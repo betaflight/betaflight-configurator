@@ -331,10 +331,6 @@
     "firmwareUpgradeRequired": {
         "message": "Firmware pada perangkat ini perlu ditingkatkan ke versi yang lebih baru. Gunakan CLI untuk backup sebelum flashing. Prosedur backup/restore CLI ada di dokumentasi.<br />Atau unduh dan gunakan Betaflight versi lama jika anda belum siap untuk upgrade."
     },
-    "infoVersions": {
-        "message": "Sistem Operasi: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Memuat informasi build untuk $1 dari server build."
     },
@@ -1136,12 +1132,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Tipe CutOff Derivatif"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Tipe Cutoff Input"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolasi"
     },
@@ -1151,38 +1141,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Smoothing RC yang digunakan"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Frekuensi cutoff dalam Hz yang digunakan filter input. Menggunakan nilai yang rendah akan menhasilkan input yang lebih halus dan lebih sesuai untuk protokol receiver yang lebih lambat. Pengguna pada umumnya cukup membiarkan nilai 0 yang berarti \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Frekuensi batas dalam Hz yang digunakan filter setpoint derivatif. Menggunakan nilai yang rendah akan menhasilkan input yang lebih halus dan lebih sesuai untuk protokol receiver yang lebih lambat. Pengguna pada umumnya cukup membiarkan nilai 0 yang berarti \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Channel smoothing diterapkan pada"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Metoda filter yang digunakan untuk input. Pengguna umumnya menggunakan nilai default \"BIQUAD\" karena seimbang antara smoothness dan delay. \"PT1\" mengurangi delay sekaligus mengurangi efek smoothing."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Pilih apakah frekuensi cutoff filter input dihitung otomatis (disarankan) atau dipilih manual oleh pengguna. Menggunakan \"Manual\" tidak disarankan untuk protokol receiver seperti Crossfire yang dapat berubah pada saat terbang."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Pilih apakah frekuensi cutoff derivatif setpoint dihitung otomatis (disarankan) atau dipilih manual oleh pengguna. Menggunakan \"Manual\" tidak disarankan untuk protokol receiver seperti Crossfire yang dapat berubah pada saat terbang."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Frekuensi CutOff Input"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frekuensi CutOff Derivatif"
-    },
-    "receiverRcInputType": {
-        "message": "Tipe Filter Input"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Tipe Filter Derivatif"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Mati"
     },
     "receiverRcSmoothingChannel": {
         "message": "Channels Smoothed"
@@ -1214,23 +1174,11 @@
     "receiverRcInterpolationInterval": {
         "message": "Interval Interpolasi RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transisi feedforward"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Dengan parameter ini, Feedforward term dapat dikurangi hingga dekat dengan nilai tengah stick, yang menghasilkan akhir flip dan roll yang lebih halus.<br> Nilai mewakili defleksi stik dari titik tengah: 0 - stick di tengah, 1 - defleksi penuh. Ketika stick diatas titik itu, Feedforward akan tetap pada nilai yang telah ditentukan. Ketika stick berada di bawah, Feedforward akan berkurang secara proporsional, hingga mencapai titik 0 pada posisi tengah stick.<br> Nilai 1 memberikan efek smoothing yang maksimum, sedangkan nilai 0 menjaga Feedforward pada nilai yang telah ditentukan untuk seluruh kisaran stick."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "Transisi Setpoint D"
     },
     "pidTuningDtermSetpoint": {
         "message": "Beban Setpoint D"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Dengan parameter ini, beban setpoint D dapat dikurangi dekat dengan tengah stik, yang menghasilkan akhir flip dan roll yang lebih halus.<br>Nilai mewakili titik defleksi stik: 0 - stik di tengah, 1 - defleksi penuh. Ketika stik berada di atas titik itu, bobot setpoint dijaga konstan pada nilai konfigurasinya. Bila stik diletakkan di bawah titik itu, bobot setpoint dikurangi secara proporsional, mencapai 0 pada posisi stik di tengah.<br>Nilai 1 memberikan efek smoothing maksimum, sedangkan nilai 0 menjaga bobot setpoint tetap pada nilai konfigurasinya diseluruh rentang stik."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Parameter ini menentukan efek akselerasi stik dalam komponen derivatif.<br>Nilai 0 sama dengan metode pengukuran lama dimana D hanya melacak gyro, sedangkan nilai 1 sama dengan metode Error lama dengan rasio pelacakan gyro dan stick yang sama.<br>Nilai yang lebih rendah sama dengan respons stik yang lebih lambat / lebih halus, sedangkan nilai yang lebih tinggi memberikan respon stik lebih cepat.<br>Perhatikan bahwa interpolasi RC dianjurkan untuk diaktifkan dengan nilai yang lebih tinggi untuk mencegah noise."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Hindari penggunaan transisi Setpoint D lebih dari 0 dan kurang dari 0.1. Menggunakan nilai tersebut dapat menyebabkan tidak stabil dan mengurangi respon stick ketika melewati titik tengahnya.</span>"
@@ -1337,12 +1285,6 @@
     "dialogCopyProfileClose": {
         "message": "Batal"
     },
-    "pidTuningResetProfile": {
-        "message": "Atur ulang semua nilai-nilai profil"
-    },
-    "pidTuningProfileReset": {
-        "message": "Nilai profil bawaan dimuat."
-    },
     "pidTuningReceivedProfile": {
         "message": "Profil Flight controller: <strong class = \"message-positive\"> $1 </strong>"
     },
@@ -1444,9 +1386,6 @@
     },
     "receiverModelPreview": {
         "message": "Tinjauan"
-    },
-    "receiverMspWarningText": {
-        "message": "Stik ini memungkinkan Betaflight untuk di arm dan diuji tanpa tx/rx. Namun,<strong>fitur ini tidak ditujukan untuk penerbangan dan baling-baling tidak boleh terpasang.</strong><br><br>Fitur ini tidak menjamin kontrol yang dapat diandalkan. <strong>Cedera serius kemungkinan terjadi jika baling-baling terpasang.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Aktifkan kontrol"
@@ -2078,9 +2017,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Pilih jenis frame untuk melihat FC yang didukung."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Pilih papan Anda untuk melihat rilis firmware online yang tersedia - Pilih firmware yang benar sesuai untuk papan Anda."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Pilih versi firmware untuk forum Anda."
     },
@@ -2182,9 +2118,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Pesan:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "<span class =\"message-negative\">Jangan</span> coba flashing perangkat keras<strong> non-Betaflight</strong> dengan flasher firmware ini.<br /> <span class =\"message-negative\" >Jangan </span><strong>memutuskan</strong> sambungan ke FC atau<strong>mematikan</strong> komputer Anda saat flashing.<br /><br /><strong> Catatan: </strong> bootloader STM32 disimpan dalam ROM, tidak akan rusak. <br /><strong>Catatan:</strong><span class =\"message-negative\">Sambungan-otomatis</span> selalu dinonaktifkan saat Anda berada di dalam flasher firmware. <br /><strong>Catatan:</strong>Pastikan Anda memiliki backup; beberapa upgrade / downgrade akan menghapus konfigurasi anda. <br /><strong>Catatan:</strong>Jika Anda mengalami masalah flashing <strong>coba lepaskan semua kabel dari FC</strong>terlebih dulu, coba reboot, upgrade chrome, upgrade driver <br /><strong>Catatan: </strong>Saat flashing FC yang terhubung langsung dengan soket USB (FC generasi baru) pastikan Anda telah membaca bagian USB Flashing di manual Betaflight dan menginstal perangkat lunak dan driver yang benar"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Pemulihan / Komunikasi terputus</strong>"
@@ -2587,17 +2520,8 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filter Lowpass Gyro"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Frekuensi Cutoff Lowpass Gyro 1 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Tipe Filter Lowpass Gyro 1"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Frekuensi Cutoff Lowpass Gyro 2 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Tipe Filter Lowpass Gyro 2"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filter Notch Gyro"
@@ -2626,12 +2550,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Tipe Filter Lowpass D Term 1"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Frekuensi CutOff Lowpass D Term 1 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Frekuensi CutOff Lowpass D Term 2 [Hz]"
-    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filter Notch D Term"
     },
@@ -2640,9 +2558,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Frekuensi CutOff Filter Notch D Term [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filter Lowpass Yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Frekuensi CutOff Lowpass Yaw [Hz]"
@@ -2670,12 +2585,6 @@
     },
     "pidTuningItermRelaxHelp": {
         "message": "Membatasi akumulasi I Term ketika bergerak cepat. Membantu untuk mengurangi efek bouncing pada akhir roll dan manuver lainnya. Anda dapet memilih di sumbu mana yang aktif, dan pilihan untuk deteksi pergerakan cepat menggunakan Gyro atau Setpoint (stick)."
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (hanya penambahan)"
@@ -3543,9 +3452,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Pengukuran"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivatif dari Kesalahan</b> memberikan respons stik langsung dan lebih sering digunakan untuk Racing.<br><br><b>Derivatif dari Pengukuran</b> memberikan respon stik yang lebih halus dan lebih berguna terbang freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID scaling dan logika PID sama persis. Belum tentu butuh retune. Legacy adalah versi lama betaflight yg telah ditulis ulang, yg merupakan kontroler PID sederhana menggunakan perhitungan dalam bilangan bulat. Kontroler PID Betaflight menggunakan perhitungan desimal yg lebih presisi dan memiliki banyak fitur baru yg dirancang khusus untuk aplikasi multirotor <br><b>Koma vs Tanpa Koma:</b> scaling PID dan logika PID sama persis. Tidak butuh retune. FC F1 tidak memiliki FPU onboard dan perhitungan dengan tingkat presisi dalam koma meningkatkan beban CPU, bilangan tanpa koma akan memperbaiki kinerjanya, tapi perhitungan dalam koma mungkin akan sedikit lebih presisi."

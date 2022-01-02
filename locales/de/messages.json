@@ -415,15 +415,8 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>Die Version des Konfigurators, die Sie verwenden ($3) ist älter als die Firmware, die Sie verwenden ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Es ist kein Motorausgabeprotokoll ausgewählt</strong>.<br>Bitte wählen Sie ein für Ihre ESCs geeignetes Motorausgabeprotokoll in '$t(configurationEscFeatures.message)' auf der Registerkarte '$t(tabConfiguration.message)' aus.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>Der Beschleunigungsmesser ist aktiviert, aber nicht kalibriert</strong>.<br>Wenn Sie den Beschleunigungsmesser verwenden wollen, folgen Sie bitte den Anweisungen für '$t(initialSetupButtonCalibrateAccel.message)' auf der Registerkarte '$t(tabSetup.message)' Wenn eine Funktion, die den Beschleunigungsmesser benötigt (Auto-Level-Modi, GPS-Rettung, u. ä.) aktiviert ist, wird das Scharfstellen des Kopters deaktiviert. Solange, bis der Beschleunigungsmesser kalibriert ist.<br>Wenn Sie nicht planen, den Beschleunigungsmesser zu verwenden, wird empfohlen, dass Sie ihn in '$t(configurationSystem.message)' auf der Registerkarte '$t(tabConfiguration.message)' deaktivieren."
-    },
-    "infoVersions": {
-        "message": "Betriebssystem: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "buildServerLoaded": {
         "message": "Geladenen Build-Infomationen für $1 vom Buildserver."
@@ -539,9 +532,6 @@
     },
     "defaultWelcomeHead": {
         "message": "Hardware"
-    },
-    "defaultWelcomeText": {
-        "message": "Diese Anwendung unterstützt sämtliche Hardware, auf der Betaflight laufen kann. Klicke auf den Flash-Tab, um auf eine vollständige Liste der unterstützten Hardware zugreifen zu können.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lade dir hier den Betaflight-Blackbox-Viewer runter.</a><br /><br />Den Betaflight Sourcecode finden Sie <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>.<br /><br />Die neusten <b>STM USB VCP Treiber</b> können <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a> heruntergeladen werden.<br />Für Hardware, die einen CP210x USB-zu-Seriell-Chip benutzt:<br />Die neusten <b>CP210x Treiber</b> können von <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a> heruntergeladen werden.<br />Die neusten <b>Zadig</b> Windows-USB-Treiber-Installationsdatei kann von <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">dieser</a> Seite heruntergeladen werden.<br />"
     },
     "defaultContributingHead": {
         "message": "Mitmachen"
@@ -1489,15 +1479,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Verstärkung",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Vorhaltezeit",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min bietet eine Möglichkeit ein niedrigeres Niveau von D im normalen Flug und ein Höheres für schnelle Manöver (welche zu Überschwingen bei Flips und Rolls führen kann) zu haben. Es erhöht D auch während Propwash. Gain stellt ein, wie schnell D auf seinen Maximalwert kommt und basiert auf den Gyro, um scharfe Bewegungen und Propwash-Ereignisse zu bestimmen. Advance lässt D früher nach oben gehen, indem es den Sollwert anstelle des Gyros verwendet, um scharfe Bewegungen zu bestimmen.",
-        "description": "D Min feature helpicon message"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID Kontroller EInstellungen"
@@ -1511,20 +1497,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuell"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto-Glättung",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Verändert die automatische Glättungs-Berechnung, 10 ist der Standard des Glättung- / Verzögerungsverhältnisses. Die Erhöhung des Wertes glättet RC-Eingaben mehr, was aber auch zu mehr Verzögerung führt. Dies kann für unzuverlässige RC-Verbindungen oder für cinematisches Fliegen nützlich sein.<br>Sei mit Zahlen, die sich 50 annähern vorsichtig, die Eingabeverzögerung wird bemerkbar.<br>Benutze den CLI-Befehl rc_smoothing_info, während die Fernsteuerung und der Empfänger eingeschaltetsind, um die automatisch berechneten RC-Glättungswerte zu sehen. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "D-Term Cutoff Typ"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Input Cutoff Typ"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
     },
@@ -1534,44 +1506,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Art der verwendeten RC-Glättung"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Die Cutoff-Frequenz in Hz, die der Eingangsfilter verwendet. Niedrigere Werte führen zu glattere Inputs und sind besser geeignet für langsamere Empfänger Protokolle. Die meisten Benutzer sollten dies bei 0 belassen, was a\"Automatisch\" entspricht."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Die Cutoff-Frequenz in Hz welche vom Setpointt Derivative Filter verwendet wird. Niedrigere Werten führen zu glatteren Inputs und sind besser geeignet für langsamere Empfänger Protokolle. Die meisten Benutzer sollten dies bei 0 belassen, was a\"Automatisch\" entspricht."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Die Kanalglättung gilt für"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Der Typ der Filtermethode welcher für \"Setpoint Derivative\" verwendet wird. Ab Version 4.2 wird der Standardwert \"Auto\" empfohlen. Die meisten Benutzer sollten den Standardwert \"BIQUAD\" verwenden, da er eine gute Balance zwischen Glättung und Verzögerung bietet. \"PT1\" bietet weniger Glättung aber die Verzögerung ist etwas reduziert."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Der Typ der Filtermethode welcher für \"Input\" verwendet wird. Die meisten Benutzer sollten den Standardwert \"BIQUAD\" verwenden, da er eine gute Balance zwischen Glättung und Verzögerung bietet. \"PT1\" bietet weniger Glättung aber die Verzögerung ist etwas reduziert."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Wählt aus, ob die Input Filter-Cutoff-Frequenz automatisch errechnet (empfohlen) oder manuell durch den Benutzer ausgewählt wird. \"Händisch\" ist nicht für Empfänger Protokolle wie Crossfire empfohlen, welche sich während des Fluges ändern können."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Wählt aus, ob die Setpoint Derivative-Cutoff-Frequenz automatisch errechnet (empfohlen) oder manuell durch den Benutzer ausgewählt wird. \"Händisch\" ist nicht für Empfänger Protokolle wie Crossfire empfohlen, welche sich während des Fluges ändern können."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Wähle Input Cutoff Frequency"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Derivative Cutoff Typ"
-    },
-    "receiverRcInputType": {
-        "message": "Input Filter Typ"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Derivative Filter Typ"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Aus"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Automatisch"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanäle geglättet"
@@ -1603,23 +1539,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolationsinterval (ms)"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward Übergang"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Mit diesem Parameter kann man die Feedforward Regelung an der Mittelstellung der Sticks reduzieren und damit ein weicheres Enden von Flips und Rolls erreichen.<br> Der Wert bedeutet eine Auslenkung des Sticks von 0 - Knüppel mittig bis 1 - voller Ausschlag. Wenn der Knüppel weiter ausgelenkt wird als dieser Wert, hat die Feedforward Regelung den eingestellten Wert. Wenn der Stick weniger ausgelenkt ist, wird die Feedforward Regelung proportional reduziert und erreicht 0 in der Nullstellung des Knüppels.<br> Ein Wert von 1 ergibt den maximalen Glättungseffekt, ein Wert von 0 hält die Feedforward Regelung über den gesamten Steuerbereich auf seinem eingestellten Wert."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Gewichtung"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Mit diesem Parameter kann man D Setpoint Weight an der Mittelstellung der Sticks reduzieren und damit weichere Enden von Flips und Rolls erreichen.<br> Der Wert bedeutet eine Auslenkung des Sticks von 0 - mittig bis 1 - voller Ausschlag. Wenn der Stick weiter ausgelenkt ist als dieser Wert, hat Setpoint Weight seinen eingestellten Wert. Wenn der Stick weniger ausgelenkt ist, wird Setpoint Weight proportional reduziert und erreicht 0 in der Nullstellung des Sticks.<br> Ein Wert von 1 ergibt den maximalen Glättungseffekt, ein Wert von 0 hält Setpoint Weight über den gesammten Steuerbereich auf seinem eingestellten Wert."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Gibt an wie hart der PID Controller bei Eingaben der Sticks vom Zentrum weg reagieren soll. 0 bedeutet das es keinen Unterschied zwischen Stick Eingaben und Abweichungen durch die Umgebung (z.B. Wind gibt). Kleinere Werte führen zu einem sauberen und \"smootheren\" Quad, höhere Werte führen zu einem direkterem Fluggefühl. <br /> Bei hohen Werten wird der Einsatz der RC Interpolation empfohlen um ein Überreagieren zu verhindern."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.</span>"
@@ -1627,16 +1551,8 @@
     "pidTuningProportional": {
         "message": "Proportional"
     },
-    "pidTuningProportionalHelp": {
-        "message": "Steuert die Stärke, wie streng das Fluggerät den Sticks (den Setpoint) folgt.<br><br>Höhere Werte (Gains) sorgen für eine strengere Verfolgung, können aber zu Überschwingen führen, wenn sie im zu hohen Verhältnis zum Derivativen (D-Wert) stehen. Stellen Sie sich den P-Wert als Feder in einem Auto vor.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
     "pidTuningIntegral": {
         "message": "Integral"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "Steuert, wie stark sich die Drohne an die grundlegende Position des Setpoint hält.<br>Ähnlich zu Proportional, aber für längere Abweichungen der Drohne zum SetPoint durch einen Versatz des Massenschwerpunkts (CoG) oder anhaltender äußerer Einfluss (beständiger Wind).<br><br>Höhere Verstärkungen bieten eine engere Verfolgung des SetPoint (z.B. bei Kehrtwenden), können aber dazu führen, dass sich die Drohne bei Stick-Input steif anfühlt.<br>Ist die Verstärkung im Verhältnis zur D-term extrem hoch, kann dies langsame Schwingungen verursachen.",
-        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Differential"
@@ -1644,16 +1560,8 @@
     "pidTuningDMax": {
         "message": "maximaler D-Wert"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Steuert die Stärke der Dämpfung der Drohne auf JEDER Bewegung. Wenn die Sticks bewegt werden, dämpft der D-term den Befehl. Bei äußerem Einfluss (Propwash oder Windböen) dämpft der D-term den Einfluss.<br><br>Höhere Verstärkung bieten mehr Dämpfung und reduzieren die Überschreitung um P-term und FF.<br>Der D-term ist jedoch SEHR empfindlich für hochfrequentes Gyro-Rauschen (Rauschen | Vergrößern um Faktor 10 bis 100).<br><br>Hochfrequenzrauschen kann heiße Motoren verursachen und Motoren zerstören, wenn die D-Verstärkung zu hoch ist oder das Gyro-Rauschen nicht gut gefiltert wird (siehe Filter-Tab).<br><br>Der D-Term ist vergleichbar mit dem Stoßdämpfer im Auto, aber mit der negativen Eigenschaft hochfrequentes Gyro-Rauschen zu verstärken.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward Regelung"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "Ist ein zusätzlicher proportionaler Term (Feder) basierend auf Stick-Inputs. FF unterstützt den P-term bei angeforderten Knüppelbewegungen.<br><br>Der P-term unterstützt auf der Grundlage des Unterschieds zwischen dem angeforderten Setpoint (Grad/sek) und dem Gyro-Wert der aktuellen Rotationsrate (Grad/sek). FF unterstützt allein basierend auf der geforderten Änderung der Sticks.<br><br>Höhere Werte (Verstärkungen) führen zu einer schärferen Reaktion auf die Knüppeleingabe.<br>Zu hohe Werte können zum Überschschwingen der Rotationsrate, erhöhter Motorwärme und Motorsättigung führen (bei der Motoren nicht mit der gewünschten Geschwindigkeit der Änderung der Rotationsrate Schritt halten können).<br>Niedrige Werte oder '0' führen zu einer langsameren und sanfteren Reaktion auf die Knüppeleingaben.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Warnung:</b></span> sehr hohe Raten können bei heftigen Abbremsungen zu Desynchronisierungen führen."
@@ -1757,12 +1665,6 @@
     "dialogCopyProfileClose": {
         "message": "Abbrechen"
     },
-    "pidTuningResetProfile": {
-        "message": "alle Profileinstellungen zurücksetzen"
-    },
-    "pidTuningProfileReset": {
-        "message": "Standartprofilwerte geladen."
-    },
     "pidTuningReceivedProfile": {
         "message": "Geladenes Profil: <strong class=\"message-positive\">$1</strong>"
     },
@@ -1786,13 +1688,6 @@
     },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">Hinweis:</span> Es ist wichtig, bei den ersten Flügen, die Motortemperatur im Auge zu behalten. Je höher die Filterwerte, desto besser könnte er fliegen, aber es wird auch mehr Rauschen in die Motoren geben.<br>Die Standarteinstellung 100Hz ist optimal, für problematische Setups könnte man jedoch richtung 50Hz Dterm Filter (und eventuell auch beim Gyro-Filter) gehen."
-    },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">IMPORTANT:</span> Wir empfehlen, die Schieberegler zu verwenden, um die Filtereinstellungen zu ändern. Bewege beide Schieberegler zusammen.<br>Es ist am besten, relativ kleine Änderungen vorzunehmen und nach jeder Änderung Testflüge durchzuführen. Überprüfen Sie die Motortemperaturen vor weiteren Änderungen.<br>Schwächeres Filtern (Schieberegler nach rechts, höhere Ausschusswerte) wird Propwash verbessern, aber mehr Rauschen an die Motoren lassen, wodurch diese heißer werden, möglicherweise so heiß, um diese zu zerstören. Schwächeres Filtern ist auf den meisten rauscharmen Drohnen möglich und wenn der Drehzahl Filter aktiviert ist.<br>Ungewöhnlich starke oder schwache Filtereinstellungen können beim Armen der Drohne zum Wegfliegen führen. Die Standardwerte sind für typische 5\" Quads sicher.<br><strong>Hinweis:</strong> Ändern der Profile ändert nur die D-Term-Filtereinstellungen. Gyro-Filtereinstellungen sind für alle Profile gleich.",
-        "description": "Filter tuning subtab note"
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Warnung:</b></span> Sie verwenden eine gefährlich niedrige Anzahl an Filtern. Wahrscheinlich wird das Fluggerät dadurch schwer kontrollierbar und kann zu \"Flayaways\" führen. Es wird dringend empfohlen, dass Sie <b>mindestens einen dynamischen Gyro Tiefpass oder Gyro Tiefpass 1 und mindestens einen dynamischen D-Term Tiefpass oder D-Term Lowpass 1</b> einschalten."
     },
     "receiverThrottleMid": {
         "message": "Gas Mittelwert"
@@ -1877,9 +1772,6 @@
     },
     "receiverModelPreview": {
         "message": "Vorschau"
-    },
-    "receiverMspWarningText": {
-        "message": "Das Schaubild ermöglicht Betaflight zu armen und alles zu testen, ohne das eine Fernsteuerung verbunden ist. Achtung<strong> diese Funktion ist nicht für Flugtests gemacht und Propeller sollten entfernt sein.</strong><br><br>Die Funktion garantiert keine verlässliche Steuerung des Fluggerätes.<strong>Ernsthafte Verletzungen könnten die Folge sein falls Sie mit montieren Propellern genutzt wird.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Kontrolle aktivieren"
@@ -2513,12 +2405,6 @@
     "dataflashButtonSaveFile": {
         "message": "Inhalt in Datei speichern"
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Flashspeicher-Inhalt in Datei speichern... (veraltet)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Das Speichern von Blackbox-Logs über den Konfigurator ist langsam und relativ anfällig für Fehler. Es wird empfohlen, stattdessen '<b>$t(onboardLoggingRebootMscText.message)</b>' (unten) zu verwenden, um den Massenspeichermodus zu aktivieren und auf den Flugcontroller als Speichergerät zuzugreifen, um die Logdateien herunterzuladen."
-    },
     "dataflashButtonErase": {
         "message": "Speicher löschen"
     },
@@ -2630,12 +2516,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Wähle anzuzeigenden Entwicklungsstand der Firmware für die jeweiligen FC's."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Wähle deinen FC, um online verfügbare Firmware-Versionen zu sehen. Wähle dann die richtige Firmware für deinen FC."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Beginnend mit Betaflight 4.1, setzt Betaflight Unterstützung für <strong>Unified Targets</strong> ein. Das Konzept von Unified Targets bedeutet, dass die gleiche Firmware .hex-Datei für alle Boards mit der gleichen MCU (F4, F7) verwendet werden kann. Damit die verschiedenen Boards mit derselben Firmware arbeiten können, wird neben der Firmware eine spezifische Konfigurationsdatei geladen, wenn ein Unified Target gebrannt wird.<br>Diese Version von Betaflight-Konfigurator unterstützt das Flashen von Unified Targets mit den jeweiligen Board-spezifischen Konfigurationen in einem Schritt. Die verschiedenen Firmware-Typen, die für jedes Board verfügbar sind, werden wie folgt angezeigt:<br><br><strong>&lt;board name&gt;</strong> oder<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>Kein Unified Target oder Pre-4.1 Versionen der Firmware für Unified Targets.<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4-Zeichen-Hersteller-Id)<br>Unified Target.<br><br><strong>Wenn verfügbar, bitte das Unified Target verwenden.</strong> Wenn es Probleme mit einem Unified Target gibt, öffne bitte ein <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Ticket</a> und verwende vorübergehend das (Legacy) Target, bis das Problem gelöst ist."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wähle die Firmware-Version für deinen FC."
     },
@@ -2741,14 +2621,8 @@
     "firmwareFlasherMessage": {
         "message": "Nachricht:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Bitte versuche <span class=\"message-negative\">nicht</span>, mit diesem Firmware-Flasher <strong>non-Betaflight</strong> Hardware zu installieren.<br />Den FC <span class=\"message-negative\">nicht</span> <strong>ausstecken</strong> und den Computer währenddessen <span class=\"message-negative\">nicht</span> <strong>abschalten</strong>. <br /><br /><strong>Hinweis: </strong>Der STM32-Bootloader ist im ROM gespeichert und kann nicht zerstört werden.<br /><strong>Hinweis: </strong><span class=\"message-negative\">Automatisch Verbinden</span> ist immer ausgeschaltet, während du den Firmware-Flasher verwendest.<br /><strong>Hinweis: </strong>Stelle sicher, dass du ein Backup deiner Konfiguration hast; einige Upgrades/Downgrades werden diese eventuell löschen.<br /><strong>Hinweis:</strong> Falls es Probleme beim flashen gibt, stelle sicher, dass <strong>keine anderen Geräte an den seriellen Ports deines FC's angeschlossen sind</strong>, reboote den Computer und aktualisiere deine Treiber.<br /><strong>Hinweis:</strong> Wenn du Firmware auf einem mit dem USB-Port verbundenem FC installierst (die meisten modernen FCs) stelle sicher, dass du den Abschnitt \"USB Flashing\" des Betaflight-Handbuches gelesen hast, und dass korrekte Treiber und Software installiert sind."
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Wiederherstellung / abgebrochene Kommunikation</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Wenn du die Verbindung zu deinem FC verloren hast:<ul><li>Abschalten</li><li> 'Nicht Rebooten' aktivieren, 'Speicher löschen' aktivieren.</li><li>BOOT-Pins überbrücken oder BOOT-Knopf drücken.</li><li>Einschalten (Aktivitäts-LED wird NICHT blinken, wenn alles klappt).</li><li>STM32-Treiber und Zadig installieren (falls benötigt, siehe <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">USB Flashing</a> Abschnitt des Betaflight-Handbuches).</li><li>Konfigurator schliessen, alle Chrome-Instanzen schliessen, alle Chrome-Apps schliessen, Konfigurator neustarten</li><li>BOOT-Knopf loslassen, wenn dein FC einen hat.</li><li>Korrekte Firmware flashen (mit manueller Baudrate, falls sie im Handbuch deines FC steht).</li><li>FC abschalten.</li><li>BOOT-Jumper entfernen (falls dein FC einen hat).</li><li>FC einschalten (Aktivitäts-LED sollte blinken).</li><li>Normal verbinden.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware-Flasher verlassen"
@@ -3178,10 +3052,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profilunabhängige Filtereinstellungen"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Schieberegler, um die Gyro- und D-Term Filterung anzupassen.<br><br>Stärkeres Filtern sorgt für einen reibungslosen Flug, erhöht aber auch die Verzögerung des Gyro-Signals (Phasen-Verzögerung) auf die PID-Schleife, was zur Verschlechterung von aggressiven Flugeigenschaften, Propwash-Handling, Stick Reaktion und bei großer Verzögerung Schwingungen verursachen kann.<br><br>Schwächeres Filtern reduziert die Verzögerung der Gyro-Signals, kann aber aufgrund der D-Term-Reaktion auf die hochfrequenten Motorvibrationen (Rauschen) die Motortemperaturen erhöhen.<br>Wenn die Filterung sehr schwach ist, werden die Flugeigenschaften verschlechtert (hohes Rausch- zu Signalverhältnis).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Geringere Filterung",
         "description": "Filter tuning slider low header"
@@ -3198,21 +3068,9 @@
         "message": "Gyro-Filter Multiplikator:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "Erhöht oder reduziert die Standard-Gyro-Tiefpass-Filter im Verhältnis zueinander. Die Gyro-Filterung wird vor der PID-Schleife angewendet.<br>Allgemeine Rauschbereiche pro Quad-Klasse:<br><br>6\"+ Quads - in der Regel innerhalb von 100Hz bis 330Hz<br>5\" Quads - in der Regel innerhalb von 220Hz bis 500Hz<br>Whoop bis 3\" Quads - in der Regel innerhalb von 300Hz bis 850Hz<br><br>Generell, sollte der Schieberegler so eingestellt sein, dass der Gyro Tiefpass 1 Min/Max Grenzbereich den oben genannten Rauschbereich abdeckt.<br>Für geschmeidigere Flüge ist stärkeres Filtern durch den Schieberegler einzustellen. Um eine aggressivere Filterung zu erhalten, ist schwächere Filterung durch den Schieberegler einzustellen.<br><br>Mit schwacher Filterung ist VORSICHT geboten, um Wegfliegen zu vermeiden oder Motoren nicht zu zerstören.<br>Hinweis: Eigenschwingungen des Rahmens, schlechte Lager und beschädigte Propeller können dazu führen, dass stärkere Filterung notwendig ist.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "D-Wert Filter Multiplikator:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Erhöht oder reduziert die Standard D-term Tiefpass Filter im Verhältnis zu einander.<br>Die D-term Filterung wird nach der PID-Schleife NUR auf den D-term angewendet, da es der empfindlichste Anteil für Rauschen ist und hohes Frequenz-Rauschen um den Faktor 10 - 100 verstärken kann.<br><br>Allgemein sollte man den D-term Filter Schieberegler mit dem Gyro Filter Schieberegler nach oben bewegen. Für härtere D-term Filterung sollte man die D-term Filter-Grenzfrequenz weiter unter dem Motorgeräuschbereich ansetzen, als die Grenzfrequenz, die auf dem gesamten Gyro-Signal mit dem Gyro Filter Multiplikator angewendet wird.<br>Das empfohlene Differenzial ist in die Standardskalierung und Schieberegler eingebaut.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Schieberegler, um die Flugchrakteristik des Quadrocopters (PID Verstärkungen) anzupassen<br><br>Hauptmultiplikator: Erhöht oder verringert alle PID-Verstärkungen (oben) und hält den proportionalen Unterschied zwischen den Verstärkungen.<br><br>PD Balance: Legt das Gleichgewicht (Verhältnis \\ proportionaler Unterschied) zwischen den P- und D-Anteilen ('die Feder' [p-term] und 'Stoßabsorber' [d-term]) fest.<br><br>PD Verstärkung: Erhöht oder verringert die P&D Verstärkung und hält das Verhältnis (Gleichgewicht) zwischen beiden - für mehr (oder weniger) PID-Kontrollauthorität.<br><br>Stick Reaktionsverstärkung: Erhöht oder verringert die FeedForward-Verstärkung, um das Stick Reaktionsgefühl des Quads anzupassen.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ACHTUNG</span>: Aktuelle Schieberegler-Positionen können \"flyaways\", Motorschäden oder unsicheres Multikopterverhalten verursachen. Bitte Vorsicht.",
@@ -3252,46 +3110,16 @@
     },
     "pidTuningPDGainSlider": {
         "message": "P und D Verstärkung:",
-        "description": "P and D gain tuning slider label"
-    },
-    "pidTuningResponseSlider": {
-        "message": "Steuerknüppel Reaktionsverstärkung:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "Generell brauchen größere Quads höhere PID Werte aufgrund eines niedrigeren Power zu Gewicht Verhältnisses.<br><br>Kleinere Quads (Micros) brauchen generell niedrigere PID Werte aufgrund eines höheren Power zu Gewicht Verhältnisses. <br><br>Höhere Werte sind für leistungsschwächere Quads. Kleinere Werte sind für leistungsstärkere Quads.",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Niedrige P- und D Verstärkung sorgt für kühlere Motoren, kann aber zu mehr Propwash-Schwingungen führen. Ein zu niedriger Wert kann dazu führen, dass der Quad instabil wird.<br><br>P- und D-Werte arbeiten zusammen, um Propwash zu reduzieren.<br><br>Höhere Werte erhöhen die Motorwärme und könnten, aufgrund der höheren D-Wert-Verstärkung, die Schwingungen während des sanften Vorwärts-Fluges erhöhen.",
-        "description": "P and D gain tuning slider helpicon message"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filter"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Lowpass 1 Cutoff Frequenz [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 Filter Type"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro Lowpass 1 Dynamic Filter Type"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro Lowpass 2 Cutoff Frequency [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro Lowpass 2 Filter Type"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Die Lowpass Filter können zwei Ausprägungen haben: statisch und dynamisch. Nur eine der beiden Varianten kann für einen funktionsfähigen Lowpass Filter aktiviert sein. Der Statische definiert einen Wert, bei dem die Filterung beginnt. Der Dynamische definiert Min- und Maxwerte, zwischen denen die Filterung patziert wird. Diese bewegt sich dann mit der Gashebelstellung in diesem Korridor."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filter"
@@ -3329,9 +3157,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Q des dynamischen Notch-Filters"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Minimale Frequenz des dynamischen Notch-Filters"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Der dynamische Notchfilter hat drei Frequenzbereiche, in denen er funktionieren kann: LOW(80-330hz) für langsam drehende Quads wie 6+ Zoll, MEDIUM(140-550hz) für einen normalen 5 Zoll Quad, HIGH(230-800hz) für sehr hoch drehende 2,5-3 Zoll Quads."
     },
@@ -3343,10 +3168,6 @@
     },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM Filter",
-        "description": "Header text for the RPM Filter group"
-    },
-    "pidTuningRpmFilterHelp": {
-        "message": "RPM-Filterung ist eine Reihe von Gyro Notch-Filter, die die RPM-Telemetrie verwenden, um Motorvibrationen zu entfernen.<br><br><b><span class=\"message-positive\">WICHTIG</span>: Der ESC muss das Bidirektionale DShot-Protokoll und den Wert des $t(configurationMotorPoles.message) im Reiter $t(tabConfiguration.message) korrekt eingestellt haben, damit der Filter funktioniert.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3374,12 +3195,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term Lowpass 1 Filter Type"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass 1 Cutoff Frequency [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Lowpass 2 Cutoff Frequency [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term Lowpass 2 Filter Type"
     },
@@ -3400,9 +3215,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch Filter Cutoff Frequenz [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw Lowpass Filter"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpassfilter Frequenz [Hz]"
@@ -3435,12 +3247,6 @@
         "message": "Achsen",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP (roll+pitch)"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (nur inkrementell)"
     },
@@ -3463,9 +3269,6 @@
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Kontrolle"
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Diese Funktion löst einige grundlegende Probleme von $t(pidTuningItermRotation.message) und sollte sie irgendwann ersetzen. Diese Funktion sammelt den absoluten Gyro-Fehler in Quad Koordinaten und mischt eine proportionale Korrektur in den Sollwert. Dafür müssen AirMode und $t(pidTuningItermRelax.message) (für $t(pidTuningItermRelaxAxesOptionRP.message)) aktiviert sein. Wenn Sie diese Funktion mit $t(pidTuningIntegratedYaw.message) kombinieren, aktivieren Sie $t(pidTuningItermRelax.message) für $t(pidTuningItermRelaxAxesOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Beschleunigungsschub"
@@ -4521,9 +4324,6 @@
     "osdDescElementRcChannels": {
         "message": "Maximal 4 Kanalwerte anzeigen. Die Kanäle müssen mit der CLI-Variable 'osd_rcchannels' angegeben werden"
     },
-    "osdDescElementCameraFrame": {
-        "message": "Fügt ein einstellbares Rahmenelement hinzu, das das Sichtfeld der HD-Kamera als Referenz zum Framing anzeigt.<br><br>Sie können die Breite und Höhe im CLI mit 'osd_camera_frame_width' und 'osd_camera_frame_height' anpassen"
-    },
     "osdTextElementEfficiency": {
         "message": "Akkueffizienz",
         "description": "One of the elements of the OSD"
@@ -5070,10 +4870,6 @@
         "message": "Pit-Modus",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Wenn aktiviert, schaltet der VTX beim anschalten der Drohne in einen sehr niedrigen Leistungsmodus, damit andere Piloten nicht gestört werden. Der Sendebereich in diesem Modus beträgt gewöhnlich weniger als 5 m.<br><br>HINWEIS: Einige Protokolle wie SmartAudio können den Pit Mode nach dem Einschalten nicht über die Software aktivieren.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Pit-Modus Frequenz",
         "description": "Text of one of the fields of the VTX tab"
@@ -5114,10 +4910,6 @@
         "message": "Dies definiert die Anzahl der Stromstufen, die von deinem VTX unterstützt werden",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "Diese Tabelle repräsentiert die unterschiedlichen Werte der Leistung, die für die VTX verwendet werden können. Sie ist zweigeteilt: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> Jede Leistungsstufe benötigt einen Wert, der vom Hardware-Hersteller definiert wird. Frage deinen Hersteller nach dem richtigen Wert oder konsultiere das Betaflight Wiki über VTX Tabellen. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> Du kannst hier das Label, das du für jeden Leistungswert verwenden möchten, eingeben. Es kann Zahlen (25, 200, 600, 1.2), Buchstaben (OFF, MIN, MAX) oder eine Mischung aus ihnen sein. <br><br>Du darfst <b>nur</b> die Leitungsebenen konfigurieren, die in deinem Land legal sind.",
-        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
-    },
     "vtxTablePowerLevelsValue": {
         "message": "Wert",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5150,10 +4942,6 @@
         "message": "Hersteller",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "Diese Tabelle repräsentiert alle Frequenzen, die für den VTX verwendet werden können. Du kannst mehrere Bänder nutzen und für jedes Band musst du folgendes konfigurieren:<br><b>- $t(vtxTableBandTitleName.message):</b> Name, den du diesem Band zuweisen möchtest, wie BOSCAM_A, FATSHARK oder RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Buchstabe, der das Band referenziert.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Dies zeigt an, ob es sich um eine Standard-Band handelt. Wenn aktiviert, sendet Betaflight an den VTX eine Band- und Kanalnummer. Der VTX wird dann seine eingebaute Frequenztabelle verwenden und die hier konfigurierten Frequenzen sind nur dazu da, um den Wert in dem OSD und anderen Orten anzuzeigen. Wenn die Funktion nicht aktiviert ist, sendet Betaflight die reale Frequenz an den VTX, die hier konfiguriert ist.<br><b>- Frequenzen:</b> Frequenzen für dieses Band.<br><br>Denke daran, dass nicht alle Frequenzen in deinem Land legal sind. Du musst einen Wert von <b>Null</b> auf jeden Frequenzindex setzen, den du nicht verwenden darfst, um ihn zu deaktivieren.",
-        "description": "Help for the table of bands-channels that appears in the VTX tab"
-    },
     "vtxSavedFileOk": {
         "message": "VTX Konfigurationsdatei <span class=\"message-positive\">gespeichert</span>",
         "description": "Message in the GUI log when the VTX Config file is saved"
@@ -5185,10 +4973,6 @@
     "vtxButtonSaveLua": {
         "message": "Lua Script speichern",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxLuaFileHelp": {
-        "message": "Der '$t(vtxButtonSaveLua.message)' Knopf erlaubt es eine <i>Modellnamen</i>.lua Datei zu speichern, welche die vtx Tabellenkonfiguration enthält, die mit den betaflight Lua Skripten verwendet werden kann. (Weitere Infos finden SIe <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hier</a>.)",
-        "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
         "message": "Aus Datei laden",
@@ -5332,9 +5116,6 @@
     "pidTuningDeltaMeasurement": {
         "message": "Messung"
     },
-    "pidTuningDeltaTip": {
-        "message": "<b>Ableitung vom Fehler</b> erzeugt direktere Stick-Antwort und ist bevorzugt für Racing.<br><br><b>Ableitung von Messung</b> erzeugt weichere Stick-Antwort und ist nützlicher für Freeestyle"
-    },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID Skalierung und PID Logik sind exakt gleich. Nicht notwendigerweise Neueinstellen notwendig. Legacy is das alte in Betaflight gewachsene rewrite, ein einfacher Integer-Arithmetik basierter Regler. Der Betaflight PID Regler nutzt Fleißkomma Arithmetik und hat viele neue Funktionen speziell für Multi-Rotor Anwendungen entwickelt.  <br> <b>Float vs Integer:</b> PID Skalierung und PID Logik sind exakt gleich. Kein Neueinstellen notwendig. F1 Boards haben keine FPU an Bord, somit belasten Fließkomma-Berechnungen die CPU Auslastung, und Integer Berechnungen verbessern die Performance. Jedoch liefert Fließkommaarithmetik die etwas höhere Genuigkeit."
     },
@@ -5456,9 +5237,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Dateiname"
-    },
-    "dialogFileNameDescription": {
-        "message": "Die Datei wird im '{{folder}}' Ordner in Ihrem internen Speicher abgelegt."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Diese Datei existiert bereits!"

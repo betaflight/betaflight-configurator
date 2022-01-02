@@ -23,16 +23,19 @@
         "message": "Error"
     },
     "warningTitle": {
-        "message": "Advertència"
+        "message": "Advertiment"
     },
     "noticeTitle": {
         "message": "Avís"
+    },
+    "dontShowAgain": {
+        "message": "No ho mostris més"
     },
     "operationNotSupported": {
         "message": "Aquesta operació no és compatible amb el teu maquinari."
     },
     "storageDeviceNotReady": {
-        "message": "El dispositiu d'emmagatzematge no està llest. En cas d'una targeta microSD, assegureu-vos de que és correctament reconeguda per la seva controladora del vol."
+        "message": "El dispositiu d'emmagatzematge no està llest. En cas d'una targeta microSD, assegureu-vos de que és correctament reconegut per la controladora del vol."
     },
     "options_title": {
         "message": "Opcions de l'aplicació"
@@ -49,6 +52,13 @@
     "portsSelectManual": {
         "message": "Selecció Manual"
     },
+    "portsSelectVirtual": {
+        "message": "Mode virtual (experimental)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Versió de microprogramari virtual"
+    },
     "portOverrideText": {
         "message": "Port:"
     },
@@ -57,6 +67,9 @@
     },
     "close": {
         "message": "Tanca"
+    },
+    "OK": {
+        "message": "OK"
     },
     "cancel": {
         "message": "Canceŀlar"
@@ -76,11 +89,18 @@
     "permanentExpertMode": {
         "message": "Habilita el mode expert permanentment"
     },
+    "warningSettings": {
+        "message": "Mostra els advertiments"
+    },
     "rememberLastTab": {
         "message": "Torna a obrir l'última pestanya al conectar"
     },
     "analyticsOptOut": {
         "message": "Desactiveu la col·lecció anònima de dades d’estadístiques"
+    },
+    "connectionTimeout": {
+        "message": "Establiu el temps d'espera de la connexió per permetre una inicialització més llarga al connectar del dispositiu o reiniciar-lo",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
     "cordovaForceComputerUI": {
         "message": "Utilitzeu la interfície dels ordinadors en lloc de la interfície dels telèfons"
@@ -107,11 +127,11 @@
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
-        "message": "Cap dataflash <br>xip trobat",
+        "message": "<br>No s'ha trobat cap xip flash",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "Dataflash: espai lliure",
+        "message": "Flash: espai lliure",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
@@ -433,14 +453,18 @@
         "message": "<strong>la versió del configurador que utilitzeu ($3) és més antiga que el firmware que utilitzeu ($4)</strong>. <br> $t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat</strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabConfiguration.message)\".<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat</strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabMotorTesting.message)\".<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>l’acceleròmetre està activat, però no està calibrat</strong>.<br>Si voleu utilitzar l’acceleròmetre, seguiu les instruccions per a '$t(initialSetupButtonCalibrateAccel.message)' a la pestanya '$t(tabSetup.message)'. Si està habilitada qualsevol funció que requereixi l’acceleròmetre (modes de nivell automàtic, rescat GPS, ...), es desactivarà l’armament de la aeronau fins que s’hagi calibrat l’acceleròmetre.<br>Si no teniu previst utilitzar l'acceleròmetre, es recomana inhabilitar-lo a \"$t(configurationSystem.message)\" a la pestanya \"$t(tabConfiguration.message)\"."
     },
-    "infoVersions": {
-        "message": "Corrent - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
+    "infoVersionOs": {
+        "message": "OS: <strong>{{operatingSystem}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
         "message": "Versions carregades per $1 des del servidor de versions."
@@ -452,7 +476,7 @@
         "message": "Fent servir 'informació des de memòria cau de versions $1."
     },
     "releaseCheckLoaded": {
-        "message": "Informació de release carregada de $1 carregada de GitHub."
+        "message": "Informació de versió per $1 carregada des de GitHub."
     },
     "releaseCheckFailed": {
         "message": "<b>La consulta a GitHub per les versions de $1 ha fallat. Fent servir informació cau. Raó: <code>$2</code></b>"
@@ -570,7 +594,7 @@
         "message": "Maquinari"
     },
     "defaultWelcomeText": {
-        "message": "L’aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per trobar una llista completa del maquinari.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar visualizador de registre de Betaflight Blackbox</a><br /><br />El codi font del firmware es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopeener noreferrer\">aquí</a><br />Els últims <b>controladors STM USB VCP</b> es poden descarregar des de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari existent que utilitza un convertidor USB a sèrie CP210x:<br />Els últims <b>controladors CP210x</b> es poden descarregar de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \"target=\"_ blank\" rel=\"noopener noreferrer\">aquí</a><br />El darrer <b>Zadig</b> del controlador de Windows USB es pot descarregar des de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />"
+        "message": "L’aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per trobar una llista completa del maquinari.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar visualizador de registre de Betaflight Blackbox</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar els scripts Lua de Betaflight per l'emisora</a><br /><br />El codi font del firmware es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopeener noreferrer\">aquí</a><br />Els últims <b>controladors STM USB VCP</b> es poden descarregar des de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari existent que utilitza un convertidor USB a sèrie CP210x:<br />Els últims <b>controladors CP210x</b> es poden descarregar des de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \"target=\"_ blank\" rel=\"noopener noreferrer\">aquí</a><br />El darrer <b>Zadig</b> del controlador de Windows USB es pot descarregar des de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -1164,6 +1188,9 @@
     "configurationDigitalIdlePercent": {
         "message": "Valor de l'accelerador Motor Inactiu [percentatge]."
     },
+    "configurationDigitalIdlePercentDisabled": {
+        "message": "El % del valor del gas en ralentí del motor està desactivat perquè el ralentí dinàmic està habilitat amb un valor a {{dynamicIdle}}rpm a la pestanya d'ajust PID"
+    },
     "configurationDigitalIdlePercentHelp": {
         "message": "El valor \"DShot Idle\" és el percentatge de la màxima acceleració que s'envia als ESC quan l'acceleració està a la posició mínima del stick i la aeronau està armada. Augmenteu-la per obtenir més velocitat al ralentí i evitar les desincronitzacions. Massa alt farà que l’arenau se senti flotant."
     },
@@ -1534,21 +1561,25 @@
     "pidTuningDMinDisabledNote": {
         "message": "<strong>Nota:</strong>La funció D Min està desactivada i els seus paràmetres estan ocults. Per utilitzar D Min, activa-la a $t(pidTuningPidSettings.message)."
     },
+    "pidTuningDMinFeatureTitle": {
+        "message": "Amortiment dinàmic",
+        "description": "Title for the options panel for the D Max feature"
+    },
     "pidTuningDMinGain": {
         "message": "Guany",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Avanç",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningDMinFeatureHelp": {
-        "message": "D Min proporciona una manera de tenir un nivell de D més baix en el vol normal i un nivell més alt per a les maniobres ràpides que puguin causar sobrepassos, com voltes i rotllos. També aporta D durant el propwash. El guany ajusta la velocitat que D augmenta al seu valor màxim i es basa en el giroscopi per determinar moviments intensos i esdeveniments de propwash. L'avanç fa que D augmenti abans utilitzant el punt de referència en lloc del giroscopi per determinar moviments bruscos.",
-        "description": "D Min feature helpicon message"
+        "message": "L’algorisme d’augment de D Max aporta D al valor D Max durant els moviments ràpids. Té dues entrades suavitzades, cadascuna amb un rang de 0 a 100, i totes dues són additives. \"Avanç\" augmenta D cap a D Max durant els moviments del stick de lemisora, lleugerament per davant de \"Gain\", que augmenta D cap a D Max quan el quad gira o tremola al rentat de prop. Només \"Gain\" aixeca D amb sacsejades o propwash. Tots dos responen amb més força al moviment més ràpid que lent. Normalment, només es necessita \"Guany\". Es pot afegir avanç per als quads de baixa autoritat que tendeixen a superar amb força. Amb valors predeterminats de 30, D arriba a D Max només durant moviments molt ràpids. Un valor de 100 portaria D fins a D Max molt fàcilment, de manera que el D efectiu durant gairebé qualsevol moviment seria el valor de D Max.",
+        "description": "D Max feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controla la força d’amortiment (D-term) en un vol endavant normal.<br>Amb D_min activat, el guany D actiu canvia durant el vol. En el vol endavant normal, es troba als guanys de D_min per sota. Durant un moviment fort o durant el propwash, el guany D actiu augmenta els guanys de D_max a  l'esquerra.<br><br>El guany complet de D_Max s’obtenen amb moviments ràpids del stick, però només s’obtenen parcialment durant el propwash.<br>Ajustar el guany de D_min i avançament per controlar la sensibilitat del guany adicional, i el temps.",
-        "description": "D Min helpicon message on PID table titlebar"
+        "message": "Controla la força de l’esmorteïment a qualsevol moviment de l’arenau. Per als moviments de stick, el terme D esmorteix l'ordre. Per a una influència exterior (propwash o ratxa de vent), el terme D esmorteix la influència. <br /><br />Els guanys més alts proporcionen més amortiment i redueixen els excessos en termes P i FF. <br /> No obstant això, el El terme D és MOLT sensible a les vibracions d'alta freqüència del giroscopi (el soroll | augmenta de 10 a 100x). <br /><br /> El soroll d'alta freqüència pot provocar calor del motor i cremar motors si els guanys D són massa elevats o el giroscopi el soroll no es filtra bé (vegeu la pestanya Filtres). <br /><br /> Penseu en el terme D com l’amortidor del vostre cotxe, però amb la propietat inherent negativa d’ampliar el soroll giroscòpic d’alta freqüència.",
+        "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Ajustament del Controlador de PIDs"
@@ -1562,18 +1593,18 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto Suavitzat",
-        "description": "Auto Smoothness parameter for RC smoothing"
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Factor automàtic",
+        "description": "Auto Factor parameter for RC smoothing"
     },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Ajusta el càlcul de suavitzat automàtic, 10 és la relació predeterminada de suavització i retard. L’augment del nombre suavitzarà més les entrades de RC, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per volar cinematogràfics.<br>Compte amb els números que s’aproximen als 50, el retard d’entrada es farà notori.<br>Utilitzeu la comanda CLI rc_smoothing_info mentre que TX i RX s’alimenten per veure el retalls del suavitzat RC automàticament calculat. ",
-        "description": "Auto Smoothness parameter help message"
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Ajusta el càlcul de factor automàtic, 10 és la relació predeterminada de suavització i retard. L’augment del nombre suavitzarà més les entrades de RC, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per volar cinematogràfics.<br>Compte amb els números que s’aproximen als 50, el retard d’entrada es farà notori.<br>Utilitzeu la comanda CLI rc_smoothing_info mentre que TX i RX s’alimenten per veure el retalls del suavitzat RC automàticament calculat. ",
+        "description": "Auto Factor parameter help message"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Tipus de tall derivat"
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "FeedForward Cutoff Tipus"
     },
-    "receiverRcInputTypeSelect": {
+    "receiverRcSetpointTypeSelect": {
         "message": "Tipus de tall d’entrada"
     },
     "receiverRcSmoothingInterpolation": {
@@ -1585,43 +1616,43 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Tipus de suavitzat RC utilitzat"
     },
-    "rcSmoothingInputCutoffHelp": {
+    "rcSmoothingSetpointCutoffHelp": {
         "message": "La freqüència de tall en Hz utilitzada pel filtre d’entrada. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
     },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "La freqüència de tall en Hz usada pel filtre derivat de consigna. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
+    "rcSmoothingFeedforwardCutoffHelp": {
+        "message": "La freqüència de tall en Hz utilitzada pel filtre d’entrada. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "El suavitzat de canals s’aplica a"
     },
-    "rcSmoothingDerivativeTypeHelp": {
+    "rcSmoothingFeedforwardTypeHelp": {
         "message": "El tipus de mètode de filtratge utilitzat per l'entrada derivada. A partir del 4.2 es recomana el valor predeterminat de \"Auto\". Per a 4.1 i versions anteriors, la majoria d'usuaris han d'utilitzar el valor predeterminat de \"BIQUAD\", ja que proporciona un bon equilibri entre suavitat i retard. \"PT1\" redueix lleugerament el retard però proporciona menys suavitat."
     },
-    "rcSmoothingInputTypeHelp": {
+    "rcSmoothingSetpointTypeHelp": {
         "message": "El tipus de mètode de filtratge utilitzat per l'entrada. La majoria dels usuaris han d'utilitzar el valor predeterminat de \"BIQUAD\" ja que proporciona un bon equilibri entre suavitat i retard. \"PT1\" redueix lleugerament el retard però proporciona menys suavitat."
     },
-    "receiverRcSmoothingInputManual": {
+    "receiverRcSmoothingSetpointManual": {
         "message": "Selecciona si la freqüència de tall del filtre d’entrada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
     },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Selecciona si la freqüència de tall del ajust de derivada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "Selecciona si la freqüència de tall del filtre d’entrada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
     },
-    "receiverRcSmoothingInputHz": {
+    "receiverRcSmoothingSetpointHz": {
         "message": "Freqüència de tall d'entrada"
     },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Freqüència de tall de derivada"
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "FeedForward Cutoff Freqëncia"
     },
-    "receiverRcInputType": {
-        "message": "Tipus de filtre d'entrada"
+    "receiverRcSetpointType": {
+        "message": "Escull tipus de filtre"
     },
-    "receiverRcDerivativeType": {
-        "message": "Tipus de filtre derivat"
+    "receiverRcFeedforwardType": {
+        "message": "Feedforward Filter Tipus"
     },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Inactiu"
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "Desactivat"
     },
-    "receiverRcSmoothingDerivativeTypeAuto": {
+    "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
@@ -1654,20 +1685,35 @@
     "receiverRcInterpolationInterval": {
         "message": "Interval d'Interpolació RC [ms]"
     },
+    "receiverRcSmoothingMode": {
+        "message": "Tipus de suavització"
+    },
     "pidTuningFeedforwardTransition": {
-        "message": "Transició de canvis"
+        "message": "Transició"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "Amb aquest paràmetre, els canvis de transició poden ser reduït al centre dels sticks, que resulta en flips i rolls finals més suaus.<br> El valor representa un punt en la deflexió del stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick està per sobre d'aquest punt, el canvi de transició es manté constant al valor configurat. Quan l'stick està per sota d'aquest punt, el canvi de transició és redueix proporcionalment, arribant a 0 a la posició central de l'stick.<br> El valor 1 dona el màxim efecte de suavitzat, mentre el valor 0 manté el canvi de transició al valor configurat durant tot el recorregut de l'stick."
+        "message": "Amb aquest paràmetre, els canvis de transició (Feedforward) poden ser reduït al centre dels sticks, que resulta en flips i rolls finals més suaus.<br> El valor representa un punt en la deflexió del stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick està per sobre d'aquest punt, el canvi de transició es manté constant al valor configurat. Quan l'stick està per sota d'aquest punt, el canvi de transició és redueix proporcionalment, arribant a 0 a la posició central de l'stick.<br> El valor 1 dona el màxim efecte de suavitzat, mentre el valor 0 manté el canvi de transició al valor configurat durant tot el recorregut de l'stick."
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
+    },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "Limit Rate Max"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "Atenua l'avanç cap a zero a mesura que els sticks es mouen ràpidament cap a la màxima deflexió (índex màxim de gir establert), per exemple, a l'inici d'un gir o un gir ràpid, per minimitzar l'excés. No fa res al final d'un gir o rotllo. Els valors més baixos fan que l'atenuació comenci abans. Normalment, aquest valor no requereix modificació. El millor és el valor més alt que coincideixi amb la superació acceptable a l'inici de rolls o girs."
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "Reducció del jitter"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "La reducció de la fluctuació redueix el Feedforward quan els sticks es mouen lentament. Això permet un vol suau i sense tremolar quan es fan arcs lents suaus, però proporciona una alimentació completa sense cap retard quan els sticks es mouen ràpidament. Un valor de llindar més alt (10-12) és més útil per a propòsits cinematogràfics o d'estil lliure en HD, i un valor lleugerament inferior (5) és millor per a carreres o de velocitat més alta."
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
     },
     "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Amb aquest paràmetre, D Setpoint Weight pot ser reduït al centre dels sticks, que resulta en flips i rolls més suaus.<br> El valor representa la desciació de l'stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick està per sobre d'aquest punt, Setpoint Weight es manté constant al valor configurat. Quan l'stick està per sota d'aquest punt, Setpoint Weight és reduït proporcionalment, arribant a 0 a la posició central de l'stick.<br> El valor 1 dona el màxim valor suavitzant, mentre el valor 0 manté el Setpoint Weight fixat añ valor configurat durant tot el recorregut de l'sctick."
+        "message": "Amb aquest paràmetre, D Setpoint Weight pot ser reduït al centre dels sticks, que resulta en flips i rolls més suaus.<br> El valor representa la desciació de l'stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick està per sobre d'aquest punt, Setpoint Weight es manté constant al valor configurat. Quan l'stick està per sota d'aquest punt, Setpoint Weight és reduït proporcionalment, arribant a 0 a la posició central de l'stick.<br> El valor 1 dona el màxim valor suavitzant, mentre el valor 0 manté el Setpoint Weight fixat añ valor configurat durant tot el recorregut de l'stick."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Aquest paràmetre determina l'efecte d'acceleració de l'stick en el component derivat.<br> El valor de 0 és igual a l'anterior mètode de mesura on D només fa el seguiment del giròscop, mentre que el valor d'1 és igual al mètode antic d'error amb la ràtio de seguiment de gir i stick igual.<br> Valor inferior és igual a una resposta d'stick més lenta/més suau, mentre que un valor més alt proporciona més resposta d'acceleració d'stick.<br> es recomana que la interpolació RC estigui activada amb valors més alts, per evitar que els cops de control facin soroll."
@@ -1675,45 +1721,48 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Es desaconsella l'ús d'una transició de punt de partida D superior a 0 i inferior a 0,1. Si ho fa, pot generar inestabilitat i una menor capacitat de resposta a mesura que els sticks passen pel punt central.</span>"
     },
-    "pidTuningFfInterpolateSp": {
-        "message": "Interpolar FF"
+    "pidTuningFeedforwardGroup": {
+        "message": "Feedforward"
     },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "Les següents opcions permeten afinar el ritme de cursa/agressiu a suau/HD.<br><br> Modalitat: ajustat a NoAverage per a cursa, Mitja 2 per a cursa/freestyle ràpid, Mitjana a 3 per a enregistrament en HD, Mitjana 4 per a cinema HD suau.<br><br> Suavitat: limita la quantitat de canvis que pot fer qualsevol pas de ràdio entrant, augmentar per obtenir un senyal de FF més suau, disminueix per respostes de FF més agressives.<br><br> Potencia: ajuda a superar el retard del motor amb moviments rápid dels sticks, pot augmentar el jitter. Prova 10 per HD, 20 per cursa. Fins a 30 poden ser útils per a quads de baixa autoritat, però poden causar micro bots o jitter."
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "Les següents opcions permeten afinar el ritme de cursa/agressiu a suau/HD.<br /><br /> Modalitat: ajustat a OFF per a cursa, Punt 2 per a cursa/freestyle ràpid, Punt 3 per a enregistrament en HD, Punt 4 per a cinema HD suau.<br /><br /> Suavitat: limita la quantitat de canvis que pot fer qualsevol pas de ràdio entrant, augmentar per obtenir un senyal de FF més suau, disminueix per respostes de FF més agressives.<br /><br /> Potenciador: ajuda a superar el retard del motor amb moviments rápid dels sticks, pot augmentar el jitter. Prova 10 per HD, 20 per cursa. Fins a 30 poden ser útils per a quads de baixa autoritat, però poden causar micro bots o jitter."
     },
-    "pidTuningFfInterpolate": {
-        "message": "Mode"
+    "pidTuningFeedforwardAveraging": {
+        "message": "Promitjant"
     },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "Sense mitja"
+    "pidTuningOptionOff": {
+        "message": "Desactivat"
     },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Mitjana 2"
+    "pidTuningOptionOn": {
+        "message": "ACTIVAT"
     },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Mitjana 3"
+    "pidTuningFeedforwardAveragingOption2Point": {
+        "message": "Punt 2"
     },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Mitjana 4"
+    "pidTuningFeedforwardAveragingOption3Point": {
+        "message": "Punt 3"
     },
-    "pidTuningFfSmoothFactor": {
+    "pidTuningFeedforwardAveragingOption4Point": {
+        "message": "Punt 4"
+    },
+    "pidTuningFeedforwardSmoothFactor": {
         "message": "Suavitat"
     },
-    "pidTuningFfBoost": {
+    "pidTuningFeedforwardBoost": {
         "message": "Potenciador"
     },
     "pidTuningProportional": {
         "message": "Proporcional"
     },
     "pidTuningProportionalHelp": {
-        "message": "Controla la força de la forma en què la màquina segueix els sticks (el punt de referència). <br><br>Un valor més elevat (guany) proporciona un seguiment més ajustat, però pot provocar una sobrealimentació si és massa alta en proporció a la derivada (D Term). Penseu en el P-Term com la molla en un cotxe.",
+        "message": "Controla la força de la forma en què la màquina segueix els sticks (el punt de referència). <br /><br />Un valor més elevat (guany) proporciona un seguiment més ajustat, però pot provocar una sobrealimentació si és massa alta en proporció a la derivada (D Term). Penseu en el P-Term com la molla en un cotxe.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "Integral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Controla la força de la forma en què la màquina manté la posició general del punt de referència.<br>Similar a la proporcional, però per a biaixos més llargs en la aeronau, com un centre de gravetat compensat (CoG) o una influència exterior persistent (vent constant).<br><br>Els guanys més elevats ofereixen un seguiment més estricte (per exemple, per voltes escombrants), però poden fer que l’aeronau se senti rígida per les entrades dels sticks comandades.<br>Si és altament proporcional al D Term, pot provocar oscil·lacions lentes.",
+        "message": "Controla la força de la forma en què la màquina manté la posició general del punt de referència.<br>Similar a la proporcional, però per a biaixos més llargs en la aeronau, com un centre de gravetat compensat (CoG) o una influència exterior persistent (vent constant).<br /><br />Els guanys més elevats ofereixen un seguiment més estricte (per exemple, per voltes escombrants), però poden fer que l’aeronau se senti rígida per les entrades dels sticks comandades.<br>Si és altament proporcional al D Term, pot provocar oscil·lacions lentes.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
@@ -1723,8 +1772,8 @@
         "message": "D Max"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Controla la força d’amortiment a qualsevol moviment de l’aeronau. Per a desplaçaments dels sticks, D Term amortitza la comanda. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br> El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del giro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
+        "message": "D Max proporciona un nivell més elevat de D per a maniobres ràpides que d’altra manera podrien causar desbordaments, com voltes i rotacions. És particularment útil en construccions sorolloses o màquines amb poca autoritat. D Max permet establir el valor bàsic de D, o amortiment, per sota del que podria ser necessari, ajudant a mantenir els motors més freds i activant-se més ràpidament. D Max també aporta D durant el propwash. D Els valors d’avanç i guany màxims controlen el temps i la força de l’increment. Els pilots de versions HD Freestyle i Cinematic solen tenir un valor derivat relativament alt per aconseguir l’estabilitat en el vol cap endavant i no necessiten tant d’un augment de D Max. Els pilots de carreres normalment es preocupen de mantenir els motors frescos fins i tot amb pales doblegades, de manera que funcionen amb valors D bàsics més baixos i mantenen D Max alçat per controlar el desbordament.",
+        "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "Transició"
@@ -1835,11 +1884,11 @@
     "dialogCopyProfileClose": {
         "message": "Canceŀla"
     },
-    "pidTuningResetProfile": {
-        "message": "Resetejar els valors del perfil"
+    "pidTuningResetPidProfile": {
+        "message": "Restableix la configuració actual del perfil PID"
     },
-    "pidTuningProfileReset": {
-        "message": "Carregar els valors per defecte del perfil."
+    "pidTuningPidProfileReset": {
+        "message": "S'han carregat els valors predeterminats del perfil PID actual."
     },
     "pidTuningReceivedProfile": {
         "message": "Controladora de vol selecciona Perfil: <strong class=\"message-positive\">$1</strong>"
@@ -1866,11 +1915,18 @@
         "message": "<b>Consells d'ajustament</b><br /><span class=\"message-negative\">IMPORTANT:</span> És important verificar la temperatura del motor durant els primers vols. Com més gran sigui el valor del filtre, millor volarà, però també tindràs més soroll als motors.<br>El valor predeterminat de 100Hz és òptim, però per a les configuracions de sorolloses pots provar de baixar el filtre Dterm a 50Hz i possiblement també el filtre del giròscop."
     },
     "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">IMPORTANT:</span> Recomanem utilitzar els control lliscants per canviar la configuració del filtre. Moveu els dos lliscadors a la vegada.<br>El millor és fer canvis relativament petits i provar el vol després de cada canvi. Comproveu les temperatures del motor de a prop abans de fer més canvis.<br>Menys filtratge (lliscadors cap a la dreta, majors valors de tall) milloraran el propwash, però permetran més soroll a traves dels motors, fent-los més calents, possiblement el suficient calents per cremar-se. Menys filtratge és possible per la majoria de aeronaus noves i si el filtre de rpm està activat. Els valors predeterminats són segurs per a quads típics de 5 \".<br><strong>Nota:</strong> El canvi de perfils només canviarà la configuració del filtre D-term. La configuració del filtre del Giro és la mateixa per a tots els perfils.",
+        "message": "Es recomana utilitzar els control lliscants per ajustar el filtratge. <br>Feu canvis relativament petits, proveu la volada i comproveu la temperatura del motor després de cada canvi. <br>Si moveu els lliscadors cap a la dreta es donen valors de tall més alts; això pot millorar el propwash, però deixa passar més soroll als motors, fent-los més calents, possiblement prou calents com per cremar-se. <br>La majoria de versions netes amb filtratge de rpm estaran bé amb el filtrat giroscòpic a la dreta.<br>En canvi , tingueu molta precaució quan moveu els control lliscants del filtre D cap a la dreta. <br> Els paràmetres de filtre inusualment alts o baixos poden provocar fallades en l'armament. Els valors predeterminats són segurs per a quads típics de 5 \". <br><strong>Nota:</strong> Si canvieu els perfils, només canviarà la configuració del filtre en termini D. Els paràmetres del filtre giroscòpic són els mateixos per a tots els perfils.",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
         "message": "<span class =\"message-negative\"><b>Advertència:</b></span> La quantitat de filtratge que utilitzeu és perillosament baixa. És probable que això faci que l'aeronau sigui difícil de controlar i que es pugui traduir en fugides. És molt recomanable que <b>activeu almenys un pasaa baix dinàmic del Giro o passa baix 1 de Giro i almenys un passa baix dinàmic D Term o pas baix D Term 1</b>."
+    },
+    "pidTuningSliderPidsMode": {
+        "message": "Mode:",
+        "description": "Pidtuning slider mode can be OFF, RP or RPY"
+    },
+    "pidTuningSliderModeHelp": {
+        "message": "<strong>Mode de control lliscant de sintonització de PID</strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><span class=\"message-negative\">Important: <b></b></span>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -1963,7 +2019,7 @@
         "message": "Previsualitza"
     },
     "receiverMspWarningText": {
-        "message": "Aquests comandaments permeten a Betaflight ser armat i testejat sense un transmissor o receptor instaŀlat. De qualsevol forma <strong>aquesta característica no està pensada per volar i les pales no haurien d'estar posades</strong><br><br>Aquesta característica no et garanteix el control fiable de l'aeronau. <strong>Poden produir-se lesions greus si es deixen posades les pales.</strong>"
+        "message": "Aquests comandaments permeten a Betaflight ser armat i testejat sense un transmissor o receptor instaŀlat. De qualsevol forma <strong>aquesta característica no està pensada per volar i les pales no haurien d'estar posades</strong><br /><br />Aquesta característica no et garanteix el control fiable de l'aeronau. <strong>Poden produir-se lesions greus si es deixen posades les pales.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Habilita els controls"
@@ -2429,6 +2485,15 @@
     "motorsEnableControl": {
         "message": "<strong>Entenc els riscos</strong>, les pales estan tretes - habilita el control dels motors i armat i deshabilita el Runaway Takeoff Prevention."
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong>S'ha detectat un problema del mode mesclador</strong><br /><br />El model {{mixerName}} necessita <strong class =\"message-positive\">{{mixerMotors}}</strong> recursos motors i la configuració actual del firmware proporciona<strong class=\"message-positive\">{{outputs}}</strong> sortides utilitzables per al mode seleccionat.<br /><br />Si utilitzeu un mode de mesclador personalitzat, cal definir un mmix personalitzat abans de canviar el mode de mesclador.<br /><br />Comproveu la configuració i afegiu els recursos motors necessaris."
+    },
+    "motorsDialogSettingsChanged": {
+        "message": "S'han detectat canvis en la configuració.<br /><br /><strong class = \"message-negative-italic\">El mode de prova del motor està desactivat fins que la configuració s'hagi desat.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "Acceptar"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Canceŀlar"
     },
@@ -2461,6 +2526,87 @@
     },
     "motorsRemapDialogStartOver": {
         "message": "Comença de nou"
+    },
+    "motorsButtonReset": {
+        "message": "Reinici"
+    },
+    "motorsButtonSave": {
+        "message": "Desa i reinicia"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Direcció del motor - <strong class=\"message-negative-italic\">Advertiment: assegureu-vos que les hèlix están fora. </strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Selecciona un o tots els motors"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Els motors giraran quan se seleccionin!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Avis de seguretat</strong><br /><strong class=\"message-negative-italic\">Retireu totes les hélices per evitar lesions!</strong><br />Els motors <strong>giraran!</strong>inmediatament quan es seleccionin!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Entenc els riscos</strong>, <br />totes les hèlix estan tretes."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Avís d'informació</strong><br /> Per canviar els sentits de gir dels motors, cal connectar la bateria i configurar el protocol ESC correcte a la pestanya $t(tabMotorTesting.message). Tingueu en compte que no tots els ESC de Dshot funcionaran amb aquest diàleg. Comproveu el firmware del vostre ESC."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Establiu el sentit de gir del motor seleccionant i girant cada motor individualment."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Restableix totes els sentits de gir del motors i, a continuació, permet a l'usuari escollir quina invertirá."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Sentit de gir de motor"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normal"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Inversa"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Probar motor"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Deixeu anar el botó per parar"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Deixeu anar per parar"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Individualment"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Assistent"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Canvia la direcció dels motor(s) seleccionats"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Els motors giraran quan s’estableixi el sentit!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "La funció només funciona amb DSHOT ESC.<br />Verifiqueu que el vostre ESC (controlador de velocitat elèctric) admeti el protocol DSHOT i canvieu-lo a la pestanya $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "El nombre de motors és 0.<br />Verifiqueu el mesclador actual a la pestanya $t(tabMotorTesting.message) o configureu-ne un de personalitzat mitjançant CLI. Consulteu aquesta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Pàgina Wiki</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Actualitzeu el microprogramari.<br /> Assegureu-vos que utilitzeu el microprogramari més recent: Betaflight 4.3 o posterior."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Feu clic als números del motor individualment per canviar la direcció de gir"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Comproveu que tots els motors giren correctament"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Arrencar / parar motors"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Parar motors"
     },
     "sensorsInfo": {
         "message": "Tingues en compte que fent servir períodes d'actualització ràpids i renderitzant múltiples gràfics alhora pot gastar ràpidament la bateria del teu portàtil.<br />Et recomanem que només rederitzis gràfics dels sensors del teu interès en períodes raonables."
@@ -2637,10 +2783,13 @@
         "message": "Desa la flash a un arxiu..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Desa el flash al fitxer... (obsolet)"
+        "message": "Desa el flash al fitxer... (no soportat)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Desar directament el flaix al fitxer és lent i és inherent a la corrupció d’errors o fitxers. <br>En alguns casos funcionarà per a fitxers petits, però no està soportat i les sol·licituds d’assistència es tancaran sense comentaris - Utilitzeu el mode d’emmagatzematge massiu en el seu lloc."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Desar els registres de blackbox a través del configurador és lent i relativament propens a errors. Es recomana que utilitzeu '<b>$t(onboardLoggingRebootMscText.message)</b>' (a continuació) per activar el mode emmagatzematge massiu i accedir al controlador de vol com a dispositiu d'emmagatzematge per descarregar els fitxers de registre."
+        "message": "Aquest mètode és lent i inherent a la corrupció d'errors / fitxers corruptes, ja que la connexió MSP té limitacions fonamentals intrínseces que la fan inadequada per a les transferències de fitxers. Pot funcionar només per a fitxers de registre petits. No creeu sol·licituds d'assistència si les transferències de fitxers fallen quan es desen amb aquest mètode. El mètode recomanat és utilitzar '<b> $t(onboardLoggingRebootMscText.message)</b>' (a sota) per activar el mode d'emmagatzematge massiu i accedir al controlador de vol com a dispositiu d'emmagatzematge per descarregar els fitxers de registre."
     },
     "dataflashButtonErase": {
         "message": "Esborra la memòria"
@@ -2757,10 +2906,10 @@
         "message": "Seleccioneu tipus de versió per veure les controladores disponibles."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecciona la teva controladora per veure les versions de firmware online disponibles - Selecciona el firmware correcte que s'adeqüi a la teva controladora."
+        "message": "Selecciona la teva placa per veure les versions de firmware online disponibles - Selecciona el firmware correcte que s'adeqüi a la teva placa."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "A partir de Betaflight 4.1, Betaflight està donant suport a <strong>Objectius unificats</strong>. El concepte d’objectius unificades significa que el mateix fitxer .hex del firmware es pot utilitzar per a totes les plaques amb la mateixa MCU (F4, F7). Perquè els diferents controladores funcionin amb el mateix programari, es desplega un fitxer de configuració específic al costat del programari quan apareix un objecte unificat.<br> Aquesta versió del configurador Betaflight soporta l'actualització d'objectes unificats amb les configuracions específiques de la placa en un sol pas. Els diferents tipus de programari disponibles per a cada placa es mostren a la llista desplegable de la següent manera:<br><br><strong>&lt;board name&gt;</strong> o<br><strong>&lt;board name&gt; (Sistema llegat)</strong>:<br>objecte no unificat, o versions pre-4.1 de programari pero objectes unificats.<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 caràcters del ID del fabricant)<br>Objectes Unificat.<br><br><strong>Si us plau, utilitzeu Objectes unificats si es posible.</strong> Si teniu problemes amb l’ús d’un objecte unificat, obriu un <a href=\"https://github.com/betaflight/betaflight/issues\"target=\"_ blank\"rel=\"noopener noreferrer\">Problema</a> i després utilitzeu el objecte no unificat fins que s'hagi resolt el problema."
+        "message": "A partir de Betaflight 4.1, Betaflight està donant suport a <strong>Plataformes unificades</strong>. El concepte plataforma unificada significa que el mateix fitxer .hex del programari es pot utilitzar per a totes les plaques amb la mateixa MCU (F4, F7). Perquè els diferents controladores funcionin amb el mateix programari, es desplega un fitxer de configuració específic al costat del programari quan apareix un objecte unificat.<br> Aquesta versió del configurador Betaflight soporta l'actualització d'objectes unificats amb les configuracions específiques de la placa en un sol pas. Els diferents tipus de programari disponibles per a cada placa es mostren a la llista desplegable de la següent manera:<br /><br /><strong>&lt;board name&gt;</strong> o<br><strong>&lt;board name&gt; (Sistema llegat)</strong>:<br>objecte no unificat, o versions pre-4.1 de programari pero objectes unificats.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 caràcters del ID del fabricant)<br>Objectes Unificat.<br /><br /><strong>Si us plau, utilitzeu Objectes unificats si es posible.</strong> Si teniu problemes amb l’ús d’un objecte unificat, obriu un <a href=\"https://github.com/betaflight/betaflight/issues\"target=\"_ blank\"rel=\"noopener noreferrer\">Problema</a> i després utilitzeu el objecte no unificat fins que s'hagi resolt el problema."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecciona la versió per la teva controladora."
@@ -2868,13 +3017,13 @@
         "message": "Missatge:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Si us plau, <span class=\"message-negative\">no</span> intenteu flashejar el maquinari <strong>no-Betaflight</strong> amb aquest firmware flasher.<br /><span class=\"message-negative\">No</span> <strong>desconnecteu</strong> la FC o <strong>desactiveu</strong> l'ordinador mentre flasheja.<br /><br /><strong>Nota: </strong>STM32 bootloader s'emmagatzema en ROM, no es pot malmetre. <br /><strong>Nota: </strong><span class=\"message-negative\">Connectar automàticament</span> sempre està desactivat mentre es troba dins del firmware flasher.<br /><strong>Nota: </strong>Assegureu-vos que teniu una còpia de seguretat; les actualitzacions / downgrades esborraran la teva configuració.<br /><strong>Nota:</strong> si teniu problemes per flashejar <strong>proveu de desconnectar tots els cables del FC</strong> intenteu reiniciar, actualitzeu Chrome, actualitzeu controladors.<br /> <strong>Nota:</strong> Quan flashejis les controladores que connecten directament als ports USB (la majoria de les controladores més noves), assegureu-vos de llegir la secció USB Flashing del manual Betaflight i instal·lar el programari i controladors correctes"
+        "message": "Si us plau, <span class=\"message-negative\">no</span> intenteu flashejar el maquinari <strong>no-Betaflight</strong> amb aquest firmware flasher.<br /><span class=\"message-negative\">No</span> <strong>desconnecteu</strong> la FC o <strong>desactiveu</strong> l'ordinador mentre flasheja.<br /><br /><strong>Nota: </strong>STM32 bootloader s'emmagatzema en ROM, no es pot brickejar.<br /><strong>Nota: </strong><span class=\"message-negative\">Connectar automàticament</span> sempre està desactivat mentre es troba dins del firmware flasher.<br /><strong>Nota: </strong>Assegureu-vos que teniu una còpia de seguretat; les actualitzacions / downgrades esborraran la teva configuració.<br /><strong>Nota:</strong> si teniu problemes per flashejar <strong>proveu de desconnectar tots els cables del FC</strong> primer, intenteu reiniciar, actualitzeu controladors.<br /> <strong>Nota:</strong> Quan flashejis les placas que connecten directament als ports USB (la majoria de les controladores més noves), assegureu-vos de llegir la secció USB Flashing del manual Betaflight i instal·lar el programari i controladors correctes"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperació / Comunicació perduda</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Si has perdut comunicació amb la teva controladora segueix aquests passos: <ul><li>Apaga</li><li>Habilita \"Sense seqüència de reinici\", habilita \"Esborrat total del xip\"</li><li>Creua els pins de boot o prem el botó.</li><li>Engega (El led d'activitat no ha de parpellejar si ho has fet correctament).</li><li>Instaŀla els drivers STM32 i Zadig si es requereix (mira a la secció de <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">flasheig USB</a> del manual).</li><li>Tanca el configurador, Tanca totes les apps de Chrome, Reinicia el configurador.</li><li>Deixa anar el botó de Boot si en tens.</li><li>Flasheja el firmware correcte (Amb velocitat de bauds manual si així ho necessites).</li><li>Apaga.</li><li>Treu el boot dels pins.</li><li>Engega (El led d'activitat ha de parpellejar).</li><li>Connecta amb normalitat.</li></ul>"
+        "message": "Si has perdut comunicació amb la teva controladora segueix aquests passos: <ul><li>Apaga</li><li>Habilita \"Sense seqüència de reinici\", habilita \"Esborrat total del xip\"</li><li>Creua els pins de boot o prem el botó.</li><li>Engega (El led d'activitat no ha de parpellejar si ho has fet correctament).</li><li>Instaŀla els drivers STM32 i Zadig si es requereix (mira a la secció de <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">flasheig USB</a> del manual).</li><li>Tanca el configurador, Taniireiniel configurador.</li><li>Deixa anar el botó de Boot si en tens.</li><li>Flasheja el firmware correcte (Amb velocitat de bauds manual si així ho necessites).</li><li>Apaga.</li><li>Treu el boot dels pins.</li><li>Engega (El led d'activitat ha de parpellejar).</li><li>Connecta amb normalitat.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Surt del flashejador de Firmware"
@@ -2923,6 +3072,33 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Detectat: <strong>$1</strong> - llençant flasheig en conectar"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>No coincideix el microprogramari</h3><br />La placa connectada és <strong>{{verified_board}}</strong> mentre seleccioneu <strong>{{selected_board}}</strong>.<br /><br />Voleu continuar l'actualització?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "El configurador ha <span class=\"message-positive\">detectat</span> correctament i verificat la placa: <strong>{{boardName}}</strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "El configurador <span class=\"message-negative\">ha fallat</span>al verificar la placa, si això no funciona, proveu de canviar lentament de pestanya per tornar-ho a provar, feu una nova connexió usb o connecteu-vos primer si és possible que hàgiu oblidat aplicar els ajustos personalitzats per defecte",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "Abandonar"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "Continuar"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Auto detectar"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "La detecció automàtica només funciona quan no es troba en mode DFU i quan la comunicació MSP funciona. De vegades cal tornar-ho a provar algunes vegades o fins i tot tornar a connectar l'USB. Proveu de connectar-vos amb la normalitat primer, ja que podríeu haver oblidat aplicar els valors predeterminats personalitzats. Reinicieu després de parpellejar: torneu a connectar l'USB."
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "Seleccioneu l'informació de la placa per preseleccionar el firmware adequat"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "Estàs a punt de fer una <strong> actualització en desenvolupament del firmware </strong>. Aquestes compilacions són una treball en curs i es pot donar qualsevol dels casos següents:<strong><ul><li>El firmware no funciona en absolut;</li><li>amb el firmware no es pot volar;</li><li>hi ha problemes de seguretat amb el firmware, per exemple flyaways</li><li>el firmware pot fer que el controlador de vol no respongui o es danyi</li></ul></strong>Si continueu amb el flaix d’aquest firmware, <strong>assumiu tota la responsabilitat del risc que passi de qualsevol dels casos anteriors</strong>. A més, reconeix que és necessari dur a terme <strong>proves completes de banc amb els accessoris desactivats</strong> abans de qualsevol intent de volar aquest firmware."
@@ -3314,7 +3490,7 @@
         "message": "Ajustament de Filtres independents del perfil"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "Els botons lliscants per ajustar el filtratge quad-giro i D-term.<br><br>Més filtrat us proporciona un vol més suau, però també augmenta el retard del senyal de giroscopis (retard de fase) al bucle PID, el que comportarà un comportament de vol agressiu pitjor i un propwash. La resposta del stick si és excessiu pot causar oscil·lacions.<br><br> Menys filtrat redueix el retard del senyal de giroscopi, però pot augmentar la temperatura del motor a causa del terme D que reacciona a les vibracions del motor d’alta freqüència (soroll).<br> A més, si el filtratge és excessivament baix, provocarà una disminució del rendiment del vol (major relació soroll/senyal).",
+        "message": "Control lliscants per ajustar els filtres giroscòpics i en termini D. <br> <br> Un filtratge més fort (control lliscant cap a l'esquerra i freqüències de tall més baixes) manté els motors més freds eliminant més soroll, però també augmenta el retard del senyal giroscòpic (retard de fase) al bucle PID . Això pot empitjorar el propwash i pot empitjorar les oscil·lacions ressonants. Quads menys sensibles, per exemple, X-Class, sovint funcionen bé amb un filtratge més fort. <br> <br> Menys filtratges (control lliscant cap a la dreta, freqüències de tall més altes) redueixen el retard del senyal giroscòpic i, sovint, milloren el propwash. Moure el filtre de gir baix giroscòpic cap a la dreta sol estar bé, però els motors poden escalfar-se. Normalment no cal desplaçar el filtre D cap a la dreta i pot provocar ràpidament motors molt calents.",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -3334,19 +3510,27 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Augmenta o baixa els filtres passa baixos de Giro predeterminats en proporció entre si. El filtratge de giroscopis s'aplica abans del bucle PID.<br> Els rangs generals de soroll del motor per classe de quad:<br><br>entre 6 \"+ quads - generalment entre 100hz i 330hz<br>quads de 5\" - generalment entre 220hz i 500hz<br>Whoop a 3 \" nanoquads - generalment entre 300hz i 850hz<br><br>Generalment, has de configurar el control lliscant perquè la gamma de tall mínim/màxim dinàmic del pasabaixos de Giro 1 cobreixi les anteriors.<br>No obstant aixó per vols mes suaus incrementa el control lliscant. Per obtenir uns ajust de filtres més agressiu, utilitzeu menys filtratge amb el control lliscant.<br><br> Amb menys filtre ANEU AMB COMPTE per provocar una fugida del quad o rustida dels motors.<br>Els problemes de ressonància del chasis, els rodaments dolents i les hèlix tocades poden provocar que calgui més filtració.",
+        "message": "Augmenta o disminueix els filtres Gyro Lowpass per defecte en proporció entre si. El filtratge giroscòpic s'aplica abans del bucle PID. <br />Rangs generals de soroll del motor per classe de quads:<br /><br />Quads de 6 \"+, generalment entre 100hz i 330hz<br />Quads de 5\", generalment dins De 220hz a 500hz<br />Whoops o quads de 3 \", generalment de 300hz a 850hz<br /><br />En general, voleu configurar el control lliscant perquè el rang de tall mínim / màxim dinàmic Gyro Lowpass 1 cobreixi l'anterior.<br />No obstant això, per a vols més suaus, utilitzeu més filtratge al control lliscant. Per obtenir una sintonia de filtre més agressiva, utilitzeu menys filtratge al control lliscant. provoqueu una volada o esgotin els motors.<br />Tingueu en compte els problemes de ressonància del quadre del quad, els coixinets defectuosos i les pales doblegades que poden fer que necessiteu més filtratge.",
         "description": "Gyro filtering tuning slider helpicon message"
+    },
+    "pidTuningGyroSliderEnabled": {
+        "message": "Utilitzeu el control lliscant del Giro",
+        "description": "Disable or enable Gyro Filter Tuning Slider"
     },
     "pidTuningDTermFilterSlider": {
         "message": "Multiplicador del filtre D Term:",
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Augmentar o disminuir els filtres Pasabaixos predeterminats de D-term proporcionals entre ells.<br>El filtratge D-term s’aplica després del bucle PID, NOMÉS al D-term, ja que és el terme més sensible al soroll i pot amplificar qualsevol soroll d’alta freqüència per 10x a 100x més vegades.<br><br>En general, has de moure el control lliscant de D-term amb el control lliscant Filtre Giro. Si desitges tenir el talls del filtre D-term molt per sota del rang de soroll del motor per a un filtratge més dur de D-term llavors es aplicat a tot el senyal de giroscopió amb el filtre multiplicador del Giro<br>. El diferencial recomanat es crea a l'escal·lació predeterminada del control lliscant.",
+        "message": "Canvia els límits de filtre de pas baix del terme D. <br /> Si moveu el control lliscant cap a l'esquerra es dóna un filtrat D més fort (freqüència de tall inferior); a la dreta proporciona menys filtrat (freqüència de tall més alta). <br /><br />El terme D és l'element PID més sensible al soroll i la ressonància. Pot amplificar qualsevol soroll d'alta freqüència entre 10 i 100 vegades més. Per això, els límits dels filtres D són molt més baixos que els filtres giroscòpics. <br /><br />El filtrat a termini D s’aplica després del filtratge giroscòpic, a més de. Un fort filtrat D reduirà la calor del motor en quads sorollosos i pot ser útil amb valors PID 'D' elevats per minimitzar la ressonància D a freqüències mitjanes a altes. No obstant això, un fort filtrat D pot retardar el senyal D, empitjorant la manipulació del propwash i afavorint les ressonàncies D. El filtratge D per defecte és òptim per a la majoria de quads. Les màquines més grans amb D alta poden funcionar millor amb un filtrat D més fort que els valors predeterminats. En general, no cal desplaçar el control lliscant del filtre de pas baix D cap a la dreta. En quads nous, anar a la dreta pot atenuar el propwash. S’ha de fer amb molta precaució, ja que tenir menys filtrat a D pot provocar ressonàncies sobtades (incloses els rodaments del motor o l’enlairament de l’armament) i una calor del motor extrema.",
         "description": "D Term filtering tuning slider helpicon message"
     },
+    "pidTuningDTermSliderEnabled": {
+        "message": "Utilitzeu el control lliscant de D Term",
+        "description": "Disable or enable D Term Filter Tuning Slider"
+    },
     "pidTuningPidSlidersHelp": {
-        "message": "Controls Lliscants per ajustar les característiques de vol del quad (guanys PID)<br><br> Multiplicador mestre: augmenta o baixa tots els guanys PID (a sobre) mantenint la diferència proporcional entre els guanys.<br><br> Balanç PD: Ajusta el balanç (relació\\diferència proporcional) entre els termes P i D (\"la molla\" [p-term] i \"amortidor\" [d-term]).<br><br> Guany PD: augmenta o permet augmentar els guanys en P&D. - mantenint la relació (equilibri) entre els dos, per a una (o menys) autoritat de control PID.<br><br>Guany de resposta del Stick: augmenta o baixa els guanys de FeedForward per controlar la sensació de resposta del stick.",
+        "message": "Control lliscant per ajustar les característiques del vol del quad (guanys PID)<br /><br />Amortiment (guany D): Resisteix el moviment ràpid, minimitza l’oscil·lació P. <br /><br />Seguiment (guany P i I): encoratja la capacitat de resposta del quad, si és massa alta, pot provocar trillacions o oscil·lacions. <br /><br />Resposta al stick (Feedforward): augmenta la capacitat de resposta del quad a moviments de stick més ràpids. <br /><br />Deriva - Wobble (Jo guanyo, expert): ajust fi de I.<br /><br />Dynamic D (D Max, expert): estableix la quantitat màxima a la qual es pot augmentar D durant moviments ràpids. <br /><br />Pitch Damping (Pitch: Roll D ratio, expert): augmenta la quantitat d'amortiment en el pitch respecte al roll. <br /><br />Pitch Tracking (Pitch: Roll P, I and F ratio, expert): Augmenta força estabilitzadora en el to respecte al rodament. <br /><br />Multiplicador principal (Tots els guanys, expert): augmenta o disminueix tots els guanys PID, mantenint les seves proporcions constants.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -3357,6 +3541,18 @@
         "message": "<strong>Nota:</strong> Els lliscadors estan desactivats perquè els valors s'han canviat manualment. Feu clic al botó '$t(pidTuningSliderEnableButton.message)' per tornar-los a activar. Això restablirà els valors i es perdran els canvis no desats.",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
+    "pidTuningGyroSliderDisabled": {
+        "message": "<strong>Nota:</strong> Els lliscadors del Giro están desactivats perquè els valors s'han canviat manualment. Feu clic al botó '$t(pidTuningGyroSliderEnableButton.message)' per tornar-los a activar. Això restablirà els valors i es perdran els canvis no desats.",
+        "description": "Gyro Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningDTermSliderDisabled": {
+        "message": "<strong>Nota:</strong> Els lliscadors del D Term están desactivats perquè els valors s'han canviat manualment. Feu clic al botó '$t(pidTuningDTermSliderEnableButton.message)' per tornar-los a activar. Això restablirà els valors i es perdran els canvis no desats.",
+        "description": "DTerm Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningPidSlidersDisabled": {
+        "message": "<strong>Nota:</strong> Els control lliscants estan desactivats. En fer clic al botó '$t(pidTuningSliderEnableButton.message)', es canviaran els valors PID perquè coincideixin amb la posició del control lliscant desada anteriorment.",
+        "description": "Tuning sliders disabled note"
+    },
     "pidTuningSliderEnableButton": {
         "message": "Activeu controls lliscants",
         "description": "Button label for enabling sliders"
@@ -3364,6 +3560,18 @@
     "pidTuningSlidersNonExpertMode": {
         "message": "<strong>Nota:</strong> El recorregut dels lliscants està restringida perquè no esteu en mode expert. Aquest rang es l'adequat per a la majoria de construccions i principiants.",
         "description": "Sliders restricted message"
+    },
+    "pidTuningPidSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> El recorregut dels lliscants està restringida perquè no esteu en mode expert. Aquest rang es l'adequat per a la majoria de construccions i principiants.",
+        "description": "Firmware Pid sliders restricted message"
+    },
+    "pidTuningFilterSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> El recorregut dels lliscants està restringida perquè no esteu en mode expert. Aquest rang es l'adequat per a la majoria de construccions i principiants.",
+        "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<span class = \"message-negative\"> ATENCIÓ </span>: s'ha detectat una configuració d'expert en mode no expert. Si us plau, activeu el mode expert per tornar a fer accessibles els control lliscants afectats.",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Baix",
@@ -3381,63 +3589,146 @@
         "message": "Multiplicador mestre:",
         "description": "Master tuning slider label"
     },
+    "pidTuningMasterSliderHelp": {
+        "message": "Augmenta tots els paràmetres PID per igual. No canvieu aquest control lliscant tret que us quedeu sense ajustar en els altres lliscadors. Normalment, això només es necessita per a quads amb baixa autoritat o moment d’inèrcia elevat (MoI) com les versions X-Class o cinelifter. Un excés de guany mestre pot provocar oscil·lacions trillants o motors calents.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Balanç PD:",
         "description": "PD balance tuning slider label"
     },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Una D relativament alta amortirà la resposta del stick i pot fer que els motors estiguin calents, però haurien d’ajudar a controlar les oscil·lacions P i poden millorar el propwash.<br /><br />Relativament una D baixa proporciona una resposta més ràpida al stick, però pot debilitar la gestió del propwash i la seva reacció devant de forçes externes (vent).",
+        "description": "D_term tuning slider helpicon message"
+    },
     "pidTuningPDGainSlider": {
         "message": "Guany P i D:",
-        "description": "P and D gain tuning slider label"
+        "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
+    "pidTuningPDGainSliderHelp": {
+        "message": "Valors baixos de P i D donarà lloc a motors més frescos, però també provocará una oscil·lació de propwash. Un valor massa baix pot fer que el quad sigui inestable.<br /><br />els terms de P i D treballen junts per reduir el propwash.<br /><br />Valors més alts augmentaran la calor del motor i podrien augmentar les oscil·lacions durant un vol cap endavant suau per un major augment del guany de D term.",
+        "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderLegacy": {
         "message": "Guany de resposta del stick:",
         "description": "Response tuning slider label"
     },
-    "pidTuningMasterSliderHelp": {
-        "message": "Generalment, els quads més grans necessiten guanys de PID més elevats per tenir una relació de potència/pes més baixa.<br><br> Els quads més petits (micros o nanos) generalment necessiten guanys PID més baixos a causa d’una relació de potència/pes més alta.<br><br> Valors més alts són per a quads d’autoritat inferior. Valors inferiors són per a quads d’autoritat superior.",
-        "description": "Master gain tuning slider helpicon message"
+    "pidTuningResponseSliderLegacyHelp": {
+        "message": "Valors més baixos de FF empitjoraran la resposta del stick i poden provocar un rebot lent al final d'un flip o roll a causa que el quad retarda massa els sticks i el I-term puja donan lloc a un \"Rebot de I-term\".<br /><br />Valors de FF més alts donaran respostes del stick més ràpides en moviments forts. Els valors de FF excessivament alts poden provocar desbordaments i rebots ràpids al final d'una flip o roll.<br /><br />Nota:<br />La característica I-term Relax pot evitar el I-term I acabi amunt en el moviment del stick per quads amb baixa autoritat o si s'utilitzen guanys de resposta de stick baixos.",
+        "description": "Stick response gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Una D relativament alta amortirà la resposta del stick i pot fer que els motors estiguin calents, però haurien d’ajudar a controlar les oscil·lacions P i poden millorar el propwash.<br><br>Relativament una D baixa proporciona una resposta més ràpida al stick, però pot debilitar la gestió del propwash.",
-        "description": "PD balance tuning slider helpicon message"
+    "pidTuningDGainSlider": {
+        "message": "Amortiment:<br /><i><small>Guany D</small></i>",
+        "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Valors baixos de P i D donarà lloc a motors més frescos, però també provocará una oscil·lació de propwash. Un valor massa baix pot fer que el quad sigui inestable.<br><br> els terms de P i D treballen junts per reduir el propwash.<br><br>Valors més alts augmentaran la calor del motor i podrien augmentar les oscil·lacions durant un vol cap endavant suau per un major augment del guany de D term.",
-        "description": "P and D gain tuning slider helpicon message"
+    "pidTuningDGainSliderHelp": {
+        "message": "Una D relativament alta amortirà la resposta del stick i pot fer que els motors estiguin calents, però haurien d’ajudar a controlar les oscil·lacions P i poden millorar el propwash.<br /><br />Relativament una D baixa proporciona una resposta més ràpida al stick, però pot debilitar la gestió del propwash i la seva reacció devant de forçes externes (vent).",
+        "description": "D gain balance tuning slider helpicon message"
+    },
+    "pidTuningPIGainSlider": {
+        "message": "Seguiment:<br /><i><small>P & I Guanys</small></i>",
+        "description": "P and I Gain (Stability) tuning slider label"
+    },
+    "pidTuningPIGainSliderHelp": {
+        "message": "Augmenteu el control lliscant de seguiment per afinar la resposta dels quads a les vostres ordres i també a influències externes; evitant que el nas del quad surti del rumb en qualsevol condició.<br /><br />Els valors més baixos de \"seguiment\" tindran molts bolets i es retiraran del rumb si es mouen els pals i es renten els accessoris. Un \"seguiment\" elevat pot provocar una oscil·lació i un rebot ràpid (difícil de veure, però es pot escoltar). Un seguiment excessiu pot provocar oscil·lacions i motors calents.",
+        "description": "P and I gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSlider": {
+        "message": "Resposta del Stick:<br /><i><small>Guany FF</small></i>",
+        "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "Valors baixos de FF empitjoraran la resposta del stick i poden provocar un rebot lent al final d’un flip o un roll (en funcionament a termini I).<br><br> Els valors FF més alts proporcionaran respostes mès agils en moviments bruscos. Valors FF excessivament elevats poden provocar desviacions ràpides i un rebot ràpid al final d'un flip o roll.",
+        "message": "La resposta de stick inferior augmentarà la latència dels moviments del quad a les ordres i pot provocar un rebot lent al final d’un gir o tirada. Una resposta de pal més alta donarà una resposta més ràpida als quadres als moviments forts de pal. Una resposta de pal excessivament alta pot provocar desbordaments i rebots ràpids al final d'un flip o roll. <br /><br /><strong>Nota: </strong><br />La funció \"Terme relaxat\" pot aturar-se rebot per a quads de baixa autoritat o si s’utilitzen guanys de resposta del stick baixos.",
         "description": "Stick response gain tuning slider helpicon message"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Drift - Wobble:<br /><i><small>Guany</small></i>",
+        "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Augmenta o disminueix I. Més alt pot millorar el seguiment en girs en espiral, en òrbites o en comandaments del 0% d’acceleració. Massa I, sobretot amb P insuficient, pot provocar oscil·lacions o rebots després de donar voltes o rodar o accelerar l’accelerador al 0%.<br /><br />Generalment voleu que el control lliscant \"Drift - Wobble\" sigui tan alt com pot ser mantenir el seguiment del quad en girs en espiral, òrbites, etc., però no tan alt que comenceu a veure oscil·lacions al baixar el throttlet a 0%.<br /><br /><strong>Nota:</strong><br />Si experimenteu un rebot en qualsevol moment que sigui fàcil de veure, assegureu-vos que estigui activat \"I-term Relax\" i proveu de reduir el valor iterm_relax_cutoff.",
+        "description": "I-gain Gain tuning slider helpicon message"
+    },
+    "pidTuningDMaxGainSlider": {
+        "message": "Amortiment Dinàmic:<br /><i><small>Guany D</small></i>",
+        "description": "D Min slider label"
+    },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "Augmenta D màx, la quantitat màxima que pot augmentar D durant moviments més ràpids.<br /><br />Per a quads de carreres, on el control lliscant d'amortiment principal s'ha establert baix per minimitzar la calor del motor, si es mou aquest control lliscant cap a la dreta, millorarà control de desbordament per a canvis ràpids de direcció.<br /><br />Per a quads d'alta definició o cinematogràfics, la inestabilitat en el vol cap endavant s'aborda millor movent el control lliscant Damping (no el control lliscant Damping Boost) cap a la dreta. Comproveu sempre si hi ha calor en els motors i escolteu si hi ha sorolls estranys durant les entrades ràpides quan ajusteu aquest control lliscant cap a la dreta.<br /><br />Per als quads d’estil lliure, especialment per a construccions més pesades, moure aquest control lliscant cap a la dreta pot ajudar a controlar el desbordament en flips i rolls.<br /><br /><strong>Nota:</strong><br />Generalment, la superació en flips i rolls es deu a que no hi ha prou \"i-Term Relax\", a desincronització del motor o a una autoritat inadequada (equivalent a una saturació del motor). Si trobeu que el desplaçament del control lliscant Damping Boost cap a la dreta no millora el tiratge o el desplaçament en excés, torneu a situar-lo a la posició normal i cerqueu el motiu del desbordament o oscil·lació.",
+        "description": "D_min slider helpicon message"
+    },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Amortiment Pitch:<br /><i><small>Pitch: Roll D</small></i>",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Augmenta l’amortiment (D) NOMÉS a l’eix del pas, és a dir, per al pas respecte al Roll. Ajuda a controlar la sobrecàrrega o el rebot específic del pitch específic.<br /><br />Els quads amb un moment d’inèrcia \"més pesat\" a l'eix Pitch solen necessitar més autoritat d'amortiment (ja que Pitch té més inèrcia i acumula més impuls).<br / ><br />Sintonitzeu primer els lliscadors mòbils \"Amortiment\" i / o \"Seguiment\" fins que obtingueu un bon comportament de l'eix de rotació. A continuació, utilitzeu els lliscadors Pitch (augmentar o disminuir) per afinar l'eix del Pitch sense afectar al Roll.",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "Seguiment Pitch:<br><i><small>Pitch: Roll P & I & FF</small></i>",
+        "description": "Pitch P & I slider label"
+    },
+    "pidTuningPitchPIGainSliderHelp": {
+        "message": "Augmenta la força de seguiment NOMÉS a l'eix del pas, canviant els valors del pas P i I en relació amb Roll. Permet una autoritat de seguiment més forta a l'eix del pas en comparació amb el rodament.<br /><br />Augmenta per estabilitzar el pitch (nas) amb entrades de pas afilades o cops d'accelerador. Penseu també en augmentar els guanys del Antigravity.<br /><br />Sintonitzeu primer els lliscadors mòbils \"Amortiment\" i / o \"Seguiment\" fins que tingueu un bon comportament de l'eix de rotació. A continuació, utilitzeu els lliscadors Pitch (augmentar o disminuir) per afinar l'eix del Pitch sense afectar al Roll.",
+        "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtres Passabaixos del Giro"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Freqüència de tall [Hz] passa-baixos Giro"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Tipus de Filtre Passabaixos 1 del Giro"
     },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "Freqüència de tall [Hz]"
+    },
+    "pidTuningGyroLowpass": {
+        "message": "Passa-baix 1 Giro"
+    },
+    "pidTuningGyroLowpassMode": {
+        "message": "Mode"
+    },
+    "pidTuningLowpassStatic": {
+        "message": "ESTÀTIC"
+    },
+    "pidTuningLowpassDynamic": {
+        "message": "DÌNAMIC"
+    },
+    "pidTuningLowpassFilterType": {
+        "message": "Tipus de filtre"
+    },
+    "pidTuningGyroLowpassDyn": {
+        "message": "Filtre Passa-baixos dinàmic del Giro"
+    },
     "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Freqüència dinàmica mínima de tall [Hz] passa-baixos 1 Giro"
+        "message": "Freqüència de tall Minima [Hz]"
     },
     "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Freqüència dinàmica màxima de tall [Hz] passa-baixos 1 Giro"
+        "message": "Freqüència de tall Máxima [Hz]"
     },
     "pidTuningGyroLowpassDynType": {
         "message": "Tipus filtre Passa-baixos dinàmic 1 del Giro"
     },
+    "pidTuningGyroLowpass2": {
+        "message": "Passa-baix 2 Giro"
+    },
     "pidTuningGyroLowpass2Frequency": {
-        "message": "Freqüència de tall [Hz] passa-baixos 2 Giro"
+        "message": "Freqüència de tall [Hz]"
     },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Tipus de Filtre Passa-baixos 2 del Giro"
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "Els filtres de pas baix giroscòpic atenuen el soroll de freqüència més alta per mantenir-lo fora del bucle PID. Hi ha dos filtres giroscòpics configurables de manera independent; per defecte, tots dos estan actius.<br /><br />El primer pas baix D pot ser estàtic (tall fix) o dinàmic; el segon pas baix D sempre és estàtic. Quan un pas baix està en mode dinàmic, el filtre serà més fort a l’accelerador baix i el tall augmentarà (menys filtrat) a mesura que augmenti l’accelerador.<br /><br />Sense filtrar RPM, els dos filtres PT1 haurien d’estar habilitats per defecte Talls (o més forts), amb pas baix 1 en mode dinàmic. <br /><br />Amb el filtre RPM, el control lliscant del filtre giroscòpic sovint es pot moure d'alguna manera cap a la dreta. En quads nous, pot anar fins a la dreta o, alternativament, pot ser suficient un sol filtre de gir inferior estàtic a 500 Hz.<br /><br />Un quad tindrà menys propwash amb el menor retard de filtre giroscòpic (control lliscant cap a la dreta), valors de tall més alts).<br /><br />Comproveu sempre si els motors están calents quan es passa a un filtratge giroscòpic inferior (control lliscant cap a la dreta). Amb un mínim filtrat giroscòpic, és essencial tenir un filtre D suficient. Tingueu cura!"
     },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Els filtres de pas baix poden tenir dues variants: estàtica i dinàmica. Per a un número de filtre determinat de pas baix només es pot habilitar un (estàtic o dinàmic) alhora. L'estàtic només té un tall que és un valor que defineix d'alguna manera on s'inicia el filtre. La dinàmica defineix valors mínims i màxims, és a dir, el rang on es posa el punt de tall. Aquest tall de distància es mou de mínim a màxim alhora que es mou l’stick del Throttle."
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "Els filtres pasa baixos del Term D atenuen el soroll i les ressonàncies de freqüència més alta que, en cas contrari, serien amplificats pel guany D. <br /><br />Hi ha dos filtres D. Els seus efectes s'dha sumen. Per defecte, tots dos estan actius i el tipus de filtre és PT1. Tots dos són necessaris en gairebé tots els quads, tot i que es pot utilitzar un sol PT2 en lloc de PT1 dual.<br /><br />El primer pasa baix D pot ser estàtic (freqüència fixa) o dinàmic; el segon pas baix D sempre és estàtic. Quan un pasa baix està en mode dinàmic, el filtratge serà més fort (freqüència de tall inferior) a l’accelerador baix i el tall augmentarà (menys filtrat i menys retard) a mesura que augmenti l’accelerador. <br /><br />El filtratge dinàmic de pas baix és útil per proporcionar un filtrat D fort al ralentí, on hi ha un risc de \"gripat del motor\" o volades inesperades en l'armament, mentre es produeix menys retard un cop a l'aire, per obtenir un millor rendiment de propwash.<br /><br />La transició de tall baix a alt es produirà abans, a mesura que s’accelera l’accelerador, amb valors d’exposició de passos baixos a més llarg termini en D. D lowpass expo es pot utilitzar per afinar la quantitat de filtratge de D en diferents punts de l'accelerador.<br /><br />En general, el quad volarà millor i tindrà menys propwash amb el retard de filtre més baix (barres lliscants cap a la dreta, valors de tall més alts), PERO, sobretot amb filtres D, això augmentarà considerablement la possibilitat d’obtenir motors calents.<br /><br />És molt fàcil cremar motors si no teniu prou filtratge D. Tingueu cura!"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtres Notch (banda eliminada) del Giro"
+    },
+    "pidTuningGyroNotchFilter": {
+        "message": "Filtre Notch (banda eliminada) 1"
+    },
+    "pidTuningGyroNotchFilter2": {
+        "message": "Filtre Notch (banda eliminada) 2"
     },
     "pidTuningGyroNotch1Frequency": {
         "message": "Giro Filtre Notch 1 Freqüència Central [Hz]"
@@ -3460,6 +3751,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "El filtre Notch (banda eliminada) dinàmic rastreja la freqüència màxima del soroll dels motors i col·loca un o dos filtres Notch amb el seu centre a aquesta freqüència."
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "Dynamic Notch Filter fa un seguiment de les freqüències de pic màximes del gyro i col·loca entre 1 y 5 filtres amb el seu centre en aquestes freqüències per cada eix."
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong> Avís:</strong> El filtre Notch dinàmic està desactivat. Per configurar-lo i utilitzar-lo, activa la funció 'FILTRE DINÀMIC' a la secció '$t(configurationFeatures.message)' de la pestanya '$t(tabConfiguration.message)'."
     },
@@ -3473,10 +3767,13 @@
         "message": "Q dinàmic de banda eliminada (Notch)"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "Mìnin Hz del Notch dinàmic"
+        "message": "Freqüència dinámica mínima del filtre Notch [Hz]"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "Màxims Hz del Notch dinàmic"
+        "message": "Freqüència dinámica màxima del filtre Notch [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Comptador dinàmic de tall"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Notch (banda eliminada) dinàmic té tres rangs de freqüència en els quals pot funcionar: BAIX (80-330hz) per a quads revolucionats de 6 o més polzades, MITJA (140-550hz) per a un quad normal de 5 polzades, ALT (230-800Hz) per quads molt revolucionats de 2,5-3 polzades. L'opció AUTO selecciona l'abast en funció del valor de la freqüència màxima de tall del filtre dinàmic passa-baixos de Giro 1."
@@ -3493,12 +3790,15 @@
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Configureu-lo a la freqüència de soroll entrant més alta que fa falta per ser controlat pel Notch dinàmic."
     },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "Estableix el nombre de talls dinàmiques per eix. Amb el filtre RPM activat, es recomana un valor d'1 o 2. Sense filtre RPM es recomana un valor de 4 o 5. Un nombre inferior reduirà el retard del filtre, però pot augmentar la temperatura del motor."
+    },
     "pidTuningRpmFilterGroup": {
         "message": "Filtre giro RPM",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "El filtratge RPM és un banc de filtres Notch (de banda eliminada) al Giro que utilitzen les dades de telemetria RPM per eliminar el soroll del motor amb precisió quirúrgica.<br><br><b><span class=\"message-positive\">IMPORTANT</span>: El ESC ha de ser compatible amb el protocol DShot bidireccional i el valor del $t(configurationMotorPoles.message) a la pestanya $t(tabConfiguration.message) ha de ser correcte perquè aquest filtre funcioni.</b>",
+        "message": "El filtratge RPM és un banc de filtres Notch (de banda eliminada) al Giro que utilitzen les dades de telemetria RPM per eliminar el soroll del motor amb precisió quirúrgica.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span>: El ESC ha de ser compatible amb el protocol DShot bidireccional i el valor del $t(configurationMotorPoles.message) a la pestanya $t(tabMotorTesting.message) ha de ser correcte perquè aquest filtre funcioni.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3520,6 +3820,15 @@
     "pidTuningFilterSettings": {
         "message": "Perfil dependent dels ajustos de filtre"
     },
+    "pidTuningDTermLowpass": {
+        "message": "Passa-baixos 1 del D Term"
+    },
+    "pidTuningDTermLowpassMode": {
+        "message": "Mode"
+    },
+    "pidTuningDTermLowpass2": {
+        "message": "Passa-baixos 2 del D Term"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filtres Passabaixos del D Term"
     },
@@ -3527,7 +3836,7 @@
         "message": "Filtres Passabaixos 1 del D Term"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "Freqüència de tall [Hz] D Term passa-baixos"
+        "message": "Freqüència de tall [Hz] D Term passa-baixos 1"
     },
     "pidTuningDTermLowpass2Frequency": {
         "message": "Freqüència de tall [Hz] D Term passa-baixos 2"
@@ -3535,17 +3844,20 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Tipus de filtre Passa-baixos 2 del D Term"
     },
+    "pidTuningDTermLowpassDyn": {
+        "message": "Filtre Passa-baixos dinàmic del D Term"
+    },
     "pidTuningDTermLowpassDynMinFrequency": {
         "message": "Freqüència dinàmica mínima de tall [Hz] D Term passa-baixos 1"
     },
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "Freqüència dinàmica màxima de tall [Hz] D Term passa-baixos 1"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipus filtre Passa-baixos dinàmic 1 del D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D Term filtre passa-baixos dinàmic 1 curva Expo"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Tipus filtre Passa-baixos dinàmic 1 del D Term"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtres Notch D Term"
@@ -3556,7 +3868,7 @@
     "pidTuningDTermNotchCutoff": {
         "message": "Freqüència de tall del filtre Notch D Term [Hz]"
     },
-    "pidTuningYawLospassFiltersGroup": {
+    "pidTuningYawLowpassFiltersGroup": {
         "message": "Filtres Passa-baixos del Yaw"
     },
     "pidTuningYawLowpassFrequency": {
@@ -3572,7 +3884,7 @@
         "message": "Compensació del Battery Sag"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Ofereix un accelerador constant i el rendiment PID sobre el rang de tensió de la bateria que es pot utilitzar compensant el descens de la bateria. El valor de la compensació pot variar entre el 0 i el 100%. Es recomana una compensació completa (100%). <br><br>Visita <a href =\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_ blank\" rel=\"noopener noreferrer\"> aquesta entrada de wiki</a> per obtenir més informació."
+        "message": "Ofereix un rendiment constant de l’accelerador i del PID en el rang de tensió de la bateria utilitzable, compensant la caiguda de la bateria. La quantitat de compensació es pot variar entre el 0 i el 100%. Es recomana una compensació completa (100%).<br /><br /> Visiteu <a href = \"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation \"target =\"_ blank \"rel =\"noopener noreferrer \"> aquesta entrada del wiki </a> per obtenir més informació."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3608,10 +3920,10 @@
         "message": "Eixos",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
+    "pidTuningOptionRP": {
         "message": "RP"
     },
-    "pidTuningItermRelaxAxesOptionRPY": {
+    "pidTuningOptionRPY": {
         "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
@@ -3641,7 +3953,7 @@
         "message": "Control absolut"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "Aquesta característica resol alguns problemes subjacents de $t(pidTuningItermRotation.message) i caldria substituir-lo en algun moment. Aquesta característica acumula l'error absolut de gir en les coordenades del quad i barreja una correcció proporcional al punt d'ajust. Perquè funcioni, heu d’habilitar AirMode i $t(pidTuningItermRelax.message) (per $t(pidTuningItermRelaxAxesOptionRP.message)). Si combines aquesta característica amb $t(pidTuningIntegratedYaw.message), pots definir $t(pidTuningItermRelax.message) habilitada per a $t(pidTuningItermRelaxAxesOptionRPY.message)."
+        "message": "Aquesta característica resol alguns problemes subjacents de $t(pidTuningItermRotation.message) i caldria substituir-lo en algun moment. Aquesta característica acumula l'error absolut de gir en les coordenades del quad i barreja una correcció proporcional al punt d'ajust. Perquè funcioni, heu d’habilitar AirMode i $t(pidTuningItermRelax.message) (per $t(pidTuningOptionRP.message)). Si combines aquesta característica amb $t(pidTuningIntegratedYaw.message), pots definir $t(pidTuningItermRelax.message) habilitada per a $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Reforç de Throttle"
@@ -3653,7 +3965,10 @@
         "message": "Valor Dinàmic Idle [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle millora el control a baixa rpm i redueix el risc de desíncs del motor. Corregeix problemes causats per l’acceleració del flux d’aire o alentiment de hèlix, millorant l’autoritat PID, l’estabilitat, la frenada del motor i la resposta. La rpm dinàmica de ralentí hauria d'estar aproximadament un 20% inferior a la rpm del vostre valor inactiu Dshot (vegeu la pestanya $t(tabMotorTesting.message) tab). Normalment no cal canviar el valor del idle DShot per defecte. Per a un temps d’inversió invertit més llarg, s’haurien de reduir el valor idle DShot i el Mínim rpm junts.<br><br>Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada de la wiki</a> per obtenir més informació."
+        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desíncs del motor. Corregeix problemes causats per l’acceleració del flux d’aire o alentiment de hèlix, millorant l’autoritat PID, l’estabilitat, la frenada del motor i la resposta. El rpm dinàmic hauria d'estar aproximadament fixat aprox un 20% inferior a la rpm del valor Dshot Idle Valeu (vegeu la pestanya $t(tabMotorTesting.message) tab). Normalment no cal canviar el valor del idle DShot per defecte. Per a un temps d’inversió de vol invertit més llarg, s’haurien de reduir el valor idle DShot i el Mínim rpm junts.<br /><br />Visita<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada de la wiki</a> per més informació."
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "Dynamic Idle està desactivat com la telemetria Dshot està desactivada"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Límit d’angle del Acro Trainer"
@@ -3750,6 +4065,12 @@
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distància de baixada (metres)"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distància mínima fins a casa (metres)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "La distància mínima a casa necessària per activar el rescat GPS"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Velocitat del sòl (metres/segon)"
@@ -4376,6 +4697,14 @@
     "osdDescElementAltitude": {
         "message": "Altitud actual (pampallugeja por sobre del nivell d'alarma)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "Amb 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Sense decimals",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "A l'hora",
         "description": "One of the elements of the OSD"
@@ -4424,6 +4753,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "Latitud coordenades GPS"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "Amb 7 decimals",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "Amb 4 decimals",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Utilitzant graus, minuts i segons",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Utilitzant el codi d’ubicació obert",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Depuració",
@@ -4501,6 +4846,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Representació gràfica de l'ús de la bateria"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Gràfic restant",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Gràfic utilitzat",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Percentatge restant",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Percentatge utilitzat",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Temporitzador: temps armat",
@@ -4724,7 +5085,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
-        "message": "Afegeix un element de traç ajustable dissenyat per representar el camp de vista de la càmera HD del pilot per a enquadrament visual.<br><br>Podeu ajustar l'amplada i l'alçada al CLI amb 'osd_camera_frame_width' i 'osd_camera_frame_height'"
+        "message": "Afegeix un element de traç ajustable dissenyat per representar el camp de vista de la càmera HD del pilot per a enquadrament visual.<br /><br />Podeu ajustar l'amplada i l'alçada al CLI amb 'osd_camera_frame_width' i 'osd_camera_frame_height'"
     },
     "osdTextElementEfficiency": {
         "message": "Eficiència de la bateria",
@@ -4732,6 +5093,27 @@
     },
     "osdDescElementEfficiency": {
         "message": "Consum instantani de la bateria en mAh/distància. (Requereix correcció GPS vàlida)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Vols totals",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Vols totals aproximats"
+    },
+    "osdTextElementUpDownReference": {
+        "message": "Referència cap amunt (Pitch a 90 graus)/Abaix (Pitch a 90 graus)",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "Símbol OSD es mostra quan el stick s'apropa a la vertical (90 graus, U) i D es baixa avall (-90 graus, D)"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "Potència d'enllaç ascendent Tx",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Mostra un valor de la potència Tx (mW o W). Útil quan <i>Potència dinàmica</i> està activat per suportar ràdios"
     },
     "osdTextElementUnknown": {
         "message": "Desconegut $1",
@@ -5276,7 +5658,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "Quan està activat, el VTX entra en un mode de potència molt baixa per deixar que el quad es posi a la banqueta sense molestar altres pilots. Normalment l’abast d’aquest mode és inferior a 5 metres.<br><br>NOTA: Alguns protocols, com SmartAudio, no poden habilitar el Pit Mode mitjançant el programari després de l’alimentació.",
+        "message": "Quan està activat, el VTX entra en un mode de potència molt baixa per deixar que el quad es posi a la banqueta sense molestar altres pilots. Normalment l’abast d’aquest mode és inferior a 5 metres.<br /><br />NOTA: Alguns protocols, com SmartAudio, no poden habilitar el Pit Mode mitjançant el programari després de l’alimentació.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -5320,7 +5702,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "Aquesta taula representa els diferents valors de potència que es poden utilitzar per a la VTX. Es divideixen en dos:<br><b>- $t(vtxTablePowerLevelsValue.message):</b> cada nivell de potència requereix un valor definit pel fabricant de maquinari. Demaneu al vostre fabricant el valor correcte o consulteu el wiki Betaflight de les taules VTX per obtenir algunes mostres. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> podeu posar aquí l’etiqueta que desitgeu per a cada valor de nivell de potència. Poden ser números (25, 200, 600, 1.2), lletres (KAO, MIN, MAX) o una combinació d’ells.<br><br> Heu de configurar<b> només</b> els nivells de potència legals al vostre país.",
+        "message": "Aquesta taula representa els diferents valors de potència que es poden utilitzar per a la VTX. Es divideixen en dos:<br><b>- $t(vtxTablePowerLevelsValue.message):</b> cada nivell de potència requereix un valor definit pel fabricant de maquinari. Demaneu al vostre fabricant el valor correcte o consulteu el wiki Betaflight de les taules VTX per obtenir algunes mostres. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> podeu posar aquí l’etiqueta que desitgeu per a cada valor de nivell de potència. Poden ser números (25, 200, 600, 1.2), lletres (KAO, MIN, MAX) o una combinació d’ells.<br /><br /> Heu de configurar<b> només</b> els nivells de potència legals al vostre país.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -5356,7 +5738,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "Aquesta taula representa totes les freqüències que es poden utilitzar per a la vostra VTX. Podeu tenir diverses bandes i per a cada banda heu de configurar:<br><b>- $t(vtxTableBandTitleName.message):</b> Nom que voleu assignar a aquesta banda, com BOSCAM_A, FATSHARK o RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Lletra que fa referència a la banda.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Això indica si es tracta banda de fàbrica. Si està activat, Betaflight envia al VTX un número de banda i canal. Aleshores, el VTX utilitzarà la seva taula de freqüències integrada i les freqüències que aquí es configuren només mostren el valor a l’OSD i altres llocs. Si no està habilitat, Betaflight enviarà a la VTX la freqüència real configurada aquí.<br><b>- Freqüències:</b> Freqüències d'aquesta banda.<br><br>Recordeu que no totes les freqüències són legals al vostre país. Heu d’afegir un valor de <b>cero</b> a cada índex de freqüència que no teniu permès utilitzar per desactivar-lo.",
+        "message": "Aquesta taula representa totes les freqüències que es poden utilitzar per al vostre VTX. Podeu tenir diverses bandes i per a cada banda heu de configurar:<br><b>- $t(vtxTableBandTitleName.message):</b> Nom que voleu assignar a aquesta banda, com ara BOSCAM_A, FATSHARK o RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Lletra breu que fa referència a la banda.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Això indica si es tracta d’un banda de fàbrica. Si està activat, Betaflight envia al VTX un número de banda i canal. El VTX utilitzarà la seva taula de freqüències integrada i les freqüències configurades aquí només són per mostrar el valor en OSD i en altres llocs. Si no està habilitat, Betaflight enviarà al VTX la freqüència real configurada aquí.<br><b>- Freqüències:</b> Freqüències per a aquesta banda. <br /><br />Recordeu que no totes les freqüències són legals al vostre país. Heu de posar un valor de <b>cero</b> a cada índex de freqüència que no tingueu permís per desactivar-lo.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -5392,7 +5774,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "El botó '$t(vtxButtonSaveLua.message)' us permetrà desar un fitxer <i>nom de l'aeronau</i>.lua que conté la configuració de la taula vtx que es pot utilitzar amb els scripts lua de betaflight. (Consulteu més <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aquí</a>.)",
+        "message": "El botó '$t(vtxButtonSaveLua.message)' us permetrà desar un fitxer <i>mcuid</i>.lua que conté la configuració de la taula VTX que es pot utilitzar amb <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_ blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br> <br>La versió 1.6.0 i posteriors poden utilitzar el fitxer tal qual, però per a versions anteriors dels scripts, s'hauria de canviar el nom perquè coincideixi amb el nom del model del TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
@@ -5410,6 +5792,10 @@
     "vtxButtonSaved": {
         "message": "Desat",
         "description": "Saved action button in the VTX tab"
+    },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} Desbloquejat",
+        "description": "Indicates if SA device is unlocked"
     },
     "mainHelpArmed": {
         "message": "Armat de motors"
@@ -5538,7 +5924,7 @@
         "message": "Mesurament"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivativa de l'Error</b> et dona resposta més directa dels sticks i és preferible per curses.<br><br><b>Derivativa de la Mesura</b> et dona una resposta més suau i és preferible per freestyle"
+        "message": "<b>Derivativa de l'Error</b> et dona resposta més directa del sticks i és preferible per curses.<br /><br /><b>Derivativa de la Mesura</b> et dona una resposta més suau i és preferible per freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (flotant):</b> L'escalat PID i la lògica PID són exactament iguals. No es necessari el re-escalat. Legacy és una vella versió reescrita evolutiva betaflight, que és un controlador de PID bàsic basat en matemàtiques integrals. El controlador PID de Betaflight utilitza matemàtiques de punt flotant i té moltes noves funcions dissenyades específicament per a aplicacions multirotor <br> <b> Float vs Integer: </b> L'escalat PID i la lògica PID són exactament iguals. No es necessari el re-escalat. Les FC F1 no tenen FPU a bord i la matemàtica del punt flotant augmenta la càrrega de la CPU i la matemàtica del sencer millorarà el rendiment, però la matemàtica flotant pot obtenir una mica més de precisió."
@@ -5688,7 +6074,7 @@
         "message": "Nom d’arxiu"
     },
     "dialogFileNameDescription": {
-        "message": "El fitxer es desarà a la carpeta \"{{folder}}\" de l'emmagatzematge intern."
+        "message": "El fitxer es desarà a la carpeta \"Android/data/betaflight-configurator/{{folder}}\" del vostre emmagatzematge intern."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Aquest fitxer ja existeix!"
@@ -5752,5 +6138,205 @@
     },
     "cordovaExitAppMessage": {
         "message": "Esteu segur que voleu tancar el configurador?"
+    },
+    "dropDownSelectAll": {
+        "message": "[Seleccionar tot]",
+        "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownAll": {
+        "message": "Tot",
+        "description": "Text indicating everything is selected in the drop down/multiple select"
+    },
+    "tabPresets": {
+        "message": "Preajustos",
+        "description": "Presets tab title"
+    },
+    "presetsReload": {
+        "message": "Recarregar",
+        "description": "Text on the reload button that appears when there in an error loading presets index"
+    },
+    "presetsAuthor": {
+        "message": "Autor:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsKeywords": {
+        "message": "Paraules claus:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsVersions": {
+        "message": "Programari:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsOfficial": {
+        "message": "Oficial",
+        "description": "Hint text in the presets detailed dialog indication preset is official"
+    },
+    "presetsCommunity": {
+        "message": "Comunitat",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but community"
+    },
+    "presetsExperimental": {
+        "message": "Experimental",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but experimental"
+    },
+    "presetsApply": {
+        "message": "Tria",
+        "description": "Button to pick a preset"
+    },
+    "presetsViewOnline": {
+        "message": "Veure en línia&hellip;",
+        "description": "Link text for opening preset file online"
+    },
+    "presetsOpenDiscussion": {
+        "message": "Debat&hellip;",
+        "description": "Link text for opening preset discussion"
+    },
+    "presetsShowCli": {
+        "message": "Mostra CLI",
+        "description": "Button to show CLI code of a preset"
+    },
+    "presetsHideCli": {
+        "message": "Amaga CLI",
+        "description": "Button to hide CLI code of a preset"
+    },
+    "presetsOptions": {
+        "message": "Opcions",
+        "description": "Text label for Options drop down select"
+    },
+    "presetsFilterCategory": {
+        "message": "Categories",
+        "description": "UI filter name"
+    },
+    "presetsFilterKeyword": {
+        "message": "Paraules claus",
+        "description": "UI filter name"
+    },
+    "presetsFilterAuthor": {
+        "message": "Autors",
+        "description": "UI filter name"
+    },
+    "presetsFilterFirmware": {
+        "message": "Programaris",
+        "description": "UI filter name"
+    },
+    "presetsFilterStatus": {
+        "message": "Estat",
+        "description": "UI filter name - official/community/experimental"
+    },
+    "presetsLoadError": {
+        "message": "Error al carregar preajustos des de Internet",
+        "description": "Error report when failed to load presets index or a specific preset"
+    },
+    "presetsButtonSave": {
+        "message": "Desa i reinicia",
+        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+    },
+    "presetsButtonCancel": {
+        "message": "Canceŀlar",
+        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+    },
+    "presetsApplyingPresets": {
+        "message": "Aplicant configuració...",
+        "description": "First label in the progress dialog when applying configuration (presets or user config)"
+    },
+    "presetsPleaseWait": {
+        "message": "Espereu, si us plau.",
+        "description": "Second label in the progress dialog when applying presets"
+    },
+    "presetsCliErrorsWaring": {
+        "message": "<span class='message-negative'>ADVERTIMENT!</span><br/>La configuració s'ha aplicat amb errors de CLI.",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
+    },
+    "presetsSaveAnyway": {
+        "message": "Desa de totes maneres",
+        "description": "Save anyway button on the CLI errors presets dialog"
+    },
+    "presetsWarningDialogTitle": {
+        "message": "ADVERTÈNCIA!",
+        "description": "Warning title in the warning dialog in the presets"
+    },
+    "presetsWarningDialogYesButton": {
+        "message": "D'acord",
+        "description": "Agree button in the presets warning dialog"
+    },
+    "presetsWarningDialogNoButton": {
+        "message": "Canceŀlar",
+        "description": "Cancel button in the presets warning dialog"
+    },
+    "presetsWiki": {
+        "message": "Preajustos Wiki",
+        "description": "Button to open Presets Wiki link"
+    },
+    "presetsBackupSave": {
+        "message": "Desa la còpia de seguretat",
+        "description": "Button to backup current configuration to file"
+    },
+    "presetsBackupLoad": {
+        "message": "Carrega la còpia de seguretat",
+        "description": "Button to load backup from the file"
+    },
+    "presetsLoadingDumpAll": {
+        "message": "S'està carregant la configuració actual des de la controladora de vol",
+        "description": "Title for the waiting dialog when loading dump all into a file"
+    },
+    "dumpAllNotSavedWarning": {
+        "message": "S'ha produït un error en desar la configuració actual",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
+    },
+    "presetSources": {
+        "message": "Fonts de pre-adjustos...",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogTitle": {
+        "message": "Fonts de pre-adjustos",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogAddNew": {
+        "message": "Afegeix una nova font",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogDefaultSourceName": {
+        "message": "Nova font predeterminada personalitzada",
+        "description": "A default preset source (repo) name"
+    },
+    "presetsSourcesDialogSaveSource": {
+        "message": "Desa",
+        "description": "Presets tab, sources dialog, button to save new or editable source"
+    },
+    "presetsSourcesDialogResetSource": {
+        "message": "Reinici",
+        "description": "Presets tab, sources dialog, button to reset source after modifications"
+    },
+    "presetsSourcesDialogMakeSourceActive": {
+        "message": "Activa",
+        "description": "Presets tab, sources dialog, button to make selected source active"
+    },
+    "presetsSourcesDialogDeleteSource": {
+        "message": "Eliminar",
+        "description": "Presets tab, sources dialog, button to delete selected source"
+    },
+    "presetsWarningNotOfficialSource": {
+        "message": "<span class=\"message-negative\">ADVERTIMENT!</span> S'ha seleccionat una font de preajustos predeterminada de tercers.",
+        "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsWarningBackup": {
+        "message": "Assegureu-vos de fer una còpia de seguretat de la vostra configuració actual (botó '$t(presetsBackupSave.message)' o mitjançant CLI si el botó està desactivat) <strong>abans</strong> d'escollir i aplicar els valors predefinits. En cas contrari, no hi ha manera de tornar a la configuració anterior després d'aplicar els valors predefinits.",
+        "description": "Warning message that shows up at the top of the presets tab"
+    },
+    "presets_sources_dialog_warning": {
+        "message": "<span class=\"message-negative\">ADVERTIMENT!</span> L'ús de fonts predeterminades de tercers pot ser perillós.<br/>Assegureu-vos que afegiu i feu servir només fonts de confiança. Les fonts predeterminades malicioses o dolentes trencaran la configuració del vostre drone i poden danyar els vostres dispositius.",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsWarningWrongVersionConfirmation": {
+        "message": "La configuració predeterminada seleccionada requereix la versió de microprogramari $1<br/> La versió actual de microprogramari és $2",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "No s'han trobat preajustos per als paràmetres de cerca entrats",
+        "description": "Message that apprears on presets tab if no presets were found"
+    },
+    "presetsTooManyPresetsFound": {
+        "message": "S'ha assolit el límit màxim del nombre de preajustos mostrats",
+        "description": "Message that apprears on presets tab if too many presets found"
     }
 }

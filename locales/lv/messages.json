@@ -370,10 +370,6 @@
     "firmwareUpgradeRequired": {
         "message": "Šai programmatūrai uz šīs iekārtas nepieciešama atjaunināšana uz jaunāku versiju. Izmantojiet CLI, lai dublētu datus pirms programmēšanas. CLI dublēšanas/atjaunošanas procedūras ir dokumentācijā. <br />Alternatīva ir lejupielādēt un lietot veco konfiguratora versiju, ja jūs neesat gatavs atjaunināt."
     },
-    "infoVersions": {
-        "message": "Darbojās - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Ielādēja informāciju priekš $1 no buildservera."
     },
@@ -1325,11 +1321,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Gain",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Advance",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID kontroliera iestatījumi"
@@ -1343,12 +1339,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuāla"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Derivative nogriešanas tips"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Ievades nogriešanas tips"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolācija"
     },
@@ -1358,38 +1348,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Pielietotās RC izlīdzināšanas tips"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Nogriešanas frekvence Hz, ko pielieto ievades filtrs. Izmantojot zemāku vērtību rezultēsies ar gludāku ieeju un atbalstošāku priekš lēnākiem uztvērēju protokoliem. Lielākai daļai lietotāju vajadzētu to atstāt uz 0, kas atbilst \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Nogriešanas frekvence Hz, ko pielieto iestatījuma derivative filtrs. Izmantojot zemāku vērtību rezultēsies ar gludāku ieeju un atbalstošāku priekš lēnākiem uztvērēju protokoliem. Lielākai daļai lietotāju vajadzētu to atstāt uz 0, kas atbilst \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanāli uz kuriem pielieto izlīdzināšanu"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Filtrēšanas metodes tips, ko pielieto ievadei. Vairums lietotāju vajadzētu izmantot noklusēto vērtību \"BIQUAD\", jo tas nodrošina pieņemamu līdzsvaru starp gludumu un aizturi. \"PT1\" nedaudz samazina aizturi, bet dod mazāku izlīdzināšanu."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Izvēlieties vai ieejas filtra nogriešanas frekvence tiek automātiski aprēķināta (ieteicamais) vai manuāli izvēlēta. Izmantot \"Manuāli\" nav ieteicams priekš uztvērēju protokoliem kā Crossfire, kas to var mainīt lidojuma laikā."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Izvēlieties vai iestatījuma derivative filtra nogriešanas frekvence tiek automātiski aprēķināta (ieteicamais) vai manuāli izvēlēta. Izmantot \"Manuāli\" nav ieteicams priekš uztvērēju protokoliem kā Crossfire, kas to var mainīt lidojuma laikā."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Ievades nogriešanas frekvence"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Derivative nogriešanas frekvence"
-    },
-    "receiverRcInputType": {
-        "message": "Ievades filtra tips"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Derivative filtra tips"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Izslg."
     },
     "receiverRcSmoothingChannel": {
         "message": "Izlīdzinātie kanāli"
@@ -1421,23 +1381,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interpolācijas intervāls [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward pāreja"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Ar šo parametru, Feedforward iestatījuma svars var tikt samazināts tuvu sviras centram, kas rezultējas ar maigāku nobeigumu pie flipiem un rolliem.<br> Šī vērtība reprezentē sviras ielieces punktu: 0 - svira centā, 1 - pilnīga ieliece. Kad svira ir virs šī punkta, Feedforward ir konstants tā konfigurētajā vērtībā. Kad svira ir zem šī punkta, Feedforward ir samazināts proporcionāli, sasniedzot 0 sviras centra pozīcijā.<br> Vērtība 1 dod maksimālu izlīdzinājumu efektu, kamēr 0 vērtība uztur Feedforward fiksētu uz tā konfigurēto vērtību visā svirās gājiena diapazonā."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D iestatījuma pāreja"
     },
     "pidTuningDtermSetpoint": {
         "message": "D iestatījuma svars"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Ar šo parametru, D iestatījuma svars var tikt samazināts tuvu sviras centram, kas rezultējas ar maigāku nobeigumu pie flipiem un rolliem.<br> Šī vērtība reprezentē sviras ielieces punktu: 0 - svira centā, 1 - pilnīga ieliece. Kad svira ir virs šī punkta, iestatījuma svars ir konstants tā konfigurētajā vērtībā. Kad svira ir zem šī punkta, iestatījuma svars ir samazināts proporcionāli, sasniedzot 0 sviras centra pozīcijā.<br> Vērtība 1 dod maksimālu izlīdzinājumu efektu, kamēr 0 vērtība uztur iestatījuma svaru fiksētu uz tā konfigurēto vērtību visā svirās gājiena diapazonā."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Šis parametrs nosaka sviras akselerācijas efektu derivative komponentē. <br> Vērtība 0 ir ekvivalenta vecajai mērījuma metodei, kur D seko tika žiroskopam, kamēr vērtība 1 ekvivalenta vecajai mērījuma metodei ar vienādu žiroskopa un sviru sekošanu attiecību.<br> Zemāka vērtība sniedz lēnāku/vienmērīgāku sviras atsauci, kamēr augstāka vērtība sniedz lielāku sviras akselerācijas atsauci.<br> Atcerieties ka pie augstām vērtībām RC interpolāciju ieteicams ieslēgt, tas novērsīs vadības sviras trokšņu ģenerēšanu."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Izmantojot D iestatījuma pāreju lielāku par 0 un mazāku par 0.1 ir drosmīgs gājiens. Tā darot, tas var novest līdz nestabilitātei un samazināt vadības sviru atsaucību, kad tās šķērso centra punktu.</span>"
@@ -1544,12 +1492,6 @@
     "dialogCopyProfileClose": {
         "message": "Atcelt"
     },
-    "pidTuningResetProfile": {
-        "message": "Atiestatīt profilu vērtības"
-    },
-    "pidTuningProfileReset": {
-        "message": "Ielādētas profila noklusējuma vērtības."
-    },
     "pidTuningReceivedProfile": {
         "message": "Lidojuma kontroliera iestatītais Profils: <strong class=\"message-positive\">$1</strong>"
     },
@@ -1573,9 +1515,6 @@
     },
     "tuningHelp": {
         "message": "<b>Ieregulēšanas ieteikumi </b><br /><span class=\"message-negative\">SVARĪGI:</span> Ir svarīgi pārbaudīt motoru temperatūras pirmā lidojuma laikā. Jo lielākas filtru vērtības, jo labāk iespējams tas lidos, bet jūs iegūsiet lielāku trokšņu līmeni motoros. <br>Noklusētā vērtība 100Hz ir optimāla, bet pie trokšņainākām konstrukcijām, jūs varat mēģināt samazināt Dterm filtru uz 50Hz un iespējams arī žiroskopa filtru."
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Brīdinājums:</b></span>Šāds filtrācijas daudzums ir bīstami mazs. Visdrīzāk gaisa kuģis būs grūti kontrolējams, un var izraisīt tā pazušanu. \n Ļoti tev iesakām <b>ieslēgt vismaz vienu Žiroskopa dinamisko zemfrekvenču vai Žiroskopa zemfrekvenču 1 un vismaz vienu D Term dinamisko zemfrekvenču vai D Term zemfrekvenču 1</b>."
     },
     "receiverThrottleMid": {
         "message": "Droseles vidus"
@@ -1654,9 +1593,6 @@
     },
     "receiverModelPreview": {
         "message": "Priekšskatījums"
-    },
-    "receiverMspWarningText": {
-        "message": "Šīs sviras ļauj Betaflight būt atvizētam un notestētam bez raidītāja vai uztvērēja klātbūtnes. Tomēr, <strong>šī iespēja nav paredzēta lidošanai un propelleriem jābūt noņemtiem.</strong><br><br>Šī iespēja negarantē pilnvērtīgu gaisa kuģa vadību. <strong>Ir liela varbūtība, ka būs nopietnas traumas, ja propelleri paliks nenoņemti.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Ieslēgt vadību"
@@ -2240,12 +2176,6 @@
     "dataflashButtonSaveFile": {
         "message": "Saglabāt atmiņu failā..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Saglabāt atmiņu failā... (novecojis)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Saglabāt melnās kastes ierakstus caur konfiguratoru ir lēni un ar lielu varbūtību radīs kļūdu. Ir ieteicams vietā lietot '<b>$t(onboardLoggingRebootMscText.message)</b>' lai aktivizētu Lielapjoma atmiņas režīmu, un piekļūt jūsu lidojuma kontrolierim kā atmiņas ierīci, lai lejuplādētu ierakstus."
-    },
     "dataflashButtonErase": {
         "message": "Dzēst atmiņu"
     },
@@ -2341,9 +2271,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Izvēlieties bilda tipu, lai redzētu pieejamās plates."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Izvēlieties jūsu kontrolieri, lai redzētu pieejamās programmaparatūras relīzes - izvēlieties pareizo programmatūru, kas piemērota jūsu kontrolierim."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Izvēlieties programmaparatūras versiju jūsu kontrolierim."
@@ -2446,9 +2373,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Ziņa:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "Lūdzu <span class=\"message-negative\">nemēģiniet</span> programmēt <strong>ne-Betaflight</strong> dzelžus ar šo programmatoru.<br /> <span class=\"message-negative\">Nemēģiniet </span> <strong>atvienot</strong> plati vai <strong>slēgt ārā</strong> jūsu datoru kamēr programmējas.<br /><br /><strong>Piezīme: </strong>STM32 ielādētājs atrodas uz ROM atmiņas, to nav iespējams sabojāt.<br /><strong>Piezīme: </strong><span class=\"message-negative\">Auto-savienojums</span> ir vienmēr izslēgts kamēr jūs esat programmatora cilnē.<br /><strong>Piezīme: </strong>Pārliecinieties ka jums ir rezerves kopija; daži atjauninājumi var pilnībā notīrīt jūsu konfigurāciju.<br /><strong>Piezīme:</strong> Ja jums ir sarežģījumi ar programmēšanu, no sākuma <strong>pamēģiniet atslēgt visu kabeļus no kontroliera</strong>, pamēģiniet pārstartēt, atjaunināt Chrome, atjaunināt draiverus.<br /><strong>Piezīme:</strong> Kad programmējat plates kurām ir tiešs USB ligzdas savienojums (lielākoties jaunās plates), pārliecinieties, ka izlasījāt USB programmēšanas sadaļu no Betaflight manuāla, un esat pareizi instalējuši programmatūru un draiverus"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Atkopšanas / Zaudēja komunikāciju</strong>"
@@ -2854,29 +2778,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Žiroskopa zemfrekvenču filtrs"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Žiroskopa zemfrekvenču 1 nogriešanas frekvence [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Žiroskopa zemfrekvenču 1 filtra tips"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Žiroskopa zemfrekvenču 1 dinamiskā minimālā nogriešanas frekvence [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Žiroskopa zemfrekvenču 1 dinamiskā maksimālā nogriešanas frekvence [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Žiroskopa zemfrekvenču 1 dinamiskā filtra tips"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Žiroskopa zemfrekvenču 2 nogriešanas frekvence [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Žiroskopa zemfrekvenču 2 filtra tips"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Zemfrekvenču filtri var būt divu tipu: statiski un dinamiski. Dēļ ierobežotā zemfrekvenču filtra skaita tikai viens (statisks vai dinamisks) var tikt ieslēgts vienlaicīgi. Statiskajam ir tikai nogriešanas frekvence, kas ir vērtība kas nosaka vietu kur sākās filtrs. Dinamiskais nosaka minimālo un maksimālo vērtību, kas ir diapazons kurā uzstādās nogriešanas frekvence. Šī nogriešana pārvietojas no min līdz maks vienlaicīgi, kad jūs pārvietojat droseli sviru."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Žiroskopa joslas filtrs"
@@ -2914,9 +2820,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Dinamiskā joslās Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Dinamiskais joslas min Hz"
-    },
     "pidTuningFilterSettings": {
         "message": "Profila atkarīgo filtru iestatījumi"
     },
@@ -2925,12 +2828,6 @@
     },
     "pidTuningDTermLowpassType": {
         "message": "D Term zemfrekvenču 1 filtra tips"
-    },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term zemfrekvenču 1 nogriešanas frekvence [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term zemfrekvenču 2 nogriešanas frekvence [Hz]"
     },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term zemfrekvenču 2 filtra tips"
@@ -2952,9 +2849,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term joslas filtra nogriešanas frekvence [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw zemfrekvenču filtrs"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw zemfrekvenču nogriešanas frekvence [Hz]"
@@ -2987,12 +2881,6 @@
         "message": "Asis",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (tikai pieaugums)"
     },
@@ -3015,9 +2903,6 @@
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolūtā kontrole"
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Šī funkcionalitāte atrisina dažas $t(pidTuningItermRotation.message) pamatproblēmas un cerams kādreiz aizvietos to pilnībā. Šī funkcionalitāte akumulē absolūto žiroskopa kļūdu iekš multirotorā koordinātām un jauc kopā ar proporcionālo korekciju iekš iestatījuma. Lai tas strādātu jums jāieslēdz AirMode un $t(pidTuningItermRelax.message) (priekš $t(pidTuningItermRelaxAxesOptionRP.message)). Ja jūs kombinējat šo funkcionalitāti ar $t(pidTuningIntegratedYaw.message), jūs varat ieslēgt $t(pidTuningItermRelax.message) priekš $t(pidTuningItermRelaxAxesOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Droseles būsts"
@@ -4594,9 +4479,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Mērījums"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivative no kļūdas</b> sniedz daudz tiešāku sviras atsauci un vairāk piemērots sacensībām.<br><br><b>Derivative no mērījumiem</b> sniedz vienmērīgāku sviras atsauci, kas ir vairāk piemērots frīstailam"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Mantojuma vs Betaflight (peldošais):</b> PID mērogošana un PID loģika ir tāda pati. Nav obligāti nepieciešama atkārtota pieregulēšana. Mantojums ir vecais betaflight, kura pamata PID kontrolieris balstīts uz veselo skaitļu matemātikas. Betaflight PID kontrolieris pielieto peldošā punkta matemātiku un tas dod daudz jaunu iespēju, īpaši izstrādātu priekš multirotoriem<br> <b>Peldošais vs veselais:</b> PID mērogošana un PID loģika ir tāda pati. Nav nepieciešama atkārtota pieregulēšana. F1 platēm nav integrēta FPU un peldoša punkta matemātika ievērojami palielina CPU noslodzi un veselo skaitļu matemātika uzlabo ātrdarbību, bet samazina precizitāti."

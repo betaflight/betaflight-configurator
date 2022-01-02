@@ -49,6 +49,13 @@
     "portsSelectManual": {
         "message": "Choisir un port"
     },
+    "portsSelectVirtual": {
+        "message": "Mode Virtuel (Expérimental)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Version du firmware virtuel"
+    },
     "portOverrideText": {
         "message": "Port:"
     },
@@ -81,6 +88,10 @@
     },
     "analyticsOptOut": {
         "message": "Ne pas participer à la collecte anonymes de données statistiques"
+    },
+    "connectionTimeout": {
+        "message": "Définir le délai d'expiration de connexion afin de permettre une initialisation plus longue au branchement ou au redémarrage de l'appareil",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
     "cordovaForceComputerUI": {
         "message": "Utiliser l'interface ordinateur au lieu de l'interface smartphone"
@@ -489,14 +500,10 @@
         "message": "<strong>la version de configurateur que vous utilisez ($3) est plus ancienne que le firmware que vous utilisez ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Aucun protocole sortant vers les moteurs n'est sélectionné</strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' onglet '$t(tabConfiguration.message)'.<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>Aucun protocole de sortie vers les moteurs n'est sélectionné</strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' l'onglet '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>l'accéléromètre est activé mais il n'est pas calibré</strong>. <br>Si vous envisagez d'utiliser l'accéléromètre, veuillez suivre les instructions '$t(initialSetupButtonCalibrateAccel.message)' dans l'onglet '$t(tabSetup.message)'. Si une fonction nécessitant l'accéléromètre (auto level modes, sauvetage GPS, . .) est activée, l'armement de l'engin sera désactivé jusqu'à ce que l'accéléromètre ait été calibré.<br>Si vous ne prévoyez pas d'utiliser l'accéléromètre, il est recommandé de le désactiver dans '$t(configurationSystem.message)' dans l'onglet '$t(tabConfiguration.message)'."
-    },
-    "infoVersions": {
-        "message": "Version - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurateur: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "buildServerLoaded": {
         "message": "Informations sur la version de $1 chargées depuis le serveur."
@@ -580,6 +587,14 @@
         "message": "Utilisation du port:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Erreur paquet:",
         "description": "Packet error text shown in the status bar"
@@ -591,6 +606,10 @@
     "statusbar_cycle_time": {
         "message": "Durée de cycle:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Charge CPU:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Veuillez utiliser le 'Firmware Flasheur' pour accéder aux dispositifs en DFU"
@@ -614,7 +633,7 @@
         "message": "Matériel"
     },
     "defaultWelcomeText": {
-        "message": "L'application est compatible avec toute carte sous Betaflight. La liste complète est disponible dans l'onglet flash.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger Betaflight Blackbox Log Viewer</a><br /><br />Le code source du firmware est disponible <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br /><br />La dernière version du <b>pilote STM USB VCP</b> peut être téléchargée <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />Pour les cartes plus anciennes avec puce CP210x USB vers Série:<br />La dernière version <b>du pilote CP210x</b> est disponible <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />La dernière version de <b>Zadig</b> utilitaire pour l'installation de pilotes USB pour Windows est <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />"
+        "message": "L'application est compatible avec toute carte sous Betaflight. La liste complète est disponible dans l'onglet flash.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger les Scripts TX Lua Betaflight</a><br /><br />Le code source du firmware est disponible <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br /><br />La dernière version du <b>pilote STM USB VCP</b> peut être téléchargée <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />Pour les cartes plus anciennes avec puce CP210x USB vers Série:<br />La dernière version <b>du pilote CP210x</b> est disponible <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />La dernière version de <b>Zadig</b> utilitaire pour l'installation de pilotes USB pour Windows est <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />"
     },
     "defaultContributingHead": {
         "message": "Participation"
@@ -1580,19 +1599,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Gain",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Avance",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min permet d'avoir un niveau inférieur de D en vol normal et un niveau plus élevé pour les manœuvres rapides qui pourraient causer des overshoots, notamment sur les flips et les rolls. Il augmente également D pendant le propwash. Gain ajuste la vitesse à laquelle D atteint sa valeur maximale et est basé sur le gyro pour déceler les manoeuvres violentes et les propwash. Avance déclenche le D plus tôt en utilisant le setpoint au lieu du gyro pour déterminer les manoeuvres violentes.",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Contrôle la force d'amortissage (D-term) en vol normal.<br>Avec D_min activé, l'Active D-gain change pendant le vol. En vol normal, D_min correspond à la valeur ci-dessous. Lors d'une manœuvre brusque ou de propwash, le D-gain actif monte aux gains D_max spécifiés à gauche.<br><br>Les valeurs D_max sont atteintes lors de mouvements de sticks violents, mais seulement une partie est atteinte pendant un propwash.<br>Ajustez le gain D_min et l'Avance pour contrôler la sensibilité et le timing du boost de gain.",
-        "description": "D Min helpicon message on PID table titlebar"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Réglages du Contrôleur PID"
@@ -1606,20 +1617,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuel"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Lissage Automatique",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Ajuste le smoothing Auto, 10 est le ratio de lissage par défaut. Augmenter ce nombre lisse plus les entrées RC et ajouter de la latence. Ca peut être utile pour les connections RC peu fiables ou les vols cinematiques.<br>Prudence, avec des valeurs proches de 50, la latence se fait bien ressentir.<br>Utiliser la commande CLI rc_smoothing_info avec le TX et le RX alimentés afin de voir les cutoff calculés automatiquement et appliqués au RC Smoothing.",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Type de Cutoff de dérivée"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Type d’entrée de Cutoff"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
     },
@@ -1629,44 +1626,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Type de RC smoothing utilisé"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "La fréquence de coupure en Hz utilisée par le filtre d’entrée. Des valeurs faibles rendent les entrées plus lisses et sont plus appropriée pour les protocoles de récepteur plus lents. La plupart des utilisateurs devraient laisser le paramètre à 0 correspondant à « Auto »."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Fréquence de coupure en Hz utilisée par le filtre dérivée setpoint. Des valeurs faibles rendent les entrées plus lisses et sont plus appropriée pour les protocoles de récepteur plus lents. La plupart des utilisateurs devraient laisser le paramètre à 0 correspondant à « Auto »."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Le lissage des canaux s'applique à"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Le type de méthode de filtrage utilisée pour la dérivée setpoint. À compter de la version 4.2, la valeur par défaut \"Auto\" est recommandée. Concernant les versions 4.1 et antérieures, la plupart des utilisateurs devraient utiliser le « BIQUAD » par défaut car il offre un bon équilibre entre souplesse et latence. « PT1 » réduit légèrement la latence mais offre moins de lissage."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Le type de filtre utilisé pour l'entrée. La plupart des utilisateurs devraient utiliser le « BIQUAD » par défaut car il offre un bon équilibre entre souplesse et latence. « PT1 » réduit légèrement la latence mais offre moins de lissage."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Sélectionne si la fréquence de coupure du filtre d’entrée est calculée automatiquement (recommandé) ou fixée manuellement par l’utilisateur. « Manuel » n’est pas recommandé pour les protocoles de récepteur comme Crossfire qui peuvent changer en vol."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Sélectionne si la fréquence de coupure du filtre dérivé setpoint est calculée automatiquement (recommandé) ou fixée manuellement par l’utilisateur. « Manuel » n’est pas recommandé pour les protocoles de récepteur comme Crossfire qui peuvent changer en vol."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Fréquence de coupure de l'entrée"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Fréquence de coupure de dérivée"
-    },
-    "receiverRcInputType": {
-        "message": "Type de filtre d'entrée"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Type de filtre de dérivée"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Désactivé"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Canaux lissés"
@@ -1699,10 +1660,7 @@
         "message": "Intervalle d'interpolation RC [ms]"
     },
     "pidTuningFeedforwardTransition": {
-        "message": "Feedforward transition"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Avec ce paramètre, l'effet du Feedforward term peut être diminué prés du centre des sticks, donnant de la souplesse à la fin des flips et rolls.<br> La valeur représente un point de déflection des sticks: 0 - stick centré, 1 - déflection complète. Lorsque le stick dépasse ce point, le Feedforward est maintenu à la valeur configurée. Lorsque le stick passe sous ce point, le Feedforward est réduit proportionnellement, jusqu'à 0 lorsque le stick est au centre.<br> Une valeur de 1 donne un maximum de souplesse, 0 conserve sur toute la course de stick le FeeForward à sa valeur configurée."
+        "message": "Transition"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
@@ -1710,54 +1668,45 @@
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
     },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Avec ce paramètre, le D Setpoint Weight peut être réduit vers le centre des sticks, cela entraine des flips et des rolls plus doux en fin de mouvement. <br> La valeur représente le point de déviation du stick: 0 - stick centré, 1 - déviation maximale. Lorsque le stick est au-dessus de ce point, le Setpoint Weight est maintenu à la valeur configurée. Lorsque le stick est en-dessous de ce point, le Setpoint Weight est proportionnellement réduit atteignant 0 lorsque le stick est centré.<br> La valeur 1 donnera un effet maximal de douceur, tandis que la valeur 0 gardera le Setpoint Weight sur toute la plage des sticks à la valeur configurée."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Ce paramètre détermine l'effet accélérateur de stick de la dérivée.<br />0 revient à l'ancienne méthode où D suivait les infos du gyro, 1 évalue l'écart entre la valeur demandée par le stick et celle obtenue par le gyro.<br />Avec une valeur faible le stick est plus lent/souple, avec une valeur élevée le stick est de plus en plus réactif.<br />Note: avec une valeur élevée, il est recommandé d'utilise l'interpolation RC afin de limiter les accoups et du bruit (dans le gyro)."
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Régler le D Setpoint transition sur une valeur comprise entre 0 et 0.1 est vivement déconseillée. Risques d'instabilité et manque réactivité vers les centres des sticks.</span>"
     },
-    "pidTuningFfInterpolateSp": {
-        "message": "Interpolation FF"
+    "pidTuningFeedforwardGroup": {
+        "message": "Feedforward"
     },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "Les options suivantes permettent de tuner finement le feed forward : de course/agressif jusqu'à souple/HD.<br><br> Mode : Pas de Moyenne pour la course, Moyenne 2 pour le freestyle rapide et course/rapide, Moyenne 3 pour l'enregistrement HD, Moyenne 4 pour la souplesse cinématique HD.<br><br> Lissage : limite le nombre de pas en entrée que la radio peut envoyer, augmenter pour assouplir le FF, diminuer pour des réponses FF plus agressives.<br><br> Boost : aide à surmonter le retard des moteurs sur des mouvements rapides des sticks, peut augmenter le jitter. Essayer 10 pour le HD, 20 pour la course. Jusqu'à 30 peut être utile pour les quads de basse autorité mais peut causer des micro overshoots ou du jitter."
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "Les options suivantes permettent de tuner finement le feed forward : de course/agressif jusqu'à souple/HD.<br /><br /> Mode : Off pour la course, 2 Points moyens pour le freestyle rapide et course/rapide, 3 Points moyens pour l'enregistrement HD, 4 Points moyens pour la souplesse cinématique HD.<br /><br /> Lissage : limite le nombre de pas en entrée que la radio peut envoyer, augmenter pour assouplir le FF, diminuer pour des réponses FF plus agressives.<br /><br /> Boost : aide à surmonter le retard des moteurs sur des mouvements rapides de sticks, peut augmenter le jitter. Essayer 10 pour le HD, 20 pour la course. Jusqu'à 30 peut être utile pour les quads de basse autorité mais peut causer des micro overshoots ou du jitter."
     },
-    "pidTuningFfInterpolate": {
-        "message": "Mode"
+    "pidTuningFeedforwardAveraging": {
+        "message": "Moyenne"
     },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "Pas de moyenne"
+    "pidTuningFeedforwardAveragingOption2Point": {
+        "message": "2 Points"
     },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Moyenne 2"
+    "pidTuningFeedforwardAveragingOption3Point": {
+        "message": "3 Points"
     },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Moyenne 3"
+    "pidTuningFeedforwardAveragingOption4Point": {
+        "message": "4 Points"
     },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Moyenne 4"
-    },
-    "pidTuningFfSmoothFactor": {
+    "pidTuningFeedforwardSmoothFactor": {
         "message": "Lissage"
     },
-    "pidTuningFfBoost": {
+    "pidTuningFeedforwardBoost": {
         "message": "Boost"
     },
     "pidTuningProportional": {
         "message": "Proportionnelle"
     },
     "pidTuningProportionalHelp": {
-        "message": "Contrôle la force utilisée par la machine pour suivre les sticks (Setpoint).<br><br>Une valeur élevée (gain) procure un suivi plus collé aux sticks mais peut causer de l'overshoot si trop haute en proportion du Derivative (D-term). Le P-term est comme le ressort de l'amortisseur sur une voiture.",
+        "message": "Contrôle la force utilisée par la machine pour suivre les sticks (Setpoint).<br /><br />Une valeur élevée (gain) procure un suivi plus collé aux sticks mais peut causer de l'overshoot si trop haute en proportion du Derivative (D-term). Le P-term est comme le ressort de l'amortisseur sur une voiture.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "Intégrale"
     },
     "pidTuningIntegralHelp": {
-        "message": "Contrôle la force avec laquelle la machine tient sa position (donnée par le Setpoint).<br>Similaire à Proportionnel, mais pour des forces qui durent plus longtemps sur le quad, comme un décalage du centre de gravité ou une influence extérieur persistente (vent régulier).<br><br>Des valeurs hautes amènenet un suivi plus serré (ex: virage rapide), mais peuvent donner un ressenti de raideur.<br>Une valeur trés elevée en proportion de D peut causer des oscillations lentes.",
+        "message": "Contrôle la force avec laquelle la machine tient sa position (donnée par le Setpoint).<br>Similaire à Proportionnel, mais pour des forces qui durent plus longtemps sur le quad, comme un décalage du centre de gravité (CoG) ou une influence extérieur persistante (vent régulier).<br /><br />Des valeurs élevées amènent un suivi plus serré (ex: virage rapide), mais peuvent donner un ressenti de raideur.<br>Une valeur très élevée en proportion de D peut causer des oscillations lentes.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
@@ -1766,16 +1715,8 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Contrôle la force de l'amortissement pour TOUT mouvement du quad. Lors des mouvements des sticks, D-term les amortit. En cas d'influence extérieur (prop wash OU rafale de vent), D-term l'amortit.<br><br>Une valeur élevée produit plus d'amortissement et réduit l'overshoot de P-term et FF.<br>D-term est trés sensible aux vibrations haute fréquence du gyro (bruit | le multiplie de 10 à 100).<br><br>Le bruit sur les hautes fréquences peut causer des moteurs chauds ou griller les moteurs si le D-gain est trop élevé ou si le bruit n'est pas filtré correctement (voir onglet Filtres).<br><br>D-term est comme la suspension d'une voiture, mais avec l'inconvénient d'amplifier le bruit sur les hautes fréquences pour le gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "Coup de pouce supplémentaire basé sur la valeur des sticks. FF aide P-term à faire bouger le quad selon les mouvements des sticks. <br><br>P-term se base sur la différence entre le Setpoint demandé (deg/sec) la valeur gyro relevée de rotation actuelle (deg/sec). FF se base sur le changement de valeurs des sticks uniquement.<br><br>Des valeurs élevées (gain) donnent une réponse du quad plus forte.<br>Des valeurs trop élevées peuvent causer de l'overshoot, des moteurs plus chauds, et une saturation moteur (les moteurs ne peuvent plus suivre la cadence).<br>Des valeurs faibles ou zéro (0) entraînent une réactivité plus lente et souple.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Avertissement:</b></span> des rates très élevés peuvent entraîner des désynchronisations lors des décélérations rapides."
@@ -1879,12 +1820,6 @@
     "dialogCopyProfileClose": {
         "message": "Annuler"
     },
-    "pidTuningResetProfile": {
-        "message": "Réinitialiser toutes les valeurs du profil"
-    },
-    "pidTuningProfileReset": {
-        "message": "Charger les valeur par défaut du profil."
-    },
     "pidTuningReceivedProfile": {
         "message": "Profil du contrôleur de vol activé: <strong class=\"message-positive\">$1</strong>"
     },
@@ -1909,12 +1844,8 @@
     "tuningHelp": {
         "message": "<b>Conseils tuning</b><br /><span class=\"message-negative\">IMPORTANT:</span> Il est important de contrôler les températures moteurs au premier vol. Des valeurs de filtre élevées peuvent introduire du bruit et des échauffements moteurs <br>La valeur par défaut de 100 Hz est optimale, mais pour des setups noisy vous pouvez essayer de baisser le filtre Dterm à 50 Hz."
     },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">IMPORTANT:</span> Nous recommandons l'utilisation des curseurs pour changer les réglages de filtrage. Bouger les deux curseurs ensemble.<br>Il est préférable de d'effectuer de petits changements et de faire un vol de test aprés chaque modification.<br>Moins de filtrage (curseurs sur la droite, valeurs de coupure plus élevée) améliore le propwash mais laisse passer plus de bruit dans les moteurs, ce qui les fera chauffer plus et peut même les griller. Moins de filtrage est possible sur la plupart des builds propres et si le filtre rpm est actif.<br>Des valeurs de filtrage particulièrement élevées ou faibles peuvent entraîner des flyaway à l'armement. Les réglages par défaut sont sûrs pour des quads de 5 pouces typiques.<br><strong>Note:</strong>Les changements de profiles ne changeront que les réglages des filtres sur D-term. Les réglages de filtres sur le gyro sont les mêmes pour tous les profiles.",
-        "description": "Filter tuning subtab note"
-    },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Avertissement:</b></span> Vous ne filtrez pas assez, la valeur est dangereusement basse. L'appareil pourrait devenir difficile à contrôler, et s'en aller seul . Il est vivement suggéré que vous <b>activiez au moins le Filtre Gyro Dynamique Passe-bas ou le filtre Gyro Passe-bas 1 et au moins le Filtre D Term Dynamique Passe-bas ou le filtre D Term Passe-bas 1</b>."
+        "message": "<span class=\"message-negative\"><b>Avertissement:</b></span> Vous ne filtrez pas assez, la valeur est dangereusement basse. L'appareil pourrait devenir difficile à contrôler, et faire un flyaway . Il est vraiment recommandé <b>d'activer au moins le Filtre Gyro Dynamique Passe-bas ou le filtre Gyro Passe-bas 1 et au moins le Filtre D Term Dynamique Passe-bas ou le filtre D Term Passe-bas 1</b>."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -2004,7 +1935,7 @@
         "message": "Prévisualisation"
     },
     "receiverMspWarningText": {
-        "message": "Ces sticks vont autoriser Betaflight à être armé et testé sans récepteur ni télécommande. Cependant, <strong> cette fonctionnalité ne sert pas à voler et les hélices doivent être retirées.</strong><br><br> Cette fonctionnalité ne garantie pas un contrôle fiable de l'appareil. <strong>Ne pas retirer les hélices entraîne à coup sûr de graves blessures.</strong>"
+        "message": "Ces sticks vont autoriser Betaflight à être armé et testé sans récepteur ni télécommande. Cependant, <strong> cette fonctionnalité ne sert pas à voler et les hélices doivent être retirées.</strong><br /><br /> Cette fonctionnalité ne garantie pas un contrôle fiable de l'appareil. <strong>Ne pas retirer les hélices entraîne à coup sûr de graves blessures.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Autoriser le contrôle"
@@ -2470,6 +2401,12 @@
     "motorsEnableControl": {
         "message": "<strong>Je comprends les riques</strong>, les hélices sont retirées - autoriser l'armement et le contrôle des moteurs et désactiver le Runaway Takeoff Prevention."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Des changements dans la configuration ont été détectés.<br /><br /><strong class=\"message-negative-italic\">Le mode Test Moteurs est désactivé jusqu'à ce que les paramètres aient été enregistrés.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Annuler"
     },
@@ -2495,13 +2432,94 @@
         "message": "<strong>Avis de sécurité</strong><br /><strong class=\"message-negative\">Retirez toutes les hélices pour éviter les blessures !</strong><br />Les moteurs vont <strong>tourner !</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Avis d'information</strong><br />Les moteurs tourneront un par un et vous pourrez sélectionner quel moteur tourne. La batterie doit être branchée, le protocole ESC correct doit être sélectionné. Cet utilitaire ne peut réorganiser que les moteurs actuellement actifs. Un remapping plus complexe nécessite la commande CLI Resource. Référez-vous à cette <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">page Wiki</a>."
+        "message": "<strong>Information</strong><br />Les moteurs vont tourner un par un et vous pourrez choisir quel moteur tourne. La batterie doit être branchée, le bon protocole ESC doit être sélectionné. Cet utilitaire ne peut réorganiser que les moteurs actuellement actifs. Un remapping plus complexe nécessite la commande CLI Resource. Référez-vous à cette <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">page du Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Enregistrer"
     },
     "motorsRemapDialogStartOver": {
         "message": "Commencer"
+    },
+    "motorsButtonReset": {
+        "message": "Réinitialiser"
+    },
+    "motorsButtonSave": {
+        "message": "Sauvegarder et Redémarrer"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Sens du moteur - <strong class=\"message-negative-italic\">Attention : Assurez-vous que les hélices sont retirées !</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Sélectionnez un ou tous les moteurs"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Les moteurs tourneront lorsqu'ils seront sélectionnés!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Avis de sécurité</strong><br /><strong class=\"message-negative-italic\">Retirez toutes les hélices pour éviter les blessures !</strong><br />Les moteurs <strong>tourneront</strong> immédiatement une fois sélectionnés !"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Je comprends les risques</strong>,<br />toutes les hélices sont retirées."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Information</strong><br />Pour changer le sens des moteurs, la batterie doit être branchée et le bon protocole ESC doit être configuré dans l'onglet $t(tabMotorTesting.message). A noter : certains ESC Dshot ne fonctionneront pas avec cette boîte de dialogue. Vérifiez votre firmware ESC."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Réglez le sens de rotation du moteur en sélectionnant et en faisant tourner chaque moteur individuellement."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Réinitialise toutes les sens de rotation des moteurs, puis permet à l'utilisateur de choisir lequel inverser."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Direction du moteur"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normal"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Inverser"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Tester le moteur"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Relâcher le bouton pour arrêter"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Relâcher pour arrêter"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Individuellement"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Assistant"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Changer la direction du ou des moteurs sélectionnés"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Les moteurs tourneront lors du réglage du sens !"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Ne fonctionne qu'avec des ESC DSHOT.<br />Vérifiez que votre ESC (contrôleur de vitesse électrique) prend en charge le protocole DSHOT et changez le dans l'onglet $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Le nombre de moteurs est 0.<br />Vérifiez le Mixer actuel dans l'onglet $t(tabMotorTesting.message) ou configurez-en un personnalisé avec le CLI. Référez-vous à cette <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\"> page du Wiki</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Mettre à jour le firmware.<br /> Soyez sûrs d'utiliser le dernier firmware : Betaflight 4.3 ou supérieur."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Cliquez sur le numéro de chaque moteur changer le sens de rotation"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Vérifiez que tous les moteurs tournent correctement"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Démarrer / faire tourner les moteurs"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Arrêter les moteurs"
     },
     "sensorsInfo": {
         "message": "Gardez à l'esprit que le rafraîchissement fréquent des données et la génération de plusieurs graphiques en même temps est exigeant en ressources et vide la batterie de votre ordinateur portable rapidement.<br /> Nous conseillons de ne générer les graphiques que pour les capteurs utiles avec des temps de rafraîchissements raisonnables."
@@ -2532,6 +2550,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Gyroscope - deg/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Accéléromètre - g (deg)"
     },
     "sensorsMagTitle": {
         "message": "Magnétomètre - Ga"
@@ -2675,10 +2696,13 @@
         "message": "Enregistrer sous..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Enregistrer le fichier sous ... (obsolète)"
+        "message": "Enregistrer le flash dans un fichier... (non pris en charge)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "L'enregistrement direct du flash dans un fichier est lent et sujet à des erreurs / corruptions de fichier.<br>Dans certains cas, cela fonctionnera pour de petits fichiers, mais ce n'est pas supporté et les requêtes de support pour cela seront fermées sans commentaire - utilisez plutôt le mode de stockage de masse."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Sauvegarder les logs de la blackbox via le configurateur est lent et relativement sujet aux erreurs. Il est recommandé d'utiliser au contraire '<b>$t(onboardLoggingRebootMscText.message)</b>' (ci-dessous) pour activer le mode de stockage de masse, et accéder à votre contrôleur de vol en mode périphérique de stockage afin de télécharger les fichiers de log."
+        "message": "Cette méthode est lente et sujette à des erreurs / corruptions de fichiers, car la connexion MSP elle-même a des limitations fondamentales qui la rendent inadaptée aux transferts de fichiers. Cela peut fonctionner uniquement pour les petits fichiers blackbox. Ne pas créer de demandes d'aide si le transfert de fichier échoue lorsque enregistré en utilisant cette méthode. La méthode recommandée est d'utiliser '<b>$t(onboardLoggingRebootMscText.message)</b>' (ci-dessous) pour activer le Mode Stockage de Masse, et accéder à votre contrôleur de vol en tant que périphérique de stockage pour télécharger les fichiers blackbox."
     },
     "dataflashButtonErase": {
         "message": "Effacer la mémoire interne"
@@ -2794,12 +2818,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Choisir le type de build pour voir les cartes disponibles."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Sélectionnez votre carte pour voir les microprogrammes disponibles - Sélectionnez le microprogramme approprié à votre carte."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Avec la version 4.1, Betaflight supporte les <strong>Cibles Unifiées</strong>. Le concept de Cibles Unifiées signifie que le même fichier .hex du firmware est utilisé pour toutes les cartes de même MCU (F4, F7). Un fichier de configuration spécifique à la carte est utilisé lors du flash de la Cible Unifiée.<br>Cette version de Betaflight Configurator permet le flash de Cibles Unifiées avec les fichiers de configuration propres à chaque carte en une seule étape. Les différents types de firmwares de chaque carte sont affichés dans le menu déroulant comme suit:<br><br><strong>&lt;nom de la carte&gt;</strong> ou<br><strong>&lt;nom de la carte&gt; (Legacy)</strong>:<br>Cible non Unifiée, ou version pre-4.1 du firmware pour Cible Unifiée.<br><br><strong>&lt;nom de la carte&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 caractères id fabricant)<br>Cible Unifiée.<br><br><strong>Veuillez utiliser les Cibles Unifiées lorsque disponibles.</strong> Si vous rencontrez des problèmes lors de l'utilisation de Cibles Unifiées, veuillez signaler le<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problème</a> puis utiliser le firmware non unifié jusqu'à la résolution du problème."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Sélectionnez la version du microprogramme pour votre carte."
     },
@@ -2905,14 +2923,11 @@
     "firmwareFlasherMessage": {
         "message": "Message:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Merci de ne<span class=\"message-negative\"> pas</span> essayer de flasher de<strong>non-Betaflight</strong> carte avec cet outil.<br />Ne <span class=\"message-negative\">pas </span> <strong>déconnecter</strong> la carte ou <strong>la débrancher</strong> pendant que vous flashez.<br /><br /><strong>Note: </strong>le bootloader est stocké dans la ROM, il ne peut pas être supprimé.<br /><strong>Note: </strong><span class=\"message-negative\">Auto-Connecte</span> est toujours désactivé pendant le flashage.<br /><strong>Note: </strong>Assurez-vous d'avoir une sauvegarde parfois un flashage supprime toutes vos configurations..<br /><strong>Note:</strong> Si vous rencontrez un problème <strong>essayez de déconnecter votre FC</strong> en premier essayez de rebooter, faites les mises à jour chrome et des drivers STM.<br /><strong>Note:</strong> Quand vous flashez une carte par l'USB assurez d'avoir connaissance de toutes les documentations et d'avoir les bon drivers installés."
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Récupération / Communication coupée</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Si vous avez perdu la communication avec votre carte suivez ces étapes: <ul><li>Débranchez</li><li> Activez 'Séquence sans redémarrage', activez 'Effacement complet de la puce '.</li><li>shuntez les bornes BOOT ou maintenez le bouton BOOT.</li><li>Re branchez (La LED d'activité ne doit PAS s'allumer).</li><li>Installez les drivers STM32 drivers et Zadig si besoin: (voir <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">Flash USB</a> section of Betaflight manual).</li><li>Fermez le configurateur, fermez toutes les instances de Chrome, fermez toutes les applications Chrome, redémarrez le Configurateur.</li><li>Relâchez le bouton BOOT.</li><li>Flashez avec le bon firmware (en utilisant le baudrate préconisé pour votre carte).</li><li>Déconnectez.</li><li>Supprimez le shunt sur le BOOT.</li><li>Re branchez (La LED d'activité devrait clignoter).</li><li>Connectez normalement.</li></ul>"
+        "message": "Si vous avez perdu la communication avec votre carte suivez ces étapes: <ul><li>Débranchez</li><li> Activez 'Séquence sans redémarrage', activez 'Effacement complet de la puce '.</li><li>shuntez les bornes BOOT ou maintenez le bouton BOOT.</li><li>Re branchez (La LED d'activité ne doit PAS s'allumer).</li><li>Installez les drivers STM32 drivers et Zadig si besoin: (voir la partie <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">Flash USB</a> du manuel Betaflight).</li><li>Fermez le configurateur, redémarrez le Configurateur.</li><li>Relâchez le bouton BOOT.</li><li>Flashez avec le bon firmware (en utilisant le baudrate préconisé pour votre carte).</li><li>Déconnectez.</li><li>Supprimez le shunt sur le BOOT.</li><li>Re branchez (La LED d'activité devrait clignoter).</li><li>Connectez normalement.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Quitter le firmware flasheur"
@@ -2961,6 +2976,20 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Détecté: <strong>$1</strong> - commencer le flash dès la connexion"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>Incompatibilité du firmware</h3><br />La carte connectée est <strong>{{verified_board}}</strong> alors que vous avez sélectionné <strong>{{selected_board}}</strong>.<br /><br />Voulez-vous continuer à flasher ?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Le configurateur a <span class=\"message-positive\">correctement</span> détecté et vérifié la carte : <strong>{{boardName}}</strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "Annuler"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "Continuer"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "Vous êtes sur le point de flasher une version de <strong>développement du firmware</strong>. Ces versions ne sont pas terminées, et peuvent produire les effets suivants :<strong><ul><li>le firmware ne fonctionne pas du tout ;</li><li>l'engin ne vole pas ;</li><li>il y a des problèmes de sécurité avec le firmware, par exemple des flyaways (l'engin s'envole et ne revient plus)</li><li>le firmware peut planter le contrôleur de vol, ou l'endommager</li></ul></strong>Si vous flashez ce firmware, <strong>vous assumez l'entière responsabilité que l'un de ces événements se produise</strong>. En outre, vous avez bien compris qu'il est nécessaire d'effectuer des <strong>tests de banc approfondis avec les hélices retirées des moteurs</strong> avant toute tentative de voler avec ce firmware."
@@ -3351,10 +3380,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Paramètres de filtre indépendants du profil"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Les curseurs ajustent le filtrage gyro et D-term du quad.<br><br>Plus de filtrage donne un vol plus souple, mais augmente la latence du signal du gyro (Phase Delay) vers la boucle PID, donne des performances dégradées en vol engagé, traitement de propwash et réaction aux sticks, et si plus excessive peut causer des oscillations.<br><br>moins de filtrage réduit la latence du signal du gyro, mais peut augmenter la température moteurs à cause de D-term qui réagit aux vibrations haute fréquence des moteurs (bruit).<br>De plus, si le filtrage est excessivement bas, il cause une diminution des performances de vol (plus de bruit dans le signal).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Moins de filtrage",
         "description": "Filter tuning slider low header"
@@ -3371,21 +3396,9 @@
         "message": "Multiplicateur du Filtre Gyro. :",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "Augmente ou diminue le filtre Lowpass (passe-bas) en proportion des autres. Le filtrage gyro est appliqué avant la boucle PID.<br>Plage de bruit moteur par classe de quad:<br><br>6\" et + - généralement de 100hz à 300hz<br>5\" - généralement de 220hz à 500hz<br>Whoop jusqu'à 3\" - généralement de 300hz à 850hz<br><br>Habituellement, il faut régler le curseur afin que l'amplitude décrite au dessus soit couverte par le Min/max Cutoff (coupure) du filtre dynamique gyro Lowpass 1.<br>Pour un vol plus smooth (souple), utiliser le curseur pour filtrer plus. Pour obtenir un réglage plus agressif, filtrer moins à l'aide du curseur.<br><br>PRUDENCE : ne pas être trop radical en filtrant moins, sous peine de fly-away (quad qui s'en va) ou griller les moteurs.<br>Noter que les raisonnances de chassis, mauvais roulements et hélices abîmées demandent plus de filtrage.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "Multiplicateur de filtre D Term :",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Augmente ou diminue le filtre Lowpass (passe-bas) D-term par défaut en proportion des autres. Le filtre D-Term est appliqué aprés la boucle PID, seulement sur D-term car il est le term le plus sensible au bruit et peut amplifier le bruit sur le hautes fréquences de 10x à 100x plus.<br><br>Généralement, vous voulez déplacer le curseur du filtre D-term vers le haut avec le curseur de filtre gyro. Vous voulez que la coupure (cutoff) soit en dessous de la plage de bruit des moteurs pour durcir le filtrage D-term, ce qui est fait sur tout le signal gyro avec le multiplicateur du filtre gyro.<br>Ce différentiel recommandé est intégré par défaut dans l'amplitude des curseurs.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Les curseurs ajustent les caractéristiques de vol du quad (gains de PID)<br><br>Multiplcateur Maître: Augmente ou Diminue tous les gains de PID (ci-dessus) en maintenant la différence proportionnelle entre les gains.<br><br>Balance PD : Ajuste la balance (ratio entre P et D terms) entre les termes P et D ('le ressort' [p-term] et 'l amortisseur' [d-term]).<br><br>Gain PD : Augmente ou Diminue les gains de P&D ensemble - maintenant le ratio (balance) entre les deux - pour plus (ou moins) d'autorité de contrôle PID.<br><br>Gain ressenti des sticks : Augmente ou Diminue le FeedForward pour contrôler le ressenti de réponse aux sticks du quad.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATTENTION</span>: La position actuelle des curseurs peut causer des flyaways, endommager les moteurs ou entraîner des réactions dangereuses du quad. Veuillez procéder avec prudence.",
@@ -3425,54 +3438,16 @@
     },
     "pidTuningPDGainSlider": {
         "message": "Gain P et D:",
-        "description": "P and D gain tuning slider label"
-    },
-    "pidTuningResponseSlider": {
-        "message": "Gain réponse aux sticks:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "En général les grands quads nécessitent des gains PID plus élevés à cause de leur faible ratio puissance / poids.<br><br> Des petits quads (micros) nécessitent généralement des gains PID plus faibles à cause d'une puissance élevée en rapport du poids.<br><br>Valeurs élevées pour petits quads. Valeurs faibles pour grands quads.",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Un D relativement élevé atténuera la réactivité aux sticks et peut faire chauffer les moteurs, mais devrait aider à contrôler les oscillations P et pourrait améliorer le propwash.<br><br>Un D relativement bas donne une meilleur réactivité aux sticks mais peut affaiblir la tenue au propwash.",
-        "description": "PD balance tuning slider helpicon message"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Des gains P et D permettent d'avoir des moteurs froids mais plus d'oscillations propwash. Des valeurs trop basses peuvent rendre le quad instable.<br><br>P et D term travaillent ensemble pour réduire le propwash.<br><br>Des valeurs élevées augmentent les échauffements moteur et peuvent entraîner des oscillations lors de vols smooth (souples) si le D term est trop élevé.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "Des valeurs FF faibles rendront le quad moins collé aux sticks et engendrent des rebonds lents à la fin d'un flip ou d'un roll (reste de I-term).<br><br>Avec des valeurs élevées, le quad est plus collé aux sticks lors de manœuvres brusques. Des valeurs trop élevées donneront de l'overshoot et des rebonds rapides à la fin d'un flip ou d'un roll.",
-        "description": "Stick response gain tuning slider helpicon message"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtres gyro passe-bas"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Fréquence de Coupure du filtre passe-bas gyro 1 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Type de filtre gyro passe-bas 1"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Fréquence de Coupure Min du filtre passe-bas gyro 1 [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Fréquence Max de Coupure du filtre passe-bas Gyro 1 [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Type de filtre dynamique Gyro passe-bas 1"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Fréquence de Coupure du filtre passe-bas gyro 2 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Type de filtre gyro passe-bas 2"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Les filtres passe-bas peuvent avoir deux variantes : statique et dynamique. Un seul des nombres définit pour chacun des filtres passe-bas est utilisé (statique ou dynamique). Le statique est un seuil de coupure à partir duquel le filtre commence. Le dynamique définit un min et max, la plage dans laquelle la coupure sera placée. Cette plage de coupure varie entre le min et le max en même temps que vous bougez le stick des gaz."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtres gyro Notch"
@@ -3498,6 +3473,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Le filtre Notch Dynamique repère la fréquence de bruit des moteurs et place un ou deux filtres Notch ayant pour centre cette fréquence."
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "Le filtre Notch Dynamique repère la fréquence de bruit des moteurs et place un à cinq filtres notch ayant pour centre cette fréquence sur chaque axe."
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Remarque:</strong> Le filtre Notch dynamique est désactivé. Pour pouvoir le configurer et l'utiliser, veuillez activer la fonctionnalité 'DYNAMIC_FILTER' dans la section '$t(configurationFeatures.message)' de l'onglet '$t(tabConfiguration.message)'."
     },
@@ -3511,10 +3489,13 @@
         "message": "Notch Dynamique Q"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "Hz Min Notch Dynamique"
+        "message": "Fréquence Min Notch Dynamique [Hz]"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "Hz max Notch Dynamique"
+        "message": "Fréquence Max Notch Dynamique [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Nombre de Notch Dynamiques"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Le Notch Dynamique peut fonctionner sur trois plages de fréquences : BAS(80-330hz) pour des quads à vitesse de rotation faible comme les 6 pouces et +, MEDIUM(140-550hz) pour un quad normal de 5 pouces, HIGH(230-800hz) pour des vitesses de rotation élevées comme les 2,5-3 pouces. AUTO choisit la plage selon les valeurs de coupure du filtre Dynamique Gyro Lowpass 1."
@@ -3531,12 +3512,15 @@
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Régler ceci sur la fréquence de bruit entrante la plus élevée qui soit nécessaire pour être contrôlée par Notch Dynamique."
     },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "Définit le nombre de notch dynamiques par axe. Si le filtre RPM est activé, une valeur de 1 ou 2 est recommandée. Sans filtre RPM, une valeur de 4 ou 5 est recommandée. Des nombres plus petits réduiront les latences, mais peuvent augmenter la température des moteur."
+    },
     "pidTuningRpmFilterGroup": {
         "message": "Filtre Gyro RPM",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "Le filtrage RPM est une banque de filtres notch s'appliquant au gyro, qui utilisent les données de télémétrie RPM pour masquer le bruit des moteurs avec une précision chirurgicale.<br><br><b><span class=\"message-positive\">IMPORTANT</span> : Les ESC doivent être compatibles avec le protocole Bidirectional DShot et la valeur de $t(configurationMotorPoles.message) dans l'onglet $t(tabConfiguration.message) doit être correcte pour que ce filtre fonctionne.</b>",
+        "message": "Le filtrage RPM est une banque de filtres notch s'appliquant au gyro, qui utilisent les données de télémétrie RPM pour retirer le bruit des moteurs avec une précision chirurgicale.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span> : Les ESC doivent être compatibles avec le protocole DShot Bidirectionnel et la valeur de $t(configurationMotorPoles.message) dans l'onglet $t(tabMotorTesting.message) doit être correcte pour que ce filtre fonctionne.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3564,12 +3548,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Type du filtre passe-bas D Term 1"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Fréquence de coupure du filtre passe-bas D Term 1 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Fréquence de coupure du filtre passe-bas D Term 2 [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "Type du filtre passe-bas D Term 2"
     },
@@ -3579,11 +3557,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "Fréquence de coupure Max du filtre passe-bas dynamique D Term 1 [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Type de filtre dynamique D Term passe-bas 1"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo de la courbe dynamique du D term passe-bas 1"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Type de filtre dynamique D Term passe-bas 1"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtres Notch D Term"
@@ -3593,9 +3571,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Fréquence de coupure du filtre Notch D Term [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filtres passe-bas Yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Fréquence de coupure du filtre passe-bas Yaw [Hz]"
@@ -3609,10 +3584,16 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensation de l'affaiblissement du vbat"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Donne des performances constantes de gaz et de PID sur la plage de tension de la batterie utilisable en compensant l'affaiblissement de la batterie. La compensation peut varier entre 0 et 100%. Une compensation complète (100%) est recommandée.<br><br>Allez sur <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">le wiki</a> pour plus d'informations."
-    },
     "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Linéarisation de poussée"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compense la relation non-linéaire entre les gaz et la poussée en appliquant une courbe moteurs inverse à la sortie moteurs. La compensation peut varier entre 0 et 150%."
+    },
+    "pidTuningThrustLinearValue": {
         "message": "%"
     },
     "pidTuningItermRotation": {
@@ -3636,12 +3617,6 @@
     "pidTuningItermRelaxAxes": {
         "message": "Axes",
         "description": "Iterm Relax Axes selection"
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (incrémente uniquement)"
@@ -3669,9 +3644,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Contrôle absolu"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Cette fonctionnalité résout certains problèmes de $t(pidTuningItermRotation.message) et devrait le remplacer à terme. Cette fonctionnalité accumule les erreurs gyro en coordonnées et mixe une correction proportionnelle dans la consigne. Pour qu’elle fonctionne, vous devez activer l'AirMode et $t(pidTuningItermRelax.message) (pour $t(pidTuningItermRelaxAxesOptionRP.message)). Si vous combinez cette fonctionnalité avec $t(pidTuningIntegratedYaw.message), vous pouvez définir $t(pidTuningItermRelax.message) activé pour $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
     },
@@ -3680,9 +3652,6 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "Valeur Idle dynamique [* 100 RPM]"
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Le Dynamic Idle améliore le contrôle à faible rpm et réduit le risque de désynchronisation moteurs. Il corrige les problèmes de perturbations liés à l'accélération et au ralentissement des hélices, en augmentant l'autorité PID. Améliore la stabilité, le frein moteur et la réactivité. Le Dynamic Idle rpm devrait être à 20% sous la valeur DShot Idle (voir l'onglet $t(tabMotorTesting.message) ). D'habitude, il n'y a pas besoin de modifier l'idle DShot. Pour pouvoir rester à l'envers plus longtemps, les valeurs Idle DShot et Minimum rpm doivent être diminuées en même temps.<br><br>Voir <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">le wiki</a> pour plus d'informations."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limite d'angle Acro Trainer"
@@ -4405,6 +4374,14 @@
     "osdDescElementAltitude": {
         "message": "Altitude ( clignote quand le seuil d'alarme est atteint)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "Avec 1 décimale",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Sans décimale",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Temps de fonctionnement",
         "description": "One of the elements of the OSD"
@@ -4453,6 +4430,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "Latitude GPS"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "Avec 7 décimales",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "Avec 4 décimales",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "En utilisant des degrés, minutes et secondes",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "En utilisant le Code Open Location",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Débogage",
@@ -4753,7 +4746,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
-        "message": "Ajoute un cadre représentant le champs de vision de la caméra HD.<br><br>Vous pouvez régler la largeur et la hauteur en CLI avec 'osd_camera_frame_width' et 'osd_camera_frame_height'"
+        "message": "Ajoute un cadre représentant le champs de vision de la caméra HD.<br /><br />Vous pouvez régler la largeur et la hauteur en CLI avec 'osd_camera_frame_width' et 'osd_camera_frame_height'"
     },
     "osdTextElementEfficiency": {
         "message": "Efficacité de la batterie",
@@ -4761,6 +4754,27 @@
     },
     "osdDescElementEfficiency": {
         "message": "Consommation instantanée de la batterie en mAh/distance. (Nécessite une accroche GPS valide)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Total des vols",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Nombre total de vols approximatifs"
+    },
+    "osdTextElementUpDownReference": {
+        "message": "Référence haut (Pitch 90 deg)/Bas (Pitch -90 deg)",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "Symbole OSD à afficher lorsque le pitch approche la verticale (90 deg, U) et D pour le nez vers le bas (-90 deg, D)"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "Puissance lien Tx",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Affiche une valeur de la puissance Tx (mW ou W). Utile lorsque la <i>Puissance Dynamique</i> est activée pour les radios compatibles"
     },
     "osdTextElementUnknown": {
         "message": "Inconnu $1",
@@ -5305,7 +5319,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "Quand activé, le VTX entre en mode très faible puissance afin de permettre de laisser le quad allumé sur le banc sans déranger les autres pilotes. Habituellement, la portée de ce mode est inférieure à 5 m.<br><br>NOTE : Certains protocoles, comme SmartAudio, ne peuvent pas activer le mode Pit de manière logicielle, après la mise en route.",
+        "message": "Quand activé, le VTX entre en mode très faible puissance afin de permettre de laisser le quad allumé sur le banc sans déranger les autres pilotes. Habituellement, la portée de ce mode est inférieure à 5 m.<br /><br />NOTE : Certains protocoles, comme SmartAudio, ne peuvent pas activer le mode Pit de manière logicielle, après la mise en route.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -5349,7 +5363,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "Ce tableau représente les différentes valeurs de puissance qui peuvent être utilisées pour le VTX. Elles sont réparties en deux sections: <br><b>- $t(vtxTablePowerLevelsValue.message) :</b> chaque niveau d'alimentation nécessite une valeur définie par le fabricant du matériel. Demandez au fabricant la valeur correcte ou consultez le wiki Betaflight sur les Tables VTX pour obtenir des exemples. <br><b>- $t(vtxTablePowerLevelsLabel.message) :</b> vous pouvez mettre ici l'étiquette que vous voulez pour chaque niveau d'alimentation. Des chiffres (25, 200, 600, 1.2), des lettres (OFF, MIN, MAX) ou un mélange des deux. <br><br>Vous devez configurer <b>uniquement</b> les niveaux de puissance autorisés dans votre pays.",
+        "message": "Ce tableau représente les différentes valeurs de puissance qui peuvent être utilisées pour le VTX. Elles sont réparties en deux sections: <br><b>- $t(vtxTablePowerLevelsValue.message) :</b> chaque niveau d'alimentation nécessite une valeur définie par le fabricant du matériel. Demandez au fabricant la valeur correcte ou consultez le wiki Betaflight sur les Tables VTX pour obtenir des exemples. <br><b>- $t(vtxTablePowerLevelsLabel.message) :</b> vous pouvez mettre ici l'étiquette que vous voulez pour chaque niveau d'alimentation. Des chiffres (25, 200, 600, 1.2), des lettres (OFF, MIN, MAX) ou un mélange des deux. <br /><br />Vous devez configurer <b>uniquement</b> les niveaux de puissance autorisés dans votre pays.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -5385,7 +5399,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "Ce tableau montre toutes les fréquences qui peuvent être utilisées sur votre VTX. Vous pouvez avoir plusieurs bandes et pour chacune d'entre elle, vous devez configurer :<br><b>- $t(vtxTableBandTitleName.message) :</b> Le nom de la bande, comme BOSCAM_A, FATSHARK ou RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message) :</b> Lettre courte qui fait référence a la bande.<br><b>- $t(vtxTableBandTitleFactory.message) :</b> Indique s'il s'agit d'une bande d'usine. Si activé, Betaflight envoie au VTX la bande et le numéro du canal. Le VTX utilisera ensuite sa table de fréquence intégrée, les fréquences configurées ne servent qu'à être affichées dans l'OSD et dans divers champs. Si non activé, Betaflight enverra au VTX la fréquence réelle configurée ici.<br><b>- Fréquences :</b> Fréquences pour cette bande.<br><br>N'oubliez pas que toutes les fréquences ne sont pas légales dans votre pays. Vous devez mettre une valeur de <b>zéro</b> à chaque index de fréquence que vous n'êtes pas autorisé à utiliser afin de le désactiver.",
+        "message": "Ce tableau montre toutes les fréquences qui peuvent être utilisées sur votre VTX. Vous pouvez avoir plusieurs bandes et pour chacune d'entre elle, vous devez configurer :<br><b>- $t(vtxTableBandTitleName.message) :</b> Le nom que vous voulez donner à la bande, comme BOSCAM_A, FATSHARK ou RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message) :</b> Lettre courte qui fait référence a la bande.<br><b>- $t(vtxTableBandTitleFactory.message) :</b> Indique s'il s'agit d'une bande d'usine. Si activé, Betaflight envoie au VTX la bande et le numéro du canal. Le VTX utilisera ensuite sa table de fréquence intégrée, les fréquences configurées ne servent qu'à être affichées dans l'OSD et dans divers champs. Si non activé, Betaflight enverra au VTX la fréquence réelle configurée ici.<br><b>- Fréquences :</b> Fréquences pour cette bande.<br /><br />N'oubliez pas que toutes les fréquences ne sont pas légales dans votre pays. Vous devez mettre une valeur de <b>zéro</b> à chaque index de fréquence que vous n'êtes pas autorisé à utiliser afin de le désactiver.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -5421,7 +5435,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "Le bouton '$t(vtxButtonSaveLua.message)' vous permettra de sauvegarder un fichier <i>craftname</i>.lua contenant la configuration de la table vtx qui pourra être utilisé avec les scripts lua de betaflight. (Voir plus <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">ici</a>.)",
+        "message": "Le bouton '$t(vtxButtonSaveLua.message)' vous permettra de sauvegarder un fichier <i>mcuid</i>.lua contenant la configuration de table VTX qui peut être utilisé avec les <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">scripts Betaflight TX Lua</a>.<br><br>La version 1.6.0 et suivantes peuvent utiliser le fichier tel quel, mais pour les anciennes versions des scripts, il doit être renommé pour correspondre au nom du modèle sur le TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
@@ -5439,6 +5453,10 @@
     "vtxButtonSaved": {
         "message": "Enregistré",
         "description": "Saved action button in the VTX tab"
+    },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} déverrouillé",
+        "description": "Indicates if SA device is unlocked"
     },
     "mainHelpArmed": {
         "message": "Moteur armé"
@@ -5567,7 +5585,7 @@
         "message": "Mesure"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivative from Error</b>fourni un feeling plus direct et c'est le préféré pour la 'race'.<br><br><b>Derivative from Measurement</b> fourni plus de 'smooth' et c'est le préféré pour le freestyle"
+        "message": "<b>Dérivée depuis l'erreur</b>fourni un feeling plus direct et c'est le préféré pour la 'race'.<br /><br /><b>Dérivée depuis la mesure</b> fourni plus de 'smooth' et c'est le préféré pour le freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID scaling and PID logic is exactly the same. Not necessarily retune needed. Legacy is old betaflight evolved rewrite, which is basic PID controller based on integer math. Betaflight PID controller uses floating point math and has many new features specifically designed for multirotor applications <br> <b>Float vs Integer:</b> PID scaling and PID logic is exactly the same. No retune needed. F1 boards have no onboard FPU and floating point math increases CPU load and integer math will improve performance, but float math might gain slightly more precision."
@@ -5715,9 +5733,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Nom de fichier"
-    },
-    "dialogFileNameDescription": {
-        "message": "Le fichier sera sauvegardé dans le dossier '{{folder}}' de votre stockage interne."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Ce fichier existe déjà!"
