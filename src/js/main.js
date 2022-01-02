@@ -261,7 +261,7 @@ function startProcess() {
                 return;
             }
 
-            if (GUI.allowedTabs.indexOf(tab) < 0 && tabName === "Firmware Flasher") {
+            if (GUI.allowedTabs.indexOf(tab) < 0 && tab === "firmware_flasher") {
                 if (GUI.connected_to || GUI.connecting_to) {
                     $('a.connect').click();
                 } else {
