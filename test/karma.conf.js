@@ -35,7 +35,7 @@ module.exports = function(config) {
             outputFile: 'test_results.xml',
         },
         junitReporter: {
-            outputDir: 'test-results-junit'
+            outputDir: 'test-results-junit',
         },
         singleRun: true,
         preprocessors: {
