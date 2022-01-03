@@ -6,7 +6,7 @@ const NODE_ENV = process.env.NODE_ENV || 'test';
 
 module.exports = function(config) {
     config.set({
-        reporters: ['tfs', 'spec'],
+        reporters: ['tfs', 'spec','junit'],
         basePath: '../',
         frameworks: ['mocha', 'chai', 'sinon-chai'],
         files: [
@@ -33,6 +33,9 @@ module.exports = function(config) {
         tfsReporter: {
             outputDir: 'testresults',
             outputFile: 'test_results.xml',
+        },
+        junitReporter: {
+            outputDir: 'test-results-junit'
         },
         singleRun: true,
         preprocessors: {
