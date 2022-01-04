@@ -24,9 +24,11 @@ export default {
   props: {
     usageDown: {
       type: Number,
+      default: 0,
     },
     usageUp: {
       type: Number,
+      default: 0,
     },
   },
 };
