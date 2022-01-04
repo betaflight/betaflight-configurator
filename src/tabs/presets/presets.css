@@ -125,6 +125,11 @@
     color: var(--defaultText);
 }
 
+.presets_filter_select_nonempty {
+    border-color: var(--accentBorder) !important;
+    border-width: 2px !important;
+}
+
 .presets_search_settings {
     position: sticky;
     top: 0px;
