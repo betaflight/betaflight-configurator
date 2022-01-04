@@ -14,7 +14,7 @@
 #define CompanyUrl "https://betaflight.com/"
 #define ExecutableFileName "betaflight-configurator.exe"
 #define GroupName "Betaflight"
-#define InstallerFileName "betaflight-configurator-installer_" + version + "_" + archName
+#define InstallerFileName "betaflight-configurator_" + version + "_" + archName + "-installer"
 #define SourcePath "..\..\" + sourceFolder + "\betaflight-configurator\" + archName
 #define TargetFolderName "Betaflight-Configurator"
 #define UpdatesUrl "https://github.com/betaflight/betaflight-configurator/releases"
