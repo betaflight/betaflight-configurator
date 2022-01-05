@@ -161,6 +161,7 @@ class SourcePanel {
     }
 
     _onActivateButtonClick() {
+        this._onSaveButtonClick();
         this.setActive(true);
         this._onActivateCallback?.(this);
     }

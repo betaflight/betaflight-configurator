@@ -103,7 +103,7 @@ class PresetsRepoIndexed {
     _parceInclude(strings, includeRowIndexes, promises)
     {
            for (let i = 0; i < strings.length; i++) {
-            const match = PresetsRepoIndexed._sRegExpInclude.exec(strings[i].toLowerCase());
+            const match = PresetsRepoIndexed._sRegExpInclude.exec(strings[i]);
 
             if (match !== null) {
                 includeRowIndexes.push(i);
@@ -143,7 +143,7 @@ class PresetsRepoIndexed {
 
     _isIncludeFound(strings) {
         for (const str of strings) {
-            const match = PresetsRepoIndexed._sRegExpInclude.exec(str.toLowerCase());
+            const match = PresetsRepoIndexed._sRegExpInclude.exec(str);
 
             if (match !== null) {
                 return true;
@@ -220,4 +220,4 @@ PresetsRepoIndexed._sCliCommentDirective = "#";
 PresetsRepoIndexed._sCliAttributeDirective = "#$";
 
 // Reg exp extracts file/path.txt from # include: file/path.txt
-PresetsRepoIndexed._sRegExpInclude = /^#\$[ ]+?include:[ ]+?(?<filePath>\S+$)/;
+PresetsRepoIndexed._sRegExpInclude = /^#\$[ ]+?INCLUDE:[ ]+?(?<filePath>\S+$)/;

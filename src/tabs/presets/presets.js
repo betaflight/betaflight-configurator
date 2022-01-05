@@ -244,7 +244,7 @@ TABS.presets.onHtmlLoad = function(callback) {
     this.readDom();
     this.setupMenuButtons();
     this.setupBackupWarning();
-    this._inputTextFilter.attr("placeholder", "example: \"karate racing\", or \"5'' freestyle\"");
+    this._inputTextFilter.attr("placeholder", "example: \"karate race\", or \"5'' freestyle\"");
 
     this.presetsDetailedDialog = new PresetsDetailedDialog($("#presets_detailed_dialog"), this.pickedPresetList, () => this.onPresetPickedCallback());
     this.presetsSourcesDialog = new PresetsSourcesDialog($("#presets_sources_dialog"));
@@ -320,7 +320,7 @@ TABS.presets.prepareFilterFields = function() {
 };
 
 TABS.presets.preselectFilterFields = function() {
-    this._selectCategory.multipleSelect('setSelects', ["TUNE"]);
+    this._selectCategory.multipleSelect('setSelects', ["TUNE", "RC_SMOOTHING", "RC_LINK", "RATES"]);
 
     const currentVersion = FC.CONFIG.flightControllerVersion;
     const selectedVersions = [];
@@ -359,11 +359,25 @@ TABS.presets.updateSearchResults = function() {
             searchString: this._inputTextFilter.val().trim(),
         };
 
+        this.updateSelectStyle();
         searchParams.authors = searchParams.authors.map(str => str.toLowerCase());
-
         const fitPresets = this.getFitPresets(searchParams);
         this.displayPresets(fitPresets);
     }
+};
+
+TABS.presets.updateSelectStyle = function() {
+    this.updateSingleSelectStyle(this._selectCategory);
+    this.updateSingleSelectStyle(this._selectKeyword);
+    this.updateSingleSelectStyle(this._selectAuthor);
+    this.updateSingleSelectStyle(this._selectFirmwareVersion);
+    this.updateSingleSelectStyle(this._selectStatus);
+};
+
+TABS.presets.updateSingleSelectStyle = function(select) {
+    const selectedOptions = select.multipleSelect("getSelects", "text");
+    const isSomethingSelected = (0 !== selectedOptions.length);
+    select.parent().find($(".ms-choice")).toggleClass("presets_filter_select_nonempty", isSomethingSelected);
 };
 
 TABS.presets.displayPresets = function(fitPresets) {
