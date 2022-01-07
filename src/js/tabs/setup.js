@@ -29,20 +29,6 @@ TABS.setup.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        const backupButton = $('#content .backup');
-
-        if (semver.lt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE)) {
-            backupButton.addClass('disabled');
-            $('#content .restore').addClass('disabled');
-
-            GUI.log(i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE]));
-        }
-
-        // saving and uploading an imaginary config to hardware is a bad idea
-        if (CONFIGURATOR.virtualMode) {
-            backupButton.addClass('disabled');
-        }
-
         // initialize 3D Model
         self.initModel();
 
@@ -162,29 +148,6 @@ TABS.setup.initialize = function (callback) {
             $(this).text(i18n.getMessage('initialSetupButtonResetZaxisValue', [self.yaw_fix]));
 
             console.log(`YAW reset to 0 deg, fix: ${self.yaw_fix} deg`);
-        });
-
-        backupButton.click(function () {
-            if ($(this).hasClass('disabled')) {
-                return;
-            }
-
-            configuration_backup(function () {
-                GUI.log(i18n.getMessage('initialSetupBackupSuccess'));
-            });
-        });
-
-        $('#content .restore').click(function () {
-            if ($(this).hasClass('disabled')) {
-                return;
-            }
-
-            configuration_restore(function () {
-                // get latest settings
-                TABS.setup.initialize();
-
-                GUI.log(i18n.getMessage('initialSetupRestoreSuccess'));
-            });
         });
 
         // cached elements
