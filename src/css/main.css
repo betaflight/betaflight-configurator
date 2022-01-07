@@ -1670,7 +1670,7 @@ dialog .dialog_toolbar .btn a.disabled {
 .content_toolbar {
     /*  content toolbar panel */
     width: 100%;
-    height: 30px;
+    height: auto;
     background-color: #EFEFEF;
     box-shadow: rgba(0, 0, 0, 0.10) 0 -3px 8px;
     padding: 10px 0;
@@ -1791,6 +1791,12 @@ dialog .dialog_toolbar .btn a.disabled {
     }
     .toolbar_expand_btn {
         display: block;
+    }
+    .toolbar_fixed_bottom .content_toolbar {
+        justify-content: flex-end;
+    }
+    .toolbar_fixed_bottom .content_toolbar div:first-child {
+        margin-bottom: 8px;
     }
 }
 
