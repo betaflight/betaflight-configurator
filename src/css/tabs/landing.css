@@ -27,7 +27,7 @@
 
 .tab-landing .content_foot {
     clear: both;
-    padding: 20px 20px 5px;
+    padding: 10px 0px 5px;
 }
 
 /* hero block */
@@ -51,7 +51,7 @@
     font-weight: 300;
 }
 
-.text1, .text2, .text3, .text4 {
+.text1, .text2, .text3 {
     margin-top: 15px;
     margin-bottom: 15px;
     font-weight: normal;
@@ -100,17 +100,34 @@
 
 .tab-landing .content_mid_bottom {
     padding: 0 15px;
+    margin-top: 5px;
 }
 
-.tab-landing .content_mid_bottom .logoFacebook {
+.tab-landing .content_mid_bottom .logoSocialMedia {
     float: left;
     width: 40px;
 }
 
-.tab-landing .content_mid_bottom .text4 {
+.tab-landing .content_mid_bottom img {
+    height: 30px;
+    width: 30px;
+}
+
+.tab-landing .content_mid_bottom .discordLogo {
+    padding-top: 3px;
+}
+
+
+.tab-landing .content_mid_bottom .socialMediaText {
     margin-top: 0;
     margin-left: 5px;
     display: inline-block;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+.tab-landing .content_mid_bottom .socialMediaParagraph {
+    margin-bottom: 15px;
 }
 
 .tab-landing .languageSwitcher .selected_language {
@@ -120,10 +137,8 @@
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    color: silver;
 }
 .tab-landing .languageSwitcher a {
-    color: silver;
     font-weight: normal;
     white-space: nowrap;
 }

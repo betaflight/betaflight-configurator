@@ -713,6 +713,9 @@
     "defaultFacebookText": {
         "message": "We also have a <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Group</a>.<br />Join us to get a place to talk about Betaflight, ask configuration questions, or just hang out with fellow pilots."
     },
+    "defaultDiscordText": {
+        "message": "Betaflight <a href=\"https://discord.gg/YXcUpdf3\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Share your flight experience, talk about Betaflight, help other people or get some help for yourself from the community."
+    },
     "defaultChangelogHead": {
         "message": "Configurator - Changelog"
     },
