@@ -895,24 +895,23 @@ TABS.pid_tuning.initialize = function (callback) {
             gyroLowpassEnabled.change(function() {
                 const checked = $(this).is(':checked');
 
-                if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 || FC.FILTER_CONFIG.gyro_lowpass_hz > 0) {
+                if (checked) {
+                    if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 || FC.FILTER_CONFIG.gyro_lowpass_hz > 0) {
                     // lowpass1 is enabled, set the master switch on, show the label, mode selector and type fields
-
-                    if (checked) {
                         gyroLowpassFilterMode.val(FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 ? 1 : 0).change();
                     } else {
-                        // the user is disabling Lowpass 1 so set everything to zero
-                        gyroLowpassDynMinFrequency.val(0);
-                        gyroLowpassDynMaxFrequency.val(0);
-                        gyroLowpassFrequency.val(0);
-                    }
-                } else {
-                    // lowpass 1 is disabled, set the master switch off, only show label
-                    if (checked) {
+                        // lowpass 1 is disabled, set the master switch off, only show label
                         // user is trying to enable the lowpass filter, but it was off (both cutoffs are zero)
                         // initialise in dynamic mode with values at sliders, or use defaults
                         gyroLowpassFilterMode.val(1).change();
                     }
+                } else {
+                    // the user is disabling Lowpass 1 so set everything to zero
+                    gyroLowpassDynMinFrequency.val(0);
+                    gyroLowpassDynMaxFrequency.val(0);
+                    gyroLowpassFrequency.val(0);
+
+                    self.calculateNewGyroFilters();
                 }
 
                 gyroLowpassOption.toggle(checked);
@@ -931,9 +930,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 gyroLowpassDynMinFrequency.val(dynMode ? cutoffMin : 0);
                 gyroLowpassDynMaxFrequency.val(dynMode ? cutoffMax : 0);
 
-                if (TuningSliders.sliderGyroFilter) {
-                    self.calculateNewGyroFilters();
-                }
+                self.calculateNewGyroFilters();
 
                 gyroLowpassOptionStatic.toggle(!dynMode);
                 gyroLowpassOptionDynamic.toggle(!!dynMode);
@@ -946,9 +943,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
                 gyroLowpass2Frequency.val(checked ? cutoff : 0).attr('disabled', !checked);
 
-                if (checked && TuningSliders.sliderGyroFilter) {
-                    self.calculateNewGyroFilters();
-                }
+                self.calculateNewGyroFilters();
 
                 gyroLowpass2Option.toggle(checked);
                 self.updateFilterWarning();
@@ -957,23 +952,23 @@ TABS.pid_tuning.initialize = function (callback) {
             dtermLowpassEnabled.change(function() {
                 const checked = $(this).is(':checked');
 
-                if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 || FC.FILTER_CONFIG.dterm_lowpass_hz > 0) {
-                    // lowpass1 is enabled, set the master switch on, show the label, mode selector and type fields
-                    if (checked) {
+                if (checked) {
+                    if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 || FC.FILTER_CONFIG.dterm_lowpass_hz > 0) {
+                        // lowpass1 is enabled, set the master switch on, show the label, mode selector and type fields
                         dtermLowpassFilterMode.val(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 ? 1 : 0).change();
                     } else {
-                        // the user is disabling Lowpass 1 so set everything to zero
-                        dtermLowpassDynMinFrequency.val(0);
-                        dtermLowpassDynMaxFrequency.val(0);
-                        dtermLowpassFrequency.val(0);
-                    }
-                } else {
-                    // lowpass 1 is disabled, set the master switch off, only show label
-                    if (checked) {
+                        // lowpass 1 is disabled, set the master switch off, only show label
                         // user is trying to enable the lowpass filter, but it was off (both cutoffs are zero)
                         // initialise in dynamic mode with values at sliders, or use defaults
                         dtermLowpassFilterMode.val(1).change();
                     }
+                } else {
+                    // the user is disabling Lowpass 1 so set everything to zero
+                    dtermLowpassDynMinFrequency.val(0);
+                    dtermLowpassDynMaxFrequency.val(0);
+                    dtermLowpassFrequency.val(0);
+
+                    self.calculateNewDTermFilters();
                 }
 
                 dtermLowpassOption.toggle(checked);
@@ -992,9 +987,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 dtermLowpassDynMinFrequency.val(dynMode ? cutoffMin : 0);
                 dtermLowpassDynMaxFrequency.val(dynMode ? cutoffMax : 0);
 
-                if (TuningSliders.sliderDTermFilter) {
-                    self.calculateNewDTermFilters();
-                }
+                self.calculateNewDTermFilters();
 
                 dtermLowpassOptionStatic.toggle(!dynMode);
                 dtermLowpassOptionDynamic.toggle(!!dynMode);
@@ -1006,9 +999,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
                 dtermLowpass2Frequency.val(checked ? cutoff : 0).attr('disabled', !checked);
 
-                if (checked && TuningSliders.sliderDTermFilter) {
-                    self.calculateNewDTermFilters();
-                }
+                self.calculateNewDTermFilters();
 
                 dtermLowpass2Option.toggle(checked);
                 self.updateFilterWarning();
@@ -2945,13 +2936,17 @@ TABS.pid_tuning.calculateNewPids = function() {
 
 TABS.pid_tuning.calculateNewGyroFilters = function() {
     if (!TABS.pid_tuning.isHtmlProcessing) {
-        TuningSliders.calculateNewGyroFilters();
+        if (TuningSliders.sliderGyroFilter) {
+            TuningSliders.calculateNewGyroFilters();
+        }
     }
 };
 
 TABS.pid_tuning.calculateNewDTermFilters = function() {
     if (!TABS.pid_tuning.isHtmlProcessing) {
-        TuningSliders.calculateNewDTermFilters();
+        if (TuningSliders.sliderDTermFilter) {
+            TuningSliders.calculateNewDTermFilters();
+        }
     }
 };
 
