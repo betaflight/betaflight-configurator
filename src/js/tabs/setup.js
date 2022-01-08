@@ -29,6 +29,36 @@ TABS.setup.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
+        if (CONFIGURATOR.virtualMode || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+            const backupButton = $('#content .backup');
+
+            if (semver.lt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE)) {
+                backupButton.addClass('disabled');
+                $('#content .restore').addClass('disabled');
+
+                GUI.log(i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE]));
+            }
+
+            if (CONFIGURATOR.virtualMode) {
+                // saving and uploading an imaginary config to hardware is a bad idea
+                backupButton.addClass('disabled');
+            }
+
+            backupButton.on('click', () => configuration_backup(() => GUI.log(i18n.getMessage('initialSetupBackupSuccess'))));
+
+            $('#content .restore').on('click', () => {
+                configuration_restore(() => {
+                    // get latest settings
+                    TABS.setup.initialize();
+
+                    GUI.log(i18n.getMessage('initialSetupRestoreSuccess'));
+                });
+            });
+
+        } else {
+            $('.backupRestore').hide();
+        }
+
         // initialize 3D Model
         self.initModel();
 
