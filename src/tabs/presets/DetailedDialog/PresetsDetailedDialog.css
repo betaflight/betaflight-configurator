@@ -77,6 +77,7 @@
     #presets_detailed_dialog .content_toolbar {
         position: fixed;
         height: 70px;
+        padding-bottom: 8px;
     }
 
     #presets_options_panel {
