@@ -1,0 +1,63 @@
+# You'll need to setup the follwing environment variables:
+#   env.repoNightly - The repository to release nightly builds to e.g. betaflight-configurator-nightly
+#   env.releaseNotes - The release notes to be published as part of the github release
+#   secrets.REPO_TOKEN - A GitHub token with permissions to push and publish releases to the nightly repo
+
+env:
+  repoNightly: betaflight/betaflight-configurator-nightlies
+  debugReleaseNotes: >
+    This is an automated development build.
+    It may be unstable and result in corrupted configurations or data loss.
+    **Use only for testing.**
+  releaseNotes: This is a release build. It does not contain the debug console.
+
+name: Nightly Build
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+jobs:
+  release-nightly:
+    name: Release Nightly
+    runs-on: ubuntu-20.04
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+    steps:
+      - name: Fetch release assets
+        uses: dawidd6/action-download-artifact@09385b76de790122f4da9c82b17bccf858b9557c # v2.16.0
+        with:
+          path: release-assets/
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+
+      - name: Select release notes
+        id: notes
+        run: |
+          set -- release-assets/Betaflight-Configurator-Debug-*
+          echo "::set-output name=notes::$(test -e "$1" && echo '${{ env.debugReleaseNotes }}' || echo '${{ env.releaseNotes }}')"
+
+      - name: Release
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # v0.1.14
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
+          repository: ${{ env.repoNightly }}
+          tag_name: build-${{ github.run_number }}
+          files: release-assets/Betaflight-Configurator-*/**
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: true
+          name: '${{ github.repository }}: ${{ github.ref_name }}'
+          body: |
+            ${{ steps.notes.outputs.notes }}
+
+            ### Repository:
+            ${{ github.repository }} ([link](${{ github.event.repository.html_url }}))
+
+            ### Branch:
+            ${{ github.ref_name }} ([link](${{ github.event.repository.html_url }}/tree/${{ github.ref_name }}))
+
+            ### Latest changeset:
+            ${{ github.sha }} ([link](https://github.com/${{ github.repository }}/commit/${{ github.sha }}))
+
+            ### Changes:
+            ${{ github.event.workflow_run.head_commit.message }}
