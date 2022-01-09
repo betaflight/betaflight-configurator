@@ -107,7 +107,7 @@
         display: inline-block;
     }
 
-    #presets_detailed_dialog .btn .regular-button:not(#presets_detailed_dialog .btn .left-panel .regular-button) {
+    #presets_detailed_dialog .mainButton {
         margin-top: 40px;
     }
 }
