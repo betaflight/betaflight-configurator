@@ -270,13 +270,11 @@ const serial = {
 
         chrome.serial.getDevices(function (devices_array) {
             const devices = [];
-            let showAllSerialDevices = false;
 
             devices_array.forEach(function (device) {
-                ConfigStorage.get('showAllSerialDevices', res => showAllSerialDevices = res.showAllSerialDevices);
                 const isKnownSerialDevice = self.serialDevices.some(el => el.vendorId === device.vendorId) && self.serialDevices.some(el => el.productId === device.productId);
 
-                if (isKnownSerialDevice || showAllSerialDevices) {
+                if (isKnownSerialDevice || PortHandler.showAllSerialDevices) {
                     devices.push({
                         path: device.path,
                         displayName: device.displayName,

@@ -16,6 +16,7 @@ options.initialize = function (callback) {
         TABS.options.initCliAutoComplete();
         TABS.options.initAutoConnectConnectionTimeout();
         TABS.options.initShowAllSerialDevices();
+        TABS.options.initShowVirtualMode();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
 
@@ -142,7 +143,19 @@ options.initShowAllSerialDevices = function() {
             .on('change', () => ConfigStorage.set({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') }))
             .trigger('change');
     });
+};
 
+options.initShowVirtualMode = function() {
+    const showVirtualModeElement = $('div.showVirtualMode input');
+    ConfigStorage.get('showVirtualMode', result => {
+        showVirtualModeElement
+            .prop('checked', !!result.showVirtualMode)
+            .on('change', () => {
+                ConfigStorage.set({ showVirtualMode: showVirtualModeElement.is(':checked') });
+                PortHandler.initialPorts = false;
+            })
+            .trigger('change');
+    });
 };
 
 options.initCordovaForceComputerUI = function () {
