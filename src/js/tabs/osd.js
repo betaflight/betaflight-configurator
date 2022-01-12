@@ -306,6 +306,22 @@ OSD.generateAltitudePreview = function(osdData) {
     return `${FONT.symbol(SYM.ALTITUDE)}399${variantSelected === 0? '.7' : ''}${unit}`;
 };
 
+
+OSD.generateVTXChannelPreview = function(osdData) {
+    const variantSelected = OSD.getVariantForPreview(osdData, 'VTX_CHANNEL');
+    let value;
+    switch (variantSelected) {
+        case 0:
+            value = 'R:2:200:P';
+            break;
+
+        case 1:
+            value = 'PWR';
+            break;
+    }
+    return value;
+};
+
 OSD.generateBatteryUsagePreview = function(osdData) {
     const variantSelected = OSD.getVariantForPreview(osdData, 'MAIN_BATT_USAGE');
 
@@ -565,7 +581,13 @@ OSD.loadDisplayFields = function() {
             defaultPosition: 1,
             draw_order: 120,
             positionable: true,
-            preview: 'R:2:200:P',
+            variants: [
+                'osdTextElementVTXchannelVariant-full',
+                'osdTextElementVTXchannelVariant-power',
+                ],
+            preview(osdData) {
+                return OSD.generateVTXChannelPreview(osdData);
+            },
         },
         VOLTAGE_WARNING: {
             name: 'VOLTAGE_WARNING',
