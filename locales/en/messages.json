@@ -810,13 +810,16 @@
         "message": "Restore settings to <strong>default</strong>"
     },
     "initialSetupButtonBackup": {
-        "message": "Backup"
+        "message": "Backup JSON"
     },
     "initialSetupButtonRestore": {
-        "message": "Restore"
+        "message": "Restore JSON"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Activate Boot Loader / DFU"
+    },
+    "initialSetupBackupRestoreHeader": {
+        "message": "Experimental Backup and Restore"
     },
     "initialSetupBackupRestoreText": {
         "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span class=\"message-negative\">not</span> included - use the command 'diff all' in CLI for this."

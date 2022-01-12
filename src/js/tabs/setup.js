@@ -51,7 +51,7 @@ TABS.setup.initialize = function (callback) {
         if (CONFIGURATOR.virtualMode) {
             // saving and uploading an imaginary config to hardware is a bad idea
             backupButton.addClass('disabled');
-        } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             restoreButton.addClass('disabled');
 
             if (!PortHandler.showVirtualMode) {

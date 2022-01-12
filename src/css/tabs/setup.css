@@ -106,7 +106,7 @@
     width: 50%;
     float: left;
 }
-.instrumentsbox {
+.backupRestore {
     margin-bottom: 0;
 }
 @media all and (max-width: 575px) {
