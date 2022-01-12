@@ -1,0 +1,27 @@
+.test-throttle-selector {
+    position: relative;
+    width: 25%;
+    margin-bottom: 1em;
+}
+
+.test-throttle-selector .list {
+    display: flex;
+    align-items: center;
+}
+
+.test-throttle-selector .test-throttle-selector-btn {
+    cursor: pointer;
+    flex: 1 1 auto;
+    text-align: center;
+    margin-right: 3px;
+}
+
+.test-throttle-selector .test-throttle-selector-btn.inactive {
+    background: #ccc;
+}
+
+.test-throttle-selector .test-throttle-selector-label {
+    flex: 1 1 auto;
+    font-weight: bold;
+    padding: 1.5ex;
+}

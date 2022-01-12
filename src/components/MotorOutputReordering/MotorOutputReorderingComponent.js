@@ -36,8 +36,13 @@ class MotorOutputReorderComponent
 
     _setupdialog()
     {
-        i18n.localizePage();
         this._readDom();
+        // TestThrottleSelectorComponent
+        //     .before(this._domMainContentBlock)
+        //     .onSelection((value) => {
+        //         // TODO
+        //     });
+        i18n.localizePage();
 
         this._resetGui();
 

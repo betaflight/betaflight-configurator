@@ -91,6 +91,11 @@ class EscDshotDirectionComponent
         this._createMotorButtons();
         this._createWizardMotorButtons();
         this._domSecondActionDiv.toggle(false);
+        // TestThrottleSelectorComponent
+        //     .before(this._domMainContentBlock)
+        //     .onSelection((value) => {
+        //         // TODO
+        //     });
         i18n.localizePage();
 
         this._resetGui();
