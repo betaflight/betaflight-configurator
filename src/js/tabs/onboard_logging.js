@@ -346,6 +346,10 @@ TABS.onboard_logging.initialize = function (callback) {
                 {text: "VTX_TRAMP"},
                 {text: "GHOST"},
                 {text: "SCHEDULER_DETERMINISM"},
+                {text: "TIMING_ACCURACY"},
+                {text: "RX_EXPRESSLRS_SPI"},
+                {text: "RX_EXPRESSLRS_PHASELOCK"},
+                {text: "RX_STATE_TIME"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
