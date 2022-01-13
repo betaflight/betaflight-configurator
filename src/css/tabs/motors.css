@@ -726,7 +726,7 @@
     .tab-motors .motor_testing .values li:last-child {
         margin-left: 4px;
     }
-    .tab-motors .motor_testing .telemetry li {
+    .tab-motors .motor_testing .telemetry span {
         font-size: 6px;
     }
 }
