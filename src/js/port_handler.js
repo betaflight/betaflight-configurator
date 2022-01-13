@@ -13,6 +13,8 @@ const PortHandler = new function () {
     this.port_removed_callbacks = [];
     this.dfu_available = false;
     this.port_available = false;
+    this.showAllSerialDevices = false;
+    this.showVirtualMode = false;
 };
 
 PortHandler.initialize = function () {
@@ -30,6 +32,9 @@ PortHandler.initialize = function () {
 
 PortHandler.check = function () {
     const self = this;
+
+    ConfigStorage.get('showVirtualMode', res => self.showVirtualMode = res.showVirtualMode);
+    ConfigStorage.get('showAllSerialDevices', res => self.showAllSerialDevices = res.showAllSerialDevices);
 
     self.check_usb_devices();
     self.check_serial_devices();
@@ -79,17 +84,20 @@ PortHandler.check_usb_devices = function (callback) {
                     data: {isDFU: true},
                 }));
 
-                self.portPickerElement.append($('<option/>', {
-                    value: 'virtual',
-                    text: i18n.getMessage('portsSelectVirtual'),
-                    data: {isVirtual: true},
-                }));
+                if (self.showVirtualMode) {
+                    self.portPickerElement.append($('<option/>', {
+                        value: 'virtual',
+                        text: i18n.getMessage('portsSelectVirtual'),
+                        data: {isVirtual: true},
+                    }));
+                }
 
                 self.portPickerElement.append($('<option/>', {
                     value: 'manual',
                     text: i18n.getMessage('portsSelectManual'),
                     data: {isManual: true},
                 }));
+
                 self.portPickerElement.val('DFU').change();
                 self.setPortsInputWidth();
             }
@@ -241,11 +249,13 @@ PortHandler.updatePortSelect = function (ports) {
         }));
     }
 
-    this.portPickerElement.append($("<option/>", {
-        value: 'virtual',
-        text: i18n.getMessage('portsSelectVirtual'),
-        data: {isVirtual: true},
-    }));
+    if (this.showVirtualMode) {
+        this.portPickerElement.append($("<option/>", {
+            value: 'virtual',
+            text: i18n.getMessage('portsSelectVirtual'),
+            data: {isVirtual: true},
+        }));
+    }
 
     this.portPickerElement.append($("<option/>", {
         value: 'manual',
