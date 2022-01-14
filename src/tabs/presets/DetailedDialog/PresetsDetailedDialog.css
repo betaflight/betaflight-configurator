@@ -46,6 +46,11 @@
     padding-left: 20px;
 }
 
+#presets_options_panel .ms-choice {
+    border-color: var(--accentBorder);
+    border-width: 2px;
+}
+
 #presets_detailed_dialog_loading {
     height: 300px;
 }
