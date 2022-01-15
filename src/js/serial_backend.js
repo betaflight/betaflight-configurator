@@ -2,6 +2,7 @@
 
 let mspHelper;
 let connectionTimestamp;
+let clicks = false;
 
 function initializeSerialBackend() {
     GUI.updateManualPortVisibility = function(){
@@ -43,11 +44,8 @@ function initializeSerialBackend() {
     $('div.connect_controls a.connect').click(function () {
         if (GUI.connect_lock != true) { // GUI control overrides the user control
 
-            const thisElement = $(this);
-            const clicks = thisElement.data('clicks');
-
             const toggleStatus = function() {
-                thisElement.data("clicks", !clicks);
+                clicks = !clicks;
             };
 
             GUI.configuration_loaded = false;
@@ -336,7 +334,7 @@ function abortConnect() {
     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
 
     // reset data
-    $('div#connectbutton a.connect').data("clicks", false);
+    clicks = false;
 }
 
 function processBoardInfo() {
@@ -829,34 +827,32 @@ function update_dataflash_global() {
      }
 }
 
-function reinitialiseConnection(originatorTab, callback) {
-    GUI.log(i18n.getMessage('deviceRebooting'));
-    let connectionTimeout = 200;
-    ConfigStorage.get('connectionTimeout', function (result) {
-        if (result.connectionTimeout) {
-            connectionTimeout = result.connectionTimeout;
-        }
+function reinitializeConnection(originatorTab, callback) {
 
-        if (FC.boardHasVcp()) { // VCP-based flight controls may crash old drivers, we catch and reconnect
-            GUI.timeout_add('waiting_for_disconnect', function waiting_for_bootup() {
-                if (callback) {
-                    callback();
-                }
-            }, connectionTimeout);
-            //TODO: Need to work out how to do a proper reconnect here.
-            // caveat: Timeouts set with `GUI.timeout_add()` are removed on disconnect.
+    // Close connection gracefully if it still exists.
+    if (serial.connectionId) {
+        if (GUI.connected_to || GUI.connecting_to) {
+            $('a.connect').trigger('click');
         } else {
-            GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                    GUI.log(i18n.getMessage('deviceReady'));
-                    originatorTab.initialize(false, $('#content').scrollTop());
-                });
-
-                if (callback) {
-                    callback();
-                }
-
-            }, connectionTimeout); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
+            serial.disconnect();
         }
-    });
+    }
+
+    GUI.log(i18n.getMessage('deviceRebooting'));
+
+    let connectionTimeout = 200;
+    const result = ConfigStorage.get('connectionTimeout');
+
+    if (result.connectionTimeout) {
+        connectionTimeout = result.connectionTimeout;
+    }
+
+    setTimeout(() => {
+        MSP.send_message(MSPCodes.MSP_STATUS, false, false, () => {
+            GUI.log(i18n.getMessage('deviceReady'));
+            originatorTab.initialize(false, $('#content').scrollTop());
+        });
+
+        callback?.();
+    }, connectionTimeout);
 }

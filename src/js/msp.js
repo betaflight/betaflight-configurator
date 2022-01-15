@@ -321,9 +321,10 @@ const MSP = {
             return;
         }
 
-        if (code === undefined) {
+        if (code === undefined || !serial.connectionId) {
             return;
         }
+
         let bufferOut;
         if (code <= 254) {
             bufferOut = this.encode_message_v1(code, data);
