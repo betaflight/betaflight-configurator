@@ -6379,8 +6379,12 @@
         "message": "Do you really want to close the configurator?"
     },
     "dropDownSelectAll": {
-        "message": "[Select all]",
+        "message": "[Select/deselect all]",
         "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownFilterDisabled": {
+        "message": "Select...",
+        "description": "Text indicating nothing is selected in the drop down/multiple select (filter disabled)"
     },
     "dropDownAll": {
         "message": "All",
@@ -6577,5 +6581,13 @@
     "presetsTooManyPresetsFound": {
         "message": "Reached the maximum limit of the shown presets number",
         "description": "Message that apprears on presets tab if too many presets found"
+    },
+    "presetsOptionsPlaceholder": {
+        "message": "ATTENTION! Review the list of options",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsVersionMismatch": {
+        "message": "Preset source version mismatch.<br/>Required version: {{versionRequired}}<br/>Preset source version: {{versionSource}}<br/>Using this preset source could be dangerous.<br/>Do you want to continue?",
+        "description": "Placeholder for the options list dropdown"
     }
 }

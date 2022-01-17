@@ -125,22 +125,57 @@ class PresetsDetailedDialog {
 
     _createOptionsSelect(options) {
         options.forEach(option => {
-            let selectedString = "selected=\"selected\"";
-            if (!option.checked) {
-                selectedString = "";
+            if (!option.childs) {
+                this._addOption(this._domOptionsSelect, option, false);
+            } else {
+                this._addOptionGroup(this._domOptionsSelect, option);
             }
-
-            this._domOptionsSelect.append(`<option value="${option.name}" ${selectedString}>${option.name}</option>`);
         });
 
         this._domOptionsSelect.multipleSelect({
-            placeholder: i18n.getMessage("dropDownAll"),
+            placeholder: i18n.getMessage("presetsOptionsPlaceholder"),
             formatSelectAll () { return i18n.getMessage("dropDownSelectAll"); },
             formatAllSelected() { return i18n.getMessage("dropDownAll"); },
             onClick: () => this._optionsSelectionChanged(),
             onCheckAll: () => this._optionsSelectionChanged(),
             onUncheckAll: () => this._optionsSelectionChanged(),
+            hideOptgroupCheckboxes: true,
+            singleRadio: true,
+            selectAll: false,
+            styler: function (row) {
+                let style = "";
+                if (row.type === 'optgroup') {
+                    style = 'font-weight: bold;';
+                } else if (row.classes.includes("optionHasParent")) {
+                    style = 'padding-left: 22px;';
+                }
+                return style;
+            },
         });
+    }
+
+    _addOptionGroup(parentElement, optionGroup) {
+        const optionGroupElement = $(`<optgroup label="${optionGroup.name}"></optgroup>`);
+
+        optionGroup.childs.forEach(option => {
+            this._addOption(optionGroupElement, option, true);
+        });
+
+        parentElement.append(optionGroupElement);
+    }
+
+    _addOption(parentElement, option, hasParent) {
+        let selectedString = "selected=\"selected\"";
+        if (!option.checked) {
+            selectedString = "";
+        }
+
+        let classString = "";
+        if (hasParent) {
+            classString = "class=\"optionHasParent\"";
+        }
+
+        parentElement.append(`<option value="${option.name}" ${selectedString} ${classString}>${option.name}</option>`);
     }
 
     _optionsSelectionChanged() {

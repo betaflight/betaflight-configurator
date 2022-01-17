@@ -287,9 +287,23 @@
 }
 
 /* hack-fix for multiple-select with small font size. Originally checkboxes are not ligned with the text options when the font size is smaller than 0.7em */
-.tab-presets
-.ms-drop input[type="radio"], .ms-drop input[type="checkbox"] {
+.tab-presets .ms-drop input[type="radio"], .ms-drop input[type="checkbox"] {
     margin-top: 0.1rem !important;
+}
+
+/* hack-fix for multiple-select. Places "X" button vertically in the middle for the current font. "X" icon clears the current selection. */
+.tab-presets .ms-choice>div.icon-close {
+    padding-top: 3px;
+}
+
+/* hack-fix for multiple-select. Prevents "X" button from changing color on hover. "X" icon clears the current selection */
+.tab-presets .ms-choice > div.icon-close:hover::before {
+    color: rgb(136, 136, 136);
+}
+
+/* hack-fix for multiple-select. Makes "X" button bigger. "X" icon clears the current selection */
+.tab-presets .ms-choice>div.icon-close {
+    font-size: 16px;
 }
 
 .presets_filter_table_wrapper {

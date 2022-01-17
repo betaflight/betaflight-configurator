@@ -4,6 +4,7 @@ TABS.presets = {
     presetsRepo: null,
     cliEngine: null,
     pickedPresetList: [],
+    majorVersion: 1,
 };
 
 TABS.presets.initialize = function (callback) {
@@ -292,7 +293,9 @@ TABS.presets.tryLoadPresets = function() {
     this._divGlobalLoading.toggle(true);
     this._domWarningNotOfficialSource.toggle(!this.presetsSourcesDialog.isOfficialActive);
 
-    this.presetsRepo.loadIndex().then(() => {
+    this.presetsRepo.loadIndex()
+    .then(() => this.checkPresetSourceVersion())
+    .then(() => {
         this.prepareFilterFields();
         this._divGlobalLoading.toggle(false);
         this._divMainContent.toggle(true);
@@ -303,13 +306,35 @@ TABS.presets.tryLoadPresets = function() {
     });
 };
 
+TABS.presets.checkPresetSourceVersion = function() {
+    return new Promise((resolve, reject) => {
+        if (this.majorVersion === this.presetsRepo.index.majorVersion) {
+            resolve();
+        } else {
+            const versionRequired = `${this.majorVersion}.X`;
+            const versionSource = `${this.presetsRepo.index.majorVersion}.${this.presetsRepo.index.minorVersion}`;
+
+            const dialogSettings = {
+                title: i18n.getMessage("presetsWarningDialogTitle"),
+                text: i18n.getMessage("presetsVersionMismatch", {"versionRequired": versionRequired, "versionSource":versionSource}),
+                buttonYesText: i18n.getMessage("yes"),
+                buttonNoText: i18n.getMessage("no"),
+                buttonYesCallback: () => resolve(),
+                buttonNoCallback: () => reject("Prset source version mismatch"),
+            };
+
+            GUI.showYesNoDialog(dialogSettings);
+        }
+    });
+};
+
 TABS.presets.prepareFilterFields = function() {
     this._freezeSearch = true;
-    this.prepareFilterSelectField(this._selectCategory, this.presetsRepo.index.uniqueValues.category);
-    this.prepareFilterSelectField(this._selectKeyword, this.presetsRepo.index.uniqueValues.keywords);
-    this.prepareFilterSelectField(this._selectAuthor, this.presetsRepo.index.uniqueValues.author);
-    this.prepareFilterSelectField(this._selectFirmwareVersion, this.presetsRepo.index.uniqueValues.firmware_version);
-    this.prepareFilterSelectField(this._selectStatus, this.presetsRepo.index.settings.PresetStatusEnum);
+    this.prepareFilterSelectField(this._selectCategory, this.presetsRepo.index.uniqueValues.category, 3);
+    this.prepareFilterSelectField(this._selectKeyword, this.presetsRepo.index.uniqueValues.keywords, 3);
+    this.prepareFilterSelectField(this._selectAuthor, this.presetsRepo.index.uniqueValues.author, 1);
+    this.prepareFilterSelectField(this._selectFirmwareVersion, this.presetsRepo.index.uniqueValues.firmware_version, 2);
+    this.prepareFilterSelectField(this._selectStatus, this.presetsRepo.index.settings.PresetStatusEnum, 2);
 
     this.preselectFilterFields();
     this._inputTextFilter.on('input', () => this.updateSearchResults());
@@ -320,8 +345,6 @@ TABS.presets.prepareFilterFields = function() {
 };
 
 TABS.presets.preselectFilterFields = function() {
-    this._selectCategory.multipleSelect('setSelects', ["TUNE", "RC_SMOOTHING", "RC_LINK", "RATES"]);
-
     const currentVersion = FC.CONFIG.flightControllerVersion;
     const selectedVersions = [];
 
@@ -334,15 +357,17 @@ TABS.presets.preselectFilterFields = function() {
     this._selectFirmwareVersion.multipleSelect('setSelects', selectedVersions);
 };
 
-TABS.presets.prepareFilterSelectField = function(domSelectElement, selectOptions) {
+TABS.presets.prepareFilterSelectField = function(domSelectElement, selectOptions, minimumCountSelected) {
     domSelectElement.multipleSelect("destroy");
     domSelectElement.multipleSelect({
         data: selectOptions,
-        placeholder: i18n.getMessage("dropDownAll"),
+        showClear: true,
+        minimumCountSelected : minimumCountSelected,
+        placeholder: i18n.getMessage("dropDownFilterDisabled"),
         onClick: () => { this.updateSearchResults(); },
         onCheckAll: () => { this.updateSearchResults(); },
         onUncheckAll: () => { this.updateSearchResults(); },
-        formatSelectAll () { return i18n.getMessage("dropDownSelectAll"); },
+        formatSelectAll() { return i18n.getMessage("dropDownSelectAll"); },
         formatAllSelected() { return i18n.getMessage("dropDownAll"); },
     });
 };
@@ -411,6 +436,8 @@ TABS.presets.getFitPresets = function(searchParams) {
         }
     }
 
+    result.sort((a, b) => (a.priority > b.priority) ? -1 : 1);
+
     return result;
 };
 
@@ -478,10 +505,10 @@ TABS.presets.isPresetFitSearchFirmwareVersions = function(preset, searchParams) 
 
 
 TABS.presets.isPresetFitSearchString = function(preset, searchParams) {
-    if (searchParams.searchString)
-    {
+    if (searchParams.searchString) {
         const allKeywords = preset.keywords.join(" ");
-        const totalLine = [preset.description, allKeywords, preset.title, preset.author].join("\n").toLowerCase().replace("''", "\"");
+        const allVersions = preset.firmware_version.join(" ");
+        const totalLine = [preset.description, allKeywords, preset.title, preset.author, allVersions, preset.category].join("\n").toLowerCase().replace("''", "\"");
         const allWords = searchParams.searchString.toLowerCase().replace("''", "\"").split(" ");
 
         for (const word of allWords) {
