@@ -1547,7 +1547,7 @@
         "message": "Anti Gravedad aumenta el término I cuando se detectan cambios rápidos en el acelerador. Un valor más alto proporciona estabilidad y mantiene mejor la actitud cuando mueves rápidamente el acelerador."
     },
     "pidTuningDMin": {
-        "message": "D Min",
+        "message": "Derivativo (D) Min",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {
@@ -1761,7 +1761,7 @@
         "message": "Derivativo (D)"
     },
     "pidTuningDMax": {
-        "message": "D Max"
+        "message": "Derivativo (D) Max"
     },
     "pidTuningDerivativeHelp": {
         "message": "D Max proporciona un nivel más alto de D para maniobras rápidas que de otro modo podrían causar sobregiro como flips y rolls. Es especialmente útil en aeronaves ruidosas o máquinas con baja autoridad. D Max permite que el valor básico D, o Amortiguación, se ajuste más bajo de lo que de otra forma podría ser necesario, ayudando a mantener los motores más fríos y a hacer giros más rápidos. D Max también eleva D durante las turbulencias. Los valores de D Max Avance y Ganancia controlan el tiempo y la fuerza del aumento. Aeronaves para HD Freestyle o Cinemático típicamente usan un valor Derivativo relativamente alto para lograr estabilidad en el vuelo recto, y no necesita tanto de un aumento de D Max. Los pilotos de carreras normalmente se preocupan por mantener fríos los motores incluso con hélices dobladas, así que ejecutan valores básicos de D más bajos y mantienen D Max alto para controlar sobregiros.",
@@ -1877,7 +1877,7 @@
         "message": "Cancelar"
     },
     "pidTuningResetPidProfile": {
-        "message": "Restablecer los ajustes actuales del perfil PID"
+        "message": "Restablecer valores del perfil PID"
     },
     "pidTuningPidProfileReset": {
         "message": "Se cargaron los valores por defecto para el perfil actual del PID."
