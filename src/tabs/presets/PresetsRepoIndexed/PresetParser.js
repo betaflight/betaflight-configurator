@@ -129,8 +129,8 @@ class PresetParser {
 
     _getOptionName(line) {
         const directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_DIRECTIVE.length).trim();
-        const regExpRemoveChecked = new RegExp(this._escapeRegex(this._settings.OptionsDirectives.OPTION_CHECKED +":"), 'gi');
-        const regExpRemoveUnchecked = new RegExp(this._escapeRegex(this._settings.OptionsDirectives.OPTION_UNCHECKED +":"), 'gi');
+        const regExpRemoveChecked = new RegExp(this._escapeRegex(`${this._settings.OptionsDirectives.OPTION_CHECKED}:`), 'gi');
+        const regExpRemoveUnchecked = new RegExp(this._escapeRegex(`${this._settings.OptionsDirectives.OPTION_UNCHECKED}:`), 'gi');
         let optionName = directiveRemoved.replace(regExpRemoveChecked, "");
         optionName = optionName.replace(regExpRemoveUnchecked, "").trim();
         return optionName;
