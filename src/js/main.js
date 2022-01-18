@@ -364,7 +364,6 @@ function startProcess() {
                     case 'setup_osd':
                         TABS.setup_osd.initialize(content_ready);
                         break;
-
                     case 'configuration':
                         TABS.configuration.initialize(content_ready);
                         break;
