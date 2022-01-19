@@ -904,3 +904,9 @@ progress[value]::-webkit-progress-bar {
 .select2-results>.select2-results__options {
     background-color: #3a3a3a !important;
 }
+
+/* MULTIPLE-SELECT */
+
+.ms-drop ul>li.hide-radio:focus, .ms-drop ul>li.hide-radio:hover {
+    background-color: var(--subtleAccent);
+}
