@@ -51,7 +51,7 @@ class PresetsDetailedDialog {
     }
 
     _getFinalCliText() {
-        const optionsToInclude = this._domOptionsSelect.multipleSelect("getSelects", "text");
+        const optionsToInclude = this._domOptionsSelect.multipleSelect("getSelects", "value");
         return this._presetsRepo.removeUncheckedOptions(this._preset.originalPresetCliStrings, optionsToInclude);
     }
 
