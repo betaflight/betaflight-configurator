@@ -1,0 +1,62 @@
+name: Bug Report
+description: Create a report to help us fix bugs in Betaflight Configurator.
+labels: [Template: Bug]
+body:
+
+  - type: markdown
+    attributes:
+      value: |
+        # Please fill all the fields with the required information
+
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        # Setup
+
+  - type: input
+    attributes:
+      label: Configurator version
+      description: Specify the version of the configurator (as displayed in the app).
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Flight controller configuration
+      description: |
+        If this bug is related to a specific flight controller and/or configuration please specify it here.
+        Create a `diff` and post it here in a code block. Put (three backticks) at the start and end of the diff block (instructions  on how to do a diff: https://oscarliang.com/use-diff-not-dump-betaflight/).
+      value: |
+        ```
+          # REPLACE THIS LINE BY THE OUTPUT OF YOUR `diff`
+        ```
+
+  - type: markdown
+    attributes:
+      value: |
+        # Other information
+
+  - type: textarea
+    attributes:
+      label: Add any other context about the problem that you think might be relevant here
