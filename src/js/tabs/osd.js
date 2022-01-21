@@ -582,8 +582,8 @@ OSD.loadDisplayFields = function() {
             draw_order: 120,
             positionable: true,
             variants: [
-                'osdTextElementVTXchannelVariant-full',
-                'osdTextElementVTXchannelVariant-power',
+                'osdTextElementVTXchannelVariantfull',
+                'osdTextElementVTXchannelVariantpower',
                 ],
             preview(osdData) {
                 return OSD.generateVTXChannelPreview(osdData);
