@@ -73,6 +73,10 @@
     display: inline-block;
 }
 
+#presets_detailed_dialog .ms-drop ul>li.hide-radio:focus, .ms-drop ul>li.hide-radio:hover {
+    background: none !important;
+}
+
 @media all and (max-width: 575px) {
     .presets_detailed_dialog_text {
         height: unset;
