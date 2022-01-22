@@ -4807,11 +4807,11 @@
     "osdDescElementVtxChannel": {
         "message": "Current VTX channel and power"
     },
-    "osdTextElementVTXchannelVariantpower": {
+    "osdTextElementVTXchannelVariantPower": {
         "message": "VTX power",
         "description": "One of the variants of the VTX channel element of the OSD"        
     },
-    "osdTextElementVTXchannelVariantfull": {
+    "osdTextElementVTXchannelVariantFull": {
         "message": "Band:Channel:Pwr:Pit",
         "description": "One of the variants of the VTX channel element of the OSD"
     },
