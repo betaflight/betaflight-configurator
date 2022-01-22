@@ -59,7 +59,7 @@ function generateData(firmware, input, startAddress) {
     }
 
     // Add 0 terminator
-    input = input + '\0';
+    input = `${input}\0`;
 
     let inputIndex = 0;
     while (inputIndex < input.length) {

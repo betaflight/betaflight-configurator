@@ -103,7 +103,7 @@ CliAutoComplete.builderStart = function() {
         };
         this.builder.commandSequence = ['help', 'dump', 'get', 'mixer list'];
         this.builder.currentSetting = null;
-        this.builder.sentinel = '# ' + Math.random();
+        this.builder.sentinel = `# ${Math.random()}`;
         this.builder.state = 'init';
         this.writeToOutput('<br># Building AutoComplete Cache ... ');
         this.sendLine(this.builder.sentinel);
@@ -123,7 +123,7 @@ CliAutoComplete.builderParseLine = function(line) {
 
         if (command && this.configEnabled) {
             // next state
-            builder.state = 'parse-' + command;
+            builder.state = `parse-${command}`;
             this.sendLine(command);
             this.sendLine(builder.sentinel);
         } else {
@@ -398,7 +398,7 @@ CliAutoComplete._initTextcomplete = function() {
                     value = this.value;
                 }
 
-                return '$1 = ' + value; // cosmetic - make sure we have spaces around the `=`
+                return `$1 = ${value}`; // cosmetic - make sure we have spaces around the `=`
             },
             index: 3,
             isSettingValueArray: false,

@@ -21,7 +21,7 @@ const Analytics = function (trackingId, userId, appName, appVersion, gitRevision
     this._googleAnalytics.set('checkProtocolTask', null);
 
     this._googleAnalytics.set('appName', appName);
-    this._googleAnalytics.set('appVersion', debugMode ? appVersion + '-debug' : appVersion);
+    this._googleAnalytics.set('appVersion', debugMode ? `${appVersion}-debug` : appVersion);
 
     this.EVENT_CATEGORIES = {
         APPLICATION: 'Application',
@@ -130,7 +130,7 @@ Analytics.prototype.sendException = function (message) {
 };
 
 Analytics.prototype.setOptOut = function (optOut) {
-    window['ga-disable-' + this._trackingId] = !!optOut;
+    window[`ga-disable-${this._trackingId}`] = !!optOut;
 };
 
 Analytics.prototype._rebuildFlightControllerEvent = function () {

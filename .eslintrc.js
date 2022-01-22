@@ -17,5 +17,7 @@ module.exports = {
         semi: "error",
         "comma-dangle": ["error", "always-multiline"],
         "no-var": "error",
+        "prefer-template": "error",
+        "template-curly-spacing": "error",
     },
 };

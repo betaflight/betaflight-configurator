@@ -14,7 +14,7 @@ module.exports = function(options) {
     const ee = appdmg(options);
 
     ee.on('progress', function(info) {
-      gutil.log(info.current + '/' + info.total + ' ' + info.type + ' ' + (info.title || info.status));
+      gutil.log(`${info.current}/${info.total} ${info.type} ${info.title || info.status}`);
     });
 
     ee.on('error', function(err) {
