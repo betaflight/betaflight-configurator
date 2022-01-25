@@ -44,6 +44,18 @@ In most Linux distributions your user won't have access to serial interfaces by 
 sudo usermod -aG dialout ${USER}
 ```
 
+Post-installation errors can be prevented by making sure the directory `/usr/share/desktop-directories` exists. To make sure it exists, run the following command before installing the package:
+
+```
+sudo mkdir /usr/share/desktop-directories/
+```
+
+The `libatomic` library must also be installed before installing Betaflight Configurator. (If the library is missing, the installation will succeed but Betaflight Configurator will not start.) Some Linux distributions (e.g. Fedora) will install it automatically. On Debian or Ubuntu you can install it as follows:
+
+```
+sudo apt install libatomic1
+```
+
 #### Graphics Issues
 
 If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
