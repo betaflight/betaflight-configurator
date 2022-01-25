@@ -9,6 +9,11 @@
     margin-bottom: 2ex;
 }
 
+/* multiple select for options - force placeholder color to black/white */
+#presets_detailed_dialog_content_wrapper .ms-choice>span.placeholder {
+    color: var(--defaultText);
+}
+
 .presets-detailed-dialog-property-table {
     margin-top: 10px;
     margin-bottom: 10px;

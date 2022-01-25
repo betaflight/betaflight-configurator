@@ -23,6 +23,7 @@ class PresetsDetailedDialog {
         this._preset = preset;
         this._setLoadingState(true);
         this._domDialog[0].showModal();
+        this._optionsShowedAtLeastOnce = false;
 
         this._presetsRepo.loadPreset(this._preset)
             .then(() => {
@@ -139,6 +140,7 @@ class PresetsDetailedDialog {
             onClick: () => this._optionsSelectionChanged(),
             onCheckAll: () => this._optionsSelectionChanged(),
             onUncheckAll: () => this._optionsSelectionChanged(),
+            onOpen: () => this._optionsOpened(),
             hideOptgroupCheckboxes: true,
             singleRadio: true,
             selectAll: false,
@@ -152,6 +154,10 @@ class PresetsDetailedDialog {
                 return style;
             },
         });
+    }
+
+    _optionsOpened() {
+        this._optionsShowedAtLeastOnce = true;
     }
 
     _addOptionGroup(parentElement, optionGroup) {
@@ -210,7 +216,14 @@ class PresetsDetailedDialog {
     }
 
     _onApplyButtonClicked() {
-        if (!this._preset.completeWarning) {
+        if (this._preset.force_options_review && !this._optionsShowedAtLeastOnce) {
+            const dialogOptions = {
+                title: i18n.getMessage("warningTitle"),
+                text: i18n.getMessage("presetsReviewOptionsWarning"),
+                buttonConfirmText: i18n.getMessage("close"),
+            };
+            GUI.showInformationDialog(dialogOptions);
+        } else if (!this._preset.completeWarning) {
             this._pickPresetFwVersionCheck();
         } else {
             GUI.showYesNoDialog(this._finalDialogYesNoSettings);

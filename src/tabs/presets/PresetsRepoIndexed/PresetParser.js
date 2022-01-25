@@ -6,7 +6,7 @@ class PresetParser {
     }
 
     readPresetProperties(preset, strings) {
-        const propertiesToRead = ["description", "discussion", "warning", "disclaimer", "include_warning", "include_disclaimer", "discussion"];
+        const propertiesToRead = ["description", "discussion", "warning", "disclaimer", "include_warning", "include_disclaimer", "discussion", "force_options_review"];
         const propertiesMetadata = {};
         preset.options = [];
 
@@ -110,9 +110,25 @@ class PresetParser {
             case this._settings.MetadataTypes.FILE_PATH_ARRAY:
                 this._processArrayProperty(preset, line, propertyName);
                 break;
+            case this._settings.MetadataTypes.BOOLEAN:
+                this._processBooleanProperty(preset, line, propertyName);
+                break;
             default:
                 this.console.err(`Parcing preset: unknown property type '${this._settings.presetsFileMetadata[property].type}' for the property '${propertyName}'`);
         }
+    }
+
+    _processBooleanProperty(preset, line, propertyName) {
+        const trueValues = ["true", "yes"];
+
+        const lineLowCase = line.toLowerCase();
+        let result = false;
+
+        if (trueValues.includes(lineLowCase)) {
+            result = true;
+        }
+
+        preset[propertyName] = result;
     }
 
     _processArrayProperty(preset, line, propertyName) {
