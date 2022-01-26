@@ -675,7 +675,6 @@ TABS.motors.initialize = function (callback) {
             dshotBidirElement.on("change", function () {
                 const value = $(this).prop('checked');
                 const newValue = (value !== FC.MOTOR_CONFIG.use_dshot_telemetry) ? 'On' : 'Off';
-
                 self.analyticsChanges['BidirectionalDshot'] = newValue;
                 FC.MOTOR_CONFIG.use_dshot_telemetry = value;
 
