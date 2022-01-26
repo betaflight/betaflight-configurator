@@ -6589,5 +6589,9 @@
     "presetsVersionMismatch": {
         "message": "Preset source version mismatch.<br/>Required version: {{versionRequired}}<br/>Preset source version: {{versionSource}}<br/>Using this preset source could be dangerous.<br/>Do you want to continue?",
         "description": "Placeholder for the options list dropdown"
+    },
+    "presetsReviewOptionsWarning": {
+        "message": "Please, review the list of options before picking this preset.",
+        "description": "Dialog text to prompt user to review options for the preset"
     }
 }
