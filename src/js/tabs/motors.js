@@ -1148,10 +1148,11 @@ TABS.motors.initialize = function (callback) {
     function setup_motor_output_reordering_dialog(callbackFunction, zeroThrottleValue)
     {
         const domDialogMotorOutputReorder = $('#dialogMotorOutputReorder');
+        const idleThrottleValue = zeroThrottleValue + 60;
 
         const motorOutputReorderComponent = new MotorOutputReorderComponent($('#dialogMotorOutputReorderContent'),
             callbackFunction, mixerList[FC.MIXER_CONFIG.mixer - 1].name,
-            zeroThrottleValue, zeroThrottleValue + 200);
+            zeroThrottleValue, idleThrottleValue);
 
         $('#dialogMotorOutputReorder-closebtn').click(closeDialogMotorOutputReorder);
 
@@ -1180,7 +1181,7 @@ TABS.motors.initialize = function (callback) {
     {
         const domEscDshotDirectionDialog = $('#escDshotDirectionDialog');
 
-        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 1000 / 100;
+        const idleThrottleValue = zeroThrottleValue + 60;
 
         const motorConfig = {
             numberOfMotors: self.numberOfValidOutputs,
