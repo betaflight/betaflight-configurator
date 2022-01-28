@@ -724,21 +724,8 @@ function showErrorDialog(message) {
     dialog.showModal();
 }
 
-function showDialogDynFiltersChange() {
-    const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
-
-    if (!dialogDynFiltersChange.hasAttribute('open')) {
-        dialogDynFiltersChange.showModal();
-
-        $('.dialogDynFiltersChange-confirmbtn').click(function() {
-            dialogDynFiltersChange.close();
-        });
-    }
-}
-
 // TODO: all of these are used as globals in other parts.
 // once moved to modules extract to own module.
-window.showDialogDynFiltersChange = showDialogDynFiltersChange;
 window.googleAnalytics = analytics;
 window.analytics = null;
 window.showErrorDialog = showErrorDialog;

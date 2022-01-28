@@ -1522,10 +1522,7 @@
         "message": "Dynamic Notch values change"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>WARNING: Some dynamic notch values have been changed to default values</b></span> because the RPM filtering has been activated/deactivated.<br> Please, check before flying."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "OK"
+        "message": "<span class=\"message-negative\"><b>WARNING: This change will enable/disable RPM filtering, increasing/decreasing filter delay/effectiveness.</b></span><br><br>Reset the dynamic notch filters to recommended values?"
     },
     "portsIdentifier": {
         "message": "Identifier"

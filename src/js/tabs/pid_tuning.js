@@ -5,6 +5,8 @@ TABS.pid_tuning = {
     showAllPids: false,
     updating: true,
     dirty: false,
+    previousFilterDynQ: null,
+    previousFilterDynCount: null,
     currentProfile: null,
     currentRateProfile: null,
     currentRatesType: null,
@@ -446,28 +448,37 @@ TABS.pid_tuning.initialize = function (callback) {
 
                 rpmFilterHarmonics_e.attr('disabled', !checked);
                 rpmFilterMinHz_e.attr('disabled', !checked);
+                self.previousFilterDynQ = FC.FILTER_CONFIG.dyn_notch_q;
+                self.previousFilterDynCount = FC.FILTER_CONFIG.dyn_notch_count;
 
                 if (harmonics == 0) {
                     rpmFilterHarmonics_e.val(FILTER_DEFAULT.gyro_rpm_notch_harmonics);
                 }
 
-                if (checked !== (FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0)) { // if rpmFilterEnabled is not the same value as saved in the fc
+                const dialogSettings = {
+                    title: i18n.getMessage("dialogDynFiltersChangeTitle"),
+                    text: i18n.getMessage("dialogDynFiltersChangeNote"),
+                    buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
+                    buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
+                    buttonYesCallback: () => _dynFilterChange(),
+                    buttonNoCallback:  null,
+                };
+
+                const _dynFilterChange = function() {
                     if (checked) {
                         dynamicNotchCount_e.val(FILTER_DEFAULT.dyn_notch_count_rpm);
                         dynamicNotchQ_e.val(FILTER_DEFAULT.dyn_notch_q_rpm);
-                        dynamicNotchWidthPercent_e.val(FILTER_DEFAULT.dyn_notch_width_percent_rpm);
                     } else {
                         dynamicNotchCount_e.val(FILTER_DEFAULT.dyn_notch_count);
                         dynamicNotchQ_e.val(FILTER_DEFAULT.dyn_notch_q);
-                        dynamicNotchWidthPercent_e.val(FILTER_DEFAULT.dyn_notch_width_percent);
                     }
+                };
 
-                    showDialogDynFiltersChange();
-
-                } else { // same value, return saved values
-                    dynamicNotchCount_e.val(FC.FILTER_CONFIG.dyn_notch_count);
-                    dynamicNotchQ_e.val(FC.FILTER_CONFIG.dyn_notch_q);
-                    dynamicNotchWidthPercent_e.val(FC.FILTER_CONFIG.dyn_notch_width_percent);
+                if (checked !== (FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0)) { // if rpmFilterEnabled is not the same value as saved in the fc
+                    GUI.showYesNoDialog(dialogSettings);
+                } else {
+                    dynamicNotchCount_e.val(self.previousFilterDynCount);
+                    dynamicNotchQ_e.val(self.previousFilterDynQ);
                 }
 
                 $('.rpmFilter span.suboption').toggle(checked);
