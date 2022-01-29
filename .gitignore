@@ -31,3 +31,7 @@ nbproject/
 # Eclipse
 .project
 .settings/
+
+.DS_STORE
+.cache
+.temp

@@ -4,19 +4,26 @@
   "description": "Crossplatform configuration tool for Betaflight flight control system.",
   "version": "10.8.0",
   "main": "main.html",
+  "type": "module",
   "chromium-args": "--disable-features=nw2",
   "scripts": {
-    "start": "run-script-os",
-    "start:default": "NODE_ENV=development NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' gulp debug",
-    "start:windows": "set NODE_ENV=development && set NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' && gulp debug",
+    "format": "run-s format:*",
+    "format:eslint": "npm run lint:eslint -- --fix",
     "gulp": "gulp",
+    "lint": "eslint --ext .js,.vue src gulpfile.js gulp-appdmg.js",
+    "lint:eslint": "eslint --ext .js,.jsx,.vue . --ignore-path .gitignore",
+    "lint:fix": "eslint --fix src gulpfile.js gulp-appdmg.js",
+    "pretest": "yarn run lint",
     "release": "run-script-os",
     "release:default": "NODE_ENV=production gulp release",
     "release:windows": "set NODE_ENV=production&& gulp release",
-    "pretest": "yarn run lint",
+    "start": "run-script-os",
+    "start:default": "NODE_ENV=development NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' gulp debug",
+    "start:windows": "set NODE_ENV=development && set NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' && gulp debug",
     "test": "karma start test/karma.conf.js",
-    "lint": "eslint --ext .js,.vue src gulpfile.js gulp-appdmg.js",
-    "lint:fix": "eslint --fix src gulpfile.js gulp-appdmg.js"
+    "vitebook:build": "vitebook build",
+    "vitebook:dev": "vitebook dev",
+    "vitebook:preview": "vitebook preview"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
@@ -47,7 +54,7 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
@@ -73,7 +80,7 @@
     "switchery-latest": "^0.8.2",
     "three": "~0.97.0",
     "universal-ga": "^1.2.0",
-    "vue": "2.6.12"
+    "vue": "3.2.29"
   },
   "devDependencies": {
     "@quanle94/innosetup": "^6.0.2",
@@ -81,12 +88,19 @@
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-replace": "^2.3.3",
+    "@vitebook/client": "^0.19.4",
+    "@vitebook/core": "^0.19.4",
+    "@vitebook/markdown-vue": "^0.19.4",
+    "@vitebook/theme-default": "^0.19.4",
+    "@vitebook/vue": "^0.19.4",
     "browserify": "^17.0.0",
     "chai": "^4.2.0",
     "command-exists": "^1.2.8",
     "cordova-lib": "^10.0.0",
     "del": "^5.0.0",
     "eslint": "^7.16.0",
+    "eslint-plugin-import": "^2.0.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-vue": "^7.3.0",
     "follow-redirects": "^1.10.0",
     "fs-extra": "^8.1.0",
@@ -114,6 +128,7 @@
     "karma-spec-reporter": "^0.0.32",
     "karma-tfs-reporter": "^1.0.2",
     "mocha": "^7.0.1",
+    "npm-run-all": "^4.0.0",
     "nw-builder": "^3.5.7",
     "os": "^0.1.1",
     "postcss": "^8.2.10",
@@ -124,6 +139,7 @@
     "simple-git": "^2.44.0",
     "sinon": "^9.0.0",
     "sinon-chai": "^3.5.0",
+    "svelte": "^3.43.1",
     "targz": "^1.0.1",
     "temp": "^0.9.1",
     "through2": "^4.0.2",
