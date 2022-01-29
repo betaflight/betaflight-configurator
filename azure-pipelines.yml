@@ -52,8 +52,8 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '14.18.2'
-      displayName: 'Install Node.js 14.18.2'
+        versionSpec: '16.13.2'
+      displayName: 'Install Node.js 16.13.2'
     - script: yarn install --ignore-optional
       displayName: 'Run yarn install'
     - script: yarn test
@@ -84,8 +84,8 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '14.18.2'
-      displayName: 'Install Node.js 14.18.2'
+        versionSpec: '16.13.2'
+      displayName: 'Install Node.js 16.13.2'
     - script: yarn install --ignore-optional
       displayName: 'Run yarn install'
     - script: yarn gulp debug-release --android
@@ -103,8 +103,8 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '14.18.2'
-      displayName: 'Install Node.js 14.18.2'
+        versionSpec: '16.13.2'
+      displayName: 'Install Node.js 16.13.2'
     - script: npm install -g gulp
       displayName: 'Install Gulp'
     - script: yarn install
@@ -128,8 +128,8 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '14.18.2'
-      displayName: 'Install Node.js 14.18.2'
+        versionSpec: '16.13.2'
+      displayName: 'Install Node.js 16.13.2'
     - script: yarn install --ignore-optional
       displayName: 'Run yarn install'
     - script: yarn gulp release --linux64

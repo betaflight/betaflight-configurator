@@ -22,7 +22,7 @@ git:
 language: node_js
 
 node_js:
-  - 14.18.2
+  - 16.13.2
 
 before_install:
   - |
