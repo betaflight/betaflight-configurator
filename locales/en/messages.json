@@ -3291,6 +3291,10 @@
         "message": "Configurator has <span class=\"message-positive\">successfully</span> detected and verified the board: <strong>{{boardName}}</strong>",
         "description": "Board verification has succeeded."
     },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "Configurator has detected the board: <strong>{{boardName}}</strong> but no official Betaflight target was found",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+    },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Configurator <span class=\"message-negative\">failed</span> to verify the board, if this does not work please try switching tab slowly to retry, make a new usb connection or connect first if you might have forgotten to apply custom defaults",
         "description": "Sometimes MSP values cannot be read from firmware correctly"

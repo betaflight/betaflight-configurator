@@ -797,9 +797,23 @@ firmware_flasher.initialize = function (callback) {
 
                 function onFinish() {
                     const board = FC.CONFIG.boardName;
+                    const boardSelect = $('select[name="board"]');
+                    const boardSelectOptions = $('select[name="board"] option');
+                    const target = boardSelect.val();
+                    let targetAvailable = false;
+
                     if (board) {
-                        $('select[name="board"]').val(board).trigger('change');
-                        GUI.log(i18n.getMessage('firmwareFlasherBoardVerificationSuccess', {boardName: board}));
+                        boardSelectOptions.each((_, e) => {
+                            if ($(e).text() === board) {
+                                targetAvailable = true;
+                            }
+                        });
+
+                        if (board !== target) {
+                            boardSelect.val(board).trigger('change');
+                        }
+                        GUI.log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
+                            { boardName: board }));
                     } else {
                         GUI.log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
                     }
@@ -869,7 +883,7 @@ firmware_flasher.initialize = function (callback) {
         function updateDetectBoardButton() {
             const isDfu = portPickerElement.val().includes('DFU');
             const isBusy = GUI.connect_lock;
-            const isLoaded = self.releases ? Object.keys(self.releases).length > 1 : false;
+            const isLoaded = self.releases ? Object.keys(self.releases).length > 0 : false;
             const isAvailable = PortHandler.port_available || false;
             const isButtonDisabled = isDfu || isBusy || !isLoaded || !isAvailable;
 
