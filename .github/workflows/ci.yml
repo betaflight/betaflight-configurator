@@ -8,20 +8,16 @@ env:
 name: CI
 
 on:
-  push:
-    branches:
-      - master
-      - '*-maintenance'
   pull_request:
     branches:
       - master
       - '*-maintenance'
+  workflow_call:
 
 jobs:
   test:
     name: Test
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v2
 

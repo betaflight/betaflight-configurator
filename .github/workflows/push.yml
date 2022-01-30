@@ -11,24 +11,28 @@ env:
     **Use only for testing.**
   releaseNotes: This is a release build. It does not contain the debug console.
 
-name: Nightly Build
+name: Push
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
+  push:
+    branches:
+      - master
+      - '*-maintenance'
 
 jobs:
-  release-nightly:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
+  nightly:
     name: Release Nightly
+    needs: ci
     runs-on: ubuntu-20.04
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
     steps:
-      - name: Fetch release assets
-        uses: dawidd6/action-download-artifact@09385b76de790122f4da9c82b17bccf858b9557c # v2.16.0
+      - name: Fetch build artifacts
+        uses: actions/download-artifact@v2
         with:
           path: release-assets/
-          workflow: ${{ github.event.workflow_run.workflow_id }}
 
       - name: Select release notes
         id: notes
@@ -37,6 +41,7 @@ jobs:
           echo "::set-output name=notes::$(test -e "$1" && echo '${{ env.debugReleaseNotes }}' || echo '${{ env.releaseNotes }}')"
 
       - name: Release
+        continue-on-error: true
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # v0.1.14
         with:
           token: ${{ secrets.REPO_TOKEN }}
