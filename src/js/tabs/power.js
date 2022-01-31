@@ -396,11 +396,14 @@ TABS.power.initialize = function (callback) {
 
         let vbatscalechanged = false;
         let amperagescalechanged = false;
+        let vbatnewscale = 0;
+        let amperagenewscale = 0;
+
         $('a.calibrate').click(function() {
             if (FC.BATTERY_CONFIG.voltageMeterSource == 1) {
                 const vbatcalibration = parseFloat($('input[name="vbatcalibration"]').val());
                 if (vbatcalibration != 0) {
-                    const vbatnewscale = Math.round(FC.VOLTAGE_METER_CONFIGS[0].vbatscale * (vbatcalibration / FC.VOLTAGE_METERS[0].voltage));
+                    vbatnewscale = Math.round(FC.VOLTAGE_METER_CONFIGS[0].vbatscale * (vbatcalibration / FC.VOLTAGE_METERS[0].voltage));
                     if (vbatnewscale >= 10 && vbatnewscale <= 255) {
                         FC.VOLTAGE_METER_CONFIGS[0].vbatscale = vbatnewscale;
                         vbatscalechanged = true;
@@ -413,7 +416,7 @@ TABS.power.initialize = function (callback) {
                 const amperageoffset = FC.CURRENT_METER_CONFIGS[ampsource - 1].offset / 1000;
                 if (amperagecalibration != 0) {
                     if (FC.CURRENT_METERS[ampsource - 1].amperage != amperageoffset && amperagecalibration != amperageoffset) {
-                        const amperagenewscale = Math.round(FC.CURRENT_METER_CONFIGS[ampsource - 1].scale *
+                        amperagenewscale = Math.round(FC.CURRENT_METER_CONFIGS[ampsource - 1].scale *
                             ((FC.CURRENT_METERS[ampsource - 1].amperage -  amperageoffset) / (amperagecalibration - amperageoffset)));
                         if (amperagenewscale > -16000 && amperagenewscale < 16000 && amperagenewscale != 0) {
                             FC.CURRENT_METER_CONFIGS[ampsource - 1].scale = amperagenewscale;
