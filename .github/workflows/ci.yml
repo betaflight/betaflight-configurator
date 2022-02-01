@@ -7,12 +7,7 @@ env:
 
 name: CI
 
-on:
-  pull_request:
-    branches:
-      - master
-      - '*-maintenance'
-  workflow_call:
+on: workflow_call
 
 jobs:
   test:
