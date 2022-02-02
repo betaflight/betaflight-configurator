@@ -564,9 +564,6 @@
     "defaultWelcomeHead": {
         "message": "Аппаратная часть"
     },
-    "defaultWelcomeText": {
-        "message": "Программа поддерживает все аппаратные средства, на которых возможно запускать Betaflight. Проверьте вкладку прошивки для получения полного списка оборудования.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight Blackbox Log Viewer</a><br /><br />/<a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight TX Lua Scripts</a><br /><br />Исходный код прошивки можно загрузить <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br /><br />Последние <b>STM USB VCP драйверы</b> можно загрузить <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Для устаревшего оборудования использующего чип CP210x USB to Serial:<br />Последние <b>CP210x драйверы</b> могут быть загружены <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Последний <b>Zadig</b> для установки USB драйвера Windows можно загрузить <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Содействие"
     },
@@ -663,12 +660,6 @@
     },
     "initialSetupResetText": {
         "message": "Сбросить настройки <strong>до заводских</strong>"
-    },
-    "initialSetupButtonBackup": {
-        "message": "Сохранить"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Восстановить"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Активировать загрузчик / DFU"
@@ -913,17 +904,11 @@
     "featureNone": {
         "message": "&lt;Выберите значение&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX вход"
-    },
     "featureVBAT": {
         "message": "Контроль напряжения батареи"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Калибровка в полете"
-    },
-    "featureRX_SERIAL": {
-        "message": "Приёмник с последоват. передачей данных (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Моторы не крутятся, если включён arming"
@@ -958,12 +943,6 @@
     "feature3D": {
         "message": "3D режим (используется с реверсивными ESC)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX input (по 1-му проводу на каждый канал)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX вход (управление через MSP-порт)"
-    },
     "featureRSSI_ADC": {
         "message": "Аналоговый RSSI-вход"
     },
@@ -987,9 +966,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "После включения настройте во вкладке Черный Ящик."
-    },
-    "featureRX_SPI": {
-        "message": "Поддержка SPI RX"
     },
     "featureESC_SENSOR": {
         "message": "Используйте KISS/BLHeli_32 ESC телеметрию <b>через отдельный провод</b>"
@@ -1017,9 +993,6 @@
     },
     "featureVTX": {
         "message": "Видеопередатчик"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "Включить Anti Gravity по умолчанию"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Если это отключено, то для включения антигравитации можно использовать режим 'ANTI GRAVITY'."
@@ -1071,9 +1044,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Примечание:</strong> Не все комбинации настроек допустимы. Когда полетный контроллер обнаруживает недопустимые настройки, то они отключаются.<br /><strong>Примечание:</strong> Настройте последовательный порт <span class=\"message-negative\">до</span> включения настроек, которые используют данный порт."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Примечание:</strong> Не забудьте настроить последовательный порт (через вкладку «Порты») и выбрать Приемник с последовательным выходом при использовании функции RX_SERIAL."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Примечание:</strong> SPI RX вход будет работать только в том случае, если необходимое \"железо\" находится на плате или подключено к шине SPI."
@@ -1155,12 +1125,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Arming всегда запрещён, если значение газа не низкое. Но будьте осторожны с этой включенной опцией, т.к. вы можете тумблером случайно задизармиться прямо в полёте, отключив тем самым моторы."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Холостой ход (в процентах)"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Значение 'Холостой ход (в процентах)' - это значение в процентах от максимального значения дросселя, которое отправляется в ESC, когда стик дросселя находится в минимальном положении и летательный аппарат включён. Увеличьте его, чтобы увеличить скорость холостого хода и избежать рассинхронизации двигателей. При слишком высоком значении летательный аппарат будет \"вялым\"."
     },
     "configurationMotorPoles": {
         "message": "Полюса мотора",
@@ -1337,10 +1301,6 @@
         "message": "Использовать Галилео",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "При включении, это заменяет QZSS систему (Япония) на Galileo (Европа).",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Установить точку \"Дом\" один раз",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1366,12 +1326,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "Изменение динамических значений Notch"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>ПРЕДУПРЕЖДЕНИЕ: Некоторые значения dynamic notch были изменены на значения по умолчанию</b></span> потому что была активирована/деактивирована фильтрация RPM.<br> Пожалуйста, проверьте перед полетом."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "OK"
     },
     "portsIdentifier": {
         "message": "Идентификатор"
@@ -1519,16 +1473,6 @@
         "message": "Порог",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Антигравитация повышает Интегрирующую составляющую, когда обнаруживаются быстрые изменения газа. Высокие значения усиления обеспечивают стабильность и лучшее удержание позиции когда вы газуете."
-    },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Примечание:</strong>Функция D Min отключена и её параметры скрыты. Чтобы использовать D Min, включите ее в $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Амплитуда",
         "description": "Gain of the D Max feature"
@@ -1600,28 +1544,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> использование D Setpoint больше 0 и меньше, чем 0.1 не рекомендуется. Это может привести к нестабильности и снижению чувствительности стиков когда стик пересекает центральную точку.</span>"
     },
-    "pidTuningProportional": {
-        "message": "Proportional"
-    },
-    "pidTuningProportionalHelp": {
-        "message": "Управляет силой, насколько плотно аппарат отслеживает стики (Setpoint).<br /><br />Высокое значение (усиление) обеспечивает более жесткое отслеживание, но может вызывать overshoot, если оно слишком большое относительно D-term. Думайте о P-term как о пружине на автомобиле.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
-    "pidTuningIntegral": {
-        "message": "Integral"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "Управляет силой, насколько плотно аппарат держит общее положение в заданной точке.<br>Подобно Proportional, но для более длительных интервалов времени, таких как смещение центра тяжести (CoG) или стойкое внешнее влияние (устойчивый ветер).<br /><br />Высокие значения обеспечивают более жесткое отслеживание (например в широких поворотах), но могут заставить аппарат вести себя жестко в отношении комманд стиками.<br>В случае если значения чрезвычайно высоки (в соотношении с D-term), это может привести к медленным осцилляциям.",
-        "description": "Integral Term helpicon message on PID table titlebar"
-    },
     "pidTuningDerivative": {
         "message": "Derivative"
-    },
-    "pidTuningDMax": {
-        "message": "D Max"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Предупреждение:</b></span> очень высокие коэфициенты могут привести к рассинхронизации двигателей при быстрых замедлениях."
@@ -1701,12 +1625,6 @@
     "pidTuningControllerHead": {
         "message": "PID Контроллер"
     },
-    "pidTuningCopyProfile": {
-        "message": "Скопир. значения профиля"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Скопир. значения Rate-профиля"
-    },
     "dialogCopyProfileText": {
         "message": "Копировать значения из текущего профиля в"
     },
@@ -1724,9 +1642,6 @@
     },
     "dialogCopyProfileClose": {
         "message": "Отмена"
-    },
-    "pidTuningResetPidProfile": {
-        "message": "Сбросить настройки текущего PID профиля"
     },
     "pidTuningPidProfileReset": {
         "message": "Загружены значения по умолчанию для текущего PID профиля."
@@ -1748,9 +1663,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">сохранено</span>"
-    },
-    "receiverHelp": {
-        "message": "Пожалуйста, прочитайте в документации главу \"Приёмник\". Сконфигурируйте последовательный порт (если это необходимо), режим приёмника (serial/ppm/pwm), протокол (в режиме serial), забиндите приёмник к аппаратуре, укажите карту каналов, настройте endpoints/range в передающей аппаратуре таким образом, чтобы все каналы имели значения от ~1000 до ~2000. Укажите значение центра стика (по умолчанию 1500); подтриммируйте каналы в передающей аппаратуре, чтобы стики в центральном положении имели значение 1500; укажите необходимое значение мёртвой зоны стика; также проверьте поведение каналов при выключенной передающей аппаратуре.<br /><span class=\"message-negative\">ВАЖНО:</span> Перед полётом ознакомьтесь в документации с главой \"failsafe\" и настройте failsafe."
     },
     "tuningHelp": {
         "message": "<b>Советы по настройке</b><br /><span class=\"message-negative\">Важно:</span> После настройки фильтров, во время первых полётов, убедитесь, что моторы не перегреваются. Более высокое значение фильтра может улучшить стабильность полёта, но, также, вносит больше шумов в моторы, что может вызвать их нагрев.<br>Значение по умолчанию 100 Гц является оптимальным, но для более шумных аппаратов вы можете снизить значение Dterm-фильтра до 50 Гц и, возможно, также понизить значение фильтра гироскопа."
@@ -2202,9 +2114,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID спут."
-    },
-    "gpsSignalQty": {
-        "message": "Количество"
     },
     "motorsVoltage": {
         "message": "Напряжение:"
@@ -3274,15 +3183,6 @@
     "pidTuningMotorLimit": {
         "message": "Коэффициент масштабирования [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "Линейный коэффициент ослабления команд двигателей (в процентах). Уменьшает ток ESC, а также нагрев двигателей, при использовании более батарей с большим чмслом банок, напр. при использовании батареи 6S на аппарате с двигателями, пропеллерами и настройками для 4S, попробуйте установить значение 66%; при использовании батареи 4S на аппарате, предназначенном для 3S, попробуйте 75%.<br>Всегда убедитесь, что все ваши компоненты поддерживают напряжение используемого аккумулятора."
-    },
-    "pidTuningCellCount": {
-        "message": "Количество \"банок\""
-    },
-    "pidTuningCellCountHelp": {
-        "message": "Автоматически активирует первый профиль, в котором количество \"банок\" равно таковому в подключенном аккумуляторе."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Настройки фильтра вне зависимости от выбранного профиля"
     },
@@ -3362,50 +3262,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro режекторные фильтры"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro Notch фильтр 1, центральная частота [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro Notch фильтр 2, центральная частота [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch фильтр 1, частота среза [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch фильтр 2, частота среза [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Notch Filter имеет центр и частоту среза. Фильтр симметричный. Центральная частота есть центр фильтра и частота среза в которой Notch filter начинается. Например Notch с частотой среза 160 и центром 260 это значит, что диапазон составляет 160-360 для наибольшего затухания вокруг центра"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Динамический Режекторный Фильтр"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "Динамический режекторный фильтр отслеживает пиковую частоту шума моторов и размещает один или два фильтра их центрами на этой частоте."
-    },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "Динамический режекторный фильтр отслеживает пиковую частоту шума моторов и размещает один или два фильтра их центрами на этой частоте."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Внимание:</strong> Динамический режекторный фильтр отключен. Чтобы настроить и использовать его, пожалуйста, включите функцию 'DYNAMIC_FILTER' в разделе '$t(configurationFeatures.message)' во вкладке '$t(tabConfiguration.message)'."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Диапазон динамического режекторного фильтра"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Ширина динамического режекторного фильтра в процентах"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "Q динамического режекторного фильтра"
-    },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Минимальная частота Динамического Notch [Hz]"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Максимальная частота динамического Notch [Hz]"
-    },
-    "pidTuningDynamicNotchCount": {
-        "message": "Количество динамических Notch"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамический режекторный фильтр имеет три частотных диапазона, в которых он может работать: LOW(80-330гц) для более низкооборотных квадрокоптеров, таких как 6+ дюймов, MEDIUM(140-550гц) для \"нормальных\" 5 дюймовых квадрокоптеров и HIGH(230-800гц) для сверхвысокооборотных 2-3 дюймовых квадрокоптеров. AUTO выбирает диапазон в зависимости от значения максимальной (cutoff) частоты динамического фильтра нижних частот Gyro."
@@ -3455,36 +3319,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term НЧ фильтры"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D Term Lowpass 1, тип фильтра"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D Term Lowpass 2, тип фильтра"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D Term Lowpass 1 Dynamic, мин. частота среза [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D Term Lowpass 1 Dynamic, макс. частота среза [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "Экспонента 1 кривой нижнего фильтра параметра D"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 Dynamic, тип фильтра"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term режекторный фильтр"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D Term Notch фильтр, центральная частота [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch фильтр, частота среза [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpass фильтр, частота среза [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "Компенсация PID-ов при низком заряде батареи"
     },
@@ -3494,17 +3328,11 @@
     "pidTuningVbatSagCompensation": {
         "message": "Компенсация просадки напряжения батареи"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Обеспечивает равномерную отзывчивость дросселя и PID-ов в пределах используемого напряжения аккумулятора за счет компенсации просадки напряжения аккумулятора. Размер компенсации может быть изменен в пределах от 0 до 100%. Рекомендуется использовать полную компенсацию (100%).<br /><br />Посетите <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">эту запись wiki</a> для получения дополнительной информации."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
     "pidTuningThrustLinearization": {
         "message": "Линейная тяга"
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": "Компенсация нелинейного соотношения между дросселем и тяговй путем применения обратной кривой тяги двигателя к выходу мотора. Размер компенсации может быть изменен в пределах от 0 до 150%."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3523,9 +3351,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I составляющая Сброс"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Ограничивает накопление I составляющей, когда происходят быстрые движения. Это специально позволяет уменьшить отскоки в конце переворотов и других быстрых движений. Вы можете выбрать активные оси, если быстрое движение определено, используя гироскоп или Setpoint (стика)."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Oси",
@@ -3551,38 +3376,23 @@
         "message": "Срез",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Низкие значения будут подавилять отскок назад после флипа в низкооборотных квадрокоптерах, высокие значения обеспечат высокую точность поворотов для гонок.<br>Установите 30-40 для гонок, 15 для фристайл моделей с высокой отзывчивостью, 10 для тяжёлых фристайл моделей, 3-5 для X-класса."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Абсолютный контроль"
     },
     "pidTuningThrottleBoost": {
         "message": "Увеличение газа"
     },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Эта функция позволяет временно увеличить газ, в момент быстрого движения стика, что увеличивает ускорение крутящего момента двигателей, обеспечивая гораздо более быструю реакцию на управление газом."
-    },
     "pidTuningIdleMinRpm": {
         "message": "Динамическое значение холостого хода [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Динамический холостой ход улучшает управление при низких оборотах и уменьшает риск возникновения перегрева двигателей. Он решает проблемы, связанные с ускорением или замедлением пропеллеров воздушным потоком, улучшает влияние PID, стабильность, торможение двигателями и чувствительность. Динамический режим холостого хода должен быть установлен (в rpm) на 20% ниже значения Холостой ход (см. $t(tabMotorTesting.message)). Как правило, нет необходимости изменять значение Холостой ход на отличное от значения по умолчанию. Для более длительного времени зависания \"вверх ногами\" значение Холостой ход и Minimum rpm должны понижаться вместе.<br /><br />Посетите <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">эту запись в вики</a> для получения дополнительной информации."
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Акро тренер лимит угла"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Добавляет новый режим пределов угла для пилотов которые учатся летать в акро режиме. Диапазон 10-80 и должен быть активирован с переключателя в $t(tabAuxiliary.message) закладке."
     },
     "pidTuningIntegratedYaw": {
         "message": "Интегрированный Yaw"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\"> ОСТОРОЖНО</span>:Если вы включите эту функцию, вы должны будете настроить YAW PID соответственно. Более детально <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Интегрированный Yaw - это свойство, которое исправляет фундаментальную проблему управления квадрокоптером: в то время как оси Pitch и Roll контролируются при помощи разницы тяги, производимое пропеллерами Yaw иначе. Интегртрованный Yaw исправляет эту проблему, интегрируя выходные данные pid yaw перед их подачей в mixer. Это нормализует работу пидов. Это позволяет настраивать Yaw как любую другую ось. Это требует включенного Абсолютного контроля, так как I не требуется вовсе, с Интегрированным Yaw."
     },
     "configHelp2": {
         "message": "Произвольное вращение платы в градусах, для разрешения установки в другом направлении / вверх ногами / повернутое и т. д. При работе с внешними датчиками используется выравнивание датчиков (Gyro, Acc, Mag), чтобы определить положение датчика независимо от ориентации платы. "

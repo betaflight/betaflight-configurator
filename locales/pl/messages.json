@@ -661,12 +661,6 @@
     "initialSetupResetText": {
         "message": "Przywróć ustawienia <strong>domyślne</strong>."
     },
-    "initialSetupButtonBackup": {
-        "message": "Zapisz kopię zapasową."
-    },
-    "initialSetupButtonRestore": {
-        "message": "Przywróć kopię zapasową."
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktywacja Boot Loadera / DFU"
     },
@@ -910,17 +904,11 @@
     "featureNone": {
         "message": "&lt;Wybierz jeden&gt;"
     },
-    "featureRX_PPM": {
-        "message": "wejście PPM RX"
-    },
     "featureVBAT": {
         "message": "Monitorowanie napięcia baterii"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Kalibracja akcelerometru w czasie lotu"
-    },
-    "featureRX_SERIAL": {
-        "message": "Odbiorniki używające SerialPort (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Nie obracaj śmigłami po uzbrojeniu"
@@ -955,12 +943,6 @@
     "feature3D": {
         "message": "Tryb 3D (do użytku tylko z ESC z odwracaniem kierunku)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "Wejście PWM RX (jeden przewód na kanał)"
-    },
-    "featureRX_MSP": {
-        "message": "Wejście MSP RX (kontrola przez port MSP)"
-    },
     "featureRSSI_ADC": {
         "message": "Analogowe wejście RSSI"
     },
@@ -984,9 +966,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Po uruchomieniu skonfiguruj w zakładce Czarna skrzynka."
-    },
-    "featureRX_SPI": {
-        "message": "Wsparcie SPI RX"
     },
     "featureESC_SENSOR": {
         "message": "Użyj telemetrii KISS/BLHeli_32 ESC <b> na osobnym przewodzie</b>"
@@ -1014,9 +993,6 @@
     },
     "featureVTX": {
         "message": "Nadajnik wideo"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "włącz tryb anty-grawitacja na stałe"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Jeśli ta opcja jest wyłączona, tryb anty-grawitacja może być włączany za pomocą przełącznika."
@@ -1068,9 +1044,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Uwaga:</strong> Nie wszystkie ustawienia są akceptowalne. Jeśli oprogramowanie kontrolera lotu wykryje błąd konfiguracji wtedy kontroler lotu wyłączy funkcje która tworzy kolizję.<br /><strong>Uwaga:</strong> Skonfiguruj port <span class=\"message-negative\">zanim</span> włączysz funkcję która będzie go potrzebować."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Uwaga:</strong> Gdy używasz odbiornika typu RX_SERIAL, pamiętaj o skonfigurowaniu portu (w zakładce Porty) i wybraniu rodzaju sygnału odbiornika."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Uwaga:</strong> Odbiornik typu SPI RX będzie działa tylko gdy odbiornik jest zintegrowany z FC lub jest podłączony do magistrali SPI."
@@ -1152,12 +1125,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Uzbrojenie jest zawsze wyłączone, gdy przepustnica nie jest nisko. Bądź ostrożny, ponieważ możesz przypadkowo rozbroić przez przełącznik podczas lotu, gdy ta opcja jest aktywna."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Wartość przepustnicy po uzbrojeniu silników [%]"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Wartość „DShot idle” to procentowa wartość maksymalnego gazu wysyłanego do ESC, gdy gaz znajduje się w położeniu minimalnej wartości gdy maszyna jest uzbrojona. Zwiększ go, aby zyskać większą prędkość biegu jałowego i uniknąć desynchronizacji. Zbyt wysoka wartość spowoduje uczucie pływającej maszyny."
     },
     "configurationMotorPoles": {
         "message": "Bieguny silnika",
@@ -1334,10 +1301,6 @@
         "message": "Użyj Galileo",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Po włączeniu, usuwany jest system nawigacji QZSS (japoński) a zastępuje go system Galileo (europejski).",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Ustaw punkt początkowy",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1363,12 +1326,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "Zakres dynamicznego filtra wycinającego"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Niektóre wartości dynamicznego filtru wycinającego zostały zmienione na wartości domyślne</b></span> ponieważ filtrowanie RPM zostało aktywowane/dezaktywowane.<br> Proszę sprawdzić ustawienia przed lotem."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "OK"
     },
     "portsIdentifier": {
         "message": "Identyfikator"
@@ -1516,16 +1473,6 @@
         "message": "Próg",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravity uruchamia się gdy zostaną wykryte szybkie zmiany przepustnicy. Wyższe wartości wzmocnienia zapewniają stabilność i lepsze utrzymywanie pozycji podczas zwiększania gazu."
-    },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong> Uwaga: </strong> funkcja D Min jest wyłączona, a jej parametry są ukryte. Aby użyć funkcji D Min, włącz ją w $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Wzmocnienie",
         "description": "Gain of the D Max feature"
@@ -1597,20 +1544,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): </strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. </span>"
     },
-    "pidTuningProportional": {
-        "message": "Proporcjonalny"
-    },
-    "pidTuningIntegral": {
-        "message": "Zintegruj"
-    },
     "pidTuningDerivative": {
         "message": "Pochodna"
-    },
-    "pidTuningDMax": {
-        "message": "D Max"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Uwaga:</b></span> bardzo wysokie parametry mogą skutkować desynchronizacją przy szybkim zwalnianiu maszyny."
@@ -1690,12 +1625,6 @@
     "pidTuningControllerHead": {
         "message": "Regulator PID"
     },
-    "pidTuningCopyProfile": {
-        "message": "Skopiuj wartości z profilu"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Skopiuj wartości z rate profilu"
-    },
     "dialogCopyProfileText": {
         "message": "Skopiuj wartości z obecnego profilu do"
     },
@@ -1731,9 +1660,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">zapisano</span>"
-    },
-    "receiverHelp": {
-        "message": "Proszę przeczytać rozdział dokumentacji dotyczący odbiornika. Skonfiguruj port szeregowy (jeśli jest wymagany), tryb odbiornika (Szeregowy / PPM / PWM), dostawcę (dla odbiorników szeregowych), oraz przypisz odbiornik następnie  ustaw kanały, skonfiguruj punkty końcowe kanałów w nadajniku RC, tak aby wszystkie kanały przechodziły od ~ 1000 do ~ 2000. Ustaw punkt środkowy (domyślnie 1500), skonfiguruj strefę nieczułości drążka, sprawdź zachowanie, gdy nadajnik RC jest wyłączony lub poza zasięgiem. <br /> <span class = \"message-negative\"> WAŻNE: </span> Przed lotem przeczytaj rozdział dokumentacji dotyczący bezpieczeństwa."
     },
     "tuningHelp": {
         "message": "<b>Wskazówki</b><br /><span class=\"message-negative\">WAŻNE:</span> Ważne jest sprawdzanie temperatury silnika podczas pierwszych lotów. Im wyższa wartość filtra, tym lepiej(płynniej) może się latać, ale jednocześnie sygnał serujący silnikami będzie bardziej agresywny aby wynikowo maszyna była bardziej stabilizowana (silnik będzie się grzał ponieważ wirnik z śmigłem ma swoją masę i pęd - szybkie zmiany obrotów potrzebują dostarczenia dużej ilości energii aby zmienić pęd). <br>Domyślna wartość 100 Hz jest optymalna, ale dla platformy z drganiami (z śmigła/ z silnika) można spróbować obniżyć ustawienie filtru Dterm do 50Hz, a być może również ustawienie filtru żyroskopowego."
@@ -2179,9 +2105,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalQty": {
-        "message": "Ilość"
     },
     "motorsVoltage": {
         "message": "Napięcie:"
@@ -3236,15 +3159,6 @@
     "pidTuningMotorLimit": {
         "message": "Współczynnik skali [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "Polecenie tłumienia silnika przez ustawienie (procentowej) wartości liniowej. Zmniejsza prąd ESC i grzanie się silnika podczas używania baterii o wyższej liczbie komórek, np. przy użyciu akumulatora 6S, na maszynie zbudowanej i dostrojonej dla akumulatora 4S, spróbuj ustawić wartość na 66%; gdy używasz baterii 4S na jednostce przeznaczonej do 3S, spróbuj 75%.<br>Zawsze upewnij się, że wszystkie twoje komponenty mogą obsługiwać napięcie baterii, której używasz."
-    },
-    "pidTuningCellCount": {
-        "message": "Liczba ogniw"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "Automatycznie aktywuje profil, który ma liczbę ogniw równą podłączonej baterii."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Ustawienia filtra niezależne od profilu"
     },
@@ -3320,38 +3234,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Pasmowo zaporowy filtr żyroskopu"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Filtr 1 wcięcia żyroskopu środkowa częstotliwość [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Filtr 2 wcięcia żyroskopu środkowa częstotliwość [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Częstotliwość odcięcia (wąskiego) filtru środkowo zaporowego1 [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Częstotliwość odcięcia (wąskiego) filtru środkowo zaporowego2 [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Filtr pasmowo-zaporowy o częstotliwości środkowej oraz odcięcia. Częstotliwość środkowa jest środkiem całego zakresu filtra, a częstotliwość odcięcia jest miejscem w paśmie gdzie filtrowanie się zaczyna. Dla przykładu: częstotliwość odcięcia 160 i środkowa 260 oznacza zakres pracy filtra 160-360 Hz, przy największym tłumieniu w środku tego zakresu"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamiczny Filtr środkowo zaporowy"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "Dynamiczny filtr środkowo zaporowy śledzi szpilki częstotliwości szumu silnikowego i umieszcza w ich ogniskach jeden lub dwa filtry środkowo zaporowe."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Uwaga:</strong> Filtr dynamiczny pasmowo zaporowy \"notch\" jest wyłączony. Aby go skonfigurować i użyć, włącz funkcję 'DYNAMICZNY FILTR ŻYROSKOPU' w '$t(configurationFeatures.message)' karcie ''$t(tabConfiguration.message)'."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Zakres dynamicznego filtra wycinającego"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Procent szerokości dynamicznego wycięcia"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "Uwaga dynamiczna Q"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Równanie dynamiczne ma trzy zakresy częstotliwości, w których może działać: NISKIE (80-330hz) dla gorzej odwołujących się quadów na śmigłach 6 cali i eięcej, ŚREDNIE (140-550hz) dla normalnego qada o długości śmigieł 5 cali, WYSOKIE (230-800hz) dla bardzo małych 2-3 calowych quadów. Opcja AUTO wybiera zakres w zależności od wartości maksymalnej częstotliwości dolnoprzepustowego filtra żyroskopu."
@@ -3394,36 +3284,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filtry D Term dolnoprzepustowe"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "Typ 1 Filtra dolnoprzepustowego D Term"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "Typ 2 Filtra dolnoprzepustowego D Term"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "Minimalna częstotliwość odcięcia dynamicznego filtru dolnoprzepustowego 1 dla członu D [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "Maksymalna częstotliwość odcięcia dynamicznego filtru dolnoprzepustowego 1 dla członu D [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "Krzywa Expo filtru Dolnoprzepustowego 1 członu D"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Typ Filtra dolnoprzepustowego D Term"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "Filtr Notch D Term"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "Filtr D term Notch częstotliwość [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "Częstotliwość [Hz] odcięcia filtra pasmowo-zaporowego \"notch\" dla D Term"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Częstotliwość odcięcia dolnoprzepustowa Yaw [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "Kompensacja PID na podstawie Vbat"
     },
@@ -3438,9 +3298,6 @@
     },
     "pidTuningThrustLinearization": {
         "message": "Linearyzacja ciągu silników"
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": "Kompensuje nieliniową zależność między gazem(throttle) a ciągiem poprzez zastosowanie odwrotnej krzywej siły napędowej na wyjściu silnika. kompensacja może wynosić od 0 do 150 %."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3459,9 +3316,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Ogranicza nawarstwianie się członu I, gdy dochodzi do szybkich ruchów. Pomaga to w szczególności zmniejszyć odbicie pod koniec zwrotów i innych szybkich ruchów. Możesz wybrać osie, w których to jest aktywne, i czy szybki ruch zostanie wykryty za pomocą żyroskopu lub Ustawienia (drążka)."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Osie",
@@ -3487,17 +3341,11 @@
         "message": "Odcięcie",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Niższe wartości tłumią odbicie zwrotne po nagłych zwrotach/przewrotach w niewielkich czterowirnikowcach, wysokie wartości zwiększają dokładność szybkich zwrotów w maszynach wyścigowych.<br>Ustaw na 30-40 dla maszyn wyścigowych, 15 dla maszyn typu freestyle, 10 dla cięższych maszyn, 3-5 dla klasy X."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Kontrola całkowita"
     },
     "pidTuningThrottleBoost": {
         "message": "Wzmocnienie przepustnicy"
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Ta funkcja umożliwia chwilowe przyspieszenie przepustnicy przy szybkich ruchach drążka, co zwiększa moment przyspieszenia silników, zapewniając znacznie szybszą reakcję przepustnicy."
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
@@ -3505,17 +3353,11 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limit kąta trybu treningowego akrobatycznego"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Dodaje nowy tryb ograniczania kąta dla pilotów, którzy uczą się latać w trybie akrobatycznym \"acro\". Prawidłowy zakres wynosi 10-80 i musi być aktywowany przy użyciu przełącznika w karcie $t(tabAuxiliary.message)."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Zintegrowane odchylenie Yaw"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">UWAGA</span>: jeśli włączysz tę funkcję, musisz odpowiednio dostosować PID dla osi Odchylenia \"YAW\". Więcej informacji znajdziesz<a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Zintegrowany Yaw jest funkcją która koryguje podstawowy błąd w sterowaniu maszyny: gdy osie pitch i roll są sterowane przez różnicowy sygnał z przepustnicy(gazu), śmigła także generują różnicę w osi Yaw. Zintegrowany Yaw poprawia to poprzez dodane wyjścia sygnału pid(Yaw) przed przekierowaniem sygnału do miksera sygnału. To działanie normalizuje pracę Pid-a. Teraz możliwe jest dostrajanie tego czynnika tak jak każdej innej osi. Wymaga to bezwzględnego sterowania, ponieważ nie używa zintegrowanego Yaw."
     },
     "configHelp2": {
         "message": "Umożliwia dowolny obrót kontrolera lotu w stopniach. Ma to umożliwić montaż kontrolera: bokiem/ do góry nogami / itp. Podczas uruchamiania zewnętrznych czujników, użyj ustawień czujników (Gyro, Akcel, Mag), aby określić położenie czujnika niezależnie od orientacji kontrolera lotów. "

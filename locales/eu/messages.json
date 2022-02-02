@@ -654,12 +654,6 @@
     "initialSetupResetText": {
         "message": "Ezarpenak <strong>lehenetsita</strong> ezarri"
     },
-    "initialSetupButtonBackup": {
-        "message": "Segurtasun kopia"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Berreskuratu"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Boot Loader / DFU aktibatu"
     },
@@ -903,17 +897,11 @@
     "featureNone": {
         "message": "&lt;Bat aukeratu&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX sarrera"
-    },
     "featureVBAT": {
         "message": "Bateria tentsioaren jarraipena"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Hegaldi-mailaren kalibrazioa"
-    },
-    "featureRX_SERIAL": {
-        "message": "Serial-oinarrituta hartzailea (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Ez biratu motorrak armatzerakoan"
@@ -948,12 +936,6 @@
     "feature3D": {
         "message": "3D modua (ESC aldakorrekin erabiltzeko)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX sarrera (kanal bakoitzeko kable bat)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX sarrera (MSP atakaren kontrola)"
-    },
     "featureRSSI_ADC": {
         "message": "RSSI analogikoaren sarrera"
     },
@@ -977,9 +959,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Gaitu ondoren, kutxa beltzaren atala konfiguratu."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX onartzen du"
     },
     "featureESC_SENSOR": {
         "message": "KISS/BLHeli_32 ESC telemetria <b>beste kable baten gainean</b> erabili"
@@ -1007,9 +986,6 @@
     },
     "featureVTX": {
         "message": "Bideo igorlea"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "Anti Gravity etengabe gaitu"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Desgaituta badago, 'ANTI GRAVITY' modua erabil dezakezu Anti Gravity-ak etengailu batekin aktibatzeko."
@@ -1061,9 +1037,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Oharra:</strong> Funtzioen konbinazio guztiak ez dira baliozkoak. Hegaldi kontroladoreen firmwareak funtzio baliogabeen konbinazio baliogabeak hautematen dituenean, desgaitu egingo dira. <br/><strong>Oharra:</strong>  Serial atakak konfiguratu <span class=\"message-negative\">lehenik eta behin</span> atakak behar duten funtzioak gaitzeko."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Oharra:</strong> Gogoratu Ataka Serial bat konfiguratu behar duzula (ataka fitxen bidez) eta aukeratu Serial Hartzaile hornitzailea RX_SERIAL funtzioa erabiltzen duzunean."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Oharra:</strong> SPI RX hornitzaileak funtzionatuko du beharrezko hardwarea taula gainean badago edo SPI bus batera konektatuta badago."
@@ -1145,12 +1118,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Armagintza beti ezgaitzen da throttle txikia ez denean. Kontuz ibili hegan egitean etengailu batekin nahi gabe desarmatu baitaiteke aukera hau aktibatua badago."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Motorraren Throttle Inaktiboaren balioa [percent]"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "'Dshot idle' balioa ESCra igortzen den gehienezko throttle balioaren ehunekoa da, stick posizio baxua denean eta gailua armatuta dagoenean. Balio hau handitu abiadura inaktibo handiagoa lortzeko eta desinkronizazioak ekiditeko. Balio handiekin gailua oso erabilgarria sentituko da."
     },
     "configurationMotorPoles": {
         "message": "Motorren zutoinak",
@@ -1327,10 +1294,6 @@
         "message": "Galileo erabili",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Gaituta dagoenean, QZSS sistema kentzen du (japoniarra) eta Galileo sistemarengandik (Europatarra) ordezkatzen du.",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Hasierako puntua behin bakarrik ezarri",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1356,12 +1319,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "Notch Dinamikoaren balioen aldaketa"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>ABISUA: Notch dinamikoaren balio batzuk aldatuko dira balio lehenetsietara</b></span> RPM iragazkia aktibatuta / desaktibatuta dagoelako.<br> Mesedez, egiaztatu hegan egin aurretik."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "Ados"
     },
     "portsIdentifier": {
         "message": "Identifikatzailea"
@@ -1509,16 +1466,6 @@
         "message": "Muga",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravity-ak I terminoa hobetzen du throttle aldaketa azkarrak hautematen direnean. Balio altuagoak egonkortasuna ematen du eta jarrera mantentzen du azeleragailua azkarrago mugitzen duzunean."
-    },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Oharra </strong> D Min funtzioa desgaituta dago eta haren parametroak ezkutatuta daude. D Min erabiltzeko, aktibatu hemen $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Irabazia",
         "description": "Gain of the D Max feature"
@@ -1590,20 +1537,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message): </strong>Ezda gomendagarria 0 Setpoint-en trantsizioa 0 eta 0.1 baino txikiagoa. Hori egitean, ezegonkortasuna eta makilen erantzuna murriztea eragin dezakete, makilek erdiko puntua zeharkatzen duten bitartean.</span>"
     },
-    "pidTuningProportional": {
-        "message": "Proportzionala (P)"
-    },
-    "pidTuningIntegral": {
-        "message": "Integrala (I)"
-    },
     "pidTuningDerivative": {
         "message": "Deribatiboa (D)"
-    },
-    "pidTuningDMax": {
-        "message": "D Max"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Kontuz:</b></span>tasa oso altuak deselerazio azkarretan desinkronizazioak sor ditzakete."
@@ -1683,12 +1618,6 @@
     "pidTuningControllerHead": {
         "message": "PID kontroladorea"
     },
-    "pidTuningCopyProfile": {
-        "message": "Profilaren balioak kopiatu"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Profilaren balioak kopiatu"
-    },
     "dialogCopyProfileText": {
         "message": "Kopiatu hemen uneko profilaren balioak"
     },
@@ -1724,9 +1653,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">gorde</span>"
-    },
-    "receiverHelp": {
-        "message": "Irakurri hartzaile dokumentazioaren kapitulua. Konfiguratu serieko ataka (beharrezkoa bada), hargailuen modua (seriekoa/ppm/pwm), hornitzailea (serieko hargailuen kasuan), lotu hartzailea, ezarri kanal mapa, konfiguratu kanalaren amaierako puntuak/barrutia TX-n, kanal guztiak~1000etik~2000ra joan daitezen.. Ezarri erdiko puntua (1500 lehenetsia), moztu kanalak 1500ra, konfiguratu stick banda zatia, egiaztatu portaera TX kanpoan edo kanpoan dagoenean.<br/><span class=\"message-negative\">GARRANTZITSUA:</span>Hegan egin aurretik, irakurri failsafe dokumentazioaren kapitulua eta konfiguratu hutsegiteak."
     },
     "tuningHelp": {
         "message": "<b>Eguneratzeko aholkuak</b><br/><span class=\"message-negative\">GARRANTZITSUA:</span> Garrantzitsua da lehen hegaldietan motorren tenperatura egiaztatzea. Iragazkiaren balioa zenbat eta handiagoa izan, orduan eta handiagoa izango da hegan egiteko, baina zarata gehiago lortuko duzu motorretan. <br>100Hz-ko balio lehenetsia ezin hobea da, baina zaratagarrien konfigurazioetarako Dterm iragazkia 50Hz-era jaistea probatu dezakezu eta, agian, giro iragazkia ere."
@@ -2172,9 +2098,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalQty": {
-        "message": "Kopurua"
     },
     "motorsVoltage": {
         "message": "Tentsioa:"
@@ -3145,15 +3068,6 @@
     "pidTuningMotorLimit": {
         "message": "Eskala Faktorea [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "Motor linear irteeraren eskala factorea(ehuneko gisa). ESC korrontea murrizten du eta motor beroak lortzen dira zelda kopuru altuagoko bateriak erabiltzen direnean, adibidez, 6S bateria erabili nahi baduzu 4S-rako diseinatuta gailu batean, 66% saiatu; 4S bateria erabiltzeko 3S diseinatutako gailu batean, 75% saiatu. <br>Egiaztatu osagai guztiak bateriaren tentsioa onartzen dutela."
-    },
-    "pidTuningCellCount": {
-        "message": "Zelda Kopurua"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "Automatikoki aktibatzen da konektatutako bateriaren zelda kopuru berdina duen lehen profila."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profileko iragazki-ezarpen independenteak"
     },
@@ -3229,38 +3143,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giro Notch Iragazkiak"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "1. Giro Notch Iragazkiaren Zentro Frekuentzia [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "2. Giro Notch Iragazkiaren Zentro Frekuentzia [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "1. Giro Notch Iragazkiaren Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "2. Giro Notch Iragazkiaren Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Notch iragazkiak zentro bat eta ebaki bat ditu. Iragazkia simetrikoa da. Frekuentzia zentrala iragazkiaren erdigunea da eta Ebaketa frekuentzia Notch iragazkia hasten den lekua da. Adibidez, 160 ebakidura-frekuentziarekin eta 260 frekuentzia zentralarekin, erdigunean duen atenuazio handiena duena 160-360Hz-ko tartea da"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Notch Iragazki Dinamikoa"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "Notch Iragazki Dinamikoak motorrek sortutako zarata frekuentzia kokatzen du eta Notch iragazki bat edo bi jartzen ditu frekuentzia horren gainetik."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Oharra:</strong> Notch iragazki dinamikoa desgaituta dago. Konfiguratu eta erabili ahal izateko, 'DYNAMIC_FILTER' funtzioa aktibatu'$t(configurationFeatures.message)' ataleko '$t(tabConfiguration.message)' atalean."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Notch Dinamikoa Iragazkiaren Barrutia"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Notch Dinamikoa Zabaleraren Ehunekoa"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "Q Notch Dinamikoa"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Notch dinamikoak hiru frekuentzian funtziona dezake: BAXUA (80-330hz) 6+ hazbeteko bezalako birakatze txikiagoetarako, ERDIA (140-550hz) 5 hazbeteko quad normal, ALTUA (230-800hz) oso altuerako 2,5-3 hazbeteko quad-ak berpiztea AUTO aukerak barrutia hautatzen du 1. Giro Behe-paseko Dinamiko Iragazkiaren ebakidura frekuentzia maximoaren balioaren arabera."
@@ -3303,36 +3193,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Behe-paseko Iragazkiak"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "1. D Term Behe-paseko Iragazki Mota"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "2. D Term Behe-paseko Iragazki Mota"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "1. D Term Behe-paseko Iragazki Dinamikoa Ebakidura Min Frekuentzia [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "1. D Term Behe-paseko Iragazki Dinamikoa Ebakidura Max Frekuentzia [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "1. D Term Behe-paseko Iragazki Dinamiko Kurbaren Expoa"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "1. D Term Behe-paseko Iragazkiko Iragazki Dinamikoa Mota"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Tem Notch Iragazkiak"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D Term Notch Iragazkiaren Zentro Frekuentzia [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Iragazkiaren Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Behe-paseko Ebakitzeko Frekuentzia [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Konpentsazioa"
     },
@@ -3347,9 +3207,6 @@
     },
     "pidTuningThrustLinearization": {
         "message": "Bultzada Linealizazioa"
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": "Azelerazioaren eta bultzadaren arteko erlazio ez-lineala konpentsatzen du motorreko irteerari alderantzizko kurba aplikatuz. Kalte-ordaina 0% eta 150% artean alda daiteke."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3368,9 +3225,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Erlaxatu"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Mugimendu azkarrak gertatzen direnean I Epearen metaketa mugatzen du. Honek batez ere erreboteak murrizten laguntzen du erroiluak eta beste mugimendu azkarrak amaitzean. Hau aktibo dauden ardatzak aukeratu ditzakezu eta mugimendu azkarra hautematen bada Giro edo Setpoint (stick) erabiliz."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Ardatzak",
@@ -3396,17 +3250,11 @@
         "message": "Cutoff",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Balio baxuek murrizketa murrizten dute flipen ondoren agintari baxuko quads. Balio altuek lasterketetarako abiadura altuko zehaztasuna areagotzen dute.<br> Lasterketetarako 30-tik 40-ra ezarritakoa da; 15 erantzun askarreko freestyle eraikuntzarako, 10 freestyle astun quad-entzat, 3-5 X-mailakoentzat."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Kontrol absolutua"
     },
     "pidTuningThrottleBoost": {
         "message": "Throttlearen Bultzada"
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Funtzionalitate honek aldi baterako bultzadari azeleragailua ematen dio komandoaren aldaketa bizkorretan eta horrek motorraren azelerazioan momentua handitzen du eta bizkortze-erantzun askoz azkarragoa ematen du."
     },
     "pidTuningIdleMinRpm": {
         "message": "Idle Dinamiko Balioa [* 100 RPM]"
@@ -3414,17 +3262,11 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Akro Trainerren Angle Muga"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Angelu mugatzeko modu berri bat gehitzen du hegan ikasten ari diren pilotuentzat. Barruti baliozkoa 10-80 da eta $t(tabAuxiliary.message) fitxan etengailu batekin aktibatu behar da."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integratua"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">ABISUA</span>: Ezaugarri hau gaitzen baduzu, YAW PID horren arabera egokitu behar duzu. Informazio gehiago <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Yaw barneratua quad kontrolarekin arazoa konpontzen duen ezaugarria da: pich eta roll-ardatza bultzada diferentzialen bidez kontrolatzen diren bitartean, helizeek Yaw desberdinak sortzen dituzte. Yaw barneratua konpondu egiten du yaw pid irteera nahasgailuan aplikatu aurretik. Honek Pid funtzionamendua normalizatzen du. Orain beste edozein ardatzetara sintoniza dezakezu. Yaw barneratuan I ez dagoenez kontrol absolutua erabiltzea eskatzen du."
     },
     "configHelp2": {
         "message": "Hegaldi kontroladorea edozein angeluan biratu(zutik, atzeraka, biraketa...). Kanpoko sentsoreak erabiltzen dituzunean, sentsoreen lerrokatzea erabili sentsoreen posizioak definitzeko, hegaldi kontroladorearen orientazioa edozein dela ere. "

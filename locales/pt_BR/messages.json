@@ -576,9 +576,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "Esta aplicação é compatível com todo hardware que consegue executar o Betaflight. Verifique a aba \"Atualização de firmware\" para ver a lista completa de hardware compatível.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download do Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download do Betaflight TX Lua Scripts</a><br /><br />É possível obter o código fonte do firmware <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br /><br />Faça do download do driver <b>STM USB VCP</b> mais recente <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />Para hardware legado que utiliza o chip serial CP210x USB<br />Os <b>drivers CP210x</b> mais recentes estão disponíveis <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />Faça o download do driver <b>Zadig USB para Windows</b> mais recente <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -675,12 +672,6 @@
     },
     "initialSetupResetText": {
         "message": "Restaura as configurações para o <strong>padrão</strong>"
-    },
-    "initialSetupButtonBackup": {
-        "message": "Backup"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Restaurar"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Ativar Boot Loader / DFU"
@@ -925,17 +916,11 @@
     "featureNone": {
         "message": "&lt;Selecione&gt;"
     },
-    "featureRX_PPM": {
-        "message": "Entrada RX PPM"
-    },
     "featureVBAT": {
         "message": "Monitoramento da voltagem da bateria"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibração do nível em voo"
-    },
-    "featureRX_SERIAL": {
-        "message": "Receptor Serial (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Não rodar os motores quando armado"
@@ -970,12 +955,6 @@
     "feature3D": {
         "message": "Modo 3D (para uso com ESCs reversíveis)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "Entrada PWM RX (um fio por canal)"
-    },
-    "featureRX_MSP": {
-        "message": "Entrada MSP RX (controle via porta MSP)"
-    },
     "featureRSSI_ADC": {
         "message": "Entrada analógica de RSSI"
     },
@@ -999,9 +978,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Configure através da aba 'Blackbox' após ativar."
-    },
-    "featureRX_SPI": {
-        "message": "Suporte a RX SPI"
     },
     "featureESC_SENSOR": {
         "message": "Utilizar telemetria do ESC KISS/BLHeli_32 em uma <b>conexão separada</b>"
@@ -1029,9 +1005,6 @@
     },
     "featureVTX": {
         "message": "Transmissor de vídeo"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "Ativar permanentemente a Anti gravidade"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Se isto estiver desabilitado, é possível ativar a Anti gravidade com o modo 'ANTI GRAVITY' configurado em um switch."
@@ -1083,9 +1056,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Nota:</strong> Nem todas as combinações de funcionalidades são válidas. Quando o firmware do controlador de voo detecta combinações inválidas, essas serão desativadas.<br /><strong>Nota:</strong> Configure as portas serial  <span class=\"message-negative\">antes</span> de ativar funcionalidades que usam as portas."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Nota:</strong> Lembre-se de configurar uma Porta Serial (através da aba de Portas) e escolher um Fornecedor Serial ao usar a funcionalidade RX_SERIAL."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:</strong> O protocolo de SPI RX só funcionará se o hardware necessário estiver presente na placa ou ligado a um barramento SPI."
@@ -1167,12 +1137,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Armar está sempre desativado quando o acelerador não está no mínimo. Tenha cuidado porque pode desarmar acidentalmente com um botão enquanto estiver voando se esta opção estiver ativa."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Valor do acelerador quando o motor está ocioso [porcentagem]"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "O valor 'DShot Ocioso' é uma porcentagem do valor máximo do acelerador que é enviado aos ESCs quando a aeronave está armada e o Stick do Acelerador está no mínimo. Aumente o valor para ganhar mais velocidade quando ocioso e evitar a dessincronização dos motores. Se definir um valor muito alto, a aeronave terá um sensação de estar flutuando durante o voo."
     },
     "configurationMotorPoles": {
         "message": "Polaridade dos motores",
@@ -1349,10 +1313,6 @@
         "message": "Usar Galileo",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Quando habilitado, isto remove o sistema QZSS (japonês) e o substitui com o sistema Galileo (europeu).",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Definir base uma vez",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1378,12 +1338,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "Valores do Filtro Notch Dinâmico alterados"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>ATENÇÃO: Alguns valores do filtro notch dinâmico foram revertidos para os valores padrão</b></span> porque o Filtro RPM foi ativado/desativado.<br> Por favor, confira antes de voar."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "OK"
     },
     "portsIdentifier": {
         "message": "Identificador"
@@ -1531,16 +1485,6 @@
         "message": "Limiar",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravidade aumenta o termo I quando houver movimentos rápidos no acelerador. Um valor maior no ganho oferece melhor estabilidade e atitude quando pulsar o acelerador."
-    },
-    "pidTuningDMin": {
-        "message": "D Mínimo",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Nota:</strong> A função D Min está desabilitada e seus parâmetros estão ocultos. Para usar o D Min, por favor o habilite em $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Ganho",
         "description": "Gain of the D Max feature"
@@ -1564,13 +1508,6 @@
     "receiverRcSmoothingAutoFactor": {
         "message": "Fator Automático",
         "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Ajusta o calculo do Fator Automático, 10 é o valor padrão para a relação entre suavidade e atraso de resposta. Aumentar o valor irá aumentar o atraso, porém será mais suave. Isso pode ser útil em conexões RC instáveis ou para um voo cinemático.<br> Cuidado com valores próximos de 50, uma vez que o atraso na resposta será perceptível. <br>Com o TX e RX ligados, na linha de comandos (CLI), digite o comando rc_smoothing_info para ver os cortes de suavidade RC calculados automaticamente.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcFeedforwardTypeSelect": {
-        "message": "Tipo de corte do Feedforward"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Tipo de corte da entrada"
@@ -1607,9 +1544,6 @@
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Frequência de corte de entrada"
-    },
-    "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "Frequência de corte do Feedforward"
     },
     "receiverRcSetpointType": {
         "message": "Tipo do filtro de entrada"
@@ -1656,9 +1590,6 @@
     "receiverRcSmoothingMode": {
         "message": "Modo Suave"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transição"
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "Transição do ponto D"
     },
@@ -1668,11 +1599,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Usar a Transição do ponto D com um valor maior que 0 e menor do que 0.1 não é recomendado. Fazer isso pode causar instabilidade e resposta reduzida do stick conforme o stick atravessa a posição central.</span>"
     },
-    "pidTuningFeedforwardGroup": {
-        "message": "Feedforward"
-    },
-    "pidTuningFeedforwardGroupHelp": {
-        "message": "As seguintes opções ajustam o Feed Forward entre modos de corrida/agresivo a modos suave/cinemática.<br /><br /> Selecione o modo Sem Média para corridas, 2 Pontos para corrida ou freestyle rápido, 3 Pontos para gravações ou 4 Pontos para gravação cinemática suave.<br /><br /> Suavidade: limita a quantidade de mudança entre passos do rádio, aumente para um sinal Feed Forward mais suave, reduza para respostas do Feed Forward mais agressivas.<br /><br /> Ganho: Compensa o atraso do motor em movimentos rápidos; valores altos podem causar micro tremulações. Experimente o valor 10 para gravações e 20 para corridas. O valor 30 pode ser útil para aeronaves com pouca autoridade, mas pode causar micro tremulação ou fazer com que ultrapasse o ponto desejado."
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Suavidade"
     },
     "pidTuningFeedforwardAveraging": {
         "message": "Média"
@@ -1686,34 +1614,14 @@
     "pidTuningFeedforwardAveragingOption4Point": {
         "message": "4 Pontos"
     },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": "Suavidade"
-    },
     "pidTuningFeedforwardBoost": {
         "message": "Ganho"
     },
-    "pidTuningProportional": {
-        "message": "Proporcional"
-    },
-    "pidTuningProportionalHelp": {
-        "message": "O Termo P (Proporcional) Ajusta o quão forte a aeronave tenta alcançar os Sticks (Setpoint).<br /><br />Um valor (ganho) maior acompanha o setpoint mais agressivamente, porém pode fazer com que a aeronave ultrapasse o setpoint desejado se o ganho estiver proporcionalmente muito maior do que o Derivativo (Termo D). Pense no Termo P como a mola da suspensão de um carro.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
-    "pidTuningIntegral": {
-        "message": "Integral"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "O Termo I (Integral) ajusta a força em utilizada para manter a posição desejada do Setpoint.<br>Similar ao Proporcional, mas para forças constantes na aeronave, como um centro de gravidade (CoG) deslocado ou influencias externas persistentes (vento constante).<br /><br />Um valor (ganho) maior faz com que a aeronave fique mais travada na posição desejada (por exemplo em curvas rápidas), porém cria uma sensação de rigidez nos comandos dos Sticks.<br>Se o ganho estiver proporcionalmente muito maior do que o Derivativo (Termo D), pode causar oscilações lentas.",
-        "description": "Integral Term helpicon message on PID table titlebar"
+    "pidTuningFeedforwardTransition": {
+        "message": "Transição"
     },
     "pidTuningDerivative": {
         "message": "Derivativo"
-    },
-    "pidTuningDMax": {
-        "message": "D Máximo"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Aviso:</b></span>Taxas muito altas podem causar a dessincronização dos motores por causa das desacelerações rápidas."
@@ -1793,12 +1701,6 @@
     "pidTuningControllerHead": {
         "message": "Controlador PID"
     },
-    "pidTuningCopyProfile": {
-        "message": "Copiar perfil"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Copiar perfil de taxas"
-    },
     "dialogCopyProfileText": {
         "message": "Copiar perfil atual"
     },
@@ -1834,9 +1736,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">salvo</span>"
-    },
-    "receiverHelp": {
-        "message": "Por favor leia o capítulo da documentação sobre receptores. Configure a porta serial (se necessário), modo do receptor (serial/ppm/pwm), Fornecedor (para receptores serial), vincule o receptor, especifique o mapa de canais, configure os limites/faixas no TX de forma que todos os canais vão de ~1000 a ~2000. Defina o ponto médio (1500 por padrão), canais de ajuste (trim) em 1500, configure a zona morta do stick, verifique o comportamento quando o TX estiver desligado ou fora de alcance.<br /><span class=\"message-negative\">IMPORTANTE:</span> Antes de voar, leia a documentação e configure o Failsafe."
     },
     "tuningHelp": {
         "message": "<b>Dicas de otimização</b><br /><span class=\"message-negative\">IMPORTANTE:</span> Sempre verifique a temperatura dos motores durante os primeiros voos. Quanto maior o valor do filtro, melhor pode ser o voo, porém, mais ruído chegará aos motores. <br>O Valor padrão de 100Hz é ótimo, mas para aeronaves com mais ruídos, você pode tentar diminuir o filtro do termo D para 50Hz e possivelmente também o filtro do giroscópio."
@@ -2288,9 +2187,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID Satélite"
-    },
-    "gpsSignalQty": {
-        "message": "Quantidade"
     },
     "motorsVoltage": {
         "message": "Voltagem:"
@@ -3393,15 +3289,6 @@
     "pidTuningMotorLimit": {
         "message": "Fator de Escala [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "Fator de escala linear da saída do motor (em porcentagem). Reduz o consumo de energia dos ESCs e reduz a temperatura dos motores ao usar uma bateria de maior quantidade de células. Exemplos: Quando usar uma bateria 6S em uma aeronave com motores, hélices e regulagem projetados para uma bateria 4S, tente o valor 66%; Para usar uma bateria 4S em uma aeronave projetada para baterias 3S, tente 75%.<br>Sempre tenha certeza de que todos os seus componentes suportam a voltagem da bateria que está utilizando."
-    },
-    "pidTuningCellCount": {
-        "message": "Quantidade de células"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "Ativa automaticamente o primeiro perfil que possui a quantidade de células igual à bateria conectada."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Configurações de filtros independentes de perfil"
     },
@@ -3481,50 +3368,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch (Rejeita Faixa) do GIROSCÓPIO"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro - Notch 1 - Frequência central [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro - Notch 2 - Frequência central [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro - Notch 1 - Frequência de corte [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro - Notch 2 - Frequência de corte [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "O filtro Notch tem duas frequências, a de centro e a de corte.<br>O filtro é simétrico.<br>A frequência de corte é onde o filtro começa e a frequência central é o centro do filtro. Por exemplo, configurando o corte em 160Hz e o centro em 260Hz indica que o filtro irá afetar as frequências de 160Hz a 360Hz, com a maior atenuação no centro"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Filtro Notch (Rejeita Faixa) dinâmico"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "O Filtro Notch (Rejeita Faixa) dinâmico localiza as maiores frequências de ruído dos motores e posiciona o centro de um ou dois filtros notch em tais frequências."
-    },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "O Filtro Notch (Rejeita Faixa) dinâmico localiza as maiores frequências de ruído do gyro e posiciona o centro de um a cinco filtros notch em tais frequências em cada eixo."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Aviso:</strong> O Filtro Notch (Rejeita Faixa) dinâmico está desabilitado. Para configurar e usar, por favor habilite a função 'DYNAMIC_FILTER' na seção '$t(configurationFeatures.message)' da aba '$t(tabConfiguration.message)' do configurador."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Filtro Notch dinâmico - Alcance"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Filtro Notch dinâmico - Porcentagem da largura"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "Filtro Notch dinâmico - Q"
-    },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Filtro Notch dinâmico - Frequência mínima [Hz]"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Filtro Notch dinâmico - Frequência máxima [Hz]"
-    },
-    "pidTuningDynamicNotchCount": {
-        "message": "Filtro Notch dinâmico - Quantidade"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O filtro Notch (Rejeita Faixa) dinâmico possui três faixas de frequência em que pode operar: BAIXO (80-330hz) para aeronaves lentas de 6\" ou mais, MÉDIO (140-550hz) para aeronaves convencionais de 5\", ALTO (230-800hz) para aeronaves rápidas de 2.5\" a 3\". a opção AUTO seleciona a faixa de acordo com a frequência de corte máxima do fitro Lowpass 1 Dinâmico do Gyro."
@@ -3574,36 +3425,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filtro Lowpass (Passa Baixa) do TERMO D"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "Termo D - Lowpass 1 - Tipo do filtro"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "Termo D - Lowpass 2 - Tipo do filtro"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "Termo D - Lowpass 1 Dinâmico - Frequência de corte mínima [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "Termo D - Lowpass 1 Dinâmico - Frequência de corte máxima [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "Termo D - Lowpass 1 - Expo da Curva Dinâmico"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Termo D - Lowpass 1 Dinâmico - Tipo do filtro"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "Filtros Notch (Rejeita Faixa) do TERMO D"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "Termo D - Notch - Frequência central [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "Termo D - Notch - Frequência de corte [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw - Lowpass - Frequência de corte [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "Compensação da Voltagem da bateria (Vbat) no PID"
     },
@@ -3613,17 +3434,11 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensar Bateria Fraca"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Faz com que o acelerador e o PID tenham um desempenho consistente durante o intervalo de tensão utilizável da bateria, compensando a bateria fraca. A quantidade compensada pode variar entre 0% e 100%. É Recomendado uma compensação completa (100%).<br /><br />Visite <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">esta página do wiki</a> para mais informações."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
     "pidTuningThrustLinearization": {
         "message": "Linearização da Propulsão"
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": "Compensa a relação não linear entre o acelerador e a propulsão das hélices, aplicando uma curva de motor inversa à saída do motor. A quantidade de compensação pode variar entre 0 e 150%."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3642,9 +3457,6 @@
     },
     "pidTuningItermRelax": {
         "message": "Relaxar o Termo I"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Limita o valor do Termo I quando a aeronave se move rapidamente (modo gyro) ou quando o piloto faz movimento rápidos nos sticks (modo setpoint). Isso melhora a estabilidade logo após um giro (flip ou roll) ou outros movimentos rápidos. Você pode escolher os eixos que esta opção irá afetar. Na versão 3.4 é recomendado todos os eixos (RPY), na versão 3.5 normalmente é necessário somente nos eixos Roll e Pitch (RP)."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Eixos",
@@ -3670,38 +3482,23 @@
         "message": "Corte",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Valores mais baixos diminuem a oscilação após giros em aeronaves mais fracas, valores maiores aumentam a precisão de giros rápidos para corridas.<br>Defina o valor entre 30 e 40 para corridas, 15 para freestyle, 10 para aeronaves mais pesadas e 3 a 5 para X-Class."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Controle Absoluto"
     },
     "pidTuningThrottleBoost": {
         "message": "Ganho no acelerador"
     },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Esta funcionalidade permite que o acelerador seja temporáriamente impulsionado em movimentos rápidos do stick, o que aumenta o torque dos motores, resultando em uma resposta muito mais rápida ao acelerador."
-    },
     "pidTuningIdleMinRpm": {
         "message": "Valor Ocioso Dinâmico [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "O Valor Ocioso Dinâmico melhora o controle em baixa rotação e reduz o risco de dessincronização dos motores. isto corrige problemas causados pelo fluxo do ar acelerando ou reduzindo a velocidade das hélices, melhorando a autoridade do PID, estabilidade, resposta e freio do motor. O Valor Ocioso Dinâmico deve ser configurado em 20% a menos do RPM do valor DShot Ocioso (Veja na aba $t(tabMotorTesting.message)). Geralmente não é necessário alterar os valores padrão. Para ficar mais tempo no ar quando estiver invertido, o valores de DShot Ocioso e Ocioso Dinâmico devem ser reduzidos juntos.<br /><br />Visite <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">esta página do Wiki</a> para mais informações."
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angulo máximo do Treinador Acro"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Angulo máximo do modo ACRO TRAINER, para pilotos que estão aprendendo a voar no modo acro. Os valores aceitos são de 10 a 80 graus.<br>Para ativar o modo, é necessário configurar um switch na aba $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">CUIDADO</span>: Ao habilitar esta função, você deve ajustar o PID do Yaw de acordo. Mais informações <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Yaw Integrado é uma funcionalidade que corrige um problema fundamental do controle da aeronave: Os eixos pitch e roll são controlados por uma diferença no impulso das hélices, mas o yaw é diferente. O Yaw integrado corrige isto ao integrar a saída do PID do yaw antes de o aplicar ao mixer. Isto normaliza o PID, e agora é possível afinar o yaw como os outros eixos. É necessário o uso do Controle Absoluto, uma vez que o termo I não é necessário com o Yaw Integrado."
     },
     "configHelp2": {
         "message": "Rotação da placa em graus, permite que a placa seja montada de lado, de cabeça para baixo, rotacionada, etc. Quando estiver utilizando sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir a posição do sensor independente da orientação da placa. "

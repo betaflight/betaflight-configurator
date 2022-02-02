@@ -592,9 +592,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "De applicatie ondersteunt alle hardware die Betaflight kan draaien. Controleer het flash-tabblad voor de volledige lijst met hardware.<br /> <br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewer downloaden</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua-scripts downloaden</a><br /><br />De broncode van de firmware kan worden gedownload van <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br /><br />De nieuwste <b>STM USB VCP-stuurprogramma's</b> kunnen worden gedownload van <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />Voor oudere hardware die een CP210x USB-naar-seriële chip gebruikt:<br />De nieuwste <b>CP210x-stuurprogramma's</b> kunnen worden gedownload van <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />Het nieuwste <b>Zadig</b> voor Windows USB-stuurprogramma-installatie kan worden gedownload van <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Bijdragen"
     },
@@ -691,12 +688,6 @@
     },
     "initialSetupResetText": {
         "message": "Instellingen teruggezet naar <strong>standaard</strong>"
-    },
-    "initialSetupButtonBackup": {
-        "message": "Backup"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Herstel"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Zet Boot Loader / DFU aan"
@@ -941,17 +932,11 @@
     "featureNone": {
         "message": "&lt;Selecteer er Een&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX invoer"
-    },
     "featureVBAT": {
         "message": "Accuspanning monitoren"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "In-flight level kalibratie"
-    },
-    "featureRX_SERIAL": {
-        "message": "Seriële ontvanger (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Draai de motoren niet bij armen"
@@ -986,12 +971,6 @@
     "feature3D": {
         "message": "3D-modus (alleen te gebruiken met omkeerbare ESC's)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX invoer (één draad per kanaal)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX invoer (controle via MSP-poort)"
-    },
     "featureRSSI_ADC": {
         "message": "Analoge RSSI invoer"
     },
@@ -1015,9 +994,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Configureer via het tabblad BlackBox nadat u dit heeft ingeschakeld."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX ondersteuning"
     },
     "featureESC_SENSOR": {
         "message": "Gebruik KISS/BLHeli_32 ESC telemetrie <b>via een aparte draad</b>"
@@ -1045,9 +1021,6 @@
     },
     "featureVTX": {
         "message": "Video Zender"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "Anti Gravity permanent inschakelen"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Als dit is uitgeschakeld, kan de 'ANTI GRAVITY' modus worden gebruikt om Anti Gravity met een schakelaar in te schakelen."
@@ -1099,9 +1072,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Opmerking:</strong> Niet alle combinaties van functies zijn geldig. Wanneer de firmware van de vluchtcontroller ongeldige functie combinaties detecteert worden tegenstrijdige functies uitgeschakeld.<br /><strong>Opmerking:</strong> Configureer seriële poorten <span class=\"message-negative\">voor</span> het inschakelen van de functies die de poorten gebruiken."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Opmerking:</strong> Vergeet niet om een seriële poort (via het tabblad poorten) te configureren en kies een seriële ontvanger wanneer je RX_SERIAL gebruikt."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Opmerking:</strong> De SPI RX provider werkt alleen als de vereiste hardware aan boord is of verbonden is met een SPI bus."
@@ -1183,12 +1153,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Arming wordt altijd uitgeschakeld wanneer het gas niet laag is. Wees voorzichtig omdat je per ongeluk kan disarmen met een schakelaar tijdens het vliegen met deze optie actief."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Motor Gas Waarde Stationair [percent]"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "De 'DShot stationair' waarde is het percentage van het maximale gas bereik die naar de ESC's wordt gestuurd wanneer je gas stick op de laatste positie staat en je quad gearmd is. Verhoog deze waarde om je motoren sneller stationair te laten draaien en desync's te voorkomen. Een te hoge waarde kan er voor zorgen dat je quad zweverig aanvoelt."
     },
     "configurationMotorPoles": {
         "message": "Motorpolen",
@@ -1365,10 +1329,6 @@
         "message": "Gebruik Galileo",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Wanneer ingeschakeld verwijdert dit het QZSS-systeem (Japans) en vervangt het door het Galileo-systeem (Europees).",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Thuispunt eenmaal instellen",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1394,12 +1354,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "Dynamische notch-waarden veranderen"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>WAARSCHUWING: sommige dynamische notch-waarden zijn gewijzigd naar de standaardwaarden</b></span> omdat de RPM-filtering is geactiveerd / gedeactiveerd. <br> Gelieve deze waardes te controleren voordat u gaat vliegen."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "Oké"
     },
     "portsIdentifier": {
         "message": "Identificator"
@@ -1547,16 +1501,6 @@
         "message": "Drempel",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Anti Zwaartekracht verhoogt de I term wanneer snelle gas veranderingen worden gedetecteerd. Hogere waarden zorgen voor stabiliteit en een betere houding wanneer je hard gas geeft."
-    },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Opmerking:</strong> D Min functie is uitgeschakeld en de bijhorende parameters zijn verborgen. Om D Min te gebruiken, schakel het in $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Toename",
         "description": "Gain of the D Max feature"
@@ -1638,9 +1582,6 @@
     "receiverRcSmoothingMode": {
         "message": "Vloeiende Modus"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Overgang"
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
@@ -1650,8 +1591,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Het gebruik van een D Setpoint transitie tussen de 0 en 0.1 wordt afgeraden. Mocht je dit wel doen dan kan dit leiden tot instabiliteit en verminderde reactievermogen als je sticks het centrum van hun bereik passeren.</span>"
     },
-    "pidTuningFeedforwardGroup": {
-        "message": "Feedforward"
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Smoothness"
     },
     "pidTuningFeedforwardAveraging": {
         "message": "Gemiddeld"
@@ -1665,30 +1606,14 @@
     "pidTuningFeedforwardAveragingOption4Point": {
         "message": "4 Punt"
     },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": "Smoothness"
-    },
     "pidTuningFeedforwardBoost": {
         "message": "Boost"
     },
-    "pidTuningProportional": {
-        "message": "Proportioneel"
-    },
-    "pidTuningProportionalHelp": {
-        "message": "Regelt de sterkte van hoe strak de quad de sticks volgt (het instelpunt/Setpoint).<br /><br />Hogere waarde (gains) zorgen voor een strakkere tracking, maar kan overshoot veroorzaken als deze te hoog is in verhouding tot de afgeleide (D-term). Zie de P-term als de veer van een auto zijn schokbreker.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
-    "pidTuningIntegral": {
-        "message": "Integraal"
+    "pidTuningFeedforwardTransition": {
+        "message": "Overgang"
     },
     "pidTuningDerivative": {
         "message": "Derivaat"
-    },
-    "pidTuningDMax": {
-        "message": "D max"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Let op:</b></span> zeer hoge waardes kunnen leiden tot desyncs tijdens snelle vertragingen."
@@ -1768,12 +1693,6 @@
     "pidTuningControllerHead": {
         "message": "PID Controller"
     },
-    "pidTuningCopyProfile": {
-        "message": "Profielwaarden kopiëren"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Kopieer rate profiel waarden"
-    },
     "dialogCopyProfileText": {
         "message": "Kopieer waarden van huidig profiel naar"
     },
@@ -1809,9 +1728,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
-    },
-    "receiverHelp": {
-        "message": "Neem alstublieft het hoofdstuk over de ontvanger door in de documentatie. Configureer seriële poort (indien nodig), ontvangermodus (serieel / ppm / pwm), provider (voor seriële ontvangers), bind ontvanger, stel kanaaloverzicht in, configureer kanaaleindpunten en het bereik op uw TX zodat alle kanalen van ~1000 tot ~2000 gaan. Stel het middelpunt in (standaard is dit 1500), trim de kanalen zodat als ze gecentreerd zijn op de waarde 1500 staan, configureer de deadband van de sticks. En controleer ook wat er gebeurt wanneer u uw zender uitgeschakeld of deze buiten bereik gaat.<br /><span class=\"message-negative\">BELANGRIJK:</span> Lees voordat u gaat vliegen het hoofdstuk over failsafe en neem de documentatie door hoe u failsafe configureerd."
     },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">BELANGRIJK:</span> Het is belangrijk om de motortemperatuur te verifiëren tijdens de eerste vluchten. Hoe hoger de filterwaarde des te beter je quad kan gaat vliegen. Echter krijgen je motoren ook meer ruis te voorduren.<br>De standaardwaarde van 100Hz is optimaal. Maar voor quads die meer ruis hebben kan je proberen om de D-Term filter te verlagen naar 50Hz en dit mogelijk ook toe te passen op de gyro-filter."
@@ -2257,9 +2173,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sateliet ID"
-    },
-    "gpsSignalQty": {
-        "message": "Aantal"
     },
     "motorsVoltage": {
         "message": "Voltage:"
@@ -3353,15 +3266,6 @@
     "pidTuningMotorLimit": {
         "message": "Schaalfactor [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "Motorvermogen lineaire schaalfactor (als percentage). Vermindert de ESC-amperage en derhalve de motorwarmte bij het gebruik van batterijen met een hogere aantal cellen. Bijvoorbeeld als u een 6S-batterij gebruikt op een quad met motoren, propellors en tuning die ontworpen is voor 4S. Stel dan de waarde in op 66%. En stel bijvoorbeeld 75% in wanneer u een 4S-batterij gebruikt op een quad die ontworpen is te vliegen op een 3S.<br>Zorg er altijd voor dat u zeker weet dat alle de componenten op uw quad de spanning van de batterij wel aan kan."
-    },
-    "pidTuningCellCount": {
-        "message": "Aantal cellen"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "Activeert automatisch het eerste profiel met een celgetal dat gelijk is aan de aangesloten batterij."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profielonafhankelijke Filterinstellingen"
     },
@@ -3437,50 +3341,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filters"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro Notch Filter 1 Middenfrequentie [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro Notch Filter 2 Middenfrequentie [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter 1 Afsnijfrequentie [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter 2 Afsnijfrequentie [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Het Notch-filter heeft een midden en een afsnijding. Het filter is symmetrisch. De middenfrequentie is het midden van het filter en de afsnijfrequentie is waar het notch-filter begint. Bijvoorbeeld met Notch Cutoff van 160 en Notch Center van 260 betekent dit dat het bereik 160-360Hz is. Met daarbij de meeste verzwakking rondom het centrum"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamic Notch Filter"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "Dynamic Notch Filter volgt de ruisfrequentie van de motoren. Deze filter plaatst een of twee notch-filters in het midden van deze frequentie."
-    },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "Dynamic Notch Filter volgt piekfrequenties van ruis en plaatst één tot vijf notch-filters met hun midden op deze frequenties. En dit doet hij voor elke as."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Let op:</strong> Het dynamische notch filter is uitgeschakeld. Om het in te schakelen en te configureren, schakel de 'DYNAMIC_FILTER' functie in de '$t(configurationFeatures.message)' sectie op het '$t(tabConfiguration.message)' tabblad."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Bereik"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Dynamic Notch Breedte Percentage"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "Dynamic Notch Q"
-    },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Dynamische Notch Min Frequentie [Hz]"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Dynamische Notch Max Frequentie [Hz]"
-    },
-    "pidTuningDynamicNotchCount": {
-        "message": "Dynamische Notch Aantal"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "De dynamische notch heeft drie frequentiebereiken waarin hij kan werken: LOW (80-330Hz) voor quads met een lager toerental zoals 6+ inch, MEDIUM (140-550Hz) voor een normale 5 inch quad, HIGH (230-800Hz) 2 tot 3 inch quads met hoge RPMs. De AUTO-optie selecteert het bereik afhankelijk van de waarde die is ingesteld bij de maximale afsnijfrequentie van de Gyro Dynamic Lowpass 1 Filter."
@@ -3530,36 +3398,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Lowpass Filter"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D Term Lowpass 1 Filter Type"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D Term Lowpass 2 Filter Type"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D Term Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D Term Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "D Term Lowpass 1 Dynamische Curve Expo"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 Dynamic Filter Type"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term Notch Filters"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D Term Notch Filter Center Frequency [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Filter Cutoff Frequency [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpass-afsnijfrequentie [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensatie"
     },
@@ -3574,9 +3412,6 @@
     },
     "pidTuningThrustLinearization": {
         "message": "Stuwkracht Linearisatie"
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": "Compenseert de niet-lineaire relatie tussen gas en kracht door een omgekeerde motorcurve toe te passen op de motor output. De hoogte van de compensatie kan tussen de 0 en 150 procent liggen."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3595,9 +3430,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Beperkt de accumulatie van I Term wanneer snelle bewegingen plaatsvinden. Dit helpt speciaal om de bounceback aan het einde van rollen en andere snelle bewegingen te verminderen. U kunt de assen kiezen waarin dit actief is. Maar ook of de snelle beweging wordt gedetecteerd met behulp van de Gyro of het Setpoint (stick)."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Assen",
@@ -3623,17 +3455,11 @@
         "message": "Afsnijden",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Lagere waarden onderdrukken bounce-back na flips in quads met een lage autoriteit, hoge waarden verhogen de hoge precisie bij het racen.<br>Stel in op 30-40 voor racen, 15 voor responsieve freestyle builds, 10 voor zwaardere freestyle quads, 3-5 voor X-klasse."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Controle"
     },
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Met deze functie kan het gas tijdelijk worden opgevoerd bij snelle stick-bewegingen. Dit verhoogt het acceleratiekoppel naar de motoren wat een veel snellere gasrespons oplevert."
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamische Stationaire Waarde [* 100 RPM]"
@@ -3641,17 +3467,11 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Hoek Limiet"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Voegt een nieuwe hoek beperkende modus toe voor piloten die leren vliegen in de acro modus. Het bereik is geldig tussen 10-80 en moet geactiveerd worden met een schakelaar in het tabblad $t(tabAuxiliary.message)."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Geïntegreerde Yaw"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">WAARSCHUWING</span>: als je deze functie inschakelt, moet je de YAW PID instellingen aanpassen. Meer informatie <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Integrated Yaw is een functie die een fundamenteel probleem met quad-besturing corrigeert: terwijl de pitch- en roll-as worden bestuurd door de stuwkrachtdifferentiëlen, is de manier waarop yaw wordt bereikt geheel anders. Integrated Yaw lost dit op door de output van de yaw pid te integreren voordat ze op de mixer worden toegepast. Dit normaliseert de manier waarop de pids werken. U kunt nu deze as instellen zoals u ook de andere assen instelt. Het vereist het gebruik van absolute control omdat er geen I nodig is bij Integrated Yaw."
     },
     "configHelp2": {
         "message": "Willekeurige rotatie van het bord in graden. Hiermee maak je het mogelijk de vluchtcontroller gedraaid, ondersteboven of in een andere dan gebruikelijke positie te monteren. Gebruik bij externe sensoren de sensoruitlijningen (Gyro, Acc, Mag) om de sensorpositie onafhankelijk van de oriëntatie van het bord te definiëren. "

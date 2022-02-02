@@ -557,12 +557,6 @@
     "initialSetupResetText": {
         "message": "Vraća sve postavke na <strong>zadane</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "Stvori sigurnosnu kopiju"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Vrati sigurnosnu kopiju"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktiviraj Boot Loader / DFU"
     },
@@ -790,17 +784,11 @@
     "featureNone": {
         "message": "&lt;Odaberi jednu&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX input"
-    },
     "featureVBAT": {
         "message": "Praćenja napona baterije"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Kalibracija akcelerometra u letu"
-    },
-    "featureRX_SERIAL": {
-        "message": "Serijski prijemnik (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Motori se ne vrte kad je letljelica armirana"
@@ -832,12 +820,6 @@
     "feature3D": {
         "message": "3D način rada (korištenje uz reverzibilne ESCove)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX ulaz (jedna žica po kanalu)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX ulaz (upravljanje preko MSP porta)"
-    },
     "featureRSSI_ADC": {
         "message": "Analogni ulaz za RSSI"
     },
@@ -861,9 +843,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Konfiguriraj u kartici Crna kutija nakon omogućavanja."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX podrška"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Proslijedi Aux kanale na izlaze servo motora"
@@ -936,9 +915,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Napomena:</strong> Nisu sve kombinacije značajki ispravne. Kada to kontroler leta prepozna neke od značajki će se onemogućiti.<br /><strong>Napomena:</strong> Konfigurirajte serijske portove <span class=\"message-negative\">prije</span> omogućavanja značajki koje će koristiti te portove."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Napomena:</strong> Potrebno je konfigurirati serijski port u kartici Portovi i odabrati protokol serijskog prijemnika kada koristite RX_SERIAL."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Napomena:</strong> SPI RX protokol će samo raditi kada je dostupan podržani hardware ili postoji veza s SPI sabirnicom."
@@ -1020,9 +996,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Arming je uvijek onemogućen kada gas/throttle nije nizak. Pazite jer biste mogli disarmati slučajno prekidačem dok letite s ovom opcijom aktivnom."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Vrijednost gasa/throttlea u praznom hodu [percent]"
     },
     "configurationMotorPoles": {
         "message": "Polovi motora",
@@ -1328,10 +1301,6 @@
         "message": "Prag",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
     "pidTuningDMinGain": {
         "message": "Gain",
         "description": "Gain of the D Max feature"
@@ -1403,17 +1372,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Kokrištenje D Setpoint prijelaza većeg od 0 i manjeg od 0.1 se ne preporučuje. To može dovesti do nestabilnosti i smanjenog odzina na upravljanje kod prijela središnje točke stickova</span>"
     },
-    "pidTuningProportional": {
-        "message": "Proporcionalno"
-    },
-    "pidTuningIntegral": {
-        "message": "Integralno"
-    },
     "pidTuningDerivative": {
         "message": "Derivacijski"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
@@ -1487,12 +1447,6 @@
     "pidTuningControllerHead": {
         "message": "PID kontroler"
     },
-    "pidTuningCopyProfile": {
-        "message": "Kopiraj vrijednosti profila"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Kopiraj vrijednosti rateprofila"
-    },
     "dialogCopyProfileText": {
         "message": "Kopiraj vrijednosti iz trenutnog profila u"
     },
@@ -1528,9 +1482,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">spremljen</span>"
-    },
-    "receiverHelp": {
-        "message": "Molimo pročitajte poglavlje o prijemnicima u dokumentaciji. Konfigurirajte serijski port (ako je potrebno), način rada prijemnika (serijski/ppm/pwm), protokol (za serijske prijemnike), povežite prijemnik, mapirajte kanale, konfigurirajte krajnje točke i rapon kanala na stanici tako da svi kanali idu of 1000 do 2000. Postavite sredinu (zadano 1500), trimajte kanale na 1500, konfigurirajte mrtve zone, provjerite ponašanje kada je stanica ugašena. <br /><span class=\"message-negative\">VAŽNO:</span>Prije leta pročitajte poglavlje failsafe i konfigurirajte ga."
     },
     "tuningHelp": {
         "message": "<b>Tuning savjeti</b><br /><span class=\"message-negative\">VAŽNO:</span> Bitno je provjeravati temperature motora tijekom prvih letova. Veće vrijednosti filtera će poboljšava karakteristike leta, ali može povećati temperature motora.<br>Zadana vrijednost od 100Hz je optimalna, ali za sustave koji imaju veće vibracije pokušajte smanjiti Dterm filter na 50Hz i po želji gyro filter."
@@ -1952,9 +1903,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalQty": {
-        "message": "Kol"
     },
     "motorsVoltage": {
         "message": "Napon:"
@@ -2880,21 +2828,6 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filteri"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro Notch Filter 1 Centralna Frekvencija [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro Notch Filter 2 Centralna Frekvencija [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter 1 Cutoff Frekvencija[Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter 2 Cutoff Frekvencija[Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Notch filter ima centar i cutoff. Filter je simetričan. Centralna frekvencija je centar filtera a cutoff frekvencije je gdje notch filter započinje. Na primjer sa notch cutoffom 160 i notch centrom na 260, znači da je raspon 160-360Hz sa najviše atenuacije oko centra"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dinamički gyro notch filter"
     },
@@ -2920,33 +2853,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Lowpass Filter"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D Term Lowpass 1 vrsta filtera"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D Term Lowpass 2 vrsta filtera"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D Term Lowpass 1 Dinamička Min Cutoff Frekvencija[Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D Term Lowpass 1 Dinamička Max Cutoff Frekvencija[Hz]"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 vrsta dinamičkog filtera"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term Notch Filteri"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D Term Notch Filter Centralna Frekvencija[Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Filter Cutoff Frekvencija[Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpass Cutoff Frekvencija[Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID kompenzacija"
     },
@@ -2967,9 +2873,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Ograničava akumulaciju I Terma kod brzih pokreta. Ovo pomaže smanjiti bounceback na kraju rollova i drugih brzih pokreta. Možete odabrati za koje osi se ovo primjenjuje, i prepoznaju li se brzi pokreti koristeći žiroskop ili određenu razinu kontrole."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Osi",
@@ -3001,20 +2904,11 @@
     "pidTuningThrottleBoost": {
         "message": "Gas/Throttle Boost"
     },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Ova opcija omogućuje da se gas privremeno pojača kod brzih promjena kontrola, što povećava ubrzanje i moment motora i daje bolji odziv na promjenu gasa."
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer limit kuta"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Dodaje novi način rada za limitiranje kuta za pilote koji uče letjeti u Acro/Air načinu leta. Prihvatljivi raspon je od 10-80 stupnjeva i način rada mora biti aktiviran prekidačem u $t(tabAuxiliary.message) kartici."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Integrirani Yaw"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Integrirani Yaw je mogućnost koja popravlja fundamentalni problem upravljanja četverokoptera: pitch i roll osi su kontrolirane diferencijalnim postiskom koje stvaraju propeleri, yaw je kontroliran drugačije. Integrirani Yaw ovo popravlja integriranjem izlaza yaw Pida prije nego što se primjeni. Ovo popravlja kako Pid vrijednosti rade i sada se može postavljati kao i za sve druge osi. Zahtijeva Apsolutnu Kontrolu jer je I Term nepotreban s Integriranim Yawom."
     },
     "configHelp2": {
         "message": "Poravnanje ploče kontrolera leta u stupnjevima. Omogućuje postavljanje kontrolera bočno ili naopako. Kada koristite vanjske senzore koristite poravnanje senzora kako biste neovisno o orjentacije kontrolera leta definirali pozicije senzora. "

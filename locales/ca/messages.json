@@ -35,7 +35,7 @@
         "message": "Aquesta operació no és compatible amb el teu maquinari."
     },
     "storageDeviceNotReady": {
-        "message": "El dispositiu d'emmagatzematge no està llest. En cas d'una targeta microSD, assegureu-vos de que és correctament reconegut per la controladora del vol."
+        "message": "El dispositiu d'emmagatzematge no està llest. En cas d'una targeta microSD, assegureu-vos de que és correctament reconegut per la controladora de vol."
     },
     "options_title": {
         "message": "Opcions de l'aplicació"
@@ -101,6 +101,14 @@
     "connectionTimeout": {
         "message": "Establiu el temps d'espera de la connexió per permetre una inicialització més llarga al connectar del dispositiu o reiniciar-lo",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
+    "showAllSerialDevices": {
+        "message": "Mostra tots els dispositius en sèrie (per a fabricants o desenvolupament)",
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "showVirtualMode": {
+        "message": "Activa el mode de connexió virtual",
+        "description": "Text for the option to enable or disable the virtual FC"
     },
     "cordovaForceComputerUI": {
         "message": "Utilitzeu la interfície dels ordinadors en lloc de la interfície dels telèfons"
@@ -581,6 +589,9 @@
     "dfu_device_flash_info": {
         "message": "Detectat dispositiu amb un total de $1 KiB de memòria flash"
     },
+    "dfu_hex_address_errors": {
+        "message": "<span class=\"message-negative\">Error</span>: la imatge del firmware conté adreces que no s'han trobat al dispositiu de destinació"
+    },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Error</span>: La imatge proporcionada és major a la memòria flash disponible al xip! Imatge: $1 KiB, limit = $2 KiB"
     },
@@ -594,7 +605,7 @@
         "message": "Maquinari"
     },
     "defaultWelcomeText": {
-        "message": "L’aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per trobar una llista completa del maquinari.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar visualizador de registre de Betaflight Blackbox</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar els scripts Lua de Betaflight per l'emisora</a><br /><br />El codi font del firmware es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopeener noreferrer\">aquí</a><br />Els últims <b>controladors STM USB VCP</b> es poden descarregar des de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari existent que utilitza un convertidor USB a sèrie CP210x:<br />Els últims <b>controladors CP210x</b> es poden descarregar des de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \"target=\"_ blank\" rel=\"noopener noreferrer\">aquí</a><br />El darrer <b>Zadig</b> del controlador de Windows USB es pot descarregar des de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />"
+        "message": "L'aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per obtenir la llista completa de maquinari.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregueu Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Descarregueu scripts Betaflight TX Lua</a><br /><br />El codi font del microprogramari es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><br />Els darrers <b>Controladors STM USB VCP</b> es poden baixar des de <a href=\"http://www..st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari heretat que utilitza un xip USB a sèrie CP210x:<br />Els <b>controladors CP210x</b> més recents es poden baixar des de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />El La darrera instal·lació del controlador USB de <b>Zadig</b> per a Windows es pot descarregar des d'<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a ><br /><b>ImpulseRC Driver Fixer</b> es pot descarregar <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -604,6 +615,9 @@
     },
     "defaultFacebookText": {
         "message": "També tenim un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Grup de Facebook</a>. <br />Uneix-te a nosaltres per obtenir un lloc on parlar de Betaflight, fer preguntes de configuració o simplement passar una estona amb altres pilots."
+    },
+    "defaultDiscordText": {
+        "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Servidor de Discord</a>.<br />Comparteix la teva experiència de vol, parla sobre Betaflight, ajudar a altres persones o obtenir ajuda per a tu mateix de la comunitat."
     },
     "defaultChangelogHead": {
         "message": "Configurador - Llista de canvis"
@@ -694,13 +708,16 @@
         "message": "Restaurar ajustos per <strong>defecte</strong>"
     },
     "initialSetupButtonBackup": {
-        "message": "Còpia de Seguretat"
+        "message": "Còpia de seguretat JSON"
     },
     "initialSetupButtonRestore": {
-        "message": "Restaurar"
+        "message": "Restaura JSON"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Activa el carregador d’arrencada/DFU"
+    },
+    "initialSetupBackupRestoreHeader": {
+        "message": "Còpia de seguretat i restauració experimental"
     },
     "initialSetupBackupRestoreText": {
         "message": "Fes una <strong>Còpia de Seguretat</strong> de la teva configuració per si hi ha problemes, la configuració dels ajustos del <strong>CLI</strong> <span class=\"message-negative\">no</span> estan incloses - fes servir la comanda 'diff all' al CLI per aixó."
@@ -943,7 +960,7 @@
         "message": "&lt;Selecciona Un&gt;"
     },
     "featureRX_PPM": {
-        "message": "PPM RX entrada"
+        "message": "PPM/CPPM (un sol cable)"
     },
     "featureVBAT": {
         "message": "Seguiment del voltatge de bateria"
@@ -952,7 +969,7 @@
         "message": "Calibració de nivell en vol"
     },
     "featureRX_SERIAL": {
-        "message": "Receptor Serial-based (SPEKSAT, SBUS, SUMD)"
+        "message": "Serial (via UART)"
     },
     "featureMOTOR_STOP": {
         "message": "No girar els motors quan està armat"
@@ -988,10 +1005,10 @@
         "message": "3D mode (per usar amb ESCs reversibles)"
     },
     "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX entrada (un cable per canal)"
+        "message": "PWM (un cable per canal)"
     },
     "featureRX_MSP": {
-        "message": "MSP RX entrada (control via port MSP)"
+        "message": "MSP (control via port MSP)"
     },
     "featureRSSI_ADC": {
         "message": "Entrada analògica RSSI"
@@ -1018,7 +1035,7 @@
         "message": "Configura via pestanya BlackBox després d'activar"
     },
     "featureRX_SPI": {
-        "message": "Suporta SPI RX"
+        "message": "SPI Rx (p. ex., Rx integrat)"
     },
     "featureESC_SENSOR": {
         "message": "Utilitzeu la telemetria KISS / BLHeli_32 ESC <b>sobre un fil separat</b>"
@@ -1048,7 +1065,7 @@
         "message": "Transmissor de vídeo"
     },
     "featureANTI_GRAVITY": {
-        "message": "Activa Anti Gravity permanentment"
+        "message": "Permanenment actiu"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Si està desactivat, es pot utilitzar el mode 'ANTI GRAVITY' habilitant Anti Gravity amb un commutador de l'emisora."
@@ -1093,16 +1110,16 @@
         "message": "RSSI (Força de la senyal)"
     },
     "configurationRSSIHelp": {
-        "message": "RSSI és una mesura de la força del senyal i és molt pràctic, de manera que et permet saber quan l'aeronau està sortint del rang de cobertura o si està patint una interferència de RF."
+        "message": "RSSI és una mesura de la força del senyal i és molt pràctic, de manera que et permet saber quan el quad està sortint del rang de cobertura o si està patint una interferència de RF."
     },
     "configurationEscFeatures": {
         "message": "Funcions ESC/Motor"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Nota:</strong> No totes les combinacions de funcions són vàlides. Quan la el firmware de la controladora detecti combinacions de funcions no vàlides, les funcions conflictives es desactivaran.<br /> <strong>Nota:</strong> Configura els ports sèrie <span class=\"message-negative\">abans</span> d'activar les funcions que utilitzaran els ports."
+        "message": "<strong>Nota:</strong> No totes les combinacions de funcions són vàlides. Quan el firmware de la controladora detecti combinacions de funcions no vàlides, les funcions conflictives es desactivaran.<br /> <strong>Nota:</strong> Configura els ports sèrie <span class=\"message-negative\">abans</span> d'activar les funcions que utilitzaran els ports."
     },
     "configurationSerialRXHelp": {
-        "message": "<strong>Nota:</strong> Recordeu configurar un port sèrie (a través de la pestanya Ports) i trieu un proveïdor de recepció de sèrie quan feu servir la funció RX_SERIAL."
+        "message": "&#8226; L'UART del receptor s'ha d'establir com a \"Rx sèrie\" (a la pestanya <i>Ports</i>)<br>&#8226; Seleccioneu el format de dades correcte al menú desplegable, a continuació:"
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:</strong> El proveïdor SPI RX només funcionarà si el maquinari necessari és a bord o està connectat a un bus SPI."
@@ -1132,7 +1149,7 @@
         "message": "Advertència: no s'ha trobat cap Giro/Acc"
     },
     "configurationSensorGyroToUseFirst": {
-        "message": "Primera"
+        "message": "Primer"
     },
     "configurationSensorGyroToUseSecond": {
         "message": "Segon"
@@ -1141,7 +1158,7 @@
         "message": "Tots dos"
     },
     "configurationSensorAlignmentGyro1": {
-        "message": "Primer Giro"
+        "message": "Primer GIRO"
     },
     "configurationSensorAlignmentGyro2": {
         "message": "Segon GIRO"
@@ -1153,7 +1170,7 @@
         "message": "Alineament MAG"
     },
     "configurationSensorAlignmentDefaultOption": {
-        "message": "Per defecte"
+        "message": "Predeterminat"
     },
     "configurationAccelTrims": {
         "message": "Alineament Trim"
@@ -1186,13 +1203,13 @@
         "message": "L'armat sempre està desactivat quan l'accelerador no és a baix del tot. Aneu amb compte ja que podríeu desarmar accidentalment amb un interruptor mentre voleu amb aquesta opció activa."
     },
     "configurationDigitalIdlePercent": {
-        "message": "Valor de l'accelerador Motor Inactiu [percentatge]."
+        "message": "Motor inactiu (%, estàtic)"
     },
     "configurationDigitalIdlePercentDisabled": {
-        "message": "El % del valor del gas en ralentí del motor està desactivat perquè el ralentí dinàmic està habilitat amb un valor a {{dynamicIdle}}rpm a la pestanya d'ajust PID"
+        "message": "Dynamic Idle està actiu a {{dynamicIdle}} rpm. Consulteu la pestanya d'ajustament PID."
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "El valor \"DShot Idle\" és el percentatge de la màxima acceleració que s'envia als ESC quan l'acceleració està a la posició mínima del stick i la aeronau està armada. Augmenteu-la per obtenir més velocitat al ralentí i evitar les desincronitzacions. Massa alt farà que l’arenau se senti flotant."
+        "message": "El valor \"Motor Idle (estàtic)\" és el percentatge de l'acceleració màxima que s'envia als ESC quan l'accelerador a la posició mínima del stick i el dron està armat. <br><br>Augmenteu-lo per obtenir més velocitat de ralentí i evitar desincronitzacions. Massa alt i el dron se sent flotant. Massa baix i els motors es poden desincronitzar o engegar-se lentament.<br><br>A 4.3, quan Dynamic Idle està actiu, el valor de ralentí estàtic no es té en compte, perquè el valor de ralentí s'ajusta contínuament per mantenir les rpm mínimes configurades activades. el motor més lent."
     },
     "configurationMotorPoles": {
         "message": "Pols de motor",
@@ -1231,13 +1248,13 @@
         "message": "Configuració de Beacon Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Fes servir el l'alarma Dshot (fes servir els motors per emetre senyals sonores quan el model està desarmat)"
+        "message": "Fes servir l'alarma Dshot (fes servir els motors per emetre senyals sonores quan el quad està desarmat)"
     },
     "configurationDshotBeaconTone": {
         "message": "To de Beacon"
     },
     "configurationDshotBeaconHelp": {
-        "message": "La balisa Dshot utilitza els motors ESC i motors per produir so. Això significa que la balisa Dshot no es pot utilitzar quan els motors giren. A Betaflight 3.4 i més recent, quan s’intenta l’armament mentre la balisa Dshot està activa, es produeix un retard de 2 segons després de l’últim to de la balisa de Dshot abans que l’armament s’armi. Això permet evitar que la funcionalitat de la balisa de Dshot interfereixi amb les ordres de Dshot enviades en l'armament.<br/><strong>Advertència:</strong> Com que la balisa Dshot funciona actualment a través dels motors quan està activa, això pot produir una calor excessiva i produir danys als motors i/o als ESC si la intensitat de la balisa és massa elevada. Utilitzeu BLHeli Configurator o BLHeli Suite per ajustar i provar la intensitat de la balisa."
+        "message": "La balisa Dshot utilitza els motors ESC i motors per produir so. Això significa que la balisa Dshot no es pot utilitzar quan els motors giren. A Betaflight 3.4 i més recent, quan s’intenta l’armament mentre la balisa Dshot està activa, es produeix un retard de 2 segons després de l’últim to de la balisa de Dshot abans que el quad s’armi. Això permet evitar que la funcionalitat de la balisa de Dshot interfereixi amb les ordres de Dshot enviades en l'armament.<br/><strong>Advertència:</strong> Com que la balisa Dshot funciona actualment a través dels motors quan està activa, això pot produir una calor excessiva i produir danys als motors i/o als ESC si la intensitat de la balisa és massa elevada. Utilitzeu BLHeli Configurator o BLHeli Suite per ajustar i provar la intensitat de la balisa."
     },
     "configurationBeeper": {
         "message": "Configuració del Beeper"
@@ -1291,7 +1308,7 @@
         "message": "Sons d'inicialització quan arrenca la controladora"
     },
     "beeperUSB": {
-        "message": "Sona quan la placa controladora es conecta per mitjà d'USB. Desactiva-ho si no vols elcoltar el xiulet"
+        "message": "Sona quan la placa controladora es conecta per mitjà d'USB. Desactiva-ho si no vols elcoltar el xiulet al banc de treball"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Sona quan l'esborrat de blackbox s'hagi completat"
@@ -1370,7 +1387,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "Si està activat, aquest elimina el sistema QZSS (japonès) i el substitueix pel sistema Galileu (europeu).",
+        "message": "Quan està activat, el mòdul GPS també farà un seguiment del sistema de satèl·lit Galileo, i normalment es tradueix en satèl·lits més bloquejats. A Betaflight 4.2.x o anterior, també desactiva el sistema d'augment QZSS.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -1400,10 +1417,7 @@
         "message": "Valors del filtre dinàmic de banda eliminada (Notch) han canviat"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>ADVERTIMENT: alguns valors dinàmics de tall s’han canviat als valors predeterminats</b></span> perquè s’ha activat/desactivat el filtratge RPM.<br> Comproveu abans de volar."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "OK"
+        "message": "<span class=\"message-negative\"><b>ADVERTIMENT: aquest canvi activarà/desactivarà el filtratge de RPM, augmentant/disminuint el retard/l'eficàcia del filtre.</b></span><br><br>Restablir l'osca dinàmica filtres als valors recomanats?"
     },
     "portsIdentifier": {
         "message": "Identificador"
@@ -1552,37 +1566,55 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravetat augmenta el terme I quan es detecten canvis ràpids d’acceleració. Valors de guanys més elevats proporcionen estabilitat i millor manteniment de l’actitud quan bombeu el gas."
+        "message": "L'antigravetat augmenta I (i, a 4.3, P) durant i poc després dels canvis ràpids de l'accelerador, augmentant l'estabilitat d'actitud durant les bombejos de l'accelerador.<br><br>Els valors de guany més alts poden millorar l'estabilitat en màquines de baixa autoritat o amb un centre de compensació de gravetat."
     },
     "pidTuningDMin": {
-        "message": "D Min",
+        "message": "<b>D</b>erivada",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {
-        "message": "<strong>Nota:</strong>La funció D Min està desactivada i els seus paràmetres estan ocults. Per utilitzar D Min, activa-la a $t(pidTuningPidSettings.message)."
+        "message": "<strong>Nota:</strong>La funció D Max està desactivada i els seus paràmetres estan ocults. Per utilitzar D Max, activa-la a $t(pidTuningPidSettings.message)."
     },
     "pidTuningDMinFeatureTitle": {
-        "message": "Amortiment dinàmic",
+        "message": "Configuració d'amortiment dinàmic / D Max",
         "description": "Title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "Amortiment<br>dinàmic",
+        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMinGain": {
         "message": "Guany",
         "description": "Gain of the D Max feature"
     },
+    "pidTuningDMaxGainHelp": {
+        "message": "D Max Gain augmenta la sensibilitat del sistema que augmenta D quan el quad gira ràpidament o tremola en el propwash.<br><br>Els valors de guany més alts augmenten D més fàcilment que els valors més baixos, augmentant D cap a D Max més ràpidament. Els valors de 40 o fins i tot 50 poden funcionar bé per a les configuracions noves d'estil lliure.<br><br>Els valors més baixos no augmentaran D cap a DMax excepte en moviments molt ràpids, i poden adaptar-se millor a les configuracions de cursa minimitzant el retard D.<br><br > ADVERTÈNCIA: El guany o l'avanç s'han de configurar per sobre d'uns 20, o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es fixarà D al valor base.",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningDMinAdvance": {
         "message": "Avanç",
         "description": "Advance of the D Max feature"
     },
+    "pidTuningDMaxAdvanceHelp": {
+        "message": "D Max Advance afegeix sensibilitat al factor Gain quan els sticks es mouen ràpidament.<br><br>Advance no respon al giroscopi ni al propwash. Actua abans que el factor Gain i de vegades és útil per a quads de baixa autoritat que tendeixen a retardar-se malament al començament d'un moviment.<br><br>En general, és millor deixar-lo a zero.<br><br>ADVERTIMENT: o bé L'avançament, o guany, s'ha de configurar per sobre d'uns 20, o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es fixarà D al valor base.",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningDMinFeatureHelp": {
-        "message": "L’algorisme d’augment de D Max aporta D al valor D Max durant els moviments ràpids. Té dues entrades suavitzades, cadascuna amb un rang de 0 a 100, i totes dues són additives. \"Avanç\" augmenta D cap a D Max durant els moviments del stick de lemisora, lleugerament per davant de \"Gain\", que augmenta D cap a D Max quan el quad gira o tremola al rentat de prop. Només \"Gain\" aixeca D amb sacsejades o propwash. Tots dos responen amb més força al moviment més ràpid que lent. Normalment, només es necessita \"Guany\". Es pot afegir avanç per als quads de baixa autoritat que tendeixen a superar amb força. Amb valors predeterminats de 30, D arriba a D Max només durant moviments molt ràpids. Un valor de 100 portaria D fins a D Max molt fàcilment, de manera que el D efectiu durant gairebé qualsevol moviment seria el valor de D Max.",
+        "message": "D Max augmenta D durant moviments més ràpids del giroscopi i/o del stick.<br><br>El factor \"Guany\" augmenta D quan el quad gira ràpidament o tremola en el propwash. Normalment només es necessita \"Guany\". <br><br>El factor \"Avançament\" augmenta D cap a D Max durant les entrades del stick. Normalment no és necessari i s'ha de posar a zero. L'avançament pot ser útil per a quads de baixa autoritat que tendeixen a sobrepassar-se molt.<br><br>Els valors de guany més alts (p. ex. 40) poden ser més adequats per a l'estil lliure aixecant D més fàcilment.<br><br>ADVERTIMENT: un dels guanys. o L'avançament s'ha de posar per sobre d'uns 20 o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es bloquejarà D al valor base.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controla la força de l’esmorteïment a qualsevol moviment de l’arenau. Per als moviments de stick, el terme D esmorteix l'ordre. Per a una influència exterior (propwash o ratxa de vent), el terme D esmorteix la influència. <br /><br />Els guanys més alts proporcionen més amortiment i redueixen els excessos en termes P i FF. <br /> No obstant això, el El terme D és MOLT sensible a les vibracions d'alta freqüència del giroscopi (el soroll | augmenta de 10 a 100x). <br /><br /> El soroll d'alta freqüència pot provocar calor del motor i cremar motors si els guanys D són massa elevats o el giroscopi el soroll no es filtra bé (vegeu la pestanya Filtres). <br /><br /> Penseu en el terme D com l’amortidor del vostre cotxe, però amb la propietat inherent negativa d’ampliar el soroll giroscòpic d’alta freqüència.",
+        "message": "Amortiment de la línia de base de QUALSEVOL moviment del quad. <br /><br />S'oposa al moviment, ja sigui causat per les entrades dels sticks o per influències externes (p. ex.,propwash o ràfegues de vent)<br /><br />Els guanys D Min més alts proporcionen més estabilitat i redueixen la superació.<br /> <br />D amplifica el soroll (amplia de 10x a 100x). Això pot cremar motors si els guanys són massa elevats o si el D no es filtra bé.<br /><br />D-term és una mica com l'amortidor del vostre cotxe.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Ajustament del Controlador de PIDs"
+    },
+    "pidTuningMotorSettings": {
+        "message": "Configuració de l'accelerador i del motor"
+    },
+    "pidTuningMiscSettings": {
+        "message": "Altres opcions"
     },
     "receiverRcSmoothing": {
         "message": "Suavitzat RC"
@@ -1598,7 +1630,11 @@
         "description": "Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Ajusta el càlcul de factor automàtic, 10 és la relació predeterminada de suavització i retard. L’augment del nombre suavitzarà més les entrades de RC, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per volar cinematogràfics.<br>Compte amb els números que s’aproximen als 50, el retard d’entrada es farà notori.<br>Utilitzeu la comanda CLI rc_smoothing_info mentre que TX i RX s’alimenten per veure el retalls del suavitzat RC automàticament calculat. ",
+        "message": "Ajusta el càlcul de factor automàtic, 10 és la relació predeterminada del percentatge de retard. L’augment del nombre suavitzarà més les entrades de RC, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per vols cinematogràfics.<br>Compte amb els números que s’aproximen als 50, el retard d’entrada es farà notori.<br>Utilitzeu la comanda CLI rc_smoothing_info mentre que TX i RX s’alimenten per veure el retalls del suavitzat RC automàticament calculat.",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "Ajusta el suavització automàtica de RC. 30 és el valor predeterminat. Els valors més alts suavitzen més les entrades de RC, p. 60 per a estil lliure HD o 90-120 per a vol cinematogràfic. Nota: els valors superiors a 50 provocaran un retard apreciable del stick. Els valors més baixos, per exemple, 20-25, transferiran alguns dels passos de control RC als senyals del motor, augmentant lleugerament la calor del motor, però reduiran lleugerament el retard de RC. Això pot ser útil per a curses.",
         "description": "Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
@@ -1641,7 +1677,7 @@
         "message": "Freqüència de tall d'entrada"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "FeedForward Cutoff Freqëncia"
+        "message": "FeedForward Cutoff Frequëncia"
     },
     "receiverRcSetpointType": {
         "message": "Escull tipus de filtre"
@@ -1688,26 +1724,8 @@
     "receiverRcSmoothingMode": {
         "message": "Tipus de suavització"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transició"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Amb aquest paràmetre, els canvis de transició (Feedforward) poden ser reduït al centre dels sticks, que resulta en flips i rolls finals més suaus.<br> El valor representa un punt en la deflexió del stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick està per sobre d'aquest punt, el canvi de transició es manté constant al valor configurat. Quan l'stick està per sota d'aquest punt, el canvi de transició és redueix proporcionalment, arribant a 0 a la posició central de l'stick.<br> El valor 1 dona el màxim efecte de suavitzat, mentre el valor 0 manté el canvi de transició al valor configurat durant tot el recorregut de l'stick."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
-    },
-    "pidTuningFeedforwardMaxRateLimit": {
-        "message": "Limit Rate Max"
-    },
-    "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "Atenua l'avanç cap a zero a mesura que els sticks es mouen ràpidament cap a la màxima deflexió (índex màxim de gir establert), per exemple, a l'inici d'un gir o un gir ràpid, per minimitzar l'excés. No fa res al final d'un gir o rotllo. Els valors més baixos fan que l'atenuació comenci abans. Normalment, aquest valor no requereix modificació. El millor és el valor més alt que coincideixi amb la superació acceptable a l'inici de rolls o girs."
-    },
-    "pidTuningFeedforwardJitter": {
-        "message": "Reducció del jitter"
-    },
-    "pidTuningFeedforwardJitterHelp": {
-        "message": "La reducció de la fluctuació redueix el Feedforward quan els sticks es mouen lentament. Això permet un vol suau i sense tremolar quan es fan arcs lents suaus, però proporciona una alimentació completa sense cap retard quan els sticks es mouen ràpidament. Un valor de llindar més alt (10-12) és més útil per a propòsits cinematogràfics o d'estil lliure en HD, i un valor lleugerament inferior (5) és millor per a carreres o de velocitat més alta."
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
@@ -1722,13 +1740,28 @@
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Es desaconsella l'ús d'una transició de punt de partida D superior a 0 i inferior a 0,1. Si ho fa, pot generar inestabilitat i una menor capacitat de resposta a mesura que els sticks passen pel punt central.</span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Feedforward"
+        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
-        "message": "Les següents opcions permeten afinar el ritme de cursa/agressiu a suau/HD.<br /><br /> Modalitat: ajustat a OFF per a cursa, Punt 2 per a cursa/freestyle ràpid, Punt 3 per a enregistrament en HD, Punt 4 per a cinema HD suau.<br /><br /> Suavitat: limita la quantitat de canvis que pot fer qualsevol pas de ràdio entrant, augmentar per obtenir un senyal de FF més suau, disminueix per respostes de FF més agressives.<br /><br /> Potenciador: ajuda a superar el retard del motor amb moviments rápid dels sticks, pot augmentar el jitter. Prova 10 per HD, 20 per cursa. Fins a 30 poden ser útils per a quads de baixa autoritat, però poden causar micro bots o jitter."
+        "message": "Feedforward ajusta la capacitat de resposta del stick.<br /><br /> Aquestes opcions us permeten ajustar-lo per oferir qualsevol cosa, des de respostes nítides i immediates del stick per a les curses o respostes suaus amb finalitats cinematogràfiques/HD."
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "Reducció del jitter"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "La reducció de la fluctuació redueix el Feedforward quan els sticks es mouen lentament, independentment de la seva posició.<br><br>Això permet un vol suau i sense tremolar quan es fan arcs lents suaus, però proporciona una alimentació completa sense cap retard quan els sticks es mouen ràpidament. La transició no és necessària i s'ha de posar a zero quan la reducció del jitter està activa.<br><br>El valor predeterminat és 7. Els valors més alts, per exemple, 10-12, són bons per a propòsits cinematogràfics o d'estil lliure en HD, 5 pot ser millor per a curses amb enllaços RC ràpids."
+    },
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Suavitat"
+    },
+    "pidTuningFeedforwardSmoothnessHelp": {
+        "message": "El suavització anticipada és essencial per atenuar el soroll a la traçada anticipada.<br><br>El valor més petit que ofereix un traçat suau és el millor.<br><br>El valor predeterminat de 25 és bo per a enllaços RC de 50-150 Hz. Per a enllaços RC de 250 hz, utilitzeu 40-50. Per a enllaços de 500 Hz, utilitzeu 60-65."
     },
     "pidTuningFeedforwardAveraging": {
         "message": "Promitjant"
+    },
+    "pidTuningFeedforwardAveragingHelp": {
+        "message": "Feedforward Averaging pren la mitjana dels últims 2 o 3 passos de feedforward. Això suavitza la traça de feedforward, però afegeix una mica de retard.<br><br>És més efectiu quan hi ha fluctuacions seqüencials amunt/baix al senyal, que és habitual amb enllaços RC més ràpids.<br><br>Mitjana de 2 punts. es necessita per a enllaços de 500 Hz i enllaços sorollosos de 250 Hz, o per a vol cinematogràfic / HD. Crossfire (abans de CRSFShot) necessita una mitjana de 3 punts en mode de 150 Hz."
     },
     "pidTuningOptionOff": {
         "message": "Desactivat"
@@ -1745,41 +1778,57 @@
     "pidTuningFeedforwardAveragingOption4Point": {
         "message": "Punt 4"
     },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": "Suavitat"
-    },
     "pidTuningFeedforwardBoost": {
         "message": "Potenciador"
     },
+    "pidTuningFeedforwardBoostHelp": {
+        "message": "L'impuls anticipat afegeix una empenta addicional en resposta a l'acceleració o la desacceleració del stick.<br><br>Això minimitza el retard del giroscopi causat pel retard de l'acceleració del motor i redueix la superació quan els sticks es desacceleren tirant cap enrere amb força els motors.<br> <br>L'impuls predeterminat funciona per a la majoria de configuracions. Els pilots de carreres poden preferir augmentar-lo una mica. Boost es pot ajustar amb una anàlisi acurada del registre."
+    },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "Limit Rate Max"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "Retalla l'avanç a mesura que els pals es mouen cap a la màxima deflexió, per minimitzar l'excés al principi d'un gir o rotllo.<br><br>No fa res al final d'un gir o rotllo. Els valors més baixos fan que l'atenuació comenci abans.<br><br>En general, aquest valor no requereix modificacions. El millor és el valor més alt que coincideixi amb la superació acceptable a l'inici de tirades o voltes."
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Transició"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Redueix linealment el Feedforward quan els sticks estan a prop del centre. <br><br>A la 4.2 i anteriors, la transició es pot utilitzar per proporcionar respostes més suaus de la palanca al voltant de la posició central de la palanca.<br><br>A la 4.3, no es recomana la transició, ja que s'ha \"substituït\" per la reducció de la fluctuació. funció.<br><br>Un valor de 0 desactiva la transició. Un valor de 0,3 retalla l'avanç a zero quan els sticks estan al centre mort, però augmenta fins a la normalitat quan els sticks estan més d'un 30% fora del centre."
+    },
     "pidTuningProportional": {
-        "message": "Proporcional"
+        "message": "<b>P</b>roporcional"
     },
     "pidTuningProportionalHelp": {
-        "message": "Controla la força de la forma en què la màquina segueix els sticks (el punt de referència). <br /><br />Un valor més elevat (guany) proporciona un seguiment més ajustat, però pot provocar una sobrealimentació si és massa alta en proporció a la derivada (D Term). Penseu en el P-Term com la molla en un cotxe.",
+        "message": "Amb quina força la màquina segueix els sticks (el punt de consigna).<br /><br />Els valors més alts (guanys) proporcionen un seguiment més ajustat, però pot provocar un sobrepassament si és massa alt en relació a D i pot provocar oscil·lacions en girs alts de l'accelerador. Penseu en P com la molla d'un cotxe.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
-        "message": "Integral"
+        "message": "<b>I</b>ntegral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Controla la força de la forma en què la màquina manté la posició general del punt de referència.<br>Similar a la proporcional, però per a biaixos més llargs en la aeronau, com un centre de gravetat compensat (CoG) o una influència exterior persistent (vent constant).<br /><br />Els guanys més elevats ofereixen un seguiment més estricte (per exemple, per voltes escombrants), però poden fer que l’aeronau se senti rígida per les entrades dels sticks comandades.<br>Si és altament proporcional al D Term, pot provocar oscil·lacions lentes.",
+        "message": "Controla els petits desplaçaments persistents.<br><br>Semblant a P, però s'acumula progressivament i lentament fins que l'error és zero. Important per a biaixos a llarg termini, com ara un centre de gravetat desplaçat o influències externes persistents com el vent.<br /><br />Els guanys més alts proporcionen un seguiment més ajustat, sobretot en els girs, però poden fer que el quad se senti rígid.<br> <br>Pot provocar oscil·lacions lentes en versions de poca autoritat o si són elevades en proporció a P.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivativa"
     },
     "pidTuningDMax": {
-        "message": "D Max"
+        "message": "<b>D</b> Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "D Max proporciona un nivell més elevat de D per a maniobres ràpides que d’altra manera podrien causar desbordaments, com voltes i rotacions. És particularment útil en construccions sorolloses o màquines amb poca autoritat. D Max permet establir el valor bàsic de D, o amortiment, per sota del que podria ser necessari, ajudant a mantenir els motors més freds i activant-se més ràpidament. D Max també aporta D durant el propwash. D Els valors d’avanç i guany màxims controlen el temps i la força de l’increment. Els pilots de versions HD Freestyle i Cinematic solen tenir un valor derivat relativament alt per aconseguir l’estabilitat en el vol cap endavant i no necessiten tant d’un augment de D Max. Els pilots de carreres normalment es preocupen de mantenir els motors frescos fins i tot amb pales doblegades, de manera que funcionen amb valors D bàsics més baixos i mantenen D Max alçat per controlar el desbordament.",
+    "pidTuningDMaxHelp": {
+        "message": "Proporciona un amortiment més fort per a maniobres ràpides que, d'una altra manera, podrien provocar un desbordament. <br><br>Permet un valor mínim bàsic de D més baix de l'habitual, mantenint els motors més freds i engegat més ràpid, però aixeca D per controlar la superació en voltes o inversions ràpides. <br><br>Més útil per a curses, construccions sorolloses o màquines de poca autoritat.",
         "description": "D Max Term helpicon message on PID table titlebar"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "Controla la força d’amortiment a qualsevol moviment del quad. Per a desplaçaments dels sticks, D Term amortitza el comandament. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br>El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll del gyro no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del gyro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
-        "message": "Transició"
+        "message": "<b>F</b>eedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "És un terme addicional d’empenta (molla) basat en l’entrada del stick. FF ajuda el P term a empènyer la aeronau per als moviments del sticks.<br><br>El P term empeny basat en la diferència entre el punt de comandat (graus/seg) i la lectura del giroscopi de la velocitat de rotació actual (graus/ sec). L'empenyament de la FF es basa només en el canvi comandat dels sticks.<br><br> Valors més elevats (guanys) produiran una resposta més forta de la aeronau a l'entrada de stick.<br>Un nivell massa elevat de valors pot provocar una sobrealimentació, augment del calor del motor i saturació del motor (quan els motors no poden mantindre la velocitat de canvi desitjada).<br> Els valors inferiors o nuls (0) produiran una resposta més lenta i suau a les entrades del stick.",
+        "message": "Un factor d'accionament addicional, derivat exclusivament de l'entrada del stick, que ajuda a empènyer el quad a moviments ràpids del stick.<br><br>FF no pot causar oscil·lacions, permet una P més baixa per a respostes de stick similars i compensa l'oposició natural de D a entrades malaltes.<br><br>Els valors baixos o zero donaran com a resultat una resposta més suau però més retardada a les entrades del stick.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -1861,10 +1910,10 @@
         "message": "Controlador de PIDs"
     },
     "pidTuningCopyProfile": {
-        "message": "Copia valors de perfil"
+        "message": "Copia el perfil"
     },
     "pidTuningCopyRateProfile": {
-        "message": "Copia valors de rates de perfil"
+        "message": "Copia el perfil de taxa"
     },
     "dialogCopyProfileText": {
         "message": "Copia els valors de perfil actual a"
@@ -1885,7 +1934,7 @@
         "message": "Canceŀla"
     },
     "pidTuningResetPidProfile": {
-        "message": "Restableix la configuració actual del perfil PID"
+        "message": "Esborra aquest perfil"
     },
     "pidTuningPidProfileReset": {
         "message": "S'han carregat els valors predeterminats del perfil PID actual."
@@ -1908,14 +1957,11 @@
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">desada</span>"
     },
-    "receiverHelp": {
-        "message": "Llegiu el capítol del receptor de la documentació. Configureu el port de sèrie (si és necessari), el mode del receptor (serial/ppm/pwm), el proveïdor (per als receptors serial), el receptor enllaçat, el mapa del canal establert, la configuració dels endpoints/rang a TX perquè tots els canals vagin de ~ 1000 a ~ 2000 . Definiu el punt mig (per defecte 1500), ajusteu els canals a 1500, configureu la banda morta de l'stick, comproveu el comportament quan el TX està apagat o fora de rang.<br /> <span class=\"message-negative\">IMPORTANT:</span> Abans de volar llegiu el capítol de documentació del Failsafe i configureu-lo."
-    },
     "tuningHelp": {
         "message": "<b>Consells d'ajustament</b><br /><span class=\"message-negative\">IMPORTANT:</span> És important verificar la temperatura del motor durant els primers vols. Com més gran sigui el valor del filtre, millor volarà, però també tindràs més soroll als motors.<br>El valor predeterminat de 100Hz és òptim, però per a les configuracions de sorolloses pots provar de baixar el filtre Dterm a 50Hz i possiblement també el filtre del giròscop."
     },
     "tuningHelpSliders": {
-        "message": "Es recomana utilitzar els control lliscants per ajustar el filtratge. <br>Feu canvis relativament petits, proveu la volada i comproveu la temperatura del motor després de cada canvi. <br>Si moveu els lliscadors cap a la dreta es donen valors de tall més alts; això pot millorar el propwash, però deixa passar més soroll als motors, fent-los més calents, possiblement prou calents com per cremar-se. <br>La majoria de versions netes amb filtratge de rpm estaran bé amb el filtrat giroscòpic a la dreta.<br>En canvi , tingueu molta precaució quan moveu els control lliscants del filtre D cap a la dreta. <br> Els paràmetres de filtre inusualment alts o baixos poden provocar fallades en l'armament. Els valors predeterminats són segurs per a quads típics de 5 \". <br><strong>Nota:</strong> Si canvieu els perfils, només canviarà la configuració del filtre en termini D. Els paràmetres del filtre giroscòpic són els mateixos per a tots els perfils.",
+        "message": "Utilitzeu els controls lliscants per ajustar els filtres. Els controls lliscants s'han d'apagar per fer canvis manuals.<br>Moure els controls lliscants cap a la dreta proporciona valors de tall més alts i pot millorar el propwash, però permetrà passar més soroll als motors, fent-los més calents.<br>La majoria de les construccions noves amb filtre de rpm anirà bé amb el control lliscant del passa baix del giroscopi completament a la dreta, o només amb el pas baix 2 actiu i els controls lliscants al mig.<br><strong>ADVERTIMENT:</strong> aneu MOLT amb compte quan moveu els controls lliscants D cap a la dreta! Comproveu la temperatura del motor després de cada canvi!<br><strong>Nota:</strong> canviar els perfils només canviarà la configuració del filtre D-term. La configuració del filtre del giroscopi és la mateixa per a tots els perfils.",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
@@ -1927,6 +1973,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Mode de control lliscant de sintonització de PID</strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><span class=\"message-negative\">Important: <b></b></span>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
+    },
+    "receiverHelp": {
+        "message": "&#8226; <b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Comproveu sempre que el vostre Failsafe funciona correctament!</a></strong></b> La configuració es troba a la pestanya Failsafe, que requereix el Mode Expert.<br> &#8226; <b>Utilitzeu el darrer microprogramari Tx!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer \">Desactiveu el filtre ADC de maquinari</a></strong> al transmissor si feu servir OpenTx o EdgeTx.<br>Configuració bàsica: configureu correctament la configuració del \"Receptor\". Trieu el \"Mapa de canals\" correcte per a la vostra ràdio. Comproveu que els gràfics de balanceig, to i altres barres es mouen correctament. Ajusteu el punt final del canal o els valors d'interval al transmissor entre ~1000 i ~2000 i configureu el punt mitjà en 1500. Per obtenir més informació, llegiu el <strong><a href=\"https://github.com/betaflight/betaflight/ blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentació</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -2370,11 +2419,47 @@
     "gpsSignalStr": {
         "message": "Potència Senyal"
     },
+    "gpsSignalGnssId": {
+        "message": "Gnss ID"
+    },
     "gpsSignalSatId": {
         "message": "Sat ID"
     },
-    "gpsSignalQty": {
-        "message": "Qty"
+    "gpsSignalStatusQly": {
+        "message": "Estat / Qualitat"
+    },
+    "gnssQualityNoSignal": {
+        "message": "sense senyal"
+    },
+    "gnssQualitySearching": {
+        "message": "cercant"
+    },
+    "gnssQualityAcquired": {
+        "message": "adquirit"
+    },
+    "gnssQualityUnusable": {
+        "message": "inutilitzable"
+    },
+    "gnssQualityLocked": {
+        "message": "fixat"
+    },
+    "gnssQualityFullyLocked": {
+        "message": "totalment fixat"
+    },
+    "gnssUsedUnused": {
+        "message": "no utilitzat"
+    },
+    "gnssUsedUsed": {
+        "message": "utilitzat"
+    },
+    "gnssHealthyUnknown": {
+        "message": "desconegut"
+    },
+    "gnssHealthyHealthy": {
+        "message": "saludable"
+    },
+    "gnssHealthyUnhealthy": {
+        "message": "poc saludable"
     },
     "motorsVoltage": {
         "message": "Voltatge:"
@@ -3081,6 +3166,10 @@
         "message": "El configurador ha <span class=\"message-positive\">detectat</span> correctament i verificat la placa: <strong>{{boardName}}</strong>",
         "description": "Board verification has succeeded."
     },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "El configurador ha detectat la controladora: <strong>{{boardName}}</strong> però no s'ha trobat cap versió oficial de Betaflight",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+    },
     "firmwareFlasherBoardVerificationFail": {
         "message": "El configurador <span class=\"message-negative\">ha fallat</span>al verificar la placa, si això no funciona, proveu de canviar lentament de pestanya per tornar-ho a provar, feu una nova connexió usb o connecteu-vos primer si és possible que hàgiu oblidat aplicar els ajustos personalitzats per defecte",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
@@ -3478,10 +3567,10 @@
         "message": "Factor d'escala [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Factor d'escala lineal de la sortida del motor (percentual). Redueix la calor actual i del motor de l’ESC quan s’utilitzen piles de mès cèl·lules, p.ex. Quan utilitzeu una bateria 6S en una aeronau que tingui motors, puntals i ajustaments dissenyats per a 4S, proveu de fixar el valor en el 66%; si utilitzeu una bateria 4S en una aeronau destinada a 3S, proveu el 75%.<br>Assegureu-vos que tots els vostres components poden suportar el voltatge de la bateria que feu servir."
+        "message": "Percentatge de reducció del senyal d'accionament per motor.<br><br>Redueix el corrent ESC i la calor del motor quan s'utilitzen bateries de major nombre de cèl·lules en motors d'alt KV.<br><br>Quan s'utilitza una bateria 6S en un quad amb motors 4S., accessoris i tuning, proveu el 66%; quan utilitzeu una bateria 4S en un quad destinada a 3S, proveu-ne un 75%.<br><br>Assegureu-vos que tots els vostres components puguin suportar el voltatge de la bateria que feu servir."
     },
     "pidTuningCellCount": {
-        "message": "Recompte de cel·les"
+        "message": "Recompte de cèl·lules: per al canvi automàtic de perfil"
     },
     "pidTuningCellCountHelp": {
         "message": "Activa automàticament el primer perfil que té un nombre de cel·les igual a la bateria connectada."
@@ -3490,7 +3579,7 @@
         "message": "Ajustament de Filtres independents del perfil"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "Control lliscants per ajustar els filtres giroscòpics i en termini D. <br> <br> Un filtratge més fort (control lliscant cap a l'esquerra i freqüències de tall més baixes) manté els motors més freds eliminant més soroll, però també augmenta el retard del senyal giroscòpic (retard de fase) al bucle PID . Això pot empitjorar el propwash i pot empitjorar les oscil·lacions ressonants. Quads menys sensibles, per exemple, X-Class, sovint funcionen bé amb un filtratge més fort. <br> <br> Menys filtratges (control lliscant cap a la dreta, freqüències de tall més altes) redueixen el retard del senyal giroscòpic i, sovint, milloren el propwash. Moure el filtre de gir baix giroscòpic cap a la dreta sol estar bé, però els motors poden escalfar-se. Normalment no cal desplaçar el filtre D cap a la dreta i pot provocar ràpidament motors molt calents.",
+        "message": "Aquests controls lliscants ajusten els filtres Gyro i D-term.<br /><br />Per a més filtratge:<br /> - Controls lliscants a l'esquerra<br> - Freqüències de tall més baixes.<br /><br /> Un filtratge més fort manté els motors es refreden eliminant més soroll, però retarda més el senyal del giroscopi i pot empitjorar el propwash o provocar oscil·lacions ressonants. Els quads menys sensibles, per exemple, X-Class ho fan millor amb un filtratge més fort. <br><br>Per a menys filtratge:<br /> - Controls lliscants a la dreta<br /> - Freqüències de tall més altes <br><br>Menys filtratge redueix el retard del senyal del giroscopi i sovint millora el propwash. Moure el filtre de pas baix del giroscopi a la dreta sol estar bé, però moure el filtre D cap a la dreta no sol ser necessari i pot provocar fàcilment motors molt calents.",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -3510,8 +3599,8 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Augmenta o disminueix els filtres Gyro Lowpass per defecte en proporció entre si. El filtratge giroscòpic s'aplica abans del bucle PID. <br />Rangs generals de soroll del motor per classe de quads:<br /><br />Quads de 6 \"+, generalment entre 100hz i 330hz<br />Quads de 5\", generalment dins De 220hz a 500hz<br />Whoops o quads de 3 \", generalment de 300hz a 850hz<br /><br />En general, voleu configurar el control lliscant perquè el rang de tall mínim / màxim dinàmic Gyro Lowpass 1 cobreixi l'anterior.<br />No obstant això, per a vols més suaus, utilitzeu més filtratge al control lliscant. Per obtenir una sintonia de filtre més agressiva, utilitzeu menys filtratge al control lliscant. provoqueu una volada o esgotin els motors.<br />Tingueu en compte els problemes de ressonància del quadre del quad, els coixinets defectuosos i les pales doblegades que poden fer que necessiteu més filtratge.",
-        "description": "Gyro filtering tuning slider helpicon message"
+        "message": "Canvia els talls del filtre pasa baixos del gyro.<br /><br />Mou el control lliscant cap a l'esquerra proporciona un filtratge Gyro més fort (freqüència de tall més baixa).<br /><br />Mou el control lliscant cap a la dreta proporciona menys filtratge Gyro ( freqüència de tall més alta).<br /><br />Quan moveu el control lliscant cap a la dreta per millorar el maneig del propwash, vés amb compte de no ser massa radical. Permetreu més soroll tant en P com en D i és possible que s'enviïn o es cremin motors.<br /><br />És possible que hàgiu de moure el control lliscant cap a l'esquerra si teniu problemes de ressonància del quadre, rodaments defectuosos, cops. accessoris, motors calents, etc.<br /><br />El filtratge de giroscopi s'aplica abans i a més del filtratge D.",
+        "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningGyroSliderEnabled": {
         "message": "Utilitzeu el control lliscant del Giro",
@@ -3522,8 +3611,8 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Canvia els límits de filtre de pas baix del terme D. <br /> Si moveu el control lliscant cap a l'esquerra es dóna un filtrat D més fort (freqüència de tall inferior); a la dreta proporciona menys filtrat (freqüència de tall més alta). <br /><br />El terme D és l'element PID més sensible al soroll i la ressonància. Pot amplificar qualsevol soroll d'alta freqüència entre 10 i 100 vegades més. Per això, els límits dels filtres D són molt més baixos que els filtres giroscòpics. <br /><br />El filtrat a termini D s’aplica després del filtratge giroscòpic, a més de. Un fort filtrat D reduirà la calor del motor en quads sorollosos i pot ser útil amb valors PID 'D' elevats per minimitzar la ressonància D a freqüències mitjanes a altes. No obstant això, un fort filtrat D pot retardar el senyal D, empitjorant la manipulació del propwash i afavorint les ressonàncies D. El filtratge D per defecte és òptim per a la majoria de quads. Les màquines més grans amb D alta poden funcionar millor amb un filtrat D més fort que els valors predeterminats. En general, no cal desplaçar el control lliscant del filtre de pas baix D cap a la dreta. En quads nous, anar a la dreta pot atenuar el propwash. S’ha de fer amb molta precaució, ja que tenir menys filtrat a D pot provocar ressonàncies sobtades (incloses els rodaments del motor o l’enlairament de l’armament) i una calor del motor extrema.",
-        "description": "D Term filtering tuning slider helpicon message"
+        "message": "Canvia els talls del filtre de pas baix del terme D.<br /><br />Mou el control lliscant cap a l'esquerra proporciona un filtratge D més fort (freqüència de tall més baixa).<br /><br />Mou el control lliscant cap a la dreta proporciona menys filtratge (freqüència de tall més alta).<br /><br />D-term és l'element PID més sensible al soroll i la ressonància. Pot amplificar el soroll d'alta freqüència de 10x a 100x. És per això que els talls de filtre D són molt més baixos que els filtres de giroscopi.<br /><br />El filtratge de terme D s'aplica després i a més del filtratge de giroscopi. El filtratge D predeterminat és òptim per a la majoria de quads i rarament s'ha de canviar.<br /><br />Mou aquest control lliscant cap a l'esquerra redueix la calor del motor en quads sorollosos i amb \"D\" de PID alt, però és possible que veiem més propwash i ressonàncies D de freqüència més baixa.<br /><br />No es recomana moure el control lliscant cap a la dreta, però pot millorar el propwash en construccions noves. Pot provocar un triturat del motor en armar-se, ressonàncies sobtades durant el vol i un sobreescalfament greu del motor.",
+        "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
         "message": "Utilitzeu el control lliscant de D Term",
@@ -3570,7 +3659,7 @@
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<span class = \"message-negative\"> ATENCIÓ </span>: s'ha detectat una configuració d'expert en mode no expert. Si us plau, activeu el mode expert per tornar a fer accessibles els control lliscants afectats.",
+        "message": "<strong>Nota:</strong> els controls lliscants estan desactivats perquè els valors actuals estan fora de l'interval d'ajust del mode bàsic. Canvia al mode expert per fer canvis",
         "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
@@ -3638,7 +3727,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "La resposta de stick inferior augmentarà la latència dels moviments del quad a les ordres i pot provocar un rebot lent al final d’un gir o tirada. Una resposta de pal més alta donarà una resposta més ràpida als quadres als moviments forts de pal. Una resposta de pal excessivament alta pot provocar desbordaments i rebots ràpids al final d'un flip o roll. <br /><br /><strong>Nota: </strong><br />La funció \"Terme relaxat\" pot aturar-se rebot per a quads de baixa autoritat o si s’utilitzen guanys de resposta del stick baixos.",
+        "message": "La resposta de stick inferior augmentarà la latència dels moviments del quad a les ordres i pot provocar un rebot lent al final d’un gir o tirada. <br><br>Una resposta de pal més alta donarà una resposta més ràpida als quadres als moviments forts de pal. Una resposta de pal excessivament alta pot provocar desbordaments i rebots ràpids al final d'un flip o roll. <br /><br /><strong>Nota: </strong><br />La funció \"Terme relaxat\" pot aturar-se rebot per a quads de baixa autoritat o si s’utilitzen guanys de resposta del stick baixos.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -3654,7 +3743,7 @@
         "description": "D Min slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "Augmenta D màx, la quantitat màxima que pot augmentar D durant moviments més ràpids.<br /><br />Per a quads de carreres, on el control lliscant d'amortiment principal s'ha establert baix per minimitzar la calor del motor, si es mou aquest control lliscant cap a la dreta, millorarà control de desbordament per a canvis ràpids de direcció.<br /><br />Per a quads d'alta definició o cinematogràfics, la inestabilitat en el vol cap endavant s'aborda millor movent el control lliscant Damping (no el control lliscant Damping Boost) cap a la dreta. Comproveu sempre si hi ha calor en els motors i escolteu si hi ha sorolls estranys durant les entrades ràpides quan ajusteu aquest control lliscant cap a la dreta.<br /><br />Per als quads d’estil lliure, especialment per a construccions més pesades, moure aquest control lliscant cap a la dreta pot ajudar a controlar el desbordament en flips i rolls.<br /><br /><strong>Nota:</strong><br />Generalment, la superació en flips i rolls es deu a que no hi ha prou \"i-Term Relax\", a desincronització del motor o a una autoritat inadequada (equivalent a una saturació del motor). Si trobeu que el desplaçament del control lliscant Damping Boost cap a la dreta no millora el tiratge o el desplaçament en excés, torneu a situar-lo a la posició normal i cerqueu el motiu del desbordament o oscil·lació.",
+        "message": "Augmenta D max, la quantitat màxima a la qual D pot augmentar durant moviments més ràpids.<br /><br />Per als quads de cursa, on el control lliscant principal d'amortiment s'ha ajustat a un nivell baix per minimitzar la calor del motor, moure aquest control lliscant cap a la dreta millorarà. Control de superació per a canvis ràpids de direcció.<br /><br />Per als quads HD o cinematogràfics, la millor solució per a la inestabilitat en el vol cap endavant es mou movent el control lliscant Amortiment (no el control lliscant Amortiment dinàmic) cap a la dreta. Comproveu la calor del motor i escolteu si hi ha sorolls estranys durant les entrades ràpides en moure aquest control lliscant cap a la dreta.<br /><br />Per als quads d'estil lliure, especialment les construccions més pesades, moure aquest control lliscant cap a la dreta pot ajudar a controlar la superació en girs i voltes..<br /><br /><strong>Nota:</strong><br />En general, la superació en els girs i els girs es deu a que no hi ha prou 'i-Term Relax', o dessincronitzacions del motor o una autoritat inadequada (també conegut com a Motor saturació). Si trobeu que moure el control lliscant del Daping Boost cap a la dreta no millora el capgirament ni el rodatge, torneu-lo a la posició normal i cerqueu el motiu de la superació o el balanceig.",
         "description": "D_min slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -3666,7 +3755,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Seguiment Pitch:<br><i><small>Pitch: Roll P & I & FF</small></i>",
+        "message": "Seguiment Pitch:<br><i><small>Pitch: Roll P, I & FF</small></i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
@@ -3679,11 +3768,12 @@
     "pidTuningGyroLowpassType": {
         "message": "Tipus de Filtre Passabaixos 1 del Giro"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Freqüència de tall [Hz]"
-    },
     "pidTuningGyroLowpass": {
         "message": "Passa-baix 1 Giro"
+    },
+    "pidTuningGyroLowpassHelp": {
+        "message": "El primer dels dos filtres Gyro passa-baix.<br /><br />L'ús del gyropass baix 1 en mode dinàmic era important amb el codi de notch dinàmic anterior. El pas baix del giroscopi 1 normalment es pot desactivar completament al microprogramari 4.3 quan s'utilitza el filtratge RPM, tret que el giroscopi no tingui cap filtrat de maquinari intern.<br /><br />En mode dinàmic, el filtratge serà més fort a baix accelerador, amb menys filtrat i menys retard a mesura que augmenta l'acceleració. La transició del tall baix a alt es produirà abans, a mesura que augmenta l'accelerador, amb valors d'exposició de pas baix de Gyro més alts.<br /><br />En mode estàtic, la freqüència de tall és fixa.<br /><br />Tipus de filtre per defecte és PT1. Poques vegades es requereix un filtratge d'ordre superior.",
+        "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
         "message": "Mode"
@@ -3700,10 +3790,10 @@
     "pidTuningGyroLowpassDyn": {
         "message": "Filtre Passa-baixos dinàmic del Giro"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
+    "pidTuningMinCutoffFrequency": {
         "message": "Freqüència de tall Minima [Hz]"
     },
-    "pidTuningGyroLowpassDynMaxFrequency": {
+    "pidTuningMaxCutoffFrequency": {
         "message": "Freqüència de tall Máxima [Hz]"
     },
     "pidTuningGyroLowpassDynType": {
@@ -3712,14 +3802,17 @@
     "pidTuningGyroLowpass2": {
         "message": "Passa-baix 2 Giro"
     },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Freqüència de tall [Hz]"
+    "pidTuningGyroLowpass2Help": {
+        "message": "El segon dels dos filtres de pas baix del Gyro.<br /><br />Aquest filtre s'executa al bucle del giroscopi, filtrant el senyal abans que entri al bucle PID. Sempre està en mode estàtic (tall fix).<br /><br />Si la freqüència del bucle PID és inferior a la freqüència del bucle del giroscopi, per exemple, un bucle PID de 4k amb un bucle de giroscopi de 8k, aquest filtre s'hauria de mantenir per evitar problemes d'àlies a causa de la baixada de mostreig de 8k->4k.<br /><br />Una configuració de pas baix 2 del giroscopi únic, establerta en algun lloc de 500 i 1000 Hz, funciona bé per a Betaflight 4.3 o superior, per a compilacions noves amb el filtratge RPM actiu i almenys filtre D predeterminat.",
+        "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Els filtres de pas baix giroscòpic atenuen el soroll de freqüència més alta per mantenir-lo fora del bucle PID. Hi ha dos filtres giroscòpics configurables de manera independent; per defecte, tots dos estan actius.<br /><br />El primer pas baix D pot ser estàtic (tall fix) o dinàmic; el segon pas baix D sempre és estàtic. Quan un pas baix està en mode dinàmic, el filtre serà més fort a l’accelerador baix i el tall augmentarà (menys filtrat) a mesura que augmenti l’accelerador.<br /><br />Sense filtrar RPM, els dos filtres PT1 haurien d’estar habilitats per defecte Talls (o més forts), amb pas baix 1 en mode dinàmic. <br /><br />Amb el filtre RPM, el control lliscant del filtre giroscòpic sovint es pot moure d'alguna manera cap a la dreta. En quads nous, pot anar fins a la dreta o, alternativament, pot ser suficient un sol filtre de gir inferior estàtic a 500 Hz.<br /><br />Un quad tindrà menys propwash amb el menor retard de filtre giroscòpic (control lliscant cap a la dreta), valors de tall més alts).<br /><br />Comproveu sempre si els motors están calents quan es passa a un filtratge giroscòpic inferior (control lliscant cap a la dreta). Amb un mínim filtrat giroscòpic, és essencial tenir un filtre D suficient. Tingueu cura!"
+        "message": "Els filtres de pas baix del giroscopi atenuen el soroll de freqüència més alta per mantenir-lo fora del bucle PID. Hi ha dos filtres de giroscopi configurables de manera independent; de manera predeterminada, tots dos estan actius.<br /><br />Amb el filtratge RPM, el control lliscant del filtre del giroscopi sovint es pot moure d'alguna manera cap a la dreta, o, alternativament, un sol filtre passa baix del giroscopi estàtic a 500 Hz pot ser suficient.<br /> <br />Un quad tindrà menys propwash amb el menor retard del filtre del giroscopi.<br /><br />Comproveu sempre la calor del motor quan moveu els controls lliscants cap a la dreta. Amb un filtrat de giroscopi mínim, és essencial tenir prou filtre D! Cuida't!",
+        "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "Els filtres pasa baixos del Term D atenuen el soroll i les ressonàncies de freqüència més alta que, en cas contrari, serien amplificats pel guany D. <br /><br />Hi ha dos filtres D. Els seus efectes s'dha sumen. Per defecte, tots dos estan actius i el tipus de filtre és PT1. Tots dos són necessaris en gairebé tots els quads, tot i que es pot utilitzar un sol PT2 en lloc de PT1 dual.<br /><br />El primer pasa baix D pot ser estàtic (freqüència fixa) o dinàmic; el segon pas baix D sempre és estàtic. Quan un pasa baix està en mode dinàmic, el filtratge serà més fort (freqüència de tall inferior) a l’accelerador baix i el tall augmentarà (menys filtrat i menys retard) a mesura que augmenti l’accelerador. <br /><br />El filtratge dinàmic de pas baix és útil per proporcionar un filtrat D fort al ralentí, on hi ha un risc de \"gripat del motor\" o volades inesperades en l'armament, mentre es produeix menys retard un cop a l'aire, per obtenir un millor rendiment de propwash.<br /><br />La transició de tall baix a alt es produirà abans, a mesura que s’accelera l’accelerador, amb valors d’exposició de passos baixos a més llarg termini en D. D lowpass expo es pot utilitzar per afinar la quantitat de filtratge de D en diferents punts de l'accelerador.<br /><br />En general, el quad volarà millor i tindrà menys propwash amb el retard de filtre més baix (barres lliscants cap a la dreta, valors de tall més alts), PERO, sobretot amb filtres D, això augmentarà considerablement la possibilitat d’obtenir motors calents.<br /><br />És molt fàcil cremar motors si no teniu prou filtratge D. Tingueu cura!"
+        "message": "Els filtres passa-baix D-term atenuen el soroll de freqüència més alta i les ressonàncies que, d'altra manera, s'amplificarien pel guany D.<br /><br />Hi ha dos filtres D i els seus efectes són additius. Tots dos són necessaris en gairebé tots els quads, tot i que es pot utilitzar un únic PT2 en lloc dels PT1 duals.<br /><br />En general, el quad volarà millor i tindrà el menor propwash quan es configura per tenir el menor retard del filtre ( controls lliscants a la dreta, valors de tall més alts). No obstant això, especialment amb els filtres D, els controls lliscants a la dreta poden augmentar molt les possibilitats d'aconseguir motors calents.<br /><br />És molt fàcil cremar motors si no teniu prou filtre D: aneu amb compte!",
+        "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtres Notch (banda eliminada) del Giro"
@@ -3727,35 +3820,36 @@
     "pidTuningGyroNotchFilter": {
         "message": "Filtre Notch (banda eliminada) 1"
     },
+    "pidTuningGyroNotchFilterHelp": {
+        "message": "Aplica un filtre d'osca estàtic (freqüència constant) al Gyro, a la freqüència central especificada. <br /><br />Pot ser útil per a ressonàncies aïllades i de freqüència constant que afecten tant P com D. <br /><br />Per ser útil, la freqüència de ressonància ha de ser constant en tot el rang de l'accelerador.<br / ><br />L'amplada de l'osca es defineix per la freqüència de tall. El tall normalment s'ha d'establir entre un 10% i un 40% per sota de la freqüència central. Utilitzeu el rang de filtre més ajustat que controli la ressonància. Eviteu establir filtres d'osca per sota de 100 Hz, excepte en circumstàncies especials.<br /><br />Els filtres d'osca estàtica rarament es requereixen a 4.3."
+    },
     "pidTuningGyroNotchFilter2": {
         "message": "Filtre Notch (banda eliminada) 2"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Giro Filtre Notch 1 Freqüència Central [Hz]"
+    "pidTuningGyroNotchFilter2Help": {
+        "message": "234 / 5.000\nResultados de traducción\nAplica un segon filtre d'osca estàtic (freqüència constant) al Gyro.<br /><br />Això es requereix rarament i només s'ha d'utilitzar com a últim recurs per combatre una segona línia de ressonància de freqüència fixa que no es pot controlar amb altres mitjans."
     },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Giro Filtre Notch 2 Freqüència Central [Hz]"
+    "pidTuningCenterFrequency": {
+        "message": "Freqüència central [Hz]"
     },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Giro Filtre Notch 1 Freqüència de Tall [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Giro Filtre Notch 2 Freqüència de Tall [Hz]"
+    "pidTuningCutoffFrequency": {
+        "message": "Freqüència de tall [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "El filtre Notch (banda eliminada) té un centre i un tall. El filtre és simètric. La freqüència central és el centre del filtre i la freqüència de tall és on s’inicia el filtre de banda eliminada (Notch). Per exemple, amb un tall Notch de 160 i centre Notch de 260, significa que l’interval és de 160-360Hz amb més atenuació al voltant del centre"
+        "message": "Un filtre Notch és un filtre simètric, estret i de tall alt, amb paràmetres centrals i de tall.<br /><br />El valor central és la freqüència central del filtre. El valor de tall és la freqüència de tall de -3dB del costat baix.<br /><br />Per exemple, un tall d'osca de 160 amb un centre de tall de 260 retorna una osca àmplia amb un rang de -3 dB de 160 a 360 Hz i el més fort. atenuació al voltant de 260 Hz.",
+        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Filtre Notch (banda eliminada) dinàmic"
     },
     "pidTuningDynamicNotchFilterHelp": {
-        "message": "El filtre Notch (banda eliminada) dinàmic rastreja la freqüència màxima del soroll dels motors i col·loca un o dos filtres Notch amb el seu centre a aquesta freqüència."
+        "message": "El filtre Dinàmic Notch fa un seguiment dels pics de freqüència de soroll dels motors i col·loca filtres de notch a aquestes freqüències, de manera independent per a cada eix."
     },
     "pidTuningMultiDynamicNotchFilterHelp": {
         "message": "Dynamic Notch Filter fa un seguiment de les freqüències de pic màximes del gyro i col·loca entre 1 y 5 filtres amb el seu centre en aquestes freqüències per cada eix."
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong> Avís:</strong> El filtre Notch dinàmic està desactivat. Per configurar-lo i utilitzar-lo, activa la funció 'FILTRE DINÀMIC' a la secció '$t(configurationFeatures.message)' de la pestanya '$t(tabConfiguration.message)'."
+        "message": "<strong> Avís:</strong> El filtre Notch dinàmic està desactivat. Per configurar-lo i utilitzar-lo, activa la funció 'FILTRE DINÀMIC' a la secció '$t(configurationFeatures.message)' de la pestanya '$t(tabConfiguration.message)'. Assegureu-vos també que el bucle PID sigui com a mínim de 2 kHz."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Rang del filtre dinàmic de banda eliminada (Notch)"
@@ -3764,16 +3858,16 @@
         "message": "Percentatge de l'amplada del filtre Notch (banda eliminada) dinàmic"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "Q dinàmic de banda eliminada (Notch)"
+        "message": "Factor Q"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "Freqüència dinámica mínima del filtre Notch [Hz]"
+        "message": "Freqüència mínima [Hz]"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "Freqüència dinámica màxima del filtre Notch [Hz]"
+        "message": "Freqüència màxima [Hz]"
     },
     "pidTuningDynamicNotchCount": {
-        "message": "Comptador dinàmic de tall"
+        "message": "Recompte d'osques"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Notch (banda eliminada) dinàmic té tres rangs de freqüència en els quals pot funcionar: BAIX (80-330hz) per a quads revolucionats de 6 o més polzades, MITJA (140-550hz) per a un quad normal de 5 polzades, ALT (230-800Hz) per quads molt revolucionats de 2,5-3 polzades. L'opció AUTO selecciona l'abast en funció del valor de la freqüència màxima de tall del filtre dinàmic passa-baixos de Giro 1."
@@ -3823,56 +3917,52 @@
     "pidTuningDTermLowpass": {
         "message": "Passa-baixos 1 del D Term"
     },
+    "pidTuningDTermLowpassHelp": {
+        "message": "El primer dels dos filtres passa-baix de terme D.<br /><br />En el mode dinàmic, el filtratge serà més fort a l'accelerador baix, amb menys filtrat i menys retard a mesura que augmenta l'acceleració. Això ajuda a controlar la mòlta del motor o les vies de vol inesperades a l'armament, alhora que redueix el retard i el rentat de prop després de l'enlairament. La transició del tall baix a alt es produirà abans, a mesura que augmenta l'acceleració, amb valors d'exposició de pas baix de termini D més alts.<br /><br />En el mode estàtic, la freqüència de tall és fixa. Això no es recomana per al filtratge D.<br /><br />El tipus de filtre predeterminat és PT1, tot i que alguns usuaris només han utilitzat un únic filtre Biquad dinàmic aquí, sense un segon PT1.<br /><br />Canvis que això el resultat en menys filtratge D pot provocar un sobreescalfament greu del motor o desviacions en armar.",
+        "description": "Help icon for the DTerm Lowpass 1 Filter"
+    },
     "pidTuningDTermLowpassMode": {
         "message": "Mode"
     },
     "pidTuningDTermLowpass2": {
         "message": "Passa-baixos 2 del D Term"
     },
+    "pidTuningDTermLowpass2Help": {
+        "message": "El segon dels dos filtres de pas baix de termini D. <br /><br />Aquest filtre sempre està en mode estàtic (tall fix). Es requereixen almenys dos filtres de pas baix PT1, o un únic filtre de segon ordre, per al filtratge D.<br /><br />En general, aquest tall s'estableix al valor més alt de l'interval de pas baix dinàmic 1. Això proporciona un control de soroll de segon ordre per sobre d'aquesta freqüència. <br /><br />Els canvis que resulten en menys filtres D poden provocar un sobreescalfament greu del motor o desplaçaments en l'armament.",
+        "description": "Help icon for the DTerm Lowpass 2 Filter"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filtres Passabaixos del D Term"
     },
     "pidTuningDTermLowpassType": {
-        "message": "Filtres Passabaixos 1 del D Term"
+        "message": "Tipus de filtre"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Freqüència de tall [Hz] D Term passa-baixos 1"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Freqüència de tall [Hz] D Term passa-baixos 2"
+    "pidTuningStaticCutoffFrequency": {
+        "message": "Freqüència de tall estàtica [Hz]"
     },
     "pidTuningDTermLowpass2Type": {
-        "message": "Tipus de filtre Passa-baixos 2 del D Term"
+        "message": "Tipus de filtre"
     },
     "pidTuningDTermLowpassDyn": {
         "message": "Filtre Passa-baixos dinàmic del D Term"
     },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "Freqüència dinàmica mínima de tall [Hz] D Term passa-baixos 1"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "Freqüència dinàmica màxima de tall [Hz] D Term passa-baixos 1"
-    },
     "pidTuningDTermLowpassDynExpo": {
-        "message": "D Term filtre passa-baixos dinàmic 1 curva Expo"
+        "message": "Expo de la corba dinàmica"
     },
     "pidTuningDTermLowpassDynType": {
-        "message": "Tipus filtre Passa-baixos dinàmic 1 del D Term"
+        "message": "Tipus de filtre dinàmic"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtres Notch D Term"
     },
-    "pidTuningDTermNotchFrequency": {
-        "message": "Freqüència central del filtre Notch D Term [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "Freqüència de tall del filtre Notch D Term [Hz]"
+    "pidTuningDTermNotchFiltersGroupHelp": {
+        "message": "Aplica un filtre d'osca estàtic (freqüència constant) a les dades de D-Term, a la freqüència central especificada.<br /><br />L'amplada de l'osca es defineix per la freqüència de tall. <br /><br />Pot ser útil per a ressonàncies aïllades i de freqüència constant que s'amplifiquen per D.<br /><br />Mantingueu el tall tan a prop del centre com sigui possible. Eviteu configurar filtres de notch per sota de 100 Hz, excepte en versions de RPM baixes."
     },
     "pidTuningYawLowpassFiltersGroup": {
-        "message": "Filtres Passa-baixos del Yaw"
+        "message": "Filtre Passa-baixos del Yaw"
     },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Freqüència de tall [Hz] passa-baixos Yaw"
+    "pidTuningYawLowpassFiltersGroupHelp": {
+        "message": "Aplica un filtre PT1 a la freqüència de tall especificada a les dades del giroscopi a l'eix de yaw."
     },
     "pidTuningVbatPidCompensation": {
         "message": "Compensació d'Vbat per als PIDs"
@@ -3884,7 +3974,7 @@
         "message": "Compensació del Battery Sag"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Ofereix un rendiment constant de l’accelerador i del PID en el rang de tensió de la bateria utilitzable, compensant la caiguda de la bateria. La quantitat de compensació es pot variar entre el 0 i el 100%. Es recomana una compensació completa (100%).<br /><br /> Visiteu <a href = \"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation \"target =\"_ blank \"rel =\"noopener noreferrer \"> aquesta entrada del wiki </a> per obtenir més informació."
+        "message": "Ofereix un rendiment constant de l'acceleració i el PID en l'interval de tensió de la bateria utilitzable augmentant la sortida del motor a mesura que cau la tensió de la bateria.<br /><br />La quantitat de compensació es pot variar entre 0 i 100%. Es recomana una compensació total (100%).<br /><br />Visiteu <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation \"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki</a> per a més informació."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3893,7 +3983,7 @@
         "message": "Linealització de l'empenta"
     },
     "pidTuningThrustLinearizationHelp": {
-        "message": "Compensa la relació no lineal entre l’accelerador i l’empenta aplicant una corba de motor inversa a la sortida del motor. El valor de la compensació es pot variar entre el 0 i el 150%."
+        "message": "Millora l'autoritat i la capacitat de resposta de l'accelerador baix. <br><br> Especialment útil per a whoops i 48k ESC. No té cap efecte a un accelerador més alt.<br><br>La quantitat de compensació es pot variar entre 0 i 150%. Normalment un 30-40% és suficient."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3914,7 +4004,7 @@
         "message": "Relaxació I term"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Limita acumulació de I Term quan es produeixen moviments ràpids. Això ajuda especialment a reduir el rebot al final dels Rolls i altres moviments ràpids. Podeu triar els eixos en què està actiu i si es detecta el moviment ràpid mitjançant el Giro o el Punt d'ajust (del stick)."
+        "message": "Suprimeix l'acumulació de I Term quan es produeixen moviments ràpids, reduint el rebot al final dels girs, els girs i altres entrades ràpides.<br><br> El mode de consigna respon a les entrades suavitzades del stick i funciona millor per a quads sensibles.<br><br >El mode giroscopi pot ser útil per a quads extremadament retardats.<br><br>Normalment, iTerm Relax no s'ha d'aplicar al yaw."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Eixos",
@@ -3947,34 +4037,34 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "Els valors més baixos suprimeixen el rebot després de volades en quads de baixa autoritat; els valors elevats augmenten la precisió de gir de velocitat alta per a les curses. <br> Establert en 30-40 per a curses, 15 per a freestyle amb bona resposta, 10 per a quads de freestyle més pesats, 3-5 per a classe X."
+        "message": "Els valors més baixos signifiquen una supressió més forta de la recuperació després dels girs en quads de baixa autoritat. Els valors més alts augmenten la precisió de gir de velocitat alta per a les carreres.<br><br>Estableix entre 30 i 40 per a les carreres, 15 per a les construccions d'estil lliure sensibles, 10 per a quads d'estil lliure més pesats, 3-5 per a la classe X."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Control absolut"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "Aquesta característica resol alguns problemes subjacents de $t(pidTuningItermRotation.message) i caldria substituir-lo en algun moment. Aquesta característica acumula l'error absolut de gir en les coordenades del quad i barreja una correcció proporcional al punt d'ajust. Perquè funcioni, heu d’habilitar AirMode i $t(pidTuningItermRelax.message) (per $t(pidTuningOptionRP.message)). Si combines aquesta característica amb $t(pidTuningIntegratedYaw.message), pots definir $t(pidTuningItermRelax.message) habilitada per a $t(pidTuningOptionRPY.message)."
+        "message": "Aquesta característica resol alguns problemes subjacents de $t(pidTuningItermRotation.message) i pot substituir-lo en algun moment. Acumula l'error absolut del giroscopi en coordenades quàdruples i barreja una correcció proporcional al punt de consigna.<br><br>AirMode s'ha d'habilitar i $t(pidTuningItermRelax.message) (per a $t(pidTuningOptionRP.message)). Quan es combina amb $t(pidTuningIntegratedYaw.message), podeu activar $t(pidTuningItermRelax.message) per a $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Reforç de Throttle"
     },
     "pidTuningThrottleBoostHelp": {
-        "message": "Aquesta característica permet augmentar temporalment l’acceleració en moviments ràpids del stick, fet que augmenta el parell d’acceleració als motors, proporcionant una resposta de l’acceleració molt més ràpida."
+        "message": "Augmenta l'acceleració de manera transitòria amb entrades d'acceleració més ràpides, proporcionant una resposta de l'accelerador més immediata."
     },
     "pidTuningIdleMinRpm": {
         "message": "Valor Dinàmic Idle [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desíncs del motor. Corregeix problemes causats per l’acceleració del flux d’aire o alentiment de hèlix, millorant l’autoritat PID, l’estabilitat, la frenada del motor i la resposta. El rpm dinàmic hauria d'estar aproximadament fixat aprox un 20% inferior a la rpm del valor Dshot Idle Valeu (vegeu la pestanya $t(tabMotorTesting.message) tab). Normalment no cal canviar el valor del idle DShot per defecte. Per a un temps d’inversió de vol invertit més llarg, s’haurien de reduir el valor idle DShot i el Mínim rpm junts.<br /><br />Visita<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada de la wiki</a> per més informació."
+        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. Per a 4.2, establiu el valor d'inactivitat de DShot baix, per exemple, 1%. No cal ajustar el valor de DShot Idle a 4.3. <br /><br />Visiteu <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada de la wiki</a> per a més informació."
     },
     "pidTuningIdleMinRpmDisabled": {
-        "message": "Dynamic Idle està desactivat com la telemetria Dshot està desactivada"
+        "message": "Dynamic Idle està DESACTIVAT perquè la telemetria Dshot està DESACTIVADA"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Límit d’angle del Acro Trainer"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Afegeix un nou mode de limitació d’angle per als pilots que aprenen a volar en mode acro. L'interval és vàlid entre 10 i 80 i s'ha d'activar amb un commutador a la pestanya $t(tabAuxiliary.message)."
+        "message": "Ajuda els pilots a aprendre a volar en mode acro limitant l'angle que pot aconseguir el quad. Els límits vàlids són de 10 a 80 graus. El mode s'ha d'activar amb un interruptor a la pestanya $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrat"
@@ -3983,7 +4073,7 @@
         "message": "<span class=\"message-negative\">ATENCIÓ</span>: si activeu aquesta característica, heu d'ajustar el PID YAW en conseqüència. Més informació <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\"target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
-        "message": "El Yaw integrat és una característica que corregeix un problema fonamental amb el control del quad: mentre que el Pitch i el Roll estan controlats pels diferencials de l'empenta, les pales que generen Yaw són diferents. El Yaw integrat ho soluciona integrant la sortida del yaw pid abans d’aplicar-les al barregador. Això normalitza el funcionament dels Pid de Yaw. Ara podeu afinar qualsevol altre eix. Requereix l'ús de control absolut ja que no es necessita I amb el Yaw Integrat."
+        "message": "Integrated Yaw integra els valors de guiñada P, I i D, la qual cosa permet que les guiñades P, I i D s'ajustin una mica com si sintonitzeu el pas i el gir.<br><br>Es requereix molt poca I, perquè la P integrada actua com I i la D integrada actuen com P.<br><br>NOTA: La guiada integrada requereix l'ús del control absolut, ja que no es necessita cap I amb la guiada integrada."
     },
     "configHelp2": {
         "message": "Rotació arbitrària de la controladora en graus, això ajuda a muntar-la de costat / al revès / etc. Quan fagis servirs sensors externs utilitza l'alineat (Gyro, Acc, Mag) per definir la posició del sensor independent de la controladora."
@@ -6140,8 +6230,12 @@
         "message": "Esteu segur que voleu tancar el configurador?"
     },
     "dropDownSelectAll": {
-        "message": "[Seleccionar tot]",
+        "message": "[Seleccionar/desseleccionar tot]",
         "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownFilterDisabled": {
+        "message": "Seleccioneu...",
+        "description": "Text indicating nothing is selected in the drop down/multiple select (filter disabled)"
     },
     "dropDownAll": {
         "message": "Tot",
@@ -6338,5 +6432,17 @@
     "presetsTooManyPresetsFound": {
         "message": "S'ha assolit el límit màxim del nombre de preajustos mostrats",
         "description": "Message that apprears on presets tab if too many presets found"
+    },
+    "presetsOptionsPlaceholder": {
+        "message": "ATENCIÓ! Reviseu la llista d'opcions",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsVersionMismatch": {
+        "message": "No coincideix amb la versió d'origen predeterminada.<br/>Versió obligatòria: {{versionRequired}}<br/>Versió d'origen predeterminada: {{versionSource}}<br/>Utilitzar aquesta font predeterminada pot ser perillós.<br/>Voleu continuar?",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsReviewOptionsWarning": {
+        "message": "Si us plau, reviseu la llista d'opcions abans d'escollir aquest valor predefinit.",
+        "description": "Dialog text to prompt user to review options for the preset"
     }
 }
