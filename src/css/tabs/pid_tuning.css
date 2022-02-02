@@ -164,7 +164,7 @@
 }
 
 .tab-pid_tuning table.compensation td:first-child:not(.filterTable) {
-    width: 65px;
+    width: 75px;
     text-align: center;
     vertical-align: top;
     padding-top: 4px;
