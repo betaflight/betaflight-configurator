@@ -306,6 +306,21 @@ TABS.presets.tryLoadPresets = function() {
     });
 };
 
+TABS.presets.multipleSelectComponentScrollFix = function() {
+    /*
+        A hack for multiple select that fixes scrolling problem
+        when the number of items 199+. More details here:
+        https://github.com/wenzhixin/multiple-select/issues/552
+    */
+    GUI.timeout_add('hack_fix_multipleselect_scroll', () => {
+        this._selectCategory.multipleSelect('refresh');
+        this._selectKeyword.multipleSelect('refresh');
+        this._selectAuthor.multipleSelect('refresh');
+        this._selectFirmwareVersion.multipleSelect('refresh');
+        this._selectStatus.multipleSelect('refresh');
+    }, 100);
+};
+
 TABS.presets.checkPresetSourceVersion = function() {
     return new Promise((resolve, reject) => {
         if (this.majorVersion === this.presetsRepo.index.majorVersion) {
@@ -335,6 +350,7 @@ TABS.presets.prepareFilterFields = function() {
     this.prepareFilterSelectField(this._selectAuthor, this.presetsRepo.index.uniqueValues.author, 1);
     this.prepareFilterSelectField(this._selectFirmwareVersion, this.presetsRepo.index.uniqueValues.firmware_version, 2);
     this.prepareFilterSelectField(this._selectStatus, this.presetsRepo.index.settings.PresetStatusEnum, 2);
+    this.multipleSelectComponentScrollFix();
 
     this.preselectFilterFields();
     this._inputTextFilter.on('input', () => this.updateSearchResults());
