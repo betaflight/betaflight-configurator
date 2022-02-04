@@ -653,9 +653,6 @@
     "defaultWelcomeHead": {
         "message": "하드웨어"
     },
-    "defaultWelcomeText": {
-        "message": "어플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 하드웨어 전체 목록의 플래시 탭을 확인하세요.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 블랙박스 로그 뷰어 다운로드</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 TX Lua 스크립트 다운로드</a><br /><br />펌웨어 소스 코드는 <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br /><br />최신 <b>STM USB VCP 드라이버</b>는 <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br />CP210x USB를 시리얼 칩으로 사용하는 레거시 하드웨어:<br />최신 <b>CP210x 드라이버</b>는 <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br />최신 윈도우 USB 드라이버 설치를 위한 <b>Zadig</b>는 <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br />"
-    },
     "defaultContributingHead": {
         "message": "기여하기"
     },
@@ -752,12 +749,6 @@
     },
     "initialSetupResetText": {
         "message": "설정을 <strong>기본값</strong>으로 복원"
-    },
-    "initialSetupButtonBackup": {
-        "message": "백업"
-    },
-    "initialSetupButtonRestore": {
-        "message": "복구"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "부트 로더 / DFU 활성화"
@@ -1002,17 +993,11 @@
     "featureNone": {
         "message": "&lt;하나를 선택하세요&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX 입력"
-    },
     "featureVBAT": {
         "message": "배터리 전압 모니터링"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "비행중 레벨 교정"
-    },
-    "featureRX_SERIAL": {
-        "message": "시리얼-기반 수신기 (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "아밍시 모터 회전 안함"
@@ -1047,12 +1032,6 @@
     "feature3D": {
         "message": "3D 모드 (역회전가능 ESC의 사용을 위한)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX 입력 (채널당 한 개의 선)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX 입력 (MSP 포트를 통한 제어)"
-    },
     "featureRSSI_ADC": {
         "message": "아날로그 RSSI 입력"
     },
@@ -1076,9 +1055,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "활성화 한 후 블랙박스 탭을 통해 환경설정하십시오."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX 지원"
     },
     "featureESC_SENSOR": {
         "message": "<b>별도의 선에</b> KISS/BLHeli_32 ESC 텔레메트리 사용"
@@ -1106,9 +1082,6 @@
     },
     "featureVTX": {
         "message": "비디오 트랜스미터"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "안티그라비티 영구 사용"
     },
     "featureANTI_GRAVITYTip": {
         "message": "이 기능이 비활성화된 경우 'ANTI GRAVITY' 모드를 사용하여 스위치로 안티 그라비티를 활성화할 수 있습니다."
@@ -1160,9 +1133,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>노트:</strong> 모든 기능 조합이 유효하지는 않습니다. 비행 컨트롤러 펌웨어가 잘못된 기능 조합을 감지하면 충돌하는 기능이 비활성화됩니다.<br /><strong>노트:</strong> 포트를 사용할 기능을 활성화 하기  <span class=\"message-negative\">전에</span> 시리얼 포트를 설정하십시오."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>노트:</strong> RX_시리얼 기능을 사용할 때는 시리얼 포트(포트 탭을 통해)를 구성하고 시리얼 수신기 공급자를 선택하십시오."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>알림:</strong> SPI RX 공급자는 필요한 하드웨어가 탑재되어 있거나 SPI 버스에 연결된 경우에만 작동합니다."
@@ -1244,15 +1214,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "스로틀이 낮지 않으면 아밍은 항상 비활성화됩니다. 이 옵션을 활성화 한 상태로 비행하는 동안 스위치로 실수로 아밍을 해제 할 수 있으므로 주의하십시오."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "모터 공회전 스로틀 값 [퍼센트]"
-    },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "모터 공회전 스로틀 값 %는 다이나믹 아이들이 PID 튜닝 탭의 {{dynamicIdle}}rpm 값으로 설정되어 있으므로 사용할 수 없습니다."
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "'DShot 아이들' 값은 스로틀이 최소 스틱 위치에 있을 때 ESC로 전송되는 최대 스로틀의 백분율입니다. 아이들(공회전) 속도를 높이고 디싱크를 방지하려면 이 값을 증가시키십시오. 너무 높으면 기체가 떠다니게 느껴집니다."
     },
     "configurationMotorPoles": {
         "message": "모터 폴수",
@@ -1429,10 +1390,6 @@
         "message": "갈릴레오 사용",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "활성화되면 QZSS 시스템(일본어)을 제거하고 갈릴레오 시스템(유럽어)으로 대체합니다.",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "홈포인트 한번만 설정",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1458,12 +1415,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "다이나믹 노치 값 변경"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>경고: 일부 다이나믹 노치 값이 기본값으로 변경되었습니다.</b></span> RPM 필터링이 활성화/비활성화되었기 때문에<br> 비행 전 반드시 확인하십시오."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "확인"
     },
     "portsIdentifier": {
         "message": "식별자"
@@ -1611,20 +1562,6 @@
         "message": "임계값",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "안티 그라비티는 빠른 스로틀 변화가 감지될 때 I 텀을 증가시킵니다. 더 높은 게인 값은 당신이 스로틀을 펌핑할 때 안정성과 더 나은 자세 유지력을 제공합니다."
-    },
-    "pidTuningDMin": {
-        "message": "D 최소값",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>노트:</strong> D 최소값 기능이 비활성화되고 매개변수가 숨겨집니다. D 최소값을 사용하려면 $t(pidTuningPidSettings.message)에서 활성화하십시오."
-    },
-    "pidTuningDMinFeatureTitle": {
-        "message": "다이나믹 댐핑",
-        "description": "Title for the options panel for the D Max feature"
-    },
     "pidTuningDMinGain": {
         "message": "게인",
         "description": "Gain of the D Max feature"
@@ -1632,14 +1569,6 @@
     "pidTuningDMinAdvance": {
         "message": "가속",
         "description": "Advance of the D Max feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D 최대 부스트 알고리즘은 빠른 이동 중에 D 최대값을 향해 D를 가져옵니다. 각각 0-100 범위의 부드러운 입력이 두가지가 있으며, 둘 다 부가적입니다. '고급'은 스틱 이동 중 D 최대를 향해 D가 증가하는데, 이는 쿼드가 회전하거나 프롭워시를 할 때 D 최대를 향해 D가 증가하는 '게인'보다 약간 앞섭니다. 흔들거리거나 프롭워시에는 오직 '게인'만 D를 올립니다. 둘 다 느린 움직임보다 빠른 움직임에 더 강하게 반응합니다. 보통, '게인'만 필요합니다. 심하게 오버슈팅하는 경향이 있는 낮은 권위의 쿼드에는 '고급'을 추가할 수 있습니다. 기본값 30에서 D는 매우 빠른 이동 중에만 D 최대에 도달합니다. 값이 100이면 D는 매우 쉽게 D 최대까지 도달하여 거의 모든 이동 중에 유효한 D는 D 최대값이 됩니다.",
-        "description": "D Max feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "기체의 어떤 움직임에도 감쇠의 강도를 제어합니다. 스틱이 움직일 때, D-텀은 명령을 감쇠시킵니다. 외부 영향(프롭위시 또는 풍력) 의 경우 D-텀은 그러한 영향을 감쇠합니다.<br /><br />높은 게인은 더 많은 감쇠를 제공하고 P-텀과 FF에 의한 오버슈트를 감소시킵니다.<br />단, D-텀은 자이로 고주파 진동(노이즈 | 10배에서 100배까지 확대) 에 민감합니다.<br /><br />D-게인이 너무 높거나 자이로 노이즈가 잘 필터링되지 않을 경우 고주파 노이즈로 모터 열과 소실 현상이 발생할 수 있습니다(필터 탭 참조).<br /><br />D-텀을 당신의 자동차에서 쇼크 업소버로 생각하되, 고주파 자이로 노이즈 확대라는 부정적 고유 속성으로 생각해 보십시오.",
-        "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PID 컨트롤러 설정"
@@ -1656,13 +1585,6 @@
     "receiverRcSmoothingAutoFactor": {
         "message": "자동 환경인자",
         "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "자동 환경인자 계산을 조정하며, 10은 기본 환경인자 대 지연 비율입니다. 숫자를 늘리면 RC 입력이 더 부드러워지는 동시에 지연도 더해집니다. 이것은 신뢰할 수 없는 RC 연결 또는 시네마틱 비행에 유용할 수 있습니다.<br>숫자가 50에 가까워지면 입력 지연이 눈에 띄게 됩니다.<br>TX와 RX가 전원이 공급되는 동안 CLI 명령 rc_smoothing_info를 사용하여 자동으로 계산된 RC 스무딩 컷오프를 확인하십시오. ",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcFeedforwardTypeSelect": {
-        "message": "피드포워드 컷오프 형식"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "셋포인트 컷오프 형식"
@@ -1699,9 +1621,6 @@
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "셋포인트 컷오프 주파수"
-    },
-    "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "피드포워드 컷오프 주파수"
     },
     "receiverRcSetpointType": {
         "message": "셋포인트 필터 형식"
@@ -1748,26 +1667,8 @@
     "receiverRcSmoothingMode": {
         "message": "스무딩 모드"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "전환"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "이 파라미터를 사용하면, 피드포워드 텀이 스틱의 중립 근처에서 감소하여 플립과 롤이 부드럽게 끝납니다.<br>값은 스틱의 편향을 나타냅니다: 0 - 스틱 중립, 1 - 전체 편향. 스틱이 그 지점보다 높을 때, 피드포워드는 설정된 값으로 일정하게 유지됩니다. 스틱이 그 지점 아래에 위치하면, 피드포워드는 스틱 중심점에서 0에 도달하는 것에 비례하여 감소합니다.<br>값 1은 최대 스무딩 효과를 주며, 값 0은 피드포워드를 전체 스틱 범위에 걸쳐 설정된 값으로 고정합니다."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D 설정점 전환"
-    },
-    "pidTuningFeedforwardMaxRateLimit": {
-        "message": "최대 레이트 제한"
-    },
-    "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "스틱이 오버슈트를 최소화하기 위해 빠른 플립 또는 롤 시작 시 최대 편향(최대 설정 회전 속도)을 향해 빠르게 이동할 때 0을 향한 피드포워드를 감쇠시킵니다. 뒤집거나 굴릴 때 아무 것도 하지 않습니다. 값이 작을수록 감쇠가 더 일찍 시작됩니다. 일반적으로 이 값은 수정할 필요가 없습니다. 롤 또는 플립 시작 시 허용 가능한 오버슈트와 일치하는 가장 높은 값이 가장 좋습니다."
-    },
-    "pidTuningFeedforwardJitter": {
-        "message": "지터 감소"
-    },
-    "pidTuningFeedforwardJitterHelp": {
-        "message": "지터 감소는 스틱이 천천히 움직일 때 피드포워드를 감소시킵니다. 이를 통해 부드러운 느린 아크를 만들 때는 지터 없이 부드럽게 비행할 수 있지만, 스틱이 빠르게 움직일 때는 지체 없이 완전한 피드포워드를 제공합니다. 임계값(10-12)이 높을수록 시네마틱 또는 HD 프리스타일 용도로 더 유용하고, 레이싱 또는 고속 RC 링크에는 약간 낮은 값(5)이 더 좋습니다."
     },
     "pidTuningDtermSetpoint": {
         "message": "D 설정점 가중치"
@@ -1781,11 +1682,11 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 0 보다 크고 0.1 보다 작은 D 설정값 전환의 사용은 불안정을 유발시킬 수 있으며, 중립포인트에서 만나는 스틱의 반응성이 감소될 수 있습니다.</span>"
     },
-    "pidTuningFeedforwardGroup": {
-        "message": "피드포워드"
+    "pidTuningFeedforwardJitter": {
+        "message": "지터 감소"
     },
-    "pidTuningFeedforwardGroupHelp": {
-        "message": "다음 옵션은 레이스/공격부터 스무드/HD까지 피드포워드를 미세 조정한다.<br /><br /> 모드: 레이스의 경우 끔, 레이스/빠른 프리스타일의 경우 2 포인트 평균, HD 레코딩의 경우 3 포인트 평균, HD 씨네마틱 부드러움의 경우 4 포인트 평균으로 설정하세요.<br /><br /> 부드러움: 입력되는 라디오 스텝 어느 하나라도 변화량을 제한하며, 부드러운 피드포워드 신호를 위해 증가시키고, 보다 공격적인 피드포워드 응답을 위해 감소시키세요.<br /><br />부스트: 빠른 스틱 입력으로 운동 장애를 극복하는 데 도움이 되며, 지터를 증가시킬 수 있습니다. HD는 10, 레이서는 20. 최대 30은 낮은 권한 쿼드에 유용할 수 있지만 미세한 오버슈트 또는 지터를 발생시킬 수 있습니다."
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "부드러움"
     },
     "pidTuningFeedforwardAveraging": {
         "message": "평균"
@@ -1805,42 +1706,17 @@
     "pidTuningFeedforwardAveragingOption4Point": {
         "message": "4 포인트"
     },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": "부드러움"
-    },
     "pidTuningFeedforwardBoost": {
         "message": "부스트"
     },
-    "pidTuningProportional": {
-        "message": "P(비례)"
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "최대 레이트 제한"
     },
-    "pidTuningProportionalHelp": {
-        "message": "기계가 스틱을 얼마나 단단히 추적하는지(설정점) 의 강도를 제어합니다.<br /><br />더 높은 값(게인) 은 더 엄격한 추적을 제공하지만, D (D-텀) 에 비례하여 너무 높을 경우 오버슈트를 일으킬 수 있습니다. P-텀을 자동차의 스프링이라고 생각하세요.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
-    "pidTuningIntegral": {
-        "message": "I(적분)"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "기계가 설정점의 전체 위치를 얼마나 단단히 고정하는지의 강도를 제어합니다.<br>P와 유사하지만, 무게중심(CoG)의 옵셋이나 지속적인 외부 영향 (안정된 바람)과 같이 기체에서 더 긴 편차를 가지는 경우를 위해 설정합니다.<br /><br />더 높은 게인은 더 엄격한 추적을 제공하지만(예: 완만한 회전시), 명령을 준 스틱 입력에 대해 기체가 뻣뻣한 느낌을 줄 수 있습니다.<br>D-텀에 비례하여 극히 높으면 느린 진동을 일으킬 수 있습니다.",
-        "description": "Integral Term helpicon message on PID table titlebar"
+    "pidTuningFeedforwardTransition": {
+        "message": "전환"
     },
     "pidTuningDerivative": {
         "message": "D(미분)"
-    },
-    "pidTuningDMax": {
-        "message": "D 최대값"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "D 최대는 플립이나 롤과 같이 오버슈트를 유발할 수 있는 빠른 기동에 더 높은 수준의 D를 제공합니다. 특히 소음이 많은 빌드 또는 낮은 권한의 기계에 유용합니다. D 최대를 사용하면 기본 D 또는 댐핑 값을 필요한 경우보다 낮게 설정하여 모터를 더 시원하게 유지하고 더 빨리 회전할 수 있습니다. D 최대도 프롭워시를 할 때 D를 올립니다. D 최대 고급 및 게인 값은 증가하는 타이밍과 강도를 제어합니다. HD 프리스타일 및 시네마틱 빌드 파일럿은 일반적으로 전진 비행의 안정성을 달성하기 위해 상대적으로 높은 D(미분) 값을 실행하며, 일반적으로 D 최대의 증가를 크게 필요로 하지 않습니다. 레이스 파일럿은 구부러진 프롭에서도 모터를 냉각시키는 데 신경을 쓰기 때문에 기본 D 값을 낮추고 D 최대를 계속 유지하여 오버슈트를 제어할 수 있습니다.",
-        "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningFeedforward": {
-        "message": "피드포워드"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "스틱 입력에 기초한 추가 푸시 항목(스프링) FF는 P-텀이 명령을 준 스틱 움직임에 비례하여 기체를 밀도록 도와줍니다.<br><br>P-텀은 명령을 준 설정점(도/초) 과 현재 회전 속도(도/초) 의 자이로 판독값 사이의 차이를 기반으로 밀어줍니다. 반면 FF는 명령을 준 스틱의 변화만을 기반으로 밀어줍니다.<br><br>값(게인) 이 높을수록 스틱 입력에 대한 기계 반응이 더 날카로워집니다.<br>너무 높은 값은 일부 오버슈트, 모터 열 증가, 모터 포화(모터가 원하는 변화율을 따라가지 못하는 경우) 가 발생할 수 있습니다.<br>낮은 값 또는 (0) 값은 스틱 입력에 대해 더 느리고 부드러운 반응을 일으킵니다.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>경고:</b></span> 매우 높은 레이트는 빠른 감속으로부터 디싱크를 초래할 수 있습니다."
@@ -1920,12 +1796,6 @@
     "pidTuningControllerHead": {
         "message": "PID 컨트롤러"
     },
-    "pidTuningCopyProfile": {
-        "message": "프로파일 값 복사"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "레이트 프로파일 값 복사"
-    },
     "dialogCopyProfileText": {
         "message": "현재 프로파일에서 값을 복사"
     },
@@ -1943,9 +1813,6 @@
     },
     "dialogCopyProfileClose": {
         "message": "취소"
-    },
-    "pidTuningResetPidProfile": {
-        "message": "현재 PID 프로파일 설정 초기화"
     },
     "pidTuningPidProfileReset": {
         "message": "현재 PID 프로파일에 대한 기본값이 로드됨"
@@ -1968,15 +1835,8 @@
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">저장됨</span>"
     },
-    "receiverHelp": {
-        "message": "문서의 수신기 장을 읽으십시오. 시리얼 포트 (필요한 경우), 수신기 모드 (시리얼/ppm/pwm), 공급자 (시리얼 수신기인 경우)를 환경설정하고, 수신기 바인딩, 채널 맵을 설정하고, TX에서 채널 종점과 범위가 모든 채널이 ~1000에서 ~2000까지 가도록 환경설정하십시오. 중간점 (기본값 1500)을 설정하고, 채널을 1500으로 조정하고, 스틱 데드밴드를 환경설정하고, TX가 꺼져 있거나 범위를 벗어 났을 때 동작을 확인합니다.<br /><span class=\"message-negative\">중요:</span>비행하기 전에 문서의 페일세이프 장을 읽고 페일세이프를 환경설정하십시오."
-    },
     "tuningHelp": {
         "message": "<b>튜닝 팁</b><br /><span class=\"message-negative\">중요:</span> 첫 비행 중 모터 온도를 확인하는 것이 중요합니다. 필터 값이 높을수록 더 잘 날 수 있지만 모터에 더 많은 노이즈가 들리게 됩니다. <br> 기본값 100Hz가 최적이지만, 노이즈 설정을 위하여 D텀 필터를 50Hz로 낮출 수 있으며, 자이로 필터를 낮추는 것 또한 가능합니다."
-    },
-    "tuningHelpSliders": {
-        "message": "슬라이더를 사용하여 필터링을 조정할 것을 권장합니다. <br>비교적 작은 변경을 하고, 각 변경 후 시험비행을 하고 모터 온도를 확인하세요.<br>슬라이더를 오른쪽으로 이동하면 컷오프 값이 더 높아집니다; 이렇게 하면 프롭 워시가 개선되지만, 더 많은 노이즈가 모터로 전달되어 뜨거워지고, 모터가 탈 만큼 충분히 뜨거워 질 수도 있습니다.<br>Rpm 필터링을 사용한 대부분의 클린 빌드는 자이로 필터링을 우측으로 많이 옮겨도 문제없습니다.<br>반대로 D 필터 슬라이더를 오른쪽으로 이동할 때는 매우 주의하십시오!<br> 필터 설정이 비정상적으로 높거나 낮으면, 아밍시 플라이어웨이 현상이 발생할 수 있습니다. 기본값은 일반적인 5\" 쿼드에 대해 안전합니다.<br><strong>참고:</strong> 프로파일을 변경하면 D-텀 필터 설정만 변경됩니다. 자이로 필터 설정은 모든 프로필에서 동일합니다.",
-        "description": "Filter tuning subtab note"
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>경고:</b></span> 당신이 사용하는 필터링 양은 위험할 정도로 낮습니다. 이는 기체를 제어하기 힘들게 하고, 분실을 초래할 수 있습니다. <b>최소한 하나의 자이로 다이나믹 저역통과 또는 자이로 저역통과 1과 최소한 하나의 D-텀 다이나믹 저역통과 또는 D텀 저역통과 1을 활성화</b>할 것을 강력히 권장합니다."
@@ -2432,9 +2292,6 @@
     },
     "gpsSignalSatId": {
         "message": "위성 ID"
-    },
-    "gpsSignalQty": {
-        "message": "품질"
     },
     "motorsVoltage": {
         "message": "전압:"
@@ -3537,21 +3394,8 @@
     "pidTuningMotorLimit": {
         "message": "스케일 계수 [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "모터 출력 선형 스케일 계수 (백분율). 더 높은 셀 수의 배터리를 사용할 때 ESC 전류와 모터 열을 감소시킵니다. 예로 4S용으로 설계된 모터, 프롭 및 튜닝한 기체에 6S 배터리를 사용할 때는 66%로, 3S용으로 설계된 기체에 4S 배터리를 사용할 때는 75%로 설정하십시오.<br>항상 모든 구성 요소가 사용 중인 배터리의 전압을 지원할 수 있는지 확인하십시오."
-    },
-    "pidTuningCellCount": {
-        "message": "셀 수"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "연결된 배터리와 동일한 셀 수를 가진 첫 번째 프로필을 자동으로 활성화하십시오."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "프로파일 독립적 필터 설정"
-    },
-    "pidTuningFilterSlidersHelp": {
-        "message": "슬라이더를 사용하여 자이로 및 D-텀 필터를 조정합니다.<br><br>더 강한 필터링(슬라이더를 좌측으로 이동, 낮은 컷오프 주파수) 은 더 많은 소음을 제거함으로써 모터를 냉각시키지만, PID 루프에 대한 자이로 신호 지연(상 지연) 도 증가시킵니다. 이는 프롭워시를 악화시키고 공명 진동을 악화시킬 수 있습니다. X-Class와 같은 응답성이 낮은 쿼드는 필터링 기능이 강화되어 잘 작동합니다. <br><br>낮은 필터링(슬라이더를 오른쪽으로 이동, 높은 컷오프 주파수) 은 자이로 신호 지연을 감소시키고 종종 프롭워시를 개선합니다. 일반적으로 자이로 저역통과 필터를 오른쪽으로 이동해도 괜찮지만 모터가 따뜻해질 수 있습니다. 일반적으로 D 필터를 오른쪽으로 이동할 필요가 없으며, 모터가 매우 뜨거워질 수 있습니다.",
-        "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
         "message": "적은 필터링",
@@ -3569,10 +3413,6 @@
         "message": "자이로 필터 승수:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "기본 자이로 저역통과 필터를 각각에 비례하여 올리거나 낮춥니다. 자이로 필터링은 PID 루프 전에 적용됩니다.<br />쿼드 규격별 일반적인 모터 노이즈 범위:<br /><br />6\"+ 쿼드 - 일반적으로 100hz ~ 330hz<br />5\" 쿼드 - 일반적으로 220hz ~ 500hz<br />후프부터 3\" 쿼드 - 일반적으로 300hz ~ 850hz<br /><br />일반적으로, 슬라이더를 자이로 저역통과 1 다이나믹 최소/최대 컷오프 범위가 위의 내용을 포함하도록 설정하십시오.<br />그러나, 부드러운 비행을 위해서는 슬라이더에 많은 필터링을 사용하세요. 보다 적극적인 필터 튜닝을 얻으려면 슬라이더에서 적은 필터링을 사용하십시오.<br /><br />적은 필터링에서 기체가 멀리 날아가거나 모터가 타는 것을 발생시킬 수 있으므로 과격한 행동을 취하지 않도록 주의하십시오.<br />참고로 프레임 공진 문제, 잘못된 베어링, 그리고 박살난 프롭은 더 많은 필터링을 필요로 합니다.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningGyroSliderEnabled": {
         "message": "자이로 슬라이더 사용",
         "description": "Disable or enable Gyro Filter Tuning Slider"
@@ -3580,10 +3420,6 @@
     "pidTuningDTermFilterSlider": {
         "message": "D 텀 필터 승수:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "D-텀 저역통과 필터 컷오프를 변경합니다.<br />슬라이더를 왼쪽으로 이동하여 더 강력한 D 필터링(낮은 컷오프 주파수) 을 가져옵니다; 오른쪽으로 이동하여 낮은 필터링(높은 컷오프 주파수) 을 가져옵니다.<br /><br />D-텀은 소음과 공명에 가장 민감한 PID 요소입니다. 모든 고주파 노이즈를 10배에서 100배 플러스까지 증폭할 수 있습니다. 그래서 D 필터의 컷오프가 자이로 필터보다 훨씬 낮은 것입니다.<br /><br />D-텀 필터링은 자이로 필터링 후에 추가로 적용됩니다. 강한 D 필터링은 잡음이 많은 쿼드에서 모터 열을 감소시키고 높은 PID 'D' 값을 사용하여 중주파에서 고주파까지 D 공명을 최소화할 수 있습니다. 그러나 강력한 D 필터링은 D 신호를 지연시켜 프롭워시 취급을 악화시키고 낮은 주파수 D 공명을 조장할 수 있습니다. 기본 D 필터링은 대부분의 쿼드에 최적입니다. 높은 D를 가지는 큰 기체는 기본값보다 더 강력한 D 필터링을 사용하는 것이 좋습니다. 일반적으로 D 저역통과 필터 슬라이더를 오른쪽으로 이동할 필요가 없습니다. 매우 깨끗한 빌드에서 오른쪽으로 가면 프롭워시를 감쇠시킬 수 있습니다. D에 대한 필터링이 적으면 갑작스런 공명(모터 갈림 또는 암밍시 이륙 포함) 과 극심한 모터 열이 발생할 수 있으므로 매우 주의해야 합니다.",
-        "description": "D Term filtering tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
         "message": "D 텀 슬라이더 사용",
@@ -3628,10 +3464,6 @@
     "pidTuningFilterSlidersNonExpertMode": {
         "message": "<strong>노트:</strong> 당신이 전문가 모드가 아니므로 슬라이더 범위가 제한됩니다. 이 범위는 대부분의 빌드와 초보자에게 적합합니다.",
         "description": "Firmware filter sliders restricted message"
-    },
-    "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<span class=\"message-negative\">주의</span>: 전문가 설정이 비전문가 모드에서 감지되었습니다. 영향을 받는 슬라이더에 다시 액세스할 수 있도록 하려면 전문가 모드를 활성화하십시오.",
-        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "낮음",
@@ -3697,10 +3529,6 @@
         "message": "스틱 응답:<br /><i><small>FF 게인</small></i>",
         "description": "Response tuning slider label"
     },
-    "pidTuningResponseSliderHelp": {
-        "message": "낮은 스틱 응답은 명령에 대한 쿼드 움직임의 대기 시간을 증가시키고 플립이나 롤의 끝에서 느린 바운스백을 초래할 수 있습니다. 더 높은 스틱 응답은 날카로운 스틱 움직임에 대한 더 빠른 쿼드 응답을 제공합니다. 지나치게 높은 스틱 응답은 플립이나 롤의 끝에서 오버슛과 빠른 바운스를 유발할 수 있습니다.<br /><br /><strong>참고:</strong><br />낮은 권한 쿼드 또는 낮은 스틱 응답 게인이 사용되는 경우 \"I-텀 릴렉스\" 기능이 바운스백을 중지할 수 있습니다.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningIGainSlider": {
         "message": "드리프트 - 워블:<br /><i><small>I 게인</small></i>",
         "description": "I-term slider label"
@@ -3713,10 +3541,6 @@
         "message": "다이나믹 댐핑:<br /><i><small>D 최대</small></i>",
         "description": "D Min slider label"
     },
-    "pidTuningDMaxGainSliderHelp": {
-        "message": "더 빠른 움직임 동안 D가 증가할 수 있는 최대량인 D 최대를 증가시킵니다.<br /><br />주 댐핑 슬라이더가 모터 열을 최소화하기 위해 낮게 설정되어 있는 레이스 쿼드의 경우, 이 슬라이더를 오른쪽으로 이동하면 빠른 방향 변경을 위한 오버슈트 제어를 개선할 수 있습니다.<br /><br />HD 또는 시네마틱 쿼드의 경우, 전진 비행의 불안정성은 (댐핑 부스트 슬라이더가 아닌) 댐핑 슬라이더를 오른쪽으로 이동하여 가장 잘 해결됩니다. 이 슬라이더를 오른쪽으로 조정할 때 빠른 입력 동안 항상 모터 열을 확인하고 이상한 소음이 들리는지 확인하십시오.<br /><br />프리스타일 쿼드, 특히 무거운 빌드의 경우 이 슬라이더를 오른쪽으로 이동하면 플립과 롤에서 오버슛을 제어하는 ​​데 도움이 될 수 있습니다.<br /><br /><strong>참고:</strong><br />일반적으로 플립과 롤의 오버슛은 'i-텀 릴렉스'가 충분하지 않거나, 모터 동기화가 부족하거나, 권한이 충분하지 않기 때문입니다(일명 모터 포화). 댐핑 부스트 슬라이더를 오른쪽으로 움직여도 플립이나 롤 오버슈트가 개선되지 않으면, 정상 위치로 되돌리고 오버슈트 또는 흔들림의 원인을 찾으십시오.",
-        "description": "D_min slider helpicon message"
-    },
     "pidTuningRollPitchRatioSlider": {
         "message": "피치 댐핑:<br /><i><small>피치:롤 D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
@@ -3724,10 +3548,6 @@
     "pidTuningRollPitchRatioSliderHelp": {
         "message": "피치 축에서만 댐핑 (D)을 증가시킵니다. 즉, 롤에 대한 피치. 피치 특정 오버슈팅 또는 바운스백을 제어하는 ​​데 도움이 됩니다.<br /><br />피치 축에서 '더 무거운' 관성 모멘트가 있는 쿼드는 일반적으로 더 많은 댐핑 권한이 필요합니다 (피치가 더 많은 관성을 갖고 더 많은 모멘텀을 축적하기 때문).<br /><br />좋은 롤 축 동작을 얻을 때까지 마스터 '댐핑' 및/또는 '추적' 슬라이더를 먼저 조정합니다. 그런 다음 피치 슬라이더 (증가 또는 감소)를 사용하여 롤에 영향을 주지 않고 피치 축을 미세 조정합니다.",
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
-    },
-    "pidTuningPitchPIGainSlider": {
-        "message": "피치 추적:<br><i><small>피치:롤 P & I & FF</small></i>",
-        "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
         "message": "롤을 기준으로 피치 P 및 I 값을 변경하여 피치 축에서만 추적 강도를 높입니다. 롤에 비해 피치 축에서 더 강력한 추적 권한을 허용합니다.<br /><br />예리한 피치 입력 또는 스로틀 조각으로 피치 (노즈) 보블을 안정화하기 위해 증가합니다. 또한 안티그래비티 게인을 높이는 것도 고려하십시오.<br /><br />좋은 롤 축 동작을 얻을 때까지 마스터 '댐핑' 및/또는 '추적' 슬라이더를 먼저 조정하십시오. 그런 다음 피치 슬라이더(증가 또는 감소)를 사용하여 롤에 영향을 주지 않고 피치 축을 미세 조정합니다.",
@@ -3738,9 +3558,6 @@
     },
     "pidTuningGyroLowpassType": {
         "message": "자이로 저역통과 1 필터 형식"
-    },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "컷오프 주파수 [Hz]"
     },
     "pidTuningGyroLowpass": {
         "message": "자이로 저역통과 1"
@@ -3760,26 +3577,11 @@
     "pidTuningGyroLowpassDyn": {
         "message": "자이로 저역토과 다이나믹 필터"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "최소 컷오프 주파수 [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "최대 컷오프 주파수 [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "자이로 저역통과 1 다이나믹 필터 형식"
     },
     "pidTuningGyroLowpass2": {
         "message": "자이로 저역통과 2"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "컷오프 주파수 [Hz]"
-    },
-    "pidTuningGyroLowpassFilterHelp": {
-        "message": "자이로 저역통과 필터는 고주파수 노이즈를 감쇠하여 PID 루프에서 벗어나도록 합니다. 2개의 독립적으로 구성 가능한 자이로 필터가 있습니다. 기본적으로 둘 다 활성화됩니다.<br /><br />첫 번째 D 저역 통과는 정적(고정 컷오프) 또는 동적일 수 있습니다. 두 번째 D 저역통과는 항상 정적입니다. 저역통과가 동적 모드일 때 필터는 낮은 스로틀에서 더 강해지고 스로틀이 증가함에 따라 컷오프는 더 높아집니다(필터링이 적음).<br /><br />RPM 필터링이 없으면, 저역통과 1은 다이나믹 모드로, 두 PT1 필터 모두 기본 (또는 더 강한) 컷오프로 활성화되어야 합니다.<br /><br />RPM 필터링을 사용하면, 자이로 필터 슬라이더를 종종 오른쪽으로 이동할 수 있습니다. 클린 쿼드에서는 제대로 작동하거나, 500hz의 단일 정적 자이로 저역통과 필터로 충분할 수 있습니다.<br /><br />쿼드는 최소한의 자이로 필터 지연 (슬라이더가 오른쪽으로 이동, 더 높은 컷오프 값) 으로 매우 적은 프롭워시를 가집니다.<br /><br />낮은 자이로 필터링 (슬라이더를 오른쪽으로 이동) 으로 전환할 때, 항상 모터 열을 확인하십시오. 최소한의 자이로 필터링을 가질 경우, 충분한 D 필터링은 필수입니다! 주의하세요!"
-    },
-    "pidTuningDTermLowpassFilterHelp": {
-        "message": "D-텀 저역통과 필터는 D 게인에 의해 증폭될 수 있는 고주파 노이즈 및 공명을 감쇠합니다.<br /><br /> 2개의 D 필터가 있으며, 그 효과는 부가적입니다. 기본값은 둘 다 활성 상태이며, 필터 유형은 PT1입니다. 이중 PT1 대신 단일 PT2를 사용할 수 있지만, 거의 모든 쿼드에서 둘 다 필요합니다.<br /><br />첫 번째 D 저역통과는 정적(고정 주파수) 또는 동적일 수 있습니다; 두 번째 D 저역통과는 항상 정적입니다. 로우패스가 동적 모드일 때, 낮은 스로틀에서 필터링이 더 강해지고(컷오프 주파수가 낮아짐), 스로틀이 증가할수록 컷오프가 더 높아집니다(낮은 필터링 및 지연 감소). <br /><br />동적 저역통과 필터링은 더 나은 프롭워시 성능을 위해 공중에서 한 번 지연을 줄이면서 '모터 갈림' 또는 예기치 않은 비행으로 위험이 있는 아이들 상태에서 강력한 D 필터링을 제공하는 데 유용합니다. <br /><br />스로틀이 증가함에 따라 D-텀 저역통과 엑스포 값이 높아짐에 따라 로우 컷오프에서 하이 컷오프로의 전환이 더 일찍 일어납니다. D 저역통과 엑스포를 사용하여 서로 다른 스로틀 지점에서 D 필터링 양을 미세 조정할 수 있습니다.<br /><br />일반적으로 쿼드는 가장 잘 날고 가장 낮은 필터 지연(오른쪽으로 슬라이더, 더 높은 컷오프 값) 으로 최소한의 프롭워시를 가집니다. 그러나 특히 D 필터의 경우, 이는 고온 모터를 얻을 가능성을 크게 증가시킵니다.<br /><br />D 필터가 충분하지 않으면 모터를 태우는 것이 매우 쉽습니다. 주의하세요!"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "자이로 노치 필터"
@@ -3790,50 +3592,14 @@
     "pidTuningGyroNotchFilter2": {
         "message": "자이로 노치 필터 2"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "자이로 노치 필터 1 센터 주파수 [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "자이로 노치 필터 2 센터 주파수 [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "자이로 노치 필터 1 컷오프 주파수 [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "자이로 노치 필터 2 컷오프 주파수 [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "노치 필터는 센터와 컷오프로 나누어집니다. 필터는 대칭을 이룹니다. 센터 주파수는 필터의 중심이며 컷오프 주파수 노치 필터가 시작되는 곳입니다. 예를 들어 컷오프 160, 노치 센터 260은 범위가 센터 주변으로 대부분 감쇄를 갖는 160-360Hz임을 의미합니다."
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "다이나믹 노치 필터"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "다이나믹 노치 필터는 피크 모터 노이즈 주파수를 추적하고 그 주파수에서 중심에 하나 혹은 두 개의 노치 필터를 생성합니다."
-    },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "다이나믹 노치 필터는 피크 자이로 노이즈 주파수를 추적하고 각 축에서 이들 주파수의 중심에 하나에서 다섯 개의 노치 필터를 생성합니다."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>알림:</strong> 다이나믹 노치 필터가 비활성화되어 있습니다. 그것을 구성하고 사용하려면 '$t(tabConfiguration.message)' 탭의 '$t(configurationFeatures.message)' 세션에서 '다이나믹_필터' 기능을 활성화하세요."
     },
     "pidTuningDynamicNotchRange": {
         "message": "다이나믹 노치 필터 범위"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "다이나믹 노치 폭 퍼센트"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "다이나믹 노치 Q"
-    },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "다이나믹 노치 최소 주파수 [Hz]"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "다이나믹 노치 최대 주파수 [Hz]"
-    },
-    "pidTuningDynamicNotchCount": {
-        "message": "다이나믹 노치 수"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "다이나믹 노치는 작동할수 있는 세 개의 주파수 범위를 가집니다: 6+인치처럼 낮은 모터속도를 가진 쿼드는 LOW(80-330Hz), 일반적인 5인치 쿼드는 MEDIUM(140-550Hz), 매우 높은 모터속도를 가진 2.5-3인치는 HIGH(230-800Hz). AUTO 옵션은 자이로 다이나믹 저역통과 1 필터의 최대 컷오프 주파수의 값에 따라 범위를 선택합니다."
@@ -3892,47 +3658,8 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D 텀 저역통과 필터"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D 텀 저역통과 1 필터 형식"
-    },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D 텀 저역통과 1 정적 컷오프 주파수 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D 텀 저역통과 2 정적 컷오프 주파수 [Hz]"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D 텀 저역통과 2 필터 형식"
-    },
     "pidTuningDTermLowpassDyn": {
         "message": "D 텀 저역통과 다이나믹 필터"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D 텀 저역통과 1 다이나믹 최소 컷오프 주파수 [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D 텀 저역통과 1 다이나믹 최대 컷오프 주파수 [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "D 텀 저역통과 1 다이나믹 곡선 엑스포"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D 텀 저역통과 1 다이나믹 필터 형식"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D 텀 노치 필터"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D 텀 노치 필터 센터 주파수 [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D 텀 노치 필터 컷오프 주파수 [Hz]"
-    },
-    "pidTuningYawLowpassFiltersGroup": {
-        "message": "요 저역통과 필터"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "요 저역통과 컷오프 주파수 [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID 보상"
@@ -3943,17 +3670,11 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat 처짐 보상"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "배터리 처짐을 보상하여 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다. 보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br /><br />더 많은 정보는 <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
     "pidTuningThrustLinearization": {
         "message": "추력 선형화"
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": "모터 출력에 역 모터 곡선을 적용하여 스로틀과 추력 사이의 비선형 관계를 보상합니다. 보상금액은 0~150% 사이에서 변동할 수 있습니다."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3972,9 +3693,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I 텀 릴렉스"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "빠른 움직임이 일어날 때 I 텀의 축적을 제한합니다. 이것은 특히 롤의 끝과 다른 빠른 움직임에서 바운스백을 줄이는 데 도움이 됩니다. 이 기능이 활성화된 축을 선택할 수 있으며, 자이로 또는 설정점(스틱)을 사용하여 빠른 이동을 감지할 수 있습니다."
     },
     "pidTuningItermRelaxAxes": {
         "message": "축",
@@ -4006,44 +3724,23 @@
         "message": "컷오프",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "낮은 값은 낮은 권위의 쿼드에서 플립 후 바운스백을 억제하며, 높은 값은 레이싱에서 높은-레이트의 턴 정밀도를 높입니다.<br>레이싱은 30-40으로, 반응이 좋은 프리스타일 빌드는 15으로, 무거운 프리스타일 쿼드는 10으로, X-클래스는 3-5로 설정합니다."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "절대 제어"
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "이 기능은 $t(pidTuningItermRotation.message)의 기본 문제를 해결하고, 희망적으로 어느 시점에서 그것을 대체합니다. 이 기능은 쿼드 좌표에 절대 자이로 오류를 축적하고 설정점에 비례 교정을 혼합합니다. 당신이 그것을 작동하려면 에어모드와 $t(pidTuningItermRelax.message) ($t(pidTuningOptionRP.message)로)을 활성화해야 합니다. 만약 이 기능을 $t(pidTuningIntegratedYaw.message)와 결합하려면, $t(pidTuningItermRelax.message)을 $t(pidTuningOptionRPY.message)로 설정할 수 있습니다."
     },
     "pidTuningThrottleBoost": {
         "message": "스로틀 부스트"
     },
-    "pidTuningThrottleBoostHelp": {
-        "message": "이 기능을 사용하면 빠른 스틱 움직임에 스로틀을 일시적으로 상승시켜 모터에 대한 가속 토크를 증가시킴으로써 훨씬 더 빠른 스로틀 반응을 제공합니다."
-    },
     "pidTuningIdleMinRpm": {
         "message": "다이나믹 아이들 값 [× 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 감소시킵니다. 그것은 프롭 속도를 높이거나 늦춰 기류에 의해 발생되는 문제를 해결하고, PID 권한, 안정성, 모터 제동 및 반응성을 향상시킵니다. 다이나믹 아이들 값은 DShot 아이들 값의 rpm보다 약 20% 낮게 설정해야 합니다($t(tabMotorTesting.message) 탭 참고). 일반적으로 DShot 아이들 값은 기본값에서 변경할 필요가 없습니다. 역 행타임을 연장하려면 DShot 아이들 값과 최소 rpm을 함께 낮춰야 합니다.<br /><br />더 많은 정보는<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\"> 이 위키 엔트리</a>를 방문하세요."
-    },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": "D샷 텔레메트리가 비활성화되었으므로 다이나믹 아이들도 비활성화됩니다."
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "아크로 트레이너 앵글 제한"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "아크로 모드에서 비행을 배우는 파일럿을 위한 새로운 앵글 제한 모드를 추가 합니다. 유효한 범위 10-80 이며 $t(tabAuxiliary.message) 탭에서 스위치를 활성화 해야 합니다."
     },
     "pidTuningIntegratedYaw": {
         "message": "통합 요(Yaw)"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">주의</span>:이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 확인하세요."
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "통합 요는 쿼드 제어의 근본적인 문제를 해결하기 위한 기능입니다: 피치와 롤 축이 프롭이 만들어내는 추력 차이로 제어가 되는 반면에 요는 다릅니다. 통합 요는 요 pid의 출력값을 믹서에 적용하기 전에 통합함으로써 이를 해결합니다. 이것은 pid가 일하는 방식을 정상화합니다. 이제 다른 축과 같이 설정할 수 있습니다. 통합 요와 함께 I가 필요하지 않기 때문에 절대 제어의 사용을 필요로 합니다."
     },
     "configHelp2": {
         "message": "옆면 / 아래로 / 회전 등으로 장착 할 수 있는 임의의 보드 회전 각도(°). 외부 센서를 작동할 때 센서 정렬(자이로, 가속도계, 자력계)을 사용하여 보드 방향과 상관없이 센서 위치를 정의합니다."
@@ -6198,10 +5895,6 @@
     },
     "cordovaExitAppMessage": {
         "message": "정말 컨피규레이터를 종료하시겠습니까?"
-    },
-    "dropDownSelectAll": {
-        "message": "[모두 선택]",
-        "description": "Select all item in the drop down/multiple select"
     },
     "dropDownAll": {
         "message": "모두",

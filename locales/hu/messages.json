@@ -661,12 +661,6 @@
     "initialSetupResetText": {
         "message": "Beállítások visszaállítása <strong>alapértelmezettre</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "Biztonsági Mentés"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Visszaállítás"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Bootloader aktiválása / firmware frissítés"
     },
@@ -910,17 +904,11 @@
     "featureNone": {
         "message": "&lt;Kiválasztani&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX bemenet"
-    },
     "featureVBAT": {
         "message": "Akkumulátor feszültség figyelése"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Kalibráció repülés közben"
-    },
-    "featureRX_SERIAL": {
-        "message": "Soros vevő (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "A motorok ne induljanak élesítéskor"
@@ -955,12 +943,6 @@
     "feature3D": {
         "message": "3D mode (megfordítható ESC-khez)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PMW RX bemenet (csatornánként egy drót)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX bemenet (MSP port irányítja)"
-    },
     "featureRSSI_ADC": {
         "message": "Analóg RSSI bemenet"
     },
@@ -984,9 +966,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Bekapcsolás után állítsa be a Blackbox fülön."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX támogatás"
     },
     "featureESC_SENSOR": {
         "message": "Használjon KISS/BLHeli_32 ESC telemetriát <b>külön szálon </b>"
@@ -1014,9 +993,6 @@
     },
     "featureVTX": {
         "message": "Videó Adó"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "Állandó légi mód (Airmode)"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Ha ez ki van kapcsolva az 'ANTI GRAVITÁCIÓ'-módot be lehet kapcsolni egy kapcsolóval."
@@ -1068,9 +1044,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong> Megjegyzés: </strong> Nem minden funkció kombinációja érvényes. Ha a repülésvezérlő firmware-je érvénytelen funkciók kombinációit észleli, az ütköző funkciók le lesznek tiltva. <br /><strong>Megjegyzés:</strong> Konfigurálja a portokat <span class=\"message-negative\">mielőtt</span> engedélyez olyan funkciókat amik portokat használnak."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong> Megjegyzés: </strong> Ne felejtse el beállítani a soros portot (a Portok fülön), és válassza ki a soros port szolgáltatót, amikor az RX_SERIAL funkciót használja."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Megjegyzés:</strong> Az SPI RX szolgáltató csak akkor működik, ha a szükséges hardver be van építve, vagy SPI buszon csatlakoztatva."
@@ -1152,12 +1125,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Ha a gázkar nincs alacsony állásban az élesítés mindig le van tiltva. Legyen óvatos, mivel emellett a beállítás mellett egy kapcsoló átállításával akár repülés közben is visszabiztosíthatja a repülésirányítót."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Gázállás [százalékban], ha a motorok nyugalmi állapotban vannak"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "A „DShot alapjárati” érték a maximális gázkar százaléka, amelyet az ESC-knek küldnek, amikor a gázkar minimális állásban van, és a drón élesedik. Növelje azt, hogy nagyobb alapjárati sebességet kapjon, és elkerülje a deszinkronizálásokat. Vigyázzon ha túl magas problémák merülhetnek fel."
     },
     "configurationMotorPoles": {
         "message": "Motor oszlopok (amin a tekercselés van)",
@@ -1334,10 +1301,6 @@
         "message": "Használd a Galileót",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Ha engedélyezi, ez eltávolítja a (japán) QZSS rendszert, és helyettesíti a Galileo rendszerrel (európai).",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Állítsa be az Otthon pontot egyszer",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1360,9 +1323,6 @@
     },
     "configurationButtonSave": {
         "message": "Mentés és Újraindítás"
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "OK"
     },
     "portsIdentifier": {
         "message": "Identifikátor"
@@ -1510,16 +1470,6 @@
         "message": "Küszöb",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Az antigravitáció növeli az I értéket, ha a gázkar gyors változása észlelhető. A magasabb erősítési értékek stabilitást és jobb hozzáállást biztosítanak a gázkar pumpálásakor."
-    },
-    "pidTuningDMin": {
-        "message": "D minimum",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Megjegyzés:</strong> A D Min funkció le van tiltva, és paraméterei rejtve vannak. A D Min használatához engedélyezze itt $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Érzékenység",
         "description": "Gain of the D Max feature"
@@ -1587,20 +1537,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message)</strong> A 0-nál nagyobb és 0,1-nél kisebb D alapjel-átmenetet erősen visszaszorítja. Ellenkező esetben instabilitást és csökkent karkészlet-reakciót okozhat, mivel a karok áthaladnak a középponton.</span>"
     },
-    "pidTuningProportional": {
-        "message": "P érték"
-    },
-    "pidTuningIntegral": {
-        "message": "I érték"
-    },
     "pidTuningDerivative": {
         "message": "Derivált"
-    },
-    "pidTuningDMax": {
-        "message": "D maximum"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Figyelem:</b></span> A nagyon magas Ratek gyors lassulás után desync-et okozhat."
@@ -1680,12 +1618,6 @@
     "pidTuningControllerHead": {
         "message": "PID Kontroller"
     },
-    "pidTuningCopyProfile": {
-        "message": "Profil értékek másolása"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Másolja a rateprofile értékeket"
-    },
     "dialogCopyProfileText": {
         "message": "Értékek másolása az aktuális profilból"
     },
@@ -1721,9 +1653,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">elmentve</span>"
-    },
-    "receiverHelp": {
-        "message": "Kérjük, olvassa el a dokumentáció vevő fejezetét. Konfigurálja a soros portot (ha szükséges), a vevő módot (soros / ppm / pwm), a szolgáltatót (a soros vevőkhöz), a vevő bekötését, a csatorna térkép beállítását, a csatorna végpontjainak / tartományának konfigurálását a TX-n úgy, hogy minden csatorna ~ 1000 és ~ 2000 között mozogjon. . Állítsa be a középpontot (alapérezett 1500), ha szükséges állítsa be hogy 1500-nál legyen, állítsa be a holtpontokat, és ellenőrizze a viselkedést, ha a TX ki  vagy be van kapcsolva . <br /><span class=\"message-negative\">FONTOS:</span>Repülés előtt olvassa el A dokumentáció hibabiztonsági fejezetét és a biztonságos konfigurálását."
     },
     "tuningHelp": {
         "message": "<b> Hangolási tippek </b><br /><span class=\"message-negative\">FONTOS:</span> Fontos ellenőrizni a motor hőmérsékletét az első repülések során. Minél nagyobb a szűrő érték, annál jobb repülni, de ugyanakkor több zajt fog adni a motorokhoz. <br> Az alapértelmezett 100Hz érték optimális, de a zajos beállításoknál megpróbálhatja a Dterm szűrőt 50 Hz-re csökkenteni, és esetleg a giroszkópot filtert is."
@@ -2169,9 +2098,6 @@
     },
     "gpsSignalSatId": {
         "message": "Szat ID"
-    },
-    "gpsSignalQty": {
-        "message": "Db"
     },
     "motorsVoltage": {
         "message": "Feszültség:"
@@ -3139,15 +3065,6 @@
     "pidTuningMotorLimit": {
         "message": "Skála tényező [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "A motor kimeneti lineáris skála tényezője (százalékban). Csökkenti az ESC áramot és a motor hőjét, ha nagyobb cellaszámú akkumulátorokat használ, pl. Ha 6S akkumulátort használ olyan drónná, amelyek motorjai, propjai és a 4S-hez tervezett tuning beállításai vannak, próbálja meg az értéket 66% -ra beállítani; ha 4S akkumulátort használ a 3S-hez tervezett drónnál, próbálja meg a 75% -ot. <br> Mindig ügyeljen arra, hogy minden alkatrész támogassa a használt akkumulátor feszültségét."
-    },
-    "pidTuningCellCount": {
-        "message": "Cella számláló"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "Automatikusan aktiválja az első profilt, amelynek cella számlálása megegyezik a csatlakoztatott akkumulátorral."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profil független Szűrő Beállítások"
     },
@@ -3223,38 +3140,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giroszkóp Notch szűrők"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Giroszkóp Notch 1. szűrő középfrekvenciája [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Giroszkóp Notch 2. szűrő középfrekvenciája [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Giroszkóp Notch 1. levágás szűrő frekvenciája [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Giroszkóp Notch 2. levágás szűrő frekvenciája [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "A Notch Szűrőnek van egy központja és egy levágása. A szűrő szimmetrikus. A középfrekvencia a szűrő középpontja, a levágási frekvencia pedig a Notch szűrő indítása. Például a 160-as Notch Levágás és a 260-as Notch Center esetén ez azt jelenti, hogy a tartomány 160-360Hz, a középső rész körül lesz a legtöbb csillapítás"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dinamikus Notch Szűrő"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "A dinamius Notch Szűrő nyomon követi a motorok csúcsfrekvenciáját, és egy vagy két Notch szűrőt helyez a középpontjába ezen a frekvencián."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong> Megjegyzés: </strong> a dinamikus Notch szűrő le van tiltva. A konfigurálás és a használat érdekében engedélyezze a 'DYNAMIC_FILTER' funkciót a $t(configurationFeatures.message) részének a $t(tabConfiguration.message) lapon."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Dinamikus Notch Szűrő tartomány"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Dinamikus Notch szélesség százalékban"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "Dinamikus Notch Q"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "A dinamikus Notch-nak három frekvenciatartománya van, amelyeken képes működni: LOW (80-330hz) alacsonyabb fordulatszámú drónokhoz, mint 6 colosok, MEDIUM (140-550hz) normál 5 colos quadok, HIGH (230-800hz) nagyon magas fordulatú 2,5-3 colos quadok. Az AUTO opció választja ki a tartományt a giroszkópikus aluljáró 1 szűrő maximális kikapcsolási frekvenciájának értékétől függően."
@@ -3297,36 +3190,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D term aluláteresztő szűrő"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D term aluláteresztő 1 szűrő típusa"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D term aluláteresztő 2 szűrő típusa"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D term aluláteresztő 1 dinamikus minimum levágási frekvencia [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D term aluláteresztő 1 dinamikus maximum levágási frekvencia [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "D-érték aluláteresztő 1 dinamikus görbe típusa"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D term aluláteresztő 1 dinamikus szűrő típusa"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D term Notch szűrő"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D term Notch szűrő középfrekvenciája [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D term Notch szűrő levágási frekvenciája [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw aluláteresztő levágási frekvencia [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID kompenzáció"
     },
@@ -3357,9 +3220,6 @@
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },
-    "pidTuningItermRelaxHelp": {
-        "message": "Korlátozza az I Term felhalmozódását, ha gyors mozgások történnek. Ez különösen segít a visszarúgás csökkentésében a fordulások és az egyéb gyors mozgások végén. Kiválaszthatja azokat a tengelyeket, amelyekben ez aktív, és ha a gyors mozgást észlel a giroszkóp vagy az alapérték (kar) akkor aktív lesz."
-    },
     "pidTuningItermRelaxAxes": {
         "message": "Tengelyek",
         "description": "Iterm Relax Axes selection"
@@ -3384,17 +3244,11 @@
         "message": "Levágás",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Az alacsonyabb értékek elnyomják a visszapattanást az alacsony autoritású quadokban történő visszafordulás után, a magas értékek növelik a versenyzés nagy sebességű fordulás pontosságát.<br>Állítsa 30–40-re versenyzésre, 15-re az érzékeny freestyle-építésekre, 10-et nehezebb freestyle-quadokra, 3-5-et az X-osztályra."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Abszolút vezérlés"
     },
     "pidTuningThrottleBoost": {
         "message": "Gáz növelés"
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Ez a szolgáltatás lehetővé teszi a gáz ideiglenes növelését a gyors karmozgásoknál, ami növeli a motorok gyorsulási nyomatékát, és sokkal gyorsabb gáz választ ad."
     },
     "pidTuningIdleMinRpm": {
         "message": "Dinamikus alapjárati érték [* 100 rpm]"
@@ -3402,17 +3256,11 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro gyakorló dőlésszög limit"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Új szögkorlátozási módot ad azoknak a pilótáknak, akik acro módban tanulnak repülni. Az érvényes tartomány 10–80, és azt a $t(tabAuxiliary.message) lapon lévő kapcsolóval kell aktiválni."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Integrált Yaw"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\"> VIGYÁZAT</span>: Ha engedélyezi ezt a funkciót, ennek megfelelően módosítania kell az YAW PID-et. További információ <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">itt érhető el</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Az integrált Yaw egy olyan funkció, amely korrigálja az alapvető kérdést a drón vezérléssel: míg a Pitch és a Roll tengelyét a tolóerő-különbségek szabályozzák, addig a propellerek generálják a Yaw-t. Az integrált Yaw ezt javítja azáltal, hogy a Yaw pid kimenetet integrálja, mielőtt a keverőbe helyezi őket. Ez normalizálja a PID-ek működését. Most beállíthatja, mint bármely más tengelyen. Abszolút vezérlés használatát igényli."
     },
     "configHelp2": {
         "message": "A vezérlő önkényes forgása fokokban, annak lehetővé tétele érdekében, hogy oldalra / fejjel lefelé / elforgatva stb. Lehessen felszerelni. Külső érzékelők futtatásakor használja az érzékelő igazítását (Gyro, Acc, Mag) az érzékelő pozíciójának meghatározásához, az alaplap tájolásától függetlenül. "

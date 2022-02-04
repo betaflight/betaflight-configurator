@@ -636,12 +636,6 @@
     "initialSetupResetText": {
         "message": "恢復<strong>默認</strong>設置"
     },
-    "initialSetupButtonBackup": {
-        "message": "備份"
-    },
-    "initialSetupButtonRestore": {
-        "message": "恢復"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "激活啟動引導程式/DFU"
     },
@@ -885,17 +879,11 @@
     "featureNone": {
         "message": "&lt;請選擇&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM 接收機"
-    },
     "featureVBAT": {
         "message": "電池電壓檢測"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "實時水平校準"
-    },
-    "featureRX_SERIAL": {
-        "message": "串行數字接收機（SPEKSAT, SBUS, SUMD）"
     },
     "featureMOTOR_STOP": {
         "message": "解鎖時不要轉動電機"
@@ -930,12 +918,6 @@
     "feature3D": {
         "message": "3D 模式 （配合支援反向轉動的電調使用）"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM 接收機（每個通道都需要接線）"
-    },
-    "featureRX_MSP": {
-        "message": "MSP 接收機輸入（通過 MSP 埠口控制）"
-    },
     "featureRSSI_ADC": {
         "message": "模擬 RSSI 輸入"
     },
@@ -959,9 +941,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "打開後，請在黑盒日誌頁面完成設置。"
-    },
-    "featureRX_SPI": {
-        "message": "SPI 接收機支援"
     },
     "featureESC_SENSOR": {
         "message": "使用<b>專線</b>回傳 KISS/BLHeli_32 電調遙測數據"
@@ -989,9 +968,6 @@
     },
     "featureVTX": {
         "message": "圖傳"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "永久啟用反重力"
     },
     "featureANTI_GRAVITYTip": {
         "message": "如果禁用，那麼“反重力”模式可以由開關來啟用。"
@@ -1043,9 +1019,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>注意:</strong> 不是所有的功能都能被同時啟用。當飛控檢測到有衝突時會禁用響應的功能。<br /><strong>注意:</strong> <span class=\"message-negative\">先</span> 設置埠口，在啟用需要用到埠口的功能。"
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>注意:</strong> 使用串行接收機時，請選擇串行接收機類型，並在埠口頁面設置相應的串口。"
     },
     "configurationSpiRxHelp": {
         "message": "<strong>注意:</strong> SPI 接收機只有通過 SPI 總線連接到飛控或板載了相應硬體時才能工作。"
@@ -1127,12 +1100,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "油門未在最低位時禁止解鎖電機。注意該選項啟動時有可能在飛行中通過開關意外觸發而上鎖。"
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "電機怠速數值[%]"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Dshot 怠速值是當飛行器解鎖且油門處於最低杆位時，飛控向電調發送的最大油門訊號。增加這個值以獲得更高的怠速轉速，並避免電機失步。若此值太高，飛機手感將會變得很飄浮。"
     },
     "configurationMotorPoles": {
         "message": "電機極數",
@@ -1309,10 +1276,6 @@
         "message": "使用伽利略系統",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "啟用後，將會移除 QZSS 系統(日本) 並將其替換為 Galileo 系統(歐洲)。",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "設置返航點",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1338,12 +1301,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "動態陷波器數值更改"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>警告: 部分動態陷波器的數值已被更改為默認值</b></span>因為RPM濾波器已被激活/停用。 <br>請在飛行前進行檢查。"
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "确认"
     },
     "portsIdentifier": {
         "message": "標識符"
@@ -1491,16 +1448,6 @@
         "message": "閾值",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "當檢測到油門快速變化時反重力功能將增大 I term。較高的增益值將在您快速抖動油門時，提供更好的穩定性和更強的姿態鎖定能力。"
-    },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>注意:</strong>D Min功能已被禁用，其參數已隱藏。要使用D Min，請在$t(pidTuningPidSettings.message)中啟用它。"
-    },
     "pidTuningDMinGain": {
         "message": "增益",
         "description": "Gain of the D Max feature"
@@ -1572,20 +1519,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 強烈不建議將D設定點轉換閾值設置為0到0.1之間的值。這樣做可能會導致不穩定，以及降低搖桿在穿過中點時的響應速度。</span>"
     },
-    "pidTuningProportional": {
-        "message": "Proportional"
-    },
-    "pidTuningIntegral": {
-        "message": "Integral"
-    },
     "pidTuningDerivative": {
         "message": "Derivative"
-    },
-    "pidTuningDMax": {
-        "message": "D Max"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> 非常高的 rate 可能會導致突然減速時發生電機失步。"
@@ -1665,12 +1600,6 @@
     "pidTuningControllerHead": {
         "message": "PID 控制器"
     },
-    "pidTuningCopyProfile": {
-        "message": "複製 PID 配置文件"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "複製 Rate 配置文件"
-    },
     "dialogCopyProfileText": {
         "message": "將當前 PID 配置文件複製到"
     },
@@ -1706,9 +1635,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">已保存</span>"
-    },
-    "receiverHelp": {
-        "message": "請閱讀文檔的接收機部分。按需配置好串口、接收機模式（serial/ppm/pwm），接收機協議，對頻好接收機，設置好通道映射，配置通道的最小最大值範圍讓它們可以覆蓋1000到2000。設置中位值（默認 1500），微調通道到1500，配置搖桿四驅，確認當遙控器關閉或超出範圍時接收機的行為（失控保護）。<br /><span class=\"message-negative\">重要：</span> 飛行前閱讀文檔的失控保護章節並配置好失控保護。"
     },
     "tuningHelp": {
         "message": "<b>調校技巧</b><br /><span class=\"message-negative\">重要：</span>調校後的初次飛行需注意電機溫度。濾波值越高，飛行效果可能越好，但也會導致更多的訊號“噪音”進入電機。<br>100Hz 是默認較佳的數值，但對震動較嚴重的情況，您可以嘗試把 Dterm 和 Gyro 濾波器降低到50Hz。"
@@ -2148,9 +2074,6 @@
     },
     "gpsSignalSatId": {
         "message": "衛星編號"
-    },
-    "gpsSignalQty": {
-        "message": "數量"
     },
     "motorsVoltage": {
         "message": "電壓："
@@ -3079,15 +3002,6 @@
     "pidTuningMotorLimit": {
         "message": "縮放因子 [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "電機輸出線性縮放因子（百分比）。用於在使用高芯數電池時降低電調電流和電機發熱，例如，在一台電機、槳和參數均已針對4S動力優化過的機器上使用6S電池，請嘗試將此值設為66% ；在一台動力設計為3S的機器上使用4S電池，請嘗試設為75%。 <br>請確保您的所有配件都支持您正在使用的電池電壓。"
-    },
-    "pidTuningCellCount": {
-        "message": "電芯數"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "自動激活第一個符合當前已連接電池芯數的配置文件。"
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "獨立於 PID 配置文件的濾波器設置"
     },
@@ -3163,38 +3077,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "陀螺儀陷波濾波器"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "陀螺儀陷波濾波器1中心頻率 [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "陀螺儀陷波濾波器2中心頻率 [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "陀螺儀陷波濾波器1截止頻率 [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "陀螺儀陷波濾波器2截止頻率 [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "陷波濾波器有一個中心頻率和一個截止頻率。濾波器的頻譜圖形是對稱的。中心頻率是濾波器的中心，截止頻率是阻帶的起始頻率。例如：當設置截止頻率為160、中心頻率為260時，它意味著濾波範圍是160-360Hz，並且訊號在中心頻率附近衰減幅度最大。"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "動態陷波濾波器"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "動態陷波濾波器將跟踪電機噪音頻率，並並根據其頻率在中間放置一個或兩個陷波濾波器過濾器，"
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>注意:</strong> 動態陷波濾波器已關閉。為了配置和使用它，請在 ‘$t(configurationFeatures.message)’ 選擇 ‘$t(tabConfiguration.message)’ 以開啟“動態陷波濾波器”功能。"
     },
     "pidTuningDynamicNotchRange": {
         "message": "動態陷波濾波器範圍"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "動態陷波濾波器寬度百分比"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "動態陷波濾波器Q"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "動態陷波濾波器有三個頻率範圍可供運行：LOW(80-330hz) 用於6英寸及以上的低速巡航機，MEDIU(140-550hz) 用於常見的5英寸飛行器，HIGH(230-800hz)用於電機轉速較高的2.5-3英寸的飛行器。 AUTO 選項將會使用陀螺儀低通濾波器1最高截止頻率範圍來決定頻率範圍。"
@@ -3237,36 +3127,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term 低通濾波器"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D Term 低通濾波器"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D Term 低通濾波器2類型"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D Term 低通濾波器1動態最低截止頻率 [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D Term 低通濾波器1動態最高截止頻率 [Hz]"
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": "D Term 低通濾波器1動態曲線指數"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term 低通濾波器1動態濾波器類型"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term 陷波濾波器"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D Term 陷波濾波器中心頻率 [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term 陷波濾波器截止頻率 [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "偏航低通濾波器截止頻率 [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "电池电压 PID 补偿"
     },
@@ -3294,9 +3154,6 @@
     "pidTuningItermRelax": {
         "message": "I 值釋放"
     },
-    "pidTuningItermRelaxHelp": {
-        "message": "在快速移動時限制 I 值的積累。這特別有助於降低翻滾等快速移動結尾時的反彈。你可以選擇該功能生效的軸向，以及快速移動的判斷依據是陀螺儀還是設定點（搖桿）。"
-    },
     "pidTuningItermRelaxAxes": {
         "message": "軸",
         "description": "Iterm Relax Axes selection"
@@ -3321,17 +3178,11 @@
         "message": "截止頻率",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "較低的值可抑制弱動力飛機在翻滾後發生的回彈；較高的值可提高以較高角速率進行轉彎時的精度，用於競速。 <br>競速建議 30-40，高響應性花飛飛機建議設置為 15，較重的花飛飛機建議設置為 10，X-class 建議設置為 3-5。"
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "絕對控制"
     },
     "pidTuningThrottleBoost": {
         "message": "油門增壓"
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": "此功能通過根據搖桿快速移動量來短暫提高油門變化值以增加電機的加速扭矩，使得油門響應更為迅速。"
     },
     "pidTuningIdleMinRpm": {
         "message": "動態怠速值 [* 100 RPM]"
@@ -3339,17 +3190,11 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "訓練模式角度限制"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "為正在學習飛行的飛行員增加一個新的角度限制模式。有效範圍為 10-80，需要使用 $t(tabAuxiliary.message) 選項卡中的一個開關激活。"
-    },
     "pidTuningIntegratedYaw": {
         "message": "整合式偏航"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">注意</span>: 如果你啟用此功能，則必須相應地調整偏航PID。更多訊息在<a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">此處</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "整合式偏航是一個用來解決四軸飛行器控制的基本問題的功能: 儘管俯仰和橫滾軸是由推力差來控制的，但偏航不同，它是由螺旋槳直接控制的。整合式偏航通過在輸出的偏航PID輸入到混控器之前對其進行積分來解決這個問題。這將使PID的工作方式正常化。你現在可以像調整其他軸一樣調整偏航。因為整合式偏航不需要用到I，所以需要啟用絕對控制。"
     },
     "configHelp2": {
         "message": "任意角度（直立，反轉，旋轉等）安裝飛控板。當使用外部傳感器時，請使用傳感器校正設置(陀螺，加速度計，磁場計)來決定獨立於飛控板的傳感器位置。"

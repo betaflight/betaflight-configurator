@@ -630,12 +630,6 @@
     "initialSetupResetText": {
         "message": "Auf Werkseinstellungen <strong>zurücksetzen</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "Backup"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Wiederherstellen"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Boot-Loader/DFU aktivieren"
     },
@@ -879,17 +873,11 @@
     "featureNone": {
         "message": "Bitte einen Empfänger wählen"
     },
-    "featureRX_PPM": {
-        "message": "PPM Empfänger"
-    },
     "featureVBAT": {
         "message": "Batteriespannungs Monitoring"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "In-Flug Kalibrierung"
-    },
-    "featureRX_SERIAL": {
-        "message": "Serieller Empfänger (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Motoren laufen beim Arming nicht an"
@@ -924,12 +912,6 @@
     "feature3D": {
         "message": "3D Modus (für die Benutzung mit umkehrbaren ESC)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM Empfänger (1 Kabel pro Kanal)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP Empfänger (via MSP Anschluss)"
-    },
     "featureRSSI_ADC": {
         "message": "analoger RSSI Eingang"
     },
@@ -953,9 +935,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "nach dem Einschalten im  Blackbox Tab konfigurierbar"
-    },
-    "featureRX_SPI": {
-        "message": "SPI Empfänger"
     },
     "featureESC_SENSOR": {
         "message": "KISS/BLHeli_32 ESC Telemetrie <b>über eine separate Leitung</b> verwenden"
@@ -1031,9 +1010,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Hinweis:</strong> Nicht alle Konfigurationen sind möglich. Sollte der FC hier einen Konflikt feststellen, werden die Kombinationen zurück gesetzt. <br /> <strong>Hinweis:</strong> Konfiguriere die seriellen Anschlüsse <span class=\"message-negative\">bevor</span> du Funkionen aktivierst, welche diese verwenden."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Hinweis:</strong> Vergiss nicht den seriellen Anschluss (Anschlüsse Tab) zu konfigurieren und einen Signal Typ auszuwählen, falls ein serieller Empfänger genutzt wird."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Hinweis:</strong> Der SPI Empfänger wird nur dann funktionieren, wenn eine passende Hardware an dem Board oder dem SPI Bus angeschlossen ist."
@@ -1115,9 +1091,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Arming is immer abgeschaltet falls das Gas nicht niedrig ist. Aufpassen weil du aus versehen im Flug disarmen könntest falls diese Option aktiviert ist."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Motor Leerlauf Gas Wert [Prozent]"
     },
     "configurationMotorPoles": {
         "message": "Motor Pole",
@@ -1294,10 +1267,6 @@
         "message": "Galileo verwenden",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Wenn aktiviert, entfernt dies das QZSS-System (Japanisch) und ersetzt es mit dem Galileo-System (europäisch).",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Startpunkt einmalig festlegen",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1467,16 +1436,6 @@
         "message": "Schwellwert",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravity steigert den I-Wert, wenn schnelle Gas-Veränderungen erkannt werden. Höhere Werte geben Stabilität und einen besseren Halt der Neigung, wenn du stark Gas gibst."
-    },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Hinweis:</strong> Die D Min Funktion ist deaktiviert und seine Parameter sind versteckt. Um D Min zu verwenden, aktiviere es bitte in $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Verstärkung",
         "description": "Gain of the D Max feature"
@@ -1548,20 +1507,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.</span>"
     },
-    "pidTuningProportional": {
-        "message": "Proportional"
-    },
-    "pidTuningIntegral": {
-        "message": "Integral"
-    },
     "pidTuningDerivative": {
         "message": "Differential"
-    },
-    "pidTuningDMax": {
-        "message": "maximaler D-Wert"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward Regelung"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Warnung:</b></span> sehr hohe Raten können bei heftigen Abbremsungen zu Desynchronisierungen führen."
@@ -1641,12 +1588,6 @@
     "pidTuningControllerHead": {
         "message": "PID Controller"
     },
-    "pidTuningCopyProfile": {
-        "message": "Kopiere Profileinstellungen"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Kopiere Rate-Profileinstellungen"
-    },
     "dialogCopyProfileText": {
         "message": "Kopiere aktuelle Profileinstellungen nach"
     },
@@ -1682,9 +1623,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
-    },
-    "receiverHelp": {
-        "message": "Bitte das Kapitel über Empfänger in der Dokumentation lesen. Seriellen Empfänger (falls nötig) konfigurieren, Protokoll auswählen, Empfänger verbinden und Kanäle zuweisen. Endpunkte so wählen, dass alle Kanäle von ~ 1000 - ~2000 gehen. Mittelwert auf 1500 festelgen. <span class=\"message-negative\">WICHTIG:</span> Ebenso bitte Failsafe konfigurieren, bzw. das Kapital darüber in der Dokumentation lesen."
     },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">Hinweis:</span> Es ist wichtig, bei den ersten Flügen, die Motortemperatur im Auge zu behalten. Je höher die Filterwerte, desto besser könnte er fliegen, aber es wird auch mehr Rauschen in die Motoren geben.<br>Die Standarteinstellung 100Hz ist optimal, für problematische Setups könnte man jedoch richtung 50Hz Dterm Filter (und eventuell auch beim Gyro-Filter) gehen."
@@ -2121,9 +2059,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalQty": {
-        "message": "Anzahl"
     },
     "motorsVoltage": {
         "message": "Spannung:"
@@ -3043,12 +2978,6 @@
     "pidTuningMotorLimit": {
         "message": "Skalierungsfaktor [%]"
     },
-    "pidTuningCellCount": {
-        "message": "Zellenanzahl"
-    },
-    "pidTuningCellCountHelp": {
-        "message": "Aktiviert automatisch das erste Profil, das eine Zellanzahl hat, die der angeschlossenen Batterie entspricht."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profilunabhängige Filtereinstellungen"
     },
@@ -3124,38 +3053,14 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filter"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro Notch Filter 1 Center Frequency [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro Notch Filter 2 Center Frequency [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter 1 Cutoff Frequency [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter 2 Cutoff Frequency [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "The Notch Filter has a Center and a Cutoff. The filter is symmetrical. The Center Frequency is the center of the filter and the Cutoff Frequency is where Notch filter starts. For example with Notch Cutoff of 160 and Notch Center of 260 it means the range is 160-360Hz with most attenuation around center"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamischer Notch-Filter"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "Der Dynamische Notch-Filter verfolgt die Frequenz der Motoren und legt einen oder zwei Notch Filter mit ihrem Zentrum an dieser Frequenz."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Hinweis:</strong> Der dynamische Notch-Filter ist deaktiviert. Um ihn zu konfigurieren und zu nutzen, aktiviere bitte die Funktion 'DYNAMIC_FILTER' im '$t(configurationFeatures.message)' Abschnitt des '$t(tabConfiguration.message)' Reiters."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Filterbereich des Dynamischen Notch-Filters"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "prozentuale Breite des dynamischen Notch-Filters"
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": "Q des dynamischen Notch-Filters"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Der dynamische Notchfilter hat drei Frequenzbereiche, in denen er funktionieren kann: LOW(80-330hz) für langsam drehende Quads wie 6+ Zoll, MEDIUM(140-550hz) für einen normalen 5 Zoll Quad, HIGH(230-800hz) für sehr hoch drehende 2,5-3 Zoll Quads."
@@ -3192,33 +3097,6 @@
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Lowpass Filter"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D Term Lowpass 1 Filter Type"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D Term Lowpass 2 Filter Type"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D Term Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D Term Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 Dynamic Filter Type"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term Notch Filter"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D-Term Notch Filter Center Frequenz [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Filter Cutoff Frequenz [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpassfilter Frequenz [Hz]"
-    },
     "pidTuningVbatPidCompensation": {
         "message": "PID Anpassung aufgrund Akkusspannung"
     },
@@ -3239,9 +3117,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Schränkt die Wirkung von I-Term bei schnelle Bewegungen ein. Das hilft \"Bounceback\" am Ende von schnellen Rollen und Bewegungen zu reduzieren. Die aktiven Achsen, als auch die Feedforward Methode bei schnelle Knüppelbewegungen, können gewählt werden."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Achsen",
@@ -3273,23 +3148,14 @@
     "pidTuningThrottleBoost": {
         "message": "Beschleunigungsschub"
     },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Mit dieser Funktion kann das Gas bei schnellen Stick Bewegungen vorübergehend verstärkt werden, um das Beschleunigungsmoment der Motoren zu erhöhen. Das führt zu einer viel schnelleren Gasannahme."
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Winkelbegrenzung"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Fügt einen neuen Winkelbegrenzungsmodus für Piloten hinzu, welche den Acro Modus lernen wollen. Der Wertebereich geht von 10-80 und muss mit einem Schalter im $t(tabAuxiliary.message) Tab aktiviert werden."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">VORSICHT</span>: Wenn Sie diese Funktion aktivieren, müssen Sie die YAW PID entsprechend anpassen. Mehr Informationen <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Gier-Integration (integrated Yaw) ist eine Funktion, die ein grundlegendes Problem mit der Quad-Steuerung korrigiert: während Pitch- und Rollachse durch Schubdifferenzen der Propeller gesteuert werden, verhält sich die Gierachse unterschiedlich. Gier-Integration behebt dies durch die Integration der Ausgabe des Gier-PID Reglers, bevor sie auf den Mischer angewendet werden. Dies normalisiert die Art und Weise, wie die PID Werte funktionieren. Du kannst die Gierachse nun wie jede andere Achse tunen. Das Feature erfordert die Verwendung von \"Absoluter Kontrolle\", da mit Gier-Integration kein I-Anteil benötigt wird."
     },
     "configHelp2": {
         "message": "Abweichender Winkel (Grad) in dem das Board anders eingebaut wurde als vorgesehen (über Kopf, gedreht, usw.) Falls externe Sensoren (Gyro, Acc, Mag) verwendet werden, bitte diese ebenfalls neu anlernen."

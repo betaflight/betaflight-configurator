@@ -548,12 +548,6 @@
     "initialSetupResetText": {
         "message": "Atjaunot <strong>noklusējuma</strong> iestatījumus"
     },
-    "initialSetupButtonBackup": {
-        "message": "Dublēt"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Atjaunot"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktivizēt ielādētāju / DFU"
     },
@@ -785,17 +779,11 @@
     "featureNone": {
         "message": "&lt;Izvēlies vienu&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX ievade"
-    },
     "featureVBAT": {
         "message": "Akumulatora sprieguma monitorings"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Līmeņojuma kalibrēšana lidojuma laikā"
-    },
-    "featureRX_SERIAL": {
-        "message": "Seriālā-principa uztvērējs (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Negriezt motorus, kad aktivizēts"
@@ -830,12 +818,6 @@
     "feature3D": {
         "message": "3D režīms (Pielieto ar ESC, kas atbalsta maināmu griešanās virzienu)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX ievade (viens vads uz katru kanālu)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX ievade (kontrole caur MSP portu)"
-    },
     "featureRSSI_ADC": {
         "message": "Analogā RSSI ievade"
     },
@@ -859,9 +841,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Pēc ieslēgšanas konfigurēt caur Melnās kastes cilni."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX atbalsts"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Novirzīt aux kanālus uz servo izvadi"
@@ -934,9 +913,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Piezīme:</strong> Ne visas iespēju kombinācijas ir derīgas. Kad lidojuma kontroliera programmatūra noteiks neiespējamu kombināciju, konfliktējošas iespējas tiks atslēgtas.<br /><strong>Piezīme:</strong> Nokonfigurējiet seriālo portu <span class=\"message-negative\">pirms</span> ieslēdzat iespējas, kas izmanto portus."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Piezīme:</strong> Atcerieties nokonfigurēt seriālo portu (caur cilni Porti) un izvēlieties seriālā uztvērēja nodrošinātāju, kad izmantojat RX_SERIAL iespēju."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Piezīme:</strong> SPI RX devējs darbojas tikai tad, ja nepieciešamā aparatūra ir uz plates vai pieslēgta pie SPI līnijas."
@@ -1018,9 +994,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Aktivizēšana vienmēr ir atslēgta, kad droselē vērtība nav lejā. Esat uzmanīgi, jo varat nejauši deaktivēt ar slēdzi kamēr lidojat ar ieslēgtu šo iespēju."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Motora tukšgaitas droseles vērtība [percent]"
     },
     "configurationThrottleMinimum": {
         "message": "Droseles minimums (Zemākā ESC vērtība, kad aktivizēts)"
@@ -1315,10 +1288,6 @@
         "message": "Slieksnis",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMin": {
-        "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
     "pidTuningDMinGain": {
         "message": "Gain",
         "description": "Gain of the D Max feature"
@@ -1390,17 +1359,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Izmantojot D iestatījuma pāreju lielāku par 0 un mazāku par 0.1 ir drosmīgs gājiens. Tā darot, tas var novest līdz nestabilitātei un samazināt vadības sviru atsaucību, kad tās šķērso centra punktu.</span>"
     },
-    "pidTuningProportional": {
-        "message": "Proportional"
-    },
-    "pidTuningIntegral": {
-        "message": "Integral"
-    },
     "pidTuningDerivative": {
         "message": "Derivative"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningRcRate": {
         "message": "RC ātrums"
@@ -1468,12 +1428,6 @@
     "pidTuningControllerHead": {
         "message": "PID kontrolieris"
     },
-    "pidTuningCopyProfile": {
-        "message": "Kopēt profila vērtības"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Kopēt ātrumprofila vērtības"
-    },
     "dialogCopyProfileText": {
         "message": "Kopēt vērtības no patreizējā profila uz"
     },
@@ -1509,9 +1463,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saglabāts</span>"
-    },
-    "receiverHelp": {
-        "message": "Lūdzu izlasiet uztvērēja sadaļu dokumentācijā.  Nokonfigurējiet seriālo portu (ja tas nepieciešams), uztvērēja režīmu (serial/ppm/pwm), devēju (priekš seriālā uztvērēja), sapārojiet uztvērēju, uzstādiet kanālu karti, nokonfigurējiet kanālu robežlīnija/diapazonus tā lai visi kanāli būtu no  ~1000 līdz ~2000.  Uzstādiet viduspunktu (noklusētais 1500), pieregulējiet kanālus uz 1500, nokonfigurējiet sviras neaktīvo joslu, pārbaudiet uzvedību kad TX ir izslēgts vai ārpus uztveršanas zonas.<br /><span class=\"message-negative\">SVARĪGI:</span> Pirms lidošanas izlasiet failsafe sadaļu dokumentācijā un  nokonfigurējiet to."
     },
     "tuningHelp": {
         "message": "<b>Ieregulēšanas ieteikumi </b><br /><span class=\"message-negative\">SVARĪGI:</span> Ir svarīgi pārbaudīt motoru temperatūras pirmā lidojuma laikā. Jo lielākas filtru vērtības, jo labāk iespējams tas lidos, bet jūs iegūsiet lielāku trokšņu līmeni motoros. <br>Noklusētā vērtība 100Hz ir optimāla, bet pie trokšņainākām konstrukcijām, jūs varat mēģināt samazināt Dterm filtru uz 50Hz un iespējams arī žiroskopa filtru."
@@ -1923,9 +1874,6 @@
     },
     "gpsSignalSatId": {
         "message": "Satelīta ID"
-    },
-    "gpsSignalQty": {
-        "message": "Daudz."
     },
     "motorsVoltage": {
         "message": "Spriegums:"
@@ -2787,29 +2735,8 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Žiroskopa joslas filtrs"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Žiroskopa joslas filtra 1 centra frekvence [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Žiroskopa joslas filtra 2 centra frekvence [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Žiroskopa joslas filtra 1 nogriešanas frekvence [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Žiroskopa joslas filtra 2 nogriešanas frekvence [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Joslas filtram ir centrs un nogriešana. Filtrs ir simetrisks. Centra frekvence ir filtra centrs un nogriešanas frekvence ir vieta, kur sākas joslas filtrs, Piemēram ar joslas filtra nogriešanu 160 un centu 260, nozīmēs ka diapazons būs 160-360 ar lielāko vājinājumu ap centru"
-    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dinamiskais joslas filtrs"
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": "Dinamiskais joslas filtrs izseko motora pīķa trokšņu frekvences un novieto vienu vai vairākus filtrus ar to centriem uz šīs frekvences."
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Ziņojums:</strong> Dinamiskais joslas filtrs ir deaktivēts. Lai nokonfigurētu un pielietotu to, lūdzu aktivizējiet 'DYNAMIC_FILTER' iespēju iekš '$t(configurationFeatures.message)' sadaļā iekš '$t(tabConfiguration.message)' cilnes."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Dinamiskā joslas filtra diapazons"
@@ -2817,41 +2744,11 @@
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Dinamiskā joslas platuma procents"
     },
-    "pidTuningDynamicNotchQ": {
-        "message": "Dinamiskā joslās Q"
-    },
     "pidTuningFilterSettings": {
         "message": "Profila atkarīgo filtru iestatījumi"
     },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term zemfrekvenču filtrs"
-    },
-    "pidTuningDTermLowpassType": {
-        "message": "D Term zemfrekvenču 1 filtra tips"
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": "D Term zemfrekvenču 2 filtra tips"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D Term zemfrekvenču 1 dinamiskā minimālā nogriešanas frekvence [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D Term zemfrekvenču 1 dinamiskā maksimālā nogriešanas frekvence [Hz]"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term zemfrekvenču 1 dinamiskā filtra tips"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term joslas filtrs"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D Term joslas filtra centra frekvence [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term joslas filtra nogriešanas frekvence [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw zemfrekvenču nogriešanas frekvence [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID kompensācija"
@@ -2873,9 +2770,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Relaks"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Limitē I Term akumulāciju, kad notiek straujas kustības. Tas īpaši palīdz samazināt atlēcienus pie roll un citu ātru kustību beigām. Jūs varat izvēlēties uz kurām asīm tas ir aktīvs, un ar ko tiek detektētas ātrās kustības ar žiroskopu vai vadības sviru iestatījumiem."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Asis",
@@ -2907,20 +2801,11 @@
     "pidTuningThrottleBoost": {
         "message": "Droseles būsts"
     },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Šī iespēja ļauj droselei būt īslaicīgi būstotai pie straujām vadības sviru kustībām, kas palielina motoru griezes akselerāciju, dodot daudz ātrāku droseles reakciju."
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Akro trenera leņķa limits"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Pievieno jaunu leņķi limitējošu režīmu priekš pilotiem, kas mācās lidot akro režīmā. Derīgais diapazons ir 10-80 un tam jābūt aktivizētam ar slēdzi iekš $t(tabAuxiliary.message) cilnes."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Integrētais Yaw"
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": "Integrētais Yaw ir fīča, kas labo multirotoru fundamentālo problēmu: kamēr Pitch un Roll tiek kontrolēts ar vilkmes diferenciāli, propelleru ģenerētais Yaw ir atšķirīgs. Integrētais Yaw to labo integrējot Yaw PIDu izeju pirms to pielieto mikserī. Tas normalizē to to kā PIDi strādā. Tagad jūs varēsiet pieregulēt ka jebkuru citu asi. Tam nepieciešams izmantot Absolūtā kontroli jo integrētajam Yaw I vairs nav nepieciešams."
     },
     "configHelp2": {
         "message": "Patvaļīga plates pagriešana grādos, lai atļautu uzstādīt to sāniski / augšpēdus / pagrieztu utt. Kad darbojas ar ārējo sensoru, izmantojiet sensora pielāgošanu (Žiro, Aksel, Mag), lai definētu sensora pozīciju neatkarīgi no plates orientācijas. "

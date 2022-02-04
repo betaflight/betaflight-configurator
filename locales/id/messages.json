@@ -506,12 +506,6 @@
     "initialSetupResetText": {
         "message": "Kembalikan ke pengaturan <strong>awal</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "Backup"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Restore"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktifkan Boot Loader / DFU"
     },
@@ -644,17 +638,11 @@
     "featureNone": {
         "message": "&lt;Pilih Satu&gt;"
     },
-    "featureRX_PPM": {
-        "message": "Input RX PPM"
-    },
     "featureVBAT": {
         "message": "Monitoring voltase baterai"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Kalibrasi level saat penerbangan"
-    },
-    "featureRX_SERIAL": {
-        "message": "Receiver serial (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Motor tidak berputar ketika armed"
@@ -686,12 +674,6 @@
     "feature3D": {
         "message": "Mode 3D (untuk digunakan dengan ESC 2 arah)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "Input RX PWM (satu kabel per channel)"
-    },
-    "featureRX_MSP": {
-        "message": "Input RX MSP (kontrol via port MSP)"
-    },
     "featureRSSI_ADC": {
         "message": "Input RSSI analog"
     },
@@ -715,9 +697,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Atur via tab BlackBox setelah mengaktifkan."
-    },
-    "featureRX_SPI": {
-        "message": "Dukungan RX SPI"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Meneruskan saluran aux ke output servo"
@@ -791,9 +770,6 @@
     "configurationFeaturesHelp": {
         "message": "<strong>Catatan:</strong> Tidak semua kombinasi dari fitur berlaku. Ketika firmware flight controller mendeteksi kombinasi fitur yang tidak berlaku, maka fitur yang menyebabkan konflik akan dinonaktifkan.<br /> <strong>Catatan:</strong> Konfigurasi port serial <span class=\"message-negative\">sebelum</span> mengaktifkan fitur yang akan menggunakan port tersebut."
     },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Catatan:</strong> Ingatlah selalu untuk mengkonfigurasi port serial (melalui tab Ports) dan memilih merk receiver serial saat menggunakan fitur RX_SERIAL."
-    },
     "configurationSpiRxHelp": {
         "message": "<strong>Catatan:</strong> RX SPI hanya bekerja jika perangkat keras yang diperlukan ada di FC atau terhubung ke bus SPI."
     },
@@ -853,9 +829,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Arming selalu dinonaktifkan saat throttle tidak rendah. Hati-hati karena anda bisa disarm tanpa sengaja saat terbang dengan pilihan ini aktif."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Nilai Throttle Motor Idle [percent]"
     },
     "configurationThrottleMinimum": {
         "message": "Minimum Throttle (nilai ESC terendah saat diarm)"
@@ -1183,17 +1156,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Hindari penggunaan transisi Setpoint D lebih dari 0 dan kurang dari 0.1. Menggunakan nilai tersebut dapat menyebabkan tidak stabil dan mengurangi respon stick ketika melewati titik tengahnya.</span>"
     },
-    "pidTuningProportional": {
-        "message": "Proporsional"
-    },
-    "pidTuningIntegral": {
-        "message": "Integral"
-    },
     "pidTuningDerivative": {
         "message": "Derivatif"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningRcRate": {
         "message": "Rate RC"
@@ -1261,12 +1225,6 @@
     "pidTuningControllerHead": {
         "message": "Pengotrol PID"
     },
-    "pidTuningCopyProfile": {
-        "message": "Salin profil"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Salin profilrate"
-    },
     "dialogCopyProfileText": {
         "message": "Salin profil saat ini ke"
     },
@@ -1302,9 +1260,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">disimpan</span>"
-    },
-    "receiverHelp": {
-        "message": "Silahkan baca dokumentasi bagian receiver. Mengkonfigurasi port serial (jika diperlukan), mode receiver (serial/ppm/pwm), provider (untuk receiver serial), binding receiver, atur mapping channel, mengkonfigurasi endpoint/kisaran channel pada TX sehingga semua saluran berkisar antara ~1000 hingga ~2000. Menetapkan midpoint (default 1500), trim channel ke 1500, mengkonfigurasi deadband stik, memverifikasi perilaku ketika TX mati atau diluar jangkauan.<br /><span class=\"message-negative\">PENTING:</span> Sebelum terbang baca bagian failsafe di dokumentasi dan konfigurasi failsafe."
     },
     "tuningHelp": {
         "message": "<b>Tips Tuning</b><br /><span class=\"message-negative\">PENTING:</span>Penting untuk memverifikasi suhu motor saat penerbangan pertama. Semakin tinggi nilai filter semakin baik, tapi Anda juga akan memberikan lebih banyak noise ke motor. <br>Nilai default 100Hz optimal, tetapi untuk setup yg memiliki noise lebih, Anda bisa mencoba menurunkan filter term D menjadi 50Hz dan mungkin juga filter gyro."
@@ -1692,9 +1647,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalQty": {
-        "message": "Qty"
     },
     "motorsVoltage": {
         "message": "Voltase:"
@@ -2526,41 +2478,11 @@
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filter Notch Gyro"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "Frekuensi Tengah Filter Notch Gyro 1 [Hz]"
-    },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Frekuensi Tengah Filter Notch Gyro 2 [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Frekuensi Cutoff Filter Notch Gyro1 [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "Frekuensi Cutoff Filter Notch Gyro2 [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Filter Notch memiliki nilai tengah dan cutoff. Filter ini bersifat simetris. Frekuensi tengah adalah posisi tengah filter dan frekuensi cutoff adalah batas nilai ketika filter Notch mulai diterapkan. Sebagai contoh, ketika CutOff Notch 160 dan Tengah Notch 260, maka kisaran hasil filter adalah 160-360Hz dengan redaman terbesar di tengah"
-    },
     "pidTuningFilterSettings": {
         "message": "Pengaturan Filter yg bergantung Profile"
     },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filter Lowpass D Term"
-    },
-    "pidTuningDTermLowpassType": {
-        "message": "Tipe Filter Lowpass D Term 1"
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": "Filter Notch D Term"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "Frekuensi Tengah Filter Notch D Term [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "Frekuensi CutOff Filter Notch D Term [Hz]"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Frekuensi CutOff Lowpass Yaw [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Kompensasi PID Vbat"
@@ -2583,9 +2505,6 @@
     "pidTuningItermRelax": {
         "message": "Relaksasi I Term"
     },
-    "pidTuningItermRelaxHelp": {
-        "message": "Membatasi akumulasi I Term ketika bergerak cepat. Membantu untuk mengurangi efek bouncing pada akhir roll dan manuver lainnya. Anda dapet memilih di sumbu mana yang aktif, dan pilihan untuk deteksi pergerakan cepat menggunakan Gyro atau Setpoint (stick)."
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (hanya penambahan)"
     },
@@ -2604,14 +2523,8 @@
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
     },
-    "pidTuningThrottleBoostHelp": {
-        "message": "Fitur ini memungkinkan throttle dinaikkan dengan pergerakan stick yang cepat, yg akan menambah akselerasi-torsi pada motor dan memberikan respon throttle yang jauh lebih cepat."
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Batas Sudut Acro Trainer"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Menambah fungsi mode angle yang terbatas untuk pilot yang sedang belajar mode acro. Kisaran nilai 10-80 dan harus diaktifkan dengan switch pada tab $t(tabAuxiliary.message)."
     },
     "configHelp2": {
         "message": "Rotasi FC dalam derajat, untuk memungkinkan pemasangannya miring / terbalik / diputar dll. Saat menjalankan sensor eksternal, atur kelurusan sensor (Gyro, Acc, Mag) untuk menentukan posisi sensor tanpa pengaruh orientasi FC. "
