@@ -8,8 +8,8 @@ const MSPCodes = {
     MSP_BOARD_INFO:                 4,
     MSP_BUILD_INFO:                 5,
 
-    MSP_NAME:                       10,
-    MSP_SET_NAME:                   11,
+    MSP_NAME:                       10, // DEPRECATED IN MSP 1.45
+    MSP_SET_NAME:                   11, // DEPRECATED IN MSP 1.45
 
     MSP_BATTERY_CONFIG:             32,
     MSP_SET_BATTERY_CONFIG:         33,
@@ -192,4 +192,10 @@ const MSPCodes = {
     MSP2_SET_MOTOR_OUTPUT_REORDERING:    0x3002,
     MSP2_SEND_DSHOT_COMMAND:        0x3003,
     MSP2_GET_VTX_DEVICE_STATUS:     0x3004,
+    MSP2_GET_TEXT:                  0x3006,
+    MSP2_SET_TEXT:                  0x3007,
+
+    // MSP2_GET_TEXT and MSP2_SET_TEXT variable types
+    MSP2TEXT_PILOT_NAME:                 1,
+    MSP2TEXT_CRAFT_NAME:                 2,
 };

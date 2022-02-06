@@ -423,16 +423,30 @@ OSD.generateLQPreview = function() {
 
 OSD.generateCraftName = function() {
     let preview = 'CRAFT_NAME';
-    if (FC.CONFIG.name !== '') {
-        preview = FC.CONFIG.name.toUpperCase();
+
+    const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ? FC.CONFIG.craftName
+        : FC.CONFIG.name;
+    if (craftName !== '') {
+        preview = craftName.toUpperCase();
     }
     return preview;
 };
 
+// for backwards compatibility before API_VERSION_1_45
 OSD.generateDisplayName = function() {
   let preview = 'DISPLAY_NAME';
-  if (FC.CONFIG.displayName !== '') {
-      preview = FC.CONFIG.displayName.toUpperCase();
+  if (FC.CONFIG.displayName) {
+      preview = FC.CONFIG.displayName?.toUpperCase();
+  }
+  return preview;
+};
+
+// added in API_VERSION_1_45
+OSD.generatePilotName = function() {
+  let preview = 'PILOT_NAME';
+  if (FC.CONFIG.pilotName) {
+      preview = FC.CONFIG.pilotName?.toUpperCase();
   }
   return preview;
 };
@@ -1203,17 +1217,38 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: OSD.drawStickOverlayPreview,
         },
-        DISPLAY_NAME: {
-            name: 'DISPLAY_NAME',
-            text: 'osdTextElementDisplayName',
-            desc: 'osdDescElementDisplayName',
-            defaultPosition: -77,
-            draw_order: 350,
-            positionable: true,
-            preview(osdData) {
-                return OSD.generateDisplayName(osdData, 1);
-            },
-        },
+        ...(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            ? {
+                DISPLAY_NAME: {
+                   name: 'DISPLAY_NAME',
+                   text: 'osdTextElementDisplayName',
+                   desc: 'osdDescElementDisplayName',
+                   defaultPosition: -77,
+                   draw_order: 350,
+                   positionable: true,
+                   preview(osdData) {
+                       return OSD.generateDisplayName(osdData, 1);
+                   },
+                },
+            }
+            : {}
+        ),
+        ...(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            ? {
+                PILOT_NAME: {
+                    name: 'PILOT_NAME',
+                    text: 'osdTextElementPilotName',
+                    desc: 'osdDescElementPilotName',
+                    defaultPosition: -77,
+                    draw_order: 350,
+                    positionable: true,
+                    preview(osdData) {
+                        return OSD.generatePilotName(osdData, 1);
+                    },
+                },
+            }
+            : {}
+        ),
         ESC_RPM_FREQ: {
             name: 'ESC_RPM_FREQ',
             text: 'osdTextElementEscRpmFreq',
@@ -1742,7 +1777,8 @@ OSD.chooseFields = function() {
                                                 F.FLIGHT_DIST,
                                                 F.STICK_OVERLAY_LEFT,
                                                 F.STICK_OVERLAY_RIGHT,
-                                                F.DISPLAY_NAME,
+                                                // show either DISPLAY_NAME or PILOT_NAME depending on the MSP version
+                                                (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME),
                                                 F.ESC_RPM_FREQ,
                                             ]);
                                             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {

@@ -757,8 +757,11 @@ function generateFilename(prefix, suffix) {
         if (FC.CONFIG.flightControllerIdentifier) {
             filename = `${FC.CONFIG.flightControllerIdentifier}_${filename}`;
         }
-        if(FC.CONFIG.name && FC.CONFIG.name.trim() !== '') {
-            filename = `${filename}_${FC.CONFIG.name.trim().replace(' ', '_')}`;
+        const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            ? FC.CONFIG.craftName
+            : FC.CONFIG.name;
+        if (craftName.trim() !== '') {
+            filename = `${filename}_${craftName.trim().replace(' ', '_')}`;
         }
     }
 

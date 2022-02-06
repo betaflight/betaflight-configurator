@@ -4993,7 +4993,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Craft name as set in Configuration tab"
+        "message": "Craft name as set in the Configuration tab.</br>Can also be set via the \"craft_name\" CLI variable."
     },
     "osdTextElementAltitude": {
         "message": "Altitude",
@@ -5341,7 +5341,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "Display name as set by the \"display_name\" cli command"
+        "message": "Can also be set via the \"display_name\" CLI variable."
+    },
+    "osdTextElementPilotName": {
+        "message": "Pilot name",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "Pilot name as set in the Configuration tab.</br>Can also be set via the \"pilot_name\" CLI variable."
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM frequency",
@@ -6278,6 +6285,15 @@
     },
     "craftName": {
         "message": "Craft name"
+    },
+    "configurationCraftNameHelp": {
+        "message": "Can be show in logs, backup file names and the OSD.</br>Can be set via the <b>craft_name</b> CLI variable."
+    },
+    "configurationPilotName": {
+        "message": "Pilot name"
+    },
+    "configurationPilotNameHelp": {
+        "message": "Can be show in the OSD.</br>Can be set via <b>pilot_name</b> CLI variable."
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV Camera Angle [degrees]"
