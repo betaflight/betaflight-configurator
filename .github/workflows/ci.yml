@@ -36,13 +36,6 @@ jobs:
       - name: Run unit tests
         run: yarn test
 
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@043296c976c53f4536194ebe3841ed720e04d496 # v1.26
-        if: always()
-        with:
-          files: test-results-junit/**/*.xml
-          comment_mode: 'off'
-
   build:
     name: Build (${{ matrix.name }})
     needs: test
