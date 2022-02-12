@@ -1408,6 +1408,9 @@
     "dialogDynFiltersChangeTitle": {
         "message": "動的ノッチ値の変更"
     },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>警告: この変更によりRPMフィルタリングが有効 / 無効となり、フィルターの遅延と効果が増加ないし減少します。</b></span><br><br>ダイナミックノッチフィルターを推奨値にリセットしますか？"
+    },
     "portsIdentifier": {
         "message": "識別子"
     },
@@ -3155,6 +3158,10 @@
         "message": "Betaflight ConfiguratorはFC基板の検出と検証に<span class=\"message-positive\">成功</span>しました: <strong>{{boardName}}</strong>",
         "description": "Board verification has succeeded."
     },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "Betaflight ConfiguratorはFCボードを検出: <strong>{{boardName}}</strong> しかしながらBetaflightにて公式ターゲットが見つかりませんでした",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+    },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Betaflight Configuratorでボードの検証に<span class=\"message-negative\">失敗</span>しました。うまくいかない場合はタブをゆっくりと切り替え再試行してください。またUSB接続を改めてやり直すか、カスタムデフォルトを適用し忘れた場合は最初から接続し直してください。",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
@@ -4038,6 +4045,9 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "動的アイドル値 [* 100 RPM]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "動的アイドルにより、低回転時の制御性が向上し、モーター非同期のリスクを低減します。<br /><br /> PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数を3000～3500rpm程度に設定します。BF4.2の場合、DShotのアイドル値を1％など低めに設定します。BF4.3ではDShotアイドル値を調整する必要はありません。<br /><br />詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">こちらのWikiエントリ</a>をご覧ください。"
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dshotテレメトリー がオフのため動的アイドルはオフとなります"
@@ -6422,5 +6432,9 @@
     "presetsVersionMismatch": {
         "message": "プリセットソースのバージョンが不一致です。<br/>必要なバージョン: {{versionRequired}}<br/>プリセットソースバージョン: {{versionSource}}<br/>このプリセットソースを使用すると危険です。<br/>このまま続けますか？",
         "description": "Placeholder for the options list dropdown"
+    },
+    "presetsReviewOptionsWarning": {
+        "message": "このプリセットを選択する前に、オプションリストを確認してください。",
+        "description": "Dialog text to prompt user to review options for the preset"
     }
 }

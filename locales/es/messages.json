@@ -3880,7 +3880,7 @@
         "message": "Establece el número de filtros notch dinámicos por eje. Con el filtro RPM activado se recomienda un valor de 1 o 2. Sin filtro RPM se recomienda un valor de 4 o 5. Los números más bajos minimizarán el retraso introducido por el filtro, sin embargo puede que aumente la temperatura de los motores."
     },
     "pidTuningRpmFilterGroup": {
-        "message": "Giro Filtro RPM",
+        "message": "Filtro RPM del Giro",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
@@ -3888,7 +3888,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "Giro Filtro RPM Número de Armónicos",
+        "message": "Número de armónicos",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -3945,7 +3945,7 @@
         "message": "Tipo de filtro dinámico"
     },
     "pidTuningDTermNotchFiltersGroup": {
-        "message": "Filtro notch del D Term"
+        "message": "Filtro Notch del D Term"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
         "message": "Aplica un filtro notch estático (frecuencia constante) a los datos del D Term, en la frecuencia Centro especificada.<br /><br />La amplitud del notch se determina por la frecuencia de corte.<br /><br />Puede ser útil para resonancias aisladas, de frecuencia constante, que son amplificadas por D.<br /><br />Mantén el corte tan cerca del centro como sea posible. Evita ajustar los filtros notch por debajo de 100 Hz excepto en construcciones de bajas RPM."
