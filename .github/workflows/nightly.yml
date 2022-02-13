@@ -40,12 +40,16 @@ jobs:
           set -- release-assets/Betaflight-Configurator-Debug-*
           echo "::set-output name=notes::$(test -e "$1" && echo '${{ env.debugReleaseNotes }}' || echo '${{ env.releaseNotes }}')"
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=today::$(date '+%Y%m%d')"
+
       - name: Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # v0.1.14
         with:
           token: ${{ secrets.REPO_TOKEN }}
           repository: ${{ env.repoNightly }}
-          tag_name: build-${{ github.run_number }}
+          tag_name: v${{ steps.date.outputs.today }}.${{ github.run_number }}
           files: release-assets/Betaflight-Configurator-*/**
           draft: false
           prerelease: false
