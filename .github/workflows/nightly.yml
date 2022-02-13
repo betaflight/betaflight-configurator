@@ -61,7 +61,7 @@ jobs:
             ${{ github.ref_name }} ([link](${{ github.event.repository.html_url }}/tree/${{ github.ref_name }}))
 
             ### Latest changeset:
-            ${{ github.sha }} ([link](https://github.com/${{ github.repository }}/commit/${{ github.sha }}))
+            ${{ github.event.head_commit.id }} ([link](${{ github.event.head_commit.url }}))
 
             ### Changes:
-            ${{ github.event.workflow_run.head_commit.message }}
+            ${{ github.event.head_commit.message }}
