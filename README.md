@@ -63,7 +63,7 @@ If you experience graphics display problems or smudged/dithered fonts display is
 
 ### Unstable Testing Versions
 
-Unstable testing versions of the lates builds of the configurator for most platforms can be downloaded from [here](https://github.com/betaflight/betaflight-configurator-nightlies/releases/).
+Unstable testing versions of the latest builds of the configurator for most platforms can be downloaded from [here](https://github.com/betaflight/betaflight-configurator-nightlies/releases/).
 
 **Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
 
