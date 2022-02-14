@@ -84,4 +84,4 @@ jobs:
         with:
           name: Betaflight-Configurator${{ env.debugBuild == 'true' && '-Debug' || '' }}-${{ matrix.name }}
           path: release/
-          retention-days: 10
+          retention-days: 90
