@@ -1,0 +1,19 @@
+name: Artifact links comments creator
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+jobs:
+  artifacts-url-comments:
+    name: add artifact links to pull request and related issues job
+    runs-on: windows-2022
+    steps:
+      - name: add artifact links to pull request and related issues step
+        uses: tonyhallett/artifacts-url-comments@v1.1.0
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            prefix: This is an automated pull request build. It may be unstable and result in corrupted configurations or data loss. Use only for testing.
+            format: name
+            addTo: pullandissues
