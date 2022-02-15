@@ -7,6 +7,7 @@ TABS.pid_tuning = {
     dirty: false,
     previousFilterDynQ: null,
     previousFilterDynCount: null,
+    previousFilterDynWidth: null,
     currentProfile: null,
     currentRateProfile: null,
     currentRatesType: null,
@@ -450,6 +451,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 rpmFilterMinHz_e.attr('disabled', !checked);
                 self.previousFilterDynQ = FC.FILTER_CONFIG.dyn_notch_q;
                 self.previousFilterDynCount = FC.FILTER_CONFIG.dyn_notch_count;
+                self.previousFilterDynWidth = FC.FILTER_CONFIG.dyn_notch_width_percent;
 
                 if (harmonics == 0) {
                     rpmFilterHarmonics_e.val(FILTER_DEFAULT.gyro_rpm_notch_harmonics);
@@ -468,9 +470,15 @@ TABS.pid_tuning.initialize = function (callback) {
                     if (checked) {
                         dynamicNotchCount_e.val(FILTER_DEFAULT.dyn_notch_count_rpm);
                         dynamicNotchQ_e.val(FILTER_DEFAULT.dyn_notch_q_rpm);
+                        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                            dynamicNotchWidthPercent_e.val(FILTER_DEFAULT.dyn_notch_width_percent_rpm);
+                        }
                     } else {
                         dynamicNotchCount_e.val(FILTER_DEFAULT.dyn_notch_count);
                         dynamicNotchQ_e.val(FILTER_DEFAULT.dyn_notch_q);
+                        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                            dynamicNotchWidthPercent_e.val(FILTER_DEFAULT.dyn_notch_width_percent);
+                        }
                     }
                 };
 
@@ -479,6 +487,9 @@ TABS.pid_tuning.initialize = function (callback) {
                 } else {
                     dynamicNotchCount_e.val(self.previousFilterDynCount);
                     dynamicNotchQ_e.val(self.previousFilterDynQ);
+                    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                        dynamicNotchWidthPercent_e.val(self.previousFilterDynWidth);
+                    }
                 }
 
                 $('.rpmFilter span.suboption').toggle(checked);
