@@ -2,12 +2,16 @@
 #
 # After building, artifacts are released to a seperate repository.
 
-env:
-  debugBuild: true
-
 name: CI
 
-on: workflow_call
+on: 
+  workflow_call:
+    inputs:
+      debug_build:
+        description: 'Specifies if it is a debug build or a release build'
+        default: true
+        required: false
+        type: boolean
 
 jobs:
   test:
@@ -74,14 +78,14 @@ jobs:
       - run: yarn install --immutable --immutable-cache --check-cache
 
       - run: yarn gulp release ${{ matrix.releaseArgs }}
-        if: ${{ !env.debugBuild }}
+        if: ${{ !inputs.debug_build && matrix.name != 'Android' }}
 
       - run: yarn gulp debug-release ${{ matrix.releaseArgs }}
-        if: ${{ env.debugBuild }}
+        if: ${{ inputs.debug_build || matrix.name == 'Android' }}
 
       - name: Publish build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Betaflight-Configurator${{ env.debugBuild == 'true' && '-Debug' || '' }}-${{ matrix.name }}
+          name: Betaflight-Configurator${{ inputs.debug_build == 'true' && '-Debug' || '' }}-${{ matrix.name }}
           path: release/
           retention-days: 90
