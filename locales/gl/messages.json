@@ -3693,9 +3693,17 @@
         "message": "D Multiplicador de filtro de prazo:",
         "description": "D Term filter tuning slider label"
     },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Cambia os cortes de filtro de paso baixo D-term.<br /><br />Mover o control deslizante á esquerda dá un filtrado D máis forte (menor frecuencia de corte).<br /><br />Mover o control deslizante á dereita dá menos filtrado (maior frecuencia de corte).<br /><br />O D-term é o elemento PID máis sensible ao ruído e a resonancia. Pode amplificar o ruído de alta frecuencia por 10x a 100x. É por iso que os cortes de filtro D son moito máis baixos que os filtros do gyro.<br /><br />O filtrado D-term é aplicado despois e, ademais, do filtrado de Gyro. O filtrado D predeterminado é óptimo para a maioría dos quads e raramente necesita ser cambiado. <br /><br />Mover este control deslizante á esquerda reduce a calor do motor en quads ruidosos e con melodías altas de PID, pero podemos ver máis propwash e resonancias de frecuencias inferiores.<br /><br />Non se recomenda mover o control deslizante á dereita, pero pode mellorar a propwash en builds limpas. Pode causar motores ruidosos ó armar, resonancias repentinas en voo e sobrequentamento grave do motor.",
+        "description": "D Term filter tuning slider helpicon message"
+    },
     "pidTuningDTermSliderEnabled": {
         "message": "Empregar control deslizante D-Term",
         "description": "Disable or enable D Term Filter Tuning Slider"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Deslizadores para axustar as características do voo do quad (ganancias de PID)<br /><br />Amortecemento (ganancia D): Resiste o movemento rápido, minimiza o oscilación de P.<br /><br />Seguimento (ganancias P e I): Mellora a capacidade de resposta do quad, se é demasiado elevado pode causar vibracións ou oscilacións.<br /><br />Resposta dos Stick's (Feedforward): Aumenta a capacidade de resposta do quad para movementos máis rápidos de stick.<br /><br />Rumbo - Oscilación (ganancia I, experto): Axuste fino de I.<br /><br />D Dinámica (D Max, experto): Establece a cantidade máxima a que D pode ser elevada durante os movementos rápidos.<br /><br />Amortecemento Pitch (ratio Pitch: Roll de D, experto): Aumenta a cantidade de amortecemento en Pitch en relación ao roll.<br /><br />Seguimento Pitch (ratio Pitch: Roll P, I e F, experto): Aumenta a forza de estabilización en Pitch con relación o Roll.<br /><br />Multiplicador mestre (tódalas ganancias, experto): Levanta ou baixa tódalas ganancias PID, mantendo as súas proporcións constantes.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATENCIÓN</span>: As posicións deslizantes actuais poden causar volantes, danos no motor ou comportamentos seguros. Proceda con precaución.",
@@ -3761,6 +3769,10 @@
         "message": "Balance de PD:",
         "description": "PD balance tuning slider label"
     },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Cambia D e D Max. Un valor relativamente alto de D amprtecerá a capacidade de resposta dos stick's e pode facer que os motores se quenten, pero deberían axudar a controlar os oscilacións do P-term e pode mellorar as oscilacións do propwash.<br /><br />Un valor relativamente baixo do D-term dá unha resposta máis rápida nos stick's, pero debilitara a resposta ante o propwash e as forzas externas (vento).",
+        "description": "D_term tuning slider helpicon message"
+    },
     "pidTuningPDGainSlider": {
         "message": "Ganancia P e D:",
         "description": "P and D Gain tuning slider label"
@@ -3772,6 +3784,10 @@
     "pidTuningResponseSliderLegacy": {
         "message": "Ganancia de resposta de stick:",
         "description": "Response tuning slider label"
+    },
+    "pidTuningResponseSliderLegacyHelp": {
+        "message": "Os valores máis baixos de FF empeorarán a resposta do stick e poden provocar un rebote lento ao final dun flip ou dun roll debido a que o quad vai moi atrasado ós stick's e acumular moito I-term provoca un \"rebote do I-term\".<br /><br />Os valores de FF máis altos darán respostas rápidas dos stick's en movementos bruscos. Os valores FF excesivamente altos poden causar sobrexiro e rebotes rápidos ao final dun flip ou dun roll.<br /><br />Nota:<br />A característica de relaxar o I-term pode deter a acumulación do I-term por movementos dos stick's en quads de pouca autoridade ou si se empregan baixas ganancias de resposta dos stick's.",
+        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningDGainSlider": {
         "message": "Amortiguamento:<br /><i><small>Ganancia D</small></i>",
@@ -3785,6 +3801,10 @@
         "message": "Seguimento:<br /><i><small>P & I Gains</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
+    "pidTuningPIGainSliderHelp": {
+        "message": "Aumentar o control deslizante de seguimento para afinar a resposta dos quads aos comandos e mellora tamén a resposta a influencias externas; evitando que o morro do quad que saia da trazada en calquera condición <br /><br />Os valores de \"seguimento\" máis baixos sufrirán bamboleos e irá fóra da trazada en movementos de stick e no propwash. Un \"seguimento\" alto pode producir oscilación e rebotes rápidos (difícil de ver, pero pódense oir). O seguimento excesivo pode producir oscilacións e motores quentes.",
+        "description": "P and I gain tuning slider helpicon message"
+    },
     "pidTuningResponseSlider": {
         "message": "Resposta de Stick:<br /><i><small>FF Gains</small></i>",
         "description": "Response tuning slider label"
@@ -3797,17 +3817,33 @@
         "message": "Drift - Wobble:<br /><i><small>I Gains</small></i>",
         "description": "I-term slider label"
     },
+    "pidTuningIGainSliderHelp": {
+        "message": "Aumenta ou diminúe I. Un I máis alto pode mellorar o seguimento de xiros en espiral, órbitas ou comandos de aceleración 0%. Demasiada I, particularmente sen moita P, pode causar bamboleos ou rebotes despois de flips/rolls ou ó cortar o acelerador a 0%.<br /><br />Xeralmente quere que o control deslizante 'Rumbo - Oscilación' sexa tan alto como para poder manter o seguimento do quad en xiros de espiral, órbitas, ect... pero non tan alto que comeza a ver bamboleos ó cortar o gas a 0%.<br /><br /><strong>Nota:</strong><br />Se experimenta rebotes en calquera momento que sexa fácil de ver, asegúrese de que \"Relaxar I-term\" está habilitado e tente baixar o valor I-term_Relax_Cutoff.",
+        "description": "I-gain Gain tuning slider helpicon message"
+    },
     "pidTuningDMaxGainSlider": {
         "message": "Amortiguamento dinámico:<br /><i><small>D Max</small></i>",
         "description": "D Min slider label"
+    },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "Aumenta o D Max, a cantidade máxima que D pode aumentar durante os movementos máis rápidos.<br /><br />Para os quads de carreiras, onde o control deslizante do amortecemento principal foi axustado baixo para minimizar a calor do motor, movendo este control deslizante á dereita mellorará o control dos sobrexiros para cambios de dirección rápidos.<br /><br />Para os quads cinemáticos ou cinematográficos, a inestabilidade no voo cara a adiante é mellor abordada movendo o control deslizante de amortecemento (non o control deslizante de amortecemento dinámico) á dereita. Consulte a temperatura do motor e escoite ruídos estraños durante as entradas rápidas ao mover este control deslizante á dereita.<br /><br />Para os quads de freestyle, especialmente as construcións máis pesadas, movendo este control deslizante á dereita pode axudar a controlar o sobrexiro en flips e rolls.<br /><br /> <strong>Nota:</strong><br />Xeralmente o sobrexirot en flips e rolls débese a que non hai suficiente 'I-TERM RELAX', desincronizacións dos motores ou autoridade inadecuada (A.K.A. Saturación Motor). Se pensa que ó mover o control deslizante de amortecemento á dereita non mellora o sobrexiro nos flips ou rolls, colóqueo de volta á posición normal e busque o motivo do bamboleo ou sobrexiro.",
+        "description": "D_min slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Amortiguamento Pitch:<br /><i><small>Pitch: Roll D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
     },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Aumenta o amortecemento (D) SÓ no eixe do Pitch, é dicir, para un Pitch relativo ó Roll. Axuda a controlar os sobrexiros ou retrocesos específicos en Piych.<br /><br />Quads con momento \"máis pesado\" de inercia no eixe do Pitch xeralmente necesita máis autoridade de amortecemento (xa que o Pitch ten máis inercia e acumula máis forza).<br /><br />Axuste o mestre \"amortecemento\" e / ou os deslizadores de \"Seguimento\" primeiro, ata que obteña un bo comportamento do eixe do Roll. A continuación, use os controis deslizantes do Pitch (Aumentar ou diminuír) para axustar o eixe do Pitch sen afectar ó Roll.",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
     "pidTuningPitchPIGainSlider": {
         "message": "Seguimento de Pitch:<br><i><small>Pitch:Roll P, I y FF</small></i>",
         "description": "Pitch P & I slider label"
+    },
+    "pidTuningPitchPIGainSliderHelp": {
+        "message": "Aumenta a forza de seguimento SÓ no eixe do Pitch, cambiando valores de P e I de Pitch en relación a Roll. Permite unha autoridade de seguimento máis forte no eixe Pitch en relación ao Roll.<br /><br />Aumentar para estabilizar bandazos de Pitch (nariz) con entradas de piych agresivas ou cortes de acelerador. Tamén considere aumentar as ganancias anti-gravidade.<br /><br />Axuste primeiro os controis deslizantes maestros \"amortiguamento\" e / ou \"seguimento\", ata que obteña un bo comportamento do eixe de Roll. A continuación, use os controis deslizantes de Pitch (Aumentar ou diminuír) para axustar o eixe Pitch sen afectar o Roll.",
+        "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Paso Baixo do Xiro"
@@ -3817,6 +3853,10 @@
     },
     "pidTuningGyroLowpass": {
         "message": "Gyro Lowpass 1"
+    },
+    "pidTuningGyroLowpassHelp": {
+        "message": "O primeiro dos dous filtros paso baixo de Gyro.<br /><br />O uso do filtro paso baixo 1 do gyro en modo dinámico foi importante co código anterior de noch dinámico. O paso baixo 1 do gyro pode ser desactivado completamente en firmware 4.3 cando se usa o filtrado de RPM, a menos que o gyro non teña filtrado de hardware interno.<br /><br />En modo dinámico, o filtrado será máis forte a baixo acelerador, con menos filtrado e menos atraso cando o acelerador aumenta. A transición de corte baixo a alto ocorrerá anteriormente, xa que o acelerador aumenta, con maiores valores de expo de paso baixo do gyro.<br /><br />En modo estático, a frecuencia de corte é fixa.<br /><br />O tipo de filtro por defecto a PT1. Raramente se require o filtrado de orde superior.",
+        "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
         "message": "Modo"
@@ -3845,11 +3885,26 @@
     "pidTuningGyroLowpass2": {
         "message": "Gyro Lowpass 2"
     },
+    "pidTuningGyroLowpass2Help": {
+        "message": "O segundo dos filtros de paso baixo do gyro.<br /><br />Este filtro execútase no lazo de gyro, filtrando o sinal antes de entrar no Pid Loop. Sempre está en modo estático (frecuencia de corte fixa).<br /><br />Se a frecuencia de loop de PID é inferior á frecuencia de loop de gyro, por exemplo, un ciclo de 4K PID cun ciclo de gyro de 8K, este filtro debe ser retido para previr problemas de aliasing debido a reducción de resolución de 8k-> 4k.<br /><br />Unha única configuración de un solo paso baixo de gyro, establecida entre 500 e 1000Hz, funciona ben para BetaFlight 4.3 ou superior, para construcións limpas con RPM activo e polo menos filtro D por defecto.",
+        "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "Os filtros de Gyro Lowpass atenúan o ruído de maior frecuencia para mantelo fóra do lazo PID. Hai dous filtros de Gyro configurables de forma independente; por defecto, ambos están activos.<br /><br />Con filtrado de RPM, o control deslizante de filtro de Gyro moitas veces pode moverse cara á dereita ou, alternativamente, empregar un único filtro de paso baixo de gyro estático a 500Hz pode ser suficiente.<br /><br />Un quad terá menos propwash co menor retraso do filtro de Gyro.<br /><br />Comprobe sempre o calor do motor cando cambie os controis deslizantes cara á dereita. Cun filtrado de Gyro mínimo, é esencial ter o suficiente filtrado D! Cóidado!",
+        "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "Os filtros de paso baixo de D atenúan o ruído de alta frecuencia e as resonancias que serían amplificadas por unha ganancia D.<br /><br /> Hai dous filtros D e os seus efectos son aditivos. Ambos son necesarios en case todos os quads, aínda que un único PT2 pode usarse no lugar do dobre PT1.<br /><br />En xeral, o quad vai voar mellor e ter o mínimo de propwash cando está configurado para ter o menor atraso de filtro (deslizantes á dereita, valores de corte máis altos). Non obstante, particularmente con filtros D, os controis deslizantes á dereita poden aumentar considerablemente a posibilidade de conseguir motores quentes.<br /><br />É moi sinxelo queimar motores se non ten o suficiente filtrado D - ¡Coidado!",
+        "description": "D-term lowpass filter helpicon message"
+    },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch do Xiro"
     },
     "pidTuningGyroNotchFilter": {
         "message": "Filtros Notch do Xiro 1"
+    },
+    "pidTuningGyroNotchFilterHelp": {
+        "message": "Aplica un filtro de notch estático (frecuencia constante) ó Gyro, na frecuencia central específica.<br /><br />Pode ser útil para as resonancias de frecuencia illada e constante que afecten tanto a P como D.<br /><br />Para ser útil, a frecuencia resonante debe ser constante a través do rango de aceleración.<br /><br />O ancho do Noch está definido pola frecuencia de corte. O corte normalmente debe ser definido entre o 10% eo 40% por baixo da frecuencia do centro. Use o rango de filtro máis axustado que controla a resonancia. Evite a configuración de filtros de entretemento por baixo de 100Hz, excepto en circunstancias especiais.<br /><br />Os filtros de Notch estáticos raramente son necesarios en 4.3."
     },
     "pidTuningGyroNotchFilter2": {
         "message": "Filtros Notch do Xiro 2"
@@ -3944,6 +3999,10 @@
     },
     "pidTuningDTermLowpass": {
         "message": "Paso-baixo D Term 1"
+    },
+    "pidTuningDTermLowpassHelp": {
+        "message": "O primeiro dos dous filtros de baixo de D.<br /><br />En modo dinámico, o filtrado será máis forte a baixo acelerador, con menos filtrado e menos atraso cando o acelerador aumenta. Isto axuda a controlar o chirrido do motor ou perder o quad ó armar, o mesmo tempo que reduce o atraso e o propwash despois do despegue. A transición de corte baixo a alto ocorrerá antes, o tempo que aumenta o acelerador, con maiores valores de expo de paso abixo de D.<br /><br />En modo estático, a frecuencia de corte é fixa. Isto non se recomenda para o filtrado D.<br /><br />O tipo de filtro predeterminado é PT1, aínda que algúns usuarios usaron só un único filtro de Biquad dinámico aquí, sen segundo PT1.<br /><br />Os cambios que resultan nun menor filtrado de D poden causar un exceso de temperatura nos motores ou que o quad marche só ao armar.",
+        "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpassMode": {
         "message": "Modo"
