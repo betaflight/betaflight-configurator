@@ -52,7 +52,7 @@ jobs:
           tag_name: v${{ steps.date.outputs.today }}.${{ github.run_number }}
           files: release-assets/Betaflight-Configurator-*/**
           draft: false
-          prerelease: false
+          prerelease: true
           fail_on_unmatched_files: true
           body: |
             ${{ steps.notes.outputs.notes }}
