@@ -679,7 +679,7 @@ TABS.motors.initialize = function (callback) {
                 FC.MOTOR_CONFIG.use_dshot_telemetry = value;
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    const rpmFilterIsDisabled = self.previousDshotBidir && FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
+                    const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
                     FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
                     FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
 
