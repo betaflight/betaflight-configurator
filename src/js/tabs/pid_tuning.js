@@ -475,7 +475,7 @@ TABS.pid_tuning.initialize = function (callback) {
                         }
                     };
 
-                    if (checked !== (FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0)) { // if rpmFilterEnabled is not the same value as saved in the fc
+                    if (checked !== (FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0)) {
                         GUI.showYesNoDialog(dialogDynFilterSettings);
                     } else {
                         dynamicNotchCount_e.val(self.previousFilterDynCount);

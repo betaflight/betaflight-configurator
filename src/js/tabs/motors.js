@@ -702,7 +702,7 @@ TABS.motors.initialize = function (callback) {
                         }
                     };
 
-                    if ((FC.MOTOR_CONFIG.use_dshot_telemetry !== self.previousDshotBidir) && !(rpmFilterIsDisabled)) { // if rpmFilterEnabled is not the same value as saved in the fc
+                    if ((FC.MOTOR_CONFIG.use_dshot_telemetry !== self.previousDshotBidir) && !(rpmFilterIsDisabled)) {
                         GUI.showYesNoDialog(dialogDynFilterSettings);
                     } else {
                         FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
