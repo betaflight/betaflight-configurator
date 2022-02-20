@@ -10,3 +10,12 @@ jobs:
   ci:
     name: CI
     uses: ./.github/workflows/ci.yml
+  hide:
+    name: Hide artifact links
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Hide artifact links
+        uses: int128/hide-comment-action@v1
+        with:
+          starts-with: "Do you want to test this code? Here you have an automated build:"
+          ends-with: "WARNING: It may be unstable and result in corrupted configurations or data loss. Use only for testing!"
