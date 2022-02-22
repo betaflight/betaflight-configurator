@@ -21,7 +21,7 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
         if (openInfo) {
             const disconnectAndCleanup = function() {
                 serial.disconnect(function(result) {
-                    console.log('Disconnected');
+                    console.log(`MSP request for serial disconnection, result: ${result}`);
 
                     MSP.clearListeners();
 
@@ -37,7 +37,7 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
             GUI.timeout_add('msp_connector', function () {
                 if (!CONFIGURATOR.connectionValid) {
                     GUI.log(i18n.getMessage('noConfigurationReceived'));
-
+                    console.log('MSP disconnecting, no valid connection within 10s');
                     disconnectAndCleanup();
                 }
             }, 10000);
@@ -51,12 +51,13 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
                 CONFIGURATOR.connectionValid = true;
 
                 GUI.timeout_remove('msp_connector');
-                console.log('Connected');
+                console.log('MSP has valid serial connection');
 
                 self.onConnectCallback();
             });
         } else {
             GUI.log(i18n.getMessage('serialPortOpenFail'));
+            console.log('MSP failed to open a serial connection');
             self.onFailureCallback();
         }
     });
@@ -67,7 +68,7 @@ MSPConnectorImpl.prototype.disconnect = function(onDisconnectCallback) {
 
     serial.disconnect(function (result) {
         MSP.clearListeners();
-        console.log('Disconnected');
+        console.log(`MSP Serial disconnection ${result}`);
 
         self.onDisconnectCallback(result);
     });

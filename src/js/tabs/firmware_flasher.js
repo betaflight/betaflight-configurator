@@ -1225,11 +1225,14 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function startFlashing() {
+            GUI.log('startFlashing');
             exitDfuElement.addClass('disabled');
             $("a.load_remote_file").addClass('disabled');
             $("a.load_file").addClass('disabled');
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
+                GUI.log('not blocked by connect_lock');
                 if (self.parsed_hex) {
+                    GUI.log('we have a parsed_hex to flash');
                     try {
                         if (self.unifiedTarget.config && !self.parsed_hex.configInserted) {
                             const configInserter = new ConfigInserter();
@@ -1245,9 +1248,11 @@ firmware_flasher.initialize = function (callback) {
 
                         flashFirmware(self.parsed_hex);
                     } catch (e) {
+                        GUI.log('flashingFailed');
                         console.log(`Flashing failed: ${e.message}`);
                     }
                 } else {
+                    GUI.log('no parsed_hex to flash');
                     $('span.progressLabel').attr('i18n','firmwareFlasherFirmwareNotLoaded').removeClass('i18n-replaced');
                     i18n.localizePage();
                 }

@@ -95,11 +95,11 @@ STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) 
 
     chrome.usb.getDevices(device, function (result) {
         if (result.length) {
-            console.log(`USB DFU detected with ID: ${result[0].device}`);
+            console.log(`USB DFU device detected with ID: ${result[0].device}`);
 
             self.openDevice(result[0]);
         } else {
-            console.log('USB DFU not found');
+            console.log(`USB DFU device not found with error ${result}`);
             GUI.log(i18n.getMessage('stm32UsbDfuNotFound'));
         }
     });
@@ -110,34 +110,30 @@ STM32DFU_protocol.prototype.openDevice = function (device) {
 
     chrome.usb.openDevice(device, function (handle) {
         if (checkChromeRuntimeError()) {
-            console.log('Failed to open USB device!');
+            console.log(`Failed to open USB device handle ID: ${handle.handle}`);
             GUI.log(i18n.getMessage('usbDeviceOpenFail'));
             if(GUI.operating_system === 'Linux') {
                 GUI.log(i18n.getMessage('usbDeviceUdevNotice'));
             }
-            return;
+        } else {
+            self.handle = handle;
+            GUI.log(i18n.getMessage('usbDeviceOpened', handle.handle.toString()));
+            console.log(`USB Device opened with Handle ID: ${handle.handle}`);
+            self.claimInterface(0);
         }
-
-        self.handle = handle;
-
-        GUI.log(i18n.getMessage('usbDeviceOpened', handle.handle.toString()));
-        console.log(`Device opened with Handle ID: ${handle.handle}`);
-        self.claimInterface(0);
     });
 };
 
 STM32DFU_protocol.prototype.closeDevice = function () {
     const self = this;
-
     chrome.usb.closeDevice(this.handle, function closed() {
         if (checkChromeRuntimeError()) {
-            console.log('Failed to close USB device!');
+            console.log(`FAILED to close USB device with Handle ID: ${self.handle.handle}`);
             GUI.log(i18n.getMessage('usbDeviceCloseFail'));
+        } else {
+            GUI.log(i18n.getMessage('usbDeviceClosed'));
+            console.log(`Device with Handle ID ${self.handle.handle} closed`);
         }
-
-        GUI.log(i18n.getMessage('usbDeviceClosed'));
-        console.log(`Device closed with Handle ID: ${self.handle.handle}`);
-
         self.handle = null;
     });
 };
@@ -149,17 +145,20 @@ STM32DFU_protocol.prototype.claimInterface = function (interfaceNumber) {
         // Don't perform the error check on MacOS at this time as there seems to be a bug
         // where it always reports the Chrome error "Error claiming interface." even though
         // the interface is in fact successfully claimed.
-        if (checkChromeRuntimeError() && (GUI.operating_system !== "MacOS")) {
-            console.log('Failed to claim USB device!');
+        if (checkChromeRuntimeError()) {
+            GUI.log('FAILED to claim USB interface, running cleanup');
+            console.log(`FAILED to claim USB interface ${interfaceNumber} handle ${self.handle.handle}`);
             self.cleanup();
-        }
-
-        console.log(`Claimed interface: ${interfaceNumber}`);
-
-        if (self.options.exitDfu) {
-            self.leave();
         } else {
-            self.upload_procedure(0);
+            GUI.log('Claimed USB interface - able to progress');
+            console.log(`Claimed interface ${interfaceNumber} handle ${self.handle.handle}`);
+            if (self.options.exitDfu) {
+                self.leave();
+            } else {
+                GUI.log('Upload procedure initiated');
+                console.log(`Upload procedure initiated for interface ${interfaceNumber} handle ${self.handle.handle}`);
+                self.upload_procedure(0);
+            }
         }
     });
 };
@@ -168,16 +167,27 @@ STM32DFU_protocol.prototype.releaseInterface = function (interfaceNumber) {
     const self = this;
 
     chrome.usb.releaseInterface(this.handle, interfaceNumber, function released() {
-        console.log(`Released interface: ${interfaceNumber}`);
-
+        if (checkChromeRuntimeError()) {
+            GUI.log('FAILED to releaseInterface');
+            console.log(`FAILED to release USB interface ${interfaceNumber} handle ${self.handle.handle}`);
+        } else {
+            GUI.log('Released USB interface');
+            console.log(`Released USB interface ${interfaceNumber} handle ${self.handle.handle}`);
+        }
         self.closeDevice();
     });
 };
 
 STM32DFU_protocol.prototype.resetDevice = function (callback) {
-    chrome.usb.resetDevice(this.handle, function (result) {
-        console.log(`Reset Device: ${result}`);
 
+    chrome.usb.resetDevice(this.handle, function (result) {
+        if (checkChromeRuntimeError()) {
+            GUI.log('FAILED to resetDevice');
+            console.log(`FAILED to resetDevice handle ${self.handle.handle} with result ${result}`);
+        } else {
+            GUI.log('ResetDevice successful');
+            console.log(`ResetDevice successful handle ${self.handle.handle} with result ${result}`);
+        }
         if (callback) callback();
     });
 };
@@ -298,7 +308,8 @@ STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, call
         'length':       255,
     }, function (result) {
         if (checkChromeRuntimeError()) {
-            console.log(`USB getFunctionalDescriptor failed! ${result.resultCode}`);
+            console.log(`getFunctionalDescriptor FAILED! error: ${result.resultCode}, ${chrome.runtime.lastError.message}`);
+            console.log(`wTransferSize not set, will fall back to 2048`);
             callback({}, result.resultCode);
             return;
         }
@@ -619,7 +630,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         self.chipInfo = chipInfo;
                         self.flash_layout = chipInfo.external_flash;
                     } else {
-                        console.log('Failed to detect internal or external flash');
+                        console.log(`Failed to detect internal or external flash`);
                         self.cleanup();
                     }
 
@@ -1097,6 +1108,7 @@ STM32DFU_protocol.prototype.leave = function () {
 
 STM32DFU_protocol.prototype.cleanup = function () {
     const self = this;
+    GUI.log('running the cleanup function');
 
     self.releaseInterface(0);
 

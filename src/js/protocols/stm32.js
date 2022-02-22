@@ -98,6 +98,8 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
             // refresh device list
             PortHandler.check_usb_devices(function(dfu_available) {
                 if (dfu_available) {
+                    GUI.log('DFU available');
+                    console.log('DFU available');
                     STM32DFU.connect(usbDevices, hex, options);
                 } else {
                     serial.connect(self.port, {bitrate: self.baud, parityBit: 'even', stopBits: 'one'}, function (openInfo) {
@@ -116,8 +118,18 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
             if (disconnectionResult) {
                 // delay to allow board to boot in bootloader mode
                 // required to detect if a DFU device appears
-                setTimeout(startFlashing, 1000);
+                if (GUI.operating_system === 'MacOS') {
+                    setTimeout(startFlashing, 5000);
+                    GUI.log('Disconnected from GUI, waiting 5s for DFU connection');
+                    console.log(`Disconnected from GUI, waiting 5s for DFU connection`);
+                } else {
+                    setTimeout(startFlashing, 1000);
+                    GUI.log('Disconnected from GUI, waiting 1s for DFU connection');
+                    console.log(`Disconnected from GUI, waiting 1s for DFU connection`);
+                }
             } else {
+                GUI.log('Failed to disconnect, GUI lock set to false');
+                console.log(`Failed to disconnect, GUI lock set to false`);
                 GUI.connect_lock = false;
             }
         };
@@ -155,7 +167,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                     setTimeout(legacyRebootAndFlash, 500);
                 });
             } else {
-                console.log('Looking for capabilities via MSP');
+                console.log('running onConnectHandler');
 
                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, () => {
                     if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
@@ -165,7 +177,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                         rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
                     } else {
                         GUI.log(i18n.getMessage('deviceRebooting_romBootloader'));
-                        console.log('no flash bootloader detected');
+                        console.log('no flash bootloader detected, will use ROM bootloader');
                         rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
                     }
 
@@ -175,6 +187,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                     function reboot() {
                         const buffer = [];
                         buffer.push8(rebootMode);
+                        console.log('reboot to DFU requested');
                         MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, () => {
 
                             // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
@@ -188,6 +201,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                         GUI.connect_lock = false;
                         rebootMode = 0;
                         console.log('User cancelled because selected target does not match verified board');
+                        GUI.log('rebootAbort');
                         reboot();
                         TABS.firmware_flasher.refresh();
                     }
@@ -203,14 +217,16 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
         const onTimeoutHandler = function() {
             GUI.connect_lock = false;
-            console.log('Looking for capabilities via MSP failed');
-
+            console.log('rebooting to Bootloader TIMED OUT');
+            GUI.log('onTimeoutHandler looking for MSP capabilities failed');
             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
         };
 
         const onFailureHandler = function() {
             GUI.connect_lock = false;
             TABS.firmware_flasher.refresh();
+            console.log('rebooting to Bootloader FAILED');
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
         };
 
         GUI.connect_lock = true;
