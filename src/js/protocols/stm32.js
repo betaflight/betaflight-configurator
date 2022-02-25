@@ -116,7 +116,8 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
             if (disconnectionResult) {
                 // delay to allow board to boot in bootloader mode
                 // required to detect if a DFU device appears
-                setTimeout(startFlashing, 1000);
+                // MacOs seems to need about 5 seconds delay
+                setTimeout(startFlashing, GUI.operating_system === 'MacOS' ? 5000 : 1000);
             } else {
                 GUI.connect_lock = false;
             }

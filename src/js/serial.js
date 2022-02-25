@@ -457,7 +457,7 @@ const serial = {
         if (GUI.connected_to || GUI.connecting_to) {
             $('a.connect').trigger('click');
         } else {
-            self.disconnect();
+            serial.disconnect();
         }
     },
 };

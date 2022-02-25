@@ -486,8 +486,7 @@ TABS.receiver.initialize = function (callback) {
                 GUI.log(i18n.getMessage('configurationEepromSaved'));
                 if (boot) {
                     GUI.tab_switch_cleanup(function() {
-                        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
-                        reinitialiseConnection(tab);
+                        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(tab));
                     });
                 }
             }

@@ -911,7 +911,7 @@ function configuration_restore(callback) {
                 GUI.log(i18n.getMessage('eeprom_saved_ok'));
 
                 GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialiseConnection('setup', _callback));
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection('setup', _callback));
                 });
             }
         }
