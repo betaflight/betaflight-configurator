@@ -59,9 +59,8 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function show_loaded_hex(summary) {
-            self.flashingMessage(`<a class="save_firmware" href="#" title="Save Firmware">${i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', self.parsed_hex.bytes_total)}</a>`,
+            self.flashingMessage(`<a class="save_firmware" href="#" title="Save Firmware">${i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', { filename: summary.file, bytes: self.parsed_hex.bytes_total })}</a>`,
                 self.FLASH_MESSAGE_TYPES.NEUTRAL);
-
             self.enableFlashing(true);
 
             if (self.unifiedTarget.manufacturerId) {
@@ -703,18 +702,20 @@ firmware_flasher.initialize = function (callback) {
             GUI.log(i18n.getMessage('firmwareFlasherFailedToLoadUnifiedConfig', { remote_file: downloadUrl }));
         }
 
-        function flashingMessageLocal() {
+        function flashingMessageLocal(fileName) {
             // used by the a.load_file hook, evaluate the loaded information, and enable flashing if suitable
             if (self.isConfigLocal && !self.parsed_hex) {
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadedConfig'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
+
             if (self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) {
                 self.enableFlashing(true);
-                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', { filename: fileName, bytes: self.parsed_hex.bytes_total }), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
+
             if (self.localFirmwareLoaded) {
                 self.enableFlashing(true);
-                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', { filename: fileName, bytes: self.parsed_hex.bytes_total }), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
         }
 
@@ -1018,7 +1019,7 @@ firmware_flasher.initialize = function (callback) {
                                             analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, self.parsed_hex.bytes_total);
                                             self.localFirmwareLoaded = true;
 
-                                            flashingMessageLocal();
+                                            flashingMessageLocal(file.name);
                                         } else {
                                             self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
                                         }
@@ -1032,7 +1033,7 @@ firmware_flasher.initialize = function (callback) {
                                         self.unifiedTarget.config = config;
                                         self.unifiedTarget.fileName = file.name;
                                         self.isConfigLocal = true;
-                                        flashingMessageLocal();
+                                        flashingMessageLocal(file.name);
                                     }
                                 }
                             }
