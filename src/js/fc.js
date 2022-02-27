@@ -240,6 +240,7 @@ const FC = {
             roll_rate_limit:            1998,
             pitch_rate_limit:           1998,
             yaw_rate_limit:             1998,
+            rates_type:                 0,
         };
 
         this.AUX_CONFIG =               [];

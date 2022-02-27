@@ -7,6 +7,7 @@ TABS.receiver = {
     yawDeadband: 0,
     analyticsChanges: {},
     needReboot: false,
+    ratesMultiplier: 1,
 };
 
 TABS.receiver.initialize = function (callback) {
@@ -840,6 +841,16 @@ TABS.receiver.initModelPreview = function () {
 
     this.rateCurve = new RateCurve(useOldRateCurve);
 
+    const ratesMultiplierList = [
+        {name: "Betaflight", value: 1},
+        {name: "Raceflight", value: 100},
+        {name: "KISS", value: 1},
+        {name: "Actual", value: 1000},
+        {name: "QuickRates", value: 1000},
+    ];
+
+    this.ratesMultiplier = ratesMultiplierList[FC.RC_TUNING.rates_type].value;
+
     $(window).on('resize', $.proxy(this.model.resize, this.model));
 };
 
@@ -851,9 +862,35 @@ TABS.receiver.renderModel = function () {
     if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
         const delta = this.clock.getDelta();
 
-        const roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[0], FC.RC_TUNING.roll_rate, FC.RC_TUNING.RC_RATE, FC.RC_TUNING.RC_EXPO, this.useSuperExpo, this.deadband, FC.RC_TUNING.roll_rate_limit),
-            pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[1], FC.RC_TUNING.pitch_rate, FC.RC_TUNING.rcPitchRate, FC.RC_TUNING.RC_PITCH_EXPO, this.useSuperExpo, this.deadband, FC.RC_TUNING.pitch_rate_limit),
-            yaw   = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[2], FC.RC_TUNING.yaw_rate, FC.RC_TUNING.rcYawRate, FC.RC_TUNING.RC_YAW_EXPO, this.useSuperExpo, this.yawDeadband, FC.RC_TUNING.yaw_rate_limit);
+        const roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
+            FC.RC.channels[0],
+            FC.RC_TUNING.roll_rate * this.ratesMultiplier,
+            FC.RC_TUNING.RC_RATE * this.ratesMultiplier,
+            FC.RC_TUNING.RC_EXPO * this.ratesMultiplier,
+            this.useSuperExpo,
+            this.deadband,
+            FC.RC_TUNING.roll_rate_limit,
+        );
+
+        const pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
+            FC.RC.channels[1],
+            FC.RC_TUNING.pitch_rate * this.ratesMultiplier,
+            FC.RC_TUNING.rcPitchRate * this.ratesMultiplier,
+            FC.RC_TUNING.RC_PITCH_EXPO * this.ratesMultiplier,
+            this.useSuperExpo,
+            this.deadband,
+            FC.RC_TUNING.pitch_rate_limit,
+        );
+
+        const yaw = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
+            FC.RC.channels[2],
+            FC.RC_TUNING.yaw_rate * this.ratesMultiplier,
+            FC.RC_TUNING.rcYawRate * this.ratesMultiplier,
+            FC.RC_TUNING.RC_YAW_EXPO * this.ratesMultiplier,
+            this.useSuperExpo,
+            this.yawDeadband,
+            FC.RC_TUNING.yaw_rate_limit,
+        );
 
         this.model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
