@@ -3242,10 +3242,10 @@
         "message": "Firmware not loaded"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Loaded Local Firmware: ($1 bytes)"
+        "message": "Loaded Local Firmware: {{filename}} ({{bytes}} bytes)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Loaded Online Firmware: ($1 bytes)"
+        "message": "Loaded Online Firmware: {{filename}} ({{bytes}} bytes)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
