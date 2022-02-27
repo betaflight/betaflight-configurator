@@ -114,10 +114,26 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
         const onDisconnect = disconnectionResult => {
             if (disconnectionResult) {
-                // delay to allow board to boot in bootloader mode
-                // required to detect if a DFU device appears
-                // MacOs seems to need about 5 seconds delay
-                setTimeout(startFlashing, GUI.operating_system === 'MacOS' ? 5000 : 1000);
+                // wait until board boots into bootloader mode
+                // MacOs may need 5 seconds delay
+                function waitForDfu() {
+                    if (PortHandler.dfu_available) {
+                        console.log(`DFU available after ${failedAttempts / 10} seconds`);
+                        clearInterval(dfuWaitInterval);
+                        startFlashing();
+                    } else {
+                        failedAttempts++;
+                        if (failedAttempts > 100) {
+                            clearInterval(dfuWaitInterval);
+                            console.log(`failed to get DFU connection, gave up after 10 seconds`);
+                            GUI.log(i18n.getMessage('serialPortOpenFail'));
+                            GUI.connect_lock = false;
+                        }
+                    }
+                }
+
+                let failedAttempts = 0;
+                const dfuWaitInterval = setInterval(waitForDfu, 100);
             } else {
                 GUI.connect_lock = false;
             }
