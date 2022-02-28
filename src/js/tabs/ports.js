@@ -124,6 +124,7 @@ ports.initialize = function (callback) {
         } else {
             promise = Promise.resolve();
         }
+
         promise.then(function() {
             mspHelper.loadSerialConfig(on_configuration_loaded_handler);
         });
@@ -385,7 +386,7 @@ ports.initialize = function (callback) {
         // update configuration based on current ui state
         FC.SERIAL_CONFIG.ports = [];
 
-        $('.tab-ports .portConfiguration').each(function (port, portConfig) {
+        $('.tab-ports .portConfiguration').each(function (_port, portConfig) {
 
             const serialPort = $(portConfig).data('serialPort');
 
@@ -426,10 +427,55 @@ ports.initialize = function (callback) {
                 blackbox_baudrate: blackboxBaudrate,
                 identifier: serialPort.identifier,
             };
+
             FC.SERIAL_CONFIG.ports.push(serialPortConfig);
         });
 
-        mspHelper.sendSerialConfig(save_to_eeprom);
+        // enable / disable features based on port configuration
+        const func = serialPortConfig.functions;
+        const featureConfig = FC.FEATURE_CONFIG.features;
+
+        const enableRxSerial = func.includes('RX_SERIAL');
+        const enableTelemetry = func.some(e => e.startsWith("TELEMETRY"));
+        const enableBlackbox = func.includes('BLACKBOX');
+        const enableEsc = func.includes('ESC_SENSOR');
+        const enableGps = func.includes('GPS');
+
+        if (enableRxSerial) {
+            featureConfig.enable('RX_SERIAL');
+        } else {
+            featureConfig.disable('RX_SERIAL');
+        }
+
+        if (enableTelemetry) {
+            featureConfig.enable('TELEMETRY');
+        } else {
+            featureConfig.disable('TELEMETRY');
+        }
+
+        if (enableBlackbox) {
+            featureConfig.enable('BLACKBOX');
+        } else {
+            featureConfig.disable('BLACKBOX');
+        }
+
+        if (enableEsc) {
+            featureConfig.enable('ESC_SENSOR');
+        } else {
+            featureConfig.disable('ESC_SENSOR');
+        }
+
+        if (enableGps) {
+            featureConfig.enable('GPS');
+        } else {
+            featureConfig.disable('GPS');
+        }
+
+        mspHelper.sendSerialConfig(save_features);
+
+        function save_features() {
+            MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, save_to_eeprom);
+        }
 
         function save_to_eeprom() {
             MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, on_saved_handler);
