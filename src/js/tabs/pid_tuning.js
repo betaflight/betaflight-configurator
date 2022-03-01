@@ -11,13 +11,6 @@ TABS.pid_tuning = {
     currentRateProfile: null,
     currentRatesType: null,
     previousRatesType: null,
-    RATES_TYPE: {
-        BETAFLIGHT: 0,
-        RACEFLIGHT: 1,
-        KISS: 2,
-        ACTUAL: 3,
-        QUICKRATES: 4,
-    },
     SETPOINT_WEIGHT_RANGE_LOW: 2.55,
     SETPOINT_WEIGHT_RANGE_HIGH: 20,
     SETPOINT_WEIGHT_RANGE_LEGACY: 2.54,
@@ -1117,8 +1110,8 @@ TABS.pid_tuning.initialize = function (callback) {
         FC.RC_TUNING.RC_PITCH_EXPO = parseFloat(rc_pitch_expo_e.val());
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            switch(self.currentRatesType) {
-                case self.RATES_TYPE.RACEFLIGHT:
+            switch (self.currentRatesType) {
+                case FC.RATES_TYPE.RACEFLIGHT:
                     FC.RC_TUNING.pitch_rate = parseFloat(pitch_rate_e.val()) / 100;
                     FC.RC_TUNING.roll_rate = parseFloat(roll_rate_e.val()) / 100;
                     FC.RC_TUNING.yaw_rate = parseFloat(yaw_rate_e.val()) / 100;
@@ -1131,7 +1124,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
                     break;
 
-                case self.RATES_TYPE.ACTUAL:
+                case FC.RATES_TYPE.ACTUAL:
                     FC.RC_TUNING.pitch_rate = parseFloat(pitch_rate_e.val()) / 1000;
                     FC.RC_TUNING.roll_rate = parseFloat(roll_rate_e.val()) / 1000;
                     FC.RC_TUNING.yaw_rate = parseFloat(yaw_rate_e.val()) / 1000;
@@ -1141,7 +1134,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
                     break;
 
-                case self.RATES_TYPE.QUICKRATES:
+                case FC.RATES_TYPE.QUICKRATES:
                     FC.RC_TUNING.pitch_rate = parseFloat(pitch_rate_e.val()) / 1000;
                     FC.RC_TUNING.roll_rate = parseFloat(roll_rate_e.val()) / 1000;
                     FC.RC_TUNING.yaw_rate = parseFloat(yaw_rate_e.val()) / 1000;
@@ -1411,6 +1404,11 @@ TABS.pid_tuning.initialize = function (callback) {
 
     self.rateCurve = new RateCurve(useLegacyCurve);
 
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+        $('.pid_tuning input[name="sensitivity"]').hide();
+        $('.pid_tuning .levelSensitivityHeader').empty();
+    }
+
     function printMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit, maxAngularVelElement) {
         const maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit).toFixed(0);
         maxAngularVelElement.text(maxAngularVel);
@@ -1441,86 +1439,7 @@ TABS.pid_tuning.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        // Local cache of current rates
-        self.currentRates = {
-            roll_rate:     FC.RC_TUNING.roll_rate,
-            pitch_rate:    FC.RC_TUNING.pitch_rate,
-            yaw_rate:      FC.RC_TUNING.yaw_rate,
-            rc_rate:       FC.RC_TUNING.RC_RATE,
-            rc_rate_yaw:   FC.RC_TUNING.rcYawRate,
-            rc_expo:       FC.RC_TUNING.RC_EXPO,
-            rc_yaw_expo:   FC.RC_TUNING.RC_YAW_EXPO,
-            rc_rate_pitch: FC.RC_TUNING.rcPitchRate,
-            rc_pitch_expo: FC.RC_TUNING.RC_PITCH_EXPO,
-            superexpo:   FC.FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
-            deadband: FC.RC_DEADBAND_CONFIG.deadband,
-            yawDeadband: FC.RC_DEADBAND_CONFIG.yaw_deadband,
-            roll_rate_limit:   FC.RC_TUNING.roll_rate_limit,
-            pitch_rate_limit:  FC.RC_TUNING.pitch_rate_limit,
-            yaw_rate_limit:    FC.RC_TUNING.yaw_rate_limit,
-        };
-
-        if (semver.lt(FC.CONFIG.apiVersion, "1.7.0")) {
-            self.currentRates.roll_rate = FC.RC_TUNING.roll_pitch_rate;
-            self.currentRates.pitch_rate = FC.RC_TUNING.roll_pitch_rate;
-        }
-
-        if (semver.lt(FC.CONFIG.apiVersion, "1.16.0")) {
-            self.currentRates.rc_rate_yaw = self.currentRates.rc_rate;
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            self.currentRates.superexpo = true;
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            $('.pid_tuning input[name="sensitivity"]').hide();
-            $('.pid_tuning .levelSensitivityHeader').empty();
-        }
-
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-            self.currentRates.rc_rate_pitch = self.currentRates.rc_rate;
-            self.currentRates.rc_expo_pitch = self.currentRates.rc_expo;
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            switch(FC.RC_TUNING.rates_type) {
-                case self.RATES_TYPE.RACEFLIGHT:
-                    self.currentRates.roll_rate *= 100;
-                    self.currentRates.pitch_rate *= 100;
-                    self.currentRates.yaw_rate *= 100;
-                    self.currentRates.rc_rate *= 1000;
-                    self.currentRates.rc_rate_yaw *= 1000;
-                    self.currentRates.rc_rate_pitch *= 1000;
-                    self.currentRates.rc_expo *= 100;
-                    self.currentRates.rc_yaw_expo *= 100;
-                    self.currentRates.rc_pitch_expo *= 100;
-
-                    break;
-
-                case self.RATES_TYPE.ACTUAL:
-                    self.currentRates.roll_rate *= 1000;
-                    self.currentRates.pitch_rate *= 1000;
-                    self.currentRates.yaw_rate *= 1000;
-                    self.currentRates.rc_rate *= 1000;
-                    self.currentRates.rc_rate_yaw *= 1000;
-                    self.currentRates.rc_rate_pitch *= 1000;
-
-                    break;
-
-                case self.RATES_TYPE.QUICKRATES:
-                    self.currentRates.roll_rate *= 1000;
-                    self.currentRates.pitch_rate *= 1000;
-                    self.currentRates.yaw_rate *= 1000;
-
-                    break;
-
-                // add future rates types here
-                default: // BetaFlight
-
-                    break;
-            }
-        }
+        self.currentRates = self.rateCurve.getCurrentRates();
 
         $('.tab-pid_tuning .tab-container .pid').on('click', () => activateSubtab('pid'));
 
@@ -1639,6 +1558,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
                         $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', 'false');
                         FC.CONFIG.rateProfile = self.currentRateProfile;
+                        self.currentRates = self.rateCurve.getCurrentRates();
 
                         GUI.log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
                     });
@@ -3048,6 +2968,10 @@ TABS.pid_tuning.changeRatesType = function(rateTypeID) {
             self.changeRatesSystem(false);
             self.previousRatesType = self.currentRatesType;
             dialogRatesType.close();
+
+            FC.RC_TUNING.rates_type = self.currentRatesType;
+            self.currentRates = self.rateCurve.getCurrentRates();
+
         });
     }
 
@@ -3091,8 +3015,8 @@ TABS.pid_tuning.changeRatesSystem = function(sameType) {
         rc_yaw_expo_e.val(FC.RC_TUNING.RC_YAW_EXPO.toFixed(2));
     }
 
-    switch(self.currentRatesType) {
-        case self.RATES_TYPE.RACEFLIGHT:
+    switch (self.currentRatesType) {
+        case FC.RATES_TYPE.RACEFLIGHT:
             rcRateLabel.text(i18n.getMessage("pidTuningRcRateRaceflight"));
             rateLabel.text(i18n.getMessage("pidTuningRateRaceflight"));
             rcExpoLabel.text(i18n.getMessage("pidTuningRcExpoRaceflight"));
@@ -3123,7 +3047,7 @@ TABS.pid_tuning.changeRatesSystem = function(sameType) {
 
             break;
 
-        case self.RATES_TYPE.KISS:
+        case FC.RATES_TYPE.KISS:
             rcRateLabel.text(i18n.getMessage("pidTuningRcRate"));
             rateLabel.text(i18n.getMessage("pidTuningRcRateRaceflight"));
             rcExpoLabel.text(i18n.getMessage("pidTuningRcExpoKISS"));
@@ -3132,7 +3056,7 @@ TABS.pid_tuning.changeRatesSystem = function(sameType) {
 
             break;
 
-        case self.RATES_TYPE.ACTUAL:
+        case FC.RATES_TYPE.ACTUAL:
             rcRateLabel.text(i18n.getMessage("pidTuningRcRateActual"));
             rateLabel.text(i18n.getMessage("pidTuningRateQuickRates"));
             rcExpoLabel.text(i18n.getMessage("pidTuningRcExpoRaceflight"));
@@ -3162,7 +3086,7 @@ TABS.pid_tuning.changeRatesSystem = function(sameType) {
 
             break;
 
-        case self.RATES_TYPE.QUICKRATES:
+        case FC.RATES_TYPE.QUICKRATES:
             rcRateLabel.text(i18n.getMessage("pidTuningRcRate"));
             rateLabel.text(i18n.getMessage("pidTuningRateQuickRates"));
             rcExpoLabel.text(i18n.getMessage("pidTuningRcExpoRaceflight"));
@@ -3213,23 +3137,23 @@ TABS.pid_tuning.changeRatesTypeLogo = function() {
 
     const ratesLogoElement = $('.rates_type img[id="ratesLogo"]');
 
-    switch(self.currentRatesType) {
-        case self.RATES_TYPE.RACEFLIGHT:
+    switch (self.currentRatesType) {
+        case FC.RATES_TYPE.RACEFLIGHT:
             ratesLogoElement.attr("src", "./images/rate_logos/raceflight.svg");
 
             break;
 
-        case self.RATES_TYPE.KISS:
+        case FC.RATES_TYPE.KISS:
             ratesLogoElement.attr("src", "./images/rate_logos/kiss.svg");
 
             break;
 
-        case self.RATES_TYPE.ACTUAL:
+        case FC.RATES_TYPE.ACTUAL:
             ratesLogoElement.attr("src", "./images/rate_logos/actual.svg");
 
             break;
 
-        case self.RATES_TYPE.QUICKRATES:
+        case FC.RATES_TYPE.QUICKRATES:
             ratesLogoElement.attr("src", "./images/rate_logos/quickrates.svg");
 
             break;
