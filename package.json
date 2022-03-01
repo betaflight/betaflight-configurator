@@ -54,6 +54,7 @@
     "@panter/vue-i18next": "^0.15.2",
     "bluebird": "^3.7.2",
     "djv": "^2.1.4",
+    "dompurify": "^2.3.6",
     "i18next": "^19.0.0",
     "i18next-xhr-backend": "^3.2.2",
     "inflection": "^1.12.0",

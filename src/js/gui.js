@@ -500,7 +500,6 @@ GuiControl.prototype.saveToTextFileDialog = function(textToSave, suggestedFileNa
     });
 };
 
-
 GuiControl.prototype._saveToTextFileDialogFileSelected = function(entry, textToSave, resolve, reject) {
     checkChromeRuntimeError();
 
@@ -533,7 +532,6 @@ GuiControl.prototype._saveToTextFileDialogFileSelected = function(entry, textToS
     });
 };
 
-
 GuiControl.prototype.readTextFileDialog = function(extension) {
     const accepts = [{ description: `${extension.toUpperCase()} files`, extensions: [extension] }];
 
@@ -560,7 +558,6 @@ GuiControl.prototype.readTextFileDialog = function(extension) {
     });
 };
 
-
 GuiControl.prototype.escapeHtml = function(unsafe) {
     return unsafe
         .replace(/&/g, "&amp;")
@@ -568,6 +565,12 @@ GuiControl.prototype.escapeHtml = function(unsafe) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+};
+
+GuiControl.prototype.addLinksTargetBlank = function(element) {
+    element.find('a').each(function() {
+        $(this).attr('target', '_blank');
+    });
 };
 
 // initialize object into GUI variable

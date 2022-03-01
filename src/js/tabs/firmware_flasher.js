@@ -84,10 +84,9 @@ firmware_flasher.initialize = function (callback) {
 
             let formattedNotes = summary.notes.replace(/#(\d+)/g, '[#$1](https://github.com/betaflight/betaflight/pull/$1)');
             formattedNotes = marked.parse(formattedNotes);
+            formattedNotes = DOMPurify.sanitize(formattedNotes);
             $('div.release_info .notes').html(formattedNotes);
-            $('div.release_info .notes').find('a').each(function() {
-                $(this).attr('target', '_blank');
-            });
+            GUI.addLinksTargetBlank($('div.release_info .notes'));
 
             if (self.releases) {
                 $('div.release_info').slideDown();

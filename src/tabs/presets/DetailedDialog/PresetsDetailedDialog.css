@@ -41,6 +41,39 @@
     user-select: text;
 }
 
+#presets_detailed_dialog_html_description {
+    white-space: normal;
+}
+
+#presets_detailed_dialog_html_description h1, h2 {
+    padding-top: 10px;
+    padding-bottom: 3px;
+}
+
+#presets_detailed_dialog_html_description h3 {
+    padding-top: 5px;
+    padding-bottom: 0px;
+}
+
+#presets_detailed_dialog_html_description h4, h5, h6 {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+#presets_detailed_dialog_html_description ul, ol {
+    padding-left: 25px;
+}
+
+#presets_detailed_dialog_html_description ul li {
+    padding-left: 12px;
+    list-style-type: disclosure-closed;
+}
+
+#presets_detailed_dialog_html_description ol li {
+    padding-left: 12px;
+    list-style-type: decimal;
+}
+
 #presets_detailed_dialog_properties {
     height: 360px;
 }
