@@ -6,7 +6,7 @@ class PresetParser {
     }
 
     readPresetProperties(preset, strings) {
-        const propertiesToRead = ["description", "discussion", "warning", "disclaimer", "include_warning", "include_disclaimer", "discussion", "force_options_review"];
+        const propertiesToRead = ["description", "discussion", "warning", "disclaimer", "include_warning", "include_disclaimer", "discussion", "force_options_review", "parser"];
         const propertiesMetadata = {};
         preset.options = [];
 
@@ -113,9 +113,17 @@ class PresetParser {
             case this._settings.MetadataTypes.BOOLEAN:
                 this._processBooleanProperty(preset, line, propertyName);
                 break;
+            case this._settings.MetadataTypes.PARSER:
+                this._processParserProperty(preset, line, propertyName);
+                break;
             default:
                 this.console.err(`Parcing preset: unknown property type '${this._settings.presetsFileMetadata[property].type}' for the property '${propertyName}'`);
         }
+    }
+
+    _processParserProperty(preset, line, propertyName)
+    {
+        preset[propertyName] = line;
     }
 
     _processBooleanProperty(preset, line, propertyName) {

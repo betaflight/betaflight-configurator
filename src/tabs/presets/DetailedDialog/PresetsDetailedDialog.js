@@ -7,6 +7,7 @@ class PresetsDetailedDialog {
         this._finalDialogYesNoSettings = {};
         this._onPresetPickedCallback = onPresetPickedCallback;
         this._openPromiseResolve = undefined;
+        this._isDescriptionHtml = false;
     }
 
     load() {
@@ -57,7 +58,7 @@ class PresetsDetailedDialog {
     }
 
     _loadPresetUi() {
-        this._domDescription.text(this._preset.description?.join("\n"));
+        this._loadDescription();
 
         this._domGitHubLink.attr("href", this._presetsRepo.getPresetOnlineLink(this._preset));
 
@@ -74,6 +75,24 @@ class PresetsDetailedDialog {
         this._loadOptionsSelect();
         this._updateFinalCliText();
         this._showCliText(false);
+    }
+
+    _loadDescription() {
+        let text = this._preset.description?.join("\n");
+
+        switch(this._preset.parser) {
+            case "MARKED":
+                this._isDescriptionHtml = true;
+                text = marked.parse(text);
+                text = DOMPurify.sanitize(text);
+                this._domDescriptionHtml.html(text);
+                GUI.addLinksTargetBlank(this._domDescriptionHtml);
+                break;
+            default:
+                this._isDescriptionHtml = false;
+                this._domDescriptionText.text(text);
+                break;
+        }
     }
 
     _updateFinalCliText() {
@@ -107,7 +126,8 @@ class PresetsDetailedDialog {
         this._domError = $('#presets_detailed_dialog_error');
         this._domProperties = $('#presets_detailed_dialog_properties');
         this._titlePanel = $('.preset_detailed_dialog_title_panel');
-        this._domDescription = $('#presets_detailed_dialog_text_description');
+        this._domDescriptionText = $('#presets_detailed_dialog_text_description');
+        this._domDescriptionHtml = $('#presets_detailed_dialog_html_description');
         this._domCliText = $('#presets_detailed_dialog_text_cli');
         this._domGitHubLink = this._domDialog.find('#presets_open_online');
         this._domDiscussionLink = this._domDialog.find('#presets_open_discussion');
@@ -118,7 +138,8 @@ class PresetsDetailedDialog {
     }
 
     _showCliText(value) {
-        this._domDescription.toggle(!value);
+        this._domDescriptionText.toggle(!value && !this._isDescriptionHtml);
+        this._domDescriptionHtml.toggle(!value && this._isDescriptionHtml);
         this._domCliText.toggle(value);
         this._domButtonCliShow.toggle(!value);
         this._domButtonCliHide.toggle(value);
