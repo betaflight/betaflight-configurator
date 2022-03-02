@@ -830,6 +830,8 @@ function update_dataflash_global() {
 function reinitializeConnection(originatorTab, callback) {
 
     // Close connection gracefully if it still exists.
+    const previousTimeStamp = connectionTimestamp;
+
     if (serial.connectionId) {
         if (GUI.connected_to || GUI.connecting_to) {
             $('a.connect').trigger('click');
@@ -840,19 +842,25 @@ function reinitializeConnection(originatorTab, callback) {
 
     GUI.log(i18n.getMessage('deviceRebooting'));
 
-    let connectionTimeout = 200;
-    const result = ConfigStorage.get('connectionTimeout');
+    let attempts = 0;
+    const reconnect = setInterval(waitforSerial, 100);
 
-    if (result.connectionTimeout) {
-        connectionTimeout = result.connectionTimeout;
+    function waitforSerial() {
+        if (connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) {
+            console.log(`Serial connection available after ${attempts / 10} seconds`);
+            clearInterval(reconnect);
+            MSP.promise(MSPCodes.MSP_STATUS).then(() => {
+                GUI.log(i18n.getMessage('deviceReady'));
+                originatorTab.initialize(false, $('#content').scrollTop());
+                callback?.();
+            });
+        } else {
+            attempts++;
+            if (attempts > 100) {
+                clearInterval(reconnect);
+                console.log(`failed to get serial connection, gave up after 10 seconds`);
+                GUI.log(i18n.getMessage('serialPortOpenFail'));
+            }
+        }
     }
-
-    setTimeout(() => {
-        MSP.send_message(MSPCodes.MSP_STATUS, false, false, () => {
-            GUI.log(i18n.getMessage('deviceReady'));
-            originatorTab.initialize(false, $('#content').scrollTop());
-        });
-
-        callback?.();
-    }, connectionTimeout);
 }
