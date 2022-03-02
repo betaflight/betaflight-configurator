@@ -22,6 +22,19 @@ firmware_flasher.initialize = function (callback) {
         GUI.active_tab = 'firmware_flasher';
     }
 
+    // On Windows we need to unset the font-size for select2
+    if (GUI.operating_system === "Windows") {
+        const styles = `
+        .tab-firmware_flasher .select2,
+        .tab-firmware_flasher .cf_table {
+            font-size: unset;
+        }
+        `;
+        const stylesheet = document.createElement("style");
+        stylesheet.innerText = styles;
+        document.head.appendChild(stylesheet);
+    }
+
     self.selectedBoard = undefined;
     self.localFirmwareLoaded = false;
     self.isConfigLocal = false;

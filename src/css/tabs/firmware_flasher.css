@@ -123,11 +123,6 @@
     font-weight: bold;
 }
 
-.tab-firmware_flasher .select2,
-.tab-firmware_flasher .cf_table {
-    font-size: unset;
-}
-
 .tab-firmware_flasher .cf_table td:last-child {
     text-align: left;
 }
