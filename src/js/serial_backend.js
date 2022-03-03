@@ -491,7 +491,7 @@ function connectCli() {
     $('#tabs .tab_cli a').click();
 }
 
-function onConnect() {
+async function onConnect() {
     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
         $('div#flashbutton a.flash_state').removeClass('active');
         $('div#flashbutton a.flash').removeClass('active');
@@ -532,13 +532,12 @@ function onConnect() {
 
         $('#tabs ul.mode-connected').show();
 
-        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
+        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-            MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
+            await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
         }
-        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
-        MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
-
+        await MSP.promise(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32) ? MSPCodes.MSP_STATUS_EX : MSPCodes.MSP_STATUS);
+        await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
         if (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) {
             startLiveDataRefreshTimer();
         }
@@ -686,10 +685,10 @@ function have_sensor(sensors_detected, sensor_code) {
 
 function startLiveDataRefreshTimer() {
     // live data refresh
-    GUI.timeout_add('data_refresh', function () { update_live_status(); }, 100);
+    GUI.timeout_add('data_refresh', update_live_status, 100);
 }
 
-function update_live_status() {
+async function update_live_status() {
 
     const statuswrapper = $('#quad-status_wrapper');
 
@@ -698,75 +697,54 @@ function update_live_status() {
     });
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
-        MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
-        } else {
-            MSP.send_message(MSPCodes.MSP_STATUS, false, false);
-        }
-        MSP.send_message(MSPCodes.MSP_ANALOG, false, false);
-    }
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await MSP.promise(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32) ? MSPCodes.MSP_STATUS_EX : MSPCodes.MSP_STATUS);
+        await MSP.promise(MSPCodes.MSP_ANALOG);
 
-    const active = ((Date.now() - FC.ANALOG.last_received_timestamp) < 300);
+        const active = ((Date.now() - FC.ANALOG.last_received_timestamp) < 300);
 
-    for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-        if (FC.AUX_CONFIG[i] === 'ARM') {
-            if (bit_check(FC.CONFIG.mode, i)) {
-                $(".armedicon").addClass('active');
-            } else {
-                $(".armedicon").removeClass('active');
+        for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
+            if (FC.AUX_CONFIG[i] === 'ARM') {
+                $(".armedicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
+            }
+            if (FC.AUX_CONFIG[i] === 'FAILSAFE') {
+                $(".failsafeicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
             }
         }
-        if (FC.AUX_CONFIG[i] === 'FAILSAFE') {
-            if (bit_check(FC.CONFIG.mode, i)) {
-                $(".failsafeicon").addClass('active');
+
+        if (FC.ANALOG != undefined) {
+            let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
+
+            if (FC.ANALOG.voltage == 0) {
+                    nbCells = 1;
+            }
+
+            const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
+            const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
+            const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
+
+            const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
+
+            if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
+                $(".battery-status").addClass('state-empty').removeClass('state-ok').removeClass('state-warning');
+                $(".battery-status").css({ width: "100%" });
             } else {
-                $(".failsafeicon").removeClass('active');
+                $(".battery-status").css({ width: `${((FC.ANALOG.voltage - min) / (max - min) * 100)}%` });
+
+                if (FC.ANALOG.voltage < warn) {
+                    $(".battery-status").addClass('state-warning').removeClass('state-empty').removeClass('state-ok');
+                } else  {
+                    $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
+                }
             }
         }
+
+        $(".linkicon").toggleClass('active', active);
+
+        statuswrapper.show();
+        GUI.timeout_remove('data_refresh');
+        startLiveDataRefreshTimer();
     }
-
-    if (FC.ANALOG != undefined) {
-        let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
-
-        if (FC.ANALOG.voltage == 0) {
-               nbCells = 1;
-        }
-
-       const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
-       const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
-       const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
-
-       const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
-
-       if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
-           $(".battery-status").addClass('state-empty').removeClass('state-ok').removeClass('state-warning');
-           $(".battery-status").css({
-               width: "100%",
-           });
-       } else {
-           $(".battery-status").css({
-               width: `${((FC.ANALOG.voltage - min) / (max - min) * 100)}%`,
-           });
-
-           if (FC.ANALOG.voltage < warn) {
-               $(".battery-status").addClass('state-warning').removeClass('state-empty').removeClass('state-ok');
-           } else  {
-               $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
-           }
-       }
-
-    }
-
-    if (active) {
-        $(".linkicon").addClass('active');
-    } else {
-        $(".linkicon").removeClass('active');
-    }
-
-    statuswrapper.show();
-    GUI.timeout_remove('data_refresh');
-    startLiveDataRefreshTimer();
 }
 
 function specificByte(num, pos) {
@@ -846,15 +824,14 @@ function reinitializeConnection(originatorTab, callback) {
     let attempts = 0;
     const reconnect = setInterval(waitforSerial, 100);
 
-    function waitforSerial() {
+    async function waitforSerial() {
         if (connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) {
             console.log(`Serial connection available after ${attempts / 10} seconds`);
             clearInterval(reconnect);
-            MSP.promise(MSPCodes.MSP_STATUS).then(() => {
-                GUI.log(i18n.getMessage('deviceReady'));
-                originatorTab.initialize(false, $('#content').scrollTop());
-                callback?.();
-            });
+            await MSP.promise(MSPCodes.MSP_STATUS);
+            GUI.log(i18n.getMessage('deviceReady'));
+            originatorTab.initialize(false, $('#content').scrollTop());
+            callback?.();
         } else {
             attempts++;
             if (attempts > 100) {

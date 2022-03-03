@@ -1436,6 +1436,7 @@ TABS.pid_tuning.initialize = function (callback) {
     function process_html() {
         TABS.pid_tuning.isHtmlProcessing = true;
         FC.FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
+        self.checkUpdateProfile(false);
 
         if (semver.lt(FC.CONFIG.apiVersion, "1.16.0") || semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
             $('.tab-pid_tuning .pidTuningSuperexpoRates').hide();

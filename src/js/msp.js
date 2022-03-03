@@ -50,6 +50,10 @@ const MSP = {
     packet_error:               0,
     unsupported:                0,
 
+    MIN_TIMEOUT:                250,
+    MAX_TIMEOUT:                2000,
+    timeout:                    250,
+
     last_received_timestamp:   null,
     listeners:                  [],
 
@@ -318,25 +322,27 @@ const MSP = {
             if (callback_msp) {
                 callback_msp();
             }
-            return;
+            return false;
         }
 
         if (code === undefined || !serial.connectionId) {
-            return;
+            return false;
         }
 
-        let bufferOut;
-        if (code <= 254) {
-            bufferOut = this.encode_message_v1(code, data);
-        } else {
-            bufferOut = this.encode_message_v2(code, data);
-        }
-
-        const obj = {'code': code, 'requestBuffer': bufferOut, 'callback': callback_msp ? callback_msp : false, 'timer': false, 'callbackOnError': doCallbackOnError};
+        const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
+        const obj = {
+            'code': code,
+            'requestBuffer': bufferOut,
+            'callback': callback_msp ? callback_msp : false,
+            'timer': false,
+            'callbackOnError': doCallbackOnError,
+            'start': performance.now(),
+        };
 
         let requestExists = false;
-        for (const value of MSP.callbacks) {
-            if (value.code === code) {
+
+        for (const instance of MSP.callbacks) {
+            if (instance.code === code) {
                 // request already exist, we will just attach
                 requestExists = true;
                 break;
@@ -345,18 +351,26 @@ const MSP = {
 
         if (!requestExists) {
             obj.timer = setInterval(function () {
-                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab}`);
+                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout}`);
+                serial.send(bufferOut, function (_sendInfo) {
+                    obj.stop = performance.now();
+                    const executionTime = Math.round(obj.stop - obj.start);
+                    MSP.timeout = Math.max(MSP.MIN_TIMEOUT, Math.min(executionTime, MSP.MAX_TIMEOUT));
+                });
 
-                serial.send(bufferOut, false);
-            }, 1000); // we should be able to define timeout in the future
+            }, MSP.timeout);
         }
 
         MSP.callbacks.push(obj);
 
         // always send messages with data payload (even when there is a message already in the queue)
         if (data || !requestExists) {
+            if (MSP.timeout > MSP.MIN_TIMEOUT) {
+                MSP.timeout--;
+            }
+
             serial.send(bufferOut, function (sendInfo) {
-                if (sendInfo.bytesSent == bufferOut.byteLength) {
+                if (sendInfo.bytesSent === bufferOut.byteLength) {
                     if (callback_sent) {
                         callback_sent();
                     }
@@ -370,17 +384,18 @@ const MSP = {
     /**
      * resolves: {command: code, data: data, length: message_length}
      */
-    promise: function(code, data) {
-      const self = this;
-      return new Promise(function(resolve) {
-        self.send_message(code, data, false, function(_data) {
-          resolve(_data);
+    promise: async function(code, data) {
+        const self = this;
+
+        return new Promise(function(resolve) {
+            self.send_message(code, data, false, function(_data) {
+                resolve(_data);
+            });
         });
-      });
     },
     callbacks_cleanup: function () {
-        for (let index = 0; index < this.callbacks.length; index++) {
-            clearInterval(this.callbacks[index].timer);
+        for (const callback of this.callbacks) {
+            clearInterval(callback.timer);
         }
 
         this.callbacks = [];

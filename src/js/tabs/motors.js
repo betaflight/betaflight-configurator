@@ -585,9 +585,11 @@ TABS.motors.initialize = async function (callback) {
 
         // Amperage
         function power_data_pull() {
-            motorVoltage.text(i18n.getMessage('motorsVoltageValue', [FC.ANALOG.voltage]));
-            motorMahDrawingElement.text(i18n.getMessage('motorsADrawingValue', [FC.ANALOG.amperage.toFixed(2)]));
-            motorMahDrawnElement.text(i18n.getMessage('motorsmAhDrawnValue', [FC.ANALOG.mAhdrawn]));
+            if (FC.ANALOG.last_received_timestamp) {
+                motorVoltage.text(i18n.getMessage('motorsVoltageValue', [FC.ANALOG.voltage]));
+                motorMahDrawingElement.text(i18n.getMessage('motorsADrawingValue', [FC.ANALOG.amperage.toFixed(2)]));
+                motorMahDrawnElement.text(i18n.getMessage('motorsmAhDrawnValue', [FC.ANALOG.mAhdrawn]));
+            }
         }
 
         GUI.interval_add('motors_power_data_pull_slow', power_data_pull, 250, true); // 4 fps
