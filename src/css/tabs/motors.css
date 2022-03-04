@@ -8,9 +8,9 @@
     border: 1px solid var(--subtleAccent);
     width: fit-content;
     height: 20px;
-    float: left;
     margin-right: 55px;
     border-radius: 3px;
+    min-width: 150px;
 }
 
 .tab-motors table {
@@ -59,7 +59,7 @@
 .tab-motors .mixerPreview img {
     width: 150px;
     height: 150px;
-    margin-left: 18px;
+    margin-left: 10px;
 }
 
 .tab-motors select .escprotocol {
@@ -156,6 +156,18 @@
     padding-bottom: 10px;
     float: left;
     width: calc(100% - 20px);
+}
+
+.tab-motors .spacer_box.mixer_settings {
+    padding-bottom: 0px;
+}
+
+.tab-motors .motor_direction_reversed {
+    padding-top: 10px;
+}
+
+.tab-motors .motor_tool_buttons {
+    padding-left: 10px;
 }
 
 .tab-motors .disarm {
