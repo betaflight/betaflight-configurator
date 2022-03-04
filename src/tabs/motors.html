@@ -16,10 +16,17 @@
                             <div class="gui_box_titlebar">
                                 <div class="spacer_box_title" i18n="configurationMixer"></div>
                             </div>
-                            <div class="spacer_box">
+                            <div class="spacer_box mixer_settings">
                                 <select class="mixerList" id="mixer">
                                     <!-- list generated here -->
                                 </select>
+                                <div class="motor_direction_reversed">
+                                    <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                                        <input type="checkbox" id="reverseMotorSwitch" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationReverseMotorSwitch"></span>
+                                    <div class="helpicon cf_tip" i18n_title="configurationReverseMotorSwitchHelp"></div>
+                                </div>
                             </div>
                             <div class="grid-row">
                                 <div class="grid-col col6">
@@ -28,14 +35,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="spacer_box reverseMotor">
-                                <div class="topBorderLine">
-                                    <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
-                                        <input type="checkbox" id="reverseMotorSwitch" class="toggle" />
-                                    </div>
-                                    <span class="freelabel" i18n="configurationReverseMotorSwitch"></span>
-                                    <div class="helpicon cf_tip" i18n_title="configurationReverseMotorSwitchHelp"></div>
-                                </div>
+                            <div class="btn motor_tool_buttons">
+                                <a href="#" id="motorOutputReorderDialogOpen" class="tool regular-button" i18n="motorOutputReorderDialogOpen"></a>
+                                <a href="#" id="escDshotDirectionDialog-Open" class="tool regular-button" i18n="escDshotDirectionDialog-Open"></a>
                             </div>
                         </div>
                     </div>
@@ -362,11 +364,6 @@
 
         <div class="content_toolbar">
             <div class="btn">
-                <a href="#" id="motorOutputReorderDialogOpen" class="tool regular-button" i18n="motorOutputReorderDialogOpen"></a>
-                <a href="#" id="escDshotDirectionDialog-Open" class="tool regular-button" i18n="escDshotDirectionDialog-Open"></a>
-            </div>
-
-            <div class="btn">
                 <a class="save disabled" href="#" i18n="motorsButtonSave"></a>
             </div>
         </div>
@@ -409,5 +406,4 @@
             <a href="#" id="escDshotDirectionDialog-closebtn" class="regular-button right" i18n="close"></a>
         </div>
     </dialog>
-  
 </div>
