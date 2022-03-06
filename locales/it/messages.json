@@ -102,6 +102,14 @@
         "message": "Imposta il timeout della connessione per consentire una inizializzazione più lunga durante il plugin o il riavvio",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "showAllSerialDevices": {
+        "message": "Mostra tutti i dispositivi seriali (per produttori o sviluppatori)",
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "showVirtualMode": {
+        "message": "Abilita modalità di connessione virtuale",
+        "description": "Text for the option to enable or disable the virtual FC"
+    },
     "cordovaForceComputerUI": {
         "message": "Usa l'interfaccia computer invece dell'interfaccia telefono"
     },
@@ -573,6 +581,9 @@
     "dfu_device_flash_info": {
         "message": "Rilevato dispositivo con capacità flash totale di $1 KiB"
     },
+    "dfu_hex_address_errors": {
+        "message": "<span class=\"message-negative\">Errore</span>: L'immagine del firmware contiene indirizzi non trovati sul dispositivo di destinazione"
+    },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Errore</span>: L'immagine è troppo grande per la capacità disponibile sul chip! Immagine: $1 KiB, limite = $2 KiB"
     },
@@ -585,6 +596,9 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
+    "defaultWelcomeText": {
+        "message": "L'applicazione supporta tutto l'hardware che può eseguire Betaflight. Controlla la scheda per il flash per una lista completa dell'hardware.<br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica il Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica gli script LUA di Betaflight per la trasmittente</a><br /><br />Il codice sorgente del firmware può essere scaricato da <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br /><br />Gli ultimi <b>Driver USB STM VCP</b> possono essere scaricati da <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br />Per hardware obsoleti che usano un chip USB-seriale CP210x:<br />gli ultimi <b>driver CP210x</b>possono essere scaricati da <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br />L'ultima versione di <b>Zadig</b> per l'installazione dei driver Windows USB può essere scaricata da <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br /><b>ImpulseRC Driver Fixer</b> può essere scaricato da <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">qui</a>"
+    },
     "defaultContributingHead": {
         "message": "Contribuisci"
     },
@@ -593,6 +607,9 @@
     },
     "defaultFacebookText": {
         "message": "Abbiamo anche un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">gruppo Facebook</a>.<br /> Unisciti a noi per discutere di Betaflight, fare domande riguardo la configurazione, o semplicemente ritrovarti con altri piloti."
+    },
+    "defaultDiscordText": {
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Server Discord</a> di Betaflight.<br />Condividi la tua esperienza di volo, parla di Betaflight, aiuta altre persone o ottieni aiuto dalla community."
     },
     "defaultChangelogHead": {
         "message": "Configuratore - Registro Modifiche"
@@ -682,8 +699,17 @@
     "initialSetupResetText": {
         "message": "Ripristina i settaggi <strong>predefiniti</strong>"
     },
+    "initialSetupButtonBackup": {
+        "message": "Backup JSON"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Ripristino JSON"
+    },
     "initialSetupButtonRebootBootloader": {
         "message": "Attiva Boot Loader / DFU"
+    },
+    "initialSetupBackupRestoreHeader": {
+        "message": "Backup e Ripristino sperimentali"
     },
     "initialSetupBackupRestoreText": {
         "message": "Effettua un <strong>backup</strong> della tua configurazione in caso di incidente. Le impostazioni <strong>CLI</strong> <span class=\"message-negative\">NON</span> sono incluse - usa il comando 'diff all' nella CLI per salvarli."
@@ -925,11 +951,17 @@
     "featureNone": {
         "message": "&lt;Seleziona Uno&gt;"
     },
+    "featureRX_PPM": {
+        "message": "PPM/CPPM (singolo filo)"
+    },
     "featureVBAT": {
         "message": "Monitoraggio tensione batteria"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibrazione livello in volo"
+    },
+    "featureRX_SERIAL": {
+        "message": "Seriale (via UART)"
     },
     "featureMOTOR_STOP": {
         "message": "Non far girare i motori quando armato"
@@ -964,6 +996,12 @@
     "feature3D": {
         "message": "Modalità 3D (da utilizzare con ESCs reversibili)"
     },
+    "featureRX_PARALLEL_PWM": {
+        "message": "PWM (un cavo per canale)"
+    },
+    "featureRX_MSP": {
+        "message": "MSP (controllo via porta MSP)"
+    },
     "featureRSSI_ADC": {
         "message": "Input analogico RSSI"
     },
@@ -987,6 +1025,9 @@
     },
     "featureBLACKBOXTip": {
         "message": "Configura tramite la schermata BlackBox dopo l'abilitazione."
+    },
+    "featureRX_SPI": {
+        "message": "Rx SPI (es. Rx integrato)"
     },
     "featureESC_SENSOR": {
         "message": "Usa la telemetria KISS/BLHeli_32 ESC <b>su un filo separato</b>"
@@ -1014,6 +1055,9 @@
     },
     "featureVTX": {
         "message": "Trasmettitore Video"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "Abilita permanentemente"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Se questo è disabilitato, la modalità 'ANTI GRAVITY' può essere utilizzata per abilitare Anti Gravity con un interruttore."
@@ -1065,6 +1109,9 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Nota:</strong> Non tutte le combinazioni di funzionalità sono valide. Quando il firmware del controllore di volo rileva delle combinazioni di funzionalità in conflitto queste funzionalità vengono disabilitate.<br /><strong>Nota:</strong> Configura le porte seriali <span class=\"message-negative\">prima</span> di abilitare le funzionalità che utilizzano le porte."
+    },
+    "configurationSerialRXHelp": {
+        "message": "&#8226; La UART per la ricevente deve essere impostata su ‘Rx Seriale’ (nella scheda <i>Porte</i>)<br>&#8226; Seleziona il formato dati corretto dalla tendina qui sotto:"
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:</strong> il provider SPI RX funzionerà solo se l'hardware necessario è incluso nella scheda o se collegato ad un bus SPI."
@@ -1146,6 +1193,15 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "L'armamento dei motori è sempre disabilitato quando lo stick del gas non è abbassato. Fai attenzione in quanto potresti disarmare accidentalmente con un interruttore quando voli con questa opzione attiva."
+    },
+    "configurationDigitalIdlePercent": {
+        "message": "Idle Motore (%, statico)"
+    },
+    "configurationDigitalIdlePercentDisabled": {
+        "message": "L'Idle Dinamico è attivo a {{dynamicIdle}} rpm. Vedi la scheda Tuning PID."
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "Il valore 'Idle Motore (statico)' è la percentuale del gas massimo che viene inviato agli ESC quando il gas è al minimo e il modello è armato. <br><br>Aumentalo per ottenere più velocità in idle ed evitare desincronizzazioni. Un valore troppo alto renderà il modello fluttuante. Un valore troppo basso farà andare in desync i motori o renderli lenti all'avvio.<br><br>In 4.3, quando l'Idle Dinamico è attivo, il valore statico di idle non viene considerato, perché il valore è continuamente impostato per mantenere gli rpm minimi impostati sul motore più lento."
     },
     "configurationMotorPoles": {
         "message": "Poli motore",
@@ -1322,6 +1378,10 @@
         "message": "Usa Galileo",
         "description": "Option to use Galileo in the GPS configuration"
     },
+    "configurationGPSGalileoHelp": {
+        "message": "Se abilitato, il modulo GPS userà anche il sistema satellitare Galileo, risultando generalmente in più satelliti utilizzati. Su Betaflight 4.2.x o precedenti disabilita anche il sistema di aumento QZSS.",
+        "description": "Help text for the option to use Galileo in the GPS configuration"
+    },
     "configurationGPSHomeOnce": {
         "message": "Imposta il punto di partenza una sola volta",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1347,6 +1407,9 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "I valori del Notch Dinamico sono cambiati"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>ATTENZIONE: Questa modifica attiverà/disabiliterà il filtro RPM, aumentando/diminuendo il ritardo o l'efficacia del filtro.</b></span><br><br>Reimpostare i filtri di notch dinamici ai valori consigliati?"
     },
     "portsIdentifier": {
         "message": "Identificativo"
@@ -1494,16 +1557,56 @@
         "message": "Soglia",
         "description": "Anti Gravity Threshold Parameter"
     },
+    "pidTuningAntiGravityHelp": {
+        "message": "L'Anti Gravity incrementa l'I term (e, in 4.3, la P) quando vengono rilevati cambiamenti veloci di gas, aumentando la stabilità durante i colpi di gas.<br><br>Valori più alti di guadagno possono aumentare la stabilità su quad a bassa potenza o in quelli con un baricentro spostato."
+    },
+    "pidTuningDMin": {
+        "message": "<b>D</b>erivativo",
+        "description": "Table header of the D Min feature in the PIDs tab"
+    },
+    "pidTuningDMinDisabledNote": {
+        "message": "<strong>Nota:</strong> La funzione D Max è disabilitata e i suoi parametri sono nascosti. Per usare il D Max, abilitalo in $t(pidTuningPidSettings.message)."
+    },
+    "pidTuningDMinFeatureTitle": {
+        "message": "Impostazioni Damping dinamico/D Max",
+        "description": "Title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "Damping<br>Dinamico",
+        "description": "Sidebar title for the options panel for the D Max feature"
+    },
     "pidTuningDMinGain": {
         "message": "Guadagno",
         "description": "Gain of the D Max feature"
+    },
+    "pidTuningDMaxGainHelp": {
+        "message": "Il guadagno del D Max aumenta la sensibilità del sistema che aumenta la D quando il quad vira velocemente o sta oscillando nel propwash.<br><br>Valori di guadagno più alti faranno aumentare la D più velocemente rispetto a valori bassi, aumentando la D verso la D Max più rapidamente. Valori di 40 o anche 50 possono funzionare bene per build Freestyle pulite.<br><br>Valori più bassi non aumenteranno la D tranne che in manovre molto veloci e potrebbe essere utile in setup da gara minimizzando il lag della D.<br><br>ATTENZIONE: Uno tra il guadagno o l'advance devono essere sopra circa 20, altrimenti la D non aumenterà come dovrebbe. Impostando entrambi su 0 bloccherà la D al valore base.",
+        "description": "D Max feature helpicon message"
     },
     "pidTuningDMinAdvance": {
         "message": "Avanzamento",
         "description": "Advance of the D Max feature"
     },
+    "pidTuningDMaxAdvanceHelp": {
+        "message": "Il D Max Advance aggiunge sensibilità al fattore di guadagno quando gli stick vengono spostati rapidamente.<br><br>L'Advance non risponde al giroscopio o al propwash. Agisce prima del guadagno ed è occasionalmente utile per i quads a bassa potenza che tendono a ritardare molto all'inizio di una manovra.<br><br>Generalmente è meglio lasciare a zero.<br><br>ATTENZIONE: Uno tra il guadagno o l'advance devono essere sopra circa 20, altrimenti la D non aumenterà come dovrebbe. Impostando entrambi su 0 bloccherà la D al valore base.",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Max aumenta la D durante i movimenti veloci del gyro e/o degli stick.<br><br>Il fattore 'Guadagno' aumenta la D quando il quad vira rapidamente o sta oscillando in propwash. Di solito è necessario solo 'Guadagno'. <br><br>Il fattore 'Advance' aumenta la D verso il D Max durante gli input degli stick. Di solito non è necessario e dovrebbe essere impostato a zero. L'advance può essere utile per i quad a bassa potenza che tendono a dare molto overshoot.<br><br>Valori di guadagno più alti (es 40) possono essere più adatti per il freestyle, aumentandola D più facilmente.<br><br>ATTENZIONE: Uno tra il guadagno o l'advance devono essere sopra circa 20, altrimenti la D non aumenterà come dovrebbe. Impostando entrambi su 0 bloccherà la D al valore base.",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Smorzamento base di QUALSIASI movimento del modello. <br /><br />Si oppone al movimento sia causato dal movimento degli stick sia da influenze esterne (es propwash o folate di vento)<br /><br />Guadagni di D Min più alti danno una maggiore stabilità e riducono gli overshoot.<br /><br />La D amplifica il rumore (aumenta da 10x a 100x). Questo può far bruciare i motori se i guadagni sono troppo alti o la D non è ben filtrata.<br /><br />La D è un po' come l'ammortizzatore di una macchina.",
+        "description": "Derivative helpicon message on PID table titlebar"
+    },
     "pidTuningPidSettings": {
         "message": "Impostazioni del controller PID"
+    },
+    "pidTuningMotorSettings": {
+        "message": "Impostazioni gas e motore"
+    },
+    "pidTuningMiscSettings": {
+        "message": "Impostazioni Varie"
     },
     "receiverRcSmoothing": {
         "message": "RC Smoothing"
@@ -1518,6 +1621,17 @@
         "message": "Fattori automatici",
         "description": "Auto Factor parameter for RC smoothing"
     },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Regola il calcolo del fattore Auto. Il rapporto fattori-ritardo predefinito è 10. Aumentando il numero l'input RC verrà ammorbidito maggiormente, aumentando però il ritardo. Questo può essere utile per connessioni radio instabili o per voli cinematografici.<br>Con numeri che si avvicinano a 50 il ritardo nell'input diventerà evidente.<br>Usa il comando CLI rc_smoothing_info mentre TX e RX sono collegati per vedere i cutoff dello smoothing calcolati automaticamente.",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "Imposta lo smoothing RC automatico. 30 è il valore predefinito. Valori più alti filtreranno di più gli input RC - es 60 per freestyle HD o 90-120 per il volo cinematico. Nota: valori oltre 50 causeranno un ritardo apprezzabile degli stick. Valori più bassi, es 20-25, trasferiranno un po' di step dei controlli RC nei segnali del motore, aumentando di poco il calore dei motori, ma ridurrà leggermente il ritardo degli input. Questo può essere utile per le gare.",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "Tipo di taglio del Feedforward"
+    },
     "receiverRcSetpointTypeSelect": {
         "message": "Tipo di taglio del Setpoint"
     },
@@ -1531,7 +1645,7 @@
         "message": "Tipo di RC Smoothing usato"
     },
     "rcSmoothingSetpointCutoffHelp": {
-        "message": "La frequenza di cutoff in Hz usata dal filtro setpoint. Usando valori più bassi si otterranno input più regolari e più appropriati per i protocolli dei ricevitori più lenti. La maggior parte degli utenti dovrebbe lasciare questa opzione a 0 che corrisponde ad \"Auto\"."
+        "message": "La frequenza di taglio in Hz usata dal filtro setpoint. Usando valori più bassi si otterranno input più regolari e più appropriati per i protocolli dei ricevitori più lenti. La maggior parte degli utenti dovrebbe lasciare questa opzione a 0 che corrisponde ad \"Auto\"."
     },
     "rcSmoothingFeedforwardCutoffHelp": {
         "message": "La frequenza di taglio in Hz usata dal filtro feedforward. Usando valori più bassi si otterranno input più regolari e più appropriati per i protocolli dei ricevitori più lenti. La maggior parte degli utenti dovrebbe lasciare questa opzione a 0 che corrisponde ad \"Auto\"."
@@ -1553,6 +1667,9 @@
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Frequenza di taglio del setpoint"
+    },
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "Frequenza di taglio del Feedforward"
     },
     "receiverRcSetpointType": {
         "message": "Tipo Filtro Setpoint"
@@ -1614,14 +1731,29 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> L'utilizzo di un D Setpoint transition più grande di 0 e minore di 0.1 è fortemente sconsigliato. Se lo fai può portare instabilità e ridurre la risposta degli stick quando si trova in posizioni centrali.</span>"
     },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feed-<br>forward"
+    },
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "Il Feedforward regola la responsività degli stick.<br /><br />Queste opzioni consentono di regolarlo per avere una risposta degli stick immediata per le corse o morbida per voli cinematici/HD."
+    },
     "pidTuningFeedforwardJitter": {
         "message": "Riduzione Jitter"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "La riduzione del Jitter riduce il Feedforward quando gli stick si muovono lentamente, indipendentemente dalla loro posizione.<br><br>Ciò consente un volo morbido e privo di jitter quando si effettuano archi lenti, ma fornisce un feedforward massimo senza alcun ritardo quando gli stick vengono spostati rapidamente. La transizione non è necessaria e dovrebbe essere impostata su zero quando la riduzione del jitter è attiva.<br><br>Il valore di default è 7. Valori più alti, es 10-12, sono migliori per voli cinematici o HD freestyle, 5 potrebbe essere migliore per gare con link RC veloci."
     },
     "pidTuningFeedforwardSmoothFactor": {
         "message": "Fluidità"
     },
+    "pidTuningFeedforwardSmoothnessHelp": {
+        "message": "Lo smoothing del feedforward è essenziale per attenuarne il rumore.<br><br>Il valore più piccolo in grado di dare una traccia liscia è il migliore.<br><br>Il valore predefinito di 25 è buono per link RC a 50-150Hz. Per link a 250Hz usa 40-50. Per link a 500Hz usa 60-65."
+    },
     "pidTuningFeedforwardAveraging": {
         "message": "Media"
+    },
+    "pidTuningFeedforwardAveragingHelp": {
+        "message": "La Media del feedforward calcola la media degli ultimi 2 o 3 step del feedforward. Questo liscia la traccia del feedforward ma aggiunge un po' di ritardo.<br><br>È più efficace quando è presente un jitter sequenziale su/giù, più comune con i link RC più veloci.<br><br>La media a 2 punti è necessaria per link a 500Hz e link rumorosi a 250Hz, oppure per voli cinematici/HD. Il Crossfire (prima di CRSFShot) in modalità 150Hz necessita di una media a 3 punti."
     },
     "pidTuningOptionOff": {
         "message": "SPENTO"
@@ -1641,14 +1773,55 @@
     "pidTuningFeedforwardBoost": {
         "message": "Boost"
     },
+    "pidTuningFeedforwardBoostHelp": {
+        "message": "Il boost del feedforward aggiunge una spinta aggiuntiva in risposta all'accelerazione o decelerazione degli stick.<br><br>Questo minimizza il ritardo del gyro causato dal ritardo di accelerazione dei motori e riduce l'overshoot quando gli stick decelerano riducendo molto la velocità dei motori.<br><br>Il boost predefinito funziona per i più dei setup. I piloti da corsa potrebbero preferire un valore più alto. Il boost può essere finemente regolato con le analisi dei log."
+    },
     "pidTuningFeedforwardMaxRateLimit": {
         "message": "Limite Rate Massimo"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "Attenua il feedforward quando gli stick si muovono verso la deflessione massima per minimizzare l'overshoot all'inizio di flip o roll.<br><br>Non agisce alla fine di flip o roll. Valori più bassi faranno iniziare prima l'attenuazione.<br><br>Generalmente questo valore non ha bisogno di modifiche. Il valore migliore è il più alto con consistenti overshoot accettabili all'inizio di flip e roll."
     },
     "pidTuningFeedforwardTransition": {
         "message": "Transizione"
     },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Riduce linearmente il Feedforward quando gli stick sono vicini al centro.<br><br>In 4.2 e precedenti, la transizione può essere usata per dare una risposta più morbida vicino al centro degli stick.<br><br>In 4.3 la transizione non è raccomandata poiché è stata 'sostituita' dalla riduzione del jitter.<br><br>Un valore di 0 disabilita la transizione. Un valore di 0.3 porta il feedforward a zero quando gli stick sono al centro, ma incrementa al valore normale quando gli stick sono >30% dal centro."
+    },
+    "pidTuningProportional": {
+        "message": "<b>P</b>roporzionale"
+    },
+    "pidTuningProportionalHelp": {
+        "message": "Quanto strettamente il modello segue gli stick (il setpoint).<br /><br />Valori più alti (guadagno) forniscono un tracciamento più rigoroso, ma possono causare overshoot se troppo alto in proporzione a D e oscillazioni in virate con gas alto. Pensa al P-term come la molla di un ammortizzatore di una macchina.",
+        "description": "Proportional Term helpicon message on PID table titlebar"
+    },
+    "pidTuningIntegral": {
+        "message": "<b>I</b>ntegrativo"
+    },
+    "pidTuningIntegralHelp": {
+        "message": "Controlla piccole differenze persistenti.<br><br>Simile alla P ma si accumula progressivamente e lentamente finché l'errore non è zero. È importante per bias a lungo termine come un baricentro spostato o influenze esterne persistenti come il vento.<br /><br />Guadagni più alti garantiscono un tracking più stretto, specialmente nelle virate, ma possono rendere il quad più rigido.<br><br>Può causare oscillazioni lente su quad a bassa potenza o se troppo alto in rapporto alla P.",
+        "description": "Integral Term helpicon message on PID table titlebar"
+    },
     "pidTuningDerivative": {
         "message": "Derivato"
+    },
+    "pidTuningDMax": {
+        "message": "<b>D</b> Max"
+    },
+    "pidTuningDMaxHelp": {
+        "message": "Fornisce smorzamenti più forti per manovre rapide che potrebbero causare un overshoot. <br><br>Consente di avere un valore D min più basso mantenendo i motori più freddi e virare ma aumenta la D per controllare l'overshoot in flip o inversioni rapide. <br><br>Più utile per i piloti, le build rumorose o i quad a bassa potenza.",
+        "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "Controlla la forza dello smorzamento di QUALSIASI movimento del modello. Per il movimento degli stick, il D-term smorza i comandi. Per un'influenza esterna (prop wash o folata di vento) il D-term smorza l'influenza.<br><br>Guadagni più alti consentono smorzamenti maggiori e riducono gli overshoot dovuti a P-term e FF.<br>Tuttavia il D-term è MOLTO sensibile alle vibrazioni ad alta frequenza del giroscopio (rumore | lo aumenta da 10 a 100 volte).<br><br>Rumore ad alta frequenza può provocare surriscaldamento o bruciare i motori se il D-gain è troppo alto o il rumore del giroscopio non è filtrato bene (vedi la scheda Filtri).<br><br>Pensa al D-term come l'ammortizzatore di una macchina, ma con lo svantaggio di amplificare il rumore ad alta frequenza del giroscopio.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
+    "pidTuningFeedforward": {
+        "message": "<b>F</b>eedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "Un fattore aggiuntivo, derivato esclusivamente dall'input degli stick, che aiuta a spingere rapidamente il quad in movimenti veloci degli stick.<br><br>FF non può causare oscillazioni, permette una P inferiore per simili risposte di bastoni e compensa la normale opposizione di D agli input degli stick.<br><br>Valori bassi o zero si tradurranno in una risposta più fluida ma ritardata rispetto agli input degli stick.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Attenzione:</b></span> rates molto alti possono causare desincronizzazione durante decelerazioni rapide."
@@ -1728,6 +1901,12 @@
     "pidTuningControllerHead": {
         "message": "Controllore dei PID"
     },
+    "pidTuningCopyProfile": {
+        "message": "Copia profilo"
+    },
+    "pidTuningCopyRateProfile": {
+        "message": "Copia profilo rate"
+    },
     "dialogCopyProfileText": {
         "message": "Copia i valori dal profilo corrente"
     },
@@ -1745,6 +1924,9 @@
     },
     "dialogCopyProfileClose": {
         "message": "Annulla"
+    },
+    "pidTuningResetPidProfile": {
+        "message": "Resetta questo profilo"
     },
     "pidTuningPidProfileReset": {
         "message": "Caricati i valori predefiniti per l'attuale profilo PID."
@@ -1770,6 +1952,10 @@
     "tuningHelp": {
         "message": "<b>Suggerimento per la messa a punto</b><br /><span class=\"message-negative\">IMPORTANTE:</span> È importante verificare la temperatura dei motori durante i primi voli. Più alto è il valore del filtro, più dovrebbe volare meglio, ma avrai anche più rumore nei motori.<br>Il valore predefinito di 100Hz è ottimale, ma per setup più rumorosi puoi provare ad abbassare il filtro Dterm a 50Hz e possibilmente anche il filtro del giroscopio."
     },
+    "tuningHelpSliders": {
+        "message": "Usa gli slider per regolare i tuoi filtri. Gli slider devono essere disattivati per apportare modifiche manuali.<br>Muovendo gli slider a sinistra darà valori di cutoff maggiore e può migliorare il propwash, ma permetterà a più rumore di entrare nei motori, rendendoli più caldi.<br>La maggior parte delle build pulite con il filtro ROM saranno OK con lo slider del passabasso del gyro tutto a destra giroscopio, o solo con il passabasso 2 attivo e i cursori nel mezzo.<br><strong>ATTENZIONE:</strong> Sii MOLTO prudente quando sposti i cursori della D a destra! Controlla la temperatura dei motori dopo ogni cambiamento!<br><strong>Nota:</strong> La modifica dei profili cambierà solo le impostazioni del filtro Dterm. Le impostazioni del filtro del gyro sono le stesse per tutti i profili.",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Avviso:</b></span> La quantità di filtraggio che stai utilizzando è pericolosamente bassa. È probabile che ciò renda difficile il controllo del modello e che possa causare flyaway. Si consiglia vivamente di <b>abilitare almeno uno dei Passabasso Dinamico del Gyro o Passabasso 1 del Gyro e almeno uno dei D Passabasso Dinamico del D Term o Passabasso 1 del D Term</b>."
     },
@@ -1779,6 +1965,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modalità slider per tuning PID</strong><br><br>La modalità slider per tuning PID può essere:<br><br>&bull; OFF - no slider, inserisci manualmente i valori<br>&bull; RP - i cursori controllano solo Roll e Pitch, inserisci manualmente i valori Yaw<br>&bull; RPY - i cursori controllano tutti i valori PID<br><br><span class=\"message-negative\"><b>Attenzione:</b></span>Passando dalla modalità RP a RPY sovrascriverà le impostazioni di Yaw con quelle del firmware."
+    },
+    "receiverHelp": {
+        "message": "&#8226;<b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il Failsafe funzioni correttamente!</a></strong></b> Le impostazioni sono nella scheda del Failsafe, la quale richiede la modalità esperto.<br> &#8226; <b>Usa l'ultimo firmware della TX!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita i filtri ADC hardware</a></strong> nella trasmittente se usi OpenTx o EdgeTx.<br>Impostazione di base: Configura le impostazioni della ricevente correttamente. Scegli la mappa canali corretta per la tua radio. Controlla che Roll, Pitch e gli altri grafici si muovano correttamente. Regola i limiti dei canali e i valori del range nella tua trasmittente da ~1000 a ~2000, e imposta il punto medio su ~1500. Per maggiori informazioni leggi la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas Medio"
@@ -2222,8 +2411,47 @@
     "gpsSignalStr": {
         "message": "Potenza del segnale"
     },
+    "gpsSignalGnssId": {
+        "message": "Gnss ID"
+    },
     "gpsSignalSatId": {
         "message": "ID Sat"
+    },
+    "gpsSignalStatusQly": {
+        "message": "Stato / Qualità"
+    },
+    "gnssQualityNoSignal": {
+        "message": "nessun segnale"
+    },
+    "gnssQualitySearching": {
+        "message": "cercando"
+    },
+    "gnssQualityAcquired": {
+        "message": "acquisito"
+    },
+    "gnssQualityUnusable": {
+        "message": "inutilizzabile"
+    },
+    "gnssQualityLocked": {
+        "message": "fissato"
+    },
+    "gnssQualityFullyLocked": {
+        "message": "completamente fissato"
+    },
+    "gnssUsedUnused": {
+        "message": "non usato"
+    },
+    "gnssUsedUsed": {
+        "message": "usato"
+    },
+    "gnssHealthyUnknown": {
+        "message": "sconosciuto"
+    },
+    "gnssHealthyHealthy": {
+        "message": "buono"
+    },
+    "gnssHealthyUnhealthy": {
+        "message": "cattivo"
     },
     "motorsVoltage": {
         "message": "Tensione:"
@@ -2930,6 +3158,10 @@
         "message": "Il configuratore ha rilevato e verificato con <span class=\"message-positive\">successo</span> la scheda: <strong>{{boardName}}</strong>",
         "description": "Board verification has succeeded."
     },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "Il configuratore ha rilevato la scheda: <strong>{{boardName}}</strong> ma non è stato trovato alcun target ufficiale di Betaflight",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+    },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Il configuratore <span class=\"message-negative\">non è riuscito</span> a verificare la scheda, se questo non funziona si prega di provare a cambiare schede lentamente per riprovare, fare una nuova connessione usb o connettersi prima in caso tu abbia dimenticato di applicare impostazioni personalizzate",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
@@ -3326,8 +3558,21 @@
     "pidTuningMotorLimit": {
         "message": "Fattore scala [%]"
     },
+    "pidTuningMotorLimitHelp": {
+        "message": "Riduzione percentuale nel segnale dato a ogni motore.<br><br>Riduce la corrente degli ESC e il calore dei motori quando si utilizzano batterie con più celle su motori ad alto kV.<br><br>Quando si utilizza una batteria 6S su un modello che ha motori, pale e tuning progettati per 4S, prova a impostare il valore al 66%; quando si utilizza una batteria 4S su un modello costruito per 3S, prova il 75%.<br><br>Assicurati che tutti i componenti supportino la tensione della batteria in uso."
+    },
+    "pidTuningCellCount": {
+        "message": "Numero Celle - per il cambio automatico del Profilo"
+    },
+    "pidTuningCellCountHelp": {
+        "message": "Attiva automaticamente il primo profilo che ha un numero di celle pari a quello della batteria connessa."
+    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Impostazioni filtro indipendenti dal profilo"
+    },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Questi slider regolano i filtri del gyro e della D.<br /><br />Filtraggi maggiori:<br /> - Slider a sinistra<br> - Frequenze di taglio minori.<br /><br />Filtraggi maggiori mantengono i motori più freddi rimuovendone il rumore, ma aumentano il ritardo nel segnale del gyro e potrebbero peggiorare il propwash e causare oscillazioni di risonanza. Quad meno responsivi come X-Class spesso volano meglio con più filtraggio.<br><br>Filtraggio minore:<br /> - Slider a destra<br /> - Frequenze di taglio maggiori.<br><br>Un minor filtraggio riduce il ritardo del segnale del gyro e spesso migliora i propwash. Muovendo il filtro passabasso del gyro verso destra è generalmente OK, ma muovendo il filtro della D a destra non è generalmente richiesto e può risultare in motori molto caldi.",
+        "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
         "message": "Meno filtraggio",
@@ -3345,6 +3590,10 @@
         "message": "Moltiplicatore filtro Giroscopio:",
         "description": "Gyro filter tuning slider label"
     },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "Cambia i cutoff del filtro passabasso del gyro.<br /><br />Spostando il cursore a sinistra si ottiene un filtraggio maggiore sul giroscopio (frequenza di cutoff più bassa).<br /><br />Spostando il cursore a destra dà meno filtraggio (frequenza di cutoff più elevata).<br /><br />Quando si sposta il cursore a destra per migliorare la gestione dei propwash, FAI ATTENZIONE a non esagerare. Permetterete più rumore in P e D e può dare flyaway o bruciare i motori.<br /><br />Potrebbe essere necessario spostare il cursore a sinistra se si hanno problemi di risonanza, cuscinetti rotti, pale scheggiate, motori caldi, ecc.<br /><br />Il filtraggio del gyro viene applicato prima e in aggiunta al filtraggio D.",
+        "description": "Gyro filter tuning slider helpicon message"
+    },
     "pidTuningGyroSliderEnabled": {
         "message": "Usa Slider Gyro",
         "description": "Disable or enable Gyro Filter Tuning Slider"
@@ -3352,6 +3601,10 @@
     "pidTuningDTermFilterSlider": {
         "message": "Moltiplicatore Filtro D Term:",
         "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Cambia i cutoff del filtro passabasso del D-term.<br /><br />Spostando lo slider a sinistra si ottiene un filtraggio maggiore (frequenza di cutoff più bassa).<br /><br />Spostando lo slider a destra dà meno filtraggio (frequenza di cutoff più elevata).<br /><br />Il D-term è l'elemento PID più sensibile al rumore e alla risonanza. Può amplificare il rumore ad alta frequenza da 10x a 100x. Questo è il motivo per cui i cutoff del filtro D sono molto più bassi dei filtri del gyro.<br /><br />Il filtraggio del D-term viene applicato dopo e in aggiunta al filtraggio del gyro. Il filtraggio D predefinito è ottimale per la maggior parte dei quad e raramente necessita di cambiamenti.<br /><br />Spostando lo slider a sinistra si riduce il calore dei motori in quad rumorosi e con alte D, ma si può avere più propwash e risonanze D a più bassa frequenza.<br /><br />Spostando lo slider a destra non è raccomandato, ma potrebbe migliorare il propwash su build pulite. Può causare grinding dei motori all'armamento, risonanze improvvise durante il volo e surriscaldamento grave dei motori.",
+        "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
         "message": "Usa Slider D Term",
@@ -3396,6 +3649,10 @@
     "pidTuningFilterSlidersNonExpertMode": {
         "message": "<strong>Nota:</strong> Il range degli slider è limitato perché non sei in modalità esperto. Questo range dovrebbe essere adatto alla maggior parte delle build e per i principianti.",
         "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<strong>Nota:</strong> gli slider sono disabilitati perché i valori attuali sono al di fuori del range della Modalità Base. Passa alla Modalità Esperto per effettuare modifiche",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Basso",
@@ -3461,6 +3718,10 @@
         "message": "Risposta stick:<br /><i><small>Guadagni FF</small></i>",
         "description": "Response tuning slider label"
     },
+    "pidTuningResponseSliderHelp": {
+        "message": "Una risposta agli stick minore aumenterà la latenza dei movimenti del quad rispetto ai comandi e può risultare in rimbalzi lenti alla fine di flip e roll.<br><br>Una risposta agli stick più alta darà una risposta del quad più secca con movimenti rapidi degli stick. Una risposta agli stick molto alta può causare overshoot alla fine di flip e roll.<br /><br /><strong>Nota:</strong><br /> la funzione \"I-term Relax\" può ridurre i rimbalzi in quad a bassa potenza oppure se vengono utilizzati bassi guadagni di risposta agli stick.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br /><i><small>Guadagni I</small></i>",
         "description": "I-term slider label"
@@ -3473,6 +3734,10 @@
         "message": "Damping dinamico:<br /><i><small>D Max</small></i>",
         "description": "D Min slider label"
     },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "Aumenta D max, il valore massimo a cui la D può aumentare durante i movimenti più veloci.<br /><br />Per quad da gara, dove lo slider principale del Damping è stato impostato basso per minimizzare il calore dei motori, muovendo lo slider a destra migliorerà il controllo dell'overshoot in cambi rapidi di direzione.<br /><br />Per i quad HD e cinematici, l'instabilità nel volo in avanti può essere risolta meglio muovendo lo slider Damping (non lo slider del Damping Dinamico) verso destra. Controlla il calore dei motori e rumori strani durante input veloci quando sposti lo slider verso destra.<br /><br />Per quad freestyle, specialmente build più pesanti, muovendo questo slider verso destra può aiutare a controllare overshoot in flip e roll.<br /><br /><strong>Nota:</strong><br />Generalmente l'overshoot in flip e roll è dovuto a 'I-Term Relax' insufficiente, desync dei motori o potenza inadeguata (alias Saturazione dei Motori). Se scopri che muovendo lo slider Boost del Damping a destra non migliora l'overshoot di flip e roll, riportalo in posizione normale e cerca il motivo per gli overshoot o il wobble.",
+        "description": "D_min slider helpicon message"
+    },
     "pidTuningRollPitchRatioSlider": {
         "message": "Damping Pitch:<br /><i><small>D Pitch e Roll</small></i>",
         "description": "Pitch-Roll Ratio slider label"
@@ -3480,6 +3745,10 @@
     "pidTuningRollPitchRatioSliderHelp": {
         "message": "Aumenta il Damping (D) SOLAMENTE sull'asse di Pitch, per es., per Pitch relativo al Roll. Aiuta a controllare overshoot e rimbalzi specifici per il Pitch.<br /><br />Quad con momento d'inerzia più alto sull'asse di Pitch necessitano generalmente di più Damping (perché il Pitch ha più inerzia e accumula più momento).<br /><br />Regola prime gli slider principali 'Damping' e/o 'Tracking' finché non hai un buon controllo sull'asse di Roll. Poi usa gli slider del Pitch (aumenta o diminuisci) per regolare finemente l'asse di Pitch senza influenzare il Roll.",
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "Tracking Pitch:<br><i><small>P, I e FF Pitch e Roll</small></i>",
+        "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
         "message": "Aumenta la forza di tracking SOLAMENTE sull'asse di pitch, cambiando i valori di I e P del pitch in relazione al roll. Consente una maggiore forza di tracking sul pitch relativamente al roll.<br /><br />Aumenta per stabilizzare il bobble sul pitch (naso) durante input di pitch violento o tagli del gas. Considera anche di aumentare i guadagni dell'Anti-Gravity.<br /><br />Prima regola gli slider del 'Damping' principale e/o del 'Tracking' finché non avrai un buon funzionamento dell'asse del roll. Poi usa gli slider del pitch (aumenta o diminuisci) per regolare finemente l'asse di pitch senza influenzare l'asse di roll.",
@@ -3493,6 +3762,10 @@
     },
     "pidTuningGyroLowpass": {
         "message": "Passabasso Gyro 1"
+    },
+    "pidTuningGyroLowpassHelp": {
+        "message": "Il primo di due filtri passabasso del gyro.<br /><br />L'uso del passabasso 1 del gyro in modalità dinamica è stato importante con il precedente codice del notch dinamico. Il passabasso 1 del gyro può essere disabilitato completamente nel firmware 4.3 quando viene utilizzato il filtraggio RPM, a meno che il giroscopio non abbia alcun filtro hardware interno.<br /><br />In modalità dinamica, il filtraggio sarà maggiore con gas basso, con meno filtraggio e meno ritardo con l'aumento del gas. La transizione dal cutoff basso ad alto avverrà prima, man mano che l'acceleratore aumenta, con valori più elevati dell'expo passabasso del gyro. <br /><br />In modalità statica, la frequenza di cutoff è fissa.<br /><br />Il tipo di filtro predefinito è PT1. Filtri di ordine più alto sono raramente richiesti.",
+        "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
         "message": "Modalità"
@@ -3509,11 +3782,29 @@
     "pidTuningGyroLowpassDyn": {
         "message": "Tipo filtro passabasso dinamico Gyro"
     },
+    "pidTuningMinCutoffFrequency": {
+        "message": "Frequenza minima di taglio [Hz]"
+    },
+    "pidTuningMaxCutoffFrequency": {
+        "message": "Frequenza massima di taglio [Hz]"
+    },
     "pidTuningGyroLowpassDynType": {
         "message": "Tipo filtro passabasso dinamico 1 del giroscopio"
     },
     "pidTuningGyroLowpass2": {
         "message": "Passabasso Gyro 2"
+    },
+    "pidTuningGyroLowpass2Help": {
+        "message": "Il secondo dei due filtri gyro passabasso.<br /><br />Questo filtro viene eseguito nel loop del gyro, filtrando il segnale prima che entri nel loop PID. È sempre in modalità statica (frequenza fissa).<br /><br />Se la frequenza del loop PID è inferiore alla frequenza del loop del gyro, ad esempio un loop PID a 4k con un loop del gyro a 8k, questo filtro deve essere mantenuto per evitare problemi di aliasing dovuti al downsampling 8k->4k.<br /><br />Una singola configurazione del passabasso 2 del gyro, impostata tra 500 e 1000Hz, funziona bene per Betaflight 4.3 o superiore, per le build pulite con filtraggio RPM attivo e almeno il filtraggio D predefinito.",
+        "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "I filtri passabasso del gyro attenuano il rumore di frequenze elevate per tenerlo fuori dal loop PID. Ci sono due filtri gyro configurabili in modo indipendente; per impostazione predefinita entrambi sono attivi.<br /><br />Con il filtro RPM, lo slider del filtro giroscopio può essere spesso spostato a destra, o in alternativa può essere sufficiente un singolo filtro gyro statico a 500Hz.<br /><br />Un quad avrà meno propwash con meno ritardo dovuto filtro del gyro.<br /><br />Controlla sempre il calore dei motori quando si spostano i cursori a destra. Con un filtraggio minimo è essenziale avere abbastanza filtro D! Sii prudente!",
+        "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "I filtri passabasso del D-term il rumore di frequenza elevata e le risonanze che altrimenti sarebbero amplificate dal guadagno della D.<br /><br />Ci sono due filtri D e i loro effetti sono additivi. Entrambi sono necessari in quasi tutti i quad, anche se un singolo PT2 può essere utilizzato al posto di un doppio PT1.<br /><br />Generalmente il quad volerà meglio e avrà meno propwash quando configurato per avere il ritardo minimo del filtro (cursori a destra, valori di cutoff più elevati). Tuttavia, in particolare con i filtri D, i cursori a destra possono aumentare notevolmente le possibilità di avere motori caldi.<br /><br />È molto facile bruciare i motori se non hai abbastanza filtraggio D - sii prudente!",
+        "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtri Notch del giroscopio"
@@ -3521,11 +3812,36 @@
     "pidTuningGyroNotchFilter": {
         "message": "Filtro Notch Gyro 1"
     },
+    "pidTuningGyroNotchFilterHelp": {
+        "message": "Applica un filtro notch statico (frequenza fissa) al gyro, alla frequenza centrale specificata. <br /><br />Può essere utile per le risonanze isolate e costanti in frequenza che interessano sia P che D. <br /><br />Per essere utile, la frequenza di risonanza deve essere costante in tutta l'escursione del gas.<br /><br />La larghezza del notch è impostata dalla frequenza di taglio. In genere il taglio deve essere impostato tra il 10% e il 40% sotto la frequenza centrale. Usa il range di filtro più stretto che controlla la risonanza. Evita di impostare filtri notch sotto i 100Hz tranne che in circostanze speciali.<br /><br />I filtri notch statici sono raramente richiesti in 4.3."
+    },
     "pidTuningGyroNotchFilter2": {
         "message": "Filtro Notch Gyro 2"
     },
+    "pidTuningGyroNotchFilter2Help": {
+        "message": "Applica un secondo filtro statico (a frequenza costante) al gyro.<br /><br />Questo è raramente richiesto e dovrebbe essere utilizzato solo come ultima risorsa per combattere una seconda frequenza fissa di risonanza che non può essere controllata con altri mezzi."
+    },
+    "pidTuningCenterFrequency": {
+        "message": "Frequenza centrale [Hz]"
+    },
+    "pidTuningCutoffFrequency": {
+        "message": "Frequenza di taglio [Hz]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "Un filtro Notch è un filtro simmetrico, stretto, ad alto taglio, con parametri di centro e cutoff.<br /><br />Il valore Centro è la frequenza centrale del filtro. Il valore Cutoff è la frequenza di taglio bassa a -3dB.<br /><br />Per esempio, un Cutoff Notch di 160 con un Centro Notch di 260 restituisce un notch largo con una gamma -3dB da 160-360Hz e un'attenuazione più forte a circa 260Hz.",
+        "description": "Notch filter helpicon message"
+    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Filtro Notch dinamico"
+    },
+    "pidTuningDynamicNotchFilterHelp": {
+        "message": "Il Filtro Notch Dinamico traccia i picchi di frequenza dei motori e posiziona filtri notch a quelle frequenze, indipendentemente per ciascun asse."
+    },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "Il filtro notch dinamico traccia la frequenza di picco del rumore del gyro e posiziona da uno a cinque filtri notch con il loro centro a questa frequenza."
+    },
+    "pidTuningDynamicNotchFilterDisabledWarning": {
+        "message": "<strong>Avviso:</strong> Il filtro dinamico notch è disabilitato. Per configurarlo e usarlo si prega di abilitare la funzione 'DYNAMIC_FILTER' nella sezione '$t(configurationFeatures.message)' della scheda '$t(tabConfiguration.message)'. Assicurati anche che il looprate PID sia almeno a 2kHz."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Range Filtro Notch dinamico"
@@ -3533,8 +3849,20 @@
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Percentuale larghezza Notch dinamico"
     },
+    "pidTuningDynamicNotchQ": {
+        "message": "Fattore Q"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Frequenza minima [Hz]"
+    },
+    "pidTuningDynamicNotchMaxHz": {
+        "message": "Frequenza massima [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Numero Notch"
+    },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "Il notch dinamico ha tre intervalli di frequenze in cui può funzionare: Basso (80-330Hz) per quad con giri del motore bassi come 6\" (e più grandi), Medio (140-550Hz) per un normale quad da 5\", Alto (230-800Hz) per quad 2.5-3\" con giri del motore alti. L'opzione AUTO seleziona l'intervallo in base al valore della frequenza massima del passa-basso dinamico 1 del giroscopio."
+        "message": "Il notch dinamico ha tre intervalli di frequenze in cui può funzionare: Basso (80-330Hz) per quad con giri del motore bassi come 6\" (e più grandi), Medio (140-550Hz) per un normale quad da 5\", Alto (230-800Hz) per quad 2.5-3\" con giri del motore alti. L'opzione AUTO seleziona l'intervallo in base al valore della frequenza massima del passabasso dinamico 1 del giroscopio."
     },
     "pidTuningDynamicNotchWidthPercentHelp": {
         "message": "Questo imposta la larghezza tra due filtri notch dinamici. Impostandolo a 0 disattiverà il secondo filtro notch dinamico e ridurrà il ritardo del filtro, tuttavia potrebbe aumentare la temperatura dei motori."
@@ -3581,17 +3909,52 @@
     "pidTuningDTermLowpass": {
         "message": "Passabasso D Term 1"
     },
+    "pidTuningDTermLowpassHelp": {
+        "message": "Il primo dei due filtri passabasso del D-term.<br /><br />In modalità dinamica, il filtraggio sarà maggiore con gas basso, con meno filtraggio e meno ritardo con l'aumento del gas. Questo aiuta a controllare il grinding dei motori o i flyway imprevisti all'armamento, riducendo il ritardo e il propwash dopo il decollo.  La transizione dal cutoff basso ad alto avverrà prima, man mano che l'acceleratore aumenta, con valori più elevati dell'expo passabasso del D-term.<br /><br />In modalità statica, la frequenza di cutoff è fissa. Questo non è raccomandato per il filtro su D.<br /><br />Il tipo di filtro predefinito è PT1, anche se alcuni utenti hanno usato solo un singolo filtro dinamico Biquad, senza secondo PT1.<br /><br />Le modifiche che comportano un minore filtraggio su D possono causare un grave surriscaldamento dei motori o flyaway durante l'armamento.",
+        "description": "Help icon for the DTerm Lowpass 1 Filter"
+    },
     "pidTuningDTermLowpassMode": {
         "message": "Modalità"
     },
     "pidTuningDTermLowpass2": {
         "message": "Passabasso D Term 2"
     },
+    "pidTuningDTermLowpass2Help": {
+        "message": "Il secondo dei due filtri passabasso del D-term. <br /><br />Questo filtro è sempre in modalità statica (taglio fisso). Per il filtraggio di D sono necessari almeno due filtri passabasso PT1, o un singolo filtro di secondo ordine.<br /><br />Di solito questo taglio è impostato sul valore più alto dell'intervallo del passabasso dinamico 1. Questo fornisce il secondo ordine di controllo del rumore sopra quella frequenza. <br /><br />Le modifiche che comportano un minore filtraggio su D possono causare un grave surriscaldamento dei motori o flyaway.",
+        "description": "Help icon for the DTerm Lowpass 2 Filter"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filtri passabasso del D Term"
     },
+    "pidTuningDTermLowpassType": {
+        "message": "Tipo di filtro"
+    },
+    "pidTuningStaticCutoffFrequency": {
+        "message": "Frequenza statica di taglio [Hz]"
+    },
+    "pidTuningDTermLowpass2Type": {
+        "message": "Tipo di filtro"
+    },
     "pidTuningDTermLowpassDyn": {
         "message": "Filtro passabasso dinamico D Term"
+    },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "Expo Curva Dinamica"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Tipo di Filtro Dinamico"
+    },
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "Filtro Notch del D Term"
+    },
+    "pidTuningDTermNotchFiltersGroupHelp": {
+        "message": "Applica un filtro notch statico (frequenza costante) ai dati del D-Term con la frequenza centrale specificata.<br /><br />La larghezza del notch è impostata dalla frequenza di taglio.  <br /><br />Può essere utile per risonanze isolate a frequenza costante amplificate dalla D.<br /><br />Mantieni il taglio il più vicino possibile al centro. Evita di impostare filtri notch al di sotto di 100Hz tranne che su build con RPM bassi."
+    },
+    "pidTuningYawLowpassFiltersGroup": {
+        "message": "Filtro passabasso yaw"
+    },
+    "pidTuningYawLowpassFiltersGroupHelp": {
+        "message": "Applica un filtro PT1 alla frequenza di taglio specificata sui dati gyro sull'asse yaw."
     },
     "pidTuningVbatPidCompensation": {
         "message": "Compensazione PID Vbat"
@@ -3602,11 +3965,17 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensazione calo Vbat"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Dà prestazioni costanti di gas e PID su tutto il range di tensione utilizzabile della batteria aumentando l'output di motori al calo della tensione della batteria.<br /><br />Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br /><br />Visita <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki</a> per ulteriori informazioni."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
     "pidTuningThrustLinearization": {
         "message": "Linearizzazione Spinta"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Migliora il controllo e la reattività con gas basso. <br><br> Particolarmente utile in whoop ed ESC a 48k. Non ha alcun effetto a gas più alto.<br><br>La compensazione può essere variata tra 0 e 150%. Solitamente il 30-40% è sufficiente."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3625,6 +3994,9 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Sopprime l'accumulo di Term quando si verificano movimenti veloci, riducendo il rimbalzo alla fine dei roll, flip e altri input rapidi.<br><br> La modalità Setpoint risponde agli input degli stick e funziona meglio per quad reattivi.<br><br>La modalità Gyro può essere utile per quad con molto ritardo.<br><br>Di solito l'iTerm Relax non dovrebbe essere applicato a yaw."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Assi",
@@ -3653,26 +4025,47 @@
         "message": "Setpoint"
     },
     "pidTuningItermRelaxCutoff": {
-        "message": "Cutoff",
+        "message": "Taglio",
         "description": "Cutoff value of the I Term Relax"
+    },
+    "pidTuningItermRelaxCutoffHelp": {
+        "message": "Valori bassi avranno maggiore soppressione di rimbalzi dopo flip nei quad a bassa potenza. Valori elevati aumentano la precisione delle virate ad alta velocità per le corse.<br><br>Impostalo a 30-40 per la corsa, 15 per freestyle, 10 per quad freestyle più pesanti, 3-5 per X-class."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Controllo assoluto"
     },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Questa funzione risolve alcuni problemi dell'$t(pidTuningItermRotation.message) e dovrebbe sostituirlo ad un certo punto. Questa funzione accumula l'errore assoluto del giroscopio nelle coordinate del quad e inserisce una correzione proporzionale nel setpoint.<br><br>Affinché funzioni devi abilitare Airmode e $t(pidTuningItermRelax.message) (per $t(pidTuningOptionRP.message)). Quando combinato con il $t(pidTuningIntegratedYaw.message), puoi abilitare l'$t(pidTuningItermRelax.message) per $t(pidTuningOptionRPY.message)."
+    },
     "pidTuningThrottleBoost": {
         "message": "Boost del Gas"
+    },
+    "pidTuningThrottleBoostHelp": {
+        "message": "Aumenta temporaneamente il gas per movimenti degli stick rapidi, fornendo una risposta molto più rapida al gas."
     },
     "pidTuningIdleMinRpm": {
         "message": "Valore idle dinamico [*100 RPM]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "L'Idle Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori.<br /><br /> Migliora il controllo dei PID, la stabilità con gas zero, il tempo in volo invertito e il freno dei motori.<br /><br />Gli rpm dell'Idle Dinamico dovrebbero essere impostati a circa 3000-3500rpm. In 4.2 imposta un valore basso, es 1%. Non c'è bisogno di cambiare il valore dell'Idle Dshot in 4.3.<br /><br />Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">questa pagina wiki</a> per maggiori informazioni."
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "L'Idle Dinamico è OFF perché la telemetria Dshot è OFF"
+    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angolo limite per l'Acro Trainer"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Aiuta i piloti ad imparare a volare in modalità acro limitando l'angolo che il quad può assumere. L'intervallo valido è di 10-80 gradi. La modalità deve essere attivata con uno switch nella scheda $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw integrato"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">ATTENZIONE</span>: se attivi questa opzione, dovrai modificare il PID dello YAW di conseguenza. Più informazioni <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>"
+    },
+    "pidTuningIntegratedYawHelp": {
+        "message": "L'Integrated Yaw integra i valori di P, I e D del yaw, consentendo di impostare P, I e D del yaw un po' come quelle di pitch e roll.<br><br>È richiesta poca I perché la P integrata agisce come una I e la D integrata agisce come una P.<br><br>NOTA: L'integrated Yaw richiede l'uso dell'Absolute Control poiché non è necessaria nessuna I con l'integrated Yaw."
     },
     "configHelp2": {
         "message": "Rotazione arbitraria del controllore di volo, per permettere di montarlo di lato, sottosopra, ruotato ecc.. Quando si utilizzano sensori esterni, usa l'allineamento del sensore (Gyro, Acc, Mag) per definire la posizione del sensore indipendente dall'orientamento del controllore di volo."
@@ -5828,6 +6221,14 @@
     "cordovaExitAppMessage": {
         "message": "Sei sicuro di voler chiudere il configuratore?"
     },
+    "dropDownSelectAll": {
+        "message": "[Seleziona/deseleziona tutto]",
+        "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownFilterDisabled": {
+        "message": "Seleziona...",
+        "description": "Text indicating nothing is selected in the drop down/multiple select (filter disabled)"
+    },
     "dropDownAll": {
         "message": "Tutto",
         "description": "Text indicating everything is selected in the drop down/multiple select"
@@ -6023,5 +6424,17 @@
     "presetsTooManyPresetsFound": {
         "message": "Raggiunto il limite massimo del numero di preset mostrato",
         "description": "Message that apprears on presets tab if too many presets found"
+    },
+    "presetsOptionsPlaceholder": {
+        "message": "ATTENZIONE! Rivedere l'elenco delle opzioni",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsVersionMismatch": {
+        "message": "Mismatch della versione della sorgente dei preset.<br/>Versione richiesta: {{versionRequired}}<br/>Versione della sorgente dei preset: {{versionSource}}<br/>Usando questa sorgente di preset potrebbe essere pericoloso.<br/>Vuoi procedere?",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsReviewOptionsWarning": {
+        "message": "Si prega di rivedere l'elenco delle opzioni prima di scegliere questo preset.",
+        "description": "Dialog text to prompt user to review options for the preset"
     }
 }
