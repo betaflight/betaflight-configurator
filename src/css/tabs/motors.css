@@ -10,7 +10,12 @@
     height: 20px;
     margin-right: 55px;
     border-radius: 3px;
+    float: left;
+}
+
+.tab-motors .mixer_settings select {
     min-width: 150px;
+    float: none;
 }
 
 .tab-motors table {
