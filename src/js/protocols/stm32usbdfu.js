@@ -615,6 +615,13 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         self.chipInfo = chipInfo;
                         self.flash_layout = chipInfo.internal_flash;
 
+                        if (TABS.firmware_flasher.parsed_hex.bytes_total > chipInfo.internal_flash.total_size) {
+                            const firmwareSize = TABS.firmware_flasher.parsed_hex.bytes_total;
+                            const boardSize = chipInfo.internal_flash.total_size;
+                            const bareBoard = TABS.firmware_flasher.bareBoard;
+                            console.log(`Firmware size ${firmwareSize} exceeds board memory size ${boardSize} (${bareBoard})`);
+                        }
+
                     } else if (typeof chipInfo.external_flash !== "undefined") {
                         // external flash
                         nextAction = 2; // no option bytes
@@ -642,7 +649,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
                         if (unusableBlocks.length > 0) {
                             GUI.log(i18n.getMessage('dfu_hex_address_errors'));
-                            self.cleanup();
+                            TABS.firmware_flasher.flashingMessage(i18n.getMessage('dfu_hex_address_errors'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
+                            self.leave();
                         } else {
                             self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
                                 self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
