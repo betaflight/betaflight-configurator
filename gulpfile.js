@@ -48,7 +48,7 @@ const NODE_ENV = process.env.NODE_ENV || 'production';
 const NAME_REGEX = /-/g;
 
 const nwBuilderOptions = {
-    version: '0.60.0',
+    version: os.platform() === 'linux' ? '0.54.1' : '0.60.0',    // linux has a bug with moving OSD elements
     files: `${DIST_DIR}**/*`,
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
