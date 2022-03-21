@@ -193,6 +193,12 @@ function finishClose(finishedCallback) {
     // reset active sensor indicators
     sensor_status(0);
 
+    // reset expert mode
+    ConfigStorage.get('permanentExpertMode', function (result) {
+        const checked = result.permanentExpertMode;
+        $('input[name="expertModeCheckbox"]').prop('checked', checked).trigger('change');
+    });
+
     if (wasConnected) {
         // detach listeners and remove element data
         $('#content').empty();
