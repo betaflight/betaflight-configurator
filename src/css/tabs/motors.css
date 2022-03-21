@@ -1,16 +1,14 @@
 .tab-motors .ui-grid-col {
     margin-bottom: 0;
 }
-/*
-.tab-motors input,
-*/
+
 .tab-motors select {
     border: 1px solid var(--subtleAccent);
     width: fit-content;
     height: 20px;
-    margin-right: 55px;
+    margin-right: 80px;
     border-radius: 3px;
-    min-width: 150px;
+    float: left;
 }
 
 .tab-motors table {
@@ -59,13 +57,11 @@
 .tab-motors .mixerPreview img {
     width: 150px;
     height: 150px;
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
-.tab-motors select .escprotocol {
-    width: 150px;
-    height: 150px;
-    margin-left: 48px;
+.tab-motors #mixer.mixerList {
+    float: none;
 }
 
 .tab-motors .featuresMultiple {

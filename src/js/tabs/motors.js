@@ -321,7 +321,7 @@ TABS.motors.initialize = function (callback) {
         for (let selectIndex = 0; selectIndex < mixerList.length; selectIndex++) {
             mixerList.forEach(function (mixerEntry, mixerIndex) {
                 if (mixerEntry.pos === selectIndex) {
-                    mixerListElement.append(`<option value="${(mixerIndex + 1)}">${mixerEntry.name}</option>`);
+                    mixerListElement.append(`<option value="${(mixerIndex + 1)}">${mixerEntry.name.toUpperCase()}</option>`);
                 }
             });
         }
