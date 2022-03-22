@@ -61,7 +61,7 @@ TABS.presets.getPickedPresetsCli = function() {
     this.pickedPresetList.forEach(pickedPreset => {
         result.push(...pickedPreset.presetCli);
     });
-    result = result.filter(command => command !== "");
+    result = result.filter(command => command.trim() !== "");
     return result;
 };
 
