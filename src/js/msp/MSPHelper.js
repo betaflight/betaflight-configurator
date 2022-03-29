@@ -33,6 +33,7 @@ function MspHelper() {
     'RUNCAM_DEVICE_CONTROL': 14, // support communitate with RunCam Device
     'LIDAR_TF': 15,
     'FRSKY_OSD': 16,
+    'VTX_MSP': 17,
     };
 
     self.REBOOT_TYPES = {
