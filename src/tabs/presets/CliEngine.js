@@ -270,6 +270,7 @@ CliEngine.s_carriageReturnCode = 13;
 CliEngine.s_tabCode = 9;
 CliEngine.s_enterKeyCode = 13;
 CliEngine.s_commandDiffAll = "diff all";
+CliEngine.s_commandDumpAll = "dump all";
 CliEngine.s_commandDefaultsNoSave = "defaults nosave";
 CliEngine.s_commandSave = "save";
 CliEngine.s_commandExit = "exit";

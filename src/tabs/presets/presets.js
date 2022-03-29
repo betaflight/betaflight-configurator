@@ -187,7 +187,13 @@ TABS.presets.onSaveConfigClick = function() {
         const suffix = 'txt';
         const text = cliStrings.join("\n");
         const filename = generateFilename(prefix, suffix);
-        return GUI.saveToTextFileDialog(text, filename, suffix);
+        if (text.length > 50) {
+            return GUI.saveToTextFileDialog(text, filename, suffix);
+        }
+        else {
+            waitingDialog.close();
+            return GUI.showInformationDialog(saveFailedDialogSettings);
+        }
     })
     .then(() => {
         waitingDialog.close();
@@ -208,12 +214,12 @@ TABS.presets.readDumpAll = function() {
     this.cliEngine.subscribeOnRowCame(str => {
         lastCliStringReceived = performance.now();
 
-        if (CliEngine.s_commandDiffAll !== str && CliEngine.s_commandSave !== str) {
+        if (CliEngine.s_commandDumpAll !== str && CliEngine.s_commandSave !== str) {
             diffAll.push(str);
         }
     });
 
-    this.cliEngine.sendLine(CliEngine.s_commandDiffAll);
+    this.cliEngine.sendLine(CliEngine.s_commandDumpAll);
 
     return new Promise(resolve => {
         GUI.interval_add(readingDumpIntervalName, () => {
