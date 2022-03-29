@@ -130,7 +130,7 @@ function initializeSerialBackend() {
             $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
         }
 
-        // bind UI hook to auto-connect checkbos
+        // bind UI hook to auto-connect checkbox
         $('input.auto_connect').change(function () {
             GUI.auto_connect = $(this).is(':checked');
 
@@ -192,6 +192,12 @@ function finishClose(finishedCallback) {
 
     // reset active sensor indicators
     sensor_status(0);
+
+    // reset expert mode
+    ConfigStorage.get('permanentExpertMode', function (result) {
+        const checked = result.permanentExpertMode;
+        $('input[name="expertModeCheckbox"]').prop('checked', checked).trigger('change');
+    });
 
     if (wasConnected) {
         // detach listeners and remove element data
