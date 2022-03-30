@@ -125,6 +125,7 @@
 
 .tab-firmware_flasher .cf_table td:last-child {
     text-align: left;
+    padding-left: 8px;
 }
 
 .tab-firmware_flasher .options .flash_on_connect_wrapper {
