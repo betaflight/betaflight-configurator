@@ -2646,12 +2646,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware nincs betöltve"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Helyi firmware betöltve ($1 byte)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Online firmware betöltve ($1 byte)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX fájl sérültnek tűnik"
     },

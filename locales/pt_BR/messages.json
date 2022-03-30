@@ -2843,12 +2843,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware não carregado"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Carregado Firmware Local ($1 bytes)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Firmware on-line carregado: ($1 bytes)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "Parece que o arquivo HEX está corrompido"
     },

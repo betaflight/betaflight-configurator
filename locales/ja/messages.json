@@ -53,11 +53,11 @@
         "message": "手動選択"
     },
     "portsSelectVirtual": {
-        "message": "バーチャルモード (実験的)",
+        "message": "バーチャル接続モード (テスト中)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "virtualMSPVersion": {
-        "message": "バーチャル ファーム バージョン"
+        "message": "バーチャルファームウェアバージョン"
     },
     "portOverrideText": {
         "message": "ポート:"
@@ -107,7 +107,7 @@
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
     "showVirtualMode": {
-        "message": "仮想接続モード 有効",
+        "message": "バーチャル接続モード 有効",
         "description": "Text for the option to enable or disable the virtual FC"
     },
     "cordovaForceComputerUI": {
@@ -582,7 +582,7 @@
         "message": "検出されたデバイスの合計フラッシュメモリサイズ $1 KB"
     },
     "dfu_hex_address_errors": {
-        "message": "<span class=\"message-negative\">エラー</span>: ターゲットデバイスにないアドレスがファームウェアイメージが含まれています"
+        "message": "ファームウェアイメージに対象デバイスに存在しないアドレスが含まれています"
     },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">エラー</span>: 指定した画像サイズが利用可能サイズより大きいです！画像: $1 KB, 制限値= $2 KB"
@@ -982,7 +982,7 @@
         "message": "ナビゲーションとテレメトリー用のGPS"
     },
     "featureGPSTip": {
-        "message": "最初にポートの設定をしてください"
+        "message": "最初にポートの設定をしてください。"
     },
     "featureSONAR": {
         "message": "ソナー 超音波距離センサー"
@@ -1042,7 +1042,7 @@
         "message": "有効後 [トランスポンダー] タブで設定をしてください。"
     },
     "featureAIRMODE": {
-        "message": "エアモードを常時有効にする"
+        "message": "エアモードの常時有効化"
     },
     "featureSUPEREXPO_RATES": {
         "message": "Super Expo Rates"
@@ -1276,7 +1276,7 @@
         "message": "バッテリーが少ないときの警告ビープ音 (リピート)"
     },
     "beeperGPS_STATUS": {
-        "message": "ビープ回数でGPS衛星の捕捉数を示します"
+        "message": "GPS衛星の捕捉数を示すビープ音 (補足数＝回数)"
     },
     "beeperRX_SET": {
         "message": "ビープをAUXチャンネルに設定しているときのビープ音"
@@ -1294,13 +1294,13 @@
         "message": "スティックがディスアームポジションにあるときのビープ音"
     },
     "beeperARMED": {
-        "message": "アイドル時にモーターがオフになっているときの警告ビープ音 (FCボードが無効、またはスロットルが上がるまでリピート)"
+        "message": "アイドル時モーターがオフのときの警告ビープ音 (FCボード無効、またはスロットルを上げるまでリピート)"
     },
     "beeperSYSTEM_INIT": {
         "message": "FCボードに電源が入ったときの初期ビープ音"
     },
     "beeperUSB": {
-        "message": "フライトコントローラがUSBから給電されたときのビープ音 (機体作成時に鳴らしたくない場合はオフにする)"
+        "message": "フライトコントローラがUSBから給電されたときのビープ音 (機体作成時に発報させない場合はオフ)"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "ブラックボックスログ消去が完了したときのビープ音"
@@ -1753,7 +1753,7 @@
         "message": "平均化"
     },
     "pidTuningFeedforwardAveragingHelp": {
-        "message": "フィードフォワード値の平均は、過去2～3回のフィードフォワードステップの平均を取ります。これにより、フィードフォワードトレースが滑らかになりますが、若干の遅延が生じます。<br><br>高速なRCリンクにありがちな信号のアップ / ダウンのジッターが連続する場合に最も効果的です。<br><br>500Hzリンクとノイズの多い250Hzリンク、またはシネマティック / HD飛行には2つのポイントの平均が必要です。Crossfire (CRSFShot以前) は150Hzモードでは3ポイントの平均が必要です。"
+        "message": "フィードフォワード平均化は、過去2～3回のフィードフォワードステップの平均を取ります。これにより、フィードフォワードトレースが滑らかになりますが、若干の遅延が生じます。<br><br>高速なRCリンクにありがちな信号のアップ / ダウンのジッターが連続する場合に最も効果的です。<br><br>500Hzリンクとノイズの多い250Hzリンク、またはシネマティック / HD飛行には2つのポイントの平均が必要です。Crossfire (CRSFShot以前) は150Hzモードでは3ポイントの平均が必要です。"
     },
     "pidTuningOptionOff": {
         "message": "OFF"
@@ -3109,10 +3109,10 @@
         "message": "ファームウェアがロードできませんでした"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "ローカル ファームウェアをロードしました: ($1 bytes)"
+        "message": "ローカルファムウェアがロードされました: {{filename}} ({{bytes}} bytes)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "オンラインファームウェアをロードしました: ($1 bytes)"
+        "message": "オンラインファームウェアがロードされました: {{filename}} ({{bytes}} bytes)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEXファイルが破損しているようです"

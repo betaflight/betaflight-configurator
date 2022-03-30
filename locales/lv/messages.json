@@ -2331,12 +2331,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Programmatūra nav ielādēta"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Ielādēta lokālā programmatūra: ($1 baiti)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Ielādētas Online programmatūra: ($1 baiti)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "Izskatās ka HEX fails ir bojāts"
     },

@@ -2080,9 +2080,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware tidak dimuat"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Firmware Lokal: ($1 bytes)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "File HEX kelihatannya sudah rusak"
     },

@@ -590,7 +590,7 @@
         "message": "Detectat dispositiu amb un total de $1 KiB de memòria flash"
     },
     "dfu_hex_address_errors": {
-        "message": "<span class=\"message-negative\">Error</span>: la imatge del firmware conté adreces que no s'han trobat al dispositiu de destinació"
+        "message": "La imatge del firmware conté adreces que no s'han trobat al dispositiu de destinació"
     },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Error</span>: La imatge proporcionada és major a la memòria flash disponible al xip! Imatge: $1 KiB, limit = $2 KiB"
@@ -3117,10 +3117,10 @@
         "message": "Firmware no carregat"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Firmware Local Carregat ($1 bytes)"
+        "message": "Firmware local carregat: {{filename}} ({{bytes}} bytes)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Programari local carregat ($1 bytes)"
+        "message": "Firmware en línia carregat: {{filename}} ({{bytes}} bytes)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "L'arxiu HEX sembla corrupte"

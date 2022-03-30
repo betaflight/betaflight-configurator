@@ -582,7 +582,7 @@
         "message": "Rilevato dispositivo con capacità flash totale di $1 KiB"
     },
     "dfu_hex_address_errors": {
-        "message": "<span class=\"message-negative\">Errore</span>: L'immagine del firmware contiene indirizzi non trovati sul dispositivo di destinazione"
+        "message": "L'immagine del firmware contiene indirizzi non trovati sul dispositivo di destinazione"
     },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Errore</span>: L'immagine è troppo grande per la capacità disponibile sul chip! Immagine: $1 KiB, limite = $2 KiB"
@@ -3109,10 +3109,10 @@
         "message": "Firmware non caricato"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Caricato Firmware Locale: ($1 byte)"
+        "message": "Caricato Firmware Locale: {{filename}} ({{bytes}} byte)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Caricato Firmware Online: ($1 byte)"
+        "message": "Caricato Firmware Online: {{filename}} ({{bytes}} byte)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "Il file HEX sembra essere corrotto"
