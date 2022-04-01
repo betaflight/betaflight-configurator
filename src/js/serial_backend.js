@@ -193,12 +193,6 @@ function finishClose(finishedCallback) {
     // reset active sensor indicators
     sensor_status(0);
 
-    // reset expert mode
-    ConfigStorage.get('permanentExpertMode', function (result) {
-        const checked = result.permanentExpertMode;
-        $('input[name="expertModeCheckbox"]').prop('checked', checked).trigger('change');
-    });
-
     if (wasConnected) {
         // detach listeners and remove element data
         $('#content').empty();
@@ -232,17 +226,22 @@ function onOpen(openInfo) {
         GUI.log(i18n.getMessage('serialPortOpened', serial.connectionType === 'serial' ? [serial.connectionId] : [openInfo.socketId]));
 
         // save selected port with chrome.storage if the port differs
-        ConfigStorage.get('last_used_port', function (result) {
-            if (result.last_used_port) {
-                if (result.last_used_port !== GUI.connected_to) {
-                    // last used port doesn't match the one found in local db, we will store the new one
-                    ConfigStorage.set({'last_used_port': GUI.connected_to});
-                }
-            } else {
-                // variable isn't stored yet, saving
+        let result = ConfigStorage.get('last_used_port');
+        if (result.last_used_port) {
+            if (result.last_used_port !== GUI.connected_to) {
+                // last used port doesn't match the one found in local db, we will store the new one
                 ConfigStorage.set({'last_used_port': GUI.connected_to});
             }
-        });
+        } else {
+            // variable isn't stored yet, saving
+            ConfigStorage.set({'last_used_port': GUI.connected_to});
+        }
+
+        // reset expert mode
+        result = ConfigStorage.get('permanentExpertMode');
+        if (result.permanentExpertMode) {
+            $('input[name="expertModeCheckbox"]').prop('checked', result.permanentExpertMode).trigger('change');
+        }
 
         serial.onReceive.addListener(read_serial);
         setConnectionTimeout();
