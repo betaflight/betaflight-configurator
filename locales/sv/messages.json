@@ -2441,12 +2441,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware ej laddad"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Laddade lokal firmware: ($1 bytes)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Laddade online-firmware: ($1 bytes)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX-filen verkar vara korrupt"
     },

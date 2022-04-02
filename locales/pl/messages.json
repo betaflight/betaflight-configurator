@@ -2740,12 +2740,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Oprogramowanie nie załadowane"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Załadowane lokalne oprogramowanie: ($1 bajtów)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Załaduj oprogramowanie ze strony online: ($1 bytes)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "Plik HEX wydaje się być uszkodzony"
     },

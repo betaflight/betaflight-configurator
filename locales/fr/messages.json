@@ -646,7 +646,7 @@
         "message": "Mémoire totale de $1 KiB détectée sur le périphérique"
     },
     "dfu_hex_address_errors": {
-        "message": "<span class=\"message-negative\">Erreur</span>: L'image du microprogramme contient des adresses non trouvées sur le périphérique cible"
+        "message": "L'image du Firmware contient des adresses introuvables sur le périphérique cible"
     },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Erreur</span>: L'image fournie est plus grande que la mémoire disponible! Image: $1 KiB, limite = $2 KiB"
@@ -661,7 +661,7 @@
         "message": "Matériel"
     },
     "defaultWelcomeText": {
-        "message": "L'application est compatible avec toute carte sous Betaflight. La liste complète est disponible dans l'onglet flash.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger les Scripts TX Lua Betaflight</a><br /><br />Le code source du firmware est disponible <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br /><br />La dernière version du <b>pilote STM USB VCP</b> peut être téléchargée <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />Pour les cartes plus anciennes avec puce CP210x USB vers Série:<br />La dernière version <b>du pilote CP210x</b> est disponible <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />La dernière version de <b>Zadig</b> utilitaire pour l'installation de pilotes USB pour Windows est <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />"
+        "message": "L'application est compatible avec toute carte sous Betaflight. La liste complète est disponible dans l'onglet flash.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger les Scripts TX Lua Betaflight</a><br /><br />Le code source du firmware est disponible <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br /><br />La dernière version du <b>pilote STM USB VCP</b> peut être téléchargée <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />Pour les cartes plus anciennes avec puce CP210x USB vers Série:<br />La dernière version <b>du pilote CP210x</b> est disponible <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />La dernière version de <b>Zadig</b> utilitaire pour l'installation de pilotes USB pour Windows est <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br /><b>ImpulseRC Driver Fixer</b> peut être téléchargé <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">ici</a>"
     },
     "defaultContributingHead": {
         "message": "Participation"
@@ -3170,10 +3170,10 @@
         "message": "Microprogramme non chargé"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Firmware local chargé: ($1 bytes)"
+        "message": "Firmware local chargé: {{filename}} ({{bytes}} octets)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Firmware en ligne chargé : ($1 octets)"
+        "message": "Firmware en ligne chargé : {{filename}} ({{bytes}} octets)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "Le fichier HEX semble corrompu"

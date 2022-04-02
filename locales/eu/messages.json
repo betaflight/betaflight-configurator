@@ -2649,12 +2649,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmwarea ez da kargatu"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Firmware Lokala Kargatuta: ($1 bytes)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Interneteko Firmwarea Kargatuta: ($1 bytes)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX fitxategia hondatuta dagoela badirudi"
     },

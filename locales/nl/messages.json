@@ -2823,12 +2823,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware niet geladen"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Lokale firmware geladen: ($1 bytes)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Online firmware geladen: ($1 bytes)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX bestand lijkt beschadigd te zijn"
     },

@@ -2583,12 +2583,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "沒有加載固件"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "已加載本地固件: ($ 1 字節)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "已加載在線固件: ($ 1 字節)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX文件似乎已損壞"
     },

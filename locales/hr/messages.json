@@ -2372,12 +2372,6 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware nije učitan"
     },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Učitan lokalni firmware: ($1 bajtova)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Učitan online firmware: ($1 bajtova)"
-    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX datoteka je koruptirana"
     },

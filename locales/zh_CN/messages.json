@@ -102,6 +102,14 @@
         "message": "设置连接超时阈值，以允许更长时间的初始化或重启",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "showAllSerialDevices": {
+        "message": "显示所有串口设备 (面向制造商或开发)",
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "showVirtualMode": {
+        "message": "启用虚拟连接模式",
+        "description": "Text for the option to enable or disable the virtual FC"
+    },
     "cordovaForceComputerUI": {
         "message": "停用手机界面并切换至计算机界面"
     },
@@ -637,6 +645,9 @@
     "dfu_device_flash_info": {
         "message": "检测到闪存空间为 $1 KiB 的芯片"
     },
+    "dfu_hex_address_errors": {
+        "message": "固件图像中包含无法在目标设备上找到的地址"
+    },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">错误</span>：固件文件大于飞控芯片的闪存。固件大小: $1 KiB，上限 = $2 KiB"
     },
@@ -649,6 +660,9 @@
     "defaultWelcomeHead": {
         "message": "硬件"
     },
+    "defaultWelcomeText": {
+        "message": "本应用支持所有能运行 Betaflight 的飞控。在 “固件烧写” 页面查看所有支持的飞控列表。<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">下载 Betaflight Blackbox 日志查看工具</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">下载 Betaflight TX Lua 脚本</a><br /><br />固件源代码可以点击 <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a> 下载<br /><br />最新的<b>STM USB VCP 驱动</b>可以点击 <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a> 下载<br />对于旧的使用 CP210x USB 转串口芯片的硬件：<br />最新的<b>CP210x 驱动</b>可以点击 <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a> 下载<br />最新的<b>Zadig</b> Windows USB驱动安装程序可以点击 <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a> 下载<br /><b>ImpulseRC 驱动修复器</b> 可从点击 <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">这里</a> 下载"
+    },
     "defaultContributingHead": {
         "message": "参与开发"
     },
@@ -657,6 +671,9 @@
     },
     "defaultFacebookText": {
         "message": "我们还有一个 <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小组</a>。<br />加入我们来一起讨论 Betaflight，询问配置问题，或者只是和小伙伴们闲聊。"
+    },
+    "defaultDiscordText": {
+        "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 服务器</a>。<br />分享您的飞行经验，讨论 Betaflight，帮助其他人或从社区中为自己获得一些帮助。"
     },
     "defaultChangelogHead": {
         "message": "配置程序 - 更新日志"
@@ -746,8 +763,17 @@
     "initialSetupResetText": {
         "message": "恢复<strong>默认</strong>设置"
     },
+    "initialSetupButtonBackup": {
+        "message": "备份 JSON"
+    },
+    "initialSetupButtonRestore": {
+        "message": "恢复 JSON"
+    },
     "initialSetupButtonRebootBootloader": {
         "message": "激活启动引导程序/DFU"
+    },
+    "initialSetupBackupRestoreHeader": {
+        "message": "实验性备份和恢复"
     },
     "initialSetupBackupRestoreText": {
         "message": "在 CLI 命令行中使用 'dump' 命令来<strong>备份</strong>你的设置以防意外丢失，注意<strong>CLI命令行</strong>设置 <span class=\"message-negative\">没有</span> 包括在内。"
@@ -989,11 +1015,17 @@
     "featureNone": {
         "message": "&lt;请选择&gt;"
     },
+    "featureRX_PPM": {
+        "message": "PPM/CPPM (单线)"
+    },
     "featureVBAT": {
         "message": "电池电压检测"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "实时水平校准"
+    },
+    "featureRX_SERIAL": {
+        "message": "串行接收机 (通过 UART)"
     },
     "featureMOTOR_STOP": {
         "message": "解锁时不要转动电机"
@@ -1028,6 +1060,12 @@
     "feature3D": {
         "message": "3D 模式（配合支持反向转动的电调使用）"
     },
+    "featureRX_PARALLEL_PWM": {
+        "message": "PWM 接收机 (每个通道都需要接线)"
+    },
+    "featureRX_MSP": {
+        "message": "MSP 接收机输入 (通过 MSP 端口控制)"
+    },
     "featureRSSI_ADC": {
         "message": "模拟 RSSI 输入"
     },
@@ -1051,6 +1089,9 @@
     },
     "featureBLACKBOXTip": {
         "message": "打开后，请在黑盒日志页面完成设置。"
+    },
+    "featureRX_SPI": {
+        "message": "SPI Rx (例如内置 RX)"
     },
     "featureESC_SENSOR": {
         "message": "使用<b>专线</b>回传 KISS/BLHeli_32 电调遥测数据"
@@ -1078,6 +1119,9 @@
     },
     "featureVTX": {
         "message": "图传"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "永久启用"
     },
     "featureANTI_GRAVITYTip": {
         "message": "如果禁用，那么“反重力”模式可以由开关来启用。"
@@ -1129,6 +1173,9 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>注意:</strong> 不是所有的功能都能同时被启用。当飞控检测到有冲突时会禁用相应的功能。<br /><strong>注意:</strong>  <span class=\"message-negative\">先</span> 设置串口，再启用需要用到串口的功能。"
+    },
+    "configurationSerialRXHelp": {
+        "message": "&#8226; 必须将接收机对应的 UART 设置为 “数字串行接收机” (在 <i>端口</i> 页面)<br>&#8226; 从下拉列表中选择正确的数据格式，如下："
     },
     "configurationSpiRxHelp": {
         "message": "<strong>注意:</strong> SPI 接收机只有通过 SPI 总线连接到飞控或板载了相应硬件时才能工作。"
@@ -1210,6 +1257,15 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "油门未在最低位时禁止解锁电机。注意该选项启动时有可能在飞行中通过开关意外触发上锁。"
+    },
+    "configurationDigitalIdlePercent": {
+        "message": "电机怠速 ( %, 静态)"
+    },
+    "configurationDigitalIdlePercentDisabled": {
+        "message": "动态怠速将于 {{dynamicIdle}} RPM 开启。请查看 PID 调校 选项卡"
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "‘电机怠速 (静态)’ 值指的是当飞机解锁后摇杆保持最低位时，飞控向电调发送的命令，其为最大油门命令的一个百分比。<br><br>增大该值以获得更高的怠速值并避免失步。过高将会导致飞行感觉虚浮，过低将会导致电机易于失步或启动缓慢。<br><br>在 4.3 中，当 动态怠速 启用时，静态怠速值将被忽略，这是因为怠速值将不断调整以保持最慢的电机的 RPM 高于配置的最低 RPM。"
     },
     "configurationMotorPoles": {
         "message": "电机极数",
@@ -1386,6 +1442,10 @@
         "message": "使用 Galileo 系统",
         "description": "Option to use Galileo in the GPS configuration"
     },
+    "configurationGPSGalileoHelp": {
+        "message": "启用后，GPS 模块还将跟踪伽利略卫星系统，以锁定更多卫星。 在 Betaflight 4.2.x 或更早版本中，它也禁用了QZSS 扩充系统。",
+        "description": "Help text for the option to use Galileo in the GPS configuration"
+    },
     "configurationGPSHomeOnce": {
         "message": "设置单次返航点",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1411,6 +1471,9 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "动态陷波器数值更改"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>警告：这将启用/禁用 RPM 滤波，并增加/减少 滤波延迟/效率。</b></span><br><br>将动态陷波滤波器重置为推荐值？"
     },
     "portsIdentifier": {
         "message": "标识符"
@@ -1558,16 +1621,56 @@
         "message": "阈值",
         "description": "Anti Gravity Threshold Parameter"
     },
+    "pidTuningAntiGravityHelp": {
+        "message": "反重力会在油门变化后的短时间内增大 I (在4.3中还会增大 P)，从而提高油门抽动期间的姿态稳定度。<br><br>更高的增益值可能会提高弱动力飞机或质心偏离中心的飞机的稳定性。"
+    },
+    "pidTuningDMin": {
+        "message": "<b>D</b>erivative",
+        "description": "Table header of the D Min feature in the PIDs tab"
+    },
+    "pidTuningDMinDisabledNote": {
+        "message": "<strong>注意:</strong>D Max功能已被禁用，其参数已隐藏。要使用D Min, 请在$t(pidTuningPidSettings.message)中启用它。"
+    },
+    "pidTuningDMinFeatureTitle": {
+        "message": "动态阻尼 / D Max 设置",
+        "description": "Title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "动态<br>阻尼",
+        "description": "Sidebar title for the options panel for the D Max feature"
+    },
     "pidTuningDMinGain": {
         "message": "增益（Gain）",
         "description": "Gain of the D Max feature"
+    },
+    "pidTuningDMaxGainHelp": {
+        "message": "D Max 可增加系统灵敏度，在飞机快速转弯或发生洗桨震荡时增加 D。<br><br>更高的增益值将会更快速地提升 D，将 D 更快地推向 D Max。 40 或 50 可能在干净的花飞机上取得良好效果。<br><br>较低的增益值将在除快速移动以外的大多数时间都不会使 D 升高到 D Max，并且最小化 D 延迟可能更适用于竞速飞机。<br><br>警告: 增益和超前都设置地超过20，否则 D 不会按预期增加。将其设置为 0 将会使 D 锁定在基础值。",
+        "description": "D Max feature helpicon message"
     },
     "pidTuningDMinAdvance": {
         "message": "超前",
         "description": "Advance of the D Max feature"
     },
+    "pidTuningDMaxAdvanceHelp": {
+        "message": "D Max 超前 将提升摇杆快速移动时增益因子的灵敏度。<br><br>超前并不对应陀螺仪或洗桨。它的作用时间早于增益因子，并对某些在运动动作之初就有严重延迟的弱动力飞机偶尔有用。<br><br>通常来说，最好将其保持为零。<br><br>警告: 超前或增益必须至少有一项设置得大于20，否则 D 将不会按预设方式增加。将两者都设为 0 将使 D 锁定为基础值。",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Max 在陀螺快速移动/快速打杆时增大 D。<br><br>“增益”因子可以在快速转弯或洗桨时增大 D。<br><br>“超前”因子将在摇杆命令输入时提前增大 D。通常来说并不需要使用它并应将其保持为0。超前对于某些易于过冲的弱动力飞机来说非常有用。<br><br>更高的增益值 (例如 40) 能够更迅速地提升 D，这或许更适用于花式飞行<br><br>警告: 超前或增益必须至少有一项设置得大于20，否则 D 将不会按预设方式增加。将两者都设为 0 将使 D 锁定为基础值。",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "飞机运动的基本阻尼。<br /><br />它抗拒运动，不论是摇杆输入还是外部影响 (例如洗桨或强风)<br /><br />更高的 D Min 增益将提供更强的稳定性并减少过冲。<br /><br />D Term 会放大噪声 (模值放大 10-100 倍)。如果增益值过高而又没有进行良好滤波的话，它将会迅速烧毁电机。<br /><br />D Term 更像是汽车上的减震器。",
+        "description": "Derivative helpicon message on PID table titlebar"
+    },
     "pidTuningPidSettings": {
         "message": "PID 控制器设置"
+    },
+    "pidTuningMotorSettings": {
+        "message": "油门和电机设置"
+    },
+    "pidTuningMiscSettings": {
+        "message": "其他设置"
     },
     "receiverRcSmoothing": {
         "message": "RC 平滑"
@@ -1581,6 +1684,17 @@
     "receiverRcSmoothingAutoFactor": {
         "message": "自动因子",
         "description": "Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "调整自动平滑因子的计算，10 是默认的延迟比因子。增加该数将加大对 RC 输入信号的平滑度，但同时会增加延迟。对于 RC 链接并不可靠的情况和电影式飞行来说这可能非常有用。<br>当数字接近 50 时请小心，输入延迟将会变得非常明显。<br>当遥控器与接收机都上电时，可以使用 CLI 命令 rc_smoothing_info 查看自动计算的 RC 平滑的截止频率。",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "自动调整 RC 信号平滑。30 为默认值。 更高的值可以进一步平滑 RC 输入信号 - 例如: HD 花飞使用 60，电影式飞行使用 90-120。注意，当此值超过 50 时会造成明显的摇杆延迟。较低的值，例如 20-25，会将部分 RC 控制信号中的阶跃信号传入电机信号，造成电机温度略有升高，但将降低 RC 信号延迟。这可能有助于竟速飞行。",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "前馈截止类型"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "设定点截止类型"
@@ -1617,6 +1731,9 @@
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "设定点截止频率"
+    },
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "前馈截止频率"
     },
     "receiverRcSetpointType": {
         "message": "设定点滤波器类型"
@@ -1678,14 +1795,29 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 强烈不建议将D设定点转换设置为0到0.1之间的值。这样做可能会导致不稳定，以及降低摇杆在穿过中点时的响应速度。</span>"
     },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feed-<br>forward"
+    },
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "前馈可以调整摇杆响应度。<br /><br />该选项将允许你调整响应度，从干脆、直接的用于竞速的摇杆响应，到柔软、平滑的用于电影式飞行/花式飞行的摇杆响应。"
+    },
     "pidTuningFeedforwardJitter": {
         "message": "抖动抑制"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "抖动抑制不论摇杆位置，仅会在摇杆移动缓慢时降低前馈。<br><br>这将实现平滑、无抖动的低速弧线飞行，并在快速打杆时无延迟地快递提供足够地前馈。不再需要过渡阈值，当抖动抑制激活时应将其设置为 0。<br><br>默认为 7。较高值 (10-12) 适合于电影式或花式飞行，5则适用于高速 RC 链路下的竟速飞行。"
     },
     "pidTuningFeedforwardSmoothFactor": {
         "message": "平滑度"
     },
+    "pidTuningFeedforwardSmoothnessHelp": {
+        "message": "前馈平滑对于抑制前馈轨线中的噪声十分重要。<br><br>使得轨线平滑的最低值即是最佳值。<br><br>默认值 25 适用于 50-150Hz 的遥控链路。对于 250Hz 的遥控链路，使用 40-50。对于 500Hz 的遥控链路，使用60-65。"
+    },
     "pidTuningFeedforwardAveraging": {
         "message": "平均"
+    },
+    "pidTuningFeedforwardAveragingHelp": {
+        "message": "前馈平均将对最近的 2 或 3 个前馈帧取平均。这可以平滑前馈轨线，但会增加一些延迟。<br><br>当信号中出现有序的上/下跳动时是最有效的，而这也是更快的 RC 链路中常见的。<br><br>500Hz 和较为嘈杂的 250Hz 链路，或电影式飞行/高清花式飞行需要使用 2 点平均。150Hz 的 CRSF (未使用 CRSFShot) 需要使用 3 点平均。"
     },
     "pidTuningOptionOff": {
         "message": "关闭"
@@ -1705,14 +1837,55 @@
     "pidTuningFeedforwardBoost": {
         "message": "增压"
     },
+    "pidTuningFeedforwardBoostHelp": {
+        "message": "前馈增压为摇杆加速/加速提供了额外的推力。<br><br>这将最大限度地降低因电机加速延迟而引起的陀螺仪滞后，并通过强力加速电机来减少摇杆减速时引起的过冲。<br><br>默认增压值适用于绝大多数设置。竞速飞行员可能会倾向于将该值稍微增大一些。增压值可通过小心而谨慎的日志分析来调整得到最佳值。"
+    },
     "pidTuningFeedforwardMaxRateLimit": {
         "message": "最大速率限制"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "当向最大偏转移动摇杆时，截断前馈，用以最小化翻滚起始时的过冲。<br><br>在翻滚结束时并不会产生任何作用。更低的值将使得衰减开始得更早。<br><br>通常来说该值不要调整。最佳值应当是使快速翻滚开始时出现的过冲处于能能接受范围之内的最大值。"
     },
     "pidTuningFeedforwardTransition": {
         "message": "转换阈值"
     },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "当摇杆靠近中点时，线性减少前馈。<br><br>在 4.2 及更早版本中，过渡阈值可用来使摇杆中点附近的响应更平滑。<br><br>在 4.3 中，由于其已被抖动抑制功能代替，故不再推荐使用过渡阈值。<br><br>将其设置为 0 将禁用过渡阈值。将其设置为 0.3 时，当摇杆处于中央死区时前馈将被衰减至 0，但当摇杆移动到偏离中心 30% 的位置时前馈会恢复正常。"
+    },
+    "pidTuningProportional": {
+        "message": "<b>P</b>roportional"
+    },
+    "pidTuningProportionalHelp": {
+        "message": "控制飞行器如何紧凑跟踪摇杆(设定点)。<br /><br /> 更高的值(增益) 将提供更紧凑的跟踪效果，但如果与D的比例过高则有可能导致过冲和高油门转弯震荡。将 P-term 视为汽车上的弹簧。",
+        "description": "Proportional Term helpicon message on PID table titlebar"
+    },
+    "pidTuningIntegral": {
+        "message": "<b>I</b>ntegral"
+    },
+    "pidTuningIntegralHelp": {
+        "message": "控制较小的持续偏移。<br><br>与 P 类似，但持续缓慢累积直至误差为 0。对于长期偏差很重要，例如重心偏移质心、风等长期外部影响。<br /><br />更高的增益将使得飞机“更跟手”，尤其是在过弯时，但也可能使得飞机感觉“更僵硬”<br><br>在弱动力飞机上，若其与P的比例较高则可能导致缓慢晃动。",
+        "description": "Integral Term helpicon message on PID table titlebar"
+    },
     "pidTuningDerivative": {
         "message": "Derivative"
+    },
+    "pidTuningDMax": {
+        "message": "<b>D</b> Max"
+    },
+    "pidTuningDMaxHelp": {
+        "message": "为可能导致过冲的快速机动动作提供更强的阻尼。<br><br>允许设置一个低于正常 D 值的基础 D Min 值，用以保持电机不至于高温，并在翻滚或快速转弯时更快地提升 D 值来控制过冲。<br><br>对竞速机、噪声比较大的飞机或弱动力飞机来说非常有用。",
+        "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "控制缓冲任何移动的阻尼的强弱。对打杆动作，D-term 会缓冲命令。对外界扰动(洗桨或微风) D-term 会缓冲扰动。<br><br>更高的增益将提供更多的阻尼，以减少 P 和 FF 造成的过冲。<br>然而 D-term 对陀螺仪的高频振动非常敏感(噪音会被按频率放大)。<br><br>如果 D 增益太高或陀螺仪噪音没有被妥善滤波处理(见滤波页) ，高频噪音则会导致电机过热甚至烧毁。<br><br>把 D-term 想象成车辆上的避震器，但是具有放大陀螺仪高频噪音的负面效果。",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
+    "pidTuningFeedforward": {
+        "message": "<b>F</b>eedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "一个额外的、完全由摇杆输入信号所驱动的驱动因子，用以帮助飞机快速响应摇杆动作。<br><br>前馈并不会引起震荡，在可以得到相似的响应情况下允许降低 P 值，并抵消 D 对于摇杆输入的自然抗阻。<br><br>低值或者零值将使得摇杆响应更加平滑但延迟更大。",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> 非常高的 rate 可能会导致突然减速时发生电机失步。"
@@ -1792,6 +1965,12 @@
     "pidTuningControllerHead": {
         "message": "PID 控制器"
     },
+    "pidTuningCopyProfile": {
+        "message": "复制配置文件"
+    },
+    "pidTuningCopyRateProfile": {
+        "message": "复制 Rate 配置文件"
+    },
     "dialogCopyProfileText": {
         "message": "将当前 PID 配置文件复制到"
     },
@@ -1809,6 +1988,9 @@
     },
     "dialogCopyProfileClose": {
         "message": "取消"
+    },
+    "pidTuningResetPidProfile": {
+        "message": "重置此配置文件"
     },
     "pidTuningPidProfileReset": {
         "message": "已为当前 PID 配置文件加载默认值。"
@@ -1834,6 +2016,10 @@
     "tuningHelp": {
         "message": "<b>调校技巧</b><br /><span class=\"message-negative\">重要：</span>调校后的初次飞行需注意电机温度。滤波值越高，飞行效果可能越好，但也会导致更多的信号“噪音”进入电机。<br>100Hz 是默认较佳的数值，但对震动较严重的情况，你可以尝试把 Dterm 和 Gyro 滤波器降低到50Hz。"
     },
+    "tuningHelpSliders": {
+        "message": "使用滑块来调整您的滤波器。滑块必须设置为关闭才可以进行手动更改。<br>向右移动滑块可获得更高的截止频率，并可能会改善洗桨，但会使更多的噪声传导至电机，使它们更热。<br>大多数开启 RPM 滤波器的干净的飞机都可以使劲往右滑动陀螺仪滤波滑块，或者仅开启 陀螺仪低通滤波器 2 并保持滑块不动。<br><strong>警告:</strong> 向右移动 D Term 滑块时请务必小心！请在每次更改之后检查电机温度！<br><strong>注意:</strong> 更改 PID 配置仅会更改 D Term 滤波器的设置。陀螺仪滤波器的设置应用于所有 PID 配置文件！",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>警告：</b></span>你使用的滤波器数量非常少。这可能会导致飞机难以控制，并可能导致起飞失控。强烈建议您<b>至少启用一个陀螺仪动态低通滤波器或者陀螺仪低通滤波器1和一个 D Term 动态低通滤波器或 D Term 低通滤波器1</b>。"
     },
@@ -1843,6 +2029,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>PID 滑块模式</strong><br><br>PID 滑块模式可以是：<br><br>&bull; 关闭，手动输入值<br>&bull; RP - 滑块仅控制Pitch 和 Roll 轴上的值，并需要手动输入 Yaw 轴的值<br>&bull; RPY - 滑块控制所有 PID 值<br><br><span class=\"message-negative\"><b>警告:</b></span>从 RP 切换到 RPY 模式将会用固件默认设置覆盖 Yaw 轴上的设置。"
+    },
+    "receiverHelp": {
+        "message": "&#8226; <b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">请始终检查您的失控保护能够正常工作！</a></strong></b> 具体设置在 失控保护 选项卡中，需要启用专家模式以查看。<br>&#8226; <b>务必使用最新的 TX 固件！</b><br> &#8226; 如果使用 OpenTX 或 EdgeTX 请务必 <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">关闭硬件 ADC 滤波器</a></strong>。<br>基本设置：正确配置 “接收机” 设置。为您的遥控器选择正确的 “通道映射”。检查 Roll、Pitch 和其他图块是否可以正确移动。将遥控器中的通道端点值或通道范围调整为 ~1000 到 ~2000，并将中点设置为 1500。有关更多信息，请阅读 <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">文档</a></strong>。"
     },
     "receiverThrottleMid": {
         "message": "油门中点"
@@ -2286,8 +2475,47 @@
     "gpsSignalStr": {
         "message": "信号强度"
     },
+    "gpsSignalGnssId": {
+        "message": "Gnss ID"
+    },
     "gpsSignalSatId": {
         "message": "卫星编号"
+    },
+    "gpsSignalStatusQly": {
+        "message": "状态/质量"
+    },
+    "gnssQualityNoSignal": {
+        "message": "无信号"
+    },
+    "gnssQualitySearching": {
+        "message": "搜索中"
+    },
+    "gnssQualityAcquired": {
+        "message": "已获取"
+    },
+    "gnssQualityUnusable": {
+        "message": "不可用"
+    },
+    "gnssQualityLocked": {
+        "message": "已锁定"
+    },
+    "gnssQualityFullyLocked": {
+        "message": "完全锁定"
+    },
+    "gnssUsedUnused": {
+        "message": "未使用"
+    },
+    "gnssUsedUsed": {
+        "message": "已使用"
+    },
+    "gnssHealthyUnknown": {
+        "message": "未知"
+    },
+    "gnssHealthyHealthy": {
+        "message": "健康"
+    },
+    "gnssHealthyUnhealthy": {
+        "message": "不良"
     },
     "motorsVoltage": {
         "message": "电压："
@@ -2945,10 +3173,10 @@
         "message": "没有加载固件"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "已加载本地固件: ($ 1 字节)"
+        "message": "已加载本地固件: {{filename}} ({{bytes}} 字节)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "已加载在线固件: ($1 字节)"
+        "message": "已加载在线固件: {{filename}} ({{bytes}} 字节)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX文件似乎已损坏"
@@ -2993,6 +3221,10 @@
     "firmwareFlasherBoardVerificationSuccess": {
         "message": "配置程序 <span class=\"message-positive\">已成功</span> 检测并验证了飞控板：<strong>{{boardName}}</strong>",
         "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "配置程序检测到电路板： <strong>{{boardName}}</strong> 但找不到与之对应的官方 Betaflight 目标",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "配置程序验证飞控板 <span class=\"message-negative\">失败</span> ，如果无法通过缓慢切换标签页使其工作，请先连接并应用自定义默认设置或重新连接 USB",
@@ -3390,8 +3622,21 @@
     "pidTuningMotorLimit": {
         "message": "缩放因子 [%]"
     },
+    "pidTuningMotorLimitHelp": {
+        "message": "按设置的百分比降低电机驱动信号。<br><br>用于在使用高芯数电池时降低电调电流和电机发热。<br><br>例如，在一台电机、桨和参数均已针对4S动力优化过的机器上使用6S电池，请尝试将此值设为66%；在一台动力设计为3S的机器上使用4S电池，请尝试设为75%。<br><br>请确保您的所有配件都支持您正在使用的电池电压。"
+    },
+    "pidTuningCellCount": {
+        "message": "电芯数 - 用于自动切换配置文件"
+    },
+    "pidTuningCellCountHelp": {
+        "message": "自动激活第一个符合当前已连接电池芯数的配置文件。"
+    },
     "pidTuningNonProfileFilterSettings": {
         "message": "独立于 PID 配置文件的滤波器设置"
+    },
+    "pidTuningFilterSlidersHelp": {
+        "message": "用以调整陀螺仪和 D Term 滤波器的滑块。<br /><br />更多的滤波：<br /> - 滑块向左滑<br>- 降低截止频率。<br /><br />更强的滤波通过滤除更多噪声来使电机温度更低，但同时会引入更多的陀螺仪信号延迟 (相位延迟)。这可能会恶化洗桨与共振。反应较慢的飞机，如 X-Class，可以使用较强的滤波。 <br><br>更少的滤波：<br /> - 滑块向右滑<br /> - 较高的截止频率<br><br>更少的滤波可减少陀螺仪信号延迟，并且可以改善洗桨。 向右移动陀螺仪滤波滑块并无大碍，但电机温度可能会略微上升。一般来说请不要将 D Term 滤波器滑块移到右侧，因为这有可能会使你的电机快速升温。",
+        "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
         "message": "更少滤波",
@@ -3409,6 +3654,10 @@
         "message": "陀螺仪滤波器乘数:",
         "description": "Gyro filter tuning slider label"
     },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "更改陀螺仪低通滤波器的截止频率。<br /><br />将滑块移到左边将会提高陀螺仪低通滤波的强度 (降低截止频率)。<br /><br />将滑块移到右边将会降低陀螺仪低通滤波的强度 (提高截止频率)。<br /><br />当将滑块移到右边以提升洗桨抑制力时，请务必不要太激进。这将会向 P 和 D 传入更多噪声，并可能导致飞行失控或烧毁电机。<br /><br />如果你有机架共振、轴承损坏、螺旋桨弯曲、电机过热等问题，请向左滑动滑块。<br /><br />陀螺仪低通滤波器在 D Term 滤波器之前单独工作。",
+        "description": "Gyro filter tuning slider helpicon message"
+    },
     "pidTuningGyroSliderEnabled": {
         "message": "使用陀螺仪滑块",
         "description": "Disable or enable Gyro Filter Tuning Slider"
@@ -3416,6 +3665,10 @@
     "pidTuningDTermFilterSlider": {
         "message": "D Term 滤波器乘数:",
         "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "更改 D Term 低通滤波器的截止频率。<br /><br />将滑块移到左边将会提高 D Term 低通滤波的强度 (降低截止频率)。<br /><br />将滑块移到右边将会降低 D Term 低通滤波的强度 (提高截止频率)。<br /><br />D Term 是 PID 中对噪声和共振最为敏感的元素。它会将噪声放大 10 至 100 倍。这便是 D Term 低通滤波器的截止频率低于陀螺仪低通滤波器的原因。<br /><br />D Term 在陀螺仪滤波器之后独立工作。默认 D Term 滤波的参数已为绝大多数飞机优化，并且几乎无需更改。<br /><br />向左移动此滑块可以降低嘈杂的飞机和高PID 'D' 飞机的电机发热，但可能会带来更多的洗桨和更低频率的 D Term 共振。<br /><br />不推荐向右滑动此滑块，但或许会改善干净的飞机的洗桨情况。这样做或许会导致电机在启动时就烧毁、在飞行中突然抖动以及电机严重发热。",
+        "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
         "message": "使用 D Term 滑块",
@@ -3460,6 +3713,10 @@
     "pidTuningFilterSlidersNonExpertMode": {
         "message": "<strong>注意:</strong> 滑块范围受限，因为未使用专家模式。此范围应该适用于大多数飞行器以及初学者。",
         "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<strong>注意：</strong> 滑块已被禁用，因为当前值已超出了基本模式调整范围。请切换到专家模式以进行更改",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "低",
@@ -3525,6 +3782,10 @@
         "message": "摇杆响应: <br /><i><small>FF 增益</small></i>",
         "description": "Response tuning slider label"
     },
+    "pidTuningResponseSliderHelp": {
+        "message": "更低的 摇杆响应 将会增加输入指令与飞机运动之间的延迟，并可能使翻滚的的结束动作中出现缓慢的回弹。过高的 摇杆响应 将会使得飞机对运动指令响应得更快速而锋利。过高的 摇杆响应 将会导致翻滚结束时出现过冲。<br /><br /><strong>注意:</strong><br />“I 值释放”这一功能可以在 摇杆响应 较低情况下帮助弱动力飞机减少回弹。",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
     "pidTuningIGainSlider": {
         "message": "漂移 - 晃动: <br /><i><small>I 增益</small></i>",
         "description": "I-term slider label"
@@ -3537,6 +3798,10 @@
         "message": "动态阻尼: <br /><i><small>D Max</small></i>",
         "description": "D Min slider label"
     },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "增大 D max，则在快速运动中 D 值可增大的最大量也会增加。<br /><br />对于竞速飞机，当为了降低电机热量而将 阻尼 滑块降低时，滑动此滑块将会提高快速转弯时的控制力。<br /><br />对于使用高清图传系统或者要进行电影式航拍的飞机来说，解决前飞时抖动的最好方法是将 阻尼 滑块（注意不是 动态阻尼 滑块）推到最右边。在将该滑块调整至最右的过程中请仔细检查电机温度，并仔细聆听快速转向时是否出现了奇怪的噪声。<br /><br />对于花式飞行，尤其是较重的飞机，将此滑块向右推可以帮助控制翻滚时出现的过冲。<br /><br /><strong>注意:</strong><br />通常来说翻滚出现的过冲是由于“I 值释放”得不够，或是电机失步，或是动力过弱（即出现电机饱和）。如果你发现向右移动 阻尼增压 滑块并不能改善翻滚的过冲，请将它重置回默认位置，并寻找过冲或晃动的真正原因。",
+        "description": "D_min slider helpicon message"
+    },
     "pidTuningRollPitchRatioSlider": {
         "message": "Pitch 阻尼: <br /><i><small>Pitch:Roll D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
@@ -3544,6 +3809,10 @@
     "pidTuningRollPitchRatioSliderHelp": {
         "message": "仅仅在俯仰轴上增加阻尼 (D)，如 Ptich:Roll 。能帮助处理只发生在 Pitch 上的过冲和回弹。<br /><br />对于在 Pitch 上转动惯量较大的飞机来说，一般需要更多阻尼 (Pitch 上惯性比较大，所以能累积更多动量) <br /><br />首先调节主的 ”阻尼“ 和/或 ”跟踪“ 滑块，直到你在 Roll 上获得比较好的反应行为。然后再用 Pitch 滑块 (增加或者减少) 在不影响到 Roll 的情况下微调 Pitch。",
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "Pitch 跟踪:<br><i><small>Pitch:Roll P & I & FF</small></i>",
+        "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
         "message": "通过改变 Pitch 相对于 Roll 的PI值，来提升 Pitch 上的跟踪力度。允许 Pitch 轴拥有比 Roll 轴更高的追踪权限。<br /><br />向右滑动此滑块将可以稳定在快速翻滚 (Pitch翻滚) 或抽动油门时的“点头”效应。另外也请考虑增大 反重力增益。<br /><br />请先调整主 “阻尼” 和/或 “追踪” 滑块，直到你获得了较好的 Roll 轴性能。然后使用 Pitch 滑块 (向右或向左) 以在不影响 Roll 轴的情况下微调 Pitch 轴。",
@@ -3557,6 +3826,10 @@
     },
     "pidTuningGyroLowpass": {
         "message": "陀螺仪低通滤波器 1"
+    },
+    "pidTuningGyroLowpassHelp": {
+        "message": "两个陀螺仪低通滤波器中的第一个。<br /><br />在早期的动态陷波代码中，将陀螺仪低通滤波器 1 设置为动态模式非常重要。在 4.3 中，当 RPM 滤波器开启后，陀螺仪低通滤波器 1 可被完全关闭，除非陀螺仪内置硬件滤波器完全关闭。<br /><br />在动态模式下，低油门时滤波非常强，随着油门升高滤波逐渐减弱，延迟逐渐降低。当陀螺仪低通滤波器 expo 值设置得较高时，截止频率由低向高的过渡随着油门得升高发生得更早。<br /><br />在静态模式下，截止频率是固定值。<br /><br />滤波器类型默认为 PT1，几乎不需要使用高阶滤波器。",
+        "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
         "message": "模式"
@@ -3573,11 +3846,29 @@
     "pidTuningGyroLowpassDyn": {
         "message": "陀螺仪低通滤波器动态滤波器"
     },
+    "pidTuningMinCutoffFrequency": {
+        "message": "最低截止频率 [Hz]"
+    },
+    "pidTuningMaxCutoffFrequency": {
+        "message": "最高截止频率 [Hz]"
+    },
     "pidTuningGyroLowpassDynType": {
         "message": "陀螺仪低通滤波器1动态滤波器类型"
     },
     "pidTuningGyroLowpass2": {
         "message": "陀螺仪低通滤波器 2"
+    },
+    "pidTuningGyroLowpass2Help": {
+        "message": "两个陀螺仪低通滤波器中的第二个。<br /><br />该滤波器运行在陀螺仪循环链路中，会在信号进入 PID 循环之前对其进行滤波。它总是运行在静态 (固定截止频率) 模式下。<br /><br />如果 PID 循环频率低于陀螺仪循环频率，例如 PID 4kHz/陀螺仪 8kHz，此滤波器应当保留，以防止由于 8k->4k 降采样引起的混叠问题。<br /><br />对于 Betaflight 4.3 及更高版本，单个陀螺仪低通滤波器 2 的设置可在干净的、开启RPM滤波器、并将 D Term 滤波保持默认的飞机上工作良好。",
+        "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "陀螺仪低通滤波器衰减更高频率的噪声，以防止其进入 PID 环路。共有两个独立配置的陀螺仪滤波器；默认设置下，两者都处于激活状态。<br /><br />当使用 RPM 滤波器时，通常可以直接将陀螺仪滤波器滑块通常滑到最右边，或者保留一个 500Hz 的静态低通陀螺仪滤波器即可。<br /><br />当陀螺仪滤波延迟最低时，飞机会有最少的洗桨。<br /><br />将滑块向右滑动时请务必检查电机温度。当陀螺仪滤波最少时，必须配备足够的 D Term 滤波！",
+        "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "D Term 低通滤波器将衰减高频噪声和由于 D 增益放大引起的共振。<br /><br />共有两个 D Term 滤波器，其效果是累加的。几乎所有飞机都需要同时使用这两个滤波器，或者可以使用单个 PT2 滤波器来取代双 PT1 滤波器。<br /><br />一般情况下，当配置所带来的陀螺仪延迟最低时 (滑块滑到最右，更高的截止频率) 飞机将会飞得最好，并具有最少的洗桨。然而，尤其对于 D Term 滤波器来说，向右滑动滑块将极大增加电机过热的可能性。<br /><br />如果你没有设置足够的 D Term 滤波强度，那么极容易烧毁电机 - 务必小心！",
+        "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "陀螺仪陷波滤波器"
@@ -3585,17 +3876,54 @@
     "pidTuningGyroNotchFilter": {
         "message": "陀螺仪陷波滤波器 1"
     },
+    "pidTuningGyroNotchFilterHelp": {
+        "message": "在陀螺仪上应用一个静态的 (截止频率为定值)、中心频率为特定值的陷波滤波器。<br /><br />或许对同时影响 P 和 D 的独立的、频率为固定值的共振非常有效。<br /><br />为使其有效，共振频率必须在整个油门段内均为恒定频率。<br /><br />陷波滤波器槽口宽度由其截止频率设定。请使用能够有效控制共振的最小频率范围。除特殊情况外，请避免将陷波滤波器设置得低于 100Hz。<br /><br />在 4.3 中，很少需要使用静态陷波滤波器。"
+    },
     "pidTuningGyroNotchFilter2": {
         "message": "陀螺仪陷波滤波器 2"
     },
+    "pidTuningGyroNotchFilter2Help": {
+        "message": "在陀螺仪上应用第二个静态 (截止频率为定值) 陷波滤波器。<br /><br />很少需要，并且只能被用作其余手段无法有效控制第二条共振频率线的最后手段。"
+    },
+    "pidTuningCenterFrequency": {
+        "message": "中心频率 [Hz]"
+    },
+    "pidTuningCutoffFrequency": {
+        "message": "截止频率 [Hz]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "陷波滤波器是一种对称的、狭窄的、带通滤波器，由中心值和截止频率两个变量所控制。<br /><br />中心值是滤波器的中心频率。截止频率对应的是 -3dB 点所对应的频率。<br /><br />例如，一个中心频率 260Hz、截止频率 160Hz 的陷波滤波器，对应的是 -3dB 范围为 160-360Hz 并在 260Hz 附近强力衰减的陷波滤波器。",
+        "description": "Notch filter helpicon message"
+    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "动态陷波滤波器"
+    },
+    "pidTuningDynamicNotchFilterHelp": {
+        "message": "动态陷波滤波器将在各个轴上分别追踪电机噪声频率的峰值，并在其上放置陷波滤波器。"
+    },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "动态陷波滤波器将跟踪电机噪音频率，并并根据其频率在中间放置一到五个陷波滤波器过滤器，"
+    },
+    "pidTuningDynamicNotchFilterDisabledWarning": {
+        "message": "<strong>注意:</strong> 动态陷波滤波器已关闭。为了配置和使用它，请在 ‘$t(configurationFeatures.message)’ 选择 ‘$t(tabConfiguration.message)’ 以开启“动态陷波滤波器”功能。另外请确保 PID 速率不低于 2kHz。"
     },
     "pidTuningDynamicNotchRange": {
         "message": "动态陷波滤波器范围"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "动态陷波滤波器宽度百分比"
+    },
+    "pidTuningDynamicNotchQ": {
+        "message": "Q 因子"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "最低频率 [Hz]"
+    },
+    "pidTuningDynamicNotchMaxHz": {
+        "message": "最高频率 [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "陷波槽数"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "动态陷波滤波器有三个频率范围可供运行：LOW(80-330hz) 用于6英寸及以上的低速巡航机，MEDIU(140-550hz) 用于常见的5英寸飞行器，HIGH(230-800hz) 用于电机转速较高的2.5-3英寸的飞行器。AUTO 选项将会使用陀螺仪低通滤波器1最高截止频率范围来决定频率范围。"
@@ -3645,17 +3973,52 @@
     "pidTuningDTermLowpass": {
         "message": "D Term 低通滤波器 1"
     },
+    "pidTuningDTermLowpassHelp": {
+        "message": "两个 D Term 低通滤波器中的第一个。<br /><br />在动态模式下，低油门时滤波会更强，随着油门的提升滤波会减少，延迟会降低。这有助于控制电机研磨现象或解锁升天，同时减少起飞后的延迟和洗桨现象。当 D Term 低通滤波器 expo 值设置得较高时，截止频率由低向高的过渡随着油门得升高发生得更早。<br /><br />在静态模式下，截止频率为固定值。不推荐在 D Term 滤波器上使用这样的设置。<br /><br />滤波器默认类型为 PT1，尽管如此，部分用户更倾向于在这里仅使用一个动态 Biquad 滤波器，而不启用第二个 PT1 滤波器。<br /><br />任何导致 D Term 滤波减弱的更改可能会导致严重的电机过热或解锁升天现象。",
+        "description": "Help icon for the DTerm Lowpass 1 Filter"
+    },
     "pidTuningDTermLowpassMode": {
         "message": "模式"
     },
     "pidTuningDTermLowpass2": {
         "message": "D Term 低通滤波器 2"
     },
+    "pidTuningDTermLowpass2Help": {
+        "message": "两个 D Term 低通滤波器中的第二个。<br /><br />该滤波器永远处于静态模式 (固定截止频率)。 D Term 滤波至少需要两个 PT1 或者一个 Biquad。<br /><br />通常来说，该滤波器的截止频率通常会被设置得高于动态低通滤波器 1 的截止频率移动范围。 这将对该频率以上的噪音进行二次滤波。<br /><br />任何导致 D Term 滤波减弱的更改可能会导致严重的电机过热或解锁升天现象。",
+        "description": "Help icon for the DTerm Lowpass 2 Filter"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term 低通滤波器"
     },
+    "pidTuningDTermLowpassType": {
+        "message": "滤波器类型"
+    },
+    "pidTuningStaticCutoffFrequency": {
+        "message": "静态截止频率 [Hz]"
+    },
+    "pidTuningDTermLowpass2Type": {
+        "message": "滤波器类型"
+    },
     "pidTuningDTermLowpassDyn": {
         "message": "D Term 动态低通滤波器"
+    },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "动态曲线 Expo"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "动态滤波器类型"
+    },
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "D Term 陷波滤波器"
+    },
+    "pidTuningDTermNotchFiltersGroupHelp": {
+        "message": "在 D Term 数据中的指定中心频率上设置一个静态 (截止频率固定) 的陷波滤波器。<br /><br />陷波宽度由截止频率指定。<br /><br />对于被 D Term 放大的独立的、恒定频率的共振非常有效。<br /><br />尽可能将截止频率靠近中心。除非是低转速飞机，否则请尽量避免将陷波器设置得低于 100hz。"
+    },
+    "pidTuningYawLowpassFiltersGroup": {
+        "message": "偏航低通滤波器"
+    },
+    "pidTuningYawLowpassFiltersGroupHelp": {
+        "message": "在陀螺仪数据 Yaw 轴上放置一个指定截止频率的 PT1 滤波器"
     },
     "pidTuningVbatPidCompensation": {
         "message": "电池电压 PID 补偿"
@@ -3666,11 +4029,17 @@
     "pidTuningVbatSagCompensation": {
         "message": "电池压降补偿"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "通过增加电机输出来补偿电池电压，使得在可用的电池电压范围内，能够提供一致的油门和PID性能。<br /><br />补偿量可以是0至100%之间任意数值。推荐使用全额补偿（100%）。<br /><br />访问<a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">这个wiki词条</a>以获取更多信息。"
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
     "pidTuningThrustLinearization": {
         "message": "推力线性化"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "提升低油门权重和响应性。<br><br>对于小圈机和 48k 电调非常有用。并且不会影响高油门响应。<br><br>补偿量可在 0 到 150% 之间。通常来说 30-40% 便足够了。"
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3689,6 +4058,9 @@
     },
     "pidTuningItermRelax": {
         "message": "I 值释放"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "当快速移动发生时抑制 I Term 的积累，用以减少翻滚结束后和其他快速输入是的回弹。<br><br>设定点模式会响应平滑摇杆输入，并且适用于高灵敏度飞机。<br><br>陀螺仪模式则适用于极其滞后的飞机。<br><br>通常来说 Yaw 轴不适用 I Term 释放。"
     },
     "pidTuningItermRelaxAxes": {
         "message": "轴",
@@ -3720,23 +4092,44 @@
         "message": "截止频率",
         "description": "Cutoff value of the I Term Relax"
     },
+    "pidTuningItermRelaxCutoffHelp": {
+        "message": "较低的值可抑制弱动力飞机在翻滚后发生的回弹；较高的值可提高以较高角速率进行转弯时的精度，用于竞速。<br><br>竞速建议 30-40，高响应性花飞飞机建议设置为 15，较重的花飞飞机建议设置为 10，X-class 建议设置为 3-5。"
+    },
     "pidTuningAbsoluteControlGain": {
         "message": "绝对控制"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "此功能解决了 $t(pidTuningItermRotation.message) 存在的一些潜在问题，并从某种角度上来说取代了它。此功能累积陀螺仪在四轴飞行器坐标系每个轴上的绝对误差，并按比例将其校正值混合到设定值中。<br><br>您需要启用 AirMode 和 $t(pidTuningItermRelax.message) (轴设置为 $t(pidTuningOptionRP.message))。当此功能与 $t(pidTuningIntegratedYaw.message) 一起使用，则可以将 $t(pidTuningItermRelax.message) 的轴设置为 $t(pidTuningOptionRPY.message) 。"
     },
     "pidTuningThrottleBoost": {
         "message": "油门增压"
     },
+    "pidTuningThrottleBoostHelp": {
+        "message": "当油门快速变化时暂时增压这种变化，提供更直接的油门响应。"
+    },
     "pidTuningIdleMinRpm": {
         "message": "动态怠速值 [* 100 RPM]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "动态怠速能够改善低 RPM 下的控制，降低电机失步的风险。<br /><br />它能提高 PID 权重，提高零油门稳定性，延长零油门倒挂滞空时间，增强电机刹车力矩。<br /><br />动态怠速最低 RPM 应设置为 3000 - 3500 RPM。对于4.2，DShot 怠速值应设置得尽量低，如 1%。4.3 中则不需要调整 Dshot 怠速值。<br /><br />请访问 <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">此 wiki 词条</a> 以获取更多信息。"
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "由于Dshot 回传已关闭，动态怠速已关闭"
+    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "训练模式角度限制"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "通过限制飞机可以到达的角度，来帮助飞行员学习手动模式飞行。有效的限制值为 10-80 度。该模式必须在 $t(tabAuxiliary.message) 选项卡中设置一个开关来激活。"
     },
     "pidTuningIntegratedYaw": {
         "message": "整合式偏航"
     },
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">注意</span>: 如果你启用此功能，则必须相应地调整偏航PID。更多信息在<a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">此处</a>"
+    },
+    "pidTuningIntegratedYawHelp": {
+        "message": "整合式偏航将对 Yaw 轴的 P, I, D 值进行积分，以允许您像调整 Pitch 和 Roll 轴的 PID 一样调整 Yaw 轴 PID。<br><br>几乎不需要 I，因为积分后的 P 行为与 I 类似，积分后的 D 行为与 P 类似。<br><br>注意：因为整合式偏航中并不包含 I，故其需要启用绝对控制。"
     },
     "configHelp2": {
         "message": "任意角度（直立，反转，旋转等）安装飞控板。当使用外部传感器时，请使用传感器校正设置(陀螺，加速度计，磁场计)来决定独立于飞控板的传感器位置。"
@@ -5892,6 +6285,14 @@
     "cordovaExitAppMessage": {
         "message": "你确定要关闭配置程序吗？"
     },
+    "dropDownSelectAll": {
+        "message": "[全选/取消全选]",
+        "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownFilterDisabled": {
+        "message": "请选择...",
+        "description": "Text indicating nothing is selected in the drop down/multiple select (filter disabled)"
+    },
     "dropDownAll": {
         "message": "所有",
         "description": "Text indicating everything is selected in the drop down/multiple select"
@@ -6087,5 +6488,17 @@
     "presetsTooManyPresetsFound": {
         "message": "已达到可显示预设数的最大限制",
         "description": "Message that apprears on presets tab if too many presets found"
+    },
+    "presetsOptionsPlaceholder": {
+        "message": "注意！请查看选项列表",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsVersionMismatch": {
+        "message": "预设源版本不匹配。<br/>所需版本： {{versionRequired}}<br/>预设源版本： {{versionSource}}<br/>使用此预设源可能是危险的。<br/>您想要继续吗？",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsReviewOptionsWarning": {
+        "message": "请在选择此预设之前查看选项列表。",
+        "description": "Dialog text to prompt user to review options for the preset"
     }
 }
