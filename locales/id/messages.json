@@ -221,7 +221,7 @@
         "message": "Tampilkan log"
     },
     "serialPortOpened": {
-        "message": "Port serial <span class=\"pesan positif\">berhasil</span> dibuka dengan ID: $1"
+        "message": "Port serial <span class=\"message-positive\">berhasil</span> dibuka dengan ID: $1"
     },
     "serialPortOpenFail": {
         "message": "<span class=\"message-negative\">Gagal</span> untuk membuka port serial"
