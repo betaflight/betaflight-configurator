@@ -4246,13 +4246,13 @@
         "message": "Stage 2 - Settings"
     },
     "failsafeDelayItem": {
-        "message": "Guard time for stage 2 activation after signal lost [1 = 0.1 sec.]"
+        "message": "Guard time for stage 2 activation after signal lost [seconds]"
     },
     "failsafeDelayHelp": {
         "message": "Time for stage 1 to wait for recovery"
     },
     "failsafeThrottleLowItem": {
-        "message": "Failsafe Throttle Low Delay [1 = 0.1 sec.]"
+        "message": "Failsafe Throttle Low Delay [seconds]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Just disarm the craft instead of executing the selected failsafe procedure when the throttle was low for this amount of time"
@@ -4261,7 +4261,7 @@
         "message": "Throttle value used while landing"
     },
     "failsafeOffDelayItem": {
-        "message": "Delay for turning off the Motors during Failsafe [1 = 0.1 sec.]"
+        "message": "Delay for turning off the Motors during Failsafe [seconds]"
     },
     "failsafeOffDelayHelp": {
         "message": "Time to stay in landing mode until the motors are turned off and the craft is disarmed"

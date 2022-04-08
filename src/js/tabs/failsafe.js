@@ -249,9 +249,9 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
         }
 
         $('input[name="failsafe_throttle"]').val(FC.FAILSAFE_CONFIG.failsafe_throttle);
-        $('input[name="failsafe_off_delay"]').val(FC.FAILSAFE_CONFIG.failsafe_off_delay);
-        $('input[name="failsafe_throttle_low_delay"]').val(FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay);
-        $('input[name="failsafe_delay"]').val(FC.FAILSAFE_CONFIG.failsafe_delay);
+        $('input[name="failsafe_off_delay"]').val((FC.FAILSAFE_CONFIG.failsafe_off_delay / 10.0).toFixed(1));
+        $('input[name="failsafe_throttle_low_delay"]').val((FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay / 10.0).toFixed(1));
+        $('input[name="failsafe_delay"]').val((FC.FAILSAFE_CONFIG.failsafe_delay / 10.0).toFixed(1));
 
         // set stage 2 failsafe procedure
         $('input[type="radio"].procedure').change(function () {
@@ -345,9 +345,9 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             FC.RX_CONFIG.rx_max_usec = parseInt($('input[name="rx_max_usec"]').val());
 
             FC.FAILSAFE_CONFIG.failsafe_throttle = parseInt($('input[name="failsafe_throttle"]').val());
-            FC.FAILSAFE_CONFIG.failsafe_off_delay = parseInt($('input[name="failsafe_off_delay"]').val());
-            FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay = parseInt($('input[name="failsafe_throttle_low_delay"]').val());
-            FC.FAILSAFE_CONFIG.failsafe_delay = parseInt($('input[name="failsafe_delay"]').val());
+            FC.FAILSAFE_CONFIG.failsafe_off_delay = Math.round(10.0 * parseFloat($('input[name="failsafe_off_delay"]').val()));
+            FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay = Math.round(10.0 * parseFloat($('input[name="failsafe_throttle_low_delay"]').val()));
+            FC.FAILSAFE_CONFIG.failsafe_delay = Math.round(10.0 * parseFloat($('input[name="failsafe_delay"]').val()));
 
             if( $('input[id="land"]').is(':checked')) {
                 FC.FAILSAFE_CONFIG.failsafe_procedure = 0;
