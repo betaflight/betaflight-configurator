@@ -2000,7 +2000,7 @@
         "message": "Estes valores (em us) indicam quanto a entrada do RC pode variar antes de ser considerada válida. Para transmissores com saídas instáveis, este valor pode ser aumentado se as entradas RC variam enquanto parado."
     },
     "receiverYawDeadband": {
-        "message": "Ponto morto do Yaw"
+        "message": "Zona morta do Yaw"
     },
     "receiverHelpYawDeadband": {
         "message": "Estes valores (em us) indicam quanto a entrada do RC pode variar antes de ser considerada válida. Para transmissores com saídas instáveis, este valor pode ser aumentado se as entradas RC variam enquanto parado. <strong> Esta configuração afeta somente o Yaw.</strong>"
@@ -2085,7 +2085,7 @@
         "message": "Adicionar Intervalo"
     },
     "auxiliaryAddLink": {
-        "message": "Adicionar Link"
+        "message": "Adicionar Ligação"
     },
     "auxiliaryButtonSave": {
         "message": "Gravar"
@@ -3568,7 +3568,7 @@
         "message": "Ativa automaticamente o primeiro perfil que tem uma contagem de células igual à da bateria conetada."
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "Configurações de filtros independentes de perfil"
+        "message": "Definições de Filtro independentes de perfil"
     },
     "pidTuningFilterSlidersHelp": {
         "message": "Estes sliders ajustam os filtros Gyro e D-term.<br /><br />Para mais filtragem:<br /> - Sliders para a esquerda<br> - Frequências de corte mais baixas.<br /><br /> Filtragem mais forte mantém os motores mais frios, removendo mais ruído, mas atrasa mais o sinal gyro e pode piorar o propwash ou causar oscilações ressonantes. Quads menos responsivos como os X - Classe funcionam melhor com filtros mais fortes. <br><br>Para menos filtro:<br /> - Sliders para a direita<br /> - Frequências de corte mais altas <br><br>Menor filtragem reduz o atraso do sinal gyro, e muitas vezes melhora o propwash. Mover o filtro gyro lowpass para a direita normalmente está OK, mas mover o filtro D para a direita normalmente não é necessário e pode facilmente resultar em motores muito quentes.",

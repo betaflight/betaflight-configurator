@@ -672,6 +672,9 @@
     "dfu_device_flash_info": {
         "message": "Dispositivo detectado cun tamaño de flash total $1 KiB"
     },
+    "dfu_hex_address_errors": {
+        "message": "A imaxe do firmware contén enderezos que non se atopan no dispositivo de destino"
+    },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Erro</span>: A imaxe estregada é maior que o tamaño do chip! Imaxe: $1 KiB, límite= $2 KiB"
     },
@@ -3195,6 +3198,12 @@
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware non cargado"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Firmware local cargado: {{filename}} ({{bytes}} bytes)"
+    },
+    "firmwareFlasherFirmwareOnlineLoaded": {
+        "message": "Firmware Online cargado: {{filename}} ({{bytes}} bytes)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "O arquivo HEX parece estar corrupto"
