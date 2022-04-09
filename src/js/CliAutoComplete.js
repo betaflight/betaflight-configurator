@@ -289,23 +289,32 @@ CliAutoComplete._initTextcomplete = function() {
          * Then add `mousemove` handler. If the mouse moves we consider that mouse interaction
          * is desired so we reenable the `mouseover` handler
          */
+
+        const textCompleteDropDownElement = $('.textcomplete-dropdown');
+
         if (!savedMouseoverItemHandler) {
             // save the original 'mouseover' handeler
-            savedMouseoverItemHandler = $._data($('.textcomplete-dropdown')[0], 'events').mouseover[0].handler;
-        }
+            try {
+                savedMouseoverItemHandler = $._data(textCompleteDropDownElement[0], 'events').mouseover[0].handler;
+            } catch (error) {
+                console.log(error);
+            }
 
-        $('.textcomplete-dropdown')
-            .off('mouseover') // initially disable it
-            .off('mousemove') // avoid `mousemove` accumulation if previous show did not trigger `mousemove`
-            .on('mousemove', '.textcomplete-item', function(e) {
-                // the mouse has moved so reenable `mouseover`
-                $(this).parent()
+            if (savedMouseoverItemHandler) {
+                textCompleteDropDownElement
+                .off('mouseover') // initially disable it
+                .off('mousemove') // avoid `mousemove` accumulation if previous show did not trigger `mousemove`
+                .on('mousemove', '.textcomplete-item', function(e) {
+                        // the mouse has moved so reenable `mouseover`
+                    $(this).parent()
                     .off('mousemove')
                     .on('mouseover', '.textcomplete-item', savedMouseoverItemHandler);
 
-                // trigger the mouseover handler to select the item under the cursor
-                savedMouseoverItemHandler(e);
-            });
+                    // trigger the mouseover handler to select the item under the cursor
+                    savedMouseoverItemHandler(e);
+                });
+            }
+        }
     });
 
     // textcomplete autocomplete strategies
