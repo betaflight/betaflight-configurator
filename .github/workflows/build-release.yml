@@ -1,0 +1,41 @@
+## This is triggered by the publishing of a release, and will build the assets and attach them.
+
+name: On Release 
+
+on:
+  release:
+    types: [published]
+        
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+    with:
+      debug_build: false
+
+  release:
+    name: Attach Release Artifacts
+    needs: ci
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v2
+
+      - name: Fetch build artifacts
+        uses: actions/download-artifact@v2
+
+      - name: List assets
+        run: ls -al Betaflight-*/*
+
+      - name: Attach assets to release
+        run: |
+          set -x
+          assets=()
+          for asset in Betaflight-*/*; do
+            assets+=("-a" "$asset")
+            echo "$asset"
+          done
+          tag_name="${GITHUB_REF##*/}"
+          hub release edit "${assets[@]}" -m "" "$tag_name"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
