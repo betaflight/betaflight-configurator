@@ -2,18 +2,14 @@
 
 TABS.receiver = {
     rateChartHeight: 117,
-    useSuperExpo: false,
-    deadband: 0,
-    yawDeadband: 0,
     analyticsChanges: {},
     needReboot: false,
-    ratesMultiplier: 1,
 };
 
 TABS.receiver.initialize = function (callback) {
     const tab = this;
 
-    if (GUI.active_tab != 'receiver') {
+    if (GUI.active_tab !== 'receiver') {
         GUI.active_tab = 'receiver';
     }
 
@@ -77,13 +73,6 @@ TABS.receiver.initialize = function (callback) {
             $('.deadband input[name="yaw_deadband"]').val(FC.RC_DEADBAND_CONFIG.yaw_deadband);
             $('.deadband input[name="deadband"]').val(FC.RC_DEADBAND_CONFIG.deadband);
             $('.deadband input[name="3ddeadbandthrottle"]').val(FC.RC_DEADBAND_CONFIG.deadband3d_throttle);
-
-            $('.deadband input[name="deadband"]').change(function () {
-                tab.deadband = parseInt($(this).val());
-            }).change();
-            $('.deadband input[name="yaw_deadband"]').change(function () {
-                tab.yawDeadband = parseInt($(this).val());
-            }).change();
         }
 
         if (semver.lt(FC.CONFIG.apiVersion, "1.15.0")) {
@@ -132,7 +121,7 @@ TABS.receiver.initialize = function (callback) {
                     <li class="meter">\
                         <div class="meter-bar">\
                             <div class="label"></div>\
-                            <div class="fill${FC.RC.active_channels == 0 ? 'disabled' : ''}">\
+                            <div class="fill${FC.RC.active_channels === 0 ? 'disabled' : ''}">\
                                 <div class="label"></div>\
                             </div>\
                         </div>\
@@ -202,7 +191,7 @@ TABS.receiver.initialize = function (callback) {
             strBuffer = val.split('');
             const duplicityBuffer = [];
 
-            if (val.length != 8) {
+            if (val.length !== 8) {
                 $(this).val(lastValid);
                 return false;
             }
@@ -522,7 +511,7 @@ TABS.receiver.initialize = function (callback) {
             }, function(createdWindow) {
                 // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
                 createdWindow.contentWindow.setRawRx = function(channels) {
-                    if (CONFIGURATOR.connectionValid && GUI.active_tab != 'cli') {
+                    if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {
                         mspHelper.setRawRx(channels);
                         return true;
                     } else {
@@ -826,32 +815,18 @@ TABS.receiver.initModelPreview = function () {
     this.keepRendering = true;
     this.model = new Model($('.model_preview'), $('.model_preview canvas'));
 
-    this.useSuperExpo = false;
-    if (semver.gte(FC.CONFIG.apiVersion, "1.20.0") || (semver.gte(FC.CONFIG.apiVersion, "1.16.0") && FC.FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'))) {
-        this.useSuperExpo = true;
-    }
-
     let useOldRateCurve = false;
-    if (FC.CONFIG.flightControllerIdentifier == 'CLFL' && semver.lt(FC.CONFIG.apiVersion, '2.0.0')) {
+    if (FC.CONFIG.flightControllerIdentifier === 'CLFL' && semver.lt(FC.CONFIG.apiVersion, '2.0.0')) {
         useOldRateCurve = true;
     }
-    if (FC.CONFIG.flightControllerIdentifier == 'BTFL' && semver.lt(FC.CONFIG.flightControllerVersion, '2.8.0')) {
+    if (FC.CONFIG.flightControllerIdentifier === 'BTFL' && semver.lt(FC.CONFIG.flightControllerVersion, '2.8.0')) {
         useOldRateCurve = true;
     }
 
     this.rateCurve = new RateCurve(useOldRateCurve);
+    this.currentRates = this.rateCurve.getCurrentRates();
 
-    const ratesMultiplierList = [
-        {name: "Betaflight", value: 1},
-        {name: "Raceflight", value: 100},
-        {name: "KISS", value: 1},
-        {name: "Actual", value: 1000},
-        {name: "QuickRates", value: 1000},
-    ];
-
-    this.ratesMultiplier = ratesMultiplierList[FC.RC_TUNING.rates_type].value;
-
-    $(window).on('resize', $.proxy(this.model.resize, this.model));
+    $(window).on('resize', $.bind(this.model.resize, this.model));
 };
 
 TABS.receiver.renderModel = function () {
@@ -862,40 +837,37 @@ TABS.receiver.renderModel = function () {
     if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
         const delta = this.clock.getDelta();
 
-        const roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
+        const roll = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
             FC.RC.channels[0],
-            FC.RC_TUNING.roll_rate * this.ratesMultiplier,
-            FC.RC_TUNING.RC_RATE * this.ratesMultiplier,
-            FC.RC_TUNING.RC_EXPO * this.ratesMultiplier,
-            this.useSuperExpo,
-            this.deadband,
-            FC.RC_TUNING.roll_rate_limit,
+            this.currentRates.roll_rate,
+            this.currentRates.rc_rate,
+            this.currentRates.rc_expo,
+            this.currentRates.superexpo,
+            this.currentRates.deadband,
+            this.currentRates.roll_rate_limit,
         );
-
         const pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
             FC.RC.channels[1],
-            FC.RC_TUNING.pitch_rate * this.ratesMultiplier,
-            FC.RC_TUNING.rcPitchRate * this.ratesMultiplier,
-            FC.RC_TUNING.RC_PITCH_EXPO * this.ratesMultiplier,
-            this.useSuperExpo,
-            this.deadband,
-            FC.RC_TUNING.pitch_rate_limit,
+            this.currentRates.pitch_rate,
+            this.currentRates.rc_rate_pitch,
+            this.currentRates.rc_pitch_expo,
+            this.currentRates.superexpo,
+            this.currentRates.deadband,
+            this.currentRates.pitch_rate_limit,
         );
-
         const yaw = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
             FC.RC.channels[2],
-            FC.RC_TUNING.yaw_rate * this.ratesMultiplier,
-            FC.RC_TUNING.rcYawRate * this.ratesMultiplier,
-            FC.RC_TUNING.RC_YAW_EXPO * this.ratesMultiplier,
-            this.useSuperExpo,
-            this.yawDeadband,
-            FC.RC_TUNING.yaw_rate_limit,
+            this.currentRates.yaw_rate,
+            this.currentRates.rc_rate_yaw,
+            this.currentRates.rc_yaw_expo,
+            this.currentRates.superexpo,
+            this.currentRates.yawDeadband,
+            this.currentRates.yaw_rate_limit,
         );
 
         this.model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
 };
-
 
 TABS.receiver.cleanup = function (callback) {
     $(window).off('resize', this.resize);

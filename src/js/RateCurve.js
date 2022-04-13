@@ -3,7 +3,6 @@
 const minRc = 1000;
 const midRc = 1500;
 const maxRc = 2000;
-
 const RateCurve = function (useLegacyCurve) {
     this.useLegacyCurve = useLegacyCurve;
     this.maxAngularVel = null;
@@ -150,6 +149,81 @@ const RateCurve = function (useLegacyCurve) {
         return angularVel;
     };
 
+    this.getCurrentRates = function () {
+
+        const currentRates = {
+            roll_rate:          FC.RC_TUNING.roll_rate,
+            pitch_rate:         FC.RC_TUNING.pitch_rate,
+            yaw_rate:           FC.RC_TUNING.yaw_rate,
+            rc_rate:            FC.RC_TUNING.RC_RATE,
+            rc_rate_yaw:        FC.RC_TUNING.rcYawRate,
+            rc_expo:            FC.RC_TUNING.RC_EXPO,
+            rc_yaw_expo:        FC.RC_TUNING.RC_YAW_EXPO,
+            rc_rate_pitch:      FC.RC_TUNING.rcPitchRate,
+            rc_pitch_expo:      FC.RC_TUNING.RC_PITCH_EXPO,
+            superexpo:          FC.FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
+            deadband:           FC.RC_DEADBAND_CONFIG.deadband,
+            yawDeadband:        FC.RC_DEADBAND_CONFIG.yaw_deadband,
+            roll_rate_limit:    FC.RC_TUNING.roll_rate_limit,
+            pitch_rate_limit:   FC.RC_TUNING.pitch_rate_limit,
+            yaw_rate_limit:     FC.RC_TUNING.yaw_rate_limit,
+        };
+
+        if (semver.lt(FC.CONFIG.apiVersion, "1.7.0")) {
+            currentRates.roll_rate = FC.RC_TUNING.roll_pitch_rate;
+            currentRates.pitch_rate = FC.RC_TUNING.roll_pitch_rate;
+        }
+
+        if (semver.lt(FC.CONFIG.apiVersion, "1.16.0")) {
+            currentRates.rc_rate_yaw = currentRates.rc_rate;
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
+            currentRates.superexpo = true;
+        }
+
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
+            currentRates.rc_rate_pitch = currentRates.rc_rate;
+            currentRates.rc_expo_pitch = currentRates.rc_expo;
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+            switch (FC.RC_TUNING.rates_type) {
+                case FC.RATES_TYPE.RACEFLIGHT:
+                    currentRates.roll_rate *= 100;
+                    currentRates.pitch_rate *= 100;
+                    currentRates.yaw_rate *= 100;
+                    currentRates.rc_rate *= 1000;
+                    currentRates.rc_rate_yaw *= 1000;
+                    currentRates.rc_rate_pitch *= 1000;
+                    currentRates.rc_expo *= 100;
+                    currentRates.rc_yaw_expo *= 100;
+                    currentRates.rc_pitch_expo *= 100;
+
+                    break;
+                case FC.RATES_TYPE.ACTUAL:
+                    currentRates.roll_rate *= 1000;
+                    currentRates.pitch_rate *= 1000;
+                    currentRates.yaw_rate *= 1000;
+                    currentRates.rc_rate *= 1000;
+                    currentRates.rc_rate_yaw *= 1000;
+                    currentRates.rc_rate_pitch *= 1000;
+
+                    break;
+                case FC.RATES_TYPE.QUICKRATES:
+                    currentRates.roll_rate *= 1000;
+                    currentRates.pitch_rate *= 1000;
+                    currentRates.yaw_rate *= 1000;
+
+                    break;
+                default:           // add future rates types here
+
+                    break;
+            }
+        }
+
+        return currentRates;
+    };
 };
 
 RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit) {
@@ -165,23 +239,23 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 
         const rcCommandfAbs = Math.abs(rcCommandf);
 
-        switch(TABS.pid_tuning.currentRatesType) {
-            case TABS.pid_tuning.RATES_TYPE.RACEFLIGHT:
+        switch (FC.RC_TUNING.rates_type) {
+            case FC.RATES_TYPE.RACEFLIGHT:
                 angleRate=this.getRaceflightRates(rcCommandf, rate, rcRate, rcExpo);
 
                 break;
 
-            case TABS.pid_tuning.RATES_TYPE.KISS:
+            case FC.RATES_TYPE.KISS:
                 angleRate=this.getKISSRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                 break;
 
-            case TABS.pid_tuning.RATES_TYPE.ACTUAL:
+            case FC.RATES_TYPE.ACTUAL:
                 angleRate=this.getActualRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                 break;
 
-            case TABS.pid_tuning.RATES_TYPE.QUICKRATES:
+            case FC.RATES_TYPE.QUICKRATES:
                 angleRate=this.getQuickRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                 break;
@@ -208,8 +282,8 @@ RateCurve.prototype.getMaxAngularVel = function (rate, rcRate, rcExpo, superExpo
 
 RateCurve.prototype.setMaxAngularVel = function (value) {
     this.maxAngularVel = Math.ceil(value/200) * 200;
-    return this.maxAngularVel;
 
+    return this.maxAngularVel;
 };
 
 RateCurve.prototype.draw = function (rate, rcRate, rcExpo, superExpoActive, deadband, limit, maxAngularVel, context) {
