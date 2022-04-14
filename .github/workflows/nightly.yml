@@ -41,8 +41,7 @@ jobs:
         id: notes
         run: |
           set -- release-assets/Betaflight-Configurator-Debug-*
-          echo "::set-output name=notes::$(test -e "$1" && echo '${{ env.debug_release_notes }}' || echo '${{ env.release_n
-      otes }}')"
+          echo "::set-output name=notes::$(test -e "$1" && echo '${{ env.debug_release_notes }}' || echo '${{ env.release_notes }}')"
 
       - name: Get current date
         id: date
