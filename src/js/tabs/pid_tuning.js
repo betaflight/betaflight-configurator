@@ -1,6 +1,6 @@
-'use strict';
+import { i18n } from "../localization";
 
-TABS.pid_tuning = {
+const pid_tuning = {
     RATE_PROFILE_MASK: 128,
     showAllPids: false,
     updating: true,
@@ -25,7 +25,7 @@ TABS.pid_tuning = {
     CONFIGURATOR_TUNING_SLIDERS: {},
 };
 
-TABS.pid_tuning.initialize = function (callback) {
+pid_tuning.initialize = function (callback) {
 
     const self = this;
 
@@ -2480,11 +2480,11 @@ TABS.pid_tuning.initialize = function (callback) {
     }
 };
 
-TABS.pid_tuning.getReceiverData = function () {
+pid_tuning.getReceiverData = function () {
     MSP.send_message(MSPCodes.MSP_RC, false, false);
 };
 
-TABS.pid_tuning.initRatesPreview = function () {
+pid_tuning.initRatesPreview = function () {
     this.keepRendering = true;
     this.model = new Model($('.rates_preview'), $('.rates_preview canvas'));
 
@@ -2495,7 +2495,7 @@ TABS.pid_tuning.initRatesPreview = function () {
     $(window).on('resize', $.proxy(this.updateRatesLabels, this));
 };
 
-TABS.pid_tuning.renderModel = function () {
+pid_tuning.renderModel = function () {
     if (this.keepRendering) { requestAnimationFrame(this.renderModel.bind(this)); }
 
     if (!this.clock) { this.clock = new THREE.Clock(); }
@@ -2538,7 +2538,7 @@ TABS.pid_tuning.renderModel = function () {
     }
 };
 
-TABS.pid_tuning.cleanup = function (callback) {
+pid_tuning.cleanup = function (callback) {
     const self = this;
 
     if (self.model) {
@@ -2555,7 +2555,7 @@ TABS.pid_tuning.cleanup = function (callback) {
     if (callback) callback();
 };
 
-TABS.pid_tuning.refresh = function (callback) {
+pid_tuning.refresh = function (callback) {
     const self = this;
 
     GUI.tab_switch_cleanup(function () {
@@ -2569,21 +2569,21 @@ TABS.pid_tuning.refresh = function (callback) {
     });
 };
 
-TABS.pid_tuning.setProfile = function () {
+pid_tuning.setProfile = function () {
     const self = this;
 
     self.currentProfile = FC.CONFIG.profile;
     $('.tab-pid_tuning select[name="profile"]').val(self.currentProfile);
 };
 
-TABS.pid_tuning.setRateProfile = function () {
+pid_tuning.setRateProfile = function () {
     const self = this;
 
     self.currentRateProfile = FC.CONFIG.rateProfile;
     $('.tab-pid_tuning select[name="rate_profile"]').val(self.currentRateProfile);
 };
 
-TABS.pid_tuning.setDirty = function (isDirty) {
+pid_tuning.setDirty = function (isDirty) {
     const self = this;
 
     self.dirty = isDirty;
@@ -2593,7 +2593,7 @@ TABS.pid_tuning.setDirty = function (isDirty) {
     }
 };
 
-TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
+pid_tuning.checkUpdateProfile = function (updateRateProfile) {
     const self = this;
 
     if (GUI.active_tab === 'pid_tuning') {
@@ -2634,7 +2634,7 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
     }
 };
 
-TABS.pid_tuning.checkRC = function() {
+pid_tuning.checkRC = function() {
     // Function monitors for change in the primary axes rc received data and returns true if a change is detected.
 
     if (!this.oldRC) { this.oldRC = [FC.RC.channels[0], FC.RC.channels[1], FC.RC.channels[2]]; }
@@ -2650,7 +2650,7 @@ TABS.pid_tuning.checkRC = function() {
     return rateCurveUpdateRequired;
 };
 
-TABS.pid_tuning.checkThrottle = function() {
+pid_tuning.checkThrottle = function() {
     // Function monitors for change in the received rc throttle data and returns true if a change is detected.
     if (!this.oldThrottle) {
         this.oldThrottle = FC.RC.channels[3];
@@ -2661,7 +2661,7 @@ TABS.pid_tuning.checkThrottle = function() {
     return updateRequired;
 };
 
-TABS.pid_tuning.updatePidControllerParameters = function () {
+pid_tuning.updatePidControllerParameters = function () {
     if (semver.gte(FC.CONFIG.apiVersion, "1.20.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_31) && $('.tab-pid_tuning select[name="controller"]').val() === '0') {
         $('.pid_tuning .YAW_JUMP_PREVENTION').show();
 
@@ -2684,7 +2684,7 @@ TABS.pid_tuning.updatePidControllerParameters = function () {
     }
 };
 
-TABS.pid_tuning.updateRatesLabels = function() {
+pid_tuning.updateRatesLabels = function() {
     const self = this;
     if (!self.rateCurve.useLegacyCurve && self.rateCurve.maxAngularVel) {
 
@@ -2871,13 +2871,13 @@ TABS.pid_tuning.updateRatesLabels = function() {
     }
 };
 
-TABS.pid_tuning.calculateNewPids = function() {
+pid_tuning.calculateNewPids = function() {
     if (!TABS.pid_tuning.isHtmlProcessing) {
         TuningSliders.calculateNewPids();
     }
 };
 
-TABS.pid_tuning.calculateNewGyroFilters = function() {
+pid_tuning.calculateNewGyroFilters = function() {
     if (!TABS.pid_tuning.isHtmlProcessing) {
         if (TuningSliders.sliderGyroFilter) {
             TuningSliders.calculateNewGyroFilters();
@@ -2885,7 +2885,7 @@ TABS.pid_tuning.calculateNewGyroFilters = function() {
     }
 };
 
-TABS.pid_tuning.calculateNewDTermFilters = function() {
+pid_tuning.calculateNewDTermFilters = function() {
     if (!TABS.pid_tuning.isHtmlProcessing) {
         if (TuningSliders.sliderDTermFilter) {
             TuningSliders.calculateNewDTermFilters();
@@ -2893,7 +2893,7 @@ TABS.pid_tuning.calculateNewDTermFilters = function() {
     }
 };
 
-TABS.pid_tuning.updateFilterWarning = function() {
+pid_tuning.updateFilterWarning = function() {
     const gyroLowpassFilterMode = parseInt($('.pid_filter select[name="gyroLowpassFilterMode"]').val());
     const gyroDynamicLowpassEnabled = gyroLowpassFilterMode === 1;
     const gyroLowpass1Enabled = !gyroLowpassFilterMode;
@@ -2918,7 +2918,7 @@ TABS.pid_tuning.updateFilterWarning = function() {
     }
 };
 
-TABS.pid_tuning.updatePIDColors = function(clear = false) {
+pid_tuning.updatePIDColors = function(clear = false) {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
         return;
     }
@@ -2951,7 +2951,7 @@ TABS.pid_tuning.updatePIDColors = function(clear = false) {
     setTuningElementColor($('.pid_tuning .YAW input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardYaw, FC.ADVANCED_TUNING.feedforwardYaw);
 };
 
-TABS.pid_tuning.changeRatesType = function(rateTypeID) {
+pid_tuning.changeRatesType = function(rateTypeID) {
     const self = this;
     const dialogRatesType = $('.dialogRatesType')[0];
 
@@ -2987,7 +2987,7 @@ TABS.pid_tuning.changeRatesType = function(rateTypeID) {
 
 };
 
-TABS.pid_tuning.changeRatesSystem = function(sameType) {
+pid_tuning.changeRatesSystem = function(sameType) {
     const self = this;
 
     let rcRateMax = 2.55, rcRateMin = 0.01, rcRateStep = 0.01;
@@ -3142,7 +3142,7 @@ TABS.pid_tuning.changeRatesSystem = function(sameType) {
     }
 };
 
-TABS.pid_tuning.changeRatesTypeLogo = function() {
+pid_tuning.changeRatesTypeLogo = function() {
     const self = this;
 
     const ratesLogoElement = $('.rates_type img[id="ratesLogo"]');
@@ -3177,6 +3177,11 @@ TABS.pid_tuning.changeRatesTypeLogo = function() {
 };
 
 
-TABS.pid_tuning.expertModeChanged = function(expertModeEnabled) {
+pid_tuning.expertModeChanged = function(expertModeEnabled) {
     TuningSliders.setExpertMode(expertModeEnabled);
+};
+
+window.TABS.pid_tuning = pid_tuning;
+export {
+    pid_tuning,
 };

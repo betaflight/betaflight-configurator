@@ -1,10 +1,11 @@
-'use strict';
+import semver from 'semver';
+import { i18n } from "../localization";
 
-TABS.ports = {
+const ports = {
     analyticsChanges: {},
 };
 
-TABS.ports.initialize = function (callback, scrollPosition) {
+ports.initialize = function (callback) {
     const self = this;
 
     let board_definition = {};
@@ -418,6 +419,9 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 };
 
-TABS.ports.cleanup = function (callback) {
+ports.cleanup = function (callback) {
     if (callback) callback();
 };
+
+window.TABS.ports = ports;
+export { ports };

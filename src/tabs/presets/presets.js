@@ -1,13 +1,13 @@
 'use strict';
 
-TABS.presets = {
+const presets = {
     presetsRepo: null,
     cliEngine: null,
     pickedPresetList: [],
     majorVersion: 1,
 };
 
-TABS.presets.initialize = function (callback) {
+presets.initialize = function (callback) {
     const self = this;
 
     self.cliEngine = new CliEngine(self);
@@ -21,7 +21,7 @@ TABS.presets.initialize = function (callback) {
     }
 };
 
-TABS.presets.readDom = function() {
+presets.readDom = function() {
     this._divGlobalLoading = $('#presets_global_loading');
     this._divGlobalLoadingError = $('#presets_global_loading_error');
     this._divCli = $('#presets_cli');
@@ -56,7 +56,7 @@ TABS.presets.readDom = function() {
     this._domListTooManyFound = $("#presets_list_too_many_found");
 };
 
-TABS.presets.getPickedPresetsCli = function() {
+presets.getPickedPresetsCli = function() {
     let result = [];
     this.pickedPresetList.forEach(pickedPreset => {
         result.push(...pickedPreset.presetCli);
@@ -65,17 +65,17 @@ TABS.presets.getPickedPresetsCli = function() {
     return result;
 };
 
-TABS.presets.onApplyProgressChange = function(value) {
+presets.onApplyProgressChange = function(value) {
     this._domProgressDialogProgressBar.val(value);
 };
 
-TABS.presets.applyCommandsList = function(strings) {
+presets.applyCommandsList = function(strings) {
     strings.forEach(cliCommand => {
         this.cliEngine.sendLine(cliCommand);
     });
 };
 
-TABS.presets.onSaveClick = function() {
+presets.onSaveClick = function() {
     this._domProgressDialogProgressBar.val(0);
     this._domProgressDialog.showModal();
     const currentCliErrorsCount = this.cliEngine.errorsCount;
@@ -98,13 +98,13 @@ TABS.presets.onSaveClick = function() {
     });
 };
 
-TABS.presets.disconnectCliMakeSure = function() {
+presets.disconnectCliMakeSure = function() {
     GUI.timeout_add('disconnect', function () {
         $('div.connect_controls a.connect').trigger( "click" );
     }, 500);
 };
 
-TABS.presets.setupMenuButtons = function() {
+presets.setupMenuButtons = function() {
     this._domButtonSave.on("click", () => this.onSaveClick());
 
 
@@ -156,17 +156,17 @@ TABS.presets.setupMenuButtons = function() {
 
 };
 
-TABS.presets.enableSaveCancelButtons = function (isEnabled) {
+presets.enableSaveCancelButtons = function (isEnabled) {
     this._domButtonSave.toggleClass(GUI.buttonDisabledClass, !isEnabled);
     this._domButtonCancel.toggleClass(GUI.buttonDisabledClass, !isEnabled);
 };
 
-TABS.presets.onButtonHideBackupWarningClick = function() {
+presets.onButtonHideBackupWarningClick = function() {
     this._domWarningBackup.toggle(false);
     ConfigStorage.set({ 'showPresetsWarningBackup': false });
 };
 
-TABS.presets.setupBackupWarning = function() {
+presets.setupBackupWarning = function() {
     const obj = ConfigStorage.get('showPresetsWarningBackup');
     if (obj.showPresetsWarningBackup === undefined) {
         obj.showPresetsWarningBackup = true;
@@ -176,13 +176,13 @@ TABS.presets.setupBackupWarning = function() {
     this._domWarningBackup.toggle(warningVisible);
 };
 
-TABS.presets.onPresetSourcesShowClick = function() {
+presets.onPresetSourcesShowClick = function() {
     this.presetsSourcesDialog.show().then(() => {
         this.reload();
     });
 };
 
-TABS.presets.onSaveConfigClick = function() {
+presets.onSaveConfigClick = function() {
     const waitingDialog = GUI.showWaitDialog({title: i18n.getMessage("presetsLoadingDumpAll"), buttonCancelCallback: null});
 
     const saveFailedDialogSettings = {
@@ -211,7 +211,7 @@ TABS.presets.onSaveConfigClick = function() {
     .then(() => this.cliEngine.sendLine(CliEngine.s_commandExit));
 };
 
-TABS.presets.readDumpAll = function() {
+presets.readDumpAll = function() {
     let lastCliStringReceived = performance.now();
     const diffAll = [CliEngine.s_commandDefaultsNoSave, ""];
     const readingDumpIntervalName = "PRESETS_READING_DUMP_INTERVAL";
@@ -238,7 +238,7 @@ TABS.presets.readDumpAll = function() {
     });
 };
 
-TABS.presets.onLoadConfigClick = function() {
+presets.onLoadConfigClick = function() {
     GUI.readTextFileDialog("txt")
     .then(text => {
         if (text) {
@@ -250,7 +250,7 @@ TABS.presets.onLoadConfigClick = function() {
     });
 };
 
-TABS.presets.onHtmlLoad = function(callback) {
+presets.onHtmlLoad = function(callback) {
     i18n.localizePage();
     TABS.presets.adaptPhones();
     this.readDom();
@@ -269,11 +269,11 @@ TABS.presets.onHtmlLoad = function(callback) {
     });
 };
 
-TABS.presets.onPresetPickedCallback = function() {
+presets.onPresetPickedCallback = function() {
     this.enableSaveCancelButtons(true);
 };
 
-TABS.presets.activateCli = function() {
+presets.activateCli = function() {
     return new Promise(resolve => {
         CONFIGURATOR.cliEngineActive = true;
         this.cliEngine.setUi($('#presets_cli_window'), $('#presets_cli_window_wrapper'), $('#presets_cli_command'));
@@ -285,12 +285,12 @@ TABS.presets.activateCli = function() {
     });
 };
 
-TABS.presets.reload = function() {
+presets.reload = function() {
     this.resetInitialValues();
     this.tryLoadPresets();
 };
 
-TABS.presets.tryLoadPresets = function() {
+presets.tryLoadPresets = function() {
     const presetSource = this.presetsSourcesDialog.getActivePresetSource();
 
     if (PresetSource.isUrlGithubRepo(presetSource.url)) {
@@ -317,7 +317,7 @@ TABS.presets.tryLoadPresets = function() {
     });
 };
 
-TABS.presets.multipleSelectComponentScrollFix = function() {
+presets.multipleSelectComponentScrollFix = function() {
     /*
         A hack for multiple select that fixes scrolling problem
         when the number of items 199+. More details here:
@@ -332,7 +332,7 @@ TABS.presets.multipleSelectComponentScrollFix = function() {
     }, 100);
 };
 
-TABS.presets.checkPresetSourceVersion = function() {
+presets.checkPresetSourceVersion = function() {
     const self = this;
 
     return new Promise((resolve, reject) => {
@@ -356,7 +356,7 @@ TABS.presets.checkPresetSourceVersion = function() {
     });
 };
 
-TABS.presets.prepareFilterFields = function() {
+presets.prepareFilterFields = function() {
     this._freezeSearch = true;
     this.prepareFilterSelectField(this._selectCategory, this.presetsRepo.index.uniqueValues.category, 3);
     this.prepareFilterSelectField(this._selectKeyword, this.presetsRepo.index.uniqueValues.keywords, 3);
@@ -373,7 +373,7 @@ TABS.presets.prepareFilterFields = function() {
     this.updateSearchResults();
 };
 
-TABS.presets.preselectFilterFields = function() {
+presets.preselectFilterFields = function() {
     const currentVersion = FC.CONFIG.flightControllerVersion;
     const selectedVersions = [];
 
@@ -386,7 +386,7 @@ TABS.presets.preselectFilterFields = function() {
     this._selectFirmwareVersion.multipleSelect('setSelects', selectedVersions);
 };
 
-TABS.presets.prepareFilterSelectField = function(domSelectElement, selectOptions, minimumCountSelected) {
+presets.prepareFilterSelectField = function(domSelectElement, selectOptions, minimumCountSelected) {
     domSelectElement.multipleSelect("destroy");
     domSelectElement.multipleSelect({
         data: selectOptions,
@@ -401,7 +401,7 @@ TABS.presets.prepareFilterSelectField = function(domSelectElement, selectOptions
     });
 };
 
-TABS.presets.updateSearchResults = function() {
+presets.updateSearchResults = function() {
     if (!this._freezeSearch)
     {
         const searchParams = {
@@ -420,7 +420,7 @@ TABS.presets.updateSearchResults = function() {
     }
 };
 
-TABS.presets.updateSelectStyle = function() {
+presets.updateSelectStyle = function() {
     this.updateSingleSelectStyle(this._selectCategory);
     this.updateSingleSelectStyle(this._selectKeyword);
     this.updateSingleSelectStyle(this._selectAuthor);
@@ -428,13 +428,13 @@ TABS.presets.updateSelectStyle = function() {
     this.updateSingleSelectStyle(this._selectStatus);
 };
 
-TABS.presets.updateSingleSelectStyle = function(select) {
+presets.updateSingleSelectStyle = function(select) {
     const selectedOptions = select.multipleSelect("getSelects", "text");
     const isSomethingSelected = (0 !== selectedOptions.length);
     select.parent().find($(".ms-choice")).toggleClass("presets_filter_select_nonempty", isSomethingSelected);
 };
 
-TABS.presets.displayPresets = function(fitPresets) {
+presets.displayPresets = function(fitPresets) {
     this._presetPanels.forEach(presetPanel => {
         presetPanel.remove();
     });
@@ -456,7 +456,7 @@ TABS.presets.displayPresets = function(fitPresets) {
     this._domListTooManyFound.appendTo(this._divPresetList);
 };
 
-TABS.presets.getFitPresets = function(searchParams) {
+presets.getFitPresets = function(searchParams) {
     const result = [];
 
     for(const preset of this.presetsRepo.index.presets) {
@@ -470,11 +470,11 @@ TABS.presets.getFitPresets = function(searchParams) {
     return result;
 };
 
-TABS.presets.isPresetFitSearchStatuses = function(preset, searchParams) {
+presets.isPresetFitSearchStatuses = function(preset, searchParams) {
     return 0 === searchParams.status.length || searchParams.status.includes(preset.status);
 };
 
-TABS.presets.isPresetFitSearchCategories = function(preset, searchParams) {
+presets.isPresetFitSearchCategories = function(preset, searchParams) {
     if (0 !== searchParams.categories.length) {
         if (undefined === preset.category) {
             return false;
@@ -488,7 +488,7 @@ TABS.presets.isPresetFitSearchCategories = function(preset, searchParams) {
     return true;
 };
 
-TABS.presets.isPresetFitSearchKeywords = function(preset, searchParams) {
+presets.isPresetFitSearchKeywords = function(preset, searchParams) {
     if (0 !== searchParams.keywords.length) {
         if (!Array.isArray(preset.keywords)) {
             return false;
@@ -503,7 +503,7 @@ TABS.presets.isPresetFitSearchKeywords = function(preset, searchParams) {
     return true;
 };
 
-TABS.presets.isPresetFitSearchAuthors = function(preset, searchParams) {
+presets.isPresetFitSearchAuthors = function(preset, searchParams) {
     if (0 !== searchParams.authors.length) {
         if (undefined === preset.author) {
             return false;
@@ -517,7 +517,7 @@ TABS.presets.isPresetFitSearchAuthors = function(preset, searchParams) {
     return true;
 };
 
-TABS.presets.isPresetFitSearchFirmwareVersions = function(preset, searchParams) {
+presets.isPresetFitSearchFirmwareVersions = function(preset, searchParams) {
     if (0 !== searchParams.firmwareVersions.length) {
         if (!Array.isArray(preset.firmware_version)) {
             return false;
@@ -533,7 +533,7 @@ TABS.presets.isPresetFitSearchFirmwareVersions = function(preset, searchParams) 
 };
 
 
-TABS.presets.isPresetFitSearchString = function(preset, searchParams) {
+presets.isPresetFitSearchString = function(preset, searchParams) {
     if (searchParams.searchString) {
         const allKeywords = preset.keywords.join(" ");
         const allVersions = preset.firmware_version.join(" ");
@@ -551,7 +551,7 @@ TABS.presets.isPresetFitSearchString = function(preset, searchParams) {
 };
 
 
-TABS.presets.isPresetFitSearch = function(preset, searchParams) {
+presets.isPresetFitSearch = function(preset, searchParams) {
     if (preset.hidden) {
         return false;
     }
@@ -583,17 +583,17 @@ TABS.presets.isPresetFitSearch = function(preset, searchParams) {
     return true;
 };
 
-TABS.presets.adaptPhones = function() {
+presets.adaptPhones = function() {
     if (GUI.isCordova()) {
         UI_PHONES.initToolbar();
     }
 };
 
-TABS.presets.read = function(readInfo) {
+presets.read = function(readInfo) {
     TABS.presets.cliEngine.readSerial(readInfo);
 };
 
-TABS.presets.cleanup = function(callback) {
+presets.cleanup = function(callback) {
     this.resetInitialValues();
 
     if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliEngineActive && CONFIGURATOR.cliEngineValid)) {
@@ -611,7 +611,7 @@ TABS.presets.cleanup = function(callback) {
     });
 };
 
-TABS.presets.resetInitialValues = function() {
+presets.resetInitialValues = function() {
     CONFIGURATOR.cliEngineActive = false;
     CONFIGURATOR.cliEngineValid = false;
     TABS.presets.presetsRepo = null;
@@ -619,6 +619,11 @@ TABS.presets.resetInitialValues = function() {
     this._domProgressDialog.close();
 };
 
-TABS.presets.expertModeChanged = function(expertModeEnabled) {
+presets.expertModeChanged = function(expertModeEnabled) {
     this._domShowHideCli.toggle(expertModeEnabled);
+};
+
+window.TABS.presets = presets;
+export {
+    presets,
 };
