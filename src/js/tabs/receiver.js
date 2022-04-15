@@ -816,10 +816,10 @@ TABS.receiver.initModelPreview = function () {
     this.model = new Model($('.model_preview'), $('.model_preview canvas'));
 
     let useOldRateCurve = false;
-    if (FC.CONFIG.flightControllerIdentifier === 'CLFL' && semver.lt(FC.CONFIG.apiVersion, '2.0.0')) {
-        useOldRateCurve = true;
-    }
-    if (FC.CONFIG.flightControllerIdentifier === 'BTFL' && semver.lt(FC.CONFIG.flightControllerVersion, '2.8.0')) {
+    const cleanFlight = FC.CONFIG.flightControllerIdentifier === 'CLFL' && semver.lt(FC.CONFIG.apiVersion, '2.0.0');
+    const betaFlight = FC.CONFIG.flightControllerIdentifier === 'BTFL' && semver.lt(FC.CONFIG.flightControllerVersion, '2.8.0');
+
+    if (cleanFlight || betaFlight) {
         useOldRateCurve = true;
     }
 
@@ -837,33 +837,12 @@ TABS.receiver.renderModel = function () {
     if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
         const delta = this.clock.getDelta();
 
-        const roll = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
-            FC.RC.channels[0],
-            this.currentRates.roll_rate,
-            this.currentRates.rc_rate,
-            this.currentRates.rc_expo,
-            this.currentRates.superexpo,
-            this.currentRates.deadband,
-            this.currentRates.roll_rate_limit,
-        );
-        const pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
-            FC.RC.channels[1],
-            this.currentRates.pitch_rate,
-            this.currentRates.rc_rate_pitch,
-            this.currentRates.rc_pitch_expo,
-            this.currentRates.superexpo,
-            this.currentRates.deadband,
-            this.currentRates.pitch_rate_limit,
-        );
-        const yaw = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
-            FC.RC.channels[2],
-            this.currentRates.yaw_rate,
-            this.currentRates.rc_rate_yaw,
-            this.currentRates.rc_yaw_expo,
-            this.currentRates.superexpo,
-            this.currentRates.yawDeadband,
-            this.currentRates.yaw_rate_limit,
-        );
+        const roll = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[0], this.currentRates.roll_rate, this.currentRates.rc_rate, this.currentRates.rc_expo,
+            this.currentRates.superexpo, this.currentRates.deadband, this.currentRates.roll_rate_limit);
+        const pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[1], this.currentRates.pitch_rate, this.currentRates.rc_rate_pitch,
+            this.currentRates.rc_pitch_expo, this.currentRates.superexpo, this.currentRates.deadband, this.currentRates.pitch_rate_limit);
+        const yaw = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[2], this.currentRates.yaw_rate, this.currentRates.rc_rate_yaw,
+            this.currentRates.rc_yaw_expo, this.currentRates.superexpo, this.currentRates.yawDeadband, this.currentRates.yaw_rate_limit);
 
         this.model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
