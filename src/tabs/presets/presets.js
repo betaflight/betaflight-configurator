@@ -42,8 +42,8 @@ TABS.presets.readDom = function() {
     this._domProgressDialog = $("#presets_apply_progress_dialog")[0];
     this._domProgressDialogProgressBar = $(".presets_apply_progress_dialog_progress_bar");
     this._domButtonaSaveAnyway = $("#presets_cli_errors_save_anyway_button");
-    this._domButtonaCliExit = $("#presets_cli_errors_exit_no_save_button");
-    this._domDialogCliErrors = $("#presets_cli_errors_dialog")[0];
+    this._domButtonCliExit = $("#presets_cli_errors_exit_no_save_button");
+    this._domDialogCliErrors = $("#presets_cli_errors_dialog");
     this._domButtonSaveBackup = $(".presets_save_config");
     this._domButtonLoadBackup = $(".presets_load_config");
     this._domButtonPresetSources = $(".presets_sources_show");
@@ -87,7 +87,8 @@ TABS.presets.onSaveClick = function() {
 
             if (newCliErrorsCount !== currentCliErrorsCount) {
                 this._domProgressDialog.close();
-                this._domDialogCliErrors.showModal();
+                this._domDialogCliErrors[0].showModal();
+                this._domDialogCliErrorsSavePressed = false;
             } else {
                 this._domProgressDialog.close();
                 this.cliEngine.sendLine(CliEngine.s_commandSave);
@@ -117,13 +118,14 @@ TABS.presets.setupMenuButtons = function() {
         this.enableSaveCancelButtons(false);
     });
 
-    this._domButtonaCliExit.on("click", () =>{
-        this._domDialogCliErrors.close();
-        this.cliEngine.sendLine(CliEngine.s_commandExit);
-        this.disconnectCliMakeSure();
+    this._domButtonCliExit.on("click", () =>{
+        this._domDialogCliErrorsSavePressed = false;
+        this._domDialogCliErrors[0].close();
     });
+
     this._domButtonaSaveAnyway.on("click", () => {
-        this._domDialogCliErrors.close();
+        this._domDialogCliErrorsSavePressed = true;
+        this._domDialogCliErrors[0].close();
         this.cliEngine.sendLine(CliEngine.s_commandSave, null, () => {
             // In case of batch CLI commands errors Firmware requeires extra "save" comand for CLI safety.
             // No need for this safety in presets as preset tab already detected errors and showed them to the user.
@@ -132,6 +134,15 @@ TABS.presets.setupMenuButtons = function() {
         });
         this.disconnectCliMakeSure();
     });
+
+    this._domDialogCliErrors.on("close", () => {
+        if(!this._domDialogCliErrorsSavePressed) {
+            this._domDialogCliErrorsSavePressed = true;
+            this.cliEngine.sendLine(CliEngine.s_commandExit);
+            this.disconnectCliMakeSure();
+        }
+    });
+
     this._domButtonSaveBackup.on("click", () => this.onSaveConfigClick());
     this._domButtonLoadBackup.on("click", () => this.onLoadConfigClick());
     this._domButtonPresetSources.on("click", () => this.onPresetSourcesShowClick());

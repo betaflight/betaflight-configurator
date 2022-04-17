@@ -92,12 +92,7 @@ class MotorOutputReorderComponent
         function reboot()
         {
             GUI.log(i18n.getMessage('configurationEepromSaved'));
-
-            GUI.tab_switch_cleanup(function()
-            {
-                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
-                reinitialiseConnection(self);
-            });
+            GUI.tab_switch_cleanup(() => MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(TABS.motors)));
         }
 
         FC.MOTOR_OUTPUT_ORDER = Array.from(this._newMotorOutputReorder);

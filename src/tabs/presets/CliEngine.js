@@ -208,7 +208,7 @@ class CliEngine
                 CONFIGURATOR.cliEngineActive = false;
                 CONFIGURATOR.cliEngineValid = false;
                 GUI.log(i18n.getMessage('cliReboot'));
-                reinitialiseConnection(this._currentTab);
+                reinitializeConnection(this._currentTab);
             }
         }
 
