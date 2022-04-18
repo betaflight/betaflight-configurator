@@ -25,6 +25,7 @@ class PresetsDetailedDialog {
         this._setLoadingState(true);
         this._domDialog[0].showModal();
         this._optionsShowedAtLeastOnce = false;
+        this._isPresetPickedOnClose = false;
 
         this._presetsRepo.loadPreset(this._preset)
             .then(() => {
@@ -231,9 +232,10 @@ class PresetsDetailedDialog {
         this._readDom();
 
         this._domButtonApply.on("click", () => this._onApplyButtonClicked());
-        this._domButtonCancel.on("click", () => this._onCancelButtonClicked(false));
+        this._domButtonCancel.on("click", () => this._onCancelButtonClicked());
         this._domButtonCliShow.on("click", () => this._showCliText(true));
         this._domButtonCliHide.on("click", () => this._showCliText(false));
+        this._domDialog.on("close", () => this._onClose());
     }
 
     _onApplyButtonClicked() {
@@ -256,7 +258,8 @@ class PresetsDetailedDialog {
         const pickedPreset = new PickedPreset(this._preset, cliStrings);
         this._pickedPresetList.push(pickedPreset);
         this._onPresetPickedCallback?.();
-        this._onCancelButtonClicked(true);
+        this._isPresetPickedOnClose = true;
+        this._onCancelButtonClicked();
     }
 
     _pickPresetFwVersionCheck() {
@@ -284,9 +287,12 @@ class PresetsDetailedDialog {
         }
     }
 
-    _onCancelButtonClicked(isPresetPicked) {
-        this._destroyOptionsSelect();
+    _onCancelButtonClicked() {
         this._domDialog[0].close();
-        this._openPromiseResolve?.(isPresetPicked);
+    }
+
+    _onClose() {
+        this._destroyOptionsSelect();
+        this._openPromiseResolve?.(this._isPresetPickedOnClose);
     }
 }

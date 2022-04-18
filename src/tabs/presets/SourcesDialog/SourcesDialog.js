@@ -124,11 +124,15 @@ class PresetsSourcesDialog {
 
     _setupEvents() {
         this._domButtonClose.on("click", () => this._onCloseButtonClick());
+        this._domDialog.on("close", () => this._onClose());
     }
 
     _onCloseButtonClick() {
-        this._sourceSelectedPromiseResolve?.();
         this._domDialog[0].close();
+    }
+
+    _onClose() {
+        this._sourceSelectedPromiseResolve?.();
     }
 
     _readPanels() {
