@@ -4115,13 +4115,13 @@
         "message": "Stage 2 - Ajustos"
     },
     "failsafeDelayItem": {
-        "message": "Temps de guarda per activar l'stage 2 després de perdre la senyal [1 = 0.1 sec.]"
+        "message": "Temps de guarda per activar l'stage 2 després de perdre la senyal [seconds]"
     },
     "failsafeDelayHelp": {
         "message": "Temps d'espera de l'stage 1 per a recuperació"
     },
     "failsafeThrottleLowItem": {
-        "message": "Retard de Failsafe Throttle baix [1 = 0.1 seg.]"
+        "message": "Retard de Failsafe Throttle Low [seconds]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Només desarma l'aeronau en comptes d'executar el failsafe si el throttle està baix per un cert temps"
@@ -4130,7 +4130,7 @@
         "message": "Valor de throttle per l'aterrament"
     },
     "failsafeOffDelayItem": {
-        "message": "Retard per aturar els motors en un failsafe [1 = 0.1 sec.]"
+        "message": "Retard per aturar els motors en un failsafe [seconds]"
     },
     "failsafeOffDelayHelp": {
         "message": "Temps de restar en landing mode fins que els motors són apagats i l'aeronau es desarma"

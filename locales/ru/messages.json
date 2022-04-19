@@ -3650,23 +3650,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Этап 2 - Настройки"
     },
-    "failsafeDelayItem": {
-        "message": "Запустить этап 2, если сигнал отсутствует указанное время [1 = 0.1 sec.]"
-    },
     "failsafeDelayHelp": {
         "message": "Время ожидания восстановления сигнала для этапа 1"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failsafe при низком значении газа в теч. указ. времени [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Задизармить аппарат вместо выполнения выбранной процедуры failsafe, если значение газа будет низким в течение указанного времени"
     },
     "failsafeThrottleItem": {
         "message": "Значение газа, применяемое во время приземления"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Длительность приземления, после которого отключ моторы [1 = 0.1 sec.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Время, отведённое на режим приземления, после чего моторы отключатся и аппарат будет задизармен"

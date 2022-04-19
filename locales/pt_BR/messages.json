@@ -3533,23 +3533,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Estágio 2 - Configurações"
     },
-    "failsafeDelayItem": {
-        "message": "Tempo de espera antes de ativar o estágio 2 após perder o sinal [1 = 0.1 sec.]"
-    },
     "failsafeDelayHelp": {
         "message": "Tempo para recuperação no estágio 1"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Tempo até Acelerador Baixo [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Apenas desarme a aeronave ao invés de executar o Failsafe se o acelerador estiver baixo por este determinado período de tempo"
     },
     "failsafeThrottleItem": {
         "message": "Valor do Acelerador utilizado para pousar"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Delay para desligar os motores durante o Failsafe [1 = 0.1 sec.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tempo para ficar no modo de pouso até que os motores sejam desligados e a aeronave desarmada"

@@ -3295,23 +3295,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "2. Stádium - Beállítások"
     },
-    "failsafeDelayItem": {
-        "message": "A 2. szakasz aktiválásának védőideje a jel elvesztése után [1 = 0,1 mp.]"
-    },
     "failsafeDelayHelp": {
         "message": "1. stádium türelmi ideje szignálvisszaállításra"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failsafe gáz alacsony késleltetése [1 = 0,1 mp.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Csak hatástalanítsa a drónt a kiválasztott hibabiztos eljárás végrehajtása helyett, ha a gázkar ilyen hosszú ideig alacsony volt"
     },
     "failsafeThrottleItem": {
         "message": "Gázkar értéke landolás közben"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Várakozás a motorok kikapcsolásáig Failsafe aktiválása esetén [1 = 0.1 sec.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Ideje maradni leszállási módban, amíg a motorokat nem kapcsolják ki és a drón hatástalanításra nem kerül"

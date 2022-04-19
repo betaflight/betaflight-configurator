@@ -2840,23 +2840,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "2. posms - Iestatījumi"
     },
-    "failsafeDelayItem": {
-        "message": "Sarga laiks priekš posma 2 pēc signāla pazušanas [1 = 0.1 sec.]"
-    },
     "failsafeDelayHelp": {
         "message": "Posms 1 gaidīšanas laiks priekš atjaunošanās"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failsafe droseles Min vērtības aizture [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Vienkārši deaktivēt gaisa kuģi, tā vietā, lai aktivētu Failsafe procedūru, kad drosele ir uz minimālās vērtības pie šāda daudzuma laika"
     },
     "failsafeThrottleItem": {
         "message": "Nolaižoties lietotā droseles vērtība"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Aizture pirms motoru dezaktivācijas Failsafe gadījumā [1 = 0.1 sec.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Laiks kurā paliks nosēšanās režīmā līdz motori tiks atslēgti un gaisa kuģis deaktivēts"

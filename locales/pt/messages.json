@@ -603,7 +603,7 @@
         "message": "Contribuir"
     },
     "defaultContributingText": {
-        "message": "Se quiser ajudar a melhorar o Betaflight pode ajudar de várias maneiras, incluíndo:<br /><ul><li>usando o seu conhecimento de Betaflight para criar ou atualizar conteúdo em <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">a nossa Wiki</a>, ou respondendo a questões de outros utilizadores nos fóruns online;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">contribuíndo com código</a> para o firmware e Configurador - novas funcionalidades, correções, melhorias;</li><li>testes <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">novas funcionalidades e correções</a> e dando feedback;</li><li>ajudando outros utilizadores a resolver os problemas que reportam <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">o nosso tracker de assuntos</a>, e participando em discussões de pedidos de funcionalidades;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduzindo</a> o Betaflight Configurator numa nova linguagem, ou ajudando a manter traduções existentes.</li></ul>"
+        "message": "Se quiser ajudar a melhorar o Betaflight pode ajudar de várias maneiras, incluíndo:<br /><ul><li>usando o seu conhecimento de Betaflight para criar ou atualizar conteúdo em <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">a nossa Wiki</a>, ou respondendo a questões de outros utilizadores nos fóruns online;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">contribuíndo com código</a> para o firmware e Configurador - novas funcionalidades, correções, melhorias;</li><li>testes <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">a novas funcionalidades e correções</a> e dando feedback;</li><li>ajudando outros utilizadores a resolver os problemas que reportam <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">no nosso tracker de assuntos</a>, e participando em discussões de pedidos de funcionalidades;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduzindo</a> o Betaflight Configurator numa nova linguagem, ou ajudando a manter traduções existentes.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Também temos um <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Grupo do Facebook</a>.<br />Junte-se a nós para conseguir um lugar para falar sobre Betaflight, fazer perguntas sobre configuração ou simplesmente interagir com outros pilotos."
@@ -691,7 +691,7 @@
         "message": "Mova o multirotor pelo menos <strong>360</strong> graus em todos os eixos de rotação, tem 30 segundos para executar esta tarefa"
     },
     "initialSetupButtonCalibratingText": {
-        "message": "Calibrando..."
+        "message": "A calibrar..."
     },
     "initialSetupButtonReset": {
         "message": "Repor Definições"
@@ -1523,7 +1523,7 @@
         "message": "Definições do Rateprofile"
     },
     "pidTuningSubTabFilter": {
-        "message": "Definições do filtro"
+        "message": "Definições do Filtro"
     },
     "pidTuningShowAllPids": {
         "message": "Mostrar todos os PIDs"
@@ -3568,7 +3568,7 @@
         "message": "Ativa automaticamente o primeiro perfil que tem uma contagem de células igual à da bateria conetada."
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "Definições de Filtro independentes de perfil"
+        "message": "Definições de Filtro independentes do Perfil"
     },
     "pidTuningFilterSlidersHelp": {
         "message": "Estes sliders ajustam os filtros Gyro e D-term.<br /><br />Para mais filtragem:<br /> - Sliders para a esquerda<br> - Frequências de corte mais baixas.<br /><br /> Filtragem mais forte mantém os motores mais frios, removendo mais ruído, mas atrasa mais o sinal gyro e pode piorar o propwash ou causar oscilações ressonantes. Quads menos responsivos como os X - Classe funcionam melhor com filtros mais fortes. <br><br>Para menos filtro:<br /> - Sliders para a direita<br /> - Frequências de corte mais altas <br><br>Menor filtragem reduz o atraso do sinal gyro, e muitas vezes melhora o propwash. Mover o filtro gyro lowpass para a direita normalmente está OK, mas mover o filtro D para a direita normalmente não é necessário e pode facilmente resultar em motores muito quentes.",
@@ -4107,13 +4107,13 @@
         "message": "Estágio 2 - Definições"
     },
     "failsafeDelayItem": {
-        "message": "Tempo de espera antes de ativar o estágio 2 após perder o sinal [1 = 0.1 sec.]"
+        "message": "Tempo de espera para ativação da fase 2 após perda de sinal [seconds]"
     },
     "failsafeDelayHelp": {
         "message": "Tempo para o estágio 1 esperar por recuperação"
     },
     "failsafeThrottleLowItem": {
-        "message": "Atraso ao Failsafe por Acelerador Baixo [1 = 0.1 sec.]"
+        "message": "Atraso do Failsafe por Acelerador Baixo [seconds]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Apenas desarme o aparelho em vez de executar o Failsafe selecionado quando o acelerador estiver baixo por este período de tempo"
@@ -4122,7 +4122,7 @@
         "message": "Valor de Acelerador utilizado para aterrar"
     },
     "failsafeOffDelayItem": {
-        "message": "Atraso a desligar os motores durante o Failsafe [1 = 0.1 sec.]"
+        "message": "Atraso a desligar os Motores durante o Failsafe [seconds]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tempo para ficar no modo de aterrar até que os motores sejam desligados e a aeronave desarmada"

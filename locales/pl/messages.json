@@ -3392,23 +3392,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Etap 2 - Ustawienia"
     },
-    "failsafeDelayItem": {
-        "message": "Czas zwłoki pomiędzy wykryciem zaniku sygnału a aktywacją etapu 2. [1 = 0.1 sek]"
-    },
     "failsafeDelayHelp": {
         "message": "Czas oczekiwania zanim przejdzie z etapu 1 do trybu ratunkowego \"recovery\""
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failsafe niskie opóźnienie przepustnicy [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Doprowadza do rozbrojenia maszyny zamiast wykonywać wybraną procedurę awaryjną, gdy gaz był na minimum przez dany okres czasu"
     },
     "failsafeThrottleItem": {
         "message": "Wartość przepustnicy użyta podczas lądowania"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Opóźnienie wyłączenia silnika podczas Failsafe [1 = 0,1 sek]"
     },
     "failsafeOffDelayHelp": {
         "message": "Czas pozostawania w trybie lądowania do momentu wyłączenia silników i wyłączenia jednostki"

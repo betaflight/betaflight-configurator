@@ -3506,23 +3506,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Fase 2 - Instellingen"
     },
-    "failsafeDelayItem": {
-        "message": "Wachttijd voor activering fase 2 nadat het signaal verloren is [1 = 0.1 sec.]"
-    },
     "failsafeDelayHelp": {
         "message": "Tijd dat fase 1 wacht op herstel"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failsafe Throttle Laag vertraging [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Schakel het vaartuig gewoon uit in plaats van de geselecteerde failsafe-procedure uit te voeren wanneer de gashendel gedurende deze tijd laag stond"
     },
     "failsafeThrottleItem": {
         "message": "Throttle waarde die gebruikt wordt tijdens het landen"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Vertraging totdat er wordt overgegaan tot het uitschakelen van de motoren tijdens een Failsafe [1 = 0,1 sec.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tijd die er wordt doorgebracht in landingsmodus totdat de motoren worden uitgeschakeld en de quad wordt disarmed"

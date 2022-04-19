@@ -4168,13 +4168,13 @@
         "message": "Stage 2 - Paramètres"
     },
     "failsafeDelayItem": {
-        "message": "Période d'attente pour l'activation du Stage 2, après la perte de signal [1 = 0.1 sec.]"
+        "message": "Temps de réserve avant l'activation du stage 2 après une perte de signal [secondes]"
     },
     "failsafeDelayHelp": {
         "message": "Période d'attente de recovery pour le Stage 1"
     },
     "failsafeThrottleLowItem": {
-        "message": "Période d'attente avant de passer les gaz à zéro [1 = 0.1 sec.]"
+        "message": "Délais avant la mise à zéro des gaz pour failsafe [secondes]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Désarme la machine à la place du Failsafe si les gaz étaient à zéro pendant la période de temps renseignée"
@@ -4183,7 +4183,7 @@
         "message": "Valeur de gaz utilisée à l'atterrissage"
     },
     "failsafeOffDelayItem": {
-        "message": "Délais avant extinction des moteurs pendant le Failsafe [1 = 0.1 sec.]"
+        "message": "Délais avant extinction des moteurs lors du failsafe [secondes]"
     },
     "failsafeOffDelayHelp": {
         "message": "Durée du mode atterrissage avant extinction des moteurs et désarmement de la machine"

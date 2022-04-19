@@ -4109,23 +4109,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Stufe 2 Einstellungen"
     },
-    "failsafeDelayItem": {
-        "message": "Zeit nach Signalverlust für die Aktivierung von Stufe 2  [1 = 0,1 Sek. ]"
-    },
     "failsafeDelayHelp": {
         "message": "Stage 1 Wartezeit für Signalwiederherstellung"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failsafe Gas niedrig Verzögerung [1 = 0.1 Sek.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Einfaches disarmen des Fluggerätes, falls das Gas über diese Zeit niedrig war. Dies wird anstatt der Failsafe Prozedur durchgeführt."
     },
     "failsafeThrottleItem": {
         "message": "Verwendeter Gaswert bei Landung"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Verzögerung im Falle eines Failsafes bevor die Motoren abgeschaltet werden [1 = 0.1 Sek. ]"
     },
     "failsafeOffDelayHelp": {
         "message": "Zeitspanne in der im Landemodus verblieben wird, bis die Motoren abgeschaltet werden und das Flugerät disarmt wird."

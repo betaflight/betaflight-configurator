@@ -3229,23 +3229,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "二階失控保護 - 設置"
     },
-    "failsafeDelayItem": {
-        "message": "觸發二階失控保護的訊號丟失保護時間[1 = 0.1 秒]"
-    },
     "failsafeDelayHelp": {
         "message": "一階失控保護等待訊號恢復時間"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "低油門失控保護延遲 [1 = 0.1 秒]"
     },
     "failsafeThrottleLowHelp": {
         "message": "在油門保持低位超過該時間，不再執行失控保護措施轉而直接鎖定電機。"
     },
     "failsafeThrottleItem": {
         "message": "降落時油門大小"
-    },
-    "failsafeOffDelayItem": {
-        "message": "失控保護過程中關閉電機延時 [1 = 0.1 秒]"
     },
     "failsafeOffDelayHelp": {
         "message": "暫時保持在降落模式而不鎖定電機的時間"
