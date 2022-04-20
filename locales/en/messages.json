@@ -2875,7 +2875,12 @@
         "message": "CLI reboot detected"
     },
     "cliSaveToFileBtn": {
-        "message": "Save to File"
+        "message": "Export to file",
+        "description": "Button in the CLI tab to export the CLI output contents to a file"
+    },
+    "cliSaveBtn": {
+        "message": "Save and reboot",
+        "description": "Button in the CLI tab that saves current FC state and restarts FC (equivalent to 'save' CLI command)"
     },
     "cliClearOutputHistoryBtn": {
         "message": "Clear output history"
@@ -2887,7 +2892,8 @@
         "message": "Copied!"
     },
     "cliLoadFromFileBtn": {
-        "message": "Load from file"
+        "message": "Import from file",
+        "description": "Button in the CLI tab to import CLI commands from file"
     },
     "cliConfirmSnippetDialogTitle": {
         "message": "Loaded file <strong>{{fileName}}</strong>. Review the loaded commands"

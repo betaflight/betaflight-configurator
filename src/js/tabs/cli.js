@@ -139,6 +139,8 @@ TABS.cli.initialize = function (callback) {
                 .focus();
         });
 
+        $('.tab-cli .cli-save').on("click", () => executeCommands("save\r"));
+
         $('.tab-cli .save').click(function() {
             const prefix = 'cli';
             const suffix = 'txt';
