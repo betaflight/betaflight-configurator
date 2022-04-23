@@ -40,6 +40,7 @@ function MspHelper() {
         BOOTLOADER: 1,
         MSC: 2,
         MSC_UTC: 3,
+        BOOTLOADER_FLASH: 4,
     };
 
     self.RESET_TYPES = {
