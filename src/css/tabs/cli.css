@@ -3,7 +3,10 @@
 }
 
 .tab-cli .content_wrapper {
-    height: calc(100% - 92px);
+    flex-direction: column;
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .tab-cli p {
@@ -15,7 +18,7 @@
     border: 1px solid var(--subtleAccent);
     background-color: rgba(0, 0, 0, 0.75);
     margin-top: 0;
-    height: calc(100% - 90px); /* - (p, textarea) */
+    flex-grow: 1;
     background-image: url("../../images/light-wide-1.svg");
     background-repeat: no-repeat;
     background-position: 50% 80%;
@@ -71,6 +74,7 @@
 
 .tab-cli .window .wrapper {
     white-space: pre-wrap;
+    height: 0px;
 }
 
 .tab-cli .window .error_message {
