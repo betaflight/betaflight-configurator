@@ -4107,13 +4107,13 @@
         "message": "Etapa 2 - Ajustes"
     },
     "failsafeDelayItem": {
-        "message": "Tiempo de guarda para activación de etapa 2 después de perder la señal [1 = 0.1 seg]"
+        "message": "Tiempo de guarda para activación de etapa 2 después de perder la señal [segundos]"
     },
     "failsafeDelayHelp": {
         "message": "Tiempo a esperar en etapa 1 para recuperación"
     },
     "failsafeThrottleLowItem": {
-        "message": "Retardo Acelerador Bajo Modo de Seguridad [1 = 0.1 seg]"
+        "message": "Retardo Acelerador Bajo Modo de Seguridad [segundos]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Simplemente desarma la aeronave en lugar de ejecutar el proceso de modo de seguridad seleccionado cuando el acelerador está al mínimo durante este tiempo"
@@ -4122,7 +4122,7 @@
         "message": "Valor de acelerador para el aterrizaje"
     },
     "failsafeOffDelayItem": {
-        "message": "Retraso para apagar los motores en caso de fallo [1 = 0.1 seg.]"
+        "message": "Retardo para apagar los motores durante el Modo de Seguridad [segundos]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tiempo para permanecer en modo aterrizaje, hasta que los motores se apaguen y se desarmen"

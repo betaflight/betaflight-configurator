@@ -4107,13 +4107,13 @@
         "message": "Impostazioni - Stadio 2"
     },
     "failsafeDelayItem": {
-        "message": "Tempo di attesa per l'attivazione della Stadio 2 dopo la perdita del segnale [1 = 0,1 s]"
+        "message": "Tempo di attesa per l'attivazione dello Stadio 2 dopo la perdita del segnale [secondi]"
     },
     "failsafeDelayHelp": {
         "message": "Tempo per lo Stadio 1 di attesa del recupero"
     },
     "failsafeThrottleLowItem": {
-        "message": "Ritardo del Failsafe Gas basso [1 = 0,1 s]"
+        "message": "Ritardo del Failsafe Gas basso [secondi]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Disarma solo il modello invece di eseguire la procedura di failsafe selezionata quando il Gas era basso per questo lasso di tempo"
@@ -4122,7 +4122,7 @@
         "message": "Valore del gas usato durante l'atterraggio"
     },
     "failsafeOffDelayItem": {
-        "message": "Ritardo per lo spegnimento dei motori durante il Failsafe [1 = 0,1 sec.]"
+        "message": "Ritardo per lo spegnimento dei motori durante il Failsafe [secondi]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tempo in cui rimanere in modalità di atterraggio fino a quando i motori non vengono spenti e il modello viene disarmato"

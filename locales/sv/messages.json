@@ -3014,23 +3014,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Etapp 2 - Inställningar"
     },
-    "failsafeDelayItem": {
-        "message": "Väntetid för aktivering av etapp 2 efter att signalen förlorats [1 = 0.1 sek.]"
-    },
     "failsafeDelayHelp": {
         "message": "Tiden som etapp 1 väntar på återhämtning"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failsafe \"trottel låg\"-fördröjning [1 = 0.1 sek.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Avaktivera farkosten istället för att utföra den valda failsafe-proceduren när trotteln varit låg under denna tidsperiod"
     },
     "failsafeThrottleItem": {
         "message": "Trottelvärde som används under landning"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Fördröjning innan motorerna stängs av under Failsafe [1 = 0.1 sek.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tid att stanna kvar i landningsläge innan motorerna stängs av och farkosten avaktiveras"

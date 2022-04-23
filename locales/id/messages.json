@@ -2562,23 +2562,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Tahap 2 - Pengaturan"
     },
-    "failsafeDelayItem": {
-        "message": "Waktu pengaman untuk aktifasi tahap 2 setelah sinyal hilang [1 = 0.1 detik.]"
-    },
     "failsafeDelayHelp": {
         "message": "Waktu untuk tahap 1 menunggu untuk pemulihan"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Failafe Throttle Low Delay [1 = 0,1 detik.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Lepaskan saja penerbangan itu sebaliknya menjalankan prosedur failsafe yang dipilih saat katup rendah untuk jumlah waktu ini"
     },
     "failsafeThrottleItem": {
         "message": "Nilai throttle digunakan saat mendarat"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Penundaan untuk mematikan Motor selama Failsafe [1 = 0,1 detik.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Waktunya untuk tetap dalam mode pendaratan sampai motor dimatikan dan pesawatnya dilucuti"

@@ -4107,13 +4107,13 @@
         "message": "ステージ2 - 設定"
     },
     "failsafeDelayItem": {
-        "message": "信号損失後のステージ2 起動時保護時間 [1 = 0.1秒]"
+        "message": "シグナル消失後、ステージ2起動までの保護時間 [seconds]"
     },
     "failsafeDelayHelp": {
         "message": "ステージ1の回復を待つための時間"
     },
     "failsafeThrottleLowItem": {
-        "message": "フェイルセーフ スロットル低遅延 [1 = 0.1 sec.]"
+        "message": "フェイルセーフ スロットル低遅延 [seconds]"
     },
     "failsafeThrottleLowHelp": {
         "message": "選択しているフェイルセーフを実行する代わりに、この時間の間スロットルが低かったとき機体をディスアームします。"
@@ -4122,7 +4122,7 @@
         "message": "着陸時に使用されるスロットル値"
     },
     "failsafeOffDelayItem": {
-        "message": "フェイルセーフ時にモーターをオフするための遅延時間 [1 = 0.1秒]"
+        "message": "フェイルセーフ時のモーターOFF遅延時間 [seconds]"
     },
     "failsafeOffDelayHelp": {
         "message": "モーターがオフになり、機体がディスアームされるまで着陸モードに留まる時間"

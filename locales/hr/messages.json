@@ -2943,23 +2943,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Faza 2 - Postavke"
     },
-    "failsafeDelayItem": {
-        "message": "Vrijeme za oporavak nakon gubitka signala prije aktivacije Faze 2"
-    },
     "failsafeDelayHelp": {
         "message": "Vrijeme u Fazi 1 za oporavak"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Odgoda failsafea kod niskog gasa [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Disarmiraj letjelicu bez izvršavanja zadane failsafe procedure ako je throttle bio nizak ovoliko vremena"
     },
     "failsafeThrottleItem": {
         "message": "Vrijednost gasa pri sljetanju"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Odgoda gašenja motora u failsafeu [1 = 0.1 sec.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Vrijeme koje će proći u načinu za slijetanje dok se motori ne ugase i letjelica se disarma"

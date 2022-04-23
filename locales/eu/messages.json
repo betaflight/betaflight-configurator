@@ -3301,23 +3301,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "2. Etapa - Ezarpenak"
     },
-    "failsafeDelayItem": {
-        "message": "Zaintzen den denbora 2. Epea aktibatzeko denbora galdu ondoren [1 = 0.1 seg.]"
-    },
     "failsafeDelayHelp": {
         "message": "1. Etapa berreskuratzeko denbora"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Throttle Atzerapena Segurtasun moduan [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Besterik gabe, desarmatu artisautza hautatutako segurtasun prozedura exekutatu beharrean, azeleragailua denbora horretan gutxienez dagoenean"
     },
     "failsafeThrottleItem": {
         "message": "Lurreratzerakoan erabilitako azeleragailu balioa"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Motorrak itzaltzeko atzerapena [1=0.1seg.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Denbora lurreratze moduan, motorrak itzali eta desarmatu egin arte"

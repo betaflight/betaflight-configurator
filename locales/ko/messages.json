@@ -4174,23 +4174,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "단계 2 - 설정"
     },
-    "failsafeDelayItem": {
-        "message": "신호가 손실 된 후 단계 2 활성화를 위한 보호 시간 [1 = 0.1초]"
-    },
     "failsafeDelayHelp": {
         "message": "단계 1에서 복구 대기 시간"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "페일세이프 스로틀 낮춤 딜레이 [1 = 0.1초]"
     },
     "failsafeThrottleLowHelp": {
         "message": "스로틀이 이 시간 동안 낮으면 선택한 페일세이프 절차를 실행하는 대신 기체를 해제합니다."
     },
     "failsafeThrottleItem": {
         "message": "착륙 시 사용되는 스로틀 값"
-    },
-    "failsafeOffDelayItem": {
-        "message": "페일세이프 동안 모터를 끄기 위한 지연 [1 = 0.1초]"
     },
     "failsafeOffDelayHelp": {
         "message": "모터가 꺼지고 기체가 해제될 때까지 착륙 모드로 유지할 시간"
