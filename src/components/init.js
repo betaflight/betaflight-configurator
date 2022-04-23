@@ -41,7 +41,6 @@ i18next.on('initialized', function() {
         },
         data: betaflightModel,
     });
-
 });
 
 
