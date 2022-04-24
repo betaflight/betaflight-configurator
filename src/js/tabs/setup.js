@@ -93,7 +93,7 @@ TABS.setup.initialize = function (callback) {
 
             $('a.rebootBootloader').click(function () {
                 const buffer = [];
-                buffer.push(mspHelper.REBOOT_TYPES.BOOTLOADER);
+                buffer.push(FC.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER);
                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
             });
         } else {
