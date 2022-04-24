@@ -16,7 +16,8 @@
     "pretest": "yarn run lint",
     "test": "karma start test/karma.conf.js",
     "lint": "eslint --ext .js,.vue src gulpfile.js gulp-appdmg.js",
-    "lint:fix": "eslint --fix src gulpfile.js gulp-appdmg.js"
+    "lint:fix": "eslint --fix src gulpfile.js gulp-appdmg.js",
+    "storybook": "start-storybook -p 6006"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
@@ -77,11 +78,17 @@
     "vue": "2.6.12"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.9",
     "@quanle94/innosetup": "^6.0.2",
     "@rollup/plugin-alias": "^3.1.1",
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-replace": "^2.3.3",
+    "@storybook/addon-actions": "^6.4.22",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/vue": "^6.4.22",
+    "babel-loader": "^8.2.4",
     "browserify": "^17.0.0",
     "chai": "^4.2.0",
     "command-exists": "^1.2.8",
@@ -129,6 +136,7 @@
     "temp": "^0.9.1",
     "through2": "^4.0.2",
     "vinyl-source-stream": "^2.0.0",
+    "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.6.12",
     "yarn": "^1.22.17"
   },
