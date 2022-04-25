@@ -2,6 +2,7 @@ changelog:
   exclude:
     labels:
       - "cleanup"
+      - "RN: IGNORE"
   categories:
     - title: Features
       labels:
