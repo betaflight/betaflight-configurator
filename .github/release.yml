@@ -1,0 +1,25 @@
+changelog:
+  exclude:
+    labels:
+      - "cleanup"
+  categories:
+    - title: Features
+      labels:
+        - "RN: FEATURE"
+        - "RN: MAJOR FEATURE"
+        - "RN: MINOR FEATURE"
+    - title: Improvements
+      labels:
+        - "RN: IMPROVEMENT"
+        - "RN: UI"
+        - "RN: REFACTOR"
+        - "RN: FONT"
+    - title: Fixes
+      labels: 
+        - "RN: BUGFIX"
+    - title: Translation
+      labels: 
+        - "RN: TRANSLATION"
+    - title: Known Issues
+      labels:
+        - BUG
