@@ -69,20 +69,48 @@ export default {
 
     configuratorVersion: {
       type: String,
-      default: '',
+      default: "",
     },
     firmwareVersion: {
       type: String,
-      default: '',
+      default: "",
     },
     firmwareId: {
       type: String,
-      default: '',
+      default: "",
     },
     hardwareId: {
       type: String,
-      default: '',
+      default: "",
     },
   },
 };
 </script>
+
+<style>
+/** Status bar **/
+#status-bar {
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  width: calc(100% - 20px);
+  height: 20px;
+  line-height: 20px;
+  padding: 0 10px 0 10px;
+  border-top: 1px solid #7d7d79;
+  background-color: #bfbeb5;
+}
+
+#status-bar > * ~ * {
+  padding-left: 10px;
+  margin-left: 10px;
+  border-left: 1px solid #7d7d79;
+}
+
+/** Status bar (phones) **/
+@media all and (max-width: 575px) {
+  #status-bar {
+    display: none;
+  }
+}
+</style>

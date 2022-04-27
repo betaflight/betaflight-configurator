@@ -656,21 +656,6 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 31px;
 }
 
-
-.battery-legend {
-    display: inline;
-    position: relative;
-    top: -2px;
-    margin-top: 0;
-    left: 0;
-    right: 0;
-    width: 40px;
-    text-align: left;
-    color: silver;
-    margin-left: -8px;
-    padding-right: 4px
-}
-
 .quad-status-contents progress::-webkit-progress-bar {
     height: 12px;
     background-color: #eee;
@@ -1456,43 +1441,6 @@ li.active .ic_mission {
         width: 100%;
     }
 }
-
-
-
-/** Status bar **/
-#status-bar {
-    position: fixed;
-    display: flex;
-    bottom: 0;
-    width: calc(100% - 20px);
-    height: 20px;
-    line-height: 20px;
-    padding: 0 10px 0 10px;
-    border-top: 1px solid #7d7d79;
-    background-color: #bfbeb5;
-}
-
-#status-bar > * ~ * {
-    padding-left: 10px;
-    margin-left: 10px;
-    border-left: 1px solid #7d7d79;
-}
-
-#status-bar .version {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    margin-left: auto;
-}
-
-/** Status bar (phones) **/
-@media all and (max-width: 575px) {
-    #status-bar {
-        display: none;
-    }
-}
-
-
 
 #cache {
     display: none;

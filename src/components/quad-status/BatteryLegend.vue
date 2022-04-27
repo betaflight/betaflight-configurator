@@ -32,3 +32,19 @@ export default {
   },
 };
 </script>
+
+<style>
+.battery-legend {
+  display: inline;
+  position: relative;
+  top: -2px;
+  margin-top: 0;
+  left: 0;
+  right: 0;
+  width: 40px;
+  text-align: left;
+  color: silver;
+  margin-left: -8px;
+  padding-right: 4px;
+}
+</style>
