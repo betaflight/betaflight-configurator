@@ -39,6 +39,7 @@ Name: "{group}\Uninstall {#ApplicationName}"; Filename: "{uninstallexe}"; Check:
 Name: "en"; MessagesFile: "compiler:Default.isl"
 ; Official languages
 Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"
 Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl"

@@ -8,7 +8,7 @@ const i18n = {};
 window.i18n = i18n;
 
 
-const languagesAvailables = ['ca', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lv', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'sv', 'zh_CN', 'zh_TW'];
+const languagesAvailables = ['ca', 'da', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lv', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'sv', 'zh_CN', 'zh_TW'];
 
 const languageFallback = {
                             'pt': ['pt_BR', 'en'],
