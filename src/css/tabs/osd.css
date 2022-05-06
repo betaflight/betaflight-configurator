@@ -253,6 +253,8 @@
 
 .tab-osd .preview .gui_box_titlebar {
   position: relative;
+  margin-bottom: 0px;
+  float: none;
 }
 
 .tab-osd .preview .gui_box_titlebar label {
@@ -276,10 +278,20 @@
   text-align: center;
 }
 
+.tab-osd .preview .row {
+  display: flex;
+}
+
 .tab-osd .preview .char {
-  display: inline-block;
+  display: flex;
   padding: 0;
   margin: 0;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+}
+
+.tab-osd .preview .char img {
+  flex: 1 1 auto;
 }
 
 .tab-osd .char.mouseover {
@@ -300,10 +312,6 @@
 
 .tab-osd .preview .char[draggable="true"] {
   cursor: move;
-}
-
-.tab-osd .preview .row {
-  height: 18px;
 }
 
 #font-logo-preview-container {
@@ -476,25 +484,27 @@ button {
 }
 
 .tab-osd .preview {
-  width: 360px;
-  float: left;
   position: sticky;
   top: 0;
-  margin-left: calc((100% - 360px) / 3);
-
 
 /* please don't copy the generic background image from another project
  * and replace the one that @nathantsoi took :)
  */
   background: url(../../images/osd-bg-1.jpg);
   background-size: cover;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  background-repeat: no-repeat;
 }
 
-.tab-osd .preview:active {
-  background: url(../../images/osd-bg-1-grid.png), url(../../images/osd-bg-1.jpg);
-  background-size: cover;
+.tab-osd .video-pal .preview:active {
+  background: url(../../images/osd-bg-1-grid-pal.png), url(../../images/osd-bg-1.jpg);
+  background-size: 100% 100%, cover;
+  background-repeat: no-repeat;
+}
+
+.tab-osd .video-ntsc .preview:active {
+  background: url(../../images/osd-bg-1-grid-ntsc.png), url(../../images/osd-bg-1.jpg);
+  background-size: 100% 100%, cover;
+  background-repeat: no-repeat;
 }
 
 .tab-osd .alarms label {
@@ -550,16 +560,31 @@ button {
   }
 }
 
-.tab-osd .grid-col.col4:first-child, .tab-osd  .grid-col.col4:last-child {
-    width: calc((100% - 390px) / 2);
-}
-
 .tab-osd .grid-row {
-    margin-bottom: 40px;
+    justify-content: center;
+    gap: 7px;
 }
 
-.tab-osd .grid-col.col4 {
-    width: auto;
+.tab-osd .grid-row .elements {
+  flex: 1 1 auto;
+  width: 210px;
+  max-width: 700px;
+}
+
+.tab-osd .grid-row .osd-preview {
+  flex: 2 0 auto;
+  width: 350px;
+  max-width: max(min(950px,calc((100vh - 470px) * 1.25)), 350px);
+}
+
+.tab-osd .grid-row .osd-profile {
+  flex: 1 1 auto;
+  width: 210px;
+  max-width: 700px ;
+}
+
+.tab-osd .grid-col {
+  margin: 0px;
 }
 
 @media all and (max-width: 575px) {
