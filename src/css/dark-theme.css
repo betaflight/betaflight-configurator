@@ -46,6 +46,7 @@ body {
     background-color: #393b3a;
 }
 
+/* NOTE: need to think on how to load the dark theme with vue */
 #status-bar {
     background-color: #414443;
 }
