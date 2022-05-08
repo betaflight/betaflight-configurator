@@ -92,6 +92,7 @@ export default {
 #status-bar {
   position: fixed;
   display: flex;
+  gap: 10px;
   bottom: 0;
   width: calc(100% - 20px);
   height: 20px;
@@ -103,7 +104,6 @@ export default {
 
 #status-bar > * ~ * {
   padding-left: 10px;
-  margin-left: 10px;
   border-left: 1px solid #7d7d79;
 }
 
