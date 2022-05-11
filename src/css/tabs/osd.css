@@ -524,9 +524,20 @@ button {
   display: inline !important;
 }
 
+.timers-container .timer-detail {
+    padding-left: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .timers-container label {
-  margin-left: 15px !important;
   margin-right: 5px !important;
+  display: inline-block;
+  width: 80px;
+}
+
+.timers-container input, .timers-container select {
+    width: 150px;
 }
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
