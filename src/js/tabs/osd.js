@@ -2877,7 +2877,7 @@ TABS.osd.initialize = function(callback) {
                             enabledCount++;
                         }
 
-                        const $field = $(`<div class="switchable-field field-${field.index}"></div>`);
+                        const $field = $(`<div class="switchable-field switchable-field-flex field-${field.index}"></div>`);
                         let desc = null;
                         if (field.desc && field.desc.length) {
                             desc = i18n.getMessage(field.desc);
@@ -2917,7 +2917,9 @@ TABS.osd.initialize = function(callback) {
                         }
 
                         const finalFieldName = titleizeField(field);
-                        $field.append(`<label for="${field.name}" class="char-label">${finalFieldName}</label>`);
+                        const $labelAndVariant = $('<div class="switchable-field-description"></div>');
+                        $labelAndVariant.append(`<label for="${field.name}" class="char-label">${finalFieldName}</label>`);
+
 
 
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && field.variants && field.variants.length > 0) {
@@ -2941,7 +2943,7 @@ TABS.osd.initialize = function(callback) {
 
                             selectVariant.val(field.variant);
 
-                            $field.append(selectVariant);
+                            $labelAndVariant.append(selectVariant);
                         }
 
                         if (field.positionable && field.isVisible[OSD.getCurrentPreviewProfile()]) {
@@ -2961,6 +2963,7 @@ TABS.osd.initialize = function(callback) {
                             );
                         }
 
+                        $field.append($labelAndVariant);
                         // Insert in alphabetical order, with unknown fields at the end
                         $field.name = field.name;
                         insertOrdered($displayFields, $field);
