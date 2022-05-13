@@ -27,6 +27,7 @@
     "cordova-plugin-whitelist": "^1.3.4",
     "cordova-plugin-theme-detection": "^1.2.1",
     "cordova-chrome-sockets-tcp": "^1.4.0",
+    "cordova-plugin-zeroconf": "^1.4.2",
     "bf-cordovarduino": "^1.0.0",
     "@ionic-native/core": "^5.1.0",
     "@ionic-native/ionic-webview": "^5.36.0",
@@ -56,7 +57,8 @@
       "cordova-plugin-theme-detection": {},
       "bf-cordova-plugin-appavailability": {},
       "cordova-chrome-sockets-tcp": {},
-      "cordova-plugin-ionic-webview": {}
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-zeroconf": {}
     }
   }
 }

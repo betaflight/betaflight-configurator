@@ -91,7 +91,7 @@ function initializeSerialBackend() {
                         finishClose(toggleStatus);
                     }
 
-                    mspHelper.setArmingEnabled(true, false, onFinishCallback);
+                    mspHelper?.setArmingEnabled(true, false, onFinishCallback);
                 }
             }
        }
