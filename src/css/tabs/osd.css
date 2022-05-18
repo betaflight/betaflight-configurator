@@ -429,16 +429,20 @@ button {
 
 .tab-osd .switchable-field-flex .switchable-field-description {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     /*
      min width here is counterintuitive/seems to do nothing. but important, stops the variant selects overflowing
      see https: //stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
     */
     min-width: 0;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
 }
 
+
 .tab-osd .switchable-field-flex .switchable-field-description .osd-variant {
-    margin-top: 5px;
+    flex-grow: 2;
 }
 
 .spacer_box_title span {
