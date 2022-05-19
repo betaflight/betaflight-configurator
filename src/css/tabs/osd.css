@@ -423,6 +423,28 @@ button {
   width: 100%;
 }
 
+.tab-osd .switchable-field-flex {
+    display: flex;
+}
+
+.tab-osd .switchable-field-flex .switchable-field-description {
+    display: flex;
+    flex-direction: row;
+    /*
+     min width here is counterintuitive/seems to do nothing. but important, stops the variant selects overflowing
+     see https: //stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+    */
+    min-width: 0;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+
+.tab-osd .switchable-field-flex .switchable-field-description .osd-variant {
+    flex-grow: 2;
+}
+
 .spacer_box_title span {
   font-size: 11px;
   font-weight: normal;
@@ -455,7 +477,7 @@ button {
 
 .tab-osd .preview {
   width: 360px;
-  float: left; 
+  float: left;
   position: sticky;
   top: 0;
   margin-left: calc((100% - 360px) / 3);
@@ -506,9 +528,20 @@ button {
   display: inline !important;
 }
 
+.timers-container .timer-detail {
+    padding-left: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
 .timers-container label {
-  margin-left: 15px !important;
   margin-right: 5px !important;
+  display: inline-block;
+  width: 80px;
+}
+
+.timers-container input, .timers-container select {
+    width: 150px;
 }
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
