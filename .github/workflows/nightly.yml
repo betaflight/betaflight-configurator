@@ -30,7 +30,7 @@ jobs:
   release:
     name: Nightly release
     needs: ci
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch build artifacts
         uses: actions/download-artifact@v2

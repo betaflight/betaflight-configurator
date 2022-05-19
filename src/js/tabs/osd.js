@@ -2352,7 +2352,11 @@ OSD.GUI.preview = {
         ev.dataTransfer.setData("text/plain", $(ev.target).data('field').index);
         ev.dataTransfer.setData("x", ev.currentTarget.dataset.x);
         ev.dataTransfer.setData("y", ev.currentTarget.dataset.y);
-        ev.dataTransfer.setDragImage($(this).data('field').preview_img, offsetX, offsetY);
+
+        if (GUI.operating_system !== "Linux") {
+            // latest NW.js (0.6x.x) has introduced an issue with Linux displaying a rectangle while moving an element
+            ev.dataTransfer.setDragImage($(this).data('field').preview_img, offsetX, offsetY);
+        }
     },
     onDragOver(e) {
         const ev = e.originalEvent;
