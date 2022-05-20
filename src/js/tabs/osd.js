@@ -1872,6 +1872,9 @@ OSD.updateDisplaySize = function() {
         y: OSD.constants.VIDEO_LINES[videoType],
         total: null,
     };
+    // Adjust css background grid
+    const previewLayoutElement = $(".tab-osd .display-layout");
+    videoType === 'PAL' ? previewLayoutElement.addClass('video-pal').removeClass('video-ntsc') : previewLayoutElement.addClass('video-ntsc').removeClass('video-pal');
 };
 
 OSD.drawByOrder = function(selectedPosition, field, charCode, x, y) {
