@@ -1,0 +1,244 @@
+.tab-failsafe {
+	position: relative;
+	.leftWrapper {
+		float: left;
+		width: calc(50% - 20px);
+	}
+	.rightWrapper {
+		float: left;
+		width: calc(50% - 0px);
+		margin: 0 0 0 20px;
+		.spacer_box {
+			padding-bottom: 7px;
+		}
+	}
+	.number {
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+		input {
+			width: 50px;
+			padding-left: 3px;
+			height: 20px;
+			line-height: 20px;
+			text-align: left;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+			margin-right: 11px;
+			font-size: 12px;
+			font-weight: normal;
+			&:disabled {
+				background-color: #ececec;
+			}
+		}
+		.switchery {
+			margin-right: 16px;
+		}
+		span {
+			margin-left: 0;
+		}
+	}
+	.checkbox {
+		float: left;
+		width: 100%;
+		margin-bottom: 6px;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		margin-top: 0;
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+	.subline {
+		float: left;
+		width: 100%;
+		font-size: 13px;
+		margin-top: 15px;
+		margin-bottom: 5px;
+	}
+	.radioarea {
+		float: left;
+		width: 100%;
+		border-radius: 5px;
+		background-color: #ededed;
+		margin-bottom: 0;
+		margin-top: 5px;
+		min-height: 90px;
+		padding-bottom: 10px;
+	}
+	.radiobuttons {
+		float: left;
+		width: 50%;
+		margin-top: 38px;
+		margin-left: 15px;
+		font-size: 12px;
+		font-weight: normal;
+		input {
+			margin-right: 8px;
+			margin-bottom: 10px;
+		}
+		label {
+			float: left;
+			width: 130px;
+			margin-top: -2px;
+		}
+	}
+	.proceduresettings {
+		padding: 10px;
+		margin-top: 75px;
+	}
+	.pro1 {
+		background-image: url(../../images/icons/cf_failsafe_procedure1.svg);
+		background-position: top right 10px;
+		background-size: 200px;
+		background-repeat: no-repeat;
+	}
+	.pro2 {
+		background-image: url(../../images/icons/cf_failsafe_procedure2.svg);
+		background-position: top right 10px;
+		background-size: 200px;
+		background-repeat: no-repeat;
+	}
+	.pro3 {
+		background-image: url(../../images/icons/cf_failsafe_procedure3.svg);
+		background-position: top right 10px;
+		background-size: 200px;
+		background-repeat: no-repeat;
+	}
+	.pro4 {
+		background-image: url(../../images/icons/cf_failsafe_procedure4.svg);
+		background-position: top right 10px;
+		background-size: 200px;
+		background-repeat: no-repeat;
+	}
+	.spacer_box {
+		.helpicon {
+			margin-top: 3px;
+			margin-right: 0;
+		}
+		padding-bottom: 10px;
+		float: left;
+		width: calc(100% - 20px);
+	}
+	.freelabel {
+		margin-left: 10px;
+		position: relative;
+	}
+	input {
+		float: left;
+	}
+	span {
+		margin: 0;
+	}
+	.gui_box_titlebar {
+		margin-bottom: 0;
+	}
+	.numberspacer {
+		float: left;
+		width: 65px;
+		height: 21px;
+	}
+	.gui_box {
+		font-style: normal;
+		font-weight: bold;
+		margin-bottom: 15px;
+		float: left;
+		span {
+			font-style: normal;
+			font-weight: normal;
+			line-height: 19px;
+			color: #4f4f4f;
+			font-size: 11px;
+		}
+	}
+	.stage1 {
+		.number {
+			input {
+				float: right;
+				margin-right: 0;
+			}
+		}
+		select {
+			float: left;
+			width: 95%;
+			height: 22px;
+			margin: 0;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+		}
+	}
+	.modename {
+		background-color: #828885;
+		border-radius: 3px;
+		border: 1px solid #686c6a;
+		color: #fff !important;
+		font-weight: 600 !important;
+		padding-left: 3px;
+		padding-right: 3px;
+		margin-right: 3px;
+	}
+	.channelprimary {
+		float: left;
+		width: 60%;
+	}
+	.channelauxiliary {
+		float: left;
+		width: 60%;
+		padding-top: 2px;
+	}
+	.channelname {
+		margin-right: 3px;
+	}
+	.channelsetting {
+		float: left;
+		width: 25%;
+	}
+	.auxiliary {
+		float: left;
+		width: 15%;
+	}
+	.cf_tooltiptext {
+		display: none;
+	}
+	.featuresNew {
+		width: 100%;
+		tr {
+			width: 100%;
+			border-bottom: 1px solid var(--subtleAccent);
+			float: left;
+			padding: 0 0 6px;
+			margin-bottom: 3px;
+		}
+		td {
+			&:first-child {
+				width: 52px;
+			}
+			&:last-child {
+				width: calc(100% - 125px);
+				margin-right: 0;
+			}
+			float: left;
+			margin-right: 10px;
+		}
+		.helpicon {
+			margin-right: -2px;
+		}
+	}
+	table {
+		width: 100%;
+	}
+	.switchMode {
+		border: 1px solid var(--subtleAccent);
+		border-radius: 3px;
+		margin-right: 5px;
+		min-width: 80px;
+	}
+}

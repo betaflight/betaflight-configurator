@@ -28,6 +28,8 @@ const git = require('simple-git')();
 const source = require('vinyl-source-stream');
 const stream = require('stream');
 const prompt = require('gulp-prompt');
+const less = require('gulp-less');
+const sourcemaps = require('gulp-sourcemaps');
 
 const cordova = require("cordova-lib").cordova;
 
@@ -101,12 +103,13 @@ function process_package_debug(done) {
     getGitRevision(done, processPackage, false);
 }
 
-
 // dist_yarn MUST be done after dist_src
 
-const distBuild = gulp.series(process_package_release, dist_src, dist_changelog, dist_yarn, dist_locale, dist_libraries, dist_resources, dist_rollup, gulp.series(cordova_dist()));
+const distCommon = gulp.series(dist_src, dist_less, dist_changelog, dist_yarn, dist_locale, dist_libraries, dist_resources, dist_rollup, gulp.series(cordova_dist()));
 
-const debugDistBuild = gulp.series(process_package_debug, dist_src, dist_changelog, dist_yarn, dist_locale, dist_libraries, dist_resources, dist_rollup, gulp.series(cordova_dist()));
+const distBuild = gulp.series(process_package_release, distCommon);
+
+const debugDistBuild = gulp.series(process_package_debug, distCommon);
 
 const distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
@@ -344,11 +347,20 @@ function dist_src() {
         './src/**/*',
         '!./src/css/dropdown-lists/LICENSE',
         '!./src/support/**',
+        '!./src/**/*.less',
     ];
 
     return gulp.src(distSources, { base: 'src' })
         .pipe(gulp.src('yarn.lock'))
         .pipe(gulp.dest(DIST_DIR));
+}
+
+function dist_less() {
+    return gulp.src('./src/**/*.less')
+    .pipe(sourcemaps.init())
+    .pipe(less())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(`${DIST_DIR}`));
 }
 
 function dist_changelog() {

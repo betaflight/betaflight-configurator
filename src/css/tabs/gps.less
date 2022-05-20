@@ -1,0 +1,175 @@
+.tab-gps {
+	.GPS_signal_strength {
+		table {
+			td {
+				&:nth-child(2) {
+					text-align: center;
+				}
+				&:nth-child(3) {
+					text-align: center;
+				}
+				&:nth-child(4) {
+					text-align: left;
+					padding-left: 10px;
+				}
+			}
+		}
+		.head {
+			display: block;
+			text-align: center;
+			line-height: 20px;
+			font-weight: bold;
+			border-bottom: 1px solid var(--subtleAccent);
+			background-color: #ececec;
+		}
+	}
+	progress {
+		width: 100%;
+		border-radius: 3px;
+	}
+	.GPS_info {
+		.head {
+			display: block;
+			text-align: center;
+			line-height: 20px;
+			font-weight: bold;
+			border-bottom: 1px solid var(--subtleAccent);
+			background-color: #ececec;
+		}
+	}
+	.gps_map {
+		height: 460px;
+	}
+	#connect {
+		display: none;
+		text-align: center;
+		padding-top: 40%;
+		a {
+			font-weight: bold;
+			margin-top: 10px;
+		}
+	}
+	#waiting {
+		margin-top: 0px;
+		display: none;
+		text-align: center;
+		padding-top: 0px;
+		background-image: url(../../images/loading-bars.svg);
+		background-position: center 40%;
+		background-size: 15%;
+		height: 100%;
+		background-repeat: no-repeat;
+		float: left;
+		width: 100%;
+		.info {
+			margin-top: 50%;
+		}
+	}
+	#loadmap {
+		margin-top: 0px;
+		display: none;
+		height: 100%;
+		width: 100%;
+		float: left;
+		.map {
+			width: 100%;
+			float: left;
+			height: 400px;
+		}
+		.controls {
+			width: 100%;
+			float: left;
+			height: 33px;
+			border-bottom-left-radius: 3px;
+			border-bottom-right-radius: 3px;
+			background-color: #D1D1D1;
+			a {
+				background-color: white;
+				border-radius: 4px;
+				border: 1px var(--subtleAccent) solid;
+				color: grey;
+				height: 10px;
+				width: 10px;
+				text-align: center;
+				font-size: 20px;
+				line-height: 10px;
+				padding: 6px;
+				margin-top: 5px;
+				float: right;
+				&:hover {
+					background-color: #f5f5f5;
+				}
+				&:active {
+					background-color: #e6e6e6;
+				}
+				&:first-child {
+					margin-left: -1px;
+					margin-right: 5px;
+					border-bottom-left-radius: 0px;
+					border-top-left-radius: 0px;
+				}
+				&:last-child {
+					margin-right: 0px;
+					border-bottom-right-radius: 0px;
+					border-top-right-radius: 0px;
+				}
+			}
+		}
+	}
+	iframe {
+		height: 400px;
+		width: 100%;
+		float: left;
+	}
+}
+progress[value] {
+	&::-webkit-progress-bar {
+		background-color: #d2d2d2;
+		border-radius: 2px;
+		box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.95);
+		box-shadow: 0 0 3px rgba(0, 0, 0, 0.25) inset;
+	}
+	&::-webkit-progress-value {
+		background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, .15), rgba(0, 0, 0, .15)), -webkit-linear-gradient(left, #ffbb00, #ffbb00);
+		border-radius: 2px;
+		box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25) inset;
+	}
+}
+@media only screen and (max-width: 1055px) {
+	.tab-gps {
+		iframe {
+			height: 347px;
+			width: 100%;
+			float: left;
+		}
+		.gps_map {
+			height: 403px;
+		}
+	}
+	.tabs-gps {
+		#loadmap {
+			.map {
+				height: 343px;
+			}
+		}
+	}
+}
+@media only screen and (max-device-width: 1055px) {
+	.tab-gps {
+		iframe {
+			height: 347px;
+			width: 100%;
+			float: left;
+		}
+		.gps_map {
+			height: 403px;
+		}
+	}
+	.tabs-gps {
+		#loadmap {
+			.map {
+				height: 343px;
+			}
+		}
+	}
+}

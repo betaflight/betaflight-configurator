@@ -1,0 +1,753 @@
+.tab-motors {
+	.ui-grid-col {
+		margin-bottom: 0;
+	}
+	select {
+		border: 1px solid var(--subtleAccent);
+		width: fit-content;
+		height: 20px;
+		margin-right: 80px;
+		border-radius: 3px;
+		float: left;
+	}
+	table {
+		margin-bottom: 0;
+		width: 100%;
+		float: left;
+		padding: 0;
+		text-align: left;
+		border-collapse: collapse;
+		th {
+			text-align: left;
+			border-collapse: collapse;
+			padding: 3px;
+			border-bottom: 1px solid var(--subtleAccent);
+		}
+		td {
+			text-align: left;
+			border-collapse: collapse;
+			padding: 5px 3px;
+			margin-right: 20px;
+			border-bottom: 1px solid var(--subtleAccent);
+		}
+		tr {
+			td {
+				&:first-child {
+					text-align: left;
+					width: 55px;
+				}
+			}
+		}
+		thead {
+			tr {
+				&:first-child {
+					background-color: #ececec;
+				}
+			}
+		}
+	}
+	position: relative;
+	.groupTitle {
+		padding: 0 0 5px 0;
+		margin: 0 0 10px 0;
+		font-size: 16px;
+		border-bottom: 1px solid var(--subtleAccent);
+	}
+	.mixerPreview {
+		img {
+			width: 150px;
+			height: 150px;
+			margin-left: 15px;
+		}
+	}
+	#mixer.mixerList {
+		float: none;
+	}
+	.featuresMultiple {
+		border-collapse: collapse;
+		margin-bottom: 5px;
+		margin-top: -5px;
+		padding: 0;
+	}
+	dl.features {
+		dt {
+			float: left;
+			width: 10px;
+			height: 18px;
+			line-height: 18px;
+			input {
+				margin-top: 2px;
+			}
+		}
+		dd {
+			margin: 0 0 0 20px;
+			height: 18px;
+			line-height: 18px;
+		}
+	}
+	.number {
+		input {
+			width: 55px;
+			padding-left: 3px;
+			height: 20px;
+			line-height: 20px;
+			text-align: left;
+			border-radius: 3px;
+			margin-right: 11px;
+			font-size: 12px;
+			font-weight: normal;
+		}
+		.disabled {
+			width: 48px;
+			padding: 0 5px;
+			background-color: #ececec;
+		}
+		span {
+			margin-left: 0;
+		}
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+	.disarm {
+		.checkboxPwm {
+			margin-top: 2px;
+			margin-right: 5px;
+		}
+		.checkbox {
+			div {
+				margin-bottom: 0;
+				margin-top: 0;
+				input {
+					margin: 0;
+					float: left;
+				}
+			}
+			span {
+				margin-left: 0;
+			}
+			float: left;
+			padding-left: 0;
+			margin-top: -5px;
+			margin-right: 5px;
+			padding-bottom: 5px;
+			border-bottom: 1px solid var(--subtleAccent);
+			width: 100%;
+		}
+		margin-bottom: 5px;
+		float: left;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+	}
+	.freelabel {
+		margin-left: 10px;
+		position: relative;
+	}
+	span {
+		margin: 0;
+	}
+	.spacer_box {
+		padding-bottom: 10px;
+		float: left;
+		width: calc(100% - 20px);
+	}
+	.spacer_box.mixer_settings {
+		padding-bottom: 0px;
+	}
+	.motor_direction_reversed {
+		padding-top: 10px;
+	}
+	.motor_tool_buttons {
+		padding-left: 10px;
+	}
+	.disarmdelay {
+		margin-top: 5px;
+		float: left;
+		width: 100%;
+		border-bottom: 1px solid var(--subtleAccent);
+	}
+	.select {
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+	.selectProtocol {
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+	}
+	.gui_box_titlebar {
+		margin-bottom: 0;
+	}
+	.numberspacer {
+		float: left;
+		width: 65px;
+		height: 21px;
+	}
+	thead {
+		display: none;
+	}
+	.gui_box {
+		margin-bottom: 10px;
+		float: left;
+		span {
+			font-style: normal;
+			font-weight: normal;
+			line-height: 19px;
+			color: #4f4f4f;
+			font-size: 11px;
+		}
+	}
+	.alignicon {
+		width: 15px;
+		height: 15px;
+		float: left;
+		margin: 3px;
+	}
+	.mixer {
+		.gui_box {
+			float: left;
+		}
+	}
+	.motorstop {
+		.gui_box {
+			float: left;
+		}
+	}
+	._3dSettings {
+		margin-top: 10px;
+		float: left;
+		width: 100%;
+	}
+	._3d {
+		div {
+			margin-right: 17px;
+		}
+	}
+	.modelAndGraph {
+		float: left;
+		width: 100%;
+		margin-bottom: 0;
+	}
+	.spacer {
+		width: calc(100% - 34px);
+		margin: 10px;
+	}
+	#graph {
+		float: left;
+		width: calc(100% - 160px);
+	}
+	.btn {
+		.disabled {
+			cursor: default;
+			color: #fff;
+			background-color: #AFAFAF;
+			border: none;
+			pointer-events: none;
+			text-shadow: none;
+			opacity: 0.5;
+		}
+	}
+	#dialogMotorOutputReorder-closebtn {
+		margin-right: 0px;
+		margin-bottom: 0px;
+	}
+	dialog {
+		width: 400px;
+		height: 440px;
+	}
+	#dialogMotorOutputReorderContentWrapper {
+		display: flex;
+		flex-flow: column;
+		width: 100%;
+		height: 100%;
+	}
+	#dialogMotorOutputReorderContent {
+		flex-grow: 1;
+	}
+	#escDshotDirectionDialog-closebtn {
+		margin-right: 0px;
+		margin-bottom: 0px;
+		position: absolute;
+		right: 0px;
+		bottom: 0px;
+	}
+	#escDshotDirectionDialog-ContentWrapper {
+		display: flex;
+		flex-flow: column;
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
+	#escDshotDirectionDialog-Content {
+		flex-grow: 1;
+	}
+	#dialog-mixer-reset {
+		width: 400px;
+		height: fit-content;
+	}
+	#dialog-settings-changed {
+		height: 120px;
+	}
+	#dialog-settings-reset-confirmbtn {
+		margin-bottom: 12px;
+		position: relative;
+	}
+	#dialog-settings-changed-confirmbtn {
+		margin-right: 0px;
+		margin-bottom: 0px;
+		position: absolute;
+		right: 0px;
+		bottom: 0px;
+	}
+	#dialog-settings-changed-content-wrapper {
+		display: flex;
+		flex-flow: column;
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
+	#dialog-settings-changed-content {
+		flex-grow: 1;
+	}
+	.dialog-buttons {
+		float: right;
+		margin-bottom: -3%;
+	}
+	.plot_control {
+		float: right;
+		width: 160px;
+		height: 178px;
+		margin: 0;
+		background-color: #ECECEC;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+		.table {
+			display: table;
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: separate;
+			border-spacing: 5px;
+			box-sizing: border-box;
+		}
+		.row-container {
+			display: table-row-group;
+		}
+		.motor-button {
+			a {
+				background-color: var(--accent);
+				border-radius: 3px;
+				border: 1px solid #e8b423;
+				color: #000;
+				font-size: 10px;
+				line-height: 17px;
+				text-shadow: 0 1px rgba(255, 255, 255, 0.25);
+				text-transform: uppercase;
+				letter-spacing: 0.03em;
+				display: block;
+				text-align: center;
+			}
+		}
+		.row {
+			display: table-row;
+		}
+		.left-cell {
+			display: table-cell;
+			vertical-align: middle;
+		}
+		.right-cell {
+			display: table-cell;
+			vertical-align: middle;
+			text-align: right;
+			width: 95px;
+			font-size: smaller;
+		}
+		select {
+			width: 100%;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+		}
+		.value {
+			padding: 3px;
+			color: #fff;
+			border-radius: 3px;
+		}
+		.x {
+			background-color: #00A8F0;
+		}
+		.y {
+			background-color: #C0D800;
+		}
+		.z {
+			background-color: #CB4B4B;
+		}
+		.rms {
+			background-color: #00D800;
+		}
+	}
+	.power_info {
+		float: left;
+		margin-left: 1em;
+		.power_text {
+			font-weight: bold;
+		}
+		.power_value {
+			margin-right: 2em;
+			margin-left: 1em;
+			display: inline-block;
+			text-align: left;
+			width: 50px;
+		}
+	}
+	svg {
+		float: left;
+		width: calc(100% - 168px);
+		height: 140px;
+		margin-top: 10px;
+		margin-bottom: 15px;
+	}
+	.grid {
+		.tick {
+			stroke: silver;
+			stroke-width: 1px;
+			shape-rendering: crispEdges;
+		}
+		path {
+			stroke-width: 0;
+		}
+	}
+	.data {
+		.line {
+			stroke-width: 2px;
+			fill: none;
+		}
+	}
+	.axis {
+		path {
+			fill: none;
+			stroke: #ccc;
+			stroke-width: 1px;
+			shape-rendering: crispEdges;
+		}
+		line {
+			fill: none;
+			stroke: #ccc;
+			stroke-width: 1px;
+			shape-rendering: crispEdges;
+		}
+	}
+	text {
+		stroke: none;
+		fill: #828885;
+		font-size: 10px;
+	}
+	.line {
+		&:nth-child(1) {
+			stroke: #00A8F0;
+		}
+		&:nth-child(2) {
+			stroke: #C0D800;
+		}
+		&:nth-child(3) {
+			stroke: #CB4B4B;
+		}
+	}
+	.motorblock {
+		margin-bottom: 0;
+		background-color: #ECECEC;
+	}
+	.left.motors {
+		float: left;
+		width: 100%;
+	}
+	.title {
+		padding-bottom: 2px;
+		text-align: center;
+		font-weight: bold;
+	}
+	.title2 {
+		padding-bottom: 2px;
+		text-align: center;
+		font-size: 12px;
+		font-weight: 300;
+	}
+	.titles {
+		height: 20px;
+		li {
+			float: left;
+			width: calc((100% / 9) - 10px);
+			margin-right: 10px;
+			text-align: center;
+		}
+		.active {
+			color: green;
+		}
+	}
+	.m-block {
+		float: left;
+		width: calc((100% / 9) - 10px);
+		height: 100px;
+		margin-right: 10px;
+		text-align: center;
+		background-color: #f4f4f4;
+		border-radius: 3px;
+		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		.meter-bar {
+			position: relative;
+			width: 100%;
+			height: 100px;
+			box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+			background-color: #E0E0E0;
+			border-radius: 3px;
+			border: 1px solid #F5F5F5;
+		}
+		.label {
+			position: absolute;
+			width: 100%;
+			bottom: 45px;
+			text-align: center;
+			font-weight: bold;
+			font-size: 10px;
+			color: #474747;
+		}
+		.label.rpm_info {
+			bottom: 28px;
+		}
+		.indicator {
+			.label {
+				color: white;
+			}
+		}
+	}
+	.indicator {
+		position: absolute;
+		overflow: hidden;
+		width: 100%;
+		text-align: center;
+		border-radius: 2px;
+	}
+	.motor_testing {
+		margin-top: 5px;
+		margin-bottom: 0;
+		padding: 0;
+		border: 0;
+		list-style: none;
+		outline: none;
+		.left {
+			width: 100%;
+		}
+		.sliders {
+			input {
+				-webkit-appearance: slider-vertical;
+				width: calc((100% / 9) - 13px);
+				height: 73px;
+				margin-left: 10px;
+				&:first-child {
+					margin-left: 0;
+				}
+			}
+		}
+		.values {
+			margin-top: 5px;
+			li {
+				&:first-child {
+					margin-left: 0;
+				}
+				float: left;
+				width: calc((100% / 9) - 10px);
+				margin-left: 10px;
+				text-align: center;
+				font-size: 10px;
+			}
+		}
+		.telemetry {
+			display: flow-root;
+			margin-bottom: 5px;
+			.warning {
+				color: var(--error);
+			}
+			li {
+				&:first-child {
+					margin-left: 0;
+				}
+				float: left;
+				width: calc((100% / 9) - 10px);
+				margin-left: 10px;
+				text-align: center;
+				font-size: 10px;
+				white-space: pre;
+			}
+		}
+		.notice {
+			float: right;
+			padding: 5px;
+			border: 2px solid var(--subtleAccent);
+			border-radius: 3px;
+			background-color: #FFFFFF;
+			font-size: 11px;
+			margin-top: 10px;
+			p {
+				margin-bottom: 10px;
+			}
+			.motorsEnableTestMode {
+				margin-left: 10px;
+			}
+		}
+	}
+	.motorDialogButtons {
+		float: right;
+	}
+}
+@media all and (max-width: 575px) {
+	.tab-motors {
+		.modelAndGraph {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.mixer {
+			.gui_box {
+				min-height: auto;
+			}
+		}
+		.motorstop {
+			.gui_box {
+				min-height: auto;
+			}
+		}
+		#graph {
+			width: 100%;
+			order: 2;
+		}
+		.plot_control {
+			order: 1;
+		}
+		.power_info {
+			order: 3;
+			width: 100%;
+			margin-top: 10px;
+		}
+		.motorblock {
+			margin-bottom: 15px;
+			>.spacer {
+				display: flex;
+				flex-wrap: wrap;
+			}
+		}
+		.left.motors {
+			width: 100%;
+			order: 1;
+		}
+		.motor_testing {
+			width: 100%;
+			display: flex;
+			flex-wrap: wrap;
+			order: 2;
+			.notice {
+				width: 100%;
+				margin-top: 15px;
+			}
+			.left {
+				width: 100%;
+			}
+			.sliders {
+				margin-left: 2px;
+				margin-right: -2px;
+				input {
+					width: calc((100% - 108px) / 9);
+				}
+			}
+			.values {
+				li {
+					width: calc((100% - 80px) / 9);
+					&:last-child {
+						margin-left: 4px;
+					}
+				}
+			}
+			.telemetry {
+				li {
+					width: calc((100% - 80px) / 9);
+				}
+				span {
+					font-size: 6px;
+				}
+			}
+		}
+		.titles {
+			li {
+				width: calc((100% - 80px) / 9);
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+		}
+		.m-block {
+			width: calc((100% - 80px) / 9);
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
+}
+@media all and (max-width: 1055px) {
+	.tab-motors {
+		.gui_box {
+			span {
+				line-height: 17px;
+			}
+		}
+		.mixer {
+			.gui_box {
+				float: left;
+			}
+		}
+		.motorstop {
+			.gui_box {
+				float: left;
+			}
+		}
+	}
+}
+@media all and (max-width: 1600px) {
+	.tab-motors {
+		select {
+			.escprotocol {
+				margin-left: 24px;
+			}
+		}
+	}
+}
+@media all and (min-width: 1920px) {
+	.tab-motors {
+		select {
+			.escprotocol {
+				margin-left: 48px;
+			}
+			margin-right: 120px;
+		}
+		._3d {
+			div {
+				margin-right: 17px;
+			}
+		}
+	}
+}

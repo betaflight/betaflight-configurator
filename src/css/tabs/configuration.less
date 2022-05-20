@@ -1,0 +1,444 @@
+.tab-configuration {
+	.ui-grid-col {
+		margin-bottom: 0;
+	}
+	input {
+		border: 1px solid var(--subtleAccent);
+		width: 230px;
+		height: 20px;
+		margin-right: 15px;
+		border-radius: 3px;
+		float: left;
+	}
+	select {
+		border: 1px solid var(--subtleAccent);
+		width: 230px;
+		height: 20px;
+		float: left;
+		margin-right: 15px;
+		border-radius: 3px;
+	}
+	table {
+		margin-bottom: 0;
+		width: 100%;
+		float: left;
+		padding: 0;
+		text-align: left;
+		th {
+			text-align: left;
+			padding: 3px;
+			border-bottom: 1px solid var(--subtleAccent);
+		}
+		td {
+			text-align: left;
+			padding: 5px 3px;
+			border-bottom: 1px solid var(--subtleAccent);
+		}
+		tr {
+			td {
+				&:first-child {
+					text-align: left;
+					width: 55px;
+				}
+			}
+		}
+		thead {
+			tr {
+				&:first-child {
+					background-color: #ececec;
+				}
+			}
+		}
+	}
+	position: relative;
+	.groupTitle {
+		padding: 0 0 5px 0;
+		margin: 0 0 10px 0;
+		font-size: 16px;
+		border-bottom: 1px solid var(--subtleAccent);
+	}
+	.featuresMultiple {
+		border-collapse: collapse;
+		margin-bottom: 5px;
+		margin-top: -5px;
+		padding: 0;
+	}
+	dl.features {
+		dt {
+			float: left;
+			width: 10px;
+			height: 18px;
+			line-height: 18px;
+			input {
+				margin-top: 2px;
+			}
+		}
+		dd {
+			margin: 0 0 0 20px;
+			height: 18px;
+			line-height: 18px;
+		}
+	}
+	.number {
+		input {
+			width: 55px;
+			padding-left: 3px;
+			height: 20px;
+			line-height: 20px;
+			text-align: left;
+			border-radius: 3px;
+			margin-right: 11px;
+			font-size: 12px;
+			font-weight: normal;
+		}
+		.disabled {
+			width: 48px;
+			padding: 0 5px;
+			background-color: #ececec;
+		}
+		span {
+			margin-left: 0;
+		}
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+	.gps {
+		.line {
+			clear: left;
+		}
+		select {
+			float: left;
+			width: 100px;
+			height: 20px;
+			margin: 0 10px 5px 0;
+			border: 1px solid var(--subtleAccent);
+		}
+		.select {
+			>div {
+				&:first-child {
+					float: left;
+					height: 20px;
+					margin-right: 15px;
+					margin-left: 3px;
+				}
+			}
+		}
+		span {
+			line-height: 20px;
+		}
+		.gui_box {
+			float: left;
+			margin-bottom: 10px;
+		}
+		td {
+			&:nth-child(2) {
+				width: 38px;
+			}
+		}
+	}
+	.freelabel {
+		margin-left: 10px;
+		position: relative;
+	}
+	span {
+		margin: 0;
+	}
+	.spacer_box {
+		padding-bottom: 10px;
+		float: left;
+		width: calc(100% - 20px);
+	}
+	.select {
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+	.board_align_inputs {
+		margin-bottom: 5px;
+		padding-bottom: 5px;
+		width: 33.3%;
+		float: left;
+		white-space: nowrap;
+		input {
+			width: 3.5em;
+			height: 20px;
+			line-height: 20px;
+			padding-left: 3px;
+		}
+		label {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	.gyro_alignment_inputs {
+		margin-bottom: 5px;
+		padding-bottom: 5px;
+		width: 33.3%;
+		float: left;
+		white-space: nowrap;
+		label {
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	.gui_box_titlebar {
+		margin-bottom: 0;
+	}
+	.numberspacer {
+		float: left;
+		width: 65px;
+		height: 21px;
+	}
+	thead {
+		display: none;
+	}
+	.gui_box {
+		margin-bottom: 10px;
+		float: left;
+		font-weight: bold;
+		span {
+			font-style: normal;
+			font-weight: normal;
+			line-height: 19px;
+			color: #4f4f4f;
+			font-size: 11px;
+		}
+	}
+	.tab-configuration {
+		.system {
+			.gui_box {
+				float: left;
+			}
+		}
+	}
+	.board {
+		.gui_box {
+			float: left;
+		}
+		select {
+			float: left;
+			width: fit-content;
+			max-width: 50%;
+			height: 20px;
+			margin-right: 5px;
+			border-radius: 3px;
+		}
+	}
+	.acc {
+		.gui_box {
+			float: left;
+		}
+	}
+	.other {
+		.gui_box {
+			float: left;
+			margin-bottom: 10px;
+		}
+		tr {
+			&:last-child {
+				td {
+					border-bottom: 0;
+					padding-bottom: 0;
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+	.beeper-configuration {
+		tr {
+			&:last-child {
+				td {
+					border-bottom: 0;
+					padding-bottom: 0;
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+	.dshotBeaconConditions {
+		tr {
+			&:last-child {
+				td {
+					border-bottom: 0;
+					padding-bottom: 0;
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+	.alignicon {
+		width: 15px;
+		height: 15px;
+		float: left;
+		margin: 3px;
+	}
+	.pitch {
+		background-image: url(../../images/icons/cf_icon_pitch.svg);
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+	.yaw {
+		background-image: url(../../images/icons/cf_icon_yaw.svg);
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+	.roll {
+		background-image: url(../../images/icons/cf_icon_roll.svg);
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+	.board_align_content {
+		width: 100%;
+		border-bottom: 1px solid var(--subtleAccent);
+		display: inline-block;
+	}
+	.gyro_align_content {
+		width: 100%;
+		border-bottom: 1px solid var(--subtleAccent);
+		display: inline-block;
+	}
+	.sensoralignment {
+		span {
+			width: 100%;
+		}
+	}
+	.gyroSyncDenom {
+		width: 90px;
+	}
+	.pidProcessDenom {
+		width: 90px;
+	}
+	.gyroFrequency {
+		width: 90px;
+		border: none;
+		background-color: var(--alternativeBackground);
+		padding-left: 6px;
+		margin-right: 10px;
+		font-weight: bold;
+	}
+	._smallAngle {
+		margin-top: 10px;
+		float: left;
+		width: 100%;
+	}
+	.gpsSettings {
+		.note {
+			margin-top: 10px;
+		}
+	}
+}
+@media only screen and (max-width: 1055px) {
+	.tab-configuration {
+		.gui_box {
+			span {
+				line-height: 17px;
+			}
+		}
+		.system {
+			.gui_box {
+				float: left;
+			}
+		}
+		.board {
+			.gui_box {
+				float: left;
+			}
+		}
+		.acc {
+			.gui_box {
+				float: left;
+			}
+		}
+		.gps {
+			.gui_box {
+				float: left;
+			}
+		}
+		.other {
+			.gui_box {
+				float: left;
+			}
+		}
+	}
+}
+@media only screen and (max-device-width: 1055px) {
+	.tab-configuration {
+		.gui_box {
+			span {
+				line-height: 17px;
+			}
+		}
+		.system {
+			.gui_box {
+				float: left;
+			}
+		}
+		.board {
+			.gui_box {
+				float: left;
+			}
+		}
+		.acc {
+			.gui_box {
+				float: left;
+			}
+		}
+		.gps {
+			.gui_box {
+				float: left;
+			}
+		}
+		.other {
+			.gui_box {
+				float: left;
+			}
+		}
+	}
+}
+@media all and (max-width: 575px) {
+	.tab-configuration {
+		.system {
+			.gui_box {
+				min-height: auto;
+			}
+		}
+		.gps {
+			td {
+				&:nth-child(2) {
+					width: auto;
+				}
+			}
+		}
+	}
+	.dshotbeacon {
+		>td {
+			>div.select {
+				>div {
+					width: 100%;
+				}
+			}
+		}
+		select.dshotBeeperBeaconTone {
+			width: 100%;
+		}
+	}
+}

@@ -1,0 +1,194 @@
+.tab-sensors {
+	.info {
+		margin-bottom: 10px;
+		margin-top: 8px;
+		margin-left: 10px;
+		input {
+			vertical-align: middle;
+			margin: 0 5px 0 15px;
+		}
+		.first {
+			margin: 0 5px 0 0;
+		}
+	}
+	.wrapper {
+		display: none;
+	}
+	.plot_control {
+		float: right;
+		width: 160px;
+		height: 160px;
+		margin: 0;
+		background-color: #ECECEC;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+		.title {
+			line-height: 20px;
+			font-weight: bold;
+			padding-left: 10px;
+			padding-top: 10px;
+			text-align: left;
+			float: left;
+		}
+		dl {
+			padding: 10px 10px 0 10px;
+			line-height: 22px;
+			float: left;
+		}
+		dt {
+			float: left;
+			width: 60px;
+			height: 22px;
+			font-weight: bold;
+		}
+		dd {
+			height: 25px;
+			float: right;
+			width: 73px;
+		}
+		select {
+			float: right;
+			width: 80px;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+		}
+		.x {
+			background-color: #00A8F0;
+			padding: 3px;
+			color: #fff;
+			height: 12px;
+			float: right;
+			border-radius: 3px;
+			line-height: 12px;
+			margin-bottom: 2px;
+			text-align: right;
+		}
+		.y {
+			background-color: #C0D800;
+			padding: 3px;
+			color: #fff;
+			height: 12px;
+			float: right;
+			border-radius: 3px;
+			line-height: 12px;
+			margin-bottom: 2px;
+			text-align: right;
+		}
+		.z {
+			background-color: #CB4B4B;
+			padding: 3px;
+			color: #fff;
+			height: 12px;
+			float: right;
+			border-radius: 3px;
+			line-height: 12px;
+			margin-bottom: 2px;
+			text-align: right;
+		}
+	}
+	svg {
+		float: left;
+		width: calc(100% - 180px);
+		height: 140px;
+		margin-bottom: 10px;
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	.grid {
+		.tick {
+			stroke: silver;
+			stroke-width: 1px;
+			shape-rendering: crispEdges;
+		}
+		path {
+			stroke-width: 0;
+		}
+	}
+	.data {
+		.line {
+			stroke-width: 2px;
+			fill: none;
+		}
+	}
+	.axis {
+		path {
+			fill: none;
+			stroke: #ccc;
+			stroke-width: 1px;
+			shape-rendering: crispEdges;
+		}
+		line {
+			fill: none;
+			stroke: #ccc;
+			stroke-width: 1px;
+			shape-rendering: crispEdges;
+		}
+	}
+	text {
+		stroke: none;
+		fill: #828885;
+		font-size: 10px;
+	}
+	.line {
+		&:nth-child(1) {
+			stroke: #00A8F0;
+		}
+		&:nth-child(2) {
+			stroke: #C0D800;
+		}
+		&:nth-child(3) {
+			stroke: #CB4B4B;
+		}
+		&:nth-child(4) {
+			stroke: #4DA74D;
+		}
+	}
+	.legend {
+		.item {
+			&:nth-child(1) {
+				fill: #00A8F0;
+			}
+			&:nth-child(2) {
+				fill: #C0D800;
+			}
+			&:nth-child(3) {
+				fill: #CB4B4B;
+			}
+			&:nth-child(4) {
+				fill: #4DA74D;
+			}
+		}
+	}
+}
+@media all and (max-width: 575px) {
+	.tab-sensors {
+		.plot_control {
+			width: 130px;
+			dt {
+				width: 60px;
+			}
+			dd {
+				width: 50px;
+				select {
+					width: 100%;
+				}
+			}
+			.x {
+				height: 18px;
+				box-sizing: border-box;
+			}
+			.y {
+				height: 18px;
+				box-sizing: border-box;
+			}
+			.z {
+				height: 18px;
+				box-sizing: border-box;
+			}
+		}
+		svg {
+			width: calc(100% - 130px);
+			margin-left: 0;
+		}
+	}
+}

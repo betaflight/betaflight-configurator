@@ -1,0 +1,192 @@
+.tab-ports {
+	position: relative;
+	table {
+		margin-bottom: 10px;
+		width: 100%;
+		border-collapse: collapse;
+		border-left: 0;
+		border-right: 0;
+		border-top: 0;
+		th {
+			border-left: 0;
+			border-right: 0;
+			border-top: 0;
+		}
+		td {
+			border-top: 0;
+			border-bottom: 1px solid var(--subtleAccent);
+			border-left: 1px solid var(--subtleAccent);
+			border-right: 1px solid var(--subtleAccent);
+			padding: 3px 3px 3px 5px;
+		}
+		tr {
+			td {
+				&:first-child {
+					text-align: left;
+				}
+			}
+			&:nth-child(even) {
+				select {
+					background-color: var(--alternativeBackground);
+				}
+				background-color: var(--alternativeBackground);
+			}
+		}
+		thead {
+			tr {
+				&:first-child {
+					background-color: var(--alternativeBackground);
+					background-color: var(--alternativeBackground);
+					font-size: 12px;
+					height: 25px;
+					border-top: 0;
+					border-right: 0;
+					border-left: 0;
+				}
+			}
+		}
+	}
+	.function {
+		input {
+			vertical-align: -2px;
+		}
+		label {
+			margin-right: 5px;
+		}
+	}
+	select {
+		border: 1px solid var(--subtleAccent);
+		border-radius: 3px;
+		margin-right: 3px;
+		background: var(--boxBackground);
+		color: var(--defaultText);
+	}
+	.require-support {
+		display: none;
+	}
+	.require-upgrade {
+		display: block;
+	}
+	.ports {
+		select {
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		select[name=function-peripherals] {
+			max-width: 110px;
+		}
+		select[name=function-telemetry] {
+			max-width: 110px;
+		}
+		td {
+			text-align: center;
+		}
+		thead {
+			td {
+				white-space: nowrap;
+				padding: 5px 7px;
+				background-color: var(--quietHeader);
+				color: var(--quietText);
+				&:first-child {
+					text-align: left;
+					border-top-left-radius: 5px;
+					border-left: 0;
+				}
+				&:last-child {
+					border-top-right-radius: 5px;
+					border-right: 0;
+				}
+			}
+		}
+	}
+}
+#tab-ports-templates {
+	display: none;
+}
+.tab-ports.supported {
+	.require-support {
+		display: block;
+	}
+	.require-upgrade {
+		display: none;
+	}
+}
+@media only screen and (max-width: 1055px) {
+	.tab-ports {
+		table {
+			thead {
+				tr {
+					&:first-child {
+						font-size: 12px;
+						height: 22px;
+					}
+				}
+			}
+		}
+	}
+}
+@media only screen and (max-device-width: 1055px) {
+	.tab-ports {
+		table {
+			thead {
+				tr {
+					&:first-child {
+						font-size: 12px;
+						height: 22px;
+					}
+				}
+			}
+		}
+	}
+}
+@media all and (max-width: 575px) {
+	.tab-ports {
+		.config {
+			text-align: left;
+			border-top-left-radius: 5px;
+			border-left: 0;
+		}
+		table {
+			td {
+				padding: 0;
+			}
+		}
+		.ports {
+			select {
+				margin: 0;
+				width: 100%;
+				border: none;
+				height: 25px;
+				border-radius: unset;
+			}
+			select[name=function-peripherals] {
+				border-bottom: 1px solid var(--subtleAccent);
+			}
+			select[name=function-telemetry] {
+				border-bottom: 1px solid var(--subtleAccent);
+			}
+			select[name=function-sensors] {
+				border-bottom: 1px solid var(--subtleAccent);
+			}
+			thead {
+				td {
+					font-size: 8px;
+					width: calc(100% / 5);
+					word-break: break-word;
+					white-space: unset;
+				}
+			}
+		}
+		.portIdentifier {
+			td {
+				height: 18px;
+				background-color: #D6D6D6;
+				padding: 2px 5px;
+				font-size: 12px;
+				color: #828282;
+				font-weight: normal;
+				background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .2) 100%, transparent);
+			}
+		}
+	}
+}

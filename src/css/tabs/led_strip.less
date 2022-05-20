@@ -1,0 +1,516 @@
+.tab-led-strip {
+	.content_wrapper {
+		position: relative !important;
+	}
+	.help {
+		padding: 10px;
+		background-color: #ffcb18;
+		margin-bottom: 10px;
+	}
+	.section {
+		color: #565656;
+		margin: 20px 0 5px 0;
+		border-bottom: 1px solid var(--subtleAccent);
+	}
+	.mainGrid {
+		width: calc((24px + 7px) * 16);
+		height: calc((24px + 7px) * 16);
+		float: left;
+		margin-right: 10px;
+		border-radius: 3px;
+		background-color: #dcdcdc;
+		border: var(--subtleAccent);
+		.gPoint {
+			float: left;
+			border: solid 1px var(--ledAccent);
+			width: 23px;
+			height: 23px;
+			margin: 3px;
+			border-radius: 7px;
+			background: var(--ledBackground);
+			cursor: pointer;
+		}
+	}
+	.gPoint.function-s {
+		background: brown;
+		box-shadow: inset 0 0 30px rgba(0, 0, 0, .7);
+		border-color: rgb(52, 155, 255);
+		.overlay-s {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , brown 0%, brown 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -6px;
+			margin-left: 16px;
+		}
+	}
+	.gPoint.function-c {
+		background: linear-gradient( to bottom right, rgba(255, 0, 0, .5) 0%, rgba(255, 255, 0, 0.5) 15%, rgba(0, 255, 0, .5) 30%, rgba(0, 255, 255, .5) 50%, rgba(0, 0, 255, .5) 65%, rgba(255, 0, 255, .5) 80%, rgba(255, 0, 0, .5) 100%);
+		box-shadow: inset 0 0 30px rgba(0, 0, 0, .7);
+		border-color: grey;
+		.overlay-color {
+			float: left;
+			height: 15px;
+			width: 15px;
+			margin-top: -23px;
+			margin-left: 4px;
+			border-radius: 4px;
+		}
+	}
+	.gPoint.function-f {
+		background: rgb(50, 205, 50);
+		box-shadow: inset 0 0 30px rgba(0, 0, 0, .7);
+		border-color: rgb(50, 205, 50);
+	}
+	.gPoint.function-a {
+		background: rgb(52, 155, 255);
+		box-shadow: inset 0 0 30px rgba(0, 0, 0, .7);
+		border-color: rgb(52, 155, 255);
+	}
+	.gPoint.function-l {
+		background: magenta;
+		box-shadow: inset 0 0 30px rgba(0, 0, 0, .7);
+		border-color: rgb(52, 155, 255);
+	}
+	.gPoint.function-r {
+		background: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, white 60%,white 70%,black 70%, black 100%);
+		box-shadow: inset 0 0 30px rgba(0, 0, 0, .7);
+		border-color: black;
+		.overlay-color {
+			float: left;
+			height: 15px;
+			width: 15px;
+			margin-top: -23px;
+			margin-left: 4px;
+			border-radius: 4px;
+		}
+	}
+	.gPoint.function-g {
+		background: green;
+		box-shadow: inset 0 0 30px rgba(0, 0, 0, .7);
+		border-color: rgb(52, 155, 255);
+	}
+	.gPoint.function-w {
+		.overlay-w {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , red 0%, red 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -30px;
+			margin-left: -9px;
+		}
+	}
+	.gPoint.function-v {
+		.overlay-v {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , black 0%, black 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -6px;
+			margin-left: 4px;
+		}
+	}
+	.gPoint.function-i {
+		.overlay-i {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , yellow 0%, yellow 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -30px;
+			margin-left: 16px;
+		}
+	}
+	.gPoint.function-t {
+		.overlay-t {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , orange 0%, orange 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -6px;
+			margin-left: -9px;
+		}
+	}
+	.gPoint.function-o {
+		.overlay-o {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , brown 0%, brown 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -6px;
+			margin-left: 16px;
+		}
+	}
+	.gPoint.function-b {
+		.overlay-b {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , rgb(52, 155, 255) 0%, rgb(52, 155, 255) 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -18px;
+			margin-left: -9px;
+		}
+	}
+	.gPoint.function-n {
+		.overlay-n {
+			float: left;
+			height: 6px;
+			width: 16px;
+			background-image: radial-gradient(1px at 8px 50% , blue 0%, blue 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+			margin-top: -18px;
+			margin-left: 16px;
+		}
+	}
+	.gPoint {
+		select {
+			background: #000;
+			width: 13px;
+			height: 13px;
+		}
+	}
+	.wire {
+		text-align: center;
+		font-size: 12px;
+		padding-top: 0px;
+		display: block;
+		margin-left: -1px;
+		margin-top: -21px;
+		width: 24px;
+		height: 24px;
+		text-shadow: 0 0 2px black,0 0 2px black,0 0 2px black;
+		color: white;
+	}
+	button {
+		text-align: center;
+		font-weight: bold;
+		border: 1px solid var(--subtleAccent);
+		background-color: #ececec;
+		border-radius: 3px;
+		padding: 7px 6px;
+		margin: 3px 0;
+		&:hover {
+			background-color: #acacac;
+		}
+	}
+	.funcWire.btnOn {
+		background: rgb(15, 171, 22);
+	}
+	.w100 {
+		width: 100%;
+	}
+	.w50 {
+		width: 49%;
+	}
+	.select {
+		.function-c {
+			background: linear-gradient( to bottom right, rgba(255, 0, 0, .5) 0%, rgba(255, 255, 0, 0.5) 15%, rgba(0, 255, 0, .5) 30%, rgba(0, 255, 255, .5) 50%, rgba(0, 0, 255, .5) 65%, rgba(255, 0, 255, .5) 80%, rgba(255, 0, 0, .5) 100%);
+		}
+		.function-f {
+			background: rgb(50, 205, 50);
+		}
+		.function-a {
+			background: rgb(52, 155, 255);
+		}
+		.function-l {
+			background: magenta;
+		}
+		.function-s {
+			background: brown;
+		}
+		.function-g {
+			background: green;
+		}
+		.function-r {
+			background: #acacac;
+		}
+		.functionSelect {
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+			background: var(--boxBackground);
+			color: var(--defaultText);
+		}
+	}
+	.overlays {
+		display: inline-block;
+	}
+	.blinkers {
+		display: inline-block;
+	}
+	.modifiers {
+		display: inline-block;
+	}
+	.colorDefineSliders {
+		display: inline-block;
+		position: absolute;
+		z-index: 10000;
+		background: var(--boxBackground);
+		padding: 5px;
+		border-color: #565656;
+		border-style: solid;
+		border-radius: 6px;
+		border-width: 2px;
+		width: 167px;
+	}
+	.color-1 {
+		background: white;
+	}
+	.color-2 {
+		background: red;
+	}
+	.color-3 {
+		background: orange;
+	}
+	.color-4 {
+		background: yellow;
+	}
+	.color-5 {
+		background: greenyellow;
+	}
+	.color-6 {
+		background: limegreen;
+	}
+	.color-7 {
+		background: palegreen;
+	}
+	.color-8 {
+		background: cyan;
+	}
+	.color-9 {
+		background: lightcyan;
+	}
+	.color-10 {
+		background: dodgerblue;
+	}
+	.color-11 {
+		background: darkviolet;
+	}
+	.color-12 {
+		background: magenta;
+	}
+	.color-13 {
+		background: deeppink;
+	}
+	.directions {
+		button.btnOn {
+			border-color: #000;
+		}
+		.btnOn {
+			background: #FFF;
+			color: #000;
+		}
+		height: 130px;
+		position: relative;
+		display: inline-block;
+		width: 49%;
+		button {
+			position: absolute;
+			width: 30px;
+			height: 30px;
+		}
+		.dir-n {
+			top: 0;
+			left: 32px;
+		}
+		.dir-s {
+			top: 64px;
+			left: 32px;
+		}
+		.dir-e {
+			left: 64px;
+			top: 32px;
+		}
+		.dir-w {
+			left: 0;
+			top: 32px;
+		}
+		.dir-u {
+			right: 10px;
+			top: 15px;
+		}
+		.dir-d {
+			right: 10px;
+			top: 54px;
+		}
+	}
+	.colors {
+		.btnOn {
+			border-color: #000;
+		}
+		button {
+			&:hover {
+				border-color: inherit;
+				border-style: solid;
+			}
+			width: 23%;
+			text-shadow: 0 0 2px black,0 0 2px black,0 0 2px black;
+			color: white;
+		}
+		height: 130px;
+		position: relative;
+		display: inline-block;
+		width: 49%;
+	}
+	.special_colors {
+		button.btnOn {
+			border-color: #000;
+		}
+	}
+	.mode_colors {
+		button.btnOn {
+			border-color: #000;
+		}
+	}
+	.indicators {
+		position: relative;
+		height: 24px;
+		span {
+			width: 0;
+			height: 0;
+			position: absolute;
+			display: none;
+			font-size: 10px;
+			font-weight: bold;
+		}
+		.north {
+			top: -9px;
+			left: 4px;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-bottom: 7px solid rgba(0,0,0,.8);
+		}
+		.south {
+			bottom: -8px;
+			left: 4px;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-top: 7px solid rgba(0,0,0,.8);
+		}
+		.east {
+			bottom: 7px;
+			right: -9px;
+			border-top: 7px solid transparent;
+			border-bottom: 7px solid transparent;
+			border-left: 7px solid rgba(0,0,0,.8);
+		}
+		.west {
+			bottom: 7px;
+			left: -9px;
+			border-top: 7px solid transparent;
+			border-bottom: 7px solid transparent;
+			border-right: 7px solid rgba(0,0,0,.8);
+		}
+		.up {
+			top: 0px;
+			left: 2px;
+		}
+		.down {
+			bottom: 17px;
+			right: 10px;
+		}
+	}
+	.dir-n {
+		.north {
+			display: inline;
+		}
+	}
+	.dir-s {
+		.south {
+			display: inline;
+		}
+	}
+	.dir-e {
+		.east {
+			display: inline;
+		}
+	}
+	.dir-w {
+		.west {
+			display: inline;
+		}
+	}
+	.dir-u {
+		.up {
+			display: inline;
+		}
+	}
+	.dir-d {
+		.down {
+			display: inline;
+		}
+	}
+	.controls {
+		position: relative;
+		float: left;
+		width: 285px;
+	}
+	.wires-remaining {
+		float: right;
+		text-align: center;
+		font-size: 14px;
+		div {
+			font-size: 40px;
+			color: var(--accent);
+			margin-bottom: -5px;
+			margin-top: -10px;
+		}
+	}
+	.wires-remaining.error {
+		div {
+			color: #FF5700;
+		}
+	}
+	>.buttons {
+		margin-top: 10px;
+	}
+	.gridSections {
+		position: absolute;
+		z-index: -1;
+		width: 496px;
+		border: 1px solid rgb(236, 236, 236);
+		margin-top: -1px;
+		margin-left: -1px;
+		border-radius: 3px;
+		.block {
+			width: 122px;
+			height: 122px;
+			float: left;
+			border: solid 1px rgb(236, 236, 236);
+		}
+	}
+	.ui-selected {
+		box-shadow: inset 0 0 8px rgba(255, 0, 255, 1) !important;
+		border: solid 1px #000 !important;
+	}
+	.ui-selecting {
+		box-shadow: inset 0 0 30px rgba(255, 0, 255, .7) !important;
+		border: solid 1px #000 !important;
+	}
+	.ui-selectable-helper {
+		background: rgba(0,0,0,.4);
+		position: absolute;
+		z-index: 100;
+		border: 1px dotted white;
+	}
+}
+.gridWire {
+	.wire {
+		color: rgba(255,255,255,1);
+	}
+	background: rgba(15, 171, 22, .5) !important;
+}
+.colorDefineSliderValue {
+	width: 10px;
+	display: inline-table;
+	margin-bottom: 5px;
+}
+.colorDefineSliderLabel {
+	width: 10px;
+	display: inline-table;
+	margin-bottom: 5px;
+}
+@media all and (max-width: 575px) {
+	.tab-led-strip {
+		.controls {
+			width: 100%;
+		}
+	}
+}
