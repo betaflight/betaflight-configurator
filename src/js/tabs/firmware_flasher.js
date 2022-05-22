@@ -847,15 +847,24 @@ firmware_flasher.initialize = function (callback) {
                 if (String(portPickerElement.val()) !== '0') {
                     const port = String(portPickerElement.val());
                     let baud = 115200;
+
                     if ($('input.flash_manual_baud').is(':checked')) {
                         baud = parseInt($('#flash_manual_baud_rate').val());
                     }
+
                     GUI.log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
-                    if (!(serial.connected || serial.connectionId)) {
-                        serial.connect(port, {bitrate: baud}, onConnect);
+
+                    const isLoaded = self.releases ? Object.keys(self.releases).length > 0 : false;
+
+                    if (isLoaded) {
+                        if (!(serial.connected || serial.connectionId)) {
+                            serial.connect(port, {bitrate: baud}, onConnect);
+                        } else {
+                            console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId);
+                            serial.disconnect();
+                        }
                     } else {
-                        console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId);
-                        serial.disconnect();
+                        console.log('Releases not loaded yet');
                     }
                 } else {
                     GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
@@ -864,31 +873,23 @@ firmware_flasher.initialize = function (callback) {
         }
 
         const detectBoardElement = $('a.detect-board');
-        let isClickable = true;
 
         detectBoardElement.on('click', () => {
             detectBoardElement.addClass('disabled');
 
-            if (isClickable) {
-                isClickable = false;
-                verifyBoard();
-                setTimeout(() => isClickable = true, 1000);
-            }
+            verifyBoard();
+
+            setTimeout(() => detectBoardElement.removeClass('disabled'), 1000);
         });
 
         function updateDetectBoardButton() {
-            const isDfu = portPickerElement.val().includes('DFU');
+            const isDfu = PortHandler.dfu_available;
             const isBusy = GUI.connect_lock;
-            const isLoaded = self.releases ? Object.keys(self.releases).length > 0 : false;
-            const isAvailable = PortHandler.port_available || false;
-            const isButtonDisabled = isDfu || isBusy || !isLoaded || !isAvailable;
+            const isAvailable = PortHandler.port_available;
+            const isButtonDisabled = isDfu || isBusy || !isAvailable;
 
             detectBoardElement.toggleClass('disabled', isButtonDisabled);
         }
-
-        document.querySelector('select[name="build_type"]').addEventListener('change', updateDetectBoardButton);
-        document.querySelector('select[name="board"]').addEventListener('change', updateDetectBoardButton);
-        document.querySelector('select[name="firmware_version"]').addEventListener('change', updateDetectBoardButton);
 
         let result = ConfigStorage.get('erase_chip');
         if (result.erase_chip) {
@@ -1114,11 +1115,14 @@ firmware_flasher.initialize = function (callback) {
         });
 
         const exitDfuElement = $('a.exit_dfu');
+
         exitDfuElement.click(function () {
-            if (!$(this).hasClass('disabled')) {
+            if (!exitDfuElement.hasClass('disabled')) {
+                exitDfuElement.addClass("disabled");
                 if (!GUI.connect_lock) { // button disabled while flashing is in progress
                     analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
                     try {
+                        console.log('Closing DFU');
                         STM32DFU.connect(usbDevices, self.parsed_hex, { exitDfu: true });
                     } catch (e) {
                         console.log(`Exiting DFU failed: ${e.message}`);
@@ -1127,25 +1131,27 @@ firmware_flasher.initialize = function (callback) {
             }
         });
 
-        portPickerElement.change(function () {
-            if (!GUI.connect_lock) {
-                if ($('option:selected', this).data().isDFU) {
-                    exitDfuElement.removeClass('disabled');
-                } else {
-                    // Porthandler resets board on port detect
-                    if (self.boardNeedsVerification) {
-                        // reset to prevent multiple calls
-                        self.boardNeedsVerification = false;
-                        verifyBoard();
-                    }
+        portPickerElement.on('change', function () {
+            if (GUI.active_tab === 'firmware_flasher') {
+                if (!GUI.connect_lock) {
+                    if ($('option:selected', this).data().isDFU) {
+                        exitDfuElement.removeClass('disabled');
+                    } else {
+                        // Porthandler resets board on port detect
+                        if (self.boardNeedsVerification) {
+                            // reset to prevent multiple calls
+                            self.boardNeedsVerification = false;
+                            verifyBoard();
+                        }
 
-                    $("a.load_remote_file").removeClass('disabled');
-                    $("a.load_file").removeClass('disabled');
-                    exitDfuElement.addClass('disabled');
+                        $("a.load_remote_file").removeClass('disabled');
+                        $("a.load_file").removeClass('disabled');
+                        exitDfuElement.addClass('disabled');
+                    }
                 }
+                updateDetectBoardButton();
             }
-            updateDetectBoardButton();
-        }).change();
+        }).trigger('change');
 
         $('a.flash_firmware').click(function () {
             if (!$(this).hasClass('disabled')) {
@@ -1214,6 +1220,7 @@ firmware_flasher.initialize = function (callback) {
 
         function startFlashing() {
             exitDfuElement.addClass('disabled');
+            $('a.flash_firmware').addClass('disabled');
             $("a.load_remote_file").addClass('disabled');
             $("a.load_file").addClass('disabled');
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
