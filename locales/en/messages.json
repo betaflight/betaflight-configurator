@@ -1212,6 +1212,12 @@
     "configurationReceiverMode": {
         "message": "Receiver Mode"
     },
+    "configurationTelemetry": {
+        "message": "Telemetry"
+    },
+    "configurationTelemetryHelp": {
+        "message": "Telemetry output from receiver"
+    },
     "configurationRSSI": {
         "message": "RSSI (Signal Strength)"
     },

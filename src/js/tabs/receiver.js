@@ -360,7 +360,7 @@ TABS.receiver.initialize = function (callback) {
             FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
 
-            if (element.attr('name') === "RSSI_ADC") {
+            if (element.attr('name') === "RSSI_ADC" || element.attr('name') === "TELEMETRY") {
                 updateSaveButton(true);
             }
         });
