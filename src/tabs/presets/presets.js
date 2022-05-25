@@ -333,12 +333,14 @@ TABS.presets.multipleSelectComponentScrollFix = function() {
 };
 
 TABS.presets.checkPresetSourceVersion = function() {
+    const self = this;
+
     return new Promise((resolve, reject) => {
-        if (this.majorVersion === this.presetsRepo.index.majorVersion) {
+        if (self.majorVersion === self.presetsRepo.index.majorVersion) {
             resolve();
         } else {
-            const versionRequired = `${this.majorVersion}.X`;
-            const versionSource = `${this.presetsRepo.index.majorVersion}.${this.presetsRepo.index.minorVersion}`;
+            const versionRequired = `${self.majorVersion}.X`;
+            const versionSource = `${self.presetsRepo.index.majorVersion}.${self.presetsRepo.index.minorVersion}`;
 
             const dialogSettings = {
                 title: i18n.getMessage("presetsWarningDialogTitle"),
