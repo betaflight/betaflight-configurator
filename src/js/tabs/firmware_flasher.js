@@ -158,12 +158,11 @@ firmware_flasher.initialize = function (callback) {
 
             TABS.firmware_flasher.releases = builds;
 
-            ConfigStorage.get('selected_board', function (result) {
-                if (result.selected_board) {
-                    const boardBuilds = builds[result.selected_board];
-                    $('select[name="board"]').val(boardBuilds ? result.selected_board : 0).trigger('change');
-                }
-            });
+            result = ConfigStorage.get('selected_board');
+            if (result.selected_board) {
+                const boardBuilds = builds[result.selected_board];
+                $('select[name="board"]').val(boardBuilds ? result.selected_board : 0).trigger('change');
+            }
         }
 
         function processBoardOptions(releaseData, showDevReleases) {
@@ -244,30 +243,29 @@ firmware_flasher.initialize = function (callback) {
             if (builds && hasUnifiedTargetBuild(builds)) {
                 console.log('loaded some builds for later');
                 const storageTag = 'unifiedSourceCache';
-                chrome.storage.local.get(storageTag, function (result) {
-                    let storageObj = result[storageTag];
-                    if (!storageObj || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod) {
-                        console.log('go get', unifiedSource);
-                        $.get(unifiedSource, function(data, textStatus, jqXHR) {
-                            // Cache the information for later use.
-                            let newStorageObj = {};
-                            let newDataObj = {};
-                            newDataObj.lastUpdate = checkTime;
-                            newDataObj.data = data;
-                            newStorageObj[storageTag] = newDataObj;
-                            chrome.storage.local.set(newStorageObj);
+                result = ConfigStorage.get(storageTag);
+                let storageObj = result[storageTag];
+                if (!storageObj || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod) {
+                    console.log('go get', unifiedSource);
+                    $.get(unifiedSource, function(data, textStatus, jqXHR) {
+                        // Cache the information for later use.
+                        let newStorageObj = {};
+                        let newDataObj = {};
+                        newDataObj.lastUpdate = checkTime;
+                        newDataObj.data = data;
+                        newStorageObj[storageTag] = newDataObj;
+                        ConfigStorage.set(newStorageObj);
 
-                            parseUnifiedBuilds(data, builds);
-                        }).fail(xhr => {
-                            console.log('failed to get new', unifiedSource, 'cached data', Math.floor((checkTime - storageObj.lastUpdate) / 60), 'mins old');
-                            parseUnifiedBuilds(storageObj.data, builds);
-                        });
-                    } else {
-                      // In the event that the cache is okay
-                      console.log('unified config cached data', Math.floor((checkTime - storageObj.lastUpdate)/60), 'mins old');
-                      parseUnifiedBuilds(storageObj.data, builds);
-                    }
-                });
+                        parseUnifiedBuilds(data, builds);
+                    }).fail(xhr => {
+                        console.log('failed to get new', unifiedSource, 'cached data', Math.floor((checkTime - storageObj.lastUpdate) / 60), 'mins old');
+                        parseUnifiedBuilds(storageObj.data, builds);
+                    });
+                } else {
+                    // In the event that the cache is okay
+                    console.log('unified config cached data', Math.floor((checkTime - storageObj.lastUpdate)/60), 'mins old');
+                    parseUnifiedBuilds(storageObj.data, builds);
+                }
             } else {
                 populateBoardOptions(builds);
             }
@@ -314,13 +312,12 @@ firmware_flasher.initialize = function (callback) {
             TABS.firmware_flasher.releases = releases;
             TABS.firmware_flasher.unifiedConfigs = unifiedConfigs;
 
-            ConfigStorage.get('selected_board', function (result) {
-                if (result.selected_board) {
-                    const boardReleases = TABS.firmware_flasher.unifiedConfigs[result.selected_board]
-                        || TABS.firmware_flasher.releases[result.selected_board];
-                    $('select[name="board"]').val(boardReleases ? result.selected_board : 0).trigger('change');
-                }
-            });
+            result = ConfigStorage.get('selected_board');
+            if (result.selected_board) {
+                const boardReleases = TABS.firmware_flasher.unifiedConfigs[result.selected_board]
+                    || TABS.firmware_flasher.releases[result.selected_board];
+                $('select[name="board"]').val(boardReleases ? result.selected_board : 0).trigger('change');
+            }
         }
 
         const buildTypes = [
@@ -416,7 +413,7 @@ firmware_flasher.initialize = function (callback) {
                 buildTypesToShow[build_type].loader();
             }
 
-            chrome.storage.local.set({'selected_build_type': build_type});
+            ConfigStorage.set({'selected_build_type': build_type});
         });
 
         function populateBuilds(builds, target, manufacturerId, duplicateName, targetVersions, callback) {
@@ -613,78 +610,77 @@ firmware_flasher.initialize = function (callback) {
                         const storageTag = 'unifiedConfigLast';
                         const expirationPeriod = 3600; // One of your earth hours.
                         const checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
-                        chrome.storage.local.get(storageTag, function (result) {
-                            let storageObj = result[storageTag];
-                            const unifiedConfigList = TABS.firmware_flasher.unifiedConfigs[target];
-                            const manufacturerIds = Object.keys(unifiedConfigList);
-                            const duplicateName = manufacturerIds.length > 1;
+                        result = ConfigStorage.get(storageTag);
+                        let storageObj = result[storageTag];
+                        const unifiedConfigList = TABS.firmware_flasher.unifiedConfigs[target];
+                        const manufacturerIds = Object.keys(unifiedConfigList);
+                        const duplicateName = manufacturerIds.length > 1;
 
-                            const processManufacturer = function(index) {
-                                const processNext = function () {
-                                    if (index < manufacturerIds.length - 1) {
-                                        processManufacturer(index + 1);
-                                    } else {
-                                        finishPopulatingBuilds();
-                                    }
-                                };
-
-                                const manufacturerId = manufacturerIds[index];
-                                const targetId = `${target}+${manufacturerId}`;
-                                // Check to see if the cached configuration is the one we want.
-                                if (!storageObj || !storageObj.targetId || storageObj.targetId !== targetId
-                                    || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod
-                                    || !storageObj.unifiedTarget) {
-                                    const unifiedConfig = unifiedConfigList[manufacturerId];
-                                    // Have to go and try and get the unified config, and then do stuff
-                                    $.get(unifiedConfig.download_url, function(targetConfig) {
-                                        console.log('got unified config');
-
-                                        let config = cleanUnifiedConfigFile(targetConfig);
-                                        if (config !== null) {
-                                            const bareBoard = grabBuildNameFromConfig(config);
-                                            TABS.firmware_flasher.bareBoard = bareBoard;
-
-                                            self.gitHubApi.getFileLastCommitInfo('betaflight/unified-targets', 'master', unifiedConfig.path, function (commitInfo) {
-                                                config = self.injectTargetInfo(config, target, manufacturerId, commitInfo);
-
-                                                setUnifiedConfig(target, bareBoard, config, manufacturerId, unifiedConfig.name, unifiedConfig.download_url, commitInfo.date);
-
-                                                // cache it for later
-                                                let newStorageObj = {};
-                                                newStorageObj[storageTag] = {
-                                                    unifiedTarget: self.unifiedTarget,
-                                                    targetId: targetId,
-                                                    lastUpdate: checkTime,
-                                                };
-                                                chrome.storage.local.set(newStorageObj);
-
-                                                populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
-                                            });
-                                        } else {
-                                            failLoading(unifiedConfig.download_url);
-                                        }
-                                    }).fail(xhr => {
-                                        failLoading(unifiedConfig.download_url);
-                                    });
+                        const processManufacturer = function(index) {
+                            const processNext = function () {
+                                if (index < manufacturerIds.length - 1) {
+                                    processManufacturer(index + 1);
                                 } else {
-                                    console.log('We have the config cached for', targetId);
-                                    const unifiedTarget = storageObj.unifiedTarget;
-
-                                    const bareBoard = grabBuildNameFromConfig(unifiedTarget.config);
-                                    TABS.firmware_flasher.bareBoard = bareBoard;
-
-                                    if (target === bareBoard) {
-                                        self.unifiedTarget = {};
-                                    } else {
-                                        self.unifiedTarget = unifiedTarget;
-                                    }
-
-                                    populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
+                                    finishPopulatingBuilds();
                                 }
                             };
 
-                            processManufacturer(0);
-                        });
+                            const manufacturerId = manufacturerIds[index];
+                            const targetId = `${target}+${manufacturerId}`;
+                            // Check to see if the cached configuration is the one we want.
+                            if (!storageObj || !storageObj.targetId || storageObj.targetId !== targetId
+                                || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod
+                                || !storageObj.unifiedTarget) {
+                                const unifiedConfig = unifiedConfigList[manufacturerId];
+                                // Have to go and try and get the unified config, and then do stuff
+                                $.get(unifiedConfig.download_url, function(targetConfig) {
+                                    console.log('got unified config');
+
+                                    let config = cleanUnifiedConfigFile(targetConfig);
+                                    if (config !== null) {
+                                        const bareBoard = grabBuildNameFromConfig(config);
+                                        TABS.firmware_flasher.bareBoard = bareBoard;
+
+                                        self.gitHubApi.getFileLastCommitInfo('betaflight/unified-targets', 'master', unifiedConfig.path, function (commitInfo) {
+                                            config = self.injectTargetInfo(config, target, manufacturerId, commitInfo);
+
+                                            setUnifiedConfig(target, bareBoard, config, manufacturerId, unifiedConfig.name, unifiedConfig.download_url, commitInfo.date);
+
+                                            // cache it for later
+                                            let newStorageObj = {};
+                                            newStorageObj[storageTag] = {
+                                                unifiedTarget: self.unifiedTarget,
+                                                targetId: targetId,
+                                                lastUpdate: checkTime,
+                                            };
+                                            ConfigStorage.set(newStorageObj);
+
+                                            populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
+                                        });
+                                    } else {
+                                        failLoading(unifiedConfig.download_url);
+                                    }
+                                }).fail(xhr => {
+                                    failLoading(unifiedConfig.download_url);
+                                });
+                            } else {
+                                console.log('We have the config cached for', targetId);
+                                const unifiedTarget = storageObj.unifiedTarget;
+
+                                const bareBoard = grabBuildNameFromConfig(unifiedTarget.config);
+                                TABS.firmware_flasher.bareBoard = bareBoard;
+
+                                if (target === bareBoard) {
+                                    self.unifiedTarget = {};
+                                } else {
+                                    self.unifiedTarget = unifiedTarget;
+                                }
+
+                                populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
+                            }
+                        };
+
+                        processManufacturer(0);
                     } else {
                         self.unifiedTarget = {};
                         finishPopulatingBuilds();
@@ -894,84 +890,77 @@ firmware_flasher.initialize = function (callback) {
         document.querySelector('select[name="board"]').addEventListener('change', updateDetectBoardButton);
         document.querySelector('select[name="firmware_version"]').addEventListener('change', updateDetectBoardButton);
 
-        ConfigStorage.get('erase_chip', function (result) {
-            if (result.erase_chip) {
-                $('input.erase_chip').prop('checked', true);
-            } else {
-                $('input.erase_chip').prop('checked', false);
-            }
+        let result = ConfigStorage.get('erase_chip');
+        if (result.erase_chip) {
+            $('input.erase_chip').prop('checked', true);
+        } else {
+            $('input.erase_chip').prop('checked', false);
+        }
 
-            $('input.erase_chip').change(function () {
-                ConfigStorage.set({'erase_chip': $(this).is(':checked')});
-            }).change();
-        });
+        $('input.erase_chip').change(function () {
+            ConfigStorage.set({'erase_chip': $(this).is(':checked')});
+        }).change();
 
-        chrome.storage.local.get('show_development_releases', function (result) {
-            $('input.show_development_releases')
-            .prop('checked', result.show_development_releases)
-            .change(function () {
-                chrome.storage.local.set({'show_development_releases': $(this).is(':checked')});
-            }).change();
+        result = ConfigStorage.get('show_development_releases');
+        $('input.show_development_releases')
+        .prop('checked', result.show_development_releases)
+        .change(function () {
+            ConfigStorage.set({'show_development_releases': $(this).is(':checked')});
+        }).change();
 
-        });
+        result = ConfigStorage.get('selected_build_type');
+        // ensure default build type is selected
+        buildType_e.val(result.selected_build_type || 0).trigger('change');
 
-        chrome.storage.local.get('selected_build_type', function (result) {
-            // ensure default build type is selected
-            buildType_e.val(result.selected_build_type || 0).trigger('change');
-        });
+        result = ConfigStorage.get('no_reboot_sequence');
+        if (result.no_reboot_sequence) {
+            $('input.updating').prop('checked', true);
+            $('.flash_on_connect_wrapper').show();
+        } else {
+            $('input.updating').prop('checked', false);
+        }
 
-        ConfigStorage.get('no_reboot_sequence', function (result) {
-            if (result.no_reboot_sequence) {
-                $('input.updating').prop('checked', true);
+        // bind UI hook so the status is saved on change
+        $('input.updating').change(function() {
+            const status = $(this).is(':checked');
+
+            if (status) {
                 $('.flash_on_connect_wrapper').show();
             } else {
-                $('input.updating').prop('checked', false);
+                $('input.flash_on_connect').prop('checked', false).change();
+                $('.flash_on_connect_wrapper').hide();
             }
 
-            // bind UI hook so the status is saved on change
-            $('input.updating').change(function() {
-                const status = $(this).is(':checked');
-
-                if (status) {
-                    $('.flash_on_connect_wrapper').show();
-                } else {
-                    $('input.flash_on_connect').prop('checked', false).change();
-                    $('.flash_on_connect_wrapper').hide();
-                }
-
-                ConfigStorage.set({'no_reboot_sequence': status});
-            });
-
-            $('input.updating').change();
+            ConfigStorage.set({'no_reboot_sequence': status});
         });
 
-        ConfigStorage.get('flash_manual_baud', function (result) {
-            if (result.flash_manual_baud) {
-                $('input.flash_manual_baud').prop('checked', true);
-            } else {
-                $('input.flash_manual_baud').prop('checked', false);
-            }
+        $('input.updating').change();
 
-            // bind UI hook so the status is saved on change
-            $('input.flash_manual_baud').change(function() {
-                const status = $(this).is(':checked');
-                ConfigStorage.set({'flash_manual_baud': status});
-            });
+        result = ConfigStorage.get('flash_manual_baud');
+        if (result.flash_manual_baud) {
+            $('input.flash_manual_baud').prop('checked', true);
+        } else {
+            $('input.flash_manual_baud').prop('checked', false);
+        }
 
-            $('input.flash_manual_baud').change();
+        // bind UI hook so the status is saved on change
+        $('input.flash_manual_baud').change(function() {
+            const status = $(this).is(':checked');
+            ConfigStorage.set({'flash_manual_baud': status});
         });
 
-        ConfigStorage.get('flash_manual_baud_rate', function (result) {
-            $('#flash_manual_baud_rate').val(result.flash_manual_baud_rate);
+        $('input.flash_manual_baud').change();
 
-            // bind UI hook so the status is saved on change
-            $('#flash_manual_baud_rate').change(function() {
-                const baud = parseInt($('#flash_manual_baud_rate').val());
-                ConfigStorage.set({'flash_manual_baud_rate': baud});
-            });
+        result = ConfigStorage.get('flash_manual_baud_rate');
+        $('#flash_manual_baud_rate').val(result.flash_manual_baud_rate);
 
-            $('input.flash_manual_baud_rate').change();
+        // bind UI hook so the status is saved on change
+        $('#flash_manual_baud_rate').change(function() {
+            const baud = parseInt($('#flash_manual_baud_rate').val());
+            ConfigStorage.set({'flash_manual_baud_rate': baud});
         });
+
+        $('input.flash_manual_baud_rate').change();
 
         // UI Hooks
         $('a.load_file').click(function () {
@@ -1175,17 +1164,16 @@ firmware_flasher.initialize = function (callback) {
             function setAcknowledgementTimestamp() {
                 const storageObj = {};
                 storageObj[storageTag] = Date.now();
-                chrome.storage.local.set(storageObj);
+                ConfigStorage.set(storageObj);
             }
 
-            chrome.storage.local.get(storageTag, function (result) {
-                if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
+            result = ConfigStorage.get(storageTag);
+            if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
 
-                    showAcknowledgementDialog(setAcknowledgementTimestamp);
-                } else {
-                    startFlashing();
-                }
-            });
+                showAcknowledgementDialog(setAcknowledgementTimestamp);
+            } else {
+                startFlashing();
+            }
         }
 
         function showAcknowledgementDialog(acknowledgementCallback) {
@@ -1306,8 +1294,8 @@ firmware_flasher.initialize = function (callback) {
 
             if (status) {
                 const catch_new_port = function () {
-                    PortHandler.port_detected('flash_detected_device', function (result) {
-                        const port = result[0];
+                    PortHandler.port_detected('flash_detected_device', function (resultPort) {
+                        const port = resultPort[0];
 
                         if (!GUI.connect_lock) {
                             GUI.log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));

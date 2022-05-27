@@ -389,13 +389,12 @@ GuiControl.prototype.content_ready = function (callback) {
 };
 
 GuiControl.prototype.selectDefaultTabWhenConnected = function() {
-    ConfigStorage.get(['rememberLastTab', 'lastTab'], function (result) {
-        if (result.rememberLastTab && result.lastTab) {
-            $(`#tabs ul.mode-connected .${result.lastTab} a`).click();
-        } else {
-            $('#tabs ul.mode-connected .tab_setup a').click();
-        }
-    });
+    const result = ConfigStorage.get(['rememberLastTab', 'lastTab']);
+    if (result.rememberLastTab && result.lastTab) {
+        $(`#tabs ul.mode-connected .${result.lastTab} a`).click();
+    } else {
+        $('#tabs ul.mode-connected .tab_setup a').click();
+    }
 };
 
 GuiControl.prototype.isNWJS = function () {

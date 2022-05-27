@@ -99,18 +99,17 @@ logging.initialize = function (callback) {
             }
         });
 
-        ConfigStorage.get('logging_file_entry', function (result) {
-            if (result.logging_file_entry) {
-                chrome.fileSystem.restoreEntry(result.logging_file_entry, function (entry) {
-                    if (checkChromeRuntimeError()) {
-                        return;
-                    }
+        const result = ConfigStorage.get('logging_file_entry');
+        if (result.logging_file_entry) {
+            chrome.fileSystem.restoreEntry(result.logging_file_entry, function (entry) {
+                if (checkChromeRuntimeError()) {
+                    return;
+                }
 
-                    fileEntry = entry;
-                    prepare_writer(true);
-                });
-            }
-        });
+                fileEntry = entry;
+                prepare_writer(true);
+            });
+        }
 
         GUI.content_ready(callback);
     }

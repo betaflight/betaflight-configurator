@@ -21,45 +21,44 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
         callback(jobs);
     };
 
-    chrome.storage.local.get([cacheLastUpdateTag, jobsDataTag], function (result) {
-        const jobsDataTimestamp = $.now();
-        const cachedJobsData = result[jobsDataTag];
-        const cachedJobsLastUpdate = result[cacheLastUpdateTag];
+    const result = ConfigStorage.get([cacheLastUpdateTag, jobsDataTag]);
+    const jobsDataTimestamp = $.now();
+    const cachedJobsData = result[jobsDataTag];
+    const cachedJobsLastUpdate = result[cacheLastUpdateTag];
 
-        const cachedCallback = () => {
-            if (cachedJobsData) {
-                GUI.log(i18n.getMessage('buildServerUsingCached', ['jobs']));
-            }
-
-            wrappedCallback(cachedJobsData ? cachedJobsData : []);
-        };
-
-        if (!cachedJobsData || !cachedJobsLastUpdate || jobsDataTimestamp - cachedJobsLastUpdate > self._cacheExpirationPeriod) {
-            const url = `${viewUrl}${self._jobsRequest}`;
-
-            $.get(url, jobsInfo => {
-                GUI.log(i18n.getMessage('buildServerLoaded', ['jobs']));
-
-                // remove Betaflight prefix, rename Betaflight job to Development
-                const jobs = jobsInfo.jobs.map(job => {
-                    return { title: job.name.replace('Betaflight ', '').replace('Betaflight', 'Development'), name: job.name };
-                });
-
-                // cache loaded info
-                const object = {};
-                object[jobsDataTag] = jobs;
-                object[cacheLastUpdateTag] = $.now();
-                chrome.storage.local.set(object);
-
-                wrappedCallback(jobs);
-            }).fail(xhr => {
-                GUI.log(i18n.getMessage('buildServerLoadFailed', ['jobs', `HTTP ${xhr.status}`]));
-                cachedCallback();
-            });
-        } else {
-            cachedCallback();
+    const cachedCallback = () => {
+        if (cachedJobsData) {
+            GUI.log(i18n.getMessage('buildServerUsingCached', ['jobs']));
         }
-    });
+
+        wrappedCallback(cachedJobsData ? cachedJobsData : []);
+    };
+
+    if (!cachedJobsData || !cachedJobsLastUpdate || jobsDataTimestamp - cachedJobsLastUpdate > self._cacheExpirationPeriod) {
+        const url = `${viewUrl}${self._jobsRequest}`;
+
+        $.get(url, jobsInfo => {
+            GUI.log(i18n.getMessage('buildServerLoaded', ['jobs']));
+
+            // remove Betaflight prefix, rename Betaflight job to Development
+            const jobs = jobsInfo.jobs.map(job => {
+                return { title: job.name.replace('Betaflight ', '').replace('Betaflight', 'Development'), name: job.name };
+            });
+
+            // cache loaded info
+            const object = {};
+            object[jobsDataTag] = jobs;
+            object[cacheLastUpdateTag] = $.now();
+            ConfigStorage.set(object);
+
+            wrappedCallback(jobs);
+        }).fail(xhr => {
+            GUI.log(i18n.getMessage('buildServerLoadFailed', ['jobs', `HTTP ${xhr.status}`]));
+            cachedCallback();
+        });
+    } else {
+        cachedCallback();
+    }
 };
 
 JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
@@ -69,49 +68,48 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
     const buildsDataTag = `${jobUrl}BuildsData`;
     const cacheLastUpdateTag = `${jobUrl}BuildsLastUpdate`;
 
-    chrome.storage.local.get([cacheLastUpdateTag, buildsDataTag], function (result) {
-        const buildsDataTimestamp = $.now();
-        const cachedBuildsData = result[buildsDataTag];
-        const cachedBuildsLastUpdate = result[cacheLastUpdateTag];
+    const result = ConfigStorage.get([cacheLastUpdateTag, buildsDataTag]);
+    const buildsDataTimestamp = $.now();
+    const cachedBuildsData = result[buildsDataTag];
+    const cachedBuildsLastUpdate = result[cacheLastUpdateTag];
 
-        const cachedCallback = () => {
-            if (cachedBuildsData) {
-                GUI.log(i18n.getMessage('buildServerUsingCached', [jobName]));
-            }
-
-            self._parseBuilds(jobUrl, jobName, cachedBuildsData ? cachedBuildsData : [], callback);
-        };
-
-        if (!cachedBuildsData || !cachedBuildsLastUpdate || buildsDataTimestamp - cachedBuildsLastUpdate > self._cacheExpirationPeriod) {
-            const url = `${jobUrl}${self._buildsRequest}`;
-
-            $.get(url, function (buildsInfo) {
-                GUI.log(i18n.getMessage('buildServerLoaded', [jobName]));
-
-                // filter successful builds
-                const builds = buildsInfo.builds.filter(build => build.result == 'SUCCESS')
-                    .map(build => ({
-                        number: build.number,
-                        artifacts: build.artifacts.map(artifact => artifact.relativePath),
-                        changes: build.changeSet.items.map(item => `* ${item.msg}`).join('<br>\n'),
-                        timestamp: build.timestamp,
-                    }));
-
-                // cache loaded info
-                const object = {};
-                object[buildsDataTag] = builds;
-                object[cacheLastUpdateTag] = $.now();
-                chrome.storage.local.set(object);
-
-                self._parseBuilds(jobUrl, jobName, builds, callback);
-            }).fail(xhr => {
-                GUI.log(i18n.getMessage('buildServerLoadFailed', [jobName, `HTTP ${xhr.status}`]));
-                cachedCallback();
-            });
-        } else {
-            cachedCallback();
+    const cachedCallback = () => {
+        if (cachedBuildsData) {
+            GUI.log(i18n.getMessage('buildServerUsingCached', [jobName]));
         }
-    });
+
+        self._parseBuilds(jobUrl, jobName, cachedBuildsData ? cachedBuildsData : [], callback);
+    };
+
+    if (!cachedBuildsData || !cachedBuildsLastUpdate || buildsDataTimestamp - cachedBuildsLastUpdate > self._cacheExpirationPeriod) {
+        const url = `${jobUrl}${self._buildsRequest}`;
+
+        $.get(url, function (buildsInfo) {
+            GUI.log(i18n.getMessage('buildServerLoaded', [jobName]));
+
+            // filter successful builds
+            const builds = buildsInfo.builds.filter(build => build.result == 'SUCCESS')
+                .map(build => ({
+                    number: build.number,
+                    artifacts: build.artifacts.map(artifact => artifact.relativePath),
+                    changes: build.changeSet.items.map(item => `* ${item.msg}`).join('<br>\n'),
+                    timestamp: build.timestamp,
+                }));
+
+            // cache loaded info
+            const object = {};
+            object[buildsDataTag] = builds;
+            object[cacheLastUpdateTag] = $.now();
+            ConfigStorage.set(object);
+
+            self._parseBuilds(jobUrl, jobName, builds, callback);
+        }).fail(xhr => {
+            GUI.log(i18n.getMessage('buildServerLoadFailed', [jobName, `HTTP ${xhr.status}`]));
+            cachedCallback();
+        });
+    } else {
+        cachedCallback();
+    }
 };
 
 JenkinsLoader.prototype._parseBuilds = function (jobUrl, jobName, builds, callback) {

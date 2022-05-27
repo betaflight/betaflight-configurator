@@ -540,16 +540,15 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         let hideUnusedModes = false;
-        ConfigStorage.get('hideUnusedModes', function (result) {
-            $("input#switch-toggle-unused")
-                .change(function() {
-                    hideUnusedModes = $(this).prop("checked");
-                    ConfigStorage.set({ hideUnusedModes: hideUnusedModes });
-                    update_ui();
-                })
-                .prop("checked", !!result.hideUnusedModes)
-                .change();
-        });
+        const result = ConfigStorage.get('hideUnusedModes');
+        $("input#switch-toggle-unused")
+            .change(function() {
+                hideUnusedModes = $(this).prop("checked");
+                ConfigStorage.set({ hideUnusedModes: hideUnusedModes });
+                update_ui();
+            })
+            .prop("checked", !!result.hideUnusedModes)
+            .change();
 
         // update ui instantly on first load
         update_ui();

@@ -45,13 +45,12 @@ function appReady() {
 function checkSetupAnalytics(callback) {
     if (!analytics) {
         setTimeout(function () {
-            ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ], function (result) {
-                if (!analytics) {
-                    setupAnalytics(result);
-                }
+            const result = ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
+            if (!analytics) {
+                setupAnalytics(result);
+            }
 
-                callback(analytics);
-            });
+            callback(analytics);
         });
     } else if (callback) {
         callback(analytics);
@@ -499,48 +498,45 @@ function startProcess() {
         $(this).data('state', state);
     });
 
-    ConfigStorage.get('logopen', function (result) {
-        if (result.logopen) {
-            $("#showlog").trigger('click');
-        }
-    });
+    let result = ConfigStorage.get('logopen');
+    if (result.logopen) {
+        $("#showlog").trigger('click');
+    }
 
-    ConfigStorage.get('permanentExpertMode', function (result) {
-        const expertModeCheckbox = 'input[name="expertModeCheckbox"]';
-        if (result.permanentExpertMode) {
-            $(expertModeCheckbox).prop('checked', true);
-        }
+    result = ConfigStorage.get('permanentExpertMode');
+    const expertModeCheckbox = 'input[name="expertModeCheckbox"]';
+    if (result.permanentExpertMode) {
+        $(expertModeCheckbox).prop('checked', true);
+    }
 
-        $(expertModeCheckbox).on("change", () => {
-            const checked = $(expertModeCheckbox).is(':checked');
-            checkSetupAnalytics(function (analyticsService) {
-                analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
-            });
-
-            if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
-                updateTabList(FC.FEATURE_CONFIG.features);
-            }
-
-            if (GUI.active_tab) {
-                TABS[GUI.active_tab]?.expertModeChanged?.(checked);
-            }
+    $(expertModeCheckbox).on("change", () => {
+        const checked = $(expertModeCheckbox).is(':checked');
+        checkSetupAnalytics(function (analyticsService) {
+            analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
         });
 
-        $(expertModeCheckbox).trigger("change");
-    });
+        if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
+            updateTabList(FC.FEATURE_CONFIG.features);
+        }
 
-    ConfigStorage.get('cliAutoComplete', function (result) {
-        CliAutoComplete.setEnabled(typeof result.cliAutoComplete == 'undefined' || result.cliAutoComplete); // On by default
-    });
-
-    ConfigStorage.get('darkTheme', function (result) {
-        if (result.darkTheme === undefined || typeof result.darkTheme !== "number") {
-            // sets dark theme to auto if not manually changed
-            setDarkTheme(2);
-        } else {
-            setDarkTheme(result.darkTheme);
+        if (GUI.active_tab) {
+            TABS[GUI.active_tab]?.expertModeChanged?.(checked);
         }
     });
+
+    $(expertModeCheckbox).trigger("change");
+
+    result = ConfigStorage.get('cliAutoComplete');
+    CliAutoComplete.setEnabled(typeof result.cliAutoComplete === undefined || result.cliAutoComplete); // On by default
+
+    result = ConfigStorage.get('darkTheme');
+    if (result.darkTheme === undefined || typeof result.darkTheme !== "number") {
+        // sets dark theme to auto if not manually changed
+        setDarkTheme(2);
+    } else {
+        setDarkTheme(result.darkTheme);
+    }
+
     if (GUI.isCordova()) {
         let darkMode = false;
         const checkDarkMode = function() {
@@ -575,52 +571,51 @@ function checkForConfiguratorUpdates() {
 }
 
 function notifyOutdatedVersion(releaseData) {
-    ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
-        let showUnstableReleases = false;
-        if (result.checkForConfiguratorUnstableVersions) {
-            showUnstableReleases = true;
+    const result = ConfigStorage.get('checkForConfiguratorUnstableVersions');
+    let showUnstableReleases = false;
+    if (result.checkForConfiguratorUnstableVersions) {
+        showUnstableReleases = true;
+    }
+    const versions = releaseData.filter(function (version) {
+        const semVerVersion = semver.parse(version.tag_name);
+        if (semVerVersion && (showUnstableReleases || semVerVersion.prerelease.length === 0)) {
+            return version;
+        } else {
+            return null;
         }
-        const versions = releaseData.filter(function (version) {
-            const semVerVersion = semver.parse(version.tag_name);
-            if (semVerVersion && (showUnstableReleases || semVerVersion.prerelease.length === 0)) {
-                return version;
-            } else {
-                return null;
-            }
-         }).sort(function (v1, v2) {
-            try {
-                return semver.compare(v2.tag_name, v1.tag_name);
-            } catch (e) {
-                return false;
-            }
-        });
-
-        if (versions.length > 0) {
-            CONFIGURATOR.latestVersion = versions[0].tag_name;
-            CONFIGURATOR.latestVersionReleaseUrl = versions[0].html_url;
-        }
-
-        if (semver.lt(CONFIGURATOR.version, CONFIGURATOR.latestVersion)) {
-            const message = i18n.getMessage('configuratorUpdateNotice', [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl]);
-            GUI.log(message);
-
-            const dialog = $('.dialogConfiguratorUpdate')[0];
-
-            $('.dialogConfiguratorUpdate-content').html(message);
-
-            $('.dialogConfiguratorUpdate-closebtn').click(function() {
-                dialog.close();
-            });
-
-            $('.dialogConfiguratorUpdate-websitebtn').click(function() {
-                dialog.close();
-
-                window.open(CONFIGURATOR.latestVersionReleaseUrl, '_blank');
-            });
-
-            dialog.showModal();
+        }).sort(function (v1, v2) {
+        try {
+            return semver.compare(v2.tag_name, v1.tag_name);
+        } catch (e) {
+            return false;
         }
     });
+
+    if (versions.length > 0) {
+        CONFIGURATOR.latestVersion = versions[0].tag_name;
+        CONFIGURATOR.latestVersionReleaseUrl = versions[0].html_url;
+    }
+
+    if (semver.lt(CONFIGURATOR.version, CONFIGURATOR.latestVersion)) {
+        const message = i18n.getMessage('configuratorUpdateNotice', [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl]);
+        GUI.log(message);
+
+        const dialog = $('.dialogConfiguratorUpdate')[0];
+
+        $('.dialogConfiguratorUpdate-content').html(message);
+
+        $('.dialogConfiguratorUpdate-closebtn').click(function() {
+            dialog.close();
+        });
+
+        $('.dialogConfiguratorUpdate-websitebtn').click(function() {
+            dialog.close();
+
+            window.open(CONFIGURATOR.latestVersionReleaseUrl, '_blank');
+        });
+
+        dialog.showModal();
+    }
 }
 
 function isExpertModeEnabled() {
