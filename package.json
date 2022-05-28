@@ -101,7 +101,7 @@
     "glob": "^7.1.6",
     "gulp": "^4.0.2",
     "gulp-concat": "~2.6.1",
-    "gulp-debian": "~0.1.8",
+    "gulp-debian": "^0.1.9",
     "gulp-json-editor": "^2.5.4",
     "gulp-prompt": "^1.2.0",
     "gulp-rename": "^2.0.0",

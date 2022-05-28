@@ -7845,7 +7845,7 @@ gulp-concat@~2.6.1:
     through2 "^2.0.0"
     vinyl "^2.0.0"
 
-gulp-debian@~0.1.8:
+gulp-debian@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/gulp-debian/-/gulp-debian-0.1.9.tgz#80e4a8cfc0f0904312f07e66a06ca3c024edc153"
   integrity sha512-hY16Lj5IdxY213L9Sl6SlEgpCvf8/ny3SQ4S9dyG8MHqRx0fPpui5CRodhQK5lA2oScxP8qi4wfK4fIDr5xF3g==

@@ -710,6 +710,7 @@ function release_deb(arch, appDirectory, done) {
     if (!commandExistsSync('dpkg-deb')) {
         console.warn(`dpkg-deb command not found, not generating deb package for ${arch}`);
         done();
+        return null;
     }
 
     return gulp.src([path.join(appDirectory, metadata.name, arch, '*')])
@@ -728,7 +729,7 @@ function release_deb(arch, appDirectory, done) {
                 `xdg-desktop-menu install ${LINUX_INSTALL_DIR}/${metadata.name}/${metadata.name}.desktop`,
             ],
             prerm: [`xdg-desktop-menu uninstall ${metadata.name}.desktop`],
-            depends: 'libgconf-2-4',
+            depends: ['libgconf-2-4', 'libatomic1'],
             changelog: [],
             _target: `${LINUX_INSTALL_DIR}/${metadata.name}`,
             _out: RELEASE_DIR,
@@ -739,10 +740,11 @@ function release_deb(arch, appDirectory, done) {
 
 function release_rpm(arch, appDirectory, done) {
 
-    // Check if dpkg-deb exists
+    // Check if rpmbuild exists
     if (!commandExistsSync('rpmbuild')) {
         console.warn(`rpmbuild command not found, not generating rpm package for ${arch}`);
         done();
+        return;
     }
 
     // The buildRpm does not generate the folder correctly, manually
@@ -755,7 +757,7 @@ function release_rpm(arch, appDirectory, done) {
             vendor: metadata.author,
             summary: metadata.description,
             license: 'GNU General Public License v3.0',
-            requires: 'libgconf-2-4',
+            requires: ['libgconf-2-4', 'libatomic1'],
             prefix: '/opt',
             files: [{
                 cwd: path.join(appDirectory, metadata.name, arch),
