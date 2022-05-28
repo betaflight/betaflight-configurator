@@ -667,27 +667,23 @@
     margin-bottom: 0;
 }
 
-.tab-receiver .rssi thead {
-    display: none;
-}
-
 .tab-receiver .gui_box {
     margin-bottom: 10px;
     float: left;
     font-weight: bold;
 }
 
-.tab-receiver .rssi td {
+.tab-receiver .feature td {
     border-bottom: none;
     padding-bottom: 0;
     margin-bottom: 0;
 }
 
-.tab-receiver .rssi .gui_box {
+.tab-receiver .feature .gui_box {
     float: left;
 }
 
-.tab-receiver .rssi td:nth-child(2) {
+.tab-receiver .feature td:nth-child(2) {
     width: 20px;
 }
 
@@ -707,16 +703,13 @@
     .tab-receiver .gui_box span {
         line-height: 17px;
     }
-    .tab-receiver .rssi .gui_box {
-        float: left;
-    }
 }
 
 @media all and (max-width: 575px) {
-    .tab-receiver .rssi .gui_box {
+    .tab-receiver .feature .gui_box {
         min-height: auto;
     }
-    .tab-receiver .rssi td:nth-child(2) {
+    .tab-receiver .feature td:nth-child(2) {
         width: auto;
     }
     .tab-receiver .features.rxMode, .tab-receiver .serialRX {
