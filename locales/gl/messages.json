@@ -4197,14 +4197,23 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Etapa 2 - Axustes"
     },
+    "failsafeDelayItem": {
+        "message": "Tempo de espera antes de activar a etapa 2 tras perder o sinal [seconds]"
+    },
     "failsafeDelayHelp": {
         "message": "Tempo para recuperación na Etapa 1"
+    },
+    "failsafeThrottleLowItem": {
+        "message": "Demora para baixar o acelerador en Failsafe [seconds]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Simplemente desarmar a aeronave en lugar de executar o procedimiento de Failsafe seleccionado cando non se acelera durante este período de tempo"
     },
     "failsafeThrottleItem": {
         "message": "Valor do acelerador utilizado durante o aterrizaxe"
+    },
+    "failsafeOffDelayItem": {
+        "message": "Espera para apagar os motores no caso de Failsafe [seconds]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tempo para permanecer no modo de aterrizaxe ata que os motores se apagan e a aeronave se desarma."
