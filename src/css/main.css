@@ -416,6 +416,10 @@ input[type="number"]::-webkit-inner-spin-button {
     }
 }
 
+#sensor-status > ul {
+    display: flex;
+}
+
 #sensor-status li {
     float: left;
     height: 67px;
@@ -640,6 +644,7 @@ input[type="number"]::-webkit-inner-spin-button {
     background-color: #434343;
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
     text-shadow: 0 1px rgba(0, 0, 0, 1.0);
+    white-space: nowrap;
 }
 
 @media all and (min-width: 1125px) {
