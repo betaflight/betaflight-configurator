@@ -5,7 +5,7 @@ let connectionTimestamp;
 let clicks = false;
 
 function initializeSerialBackend() {
-    GUI.updateManualPortVisibility = function(){
+    GUI.updateManualPortVisibility = function() {
         const selected_port = $('div#port-picker #port option:selected');
         if (selected_port.data().isManual) {
             $('#port-override-option').show();
@@ -19,12 +19,8 @@ function initializeSerialBackend() {
         else {
             $('#firmware-virtual-option').hide();
         }
-        if (selected_port.data().isDFU) {
-            $('select#baud').hide();
-        }
-        else {
-            $('select#baud').show();
-        }
+
+        $('#auto-connect-and-baud').toggle(!selected_port.data().isDFU);
     };
 
     GUI.updateManualPortVisibility();

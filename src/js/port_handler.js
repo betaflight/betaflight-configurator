@@ -23,6 +23,9 @@ PortHandler.initialize = function () {
     this.selectList = document.querySelector(portPickerElementSelector);
     this.initialWidth = this.selectList.offsetWidth + 12;
 
+    this.showVirtualMode = ConfigStorage.get('showVirtualMode').showVirtualMode;
+    this.showAllSerialDevices = ConfigStorage.get('showAllSerialDevices').showAllSerialDevices;
+
     // fill dropdown with version numbers
     generateVirtualApiVersions();
 
@@ -32,17 +35,14 @@ PortHandler.initialize = function () {
 
 PortHandler.check = function () {
     const self = this;
-    let result;
 
-    result = ConfigStorage.get('showVirtualMode');
-    self.showVirtualMode = result.showVirtualMode;
-    result = ConfigStorage.get('showAllSerialDevices');
-    self.showAllSerialDevices = result.showAllSerialDevices;
+    if (!self.port_available) {
+        self.check_usb_devices();
+    }
 
-    self.check_usb_devices();
-    self.check_serial_devices();
-
-    GUI.updateManualPortVisibility();
+    if (!self.dfu_available) {
+        self.check_serial_devices();
+    }
 
     setTimeout(function () {
         self.check();
@@ -87,14 +87,6 @@ PortHandler.check_usb_devices = function (callback) {
                     data: {isDFU: true},
                 }));
 
-                if (self.showVirtualMode) {
-                    self.portPickerElement.append($('<option/>', {
-                        value: 'virtual',
-                        text: i18n.getMessage('portsSelectVirtual'),
-                        data: {isVirtual: true},
-                    }));
-                }
-
                 self.portPickerElement.append($('<option/>', {
                     value: 'manual',
                     text: i18n.getMessage('portsSelectManual'),
@@ -112,14 +104,16 @@ PortHandler.check_usb_devices = function (callback) {
             }
             self.dfu_available = false;
         }
-        if(callback) {
+        if (callback) {
             callback(self.dfu_available);
         }
         if (!$('option:selected', self.portPickerElement).data().isDFU) {
             if (!(GUI.connected_to || GUI.connect_lock)) {
                 FC.resetState();
             }
-            self.portPickerElement.trigger('change');
+            if (self.dfu_available) {
+                self.portPickerElement.trigger('change');
+            }
         }
     });
 };
@@ -159,6 +153,7 @@ PortHandler.removePort = function(currentPorts) {
             self.initialPorts.splice(self.initialPorts.indexOf(removePorts[i]), 1);
         }
         self.updatePortSelect(self.initialPorts);
+        self.portPickerElement.trigger('change');
     }
 };
 
@@ -187,6 +182,8 @@ PortHandler.detectPort = function(currentPorts) {
         if (GUI.active_tab === 'firmware_flasher') {
             TABS.firmware_flasher.boardNeedsVerification = true;
         }
+
+        self.portPickerElement.trigger('change');
 
         // auto-connect if enabled
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {
@@ -269,7 +266,7 @@ PortHandler.selectPort = function(ports) {
             const pathSelect = ports[i].path;
             const isWindows = (OS === 'Windows');
             const isTty = pathSelect.includes('tty');
-            const deviceRecognized = portName.includes('STM') || portName.includes('CP210');
+            const deviceRecognized = portName.includes('STM') || portName.includes('CP210') || portName.startsWith('SPR');
             const legacyDeviceRecognized = portName.includes('usb');
             if (isWindows && deviceRecognized || isTty && (deviceRecognized || legacyDeviceRecognized)) {
                 this.portPickerElement.val(pathSelect);
@@ -295,7 +292,7 @@ PortHandler.setPortsInputWidth = function() {
         return max;
     }
 
-    const correction = 24; // account for up/down button and spacing
+    const correction = 32; // account for up/down button and spacing
     let width = findMaxLengthOption(this.selectList) + correction;
 
     width = (width > this.initialWidth) ? width : this.initialWidth;
