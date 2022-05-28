@@ -780,7 +780,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight Videos</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight 4.3 Videos</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -3899,7 +3899,7 @@
     },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 Filter Type"
-    },    
+    },
     "pidTuningGyroLowpass": {
         "message": "Gyro Lowpass 1"
     },
@@ -4018,7 +4018,7 @@
     },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 Filter Type"
-    },    
+    },
     "pidTuningDynamicNotchCountHelp": {
         "message": "Sets the number of dynamic notches per axis. With RPM filter enabled a value of 1 or 2 is recommended. Without RPM filter a value of 4 or 5 is recommended. Lower numbers will reduce filter delay, however it may increase motor temperature."
     },
@@ -4315,26 +4315,26 @@
     },
     "failsafeGpsRescueItemDescendRate": {
         "message": "Descend rate (meters/second)"
-    },    
+    },
     "failsafeGpsRescueItemMinSats": {
         "message": "Minimum satellites"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
         "message": "Allow arming without fix - <span class=\"message-negative\">WARNING: the GPS Rescue will not be available</span>"
     },
-    "failsafeGpsRescueItemAltitudeMode": { 
+    "failsafeGpsRescueItemAltitudeMode": {
         "message": "Altitude mode"
     },
-    "failsafeGpsRescueItemAltitudeModeMaxAlt": { 
+    "failsafeGpsRescueItemAltitudeModeMaxAlt": {
         "message": "Maximum altitude"
     },
-    "failsafeGpsRescueItemAltitudeModeFixedAlt": { 
+    "failsafeGpsRescueItemAltitudeModeFixedAlt": {
         "message": "Fixed altitude"
     },
-    "failsafeGpsRescueItemAltitudeModeCurrentAlt": { 
+    "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Current altitude"
     },
-    "failsafeGpsRescueItemSanityChecks": { 
+    "failsafeGpsRescueItemSanityChecks": {
         "message": "Sanity checks"
     },
     "failsafeGpsRescueItemSanityChecksOff": {
@@ -4996,7 +4996,7 @@
     },
     "osdTextElementGPSVariant4Decimals": {
         "message": "With 4 decimals",
-        "description": "One of the variants for the GPS element of the OSD"        
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementGPSVariantDegMinSec": {
         "message": "Using degrees, minutes and seconds",
@@ -5315,14 +5315,14 @@
     },
     "osdDescElementRcChannels": {
         "message": "Display at most 4 channels values. The channels must be specified with the CLI variable 'osd_rcchannels'"
-    },    
+    },
     "osdTextElementCameraFrame": {
         "message": "Camera frame",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
         "message": "Adds an adjustable outline element designed to represent the field of view of the pilot's HD camera for visual framing.<br /><br />You can adjust the width and height in CLI with 'osd_camera_frame_width' and 'osd_camera_frame_height'"
-    },    
+    },
     "osdTextElementEfficiency": {
         "message": "Battery efficiency",
         "description": "One of the elements of the OSD"
