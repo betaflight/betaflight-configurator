@@ -843,38 +843,43 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_BOARD_INFO:
-                let boardIdentifier = '';
+                FC.CONFIG.boardIdentifier = '';
+
                 for (let i = 0; i < 4; i++) {
-                    boardIdentifier += String.fromCharCode(data.readU8());
+                    FC.CONFIG.boardIdentifier += String.fromCharCode(data.readU8());
                 }
-                FC.CONFIG.boardIdentifier = boardIdentifier;
+
                 FC.CONFIG.boardVersion = data.readU16();
+                FC.CONFIG.boardType = 0;
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_35)) {
                     FC.CONFIG.boardType = data.readU8();
-                } else {
-                    FC.CONFIG.boardType = 0;
                 }
+
+                FC.CONFIG.targetCapabilities = 0;
+                FC.CONFIG.targetName = '';
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
                     FC.CONFIG.targetCapabilities = data.readU8();
-
-                    let length = data.readU8();
+                    const length = data.readU8();
                     for (let i = 0; i < length; i++) {
                         FC.CONFIG.targetName += String.fromCharCode(data.readU8());
                     }
-                } else {
-                    FC.CONFIG.targetCapabilities = 0;
-                    FC.CONFIG.targetName = "";
                 }
+
+                FC.CONFIG.boardName = '';
+                FC.CONFIG.manufacturerId = '';
+                FC.CONFIG.signature = [];
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                     let length = data.readU8();
+
                     for (let i = 0; i < length; i++) {
                         FC.CONFIG.boardName += String.fromCharCode(data.readU8());
                     }
 
                     length = data.readU8();
+
                     for (let i = 0; i < length; i++) {
                         FC.CONFIG.manufacturerId += String.fromCharCode(data.readU8());
                     }
@@ -882,10 +887,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     for (let i = 0; i < self.SIGNATURE_LENGTH; i++) {
                         FC.CONFIG.signature.push(data.readU8());
                     }
-                } else {
-                    FC.CONFIG.boardName = "";
-                    FC.CONFIG.manufacturerId = "";
-                    FC.CONFIG.signature = [];
                 }
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {

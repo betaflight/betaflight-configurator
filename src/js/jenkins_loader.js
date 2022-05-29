@@ -21,7 +21,7 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
         callback(jobs);
     };
 
-    const result = ConfigStorage.get([cacheLastUpdateTag, jobsDataTag]);
+    const result = SessionStorage.get([cacheLastUpdateTag, jobsDataTag]);
     const jobsDataTimestamp = $.now();
     const cachedJobsData = result[jobsDataTag];
     const cachedJobsLastUpdate = result[cacheLastUpdateTag];
@@ -49,7 +49,7 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
             const object = {};
             object[jobsDataTag] = jobs;
             object[cacheLastUpdateTag] = $.now();
-            ConfigStorage.set(object);
+            SessionStorage.set(object);
 
             wrappedCallback(jobs);
         }).fail(xhr => {
@@ -68,7 +68,7 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
     const buildsDataTag = `${jobUrl}BuildsData`;
     const cacheLastUpdateTag = `${jobUrl}BuildsLastUpdate`;
 
-    const result = ConfigStorage.get([cacheLastUpdateTag, buildsDataTag]);
+    const result = SessionStorage.get([cacheLastUpdateTag, buildsDataTag]);
     const buildsDataTimestamp = $.now();
     const cachedBuildsData = result[buildsDataTag];
     const cachedBuildsLastUpdate = result[cacheLastUpdateTag];
@@ -100,8 +100,7 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
             const object = {};
             object[buildsDataTag] = builds;
             object[cacheLastUpdateTag] = $.now();
-            ConfigStorage.set(object);
-
+            SessionStorage.set(object);
             self._parseBuilds(jobUrl, jobName, builds, callback);
         }).fail(xhr => {
             GUI.log(i18n.getMessage('buildServerLoadFailed', [jobName, `HTTP ${xhr.status}`]));

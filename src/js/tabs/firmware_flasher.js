@@ -158,7 +158,7 @@ firmware_flasher.initialize = function (callback) {
 
             TABS.firmware_flasher.releases = builds;
 
-            result = ConfigStorage.get('selected_board');
+            result = SessionStorage.get('selected_board');
             if (result.selected_board) {
                 const boardBuilds = builds[result.selected_board];
                 $('select[name="board"]').val(boardBuilds ? result.selected_board : 0).trigger('change');
@@ -243,7 +243,7 @@ firmware_flasher.initialize = function (callback) {
             if (builds && hasUnifiedTargetBuild(builds)) {
                 console.log('loaded some builds for later');
                 const storageTag = 'unifiedSourceCache';
-                result = ConfigStorage.get(storageTag);
+                result = SessionStorage.get(storageTag);
                 let storageObj = result[storageTag];
                 if (!storageObj || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod) {
                     console.log('go get', unifiedSource);
@@ -254,7 +254,7 @@ firmware_flasher.initialize = function (callback) {
                         newDataObj.lastUpdate = checkTime;
                         newDataObj.data = data;
                         newStorageObj[storageTag] = newDataObj;
-                        ConfigStorage.set(newStorageObj);
+                        SessionStorage.set(newStorageObj);
 
                         parseUnifiedBuilds(data, builds);
                     }).fail(xhr => {
@@ -312,7 +312,7 @@ firmware_flasher.initialize = function (callback) {
             TABS.firmware_flasher.releases = releases;
             TABS.firmware_flasher.unifiedConfigs = unifiedConfigs;
 
-            result = ConfigStorage.get('selected_board');
+            result = SessionStorage.get('selected_board');
             if (result.selected_board) {
                 const boardReleases = TABS.firmware_flasher.unifiedConfigs[result.selected_board]
                     || TABS.firmware_flasher.releases[result.selected_board];
@@ -410,7 +410,12 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 TABS.firmware_flasher.unifiedConfigs = {};
-                buildTypesToShow[build_type].loader();
+
+                try {
+                    buildTypesToShow[build_type].loader();
+                } catch (err) {
+                    console.error(err);
+                }
             }
 
             ConfigStorage.set({'selected_build_type': build_type});
@@ -554,7 +559,7 @@ firmware_flasher.initialize = function (callback) {
                 }
 
                 if (target !== '0') {
-                    ConfigStorage.set({'selected_board': target});
+                    SessionStorage.set({'selected_board': target});
                 }
 
                 TABS.firmware_flasher.selectedBoard = target;
@@ -610,7 +615,7 @@ firmware_flasher.initialize = function (callback) {
                         const storageTag = 'unifiedConfigLast';
                         const expirationPeriod = 3600; // One of your earth hours.
                         const checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
-                        result = ConfigStorage.get(storageTag);
+                        result = SessionStorage.get(storageTag);
                         let storageObj = result[storageTag];
                         const unifiedConfigList = TABS.firmware_flasher.unifiedConfigs[target];
                         const manufacturerIds = Object.keys(unifiedConfigList);
@@ -653,7 +658,7 @@ firmware_flasher.initialize = function (callback) {
                                                 targetId: targetId,
                                                 lastUpdate: checkTime,
                                             };
-                                            ConfigStorage.set(newStorageObj);
+                                            SessionStorage.set(newStorageObj);
 
                                             populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
                                         });
@@ -1170,10 +1175,10 @@ firmware_flasher.initialize = function (callback) {
             function setAcknowledgementTimestamp() {
                 const storageObj = {};
                 storageObj[storageTag] = Date.now();
-                ConfigStorage.set(storageObj);
+                SessionStorage.set(storageObj);
             }
 
-            result = ConfigStorage.get(storageTag);
+            result = SessionStorage.get(storageTag);
             if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
 
                 showAcknowledgementDialog(setAcknowledgementTimestamp);
@@ -1392,7 +1397,7 @@ firmware_flasher.showDialogVerifyBoard = function (selected, verified, onAbort, 
     if (!dialogVerifyBoard.hasAttribute('open')) {
         dialogVerifyBoard.showModal();
         $('#dialog-verify-board-abort-confirmbtn').click(function() {
-            ConfigStorage.set({'selected_board': FC.CONFIG.boardName});
+            SessionStorage.set({'selected_board': FC.CONFIG.boardName});
             dialogVerifyBoard.close();
             onAbort();
         });

@@ -28,8 +28,30 @@ function readConfiguratorVersionMetadata() {
     CONFIGURATOR.gitRevision = manifest.gitRevision;
 }
 
+function cleanupLocalStorage() {
+
+    const cleanupLocalStorageList = [
+        'cache',
+        'firmware',
+        'https',
+        'selected_board',
+        'unifiedConfigLast',
+        'unifiedSourceCache',
+    ];
+
+    for (const key in localStorage) {
+        for (const item of cleanupLocalStorageList) {
+            if (key.includes(item)) {
+                localStorage.removeItem(key);
+            }
+        }
+    }
+}
+
 function appReady() {
     readConfiguratorVersionMetadata();
+
+    cleanupLocalStorage();
 
     i18n.init(function() {
         startProcess();
