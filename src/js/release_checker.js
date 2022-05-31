@@ -11,7 +11,7 @@ const ReleaseChecker = function (releaseName, releaseUrl) {
 
 ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
     const self = this;
-    const result = ConfigStorage.get([self._releaseLastUpdateTag, self._releaseDataTag]);
+    const result = SessionStorage.get([self._releaseLastUpdateTag, self._releaseDataTag]);
     const releaseDataTimestamp = $.now();
     const cacheReleaseData = result[self._releaseDataTag];
     const cachedReleaseLastUpdate = result[self._releaseLastUpdateTag];
@@ -23,7 +23,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
             const data = {};
             data[self._releaseDataTag] = releaseData;
             data[self._releaseLastUpdateTag] = releaseDataTimestamp;
-            ConfigStorage.set(data);
+            SessionStorage.set(data);
 
             self._processReleaseData(releaseData, processFunction);
         }).fail(function (data) {

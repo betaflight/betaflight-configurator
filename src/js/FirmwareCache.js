@@ -44,14 +44,14 @@ let FirmwareCache = (function () {
         function persist(data) {
             let obj = {};
             obj[CACHEKEY] = data;
-            ConfigStorage.set(obj);
+            SessionStorage.set(obj);
         }
 
         /**
          * @param {Function} callback
          */
         function load(callback) {
-            const obj = ConfigStorage.get(CACHEKEY);
+            const obj = SessionStorage.get(CACHEKEY);
             let entries = typeof obj === "object" && obj.hasOwnProperty(CACHEKEY)
                 ? obj[CACHEKEY]
                 : [];
@@ -75,13 +75,13 @@ let FirmwareCache = (function () {
         }
         let key = oldest[0];
         let cacheKey = withCachePrefix(key);
-        const obj = ConfigStorage.get(cacheKey);
+        const obj = SessionStorage.get(cacheKey);
         /** @type {CacheItem} */
         const cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey) ? obj[cacheKey] : null;
         if (cached === null) {
             return undefined;
         }
-        ConfigStorage.remove(cacheKey);
+        SessionStorage.remove(cacheKey);
         onRemoveFromCache(cached.release);
         return oldest;
     };
@@ -138,7 +138,7 @@ let FirmwareCache = (function () {
             release: release,
             hexdata: hexdata,
         };
-        ConfigStorage.set(obj);
+        SessionStorage.set(obj);
         onPutToCache(release);
     }
 
@@ -157,7 +157,7 @@ let FirmwareCache = (function () {
             return;
         }
         let cacheKey = withCachePrefix(key);
-        const obj = ConfigStorage.get(cacheKey);
+        const obj = SessionStorage.get(cacheKey);
         const cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey) ? obj[cacheKey] : null;
         callback(cached);
     }
@@ -174,7 +174,7 @@ let FirmwareCache = (function () {
         for (let key of journal.keys()) {
             cacheKeys.push(withCachePrefix(key));
         }
-        const obj = ConfigStorage.get(cacheKeys);
+        const obj = SessionStorage.get(cacheKeys);
         if (typeof obj !== "object") {
             return;
         }
@@ -186,7 +186,7 @@ let FirmwareCache = (function () {
                 onRemoveFromCache(item.release);
             }
         }
-        ConfigStorage.remove(cacheKeys);
+        SessionStorage.remove(cacheKeys);
         journal.clear();
         JournalStorage.persist(journal.toJSON());
     }
