@@ -170,7 +170,13 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
             $('.pid_tuning input[name="angleLimit"]').val(FC.ADVANCED_TUNING.levelAngleLimit);
-            $('.pid_tuning input[name="sensitivity"]').val(FC.ADVANCED_TUNING.levelSensitivity);
+
+            if (semver.lte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+                $('.pid_tuning input[name="sensitivity"]').val(FC.ADVANCED_TUNING.levelSensitivity);
+            } else {
+                $('.pid_tuning input[name="sensitivity"]').hide();
+                $('.pid_tuning .levelSensitivityHeader').empty();
+            }
         } else {
             $('.pid_sensitivity').hide();
         }
@@ -1189,7 +1195,10 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
             FC.ADVANCED_TUNING.levelAngleLimit = parseInt($('.pid_tuning input[name="angleLimit"]').val());
-            FC.ADVANCED_TUNING.levelSensitivity = parseInt($('.pid_tuning input[name="sensitivity"]').val());
+
+            if (semver.lte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+                FC.ADVANCED_TUNING.levelSensitivity = parseInt($('.pid_tuning input[name="sensitivity"]').val());
+            }
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
