@@ -731,7 +731,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki Betaflight</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Vidéos Betaflight de Joshua Bardwell</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Vidéos de Joshua Bardwell sur Betaflight 4.3</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -1161,6 +1161,12 @@
     },
     "configurationReceiverMode": {
         "message": "Mode du récepteur"
+    },
+    "configurationTelemetry": {
+        "message": "Télémétrie"
+    },
+    "configurationTelemetryHelp": {
+        "message": "Sortie de télémétrie depuis le récepteur"
     },
     "configurationRSSI": {
         "message": "RSSI (Force du signal)"
