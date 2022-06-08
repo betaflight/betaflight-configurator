@@ -667,7 +667,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight ビデオ集</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight 4.3 動画集</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -1097,6 +1097,12 @@
     },
     "configurationReceiverMode": {
         "message": "受信機モード"
+    },
+    "configurationTelemetry": {
+        "message": "テレメトリー"
+    },
+    "configurationTelemetryHelp": {
+        "message": "受信機からテレメトリーを出力"
     },
     "configurationRSSI": {
         "message": "アナログRSSI (信号強度設定)"

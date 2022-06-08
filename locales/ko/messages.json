@@ -735,7 +735,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 위키</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell 베타플라이트 동영상</a><br /><a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">JJangPapa 베타플라이트 동영상(한글판)</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell 베타플라이트 4.3 동영상</a><br /><a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">JJangPapa 베타플라이트 동영상(한글판)</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -1165,6 +1165,12 @@
     },
     "configurationReceiverMode": {
         "message": "수신기 모드"
+    },
+    "configurationTelemetry": {
+        "message": "텔레메트리"
+    },
+    "configurationTelemetryHelp": {
+        "message": "수신기로부터 텔레메트리 출력"
     },
     "configurationRSSI": {
         "message": "RSSI (신호 강도)"

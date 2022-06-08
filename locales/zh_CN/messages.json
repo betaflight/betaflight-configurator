@@ -731,7 +731,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight 设置教程视频</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight 4.3 视频</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -1161,6 +1161,12 @@
     },
     "configurationReceiverMode": {
         "message": "接收机模式"
+    },
+    "configurationTelemetry": {
+        "message": "遥测"
+    },
+    "configurationTelemetryHelp": {
+        "message": "接收器的遥测输出"
     },
     "configurationRSSI": {
         "message": "RSSI（接收机信号强度）"

@@ -149,28 +149,28 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
-        "message": "Magnetometer"
+        "message": "Magnetometer / Kompas"
     },
     "sensorStatusMagShort": {
         "message": "Mag",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
-        "message": "Barometer"
+        "message": "Barometer / Højde"
     },
     "sensorStatusBaroShort": {
         "message": "Baro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusGPS": {
-        "message": "GPS"
+        "message": "GPS / Lokation"
     },
     "sensorStatusGPSShort": {
         "message": "GPS",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusSonar": {
-        "message": "Sonar/Afstandsmåler"
+        "message": "Sonar / Afstandsmåler"
     },
     "sensorStatusSonarShort": {
         "message": "Sonar",
@@ -618,7 +618,7 @@
         "message": "Brænd firmware"
     },
     "defaultDonateHead": {
-        "message": "Open Source/Donationsmeddelelse"
+        "message": "Open Source/Donations meddelelse"
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight</strong> er <strong>open source</strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti</strong>.</p><p>Hvis du fandt Betaflight eller Betaflight-Configurator nyttig, så overvej venligst at <strong>støtte</strong> udviklingen ved en donation.</p>"
@@ -667,7 +667,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight videoer</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight videoer</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -760,7 +760,7 @@
         "message": "Spænd.skala:"
     },
     "initialSetupAccelTrimsHead": {
-        "message": "Accelerometer-trims"
+        "message": "Accelerometer trim"
     },
     "initialSetupPitch": {
         "message": "Højderor:"
@@ -872,7 +872,7 @@
         "description": "Message that pops up to describe the OSD_MENU arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBST": {
-        "message": "En Black Sheep-telemetrienhed (f.eks. TBS Core Pro) er afkoblet og forhindrer indkobling",
+        "message": "En Black Sheep-telemetrienhed (f.eks. TBS Core Pro) er deaktiveret og forhindrer FC aktivering",
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
@@ -892,7 +892,7 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "RPM eller omdrejnings-baseret filtrering er aktiv men èn eller flere esc'ere sender ikke gyldige DSHOT telemetri data retur. Tjek at esc'erne er flashed med den nødvendige DSHOT firmware for at kunne køre to-vejs telemetri.",
+        "message": "RPM eller omdrejnings-baseret filtrering er aktiv, men èn eller flere esc'ere sender ikke gyldige DShot telemetri data. Tjek at esc'erne har den nødvendige firmware for at kunne køre to-vejs DShot telemetri.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
@@ -976,13 +976,13 @@
         "message": "Aktiver serielle porte emuleret af CPU"
     },
     "featureSOFTSERIALTip": {
-        "message": "Opsæt porte på fanen Porte efter aktivering."
+        "message": "Mangler man en seriel port, kan den evt emuleres af CPU. Opsæt den software emulerede port på fanen Porte efter aktivering."
     },
     "featureGPS": {
-        "message": "GPS til navigation og telemetri"
+        "message": "Aktiverer GPS til navigation"
     },
     "featureGPSTip": {
-        "message": "Opsæt først portscenarie"
+        "message": "Her tilvælges GPS til navigation, men du skal først konfigurere en port til GPS i fanen Porte, før aktiveringen kan gemmes."
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -1098,6 +1098,12 @@
     "configurationReceiverMode": {
         "message": "Modtagertilstand"
     },
+    "configurationTelemetry": {
+        "message": "Telemetri"
+    },
+    "configurationTelemetryHelp": {
+        "message": "Telemetri output sendes fra modtager"
+    },
     "configurationRSSI": {
         "message": "RSSI (signalstyrke)"
     },
@@ -1108,7 +1114,7 @@
         "message": "ESC-/Motorfunktioner"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Bemærk:</strong> Ikke alle kombinationer af funktioner fungerer. Opdager flight controller-firmwaren ugyldige funktionskombinationer, deaktiveres modstridende funktioner.<br /><strong>Bemærk:</strong> Opsæt seriel porte <span class=\"message-negative\">inden</span> aktivering af funktioner, som skal benytter portene."
+        "message": "<strong>Bemærk:</strong> Ikke alle kombinationer af funktioner fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de     uden videre.<br /><strong>Bemærk:</strong> Opsæt seriel porte <span class=\"message-negative\">inden</span> aktivering af funktioner, som skal benytter portene."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; UART til modtageren skal indstilles til ‘Serial Rx’ (i fanen <i>Porte</i>)<br>&#8226; Vælg den korrekte leverandør protokol i rullemenu"
@@ -1117,7 +1123,7 @@
         "message": "<strong>Note:</strong> SPI RX-leverandøren vil kun fungere, hvis den nødvendige hardware er on-board eller tilsluttet en SPI-bus."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>Bemærk:</strong> Ikke alle funktioner understøttes af alle flight controllere. Aktiveres en bestemt funktion, og er den derefter deaktiveret, når du har valgt \"Gem og genstart\", er funktionen ikke understøttet af din FC."
+        "message": "<strong>Bemærk:</strong> Ikke alle funktioner understøttes af alle FC / flight controllere. Aktiveres en bestemt funktion, og er den derefter deaktiveret, når du har valgt \"Gem og genstart\", er funktionen ikke understøttet af din FC."
     },
     "configurationBoardAlignment": {
         "message": "FC sensor justering"
@@ -1159,13 +1165,13 @@
         "message": "ACCEL-justering"
     },
     "configurationSensorAlignmentMag": {
-        "message": "MAG-justering"
+        "message": "Magnetometer (kompas) justering"
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
     },
     "configurationAccelTrims": {
-        "message": "Accelerometertrim"
+        "message": "Accelerometer trim"
     },
     "configurationAccelTrimRoll": {
         "message": "Accelerometer krængeror trim"
@@ -1237,16 +1243,16 @@
         "message": "<strong>Forsigtig:</strong> Valg af en protokol til motorstyring, der ikke understøttes af dine ESC'er, kan føre til, at <strong>ESC'er spinder op, så snart et batteri er tilsluttet</strong>. Af denne grund, <strong>sørg altid for at fjerne propellerne før du tilslutter et batteri for første gang efter ændring af protokol til motorstyring</strong>."
     },
     "configurationDshotBeeper": {
-        "message": "Dshot Beacon-opsætning"
+        "message": "Opsætning af motor bip"
     },
     "configurationUseDshotBeeper": {
-        "message": "Benyt Dshot beacon (lad motorer afgive bip, hvis deaktiverede)"
+        "message": "Benyt motor bip (lad motorer afgive bip, hvis deaktiverede)"
     },
     "configurationDshotBeaconTone": {
-        "message": "Beacon-tone"
+        "message": "Motor tone"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Dshot beacon benytter ESC'erne og motorerne til lydafgivelse. Dette betyder, at Dshot beacon ikke kan benyttes, når motorerne roterer.<br/>Fra Betaflight 3.4: Forsøges der aktiveret, mens Dshot beacon'et er aktivt, forekommer en 2 sekunders forsinkelse efter den seneste Dshot beacon tone, inden fartøjet aktiveres. Dette forhindrer Dshot beacon funktionen i at forstyrre Dshot aktiverings kommandoer.<br/><br/><strong>Advarsel:</strong> Når aktiveret, sender Dshot beacon strøm gennem motorerne, hvilket kan resultere i for høj varmeudvikling og beskadigelse af motorer og/eller ESC'er, hvis beacon-styrken er for høj. Benyt BLHeli Configurator eller BLHeli Suite til at justere og teste beacon styrken."
+        "message": "Motor bip benytter ESC'erne og motorerne til lydafgivelse. Motor bip kan ikke bruges, når motorerne roterer.<br/>Fra Betaflight 3.4: Forsøges aktivering, mens motor bip er aktivt, er der en 2 sekunders forsinkelse efter det seneste motor bip, før fartøjet aktiveres. Dette forhindrer motor bip funktionen i at forstyrre Dshot kommandoer.<br/><br/><strong>Advarsel:</strong> Når aktiveret, sender mottor bip strøm gennem motorerne, hvilket kan resultere i for høj varmeudvikling og beskadigelse af motorer og/eller ESC'er, hvis bip styrken er for høj. Benyt BLHeli Configurator eller BLHeli Suite til at justere og teste bip styrken."
     },
     "configurationBeeper": {
         "message": "Opsætning af bip"
@@ -1424,7 +1430,7 @@
         "message": "Sensor input protokol"
     },
     "portsTelemetryOut": {
-        "message": "Telemetri-output"
+        "message": "Telemetri output protokol"
     },
     "portsPeripherals": {
         "message": "Tilbehør"
@@ -2439,10 +2445,10 @@
         "message": "helt låst"
     },
     "gnssUsedUnused": {
-        "message": "bruges ikke"
+        "message": "anvendes ikke"
     },
     "gnssUsedUsed": {
-        "message": "bruges"
+        "message": "anvendes"
     },
     "gnssHealthyUnknown": {
         "message": "ukendt"
@@ -2538,7 +2544,7 @@
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "Disse tal viser telemetri info modtaget fra ESC'er (hvis ESC understøtter det). Det kan vise den faktiske hastighed af motorer (i RPM), fejlfrekvensen af telemetri link og temperaturen af ESC'erne.",
+        "message": "Disse tal viser telemetri info modtaget fra ESC'er (hvis ESC understøtter det). Det kan vise den faktiske hastighed af motorer (i RPM), fejlfrekvens fra telemetri link og temperaturen i ESC'erne.",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
@@ -2593,7 +2599,7 @@
         "message": "<strong>Jeg forstår risici</strong>,<br />propellerne er fjernet."
     },
     "motorsRemapDialogRiskNotice": {
-        "message": "<strong>Sikkerhedsmeddelelse</strong><br /><strong class=\"message-negative\">Fjern alle propeller for at forhindre skader!</strong><br />Motorerne vil <strong>rotere !</strong>"
+        "message": "<strong>Sikkerheds meddelelse</strong><br /><strong class=\"message-negative\">Fjern alle propeller for at forhindre skader!</strong><br />Motorerne vil <strong>rotere !</strong>"
     },
     "motorsRemapDialogExplanations": {
         "message": "<strong>Bemærk</strong><br />Motorer vil rotere en efter en, og du vil være i stand til at vælge hvilken motor der skal rotere. Batteriet skal tilsluttes, den korrekte ESC-protokol skal vælges. Dette værktøj kan kun omarrangere motorer som er opdaget af FC . Mere komplekse ommapping kræver CLI Resource kommandoen. Se denne <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side</a>."
@@ -2620,7 +2626,7 @@
         "message": "Motorer vil rotere når de er valgt!"
     },
     "escDshotDirectionDialog-RiskNotice": {
-        "message": "<strong>Sikkerhedsmeddelelse</strong><br /><strong class=\"message-negative-italic\">Fjern alle propeller for at forhindre skader!</strong><br />Motorerne vil <strong>rotere !</strong>!"
+        "message": "<strong>Sikkerheds meddelelse</strong><br /><strong class=\"message-negative-italic\">Fjern alle propeller for at forhindre skader!</strong><br />Motorerne vil <strong>rotere !</strong>!"
     },
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>Jeg forstår risiko</strong>,<br />alle propeller er fjernet."
@@ -2734,7 +2740,7 @@
         "message": "Fejlfinding"
     },
     "cliInfo": {
-        "message": "<strong>Bemærk:</strong> Forlades CLI vinduet eller trykkes på Afbryd vil <strong>automatisk</strong> sende \"<strong>exit</strong>\" til FC. Med den nyeste firmware vil FC så <strong>genstart</strong> og ikke gemte ændringer vil gå <strong>tabt</strong>.<p><strong><span class=\"message-negative\">Advarsel:</span></strong> Nogle kommandoer i CLI kan resultere i, at vilkårlige signaler sendes til motorens ESC. Dette kan få motorerne til at rotere, hvis et batteri er tilsluttet. Derfor anbefales det stærkt at sikre, at <strong>intet batteri er tilkoblet,</strong> før du indtaster kommandoer i CLI."
+        "message": "<strong>Bemærk:</strong> Forlades CLI vinduet eller trykkes på enhver anden fane vil Configurator <strong>automatisk</strong> sende \"<strong>exit</strong>\" til FC. Med den nyeste firmware vil FC <strong>genstarte</strong> og ændringer som ikke er gemt vil gå <strong>tabt</strong>.<p><strong><span class=\"message-negative\">Advarsel:</span></strong> Nogle kommandoer i CLI kan betyde , at vilkårlige signaler sendes til motorens ESC. Dette kan få motorerne til at rotere, hvis et batteri er tilsluttet. Derfor anbefales det stærkt at sikre, at <strong>enten - intet batteri er tilkoblet - eller at - propellerne er afmonteret,</strong> før du indtaster kommandoer i CLI."
     },
     "cliInputPlaceholder": {
         "message": "Skriv din kommando her. Tryk på tab for autoudfyld."
@@ -2764,7 +2770,7 @@
         "message": "Indlæs fra fil"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "Indlæst fil <strong>{{fileName}}</strong>. Gennemgå de indlæste kommandoer"
+        "message": "Indlæst fil <strong>{{fileName}}</strong>. Se indlæste kommandoer nedenfor. Bemærk at FC genstartes efter, at der er trykket på Udfør"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Note</strong>: Du kan gennemse og redigere kommandoer før udførelse."
@@ -3100,7 +3106,7 @@
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Fuld chip sletning'.</li><li>Hold FC BOOT knap nede eller BOOT kontakt sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt (se <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB blinkende</a> sektion i Betaflight manual).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper på FC BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud sats, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Fjern BOOT jumper.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul>"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller BOOT kontakt sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt (se <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB blinkende</a> sektion i Betaflight manual).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper på FC BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud sats, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Fjern BOOT jumper.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -3884,7 +3890,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM filtrering er en bank af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br /><br /><b><span class=\"message-positive\">VIGTIGT</span>: ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.</b>",
+        "message": "RPM filtrering er en gruppe af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br /><br /><b><span class=\"message-positive\">VIGTIGT</span>: ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -4728,7 +4734,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisarmed": {
-        "message": "Afkoblingstekstmeddelelse"
+        "message": "Afkoblings meddelelse"
     },
     "osdTextElementCrosshairs": {
         "message": "Sigtekorn",
@@ -5620,7 +5626,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne herfra. Dette vil kun være muligt, hvis flyvelederen er knyttet til VTX ved hjælp af nogle protokol som Tramp eller SmartAudio og er korrekt konfigureret i $t(tabPorts.message) fanen, hvis det er nødvendigt.",
+        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne herfra. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
@@ -5632,7 +5638,7 @@
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Værdierne i VTX-tabellen er blevet indlæst, men endnu ikke gemt på flyvelederen. Du skal bekræfte og ændre værdierne for at være sikker på, at de er gyldige og lovlige i dit land, og tryk derefter på $t(vtxButtonSave.message) knappen for at gemme dem på flycontrolleren.",
+        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Værdierne i VTX-tabellen er blevet indlæst, men endnu ikke gemt i FC. Du skal bekræfte og ændre værdierne for at sikre, at de er gyldige og lovlige i dit land, og tryk derefter på $t(vtxButtonSave.message) knappen for at gemme dem i FC.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -5856,7 +5862,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "Knappen '$t(vtxButtonSaveLua.message)' vil give dig mulighed for at gemme et <i>mcuid</i>. ua fil der indeholder en VTX tabel konfiguration, der kan bruges med <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>Version 1.6. og derover kan bruge filen som er, men for ældre radio sendere skal scripts omdøbes til at matche modelnavnet på TX.",
+        "message": "Knappen '$t(vtxButtonSaveLua.message)' vil give dig mulighed for at gemme en <i>mcuid</i>.lua fil der indeholder en konfiguration med VTX tabel, der kan bruges med <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>Version 1.6. og derover kan bruge filen uændret, men for ældre RC sendere skal der omdøbes til at matche modelnavnet på TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
@@ -5908,7 +5914,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "Sender ESC kommandoer til FC via Dshot telemetri. Kræves ved RPM filtrering og dynamisk tomgang. <br> <br>Bemærk: Kræver en Dshot kompatibel ESC med passende firmware, fx JESC, Jazzmac, BLHeli-32.",
+        "message": "Sender ESC kommandoer til FC via DShot telemetri. Kræves ved RPM filtrering og dynamisk tomgang. <br> <br>Bemærk: Kræver en DShot kompatibel ESC med passende firmware, fx JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
