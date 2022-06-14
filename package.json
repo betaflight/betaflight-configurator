@@ -2,7 +2,7 @@
   "name": "betaflight-configurator",
   "productName": "Betaflight Configurator",
   "description": "Crossplatform configuration tool for Betaflight flight control system.",
-  "version": "10.8.0",
+  "version": "10.9.0",
   "main": "main.html",
   "chromium-args": "--disable-features=nw2",
   "scripts": {
