@@ -1,5 +1,46 @@
 <div class="title" i18n="defaultChangelogHead"></div>
 
+<span>2022.06.11 - 10.8.0 - BetaFlight</span>
+<ul>
+    <li>Key Features:
+        <ul>
+            <li>
+                <b>Presets</b> - A fantastic, comprehensive new preset system! Whether a whoop, a twig, a 5" racer, a freestyle setup, or an X-class, you can now easily apply a great tune for your quad, out of the box. Presets also exist for radio setups, vtx configurations, and so on. Users can choose from 'official' Betaflight Presets and 'community' presets. Both are checked by Betaflight developers. Access to external Preset repositories is also provided, but take care when using these, since Betaflight has no control over their content.
+            </li>
+            <li>
+                <b>New PID based tuning sliders</b> - Whether you need to tweak the tune or build it from scratch, we now have simpler, more comprehensive, firmware based tuning sliders in the Configurator. These are active by default. Slider positions are stored with the quad, and can be modified via the OSD or LUA. New expert sliders allow fine-tuning of Pitch:Roll balance, DMax:Dmin, and I relative to P.
+            </li>
+            <li>
+                <b>Multi dynamic notch</b> - We have a completely rewritten, much improved, SDFT based multi-dynamic notches. More than one resonant peak can be tracked at the same time, more accurately and more quickly than before, with low latency cost. This allows for lower overall low pass filtering and better performance.
+            </li>
+            <li>
+                <b>PT3 based RC smoothing</b> - RC smoothing has been completely revised, and is now entirely filter based, using optimised PT3 (third order) smoothing. RC Smoothing now has the ideal filter shape applied with no overshoot and very smooth response. The auto smoothing value provides anything from low-latency to exceptional buttery cinematic smoothness.
+            </li>
+            <li>
+                <b>RPM crossfading</b> - we now can smoothly disable overlapping RPM filtering notches entirely at low RPM. This greatly reduces filter delay at low throttle. You'll hear an immediate difference in the sound of the motors, and experience less propwash around low throttle.
+            </li>
+            <li>
+                <b>PT2 and PT3 lowpass filtering options</b> - The old biquad lowpass filter option is no longer available on Gyro, due to delay, overshoot and resonance issues. Previous Gyro biquad lowpass users should change to PT2, but more likely will find that, in 4.3, single or dual first order filtering is optimal for Gyro. Biquad filtering is still available for D, where a harder cut than PT2 can be useful.
+            </li>
+            <li>
+                <b>Feedforward jitter reduction</b> - 4.3 introduces feedforward jitter reduction, which is an improvement on feedforward transition. It delivers a 'dynamic transition' effect to the feedforward, where you can get silky smooth responses while making slow stick inputs, and immediate, snappy feedforward responses to quick inputs. Usually, Transition is not required any more. Jitter reduction provides the Transition type effect, but at any stick angle. Jitter reduction also attenuates RC link noise during slow movements, especially for the newer higher rate Rx links. Racers will tend to use lower jitter reduction values than Freestylers, since that will attenuate link noise without delaying stick responses.
+            </li>
+            <li>
+                <b>Linear and Dynamic mixer options</b> - These are alternatives to the stock Betaflight mixer code. The dynamic option may result in less aggressive bump and landing responses for level mode or cinematic flights.
+            </li>
+            <li>RC smoothing updates to better work with higher speed connections</li>
+            <li>Motor remap, direction adjustment, and validation of output in motors tab</li>
+            <li>Target autodetection during flashing</li>
+            <li>Configurator tab re-ordering and other UI improvements</li>
+            <li>OSD Preview</li>
+            <li>Detect and select serial port</li>
+            <li>
+                <b>So much more...</b> - The above are merely some of the enhancements and improvements. It has been awhile so 4.3 as a release is huge so make sure you check out the complete release notes at <a href="https://betaflight.com">betaflight.com</a> and the <a href="https://github.com/betaflight/betaflight/wiki/4.3-Tuning-Notes">tuning guide Wiki</a>.
+            </li>
+        </ul>
+    </li>
+</ul>
+
 <span>2020.04.27 - 10.7.0 - BetaFlight</span>
 <ul>
     <li>Features:
