@@ -1352,6 +1352,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (!have_sensor(FC.CONFIG.activeSensors, 'acc')) {
             $('#pid_accel').hide();
+            $('.acroTrainerAngleLimit').hide();
         }
 
         const hideSensorPid = function(element, sensorReady) {
