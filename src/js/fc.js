@@ -486,7 +486,8 @@ const FC = {
             levelAngleLimit:            0,
             levelSensitivity:           0,
             itermThrottleThreshold:     0,
-            itermAcceleratorGain:       0,
+            itermAcceleratorGain:       0, // depecrated in API 1.45
+            antiGravityGain:            0, // was itermAccelatorGain till API 1.45
             itermRotation:              0,
             smartFeedforward:           0,
             itermRelax:                 0,
