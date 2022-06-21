@@ -316,7 +316,7 @@ OSD.generateVTXChannelPreview = function(osdData) {
             break;
 
         case 1:
-            value = 'PWR';
+            value = '200';
             break;
     }
     return value;
