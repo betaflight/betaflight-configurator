@@ -8,7 +8,7 @@ on:
 jobs:
   stale:
     name: 'Check and close stale issues'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/stale@v4
       with:
