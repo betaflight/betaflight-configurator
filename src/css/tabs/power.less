@@ -1,0 +1,85 @@
+#tab-power-templates {
+	display: none;
+}
+.tab-power {
+	.ui-grid-col {
+		margin-bottom: 0;
+	}
+	td.configuration {
+		padding-top: 5px;
+		text-align: left;
+	}
+	.battery-state {
+		.configuration {
+			border-bottom: 0;
+		}
+	}
+	td.value {
+		text-align: left;
+		width: 20%;
+	}
+	.label {
+		width: 25%;
+	}
+	.number {
+		input {
+			width: 50px;
+			padding-left: 3px;
+			height: 20px;
+			line-height: 20px;
+			text-align: left;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+			margin-right: 11px;
+			font-size: 12px;
+			font-weight: normal;
+		}
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+	.select {
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+	.battery-configuration {
+		select {
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+			margin-right: 5px;
+			float: left;
+			width: 150px;
+		}
+	}
+	.require-support {
+		display: none;
+	}
+	.require-upgrade {
+		display: block;
+	}
+}
+.tab-power.supported {
+	.require-support {
+		display: block;
+	}
+	.require-upgrade {
+		display: none;
+	}
+}

@@ -1,0 +1,85 @@
+#tab-transponder-templates {
+	display: none;
+}
+.tab-transponder {
+	.spacer_box {
+		padding-bottom: 10px;
+		float: left;
+		width: calc(100% - 20px);
+	}
+	.text {
+		input {
+			width: 100px;
+			padding-left: 3px;
+			height: 20px;
+			line-height: 20px;
+			text-align: left;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+			margin-right: 11px;
+			font-size: 12px;
+			font-weight: normal;
+			background: var(--boxBackground);
+			color: var(--defaultText);
+		}
+		.disabled {
+			width: 43px;
+			padding: 0px 5px;
+			background-color: #ececec;
+		}
+		span {
+			margin-left: 0px;
+		}
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0px;
+			margin-bottom: 0px;
+		}
+	}
+	input {
+		float: left;
+	}
+	span {
+		margin: 0px;
+	}
+	.textspacer {
+		float: left;
+		width: 115px;
+		height: 21px;
+	}
+	.gui_box {
+		span {
+			font-style: normal;
+			line-height: 19px;
+			color: #4f4f4f;
+			font-size: 11px;
+		}
+	}
+	select {
+		min-width: 100px;
+		border: 1px solid var(--subtleAccent);
+		border-radius: 3px;
+		background: var(--boxBackground);
+		color: var(--defaultText);
+	}
+}
+.require-transponder-supported {
+	display: none;
+}
+.tab-transponder.transponder-supported {
+	.require-transponder-unsupported {
+		display: none;
+	}
+	.require-transponder-supported {
+		display: block;
+	}
+}
+.textspacer-small {
+	margin-bottom: 15px;
+}

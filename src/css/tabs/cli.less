@@ -1,0 +1,142 @@
+.tab-cli {
+	height: 100%;
+	.content_wrapper {
+		flex-direction: column;
+		display: flex;
+		overflow-x: hidden;
+		overflow-y: hidden;
+	}
+	p {
+		padding: 0;
+		border: 0 dotted var(--subtleAccent);
+	}
+	.backdrop {
+		border: 1px solid var(--subtleAccent);
+		background-color: rgba(0, 0, 0, 0.75);
+		margin-top: 0;
+		flex-grow: 1;
+		background-image: url("../../images/light-wide-1.svg");
+		background-repeat: no-repeat;
+		background-position: 50% 80%;
+		background-size: 600px;
+		border-radius: 5px;
+		box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.80);
+		width: 100%;
+	}
+	.window {
+		height: 100%;
+		width: 100%;
+		padding: 5px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		font-family: monospace;
+		color: white;
+		box-sizing: border-box;
+		float: left;
+		.wrapper {
+			user-select: text;
+			white-space: pre-wrap;
+			height: 0px;
+			>* {
+				user-select: text;
+			}
+		}
+		.error_message {
+			color: red;
+			font-weight: bold;
+		}
+	}
+	textarea[name='commands'] {
+		-webkit-box-sizing: border-box;
+		width: 100%;
+		margin-top: 8px;
+		height: 22px;
+		line-height: 20px;
+		padding-left: 5px;
+		border: 1px solid var(--subtleAccent);
+		resize: none;
+	}
+	#content-watermark {
+		z-index: 0;
+	}
+	.save {
+		color: white;
+	}
+}
+.jBox-container {
+	textarea#preview {
+		background-color: rgba(0, 0, 0, 0.75);
+		width: 100%;
+		resize: none;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		font-family: monospace;
+		color: white;
+		padding: 5px;
+		margin-bottom: 5px;
+	}
+}
+.cli-textcomplete-dropdown {
+	border: 1px solid var(--subtleAccent);
+	background-color: white;
+	border-radius: 5px;
+	max-height: 50%;
+	overflow: auto;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+	&::-webkit-scrollbar-track {
+		background: lightgrey;
+		border-radius: 3px;
+	}
+	&::-webkit-scrollbar-thumb {
+		background: grey;
+		border-radius: 3px;
+	}
+	li {
+		padding: 2px 5px;
+	}
+	.active {
+		background-color: rgb(255, 187, 0);
+	}
+	a {
+		&:hover {
+			cursor: pointer;
+		}
+		font-family: monospace;
+		b {
+			font-family: monospace;
+			font-weight: bold;
+		}
+	}
+}
+@media only screen and (max-width: 1055px) {
+	.tab-cli {
+		.content_wrapper {
+			height: calc(100% - 87px);
+		}
+		.content_toolbar {
+			margin-top: 5px;
+		}
+	}
+}
+@media only screen and (max-device-width: 1055px) {
+	.tab-cli {
+		.content_wrapper {
+			height: calc(100% - 87px);
+		}
+		.content_toolbar {
+			margin-top: 5px;
+		}
+	}
+}
+@media all and (max-width: 575px) {
+	.tab-cli {
+		.backdrop {
+			background-size: 100%;
+		}
+	}
+}
