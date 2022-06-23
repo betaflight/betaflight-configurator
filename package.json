@@ -124,7 +124,7 @@
     "karma-spec-reporter": "^0.0.32",
     "karma-tfs-reporter": "^1.0.2",
     "mocha": "^7.0.1",
-    "nw-builder": "^3.5.7",
+    "nw-builder": "^3.7.4",
     "os": "^0.1.1",
     "postcss": "^8.2.13",
     "rollup": "^2.28.2",
