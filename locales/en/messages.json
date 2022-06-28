@@ -4869,6 +4869,14 @@
     "osdDescElementVtxChannel": {
         "message": "Current VTX channel and power"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "VTX power",
+        "description": "One of the variants of the VTX channel element of the OSD"        
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "Band:Channel:Pwr:Pit",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "Battery voltage warning",
         "description": "One of the elements of the OSD"
