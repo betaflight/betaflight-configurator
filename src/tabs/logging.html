@@ -12,35 +12,35 @@
                 <dt>
                     <label><input type="checkbox" name="MSP_RAW_IMU" /> MSP_RAW_IMU</label>
                 </dt>
-                <dd>9 columns (accel[x, y, z], gyro[x, y, z], mag[x, y, z])</dd>
+                <dd>9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])</dd>
                 <dt>
                     <label><input type="checkbox" name="MSP_ATTITUDE" /> MSP_ATTITUDE</label>
                 </dt>
-                <dd>3 columns (x, y, z)</dd>
+                <dd>3 columns (kine[x, y, z])</dd>
                 <dt>
                     <label><input type="checkbox" name="MSP_ALTITUDE" /> MSP_ALTITUDE</label>
                 </dt>
-                <dd>one column</dd>
+                <dd>1 column (alt)</dd>
                 <dt>
                     <label><input type="checkbox" name="MSP_RAW_GPS" /> MSP_RAW_GPS</label>
                 </dt>
-                <dd>7 columns</dd>
+                <dd>7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)</dd>
                 <dt>
                     <label><input type="checkbox" name="MSP_ANALOG" /> MSP_ANALOG</label>
                 </dt>
-                <dd>4 columns</dd>
+                <dd>4 columns (voltage, amperage, mAhdrawn, rssi)</dd>
                 <dt>
                     <label><input type="checkbox" name="MSP_RC" /> MSP_RC</label>
                 </dt>
-                <dd>8 columns by default</dd>
+                <dd>8 columns (RC0, RC1, RC2, RC3, RC4, RC5, RC6, RC7)</dd>
                 <dt>
                     <label><input type="checkbox" name="MSP_MOTOR" /> MSP_MOTOR</label>
                 </dt>
-                <dd>8 columns by default</dd>
+                <dd>8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)</dd>
                 <dt>
                     <label><input type="checkbox" name="MSP_DEBUG" /> MSP_DEBUG</label>
                 </dt>
-                <dd>4 columns</dd>
+                <dd>4 columns (Debug0, Debug1, Debug2, Debug3)</dd>
             </dl>
         </div>
         <select class="speed" name="speed">
