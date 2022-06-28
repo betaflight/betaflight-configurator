@@ -147,8 +147,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.mode = data.readU32();
                 FC.CONFIG.profile = data.readU8();
 
-                TABS.pid_tuning.checkUpdateProfile(false);
-
                 sensor_status(FC.CONFIG.activeSensors);
                 break;
             case MSPCodes.MSP_STATUS_EX:
@@ -173,8 +171,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                       FC.CONFIG.armingDisableCount = data.readU8(); // Flag count
                       FC.CONFIG.armingDisableFlags = data.readU32();
                     }
-
-                    TABS.pid_tuning.checkUpdateProfile(true);
                 }
 
                 sensor_status(FC.CONFIG.activeSensors);
@@ -274,10 +270,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.ANALOG.mAhdrawn = data.readU16();
                 FC.ANALOG.rssi = data.readU16(); // 0-1023
                 FC.ANALOG.amperage = data.read16() / 100; // A
-                FC.ANALOG.last_received_timestamp = Date.now();
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                     FC.ANALOG.voltage = data.readU16() / 100;
                 }
+                FC.ANALOG.last_received_timestamp = Date.now();
                 break;
             case MSPCodes.MSP_VOLTAGE_METERS:
                 FC.VOLTAGE_METERS = [];
@@ -727,7 +723,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
             case MSPCodes.MSP_SET_MOTOR:
-                console.log('Motor Speeds Updated');
                 break;
             case MSPCodes.MSP_UID:
                 FC.CONFIG.uid[0] = data.readU32();
@@ -1728,8 +1723,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     if (self.mspMultipleCache.length > 0) {
 
                         const partialBuffer = [];
-                        for (let i = 0; i < self.mspMultipleCache.length; i++) {
-                            partialBuffer.push8(self.mspMultipleCache[i]);
+                        for (const instance of self.mspMultipleCache) {
+                            partialBuffer.push8(instance);
                         }
 
                         MSP.send_message(MSPCodes.MSP_MULTIPLE_MSP, partialBuffer, false, dataHandler.callbacks);
@@ -1746,11 +1741,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log(`Unknown code detected: ${code}`);
         } else {
             console.log(`FC reports unsupported message error: ${code}`);
-
-            if (code === MSPCodes.MSP_SET_REBOOT) {
-                TABS.onboard_logging.mscRebootFailedCallback();
-            }
         }
+
+        if (code === MSPCodes.MSP_SET_REBOOT) {
+            TABS.onboard_logging.mscRebootFailedCallback();
+        }
+
     } else {
         console.warn(`code: ${code} - crc failed`);
     }
