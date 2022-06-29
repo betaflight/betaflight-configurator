@@ -3514,10 +3514,10 @@ app-root-dir@^1.0.2:
   resolved "https://registry.yarnpkg.com/app-root-dir/-/app-root-dir-1.0.2.tgz#38187ec2dea7577fff033ffcb12172692ff6e118"
   integrity sha1-OBh+wt6nV3//Az/8sSFyaS/24Rg=
 
-appdmg@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/appdmg/-/appdmg-0.6.2.tgz#3acd6246ffb25ae3e109bdba564aa3ddce1b64a8"
-  integrity sha512-mbJyAxn2/JmDpckNpXDU4AQ/XF7fltOyrLcETZxGfYwESt0NdCjQB8L2vIxxAyZKT0R/c0aSzb9yE+P2yDh9TQ==
+appdmg@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/appdmg/-/appdmg-0.6.4.tgz#283b85cc761c1d924f2370bd5cdbd92824b12ef3"
+  integrity sha512-YTilgNF0DF2DSRzGzzGDxaTMLXlhe3b3HB8RAaoJJ/VJXZbOlzIAcZ7gdPniHUVUuHjGwnS7fUMd4FvO2Rp94A==
   dependencies:
     async "^1.4.2"
     ds-store "^0.1.5"
