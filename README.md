@@ -117,7 +117,7 @@ If no platform is provided, the build for the host platform is run.
 
 **Note:** Support for cross-platform building is very limited due to the requirement for platform specific build tools. If in doubt, build on the target platform.
 
-You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32`, `--linux32` and `--armv7` can be used too, but they are not officially supported, so use them at your own risk.
+You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32`, `--linux32` and `--armv8` can be used too, but they are not officially supported, so use them at your own risk.
 
 ## Support
 

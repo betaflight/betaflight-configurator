@@ -58,7 +58,7 @@ const nwBuilderOptions = {
     zip: false,
 };
 
-const nwArmVersion = '0.27.6';
+const nwArmVersion = 'nw60-arm64_2022-01-08';
 
 let metadata = {};
 
@@ -139,10 +139,10 @@ gulp.task('default', debugBuild);
 
 // Get platform from commandline args
 // #
-// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --armv7, --osx64, --win32, --win64, or --android)
+// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --armv8, --osx64, --win32, --win64, or --android)
 // #
 function getInputPlatforms() {
-    const supportedPlatforms = ['linux64', 'linux32', 'armv7', 'osx64', 'win32', 'win64', 'android'];
+    const supportedPlatforms = ['linux64', 'linux32', 'armv8', 'osx64', 'win32', 'win64', 'android'];
     const platforms = [];
     const regEx = /--(\w+)/;
 
@@ -232,7 +232,7 @@ function getRunDebugAppCommand(arch) {
 
     case 'linux64':
     case 'linux32':
-    case 'armv7':
+    case 'armv8':
         command = path.join(DEBUG_DIR, metadata.name, arch, metadata.name);
 
         break;
@@ -466,9 +466,9 @@ function listPostBuildTasks(folder) {
         });
     }
 
-    if (platforms.indexOf('armv7') !== -1) {
-        postBuildTasks.push(function post_build_armv7(done) {
-            return post_build('armv7', folder, done);
+    if (platforms.indexOf('armv8') !== -1) {
+        postBuildTasks.push(function post_build_armv8(done) {
+            return post_build('armv8', folder, done);
         });
     }
 
@@ -491,9 +491,9 @@ function post_build(arch, folder, done) {
                    .pipe(gulp.dest(launcherDir));
     }
 
-    if (arch === 'armv7') {
-        console.log('Moving ARMv7 build from "linux32" to "armv7" directory...');
-        fse.moveSync(path.join(folder, metadata.name, 'linux32'), path.join(folder, metadata.name, 'armv7'));
+    if (arch === 'armv8') {
+        console.log('Moving armv8 build from "linux32" to "armv8" directory...');
+        fse.moveSync(path.join(folder, metadata.name, 'linux32'), path.join(folder, metadata.name, 'armv8'));
     }
 
     return done();
@@ -514,7 +514,7 @@ function injectARMCache(flavor, done) {
         if (!fs.existsSync('./cache')) {
             fs.mkdirSync('./cache');
         }
-        fs.closeSync(fs.openSync('./cache/_ARMv7_IS_CACHED', 'w'));
+        fs.closeSync(fs.openSync('./cache/_ARMv8_IS_CACHED', 'w'));
         const versionFolder = `./cache/${nwBuilderOptions.version}${flavorPostfix}`;
         if (!fs.existsSync(versionFolder)) {
             fs.mkdirSync(versionFolder);
@@ -524,12 +524,12 @@ function injectARMCache(flavor, done) {
             fs.mkdirSync(linux32Folder);
         }
         const downloadedArchivePath = `${versionFolder}/nwjs${flavorPostfix}-v${nwArmVersion}-linux-arm.tar.gz`;
-        const downloadUrl = `https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/v${nwArmVersion}/nwjs${flavorDownloadPostfix}-v${nwArmVersion}-linux-arm.tar.gz`;
+        const downloadUrl = `https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/${nwArmVersion}/${nwArmVersion}.tar.gz`;
         if (fs.existsSync(downloadedArchivePath)) {
-            console.log('Prebuilt ARMv7 binaries found in /tmp');
+            console.log('Prebuilt ARMv8 binaries found in /tmp');
             downloadDone(flavorDownloadPostfix, downloadedArchivePath, versionFolder);
         } else {
-            console.log(`Downloading prebuilt ARMv7 binaries from "${downloadUrl}"...`);
+            console.log(`Downloading prebuilt ARMv8 binaries from "${downloadUrl}"...`);
             process.stdout.write('> Starting download...\r');
             const armBuildBinary = fs.createWriteStream(downloadedArchivePath);
             https.get(downloadUrl, function(res) {
@@ -551,7 +551,7 @@ function injectARMCache(flavor, done) {
     });
 
     function downloadDone(flavorDownload, downloadedArchivePath, versionFolder) {
-        console.log('Injecting prebuilt ARMv7 binaries into Linux32 cache...');
+        console.log('Injecting prebuilt ARMv8 binaries into Linux32 cache...');
         targz.decompress({
             src: downloadedArchivePath,
             dest: versionFolder,
@@ -583,16 +583,16 @@ function buildNWAppsWrapper(platforms, flavor, dir, done) {
         buildNWApps(platforms, flavor, dir, done);
     }
 
-    if (platforms.indexOf('armv7') !== -1) {
+    if (platforms.indexOf('armv8') !== -1) {
         if (platforms.indexOf('linux32') !== -1) {
-            console.log('Cannot build ARMv7 and Linux32 versions at the same time!');
+            console.log('Cannot build ARMv8 and Linux32 versions at the same time!');
             clean_debug();
             process.exit(1);
         }
-        removeItem(platforms, 'armv7');
+        removeItem(platforms, 'armv8');
         platforms.push('linux32');
 
-        if (!fs.existsSync('./cache/_ARMv7_IS_CACHED', 'w')) {
+        if (!fs.existsSync('./cache/_ARMv8_IS_CACHED', 'w')) {
             console.log('Purging cache because it needs to be overwritten...');
             clean_cache().then(() => {
                 injectARMCache(flavor, buildNWAppsCallback);
@@ -601,7 +601,7 @@ function buildNWAppsWrapper(platforms, flavor, dir, done) {
             buildNWAppsCallback();
         }
     } else {
-        if (platforms.indexOf('linux32') !== -1 && fs.existsSync('./cache/_ARMv7_IS_CACHED')) {
+        if (platforms.indexOf('linux32') !== -1 && fs.existsSync('./cache/_ARMv8_IS_CACHED')) {
             console.log('Purging cache because it was previously overwritten...');
             clean_cache().then(buildNWAppsCallback);
         } else {
@@ -886,9 +886,9 @@ function listReleaseTasks(isReleaseBuild, appDirectory) {
         });
     }
 
-    if (platforms.indexOf('armv7') !== -1) {
-        releaseTasks.push(function release_armv7_zip() {
-            return release_zip('armv7', appDirectory);
+    if (platforms.indexOf('armv8') !== -1) {
+        releaseTasks.push(function release_armv8_zip() {
+            return release_zip('armv8', appDirectory);
         });
     }
 
