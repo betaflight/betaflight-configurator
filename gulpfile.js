@@ -769,7 +769,7 @@ function release_rpm(arch, appDirectory, done) {
             vendor: metadata.author,
             summary: metadata.description,
             license: 'GNU General Public License v3.0',
-            requires: ['libgconf-2-4', 'libatomic1'],
+            requires: ['GConf2', 'libatomic'],
             prefix: '/opt',
             files: [{
                 cwd: path.join(appDirectory, metadata.name, arch),
