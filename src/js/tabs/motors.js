@@ -55,9 +55,7 @@ motors.initialize = async function (callback) {
     // Update filtering defaults based on API version
     const FILTER_DEFAULT = FC.getFilterDefaults();
 
-    if (GUI.active_tab != 'motors') {
-        GUI.active_tab = 'motors';
-    }
+    GUI.active_tab = 'motors';
 
     await MSP.promise(MSPCodes.MSP_STATUS);
     await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
@@ -884,7 +882,7 @@ motors.initialize = async function (callback) {
         ];
 
         motorsEnableTestModeElement.on('change', function () {
-            let enabled = $(this).is(':checked');
+            let enabled = motorsEnableTestModeElement.is(':checked');
             // prevent or disable testing if configHasChanged flag is set.
             if (self.configHasChanged) {
                 if (enabled) {
@@ -900,17 +898,13 @@ motors.initialize = async function (callback) {
                 if (motorsEnableTestModeElement.is(':checked')) {
                     if (!ignoreKeys.includes(e.code)) {
                         motorsEnableTestModeElement.prop('checked', false).trigger('change');
+                        document.removeEventListener('keydown', evt => disableMotorTest(evt));
                     }
                 }
             }
 
             if (enabled) {
                 document.addEventListener('keydown', e => disableMotorTest(e));
-                // enable Status and Motor data pulling
-                GUI.interval_add('motor_and_status_pull', get_status, 50, true);
-            } else {
-                document.removeEventListener('keydown', e => disableMotorTest(e));
-                GUI.interval_remove("motor_and_status_pull");
             }
 
             setContentButtons(enabled);
@@ -1002,7 +996,7 @@ motors.initialize = async function (callback) {
 
         // data pulling functions used inside interval timer
 
-        function get_status() {
+        function getStatus() {
             // status needed for arming flag
             MSP.send_message(MSPCodes.MSP_STATUS, false, false, get_motor_data);
         }
@@ -1143,8 +1137,8 @@ motors.initialize = async function (callback) {
 
         $('a.stop').on('click', () => motorsEnableTestModeElement.prop('checked', false).trigger('change'));
 
-        // get initial motor status values
-        get_status();
+        // enable Status and Motor data pulling
+        GUI.interval_add('motor_and_status_pull', getStatus, 50, true);
 
         setup_motor_output_reordering_dialog(SetupEscDshotDirectionDialogCallback, zeroThrottleValue);
 
