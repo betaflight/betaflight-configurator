@@ -2,12 +2,8 @@
 
 TABS.failsafe = {};
 
-TABS.failsafe.initialize = function (callback, scrollPosition) {
-    const self = this;
-
-    if (GUI.active_tab != 'failsafe') {
-        GUI.active_tab = 'failsafe';
-    }
+TABS.failsafe.initialize = function (callback) {
+    GUI.active_tab = 'failsafe';
 
     function load_rx_config() {
         MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, load_failssafe_config);
@@ -219,11 +215,6 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             FC.RXFAIL_CONFIG[i].value = parseInt($(this).val());
         });
 
-        // for some odd reason chrome 38+ changes scroll according to the touched select element
-        // i am guessing this is a bug, since this wasn't happening on 37
-        // code below is a temporary fix, which we will be able to remove in the future (hopefully)
-        $('#content').scrollTop((scrollPosition) ? scrollPosition : 0);
-
         // fill stage 1 Valid Pulse Range Settings
         $('input[name="rx_min_usec"]').val(FC.RX_CONFIG.rx_min_usec);
         $('input[name="rx_max_usec"]').val(FC.RX_CONFIG.rx_max_usec);
@@ -413,7 +404,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 GUI.log(i18n.getMessage('configurationEepromSaved'));
 
                 GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(self));
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection());
                 });
             }
 

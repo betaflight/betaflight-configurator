@@ -1162,7 +1162,7 @@ TABS.motors.initialize = async function (callback) {
     async function reboot() {
         GUI.log(i18n.getMessage('configurationEepromSaved'));
         await MSP.promise(MSPCodes.MSP_SET_REBOOT);
-        reinitializeConnection(self);
+        reinitializeConnection();
     }
 
     function showDialogMixerReset(message) {

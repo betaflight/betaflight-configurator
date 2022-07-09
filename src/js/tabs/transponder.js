@@ -5,7 +5,7 @@ TABS.transponder = {
     available: false,
 };
 
-TABS.transponder.initialize = function(callback, scrollPosition) {
+TABS.transponder.initialize = function(callback) {
 
     let _persistentInputValues = {};
 
@@ -303,7 +303,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                         GUI.log(i18n.getMessage('transponderEepromSaved'));
                         if ( $(_this).hasClass('reboot') ) {
                             GUI.tab_switch_cleanup(function() {
-                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(self));
+                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection());
                             });
                         }
                     });

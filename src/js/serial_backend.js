@@ -806,7 +806,7 @@ function update_dataflash_global() {
      }
 }
 
-function reinitializeConnection(originatorTab, callback) {
+function reinitializeConnection(callback) {
 
     // Close connection gracefully if it still exists.
     const previousTimeStamp = connectionTimestamp;
@@ -830,7 +830,6 @@ function reinitializeConnection(originatorTab, callback) {
             clearInterval(reconnect);
             await MSP.promise(MSPCodes.MSP_STATUS);
             GUI.log(i18n.getMessage('deviceReady'));
-            originatorTab.initialize(false, $('#content').scrollTop());
             callback?.();
         } else {
             attempts++;
