@@ -491,30 +491,32 @@ function connectCli() {
     $('#tabs .tab_cli a').click();
 }
 
-async function onConnect() {
+function onConnect() {
     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
         $('div#flashbutton a.flash_state').removeClass('active');
         $('div#flashbutton a.flash').removeClass('active');
     }
+
     GUI.timeout_remove('connecting'); // kill connecting timer
+
     $('div#connectbutton div.connect_state').text(i18n.getMessage('disconnect')).addClass('active');
     $('div#connectbutton a.connect').addClass('active');
 
     $('#tabs ul.mode-disconnected').hide();
     $('#tabs ul.mode-connected-cli').show();
 
-
     // show only appropriate tabs
     $('#tabs ul.mode-connected li').hide();
     $('#tabs ul.mode-connected li').filter(function (index) {
         const classes = $(this).attr("class").split(/\s+/);
         let found = false;
+
         $.each(GUI.allowedTabs, (_index, value) => {
-                const tabName = `tab_${value}`;
-                if ($.inArray(tabName, classes) >= 0) {
-                    found = true;
-                }
-            });
+            const tabName = `tab_${value}`;
+            if ($.inArray(tabName, classes) >= 0) {
+                found = true;
+            }
+        });
 
         if (FC.CONFIG.boardType == 0) {
             if (classes.indexOf("osd-required") >= 0) {
@@ -532,13 +534,14 @@ async function onConnect() {
 
         $('#tabs ul.mode-connected').show();
 
-        await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-            await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
-        }
-        await MSP.promise(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32) ? MSPCodes.MSP_STATUS_EX : MSPCodes.MSP_STATUS);
-        await MSP.promise(MSPCodes.MSP_DATAFLASH_SUMMARY);
-        if (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) {
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
+        MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
+
+        getStatus();
+
+        MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
+
+        if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
             startLiveDataRefreshTimer();
         }
     }
@@ -688,8 +691,15 @@ function startLiveDataRefreshTimer() {
     GUI.timeout_add('data_refresh', update_live_status, 100);
 }
 
-async function update_live_status() {
+async function getStatus() {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
+        return MSP.promise(MSPCodes.MSP_STATUS_EX);
+    } else {
+        return MSP.promise(MSPCodes.MSP_STATUS);
+    }
+}
 
+async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
     $(".quad-status-contents").css({
@@ -698,7 +708,7 @@ async function update_live_status() {
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
-        await MSP.promise(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32) ? MSPCodes.MSP_STATUS_EX : MSPCodes.MSP_STATUS);
+        await getStatus();
         await MSP.promise(MSPCodes.MSP_ANALOG);
 
         const active = ((Date.now() - FC.ANALOG.last_received_timestamp) < 300);
@@ -828,7 +838,7 @@ function reinitializeConnection(originatorTab, callback) {
         if (connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) {
             console.log(`Serial connection available after ${attempts / 10} seconds`);
             clearInterval(reconnect);
-            await MSP.promise(MSPCodes.MSP_STATUS);
+            await getStatus();
             GUI.log(i18n.getMessage('deviceReady'));
             originatorTab.initialize(false, $('#content').scrollTop());
             callback?.();
