@@ -4925,6 +4925,13 @@
     "osdDescElementMahDrawn": {
         "message": "Total battery capacity used"
     },
+    "osdTextElementWhDrawn": {
+        "message": "Battery current Wh drawn",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "Total battery capacity used in Wh"
+    },
     "osdTextElementCraftName": {
         "message": "Craft name",
         "description": "One of the elements of the OSD"
@@ -5399,6 +5406,13 @@
     },
     "osdDescStatUsedMah": {
         "message": "Battery capacity used"
+    },
+    "osdTextStatUsedWh": {
+        "message": "Battery Wh used",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "Battery capacity used in Wh"
     },
     "osdTextStatMaxAltitude": {
         "message": "Altitude maximum",

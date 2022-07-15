@@ -721,6 +721,15 @@ OSD.loadDisplayFields = function() {
                 return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36) ? ` 690${FONT.symbol(SYM.MAH)}` : `${FONT.symbol(SYM.MAH)}690`;
             },
         },
+        WH_DRAWN: {
+            name: 'WH_DRAWN',
+            text: 'osdTextElementWhDrawn',
+            desc: 'osdDescElementWhDrawn',
+            defaultPosition: -1,
+            draw_order: 145,
+            positionable: true,
+            preview: '1.10 WH',
+        },
         CRAFT_NAME: {
             name: 'CRAFT_NAME',
             text: 'osdTextElementCraftName',
@@ -1352,6 +1361,11 @@ OSD.constants = {
             text: 'osdTextStatUsedMah',
             desc: 'osdDescStatUsedMah',
         },
+        USED_WH: {
+            name: 'USED_WH',
+            text: 'osdTextStatUsedWh',
+            desc: 'osdDescStatUsedWh',
+        },
         MAX_ALTITUDE: {
             name: 'MAX_ALTITUDE',
             text: 'osdTextStatMaxAltitude',
@@ -1624,6 +1638,7 @@ OSD.chooseFields = function() {
             F.VTX_CHANNEL,
             F.CURRENT_DRAW,
             F.MAH_DRAWN,
+            F.WH_DRAWN,
             F.GPS_SPEED,
             F.GPS_SATS,
             F.ALTITUDE,
@@ -1791,6 +1806,7 @@ OSD.chooseFields = function() {
             F.MAX_ALTITUDE,
             F.BLACKBOX,
             F.BLACKBOX_LOG_NUMBER,
+            F.USED_WH,
         ];
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
