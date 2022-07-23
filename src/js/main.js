@@ -403,9 +403,7 @@ function startProcess() {
                         );
                         break;
                     case 'configuration':
-                        import(
-                            "./tabs/configuration"
-                        ).then(({ configuration }) =>
+                        import("./tabs/configuration").then(({ configuration }) =>
                             configuration.initialize(content_ready),
                         );
                         break;
