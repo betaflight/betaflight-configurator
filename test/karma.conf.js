@@ -19,7 +19,7 @@ module.exports = function(config) {
             { pattern: './src/js/localization.js', type: 'module', watched: false },
             './src/js/gui.js',
             './src/js/CliAutoComplete.js',
-            './src/js/tabs/cli.js',
+            { pattern: './src/js/tabs/cli.js', type: 'module', watched: false },
             './src/js/phones_ui.js',
             './test/**/*.js',
         ],
@@ -40,6 +40,7 @@ module.exports = function(config) {
         singleRun: true,
         preprocessors: {
              './src/js/localization.js': ['rollup'],
+             './src/js/tabs/cli.js': ['rollup'],
         },
         rollupPreprocessor: {
             plugins: [

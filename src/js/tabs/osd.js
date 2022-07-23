@@ -1,4 +1,4 @@
-'use strict';
+import { i18n } from "../localization";
 
 const FONT = {};
 const SYM = {};
@@ -2448,11 +2448,11 @@ OSD.GUI.preview = {
 };
 
 
-TABS.osd = {
+const osd = {
     analyticsChanges: {},
 };
 
-TABS.osd.initialize = function(callback) {
+osd.initialize = function(callback) {
     if (GUI.active_tab !== 'osd') {
         GUI.active_tab = 'osd';
     }
@@ -3287,7 +3287,7 @@ TABS.osd.initialize = function(callback) {
     });
 };
 
-TABS.osd.cleanup = function(callback) {
+osd.cleanup = function(callback) {
     PortHandler.flush_callbacks();
 
     if (OSD.GUI.fontManager) {
@@ -3301,4 +3301,9 @@ TABS.osd.cleanup = function(callback) {
     if (callback) {
         callback();
     }
+};
+
+window.TABS.osd = osd;
+export {
+    osd,
 };

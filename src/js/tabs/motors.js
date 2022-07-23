@@ -1,6 +1,6 @@
-'use strict';
+import { i18n } from "../localization";
 
-TABS.motors = {
+const motors = {
     previousDshotBidir: null,
     previousFilterDynQ: null,
     previousFilterDynCount: null,
@@ -44,7 +44,7 @@ TABS.motors = {
     DSHOT_3D_NEUTRAL: 1500,
 };
 
-TABS.motors.initialize = async function (callback) {
+motors.initialize = async function (callback) {
     const self = this;
 
     self.armed = false;
@@ -371,17 +371,17 @@ TABS.motors.initialize = async function (callback) {
         function validateMixerOutputs() {
             MSP.promise(MSPCodes.MSP_MOTOR).then(() => {
                 const mixer = FC.MIXER_CONFIG.mixer;
-                const motors = mixerList[mixer - 1].motors;
+                const motorCount = mixerList[mixer - 1].motors;
                 // initialize for models with zero motors
-                self.numberOfValidOutputs = motors;
+                self.numberOfValidOutputs = motorCount;
 
                 for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
                     if (FC.MOTOR_DATA[i] === 0) {
                         self.numberOfValidOutputs = i;
-                        if (motors > self.numberOfValidOutputs && motors > 0) {
+                        if (motorCount > self.numberOfValidOutputs && motorCount > 0) {
                             const msg = i18n.getMessage('motorsDialogMixerReset', {
                                 mixerName: mixerList[mixer - 1].name,
-                                mixerMotors: motors,
+                                mixerMotors: motorCount,
                                 outputs: self.numberOfValidOutputs,
                             });
                             showDialogMixerReset(msg);
@@ -1268,7 +1268,7 @@ TABS.motors.initialize = async function (callback) {
     }
 };
 
-TABS.motors.refresh = function (callback) {
+motors.refresh = function (callback) {
     const self = this;
 
     GUI.tab_switch_cleanup(function() {
@@ -1280,6 +1280,11 @@ TABS.motors.refresh = function (callback) {
     });
 };
 
-TABS.motors.cleanup = function (callback) {
+motors.cleanup = function (callback) {
     if (callback) callback();
+};
+
+window.TABS.motors = motors;
+export {
+    motors,
 };
