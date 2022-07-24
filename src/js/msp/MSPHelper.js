@@ -1741,10 +1741,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log(`Unknown code detected: ${code}`);
         } else {
             console.log(`FC reports unsupported message error: ${code}`);
-        }
 
-        if (code === MSPCodes.MSP_SET_REBOOT) {
-            TABS.onboard_logging.mscRebootFailedCallback();
+            if (code === MSPCodes.MSP_SET_REBOOT) {
+                TABS.onboard_logging.mscRebootFailedCallback();
+            }
         }
 
     } else {
