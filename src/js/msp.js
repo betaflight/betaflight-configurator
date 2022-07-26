@@ -351,7 +351,7 @@ const MSP = {
 
         if (!requestExists) {
             obj.timer = setInterval(function () {
-                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout}`);
+                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length}`);
                 serial.send(bufferOut, function (_sendInfo) {
                     obj.stop = performance.now();
                     const executionTime = Math.round(obj.stop - obj.start);

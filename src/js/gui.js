@@ -74,19 +74,7 @@ const GuiControl = function () {
 };
 
 function GUI_checkOperatingSystem() {
-    if (navigator.appVersion.indexOf("Win") !== -1) {
-        return "Windows";
-    } else if (navigator.appVersion.indexOf("Mac") !== -1) {
-        return "MacOS";
-    } else if (navigator.appVersion.indexOf("Android") !== -1) {
-        return "Android";
-    } else if (navigator.appVersion.indexOf("Linux") !== -1) {
-        return "Linux";
-    } else if (navigator.appVersion.indexOf("X11") !== -1) {
-        return "UNIX";
-    } else {
-        return "Unknown";
-    }
+    return navigator.userAgentData.platform;
 }
 
 // Timer managing methods
@@ -390,11 +378,9 @@ GuiControl.prototype.content_ready = function (callback) {
 
 GuiControl.prototype.selectDefaultTabWhenConnected = function() {
     const result = ConfigStorage.get(['rememberLastTab', 'lastTab']);
-    if (result.rememberLastTab && result.lastTab) {
-        $(`#tabs ul.mode-connected .${result.lastTab} a`).click();
-    } else {
-        $('#tabs ul.mode-connected .tab_setup a').click();
-    }
+    const tab = result.rememberLastTab && result.lastTab ? result.lastTab : 'tab_setup';
+
+    $(`#tabs ul.mode-connected .${tab} a`).trigger('click');
 };
 
 GuiControl.prototype.isNWJS = function () {

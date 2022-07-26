@@ -244,6 +244,7 @@ function onOpen(openInfo) {
         FC.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
+        MSP.timeout = 250;
         console.log(`Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
@@ -590,6 +591,8 @@ function onClosed(result) {
 
 function read_serial(info) {
     if (CONFIGURATOR.cliActive) {
+        MSP.clearListeners();
+        MSP.disconnect_cleanup();
         TABS.cli.read(info);
     } else if (CONFIGURATOR.cliEngineActive) {
         TABS.presets.read(info);
@@ -816,7 +819,7 @@ function update_dataflash_global() {
      }
 }
 
-function reinitializeConnection(originatorTab, callback) {
+function reinitializeConnection(callback) {
 
     // Close connection gracefully if it still exists.
     const previousTimeStamp = connectionTimestamp;
@@ -834,13 +837,12 @@ function reinitializeConnection(originatorTab, callback) {
     let attempts = 0;
     const reconnect = setInterval(waitforSerial, 100);
 
-    async function waitforSerial() {
+    function waitforSerial() {
         if (connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) {
             console.log(`Serial connection available after ${attempts / 10} seconds`);
             clearInterval(reconnect);
-            await getStatus();
+            getStatus();
             GUI.log(i18n.getMessage('deviceReady'));
-            originatorTab.initialize(false, $('#content').scrollTop());
             callback?.();
         } else {
             attempts++;

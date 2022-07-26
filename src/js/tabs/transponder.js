@@ -302,7 +302,7 @@ transponder.initialize = function(callback) {
                         GUI.log(i18n.getMessage('transponderEepromSaved'));
                         if ( $(_this).hasClass('reboot') ) {
                             GUI.tab_switch_cleanup(function() {
-                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(self));
+                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
                             });
                         }
                     });

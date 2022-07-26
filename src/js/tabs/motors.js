@@ -1153,10 +1153,9 @@ motors.initialize = async function (callback) {
         content_ready();
     }
 
-    async function reboot() {
+    function reboot() {
         GUI.log(i18n.getMessage('configurationEepromSaved'));
-        await MSP.promise(MSPCodes.MSP_SET_REBOOT);
-        reinitializeConnection(self);
+        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
     }
 
     function showDialogMixerReset(message) {
