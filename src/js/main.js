@@ -588,7 +588,7 @@ function startProcess() {
     $(expertModeCheckbox).trigger("change");
 
     result = ConfigStorage.get('cliAutoComplete');
-    CliAutoComplete.setEnabled(typeof result.cliAutoComplete === undefined || result.cliAutoComplete); // On by default
+    CliAutoComplete.setEnabled(typeof result.cliAutoComplete === "undefined" || result.cliAutoComplete); // On by default
 
     result = ConfigStorage.get('darkTheme');
     if (result.darkTheme === undefined || typeof result.darkTheme !== "number") {

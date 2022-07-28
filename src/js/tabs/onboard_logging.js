@@ -49,7 +49,7 @@ onboard_logging.initialize = function (callback) {
         GUI.log(i18n.getMessage('configurationEepromSaved'));
 
         GUI.tab_switch_cleanup(function() {
-            MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(self));
+            MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
         });
     }
 
