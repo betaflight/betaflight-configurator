@@ -492,6 +492,10 @@ pid_tuning.initialize = function (callback) {
             $('.rpmFilter').hide();
         }
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            $('input[name="idleMinRpm-number"]').attr("max", 200);
+        }
+
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             $('.tab-pid_tuning input[name="motorLimit"]').val(FC.ADVANCED_TUNING.motorOutputLimit);
             $('.tab-pid_tuning input[name="cellCount"]').val(FC.ADVANCED_TUNING.autoProfileCellCount);
