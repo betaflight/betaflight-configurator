@@ -1212,7 +1212,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                                 FC.ADVANCED_TUNING.itermThrottleThreshold = data.readU16();
-                                FC.ADVANCED_TUNING.itermAcceleratorGain = data.readU16();
+
+                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                                    FC.ADVANCED_TUNING.antiGravityGain = data.readU16();
+                                } else {
+                                    FC.ADVANCED_TUNING.itermAcceleratorGain = data.readU16();
+                                }
 
                                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                                     FC.ADVANCED_TUNING.dtermSetpointWeight = data.readU16();
@@ -2214,8 +2219,13 @@ MspHelper.prototype.crunch = function(code) {
                             .push8(FC.ADVANCED_TUNING.levelSensitivity);
 
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                            buffer.push16(FC.ADVANCED_TUNING.itermThrottleThreshold)
-                                .push16(FC.ADVANCED_TUNING.itermAcceleratorGain);
+                            buffer.push16(FC.ADVANCED_TUNING.itermThrottleThreshold);
+
+                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                                buffer.push16(FC.ADVANCED_TUNING.antiGravityGain);
+                            } else {
+                                buffer.push16(FC.ADVANCED_TUNING.itermAcceleratorGain);
+                            }
 
                             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                                 buffer.push16(FC.ADVANCED_TUNING.dtermSetpointWeight);
