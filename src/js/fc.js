@@ -229,10 +229,10 @@ const FC = {
             roll_rate:                  0,
             pitch_rate:                 0,
             yaw_rate:                   0,
-            dynamic_THR_PID:            0,
+            dynamic_THR_PID:            0, // moved in 1.45 to ADVANCED_TUNING
             throttle_MID:               0,
             throttle_EXPO:              0,
-            dynamic_THR_breakpoint:     0,
+            dynamic_THR_breakpoint:     0, // moved in 1.45 to ADVANCED_TUNING
             RC_YAW_EXPO:                0,
             rcYawRate:                  0,
             rcPitchRate:                0,
@@ -518,6 +518,8 @@ const FC = {
             feedforward_jitter_factor:  0,
             vbat_sag_compensation:      0,
             thrustLinearization:        0,
+            tpaRate:                    0,
+            tpaBreakpoint:              0,
         };
         this.ADVANCED_TUNING_ACTIVE = { ...this.ADVANCED_TUNING };
 
