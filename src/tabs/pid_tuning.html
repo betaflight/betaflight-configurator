@@ -813,6 +813,21 @@
                         </table>
                     </div>
 
+                    <div class="gui_box grey tpa pidControllerAdvancedSettings spacer_left">
+                        <table class="pid_titlebar tpa-header" aria-labelledby="tpa-header">
+                            <tr>
+                                <th i18n="pidTuningTPA"></th>
+                                <th i18n="pidTuningTPABreakPoint"></th>
+                            </tr>
+                        </table>
+                        <table class="tpa-settings" aria-labelledby="tpa-settings" role="presentation">
+                            <tr>
+                                <td><input type="number" id="tpaRate" step="0.01" min="0" max="1.00" /></td>
+                                <td class="tpa-breakpoint"><input type="number" id="tpaBreakpoint" step="10" min="750" max="2250" /></td>
+                            </tr>
+                        </table>
+                    </div>
+
                     <div class="gui_box grey pidControllerAdvancedSettings spacer_left">
                         <table class="pid_titlebar new_rates">
                             <tr>
@@ -1022,7 +1037,7 @@
                 </div>
 
                 <div class="cf_column">
-                    <div class="gui_box tpa spacer_left">
+                    <div class="gui_box tpa-old spacer_left">
                         <table class="cf">
                             <thead>
                                 <tr>
@@ -1032,8 +1047,8 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="leftzero"><input type="number" name="tpa" step="1" min="0" max="100" /></td>
-                                    <td class="tpa-breakpoint"><input type="number" name="tpa-breakpoint" step="10" min="750" max="2250" /></td>
+                                    <td class="tpaRate"><input type="number" name="tpa" step="0.01" min="0" max="1.00" /></td>
+                                    <td class="tpaBreakpoint"><input type="number" name="tpa-breakpoint" step="10" min="1000" max="2000" /></td>
                                 </tr>
                             </tbody>
                         </table>

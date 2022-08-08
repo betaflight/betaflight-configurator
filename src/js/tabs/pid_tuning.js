@@ -111,11 +111,11 @@ pid_tuning.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             // Moved tpa to profile
-            $('.tpa input[name="tpa"]').val(FC.ADVANCED_TUNING.tpaRate);
-            $('.tpa input[name="tpa-breakpoint"]').val(FC.ADVANCED_TUNING.tpaBreakpoint);
+            $('input[id="tpaRate"]').val(FC.ADVANCED_TUNING.tpaRate.toFixed(2));
+            $('input[id="tpaBreakpoint"]').val(FC.ADVANCED_TUNING.tpaBreakpoint);
         } else {
-            $('.tpa input[name="tpa"]').val(FC.RC_TUNING.dynamic_THR_PID.toFixed(2));
-            $('.tpa input[name="tpa-breakpoint"]').val(FC.RC_TUNING.dynamic_THR_breakpoint);
+            $('.tpa-old input[name="tpa"]').val(FC.RC_TUNING.dynamic_THR_PID.toFixed(2));
+            $('.tpa-old input[name="tpa-breakpoint"]').val(FC.RC_TUNING.dynamic_THR_breakpoint);
         }
 
         if (semver.lt(FC.CONFIG.apiVersion, "1.10.0")) {
@@ -1191,11 +1191,11 @@ pid_tuning.initialize = function (callback) {
         FC.RC_TUNING.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val());
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            FC.ADVANCED_TUNING.tpaRate = parseFloat($('.tpa input[name="tpa"]').val());
-            FC.ADVANCED_TUNING.tpaBreakpoint = parseInt($('.tpa input[name="tpa-breakpoint"]').val());
+            FC.ADVANCED_TUNING.tpaRate = parseFloat($('input[id="tpaRate"]').val());
+            FC.ADVANCED_TUNING.tpaBreakpoint = parseInt($('input[id="tpaBreakpoint"]').val());
         } else {
-            FC.RC_TUNING.dynamic_THR_PID = parseFloat($('.tpa input[name="tpa"]').val());
-            FC.RC_TUNING.dynamic_THR_breakpoint = parseInt($('.tpa input[name="tpa-breakpoint"]').val());
+            FC.RC_TUNING.dynamic_THR_PID = parseFloat($('.tpa-old input[name="tpa"]').val());
+            FC.RC_TUNING.dynamic_THR_breakpoint = parseInt($('.tpa-old input[name="tpa-breakpoint"]').val());
         }
 
         FC.FILTER_CONFIG.gyro_lowpass_hz = parseInt($('.pid_filter input[name="gyroLowpassFrequency"]').val());
@@ -1782,12 +1782,18 @@ pid_tuning.initialize = function (callback) {
         }
 
         if (semver.lt(FC.CONFIG.apiVersion, "1.7.0")) {
-            $('.tpa .tpa-breakpoint').hide();
+            $('.tpa-old .tpa-breakpoint').hide();
 
             $('.pid_tuning .roll_rate').hide();
             $('.pid_tuning .pitch_rate').hide();
         } else {
             $('.pid_tuning .roll_pitch_rate').hide();
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            $('.tpa-old').hide();
+        } else {
+            $('.tpa').hide();
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {

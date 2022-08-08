@@ -1271,7 +1271,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                                         FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
 
                                                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                                                            FC.ADVANCED_TUNING.tpaRate = data.readU8();
+                                                            FC.ADVANCED_TUNING.tpaRate = parseFloat((data.readU8() / 100).toFixed(2));
                                                             FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
                                                         }
                                                     }
@@ -2292,7 +2292,7 @@ MspHelper.prototype.crunch = function(code) {
                                                           .push8(FC.ADVANCED_TUNING.thrustLinearization);
 
                                                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                                                        buffer.push8(FC.ADVANCED_TUNING.tpaRate);
+                                                        buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
                                                         buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
                                                     }
                                                 }
