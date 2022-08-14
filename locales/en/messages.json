@@ -3710,7 +3710,39 @@
         "message": "Cell Count - for auto Profile switching"
     },
     "pidTuningCellCountHelp": {
-        "message": "Automatically activates the first profile that has a cell count equal to that of the connected battery."
+        "message": "Automatically activates the first profile that has a cell count equal to that of the connected battery.<br><br><ul><li><b>Switch</b>: Always switch to a profile with matching cell count if there is one.</li><li><b>Disable</b>: Disable auto profile switching</li><b>1S-8S</b>: Select the profile cell count to be used for this profile</li></ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "Switch",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "Disable",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile independent Filter Settings"
@@ -3797,7 +3829,7 @@
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
         "message": "<strong>Note:</strong> Slider(s) are disabled because current values are outside the Basic Mode adjustment range. Switch to Expert Mode to make changes",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Low",
