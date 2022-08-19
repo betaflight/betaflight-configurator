@@ -31,3 +31,4 @@ nbproject/
 # Eclipse
 .project
 .settings/
+test-results-junit/

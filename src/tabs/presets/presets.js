@@ -1,4 +1,4 @@
-'use strict';
+import GUI from '../../js/gui';
 
 import { favoritePresets } from './FavoritePresets';
 

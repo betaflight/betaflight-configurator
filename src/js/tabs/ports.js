@@ -1,5 +1,6 @@
 import semver from 'semver';
 import { i18n } from "../localization";
+import GUI from '../gui';
 
 const ports = {
     // intentional

@@ -1,4 +1,5 @@
 import { i18n } from '../localization';
+import GUI from '../gui';
 
 const setup = {
     yaw_fix: 0.0,

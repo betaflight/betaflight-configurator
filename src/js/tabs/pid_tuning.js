@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import { colorTables, getColorForPercentage } from '../utils/css.js';
+import GUI from '../gui';
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,

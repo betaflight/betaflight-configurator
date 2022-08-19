@@ -1,3 +1,5 @@
+import GUI from '../gui';
+
 const help = {};
 help.initialize = function (callback) {
 

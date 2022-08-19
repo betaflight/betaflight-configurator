@@ -1,4 +1,6 @@
 import { i18n } from "../localization";
+import Clipboard from "../Clipboard";
+import GUI from '../gui';
 
 const vtx = {
     supported: false,

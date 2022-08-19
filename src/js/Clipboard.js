@@ -1,4 +1,4 @@
-'use strict';
+import GUI from './gui.js';
 
 /**
  * Encapsulates the Clipboard logic, depending on web or nw
@@ -99,3 +99,5 @@ if (GUI.isNWJS()){
 } else {
     Clipboard._configureClipboardAsOther();
 }
+
+export default Clipboard;
