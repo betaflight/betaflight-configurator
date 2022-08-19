@@ -1,4 +1,5 @@
-import { i18n } from './localization';
+import '../components/init.js';
+import { i18n } from './localization.js';
 
 $(document).ready(function () {
 
