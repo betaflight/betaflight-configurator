@@ -15,6 +15,7 @@ module.exports = {
         "no-trailing-spaces": "error",
         "eol-last": "error",
         semi: "error",
+        "no-extra-semi": "error",
         "comma-dangle": ["error", "always-multiline"],
         "no-var": "error",
         "prefer-template": "error",
