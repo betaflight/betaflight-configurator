@@ -74,7 +74,7 @@ const GuiControl = function () {
 };
 
 function GUI_checkOperatingSystem() {
-    return navigator.userAgentData.platform;
+    return navigator?.userAgentData?.platform || 'Android';
 }
 
 // Timer managing methods
