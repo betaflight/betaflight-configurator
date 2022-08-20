@@ -407,10 +407,8 @@ function dist_rollup() {
                 // If all the things used by other files are importing
                 // it with `import/export` file doesn't have to be here.
                 // I will be picked up by rollup and bundled accordingly.
-                'components/init': 'src/components/init.js',
                 'js/main_cordova': 'src/js/main_cordova.js',
                 'js/utils/common': 'src/js/utils/common.js',
-                'js/tabs/logging': 'src/js/tabs/logging.js',
                 'js/main': 'src/js/main.js',
             },
             plugins: [
