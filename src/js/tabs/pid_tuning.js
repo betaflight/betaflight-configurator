@@ -1,4 +1,5 @@
 import { i18n } from "../localization";
+import { colorTables, getColorForPercentage } from '../utils/css.js';
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,
@@ -2962,7 +2963,7 @@ pid_tuning.updatePIDColors = function(clear = false) {
         }
 
         const change = (currentValue - mspValue) / 50;
-        element.css({ "background-color": cssUtil.getColorForPercentage(change, cssUtil.colorTables.pidSlider) });
+        element.css({ "background-color": getColorForPercentage(change, colorTables.pidSlider) });
     };
 
     FC.PID_NAMES.forEach(function(elementPid, indexPid) {

@@ -1,12 +1,8 @@
-'use strict';
-
 /*
   This utility contains CSS helpers.
 */
 
-const CSSUtil = function () {};
-
-CSSUtil.prototype.colorTables = {
+export const colorTables = {
   redWhiteGreen: [
     { percentage: -1, color: { r: 0xff, g: 0x00, b: 0x00, a: 1.0 } },
     { percentage: 0, color: { r: 0xff, g: 0xff, b: 0xff, a: 1.0 } },
@@ -20,19 +16,19 @@ CSSUtil.prototype.colorTables = {
 };
 
 // Stack Overflow: https://stackoverflow.com/a/7128796/4107016
-CSSUtil.prototype.getColorForPercentage = function(percentage, colorTable = null) {
-    colorTable = colorTable || cssUtil.colorTables.redWhiteGreen;
+export function getColorForPercentage(percentage, colorTableOverride = null) {
+    colorTableOverride = colorTableOverride || colorTables.redWhiteGreen;
 
     percentage = Math.min(1, Math.max(-1, percentage));
 
     let index;
-    for (index = 1; index < colorTable.length - 1; index++) {
-        if (percentage < colorTable[index].percentage) {
+    for (index = 1; index < colorTableOverride.length - 1; index++) {
+        if (percentage < colorTableOverride[index].percentage) {
             break;
         }
     }
-    const lower = colorTable[index - 1];
-    const upper = colorTable[index];
+    const lower = colorTableOverride[index - 1];
+    const upper = colorTableOverride[index];
     const range = upper.percentage - lower.percentage;
     const rangePercentage = (percentage - lower.percentage) / range;
     const percentageLower = 1 - rangePercentage;
@@ -45,7 +41,3 @@ CSSUtil.prototype.getColorForPercentage = function(percentage, colorTable = null
     };
     return `rgba(${[color.r, color.g, color.b, color.a].join(",")})`;
 };
-
-const cssUtil = new CSSUtil();
-window.cssUtil = cssUtil;
-export default cssUtil;
