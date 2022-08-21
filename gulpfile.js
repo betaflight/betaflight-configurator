@@ -6,6 +6,7 @@ const fsp = require('fs/promises');
 const fse = require('fs-extra');
 const https = require('follow-redirects').https;
 const path = require('path');
+const promisify = require('util').promisify;
 
 const zip = require('gulp-zip');
 const del = require('del');
@@ -64,6 +65,7 @@ let metadata = {};
 
 let cordovaDependencies = true;
 
+const decompress = promisify(targz.decompress);
 
 //-----------------
 //Pre tasks operations
@@ -441,11 +443,11 @@ function dist_rollup() {
 }
 
 // Create runable app directories in ./apps
-function apps(done) {
+function apps() {
     const platforms = getPlatforms();
     removeItem(platforms, 'android');
 
-    buildNWAppsWrapper(platforms, 'normal', APPS_DIR, done);
+    return buildNWAppsWrapper(platforms, 'normal', APPS_DIR);
 }
 
 function listPostBuildTasks(folder) {
@@ -500,38 +502,39 @@ function post_build(arch, folder, done) {
 }
 
 // Create debug app directories in ./debug
-function debug(done) {
+function debug() {
     const platforms = getPlatforms();
     removeItem(platforms, 'android');
 
-    buildNWAppsWrapper(platforms, 'sdk', DEBUG_DIR, done);
+    return buildNWAppsWrapper(platforms, 'sdk', DEBUG_DIR);
 }
 
-function injectARMCache(flavor, done) {
+async function injectARMCache(flavor, done) {
     const flavorPostfix = `-${flavor}`;
     const flavorDownloadPostfix = flavor !== 'normal' ? `-${flavor}` : '';
-    clean_cache().then(function() {
-        if (!fs.existsSync('./cache')) {
-            fs.mkdirSync('./cache');
-        }
-        fs.closeSync(fs.openSync('./cache/_ARMv8_IS_CACHED', 'w'));
-        const versionFolder = `./cache/${nwBuilderOptions.version}${flavorPostfix}`;
-        if (!fs.existsSync(versionFolder)) {
-            fs.mkdirSync(versionFolder);
-        }
-        const linux32Folder = `${versionFolder}/linux32`;
-        if (!fs.existsSync(linux32Folder)) {
-            fs.mkdirSync(linux32Folder);
-        }
-        const downloadedArchivePath = `${versionFolder}/nwjs${flavorPostfix}-v${nwArmVersion}-linux-arm.tar.gz`;
-        const downloadUrl = `https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/${nwArmVersion}/${nwArmVersion}.tar.gz`;
-        if (fs.existsSync(downloadedArchivePath)) {
-            console.log('Prebuilt ARMv8 binaries found in /tmp');
-            downloadDone(flavorDownloadPostfix, downloadedArchivePath, versionFolder);
-        } else {
-            console.log(`Downloading prebuilt ARMv8 binaries from "${downloadUrl}"...`);
-            process.stdout.write('> Starting download...\r');
-            const armBuildBinary = fs.createWriteStream(downloadedArchivePath);
+    await clean_cache();
+    if (!fs.existsSync('./cache')) {
+        fs.mkdirSync('./cache');
+    }
+    fs.closeSync(fs.openSync('./cache/_ARMv8_IS_CACHED', 'w'));
+    const versionFolder = `./cache/${nwBuilderOptions.version}${flavorPostfix}`;
+    if (!fs.existsSync(versionFolder)) {
+        fs.mkdirSync(versionFolder);
+    }
+    const linux32Folder = `${versionFolder}/linux32`;
+    if (!fs.existsSync(linux32Folder)) {
+        fs.mkdirSync(linux32Folder);
+    }
+    const downloadedArchivePath = `${versionFolder}/nwjs${flavorPostfix}-v${nwArmVersion}-linux-arm.tar.gz`;
+    const downloadUrl = `https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/${nwArmVersion}/${nwArmVersion}.tar.gz`;
+    if (fs.existsSync(downloadedArchivePath)) {
+        console.log('Prebuilt ARMv8 binaries found in /tmp');
+        return nwArmReleaseDownloadDone(flavorDownloadPostfix, downloadedArchivePath, versionFolder);
+    } else {
+        console.log(`Downloading prebuilt ARMv8 binaries from "${downloadUrl}"...`);
+        process.stdout.write('> Starting download...\r');
+        const armBuildBinary = fs.createWriteStream(downloadedArchivePath);
+        return new Promise((resolve, reject) => {
             https.get(downloadUrl, function(res) {
                 const totalBytes = res.headers['content-length'];
                 let downloadedBytes = 0;
@@ -542,45 +545,37 @@ function injectARMCache(flavor, done) {
                 });
                 armBuildBinary.on('finish', function() {
                     process.stdout.write('> 100% done             \n');
-                    armBuildBinary.close(function() {
-                        downloadDone(flavorDownloadPostfix, downloadedArchivePath, versionFolder);
+                    armBuildBinary.close(async function() {
+                        await nwArmReleaseDownloadDone(flavorDownloadPostfix, downloadedArchivePath, versionFolder);
+                        resolve();
                     });
                 });
             });
-        }
-    });
-
-    function downloadDone(flavorDownload, downloadedArchivePath, versionFolder) {
-        console.log('Injecting prebuilt ARMv8 binaries into Linux32 cache...');
-        targz.decompress({
-            src: downloadedArchivePath,
-            dest: versionFolder,
-        }, function(err) {
-            if (err) {
-                console.log(err);
-                clean_debug();
-                process.exit(1);
-            } else {
-                fs.rename(
-                    `${versionFolder}/nwjs${flavorDownload}-v${nwArmVersion}-linux-arm`,
-                    `${versionFolder}/linux32`,
-                    (renameErr) => {
-                        if (renameErr) {
-                            console.log(renameErr);
-                            clean_debug();
-                            process.exit(1);
-                        }
-                        done();
-                    },
-                );
-            }
         });
     }
 }
 
-function buildNWAppsWrapper(platforms, flavor, dir, done) {
+async function nwArmReleaseDownloadDone(flavorDownload, downloadedArchivePath, versionFolder) {
+    console.log('Injecting prebuilt ARMv8 binaries into Linux32 cache...');
+    try {
+        await decompress({
+            src: downloadedArchivePath,
+            dest: versionFolder,
+        });
+        await fsp.rename(
+            `${versionFolder}/nwjs${flavorDownload}-v${nwArmVersion}-linux-arm`,
+            `${versionFolder}/linux32`,
+        );
+    } catch (error) {
+            console.log(err);
+            clean_debug();
+            process.exit(1);
+    }
+}
+
+async function buildNWAppsWrapper(platforms, flavor, dir) {
     function buildNWAppsCallback() {
-        buildNWApps(platforms, flavor, dir, done);
+        buildNWApps(platforms, flavor, dir);
     }
 
     if (platforms.indexOf('armv8') !== -1) {
@@ -594,23 +589,23 @@ function buildNWAppsWrapper(platforms, flavor, dir, done) {
 
         if (!fs.existsSync('./cache/_ARMv8_IS_CACHED', 'w')) {
             console.log('Purging cache because it needs to be overwritten...');
-            clean_cache().then(() => {
-                injectARMCache(flavor, buildNWAppsCallback);
-            });
+            await clean_cache();
+            return injectARMCache(flavor, buildNWAppsCallback);
         } else {
-            buildNWAppsCallback();
+            return buildNWAppsCallback();
         }
     } else {
         if (platforms.indexOf('linux32') !== -1 && fs.existsSync('./cache/_ARMv8_IS_CACHED')) {
             console.log('Purging cache because it was previously overwritten...');
-            clean_cache().then(buildNWAppsCallback);
+            await clean_cache();
+            return buildNWAppsCallback();
         } else {
-            buildNWAppsCallback();
+            return buildNWAppsCallback();
         }
     }
 }
 
-function buildNWApps(platforms, flavor, dir, done) {
+async function buildNWApps(platforms, flavor, dir) {
     if (platforms.length > 0) {
         const builder = new NwBuilder(Object.assign({
             buildDir: dir,
@@ -618,17 +613,16 @@ function buildNWApps(platforms, flavor, dir, done) {
             flavor,
         }, nwBuilderOptions));
         builder.on('log', console.log);
-        builder.build(function (err) {
-            if (err) {
+        try {
+            // `return await` to catch the error in this function
+           return await builder.build();
+        } catch (error) {
                 console.log(`Error building NW apps: ${err}`);
                 clean_debug();
                 process.exit(1);
-            }
-            done();
-        });
+        }
     } else {
         console.log('No platform suitable for NW Build');
-        done();
     }
 }
 
