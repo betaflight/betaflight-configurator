@@ -131,7 +131,7 @@
     "rollup-plugin-vue": "^5.*.*",
     "rpm-builder": "^1.2.1",
     "run-script-os": "^1.1.6",
-    "simple-git": "^3.10.0",
+    "simple-git": "^3.12.0",
     "sinon": "^14.0.0",
     "sinon-chai": "^3.7.0",
     "targz": "^1.0.1",

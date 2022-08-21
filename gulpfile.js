@@ -2,6 +2,7 @@
 
 const child_process = require('child_process');
 const fs = require('fs');
+const fsp = require('fs/promises');
 const fse = require('fs-extra');
 const https = require('follow-redirects').https;
 const path = require('path');
@@ -17,7 +18,6 @@ const targz = require('targz');
 
 const gulp = require('gulp');
 const rollup = require('rollup');
-const concat = require('gulp-concat');
 const yarn = require("gulp-yarn");
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
@@ -95,12 +95,14 @@ gulp.task('test-cordova', cordova_browserify);
 
 // Function definitions are processed before function calls.
 
-function process_package_release(done) {
-    getGitRevision(done, processPackage, true);
+async function process_package_release() {
+    const gitRevision = await getGitRevision();
+    return processPackage(gitRevision, true);
 }
 
-function process_package_debug(done) {
-    getGitRevision(done, processPackage, false);
+async function process_package_debug() {
+    const gitRevision = await getGitRevision();
+    return processPackage(gitRevision, false);
 }
 
 // dist_yarn MUST be done after dist_src
@@ -279,7 +281,7 @@ function clean_cache() {
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
 
-function processPackage(done, gitRevision, isReleaseBuild) {
+async function processPackage(gitRevision, isReleaseBuild) {
     const metadataKeys = [ 'name', 'productName', 'description', 'author', 'license', 'version' ];
 
     const pkg = require('./package.json');
@@ -336,9 +338,9 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 
     const platforms = getPlatforms();
     if (platforms.indexOf('android') !== -1 && isReleaseBuild) {
-        gulp.series(version_prompt, write_package_file)(done);
+       return gulp.series(version_prompt, write_package_file)();
     } else {
-        gulp.series(write_package_file)(done);
+       return gulp.series(write_package_file)();
     }
 }
 
@@ -630,21 +632,19 @@ function buildNWApps(platforms, flavor, dir, done) {
     }
 }
 
-function getGitRevision(done, callback, isReleaseBuild) {
+async function getGitRevision(done, callback, isReleaseBuild) {
     let gitRevision = 'norevision';
-    git.diff([ '--shortstat' ], function (err1, diff) {
-        if (!err1 && !diff) {
-            git.log([ '-1', '--pretty=format:%h' ], function (err2, rev) {
-                if (!err2) {
-                    gitRevision = rev.latest.hash;
-                }
+    try {
+       const diff = await git.diff(['--shortstat']);
+       if(!diff) {
+            const rev = await git.log(['-1', '--pretty=format:%h']);
+            gitRevision = rev.latest.hash;
+       }
+    } catch (error) {
+       console.log('norevision');
+    }
 
-                callback(done, gitRevision, isReleaseBuild);
-            });
-        } else {
-            callback(done, gitRevision, isReleaseBuild);
-        }
-    });
+    return gitRevision;
 }
 
 function start_debug(done) {
@@ -1067,9 +1067,9 @@ function cordova_browserify(done) {
     const readFile = function(file) {
         return new Promise(function(resolve) {
             if (!file.includes("node_modules")) {
-                fs.readFile(file, 'utf8', async function (err,data) {
+                fs.readFile(file, 'utf8', function (err,data) {
                     if (data.match('require\\(.*\\)')) {
-                        await cordova_execbrowserify(file);
+                        cordova_execbrowserify(file);
                     }
                     resolve();
                 });
