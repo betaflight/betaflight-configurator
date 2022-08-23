@@ -214,6 +214,7 @@
 			margin: 0;
 			flex: 1 1 auto;
 			flex-wrap: nowrap;
+            border: 1px solid transparent;
 			img {
 				flex: 1 1 auto;
 			}
@@ -307,24 +308,16 @@
 	select.osd-variant {
 		max-width: 100%;
 	}
-	.video-pal {
-		.preview {
-			&:active {
-				background: url(../../images/osd-bg-1-grid-pal.png), url(../../images/osd-bg-1.jpg);
-				background-size: 100% 100%, cover;
-				background-repeat: no-repeat;
-			}
-		}
-	}
-	.video-ntsc {
-		.preview {
-			&:active {
-				background: url(../../images/osd-bg-1-grid-ntsc.png), url(../../images/osd-bg-1.jpg);
-				background-size: 100% 100%, cover;
-				background-repeat: no-repeat;
-			}
-		}
-	}
+
+    .preview {
+        &:active {
+            .char {
+                border: 1px dashed rgba(55, 55, 55, 0.5) ;
+            }
+        }
+    }
+
+
 	.alarms {
 		label {
 			display: block;

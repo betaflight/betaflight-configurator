@@ -175,7 +175,7 @@ const VirtualFC = {
         // 11 1111 (pass bitchecks)
         virtualFC.CONFIG.activeSensors = 63;
     },
-    setupVirtualOSD(){
+    setupVirtualOSD(OSD){
         const virtualOSD = OSD;
 
         virtualOSD.data.video_system = 1;
