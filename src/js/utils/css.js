@@ -40,4 +40,4 @@ export function getColorForPercentage(percentage, colorTableOverride = null) {
         a: lower.color.a * percentageLower + upper.color.a * percentageUpper,
     };
     return `rgba(${[color.r, color.g, color.b, color.a].join(",")})`;
-};
+}
