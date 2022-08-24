@@ -222,6 +222,12 @@
 		.char[draggable="true"] {
 			cursor: move;
 		}
+
+		&:active {
+			.char {
+				border: 1px dashed rgba(55, 55, 55, 0.5) ;
+			}
+		}
 	}
 	.char.mouseover {
 		background: rgba(255,255,255,0.4);
@@ -308,15 +314,6 @@
 	select.osd-variant {
 		max-width: 100%;
 	}
-
-    .preview {
-        &:active {
-            .char {
-                border: 1px dashed rgba(55, 55, 55, 0.5) ;
-            }
-        }
-    }
-
 
 	.alarms {
 		label {
