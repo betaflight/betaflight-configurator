@@ -26,9 +26,6 @@ PortHandler.initialize = function () {
     this.selectList = document.querySelector(portPickerElementSelector);
     this.initialWidth = this.selectList.offsetWidth + 12;
 
-    this.showVirtualMode = ConfigStorage.get('showVirtualMode').showVirtualMode;
-    this.showAllSerialDevices = ConfigStorage.get('showAllSerialDevices').showAllSerialDevices;
-
     // fill dropdown with version numbers
     generateVirtualApiVersions();
 
@@ -120,8 +117,17 @@ PortHandler.initialize = function () {
         }
     }, MDNS_INTERVAL);
 
-    // start listening, check after TIMEOUT_CHECK ms
-    this.check();
+    this.reinitialize();    // just to prevent code redundancy
+};
+
+PortHandler.reinitialize = function () {
+    this.initialPorts = false;
+    if (this.usbCheckLoop) {
+        clearTimeout(this.usbCheckLoop);
+    }
+    this.showVirtualMode = ConfigStorage.get('showVirtualMode').showVirtualMode;
+    this.showAllSerialDevices = ConfigStorage.get('showAllSerialDevices').showAllSerialDevices;
+    this.check();   // start listening, check after TIMEOUT_CHECK ms
 };
 
 PortHandler.check = function () {
@@ -135,7 +141,7 @@ PortHandler.check = function () {
         self.check_serial_devices();
     }
 
-    setTimeout(function () {
+    self.usbCheckLoop = setTimeout(function () {
         self.check();
     }, TIMEOUT_CHECK);
 };
@@ -196,7 +202,7 @@ PortHandler.check_usb_devices = function (callback) {
                     data: {isManual: true},
                 }));
 
-                self.portPickerElement.val('DFU').change();
+                self.portPickerElement.val('DFU').trigger('change');
                 self.setPortsInputWidth();
             }
             self.dfu_available = true;
