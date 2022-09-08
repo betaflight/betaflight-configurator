@@ -876,6 +876,9 @@ const FC = {
                 versionFilterDefaults.dterm_lowpass_dyn_min_hz = 75;
                 versionFilterDefaults.dterm_lowpass_dyn_max_hz = 150;
             }
+            if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_45)) {
+                versionFilterDefaults.dyn_notch_min_hz = 100;
+            }
         }
         return versionFilterDefaults;
     },
