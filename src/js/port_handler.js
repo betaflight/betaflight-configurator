@@ -36,6 +36,7 @@ PortHandler.initialize = function () {
 
     self.mdnsBrowser = {
         services: [],
+        browser: null,
         init: false,
     };
 
@@ -63,7 +64,7 @@ PortHandler.initialize = function () {
             });
         } else {
             bonjour = require('bonjour')();
-            bonjour.find({ type: 'http' }, function(service) {
+            self.mdnsBrowser.browser = bonjour.find({ type: 'http' }, function(service) {
                 console.log("Found HTTP service", service);
                 self.mdnsBrowser.services.push({
                     addresses: service.addresses,
@@ -114,8 +115,8 @@ PortHandler.initialize = function () {
     }
 
     self.mdns_timer = setInterval(() => {
-        if (!GUI.connected_to && !GUI.isCordova()) {
-            bonjour.update();
+        if (!GUI.connected_to && !GUI.isCordova() && self.mdnsBrowser.browser) {
+            self.mdnsBrowser.browser.update();
         }
     }, MDNS_INTERVAL);
 

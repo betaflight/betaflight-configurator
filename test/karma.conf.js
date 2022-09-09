@@ -14,7 +14,6 @@ module.exports = function(config) {
             './node_modules/jquery-textcomplete/dist/jquery.textcomplete.min.js',
             './node_modules/bluebird/js/browser/bluebird.min.js',
             './node_modules/jbox/dist/jBox.min.js',
-            './src/js/helper.js',
             './src/js/serial.js',
             './src/js/data_storage.js',
             { pattern: './src/js/localization.js', type: 'module', watched: false },
