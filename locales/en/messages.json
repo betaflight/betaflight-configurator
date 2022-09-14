@@ -1627,6 +1627,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSky Protocol)"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP)"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -5835,6 +5838,10 @@
     },
     "vtxType_4": {
         "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {

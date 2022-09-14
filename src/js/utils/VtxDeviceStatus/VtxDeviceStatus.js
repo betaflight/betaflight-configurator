@@ -6,6 +6,7 @@ const VtxDeviceTypes = {
     // 2 reserved
     VTXDEV_SMARTAUDIO: 3,
     VTXDEV_TRAMP: 4,
+    VTXDEV_MSP: 5,
     VTXDEV_UNKNOWN:  0xFF,
 };
 
