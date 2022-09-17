@@ -822,7 +822,20 @@
                         <table class="compensation">
 
                             <tr class="cellCount">
-                                <td><input type="number" name="cellCount" step="1" min="0" max="8"/></td>
+                                <td>
+                                    <select name="cellCount">
+                                        <option value="-1" i18n="pidTuningCellCountChange"></option>
+                                        <option value="0" i18n="pidTuningCellCountStay"></option>
+                                        <option value="1" i18n="pidTuningCellCount1S"></option>
+                                        <option value="2" i18n="pidTuningCellCount2S"></option>
+                                        <option value="3" i18n="pidTuningCellCount3S"></option>
+                                        <option value="4" i18n="pidTuningCellCount4S"></option>
+                                        <option value="5" i18n="pidTuningCellCount5S"></option>
+                                        <option value="6" i18n="pidTuningCellCount6S"></option>
+                                        <option value="7" i18n="pidTuningCellCount7S"></option>
+                                        <option value="8" i18n="pidTuningCellCount8S"></option>
+                                    </select>
+                                </td>
                                 <td colspan="2">
                                     <div>
                                         <label>
