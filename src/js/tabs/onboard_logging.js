@@ -350,6 +350,11 @@ onboard_logging.initialize = function (callback) {
                 {text: "RX_EXPRESSLRS_SPI"},
                 {text: "RX_EXPRESSLRS_PHASELOCK"},
                 {text: "RX_STATE_TIME"},
+                {text: "GPS_RESCUE_VELOCITY"},
+                {text: "GPS_RESCUE_HEADING"},
+                {text: "GPS_RESCUE_TRACKING"},
+                {text: "ATTITUDE"},
+                {text: "VTX_MSP"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
