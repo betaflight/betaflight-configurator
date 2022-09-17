@@ -1466,7 +1466,6 @@ pid_tuning.initialize = function (callback) {
     function process_html() {
         TABS.pid_tuning.isHtmlProcessing = true;
         FC.FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
-        self.checkUpdateProfile(false);
 
         if (semver.lt(FC.CONFIG.apiVersion, "1.16.0") || semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
             $('.tab-pid_tuning .pidTuningSuperexpoRates').hide();
@@ -2496,12 +2495,12 @@ pid_tuning.initialize = function (callback) {
         self.updating = false;
 
         // enable RC data pulling for rates preview
-        GUI.interval_add('receiver_pull', self.getReceiverData, true);
+        GUI.interval_add('receiver_pull', self.getReceiverData, 250, true);
 
         // status data pulled via separate timer with static speed
         GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
+            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, self.checkUpdateProfile(true));
+        }, 500, true);
 
         self.analyticsChanges = {};
 
