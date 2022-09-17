@@ -904,6 +904,16 @@ motors.initialize = async function (callback) {
             }
 
             if (enabled) {
+                // Send enable extended dshot telemetry command
+                const buffer = [];
+
+                buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
+                buffer.push8(255);  // Send to all escs
+                buffer.push8(1);    // 1 command
+                buffer.push8(13);   // Enable extended dshot telemetry
+
+                MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+
                 document.addEventListener('keydown', e => disableMotorTest(e));
             }
 
@@ -1071,7 +1081,7 @@ motors.initialize = async function (callback) {
                         telemetryText += "</span>";
                     }
 
-                    if (FC.MOTOR_CONFIG.use_esc_sensor) {
+                    if (FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor) {
 
                         let escTemperature = FC.MOTOR_TELEMETRY_DATA.temperature[i];
                         escTemperature = escTemperature.toString().padStart(MAX_VALUE_SIZE);
