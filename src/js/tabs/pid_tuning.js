@@ -1487,14 +1487,10 @@ pid_tuning.initialize = function (callback) {
         $('.tab-pid_tuning .tab-container .filter').on('click', () => activateSubtab('filter'));
 
         function loadProfilesList() {
-            let numberOfProfiles = 3;
-            if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")
-                 && FC.CONFIG.numProfiles === 2) {
-                    numberOfProfiles = 2;
-            }
+            const numberOfProfiles = semver.gte(FC.CONFIG.apiVersion, "1.16.0") ? FC.CONFIG.numProfiles : 3;
 
             const profileElements = [];
-            for (let i=0; i<numberOfProfiles; i++) {
+            for (let i = 0; i < numberOfProfiles; i++) {
                 profileElements.push(i18n.getMessage("pidTuningProfileOption",[(i + 1)]));
             }
             return profileElements;
@@ -1502,12 +1498,17 @@ pid_tuning.initialize = function (callback) {
 
         function loadRateProfilesList() {
             let numberOfRateProfiles = 6;
+
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
                 numberOfRateProfiles = 3;
             }
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                numberOfRateProfiles = 4;
+            }
+
             const rateProfileElements = [];
-            for (let i=0; i<numberOfRateProfiles; i++) {
+            for (let i = 0; i < numberOfRateProfiles; i++) {
                 rateProfileElements.push(i18n.getMessage("pidTuningRateProfileOption",[(i + 1)]));
             }
             return rateProfileElements;
