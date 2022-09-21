@@ -3325,6 +3325,7 @@ osd.cleanup = function(callback) {
 };
 
 window.TABS.osd = osd;
+window.OSD = OSD;
 export {
     osd,
 };
