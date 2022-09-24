@@ -162,6 +162,7 @@ PortHandler.check_serial_devices = function () {
             currentPorts = self.updatePortSelect(currentPorts);
             self.selectPort(currentPorts);
             self.initialPorts = currentPorts;
+            GUI.updateManualPortVisibility();
         } else {
             self.removePort(currentPorts);
             self.detectPort(currentPorts);
