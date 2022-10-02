@@ -597,7 +597,7 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Mira el apartado Instalar Firmware para una lista completa del hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight TX Lua Scripts</a><br /><br />El código fuente del firmware puede descargarse desde <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><br />Los últimos <b>Drivers STM USB VCP</b> pueden descargarse desde <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Para hardware antiguo que use un chip USB CP210x a serie:<br />Los últimos <b>Drivers CP210x</b> pueden descargarse desde <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />El último driver <b>Zadig</b> para instalación del driver USB de Windows puede descargarse desde <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><b>Solucionador de Driver de ImpulseRC</b> puede ser descargado <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
+        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Mira el apartado Instalar Firmware para una lista completa del hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight TX Lua Scripts</a><br /><br />El código fuente del firmware puede descargarse desde <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><br />Para hardware antiguo que use un chip USB CP210x a serie:<br />Los últimos <b>Drivers CP210x</b> pueden descargarse desde <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />El último driver <b>Zadig</b> para instalación del driver USB de Windows puede descargarse desde <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><b>Solucionador de Driver de ImpulseRC</b> puede ser descargado <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -1509,6 +1509,9 @@
     },
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocolo FrSky)"
+    },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP)"
     },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
@@ -3571,7 +3574,39 @@
         "message": "Número de celdas - para cambio de perfil automático"
     },
     "pidTuningCellCountHelp": {
-        "message": "Activa automáticamente el primer perfil que tiene un número de celdas igual a la batería conectada."
+        "message": "Activa automáticamente el primer perfil que tiene un recuento de celdas igual al de la batería conectada.<br><br><ul><li><b>Cambiar</b>: Siempre cambia a un perfil con el recuento de celdas coincidentes si hay uno.</li><li><b>Desactivar</b>: Desactiva el cambio de perfil automático</li><b>1S-8S</b>: Selecciona el número de celdas que se utilizará para este perfil</li></ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "Cambiar",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "Desactivar",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Ajustes de Filtros independientes del Perfil"
@@ -3658,7 +3693,7 @@
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
         "message": "<strong>Nota:</strong> Deslizador(es) están deshabilitados porque los valores actuales están fuera del rango de ajuste del Modo Básico. Cambia al modo Experto para hacer cambios.",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Bajo",
@@ -4715,6 +4750,14 @@
     "osdDescElementVtxChannel": {
         "message": "Canal y potencia actual del VTX"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "Potencia del VTX",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "Banda:Canal:Potencia:Pit",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "Batería: aviso de voltaje",
         "description": "One of the elements of the OSD"
@@ -5675,6 +5718,10 @@
     },
     "vtxType_4": {
         "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {

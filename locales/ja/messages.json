@@ -597,7 +597,7 @@
         "message": "ハードウェア"
     },
     "defaultWelcomeText": {
-        "message": "このアプリケーションは、Betaflightを実行するすべてのハードウェアをサポートします。対応するハードウェアの完全なリストについては、 [ファームフラッシャー] タブをご確認ください。<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewerをダウンロード</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Script</a><br /><br />ファームウェアのソースコードのダウンロード先は<a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><br />最新の<b>STM USB VCPドライバ</b>のダウンロード先は<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br />CP210X USBシリアルチップを使用するレガシーハードウェアの場合:<br />最新の<b>CP210Xドライバ</b>のダウンロード先は<a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br />最新のWindows用 <b>Zadig</b> USBドライバインストーラのダウンロード先は<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><b>ImpulseRC Driver Fixer</b>のダウンロードは<a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">こちら</a>"
+        "message": "このアプリケーションは、Betaflightを実行可能なハードウェアすべてをサポートします。対応ハードウェア一覧は [ファームフラッシャー] タブをご確認ください。<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewerをダウンロード</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scriptsをダウンロード</a><br /><br />ファームウェアのソースコードのダウンロード先は<a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><br />CP210X USBシリアルチップを使用するレガシーハードウェアの場合:<br />最新の<b>CP210xドライバ</b>のダウンロード先は<a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br />最新のWindows用<b>Zadig</b>USBドライバインストーラのダウンロード先は<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><b>ImpulseRC Driver Fixer</b>のダウンロード先は<a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">こちら</a>"
     },
     "defaultContributingHead": {
         "message": "開発への協力・貢献"
@@ -1509,6 +1509,9 @@
     },
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSkyプロトコル)"
+    },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP)"
     },
     "pidTuningProfileOption": {
         "message": "Profile $1"
@@ -3571,7 +3574,39 @@
         "message": "セル数 - プロファイル自動切替用"
     },
     "pidTuningCellCountHelp": {
-        "message": "接続されたバッテリーと同じセル数を設定している最初のプロファイルを自動的に有効にします。"
+        "message": "接続されているバッテリーセル数と等しい値を初期プロファイルとして自動的に有効にします。<br><br><ul><li><b>切り替え</b>: \nバッテリーセル数と等しい値のプロファイルがある場合、常にそのプロファイルへ切り替えます。</li><li><b>無効</b>: プロファイルの自動切り替えを無効にします。</li><b>1S～8S</b>: この設定に使用するプロファイルのセル数を選択します。</li></ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "切り替え",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "無効",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile毎のPID制御設定"
@@ -3658,7 +3693,7 @@
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
         "message": "<strong>注:</strong> 現在の値が基本モードの調整範囲外であるため、スライダーが無効になっています。Expertモードに切り替えてください。",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "低",
@@ -4715,6 +4750,14 @@
     "osdDescElementVtxChannel": {
         "message": "現在のVTX ChとVTX出力"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "VTX出力",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "バンド:チャンネル:出力:ピット",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "バッテリー電圧警告",
         "description": "One of the elements of the OSD"
@@ -5675,6 +5718,10 @@
     },
     "vtxType_4": {
         "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {

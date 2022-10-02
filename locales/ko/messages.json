@@ -664,9 +664,6 @@
     "defaultWelcomeHead": {
         "message": "하드웨어"
     },
-    "defaultWelcomeText": {
-        "message": "어플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 하드웨어 전체 목록의 플래시 탭을 확인하세요.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 블랙박스 로그 뷰어 다운로드</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 TX Lua 스크립트 다운로드</a><br /><br />펌웨어 소스 코드는 <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br /><br />최신 <b>STM USB VCP 드라이버</b>는 <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br />CP210x USB를 시리얼 칩으로 사용하는 레거시 하드웨어:<br />최신 <b>CP210x 드라이버</b>는 <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br />최신 윈도우 USB 드라이버 설치를 위한 <b>Zadig</b>는 <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br /><b>ImpulseRC 드라이버 픽서</b>는 <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다."
-    },
     "defaultContributingHead": {
         "message": "기여하기"
     },
@@ -3638,9 +3635,6 @@
     "pidTuningCellCount": {
         "message": "셀 수 - 자동 프로파일 전환용"
     },
-    "pidTuningCellCountHelp": {
-        "message": "연결된 배터리와 동일한 셀 수를 가진 첫 번째 프로파일을 자동으로 활성화합니다."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "프로파일 독립적 필터 설정"
     },
@@ -3726,7 +3720,7 @@
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
         "message": "<strong>참고:</strong> 현재 값이 기본 모드 조정 범위를 벗어났기 때문에 슬라이더가 비활성화됩니다. 변경하려면 전문가 모드로 전환하세요.",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "낮음",
