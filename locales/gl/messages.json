@@ -687,9 +687,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "A aplicación admite todo o hardware que pode executar BetaFlight. Comprobe a pestana Flash para ver a lista completa de hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar BetaFlight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar BetaFlight TX Lua Scripts</a><br /><br /> O código fonte do firmware pode descargarse de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><br /> Os últimos <b>controladores STM USB VCP </b> pódense descargar de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\"> aquí </a><br /> para hardware herdado usando un CP210X USB a chip serie: <br /> Os controladores máis recentes <b> CP210X </b> poden descargarse de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\"> aquí </a><br /> Última <b> Zadig </b> para a instalación do controlador USB de Windows pode descargarse a partir de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\"> aquí </a ><br /><b> ImpulseRC Driver Fixer </b> pódese descargar <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\"> aquí </a>"
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -756,6 +753,9 @@
     },
     "defaultSupport2": {
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki de Betaflight</a>"
+    },
+    "defaultSupport3": {
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Videos 4.3 Joshua Bardallas Betaflight</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -1185,6 +1185,12 @@
     },
     "configurationReceiverMode": {
         "message": "Modo do receptor"
+    },
+    "configurationTelemetry": {
+        "message": "Telemetría"
+    },
+    "configurationTelemetryHelp": {
+        "message": "Saída da telemetría dende o receptor"
     },
     "configurationRSSI": {
         "message": "RSSI (Calidade da sinal)"
@@ -3652,9 +3658,6 @@
     "pidTuningCellCount": {
         "message": "Número de celdas - para cambio automático de perfil"
     },
-    "pidTuningCellCountHelp": {
-        "message": "Activa automaticamente o primer perfil que teña o número de celdas igual ó da batería conectada."
-    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Axustes do perfil de Filtros independentes"
     },
@@ -3740,7 +3743,7 @@
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
         "message": "<strong>Nota:</strong> Controis deslizantes están desactivados porque os valores actuais están fóra do rango de axuste do Modo Básico. Cambie ao modo experto para facer cambios",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Baixo",

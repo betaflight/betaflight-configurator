@@ -605,7 +605,7 @@
         "message": "Maquinari"
     },
     "defaultWelcomeText": {
-        "message": "L'aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per obtenir la llista completa de maquinari.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregueu Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Descarregueu scripts Betaflight TX Lua</a><br /><br />El codi font del microprogramari es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><br />Els darrers <b>Controladors STM USB VCP</b> es poden baixar des de <a href=\"http://www..st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari heretat que utilitza un xip USB a sèrie CP210x:<br />Els <b>controladors CP210x</b> més recents es poden baixar des de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />El La darrera instal·lació del controlador USB de <b>Zadig</b> per a Windows es pot descarregar des d'<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a ><br /><b>ImpulseRC Driver Fixer</b> es pot descarregar <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
+        "message": "L'aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per obtenir la llista completa de maquinari.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregueu Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Descarregueu scripts Betaflight TX Lua</a><br /><br />El codi font del microprogramari es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><br />Per al maquinari heretat que utilitza un xip USB a sèrie CP210x:<br />Els <b>controladors CP210x</b> més recents es poden baixar des de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />El La darrera instal·lació del controlador USB de <b>Zadig</b> per a Windows es pot descarregar des d'<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a ><br /><b>ImpulseRC Driver Fixer</b> es pot descarregar <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -1517,6 +1517,9 @@
     },
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocol FrSky)"
+    },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP)"
     },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
@@ -3579,7 +3582,39 @@
         "message": "Recompte de cèl·lules: per al canvi automàtic de perfil"
     },
     "pidTuningCellCountHelp": {
-        "message": "Activa automàticament el primer perfil que té un nombre de cel·les igual a la bateria connectada."
+        "message": "Activa automàticament el primer perfil que té un recompte de cel·les igual al de la bateria connectada.<br><br><ul><li><b>Canvia</b>: Canvia sempre a un perfil amb un recompte de cel·les coincident si hi ha és un.</li><li><b>Desactiva</b>: Desactiva el canvi automàtic de perfil</li><b>1S-8S</b>: Seleccioneu el recompte de cel·les del perfil que s'utilitzarà per a aquest perfil</li></ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "Interruptor",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "Deshabilita",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Ajustament de Filtres independents del perfil"
@@ -3666,7 +3701,7 @@
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
         "message": "<strong>Nota:</strong> els controls lliscants estan desactivats perquè els valors actuals estan fora de l'interval d'ajust del mode bàsic. Canvia al mode expert per fer canvis",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Baix",
@@ -4723,6 +4758,14 @@
     "osdDescElementVtxChannel": {
         "message": "Canal i potencia actual del VTX"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "Potència VTX",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "Banda:Canal:Pot:Pit",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "Advertiment voltatge de bateria",
         "description": "One of the elements of the OSD"
@@ -5683,6 +5726,10 @@
     },
     "vtxType_4": {
         "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {

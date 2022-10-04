@@ -5323,7 +5323,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "Envia dados do ESC para o FC através da telemetria DShot. Obrigatório para o Filtro RPM e para o modo Ocioso Dinâmico [rpm]. <br> <br>Nota: Requer um ESC compatível e com firmware apropriado instalado, por exemplo, JESC, Jazzmac, BLHeli-32.",
+        "message": "Envia dados do ESC para o FC através da telemetria DShot. Obrigatório para o Filtro RPM e para o Modo Ocioso Dinâmico. <br> <br> Nota: Requer um ESC compatível e com firmware apropriado instalado, por exemplo, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {

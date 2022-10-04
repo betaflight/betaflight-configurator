@@ -597,7 +597,7 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "A aplicação suporta todo o hardware que possa executar o Betaflight. Verifique a aba flash para obter uma lista completa de hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar Betaflight Blackbox Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar Betaflight TX Lua Scripts</a><br /><br />O código fonte do firmware pode ser descarregado <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br /><br />Os mais recentes <b>Drivers STM USB VCP</b> podem ser descarregados <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />Para hardware antigo que utilize um USB CP210x para chip serial:<br />Os últimos <b>CP210x Drivers</b> podem ser descarregados <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />O último <b>Zadig</b> para instalação do driver USB para Windows pode ser descarregado <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br /><b>ImpulseRC Fixer</b> pode ser descarregado <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aqui</a>"
+        "message": "A aplicação suporta todo o hardware que possa executar o Betaflight. Verifique a aba flash para obter uma lista completa de hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar Betaflight Blackbox Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar Betaflight TX Lua Scripts</a><br /><br />O código fonte do firmware pode ser descarregado <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br /><br />Para hardware antigo que utilize um USB CP210x para chip serial:<br />Os últimos <b>CP210x Drivers</b> podem ser descarregados <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />O último <b>Zadig</b> para instalação do driver USB para Windows pode ser descarregado <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br /><b>ImpulseRC Driver Fixer</b> pode ser descarregado <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aqui</a>"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -1509,6 +1509,9 @@
     },
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocolo FrSky)"
+    },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP)"
     },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
@@ -3571,7 +3574,39 @@
         "message": "Contagem de Células - para troca automática de perfil"
     },
     "pidTuningCellCountHelp": {
-        "message": "Ativa automaticamente o primeiro perfil que tem uma contagem de células igual à da bateria conetada."
+        "message": "Ativa automaticamente o primeiro perfil que tem uma contagem de células igual à da bateria conectada.<br><br><ul><li><b>Interruptor</b>: Mude sempre para um perfil com o número de células correspondente se houver um.</li><li><b>Desativar</b>: Desativar a troca de perfil automático</li><b>1S-8S</b>: Selecionar a contagem de célula do perfil a ser usada para este perfil</li></ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "Trocar",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "Desativar",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Definições de Filtro independentes do Perfil"
@@ -3658,7 +3693,7 @@
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
         "message": "<strong>Nota:</strong> O(s) slider(s) estão desativados porque os valores atuais estão fora do intervalo de ajuste do Modo Básico. Mude para o Modo de Perito para fazer alterações",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Baixo",
@@ -4715,6 +4750,14 @@
     "osdDescElementVtxChannel": {
         "message": "Canal e potência atuais do VTX"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "Potência VTX",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "Banda:Canal:Pot:Pit",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "Aviso de voltagem da bateria",
         "description": "One of the elements of the OSD"
@@ -5677,6 +5720,10 @@
         "message": "Tramp",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
+    "vtxType_5": {
+        "message": "MSP",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
     "vtxType_255": {
         "message": "Desconhecido",
         "description": "Text for one of the types of the VTX type in VTX tab"
@@ -6376,19 +6423,19 @@
         "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
-        "message": "Fontes das Predefinições...",
+        "message": "Origens das Predefinições...",
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogTitle": {
-        "message": "Fontes das Predefinições",
+        "message": "Origens das Predefinições",
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogAddNew": {
-        "message": "Adicionar nova fonte",
+        "message": "Adicionar nova origem",
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogDefaultSourceName": {
-        "message": "Nova Fonte de Predefinição personalizada",
+        "message": "Nova Origem de Predefinição Personalizada",
         "description": "A default preset source (repo) name"
     },
     "presetsSourcesDialogSaveSource": {
@@ -6408,19 +6455,19 @@
         "description": "Presets tab, sources dialog, button to delete selected source"
     },
     "presetsWarningNotOfficialSource": {
-        "message": "<span class=\"message-negative\">AVISO!</span> Uma fonte de predefinições de terceiros está selecionada.",
+        "message": "<span class=\"message-negative\">AVISO!</span> Uma origem de predefinições de terceiros está selecionada.",
         "description": "Warning message that shows up when a third party preset source is selected"
     },
     "presetsWarningBackup": {
-        "message": "Por favor, certifique-se de gravar a sua configuração atual (botão de$t(presetsBackupSave.message)' ou via CLI se o botão estiver desabilitado) <strong>antes de</strong> escolher e aplicar predefinições. Caso contrário, não há como voltar à configuração anterior após a aplicação das predefinições.",
+        "message": "Por favor, certifique-se de gravar a sua configuração atual ('$t(presetsBackupSave.message)' no botão ou via CLI se o botão estiver desativado) <strong>antes de</strong> escolher e aplicar as predefinições. Caso contrário, não há como voltar à configuração anterior após a aplicação das predefinições.",
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">AVISO!</span> Usar predefinições de fontes de terceiros pode ser perigoso.<br/>Certifique-se de adicionar e usar apenas fontes confiáveis. Fontes maliciosas ou más de predefinições maliciosas irão quebrar a configuração do seu drone e podem potencialmente prejudicar os seus dispositivos.",
+        "message": "<span class=\"message-negative\">AVISO!</span> Usar predefinições de fontes de terceiros pode ser perigoso.<br/>Certifique-se de adicionar e usar apenas fontes fidedignas. Fontes maliciosas, ou más predefinições podem alterar a configuração do seu drone e podem potencialmente danificar os seus dispositivos.",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
-        "message": "A predefinição escolhida requer versão de firmware $1<br/> A versão atual do firmware é $2",
+        "message": "A predefinição escolhida requer a versão de firmware $1<br/> A versão atual do firmware é $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
@@ -6436,7 +6483,7 @@
         "description": "Placeholder for the options list dropdown"
     },
     "presetsVersionMismatch": {
-        "message": "Incompatibilidade de versão de origem de predefinição.<br/>Versão necessária: {{versionRequired}}<br/>Versão de origem de predefinição: {{versionSource}}<br/>Usar esta fonte de predefinição pode ser perigoso.<br/>Quer continuar?",
+        "message": "Versão de Origem da predefinição incompatível.<br/>Versão necessária: {{versionRequired}}<br/>Versão de Origem da predefinição: {{versionSource}}<br/>Usar esta origem de predefinição pode ser perigoso.<br/>Quer continuar?",
         "description": "Placeholder for the options list dropdown"
     },
     "presetsReviewOptionsWarning": {
