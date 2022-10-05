@@ -18,10 +18,10 @@ jobs:
     name: Test
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
@@ -54,16 +54,16 @@ jobs:
             os: windows-2022
             releaseArgs: --win64
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache NW.js
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: cache/
           key: ${{ runner.os }}-${{ hashFiles('gulpfile.js') }}
 
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: yarn
@@ -84,7 +84,7 @@ jobs:
         if: ${{ inputs.debug_build || matrix.name == 'Android' }}
 
       - name: Publish build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Betaflight-Configurator${{ inputs.debug_build == 'true' && '-Debug' || '' }}-${{ matrix.name }}
           path: release/
