@@ -400,7 +400,7 @@ led_strip.initialize = function (callback, scrollPosition) {
 
                         if (feature_o.is(':checked') !== newVal) {
                             feature_o.prop('checked', newVal);
-                            feature_o.change();
+                            feature_o.trigger('change');
                         }
                     });
 
@@ -503,10 +503,28 @@ led_strip.initialize = function (callback, scrollPosition) {
         }
 
         // UI: check-box toggle
-        $('.checkbox').change(function(e) {
+        $('.checkbox').on('change', function(e) {
             if (e.originalEvent) {
                 // user-triggered event
                 const that = $(this).find('input');
+
+                //disable Blink always or Larson scanner, both functions are not working properly at the same time
+                if (that.is('.function-o')) {
+                    const blink = $('.checkbox .function-b');
+                    if (blink.is(':checked')) {
+                        blink.prop('checked', false);
+                        blink.trigger('change');
+                        toggleSwitch(blink, 'b');
+                    }
+                } else if (that.is('.function-b')) {
+                    const larson = $('.checkbox .function-o');
+                    if ($('.checkbox .function-o').is(':checked')) {
+                        larson.prop('checked', false);
+                        larson.trigger('change');
+                        toggleSwitch(larson, 'o');
+                    }
+                }
+
                 if ($('.ui-selected').length > 0) {
 
                     TABS.led_strip.overlays.forEach(function(letter) {
@@ -519,11 +537,11 @@ led_strip.initialize = function (callback, scrollPosition) {
                             if (ret) {
                                 if (letter == 'b' && cbn.is(':checked')) {
                                     cbn.prop('checked', false);
-                                    cbn.change();
+                                    cbn.trigger('change');
                                     toggleSwitch(cbn, 'n');
                                 } else if (letter == 'n' && cbb.is(':checked')) {
                                     cbb.prop('checked', false);
-                                    cbb.change();
+                                    cbb.trigger('change');
                                     toggleSwitch(cbb, 'b');
                                 }
                             }
@@ -577,8 +595,7 @@ led_strip.initialize = function (callback, scrollPosition) {
 
         });
 
-        $('a.save').click(function () {
-
+        $('a.save').on('click', function () {
             mspHelper.sendLedStripConfig(send_led_strip_colors);
 
             function send_led_strip_colors() {
@@ -848,26 +865,15 @@ led_strip.initialize = function (callback, scrollPosition) {
 
 
         // set color modifiers (check-boxes) visibility
-        $('.overlays').hide();
-        $('.modifiers').hide();
-        $('.blinkers').hide();
-        $('.warningOverlay').hide();
-        $('.vtxOverlay').hide();
+        $('.overlays').toggle(areOverlaysActive(activeFunction));
 
-        if (areOverlaysActive(activeFunction))
-            $('.overlays').show();
+        $('.modifiers').toggle(areModifiersActive(activeFunction));
 
-        if (areModifiersActive(activeFunction))
-            $('.modifiers').show();
+        $('.blinkers').toggle(areBlinkersActive(activeFunction));
 
-        if (areBlinkersActive(activeFunction))
-            $('.blinkers').show();
+        $('.warningOverlay').toggle(isWarningActive(activeFunction));
 
-        if (isWarningActive(activeFunction))
-            $('.warningOverlay').show();
-
-        if (isVtxActive(activeFunction))
-            $('.vtxOverlay').show();
+        $('.vtxOverlay').toggle(isVtxActive(activeFunction));
 
         // set directions visibility
         if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
@@ -991,7 +997,7 @@ led_strip.initialize = function (callback, scrollPosition) {
 
     function unselectOverlay(func, overlay) {
         $(`input.function-${overlay}`).prop('checked', false);
-        $(`input.function-${overlay}`).change();
+        $(`input.function-${overlay}`).trigger('change');
         $('.ui-selected').each(function() {
             if (func === '' || $(this).is(functionTag + func)) {
                 $(this).removeClass(`function-${overlay}`);
@@ -1121,7 +1127,7 @@ led_strip.initialize = function (callback, scrollPosition) {
                 return mc.color;
             }
         }
-        return "";
+        return 3; //index of Throttle, use as default
     }
 
     function setModeColor(mode, dir, color) {
