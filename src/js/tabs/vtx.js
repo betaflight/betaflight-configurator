@@ -885,13 +885,21 @@ vtx.initialize = function (callback) {
 
             TABS.vtx.vtxTableSavePending = false;
 
-            const oldText = $("#save_button").text();
-            $("#save_button").html(i18n.getMessage('vtxButtonSaved'));
-            setTimeout(function () {
-                $("#save_button").html(oldText);
-            }, 2000);
+            const saveButton = $("#save_button");
+            const oldText = saveButton.text();
+            const buttonDelay = 2000;
 
-            TABS.vtx.initialize();
+            saveButton.html(i18n.getMessage('vtxButtonSaving')).addClass('disabled');
+
+             // Allow firmware to make relevant changes before initialization
+            setTimeout(() => {
+                saveButton.html(i18n.getMessage('vtxButtonSaved'));
+
+                setTimeout(() => {
+                    TABS.vtx.initialize();
+                    saveButton.html(oldText).removeClass('disabled');
+                }, buttonDelay);
+            }, buttonDelay);
         }
     }
 
