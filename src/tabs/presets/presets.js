@@ -1,5 +1,7 @@
 'use strict';
 
+import { favoritePresets } from './FavoritePresets';
+
 const presets = {
     presetsRepo: null,
     cliEngine: null,
@@ -82,6 +84,7 @@ presets.onSaveClick = function() {
 
     this.activateCli().then(() => {
         const cliCommandsArray = this.getPickedPresetsCli();
+        this.markPickedPresetsAsFavorites();
         this.cliEngine.executeCommandsArray(cliCommandsArray).then(() => {
             const newCliErrorsCount = this.cliEngine.errorsCount;
 
@@ -96,6 +99,14 @@ presets.onSaveClick = function() {
             }
         });
     });
+};
+
+presets.markPickedPresetsAsFavorites = function() {
+    for(const pickedPreset of this.pickedPresetList) {
+        favoritePresets.add(pickedPreset.preset);
+    }
+
+    favoritePresets.saveToStorage();
 };
 
 presets.disconnectCliMakeSure = function() {
@@ -307,6 +318,7 @@ presets.tryLoadPresets = function() {
     this.presetsRepo.loadIndex()
     .then(() => this.checkPresetSourceVersion())
     .then(() => {
+        favoritePresets.addLastPickDate(this.presetsRepo.index.presets);
         this.prepareFilterFields();
         this._divGlobalLoading.toggle(false);
         this._divMainContent.toggle(true);
@@ -465,9 +477,21 @@ presets.getFitPresets = function(searchParams) {
         }
     }
 
-    result.sort((a, b) => (a.priority > b.priority) ? -1 : 1);
+    result.sort((a, b) => this.presetSearchPriorityComparer(a,b));
 
     return result;
+};
+
+presets.presetSearchPriorityComparer = function(presetA, presetB) {
+    if (presetA.lastPickDate && presetB.lastPickDate) {
+        return presetB.lastPickDate - presetA.lastPickDate;
+    }
+
+    if (presetA.lastPickDate || presetB.lastPickDate) {
+        return (presetA.lastPickDate) ? -1 : 1;
+    }
+
+    return (presetA.priority > presetB.priority) ? -1 : 1;
 };
 
 presets.isPresetFitSearchStatuses = function(preset, searchParams) {
