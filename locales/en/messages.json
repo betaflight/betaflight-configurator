@@ -6099,6 +6099,10 @@
         "message": "Save",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "Saving",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "Saved",
         "description": "Saved action button in the VTX tab"
