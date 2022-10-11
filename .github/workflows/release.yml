@@ -44,6 +44,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ github.event.inputs.title }}
           tag_name: ${{ github.event.inputs.tag }}
+          target_commitish: ${{ GITHUB.REF_NAME }}
           generate_release_notes: ${{ github.event.inputs.generate_release_notes }}
           files: release-assets/Betaflight-Configurator-*/**
           draft: true
