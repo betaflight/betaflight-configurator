@@ -1659,7 +1659,6 @@ OSD.chooseFields = function() {
             F.VTX_CHANNEL,
             F.CURRENT_DRAW,
             F.MAH_DRAWN,
-            F.WH_DRAWN,
             F.GPS_SPEED,
             F.GPS_SATS,
             F.ALTITUDE,
@@ -1740,13 +1739,18 @@ OSD.chooseFields = function() {
                                                         F.CAMERA_FRAME,
                                                         F.OSD_EFFICIENCY,
                                                     ]);
-                                                }
-                                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                                                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                                        F.TOTAL_FLIGHTS,
-                                                        F.OSD_UP_DOWN_REFERENCE,
-                                                        F.OSD_TX_UPLINK_POWER,
-                                                    ]);
+                                                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                                                        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                                                            F.TOTAL_FLIGHTS,
+                                                            F.OSD_UP_DOWN_REFERENCE,
+                                                            F.OSD_TX_UPLINK_POWER,
+                                                        ]);
+                                                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                                                            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                                                                F.WH_DRAWN,
+                                                            ]);
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -1827,7 +1831,6 @@ OSD.chooseFields = function() {
             F.MAX_ALTITUDE,
             F.BLACKBOX,
             F.BLACKBOX_LOG_NUMBER,
-            F.USED_WH,
         ];
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
@@ -1845,6 +1848,11 @@ OSD.chooseFields = function() {
                 F.STAT_TOTAL_FLIGHT_TIME,
                 F.STAT_TOTAL_FLIGHT_DIST,
                 F.MIN_RSSI_DBM,
+            ]);
+        }
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+                F.USED_WH,
             ]);
         }
     }
