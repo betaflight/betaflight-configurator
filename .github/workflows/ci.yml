@@ -12,6 +12,13 @@ on:
         default: true
         required: false
         type: boolean
+  workflow_dispatch:
+    inputs:
+        debug_build:
+          description: 'Specifies if it is a debug build or a release build'
+          default: true
+          required: false
+          type: boolean
 
 jobs:
   test:
