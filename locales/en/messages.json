@@ -1680,6 +1680,11 @@
         "message": "Gain",
         "description": "Anti Gravity Gain Parameter"
     },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "Boost iTerm and increase P during fast throttle changes.<br><br>8.0 means about 8x iTerm boost",
+        "description": "Anti Gravity Gain Parameter Help Icon"
+    },
+
     "pidTuningAntiGravityThres": {
         "message": "Threshold",
         "description": "Anti Gravity Threshold Parameter"

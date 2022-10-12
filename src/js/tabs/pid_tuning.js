@@ -192,30 +192,25 @@ pid_tuning.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 // we keep the same name in html - just switching variable.
-                antiGravityGain.val(FC.ADVANCED_TUNING.antiGravityGain);
-
+                antiGravityGain.val(FC.ADVANCED_TUNING.antiGravityGain / 10);
                 antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.antiGravityGain !== ITERM_ACCELERATOR_GAIN_OFF);
             } else {
                 $('.antigravity input[name="itermThrottleThreshold"]').val(FC.ADVANCED_TUNING.itermThrottleThreshold);
                 antiGravityGain.val(FC.ADVANCED_TUNING.itermAcceleratorGain / 1000);
-
                 antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.itermAcceleratorGain !== ITERM_ACCELERATOR_GAIN_OFF);
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                antiGravityGain.attr("min","0.1");
+                antiGravityGain.attr("min", "0.1");
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    antiGravityGain.attr({ "min": "0.1", "max": "25.0", "step": "0.1" });
+                }
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                antiGravityGain.attr({ "min": "1", "max": "250", "step": "1" });
-            }
-
-            antiGravitySwitch.change(function() {
-                const checked = $(this).is(':checked');
-
-                if (checked) {
+            antiGravitySwitch.on("change", function() {
+                if (antiGravitySwitch.is(':checked')) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                        antiGravityGain.val(FC.ADVANCED_TUNING.antiGravityGain || 1);
+                        antiGravityGain.val(Number.parseFloat(FC.ADVANCED_TUNING.antiGravityGain / 10 || 8).toFixed(1));
                     } else {
                         const DEFAULT_ACCELERATOR_GAIN = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? 3.5 : 1.1;
 
@@ -231,17 +226,17 @@ pid_tuning.initialize = function (callback) {
                     $('.antigravity .antiGravityThres').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.ADVANCED_TUNING.itermAcceleratorGain === 0);
                     $('.antigravity .antiGravityMode').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
                 } else {
-                    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                        antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF / 1000);
+                    } else {
                         $('.antigravity select[id="antiGravityMode"]').val(0);
                         antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF);
-                    } else {
-                        antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF / 1000);
                     }
 
                     $('.antigravity .suboption').hide();
                 }
             });
-            antiGravitySwitch.change();
+            antiGravitySwitch.trigger("change");
         } else {
             $('.dtermLowpassType').hide();
             $('.antigravity').hide();
@@ -330,7 +325,7 @@ pid_tuning.initialize = function (callback) {
             $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
 
             const feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
-            feedforwardTransitionNumberElement.val(FC.ADVANCED_TUNING.feedforwardTransition / 100);
+            feedforwardTransitionNumberElement.val(Number.parseFloat(FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2));
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 // AntiGravity Mode
@@ -1233,7 +1228,7 @@ pid_tuning.initialize = function (callback) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             FC.FILTER_CONFIG.dterm_lowpass_type = parseInt($('.pid_filter select[name="dtermLowpassType"]').val());
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                FC.ADVANCED_TUNING.antiGravityGain = parseInt(antiGravityGain.val());
+                FC.ADVANCED_TUNING.antiGravityGain = parseInt(antiGravityGain.val() * 10);
             } else {
                 FC.ADVANCED_TUNING.itermThrottleThreshold = parseInt($('.antigravity input[name="itermThrottleThreshold"]').val());
                 FC.ADVANCED_TUNING.itermAcceleratorGain = parseInt(antiGravityGain.val() * 1000);
