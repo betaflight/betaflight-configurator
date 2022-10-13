@@ -406,11 +406,19 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.RC_TUNING.pitch_rate = parseFloat((data.readU8() / 100).toFixed(2));
                 }
                 FC.RC_TUNING.yaw_rate = parseFloat((data.readU8() / 100).toFixed(2));
-                FC.RC_TUNING.dynamic_THR_PID = parseFloat((data.readU8() / 100).toFixed(2));
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    FC.RC_TUNING.dynamic_THR_PID = parseFloat((data.readU8() / 100).toFixed(2));
+                } else {
+                    data.readU8();
+                }
                 FC.RC_TUNING.throttle_MID = parseFloat((data.readU8() / 100).toFixed(2));
                 FC.RC_TUNING.throttle_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
                 if (semver.gte(FC.CONFIG.apiVersion, "1.7.0")) {
-                    FC.RC_TUNING.dynamic_THR_breakpoint = data.readU16();
+                    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                        FC.RC_TUNING.dynamic_THR_breakpoint = data.readU16();
+                    } else {
+                        data.readU16();
+                    }
                 } else {
                     FC.RC_TUNING.dynamic_THR_breakpoint = 0;
                 }
@@ -1245,15 +1253,15 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                             FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
                                             FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
 
-                                            if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+                                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                                                 FC.ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
 
-                                                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                                                     FC.ADVANCED_TUNING.motorOutputLimit = data.readU8();
                                                     FC.ADVANCED_TUNING.autoProfileCellCount = data.read8();
                                                     FC.ADVANCED_TUNING.idleMinRpm = data.readU8();
 
-                                                    if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                                                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                                                         FC.ADVANCED_TUNING.feedforward_averaging = data.readU8();
                                                         FC.ADVANCED_TUNING.feedforward_smooth_factor = data.readU8();
                                                         FC.ADVANCED_TUNING.feedforward_boost = data.readU8();
@@ -1261,6 +1269,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                                         FC.ADVANCED_TUNING.feedforward_jitter_factor = data.readU8();
                                                         FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
                                                         FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
+
+                                                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                                                            FC.ADVANCED_TUNING.tpaRate = parseFloat((data.readU8() / 100).toFixed(2));
+                                                            FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1830,12 +1843,20 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push8(Math.round(FC.RC_TUNING.roll_rate * 100))
                     .push8(Math.round(FC.RC_TUNING.pitch_rate * 100));
             }
-            buffer.push8(Math.round(FC.RC_TUNING.yaw_rate * 100))
-                .push8(Math.round(FC.RC_TUNING.dynamic_THR_PID * 100))
-                .push8(Math.round(FC.RC_TUNING.throttle_MID * 100))
-                .push8(Math.round(FC.RC_TUNING.throttle_EXPO * 100));
+            buffer.push8(Math.round(FC.RC_TUNING.yaw_rate * 100));
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                buffer.push8(Math.round(FC.RC_TUNING.dynamic_THR_PID * 100));
+            } else {
+                buffer.push8(0);
+            }
+            buffer.push8(Math.round(FC.RC_TUNING.throttle_MID * 100));
+            buffer.push8(Math.round(FC.RC_TUNING.throttle_EXPO * 100));
             if (semver.gte(FC.CONFIG.apiVersion, "1.7.0")) {
-                buffer.push16(FC.RC_TUNING.dynamic_THR_breakpoint);
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    buffer.push16(FC.RC_TUNING.dynamic_THR_breakpoint);
+                } else {
+                    buffer.push16(0);
+                }
             }
             if (semver.gte(FC.CONFIG.apiVersion, "1.10.0")) {
                 buffer.push8(Math.round(FC.RC_TUNING.RC_YAW_EXPO * 100));
@@ -2269,6 +2290,11 @@ MspHelper.prototype.crunch = function(code) {
                                                           .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
                                                           .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
                                                           .push8(FC.ADVANCED_TUNING.thrustLinearization);
+
+                                                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                                                        buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
+                                                        buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
+                                                    }
                                                 }
                                             }
                                         }
