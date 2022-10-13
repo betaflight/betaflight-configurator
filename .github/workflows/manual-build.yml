@@ -1,0 +1,18 @@
+name: Manual Build
+run-name: Manual Build ${{ github.ref_name }} ${{ ((inputs.debug_build == true) && '(debug)') || '' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+        debug_build:
+          description: 'Specifies if it is a debug build or a release build'
+          default: true
+          required: false
+          type: boolean
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+    with:
+      debug_build: ${{ inputs.debug_build }}
