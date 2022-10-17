@@ -54,9 +54,7 @@ setup.initialize = function (callback) {
         } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             restoreButton.addClass('disabled');
 
-            if (!PortHandler.showVirtualMode) {
-                $('.backupRestore').hide();
-            }
+            $('.backupRestore').hide();
         }
 
         // initialize 3D Model
