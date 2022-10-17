@@ -269,7 +269,7 @@ presets.onHtmlLoad = function(callback) {
     this.setupBackupWarning();
     this._inputTextFilter.attr("placeholder", "example: \"karate race\", or \"5'' freestyle\"");
 
-    this.presetsDetailedDialog = new PresetsDetailedDialog($("#presets_detailed_dialog"), this.pickedPresetList, () => this.onPresetPickedCallback());
+    this.presetsDetailedDialog = new PresetsDetailedDialog($("#presets_detailed_dialog"), this.pickedPresetList, () => this.onPresetPickedCallback(), favoritePresets);
     this.presetsSourcesDialog = new PresetsSourcesDialog($("#presets_sources_dialog"));
 
     this.presetsDetailedDialog.load()
@@ -460,7 +460,7 @@ presets.displayPresets = function(fitPresets) {
     this._domListNoFound.toggle(fitPresets.length === 0);
 
     fitPresets.forEach(preset => {
-        const presetPanel = new PresetTitlePanel(this._divPresetList, preset, true);
+        const presetPanel = new PresetTitlePanel(this._divPresetList, preset, true, undefined, favoritePresets);
         presetPanel.load();
         this._presetPanels.push(presetPanel);
         presetPanel.subscribeClick(this.presetsDetailedDialog, this.presetsRepo);

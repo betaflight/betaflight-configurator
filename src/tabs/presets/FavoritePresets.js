@@ -53,6 +53,16 @@ class FavoritePresetsData {
         return preset;
     }
 
+    delete(presetPath) {
+        const index = this._favoritePresetsList.findIndex((preset) => preset.presetPath === presetPath);
+
+        if (index >= 0) {
+            this._favoritePresetsList.splice(index, 1);
+            this._sort();
+            this._purgeOldPresets();
+        }
+    }
+
     findPreset(presetPath) {
         return this._favoritePresetsList.find((preset) => preset.presetPath === presetPath);
     }
@@ -67,6 +77,11 @@ class FavoritePresetsClass {
     add(preset) {
         const favoritePreset = this._favoritePresetsData.add(preset.fullPath);
         preset.lastPickDate = favoritePreset.lastPickDate;
+    }
+
+    delete(preset) {
+        this._favoritePresetsData.delete(preset.fullPath);
+        preset.lastPickDate = undefined;
     }
 
     addLastPickDate(presets) {

@@ -1,5 +1,6 @@
 .preset_title_panel {
     color: var(--defaultText);
+    position: relative;
 }
 
 .preset_title_panel_border {
@@ -14,11 +15,26 @@
 .preset_title_panel_title {
     font-size: 1.5em;
     font-weight: bold;
-    display: block;
+    display: inline-block;
     margin-bottom: 1ex;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    width: calc(100% - 30px);
+}
+
+.preset_title_panel_star {
+    background-image: url(../../../images/icons/star_orange.svg);
+    width: 25px;
+    height: 25px;
+    background-size: cover;
+    border-radius: 5px;
+    padding: 5px;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    position: absolute;
+    right: -6px;
+    top: -5px;
 }
 
 .preset_title_panel_category {
