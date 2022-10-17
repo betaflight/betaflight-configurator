@@ -133,8 +133,10 @@ options.initShowAllSerialDevices = function() {
     const result = ConfigStorage.get('showAllSerialDevices');
     showAllSerialDevicesElement
         .prop('checked', !!result.showAllSerialDevices)
-        .on('change', () => ConfigStorage.set({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') }))
-        .trigger('change');
+        .on('change', () => {
+            ConfigStorage.set({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') });
+            PortHandler.reinitialize();
+        });
 };
 
 options.initShowVirtualMode = function() {
@@ -144,9 +146,8 @@ options.initShowVirtualMode = function() {
         .prop('checked', !!result.showVirtualMode)
         .on('change', () => {
             ConfigStorage.set({ showVirtualMode: showVirtualModeElement.is(':checked') });
-            PortHandler.initialPorts = false;
-        })
-        .trigger('change');
+            PortHandler.reinitialize();
+        });
 };
 
 options.initCordovaForceComputerUI = function () {
