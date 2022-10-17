@@ -2,7 +2,7 @@
 
 class PresetTitlePanel
 {
-    constructor(parentDiv, preset, clickable, onLoadedCallback)
+    constructor(parentDiv, preset, clickable, onLoadedCallback, favoritePresets)
     {
         PresetTitlePanel.s_panelCounter ++;
         this._parentDiv = parentDiv;
@@ -10,16 +10,45 @@ class PresetTitlePanel
         this._domId = `preset_title_panel_${PresetTitlePanel.s_panelCounter}`;
         this._preset = preset;
         this._clickable = clickable;
+        this._favoritePresets = favoritePresets;
 
         this._parentDiv.append(`<div class="${this._domId}"></div>`);
         this._domWrapperDiv = $(`.${this._domId}`);
         this._domWrapperDiv.toggle(false);
+        this._starJustClicked = false;
+        this._mouseOnStar = false;
+        this._mouseOnPanel = false;
+        this._clickable = clickable;
 
         if (clickable) {
             this._domWrapperDiv.addClass("preset_title_panel_border");
             // setting up hover effect here, because if setup in SCC it stops working after background animation like - this._domWrapperDiv.animate({ backgroundColor....
-            this._domWrapperDiv.on("mouseenter", () => this._domWrapperDiv.css({"background-color": "var(--subtleAccent)"}));
-            this._domWrapperDiv.on("mouseleave", () => this._domWrapperDiv.css({"background-color": "var(--boxBackground)"}));
+        }
+    }
+
+    _updateHoverEffects() {
+        let starMouseHover = false;
+
+        if (this._clickable && this._mouseOnPanel && !this._mouseOnStar) {
+            this._domWrapperDiv.css({"background-color": "var(--subtleAccent)"});
+        } else {
+            this._domWrapperDiv.css({"background-color": "var(--boxBackground)"});
+        }
+
+        if (this._mouseOnStar || (this._mouseOnPanel && this._clickable)) {
+            this._domStar.css({"background-color": "var(--subtleAccent)"});
+            starMouseHover = true;
+        } else {
+            this._domWrapperDiv.css({"background-color": "var(--boxBackground)"});
+            this._domStar.css({"background-color": "var(--boxBackground)"});
+        }
+
+        if (this._preset.lastPickDate) {
+            this._domStar.css("background-image", "url('../../../images/icons/star_orange.svg')");
+        } else if (starMouseHover) {
+            this._domStar.css("background-image", "url('../../../images/icons/star_orange_stroke.svg')");
+        } else {
+            this._domStar.css("background-image", "url('../../../images/icons/star_transparent.svg')");
         }
     }
 
@@ -30,14 +59,24 @@ class PresetTitlePanel
     subscribeClick(presetsDetailedDialog, presetsRepo)
     {
         this._domWrapperDiv.on("click", () => {
-            presetsDetailedDialog.open(this._preset, presetsRepo).then(isPresetPicked => {
-                if (isPresetPicked) {
-                    const color = this._domWrapperDiv.css( "background-color" );
-                    this._domWrapperDiv.css('background-color', 'green');
-                    this._domWrapperDiv.animate({ backgroundColor: color }, 2000);
-                    this.setPicked(true);
-                }
-            });
+            if (!this._starJustClicked) {
+                this._showPresetsDetailedDialog(presetsDetailedDialog, presetsRepo);
+            }
+
+            this._starJustClicked = false;
+        });
+    }
+
+    _showPresetsDetailedDialog(presetsDetailedDialog, presetsRepo) {
+        presetsDetailedDialog.open(this._preset, presetsRepo).then(isPresetPicked => {
+            if (isPresetPicked) {
+                const color = this._domWrapperDiv.css( "background-color" );
+                this._domWrapperDiv.css('background-color', 'green');
+                this._domWrapperDiv.animate({ backgroundColor: color }, 2000);
+                this.setPicked(true);
+            }
+
+            this._updateHoverEffects();
         });
     }
 
@@ -70,6 +109,12 @@ class PresetTitlePanel
         this._domStatusCommunity.toggle(this._preset.status === "COMMUNITY");
         this._domStatusExperimental.toggle(this._preset.status === "EXPERIMENTAL");
         this.setPicked(this._preset.isPicked);
+        this._setupStar();
+
+        this._domWrapperDiv.on("mouseenter", () => { this._mouseOnPanel = true; this._updateHoverEffects(); });
+        this._domWrapperDiv.on("mouseleave", () => { this._mouseOnPanel = false; this._updateHoverEffects(); } );
+        this._domStar.on("mouseenter", () => { this._mouseOnStar = true; this._updateHoverEffects(); });
+        this._domStar.on("mouseleave", () => { this._mouseOnStar = false; this._updateHoverEffects(); });
 
         i18n.localizePage();
         this._domWrapperDiv.toggle(true);
@@ -79,6 +124,7 @@ class PresetTitlePanel
     _readDom()
     {
         this._domTitle = this._domWrapperDiv.find('.preset_title_panel_title');
+        this._domStar = this._domWrapperDiv.find('.preset_title_panel_star');
         this._domCategory = this._domWrapperDiv.find('.preset_title_panel_category');
         this._domAuthor = this._domWrapperDiv.find('.preset_title_panel_author_text');
         this._domKeywords = this._domWrapperDiv.find('.preset_title_panel_keywords_text');
@@ -86,6 +132,26 @@ class PresetTitlePanel
         this._domStatusOfficial = this._domWrapperDiv.find('.preset_title_panel_status_official');
         this._domStatusCommunity = this._domWrapperDiv.find('.preset_title_panel_status_community');
         this._domStatusExperimental = this._domWrapperDiv.find('.preset_title_panel_status_experimental');
+    }
+
+    _setupStar() {
+        this._updateHoverEffects();
+
+        this._domStar.on("click", () => {
+            this._starJustClicked = true;
+            this._processStarClick();
+        });
+    }
+
+    _processStarClick() {
+        if (this._preset.lastPickDate) {
+            this._favoritePresets.delete(this._preset);
+        } else {
+            this._favoritePresets.add(this._preset);
+        }
+
+        this._favoritePresets.saveToStorage();
+        this._updateHoverEffects();
     }
 
     remove()

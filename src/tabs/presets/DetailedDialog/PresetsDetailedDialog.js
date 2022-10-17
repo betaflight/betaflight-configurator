@@ -1,13 +1,14 @@
 'use strict';
 
 class PresetsDetailedDialog {
-    constructor(domDialog, pickedPresetList, onPresetPickedCallback) {
+    constructor(domDialog, pickedPresetList, onPresetPickedCallback, favoritePresets) {
         this._domDialog = domDialog;
         this._pickedPresetList = pickedPresetList;
         this._finalDialogYesNoSettings = {};
         this._onPresetPickedCallback = onPresetPickedCallback;
         this._openPromiseResolve = undefined;
         this._isDescriptionHtml = false;
+        this._favoritePresets = favoritePresets;
     }
 
     load() {
@@ -71,7 +72,8 @@ class PresetsDetailedDialog {
         }
 
         this._titlePanel.empty();
-        const titlePanel = new PresetTitlePanel(this._titlePanel, this._preset, false, () => this._setLoadingState(false));
+        const titlePanel = new PresetTitlePanel(this._titlePanel, this._preset, false,
+            () => this._setLoadingState(false), this._favoritePresets);
         titlePanel.load();
         this._loadOptionsSelect();
         this._updateFinalCliText();
