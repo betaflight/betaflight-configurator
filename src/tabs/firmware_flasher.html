@@ -1,68 +1,104 @@
 <div class="tab-firmware_flasher toolbar_fixed_bottom">
     <div class="content_wrapper">
-        <div class="options gui_box">
-            <div class="spacer">
+        <div class="options gui_box" style="float: left; width: 460px; ">
+            <div class="spacer" style="margin-bottom: 10px;">
+                <div class="margin-bottom">
                 <table class="cf_table" style="margin-top: 10px;">
                     <tr class="option">
-                        <td><label> <input class="show_development_releases toggle" type="checkbox" /> <span
-                                i18n="firmwareFlasherShowDevelopmentReleases"></span>
-                        </label></td>
-                        <td><span class="description" i18n="firmwareFlasherShowDevelopmentReleasesDescription"></span></td>
+                        <td>
+                            <label> 
+                                <input class="show_development_releases toggle" type="checkbox" /> 
+                                <span i18n="firmwareFlasherShowDevelopmentReleases"></span>
+                            </label>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherShowDevelopmentReleasesDescription"></div>
+                        </td>
+                        <td>
+                        </td>
                     </tr>
                     <tr class="expert_mode option">
-                        <td><label><input class="expert_mode toggle" type="checkbox" /><span i18n="expertMode"></span>
-                        </label></td>
-                        <td><span class="description" i18n="expertModeDescription"></span></td>
+                        <td>
+                            <label>
+                                <input class="expert_mode toggle" type="checkbox" />
+                                <span i18n="expertMode"></span>
+                            </label>
+                            <div class="helpicon cf_tip_wide" i18n_title="expertModeDescription"></div>
+                        </td>
+                        <td>
+                        </td>
                     </tr>
                     <tr class="build_type">
                         <td>
                             <select name="build_type">
                                 <!-- options generated at runtime -->
                             </select>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherOnlineSelectBuildType"></div>
                         </td>
-                        <td><span class="description" i18n="firmwareFlasherOnlineSelectBuildType"></span></td>
+                        <td>
+                        </td>
                     </tr>
                     <tr>
-                        <td class="board-select"><select name="board">
+                        <td class="board-select">
+                            <select name="board">
                                 <option value="0" i18n="firmwareFlasherOptionLoading">Loading ...</option>
-                        </select></td>
+                            </select>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherOnlineSelectBoardDescription"></div>
+                        </td>
                         <td class="board-description">
                             <div class="btn default_btn">
                                 <a class="detect-board disabled" href="#" i18n="firmwareFlasherDetectBoardButton"></a>
                             </div>
-                            <span class="description" i18n="firmwareFlasherOnlineSelectBoardDescription"></span>
                             <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherOnlineSelectBoardHint"></div>
-                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherDetectBoardDescriptionHint"></div>
                         </td>
                     </tr>
                     <tr>
-                        <td><select name="firmware_version">
+                        <td>
+                            <select name="firmware_version">
                                 <option value="0" i18n="firmwareFlasherOptionLoading">Loading ...</option>
-                        </select></td>
-                        <td><span class="description" i18n="firmwareFlasherOnlineSelectFirmwareVersionDescription"></span></td>
+                            </select>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherOnlineSelectFirmwareVersionDescription"></div>
+                        </td>
+                        <td>
+                        </td>
                     </tr>
                     <tr>
-                        <td><label> <input class="updating toggle" type="checkbox" /> <span
-                                i18n="firmwareFlasherNoReboot"></span>
-                        </label></td>
-                        <td><span class="description" i18n="firmwareFlasherNoRebootDescription"></span></td>
+                        <td>
+                            <label> 
+                                <input class="updating toggle" type="checkbox" /> 
+                                <span i18n="firmwareFlasherNoReboot"></span>
+                            </label>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherNoRebootDescription"></div>
+                        </td>
+                        <td>
+                        </td>
                     </tr>
                     <tr class="option flash_on_connect_wrapper">
-                        <td><label> <input class="flash_on_connect toggle" type="checkbox" /> <span
-                                i18n="firmwareFlasherFlashOnConnect"></span></label></td>
-                        
-                        <td><span class="description" i18n="firmwareFlasherFlashOnConnectDescription"></span></td>
+                        <td>
+                            <label>
+                                <input class="flash_on_connect toggle" type="checkbox" /> 
+                                <span i18n="firmwareFlasherFlashOnConnect"></span>
+                            </label>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherFlashOnConnectDescription"></div>
+                        </td>
+                        <td>
+                        </td>
                     </tr>
                     <tr class="option">
-                        <td><label> <input class="erase_chip toggle" type="checkbox" /> <span
-                                i18n="firmwareFlasherFullChipErase"></span>
-                        </label></td>
-                        <td><span class="description" i18n="firmwareFlasherFullChipEraseDescription"></span></td>
+                        <td>
+                            <label>
+                                <input class="erase_chip toggle" type="checkbox" />
+                                <span i18n="firmwareFlasherFullChipErase"></span>
+                            </label>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherFullChipEraseDescription"></div>
+                        </td>
+                        <td>
+                        </td>
                     </tr>
                     <tr class="option manual_baud_rate noboarder">
-                        <td><label> <input class="flash_manual_baud toggle" type="checkbox" /> <span
-                                i18n="firmwareFlasherManualBaud"></span> <select id="flash_manual_baud_rate"
-                                i18n_title="firmwareFlasherBaudRate">
+                        <td>
+                            <label>
+                                <input class="flash_manual_baud toggle" type="checkbox" />
+                                <span i18n="firmwareFlasherManualBaud"></span> 
+                                <select id="flash_manual_baud_rate" i18n_title="firmwareFlasherBaudRate">
                                     <option value="921600">921600</option>
                                     <option value="460800">460800</option>
                                     <option value="256000" selected="selected">256000</option>
@@ -72,27 +108,83 @@
                                     <option value="38400">38400</option>
                                     <option value="28800">28800</option>
                                     <option value="19200">19200</option>
-                            </select>
-                        </label></td>
-                        <td><span class="description" i18n="firmwareFlasherManualBaudDescription"></span></td>
+                                </select>
+                            </label>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherManualBaudDescription"></div>
+                        </td>
+                        <td>
+                        </td>
                     </tr>
                 </table>
+                </div>
+
             </div>
         </div>
+        <div class="gui_box gui_warning" style="max-width: calc(100% - 470px); float: right;">
+            <div class="gui_box_titlebar">
+                <div class="spacer_box_title" style="text-align: center;"
+                    i18n="warningTitle">
+                </div>
+            </div>
+            <div class="spacer" style="margin-bottom: 10px;">
+                <p i18n="firmwareFlasherWarningText"></p>
+                <br />
+                <p i18n="firmwareFlasherTargetWarning"></p>
+            </div>
+        </div>
+    
         <div class="clear-both"></div>
         <div class="git_info">
             <div class="title" i18n="firmwareFlasherGithubInfoHead"></div>
             <p>
-                <strong i18n="firmwareFlasherHash"></strong> <a i18n_title="firmwareFlasherUrl" class="hash" href="#"
-                    target="_blank"></a><br /> <strong i18n="firmwareFlasherCommiter"></strong> <span class="committer"></span><br />
-                <strong i18n="firmwareFlasherDate"></strong> <span class="date"></span><br /> <strong
-                    i18n="firmwareFlasherMessage"></strong> <span class="message"></span>
+                <strong i18n="firmwareFlasherHash"></strong> 
+                <a i18n_title="firmwareFlasherUrl" class="hash" href="#" target="_blank"></a><br />
+                <strong i18n="firmwareFlasherCommiter"></strong> <span class="committer"></span><br />
+                <strong i18n="firmwareFlasherDate"></strong> <span class="date"></span><br /> 
+                <strong i18n="firmwareFlasherMessage"></strong> <span class="message"></span>
             </p>
         </div>
+
+        <div class="build_configuration gui_box">
+            <div class="darkgrey_box gui_box_titlebar">
+                <div class="spacer_box_title" style="text-align: center;" i18n="firmwareFlasherBuildConfigurationHead">
+                </div>
+            </div>
+            <div class="spacer" style="margin-bottom: 10px;">
+                <div class="margin-bottom">
+                    <div style="width: 49%; float: left;">
+                        <strong i18n="firmwareFlasherBuildRadioProtocols"></strong>
+                        <div id="radioProtocolInfo">
+                            <select id="radioProtocols" name="radioProtocols" multiple="multiple" class="select2" style="width: 95%; color: #424242">
+                            </select>
+                        </div>
+                    </div>
+                    <div style="width: 49%; float: right;">
+                        <strong i18n="firmwareFlasherBuildTelemetryProtocols"></strong>
+                        <div id="telemetryProtocolInfo">
+                            <select id="telemetryProtocols" name="telemetryProtocols" multiple="multiple" class="select2" style="width: 95%; color: #424242">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="spacer" style="margin-bottom: 10px;">
+                <div class="margin-bottom">
+                    <div style="width: 49%; float: left;">
+                        <strong i18n="firmwareFlasherBuildOptions"></strong>
+                        <div id="optionsInfo">
+                            <select id="options" name="options" multiple="multiple" class="select2" style="width: 95%; color: #424242">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="release_info gui_box">
             <div class="darkgrey_box gui_box_titlebar">
-                <div class="spacer_box_title" style="text-align: center;"
-                    i18n="firmwareFlasherReleaseSummaryHead"></div>
+                <div class="spacer_box_title" style="text-align: center;" i18n="firmwareFlasherReleaseSummaryHead">
+                </div>
             </div>
             <div class="spacer" style="margin-bottom: 10px;">
                 <div class="margin-bottom">
@@ -107,37 +199,26 @@
                     <strong i18n="firmwareFlasherReleaseVersion"></strong>
                     <a i18n_title="firmwareFlasherReleaseVersionUrl" class="name" href="#" target="_blank"></a>
                     <br />
-                    <strong i18n="firmwareFlasherReleaseFile"></strong>
-                    <a i18n_title="firmwareFlasherReleaseFileUrl" class="file" href="#" target="_blank"></a>
+                    <strong i18n="firmwareFlasherReleaseMCU"></strong>
+                    <span id="targetMCU"></span>
                     <br />
                     <strong i18n="firmwareFlasherReleaseDate"></strong>
                     <span class="date"></span>
                     <br />
                 </div>
-                <div class="margin-bottom" id="unifiedTargetInfo">
-                    <strong i18n="firmwareFlasherUnifiedTargetName"></strong>
-                    <a i18n_title="firmwareFlasherUnifiedTargetFileUrl" id="unifiedTargetFile" href="#" target="_blank"></a>
+                <div class="margin-bottom" id="cloudTargetInfo">
+                    <strong i18n="firmwareFlasherCloudBuildDetails"></strong>
+                    <a i18n_title="firmwareFlasherCloudBuildLogUrl" id="cloudTargetLog" href="#" target="_blank"></a>
                     <br />
-                    <strong i18n="firmwareFlasherUnifiedTargetDate"></strong>
-                    <span id="unifiedTargetDate"></span>
+                    <strong i18n="firmwareFlasherCloudBuildStatus"></strong>
+                    <span id="cloudTargetStatus"></span>
                     <br />
                 </div>
                 <strong i18n="firmwareFlasherReleaseNotes"></strong>
                 <div class=notes></div>
             </div>
         </div>
-        <div class="gui_box gui_warning">
-            <div class="gui_box_titlebar">
-                <div class="spacer_box_title" style="text-align: center;"
-                    i18n="warningTitle">
-                </div>
-            </div>
-            <div class="spacer" style="margin-bottom: 10px;">
-                <p i18n="firmwareFlasherWarningText"></p>
-                <br />
-                <p i18n="firmwareFlasherTargetWarning"></p>
-            </div>
-        </div>
+
         <div class="gui_box gui_note">
             <div class="gui_box_titlebar">
                 <div class="spacer_box_title" style="text-align: center;"
