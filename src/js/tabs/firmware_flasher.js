@@ -768,17 +768,21 @@ firmware_flasher.initialize = function (callback) {
                             // will be cached already, no need to wait.
                             if (status.status === 'success') {
                                 self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.key), onLoadFailed);
+                            } else {
+                                onLoadFailed();
                             }
                             return;
                         }
 
                         const timer = setInterval(() => {
                             self.releaseLoader.requestBuildStatus(info.key, (status) => {
-                                if (status.status !== 'queued' || retries > 6) {
+                                if (status.status !== 'queued' || retries > 8) {
                                     updateStatus(status.status, info.key);
                                     clearInterval(timer);
                                     if (status.status === 'success') {
                                         self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.key), onLoadFailed);
+                                    } else {
+                                        onLoadFailed();
                                     }
                                     return;
                                 }
