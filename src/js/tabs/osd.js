@@ -938,6 +938,15 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: `${FONT.symbol(SYM.PITCH)}-00.0`,
         },
+        READY_MODE: {
+            name: 'READY_MODE',
+            text: 'osdTextElementReadyMode',
+            desc: 'osdDescElementReadyMode',
+            defaultPosition: -1,
+            draw_order: 255,
+            positionable: true,
+            preview: 'READY',
+        },
         ROLL_ANGLE: {
             name: 'ROLL_ANGLE',
             text: 'osdTextElementRollAngle',
@@ -1663,6 +1672,7 @@ OSD.chooseFields = function() {
             F.GPS_SATS,
             F.ALTITUDE,
         ]);
+
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                 F.PID_ROLL,
@@ -1748,6 +1758,7 @@ OSD.chooseFields = function() {
                                                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                                                             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                                 F.WH_DRAWN,
+                                                                F.READY_MODE,
                                                             ]);
                                                         }
                                                     }
