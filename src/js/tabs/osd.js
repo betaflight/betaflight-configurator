@@ -742,15 +742,6 @@ OSD.loadDisplayFields = function() {
                 return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36) ? ` 690${FONT.symbol(SYM.MAH)}` : `${FONT.symbol(SYM.MAH)}690`;
             },
         },
-        WH_DRAWN: {
-            name: 'WH_DRAWN',
-            text: 'osdTextElementWhDrawn',
-            desc: 'osdDescElementWhDrawn',
-            defaultPosition: -1,
-            draw_order: 145,
-            positionable: true,
-            preview: '1.10 WH',
-        },
         CRAFT_NAME: {
             name: 'CRAFT_NAME',
             text: 'osdTextElementCraftName',
@@ -1325,6 +1316,24 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: `${FONT.symbol(SYM.RSSI)}250MW`,
         },
+        WH_DRAWN: {
+            name: 'WH_DRAWN',
+            text: 'osdTextElementWhDrawn',
+            desc: 'osdDescElementWhDrawn',
+            defaultPosition: -1,
+            draw_order: 475,
+            positionable: true,
+            preview: '1.10 WH',
+        },
+        AUX_VALUE: {
+            name: 'AUX_VALUE',
+            text: 'osdTextElementAuxValue',
+            desc: 'osdDescElementAuxValue',
+            defaultPosition: -1,
+            draw_order: 480,
+            positionable: true,
+            preview: 'AUX',
+        },
     };
 };
 
@@ -1758,6 +1767,7 @@ OSD.chooseFields = function() {
                                                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                                                             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                                 F.WH_DRAWN,
+                                                                F.AUX_VALUE,
                                                                 F.READY_MODE,
                                                             ]);
                                                         }
