@@ -131,7 +131,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function loadTargetList(targets) {
-            if (!targets) {
+            if (!targets || !navigator.onLine) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
                 $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
 
@@ -171,6 +171,9 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function buildOptions(data) {
+            if (!navigator.onLine) {
+                return;
+            }
             buildOptionsList($('select[name="radioProtocols"]'), data.radioProtocols);
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);

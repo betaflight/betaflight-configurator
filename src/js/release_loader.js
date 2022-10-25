@@ -37,7 +37,7 @@ class ReleaseLoader {
                 onSuccess(info);
             }).fail(xhr => {
                 GUI.log(i18n.getMessage('buildServerLoadFailed', [url, `HTTP ${xhr.status}`]));
-                if (onFailure !== 'undefined') {
+                if (onFailure !== undefined) {
                     onFailure();
                 } else {
                     cachedCallback();
@@ -74,7 +74,7 @@ class ReleaseLoader {
             onSuccess(data);
         }).fail(xhr => {
             GUI.log(i18n.getMessage('buildServerLoadFailed', [path, `HTTP ${xhr.status}`]));
-            if (typeof(onFailure) !== 'undefined') {
+            if (onFailure !== undefined) {
                 onFailure();
             }
         });
@@ -95,7 +95,7 @@ class ReleaseLoader {
             },
         }).fail(xhr => {
             GUI.log(i18n.getMessage('buildServerLoadFailed', [url, `HTTP ${xhr.status}`]));
-            if (typeof(onFailure) !== 'undefined') {
+            if (onFailure !== undefined) {
                 onFailure();
             }
         });
@@ -109,7 +109,7 @@ class ReleaseLoader {
             onSuccess(data);
         }).fail(xhr => {
             GUI.log(i18n.getMessage('buildServerLoadFailed', [url, `HTTP ${xhr.status}`]));
-            if (typeof(onFailure) !== 'undefined') {
+            if (onFailure !== undefined) {
                 onFailure();
             }
         });
