@@ -1630,6 +1630,9 @@
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP)"
     },
+    "portsFunction_MSP_DISPLAYPORT": {
+        "message": "OSD (MSP Displayport)"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
