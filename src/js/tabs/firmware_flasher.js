@@ -25,20 +25,7 @@ firmware_flasher.initialize = function (callback) {
     self.intel_hex = undefined;
     self.parsed_hex = undefined;
 
-    function onFirmwareCacheUpdate(release) {
-        $('select[name="firmware_version"] option').each(function () {
-            const option_e = $(this);
-            const optionRelease = option_e.data("summary");
-            if (optionRelease && optionRelease.file === release.file) {
-                option_e.toggleClass("cached", FirmwareCache.has(release));
-            }
-        });
-    }
-
     function onDocumentLoad() {
-        FirmwareCache.load();
-        FirmwareCache.onPutToCache(onFirmwareCacheUpdate);
-        FirmwareCache.onRemoveFromCache(onFirmwareCacheUpdate);
 
         function parseHex(str, callback) {
             // parsing hex in different thread
@@ -61,7 +48,6 @@ firmware_flasher.initialize = function (callback) {
                     self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
             self.enableFlashing(true);
-
         }
 
         function showReleaseNotes(summary) {
@@ -108,12 +94,6 @@ firmware_flasher.initialize = function (callback) {
 
                 if (self.parsed_hex) {
                     analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, self.parsed_hex.bytes_total);
-
-                    if (key) {
-                        if (!FirmwareCache.has(key)) {
-                            FirmwareCache.put(key, self.intel_hex);
-                        }
-                    }
                     showLoadedHex(key);
                 } else {
                     self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
@@ -289,9 +269,6 @@ firmware_flasher.initialize = function (callback) {
                         const releaseName = release.release;
 
                         const select_e = $(`<option value='${releaseName}'>${releaseName} [${release.label}]</option>`);
-                        if (FirmwareCache.has(release)) {
-                            select_e.addClass("cached");
-                        }
                         const summary = `${target}/${release}`;
                         select_e.data('summary', summary);
                         versions_element.append(select_e);
@@ -681,37 +658,17 @@ firmware_flasher.initialize = function (callback) {
             const release = $("option:selected", evt.target).val();
             const target = $('select[name="board"] option:selected').val();
 
-            function loadCachedFileCheck(summary) {
+            function onTargetDetail(summary) {
                 self.summary = summary;
 
                 if (summary.cloudBuild === true) {
                     $('div.build_configuration').slideDown();
-                    $("a.load_remote_file").removeClass('disabled');
-                    return;
                 }
 
-                let isCached = FirmwareCache.has(summary);
-                if (evt.target.value === "0" || isCached) {
-                    if (isCached) {
-                        analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'cache');
-
-                        FirmwareCache.get(summary, cached => {
-                            analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, summary.file);
-                            console.info("Release found in cache:", summary.file);
-
-                            self.developmentFirmwareLoaded = summary.releaseType === 'Unstable';
-
-                            onLoadSuccess(cached.hexdata, summary.key);
-                        });
-                    }
-                    $("a.load_remote_file").addClass('disabled');
-                }
-                else {
-                    $("a.load_remote_file").removeClass('disabled');
-                }
+                $("a.load_remote_file").removeClass('disabled');
             }
 
-            self.releaseLoader.loadTarget(target, release, loadCachedFileCheck);
+            self.releaseLoader.loadTarget(target, release, onTargetDetail);
         });
 
         $('a.load_remote_file').click(function (evt) {
@@ -764,6 +721,8 @@ firmware_flasher.initialize = function (callback) {
                 self.releaseLoader.requestBuild(request, (info) => {
                     console.info("Build requested:", info);
 
+                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, info.key);
+
                     let retries = 0;
                     self.releaseLoader.requestBuildStatus(info.key, (status) => {
                         if (status.status !== "queued") {
@@ -797,20 +756,9 @@ firmware_flasher.initialize = function (callback) {
                 }, onLoadFailed);
             }
 
-            function loadTargetHex(summary) {
+            function requestLegacyBuild(summary) {
                 const key = summary.key;
 
-                if (self.isConfigLocal && FirmwareCache.has(key)) {
-                    // TODO: rethink this, is it even necessary?
-                    // Load the .hex from Cache if available when the user is providing their own config.
-                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'cache');
-                    FirmwareCache.get(key, cached => {
-                        analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, key);
-                        console.info("Release found in cache:", key);
-                        onLoadSuccess(cached.hexdata, key);
-                    });
-                    return;
-                }
                 analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, key);
                 self.releaseLoader.loadTargetHex(summary.url, (hex) => onLoadSuccess(hex, key), onLoadFailed);
             }
@@ -827,7 +775,7 @@ firmware_flasher.initialize = function (callback) {
                 if (self.summary.cloudBuild === true) {
                     self.releaseLoader.loadTarget(target, release, requestCloudBuild, onLoadFailed);
                 } else {
-                    self.releaseLoader.loadTarget(target, release, loadTargetHex, onLoadFailed);
+                    self.releaseLoader.loadTarget(target, release, requestLegacyBuild, onLoadFailed);
                 }
             } else {
                 $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');
@@ -1058,7 +1006,6 @@ firmware_flasher.initialize = function (callback) {
 
 firmware_flasher.cleanup = function (callback) {
     PortHandler.flush_callbacks();
-    FirmwareCache.unload();
 
     // unbind "global" events
     $(document).unbind('keypress');
