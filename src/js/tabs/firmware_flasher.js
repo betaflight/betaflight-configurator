@@ -757,10 +757,10 @@ firmware_flasher.initialize = function (callback) {
             }
 
             function requestLegacyBuild(summary) {
-                const key = summary.key;
+                const fileName = summary.file;
 
-                analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, key);
-                self.releaseLoader.loadTargetHex(summary.url, (hex) => onLoadSuccess(hex, key), onLoadFailed);
+                analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, fileName);
+                self.releaseLoader.loadTargetHex(summary.url, (hex) => onLoadSuccess(hex, fileName), onLoadFailed);
             }
 
             const target = $('select[name="board"] option:selected').val();
