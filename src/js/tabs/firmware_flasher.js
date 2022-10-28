@@ -143,10 +143,14 @@ firmware_flasher.initialize = function (callback) {
             }
         }
 
-        function buildOptionsList(select_e, list) {
+        function buildOptionsList(select_e, options) {
             select_e.empty();
-            list.forEach(({ name, value }, index) => {
-                select_e.append($(`<option value='${value}'>${name}</option>`));
+            options.forEach((option) => {
+                if (option.default) {
+                    select_e.append($(`<option value='${option.value}' selected>${option.name}</option>`));
+                } else {
+                    select_e.append($(`<option value='${option.value}'>${option.name}</option>`));
+                }
             });
         }
 
