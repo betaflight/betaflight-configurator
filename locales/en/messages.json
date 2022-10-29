@@ -6688,5 +6688,8 @@
     },
     "firmwareFlasherBuildTelemetryProtocols": {
         "message": "Telemetry Protocols"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Motor Protocols"
     }
 }

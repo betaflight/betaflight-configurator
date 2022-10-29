@@ -161,6 +161,7 @@ firmware_flasher.initialize = function (callback) {
             buildOptionsList($('select[name="radioProtocols"]'), data.radioProtocols);
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
+            buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
         }
 
         self.releaseLoader.loadOptions(buildOptions);
@@ -292,6 +293,7 @@ firmware_flasher.initialize = function (callback) {
         $('select[name="board"]').select2();
         $('select[name="radioProtocols"]').select2();
         $('select[name="telemetryProtocols"]').select2();
+        $('select[name="motorProtocols"]').select2();
         $('select[name="options"]').select2();
         $('select[name="commits"]').select2();
 
@@ -723,6 +725,7 @@ firmware_flasher.initialize = function (callback) {
                     release: summary.release,
                     radioProtocols: [],
                     telemetryProtocols: [],
+                    motorProtocols: [],
                     options: [],
                 };
 
@@ -736,6 +739,10 @@ firmware_flasher.initialize = function (callback) {
 
                 $('select[name="options"] option:selected').each(function () {
                     request.options.push($(this).val());
+                });
+
+                $('select[name="motorProtocols"] option:selected').each(function () {
+                    request.motorProtocols.push($(this).val());
                 });
 
                 if (summary.releaseType === "Unstable") {
