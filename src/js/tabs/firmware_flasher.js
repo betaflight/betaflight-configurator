@@ -200,7 +200,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         const globalExpertMode_e = $('input[name="expertModeCheckbox"]');
-        function showOrHideBuildTypeSelect() {
+        function showOrHideExpertMode() {
             const expertModeChecked = $(this).is(':checked');
 
             globalExpertMode_e.prop('checked', expertModeChecked).trigger('change');
@@ -216,7 +216,7 @@ firmware_flasher.initialize = function (callback) {
         const expertMode_e = $('.tab-firmware_flasher input.expert_mode');
         expertMode_e.prop('checked', globalExpertMode_e.is(':checked'));
         $('input.show_development_releases').change(showOrHideBuildTypes).change();
-        expertMode_e.change(showOrHideBuildTypeSelect).change();
+        expertMode_e.change(showOrHideExpertMode).change();
 
         // translate to user-selected language
         i18n.localizePage();
@@ -293,6 +293,7 @@ firmware_flasher.initialize = function (callback) {
         $('select[name="radioProtocols"]').select2();
         $('select[name="telemetryProtocols"]').select2();
         $('select[name="options"]').select2();
+        $('select[name="commits"]').select2();
 
         $('select[name="board"]').change(function() {
             $("a.load_remote_file").addClass('disabled');
@@ -667,6 +668,21 @@ firmware_flasher.initialize = function (callback) {
 
                 if (summary.cloudBuild === true) {
                     $('div.build_configuration').slideDown();
+
+                    const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
+                    if (!expertMode) {
+                        $('div.commitSelection').hide();
+                        return;
+                    }
+                    $('div.commitSelection').show();
+
+                    self.releaseLoader.loadCommits(summary.release, (commits) => {
+                        const select_e = $('select[name="commits"]');
+                        select_e.empty();
+                        commits.forEach((commit) => {
+                            select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
+                        });
+                    });
                 }
 
                 $("a.load_remote_file").removeClass('disabled');
@@ -721,6 +737,10 @@ firmware_flasher.initialize = function (callback) {
                 $('select[name="options"] option:selected').each(function () {
                     request.options.push($(this).val());
                 });
+
+                if (summary.releaseType === "Unstable") {
+                    request.commit = $('select[name="commits"] option:selected').val();
+                }
 
                 self.releaseLoader.requestBuild(request, (info) => {
                     console.info("Build requested:", info);

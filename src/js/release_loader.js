@@ -120,4 +120,10 @@ class ReleaseLoader {
         const url = `${this._url}/api/options`;
         this.load(url, onSuccess, onFailure);
     }
+
+    loadCommits(release, onSuccess, onFailure) {
+
+        const url = `${this._url}/api/releases/${release}/commits`;
+        this.load(url, onSuccess, onFailure);
+    }
 }

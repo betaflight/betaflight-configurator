@@ -3068,7 +3068,9 @@
     "sdcardStatusUnknown": {
         "message": "Unknown state $1"
     },
-
+    "firmwareFlasherBranch": {
+        "message": "Select commit"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release info"
     },
