@@ -256,7 +256,7 @@ firmware_flasher.initialize = function (callback) {
                     $(
                         `<option value='0'>${i18n.getMessage(
                             "firmwareFlasherOptionLabelSelectFirmwareVersionFor",
-                        )} ${target}</option>`,
+                        )} ${target.target}</option>`,
                     ),
                 );
 
@@ -745,7 +745,7 @@ firmware_flasher.initialize = function (callback) {
                 self.releaseLoader.requestBuild(request, (info) => {
                     console.info("Build requested:", info);
 
-                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, info.key);
+                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, info.file);
 
                     let retries = 0;
                     self.releaseLoader.requestBuildStatus(info.key, (status) => {
@@ -753,7 +753,7 @@ firmware_flasher.initialize = function (callback) {
                             updateStatus(status.status, info.key);
                             // will be cached already, no need to wait.
                             if (status.status === 'success') {
-                                self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.key), onLoadFailed);
+                                self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
                             } else {
                                 onLoadFailed();
                             }
@@ -766,7 +766,7 @@ firmware_flasher.initialize = function (callback) {
                                     updateStatus(status.status, info.key);
                                     clearInterval(timer);
                                     if (status.status === 'success') {
-                                        self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.key), onLoadFailed);
+                                        self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
                                     } else {
                                         onLoadFailed();
                                     }
