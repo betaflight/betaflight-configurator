@@ -17,8 +17,10 @@ const INITIAL_CONFIG = {
     profile:                          0,
     uid:                              [0, 0, 0],
     accelerometerTrims:               [0, 0],
-    name:                             '',
-    displayName:                      'JOE PILOT',
+    name:                             '', // present for backwards compatibility before MSP v1.45
+    craftName:                        '',
+    displayName:                      '', // present for backwards compatibility before MSP v1.45
+    pilotName:                        '',
     numProfiles:                      3,
     rateProfile:                      0,
     boardType:                        0,

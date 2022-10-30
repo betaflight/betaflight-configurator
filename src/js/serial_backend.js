@@ -445,20 +445,37 @@ function processUid() {
         GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
 
         if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            processName();
+            processCraftName();
         } else {
             setRtc();
         }
     });
 }
 
-function processName() {
-    MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
-        GUI.log(i18n.getMessage('craftNameReceived', [FC.CONFIG.name]));
+async function processCraftName() {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        await MSP.promise(
+            MSPCodes.MSP2_GET_TEXT,
+            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME),
+        );
+    } else {
+        await MSP.promise(MSPCodes.MSP_NAME);
+    }
 
-        FC.CONFIG.armingDisabled = false;
-        mspHelper.setArmingEnabled(false, false, setRtc);
-    });
+    GUI.log(i18n.getMessage('craftNameReceived', semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ? [FC.CONFIG.craftName]
+        : [FC.CONFIG.name],
+    ));
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        await MSP.promise(
+            MSPCodes.MSP2_GET_TEXT,
+            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME),
+        );
+    }
+
+    FC.CONFIG.armingDisabled = false;
+    mspHelper.setArmingEnabled(false, false, setRtc);
 }
 
 function setRtc() {

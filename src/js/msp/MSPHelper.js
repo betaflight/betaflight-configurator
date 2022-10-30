@@ -920,6 +920,25 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
 
+            case MSPCodes.MSP2_GET_TEXT:
+                // type byte
+                const textType = data.readU8();
+                // length byte followed by the actual characters
+                const textLength = data.readU8() || 0;
+
+                if (textType === MSPCodes.MSP2TEXT_PILOT_NAME) {
+                    FC.CONFIG.pilotName = '';
+                    for (let i = 0; i < textLength; i++) {
+                        FC.CONFIG.pilotName += String.fromCharCode(data.readU8());
+                    }
+                } else if (textType === MSPCodes.MSP2TEXT_CRAFT_NAME) {
+                    FC.CONFIG.craftName = '';
+                    for (let i = 0; i < textLength; i++) {
+                        FC.CONFIG.craftName += String.fromCharCode(data.readU8());
+                    }
+                }
+                break;
+
             case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
                 console.log('Channel forwarding saved');
                 break;
@@ -1688,6 +1707,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_NAME:
                 console.log('Name set');
                 break;
+            case MSPCodes.MSP2_SET_TEXT:
+                console.log('Text set');
+                break;
             case MSPCodes.MSP_SET_FILTER_CONFIG:
                 // removed as this fires a lot with firmware sliders console.log('Filter config set');
                 break;
@@ -1794,8 +1816,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
 /**
  * Encode the request body for the MSP request with the given code and return it as an array of bytes.
+ * The second (optional) 'modifierCode' argument can be used to extend/specify the behavior of certain MSP codes
+ * (e.g. 'MSPCodes.MSP2_GET_TEXT' and 'MSPCodes.MSP2_SET_TEXT')
  */
-MspHelper.prototype.crunch = function(code) {
+MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
     const buffer = [];
     const self = this;
 
@@ -2320,6 +2344,44 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
 
+        case MSPCodes.MSP2_GET_TEXT:
+            if (modifierCode === MSPCodes.MSP2TEXT_PILOT_NAME) {
+                // type byte
+                buffer.push8(MSPCodes.MSP2TEXT_PILOT_NAME);
+            } else if (modifierCode === MSPCodes.MSP2TEXT_CRAFT_NAME) {
+                // type byte
+                buffer.push8(MSPCodes.MSP2TEXT_CRAFT_NAME);
+            }
+            break;
+
+        case MSPCodes.MSP2_SET_TEXT:
+            if (modifierCode === MSPCodes.MSP2TEXT_PILOT_NAME) {
+                // type byte
+                buffer.push8(MSPCodes.MSP2TEXT_PILOT_NAME);
+
+                const MAX_NAME_LENGTH = 16;
+                const pilotNameLength = Math.min(MAX_NAME_LENGTH, FC.CONFIG.pilotName.length);
+                // length byte followed by the actual characters
+                buffer.push8(pilotNameLength);
+
+                for (let i = 0; i < pilotNameLength; i++) {
+                    buffer.push8(FC.CONFIG.pilotName.charCodeAt(i));
+                }
+            } else if (modifierCode === MSPCodes.MSP2TEXT_CRAFT_NAME) {
+                // type byte
+                buffer.push8(MSPCodes.MSP2TEXT_CRAFT_NAME);
+
+                const MAX_NAME_LENGTH = 16;
+                const craftNameLength = Math.min(MAX_NAME_LENGTH, FC.CONFIG.craftName.length);
+                // length byte followed by the actual characters
+                buffer.push8(craftNameLength);
+
+                for (let i = 0; i < craftNameLength; i++) {
+                    buffer.push8(FC.CONFIG.craftName.charCodeAt(i));
+                }
+            }
+            break;
+
         case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
             buffer.push8(FC.BLACKBOX.blackboxDevice)
                 .push8(FC.BLACKBOX.blackboxRateNum)
@@ -2474,7 +2536,7 @@ MspHelper.prototype.crunch = function(code) {
             break;
 
         default:
-            return false;
+            return buffer;
     }
 
     return buffer;

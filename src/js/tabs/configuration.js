@@ -30,8 +30,15 @@ configuration.initialize = function (callback) {
         .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.17.0") ? MSP.promise(MSPCodes.MSP_RC_DEADBAND) : true; })
         .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.16.0") ? MSP.promise(MSPCodes.MSP_SENSOR_CONFIG) : true; })
         .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.15.0") ? MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT) : true; })
-        .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.20.0") ? MSP.promise(MSPCodes.MSP_NAME) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.20.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            ? MSP.promise(MSPCodes.MSP_NAME)
+            : Promise.resolve(true); })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME))
+            : Promise.resolve(true); })
         .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31) ? MSP.promise(MSPCodes.MSP_RX_CONFIG) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME)) : Promise.resolve(true); })
         .then(() => { return MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG); })
         .then(() => { load_html(); });
     }
@@ -368,7 +375,13 @@ configuration.initialize = function (callback) {
             $('.hardwareSelection').hide();
         }
 
-        $('input[name="craftName"]').val(FC.CONFIG.name);
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            $('input[name="craftName"]').val(FC.CONFIG.craftName);
+            $('input[name="pilotName"]').val(FC.CONFIG.pilotName);
+        } else {
+            $('input[name="craftName"]').val(FC.CONFIG.name);
+            $('.pilotName').hide();
+        }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             $('input[name="fpvCamAngleDegrees"]').val(FC.RX_CONFIG.fpvCamAngleDegrees);
@@ -594,7 +607,12 @@ configuration.initialize = function (callback) {
             FC.SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
             FC.SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
             FC.SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
-            FC.CONFIG.name = $.trim($('input[name="craftName"]').val());
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                FC.CONFIG.craftName = $('input[name="craftName"]').val().trim();
+                FC.CONFIG.pilotName = $('input[name="pilotName"]').val().trim();
+            } else {
+                FC.CONFIG.name = $('input[name="craftName"]').val().trim();
+            }
 
             function save_serial_config() {
                 mspHelper.sendSerialConfig(save_config);
@@ -617,7 +635,11 @@ configuration.initialize = function (callback) {
                 .then(() => { return MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM)); })
                 .then(() => { return MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)); })
                 .then(() => { return MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG)); })
-                .then(() => { return MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME)); })
+                .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    ? MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME))
+                    : MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME)); })
+                .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ?
+                    MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME)) : Promise.resolve(true); })
                 .then(() => { return (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) ? MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)) : true; })
                 .then(() => { return MSP.promise(MSPCodes.MSP_EEPROM_WRITE); })
                 .then(() => { reboot(); });

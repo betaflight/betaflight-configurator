@@ -144,8 +144,13 @@ function configuration_backup(callback) {
                 configuration.LED_STRIP = jQuery.extend(true, [], FC.LED_STRIP);
                 configuration.LED_COLORS = jQuery.extend(true, [], FC.LED_COLORS);
                 configuration.BOARD_ALIGNMENT_CONFIG = jQuery.extend(true, {}, FC.BOARD_ALIGNMENT_CONFIG);
-                configuration.CRAFT_NAME = FC.CONFIG.name;
-                configuration.DISPLAY_NAME = FC.CONFIG.displayName;
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    configuration.CRAFT_NAME = FC.CONFIG.craftName;
+                    configuration.PILOT_NAME = FC.CONFIG.pilotName;
+                } else {
+                    configuration.CRAFT_NAME = FC.CONFIG.name;
+                    configuration.DISPLAY_NAME = FC.CONFIG.displayName;
+                }
                 configuration.MIXER_CONFIG = jQuery.extend(true, {}, FC.MIXER_CONFIG);
                 configuration.SENSOR_CONFIG = jQuery.extend(true, {}, FC.SENSOR_CONFIG);
                 configuration.PID_ADVANCED_CONFIG = jQuery.extend(true, {}, FC.PID_ADVANCED_CONFIG);
@@ -190,7 +195,12 @@ function configuration_backup(callback) {
         MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG).then(function() {
             return MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
         }).then(function() {
-            return MSP.promise(MSPCodes.MSP_NAME);
+            return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME))
+                : MSP.promise(MSPCodes.MSP_NAME);
+        }).then(function() {
+            return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME)) : Promise.resolve(true);
         }).then(function() {
             return MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
         }).then(function() {
@@ -801,7 +811,13 @@ function configuration_restore(callback) {
                 ];
 
                 function update_unique_data_list() {
-                    uniqueData.push(MSPCodes.MSP_SET_NAME);
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                        uniqueData.push([MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME]);
+                        uniqueData.push([MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME]);
+                    } else {
+                        uniqueData.push(MSPCodes.MSP_SET_NAME);
+                    }
+
                     uniqueData.push(MSPCodes.MSP_SET_SENSOR_CONFIG);
                     uniqueData.push(MSPCodes.MSP_SET_MIXER_CONFIG);
                     uniqueData.push(MSPCodes.MSP_SET_BEEPER_CONFIG);
@@ -847,8 +863,13 @@ function configuration_restore(callback) {
                     FC.GPS_CONFIG = configuration.GPS_CONFIG;
                     FC.RSSI_CONFIG = configuration.RSSI_CONFIG;
                     FC.BOARD_ALIGNMENT_CONFIG = configuration.BOARD_ALIGNMENT_CONFIG;
-                    FC.CONFIG.name = configuration.CRAFT_NAME;
-                    FC.CONFIG.displayName = configuration.DISPLAY_NAME;
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                        FC.CONFIG.craftName = configuration.CRAFT_NAME;
+                        FC.CONFIG.pilotName = configuration.PILOT_NAME;
+                    } else {
+                        FC.CONFIG.name = configuration.CRAFT_NAME;
+                        FC.CONFIG.displayName = configuration.DISPLAY_NAME;
+                    }
                     FC.MIXER_CONFIG = configuration.MIXER_CONFIG;
                     FC.SENSOR_CONFIG = configuration.SENSOR_CONFIG;
                     FC.PID_ADVANCED_CONFIG = configuration.PID_ADVANCED_CONFIG;
@@ -862,10 +883,16 @@ function configuration_restore(callback) {
 
                 function send_unique_data_item() {
                     if (codeKey < uniqueData.length) {
-                        MSP.send_message(uniqueData[codeKey], mspHelper.crunch(uniqueData[codeKey]), false, function () {
+                        const callback = () => {
                             codeKey++;
                             send_unique_data_item();
-                        });
+                        };
+
+                        if (Array.isArray(uniqueData[codeKey])) {
+                            MSP.send_message(uniqueData[codeKey][0], mspHelper.crunch(...uniqueData[codeKey]), false, callback);
+                        } else {
+                            MSP.send_message(uniqueData[codeKey], mspHelper.crunch(uniqueData[codeKey]), false, callback);
+                        }
                     } else {
                         send_led_strip_config();
                     }
