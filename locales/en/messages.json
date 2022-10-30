@@ -1630,6 +1630,9 @@
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP)"
     },
+    "portsFunction_MSP_DISPLAYPORT": {
+        "message": "OSD (MSP Displayport)"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -4982,6 +4985,14 @@
     "osdDescElementWhDrawn": {
         "message": "Total battery capacity used in Wh"
     },
+    "osdDescElementAuxValue": {
+        "message": "Aux value",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "Aux value",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementCraftName": {
         "message": "Craft name",
         "description": "One of the elements of the OSD"
@@ -5413,6 +5424,13 @@
     },
     "osdDescTxUplinkPower": {
         "message": "Shows a value of the Tx power (mW or W). Useful when <i>Dynamic Power</i> is enabled for supporting radios"
+    },
+    "osdTextElementReadyMode": {
+        "message": "Ready Mode",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "When active READY will be displayed until flying"
     },
     "osdTextElementUnknown": {
         "message": "Unknown $1",

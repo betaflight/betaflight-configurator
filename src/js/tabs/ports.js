@@ -62,6 +62,10 @@ ports.initialize = function (callback) {
         functionRules.push({ name: 'VTX_MSP', groups: ['peripherals'], maxPorts: 1 });
     }
 
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        functionRules.push({ name: 'MSP_DISPLAYPORT', groups: ['peripherals'], maxPorts: 1 });
+    }
+
     for (const rule of functionRules) {
         rule.displayName = i18n.getMessage(`portsFunction_${rule.name}`);
     }
