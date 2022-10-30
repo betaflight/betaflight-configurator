@@ -638,6 +638,12 @@ function notifyOutdatedVersion(releaseData) {
     if (result.checkForConfiguratorUnstableVersions) {
         showUnstableReleases = true;
     }
+
+    if (releaseData === undefined) {
+        console.log('No releaseData');
+        return false;
+    }
+
     const versions = releaseData.filter(function (version) {
         const semVerVersion = semver.parse(version.tag_name);
         if (semVerVersion && (showUnstableReleases || semVerVersion.prerelease.length === 0)) {

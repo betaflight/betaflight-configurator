@@ -3068,7 +3068,9 @@
     "sdcardStatusUnknown": {
         "message": "Unknown state $1"
     },
-
+    "firmwareFlasherBranch": {
+        "message": "Select commit"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release info"
     },
@@ -3090,17 +3092,17 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binary:"
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
     },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Unified Target:"
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "Cloud Build Details:"
     },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Show config."
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Show Log."
     },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Date:"
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Status:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manually."
@@ -6674,5 +6676,20 @@
     "presetsReviewOptionsWarning": {
         "message": "Please, review the list of options before picking this preset.",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "Build Configuration"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "Other Options"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Radio Protocols"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Telemetry Protocols"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Motor Protocols"
     }
 }
