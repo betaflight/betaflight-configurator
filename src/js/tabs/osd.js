@@ -2217,6 +2217,7 @@ OSD.msp = {
         d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5) || (d.state.haveMax7456FontDeviceConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_43));
         d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags === 1 && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_34));
         d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_34);
+        d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
         d.displayItems = [];
         d.statItems = [];
@@ -2906,7 +2907,7 @@ osd.initialize = function(callback) {
                         }
                     }
 
-                    if (!OSD.data.state.haveMax7456Configured) {
+                    if (!(OSD.data.state.haveMax7456Configured || OSD.data.state.isMspDevice)) {
                         $('.requires-max7456').hide();
                     }
 
