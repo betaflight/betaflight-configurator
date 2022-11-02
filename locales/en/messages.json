@@ -1628,10 +1628,7 @@
         "message": "OSD (FrSky Protocol)"
     },
     "portsFunction_VTX_MSP": {
-        "message": "VTX (MSP)"
-    },
-    "portsFunction_MSP_DISPLAYPORT": {
-        "message": "OSD (MSP Displayport)"
+        "message": "VTX (MSP + Displayport)"
     },
     "pidTuningProfileOption": {
         "message": "Profile $1"

@@ -60,7 +60,6 @@ ports.initialize = function (callback) {
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         functionRules.push({ name: 'VTX_MSP', groups: ['peripherals'], sharableWith: ['msp'], maxPorts: 1 });
-        functionRules.push({ name: 'MSP_DISPLAYPORT', groups: ['peripherals'], sharableWith: ['msp'], maxPorts: 1 });
     }
 
     for (const rule of functionRules) {
