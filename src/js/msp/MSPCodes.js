@@ -138,6 +138,9 @@ const MSPCodes = {
     MSP_BEEPER_CONFIG:              184,
     MSP_SET_BEEPER_CONFIG:          185,
 
+    MSP_SET_OSD_CANVAS:             188,
+    MSP_OSD_CANVAS:                 189,
+
     MSP_SET_RAW_RC:                 200,
     MSP_SET_RAW_GPS:                201, // Not used
     MSP_SET_PID:                    202,
