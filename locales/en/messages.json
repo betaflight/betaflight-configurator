@@ -6725,5 +6725,8 @@
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Motor Protocols"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Configuration Filename:"
     }
 }
