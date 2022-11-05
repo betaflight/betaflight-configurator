@@ -365,6 +365,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "GPS_RESCUE_TRACKING"},
                 {text: "ATTITUDE"},
                 {text: "VTX_MSP"},
+                {text: "GPS_DOP"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
