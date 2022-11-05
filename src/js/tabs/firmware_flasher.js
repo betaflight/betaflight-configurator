@@ -4,7 +4,6 @@ const firmware_flasher = {
     targets: null,
     releaseLoader: new ReleaseLoader('https://build.betaflight.com'),
     localFirmwareLoaded: false,
-    selectedBoard: undefined,
     boardNeedsVerification: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
@@ -21,7 +20,6 @@ firmware_flasher.initialize = function (callback) {
         GUI.active_tab = 'firmware_flasher';
     }
 
-    self.selectedBoard = undefined;
     self.localFirmwareLoaded = false;
     self.isConfigLocal = false;
     self.intel_hex = undefined;
@@ -153,7 +151,7 @@ firmware_flasher.initialize = function (callback) {
 
             result = SessionStorage.get('selected_board');
             if (result.selected_board) {
-                const selected = targets[result.selected_board];
+                const selected = targets.find(t => t.target === result.selected_board);
                 $('select[name="board"]').val(selected ? result.selected_board : 0).trigger('change');
             }
         }
@@ -293,7 +291,8 @@ firmware_flasher.initialize = function (callback) {
                         select_e.data('summary', summary);
                         versions_element.append(select_e);
                     });
-                    // Assume flashing latest, so default to it.
+
+                // Assume flashing latest, so default to it.
                 versions_element.prop("selectedIndex", 1).change();
             }
         }
@@ -327,8 +326,6 @@ firmware_flasher.initialize = function (callback) {
                     SessionStorage.set({'selected_board': target});
                 }
 
-                TABS.firmware_flasher.selectedBoard = target;
-                TABS.firmware_flasher.bareBoard = undefined;
                 console.log('board changed to', target);
 
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL)
