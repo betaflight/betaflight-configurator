@@ -10,7 +10,7 @@ env:
     This is an automated development build.
     It may be unstable and result in corrupted configurations or data loss.
     **Use only for testing.**
-  release_notes: This is a release build. It does not contain the debug console.
+  release_notes: This is a debug build. It contains the debug console.
 
 name: Nightly
 
