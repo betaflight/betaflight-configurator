@@ -9,6 +9,8 @@ const firmware_flasher = {
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     isConfigLocal: false, // Set to true if the user loads one locally
+    configFilename: null,
+    config: {},
     developmentFirmwareLoaded: false, // Is the firmware to be flashed from the development branch?
 };
 
@@ -61,6 +63,7 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info .name').text(summary.release).prop('href', summary.releaseUrl);
             $('div.release_info .date').text(summary.date);
             $('div.release_info #targetMCU').text(summary.mcu);
+            $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
@@ -84,6 +87,18 @@ firmware_flasher.initialize = function (callback) {
                 $('div.release_info').slideDown();
                 $('.tab-firmware_flasher .content_wrapper').animate({ scrollTop: $('div.release_info').position().top }, 1000);
             }
+        }
+
+        function clearBoardConfig() {
+            self.config = {};
+            self.isConfigLocal = false;
+            self.configFilename = null;
+        }
+
+        function setBoardConfig(config, filename) {
+            self.config = config;
+            self.isConfigLocal = filename !== undefined;
+            self.configFilename = filename !== undefined ? filename : null;
         }
 
         function processHex(data, key) {
@@ -284,7 +299,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function clearBufferedFirmware() {
-            self.isConfigLocal = false;
+            clearBoardConfig();
             self.intel_hex = undefined;
             self.parsed_hex = undefined;
             self.localFirmwareLoaded = false;
@@ -355,6 +370,33 @@ firmware_flasher.initialize = function (callback) {
                 }
             }
         });
+
+        function cleanUnifiedConfigFile(input) {
+            let output = [];
+            let inComment = false;
+            for (let i=0; i < input.length; i++) {
+                if (input.charAt(i) === "\n" || input.charAt(i) === "\r") {
+                    inComment = false;
+                }
+
+                if (input.charAt(i) === "#") {
+                    inComment = true;
+                }
+
+                if (!inComment && input.charCodeAt(i) > 255) {
+                    self.flashingMessage(i18n.getMessage('firmwareFlasherConfigCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
+                    GUI.log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
+                    return null;
+                }
+
+                if (input.charCodeAt(i) > 255) {
+                    output.push('_');
+                } else {
+                    output.push(input.charAt(i));
+                }
+            }
+            return output.join('');
+        }
 
         const portPickerElement = $('div#port-picker #port');
         function flashFirmware(firmware) {
@@ -594,7 +636,7 @@ firmware_flasher.initialize = function (callback) {
                 accepts: [
                     {
                         description: 'target files',
-                        extensions: ['hex'],
+                        extensions: ['hex', 'config'],
                     },
                 ],
             }, function (fileEntry) {
@@ -633,7 +675,13 @@ firmware_flasher.initialize = function (callback) {
                                         }
                                     });
                                 } else {
-                                    self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
+                                    clearBufferedFirmware();
+
+                                    let config = cleanUnifiedConfigFile(e.target.result);
+                                    if (config !== null) {
+                                        setBoardConfig(config, file.name);
+                                        flashingMessageLocal(file.name);
+                                    }
                                 }
                             }
                         };
@@ -685,6 +733,10 @@ firmware_flasher.initialize = function (callback) {
                             select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
                         });
                     });
+                }
+
+                if (summary.configuration && !self.isConfigLocal) {
+                    setBoardConfig(summary.configuration.join('\n'));
                 }
 
                 $("a.load_remote_file").removeClass('disabled');
@@ -794,9 +846,6 @@ firmware_flasher.initialize = function (callback) {
                 self.releaseLoader.loadTargetHex(summary.url, (hex) => onLoadSuccess(hex, fileName), onLoadFailed);
             }
 
-            const target = $('select[name="board"] option:selected').val();
-            const release = $('select[name="firmware_version"] option:selected').val();
-
             if (self.summary) { // undefined while list is loading or while running offline
                 $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonDownloading'));
                 $("a.load_remote_file").addClass('disabled');
@@ -804,9 +853,9 @@ firmware_flasher.initialize = function (callback) {
                 showReleaseNotes(self.summary);
 
                 if (self.summary.cloudBuild === true) {
-                    self.releaseLoader.loadTarget(target, release, requestCloudBuild, onLoadFailed);
+                    requestCloudBuild(self.summary);
                 } else {
-                    self.releaseLoader.loadTarget(target, release, requestLegacyBuild, onLoadFailed);
+                    requestLegacyBuild(self.summary);
                 }
             } else {
                 $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');
@@ -926,6 +975,17 @@ firmware_flasher.initialize = function (callback) {
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
                 if (self.parsed_hex) {
                     try {
+                        if (self.config && !self.parsed_hex.configInserted) {
+                            const configInserter = new ConfigInserter();
+
+                            if (configInserter.insertConfig(self.parsed_hex, self.config)) {
+                                self.parsed_hex.configInserted = true;
+                            } else {
+                                console.log('Firmware does not support custom defaults.');
+                                clearBoardConfig();
+                            }
+                        }
+
                         flashFirmware(self.parsed_hex);
                     } catch (e) {
                         console.log(`Flashing failed: ${e.message}`);
