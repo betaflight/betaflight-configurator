@@ -153,7 +153,7 @@ firmware_flasher.initialize = function (callback) {
 
             result = SessionStorage.get('selected_board');
             if (result.selected_board) {
-                const selected = targets[result.selected_board];
+                const selected = targets.find(t => t.target === result.selected_board);
                 $('select[name="board"]').val(selected ? result.selected_board : 0).trigger('change');
             }
         }
@@ -227,10 +227,13 @@ firmware_flasher.initialize = function (callback) {
             }
             buildBuildTypeOptionsList();
             buildType_e.val(0).trigger('change');
+
+            ConfigStorage.set({'selected_expert_mode': expertModeChecked});
         }
 
         const expertMode_e = $('.tab-firmware_flasher input.expert_mode');
-        expertMode_e.prop('checked', globalExpertMode_e.is(':checked'));
+        const expertMode = ConfigStorage.get('selected_expert_mode');
+        expertMode_e.prop('checked', expertMode.selected_expert_mode ?? false);
         $('input.show_development_releases').change(showOrHideBuildTypes).change();
         expertMode_e.change(showOrHideExpertMode).change();
 
@@ -259,6 +262,55 @@ firmware_flasher.initialize = function (callback) {
 
             ConfigStorage.set({'selected_build_type': build_type});
         });
+
+        function selectFirmware(release) {
+            $('div.build_configuration').slideUp();
+            $('div.release_info').slideUp();
+
+            if (!self.localFirmwareLoaded) {
+                self.enableFlashing(false);
+                self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                if (self.parsed_hex && self.parsed_hex.bytes_total) {
+                    // Changing the board triggers a version change, so we need only dump it here.
+                    console.log('throw out loaded hex');
+                    self.intel_hex = undefined;
+                    self.parsed_hex = undefined;
+                }
+            }
+
+            const target = $('select[name="board"] option:selected').val();
+
+            function onTargetDetail(summary) {
+                self.summary = summary;
+
+                if (summary.cloudBuild === true) {
+                    $('div.build_configuration').slideDown();
+
+                    const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
+                    if (!expertMode) {
+                        $('div.commitSelection').hide();
+                        return;
+                    }
+                    $('div.commitSelection').show();
+
+                    self.releaseLoader.loadCommits(summary.release, (commits) => {
+                        const select_e = $('select[name="commits"]');
+                        select_e.empty();
+                        commits.forEach((commit) => {
+                            select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
+                        });
+                    });
+                }
+
+                if (summary.configuration && !self.isConfigLocal) {
+                    setBoardConfig(summary.configuration.join('\n'));
+                }
+
+                $("a.load_remote_file").removeClass('disabled');
+            }
+
+            self.releaseLoader.loadTarget(target, release, onTargetDetail);
+        }
 
         function populateReleases(versions_element, target) {
             const sortReleases = function (a, b) {
@@ -293,8 +345,10 @@ firmware_flasher.initialize = function (callback) {
                         select_e.data('summary', summary);
                         versions_element.append(select_e);
                     });
-                    // Assume flashing latest, so default to it.
-                versions_element.prop("selectedIndex", 1).change();
+
+                // Assume flashing latest, so default to it.
+                versions_element.prop("selectedIndex", 1);
+                selectFirmware(versions_element.val());
             }
         }
 
@@ -327,8 +381,7 @@ firmware_flasher.initialize = function (callback) {
                     SessionStorage.set({'selected_board': target});
                 }
 
-                TABS.firmware_flasher.selectedBoard = target;
-                TABS.firmware_flasher.bareBoard = undefined;
+                self.selectedBoard = target;
                 console.log('board changed to', target);
 
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL)
@@ -695,55 +748,10 @@ firmware_flasher.initialize = function (callback) {
         /**
          * Lock / Unlock the firmware download button according to the firmware selection dropdown.
          */
-        $('select[name="firmware_version"]').change(function(evt) {
-            $('div.build_configuration').slideUp();
-            $('div.release_info').slideUp();
-
-            if (!self.localFirmwareLoaded) {
-                self.enableFlashing(false);
-                self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
-                if (self.parsed_hex && self.parsed_hex.bytes_total) {
-                    // Changing the board triggers a version change, so we need only dump it here.
-                    console.log('throw out loaded hex');
-                    self.intel_hex = undefined;
-                    self.parsed_hex = undefined;
-                }
-            }
-
-            const release = $("option:selected", evt.target).val();
-            const target = $('select[name="board"] option:selected').val();
-
-            function onTargetDetail(summary) {
-                self.summary = summary;
-
-                if (summary.cloudBuild === true) {
-                    $('div.build_configuration').slideDown();
-
-                    const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
-                    if (!expertMode) {
-                        $('div.commitSelection').hide();
-                        return;
-                    }
-                    $('div.commitSelection').show();
-
-                    self.releaseLoader.loadCommits(summary.release, (commits) => {
-                        const select_e = $('select[name="commits"]');
-                        select_e.empty();
-                        commits.forEach((commit) => {
-                            select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
-                        });
-                    });
-                }
-
-                if (summary.configuration && !self.isConfigLocal) {
-                    setBoardConfig(summary.configuration.join('\n'));
-                }
-
-                $("a.load_remote_file").removeClass('disabled');
-            }
-
-            self.releaseLoader.loadTarget(target, release, onTargetDetail);
-        });
+        $('select[name="firmware_version"]').change((evt) => {
+                selectFirmware($("option:selected", evt.target).val());
+            },
+        );
 
         $('a.load_remote_file').click(function (evt) {
             self.enableFlashing(false);
