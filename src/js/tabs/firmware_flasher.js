@@ -4,6 +4,7 @@ const firmware_flasher = {
     targets: null,
     releaseLoader: new ReleaseLoader('https://build.betaflight.com'),
     localFirmwareLoaded: false,
+    selectedBoard: undefined,
     boardNeedsVerification: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
@@ -20,6 +21,7 @@ firmware_flasher.initialize = function (callback) {
         GUI.active_tab = 'firmware_flasher';
     }
 
+    self.selectedBoard = undefined;
     self.localFirmwareLoaded = false;
     self.isConfigLocal = false;
     self.intel_hex = undefined;
@@ -379,6 +381,7 @@ firmware_flasher.initialize = function (callback) {
                     SessionStorage.set({'selected_board': target});
                 }
 
+                self.selectedBoard = target;
                 console.log('board changed to', target);
 
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL)
