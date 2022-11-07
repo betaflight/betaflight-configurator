@@ -807,6 +807,9 @@ firmware_flasher.initialize = function (callback) {
 
                 if (summary.releaseType === "Unstable") {
                     request.commit = $('select[name="commits"] option:selected').val();
+                    $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
+                        request.options.push(v);
+                    });
                 }
 
                 self.releaseLoader.requestBuild(request, (info) => {
