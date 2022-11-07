@@ -6725,5 +6725,20 @@
     },
     "firmwareFlasherConfigurationFile": {
         "message": "Configuration Filename:"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Select the radio protocols you would like included in this build. Note this is a drop down, and multiple items maybe selected."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Select the telemetry protocols you would like included in this build. Note this is a drop down, and multiple items maybe selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items maybe selected. Such items as fixes, e.g. AKK VTX, are included here."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Select the motor (ESC) protocols you would like included in this build. Note this is a drop down, and multiple items maybe selected."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Especially useful for developers, you can select a merged PR, specify a commit sha, or specify a 'yet to be merged' PR by typing in: pull/{PR number}/head ."
     }
 }
