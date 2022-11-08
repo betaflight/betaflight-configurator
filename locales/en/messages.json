@@ -6740,5 +6740,11 @@
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especially useful for developers, you can select a merged PR, specify a commit sha, or specify a 'yet to be merged' PR by typing in: pull/{PR number}/head ."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "For developers, you can add any defines you need, separated by a `space`, but without the `USE_` prefix, it will be added automatically for you."
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "Custom Defines"
     }
 }
