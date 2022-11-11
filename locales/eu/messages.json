@@ -2490,18 +2490,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Bitarra:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Target Bateratua:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Konfig erakutzi."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Data:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Eskuz deskargatu."
     },
@@ -3946,9 +3934,6 @@
         "message": "Gailuaren izena",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Gailuaren izena Konfigurazio atalean dagoen moduan"
-    },
     "osdTextElementAltitude": {
         "message": "Altitudea",
         "description": "One of the elements of the OSD"
@@ -4253,9 +4238,6 @@
     "osdTextElementDisplayName": {
         "message": "Pantailako izena",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Erakuzteko izena \"Pantailako izena\" cli agindeak ezartzen du"
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM maiztasuna",

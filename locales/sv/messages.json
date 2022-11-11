@@ -2300,9 +2300,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Mål:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binärfil:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Ladda ner manuellt."
     },
@@ -3622,9 +3619,6 @@
         "message": "Farkostnamn",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Farkostnamnet som det angivits i Konfigurationsfliken"
-    },
     "osdTextElementAltitude": {
         "message": "Höjd",
         "description": "One of the elements of the OSD"
@@ -3929,9 +3923,6 @@
     "osdTextElementDisplayName": {
         "message": "Visningsnamn",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Visningsnamnet som det har satts med cli-kommandot \"display_name\""
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM-frekvens",

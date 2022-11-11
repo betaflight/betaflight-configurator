@@ -2658,18 +2658,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Doel:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binary:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Uniform doel:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Toon configuratie."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Datum:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download handmatig."
     },
@@ -4157,9 +4145,6 @@
         "message": "Naam drone",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Naam drone zoals ingesteld op het configuratie-tabblad"
-    },
     "osdTextElementAltitude": {
         "message": "Hoogte",
         "description": "One of the elements of the OSD"
@@ -4504,9 +4489,6 @@
     "osdTextElementDisplayName": {
         "message": "Toon naam",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Toon naam zoals is ingesteld door de \"display_name\" cli commando"
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM frequentie",

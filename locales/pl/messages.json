@@ -2581,18 +2581,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binarnie:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Ujednolicony kontroller:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Pokaż konfigurację."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Data:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Pobierz ręcznie."
     },
@@ -4037,9 +4025,6 @@
         "message": "Nazwa modelu",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Twórz nazwy zgodnie z ustawieniami na karcie Konfiguracja"
-    },
     "osdTextElementAltitude": {
         "message": "Wysokość",
         "description": "One of the elements of the OSD"
@@ -4344,9 +4329,6 @@
     "osdTextElementDisplayName": {
         "message": "Wyświetl nazwę",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Wyświetla nazwę którą ustawiono poprzez polecenie \"display_name\" w konsoli cli"
     },
     "osdTextElementEscRpmFreq": {
         "message": "Częstotliwość RPM ESC",

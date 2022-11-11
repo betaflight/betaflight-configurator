@@ -1620,6 +1620,10 @@
         "message": "Gain",
         "description": "Anti Gravity Gain Parameter"
     },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "Boost iTerm et augmentation de P lors des changements rapides de l'accélérateur.<br><br>8.0 signifie environ 8x iTerm boost",
+        "description": "Anti Gravity Gain Parameter Help Icon"
+    },
     "pidTuningAntiGravityThres": {
         "message": "Seuil",
         "description": "Anti Gravity Threshold Parameter"
@@ -2983,6 +2987,9 @@
     "sdcardStatusUnknown": {
         "message": "état inconnu $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "Sélectionner un commit"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informations de la version"
     },
@@ -3004,17 +3011,17 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Cible:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Exécutable:"
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
     },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Cible unifiée :"
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "Détails de la Construction du Cloud:"
     },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Afficher la configuration."
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Afficher les logs."
     },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Date:"
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Status:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Téléchargement manuel."
@@ -4826,12 +4833,20 @@
     "osdDescElementMahDrawn": {
         "message": "Capacité total utilisée de la batterie utilisée"
     },
+    "osdDescElementAuxValue": {
+        "message": "Valeur auxiliaire",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "Valeur auxiliaire",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementCraftName": {
         "message": "Nom de l'appareil",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Nom du modèle comme indiqué dans le configurateur"
+        "message": "Nom de l'appareil tel que défini dans l'onglet Paramètres.</br>Peut également être défini via la variable CLI \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Altitude",
@@ -5179,7 +5194,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "Afficher le nom comme défini par la commande cli \"display_name\""
+        "message": "Peut également être défini via la variable CLI \"display_name\"."
+    },
+    "osdTextElementPilotName": {
+        "message": "Nom du pilote",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "Nom du pilote tel que défini dans l'onglet Paramètres.</br>Peut également être défini via la variable CLI \"pilot_name\"."
     },
     "osdTextElementEscRpmFreq": {
         "message": "Fréquence RPM ESC",
@@ -5257,6 +5279,13 @@
     },
     "osdDescTxUplinkPower": {
         "message": "Affiche une valeur de la puissance Tx (mW ou W). Utile lorsque la <i>Puissance Dynamique</i> est activée pour les radios compatibles"
+    },
+    "osdTextElementReadyMode": {
+        "message": "Mode READY",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "Lorsque activé, READY sera affiché pendant le vol"
     },
     "osdTextElementUnknown": {
         "message": "Inconnu $1",
@@ -5932,6 +5961,10 @@
         "message": "Enregistrer",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "Sauvegarde",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "Enregistré",
         "description": "Saved action button in the VTX tab"
@@ -6086,6 +6119,15 @@
     },
     "craftName": {
         "message": "Nom du modèle"
+    },
+    "configurationCraftNameHelp": {
+        "message": "Peut être affiché dans les logs, les noms de fichiers de sauvegarde et l'OSD.</br>Peut être défini via la variable CLI <b>craft_name</b>."
+    },
+    "configurationPilotName": {
+        "message": "Nom du pilote"
+    },
+    "configurationPilotNameHelp": {
+        "message": "Peut être affiché dans l'OSD.</br>Peut être défini via la variable CLI <b>pilot_name</b>."
     },
     "configurationFpvCamAngleDegrees": {
         "message": "Angle Caméra FPV (degrés)"
@@ -6497,5 +6539,20 @@
     "presetsReviewOptionsWarning": {
         "message": "Veuillez vérifier la liste d'options avant de choisir ce préréglage.",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "Générer la configuration"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "Autres Options"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Protocoles Radio"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Protocoles de télémétrie"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Protocoles du Moteur"
     }
 }

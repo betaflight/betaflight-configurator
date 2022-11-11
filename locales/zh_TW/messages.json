@@ -2424,18 +2424,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "飛控目標："
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "二進制"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "統一目標："
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "顯示配置"
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "日期："
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手動下載"
     },
@@ -3870,9 +3858,6 @@
         "message": "飛行器名稱",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "設置頁面裡設置的飛行器名稱"
-    },
     "osdTextElementAltitude": {
         "message": "海拔高度",
         "description": "One of the elements of the OSD"
@@ -4177,9 +4162,6 @@
     "osdTextElementDisplayName": {
         "message": "顯示名稱",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "由CLI命令\"display_name\"設置的顯示名稱"
     },
     "osdTextElementEscRpmFreq": {
         "message": "電調轉速頻率",

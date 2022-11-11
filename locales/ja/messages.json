@@ -1510,9 +1510,6 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSkyプロトコル)"
     },
-    "portsFunction_VTX_MSP": {
-        "message": "VTX (MSP)"
-    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -1561,6 +1558,10 @@
     "pidTuningAntiGravityGain": {
         "message": "強度[ゲイン]",
         "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "I値をブーストし、速いスロットル可変時にP値を増加させます。<br><br>8.0はI値を約8倍ブーストすることを意味します。",
+        "description": "Anti Gravity Gain Parameter Help Icon"
     },
     "pidTuningAntiGravityThres": {
         "message": "しきい値",
@@ -2928,6 +2929,9 @@
     "sdcardStatusUnknown": {
         "message": "不明な状態 $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "コミットを選択"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "リリース情報"
     },
@@ -2949,17 +2953,17 @@
     "firmwareFlasherReleaseTarget": {
         "message": "ターゲット:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binary:"
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
     },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Unified Target:"
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "クラウド ビルド詳細:"
     },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "設定を表示します。"
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "ログ表示."
     },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "日時:"
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "状態:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手動でダウンロードしてください。"
@@ -4801,25 +4805,40 @@
         "message": "ピッチ表示"
     },
     "osdTextElementCurrentDraw": {
-        "message": "バッテリー瞬間電流値",
+        "message": "バッテリー電流値",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCurrentDraw": {
-        "message": "瞬間電流量"
+        "message": "バッテリー瞬間電流値"
     },
     "osdTextElementMahDrawn": {
-        "message": "バッテリー総容量",
+        "message": "バッテリー電流値 (mAh)",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMahDrawn": {
         "message": "使用バッテリー総容量"
+    },
+    "osdTextElementWhDrawn": {
+        "message": "バッテリー電流値 (Wh)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "使用バッテリー総容量 (Wh)"
+    },
+    "osdDescElementAuxValue": {
+        "message": "AUX値",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "AUX値",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementCraftName": {
         "message": "機体名",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "[設定] タブで設定した機体名"
+        "message": "【基本設定】タブで設定した機体名。</br>CLI変数『craft_name』でも設定可能です。"
     },
     "osdTextElementAltitude": {
         "message": "高度",
@@ -5167,7 +5186,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "CLIコマンド『display_name』で設定した表示名"
+        "message": "CLI変数『display_name』でも設定可能です。"
+    },
+    "osdTextElementPilotName": {
+        "message": "パイロット名",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "【基本設定】タブで設定されたパイロット名。</br>CLI変数『pilot_name』でも設定可能です。"
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM 周波数",
@@ -5246,6 +5272,13 @@
     "osdDescTxUplinkPower": {
         "message": "送信出力値 (mW or W) を表示します。対応する送信機で<i>Dynamic Power</i>が有効になっている場合に使用できます。"
     },
+    "osdTextElementReadyMode": {
+        "message": "準備モード",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "有効な場合、飛行するまで READY を表示"
+    },
     "osdTextElementUnknown": {
         "message": "不明 $1",
         "description": "One of the elements of the OSD"
@@ -5286,7 +5319,14 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatUsedMah": {
-        "message": "バッテリー容量"
+        "message": "使用バッテリー容量"
+    },
+    "osdTextStatUsedWh": {
+        "message": "バッテリー使用量 (Wh)",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "使用バッテリー容量 (Wh)"
     },
     "osdTextStatMaxAltitude": {
         "message": "最大高度",
@@ -5924,6 +5964,10 @@
         "message": "保存",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "保存中",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "保存しました",
         "description": "Saved action button in the VTX tab"
@@ -6078,6 +6122,15 @@
     },
     "craftName": {
         "message": "機体名"
+    },
+    "configurationCraftNameHelp": {
+        "message": "ログ、バックアップファイル名、OSDに表示できます。</br>CLI変数『<b>craft_name</b>』でも設定可能です。"
+    },
+    "configurationPilotName": {
+        "message": "パイロット名"
+    },
+    "configurationPilotNameHelp": {
+        "message": "OSDで表示できます。</br>CLI変数『<b>pilot_name</b>』でも設定可能です。"
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPVカメラアングル [degrees]"
@@ -6489,5 +6542,20 @@
     "presetsReviewOptionsWarning": {
         "message": "このプリセットを選択する前に、オプションリストを確認してください。",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "ビルド設定"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "その他のオプション"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "送信機プロトコル"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "テレメトリープロトコル"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "モータープロトコル"
     }
 }

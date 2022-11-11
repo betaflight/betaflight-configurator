@@ -1518,9 +1518,6 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocol FrSky)"
     },
-    "portsFunction_VTX_MSP": {
-        "message": "VTX (MSP)"
-    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1569,6 +1566,10 @@
     "pidTuningAntiGravityGain": {
         "message": "Guany",
         "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "Augmenta iTerm i augmenta P durant els canvis ràpids de l'accelerador.<br><br>8.0 significa aproximadament 8 vegades l'augment iTerm",
+        "description": "Anti Gravity Gain Parameter Help Icon"
     },
     "pidTuningAntiGravityThres": {
         "message": "Llindar",
@@ -2936,6 +2937,9 @@
     "sdcardStatusUnknown": {
         "message": "Estat desconegut $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "Selecciona aplicar"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informació de la publicació"
     },
@@ -2957,17 +2961,17 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Model:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binari:"
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
     },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Plataforma Unificada:"
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "Detalls de l'estructura del nuvol:"
     },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Mostra config."
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Mostrar Log."
     },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Data:"
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Estat:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Descarrega manualment."
@@ -4822,12 +4826,27 @@
     "osdDescElementMahDrawn": {
         "message": "Capacitat total usada de la bateria"
     },
+    "osdTextElementWhDrawn": {
+        "message": "Descàrrega actual Wh de la bateria",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "Capacitat total usada de la bateria en Wh"
+    },
+    "osdDescElementAuxValue": {
+        "message": "Valor auxiliar",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "Valor auxiliar",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementCraftName": {
         "message": "Nom de l'aeronau",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Nom de l'aeronau inficat a la pestanya de Configuració"
+        "message": "Nom de l'aparell tal com s'estableix a la pestanya Configuració.</br>També es pot definir mitjançant la variable CLI \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Altitud",
@@ -5175,7 +5194,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "Mostra el nom tal com s'ha escrit a l'ordre de CLI \"display_name\""
+        "message": "També es pot configurar mitjançant la variable CLI \"display_name\"."
+    },
+    "osdTextElementPilotName": {
+        "message": "Nom del pilot",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "Nom del pilot tal com s'estableix a la pestanya Configuració.</br>També es pot definir mitjançant la variable CLI \"pilot_name\"."
     },
     "osdTextElementEscRpmFreq": {
         "message": "Freqüència RPM ESC",
@@ -5254,6 +5280,13 @@
     "osdDescTxUplinkPower": {
         "message": "Mostra un valor de la potència Tx (mW o W). Útil quan <i>Potència dinàmica</i> està activat per suportar ràdios"
     },
+    "osdTextElementReadyMode": {
+        "message": "Mode llest",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "Quan estigui actiu, es mostrarà READY fins a volar"
+    },
     "osdTextElementUnknown": {
         "message": "Desconegut $1",
         "description": "One of the elements of the OSD"
@@ -5295,6 +5328,13 @@
     },
     "osdDescStatUsedMah": {
         "message": "Capacitat de la bateria utilitzada"
+    },
+    "osdTextStatUsedWh": {
+        "message": "Wh usats de bateria",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "Capacitat de la bateria utilitzada en Wh"
     },
     "osdTextStatMaxAltitude": {
         "message": "Altitud màxima",
@@ -5932,6 +5972,10 @@
         "message": "Desa",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "Desant",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "Desat",
         "description": "Saved action button in the VTX tab"
@@ -6086,6 +6130,15 @@
     },
     "craftName": {
         "message": "Nom de l'aeronau"
+    },
+    "configurationCraftNameHelp": {
+        "message": "Es pot mostrar als registres, als noms dels fitxers de còpia de seguretat i a l'OSD.</br>Es pot configurar mitjançant la variable CLI <b>craft_name</b>."
+    },
+    "configurationPilotName": {
+        "message": "Nom del pilot"
+    },
+    "configurationPilotNameHelp": {
+        "message": "Es pot mostrar a l'OSD.</br>Es pot configurar mitjançant la variable CLI <b>pilot_name</b>."
     },
     "configurationFpvCamAngleDegrees": {
         "message": "Angle de la càmera FPV [graus]"
@@ -6497,5 +6550,20 @@
     "presetsReviewOptionsWarning": {
         "message": "Si us plau, reviseu la llista d'opcions abans d'escollir aquest valor predefinit.",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "Configuració de compilació"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "Altres opciones"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Protocols de ràdio"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Protocols de telemetria"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Protocols motors"
     }
 }
