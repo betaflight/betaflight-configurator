@@ -317,6 +317,10 @@ failsafe.initialize = function (callback) {
                     $('input[name="gps_rescue_min_dth"]').closest('.number').hide();
                 }
 
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    $('input[name="gps_rescue_min_dth"]').attr("min", 20);
+                }
+
             } else {
                 // GPS Rescue Parameters not available
                 $('.pro4 > .proceduresettings').hide();
