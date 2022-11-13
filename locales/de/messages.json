@@ -2937,18 +2937,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Ziel:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binär:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Eindeutiges Target:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Zeige Konfiguration."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Datum:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Manuell herunterladen."
     },
@@ -4754,9 +4742,6 @@
         "message": "Modellname",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Name des Fluggerätes (gesetzt im Konfigurationstab)"
-    },
     "osdTextElementAltitude": {
         "message": "Höhe",
         "description": "One of the elements of the OSD"
@@ -5101,9 +5086,6 @@
     "osdTextElementDisplayName": {
         "message": "Anzeigename",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Zeigt den Namen, welcher durch den \"display_name\"-cli-Befehl festgelegt wurde."
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM Frequenz",

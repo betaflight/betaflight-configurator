@@ -2190,9 +2190,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Mērķis:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binārais:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Lejuplādēt manuāli."
     },
@@ -3435,9 +3432,6 @@
         "message": "Gaisa kuģa vārds",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Konfigurācijas cilnē iestatītais gaisa kuģa vārds"
-    },
     "osdTextElementAltitude": {
         "message": "Augstums",
         "description": "One of the elements of the OSD"
@@ -3718,9 +3712,6 @@
     "osdTextElementDisplayName": {
         "message": "Parādāmais vārds",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Rādīt vārdu kas uzstādīts ar CLI komandu \"display_name\""
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM frekvence",

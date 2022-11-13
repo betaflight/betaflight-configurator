@@ -3034,18 +3034,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Placa:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binario:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Unified Target:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Amosar configuración."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Data:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Descargar manualmente."
     },
@@ -4860,9 +4848,6 @@
         "message": "Nome da aeronave",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Nome da aeronave tal como está no apartado Configuración"
-    },
     "osdTextElementAltitude": {
         "message": "Altitude",
         "description": "One of the elements of the OSD"
@@ -5207,9 +5192,6 @@
     "osdTextElementDisplayName": {
         "message": "Mostrar nome",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Mostrar nome configurado có comando cli \"display_name\""
     },
     "osdTextElementEscRpmFreq": {
         "message": "Frecuencia RPM ESC",

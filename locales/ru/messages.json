@@ -2733,18 +2733,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Объект:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Файл прошивки:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Unified Target:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Показать конфигурацию."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Дата:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Скачать самостоятельно."
     },
@@ -4301,9 +4289,6 @@
         "message": "Позывной пилота",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Позывной пилота, установленный во вкладке \"Конфигурация\""
-    },
     "osdTextElementAltitude": {
         "message": "Высота",
         "description": "One of the elements of the OSD"
@@ -4648,9 +4633,6 @@
     "osdTextElementDisplayName": {
         "message": "Отображаемое имя",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Отображать имя, которое установлено консольной командой \"display_name\""
     },
     "osdTextElementEscRpmFreq": {
         "message": "Частота вращения, полученная от ESC",

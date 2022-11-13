@@ -596,6 +596,9 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
+    "defaultWelcomeText": {
+        "message": "Programmet understøtter hardware, der kan køre Betaflight. Tjek fanen Brænd firmware for liste over hardware muligheder.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Hent Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Hent Betaflight TX Lua Scripts</a><br /><br />Firmware kildekode kan downloades <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">her</a><br /><br />Den seneste <b>STM USB VCP driver</b> kan downloades <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">her</a><br />Ældre hardware brug en CP210x USB til seriel chip:<br />Den seneste <b>CP210x Drivers</b> kan downloades <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her</a><br />Den seneste <b>Zadig</b> til Windows USB driverinstallation kan downloades <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">her</a><br /><b>ImpulseRC Driver Fixer</b> kan downloades <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">her</a> </a>"
+    },
     "defaultContributingHead": {
         "message": "Bidrag"
     },
@@ -1507,9 +1510,6 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSky protokol)"
     },
-    "portsFunction_VTX_MSP": {
-        "message": "VTX (MSP)"
-    },
     "pidTuningProfileOption": {
         "message": "Profil $1"
     },
@@ -1558,6 +1558,10 @@
     "pidTuningAntiGravityGain": {
         "message": "Forstærkning",
         "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "Boost I term og øg P ved hurtige gas ændringer.<br><br>8.0 betyder ca. 8x I term boost",
+        "description": "Anti Gravity Gain Parameter Help Icon"
     },
     "pidTuningAntiGravityThres": {
         "message": "Grænseværdi",
@@ -2809,7 +2813,7 @@
         "message": "Vælg venligst mindst måling for at logge"
     },
     "loggingAutomaticallyRetained": {
-        "message": "Automatisk indlæste tidligere logfil: <strong>$1</strong>"
+        "message": "Automatisk indlæst tidligere logfil: <strong>$1</strong>"
     },
     "blackboxNotSupported": {
         "message": "Din FC har ikke firmware som understøtter Blackbox-logning."
@@ -2925,6 +2929,9 @@
     "sdcardStatusUnknown": {
         "message": "Ukendt tilstand $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "Vælg github commit"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Udgivelsesinfo"
     },
@@ -2946,17 +2953,17 @@
     "firmwareFlasherReleaseTarget": {
         "message": "FC type:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binær:"
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
     },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "FC fælles type:"
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "Build i skyen - detajler:"
     },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Vis konfiguration."
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Vis log."
     },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Dato:"
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Status:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manuelt."
@@ -3572,6 +3579,14 @@
     },
     "pidTuningCellCountHelp": {
         "message": "Aktiverer automatisk den første profil, der har et celle antal som svarer til det tilsluttede batteris celle antal.<br><br><ul><li><b>Skift</b>: Skift altid til en profil med matchende celle antal, hvis der er en.</li><li><b>Deaktivér</b>: Deaktivér automatisk profilskift</li><b>1S-8S</b>: Vælg det celle antal, der skal bruges til denne profil</li></ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "Kontakt",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "Deaktiver",
+        "description": "Disable cell count for this profile"
     },
     "pidTuningCellCount1S": {
         "message": "1S"
@@ -4743,6 +4758,10 @@
         "message": "VTX effekt",
         "description": "One of the variants of the VTX channel element of the OSD"
     },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "Bånd:Kanal:Spænding:Pit",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "Advarsel om lav batteri spænding",
         "description": "One of the elements of the OSD"
@@ -4799,12 +4818,27 @@
     "osdDescElementMahDrawn": {
         "message": "Den samlede anvendte batterikapacitet"
     },
+    "osdTextElementWhDrawn": {
+        "message": "Batteris forbrug i Wh",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "Samlet anvendt batteri kapacitet (Wh)"
+    },
+    "osdDescElementAuxValue": {
+        "message": "AUX værdi",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "AUX værdi",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementCraftName": {
         "message": "Fartøjsnavn",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Fartøjsnavn som angivet i Indstillingsfaneblad"
+        "message": "Fartøjs navn som det er indstillet på fanen Opsætning ved Tilpasning.</br>Kan også indstilles via \"craft_name\" CLI variabel."
     },
     "osdTextElementAltitude": {
         "message": "Højde",
@@ -5148,11 +5182,18 @@
         "message": "Overlay for postion af højre pind."
     },
     "osdTextElementDisplayName": {
-        "message": "\"Display name\"",
+        "message": "Pilot navn",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "Navn fra CLI kommando \"Display name\""
+        "message": "Kan også indstilles via \"display_name\" CLI variabel."
+    },
+    "osdTextElementPilotName": {
+        "message": "Pilot navn",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "Pilot navn som det er indstillet på fanen Opsætning ved Tilpasning.</br>Kan også indstilles via \"pilot_name\" CLI variabel."
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM frekvens",
@@ -5231,6 +5272,13 @@
     "osdDescTxUplinkPower": {
         "message": "Viser en værdi af Tx-effekten (mW eller W). Nyttigt når <i>Dynamic Power</i> kan sættes af sendere som understøtter funktionen"
     },
+    "osdTextElementReadyMode": {
+        "message": "Klar tilstand",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "Når tilstand er valgt aktiv, vises READY (klar) indtil flyvning starter"
+    },
     "osdTextElementUnknown": {
         "message": "Ukendt $1",
         "description": "One of the elements of the OSD"
@@ -5272,6 +5320,13 @@
     },
     "osdDescStatUsedMah": {
         "message": "Anvendt batteri kapacitet"
+    },
+    "osdTextStatUsedWh": {
+        "message": "Batteri anvendt (Wh)",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "Batteri kapacitet anvendt (Wh)"
     },
     "osdTextStatMaxAltitude": {
         "message": "Højeste højde",
@@ -5909,6 +5964,10 @@
         "message": "Gem",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "gemmer",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "Gemt",
         "description": "Saved action button in the VTX tab"
@@ -6063,6 +6122,15 @@
     },
     "craftName": {
         "message": "Fartøjsnavn"
+    },
+    "configurationCraftNameHelp": {
+        "message": "Kan vises i loggen, filnavn for sikkkerhedskopi og OSD.</br>Indstilles via <b>craft_name</b> CLI variabel."
+    },
+    "configurationPilotName": {
+        "message": "Pilot navn"
+    },
+    "configurationPilotNameHelp": {
+        "message": "Mulig at vise i OSD.</br>Indstilles via <b>pilot_name</b> CLI variabel."
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV-kameraets vinkel [grader]"
@@ -6474,5 +6542,20 @@
     "presetsReviewOptionsWarning": {
         "message": "Gennemse venligst listen over indstillinger før du vælger denne predefinerede opsætning.",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "Build konfirguration"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "Andre indstillinger"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Radio protokol"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Telemetri protokol"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Motor protokol"
     }
 }

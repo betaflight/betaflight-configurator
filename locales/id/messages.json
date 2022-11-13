@@ -1939,9 +1939,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Biner:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Unduh manual."
     },
@@ -2990,9 +2987,6 @@
     },
     "osdDescElementMahDrawn": {
         "message": "Kapasitas baterai terpakai"
-    },
-    "osdDescElementCraftName": {
-        "message": "Nama model seperti yang ada di tab Konfigurasi"
     },
     "osdDescElementAltitude": {
         "message": "Ketinggian saat ini (berkedip saat berada di atas ambang alarm)"

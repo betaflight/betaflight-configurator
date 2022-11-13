@@ -3007,18 +3007,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "飞控目标："
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "二进制"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "统一目标："
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "显示配置"
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "日期："
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手动下载"
     },
@@ -4833,9 +4821,6 @@
         "message": "飞行器名称",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "设置页面里设置的飞行器名称"
-    },
     "osdTextElementAltitude": {
         "message": "海拔高度",
         "description": "One of the elements of the OSD"
@@ -5180,9 +5165,6 @@
     "osdTextElementDisplayName": {
         "message": "显示名称",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "由CLI命令\"display_name\"设置的显示名称"
     },
     "osdTextElementEscRpmFreq": {
         "message": "电调转速频率",

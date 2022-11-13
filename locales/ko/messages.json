@@ -3011,18 +3011,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "타겟:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "바이너리:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "통합 타겟:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "환경설정 보기."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "일자:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "수동으로 다운로드하십시오."
     },
@@ -4837,9 +4825,6 @@
         "message": "기체 이름",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "환경설정 탭에서 설정된 기체 이름"
-    },
     "osdTextElementAltitude": {
         "message": "고도",
         "description": "One of the elements of the OSD"
@@ -5184,9 +5169,6 @@
     "osdTextElementDisplayName": {
         "message": "디스플레이 이름",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "\"display_name\" cli 명령에 의해 설정된 이름을 표시합니다."
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM 주파수",

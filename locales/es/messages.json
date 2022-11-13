@@ -1511,7 +1511,7 @@
         "message": "OSD (Protocolo FrSky)"
     },
     "portsFunction_VTX_MSP": {
-        "message": "VTX (MSP)"
+        "message": "VTX (MSP + Displayport)"
     },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
@@ -1561,6 +1561,10 @@
     "pidTuningAntiGravityGain": {
         "message": "Ganancia",
         "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "Multiplica el iTerm y aumenta P durante los cambios de acelerador rápido.<br><br>8.0 significa multiplicar 8x el iTerm",
+        "description": "Anti Gravity Gain Parameter Help Icon"
     },
     "pidTuningAntiGravityThres": {
         "message": "Umbral",
@@ -2928,6 +2932,9 @@
     "sdcardStatusUnknown": {
         "message": "Estado desconocido $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "Seleccionar commit"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Info de la versión"
     },
@@ -2949,17 +2956,17 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Placa:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binario:"
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
     },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Placa Unificada:"
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "Detalles de la compilación en la nube:"
     },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Mostrar config."
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Mostrar registro."
     },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Fecha:"
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "Estado:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Descargar manualmente."
@@ -4814,12 +4821,27 @@
     "osdDescElementMahDrawn": {
         "message": "Capacidad total usada de la batería"
     },
+    "osdTextElementWhDrawn": {
+        "message": "Batería: Wh consumidos actualmente",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "Capacidad total usada de la batería en Wh"
+    },
+    "osdDescElementAuxValue": {
+        "message": "Valor auxiliar",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "Valor auxiliar",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementCraftName": {
         "message": "Nombre de la aeronave",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Nombre de la aeronave tal como está en el apartado Configuración"
+        "message": "Nombre de la aeronave tal y como se establece en la pestaña Configuración.</br>También se puede establecer a través de la variable CLI \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Altitud",
@@ -5167,7 +5189,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "Mostrar nombre configurado con el comando cli \"display_name\""
+        "message": "También se puede configurar a través de la variable CLI \"display_name\"."
+    },
+    "osdTextElementPilotName": {
+        "message": "Identificador: nombre del piloto",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "Nombre del piloto tal y como se establece en la pestaña Configuración.</br>También se puede establecer a través de la variable CLI \"pilot_name\"."
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC: frecuencia RPM",
@@ -5246,6 +5275,13 @@
     "osdDescTxUplinkPower": {
         "message": "Muestra un valor de la potencia de TX (mW o W). Útil cuando <i>Energía Dinámica</i> está activada en las radios que lo soportan"
     },
+    "osdTextElementReadyMode": {
+        "message": "Modo preparado (ready)",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "Cuando está activo se mostrará READY hasta que empiece el vuelo"
+    },
     "osdTextElementUnknown": {
         "message": "Desconocido $1",
         "description": "One of the elements of the OSD"
@@ -5287,6 +5323,13 @@
     },
     "osdDescStatUsedMah": {
         "message": "Capacidad de batería usada"
+    },
+    "osdTextStatUsedWh": {
+        "message": "Bateria: Wh usados",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "Capacidad usada de la batería en Wh"
     },
     "osdTextStatMaxAltitude": {
         "message": "Altitud: máxima",
@@ -5924,6 +5967,10 @@
         "message": "Guardar",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "Guardando",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "Guardado",
         "description": "Saved action button in the VTX tab"
@@ -6078,6 +6125,15 @@
     },
     "craftName": {
         "message": "Nombre de la aeronave"
+    },
+    "configurationCraftNameHelp": {
+        "message": "Se puede mostrar en los registros, los nombres de los archivos de copia de seguridad y el OSD.</br>Se puede establecer a través de la variable CLI <b>craft_name</b>."
+    },
+    "configurationPilotName": {
+        "message": "Nombre del piloto"
+    },
+    "configurationPilotNameHelp": {
+        "message": "Se puede mostrar en el OSD.</br>Se puede configurar a través de la variable CLI <b>pilot_name</b>."
     },
     "configurationFpvCamAngleDegrees": {
         "message": "Ángulo Cámara FPV [grados]"
@@ -6489,5 +6545,44 @@
     "presetsReviewOptionsWarning": {
         "message": "Por favor, revisa la lista de opciones antes de seleccionar este ajuste predeterminado.",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "Configuración de compilación"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "Otras opciones"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Protocols de radio"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Protocolos de telemetría"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Protocolos de motor"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Nombre de archivo de configuración:"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Selecciona los protocolos de radio que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Selecciona los protocolos de telemetría que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos. También hay algunos protocolos de telemetría que se habilitarán, independientemente de tu selección aquí, dependiendo del protocolo de radio seleccionado, por ejemplo, CRSF."
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Selecciona las opciones generales que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos. Algunos elementos como parches, por ejemplo, AKK VTX, están incluidos aquí."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Selecciona los protocolos de motor (ESC) que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Especialmente útil para desarrolladores, puedes seleccionar un PR incluido en el código, especificar el sha de un commit, o incluso un PR 'todavía no incluido' escribiendo: pull/{número de PR}/head ."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "Para desarrolladores, puedes añadir cualquier define que necesites, separados por un `espacio`, pero sin el prefijo `USE_`, se añadirá automáticamente."
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "Defines personalizados"
     }
 }

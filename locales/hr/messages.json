@@ -2231,9 +2231,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binary:"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Ručno preuzimanje."
     },
@@ -3551,9 +3548,6 @@
         "message": "Naziv letjelice",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Ime letjelice postavljeno u kartici Konfiguracija"
-    },
     "osdTextElementAltitude": {
         "message": "Visina",
         "description": "One of the elements of the OSD"
@@ -3846,9 +3840,6 @@
     "osdTextElementDisplayName": {
         "message": "Prikazani naziv",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementDisplayName": {
-        "message": "Prikaži naziv koji je postavljen u CLI komandi \"display_name\""
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM frekvencija",
