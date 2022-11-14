@@ -772,11 +772,11 @@ firmware_flasher.initialize = function (callback) {
                 i18n.localizePage();
             }
 
-            function updateStatus(status, key, val) {
-                if (status === 'success' || status === 'fail') {
-                    $('div.release_info #cloudTargetLog').text('Build Log').prop('href', `https://build.betaflight.com/api/builds/${key}/log`);
+            function updateStatus(status, key, val, showLog) {
+                if (showLog === true) {
+                    $('div.release_info #cloudTargetLog').text(i18n.getMessage(`firmwareFlasherCloudBuildLogUrl`)).prop('href', `https://build.betaflight.com/api/builds/${key}/log`);
                 }
-                $('div.release_info #cloudTargetStatus').text(status);
+                $('div.release_info #cloudTargetStatus').text(i18n.getMessage(`firmwareFlasherCloudBuild${status}`));
                 $('.buildProgress').val(val);
             }
 
@@ -818,16 +818,17 @@ firmware_flasher.initialize = function (callback) {
 
                     analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, info.file);
 
-                    $('.buildProgress').val(0);
+                    updateStatus('Pending', info.key, 0, false);
                     let retries = 1;
                     self.releaseLoader.requestBuildStatus(info.key, (status) => {
                         if (status.status !== "queued") {
-                            updateStatus(`${status.status} (cached)`, info.key, 100);
                             // will be cached already, no need to wait.
                             if (status.status === 'success') {
+                                updateStatus('SuccessCached', info.key, 100, true);
                                 $('.buildProgress').val(100);
                                 self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
                             } else {
+                                updateStatus('Failed', info.key, 0, true);
                                 onLoadFailed();
                             }
                             return;
@@ -836,17 +837,22 @@ firmware_flasher.initialize = function (callback) {
                         const timer = setInterval(() => {
                             self.releaseLoader.requestBuildStatus(info.key, (status) => {
                                 if (status.status !== 'queued' || retries > 10) {
-                                    updateStatus(status.status, info.key, 100);
                                     clearInterval(timer);
                                     if (status.status === 'success') {
+                                        updateStatus('Success', info.key, 100, true);
                                         self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
                                     } else {
+                                        if (retries > 10) {
+                                            updateStatus('TimedOut', info.key, 0, true);
+                                        } else {
+                                            updateStatus('Failed', info.key, 0, true);
+                                        }
                                         onLoadFailed();
                                     }
                                     return;
                                 }
 
-                                updateStatus('processing', info.key, retries * 10);
+                                updateStatus('Processing', info.key, retries * 10, false);
                                 retries = retries + 1;
                             });
                         }, 4000);

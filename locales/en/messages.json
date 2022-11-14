@@ -3072,7 +3072,7 @@
         "message": "Select commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Release info"
+        "message": "Release and Build info"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "Manufacturer ID:"
@@ -3103,6 +3103,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "pending"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "processing"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "success (cached)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "success"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "timed out (please retry)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "failed (please check log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manually."
