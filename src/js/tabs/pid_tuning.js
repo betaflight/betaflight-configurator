@@ -111,6 +111,7 @@ pid_tuning.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             // Moved tpa to profile
+            $('select[id="tpaMode"]').val(FC.ADVANCED_TUNING.tpaMode);
             $('input[id="tpaRate"]').val(FC.ADVANCED_TUNING.tpaRate.toFixed(2));
             $('input[id="tpaBreakpoint"]').val(FC.ADVANCED_TUNING.tpaBreakpoint);
         } else {
@@ -1186,6 +1187,7 @@ pid_tuning.initialize = function (callback) {
         FC.RC_TUNING.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val());
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            FC.ADVANCED_TUNING.tpaMode = $('select[id="tpaMode"]').val();
             FC.ADVANCED_TUNING.tpaRate = parseFloat($('input[id="tpaRate"]').val());
             FC.ADVANCED_TUNING.tpaBreakpoint = parseInt($('input[id="tpaBreakpoint"]').val());
         } else {

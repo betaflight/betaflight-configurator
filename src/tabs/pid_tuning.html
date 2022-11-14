@@ -817,12 +817,19 @@
                     <div class="gui_box grey tpa pidControllerAdvancedSettings spacer_left">
                         <table class="pid_titlebar tpa-header" aria-labelledby="tpa-header">
                             <tr>
-                                <th i18n="pidTuningTPA"></th>
+                                <th i18n="pidTuningTPAMode"></th>
+                                <th i18n="pidTuningTPARate"></th>
                                 <th i18n="pidTuningTPABreakPoint"></th>
                             </tr>
                         </table>
                         <table class="tpa-settings" aria-labelledby="tpa-settings" role="presentation">
                             <tr>
+                                <td>
+                                    <select id="tpaMode">
+                                        <option value="0" i18n="pidTuningTPAPD"></option>
+                                        <option value="1" i18n="pidTuningTPAD"></option>
+                                    </select>
+                                </td>
                                 <td><input type="number" id="tpaRate" step="0.01" min="0" max="1.00" /></td>
                                 <td class="tpa-breakpoint"><input type="number" id="tpaBreakpoint" step="10" min="750" max="2250" /></td>
                             </tr>
