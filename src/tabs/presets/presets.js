@@ -323,13 +323,16 @@ TABS.presets.multipleSelectComponentScrollFix = function() {
         when the number of items 199+. More details here:
         https://github.com/wenzhixin/multiple-select/issues/552
     */
+   return new Promise((resolve) => {
     GUI.timeout_add('hack_fix_multipleselect_scroll', () => {
         this._selectCategory.multipleSelect('refresh');
         this._selectKeyword.multipleSelect('refresh');
         this._selectAuthor.multipleSelect('refresh');
         this._selectFirmwareVersion.multipleSelect('refresh');
         this._selectStatus.multipleSelect('refresh');
+        resolve();
     }, 100);
+   });
 };
 
 TABS.presets.checkPresetSourceVersion = function() {
@@ -363,14 +366,12 @@ TABS.presets.prepareFilterFields = function() {
     this.prepareFilterSelectField(this._selectAuthor, this.presetsRepo.index.uniqueValues.author, 1);
     this.prepareFilterSelectField(this._selectFirmwareVersion, this.presetsRepo.index.uniqueValues.firmware_version, 2);
     this.prepareFilterSelectField(this._selectStatus, this.presetsRepo.index.settings.PresetStatusEnum, 2);
-    this.multipleSelectComponentScrollFix();
-
-    this.preselectFilterFields();
-    this._inputTextFilter.on('input', () => this.updateSearchResults());
-
-    this._freezeSearch = false;
-
-    this.updateSearchResults();
+    this.multipleSelectComponentScrollFix().then(() => {
+        this.preselectFilterFields();
+        this._inputTextFilter.on('input', () => this.updateSearchResults());
+        this._freezeSearch = false;
+        this.updateSearchResults();
+    });
 };
 
 TABS.presets.preselectFilterFields = function() {
