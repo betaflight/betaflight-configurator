@@ -33,27 +33,27 @@ const Features = function (config) {
         );
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.15.0") && !semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+    if (semver.gte(config.apiVersion, "1.15.0") && !semver.gte(config.apiVersion, API_VERSION_1_36)) {
         features.push(
             {bit: 8, group: 'rxFailsafe', name: 'FAILSAFE', haveTip: true},
         );
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
+    if (semver.gte(config.apiVersion, "1.16.0")) {
         features.push(
             {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true},
         );
     }
 
     if (config.flightControllerVersion !== '') {
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
+        if (semver.gte(config.apiVersion, "1.16.0")) {
             features.push(
                 {bit: 22, group: 'other', name: 'AIRMODE'},
             );
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
+        if (semver.gte(config.apiVersion, "1.16.0")) {
+            if (semver.lt(config.apiVersion, "1.20.0")) {
                 features.push(
                     {bit: 23, group: 'superexpoRates', name: 'SUPEREXPO_RATES'},
                 );
@@ -64,36 +64,36 @@ const Features = function (config) {
             }
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
+        if (semver.gte(config.apiVersion, "1.20.0")) {
             features.push(
                 {bit: 18, group: 'other', name: 'OSD'},
             );
-            if (!semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_35)) {
+            if (!semver.gte(config.apiVersion, API_VERSION_1_35)) {
                 features.push(
                     {bit: 24, group: 'other', name: 'VTX'},
                 );
             }
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
+        if (semver.gte(config.apiVersion, API_VERSION_1_31)) {
             features.push(
                 {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
                 {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
             );
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+        if (semver.gte(config.apiVersion, API_VERSION_1_36)) {
             features.push(
                 {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
             );
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) { // DYNAMIC_FILTER got removed from FEATURES in BF 4.3 / API 1.44
+            if (semver.lt(config.apiVersion, API_VERSION_1_44)) { // DYNAMIC_FILTER got removed from FEATURES in BF 4.3 / API 1.44
                 features.push(
                     {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'},
                 );
             }
         }
 
-        if (!semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+        if (!semver.gte(config.apiVersion, API_VERSION_1_36)) {
             features.push(
                 {bit: 1, group: 'batteryVoltage', name: 'VBAT'},
                 {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'},
@@ -125,12 +125,32 @@ Features.prototype.setMask = function (featureMask) {
 Features.prototype.isEnabled = function (featureName) {
     const self = this;
 
-    for (let i = 0; i < self._features.length; i++) {
-        if (self._features[i].name === featureName && bit_check(self._featureMask, self._features[i].bit)) {
+    for (const element of self._features) {
+        if (element.name === featureName && bit_check(self._featureMask, element.bit)) {
             return true;
         }
     }
     return false;
+};
+
+Features.prototype.enable = function (featureName) {
+    const self = this;
+
+    for (const element of self._features) {
+        if (element.name === featureName) {
+            self._featureMask = bit_set(self._featureMask, element.bit);
+        }
+    }
+};
+
+Features.prototype.disable = function (featureName) {
+    const self = this;
+
+    for (const element of self._features) {
+        if (element.name === featureName) {
+            self._featureMask = bit_clear(self._featureMask, element.bit);
+        }
+    }
 };
 
 Features.prototype.generateElements = function (featuresElements) {
