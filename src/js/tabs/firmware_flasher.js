@@ -73,16 +73,6 @@ firmware_flasher.initialize = function (callback) {
                 $('div.release_info #cloudTargetInfo').hide();
             }
 
-            if (summary.notes) {
-                let formattedNotes = summary.notes.replace(/#(\d+)/g, '[#$1](https://github.com/betaflight/betaflight/pull/$1)');
-                formattedNotes = marked.parse(formattedNotes);
-                formattedNotes = DOMPurify.sanitize(formattedNotes);
-                $('div.release_info .notes').html(formattedNotes);
-                GUI.addLinksTargetBlank($('div.release_info .notes'));
-            } else {
-                $('div.release_info .notes').html('Release notes unavailable.');
-            }
-
             if (self.targets) {
                 $('div.release_info').slideDown();
                 $('.tab-firmware_flasher .content_wrapper').animate({ scrollTop: $('div.release_info').position().top }, 1000);
