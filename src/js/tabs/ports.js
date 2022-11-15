@@ -432,14 +432,37 @@ ports.initialize = function (callback) {
         });
 
         // enable / disable features based on port configuration
-        const func = serialPortConfig.functions;
-        const featureConfig = FC.FEATURE_CONFIG.features;
+        let enableRxSerial = false;
+        let enableTelemetry = false;
+        let enableBlackbox = false;
+        let enableEsc = false;
+        let enableGps = false;
 
-        const enableRxSerial = func.includes('RX_SERIAL');
-        const enableTelemetry = func.some(e => e.startsWith("TELEMETRY"));
-        const enableBlackbox = func.includes('BLACKBOX');
-        const enableEsc = func.includes('ESC_SENSOR');
-        const enableGps = func.includes('GPS');
+        for (const port of FC.SERIAL_CONFIG.ports) {
+            const func = port.functions;
+
+            if (func.includes('RX_SERIAL')) {
+                enableRxSerial = true;
+            }
+
+            if (func.some(e => e.startsWith("TELEMETRY"))) {
+                enableTelemetry = true;
+            }
+
+            if (func.includes('BLACKBOX')) {
+                enableBlackbox = true;
+            }
+
+            if (func.includes('ESC_SENSOR')) {
+                enableEsc = true;
+            }
+
+            if (func.includes('GPS')) {
+                enableGps = true;
+            }
+        }
+
+        const featureConfig = FC.FEATURE_CONFIG.features;
 
         if (enableRxSerial) {
             featureConfig.enable('RX_SERIAL');

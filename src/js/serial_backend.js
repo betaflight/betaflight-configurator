@@ -860,7 +860,9 @@ function reinitializeConnection(callback) {
             clearInterval(reconnect);
             getStatus();
             GUI.log(i18n.getMessage('deviceReady'));
-            callback?.();
+            if (callback === typeof('function')) {
+                callback();
+            }
         } else {
             attempts++;
             if (attempts > 100) {
