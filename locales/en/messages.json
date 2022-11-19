@@ -6776,5 +6776,11 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Custom Defines"
+    },
+    "classicBuild": {
+        "message": "Classic Mode"
+    },
+    "classicBuildModeDescription": {
+        "message": "This mode ignores all the parameters here, exception for the commit. This essentially achieves the same as the classic nightlies, and is provided for convenience."
     }
 }

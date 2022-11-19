@@ -647,6 +647,16 @@ firmware_flasher.initialize = function (callback) {
             $('input.flash_manual_baud').prop('checked', false);
         }
 
+        $('input.classicbuild_mode').change(function () {
+            const status = $(this).is(':checked');
+
+            $('select[name="radioProtocols"').enabled = !status;
+            $('select[name="telemetryProtocols"').enabled = !status;
+            $('select[name="motorProtocols"').enabled = !status;
+            $('select[name="options"').enabled = !status;
+        });
+        $('input.classicbuild_mode').change();
+
         // bind UI hook so the status is saved on change
         $('input.flash_manual_baud').change(function() {
             const status = $(this).is(':checked');
@@ -778,23 +788,27 @@ firmware_flasher.initialize = function (callback) {
                     telemetryProtocols: [],
                     motorProtocols: [],
                     options: [],
+                    classicBuild: false,
                 };
 
-                $('select[name="radioProtocols"] option:selected').each(function () {
-                    request.radioProtocols.push($(this).val());
-                });
+                request.classicBuild = $('input[name="classicBuildModeCheckbox"]').is(':checked');
+                if (!request.classicBuild) {
+                    $('select[name="radioProtocols"] option:selected').each(function () {
+                        request.radioProtocols.push($(this).val());
+                    });
 
-                $('select[name="telemetryProtocols"] option:selected').each(function () {
-                    request.telemetryProtocols.push($(this).val());
-                });
+                    $('select[name="telemetryProtocols"] option:selected').each(function () {
+                        request.telemetryProtocols.push($(this).val());
+                    });
 
-                $('select[name="options"] option:selected').each(function () {
-                    request.options.push($(this).val());
-                });
+                    $('select[name="options"] option:selected').each(function () {
+                        request.options.push($(this).val());
+                    });
 
-                $('select[name="motorProtocols"] option:selected').each(function () {
-                    request.motorProtocols.push($(this).val());
-                });
+                    $('select[name="motorProtocols"] option:selected').each(function () {
+                        request.motorProtocols.push($(this).val());
+                    });
+                }
 
                 if (summary.releaseType === "Unstable") {
                     request.commit = $('select[name="commits"] option:selected').val();
