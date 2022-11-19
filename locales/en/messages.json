@@ -5547,6 +5547,13 @@
     "osdDescElementReadyMode": {
         "message": "When active READY will be displayed until flying"
     },
+    "osdTextElementRSNRValue": {
+        "message": "RSNR Value",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "RSNR Value"
+    },
     "osdTextElementUnknown": {
         "message": "Unknown $1",
         "description": "One of the elements of the OSD"
@@ -5744,6 +5751,13 @@
     "osdDescStatMinRssiDbm": {
         "message": "Minimum RSSI dBm value"
     },
+    "osdTextStatMinRSNR": {
+        "message": "Minimum RSNR value",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Minimum RSNR value"
+    },
     "osdTextStatUnknown": {
         "message": "Unknown $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5939,6 +5953,13 @@
     },
     "osdWarningOverCap": {
         "message": "Warns when the consumed mAh exceeds the configured capacity limit"
+    },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Warns when RSNR value is below alarm setting"
     },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
