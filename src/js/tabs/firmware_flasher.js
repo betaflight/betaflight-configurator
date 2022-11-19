@@ -650,10 +650,11 @@ firmware_flasher.initialize = function (callback) {
         $('input.classicbuild_mode').change(function () {
             const status = $(this).is(':checked');
 
-            $('select[name="radioProtocols"').enabled = !status;
-            $('select[name="telemetryProtocols"').enabled = !status;
-            $('select[name="motorProtocols"').enabled = !status;
-            $('select[name="options"').enabled = !status;
+            $('select[name="radioProtocols"]').attr('disabled', status);
+            $('select[name="telemetryProtocols"]').attr('disabled', status);
+            $('select[name="motorProtocols"]').attr('disabled', status);
+            $('select[name="options"]').attr('disabled', status);
+            $('input[name="customDefines"]').attr('disabled', status);
         });
         $('input.classicbuild_mode').change();
 
