@@ -2669,7 +2669,7 @@ OSD.GUI.preview = {
 };
 
 async function getCanvas() {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         return MSP.promise(MSPCodes.MSP_OSD_CANVAS);
     }
 }
