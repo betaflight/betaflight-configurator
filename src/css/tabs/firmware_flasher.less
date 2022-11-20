@@ -128,6 +128,12 @@
             margin: auto;
             color: #3f4241;
         }
+		input {
+			border: solid 1px var(--subtleAccent);
+			border-radius: 3px;
+			min-height: 20px;
+			padding: 2px 4px 2px 4px;
+		}
     }
     .release_info, .build_configuration {
 		display: none;
@@ -205,4 +211,20 @@
 			margin-bottom: 5px;
 		}
 	}
+}
+#branchInfo {
+	.select2-selection__rendered {
+		line-height: 30px !important;
+	}
+	.select2-container .select2-selection--single {
+		height: 32px !important;
+	}
+	.select2-selection__arrow {
+		height: 32px !important;
+		width: 32px;
+	}
+}
+#customDefines {
+	width: calc(95% - 6px);
+	height: 26px;
 }
