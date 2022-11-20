@@ -948,15 +948,6 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: `${FONT.symbol(SYM.PITCH)}-00.0`,
         },
-        READY_MODE: {
-            name: 'READY_MODE',
-            text: 'osdTextElementReadyMode',
-            desc: 'osdDescElementReadyMode',
-            defaultPosition: -1,
-            draw_order: 255,
-            positionable: true,
-            preview: 'READY',
-        },
         ROLL_ANGLE: {
             name: 'ROLL_ANGLE',
             text: 'osdTextElementRollAngle',
@@ -1374,6 +1365,24 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: 'AUX',
         },
+        READY_MODE: {
+            name: 'READY_MODE',
+            text: 'osdTextElementReadyMode',
+            desc: 'osdDescElementReadyMode',
+            defaultPosition: -1,
+            draw_order: 485,
+            positionable: true,
+            preview: 'READY',
+        },
+        RSNR_VALUE: {
+            name: 'RSNR_VALUE',
+            text: 'osdTextElementRSNRValue',
+            desc: 'osdDescElementRSNRValue',
+            defaultPosition: -1,
+            draw_order: 490,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.RSSI)}15`,
+        },
         SYS_GOGGLE_VOLTAGE: {
             name: 'SYS_GOGGLE_VOLTAGE',
             text: 'osdTextElementSysGoggleVoltage',
@@ -1644,6 +1653,11 @@ OSD.constants = {
             text: 'osdTextStatMinRssiDbm',
             desc: 'osdDescStatMinRssiDbm',
         },
+        MIN_RSNR: {
+            name: 'MIN_RSNR',
+            text: 'osdTextStatMinRSNR',
+            desc: 'osdDescStatMinRSNR',
+        },
     },
     ALL_WARNINGS: {
         ARMING_DISABLED: {
@@ -1730,6 +1744,11 @@ OSD.constants = {
             name: 'OVER_CAP',
             text: 'osdWarningTextOverCap',
             desc: 'osdWarningOverCap',
+        },
+        RSNR: {
+            name: 'RSNR',
+            text: 'osdWarningTextRSNR',
+            desc: 'osdWarningRSNR',
         },
 
     },
@@ -1904,6 +1923,7 @@ OSD.chooseFields = function() {
                                                                 F.WH_DRAWN,
                                                                 F.AUX_VALUE,
                                                                 F.READY_MODE,
+                                                                F.RSNR_VALUE,
                                                                 F.SYS_GOGGLE_VOLTAGE,
                                                                 F.SYS_VTX_VOLTAGE,
                                                                 F.SYS_BITRATE,
@@ -2020,6 +2040,7 @@ OSD.chooseFields = function() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
                 F.USED_WH,
+                F.MIN_RSNR,
             ]);
         }
     }
@@ -2069,6 +2090,11 @@ OSD.chooseFields = function() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.OVER_CAP,
+        ]);
+    }
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+            F.RSNR,
         ]);
     }
 };
