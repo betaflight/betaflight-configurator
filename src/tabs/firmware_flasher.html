@@ -132,38 +132,32 @@
                 <p i18n="firmwareFlasherTargetWarning"></p>
             </div>
         </div>
-    
+
         <div class="clear-both"></div>
         <div class="git_info">
             <div class="title" i18n="firmwareFlasherGithubInfoHead"></div>
             <p>
-                <strong i18n="firmwareFlasherHash"></strong> 
+                <strong i18n="firmwareFlasherHash"></strong>
                 <a i18n_title="firmwareFlasherUrl" class="hash" href="#" target="_blank"></a><br />
                 <strong i18n="firmwareFlasherCommiter"></strong> <span class="committer"></span><br />
-                <strong i18n="firmwareFlasherDate"></strong> <span class="date"></span><br /> 
+                <strong i18n="firmwareFlasherDate"></strong> <span class="date"></span><br />
                 <strong i18n="firmwareFlasherMessage"></strong> <span class="message"></span>
             </p>
         </div>
 
-        <div class="build_configuration gui_box">
+        <div class="build_configuration gui_box" style="position: relative;">
             <div class="darkgrey_box gui_box_titlebar">
+                <div class="build_configuration_toggle_wrapper">
+                    <label id="build_configuration_toggle_label">
+                        <input class="classicbuild_mode toggle" type="checkbox" name="classicBuildModeCheckbox" />
+                        <span id="build_configuration_toggle_label_text" i18n="classicBuild"></span>
+                    </label>
+                    <div class="helpicon cf_tip_wide" i18n_title="classicBuildModeDescription"></div>
+                </div>
                 <div class="spacer_box_title" style="text-align: center;" i18n="firmwareFlasherBuildConfigurationHead">
                 </div>
             </div>
-            <div class="spacer" style="margin-bottom: 10px;">
-                <div class="margin-bottom">
-                    <div style="width: 49%; float: left;">
-                        <label>
-                            <input class="classicbuild_mode toggle" type="checkbox" name="classicBuildModeCheckbox" />
-                            <span i18n="classicBuild"></span>
-                        </label>
-                        <div class="helpicon cf_tip_wide" i18n_title="classicBuildModeDescription"></div>
-                    </div>
-                    <div style="width: 49%; float: right;">
-                    </div>
-                </div>
-            </div>
-            <div class="spacer" style="margin-bottom: 10px;">
+            <div class="spacer hide-in-classic-build-mode" style="margin-bottom: 10px;">
                 <div class="margin-bottom">
                     <div style="width: 49%; float: left;">
                         <strong i18n="firmwareFlasherBuildRadioProtocols"></strong>
@@ -183,7 +177,7 @@
                     </div>
                 </div>
             </div>
-            <div class="spacer" style="margin-bottom: 10px;">
+            <div class="spacer hide-in-classic-build-mode" style="margin-bottom: 10px;">
                 <div class="margin-bottom">
                     <div style="width: 49%; float: left;">
                         <strong i18n="firmwareFlasherBuildOptions"></strong>
@@ -213,7 +207,7 @@
                             <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherBranchDescription"></div>
                         </div>
                     </div>
-                    <div style="width: 49%; float: right;">
+                    <div style="width: 49%; float: right;" class="hide-in-classic-build-mode">
                         <strong i18n="firmwareFlasherBuildCustomDefines"></strong>
                         <div id="customDefinesInfo">
                             <input id="customDefines" name="customDefines"></input>
