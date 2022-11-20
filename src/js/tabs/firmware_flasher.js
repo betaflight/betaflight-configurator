@@ -150,7 +150,18 @@ firmware_flasher.initialize = function (callback) {
 
         function buildOptionsList(select_e, options) {
             select_e.empty();
-            options.forEach((option) => {
+
+            options.sort((a, b) => {
+                if (a.name < b.name) {
+                    return -1;
+                }
+                if (a.name > b.name) {
+                    return 1;
+                }
+
+                return 0;
+            })
+            .forEach(option => {
                 if (option.default) {
                     select_e.append($(`<option value='${option.value}' selected>${option.name}</option>`));
                 } else {
