@@ -4790,6 +4790,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Units"
     },
@@ -5019,6 +5023,83 @@
     "osdTextElementAuxValue": {
         "message": "Aux value",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Goggle voltage",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Goggle voltage rendered by the goggles"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "VTX voltage",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "VTX voltage rendered by the goggles"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "VTX bitrate",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Video bitrate rendered by the goggles"
+    },
+    "osdTextElementSysDelay": {
+        "message": "VTX delay",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Video delay rendered by the goggles"
+    },
+    "osdTextElementSysDistance": {
+        "message": "VTX distance",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Video transmission distance rendered by the goggles"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Goggle link quality",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Video link quality rendered by the goggles"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Goggle DVR status",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Goggle DVR status rendered by the goggles"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "VTX DVR status",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "VTX DVR status rendered by the goggles"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Goggle system warnings",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Video system warnings rendered by the goggles"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "VTX temperature",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "VTX temperature rendered by the goggles"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Goggle fan speed",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Goggle fan speed rendered by the goggles"
     },
     "osdTextElementCraftName": {
         "message": "Craft name",

@@ -45,6 +45,7 @@ SYM.loadSymbols = function() {
     SYM.ARROW_SOUTH = 0x60;
     SYM.ARROW_EAST = 0x64;
     SYM.ARROW_SMALL_UP = 0x75;
+    SYM.ARROW_SMALL_RIGHT = 0x77;
     SYM.HEADING_LINE = 0x1D;
     SYM.HEADING_DIVIDED_LINE = 0x1C;
     SYM.HEADING_N = 0x18;
@@ -106,7 +107,6 @@ FONT.constants = {
         MAX_NVM_FONT_CHAR_FIELD_SIZE: 64,
         CHAR_HEIGHT: 18,
         CHAR_WIDTH: 12,
-        LINE: 30,
     },
     COLORS: {
         // black
@@ -292,6 +292,21 @@ OSD.initData = function() {
         preview: [],
         tooltips: [],
         osd_profiles: {},
+        VIDEO_COLS: {
+            PAL: 30,
+            NTSC: 30,
+            HD: 53,
+        },
+        VIDEO_ROWS: {
+            PAL: 16,
+            NTSC: 13,
+            HD: 20,
+        },
+        VIDEO_BUFFER_CHARS: {
+            PAL: 480,
+            NTSC: 390,
+            HD: 1590,
+        },
     };
 };
 OSD.initData();
@@ -542,6 +557,8 @@ OSD.formatPidsPreview = function(axis) {
 
 OSD.loadDisplayFields = function() {
 
+    let videoType = OSD.constants.VIDEO_TYPES[OSD.data.video_system];
+
  // All display fields, from every version, do not remove elements, only add!
     OSD.ALL_DISPLAY_FIELDS = {
         MAIN_BATT_VOLTAGE: {
@@ -632,11 +649,7 @@ OSD.loadDisplayFields = function() {
             text: 'osdTextElementCrosshairs',
             desc: 'osdDescElementCrosshairs',
             defaultPosition() {
-                let position = 193;
-                if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] !== 'NTSC') {
-                    position += FONT.constants.SIZES.LINE;
-                }
-                return position;
+                return (OSD.data.VIDEO_COLS[videoType] >> 1) + ((OSD.data.VIDEO_ROWS[videoType] >> 1) - 2) * OSD.data.VIDEO_COLS[videoType] - 2;
             },
             draw_order: 40,
             positionable() {
@@ -651,11 +664,7 @@ OSD.loadDisplayFields = function() {
             text: 'osdTextElementArtificialHorizon',
             desc: 'osdDescElementArtificialHorizon',
             defaultPosition() {
-                let position = 74;
-                if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] !== 'NTSC') {
-                    position += FONT.constants.SIZES.LINE;
-                }
-                return position;
+                return (OSD.data.VIDEO_COLS[videoType] >> 1) + ((OSD.data.VIDEO_ROWS[videoType] >> 1) - 5) * OSD.data.VIDEO_COLS[videoType] - 1;
             },
             draw_order: 10,
             positionable() {
@@ -688,11 +697,7 @@ OSD.loadDisplayFields = function() {
             text: 'osdTextElementHorizonSidebars',
             desc: 'osdDescElementHorizonSidebars',
             defaultPosition() {
-                let position = 194;
-                if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] !== 'NTSC') {
-                    position += FONT.constants.SIZES.LINE;
-                }
-                return position;
+                return (OSD.data.VIDEO_COLS[videoType] >> 1) + ((OSD.data.VIDEO_ROWS[videoType] >> 1) - 2) * OSD.data.VIDEO_COLS[videoType] - 1;
             },
             draw_order: 50,
             positionable() {
@@ -1369,6 +1374,107 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: 'AUX',
         },
+        SYS_GOGGLE_VOLTAGE: {
+            name: 'SYS_GOGGLE_VOLTAGE',
+            text: 'osdTextElementSysGoggleVoltage',
+            desc: 'osdDescElementSysGoggleVoltage',
+            defaultPosition: -1,
+            draw_order: 485,
+            positionable: true,
+            preview: 'G 16.8V',
+        },
+        SYS_VTX_VOLTAGE: {
+            name: 'SYS_VTX_VOLTAGE',
+            text: 'osdTextElementSysVtxVoltage',
+            desc: 'osdDescElementSysVtxVoltage',
+            defaultPosition: -1,
+            draw_order: 490,
+            positionable: true,
+            preview: 'A 12.6V',
+        },
+        SYS_BITRATE: {
+            name: 'SYS_BITRATE',
+            text: 'osdTextElementSysBitrate',
+            desc: 'osdDescElementSysBitrate',
+            defaultPosition: -1,
+            draw_order: 495,
+            positionable: true,
+            preview: '50MBPS',
+        },
+        SYS_DELAY: {
+            name: 'SYS_DELAY',
+            text: 'osdTextElementSysDelay',
+            desc: 'osdDescElementSysDelay',
+            defaultPosition: -1,
+            draw_order: 500,
+            positionable: true,
+            preview: '24.5MS',
+        },
+        SYS_DISTANCE: {
+            name: 'SYS_DISTANCE',
+            text: 'osdTextElementSysDistance',
+            desc: 'osdDescElementSysDistance',
+            defaultPosition: -1,
+            draw_order: 505,
+            positionable: true,
+            preview: `10${FONT.symbol(SYM.METRE)}`,
+        },
+        SYS_LQ: {
+            name: 'SYS_LQ',
+            text: 'osdTextElementSysLQ',
+            desc: 'osdDescElementSysLQ',
+            defaultPosition: -1,
+            draw_order: 510,
+            positionable: true,
+            preview: `G${FONT.symbol(SYM.LINK_QUALITY)}100`,
+        },
+        SYS_GOGGLE_DVR: {
+            name: 'SYS_GOGGLE_DVR',
+            text: 'osdTextElementSysGoggleDVR',
+            desc: 'osdDescElementSysGoggleDVR',
+            defaultPosition: -1,
+            draw_order: 515,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.ARROW_SMALL_RIGHT)}G DVR 8.4G`,
+        },
+        SYS_VTX_DVR: {
+            name: 'SYS_VTX_DVR',
+            text: 'osdTextElementSysVtxDVR',
+            desc: 'osdDescElementSysVtxDVR',
+            defaultPosition: -1,
+            draw_order: 520,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.ARROW_SMALL_RIGHT)}A DVR 1.6G`,
+        },
+        SYS_WARNINGS: {
+            name: 'SYS_WARNINGS',
+            text: 'osdTextElementSysWarnings',
+            desc: 'osdDescElementSysWarnings',
+            defaultPosition: -1,
+            draw_order: 525,
+            positionable: true,
+            preview: 'VTX WARNINGS',
+        },
+        SYS_VTX_TEMP: {
+            name: 'SYS_VTX_TEMP',
+            text: 'osdTextElementSysVtxTemp',
+            desc: 'osdDescElementSysVtxTemp',
+            defaultPosition: -1,
+            draw_order: 530,
+            positionable: true,
+            preview(osdData) {
+                return `V${OSD.generateTemperaturePreview(osdData, 45)}`;
+            },
+        },
+        SYS_FAN_SPEED: {
+            name: 'SYS_FAN_SPEED',
+            text: 'osdTextElementSysFanSpeed',
+            desc: 'osdDescElementSysFanSpeed',
+            defaultPosition: -1,
+            draw_order: 535,
+            positionable: true,
+            preview: `F${FONT.symbol(SYM.TEMPERATURE)}5`,
+        },
     };
 };
 
@@ -1379,15 +1485,8 @@ OSD.constants = {
         'AUTO',
         'PAL',
         'NTSC',
+        'HD',
     ],
-    VIDEO_LINES: {
-        PAL: 16,
-        NTSC: 13,
-    },
-    VIDEO_BUFFER_CHARS: {
-        PAL: 480,
-        NTSC: 390,
-    },
     UNIT_TYPES: [
         'IMPERIAL',
         'METRIC',
@@ -1805,6 +1904,17 @@ OSD.chooseFields = function() {
                                                                 F.WH_DRAWN,
                                                                 F.AUX_VALUE,
                                                                 F.READY_MODE,
+                                                                F.SYS_GOGGLE_VOLTAGE,
+                                                                F.SYS_VTX_VOLTAGE,
+                                                                F.SYS_BITRATE,
+                                                                F.SYS_DELAY,
+                                                                F.SYS_DISTANCE,
+                                                                F.SYS_LQ,
+                                                                F.SYS_GOGGLE_DVR,
+                                                                F.SYS_VTX_DVR,
+                                                                F.SYS_WARNINGS,
+                                                                F.SYS_VTX_TEMP,
+                                                                F.SYS_FAN_SPEED,
                                                             ]);
                                                         }
                                                     }
@@ -1968,15 +2078,13 @@ OSD.updateDisplaySize = function() {
     if (videoType === 'AUTO') {
         videoType = 'PAL';
     }
+
     // compute the size
     OSD.data.displaySize = {
-        x: FONT.constants.SIZES.LINE,
-        y: OSD.constants.VIDEO_LINES[videoType],
+        x: OSD.data.VIDEO_COLS[videoType],
+        y: OSD.data.VIDEO_ROWS[videoType],
         total: null,
     };
-    // Adjust css background grid
-    const previewLayoutElement = $(".tab-osd .display-layout");
-    videoType === 'PAL' ? previewLayoutElement.addClass('video-pal').removeClass('video-ntsc') : previewLayoutElement.addClass('video-ntsc').removeClass('video-pal');
 };
 
 OSD.drawByOrder = function(selectedPosition, field, charCode, x, y) {
@@ -2017,9 +2125,15 @@ OSD.msp = {
                 const defaultPosition = typeof (c.defaultPosition) === 'function' ? c.defaultPosition() : c.defaultPosition;
 
                 displayItem.positionable = positionable;
+
+                OSD.updateDisplaySize();
+
                 if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
                     // size * y + x
-                    displayItem.position = positionable ? FONT.constants.SIZES.LINE * ((bits >> 5) & 0x001F) + (bits & 0x001F) : defaultPosition;
+                    const xpos = ((bits >> 5) & 0x0020) | (bits & 0x001F);
+                    const ypos = (bits >> 5) & 0x001F;
+
+                    displayItem.position = positionable ? OSD.data.displaySize.x * ypos + xpos : defaultPosition;
 
                     displayItem.isVisible = [];
                     for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
@@ -2056,8 +2170,10 @@ OSD.msp = {
                         packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
                     }
                     const variantSelected = (variant << 14);
+                    const xpos = position % OSD.data.displaySize.x;
+                    const ypos = (position - xpos) / OSD.data.displaySize.x;
 
-                    return packed_visible | variantSelected | (((position / FONT.constants.SIZES.LINE) & 0x001F) << 5) | (position % FONT.constants.SIZES.LINE);
+                    return packed_visible | variantSelected | ((ypos & 0x001F) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001F);
                 } else {
                     const realPosition = position === -1 ? 0 : position;
                     return isVisible[0] ? realPosition : -1;
@@ -2483,7 +2599,9 @@ OSD.GUI.preview = {
         const displayItem = OSD.data.displayItems[fieldId];
         let position = $(this).removeAttr('style').data('position');
         const cursor = position;
-        const cursorX = cursor % FONT.constants.SIZES.LINE;
+        const cursorX = cursor % OSD.data.displaySize.x;
+
+        console.log(`cursorX=${cursorX}`);
 
         if (displayItem.preview.constructor === Array) {
             console.log(`Initial Drop Position: ${position}`);
@@ -2491,14 +2609,14 @@ OSD.GUI.preview = {
             const y = parseInt(ev.dataTransfer.getData('y'));
             console.log(`XY Co-ords: ${x}-${y}`);
             position -= x;
-            position -= (y * FONT.constants.SIZES.LINE);
+            position -= (y * OSD.data.displaySize.x);
             console.log(`Calculated Position: ${position}`);
         }
 
         if (!displayItem.ignoreSize) {
             if (displayItem.preview.constructor !== Array) {
                 // Standard preview, string type
-                const overflowsLine = FONT.constants.SIZES.LINE - ((position % FONT.constants.SIZES.LINE) + displayItem.preview.length);
+                const overflowsLine = OSD.data.displaySize.x - ((position % OSD.data.displaySize.x) + displayItem.preview.length);
                 if (overflowsLine < 0) {
                     position += overflowsLine;
                 }
@@ -2506,34 +2624,34 @@ OSD.GUI.preview = {
                 // Advanced preview, array type
                 const arrayElements = displayItem.preview;
                 const limits = OSD.searchLimitsElement(arrayElements);
-                const selectedPositionX = position % FONT.constants.SIZES.LINE;
-                let selectedPositionY = Math.trunc(position / FONT.constants.SIZES.LINE);
+                const selectedPositionX = position % OSD.data.displaySize.x;
+                let selectedPositionY = Math.trunc(position / OSD.data.displaySize.x);
                 if (arrayElements[0].constructor === String) {
                     if (position < 0 ) {
                         return;
                     }
                     if (selectedPositionX > cursorX) { // TRUE -> Detected wrap around
-                        position += FONT.constants.SIZES.LINE - selectedPositionX;
+                        position += OSD.data.displaySize.x - selectedPositionX;
                         selectedPositionY++;
-                    } else if (selectedPositionX + limits.maxX > FONT.constants.SIZES.LINE) { // TRUE -> right border of the element went beyond left edge of screen.
-                        position -= selectedPositionX + limits.maxX - FONT.constants.SIZES.LINE;
+                    } else if (selectedPositionX + limits.maxX > OSD.data.displaySize.x) { // TRUE -> right border of the element went beyond left edge of screen.
+                        position -= selectedPositionX + limits.maxX - OSD.data.displaySize.x;
                     }
                     if (selectedPositionY < 0 ) {
-                        position += Math.abs(selectedPositionY) * FONT.constants.SIZES.LINE;
+                        position += Math.abs(selectedPositionY) * OSD.data.displaySize.x;
                     } else if ((selectedPositionY + limits.maxY ) > OSD.data.displaySize.y) {
-                        position -= (selectedPositionY + limits.maxY  - OSD.data.displaySize.y) * FONT.constants.SIZES.LINE;
+                        position -= (selectedPositionY + limits.maxY  - OSD.data.displaySize.y) * OSD.data.displaySize.x;
                     }
 
                 } else {
                     if ((limits.minX < 0) && ((selectedPositionX + limits.minX) < 0)) {
                         position += Math.abs(selectedPositionX + limits.minX);
-                    } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= FONT.constants.SIZES.LINE)) {
-                        position -= (selectedPositionX + limits.maxX + 1) - FONT.constants.SIZES.LINE;
+                    } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= OSD.data.displaySize.x)) {
+                        position -= (selectedPositionX + limits.maxX + 1) - OSD.data.displaySize.x;
                     }
                     if ((limits.minY < 0) && ((selectedPositionY + limits.minY) < 0)) {
-                        position += Math.abs(selectedPositionY + limits.minY) * FONT.constants.SIZES.LINE;
+                        position += Math.abs(selectedPositionY + limits.minY) * OSD.data.displaySize.x;
                     } else if ((limits.maxY > 0) && ((selectedPositionY + limits.maxY) >= OSD.data.displaySize.y)) {
-                        position -= (selectedPositionY + limits.maxY - OSD.data.displaySize.y + 1) * FONT.constants.SIZES.LINE;
+                        position -= (selectedPositionY + limits.maxY - OSD.data.displaySize.y + 1) * OSD.data.displaySize.x;
                     }
                 }
             }
@@ -2550,6 +2668,11 @@ OSD.GUI.preview = {
     },
 };
 
+async function getCanvas() {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        return MSP.promise(MSPCodes.MSP_OSD_CANVAS);
+    }
+}
 
 const osd = {
     analyticsChanges: {},
@@ -2648,6 +2771,9 @@ osd.initialize = function(callback) {
 
         // 2 way binding... sorta
         function updateOsdView() {
+            // ask for the OSD canvas data
+            getCanvas();
+
             // ask for the OSD config data
             MSP.promise(MSPCodes.MSP_OSD_CONFIG)
                 .then(function(info) {
@@ -3077,7 +3203,6 @@ osd.initialize = function(callback) {
                         // Insert in alphabetical order, with unknown fields at the end
                         $field.name = field.name;
                         insertOrdered($displayFields, $field);
-
                     }
 
                     GUI.switchery();
@@ -3144,7 +3269,7 @@ osd.initialize = function(callback) {
                                             ctx.drawImage(img, j * 12, i * 18);
                                         }
                                     }
-                                    selectedPosition = selectedPosition - element.length + FONT.constants.SIZES.LINE;
+                                    selectedPosition = selectedPosition - element.length + OSD.data.displaySize.x;
                                 } else {
                                     const limits = OSD.searchLimitsElement(arrayElements);
                                     let offsetX = 0;
@@ -3157,7 +3282,7 @@ osd.initialize = function(callback) {
                                         }
                                         // Add the character to the preview
                                         const charCode = element.sym;
-                                        OSD.drawByOrder(selectedPosition + element.x + element.y * FONT.constants.SIZES.LINE, field, charCode, element.x, element.y);
+                                        OSD.drawByOrder(selectedPosition + element.x + element.y * OSD.data.displaySize.x, field, charCode, element.x, element.y);
                                         // Image used when "dragging" the element
                                         if (field.positionable) {
                                             const img = new Image();
