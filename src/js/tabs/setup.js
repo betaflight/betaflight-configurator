@@ -29,34 +29,6 @@ setup.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        const backupButton = $('#content .backup');
-        const restoreButton = $('#content .restore');
-
-        backupButton.on('click', () => configuration_backup(() => GUI.log(i18n.getMessage('initialSetupBackupSuccess'))));
-
-        restoreButton.on('click', () => configuration_restore(() => {
-            // get latest settings
-            TABS.setup.initialize();
-
-            GUI.log(i18n.getMessage('initialSetupRestoreSuccess'));
-        }));
-
-        if (semver.lt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE)) {
-            backupButton.addClass('disabled');
-            restoreButton.addClass('disabled');
-
-            GUI.log(i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE]));
-        }
-
-        if (CONFIGURATOR.virtualMode) {
-            // saving and uploading an imaginary config to hardware is a bad idea
-            backupButton.addClass('disabled');
-        } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-            restoreButton.addClass('disabled');
-
-            $('.backupRestore').hide();
-        }
-
         // initialize 3D Model
         self.initModel();
 
@@ -82,21 +54,17 @@ setup.initialize = function (callback) {
 
         $('#arming-disable-flag').attr('title', i18n.getMessage('initialSetupArmingDisableFlagsTooltip'));
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-            if (isExpertModeEnabled()) {
-                $('.initialSetupRebootBootloader').show();
-            } else {
-                $('.initialSetupRebootBootloader').hide();
-            }
-
-            $('a.rebootBootloader').click(function () {
-                const buffer = [];
-                buffer.push(FC.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER);
-                MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
-            });
+        if (isExpertModeEnabled()) {
+            $('.initialSetupRebootBootloader').show();
         } else {
             $('.initialSetupRebootBootloader').hide();
         }
+
+        $('a.rebootBootloader').click(function () {
+            const buffer = [];
+            buffer.push(FC.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER);
+            MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+        });
 
         // UI Hooks
         $('a.calibrateAccel').click(function () {
@@ -192,9 +160,7 @@ setup.initialize = function (callback) {
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading');
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            arming_disable_flags_e.hide();
-        }
+        arming_disable_flags_e.hide();
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
@@ -219,25 +185,20 @@ setup.initialize = function (callback) {
                 'MSP',
             ];
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_38)) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
-            }
+            disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                disarmFlagElements = disarmFlagElements.concat(['PARALYZE',
-                                                                'GPS']);
-            }
+            disarmFlagElements = disarmFlagElements.concat(['PARALYZE', 'GPS']);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
-                disarmFlagElements = disarmFlagElements.concat(['RESC']);
-                disarmFlagElements = disarmFlagElements.concat(['RPMFILTER']);
-            }
+            disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
+            disarmFlagElements = disarmFlagElements.concat(['RESC']);
+            disarmFlagElements = disarmFlagElements.concat(['RPMFILTER']);
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
                 disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD',
                                                                 'DSHOT_BBANG']);
             }
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                 disarmFlagElements = disarmFlagElements.concat(['NO_ACC_CAL', 'MOTOR_PROTO']);
             }

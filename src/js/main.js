@@ -730,11 +730,7 @@ function updateTabList(features) {
         $('#tabs ul.mode-connected li.tab_osd').hide();
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-        $('#tabs ul.mode-connected li.tab_power').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_power').hide();
-    }
+    $('#tabs ul.mode-connected li.tab_power').show();
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
         $('#tabs ul.mode-connected li.tab_vtx').show();

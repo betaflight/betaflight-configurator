@@ -40,48 +40,34 @@ pid_tuning.initialize = function (callback) {
     const PID_DEFAULT = FC.getPidDefaults();
 
     // requesting MSP_STATUS manually because it contains FC.CONFIG.profile
-    MSP.promise(MSPCodes.MSP_STATUS).then(function() {
-        if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE)) {
-            return MSP.promise(MSPCodes.MSP_PID_CONTROLLER);
-        }
-    }).then(function() {
-        return MSP.promise(MSPCodes.MSP_PIDNAMES);
-    }).then(function() {
-        return MSP.promise(MSPCodes.MSP_PID);
-    }).then(function() {
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            return MSP.promise(MSPCodes.MSP_PID_ADVANCED);
-        }
-    }).then(function() {
-        return MSP.promise(MSPCodes.MSP_RC_TUNING);
-    }).then(function() {
-        return MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
-    }).then(function() {
-        return MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-    }).then(function() {
-        return MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
-    }).then(function() {
-        let promise;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            promise = MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
-        }
+    MSP.promise(MSPCodes.MSP_STATUS)
+        .then(() => MSP.promise(MSPCodes.MSP_PID_CONTROLLER))
+        .then(() => MSP.promise(MSPCodes.MSP_PIDNAMES))
+        .then(() => MSP.promise(MSPCodes.MSP_PID))
+        .then(() => MSP.promise(MSPCodes.MSP_PID_ADVANCED))
+        .then(() => MSP.promise(MSPCodes.MSP_RC_TUNING))
+        .then(() => MSP.promise(MSPCodes.MSP_FILTER_CONFIG))
+        .then(() => MSP.promise(MSPCodes.MSP_RC_DEADBAND))
+        .then(() => MSP.promise(MSPCodes.MSP_MOTOR_CONFIG))
+        .then(() => {
+            let promise;
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                promise = MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
+            }
 
-        return promise;
-    }).then(function() {
-        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
-    });
+            return promise;
+            })
+        .then(() => MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html));
 
     function load_html() {
         $('#content').load("./tabs/pid_tuning.html", process_html);
     }
 
-    const vbatpidcompensationIsUsed = semver.gte(FC.CONFIG.apiVersion, "1.16.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44);
+    const vbatpidcompensationIsUsed = semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44);
 
     function pid_and_rc_to_form() {
         self.setProfile();
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            self.setRateProfile();
-        }
+        self.setRateProfile();
 
         // Fill in the data from PIDs array for each pid name
         FC.PID_NAMES.forEach(function(elementPid, indexPid) {
@@ -119,286 +105,207 @@ pid_tuning.initialize = function (callback) {
             $('.tpa-old input[name="tpa-breakpoint"]').val(FC.RC_TUNING.dynamic_THR_breakpoint);
         }
 
-        if (semver.lt(FC.CONFIG.apiVersion, "1.10.0")) {
-            $('.pid_tuning input[name="rc_yaw_expo"]').hide();
-            $('.pid_tuning input[name="rc_expo"]').attr("rowspan", "3");
-        }
+        $('.pid_tuning input[name="rc_yaw_expo"]').hide();
+        $('.pid_tuning input[name="rc_expo"]').attr("rowspan", "3");
 
         $('.vbatpidcompensation').toggle(vbatpidcompensationIsUsed);
         $('input[id="vbatpidcompensation"]').prop('checked', FC.ADVANCED_TUNING.vbatPidCompensation !== 0);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            $('#pid-tuning .delta select').val(FC.ADVANCED_TUNING.deltaMethod);
-        }
+        $('#pid-tuning .delta select').val(FC.ADVANCED_TUNING.deltaMethod);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            $('.pid_tuning input[name="rc_rate_yaw"]').val(FC.RC_TUNING.rcYawRate.toFixed(2));
-            $('.pid_filter input[name="gyroLowpassFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_hz);
-            $('.pid_filter input[name="dtermLowpassFrequency"]').val(FC.FILTER_CONFIG.dterm_lowpass_hz);
-            $('.pid_filter input[name="yawLowpassFrequency"]').val(FC.FILTER_CONFIG.yaw_lowpass_hz);
-        } else {
-            $('.tab-pid_tuning .subtab-filter').hide();
-            $('.tab-pid_tuning .tab-container').hide();
-            $('.pid_tuning input[name="rc_rate_yaw"]').hide();
-        }
+        $('.pid_tuning input[name="rc_rate_yaw"]').val(FC.RC_TUNING.rcYawRate.toFixed(2));
+        $('.pid_filter input[name="gyroLowpassFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_hz);
+        $('.pid_filter input[name="dtermLowpassFrequency"]').val(FC.FILTER_CONFIG.dterm_lowpass_hz);
+        $('.pid_filter input[name="yawLowpassFrequency"]').val(FC.FILTER_CONFIG.yaw_lowpass_hz);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")
-            || semver.gte(FC.CONFIG.apiVersion, "1.16.0") && FC.FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES')) {
+        if (FC.FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES')) {
             $('#pid-tuning .rate').text(i18n.getMessage("pidTuningSuperRate"));
         } else {
             $('#pid-tuning .rate').text(i18n.getMessage("pidTuningRate"));
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            $('.pid_filter input[name="gyroNotch1Frequency"]').val(FC.FILTER_CONFIG.gyro_notch_hz);
-            $('.pid_filter input[name="gyroNotch1Cutoff"]').val(FC.FILTER_CONFIG.gyro_notch_cutoff);
-            $('.pid_filter input[name="dTermNotchFrequency"]').val(FC.FILTER_CONFIG.dterm_notch_hz);
-            $('.pid_filter input[name="dTermNotchCutoff"]').val(FC.FILTER_CONFIG.dterm_notch_cutoff);
+        $('.pid_filter input[name="gyroNotch1Frequency"]').val(FC.FILTER_CONFIG.gyro_notch_hz);
+        $('.pid_filter input[name="gyroNotch1Cutoff"]').val(FC.FILTER_CONFIG.gyro_notch_cutoff);
+        $('.pid_filter input[name="dTermNotchFrequency"]').val(FC.FILTER_CONFIG.dterm_notch_hz);
+        $('.pid_filter input[name="dTermNotchCutoff"]').val(FC.FILTER_CONFIG.dterm_notch_cutoff);
 
-            const dtermSetpointTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_38)) {
-                dtermSetpointTransitionNumberElement.attr('min', 0.00);
-            } else {
-                dtermSetpointTransitionNumberElement.attr('min', 0.01);
-            }
+        const dtermSetpointTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
+        dtermSetpointTransitionNumberElement.attr('min', 0.00);
+         dtermSetpointTransitionNumberElement.val(FC.ADVANCED_TUNING.dtermSetpointTransition / 100);
 
-            dtermSetpointTransitionNumberElement.val(FC.ADVANCED_TUNING.dtermSetpointTransition / 100);
+        $('input[name="dtermSetpoint-number"]').val(FC.ADVANCED_TUNING.dtermSetpointWeight / 100);
 
-            $('input[name="dtermSetpoint-number"]').val(FC.ADVANCED_TUNING.dtermSetpointWeight / 100);
-        } else {
-            $('.pid_filter .newFilter').hide();
-        }
+        $('.pid_filter input[name="gyroNotch2Frequency"]').val(FC.FILTER_CONFIG.gyro_notch2_hz);
+        $('.pid_filter input[name="gyroNotch2Cutoff"]').val(FC.FILTER_CONFIG.gyro_notch2_cutoff);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-            $('.pid_filter input[name="gyroNotch2Frequency"]').val(FC.FILTER_CONFIG.gyro_notch2_hz);
-            $('.pid_filter input[name="gyroNotch2Cutoff"]').val(FC.FILTER_CONFIG.gyro_notch2_cutoff);
-        } else {
-            $('.pid_filter .gyroNotch2').hide();
-        }
+        $('.pid_tuning input[name="angleLimit"]').val(FC.ADVANCED_TUNING.levelAngleLimit);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
-            $('.pid_tuning input[name="angleLimit"]').val(FC.ADVANCED_TUNING.levelAngleLimit);
-
-            if (semver.lte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                $('.pid_tuning input[name="sensitivity"]').val(FC.ADVANCED_TUNING.levelSensitivity);
-            } else {
-                $('.pid_tuning input[name="sensitivity"]').hide();
-                $('.pid_tuning .levelSensitivityHeader').empty();
-            }
-        } else {
-            $('.pid_sensitivity').hide();
-        }
+        $('.pid_tuning input[name="sensitivity"]').hide();
+        $('.pid_tuning .levelSensitivityHeader').empty();
 
         const antiGravitySwitch = $('#antiGravitySwitch');
         const antiGravityGain = $('.antigravity input[name="itermAcceleratorGain"]');
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            $('.pid_filter select[name="dtermLowpassType"]').val(FC.FILTER_CONFIG.dterm_lowpass_type);
+        $('.pid_filter select[name="dtermLowpassType"]').val(FC.FILTER_CONFIG.dterm_lowpass_type);
 
-            const ITERM_ACCELERATOR_GAIN_OFF = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0 : 1000;
+        const ITERM_ACCELERATOR_GAIN_OFF = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0 : 1000;
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            // we keep the same name in html - just switching variable.
+            antiGravityGain.val(FC.ADVANCED_TUNING.antiGravityGain / 10);
+            antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.antiGravityGain !== ITERM_ACCELERATOR_GAIN_OFF);
+        } else {
+            $('.antigravity input[name="itermThrottleThreshold"]').val(FC.ADVANCED_TUNING.itermThrottleThreshold);
+            antiGravityGain.val(FC.ADVANCED_TUNING.itermAcceleratorGain / 1000);
+            antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.itermAcceleratorGain !== ITERM_ACCELERATOR_GAIN_OFF);
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+            antiGravityGain.attr("min", "0.1");
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                // we keep the same name in html - just switching variable.
-                antiGravityGain.val(FC.ADVANCED_TUNING.antiGravityGain / 10);
-                antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.antiGravityGain !== ITERM_ACCELERATOR_GAIN_OFF);
-            } else {
-                $('.antigravity input[name="itermThrottleThreshold"]').val(FC.ADVANCED_TUNING.itermThrottleThreshold);
-                antiGravityGain.val(FC.ADVANCED_TUNING.itermAcceleratorGain / 1000);
-                antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.itermAcceleratorGain !== ITERM_ACCELERATOR_GAIN_OFF);
+                antiGravityGain.attr({ "min": "0.1", "max": "25.0", "step": "0.1" });
             }
+        }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                antiGravityGain.attr("min", "0.1");
+        antiGravitySwitch.on("change", function() {
+            if (antiGravitySwitch.is(':checked')) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    antiGravityGain.attr({ "min": "0.1", "max": "25.0", "step": "0.1" });
-                }
-            }
-
-            antiGravitySwitch.on("change", function() {
-                if (antiGravitySwitch.is(':checked')) {
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                        antiGravityGain.val(Number.parseFloat(FC.ADVANCED_TUNING.antiGravityGain / 10 || 8).toFixed(1));
-                    } else {
-                        const DEFAULT_ACCELERATOR_GAIN = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? 3.5 : 1.1;
-
-                        if (FC.ADVANCED_TUNING.itermAcceleratorGain === ITERM_ACCELERATOR_GAIN_OFF) {
-                            antiGravityGain.val(DEFAULT_ACCELERATOR_GAIN);
-                        } else {
-                            const itermAcceleratorGain = (FC.ADVANCED_TUNING.itermAcceleratorGain / 1000);
-                            antiGravityGain.val(itermAcceleratorGain);
-                        }
-                    }
-
-                    $('.antigravity .suboption').show();
-                    $('.antigravity .antiGravityThres').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.ADVANCED_TUNING.itermAcceleratorGain === 0);
-                    $('.antigravity .antiGravityMode').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
+                    antiGravityGain.val(Number.parseFloat(FC.ADVANCED_TUNING.antiGravityGain / 10 || 8).toFixed(1));
                 } else {
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                        antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF / 1000);
-                    } else {
-                        $('.antigravity select[id="antiGravityMode"]').val(0);
-                        antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF);
-                    }
+                    const DEFAULT_ACCELERATOR_GAIN = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? 3.5 : 1.1;
 
-                    $('.antigravity .suboption').hide();
+                    if (FC.ADVANCED_TUNING.itermAcceleratorGain === ITERM_ACCELERATOR_GAIN_OFF) {
+                        antiGravityGain.val(DEFAULT_ACCELERATOR_GAIN);
+                    } else {
+                        const itermAcceleratorGain = (FC.ADVANCED_TUNING.itermAcceleratorGain / 1000);
+                        antiGravityGain.val(itermAcceleratorGain);
+                    }
                 }
-            });
-            antiGravitySwitch.trigger("change");
-        } else {
-            $('.dtermLowpassType').hide();
-            $('.antigravity').hide();
-        }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-            $('.pid_tuning input[name="rc_rate_pitch"]').val(FC.RC_TUNING.rcPitchRate.toFixed(2));
-            $('.pid_tuning input[name="rc_pitch_expo"]').val(FC.RC_TUNING.RC_PITCH_EXPO.toFixed(2));
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-
-            $('.pid_filter input[name="gyroLowpass2Frequency"]').val(FC.FILTER_CONFIG.gyro_lowpass2_hz);
-            $('.pid_filter select[name="gyroLowpassType"]').val(FC.FILTER_CONFIG.gyro_lowpass_type);
-            $('.pid_filter select[name="gyroLowpass2Type"]').val(FC.FILTER_CONFIG.gyro_lowpass2_type);
-            $('.pid_filter input[name="dtermLowpass2Frequency"]').val(FC.FILTER_CONFIG.dterm_lowpass2_hz);
-            $('.pid_filter select[name="dtermLowpass2Type"]').val(FC.FILTER_CONFIG.dterm_lowpass2_type);
-
-            // We load it again because the limits are now bigger than in 1.16.0
-            $('.pid_filter input[name="gyroLowpassFrequency"]').attr("max","16000");
-            $('.pid_filter input[name="gyroLowpassFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_hz);
-            //removes 5th column which is Feedforward
-            $('#pid_main .pid_titlebar2 th').attr('colspan', 4);
-        } else {
-            $('.gyroLowpass2').hide();
-            $('.gyroLowpass2Type').hide();
-            $('.dtermLowpass2').hide();
-            $('#pid_main .pid_titlebar2 th').attr('colspan', 4);
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-
-            // I Term Rotation
-            $('input[id="itermrotation"]').prop('checked', FC.ADVANCED_TUNING.itermRotation !== 0);
-
-             // Smart Feed Forward
-            $('input[id="smartfeedforward"]').prop('checked', FC.ADVANCED_TUNING.smartFeedforward !== 0);
-
-            // I Term Relax
-            const itermRelaxCheck = $('input[id="itermrelax"]');
-
-            itermRelaxCheck.prop('checked', FC.ADVANCED_TUNING.itermRelax !== 0);
-            $('select[id="itermrelaxAxes"]').val(FC.ADVANCED_TUNING.itermRelax > 0 ? FC.ADVANCED_TUNING.itermRelax : 1);
-            $('select[id="itermrelaxType"]').val(FC.ADVANCED_TUNING.itermRelaxType);
-            $('input[name="itermRelaxCutoff"]').val(FC.ADVANCED_TUNING.itermRelaxCutoff);
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                $('.itermrelax input[name="itermRelaxCutoff"]').attr("max","50");
-            }
-
-            itermRelaxCheck.change(function() {
-                const checked = $(this).is(':checked');
-
-                if (checked) {
-                    $('.itermrelax .suboption').show();
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                        $('.itermRelaxCutoff').show();
-                    } else {
-                        $('.itermRelaxCutoff').hide();
-                    }
+                $('.antigravity .suboption').show();
+                $('.antigravity .antiGravityThres').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.ADVANCED_TUNING.itermAcceleratorGain === 0);
+                $('.antigravity .antiGravityMode').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
+            } else {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF / 1000);
                 } else {
-                    $('.itermrelax .suboption').hide();
+                    $('.antigravity select[id="antiGravityMode"]').val(0);
+                    antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF);
                 }
-            });
-            itermRelaxCheck.change();
 
-            // Absolute Control
-            const absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
-            absoluteControlGainNumberElement.val(FC.ADVANCED_TUNING.absoluteControlGain).trigger('input');
-
-            // Throttle Boost
-            const throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
-            throttleBoostNumberElement.val(FC.ADVANCED_TUNING.throttleBoost).trigger('input');
-
-            // Acro Trainer
-            const acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
-            acroTrainerAngleLimitNumberElement.val(FC.ADVANCED_TUNING.acroTrainerAngleLimit).trigger('input');
-
-            // Yaw D
-            $('.pid_tuning .YAW input[name="d"]').val(FC.PIDS[2][2]); // PID Yaw D
-
-            // Feedforward
-            $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
-            $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
-            $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
-            $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
-
-            const feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
-            feedforwardTransitionNumberElement.val(Number.parseFloat(FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2));
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                // AntiGravity Mode
-                const antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
-
-                antiGravityModeSelect.on('change', function () {
-                    const antiGravityModeValue = antiGravityModeSelect.val();
-
-                    // Smooth removes threshold
-                    $('.antiGravityThres').toggle(antiGravityModeValue !== 0);
-                });
-
-                antiGravityModeSelect.val(FC.ADVANCED_TUNING.antiGravityMode).trigger('change');
+                $('.antigravity .suboption').hide();
             }
+        });
+        antiGravitySwitch.trigger("change");
 
-        } else {
-            $('.itermrotation').hide();
-            $('.smartfeedforward').hide();
-            $('.itermrelax').hide();
-            $('.absoluteControlGain').hide();
-            $('.throttleBoost').hide();
-            $('.acroTrainerAngleLimit').hide();
+        $('.pid_tuning input[name="rc_rate_pitch"]').val(FC.RC_TUNING.rcPitchRate.toFixed(2));
+        $('.pid_tuning input[name="rc_pitch_expo"]').val(FC.RC_TUNING.RC_PITCH_EXPO.toFixed(2));
 
-            $('.pid_tuning .YAW input[name="d"]').hide();
 
-            // Feedforward column
-            $('#pid_main tr :nth-child(6)').hide();
+        $('.pid_filter input[name="gyroLowpass2Frequency"]').val(FC.FILTER_CONFIG.gyro_lowpass2_hz);
+        $('.pid_filter select[name="gyroLowpassType"]').val(FC.FILTER_CONFIG.gyro_lowpass_type);
+        $('.pid_filter select[name="gyroLowpass2Type"]').val(FC.FILTER_CONFIG.gyro_lowpass2_type);
+        $('.pid_filter input[name="dtermLowpass2Frequency"]').val(FC.FILTER_CONFIG.dterm_lowpass2_hz);
+        $('.pid_filter select[name="dtermLowpass2Type"]').val(FC.FILTER_CONFIG.dterm_lowpass2_type);
 
-            $('#pid-tuning .feedforwardGroup').hide();
+        // We load it again because the limits are now bigger than in 1.16.0
+        $('.pid_filter input[name="gyroLowpassFrequency"]').attr("max","16000");
+        $('.pid_filter input[name="gyroLowpassFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_hz);
+        //removes 5th column which is Feedforward
+        $('#pid_main .pid_titlebar2 th').attr('colspan', 4);
+
+        // I Term Rotation
+        $('input[id="itermrotation"]').prop('checked', FC.ADVANCED_TUNING.itermRotation !== 0);
+
+            // Smart Feed Forward
+        $('input[id="smartfeedforward"]').prop('checked', FC.ADVANCED_TUNING.smartFeedforward !== 0);
+
+        // I Term Relax
+        const itermRelaxCheck = $('input[id="itermrelax"]');
+
+        itermRelaxCheck.prop('checked', FC.ADVANCED_TUNING.itermRelax !== 0);
+        $('select[id="itermrelaxAxes"]').val(FC.ADVANCED_TUNING.itermRelax > 0 ? FC.ADVANCED_TUNING.itermRelax : 1);
+        $('select[id="itermrelaxType"]').val(FC.ADVANCED_TUNING.itermRelaxType);
+        $('input[name="itermRelaxCutoff"]').val(FC.ADVANCED_TUNING.itermRelaxCutoff);
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+            $('.itermrelax input[name="itermRelaxCutoff"]').attr("max","50");
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-            $('select[id="throttleLimitType"]').val(FC.RC_TUNING.throttleLimitType);
-            $('.throttle_limit input[name="throttleLimitPercent"]').val(FC.RC_TUNING.throttleLimitPercent);
+        itermRelaxCheck.change(function() {
+            const checked = $(this).is(':checked');
 
-            $('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz);
-            $('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz);
-            $('.pid_filter select[name="gyroLowpassDynType"]').val(FC.FILTER_CONFIG.gyro_lowpass_type);
+            if (checked) {
+                $('.itermrelax .suboption').show();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+                    $('.itermRelaxCutoff').show();
+                } else {
+                    $('.itermRelaxCutoff').hide();
+                }
+            } else {
+                $('.itermrelax .suboption').hide();
+            }
+        });
+        itermRelaxCheck.change();
 
-            $('.pid_filter input[name="dtermLowpassDynMinFrequency"]').val(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz);
-            $('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
-            $('.pid_filter select[name="dtermLowpassDynType"]').val(FC.FILTER_CONFIG.dterm_lowpass_type);
+        // Absolute Control
+        const absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
+        absoluteControlGainNumberElement.val(FC.ADVANCED_TUNING.absoluteControlGain).trigger('input');
 
-            $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
-            $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
-            $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
-            $('.dminGroup input[name="dMinGain"]').val(FC.ADVANCED_TUNING.dMinGain);
-            $('.dminGroup input[name="dMinAdvance"]').val(FC.ADVANCED_TUNING.dMinAdvance);
+        // Throttle Boost
+        const throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
+        throttleBoostNumberElement.val(FC.ADVANCED_TUNING.throttleBoost).trigger('input');
 
-            $('input[id="useIntegratedYaw"]').prop('checked', FC.ADVANCED_TUNING.useIntegratedYaw !== 0);
-            //dmin column
-            $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
-        } else {
-            $('.throttle_limit').hide();
+        // Acro Trainer
+        const acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
+        acroTrainerAngleLimitNumberElement.val(FC.ADVANCED_TUNING.acroTrainerAngleLimit).trigger('input');
 
-            $('.gyroLowpassDynLegacy').hide();
-            $('.dtermLowpassDynLegacy').hide();
-            $('.dtermLowpass2TypeGroup').hide();
+        // Yaw D
+        $('.pid_tuning .YAW input[name="d"]').val(FC.PIDS[2][2]); // PID Yaw D
 
-            $('.dminGroup').hide();
-            $('.dMinDisabledNote').hide();
-            //dmin column
-            $('#pid_main tr :nth-child(5)').hide();
+        // Feedforward
+        $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
+        $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
+        $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
+        $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
 
-            $('.integratedYaw').hide();
+        const feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
+        feedforwardTransitionNumberElement.val(Number.parseFloat(FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2));
+
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            // AntiGravity Mode
+            const antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
+
+            antiGravityModeSelect.on('change', function () {
+                const antiGravityModeValue = antiGravityModeSelect.val();
+
+                // Smooth removes threshold
+                $('.antiGravityThres').toggle(antiGravityModeValue !== 0);
+            });
+
+            antiGravityModeSelect.val(FC.ADVANCED_TUNING.antiGravityMode).trigger('change');
         }
+
+        $('select[id="throttleLimitType"]').val(FC.RC_TUNING.throttleLimitType);
+        $('.throttle_limit input[name="throttleLimitPercent"]').val(FC.RC_TUNING.throttleLimitPercent);
+
+        $('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz);
+        $('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz);
+        $('.pid_filter select[name="gyroLowpassDynType"]').val(FC.FILTER_CONFIG.gyro_lowpass_type);
+
+        $('.pid_filter input[name="dtermLowpassDynMinFrequency"]').val(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz);
+        $('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
+        $('.pid_filter select[name="dtermLowpassDynType"]').val(FC.FILTER_CONFIG.dterm_lowpass_type);
+
+        $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
+        $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
+        $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
+        $('.dminGroup input[name="dMinGain"]').val(FC.ADVANCED_TUNING.dMinGain);
+        $('.dminGroup input[name="dMinAdvance"]').val(FC.ADVANCED_TUNING.dMinAdvance);
+
+        $('input[id="useIntegratedYaw"]').prop('checked', FC.ADVANCED_TUNING.useIntegratedYaw !== 0);
+        //dmin column
+        $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
 
@@ -623,14 +530,10 @@ pid_tuning.initialize = function (callback) {
             $('.vbatSagCompensation').hide();
             $('.thrustLinearization').hide();
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-                $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll > 0 ? FC.ADVANCED_TUNING.feedforwardRoll : PID_DEFAULT[4]);
-                $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch > 0 ? FC.ADVANCED_TUNING.feedforwardPitch : PID_DEFAULT[9]);
-                $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw > 0 ? FC.ADVANCED_TUNING.feedforwardYaw : PID_DEFAULT[14]);
-                $('span.feedforwardOption').hide();
-            } else {
-                $('.feedforwardGroup').hide();
-            }
+            $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll > 0 ? FC.ADVANCED_TUNING.feedforwardRoll : PID_DEFAULT[4]);
+            $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch > 0 ? FC.ADVANCED_TUNING.feedforwardPitch : PID_DEFAULT[9]);
+            $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw > 0 ? FC.ADVANCED_TUNING.feedforwardYaw : PID_DEFAULT[14]);
+            $('span.feedforwardOption').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -712,54 +615,52 @@ pid_tuning.initialize = function (callback) {
         }).change();
 
         // dMinSwitch toggle - renamed to Dynamic Damping and disabled in 4.3
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-            const dMinSwitch = $('#dMinSwitch');
+        const dMinSwitch = $('#dMinSwitch');
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                const box = document.getElementById('dMinSwitch');
-                if (box.parentNode) {
-                    box.parentNode.removeChild(box);
-                }
-                $('.dMinDisabledNote').hide();
-            } else {
-                dMinSwitch.prop('checked', FC.ADVANCED_TUNING.dMinRoll > 0 || FC.ADVANCED_TUNING.dMinPitch > 0 || FC.ADVANCED_TUNING.dMinYaw > 0);
-
-                dMinSwitch.on('change', function() {
-                    const checked = $(this).is(':checked');
-
-                    if (checked) {
-                        if ($('.pid_tuning input[name="dMinRoll"]').val() == 0 && $('.pid_tuning input[name="dMinPitch"]').val() == 0 && $('.pid_tuning input[name="dMinYaw"]').val() == 0) {
-                            // when enabling dmin set its value based on 0.57x of actual dmax, dmin is limited to 100
-                            $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.57), 100));
-                            $('.pid_tuning input[name="dMinPitch"]').val(Math.min(Math.round($('.pid_tuning .PITCH input[name="d"]').val() * 0.57), 100));
-                            $('.pid_tuning input[name="dMinYaw"]').val(Math.min(Math.round($('.pid_tuning .YAW input[name="d"]').val() * 0.57), 100));
-                            if (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                                $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.65), 100));
-                                $('.pid_tuning input[name="dMinPitch"]').val(Math.min(Math.round($('.pid_tuning .PITCH input[name="d"]').val() * 0.65), 100));
-                                $('.pid_tuning input[name="dMinYaw"]').val(Math.min(Math.round($('.pid_tuning .YAW input[name="d"]').val() * 0.65), 100));
-                            }
-                        } else {
-                            $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
-                            $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
-                            $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
-                        }
-                        $('.dMinDisabledNote').hide();
-                        $('.dminGroup .suboption').show();
-                        $('#pid_main tr :nth-child(5)').show();
-                        $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
-                        $('.derivativeText').text(i18n.getMessage("pidTuningDMax"));
-                    } else {
-                        $('.dMinDisabledNote').show();
-                        $('.dminGroup .suboption').hide();
-                        $('#pid_main tr :nth-child(5)').hide();
-                        $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
-                        $('.derivativeText').text(i18n.getMessage("pidTuningDerivative"));
-                        $('.pid_tuning input[name="dMinRoll"]').val(0);
-                        $('.pid_tuning input[name="dMinPitch"]').val(0);
-                        $('.pid_tuning input[name="dMinYaw"]').val(0);
-                    }
-                }).trigger('change');
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+            const box = document.getElementById('dMinSwitch');
+            if (box.parentNode) {
+                box.parentNode.removeChild(box);
             }
+            $('.dMinDisabledNote').hide();
+        } else {
+            dMinSwitch.prop('checked', FC.ADVANCED_TUNING.dMinRoll > 0 || FC.ADVANCED_TUNING.dMinPitch > 0 || FC.ADVANCED_TUNING.dMinYaw > 0);
+
+            dMinSwitch.on('change', function() {
+                const checked = $(this).is(':checked');
+
+                if (checked) {
+                    if ($('.pid_tuning input[name="dMinRoll"]').val() == 0 && $('.pid_tuning input[name="dMinPitch"]').val() == 0 && $('.pid_tuning input[name="dMinYaw"]').val() == 0) {
+                        // when enabling dmin set its value based on 0.57x of actual dmax, dmin is limited to 100
+                        $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.57), 100));
+                        $('.pid_tuning input[name="dMinPitch"]').val(Math.min(Math.round($('.pid_tuning .PITCH input[name="d"]').val() * 0.57), 100));
+                        $('.pid_tuning input[name="dMinYaw"]').val(Math.min(Math.round($('.pid_tuning .YAW input[name="d"]').val() * 0.57), 100));
+                        if (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                            $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.65), 100));
+                            $('.pid_tuning input[name="dMinPitch"]').val(Math.min(Math.round($('.pid_tuning .PITCH input[name="d"]').val() * 0.65), 100));
+                            $('.pid_tuning input[name="dMinYaw"]').val(Math.min(Math.round($('.pid_tuning .YAW input[name="d"]').val() * 0.65), 100));
+                        }
+                    } else {
+                        $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
+                        $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
+                        $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
+                    }
+                    $('.dMinDisabledNote').hide();
+                    $('.dminGroup .suboption').show();
+                    $('#pid_main tr :nth-child(5)').show();
+                    $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
+                    $('.derivativeText').text(i18n.getMessage("pidTuningDMax"));
+                } else {
+                    $('.dMinDisabledNote').show();
+                    $('.dminGroup .suboption').hide();
+                    $('#pid_main tr :nth-child(5)').hide();
+                    $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
+                    $('.derivativeText').text(i18n.getMessage("pidTuningDerivative"));
+                    $('.pid_tuning input[name="dMinRoll"]').val(0);
+                    $('.pid_tuning input[name="dMinPitch"]').val(0);
+                    $('.pid_tuning input[name="dMinYaw"]').val(0);
+                }
+            }).trigger('change');
         }
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
@@ -1211,102 +1112,82 @@ pid_tuning.initialize = function (callback) {
             FC.ADVANCED_TUNING.vbatPidCompensation = value;
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            FC.ADVANCED_TUNING.deltaMethod = $('#pid-tuning .delta select').val();
-        }
+        FC.ADVANCED_TUNING.deltaMethod = $('#pid-tuning .delta select').val();
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            FC.ADVANCED_TUNING.dtermSetpointTransition = parseInt($('input[name="dtermSetpointTransition-number"]').val() * 100);
-            FC.ADVANCED_TUNING.dtermSetpointWeight = parseInt($('input[name="dtermSetpoint-number"]').val() * 100);
+        FC.ADVANCED_TUNING.dtermSetpointTransition = parseInt($('input[name="dtermSetpointTransition-number"]').val() * 100);
+        FC.ADVANCED_TUNING.dtermSetpointWeight = parseInt($('input[name="dtermSetpoint-number"]').val() * 100);
 
-            FC.FILTER_CONFIG.gyro_notch_hz = parseInt($('.pid_filter input[name="gyroNotch1Frequency"]').val());
-            FC.FILTER_CONFIG.gyro_notch_cutoff = parseInt($('.pid_filter input[name="gyroNotch1Cutoff"]').val());
-            FC.FILTER_CONFIG.dterm_notch_hz = parseInt($('.pid_filter input[name="dTermNotchFrequency"]').val());
-            FC.FILTER_CONFIG.dterm_notch_cutoff = parseInt($('.pid_filter input[name="dTermNotchCutoff"]').val());
-            if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-                FC.FILTER_CONFIG.gyro_notch2_hz = parseInt($('.pid_filter input[name="gyroNotch2Frequency"]').val());
-                FC.FILTER_CONFIG.gyro_notch2_cutoff = parseInt($('.pid_filter input[name="gyroNotch2Cutoff"]').val());
-            }
-        }
+        FC.FILTER_CONFIG.gyro_notch_hz = parseInt($('.pid_filter input[name="gyroNotch1Frequency"]').val());
+        FC.FILTER_CONFIG.gyro_notch_cutoff = parseInt($('.pid_filter input[name="gyroNotch1Cutoff"]').val());
+        FC.FILTER_CONFIG.dterm_notch_hz = parseInt($('.pid_filter input[name="dTermNotchFrequency"]').val());
+        FC.FILTER_CONFIG.dterm_notch_cutoff = parseInt($('.pid_filter input[name="dTermNotchCutoff"]').val());
+        FC.FILTER_CONFIG.gyro_notch2_hz = parseInt($('.pid_filter input[name="gyroNotch2Frequency"]').val());
+        FC.FILTER_CONFIG.gyro_notch2_cutoff = parseInt($('.pid_filter input[name="gyroNotch2Cutoff"]').val());
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
-            FC.ADVANCED_TUNING.levelAngleLimit = parseInt($('.pid_tuning input[name="angleLimit"]').val());
-
-            if (semver.lte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                FC.ADVANCED_TUNING.levelSensitivity = parseInt($('.pid_tuning input[name="sensitivity"]').val());
-            }
-        }
+        FC.ADVANCED_TUNING.levelAngleLimit = parseInt($('.pid_tuning input[name="angleLimit"]').val());
 
         const antiGravityGain = $('.antigravity input[name="itermAcceleratorGain"]');
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            FC.FILTER_CONFIG.dterm_lowpass_type = parseInt($('.pid_filter select[name="dtermLowpassType"]').val());
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                FC.ADVANCED_TUNING.antiGravityGain = parseInt(antiGravityGain.val() * 10);
-            } else {
-                FC.ADVANCED_TUNING.itermThrottleThreshold = parseInt($('.antigravity input[name="itermThrottleThreshold"]').val());
-                FC.ADVANCED_TUNING.itermAcceleratorGain = parseInt(antiGravityGain.val() * 1000);
+        FC.FILTER_CONFIG.dterm_lowpass_type = parseInt($('.pid_filter select[name="dtermLowpassType"]').val());
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            FC.ADVANCED_TUNING.antiGravityGain = parseInt(antiGravityGain.val() * 10);
+        } else {
+            FC.ADVANCED_TUNING.itermThrottleThreshold = parseInt($('.antigravity input[name="itermThrottleThreshold"]').val());
+            FC.ADVANCED_TUNING.itermAcceleratorGain = parseInt(antiGravityGain.val() * 1000);
+        }
+
+        FC.FILTER_CONFIG.gyro_lowpass2_hz = parseInt($('.pid_filter input[name="gyroLowpass2Frequency"]').val());
+        FC.FILTER_CONFIG.gyro_lowpass_type = parseInt($('.pid_filter select[name="gyroLowpassType"]').val());
+        FC.FILTER_CONFIG.gyro_lowpass2_type = parseInt($('.pid_filter select[name="gyroLowpass2Type"]').val());
+        FC.FILTER_CONFIG.dterm_lowpass2_hz = parseInt($('.pid_filter input[name="dtermLowpass2Frequency"]').val());
+        FC.FILTER_CONFIG.dterm_lowpass2_type = parseInt($('.pid_filter select[name="dtermLowpass2Type"]').val());
+
+        FC.ADVANCED_TUNING.itermRotation = $('input[id="itermrotation"]').is(':checked') ? 1 : 0;
+        FC.ADVANCED_TUNING.smartFeedforward = $('input[id="smartfeedforward"]').is(':checked') ? 1 : 0;
+
+        FC.ADVANCED_TUNING.itermRelax = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxAxes"]').val() : 0;
+        FC.ADVANCED_TUNING.itermRelaxType = $('select[id="itermrelaxType"]').val();
+        FC.ADVANCED_TUNING.itermRelaxCutoff = parseInt($('input[name="itermRelaxCutoff"]').val());
+
+        FC.ADVANCED_TUNING.absoluteControlGain = $('input[name="absoluteControlGain-number"]').val();
+
+        FC.ADVANCED_TUNING.throttleBoost = $('input[name="throttleBoost-number"]').val();
+
+        FC.ADVANCED_TUNING.acroTrainerAngleLimit = $('input[name="acroTrainerAngleLimit-number"]').val();
+
+        FC.ADVANCED_TUNING.feedforwardRoll  = parseInt($('.pid_tuning .ROLL input[name="f"]').val());
+        FC.ADVANCED_TUNING.feedforwardPitch = parseInt($('.pid_tuning .PITCH input[name="f"]').val());
+        FC.ADVANCED_TUNING.feedforwardYaw   = parseInt($('.pid_tuning .YAW input[name="f"]').val());
+
+        FC.ADVANCED_TUNING.feedforwardTransition = parseInt($('input[name="feedforwardTransition-number"]').val() * 100);
+
+        FC.ADVANCED_TUNING.antiGravityMode = semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45) ? $('select[id="antiGravityMode"]').val() : 0;
+
+        FC.RC_TUNING.throttleLimitType = $('select[id="throttleLimitType"]').val();
+        FC.RC_TUNING.throttleLimitPercent = parseInt($('.throttle_limit input[name="throttleLimitPercent"]').val());
+
+        FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = parseInt($('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val());
+        FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = parseInt($('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').val());
+        FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = parseInt($('.pid_filter input[name="dtermLowpassDynMinFrequency"]').val());
+        FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = parseInt($('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val());
+
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+            if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 && FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz < FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz ) {
+                FC.FILTER_CONFIG.gyro_lowpass_type = $('.pid_filter select[name="gyroLowpassDynType"]').val();
+            }
+            if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 && FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz < FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz ) {
+                FC.FILTER_CONFIG.dterm_lowpass_type = $('.pid_filter select[name="dtermLowpassDynType"]').val();
             }
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-            FC.FILTER_CONFIG.gyro_lowpass2_hz = parseInt($('.pid_filter input[name="gyroLowpass2Frequency"]').val());
-            FC.FILTER_CONFIG.gyro_lowpass_type = parseInt($('.pid_filter select[name="gyroLowpassType"]').val());
-            FC.FILTER_CONFIG.gyro_lowpass2_type = parseInt($('.pid_filter select[name="gyroLowpass2Type"]').val());
-            FC.FILTER_CONFIG.dterm_lowpass2_hz = parseInt($('.pid_filter input[name="dtermLowpass2Frequency"]').val());
-            FC.FILTER_CONFIG.dterm_lowpass2_type = parseInt($('.pid_filter select[name="dtermLowpass2Type"]').val());
-        }
+        FC.ADVANCED_TUNING.dMinRoll = parseInt($('.pid_tuning input[name="dMinRoll"]').val());
+        FC.ADVANCED_TUNING.dMinPitch = parseInt($('.pid_tuning input[name="dMinPitch"]').val());
+        FC.ADVANCED_TUNING.dMinYaw = parseInt($('.pid_tuning input[name="dMinYaw"]').val());
+        FC.ADVANCED_TUNING.dMinGain = parseInt($('.dminGroup input[name="dMinGain"]').val());
+        FC.ADVANCED_TUNING.dMinAdvance = parseInt($('.dminGroup input[name="dMinAdvance"]').val());
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
+        FC.ADVANCED_TUNING.useIntegratedYaw = $('input[id="useIntegratedYaw"]').is(':checked') ? 1 : 0;
 
-            FC.ADVANCED_TUNING.itermRotation = $('input[id="itermrotation"]').is(':checked') ? 1 : 0;
-            FC.ADVANCED_TUNING.smartFeedforward = $('input[id="smartfeedforward"]').is(':checked') ? 1 : 0;
-
-            FC.ADVANCED_TUNING.itermRelax = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxAxes"]').val() : 0;
-            FC.ADVANCED_TUNING.itermRelaxType = $('select[id="itermrelaxType"]').val();
-            FC.ADVANCED_TUNING.itermRelaxCutoff = parseInt($('input[name="itermRelaxCutoff"]').val());
-
-            FC.ADVANCED_TUNING.absoluteControlGain = $('input[name="absoluteControlGain-number"]').val();
-
-            FC.ADVANCED_TUNING.throttleBoost = $('input[name="throttleBoost-number"]').val();
-
-            FC.ADVANCED_TUNING.acroTrainerAngleLimit = $('input[name="acroTrainerAngleLimit-number"]').val();
-
-            FC.ADVANCED_TUNING.feedforwardRoll  = parseInt($('.pid_tuning .ROLL input[name="f"]').val());
-            FC.ADVANCED_TUNING.feedforwardPitch = parseInt($('.pid_tuning .PITCH input[name="f"]').val());
-            FC.ADVANCED_TUNING.feedforwardYaw   = parseInt($('.pid_tuning .YAW input[name="f"]').val());
-
-            FC.ADVANCED_TUNING.feedforwardTransition = parseInt($('input[name="feedforwardTransition-number"]').val() * 100);
-
-            FC.ADVANCED_TUNING.antiGravityMode = semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45) ? $('select[id="antiGravityMode"]').val() : 0;
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-            FC.RC_TUNING.throttleLimitType = $('select[id="throttleLimitType"]').val();
-            FC.RC_TUNING.throttleLimitPercent = parseInt($('.throttle_limit input[name="throttleLimitPercent"]').val());
-
-            FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = parseInt($('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val());
-            FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = parseInt($('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').val());
-            FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = parseInt($('.pid_filter input[name="dtermLowpassDynMinFrequency"]').val());
-            FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = parseInt($('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val());
-
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 && FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz < FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz ) {
-                    FC.FILTER_CONFIG.gyro_lowpass_type = $('.pid_filter select[name="gyroLowpassDynType"]').val();
-                }
-                if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 && FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz < FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz ) {
-                    FC.FILTER_CONFIG.dterm_lowpass_type = $('.pid_filter select[name="dtermLowpassDynType"]').val();
-                }
-            }
-
-            FC.ADVANCED_TUNING.dMinRoll = parseInt($('.pid_tuning input[name="dMinRoll"]').val());
-            FC.ADVANCED_TUNING.dMinPitch = parseInt($('.pid_tuning input[name="dMinPitch"]').val());
-            FC.ADVANCED_TUNING.dMinYaw = parseInt($('.pid_tuning input[name="dMinYaw"]').val());
-            FC.ADVANCED_TUNING.dMinGain = parseInt($('.dminGroup input[name="dMinGain"]').val());
-            FC.ADVANCED_TUNING.dMinAdvance = parseInt($('.dminGroup input[name="dMinAdvance"]').val());
-
-            FC.ADVANCED_TUNING.useIntegratedYaw = $('input[id="useIntegratedYaw"]').is(':checked') ? 1 : 0;
-        }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             FC.FILTER_CONFIG.dyn_notch_range = parseInt($('.pid_filter select[name="dynamicNotchRange"]').val());
@@ -1382,12 +1263,6 @@ pid_tuning.initialize = function (callback) {
             // Show titles and other elements needed by the PID
             $(`.needed_by_${elementPid}`).show();
         });
-
-        // Special case
-        if (semver.lt(FC.CONFIG.apiVersion, "1.24.0")) {
-            $('#pid_sensitivity').hide();
-        }
-
     }
 
     function hideUnusedPids() {
@@ -1449,17 +1324,12 @@ pid_tuning.initialize = function (callback) {
         return value;
     }
 
-    let useLegacyCurve = false;
-    if (!semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-        useLegacyCurve = true;
-    }
+    const useLegacyCurve = true;
 
     self.rateCurve = new RateCurve(useLegacyCurve);
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-        $('.pid_tuning input[name="sensitivity"]').hide();
-        $('.pid_tuning .levelSensitivityHeader').empty();
-    }
+    $('.pid_tuning input[name="sensitivity"]').hide();
+    $('.pid_tuning .levelSensitivityHeader').empty();
 
     function printMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit, maxAngularVelElement) {
         const maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit).toFixed(0);
@@ -1480,13 +1350,7 @@ pid_tuning.initialize = function (callback) {
         TABS.pid_tuning.isHtmlProcessing = true;
         FC.FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
 
-        if (semver.lt(FC.CONFIG.apiVersion, "1.16.0") || semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            $('.tab-pid_tuning .pidTuningSuperexpoRates').hide();
-        }
-
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-            $('input[name="dtermSetpoint-number"]').attr('max', self.SETPOINT_WEIGHT_RANGE_LEGACY);
-        }
+        $('.tab-pid_tuning .pidTuningSuperexpoRates').hide();
 
         // translate to user-selected language
         i18n.localizePage();
@@ -1500,7 +1364,7 @@ pid_tuning.initialize = function (callback) {
         $('.tab-pid_tuning .tab-container .filter').on('click', () => activateSubtab('filter'));
 
         function loadProfilesList() {
-            const numberOfProfiles = semver.gte(FC.CONFIG.apiVersion, "1.16.0") ? FC.CONFIG.numProfiles : 3;
+            const numberOfProfiles = FC.CONFIG.numProfiles;
 
             const profileElements = [];
             for (let i = 0; i < numberOfProfiles; i++) {
@@ -1511,10 +1375,6 @@ pid_tuning.initialize = function (callback) {
 
         function loadRateProfilesList() {
             let numberOfRateProfiles = 6;
-
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-                numberOfRateProfiles = 3;
-            }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 numberOfRateProfiles = 4;
@@ -1600,52 +1460,39 @@ pid_tuning.initialize = function (callback) {
             });
         });
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            $('.tab-pid_tuning select[name="rate_profile"]').change(function () {
-                self.currentRateProfile = parseInt($(this).val());
-                self.updating = true;
-                $(this).prop('disabled', 'true');
-                MSP.promise(MSPCodes.MSP_SELECT_SETTING, [self.currentRateProfile + self.RATE_PROFILE_MASK]).then(function () {
-                    self.refresh(function () {
-                        self.updating = false;
+        $('.tab-pid_tuning select[name="rate_profile"]').change(function () {
+            self.currentRateProfile = parseInt($(this).val());
+            self.updating = true;
+            $(this).prop('disabled', 'true');
+            MSP.promise(MSPCodes.MSP_SELECT_SETTING, [self.currentRateProfile + self.RATE_PROFILE_MASK]).then(function () {
+                self.refresh(function () {
+                    self.updating = false;
 
-                        $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', 'false');
-                        FC.CONFIG.rateProfile = self.currentRateProfile;
-                        self.currentRates = self.rateCurve.getCurrentRates();
+                    $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', 'false');
+                    FC.CONFIG.rateProfile = self.currentRateProfile;
+                    self.currentRates = self.rateCurve.getCurrentRates();
 
-                        GUI.log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
-                    });
+                    GUI.log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
                 });
             });
+        });
 
-            const dtermTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
-            const dtermTransitionWarningElement = $('#pid-tuning .dtermSetpointTransitionWarning');
+        const dtermTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
+        const dtermTransitionWarningElement = $('#pid-tuning .dtermSetpointTransitionWarning');
 
-            function checkUpdateDtermTransitionWarning(value) {
-                if (value > 0 && value < 0.1) {
-                    dtermTransitionWarningElement.show();
-                } else {
-                    dtermTransitionWarningElement.hide();
-                }
+        function checkUpdateDtermTransitionWarning(value) {
+            if (value > 0 && value < 0.1) {
+                dtermTransitionWarningElement.show();
+            } else {
+                dtermTransitionWarningElement.hide();
             }
-            checkUpdateDtermTransitionWarning(dtermTransitionNumberElement.val());
-
-            //Use 'input' event for coupled controls to allow synchronized update
-            dtermTransitionNumberElement.on('input', function () {
-                checkUpdateDtermTransitionWarning($(this).val());
-            });
-
-        } else {
-            $('.tab-pid_tuning .rate_profile').hide();
-
-            $('#pid-tuning .dtermSetpointTransition').hide();
-            $('#pid-tuning .dtermSetpoint').hide();
         }
+        checkUpdateDtermTransitionWarning(dtermTransitionNumberElement.val());
 
-        if (!semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            $('#pid-tuning .delta').hide();
-            $('.tab-pid_tuning .note').hide();
-        }
+        //Use 'input' event for coupled controls to allow synchronized update
+        dtermTransitionNumberElement.on('input', function () {
+            checkUpdateDtermTransitionWarning($(this).val());
+        });
 
         // Add a name to each row of PIDs if empty
         $('.pid_tuning tr').each(function() {
@@ -1664,13 +1511,12 @@ pid_tuning.initialize = function (callback) {
             const filterTypeValues = [];
             filterTypeValues.push("PT1");
             filterTypeValues.push("BIQUAD");
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                filterTypeValues.push("FIR");
-            }
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                 filterTypeValues.push("PT2");
                 filterTypeValues.push("PT3");
             }
+
             return filterTypeValues;
         }
 
@@ -1728,64 +1574,11 @@ pid_tuning.initialize = function (callback) {
 
         activateSubtab(self.activeSubtab);
 
-        const pidController_e = $('select[name="controller"]');
+        $('.tab-pid_tuning div.controller').hide();
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-            let pidControllerList;
+        self.updatePidControllerParameters();
 
-
-            if (semver.lt(FC.CONFIG.apiVersion, "1.14.0")) {
-                pidControllerList = [
-                    {name: "MultiWii (Old)"},
-                    {name: "MultiWii (rewrite)"},
-                    {name: "LuxFloat"},
-                    {name: "MultiWii (2.3 - latest)"},
-                    {name: "MultiWii (2.3 - hybrid)"},
-                    {name: "Harakiri"},
-                ];
-            } else if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
-                pidControllerList = [
-                    {name: ""},
-                    {name: "Integer"},
-                    {name: "Float"},
-                ];
-            } else {
-                pidControllerList = [
-                    {name: "Legacy"},
-                    {name: "Betaflight"},
-                ];
-            }
-
-            for (let i = 0; i < pidControllerList.length; i++) {
-                pidController_e.append(`<option value="${i}">${pidControllerList[i].name}</option>`);
-            }
-
-            if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE)) {
-                pidController_e.val(FC.PID.controller);
-
-                self.updatePidControllerParameters();
-            } else {
-                GUI.log(i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE]));
-
-                pidController_e.empty();
-                pidController_e.append('<option value="">Unknown</option>');
-
-                pidController_e.prop('disabled', true);
-            }
-        } else {
-            $('.tab-pid_tuning div.controller').hide();
-
-            self.updatePidControllerParameters();
-        }
-
-        if (semver.lt(FC.CONFIG.apiVersion, "1.7.0")) {
-            $('.tpa-old .tpa-breakpoint').hide();
-
-            $('.pid_tuning .roll_rate').hide();
-            $('.pid_tuning .pitch_rate').hide();
-        } else {
-            $('.pid_tuning .roll_pitch_rate').hide();
-        }
+        $('.pid_tuning .roll_pitch_rate').hide();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('.tpa-old').hide();
@@ -1793,16 +1586,11 @@ pid_tuning.initialize = function (callback) {
             $('.tpa').hide();
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-            $('.pid_tuning .bracket').hide();
-            $('.pid_tuning input[name=rc_rate]').parent().attr('class', 'pid_data');
-            $('.pid_tuning input[name=rc_rate]').parent().attr('rowspan', 1);
-            $('.pid_tuning input[name=rc_expo]').parent().attr('class', 'pid_data');
-            $('.pid_tuning input[name=rc_expo]').parent().attr('rowspan', 1);
-        } else {
-            $('.pid_tuning input[name=rc_rate_pitch]').parent().hide();
-            $('.pid_tuning input[name=rc_pitch_expo]').parent().hide();
-        }
+        $('.pid_tuning .bracket').hide();
+        $('.pid_tuning input[name=rc_rate]').parent().attr('class', 'pid_data');
+        $('.pid_tuning input[name=rc_rate]').parent().attr('rowspan', 1);
+        $('.pid_tuning input[name=rc_expo]').parent().attr('class', 'pid_data');
+        $('.pid_tuning input[name=rc_expo]').parent().attr('rowspan', 1);
 
         if (useLegacyCurve) {
             $('.new_rates').hide();
@@ -1839,29 +1627,10 @@ pid_tuning.initialize = function (callback) {
                         updateNeeded = true;
                     }
 
-                    if (targetElement.attr('name') === 'rc_rate' && semver.lt(FC.CONFIG.apiVersion, "1.16.0")) {
-                        self.currentRates.rc_rate_yaw = targetValue;
-                    }
-
-                    if (targetElement.attr('name') === 'roll_pitch_rate' && semver.lt(FC.CONFIG.apiVersion, "1.7.0")) {
-                        self.currentRates.roll_rate = targetValue;
-                        self.currentRates.pitch_rate = targetValue;
-
-                        updateNeeded = true;
-                    }
-
                     if (targetElement.attr('name') === 'SUPEREXPO_RATES') {
                         self.currentRates.superexpo = targetElement.is(':checked');
 
                         updateNeeded = true;
-                    }
-
-                    if (targetElement.attr('name') === 'rc_rate' && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-                        self.currentRates.rc_rate_pitch = targetValue;
-                    }
-
-                    if (targetElement.attr('name') === 'rc_expo' && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-                        self.currentRates.rc_pitch_expo = targetValue;
                     }
 
                     if (targetElement.attr('id') === 'ratesType' && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
@@ -2032,73 +1801,67 @@ pid_tuning.initialize = function (callback) {
         const DIALOG_MODE_RATEPROFILE = 1;
         let dialogCopyProfileMode;
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+        const selectProfile = $('.selectProfile');
+        const selectRateProfile = $('.selectRateProfile');
 
-            const selectProfile = $('.selectProfile');
-            const selectRateProfile = $('.selectRateProfile');
+        $.each(selectProfileValues, function(key, value) {
+            if (key !== FC.CONFIG.profile) {
+                selectProfile.append(new Option(value, key));
+            }
+        });
+        $.each(selectRateProfileValues, function(key, value) {
+            if (key !== FC.CONFIG.rateProfile) {
+                selectRateProfile.append(new Option(value, key));
+            }
+        });
 
-            $.each(selectProfileValues, function(key, value) {
-                if (key !== FC.CONFIG.profile) {
-                    selectProfile.append(new Option(value, key));
-                }
-            });
-            $.each(selectRateProfileValues, function(key, value) {
-                if (key !== FC.CONFIG.rateProfile) {
-                    selectRateProfile.append(new Option(value, key));
-                }
-            });
+        $('.copyprofilebtn').click(function() {
+            $('.dialogCopyProfile').find('.contentProfile').show();
+            $('.dialogCopyProfile').find('.contentRateProfile').hide();
+            dialogCopyProfileMode = DIALOG_MODE_PROFILE;
+            dialogCopyProfile.showModal();
+        });
 
-            $('.copyprofilebtn').click(function() {
-                $('.dialogCopyProfile').find('.contentProfile').show();
-                $('.dialogCopyProfile').find('.contentRateProfile').hide();
-                dialogCopyProfileMode = DIALOG_MODE_PROFILE;
-                dialogCopyProfile.showModal();
-            });
+        $('.copyrateprofilebtn').click(function() {
+            $('.dialogCopyProfile').find('.contentProfile').hide();
+            $('.dialogCopyProfile').find('.contentRateProfile').show();
+            dialogCopyProfileMode = DIALOG_MODE_RATEPROFILE;
+            dialogCopyProfile.showModal();
+        });
 
-            $('.copyrateprofilebtn').click(function() {
-                $('.dialogCopyProfile').find('.contentProfile').hide();
-                $('.dialogCopyProfile').find('.contentRateProfile').show();
-                dialogCopyProfileMode = DIALOG_MODE_RATEPROFILE;
-                dialogCopyProfile.showModal();
-            });
+        $('.dialogCopyProfile-cancelbtn').click(function() {
+            dialogCopyProfile.close();
+        });
 
-            $('.dialogCopyProfile-cancelbtn').click(function() {
+        $('.dialogCopyProfile-confirmbtn').click(function() {
+            switch(dialogCopyProfileMode) {
+                case DIALOG_MODE_PROFILE:
+                    FC.COPY_PROFILE.type = DIALOG_MODE_PROFILE;    // 0 = pid profile
+                    FC.COPY_PROFILE.dstProfile = parseInt(selectProfile.val());
+                    FC.COPY_PROFILE.srcProfile = FC.CONFIG.profile;
+
+                    MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
+
+                    break;
+
+                case DIALOG_MODE_RATEPROFILE:
+                    FC.COPY_PROFILE.type = DIALOG_MODE_RATEPROFILE;    // 1 = rate profile
+                    FC.COPY_PROFILE.dstProfile = parseInt(selectRateProfile.val());
+                    FC.COPY_PROFILE.srcProfile = FC.CONFIG.rateProfile;
+
+                    MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
+
+                    break;
+
+                default:
+                    close_dialog();
+                    break;
+            }
+
+            function close_dialog() {
                 dialogCopyProfile.close();
-            });
-
-            $('.dialogCopyProfile-confirmbtn').click(function() {
-                switch(dialogCopyProfileMode) {
-                    case DIALOG_MODE_PROFILE:
-                        FC.COPY_PROFILE.type = DIALOG_MODE_PROFILE;    // 0 = pid profile
-                        FC.COPY_PROFILE.dstProfile = parseInt(selectProfile.val());
-                        FC.COPY_PROFILE.srcProfile = FC.CONFIG.profile;
-
-                        MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
-
-                        break;
-
-                    case DIALOG_MODE_RATEPROFILE:
-                        FC.COPY_PROFILE.type = DIALOG_MODE_RATEPROFILE;    // 1 = rate profile
-                        FC.COPY_PROFILE.dstProfile = parseInt(selectRateProfile.val());
-                        FC.COPY_PROFILE.srcProfile = FC.CONFIG.rateProfile;
-
-                        MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
-
-                        break;
-
-                    default:
-                        close_dialog();
-                        break;
-                }
-
-                function close_dialog() {
-                    dialogCopyProfile.close();
-                }
-            });
-        } else {
-            $('.copyprofilebtn').hide();
-            $('.copyrateprofilebtn').hide();
-        }
+            }
+        });
 
         /*
          *  TuningSliders
@@ -2454,37 +2217,16 @@ pid_tuning.initialize = function (callback) {
             $('.tuningHelpSliders').hide();
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            $('#pid-tuning .delta select').change(function() {
-                self.setDirty(true);
-            });
-        }
-
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-            pidController_e.change(function () {
-                self.setDirty(true);
-
-                self.updatePidControllerParameters();
-            });
-        }
+        $('#pid-tuning .delta select').change(function() {
+            self.setDirty(true);
+        });
 
         // update == save.
         $('a.update').click(function () {
             form_to_pid_and_rc();
             self.updating = true;
 
-            Promise.resolve(true)
-            .then(function () {
-                let promise;
-                if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-                    FC.PID.controller = pidController_e.val();
-                    promise = MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
-                } else {
-                    console.log(`Unsupported API version: ${FC.CONFIG.apiVersion}`);
-                }
-                return promise;
-            })
-            .then(() => MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID)))
+            MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID))
             .then(() => MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED)))
             .then(() => {
                 self.updatePIDColors();
@@ -2637,9 +2379,7 @@ pid_tuning.setDirty = function (isDirty) {
 
     self.dirty = isDirty;
     $('.tab-pid_tuning select[name="profile"]').prop('disabled', isDirty);
-    if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-        $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', isDirty);
-    }
+    $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', isDirty);
 };
 
 pid_tuning.checkUpdateProfile = function (updateRateProfile) {
@@ -2656,9 +2396,7 @@ pid_tuning.checkUpdateProfile = function (updateRateProfile) {
             }
 
             let changedRateProfile = false;
-            if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")
-                && updateRateProfile
-                && self.currentRateProfile !== FC.CONFIG.rateProfile) {
+            if (updateRateProfile && self.currentRateProfile !== FC.CONFIG.rateProfile) {
                 self.setRateProfile();
 
                 changedRateProfile = true;
@@ -2711,26 +2449,10 @@ pid_tuning.checkThrottle = function() {
 };
 
 pid_tuning.updatePidControllerParameters = function () {
-    if (semver.gte(FC.CONFIG.apiVersion, "1.20.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_31) && $('.tab-pid_tuning select[name="controller"]').val() === '0') {
-        $('.pid_tuning .YAW_JUMP_PREVENTION').show();
-
-        $('#pid-tuning .delta').show();
-
-        $('#pid-tuning .dtermSetpointTransition').hide();
-        $('#pid-tuning .dtermSetpoint').hide();
-    } else {
-        $('.pid_tuning .YAW_JUMP_PREVENTION').hide();
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-            $('#pid-tuning .dtermSetpointTransition').hide();
-            $('#pid-tuning .dtermSetpoint').hide();
-        } else {
-            $('#pid-tuning .dtermSetpointTransition').show();
-            $('#pid-tuning .dtermSetpoint').show();
-        }
-
-        $('#pid-tuning .delta').hide();
-    }
+    $('.pid_tuning .YAW_JUMP_PREVENTION').hide();
+    $('#pid-tuning .dtermSetpointTransition').hide();
+    $('#pid-tuning .dtermSetpoint').hide();
+    $('#pid-tuning .delta').hide();
 };
 
 pid_tuning.updateRatesLabels = function() {

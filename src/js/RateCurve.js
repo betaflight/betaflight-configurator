@@ -87,13 +87,8 @@ const RateCurve = function (useLegacyCurve) {
         let expoPower;
         let rcRateConstant;
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            expoPower = 3;
-            rcRateConstant = 200;
-        } else {
-            expoPower = 2;
-            rcRateConstant = 205.85;
-        }
+        expoPower = 3;
+        rcRateConstant = 200;
 
         if (rcExpo > 0) {
             rcCommandf =  rcCommandf * Math.pow(rcCommandfAbs, expoPower) * rcExpo + rcCommandf * (1-rcExpo);
@@ -169,23 +164,7 @@ const RateCurve = function (useLegacyCurve) {
             yaw_rate_limit:     FC.RC_TUNING.yaw_rate_limit,
         };
 
-        if (semver.lt(FC.CONFIG.apiVersion, "1.7.0")) {
-            currentRates.roll_rate = FC.RC_TUNING.roll_pitch_rate;
-            currentRates.pitch_rate = FC.RC_TUNING.roll_pitch_rate;
-        }
-
-        if (semver.lt(FC.CONFIG.apiVersion, "1.16.0")) {
-            currentRates.rc_rate_yaw = currentRates.rc_rate;
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            currentRates.superexpo = true;
-        }
-
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-            currentRates.rc_rate_pitch = currentRates.rc_rate;
-            currentRates.rc_expo_pitch = currentRates.rc_expo;
-        }
+        currentRates.superexpo = true;
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             switch (FC.RC_TUNING.rates_type) {

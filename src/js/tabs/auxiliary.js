@@ -8,8 +8,7 @@ auxiliary.initialize = function (callback) {
     let prevChannelsValues = null;
 
     function get_mode_ranges() {
-        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false,
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41) ? get_mode_ranges_extra : get_box_ids);
+        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, get_mode_ranges_extra);
     }
 
     function get_mode_ranges_extra() {
@@ -57,7 +56,7 @@ auxiliary.initialize = function (callback) {
         $(newMode).find('a.addLink').data('modeElement', newMode);
 
         // hide link button for ARM
-        if (modeId == 0 || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
+        if (modeId == 0) {
             $(newMode).find('.addLink').hide();
         }
 
@@ -75,12 +74,11 @@ auxiliary.initialize = function (callback) {
         logicOption.val(0);
         logicList.append(logicOption);
 
-        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)){
-            logicOption = logicOptionTemplate.clone();
-            logicOption.text(i18n.getMessage('auxiliaryModeLogicAND'));
-            logicOption.val(1);
-            logicList.append(logicOption);
-        }
+        logicOption = logicOptionTemplate.clone();
+        logicOption.text(i18n.getMessage('auxiliaryModeLogicAND'));
+        logicOption.val(1);
+        logicList.append(logicOption);
+
         logicOptionTemplate.val(0);
     }
 
@@ -265,15 +263,7 @@ auxiliary.initialize = function (callback) {
             // skip linked modes for now
             for (let modeRangeIndex = 0; modeRangeIndex < FC.MODE_RANGES.length; modeRangeIndex++) {
                 const modeRange = FC.MODE_RANGES[modeRangeIndex];
-
-                let modeRangeExtra = {
-                    id: modeRange.id,
-                    modeLogic: 0,
-                    linkedTo: 0,
-                };
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                    modeRangeExtra = FC.MODE_RANGES_EXTRA[modeRangeIndex];
-                }
+                const modeRangeExtra = FC.MODE_RANGES_EXTRA[modeRangeIndex];
 
                 if (modeRange.id != modeId || modeRangeExtra.id != modeId) {
                     continue;
@@ -454,13 +444,11 @@ auxiliary.initialize = function (callback) {
                     if (i == 0) {
                         let armSwitchActive = false;
 
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                            if (FC.CONFIG.armingDisableCount > 0) {
-                                // check the highest bit of the armingDisableFlags. This will be the ARMING_DISABLED_ARMSWITCH flag.
-                                const armSwitchMask = 1 << (FC.CONFIG.armingDisableCount - 1);
-                                if ((FC.CONFIG.armingDisableFlags & armSwitchMask) > 0) {
-                                    armSwitchActive = true;
-                                }
+                        if (FC.CONFIG.armingDisableCount > 0) {
+                            // check the highest bit of the armingDisableFlags. This will be the ARMING_DISABLED_ARMSWITCH flag.
+                            const armSwitchMask = 1 << (FC.CONFIG.armingDisableCount - 1);
+                            if ((FC.CONFIG.armingDisableFlags & armSwitchMask) > 0) {
+                                armSwitchActive = true;
                             }
                         }
 

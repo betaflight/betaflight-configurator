@@ -20,39 +20,22 @@ ports.initialize = function (callback) {
         { name: 'BLACKBOX',             groups: ['peripherals'], sharableWith: ['msp'], notSharableWith: ['telemetry'], maxPorts: 1 },
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
-        const ltmFunctionRule = {name: 'TELEMETRY_LTM', groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1};
-        functionRules.push(ltmFunctionRule);
-    } else {
-        const mspFunctionRule = {name: 'TELEMETRY_MSP', groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1};
-        functionRules.push(mspFunctionRule);
-    }
+    const ltmFunctionRule = {name: 'TELEMETRY_LTM', groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1};
+    functionRules.push(ltmFunctionRule);
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.18.0")) {
-        const mavlinkFunctionRule = {name: 'TELEMETRY_MAVLINK', groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1};
-        functionRules.push(mavlinkFunctionRule);
-    }
+    const mavlinkFunctionRule = {name: 'TELEMETRY_MAVLINK', groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1};
+    functionRules.push(mavlinkFunctionRule);
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.27.0")) {
-        functionRules.push({ name: 'IRC_TRAMP', groups: ['peripherals'], maxPorts: 1 });
-    }
+    functionRules.push({ name: 'IRC_TRAMP', groups: ['peripherals'], maxPorts: 1 });
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-        functionRules.push({ name: 'ESC_SENSOR', groups: ['sensors'], maxPorts: 1 });
-        functionRules.push({ name: 'TBS_SMARTAUDIO', groups: ['peripherals'], maxPorts: 1 });
-    }
+    functionRules.push({ name: 'ESC_SENSOR', groups: ['sensors'], maxPorts: 1 });
+    functionRules.push({ name: 'TBS_SMARTAUDIO', groups: ['peripherals'], maxPorts: 1 });
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
-        functionRules.push({ name: 'TELEMETRY_IBUS', groups: ['telemetry'], maxPorts: 1 });
-    }
+    functionRules.push({ name: 'TELEMETRY_IBUS', groups: ['telemetry'], maxPorts: 1 });
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-        functionRules.push({ name: 'RUNCAM_DEVICE_CONTROL', groups: ['peripherals'], maxPorts: 1 });
-    }
+    functionRules.push({ name: 'RUNCAM_DEVICE_CONTROL', groups: ['peripherals'], maxPorts: 1 });
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-        functionRules.push({ name: 'LIDAR_TF', groups: ['peripherals'], maxPorts: 1 });
-    }
+    functionRules.push({ name: 'LIDAR_TF', groups: ['peripherals'], maxPorts: 1 });
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
         functionRules.push({ name: 'FRSKY_OSD', groups: ['peripherals'], maxPorts: 1 });
@@ -74,11 +57,9 @@ ports.initialize = function (callback) {
         '115200',
         '230400',
         '250000',
+        '500000',
+        '1000000',
     ];
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-        mspBaudRates = mspBaudRates.concat(['500000', '1000000']);
-    }
 
     const gpsBaudRates = [
         'AUTO',
@@ -139,12 +120,6 @@ ports.initialize = function (callback) {
 
     function update_ui() {
         self.analyticsChanges = {};
-
-        if (semver.lt(FC.CONFIG.apiVersion, "1.6.0")) {
-
-            $(".tab-ports").removeClass("supported");
-            return;
-        }
 
         $(".tab-ports").addClass("supported");
 

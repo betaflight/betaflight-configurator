@@ -18,10 +18,7 @@ const API_VERSION_1_45 = '1.45.0';
 
 const CONFIGURATOR = {
     // all versions are specified and compared using semantic versioning http://semver.org/
-    API_VERSION_ACCEPTED: '1.2.1',
-    API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE: '1.5.0',
-    API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE: '1.5.0',
-    BACKUP_FILE_VERSION_MIN_SUPPORTED: '0.55.0', // chrome.runtime.getManifest().version is stored as string, so does this one
+    API_VERSION_ACCEPTED: API_VERSION_1_41,
     API_VERSION_MAX_SUPPORTED: API_VERSION_1_45,
 
     connectionValid: false,
