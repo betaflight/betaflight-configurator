@@ -120,13 +120,17 @@ PortHandler.initialize = function () {
     this.reinitialize();    // just to prevent code redundancy
 };
 
-PortHandler.reinitialize = function () {
-    this.initialPorts = false;
-    if (this.usbCheckLoop) {
-        clearTimeout(this.usbCheckLoop);
+PortHandler.reinitialize = function (reset=false) {
+    if (reset) {
+        this.initialPorts = false;
+        if (this.usbCheckLoop) {
+            clearTimeout(this.usbCheckLoop);
+        }
     }
+
     this.showVirtualMode = ConfigStorage.get('showVirtualMode').showVirtualMode;
     this.showAllSerialDevices = ConfigStorage.get('showAllSerialDevices').showAllSerialDevices;
+
     this.check();   // start listening, check after TIMEOUT_CHECK ms
 };
 

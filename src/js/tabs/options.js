@@ -135,7 +135,7 @@ options.initShowAllSerialDevices = function() {
         .prop('checked', !!result.showAllSerialDevices)
         .on('change', () => {
             ConfigStorage.set({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') });
-            PortHandler.reinitialize();
+            PortHandler.reinitialize(true);
         });
 };
 
@@ -146,7 +146,7 @@ options.initShowVirtualMode = function() {
         .prop('checked', !!result.showVirtualMode)
         .on('change', () => {
             ConfigStorage.set({ showVirtualMode: showVirtualModeElement.is(':checked') });
-            PortHandler.reinitialize();
+            PortHandler.reinitialize(true);
         });
 };
 
