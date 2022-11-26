@@ -45,7 +45,13 @@
             </intent-filter>
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/usb_device_filter"/>
         </config-file>
-        <resource-file src="usb_device_filter.xml" target="app/src/main/res/xml/usb_device_filter.xml"/>
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
+        <edit-config xmlns:android="http://schemas.android.com/apk/res/android" file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:networkSecurityConfig="@xml/network_security_config" />
+        </edit-config>
+        <resource-file src="network_security_config.xml" target="app/src/main/res/xml/network_security_config.xml" />        <resource-file src="usb_device_filter.xml" target="app/src/main/res/xml/usb_device_filter.xml"/>
         <resource-file src="manifest.json" target="app/src/main/assets/www/manifest.json"/>
     </platform>
     <platform name="ios">
