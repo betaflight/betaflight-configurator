@@ -145,6 +145,7 @@ function initializeSerialBackend() {
         ConfigStorage.set({'auto_connect': GUI.auto_connect});
     });
 
+    MdnsDiscovery.initialize();
     PortHandler.initialize();
     PortUsage.initialize();
 }
