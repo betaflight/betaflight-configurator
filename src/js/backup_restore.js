@@ -196,11 +196,11 @@ function configuration_backup(callback) {
             return MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
         }).then(function() {
             return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME))
+                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME))
                 : MSP.promise(MSPCodes.MSP_NAME);
         }).then(function() {
             return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME)) : Promise.resolve(true);
+                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME)) : Promise.resolve(true);
         }).then(function() {
             return MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
         }).then(function() {
@@ -812,8 +812,8 @@ function configuration_restore(callback) {
 
                 function update_unique_data_list() {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                        uniqueData.push([MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME]);
-                        uniqueData.push([MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME]);
+                        uniqueData.push([MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME]);
+                        uniqueData.push([MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME]);
                     } else {
                         uniqueData.push(MSPCodes.MSP_SET_NAME);
                     }
