@@ -2712,9 +2712,6 @@
     "sdcardStatusUnknown": {
         "message": "Неизвестное состояние $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Информация о выпуске"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID производителя:"
     },

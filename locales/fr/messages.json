@@ -1571,6 +1571,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocole FrSky)"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP + Displayport)"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -1918,11 +1921,23 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTPAMode": {
+        "message": "Mode TPA"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Rate TPA"
+    },
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Aperçu de la courbe des Gaz"
@@ -2991,7 +3006,7 @@
         "message": "Sélectionner un commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Informations de la version"
+        "message": "Informations sur la version et le Build"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID du fabricant :"
@@ -3022,6 +3037,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "en attente"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "traitement en cours"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "succès (en cache)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "succès"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "temps expiré (veuillez réessayer)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "échec (veuillez vérifier le log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Téléchargement manuel."
@@ -3634,6 +3667,38 @@
     },
     "pidTuningCellCount": {
         "message": "Nombre de cellules - pour le changement automatique de profil"
+    },
+    "pidTuningCellCountChange": {
+        "message": "Changer",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "Désactiver",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Paramètres de filtre indépendants du profil"
@@ -4629,6 +4694,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Unités"
     },
@@ -4777,6 +4846,14 @@
     "osdDescElementVtxChannel": {
         "message": "Canal et puissance VTX actuels"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "Puissance VTX",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "Bande:Canal:Puissance:Pit",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "Avertissement de tension batterie",
         "description": "One of the elements of the OSD"
@@ -4833,6 +4910,13 @@
     "osdDescElementMahDrawn": {
         "message": "Capacité total utilisée de la batterie utilisée"
     },
+    "osdTextElementWhDrawn": {
+        "message": "Wh de la batterie consommé",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "Capacité totale de la batterie utilisée en Wh"
+    },
     "osdDescElementAuxValue": {
         "message": "Valeur auxiliaire",
         "description": "Displays a receiver AUX channel see PR 10789"
@@ -4840,6 +4924,83 @@
     "osdTextElementAuxValue": {
         "message": "Valeur auxiliaire",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Tension des goggles",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Tension des goggles rendue par les goggles"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "Tension VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "Tension des goggles rendue par les goggles"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "Débit VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Débit vidéo rendu par les goggles"
+    },
+    "osdTextElementSysDelay": {
+        "message": "Délai VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Délais de la vidéo rendue par les goggles"
+    },
+    "osdTextElementSysDistance": {
+        "message": "Distance VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Distance de transmission vidéo rendue par les goggles"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Qualité du lien des goggles",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Qualité du lien vidéo rendue par les goggles"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Statut DVR des goggles",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Statut DVR des goggles rendu par les goggles"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "Statut DVR VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "Statut DVR VTX rendu par les goggles"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Avertissements système des goggles",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Avertissements du système vidéo rendus par les goggles"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "Température du VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "Température du VTX rendue par les goggles"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Vitesse du ventilateur des goggles",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Vitesse du ventilateur rendue par les goggles"
     },
     "osdTextElementCraftName": {
         "message": "Nom de l'appareil",
@@ -5287,6 +5448,13 @@
     "osdDescElementReadyMode": {
         "message": "Lorsque activé, READY sera affiché pendant le vol"
     },
+    "osdTextElementRSNRValue": {
+        "message": "Valeur RSNR",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "Valeur RSNR"
+    },
     "osdTextElementUnknown": {
         "message": "Inconnu $1",
         "description": "One of the elements of the OSD"
@@ -5328,6 +5496,13 @@
     },
     "osdDescStatUsedMah": {
         "message": "Capacité de la batterie utilisée"
+    },
+    "osdTextStatUsedWh": {
+        "message": "Wh de la batterie utilisé",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "Capacité de la batterie consommée en Wh"
     },
     "osdTextStatMaxAltitude": {
         "message": "Altitude maximum",
@@ -5475,6 +5650,13 @@
     },
     "osdDescStatMinRssiDbm": {
         "message": "Valeur minimum du RSSI en dBm"
+    },
+    "osdTextStatMinRSNR": {
+        "message": "Valeur minimum du RSNR",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Valeur minimum du RSNR"
     },
     "osdTextStatUnknown": {
         "message": "Inconnu $1",
@@ -5669,6 +5851,13 @@
     "osdWarningOverCap": {
         "message": "Alerte lorsque le mAh consommé dépasse la limite de capacité configurée"
     },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Alerte quand la valeur du RSNR est inférieur au paramètre d'alarme"
+    },
     "osdWarningTextUnknown": {
         "message": "Inconnu $1"
     },
@@ -5759,6 +5948,10 @@
     },
     "vtxType_4": {
         "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {
@@ -6554,5 +6747,35 @@
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocoles du Moteur"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Nom du fichier de configuration :"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Sélectionnez les protocoles radio que vous souhaitez inclure dans cette version. Notez que ceci une liste déroulante et plusieurs éléments peuvent être sélectionnés."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Sélectionnez les protocoles de télémétrie que vous souhaitez inclure dans cette compilation. Notez que ceci est une liste déroulante, et que plusieurs éléments peuvent être sélectionnés. Il y a aussi certains protocoles de télémétrie qui seront activés, indépendamment de votre sélection ici basée sur le protocole radio sélectionné, par exemple CRSF."
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Sélectionnez les options génériques que vous souhaitez inclure dans cette compilation. Notez qu'il s'agit d'une liste déroulante et plusieurs éléments peuvent être sélectionnés. Ces éléments comme des correctifs, par exemple AKK VTX, sont inclus ici."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Sélectionnez les protocoles du moteur (ESC) que vous souhaitez inclure dans cette build. Notez que c'est une liste déroulante, et plusieurs éléments peuvent être sélectionnés."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Particulièrement utile pour les développeurs, vous pouvez sélectionner une PR fusionnée, spécifier un commit sha, ou spécifiez un PR 'encore à fusionner' en tapant dans: pull/{PR number}/head."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "Pour les développeurs, vous pouvez ajouter les définitions dont vous avez besoin, séparées par un `espace`, mais sans le préfixe `USE_`, il sera ajouté automatiquement pour vous."
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "Définitions personnalisées"
+    },
+    "classicBuild": {
+        "message": "Mode Classique"
+    },
+    "classicBuildModeDescription": {
+        "message": "Ce mode ignore tous les paramètres ici, à l'exception du commit. Cela est essentiellement le même que les nightlies classiques, et est fourni pour la commodité."
     }
 }

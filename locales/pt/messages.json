@@ -1510,6 +1510,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocolo FrSky)"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP + Displayport)"
+    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1857,11 +1860,23 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTPAMode": {
+        "message": "Modo TPA"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Rate TPA"
+    },
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Pré-visualização da Curva do Acelerador"
@@ -2933,7 +2948,7 @@
         "message": "Selecionar commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Notas de lançamento"
+        "message": "Info de Lançamento e Compilação"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID Fabricante:"
@@ -2964,6 +2979,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Estado:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "pendente"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "a processar"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "sucesso (em cache)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "sucesso"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "tempo expirou (pf tente novamente)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "falhou (pf verifique o log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manualmente."
@@ -4606,6 +4639,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Unidades"
     },
@@ -4832,6 +4869,83 @@
     "osdTextElementAuxValue": {
         "message": "Valor Aux",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Voltagem dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Voltagem dos óculos renderizada pelos óculos"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "Voltagem do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "Voltagem do VTX renderizada pelos óculos"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "Bitrate do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Bitrate do Vídeo renderizado pelos óculos"
+    },
+    "osdTextElementSysDelay": {
+        "message": "Atraso do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Atraso de vídeo renderizado pelos óculos"
+    },
+    "osdTextElementSysDistance": {
+        "message": "Distância do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Distância de transmissão de vídeo renderizada pelos óculos"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Qualidade do link dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Qualidade do link de vídeo renderizada pelos óculos"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Estado do DVR dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Estado do DVR dos óculos renderizado pelos óculos"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "Estado do DVR do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "Estado do DVR do VTX renderizado pelos óculos"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Avisos de sistema dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Avisos do sistema de vídeo renderizados pelos óculos"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "Temperatura do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "Temperatura do VTX renderizada pelos óculos"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Velocidade da ventoinha dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Velocidade da ventoinha dos óculos renderizada pelos óculos"
     },
     "osdTextElementCraftName": {
         "message": "Nome do aparelho",
@@ -5279,6 +5393,13 @@
     "osdDescElementReadyMode": {
         "message": "Quando ativo o READY será exibido até voar"
     },
+    "osdTextElementRSNRValue": {
+        "message": "Valor RSNR",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "Valor RSNR"
+    },
     "osdTextElementUnknown": {
         "message": "$1 desconhecido",
         "description": "One of the elements of the OSD"
@@ -5475,6 +5596,13 @@
     "osdDescStatMinRssiDbm": {
         "message": "Valor dBm mínimo do RSSI"
     },
+    "osdTextStatMinRSNR": {
+        "message": "Valor mínimo RSNR",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Valor mínimo RSNR"
+    },
     "osdTextStatUnknown": {
         "message": "$1 desconhecido",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5667,6 +5795,13 @@
     },
     "osdWarningOverCap": {
         "message": "Avisa quando o mAh consumido excede o limite de capacidade configurado"
+    },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Alerta quando o valor RSNR está abaixo da definição do alarme"
     },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"
@@ -6557,5 +6692,35 @@
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocolos de Motores"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Nome do ficheiro de Configuração:"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Selecione os protocolos de rádio que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Selecione os protocolos de rádio que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Existem também alguns protocolos de telemetria que serão ativados, independentemente da sua seleção aqui, baseados no protocolo de rádio selecionado, por exemplo, CRSF."
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Selecione as opções genéricas que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Tais itens como correções, por exemplo, VTX AKK, estão incluídos aqui."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Selecione os protocolos de motor (ESC) que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Especialmente útil para programadores, pode selecionar um merged PR, especificar um commit sha, ou especificar um PR 'yet to be merged' digitando in: pull/{PR number}/head ."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "Para programadores, pode adicionar quaisquer 'defines' que precise, separadas por um `espaço`, mas sem o prefixo `USE_`, que será adicionado automaticamente para si."
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "'Defines' personalizadas"
+    },
+    "classicBuild": {
+        "message": "Modo Clássico"
+    },
+    "classicBuildModeDescription": {
+        "message": "Este modo ignora todos os parâmetros aqui, exceto para o commit. Isto essencialmente consegue o mesmo que as clássicas nightlies e é fornecido por conveniência."
     }
 }

@@ -2560,9 +2560,6 @@
     "sdcardStatusUnknown": {
         "message": "Nieznany stan $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Informacja o wydaniu"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID Producenta:"
     },

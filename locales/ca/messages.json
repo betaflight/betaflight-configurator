@@ -2940,9 +2940,6 @@
     "firmwareFlasherBranch": {
         "message": "Selecciona aplicar"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Informació de la publicació"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID Fabricant:"
     },

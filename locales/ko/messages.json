@@ -664,6 +664,9 @@
     "defaultWelcomeHead": {
         "message": "하드웨어"
     },
+    "defaultWelcomeText": {
+        "message": "어플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 하드웨어 전체 목록의 플래시 탭을 확인하세요.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 블랙박스 로그 뷰어 다운로드</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 TX Lua 스크립트 다운로드</a><br /><br />펌웨어 소스 코드는 <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br /><br />CP210x USB를 시리얼 칩으로 사용하는 레거시 하드웨어:<br />최신 <b>CP210x 드라이버</b>는 <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br />최신 윈도우 USB 드라이버 설치를 위한 <b>Zadig</b>는 <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다.<br /><b>ImpulseRC 드라이버 픽서</b>는 <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">여기서</a> 다운받을 수 있습니다."
+    },
     "defaultContributingHead": {
         "message": "기여하기"
     },
@@ -1575,6 +1578,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSky 프로토콜)"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP + 디스플레이포트)"
+    },
     "pidTuningProfileOption": {
         "message": "프로파일 $1"
     },
@@ -1623,6 +1629,10 @@
     "pidTuningAntiGravityGain": {
         "message": "게인",
         "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "빠른 스로틀 변화 동안 iTerm을 끌어올리고 P를 증가시킵니다.<br><br>8.0은 iTerm 부스트 8배를 의미합니다.",
+        "description": "Anti Gravity Gain Parameter Help Icon"
     },
     "pidTuningAntiGravityThres": {
         "message": "임계값",
@@ -1918,11 +1928,23 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTPAMode": {
+        "message": "TPA 모드"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "TPA 레이트"
+    },
     "pidTuningTPABreakPoint": {
         "message": "TPA 브레이크포인트"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "스로틀 곡선 미리보기"
@@ -2990,8 +3012,11 @@
     "sdcardStatusUnknown": {
         "message": "알 수 없는 상태 $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "커밋 선택"
+    },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "릴리즈 정보"
+        "message": "릴리즈와 빌드 정보"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "제조사 ID:"
@@ -3010,6 +3035,36 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "타겟:"
+    },
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
+    },
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "클라우드 빌드 상세정보:"
+    },
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "로그 보기."
+    },
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "상태:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "대기 중"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "처리 중"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "성공 (캐쉬 저장됨)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "성공"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "시간 초과됨 (재시도하세요)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "실패 (로그기록을 확인하세요)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "수동으로 다운로드하십시오."
@@ -3622,6 +3677,41 @@
     },
     "pidTuningCellCount": {
         "message": "셀 수 - 자동 프로파일 전환용"
+    },
+    "pidTuningCellCountHelp": {
+        "message": "연결된 배터리의 셀 수와 동일한 셀 수를 가진 첫 번째 프로파일을 자동으로 활성화합니다.<br><br><ul><li><b>전환</b>: 셀 수가 일치하는 프로파일이 있으면 항상 프로파일로 전환합니다.</li><li><b>비활성화</b>: 자동 프로파일 전환을 비활성화합니다</li><b>1S-8S</b>: 이 프로파일에 사용할 프로파일 셀 수를 선택하세요</li></ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "전환",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "비활성화",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "프로파일 독립적 필터 설정"
@@ -4617,6 +4707,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "단위"
     },
@@ -4765,6 +4859,14 @@
     "osdDescElementVtxChannel": {
         "message": "현재 VTX 채널과 출력"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "VTX 전력",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "밴드:채널:전력:핏",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "배터리 전압 경고",
         "description": "One of the elements of the OSD"
@@ -4821,9 +4923,104 @@
     "osdDescElementMahDrawn": {
         "message": "사용 된 총 배터리 용량"
     },
+    "osdTextElementWhDrawn": {
+        "message": "배터리 전류 강하 [Wh]",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "사용 된 총 배터리 용량 [Wh]"
+    },
+    "osdDescElementAuxValue": {
+        "message": "Aux 값",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "Aux 값",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "고글 전압",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "고글에 의해 제시된 고글 전압"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "VTX 전압",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "고글에 의해 제시된 VTX 전압"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "VTX 비트전송률",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "고글에 의해 제시된 동영상 비트전송률"
+    },
+    "osdTextElementSysDelay": {
+        "message": "VTX 지연",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "고글에 의해 제시된 영상 지연"
+    },
+    "osdTextElementSysDistance": {
+        "message": "VTX 거리",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "고글에 의해 제시된 영상 전송거리"
+    },
+    "osdTextElementSysLQ": {
+        "message": "고글 링크 품질",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "고글에 의해 제시된 영상 링크 품질"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "고글 DVR 상태",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "고글에 의해 제시된 고글 DVR 상태"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "VTX DVR 상태",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "고글에 의해 제시된 VTX DVR 상태"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "고글 시스템 경고",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "고글에 의해 제시된 영상 시스템 경고"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "VTX 온도",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "고글에 의해 제시된 VTX 온도"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "고글 팬 속도",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "고글에 의해 제시된 고글 팬 속도"
+    },
     "osdTextElementCraftName": {
         "message": "기체 이름",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCraftName": {
+        "message": "컨피규레이터 탭에서 설정한 기체 이름.</br>CLI 변수 \"craft_name\"을 통해 설정할 수도 있습니다."
     },
     "osdTextElementAltitude": {
         "message": "고도",
@@ -5170,6 +5367,16 @@
         "message": "디스플레이 이름",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementDisplayName": {
+        "message": "CLI 변수 \"display_name\"을 통해 설정할 수도 있습니다."
+    },
+    "osdTextElementPilotName": {
+        "message": "파일럿 이름",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "컨피규레이터 탭에서 설정한 파일럿 이름.</br>CLI 변수 \"pilot_name\"을 통해 설정할 수도 있습니다."
+    },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM 주파수",
         "description": "One of the elements of the OSD"
@@ -5247,6 +5454,20 @@
     "osdDescTxUplinkPower": {
         "message": "Tx 출력 값 (mW 또는 W)을 표시합니다. 지원되는 라디오를 위해 <i>다이나믹 출력</i>이 활성화 된 경우에 유용합니다."
     },
+    "osdTextElementReadyMode": {
+        "message": "준비 모드",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "활성화하면 '준비'가 비행할 때까지 디스플레이됩니다"
+    },
+    "osdTextElementRSNRValue": {
+        "message": "RSNR 수치",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "RSNR 수치"
+    },
     "osdTextElementUnknown": {
         "message": "알 수 없음 $1",
         "description": "One of the elements of the OSD"
@@ -5288,6 +5509,13 @@
     },
     "osdDescStatUsedMah": {
         "message": "사용된 배터리 용량"
+    },
+    "osdTextStatUsedWh": {
+        "message": "사용된 배터리 [Wh]",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "사용 된 배터리 용량 [Wh]"
     },
     "osdTextStatMaxAltitude": {
         "message": "최대 고도",
@@ -5435,6 +5663,13 @@
     },
     "osdDescStatMinRssiDbm": {
         "message": "최소 RSSI dBm 값"
+    },
+    "osdTextStatMinRSNR": {
+        "message": "최소 RSNR 수치",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "최소 RSNR 수치"
     },
     "osdTextStatUnknown": {
         "message": "알 수 없음 $1",
@@ -5629,6 +5864,13 @@
     "osdWarningOverCap": {
         "message": "사용된 mAh가 설정된 용량 제한을 초과할 때 경고"
     },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "RSNR 수치가 알람 설정값 아래일 때 경고합니다"
+    },
     "osdWarningTextUnknown": {
         "message": "알 수 없음 $1"
     },
@@ -5719,6 +5961,10 @@
     },
     "vtxType_4": {
         "message": "트램프",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {
@@ -5921,6 +6167,10 @@
         "message": "저장",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "저장 중",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "저장됨",
         "description": "Saved action button in the VTX tab"
@@ -6075,6 +6325,15 @@
     },
     "craftName": {
         "message": "기체 이름"
+    },
+    "configurationCraftNameHelp": {
+        "message": "로그, 백업 파일 이름 및 OSD에 표시할 수 있습니다.</br>CLI 변수 <b>craft_name</b>를 통해 설정할 수 있습니다."
+    },
+    "configurationPilotName": {
+        "message": "파일럿 이름"
+    },
+    "configurationPilotNameHelp": {
+        "message": "OSD에 표시할 수 있습니다.</br>CLI 변수 <b>pilot_name</b>을 통해 설정할 수 있습니다."
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV 카메라 각도 [도]"
@@ -6486,5 +6745,50 @@
     "presetsReviewOptionsWarning": {
         "message": "이 프리셋을 선택하기 전에 옵션 목록을 검토하십시오.",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "빌드 설정"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "기타 옵션"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "무선 프로토콜"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "텔레메트리 프로토콜"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "모터 프로토콜"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "설정 파일이름:"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "이 빌드에 포함할 무선 프로토콜을 선택하십시오. 이것은 드롭다운으로 여러 항목을 선택할 수 있습니다."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "이 빌드에 포함할 텔레메트리 프로토콜을 선택하십시오. 이것은 드롭다운으로 여러 항목을 선택할 수 있습니다. 선택한 무선 프로토콜(예: CRSF)에 따라 여기서 선택한 것과 관계없이 활성화되는 텔레메트리 프로토콜도 있습니다."
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "이 빌드에 포함할 일반 옵션을 선택하십시오. 이것은 드롭다운으로 여러 항목을 선택할 수 있습니다. 수정 사항(예: AKK VTX)이 여기에 포함됩니다."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "이 빌드에 포함할 모터(ESC) 프로토콜을 선택하십시오. 이것은 드롭다운으로 여러 항목을 선택할 수 있습니다."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "특히 개발자에게 유용한데, 다음에 입력하여 병합된 PR을 선택하거나 커밋 sha를 지정하거나 '아직 병합되지 않은' PR을 지정할 수 있습니다: pull/{PR number}/head ."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "개발자의 경우 '스페이스'로 구분하여 필요한 정의를 추가할 수 있지만, 'USE_' 접두사가 없으면 자동으로 추가됩니다."
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "사용자 정의"
+    },
+    "classicBuild": {
+        "message": "클래식 모드"
+    },
+    "classicBuildModeDescription": {
+        "message": "이 모드는 커밋을 제외한 모든 매개 변수를 무시합니다. 이것은 기본적으로 고전적인 집합체와 동일한 것을 달성하며, 편의를 위해 제공됩니다."
     }
 }

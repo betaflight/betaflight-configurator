@@ -1924,9 +1924,6 @@
     "sdcardStatusUnknown": {
         "message": "Status tidak dikenal $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Info Rilis"
-    },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Kunjungi halaman rilis."
     },

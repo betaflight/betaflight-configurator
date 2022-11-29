@@ -2285,9 +2285,6 @@
     "sdcardStatusUnknown": {
         "message": "Okänt tillstånd $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Utgåve-info"
-    },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Besök utgåvesida."
     },
