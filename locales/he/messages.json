@@ -382,12 +382,6 @@
     "initialSetupResetText": {
         "message": "שיחזור הגדרות ל <strong>ברירת מחדל</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "גיבוי"
-    },
-    "initialSetupButtonRestore": {
-        "message": "שחזור"
-    },
     "initialSetupBackupSuccess": {
         "message": "הגיבוי נשמר<span class=\"message-positive\">בהצלחה</span>"
     },
@@ -457,14 +451,8 @@
     "featureNone": {
         "message": "&lt;בחר אחד&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX input"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "כיול מצב מאוזן, בזמן טיסה."
-    },
-    "featureRX_SERIAL": {
-        "message": "מקלט מבוסס תקשורת טורית (SBUS, FPORT, IBUS, SPEKSAT)"
     },
     "featureMOTOR_STOP": {
         "message": "לא לסובב מנועים כאשר מחומש"
