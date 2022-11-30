@@ -491,12 +491,6 @@
     "initialSetupResetText": {
         "message": "Obnovit <strong>výchozí</strong> nastavení"
     },
-    "initialSetupButtonBackup": {
-        "message": "Zálohovat"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Obnovit"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktivovat Boot Loader / DFU"
     },
@@ -623,9 +617,6 @@
     "featureNone": {
         "message": "&lt;Vyber Jedno&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX vstup"
-    },
     "featureVBAT": {
         "message": "Monitorování napětí baterie"
     },
@@ -656,9 +647,6 @@
     "feature3D": {
         "message": "3D mód (pro použití s obousměrnými ESC)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "Vstup PWM (jeden drát na kanál)"
-    },
     "featureRSSI_ADC": {
         "message": "Analogový RSSI vstup"
     },
@@ -682,9 +670,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Po zapnutí nastavte na záložce Blackbox."
-    },
-    "featureRX_SPI": {
-        "message": "Podpora SPI RX"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Předat aux kanály servo výstupům"
@@ -775,9 +760,6 @@
     },
     "configurationReverseMotorSwitch": {
         "message": "Směr motorů je opačný"
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Volnoběh motorů [percent]"
     },
     "configurationThrottleMinimum": {
         "message": "Minimální plyn (Nejnižší ESC hodnota, když je odjištěno)"
@@ -987,12 +969,6 @@
     },
     "receiverRcInterpolationManual": {
         "message": "Manuální"
-    },
-    "pidTuningProportional": {
-        "message": "Proporciální"
-    },
-    "pidTuningIntegral": {
-        "message": "Integrál"
     },
     "pidTuningDerivative": {
         "message": "Derivace"
@@ -1384,9 +1360,6 @@
     "pidTuningAngle": {
         "message": "Acro"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Přidá nový režim omezující úhly náklonu pro piloty, kteří se učí létat v režimu acro. Rozsah je 10-80 a musí být aktivován pomocí přepínače v $t(tabAuxiliary.message)."
-    },
     "failsafeKillSwitchItem": {
         "message": "Failsafe Kill Switch (nastavení Failsafe v záložce módů)"
     },
@@ -1446,9 +1419,6 @@
     },
     "osdSetupTitle": {
         "message": "OSD"
-    },
-    "osdDescElementCraftName": {
-        "message": "Jméno dronu nastavené v záložce Konfigurace"
     },
     "pidTuningProfile": {
         "message": "Profil"
