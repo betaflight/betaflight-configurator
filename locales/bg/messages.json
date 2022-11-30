@@ -628,9 +628,6 @@
     "defaultSupport2": {
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Бетафлайт Wiki</a>"
     },
-    "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Джошуа Бардуел видеа</a>"
-    },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
@@ -660,12 +657,6 @@
     },
     "initialSetupResetText": {
         "message": "Възстанови настройките на <strong>стандартни</strong>"
-    },
-    "initialSetupButtonBackup": {
-        "message": "Резервно копие"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Възстанови"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Активирайте буутлоудъра / DFU"
@@ -910,17 +901,11 @@
     "featureNone": {
         "message": "&lt;Select One&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX вход"
-    },
     "featureVBAT": {
         "message": "Мониторинг на напрежението на батерията"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Калибриране в полет"
-    },
-    "featureRX_SERIAL": {
-        "message": "Приемник със серийно предаване на данни (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Моторите не се въртят при arm"
@@ -955,12 +940,6 @@
     "feature3D": {
         "message": "3D режим (използва се с обратими ESC)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX вход (един кабел на канал)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX вход (управление чрез MSP порт)"
-    },
     "featureRSSI_ADC": {
         "message": "Аналогов RSSI вход"
     },
@@ -984,9 +963,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "След като активирате, конфигурирайте в раздела Черна Кутия."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX поддръжка"
     },
     "featureESC_SENSOR": {
         "message": "Използвай KISS/BLHeli_32 ESC телеметрия<b>по отделен кабел</b>"
@@ -1014,9 +990,6 @@
     },
     "featureVTX": {
         "message": "Видеопредавател"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "Активирай за постоянно Anti Gravity"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Ако това е деактивирано, режимът „ANTI GRAVITY“ може да се използва за активиране на Anti Gravity от ключ."
@@ -1068,9 +1041,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Забележка: </strong>Не всички комбинации от функции са валидни. Когато фърмуера на полетният контролер засече несъвместима комбинация от функции, функцията ще бъде деактивирана.<br /><strong>Бележка:</strong>Конфигурирай серийният порт<span class=\"message-negative\">преди</span>да активираш финкция която ще използва порта."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Забележка: </strong>Не забравяй да конфигурираш Серийният порт (от Порт раздела) и избери вида Сериен Приемник когато използваш опцията RX_SERIAL."
     },
     "configurationSpiRxHelp": {
         "message": "<strong> Забележка: </strong> Входът SPI RX ще работи само ако необходимият хардуер е на платката или е свързан към SPI шината."
@@ -1152,12 +1122,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Arming винаги е деактивирано, ако стойността на газта не е най-ниска. Бъдете внимателни с активирането на тази опция, тъй като можете да изключите двигателите с превключвателя по време на полет."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "На празен ход [percent]"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Стойността „DShot idle“ е процентът от максималната стойност на газта, която се изпраща към ESC, когато положението на газта е в минималното положение и дрона е включен. Увеличете го, за да увеличите оборотите на празен ход и да избегнете несинхронизиране на двигателя. Ако стойността е твърде висока, дрона ще бъде \"плаващ\"."
     },
     "configurationMotorPoles": {
         "message": "Полюс на мотора",
@@ -1334,10 +1298,6 @@
         "message": "Използвай Galileo",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Когато се активира, това заменя QZSS системата (Япония) с Galileo ситемата (Европа).",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "Задай точка \"Дом\" веднъж",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1363,12 +1323,6 @@
     },
     "dialogDynFiltersChangeTitle": {
         "message": "Промяна стойноста на Dynamic Notch"
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": "<span class = \"message-negative\"> <b> ПРЕДУПРЕЖДЕНИЕ: Някои стойности на dynamic notch са променени по подразбиране </b> </span>, защото RPM филтрирането е активирано / деактивирано. <br> Моля, проверете преди полет."
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "OK"
     },
     "portsIdentifier": {
         "message": "Идентификатор"
@@ -1516,16 +1470,6 @@
         "message": "Праг",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravity усилва I term, когато се открият бързи промени в газта. По-високите стойности на усилване осигуряват стабилност и по-добро задържане на позицията при подаване на газ."
-    },
-    "pidTuningDMin": {
-        "message": "D минимално",
-        "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Забележка:</strong>Функцията D мин e деактивирана и нейните параметри са скрити. За да използвате D мин моля активирайте го в $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinGain": {
         "message": "Коефициент на усилване",
         "description": "Gain of the D Max feature"
@@ -1597,28 +1541,8 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Силно се препоръчва използването на D Setpoint transition по-голям от 0 и по-малък от 0,1. Това може да доведе до нестабилност и намалена реакция на стика, докато стиковете пресичат централната точка</span>"
     },
-    "pidTuningProportional": {
-        "message": "Пропорционално"
-    },
-    "pidTuningProportionalHelp": {
-        "message": "Контролира силата на това колко плътно дрона следва стиковете (зададената точка).<br /><br /> По-високата стойност (gains) осигурява добро следване, но може да доведе до overshoot, ако е твърде висока, пропорционално на Derivative (D-term). Мислете за P-term като за пружината на автомобил.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
-    "pidTuningIntegral": {
-        "message": "Integral"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "Контролира силата на това колко плътно дрона задържа общото положение в дадена точка. <br> Подобно на Proportional, но за по-дълги периоди от време, като например изместен център на тежестта (CoG) или постоянно външно влияние (постоянен вятър). <br /><br /> По-висок gains осигурява по-стегнато следене (напр. при мащабни завои), но могат да накарат дрона да се почувства стегнат за командите от стика. <br> Ако стойноста е прекалено висока, може да причини бавни трептения.",
-        "description": "Integral Term helpicon message on PID table titlebar"
-    },
     "pidTuningDerivative": {
         "message": "Derivative"
-    },
-    "pidTuningDMax": {
-        "message": "D Max"
-    },
-    "pidTuningFeedforward": {
-        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"> <b> Предупреждение: </b> </span> много високи рейтове могат да доведат до десинхронизация на двигателите по време на бързо забавяне."
@@ -1698,12 +1622,6 @@
     "pidTuningControllerHead": {
         "message": "PID контрол"
     },
-    "pidTuningCopyProfile": {
-        "message": "Копирайте стойностите на профила"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Копирайте стойностите на Rate профила"
-    },
     "dialogCopyProfileText": {
         "message": "Копиране на стойности от текущия профил"
     },
@@ -1739,9 +1657,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\"> запазен </span>"
-    },
-    "receiverHelp": {
-        "message": "Моля, прочетете указанията за приемника в документацията. Конфигуриране на сериен порт (ако е необходим), режим на приемник (сериен / ppm / pwm), доставчик (за серийни приемници), свързване на приемник, задаване на карта на канала, конфигуриране на крайни точки / обхват на канала на TX, така че всички канали да преминават от ~ 1000 до ~ 2000. Задайте средна точка (по подразбиране 1500), центрирайте каналите на 1500, конфигурирайте мъртва зона на стика, проверете поведението когато TX е изключен или извън обхвата. <br /> <span class=\"message-negative\"> ВАЖНО: </span> Преди полет прочетете указанията за failsafe и неговото конфигуриране."
     },
     "tuningHelp": {
         "message": "<b>Препоръка</b><br /><span class=\"message-negative\">ВАЖНО:</span> Важно е да проверявате температурата на моторите повреме на първите полети. Колкото по висока е стойността на филтъра, толкова по-добре би трябвало да летите, но също така ще имате повече шум от моторите. <br>Стойността по подразбиране от 100Hz е оптимална, но за по шумни конфигурации може да опитате да намалите Dterm филтъра на 50Hz и най-вероятно gyro филтъра."
@@ -2193,9 +2108,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID на сателити"
-    },
-    "gpsSignalQty": {
-        "message": "Количество"
     },
     "motorsVoltage": {
         "message": "Волтаж:"
@@ -2660,9 +2572,6 @@
     "sdcardStatusUnknown": {
         "message": "Неизвестно състояние $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Информация за изданието"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID на производителя:"
     },
@@ -2680,18 +2589,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Цел:"
-    },
-    "firmwareFlasherReleaseFile": {
-        "message": "Двоичен код:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Единна цел:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Показване на конфигурацията."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Дата:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Изтеглете ръчно"
@@ -2845,12 +2742,6 @@
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Фърмуерът не е зареден"
-    },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "Зареден локален фърмуер: ($1 байта)"
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "Зареден Online фърмуер: ($1 байта)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX файлът изглежда е повреден"
