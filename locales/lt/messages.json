@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Pastaba"
     },
+    "dontShowAgain": {
+        "message": "Daugiau neberodyti"
+    },
     "operationNotSupported": {
         "message": "Jūsų aparatinė įranga nepalaiko šios funkcijos."
     },
@@ -55,6 +58,9 @@
     "close": {
         "message": "Uždaryti"
     },
+    "OK": {
+        "message": "OK"
+    },
     "cancel": {
         "message": "Atšaukti"
     },
@@ -69,6 +75,9 @@
     },
     "permanentExpertMode": {
         "message": "Nuolat įjungti Experto režimą"
+    },
+    "warningSettings": {
+        "message": "Rodyti įspėjimus"
     },
     "rememberLastTab": {
         "message": "Prisijungus atverti paskutinę kortelę"
@@ -175,6 +184,9 @@
     "tabHelp": {
         "message": "Dokumentacija ir Pagalba"
     },
+    "tabOptions": {
+        "message": "Nustatymai"
+    },
     "tabSetup": {
         "message": "Nustatymai"
     },
@@ -253,8 +265,20 @@
     "serialPortClosedFail": {
         "message": "<span class=\"message-negative\">Nepavyko</span> uždaryti nuoseklaus prievado"
     },
+    "serialPortLoading": {
+        "message": "Įkeliama..."
+    },
     "usbDeviceOpened": {
         "message": "USB įrenginys <span class=\"message-positive\">sėkmingai</span> atidarytas su ID: $1"
+    },
+    "usbDeviceOpenFail": {
+        "message": "<span class=\"message-negative\">Nepavyko</span> atidaryti USB įrenginio!"
+    },
+    "usbDeviceClosed": {
+        "message": "USB įrenginys <span class=\"message-positive\">sėkmingai</span> uždarytas"
+    },
+    "usbDeviceCloseFail": {
+        "message": "<span class=\"message-negative\">Nepavyko</span> uždaryti USB įrenginio"
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU nerastas"
@@ -350,6 +374,10 @@
         "message": "Ciklo laikas:",
         "description": "Cycle time text shown in the status bar"
     },
+    "statusbar_cpu_load": {
+        "message": "Procesoriaus apkrova:",
+        "description": "CPU load text shown in the status bar"
+    },
     "defaultWelcomeIntro": {
         "message": "Sveiki atvykę į <strong>Betaflight - Configurator</strong>, programa skirta supaprastinti Jūsų skrydžio valdiklio naujinimus, konfigūravimą ir derinimą."
     },
@@ -394,12 +422,6 @@
     },
     "initialSetupResetText": {
         "message": "Atstatyti nustatymus į <strong>numatytuosius</strong>"
-    },
-    "initialSetupButtonBackup": {
-        "message": "Atsarginė kopija"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Atkurti iš atsarginės kopijos"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktyvuoti Boot Loader / DFU"
@@ -554,14 +576,8 @@
     "featureNone": {
         "message": "&lt;Pasirinkite&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX input"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Lygio kalibravimas skrydžio metu"
-    },
-    "featureRX_SERIAL": {
-        "message": "Serial-based imtuvas (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Nejungti variklių po ARM komandos"
@@ -593,12 +609,6 @@
     "feature3D": {
         "message": "Režimas 3D (naudojamas su reversiniais ESC)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX įėjimas (laidas kiekvienam kanalui)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX įėjimas (valdymas per MSP portą)"
-    },
     "featureRSSI_ADC": {
         "message": "Analoginis RSSI įėjimas"
     },
@@ -610,9 +620,6 @@
     },
     "featureDISPLAYTip": {
         "message": "Jeigu ši funkcija yra įjungta, bet ekranas nėra prijungtas (arba nėra įjungtas), po kiekvieno valdiklio perkrovimo arba jį įjungus, atsiras apie 10 sekundžių įjungimo uždėlsimas."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX palaikymas"
     },
     "featureESC_SENSOR": {
         "message": "Naudoti KISS/BLHeli_32 ESC telemetriją <b>pajungta per atskirą laidą</b>"
@@ -631,9 +638,6 @@
     },
     "featureOSD": {
         "message": "On Screen Display (duomenų atvaizdavimas į kameros vaizdą)"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "Nuolat įjungti Anti Gravity režimą"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Jeigu tai išjungta, tam kad įjungti antigravitaciją jungikliu, naudokite 'ANTI GRAVITY' režimą."
@@ -673,9 +677,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Pastaba:</strong> Ne visos funkcionalumu kombinacijos yra įmanomos. Jeigu skrydžio valdiklis nustatys netinkamą kombinaciją - ji bus atmesta.<br /><strong>Pastaba:</strong> Nustatykite prievadus <span class=\"message-negative\">prieš</span> įjungiant funkcionalumus, naudojančius šiuos prievadus."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Pastaba:</strong> Nepamirškite nustatyti nuoseklųjį prievadą (per kortelę 'Prievadai'), bei pasirinkti Nuosekliojo imtuvo tipą, naudojant RX_SERIAL funkcionalumą."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Pastaba:</strong> SPI RX tipas veiks tik jeigu plokštėje yra reikalinga įranga ir ji pajungta per SPI magistralę."
@@ -751,12 +752,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Įjungimas (arming) visada išjungtas kol \"gazo\" svirtis nėra minimalioj padėtyje. Bukite atsargus, nes įjungus šią funkciją atsiranda galimybė netyčia išjungti skraidyklę jai bunant ore."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Variklių tuščios eigos (idle) reikšmė [percent]"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "'DShot idle' reikšmė tai procentai nuo maksimalios \"gazo\" svirties reikšmės, kuri yra siunčiama į ESC, kai \"gazo\" svirtis randasi apatinėje padėtyje ir skraidyklė yra įjungta (armed). Didinkite ją kad gauti aukštesnius tuščios eigos apsukas ir išvengti variklių išsinchronizavimo. Nustačius per aukštą reikšmę - skraidyklė taps \"plaukiojanti\"."
     },
     "configurationMotorPoles": {
         "message": "Variklio polių skaičius",
@@ -916,10 +911,6 @@
         "message": "Naudoti Galileo",
         "description": "Option to use Galileo in the GPS configuration"
     },
-    "configurationGPSGalileoHelp": {
-        "message": "Įjungus, išjungia QZSS (Japonijos) palydovų sistema ir pakeičia ją Galileo (Europos) palydovų sistema.",
-        "description": "Help text for the option to use Galileo in the GPS configuration"
-    },
     "configurationGPSHomeOnce": {
         "message": "\"Namų\" taško koordinačių vienkartinis nustatymas",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
@@ -1059,9 +1050,6 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "RC interpoliacijos intervalas [ms]"
-    },
-    "receiverHelp": {
-        "message": "Perskaitykite įmtuvo dalį dokumetacijoje. Nustatykite nuoseklųjį prievadą (jeigu reikia), imtuvo režimą (serial/ppm/pwm), tipą (nuosekliesiems imtuvams), atlikite bind procedūrą, nustatykite kanalų išdėstymą, kraštinius režius siustuve, kad visi kanalai turėtu reikšmes nuo ~1000 iki ~2000. Nustatykite centro reikšmę (paprastai 1500), atlikite kanalų 'trim', kad reikšmė būtu 1500, nustatykite svirčių nejautrumo zonas, patikrinkite siustuvo elgsiena jam esant išjungtam arba nebunant ryšiui.<br /><span class=\"message-negative\">SVARBU:</span> Prieš skrydį perskaitykite failsafe dokumentacijos dalį ir nustatykite failsafe."
     },
     "receiverStickMin": {
         "message": "'Apatinė Svirties' riba"
@@ -1348,9 +1336,6 @@
     "sdcardStatusReboot": {
         "message": "Kritinė klaida<br>Perkraukite pakartojimui"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Išeidimo informacija"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "Gamintojo ID:"
     },
@@ -1368,18 +1353,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Tikslas:"
-    },
-    "firmwareFlasherReleaseFile": {
-        "message": "Dvejetainis:"
-    },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "Unified Target:"
-    },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "Rodyti konfigūracija."
-    },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "Data:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Atsisiųskite rankiniu būdu."
