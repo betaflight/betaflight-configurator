@@ -1,0 +1,160 @@
+{
+    "yes": {
+        "message": "Ya",
+        "description": "General Yes message to be used across the application"
+    },
+    "no": {
+        "message": "Tidak",
+        "description": "General No message to be used across the application"
+    },
+    "on": {
+        "message": "Dihidupkan"
+    },
+    "off": {
+        "message": "Dimatikan"
+    },
+    "auto": {
+        "message": "Auto"
+    },
+    "error": {
+        "message": "Ralat:{{errorMessage}}"
+    },
+    "errorTitle": {
+        "message": "Ralat"
+    },
+    "warningTitle": {
+        "message": "Amaran"
+    },
+    "noticeTitle": {
+        "message": "Perhatian"
+    },
+    "dontShowAgain": {
+        "message": "Jangan paparkan lagi"
+    },
+    "operationNotSupported": {
+        "message": "Operasi ini tidak disokong oleh perkakasan anda."
+    },
+    "storageDeviceNotReady": {
+        "message": "Peranti storan belum sedia untuk digunakan. Jika kad microSD digunakan, pastikan ianya dikenal pasti oleh papan kawalan penerbangan anda."
+    },
+    "options_title": {
+        "message": "Pilihan aplikasi"
+    },
+    "connect": {
+        "message": "Sambung"
+    },
+    "connecting": {
+        "message": "Sedang disambung"
+    },
+    "disconnect": {
+        "message": "Putuskan sambungan"
+    },
+    "portsSelectManual": {
+        "message": "Pemilihan manual"
+    },
+    "autoConnect": {
+        "message": "Sambungan-Automatik"
+    },
+    "OK": {
+        "message": "OK"
+    },
+    "cancel": {
+        "message": "Batal"
+    },
+    "warningSettings": {
+        "message": "Tunjuk amaran"
+    },
+    "rememberLastTab": {
+        "message": "Buka semula tab terakhir setelah bersambung"
+    },
+    "language_choice_message": {
+        "message": "Ubah bahasa:",
+        "description": "Try and be brief"
+    },
+    "sensorStatusMag": {
+        "message": "Magnetometer"
+    },
+    "tabLanding": {
+        "message": "Selamat datang"
+    },
+    "tabChangelog": {
+        "message": "Log perubahan"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Dasar Privasi"
+    },
+    "tabOptions": {
+        "message": "Tetapan"
+    },
+    "tabPorts": {
+        "message": "Port"
+    },
+    "tabReceiver": {
+        "message": "Penerima"
+    },
+    "tabMotorTesting": {
+        "message": "Motor"
+    },
+    "tabCLI": {
+        "message": "CLI"
+    },
+    "tabOnboardLogging": {
+        "message": "Kotak Hitam"
+    },
+    "logActionHide": {
+        "message": "Sembunyikan Log"
+    },
+    "logActionShow": {
+        "message": "Paparkan Log"
+    },
+    "stm32InvalidHex": {
+        "message": "Hex tidak sah"
+    },
+    "stm32Erase": {
+        "message": "Sedang dipadam ..."
+    },
+    "craftNameReceived": {
+        "message": "Nama pesawat: <strong>$1</strong>"
+    },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_i2c_error": {
+        "message": "Ralat I2C:",
+        "description": "CPU load text shown in the status bar"
+    },
+    "defaultWelcomeHead": {
+        "message": "Perkakasan"
+    },
+    "defaultDonateHead": {
+        "message": "Sumber Terbuka / Notis Penderma"
+    },
+    "defaultDonate": {
+        "message": "Derma"
+    },
+    "initialSetupMinimum": {
+        "message": "Minimum:"
+    },
+    "initialSetupMaximum": {
+        "message": "Maksimum:"
+    },
+    "initialSetupInfoHead": {
+        "message": "Maklumat"
+    },
+    "initialSetupArmingDisableFlagsTooltipCLI": {
+        "message": "CLI sedang aktif",
+        "description": "Message that pops up to describe the CLI arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
+        "message": "Menu OSD sedang aktif",
+        "description": "Message that pops up to describe the OSD_MENU arming disable flag"
+    },
+    "initialSetupGPSHead": {
+        "message": "GPS"
+    }
+}
