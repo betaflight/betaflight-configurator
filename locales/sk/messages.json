@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Oznámenie"
     },
+    "dontShowAgain": {
+        "message": "Znovu nezobrazovať"
+    },
     "operationNotSupported": {
         "message": "Táto operácia nieje podporovaná vašim hardvérom."
     },
@@ -65,6 +68,9 @@
     "close": {
         "message": "Zatvoriť"
     },
+    "OK": {
+        "message": "OK"
+    },
     "cancel": {
         "message": "Zrušiť"
     },
@@ -83,11 +89,26 @@
     "permanentExpertMode": {
         "message": "Permanentne povoliť expertný režim"
     },
+    "warningSettings": {
+        "message": "Zobraziť upozornenia"
+    },
     "rememberLastTab": {
         "message": "Po pripojení otvoriť poslednú záložku"
     },
     "analyticsOptOut": {
         "message": "Odhlásiť sa z odosielania anonymných štatistikých dát"
+    },
+    "connectionTimeout": {
+        "message": "Nastavenie vypršania času pre povolenie dlhšieho spúštania pri pripojení alebo reštarte",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
+    "showAllSerialDevices": {
+        "message": "Zobraz všetky sériove zariadenia (pre výrobcov alebo vývoj)",
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "showVirtualMode": {
+        "message": "Povoľ mód virtuálneho spojenia",
+        "description": "Text for the option to enable or disable the virtual FC"
     },
     "cordovaForceComputerUI": {
         "message": "Použiť rozhranie počítača namiesto mobilného telefónu"
@@ -431,6 +452,9 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>Verzia konfigurátora ktorú používate ($3) je staršia ako firmvér ktorý používate ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Nieje zvolený protokol ovládania motorov</strong>.<br>Prosím vyberte vhodný protokol ovládania motorov vášho ESC '$t(configurationEscFeatures.message)' na '$t(tabMotorTesting.message)' záložke.<br>$t(escProtocolDisabledMessage.message)"
+    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>Akcelerometer je povolený ale nieje nakalibrovaný</strong>.<br>Ak plánujete používať akcelerometer, prosím postupujte podľa inštrukcií na '$t(initialSetupButtonCalibrateAccel.message)' na '$t(tabSetup.message)' záložke. Ak je niektorá z funkcií ktoré vyžadujú akcelerometer povolená (automatické vyrovnávanie letu, GPS záchrana, ...), odistenie stroja bude zakázané dokiaľ akcelerometer nebude správne nakalibrovaný.<br>Ak akcelerometer používať neplánujete, je odporučené ho zakázať v '$t(configurationSystem.message)' na '$t(tabConfiguration.message)' záložke."
     },
@@ -463,6 +487,9 @@
     "releaseCheckNoInfo": {
         "message": "Pre verziu $1 niesú dostupné žiadne informácie."
     },
+    "tabSwitchConnectionRequired": {
+        "message": "Predým než budete môcť zobraziť ktorúkoľvek zo záložiek musíte <strong>pripojiť</strong>."
+    },
     "tabSwitchWaitForOperation": {
         "message": "Toto momentálne <span class=\"message-negative\">nemôžete</span> urobiť, prosím počkajte kým sa ukončí prebiehajúca operácia..."
     },
@@ -477,6 +504,9 @@
     },
     "uniqueDeviceIdReceived": {
         "message": "Unikátne ID zariadenia: <strong>0x$1</strong>"
+    },
+    "craftNameReceived": {
+        "message": "Názov stroja: <strong>$1</strong>"
     },
     "armingDisabled": {
         "message": "<strong>Odistenie zakázané</strong>"
@@ -551,6 +581,9 @@
     "dfu_device_flash_info": {
         "message": "Detekované zariadenie s celkovou veľkosťou pamäte $1 KiB"
     },
+    "dfu_hex_address_errors": {
+        "message": "Firmwérový obraz obsahuje adresy nenájdené na označenom zariadení"
+    },
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Chyba</span>: Veľkosť načítaného súboru je väčšia ako veľkosť pamäti procesora: Súbor: $1 KiB, limit = $2 KiB"
     },
@@ -571,6 +604,9 @@
     },
     "defaultFacebookText": {
         "message": "Taktiež máme <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebookovú Skupinu</a>.<br />Pridajte sa k nám a objavte miesto na debatu okolo Betaflightu, pýtajte sa otázky ohľadne konfigurácie, alebo len strávte čas s ostatnými pilotmi."
+    },
+    "defaultDiscordText": {
+        "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a><br />Zdieľajte svoj zážitok letu, rozprávajte sa o Betaflighte, pomôžte iným alebo vyhľadajte pomoc od komunity."
     },
     "defaultChangelogHead": {
         "message": "Konfigurátor - história zmien"
@@ -628,7 +664,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight videá od Joshuu Bardwella</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight videá od Joshuu Bardwella</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -661,13 +697,16 @@
         "message": "Obnoviť do <strong>predvolených</strong> nastavení"
     },
     "initialSetupButtonBackup": {
-        "message": "Záloha"
+        "message": "Záloha JSON"
     },
     "initialSetupButtonRestore": {
-        "message": "Obnoviť"
+        "message": "Obnovenie JSON"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktivovať zavádzač / DFU"
+    },
+    "initialSetupBackupRestoreHeader": {
+        "message": "Experimentálna záloha a obnovenie"
     },
     "initialSetupBackupRestoreText": {
         "message": "Pre prípad nehody <strong>zálohujte</strong> vašu konfiguráciu, Nastavenia <strong>príkazovéhu riadka </strong>niesú<span class=\"message-negative\"></span> zahrnuté - na toto použite príkaz 'diff all' v príkazovom riadku."
@@ -714,8 +753,17 @@
     "initialSetupMaxCellV": {
         "message": "Max. napätie článku:"
     },
+    "initialSetupVoltageScale": {
+        "message": "Rozsah napätia:"
+    },
     "initialSetupAccelTrimsHead": {
         "message": "Doladenie akcelerometra"
+    },
+    "initialSetupPitch": {
+        "message": "Sklon (Pitch):"
+    },
+    "initialSetupRoll": {
+        "message": "Náklon (Roll):"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -764,6 +812,10 @@
         "message": "Ochrana pred stratou signálu (Failsafe) je aktívna",
         "description": "Message that pops up to describe the FAILSAFE arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
+        "message": "Nenašiel sa platný signál prijímača",
+        "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
         "message": "Váš prijímač obnovil komunikáciu po strate signálu, ale je odistené",
         "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
@@ -779,6 +831,10 @@
     "initialSetupArmingDisableFlagsTooltipCRASH": {
         "message": "Zaistené kôli detekovanému nárazu",
         "description": "Message that pops up to describe the CRASH arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
+        "message": "Kanál plynu má privysokú hodnotu",
+        "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
         "message": "Stroj je príliš vychýlený",
@@ -828,6 +884,10 @@
         "message": "Nebol zachytený potrebný počet satelitov, ktorý vyžaduje konfigurácia GPS záchrany",
         "description": "Message that pops up to describe the GPS arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipRESC": {
+        "message": "\"Záchrana GPS\" bola aktivovaná",
+        "description": "Message that pops up to describe the RESC arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Filtrovanie založené na otáčkach motorov je povolené, ale jedno, alebo viac ESC neposkytuje platnú telemetriu. Skontrolujte či sú ESC schopné a majú nainštalovaný firmvér, ktorý podporuje obojsmernú DSHOT telemetriu.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
@@ -855,6 +915,9 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupInstrumentsHead": {
+        "message": "Prístroje"
+    },
     "initialSetupButtonSave": {
         "message": "Uložiť"
     },
@@ -876,8 +939,17 @@
     "initialSetupMagCalibEnded": {
         "message": "Kalibrácia magnetometra <span class=\"message-positive\">dokončená</span>"
     },
+    "initialSetupSettingsRestored": {
+        "message": "<strong>Predvolené</strong> nastavenia boli obnovené"
+    },
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">uložená</span>"
+    },
+    "featureNone": {
+        "message": "&lt;Vyberte jednu&gt;"
+    },
+    "featureRX_PPM": {
+        "message": "PPM/CPPM (jedno káblikový)"
     },
     "featureVBAT": {
         "message": "Monitorovanie napätia batérie"
@@ -886,7 +958,7 @@
         "message": "Kalibrácia akcelerometra počas letu"
     },
     "featureRX_SERIAL": {
-        "message": "Prijímač založený na sériovej komunikácii (SPEKSAT, SBUS, SUMD)"
+        "message": "Seriový (cez UART)"
     },
     "featureMOTOR_STOP": {
         "message": "Netočiť motory po odistení"
@@ -939,6 +1011,9 @@
     "featureDISPLAYTip": {
         "message": "Ak je táto funkcia povolená a nieje pripojené žiadne zobrazovacie zariadenie (alebo je zobrazovacie zariadenie vypnuté), každý reštart letového ovládača bude spomalený o približne 10 sekúnd."
     },
+    "featureONESHOT125": {
+        "message": "ESC podpora ONESHOT"
+    },
     "featureONESHOT125Tip": {
         "message": "Pred povolením odpojte batériu a demontujte vrtule."
     },
@@ -949,7 +1024,7 @@
         "message": "Po zapnutí nastavte cez záložku Čiernej skrinky."
     },
     "featureRX_SPI": {
-        "message": "Podpora SPI RX"
+        "message": "SPI Rx (e.g. vstavané Rx)"
     },
     "featureESC_SENSOR": {
         "message": "Použiť telemetriu KISS/BLHeli_32 <b>cez samostatný káblik</b>"
@@ -972,17 +1047,47 @@
     "featureSDCARD": {
         "message": "Podpora SD karty (pre záznamy)"
     },
+    "featureOSD": {
+        "message": "Informácie na obrazovke (OSD)"
+    },
     "featureVTX": {
         "message": "Video vysielač"
     },
     "featureANTI_GRAVITY": {
-        "message": "Permanentne zapnúť režim antigravitácie"
+        "message": "Zapni navždy"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Ak je toto zakázané, mód Antigravitácie môže byť povolený pomocou prepínača."
+    },
+    "featureDYNAMIC_FILTER": {
+        "message": "Dynamický \"notch\" filter gyroskopu"
+    },
+    "featureFAILSAFE": {
+        "message": "Povoliť druhý stupeň ochrany pred stratou signálu"
+    },
+    "featureFAILSAFEOld": {
+        "message": "Povoliť ochranu pred stratou signálu (Failsafe)"
     },
     "featureFAILSAFETip": {
         "message": "<strong>Poznámka:</strong> Ak je druhý stupeň ZAKÁZANÝ, záložné nastavenie <strong>Auto</strong> je použité namiesto užívateľských nastavení pre všetky letové kanály (Náklon (Roll), Sklon (Pitch), Otáčanie (Yaw) a Plyn (Throttle))."
     },
+    "featureFAILSAFEOldTip": {
+        "message": "Použit nastavenia Failsafe pri strate RX signálu"
+    },
+    "configurationFeatureEnabled": {
+        "message": "Zapnuté"
+    },
+    "configurationFeatureName": {
+        "message": "Funkcia"
+    },
     "configurationFeatureDescription": {
         "message": "Opis"
+    },
+    "configurationMixer": {
+        "message": "Zmiešavač"
+    },
+    "configurationFeatures": {
+        "message": "Iné funkcie"
     },
     "configurationReceiver": {
         "message": "Prijímač"
@@ -990,8 +1095,53 @@
     "configurationReceiverMode": {
         "message": "Mód prijímača"
     },
+    "configurationTelemetry": {
+        "message": "Telemetria"
+    },
+    "configurationTelemetryHelp": {
+        "message": "Výstup telemetrie z prijímača"
+    },
+    "configurationRSSI": {
+        "message": "RSSI (Úroveň signálu)"
+    },
+    "configurationRSSIHelp": {
+        "message": "RSSI je meranie intenzity signálu ktoré vám dokáže pomôct rozpoznať, kedy sa váš model dostáva mimo dosah, alebo nakoľko je jeho RF signál rušený."
+    },
     "configurationEscFeatures": {
         "message": "Funkcie ESC/Motora"
+    },
+    "configurationFeaturesHelp": {
+        "message": "<strong>Poznámka:</strong> Všetky kombinácie funkcií niesú povolené. Ak firmvér ovládača zistí neplatnú kombináciu, funkcie, ktoré spôsobujú konflikt zakáže.<br /><strong>Poznámka:</strong> Porty nastavte <span class=\"message-negative\">pred</span> povolením funkcií ktoré ich budú používať."
+    },
+    "configurationSerialRXHelp": {
+        "message": "&#8226; UART príjímača musí byť nastavený ma 'Sériový RX' (V<i>záložke</i>portov)<br>&#8226; Vyberte správny dátový formát z možností dole:"
+    },
+    "configurationSpiRxHelp": {
+        "message": "<strong>Poznámka:</strong> Vstup protokolu SPI bude fungovať len vprípade, ak sa požadované zariadenie nachádza na doske, alebo je pripojené pomocou SPI zbernice."
+    },
+    "configurationOtherFeaturesHelp": {
+        "message": "<strong>Poznámka:</strong> Všetky funkcie nemusia byť podporované všetkými letovými ovládačmi. Ak povolíte špecifickú funkciu, a tá je po uložení a reštartovaní zakázaná, znamená to, že táto funkcia na vašej doske nieje podporovaná."
+    },
+    "configurationBoardAlignment": {
+        "message": "Orientácia dosky a senzorov"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Stupňov náklonu"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Stupňov sklonu"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Stupňov otočenia"
+    },
+    "configurationSensorAlignmentGyro": {
+        "message": "Poloha gyroskopu"
+    },
+    "configurationSensorGyroToUse": {
+        "message": "Gyroskop/Akcelerometer"
+    },
+    "configurationSensorGyroToUseNotFound": {
+        "message": "Varovanie: Nenašlo sa Gyro/Akcelerometer"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Prvý"
@@ -1002,10 +1152,372 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Oba"
     },
+    "configurationSensorAlignmentGyro1": {
+        "message": "Prvé GYRO"
+    },
+    "configurationSensorAlignmentGyro2": {
+        "message": "Druhé GYRO"
+    },
+    "configurationSensorAlignmentAcc": {
+        "message": "Poloha akcelerometra"
+    },
+    "configurationSensorAlignmentMag": {
+        "message": "Poloha magnetometra"
+    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predvolené"
     },
+    "configurationAccelTrims": {
+        "message": "Doladenie akcelerometra"
+    },
+    "configurationAccelTrimRoll": {
+        "message": "Doladenie náklonu akcelerometra"
+    },
+    "configurationAccelTrimPitch": {
+        "message": "Doladenie sklonu akcelerometra"
+    },
     "configurationArming": {
         "message": "Odistenie"
+    },
+    "configurationArmingHelp": {
+        "message": "Niektoré nastavenia odistenia možu vyžadovať povolený akcelerometer"
+    },
+    "configurationReverseMotorSwitch": {
+        "message": "Opačný beh motorov"
+    },
+    "configurationReverseMotorSwitchHelp": {
+        "message": "Táto funkcia nastaví zmiešavač aby očakával reverzný chod motorov, a teda aj opačne nasadené vrtule. <strong>Varovanie:</strong> Toto nastavenie nezmení smer otáčania motorov. Pre reverzný chod motorov použite konfiguračný nástroj vašeho ESC, alebo zmeňte polaritu napájania motorov. Taktiež sa pred odistením uistite, so zloženými vrtuľami, že sa motory otáčaju v smere zobrazenom na diagrame."
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "Oneskorené zaistenie motorov po [seconds] (Vyžaduje funkciu MOTOR_STOP)"
+    },
+    "configurationDisarmKillSwitch": {
+        "message": "Zaistiť motory bez ohľadu na polohe plynu (Ak je odistenie nastavené cez AUX kanál v záložke Módy)"
+    },
+    "configurationDisarmKillSwitchHelp": {
+        "message": "Ak je poloha plynu privysoká, odistenie je vždy zakázané. Dávajte si pozor ked je táto možnost zapnutá, mohli by ste náhodne zaistiť prepínačom počas letu."
+    },
+    "configurationMotorPoles": {
+        "message": "Póly motoru",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesLong": {
+        "message": "$t(configurationMotorPoles.message) (počet magnetov na rotore motoru)",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesHelp": {
+        "message": "Počet pólov je počet magnetov na rotore motora. Nepočítajte póly statoru s vinutím. 5\" motory majú zvyčajne 14 magnetov, 3\" alebo menšie, majú často 12 magnetov.",
+        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
+    "configurationThrottleMinimum": {
+        "message": "Minimálny plyn (Najnižšia ESC hodnota, keď je odistené)"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Toto je hodnota plynu ktorá je odosielaná do ESC, keď je stroj odistený a páčka plynu je na minime (\"voľnobeh\"). Zvýšte hodnotu pre vyššiu rýchlosť voľnobehu. Taktiež, v prípade desynchronizacie."
+    },
+    "configurationThrottleMaximum": {
+        "message": "Maximálny plyn (Najvyššia ESC hodnota, keď je odistené)"
+    },
+    "configurationThrottleMinimumCommand": {
+        "message": "Minimálna hodnota (hodnota ESC v momente odistenia)"
+    },
+    "configurationThrottleMinimumCommandHelp": {
+        "message": "Toto je hodnota ktorá je odoslaná do ESC, keď je stroj zaistený. Nastavte na hodnotu pri ktorej sa zastavia motory (1000 pre väčšinu ESC)."
+    },
+    "configurationEscProtocolDisabled": {
+        "message": "Prosím vyberte vhodný protokol ovládania motorov pre vaše ESC. $t(escProtocolDisabledMessage.message)"
+    },
+    "configurationDshotBeeper": {
+        "message": "Konfigurácia zvukovej signalizácie Dshot"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Použiť zvukovú signalizáciu Dshot (použiť motory na pípanie keď je zaistené)"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "Tón zvukovej signalizácie"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "Maják Dshot používa na vytváranie zvuku ESC a motory. To znamená, že maják Dshot nemožno použiť, keď sa motory točia. V Betaflight 3.4 a novších, keď sa pokúsite o aktiváciu, keď je maják Dshot aktívny, dôjde k 2 sekundovému oneskoreniu po poslednom tóne majáku Dshot, kým sa plavidlo zapne. Toto má zabrániť tomu, aby funkcia majáku Dshot zasahovala do príkazov Dshot odosielaných pri aktivácii.<br/><strong>Varovanie:</strong> Keďže maják Dshot je aktívny cez vaše motory, môže to mať za následok nadmernú produkciu tepla a poškodenie vašich motorov a/alebo ESC, ak je sila majáku nastavená príliš vysoko. Na nastavenie a otestovanie sily majáku použite konfigurátor BLHeli alebo sadu BLHeli Suite."
+    },
+    "configurationBeeper": {
+        "message": "Nastavenie pípača"
+    },
+    "beeperGYRO_CALIBRATED": {
+        "message": "Pípnutie po kalibrácii gyroskopu"
+    },
+    "beeperRX_LOST": {
+        "message": "Pípa, keď sa TX vypne alebo sa stratí signál (opakujte, kým TX nebude v poriadku)"
+    },
+    "beeperRX_LOST_LANDING": {
+        "message": "Pípne SOS, keď je zapnuté a TX je vypnuté alebo sa stratil signál (automatické pristátie/automatické vypnutie zo stráženia)"
+    },
+    "beeperDISARMING": {
+        "message": "Pípnuť pri zaistení letového ovládača"
+    },
+    "beeperARMING": {
+        "message": "Pípnuť pri odistení letového ovládača"
+    },
+    "beeperARMING_GPS_FIX": {
+        "message": "Pípne v špeciálnom tóne pri aktivácií z doskov z nastavením GPS"
+    },
+    "beeperBAT_CRIT_LOW": {
+        "message": "Dlhšie varovanie pípa keď je batéria kriticky prázdna (opakuje)"
+    },
+    "beeperBAT_LOW": {
+        "message": "Dlhšie varovanie pípa ked je batéria kriticky prázdna (opakuje)"
+    },
+    "beeperGPS_STATUS": {
+        "message": "Použije počet pípnutí na zobrazenie koľko je pripojených GPS satelitov"
+    },
+    "beeperRX_SET": {
+        "message": "Pípa ked je aux kanál nastavený na pípanie"
+    },
+    "beeperACC_CALIBRATION": {
+        "message": "Kalibrácia akcelerometru počas letu prebehla úspešne"
+    },
+    "beeperACC_CALIBRATION_FAIL": {
+        "message": "Nepodarilo sa nakalibrovať akcelerometer počas letu"
+    },
+    "beeperREADY_BEEP": {
+        "message": "Zahraj zvuk keď je GPS pripravené"
+    },
+    "beeperDISARM_REPEAT": {
+        "message": "Pípanie zaznie ked je ovladač v zaistenom móde"
+    },
+    "beeperARMED": {
+        "message": "Upozorňovací zvuk keď je doska odistená z vypnutými motormi (opakuje do vypnutia alebo zvýšenia výkonu)"
+    },
+    "beeperSYSTEM_INIT": {
+        "message": "Inicializácia pípne keď je doska spustená"
+    },
+    "beeperUSB": {
+        "message": "Pípaj keď je ovládač letu napájaný z USB. Vypnite túto možnosť keď nechcete pípanie pri práci"
+    },
+    "beeperBLACKBOX_ERASE": {
+        "message": "Pípni keď sa dokončí vymazávanie čiernej skrinky"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Pípni pokiaľ je mód otočenia sa po páde zapnutý"
+    },
+    "configuration3d": {
+        "message": "Funkcie 3D ESC/Motorov"
+    },
+    "configuration3dNeutral": {
+        "message": "3D Neutrálne"
+    },
+    "configurationSystem": {
+        "message": "Konfigurácia systému"
+    },
+    "configurationLoopTime": {
+        "message": "Čas cyklu letového ovládača"
+    },
+    "configurationCalculatedCyclesSec": {
+        "message": "Cyklov za sekundu [Hz]"
+    },
+    "configurationSpeedPidNoGyro": {
+        "message": "Gyro / {{value}}",
+        "description": "When no gyro is configured this appears in place of the speed of the PID in kHz. Try to keep it short."
+    },
+    "configurationKHzUnitLabel": {
+        "message": "{{value}} kHz",
+        "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
+    },
+    "configurationGPS": {
+        "message": "GPS"
+    },
+    "configurationGPSProtocol": {
+        "message": "Protokol"
+    },
+    "configurationGPSubxSbas": {
+        "message": "Typ pozemnej asistencie"
+    },
+    "configurationGPSAutoConfig": {
+        "message": "Automatické nastavenie"
+    },
+    "configurationGPSGalileo": {
+        "message": "Použiť Galileo",
+        "description": "Option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSGalileoHelp": {
+        "message": "Pokiaľ povolené, GPS modul bude pripájať aj satelity systému Galileo, väčšinou pomáha pri zväčšení počtu pripojených satelitov. Na verzii Betaflightu 4.2.X a skôr, tiež vypne QZSS argumentačný systém.",
+        "description": "Help text for the option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSHomeOnce": {
+        "message": "Nastavenie bodu domova jeden krát",
+        "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSHomeOnceHelp": {
+        "message": "Pokiaľ povolené, Nastaví sa bod domova iba pri prvom odistení po pripojení batérie. Pokiaľ nieje povolené, vždy keď sa kvadrokoptera odistí, nastavý sa nový bod domova.",
+        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationSerialRX": {
+        "message": "Sériový port prijímača"
+    },
+    "configurationButtonSave": {
+        "message": "Uložiť a Reštartovať"
+    },
+    "portsIdentifier": {
+        "message": "Identifikátor"
+    },
+    "portsConfiguration": {
+        "message": "Konfigurácia/MSP"
+    },
+    "portsSerialRx": {
+        "message": "Sériový Rx"
+    },
+    "portsSensorIn": {
+        "message": "Vstup snímača"
+    },
+    "portsTelemetryOut": {
+        "message": "Výstup telemetrie"
+    },
+    "portsPeripherals": {
+        "message": "Periférne zariadenia"
+    },
+    "portsHelp": {
+        "message": "<strong>Poznámka:</strong> Všetky kombinácie niesú dovolené. Ak letový ovládač zistí neplatnú kombináciu, konfigurácia sériového portu bude resetovaná."
+    },
+    "portsButtonSave": {
+        "message": "Uložiť a Reštartovať"
+    },
+    "portsTelemetryDisabled": {
+        "message": "Vypnuté"
+    },
+    "portsFunction_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_GPS": {
+        "message": "GPS"
+    },
+    "portsFunction_TELEMETRY_FRSKY": {
+        "message": "FrSky"
+    },
+    "portsFunction_TELEMETRY_HOTT": {
+        "message": "HoTT"
+    },
+    "portsFunction_TELEMETRY_LTM": {
+        "message": "LTM"
+    },
+    "portsFunction_TELEMETRY_MAVLINK": {
+        "message": "MAVLink"
+    },
+    "portsFunction_TELEMETRY_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_TELEMETRY_SMARTPORT": {
+        "message": "InteligentnýPort"
+    },
+    "portsFunction_TELEMETRY_IBUS": {
+        "message": "iBUS"
+    },
+    "portsFunction_TELEMETRY_JETIXBUS": {
+        "message": "JETIXBUS"
+    },
+    "portsFunction_TELEMETRY_CRSF": {
+        "message": "CRSF"
+    },
+    "portsFunction_TELEMETRY_SRXL": {
+        "message": "SRXL"
+    },
+    "portsFunction_ESC_SENSOR": {
+        "message": "ESC"
+    },
+    "portsFunction_RX_SERIAL": {
+        "message": "Sériový Rx"
+    },
+    "portsFunction_BLACKBOX": {
+        "message": "Zaznamenávanie čiernej skrinky"
+    },
+    "portsFunction_TBS_SMARTAUDIO": {
+        "message": "VTX (TBS SmartAudio)"
+    },
+    "portsFunction_IRC_TRAMP": {
+        "message": "VTX (IRC Tramp)"
+    },
+    "portsFunction_RUNCAM_DEVICE_CONTROL": {
+        "message": "Kamera (protokol RunCam)"
+    },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (FrSky Protokol)"
+    },
+    "pidTuningProfileOption": {
+        "message": "Profil $1"
+    },
+    "pidTuningRateProfileOption": {
+        "message": "Rateprofile $1"
+    },
+    "portsFunction_LIDAR_TF": {
+        "message": "Benewake LiDAR"
+    },
+    "pidTuningSubTabFilter": {
+        "message": "Nastavenia filtrov"
+    },
+    "pidTuningShowAllPids": {
+        "message": "Zobraziť všetky PIDy"
+    },
+    "pidTuningHideUnusedPids": {
+        "message": "Skryť nepoužívané PIDy"
+    },
+    "pidTuningAntiGravity": {
+        "message": "Anti-Gravitácia"
+    },
+    "pidTuningAntiGravityMode": {
+        "message": "Režim",
+        "description": "Anti Gravity mode selection parameter"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Jemný",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Krok",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityGain": {
+        "message": "Zosilnenie",
+        "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityThres": {
+        "message": "Hranica",
+        "description": "Anti Gravity Threshold Parameter"
+    },
+    "pidTuningDMinGain": {
+        "message": "Zosilnenie",
+        "description": "Gain of the D Max feature"
+    },
+    "pidTuningDMinAdvance": {
+        "message": "Pokročilé",
+        "description": "Advance of the D Max feature"
+    },
+    "receiverRcSmoothing": {
+        "message": "RC zjemňovanie"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "Automaticky"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "Manuál"
+    },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Auto faktor",
+        "description": "Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "Filter"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "Typ použitého RC zjemňovania"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Stav Istenia",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Zaistené",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Odistené",
+        "description": "One of the modes in Color Mode in Led Strip"
     }
 }
