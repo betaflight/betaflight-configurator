@@ -105,6 +105,14 @@
         "message": "crwdns10508:0crwdne10508:0",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "showAllSerialDevices": {
+        "message": "crwdns10853:0crwdne10853:0",
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "showVirtualMode": {
+        "message": "crwdns10855:0crwdne10855:0",
+        "description": "Text for the option to enable or disable the virtual FC"
+    },
     "cordovaForceComputerUI": {
         "message": "crwdns10174:0crwdne10174:0"
     },
@@ -123,6 +131,10 @@
     },
     "language_ca": {
         "message": "crwdns9490:0crwdne9490:0",
+        "description": "Don't translate!!!"
+    },
+    "language_da": {
+        "message": "crwdns11116:0crwdne11116:0",
         "description": "Don't translate!!!"
     },
     "language_de": {
@@ -664,6 +676,9 @@
     "dfu_device_flash_info": {
         "message": "crwdns6382:0$1crwdne6382:0"
     },
+    "dfu_hex_address_errors": {
+        "message": "crwdns11104:0crwdne11104:0"
+    },
     "dfu_error_image_size": {
         "message": "crwdns6383:0$1crwdnd6383:0$2crwdne6383:0"
     },
@@ -677,7 +692,7 @@
         "message": "crwdns5452:0crwdne5452:0"
     },
     "defaultWelcomeText": {
-        "message": "crwdns10480:0crwdne10480:0"
+        "message": "crwdns11124:0crwdne11124:0"
     },
     "defaultContributingHead": {
         "message": "crwdns5454:0crwdne5454:0"
@@ -687,6 +702,9 @@
     },
     "defaultFacebookText": {
         "message": "crwdns10080:0crwdne10080:0"
+    },
+    "defaultDiscordText": {
+        "message": "crwdns10861:0crwdne10861:0"
     },
     "defaultChangelogHead": {
         "message": "crwdns5457:0crwdne5457:0"
@@ -744,7 +762,7 @@
         "message": "crwdns10090:0crwdne10090:0"
     },
     "defaultSupport3": {
-        "message": "crwdns10092:0crwdne10092:0"
+        "message": "crwdns11118:0crwdne11118:0"
     },
     "defaultSupport4": {
         "message": "crwdns10094:0crwdne10094:0"
@@ -777,13 +795,16 @@
         "message": "crwdns5483:0crwdne5483:0"
     },
     "initialSetupButtonBackup": {
-        "message": "crwdns5484:0crwdne5484:0"
+        "message": "crwdns10863:0crwdne10863:0"
     },
     "initialSetupButtonRestore": {
-        "message": "crwdns5485:0crwdne5485:0"
+        "message": "crwdns10865:0crwdne10865:0"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "crwdns8780:0crwdne8780:0"
+    },
+    "initialSetupBackupRestoreHeader": {
+        "message": "crwdns10867:0crwdne10867:0"
     },
     "initialSetupBackupRestoreText": {
         "message": "crwdns8781:0crwdne8781:0"
@@ -1026,7 +1047,7 @@
         "message": "crwdns5529:0crwdne5529:0"
     },
     "featureRX_PPM": {
-        "message": "crwdns5530:0crwdne5530:0"
+        "message": "crwdns10869:0crwdne10869:0"
     },
     "featureVBAT": {
         "message": "crwdns5531:0crwdne5531:0"
@@ -1035,7 +1056,7 @@
         "message": "crwdns5532:0crwdne5532:0"
     },
     "featureRX_SERIAL": {
-        "message": "crwdns5533:0crwdne5533:0"
+        "message": "crwdns10871:0crwdne10871:0"
     },
     "featureMOTOR_STOP": {
         "message": "crwdns5534:0crwdne5534:0"
@@ -1071,10 +1092,10 @@
         "message": "crwdns5543:0crwdne5543:0"
     },
     "featureRX_PARALLEL_PWM": {
-        "message": "crwdns5544:0crwdne5544:0"
+        "message": "crwdns10873:0crwdne10873:0"
     },
     "featureRX_MSP": {
-        "message": "crwdns5545:0crwdne5545:0"
+        "message": "crwdns10875:0crwdne10875:0"
     },
     "featureRSSI_ADC": {
         "message": "crwdns5546:0crwdne5546:0"
@@ -1101,7 +1122,7 @@
         "message": "crwdns5553:0crwdne5553:0"
     },
     "featureRX_SPI": {
-        "message": "crwdns5554:0crwdne5554:0"
+        "message": "crwdns10877:0crwdne10877:0"
     },
     "featureESC_SENSOR": {
         "message": "crwdns9830:0crwdne9830:0"
@@ -1131,7 +1152,7 @@
         "message": "crwdns5563:0crwdne5563:0"
     },
     "featureANTI_GRAVITY": {
-        "message": "crwdns10150:0crwdne10150:0"
+        "message": "crwdns10879:0crwdne10879:0"
     },
     "featureANTI_GRAVITYTip": {
         "message": "crwdns10152:0crwdne10152:0"
@@ -1172,6 +1193,12 @@
     "configurationReceiverMode": {
         "message": "crwdns5576:0crwdne5576:0"
     },
+    "configurationTelemetry": {
+        "message": "crwdns11120:0crwdne11120:0"
+    },
+    "configurationTelemetryHelp": {
+        "message": "crwdns11122:0crwdne11122:0"
+    },
     "configurationRSSI": {
         "message": "crwdns5577:0crwdne5577:0"
     },
@@ -1185,7 +1212,7 @@
         "message": "crwdns5580:0crwdne5580:0"
     },
     "configurationSerialRXHelp": {
-        "message": "crwdns5581:0crwdne5581:0"
+        "message": "crwdns10881:0crwdne10881:0"
     },
     "configurationSpiRxHelp": {
         "message": "crwdns5582:0crwdne5582:0"
@@ -1269,10 +1296,13 @@
         "message": "crwdns5602:0crwdne5602:0"
     },
     "configurationDigitalIdlePercent": {
-        "message": "crwdns5603:0[percent]crwdne5603:0"
+        "message": "crwdns10883:0crwdne10883:0"
+    },
+    "configurationDigitalIdlePercentDisabled": {
+        "message": "crwdns10885:0{{dynamicIdle}}crwdne10885:0"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "crwdns10118:0crwdne10118:0"
+        "message": "crwdns10887:0crwdne10887:0"
     },
     "configurationMotorPoles": {
         "message": "crwdns9808:0crwdne9808:0",
@@ -1453,7 +1483,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "crwdns9902:0crwdne9902:0",
+        "message": "crwdns10889:0crwdne10889:0",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -1483,10 +1513,7 @@
         "message": "crwdns10226:0crwdne10226:0"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "crwdns10228:0crwdne10228:0"
-    },
-    "dialogDynFiltersConfirm": {
-        "message": "crwdns10230:0crwdne10230:0"
+        "message": "crwdns11097:0crwdne11097:0"
     },
     "portsIdentifier": {
         "message": "crwdns5650:0crwdne5650:0"
@@ -1581,6 +1608,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "crwdns10148:0crwdne10148:0"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "crwdns11211:0crwdne11211:0"
+    },
     "pidTuningProfileOption": {
         "message": "crwdns6372:0$1crwdne6372:0"
     },
@@ -1630,42 +1660,64 @@
         "message": "crwdns9680:0crwdne9680:0",
         "description": "Anti Gravity Gain Parameter"
     },
+    "pidTuningAntiGravityGainHelp": {
+        "message": "crwdns11165:0crwdne11165:0",
+        "description": "Anti Gravity Gain Parameter Help Icon"
+    },
     "pidTuningAntiGravityThres": {
         "message": "crwdns9682:0crwdne9682:0",
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "crwdns9684:0crwdne9684:0"
+        "message": "crwdns10891:0crwdne10891:0"
     },
     "pidTuningDMin": {
-        "message": "crwdns9046:0crwdne9046:0",
+        "message": "crwdns10893:0crwdne10893:0",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {
-        "message": "crwdns9686:0$t(pidTuningPidSettings.message)crwdne9686:0"
+        "message": "crwdns10895:0$t(pidTuningPidSettings.message)crwdne10895:0"
     },
     "pidTuningDMinFeatureTitle": {
-        "message": "crwdns10589:0crwdne10589:0",
+        "message": "crwdns10897:0crwdne10897:0",
         "description": "Title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "crwdns10899:0crwdne10899:0",
+        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMinGain": {
         "message": "crwdns9054:0crwdne9054:0",
         "description": "Gain of the D Max feature"
     },
+    "pidTuningDMaxGainHelp": {
+        "message": "crwdns10901:0crwdne10901:0",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningDMinAdvance": {
         "message": "crwdns9056:0crwdne9056:0",
         "description": "Advance of the D Max feature"
     },
+    "pidTuningDMaxAdvanceHelp": {
+        "message": "crwdns10903:0crwdne10903:0",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningDMinFeatureHelp": {
-        "message": "crwdns10591:0crwdne10591:0",
+        "message": "crwdns10905:0crwdne10905:0",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "crwdns10593:0crwdne10593:0",
+        "message": "crwdns10907:0crwdne10907:0",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "crwdns5687:0crwdne5687:0"
+    },
+    "pidTuningMotorSettings": {
+        "message": "crwdns10909:0crwdne10909:0"
+    },
+    "pidTuningMiscSettings": {
+        "message": "crwdns10911:0crwdne10911:0"
     },
     "receiverRcSmoothing": {
         "message": "crwdns8833:0crwdne8833:0"
@@ -1681,11 +1733,15 @@
         "description": "Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "crwdns10551:0crwdne10551:0",
+        "message": "crwdns10913:0crwdne10913:0",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "crwdns10915:0crwdne10915:0",
         "description": "Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
-        "message": "crwdns10553:0crwdne10553:0"
+        "message": "crwdns10917:0crwdne10917:0"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "crwdns10555:0crwdne10555:0"
@@ -1724,7 +1780,7 @@
         "message": "crwdns10569:0crwdne10569:0"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "crwdns10571:0crwdne10571:0"
+        "message": "crwdns10919:0crwdne10919:0"
     },
     "receiverRcSetpointType": {
         "message": "crwdns10573:0crwdne10573:0"
@@ -1771,26 +1827,8 @@
     "receiverRcSmoothingMode": {
         "message": "crwdns10581:0crwdne10581:0"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "crwdns10522:0crwdne10522:0"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "crwdns10595:0crwdne10595:0"
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "crwdns5696:0crwdne5696:0"
-    },
-    "pidTuningFeedforwardMaxRateLimit": {
-        "message": "crwdns10683:0crwdne10683:0"
-    },
-    "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "crwdns10685:0crwdne10685:0"
-    },
-    "pidTuningFeedforwardJitter": {
-        "message": "crwdns10687:0crwdne10687:0"
-    },
-    "pidTuningFeedforwardJitterHelp": {
-        "message": "crwdns10689:0crwdne10689:0"
     },
     "pidTuningDtermSetpoint": {
         "message": "crwdns5697:0crwdne5697:0"
@@ -1805,13 +1843,28 @@
         "message": "crwdns8732:0$t(warningTitle.message)crwdne8732:0"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "crwdns10524:0crwdne10524:0"
+        "message": "crwdns10921:0crwdne10921:0"
     },
     "pidTuningFeedforwardGroupHelp": {
-        "message": "crwdns10526:0crwdne10526:0"
+        "message": "crwdns10923:0crwdne10923:0"
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "crwdns10687:0crwdne10687:0"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "crwdns10925:0crwdne10925:0"
+    },
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "crwdns10538:0crwdne10538:0"
+    },
+    "pidTuningFeedforwardSmoothnessHelp": {
+        "message": "crwdns10927:0crwdne10927:0"
     },
     "pidTuningFeedforwardAveraging": {
         "message": "crwdns10528:0crwdne10528:0"
+    },
+    "pidTuningFeedforwardAveragingHelp": {
+        "message": "crwdns10929:0crwdne10929:0"
     },
     "pidTuningOptionOff": {
         "message": "crwdns10673:0crwdne10673:0"
@@ -1828,41 +1881,57 @@
     "pidTuningFeedforwardAveragingOption4Point": {
         "message": "crwdns10536:0crwdne10536:0"
     },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": "crwdns10538:0crwdne10538:0"
-    },
     "pidTuningFeedforwardBoost": {
         "message": "crwdns10540:0crwdne10540:0"
     },
+    "pidTuningFeedforwardBoostHelp": {
+        "message": "crwdns10931:0crwdne10931:0"
+    },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "crwdns10683:0crwdne10683:0"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "crwdns10933:0crwdne10933:0"
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "crwdns10522:0crwdne10522:0"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "crwdns10935:0crwdne10935:0"
+    },
     "pidTuningProportional": {
-        "message": "crwdns5700:0crwdne5700:0"
+        "message": "crwdns10937:0crwdne10937:0"
     },
     "pidTuningProportionalHelp": {
-        "message": "crwdns10382:0crwdne10382:0",
+        "message": "crwdns10939:0crwdne10939:0",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
-        "message": "crwdns5701:0crwdne5701:0"
+        "message": "crwdns10941:0crwdne10941:0"
     },
     "pidTuningIntegralHelp": {
-        "message": "crwdns10384:0crwdne10384:0",
+        "message": "crwdns10943:0crwdne10943:0",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "crwdns5702:0crwdne5702:0"
     },
     "pidTuningDMax": {
-        "message": "crwdns10062:0crwdne10062:0"
+        "message": "crwdns10945:0crwdne10945:0"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "crwdns10601:0crwdne10601:0",
+    "pidTuningDMaxHelp": {
+        "message": "crwdns10947:0crwdne10947:0",
         "description": "D Max Term helpicon message on PID table titlebar"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "crwdns10949:0crwdne10949:0",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
-        "message": "crwdns8809:0crwdne8809:0"
+        "message": "crwdns10951:0crwdne10951:0"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "crwdns10603:0crwdne10603:0",
+        "message": "crwdns10953:0crwdne10953:0",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -1889,11 +1958,23 @@
     "pidTuningRcExpo": {
         "message": "crwdns5708:0crwdne5708:0"
     },
+    "pidTuningTPAMode": {
+        "message": "crwdns11229:0crwdne11229:0"
+    },
     "pidTuningTPA": {
         "message": "crwdns5709:0crwdne5709:0"
     },
+    "pidTuningTPARate": {
+        "message": "crwdns11231:0crwdne11231:0"
+    },
     "pidTuningTPABreakPoint": {
         "message": "crwdns5710:0crwdne5710:0"
+    },
+    "pidTuningTPAPD": {
+        "message": "crwdns11233:0crwdne11233:0"
+    },
+    "pidTuningTPAD": {
+        "message": "crwdns11235:0crwdne11235:0"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "crwdns9692:0crwdne9692:0"
@@ -1944,10 +2025,10 @@
         "message": "crwdns5718:0crwdne5718:0"
     },
     "pidTuningCopyProfile": {
-        "message": "crwdns5719:0crwdne5719:0"
+        "message": "crwdns10955:0crwdne10955:0"
     },
     "pidTuningCopyRateProfile": {
-        "message": "crwdns5720:0crwdne5720:0"
+        "message": "crwdns10957:0crwdne10957:0"
     },
     "dialogCopyProfileText": {
         "message": "crwdns6374:0crwdne6374:0"
@@ -1968,7 +2049,7 @@
         "message": "crwdns5724:0crwdne5724:0"
     },
     "pidTuningResetPidProfile": {
-        "message": "crwdns10665:0crwdne10665:0"
+        "message": "crwdns10959:0crwdne10959:0"
     },
     "pidTuningPidProfileReset": {
         "message": "crwdns10667:0crwdne10667:0"
@@ -1991,14 +2072,11 @@
     "pidTuningEepromSaved": {
         "message": "crwdns5732:0crwdne5732:0"
     },
-    "receiverHelp": {
-        "message": "crwdns5733:0crwdne5733:0"
-    },
     "tuningHelp": {
         "message": "crwdns6388:0crwdne6388:0"
     },
     "tuningHelpSliders": {
-        "message": "crwdns10605:0crwdne10605:0",
+        "message": "crwdns10961:0crwdne10961:0",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
@@ -2010,6 +2088,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "crwdns10669:0crwdne10669:0"
+    },
+    "receiverHelp": {
+        "message": "crwdns10963:0crwdne10963:0"
     },
     "receiverThrottleMid": {
         "message": "crwdns5735:0crwdne5735:0"
@@ -2453,11 +2534,47 @@
     "gpsSignalStr": {
         "message": "crwdns5861:0crwdne5861:0"
     },
+    "gpsSignalGnssId": {
+        "message": "crwdns10965:0crwdne10965:0"
+    },
     "gpsSignalSatId": {
         "message": "crwdns5862:0crwdne5862:0"
     },
-    "gpsSignalQty": {
-        "message": "crwdns5863:0crwdne5863:0"
+    "gpsSignalStatusQly": {
+        "message": "crwdns10967:0crwdne10967:0"
+    },
+    "gnssQualityNoSignal": {
+        "message": "crwdns10969:0crwdne10969:0"
+    },
+    "gnssQualitySearching": {
+        "message": "crwdns10971:0crwdne10971:0"
+    },
+    "gnssQualityAcquired": {
+        "message": "crwdns10973:0crwdne10973:0"
+    },
+    "gnssQualityUnusable": {
+        "message": "crwdns10975:0crwdne10975:0"
+    },
+    "gnssQualityLocked": {
+        "message": "crwdns10977:0crwdne10977:0"
+    },
+    "gnssQualityFullyLocked": {
+        "message": "crwdns10979:0crwdne10979:0"
+    },
+    "gnssUsedUnused": {
+        "message": "crwdns10981:0crwdne10981:0"
+    },
+    "gnssUsedUsed": {
+        "message": "crwdns10983:0crwdne10983:0"
+    },
+    "gnssHealthyUnknown": {
+        "message": "crwdns10985:0crwdne10985:0"
+    },
+    "gnssHealthyHealthy": {
+        "message": "crwdns10987:0crwdne10987:0"
+    },
+    "gnssHealthyUnhealthy": {
+        "message": "crwdns10989:0crwdne10989:0"
     },
     "motorsVoltage": {
         "message": "crwdns8702:0crwdne8702:0"
@@ -2925,8 +3042,11 @@
     "sdcardStatusUnknown": {
         "message": "crwdns5954:0$1crwdne5954:0"
     },
+    "firmwareFlasherBranch": {
+        "message": "crwdns11167:0crwdne11167:0"
+    },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "crwdns5955:0crwdne5955:0"
+        "message": "crwdns11237:0crwdne11237:0"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "crwdns10042:0crwdne10042:0"
@@ -2946,17 +3066,35 @@
     "firmwareFlasherReleaseTarget": {
         "message": "crwdns5961:0crwdne5961:0"
     },
-    "firmwareFlasherReleaseFile": {
-        "message": "crwdns5962:0crwdne5962:0"
+    "firmwareFlasherReleaseMCU": {
+        "message": "crwdns11169:0crwdne11169:0"
     },
-    "firmwareFlasherUnifiedTargetName": {
-        "message": "crwdns10044:0crwdne10044:0"
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "crwdns11171:0crwdne11171:0"
     },
-    "firmwareFlasherUnifiedTargetFileUrl": {
-        "message": "crwdns10046:0crwdne10046:0"
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "crwdns11173:0crwdne11173:0"
     },
-    "firmwareFlasherUnifiedTargetDate": {
-        "message": "crwdns10048:0crwdne10048:0"
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "crwdns11175:0crwdne11175:0"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "crwdns11239:0crwdne11239:0"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "crwdns11241:0crwdne11241:0"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "crwdns11243:0crwdne11243:0"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "crwdns11245:0crwdne11245:0"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "crwdns11247:0crwdne11247:0"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "crwdns11249:0crwdne11249:0"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "crwdns5964:0crwdne5964:0"
@@ -3115,10 +3253,10 @@
         "message": "crwdns6006:0crwdne6006:0"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "crwdns6447:0$1crwdne6447:0"
+        "message": "crwdns11106:0{{filename}}crwdnd11106:0{{bytes}}crwdne11106:0"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "crwdns9136:0$1crwdne9136:0"
+        "message": "crwdns11108:0{{filename}}crwdnd11108:0{{bytes}}crwdne11108:0"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "crwdns6007:0crwdne6007:0"
@@ -3163,6 +3301,10 @@
     "firmwareFlasherBoardVerificationSuccess": {
         "message": "crwdns10512:0{{boardName}}crwdne10512:0",
         "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "crwdns11099:0{{boardName}}crwdne11099:0",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "crwdns10514:0crwdne10514:0",
@@ -3561,19 +3703,51 @@
         "message": "crwdns10142:0[%]crwdne10142:0"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "crwdns10144:0crwdne10144:0"
+        "message": "crwdns10991:0crwdne10991:0"
     },
     "pidTuningCellCount": {
-        "message": "crwdns9974:0crwdne9974:0"
+        "message": "crwdns10993:0crwdne10993:0"
     },
     "pidTuningCellCountHelp": {
-        "message": "crwdns9976:0crwdne9976:0"
+        "message": "crwdns11128:0crwdne11128:0"
+    },
+    "pidTuningCellCountChange": {
+        "message": "crwdns11130:0crwdne11130:0",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "crwdns11132:0crwdne11132:0",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "crwdns11134:0crwdne11134:0"
+    },
+    "pidTuningCellCount2S": {
+        "message": "crwdns11136:0crwdne11136:0"
+    },
+    "pidTuningCellCount3S": {
+        "message": "crwdns11138:0crwdne11138:0"
+    },
+    "pidTuningCellCount4S": {
+        "message": "crwdns11140:0crwdne11140:0"
+    },
+    "pidTuningCellCount5S": {
+        "message": "crwdns11142:0crwdne11142:0"
+    },
+    "pidTuningCellCount6S": {
+        "message": "crwdns11144:0crwdne11144:0"
+    },
+    "pidTuningCellCount7S": {
+        "message": "crwdns11146:0crwdne11146:0"
+    },
+    "pidTuningCellCount8S": {
+        "message": "crwdns11148:0crwdne11148:0"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "crwdns6080:0crwdne6080:0"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "crwdns10611:0crwdne10611:0",
+        "message": "crwdns10997:0crwdne10997:0",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -3593,8 +3767,8 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "crwdns10613:0crwdne10613:0",
-        "description": "Gyro filtering tuning slider helpicon message"
+        "message": "crwdns10999:0crwdne10999:0",
+        "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningGyroSliderEnabled": {
         "message": "crwdns10693:0crwdne10693:0",
@@ -3605,8 +3779,8 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "crwdns10615:0crwdne10615:0",
-        "description": "D Term filtering tuning slider helpicon message"
+        "message": "crwdns11001:0crwdne11001:0",
+        "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
         "message": "crwdns10695:0crwdne10695:0",
@@ -3653,8 +3827,8 @@
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "crwdns10671:0crwdne10671:0",
-        "desciption": "Slider expert settings detected while in non-expert mode"
+        "message": "crwdns11003:0crwdne11003:0",
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "crwdns9786:0crwdne9786:0",
@@ -3721,7 +3895,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "crwdns10641:0crwdne10641:0",
+        "message": "crwdns11005:0crwdne11005:0",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -3737,7 +3911,7 @@
         "description": "D Min slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "crwdns10649:0crwdne10649:0",
+        "message": "crwdns11007:0crwdne11007:0",
         "description": "D_min slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -3749,7 +3923,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "crwdns10655:0crwdne10655:0",
+        "message": "crwdns11009:0crwdne11009:0",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
@@ -3762,11 +3936,12 @@
     "pidTuningGyroLowpassType": {
         "message": "crwdns8735:0crwdne8735:0"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "crwdns10701:0[Hz]crwdne10701:0"
-    },
     "pidTuningGyroLowpass": {
         "message": "crwdns10703:0crwdne10703:0"
+    },
+    "pidTuningGyroLowpassHelp": {
+        "message": "crwdns11011:0crwdne11011:0",
+        "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
         "message": "crwdns10705:0crwdne10705:0"
@@ -3783,11 +3958,11 @@
     "pidTuningGyroLowpassDyn": {
         "message": "crwdns10713:0crwdne10713:0"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "crwdns10715:0[Hz]crwdne10715:0"
+    "pidTuningMinCutoffFrequency": {
+        "message": "crwdns11013:0[Hz]crwdne11013:0"
     },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "crwdns10717:0[Hz]crwdne10717:0"
+    "pidTuningMaxCutoffFrequency": {
+        "message": "crwdns11015:0[Hz]crwdne11015:0"
     },
     "pidTuningGyroLowpassDynType": {
         "message": "crwdns9024:0crwdne9024:0"
@@ -3795,14 +3970,17 @@
     "pidTuningGyroLowpass2": {
         "message": "crwdns10719:0crwdne10719:0"
     },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "crwdns10721:0[Hz]crwdne10721:0"
+    "pidTuningGyroLowpass2Help": {
+        "message": "crwdns11017:0crwdne11017:0",
+        "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "crwdns10659:0crwdne10659:0"
+        "message": "crwdns11019:0crwdne11019:0",
+        "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "crwdns10661:0crwdne10661:0"
+        "message": "crwdns11021:0crwdne11021:0",
+        "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "crwdns8738:0crwdne8738:0"
@@ -3810,35 +3988,36 @@
     "pidTuningGyroNotchFilter": {
         "message": "crwdns10723:0crwdne10723:0"
     },
+    "pidTuningGyroNotchFilterHelp": {
+        "message": "crwdns11023:0crwdne11023:0"
+    },
     "pidTuningGyroNotchFilter2": {
         "message": "crwdns10725:0crwdne10725:0"
     },
-    "pidTuningGyroNotch1Frequency": {
-        "message": "crwdns8739:0[Hz]crwdne8739:0"
+    "pidTuningGyroNotchFilter2Help": {
+        "message": "crwdns11025:0crwdne11025:0"
     },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "crwdns8740:0[Hz]crwdne8740:0"
+    "pidTuningCenterFrequency": {
+        "message": "crwdns11027:0[Hz]crwdne11027:0"
     },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "crwdns8741:0[Hz]crwdne8741:0"
-    },
-    "pidTuningGyroNotch2Cutoff": {
-        "message": "crwdns8742:0[Hz]crwdne8742:0"
+    "pidTuningCutoffFrequency": {
+        "message": "crwdns11029:0[Hz]crwdne11029:0"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "crwdns8743:0crwdne8743:0"
+        "message": "crwdns11031:0crwdne11031:0",
+        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "crwdns9528:0crwdne9528:0"
     },
     "pidTuningDynamicNotchFilterHelp": {
-        "message": "crwdns9530:0crwdne9530:0"
+        "message": "crwdns11033:0crwdne11033:0"
     },
     "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "crwdns10462:0crwdne10462:0"
+        "message": "crwdns11035:0crwdne11035:0"
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "crwdns9532:0$t(configurationFeatures.message)crwdnd9532:0$t(tabConfiguration.message)crwdne9532:0"
+        "message": "crwdns11037:0$t(configurationFeatures.message)crwdnd11037:0$t(tabConfiguration.message)crwdne11037:0"
     },
     "pidTuningDynamicNotchRange": {
         "message": "crwdns9534:0crwdne9534:0"
@@ -3847,16 +4026,16 @@
         "message": "crwdns9536:0crwdne9536:0"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "crwdns9538:0crwdne9538:0"
+        "message": "crwdns11039:0crwdne11039:0"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "crwdns10464:0[Hz]crwdne10464:0"
+        "message": "crwdns11041:0[Hz]crwdne11041:0"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "crwdns10466:0[Hz]crwdne10466:0"
+        "message": "crwdns11043:0[Hz]crwdne11043:0"
     },
     "pidTuningDynamicNotchCount": {
-        "message": "crwdns10468:0crwdne10468:0"
+        "message": "crwdns11045:0crwdne11045:0"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "crwdns9542:0crwdne9542:0"
@@ -3906,56 +4085,52 @@
     "pidTuningDTermLowpass": {
         "message": "crwdns10727:0crwdne10727:0"
     },
+    "pidTuningDTermLowpassHelp": {
+        "message": "crwdns11047:0crwdne11047:0",
+        "description": "Help icon for the DTerm Lowpass 1 Filter"
+    },
     "pidTuningDTermLowpassMode": {
         "message": "crwdns10729:0crwdne10729:0"
     },
     "pidTuningDTermLowpass2": {
         "message": "crwdns10731:0crwdne10731:0"
     },
+    "pidTuningDTermLowpass2Help": {
+        "message": "crwdns11049:0crwdne11049:0",
+        "description": "Help icon for the DTerm Lowpass 2 Filter"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "crwdns8745:0crwdne8745:0"
     },
     "pidTuningDTermLowpassType": {
-        "message": "crwdns8746:0crwdne8746:0"
+        "message": "crwdns11051:0crwdne11051:0"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "crwdns10733:0[Hz]crwdne10733:0"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "crwdns10735:0[Hz]crwdne10735:0"
+    "pidTuningStaticCutoffFrequency": {
+        "message": "crwdns11053:0[Hz]crwdne11053:0"
     },
     "pidTuningDTermLowpass2Type": {
-        "message": "crwdns9028:0crwdne9028:0"
+        "message": "crwdns11055:0crwdne11055:0"
     },
     "pidTuningDTermLowpassDyn": {
         "message": "crwdns10737:0crwdne10737:0"
     },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "crwdns9030:0[Hz]crwdne9030:0"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "crwdns9032:0[Hz]crwdne9032:0"
-    },
     "pidTuningDTermLowpassDynExpo": {
-        "message": "crwdns10154:0crwdne10154:0"
+        "message": "crwdns11057:0crwdne11057:0"
     },
     "pidTuningDTermLowpassDynType": {
-        "message": "crwdns9034:0crwdne9034:0"
+        "message": "crwdns11059:0crwdne11059:0"
     },
     "pidTuningDTermNotchFiltersGroup": {
-        "message": "crwdns8749:0crwdne8749:0"
+        "message": "crwdns11061:0crwdne11061:0"
     },
-    "pidTuningDTermNotchFrequency": {
-        "message": "crwdns8750:0[Hz]crwdne8750:0"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "crwdns8751:0[Hz]crwdne8751:0"
+    "pidTuningDTermNotchFiltersGroupHelp": {
+        "message": "crwdns11063:0crwdne11063:0"
     },
     "pidTuningYawLowpassFiltersGroup": {
-        "message": "crwdns10739:0crwdne10739:0"
+        "message": "crwdns11065:0crwdne11065:0"
     },
-    "pidTuningYawLowpassFrequency": {
-        "message": "crwdns8753:0[Hz]crwdne8753:0"
+    "pidTuningYawLowpassFiltersGroupHelp": {
+        "message": "crwdns11067:0crwdne11067:0"
     },
     "pidTuningVbatPidCompensation": {
         "message": "crwdns6103:0crwdne6103:0"
@@ -3967,7 +4142,7 @@
         "message": "crwdns10220:0crwdne10220:0"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "crwdns10428:0crwdne10428:0"
+        "message": "crwdns11069:0crwdne11069:0"
     },
     "pidTuningVbatSagValue": {
         "message": "crwdns10224:0crwdne10224:0"
@@ -3976,7 +4151,7 @@
         "message": "crwdns10276:0crwdne10276:0"
     },
     "pidTuningThrustLinearizationHelp": {
-        "message": "crwdns10278:0crwdne10278:0"
+        "message": "crwdns11071:0crwdne11071:0"
     },
     "pidTuningThrustLinearValue": {
         "message": "crwdns10280:0crwdne10280:0"
@@ -3997,7 +4172,7 @@
         "message": "crwdns8791:0crwdne8791:0"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "crwdns8792:0crwdne8792:0"
+        "message": "crwdns11073:0crwdne11073:0"
     },
     "pidTuningItermRelaxAxes": {
         "message": "crwdns9696:0crwdne9696:0",
@@ -4030,31 +4205,34 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "crwdns10050:0crwdne10050:0"
+        "message": "crwdns11075:0crwdne11075:0"
     },
     "pidTuningAbsoluteControlGain": {
         "message": "crwdns8801:0crwdne8801:0"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "crwdns10681:0$t(pidTuningItermRotation.message)crwdnd10681:0$t(pidTuningItermRelax.message)crwdnd10681:0$t(pidTuningOptionRP.message)crwdnd10681:0$t(pidTuningIntegratedYaw.message)crwdnd10681:0$t(pidTuningItermRelax.message)crwdnd10681:0$t(pidTuningOptionRPY.message)crwdne10681:0"
+        "message": "crwdns11077:0$t(pidTuningItermRotation.message)crwdnd11077:0$t(pidTuningItermRelax.message)crwdnd11077:0$t(pidTuningOptionRP.message)crwdnd11077:0$t(pidTuningIntegratedYaw.message)crwdnd11077:0$t(pidTuningItermRelax.message)crwdnd11077:0$t(pidTuningOptionRPY.message)crwdne11077:0"
     },
     "pidTuningThrottleBoost": {
         "message": "crwdns8803:0crwdne8803:0"
     },
     "pidTuningThrottleBoostHelp": {
-        "message": "crwdns8861:0crwdne8861:0"
+        "message": "crwdns11079:0crwdne11079:0"
     },
     "pidTuningIdleMinRpm": {
         "message": "crwdns10136:0crwdne10136:0"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "crwdns10430:0$t(tabMotorTesting.message)crwdne10430:0"
+        "message": "crwdns11101:0crwdne11101:0"
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "crwdns11083:0crwdne11083:0"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "crwdns8805:0crwdne8805:0"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "crwdns8821:0$t(tabAuxiliary.message)crwdne8821:0"
+        "message": "crwdns11085:0$t(tabAuxiliary.message)crwdne11085:0"
     },
     "pidTuningIntegratedYaw": {
         "message": "crwdns9058:0crwdne9058:0"
@@ -4063,7 +4241,7 @@
         "message": "crwdns10108:0crwdne10108:0"
     },
     "pidTuningIntegratedYawHelp": {
-        "message": "crwdns9062:0crwdne9062:0"
+        "message": "crwdns11087:0crwdne11087:0"
     },
     "configHelp2": {
         "message": "crwdns6105:0crwdne6105:0"
@@ -4105,13 +4283,13 @@
         "message": "crwdns6117:0crwdne6117:0"
     },
     "failsafeDelayItem": {
-        "message": "crwdns6118:0crwdne6118:0"
+        "message": "crwdns11110:0[seconds]crwdne11110:0"
     },
     "failsafeDelayHelp": {
         "message": "crwdns6119:0crwdne6119:0"
     },
     "failsafeThrottleLowItem": {
-        "message": "crwdns6120:0crwdne6120:0"
+        "message": "crwdns11112:0[seconds]crwdne11112:0"
     },
     "failsafeThrottleLowHelp": {
         "message": "crwdns6121:0crwdne6121:0"
@@ -4120,7 +4298,7 @@
         "message": "crwdns6122:0crwdne6122:0"
     },
     "failsafeOffDelayItem": {
-        "message": "crwdns6123:0crwdne6123:0"
+        "message": "crwdns11114:0[seconds]crwdne11114:0"
     },
     "failsafeOffDelayHelp": {
         "message": "crwdns6124:0crwdne6124:0"
@@ -4559,6 +4737,10 @@
         "message": "crwdns9346:0crwdne9346:0",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "crwdns11251:0crwdne11251:0",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "crwdns6212:0crwdne6212:0"
     },
@@ -4707,6 +4889,14 @@
     "osdDescElementVtxChannel": {
         "message": "crwdns9212:0crwdne9212:0"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "crwdns11150:0crwdne11150:0",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "crwdns11152:0crwdne11152:0",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "crwdns9214:0crwdne9214:0",
         "description": "One of the elements of the OSD"
@@ -4763,12 +4953,104 @@
     "osdDescElementMahDrawn": {
         "message": "crwdns6241:0crwdne6241:0"
     },
+    "osdTextElementWhDrawn": {
+        "message": "crwdns11156:0crwdne11156:0",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "crwdns11158:0crwdne11158:0"
+    },
+    "osdDescElementAuxValue": {
+        "message": "crwdns11177:0crwdne11177:0",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "crwdns11179:0crwdne11179:0",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "crwdns11253:0crwdne11253:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "crwdns11255:0crwdne11255:0"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "crwdns11257:0crwdne11257:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "crwdns11259:0crwdne11259:0"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "crwdns11261:0crwdne11261:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "crwdns11263:0crwdne11263:0"
+    },
+    "osdTextElementSysDelay": {
+        "message": "crwdns11265:0crwdne11265:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "crwdns11267:0crwdne11267:0"
+    },
+    "osdTextElementSysDistance": {
+        "message": "crwdns11269:0crwdne11269:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "crwdns11271:0crwdne11271:0"
+    },
+    "osdTextElementSysLQ": {
+        "message": "crwdns11273:0crwdne11273:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "crwdns11275:0crwdne11275:0"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "crwdns11277:0crwdne11277:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "crwdns11279:0crwdne11279:0"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "crwdns11281:0crwdne11281:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "crwdns11283:0crwdne11283:0"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "crwdns11285:0crwdne11285:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "crwdns11287:0crwdne11287:0"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "crwdns11289:0crwdne11289:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "crwdns11291:0crwdne11291:0"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "crwdns11293:0crwdne11293:0",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "crwdns11295:0crwdne11295:0"
+    },
     "osdTextElementCraftName": {
         "message": "crwdns9232:0crwdne9232:0",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "crwdns6242:0crwdne6242:0"
+        "message": "crwdns11181:0crwdne11181:0"
     },
     "osdTextElementAltitude": {
         "message": "crwdns9234:0crwdne9234:0",
@@ -5116,7 +5398,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "crwdns9042:0crwdne9042:0"
+        "message": "crwdns11183:0crwdne11183:0"
+    },
+    "osdTextElementPilotName": {
+        "message": "crwdns11185:0crwdne11185:0",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "crwdns11187:0crwdne11187:0"
     },
     "osdTextElementEscRpmFreq": {
         "message": "crwdns9326:0crwdne9326:0",
@@ -5195,6 +5484,20 @@
     "osdDescTxUplinkPower": {
         "message": "crwdns10486:0crwdne10486:0"
     },
+    "osdTextElementReadyMode": {
+        "message": "crwdns11189:0crwdne11189:0",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "crwdns11191:0crwdne11191:0"
+    },
+    "osdTextElementRSNRValue": {
+        "message": "crwdns11297:0crwdne11297:0",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "crwdns11299:0crwdne11299:0"
+    },
     "osdTextElementUnknown": {
         "message": "crwdns9334:0$1crwdne9334:0",
         "description": "One of the elements of the OSD"
@@ -5236,6 +5539,13 @@
     },
     "osdDescStatUsedMah": {
         "message": "crwdns6282:0crwdne6282:0"
+    },
+    "osdTextStatUsedWh": {
+        "message": "crwdns11160:0crwdne11160:0",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "crwdns11162:0crwdne11162:0"
     },
     "osdTextStatMaxAltitude": {
         "message": "crwdns9422:0crwdne9422:0",
@@ -5383,6 +5693,13 @@
     },
     "osdDescStatMinRssiDbm": {
         "message": "crwdns9410:0crwdne9410:0"
+    },
+    "osdTextStatMinRSNR": {
+        "message": "crwdns11301:0crwdne11301:0",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "crwdns11303:0crwdne11303:0"
     },
     "osdTextStatUnknown": {
         "message": "crwdns9466:0$1crwdne9466:0",
@@ -5577,6 +5894,13 @@
     "osdWarningOverCap": {
         "message": "crwdns9959:0crwdne9959:0"
     },
+    "osdWarningTextRSNR": {
+        "message": "crwdns11305:0crwdne11305:0",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "crwdns11307:0crwdne11307:0"
+    },
     "osdWarningTextUnknown": {
         "message": "crwdns9406:0$1crwdne9406:0"
     },
@@ -5667,6 +5991,10 @@
     },
     "vtxType_4": {
         "message": "crwdns9582:0crwdne9582:0",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "crwdns11154:0crwdne11154:0",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {
@@ -5869,6 +6197,10 @@
         "message": "crwdns9660:0crwdne9660:0",
         "description": "Save button in the VTX tab"
     },
+    "vtxButtonSaving": {
+        "message": "crwdns11193:0crwdne11193:0",
+        "description": "Show state of the Save button in the VTX tab"
+    },
     "vtxButtonSaved": {
         "message": "crwdns9662:0crwdne9662:0",
         "description": "Saved action button in the VTX tab"
@@ -6024,6 +6356,15 @@
     "craftName": {
         "message": "crwdns6357:0crwdne6357:0"
     },
+    "configurationCraftNameHelp": {
+        "message": "crwdns11195:0crwdne11195:0"
+    },
+    "configurationPilotName": {
+        "message": "crwdns11197:0crwdne11197:0"
+    },
+    "configurationPilotNameHelp": {
+        "message": "crwdns11199:0crwdne11199:0"
+    },
     "configurationFpvCamAngleDegrees": {
         "message": "crwdns6358:0[degrees]crwdne6358:0"
     },
@@ -6154,7 +6495,7 @@
         "message": "crwdns10178:0crwdne10178:0"
     },
     "dialogFileNameDescription": {
-        "message": "crwdns10180:0{{folder}}crwdne10180:0"
+        "message": "crwdns10847:0{{folder}}crwdne10847:0"
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "crwdns10182:0crwdne10182:0"
@@ -6220,8 +6561,12 @@
         "message": "crwdns10236:0crwdne10236:0"
     },
     "dropDownSelectAll": {
-        "message": "crwdns10747:0crwdne10747:0",
+        "message": "crwdns11089:0crwdne11089:0",
         "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownFilterDisabled": {
+        "message": "crwdns11091:0crwdne11091:0",
+        "description": "Text indicating nothing is selected in the drop down/multiple select (filter disabled)"
     },
     "dropDownAll": {
         "message": "crwdns10749:0crwdne10749:0",
@@ -6418,5 +6763,62 @@
     "presetsTooManyPresetsFound": {
         "message": "crwdns10845:0crwdne10845:0",
         "description": "Message that apprears on presets tab if too many presets found"
+    },
+    "presetsOptionsPlaceholder": {
+        "message": "crwdns11093:0crwdne11093:0",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsVersionMismatch": {
+        "message": "crwdns11095:0{{versionRequired}}crwdnd11095:0{{versionSource}}crwdne11095:0",
+        "description": "Placeholder for the options list dropdown"
+    },
+    "presetsReviewOptionsWarning": {
+        "message": "crwdns11103:0crwdne11103:0",
+        "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "crwdns11201:0crwdne11201:0"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "crwdns11203:0crwdne11203:0"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "crwdns11205:0crwdne11205:0"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "crwdns11207:0crwdne11207:0"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "crwdns11209:0crwdne11209:0"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "crwdns11213:0crwdne11213:0"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "crwdns11215:0crwdne11215:0"
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "crwdns11217:0crwdne11217:0"
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "crwdns11219:0crwdne11219:0"
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "crwdns11221:0crwdne11221:0"
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "crwdns11223:0{PR number}crwdne11223:0"
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "crwdns11225:0crwdne11225:0"
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "crwdns11227:0crwdne11227:0"
+    },
+    "classicBuild": {
+        "message": "crwdns11309:0crwdne11309:0"
+    },
+    "classicBuildModeDescription": {
+        "message": "crwdns11311:0crwdne11311:0"
     }
 }
