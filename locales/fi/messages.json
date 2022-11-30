@@ -429,12 +429,6 @@
     "initialSetupResetText": {
         "message": "Palauta asetukset <strong>vakioiksi</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "Varmuuskopioi"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Palauta"
-    },
     "initialSetupBackupSuccess": {
         "message": "Varmuuskopio tallennettu <span class=\"message-positive\">onnistuneesti</span>"
     },
@@ -558,17 +552,11 @@
     "featureNone": {
         "message": "&lt;Valitse yksi&gt;"
     },
-    "featureRX_PPM": {
-        "message": "PPM RX sisääntulo"
-    },
     "featureVBAT": {
         "message": "Akun jännitteen seuranta"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Lennonaikainen suoruuden kalibrointi"
-    },
-    "featureRX_SERIAL": {
-        "message": "Sarjaliikennepohjainen vastaanotin (SPEKSAT, SBUS, SUMD)"
     },
     "featureMOTOR_STOP": {
         "message": "Älä pyöritä moottoreita kun moottorit on aktivoitu"
@@ -600,12 +588,6 @@
     "feature3D": {
         "message": "3D-tila (voidaan käyttää vain kaksisuuntaisten nopeudensäätimien(ESC) kanssa)"
     },
-    "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX sisääntulo (yksi johto jokaista kanavaa kohti, perinteinen servojohto)"
-    },
-    "featureRX_MSP": {
-        "message": "MSP RX sisääntulo (hallinta MSP portin kautta)"
-    },
     "featureRSSI_ADC": {
         "message": "Analoginen RSSI sisääntulo"
     },
@@ -629,9 +611,6 @@
     },
     "featureBLACKBOXTip": {
         "message": "Määritä Blackbox-välilehden kautta kun olet kytkenyt tämän käyttöön."
-    },
-    "featureRX_SPI": {
-        "message": "SPI RX tuki"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Lähetä AUX kanavat eteenpäin servoulostuloille"
@@ -705,9 +684,6 @@
     "configurationFeaturesHelp": {
         "message": "<strong>Huomaa:</strong> Kaikki asetusyhdistelmät eivät välttämättä ole toimivia. Havaitessaan ristiriitaisia asetuksia, lento-ohjain nollaa nämä oletusarvoihinsa.<br /><strong>Huomaa:</strong> Määritä sarjaportit <span class=\"message-negative\">ennen</span> kuin kytket sarjaportteja käyttäviä toimintoja käyttöön."
     },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Huomaa:</strong> Muista määrittää sarjaportti (Portit-välilehdeltä) ja valita oikea Sarjavastaanottimen tyyppi käyttäessäsi RX_SERIAL toimintoa."
-    },
     "configurationSpiRxHelp": {
         "message": "<strong>Huomaa:</strong> SPI RX-vastaanotintyyppi toimii ainoastaan jos tähän vaadittava laitteisto löytyy lento-ohjaimesta, tai sen mahdollistava laitteisto on kytketty SPI-väylään."
     },
@@ -764,9 +740,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Moottoreiden aktivointi on aina pois päältä kun kaasutikku EI ole alhaalla. Ole varovainen, sillä voit vahingossa sammuttaa moottorit lennon aikana kytkimellä, kun tämä asetus on käytössä."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Moottoreiden tyhjäkäyntikaasun määrä [prosenttia]"
     },
     "configurationThrottleMinimum": {
         "message": "Kaasun vähimmäisarvo (Pienin arvo joka lähetetään nopeudensäätimille(ESC), kun moottorit on aktivoitu)"
@@ -1014,12 +987,6 @@
     "pidTuningDtermSetpoint": {
         "message": "D asetuspisteen painoarvo"
     },
-    "pidTuningProportional": {
-        "message": "Verrannollinen (proportional)"
-    },
-    "pidTuningIntegral": {
-        "message": "Integraali"
-    },
     "pidTuningDerivative": {
         "message": "Johdannainen (derivative)"
     },
@@ -1068,12 +1035,6 @@
     "pidTuningControllerHead": {
         "message": "PID-ohjain"
     },
-    "pidTuningCopyProfile": {
-        "message": "Kopioi profiilin arvot"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Kopioi suhdeprofiilin arvot"
-    },
     "dialogCopyProfileTitle": {
         "message": "Kopioi profiilin arvot"
     },
@@ -1103,9 +1064,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
-    },
-    "receiverHelp": {
-        "message": "Ole hyvä ja lue dokumentaation kappale, joka käsittelee vastaanottimia. Määritä sarjaportti (jos on tarpeen), vastaanottimen tyyppi (sarjaliikenne/ppm/pwm), toimittaja (sarjaliikennevastaanottimille), parita vastaanotin, aseta kanavakartta, määritä kanavien ääripisteet/liikeradat lähettimestä siten, että kaikkien kanavien liikeratojen arvot ovat välillä ~1000 - ~2000.  Aseta keskipiste (oletus 1500), hienosäädä kanavat tähän arvoon, määritä tikkujen kuollut kohta (välys) keskipisteessä, vahvista käytös kun lähetin on pois päältä/kantaman ulkopuolella.<br /><span class=\"message-negative\">TÄRKEÄÄ:</span> Lue ennen lentämistä Failsafe-asetuksia käsittelevä kappale dokumentaatiosta ja määritä Failsafen asetukset."
     },
     "receiverThrottleMid": {
         "message": "Kaasun keskipiste"
@@ -1467,9 +1425,6 @@
     "gpsSignalSatId": {
         "message": "Satelliitin ID"
     },
-    "gpsSignalQty": {
-        "message": "Määrä"
-    },
     "motorsText": {
         "message": "Moottorit"
     },
@@ -1719,9 +1674,6 @@
     "sdcardStatusUnknown": {
         "message": "Tuntematon tila $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Julkaisutiedot"
-    },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Vieraile julkaisusivulla."
     },
@@ -1733,9 +1685,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Kohde:"
-    },
-    "firmwareFlasherReleaseFile": {
-        "message": "Binääri:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Lataa käsin."
