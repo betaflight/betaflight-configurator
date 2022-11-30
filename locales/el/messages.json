@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Σημείωση"
     },
+    "dontShowAgain": {
+        "message": "Να μην εμφανιστεί ξανά"
+    },
     "operationNotSupported": {
         "message": "Αυτή η λειτουργία δεν υποστηρίζεται από τη συσκευή σας."
     },
@@ -65,6 +68,9 @@
     "close": {
         "message": "Κλείσιμο"
     },
+    "OK": {
+        "message": "ΟΚ"
+    },
     "cancel": {
         "message": "Ακύρωση"
     },
@@ -83,11 +89,26 @@
     "permanentExpertMode": {
         "message": "Μόνιμη ενεργοποίηση Λειτουργίας Εμπειρογνωμόνων"
     },
+    "warningSettings": {
+        "message": "Προβολή προειδοποιήσεων"
+    },
     "rememberLastTab": {
         "message": "Επαναφόρτωση τελευταίας καρτέλας κατά τη σύνδεση"
     },
     "analyticsOptOut": {
         "message": "Απαλλαγή από την περισυλλογή ανωνυμοποιημένων στατιστικών δεδομένων"
+    },
+    "connectionTimeout": {
+        "message": "Ορίστε το χρονικό όριο σύνδεσης για να επιτρέψετε μεγαλύτερο χρόνο αρχικοποίησης κατά τη σύνδεση της συσκευής ή την επανεκκίνησή της",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
+    "showAllSerialDevices": {
+        "message": "Εμφάνισε όλους τους σειριακούς οδηγούς (για κατασκευαστές ή εξέλιξη)",
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "showVirtualMode": {
+        "message": "Ενεργοποίησε τη λειτουργία εικονικής σύνδεσης",
+        "description": "Text for the option to enable or disable the virtual FC"
     },
     "cordovaForceComputerUI": {
         "message": "Χρησιμοποιήστε το πρόγραμμα του υπολογιστή αντί του προγράμματος της κινητής συσκευής"
@@ -188,8 +209,32 @@
     "configMigrationFrom": {
         "message": "Μετεγκατάσταση του αρχείου ρυθμίσεων που κατασκεύασε ο διαμορφωτής (configurator): $1"
     },
+    "configMigratedTo": {
+        "message": "Μετεγκατάσταση ρύθμισης παραμέτρων στο ρυθμιστή: $1"
+    },
+    "configMigrationSuccessful": {
+        "message": "Η μετεγκατάσταση ρυθμίσεων ολοκληρώθηκε, εφαρμόστηκαν οι μετεγκαταστάσεις: $1"
+    },
+    "tabFirmwareFlasher": {
+        "message": "Εγκατάσταση προγράμματος"
+    },
+    "tabLanding": {
+        "message": "Καλωσορίσατε"
+    },
+    "tabChangelog": {
+        "message": "Αρχείο καταγραφής αλλαγών"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Πολιτική Απορρήτου"
+    },
     "tabHelp": {
         "message": "Τεκμηρίωση και υποστήριξη"
+    },
+    "tabOptions": {
+        "message": "Επιλογές"
+    },
+    "tabSetup": {
+        "message": "Διαμόρφωση"
     },
     "tabSetupOSD": {
         "message": "Ρύθμιση Οθόνης Γραφικών"
@@ -200,11 +245,17 @@
     "tabPorts": {
         "message": "Θύρες"
     },
+    "tabPidTuning": {
+        "message": "Ρύθμιση PID"
+    },
     "tabReceiver": {
         "message": "Δέκτης"
     },
     "tabModeSelection": {
         "message": "Επιλογή Λειτουργίας"
+    },
+    "tabServos": {
+        "message": "Servo"
     },
     "tabFailsafe": {
         "message": "Ασφαλής Αποτυχία"
@@ -239,6 +290,9 @@
     "tabLogging": {
         "message": "Καταγραφέας πτήσης"
     },
+    "tabOnboardLogging": {
+        "message": "Μαύρο Κουτί"
+    },
     "tabAdjustments": {
         "message": "Προσαρμογές"
     },
@@ -250,6 +304,48 @@
     },
     "logActionShow": {
         "message": "Προβολή αρχείου καταγραφής"
+    },
+    "serialErrorFrameError": {
+        "message": "Πρόβλημα σειριακής επικοινωνίας: κακό framing"
+    },
+    "serialErrorParityError": {
+        "message": "Πρόβλημα σειριακής επικοινωνίας: κακή εξέλιξη"
+    },
+    "serialPortOpened": {
+        "message": "Η σειριακή θύρα <span class=\"message-positive\">άνοιξε επιτυχώς</span> με ID: $1"
+    },
+    "serialPortOpenFail": {
+        "message": "<span class=\"message-negative\">Αποτυχία</span> ανοίγματος σειριακής θύρας"
+    },
+    "serialPortClosedOk": {
+        "message": "Η σειριακή θύρα <span class=\"message-positive\">έκλεισε</span>επιτυχώς"
+    },
+    "serialPortClosedFail": {
+        "message": "<span class=\"message-negative\">Αποτυχία</span> κλεισίματος σειριακής θύρας"
+    },
+    "serialUnrecoverable": {
+        "message": "Μη ανακτήσιμη <span class=\"message-negative\">αποτυχία</span> σειριακής σύνδεσης, γίνεται αποσύνδεση..."
+    },
+    "serialPortLoading": {
+        "message": "Φόρτωση ..."
+    },
+    "usbDeviceOpened": {
+        "message": "Η συσκευή USB <span class=\"message-positive\">άνοιξε επιτυχώς</span> με ID: $1"
+    },
+    "usbDeviceOpenFail": {
+        "message": "<span class=\"message-negative\">Αποτυχία</span> ανοίγματος συσκευής USB!"
+    },
+    "usbDeviceClosed": {
+        "message": "Η συσκευή USB <span class=\"message-positive\">έκλεισε επιτυχώς</span>"
+    },
+    "usbDeviceCloseFail": {
+        "message": "<span class=\"message-negative\">Αποτυχία</span> κλεισίματος της συσκευής USB"
+    },
+    "usbDeviceUdevNotice": {
+        "message": "Είναι <strong>οι κανόνες udev</strong> εγκατεστημένοι σωστά? Δείτε τα έγγραφα για οδηγίες"
+    },
+    "stm32UsbDfuNotFound": {
+        "message": "Δεν βρέθηκε USB για DFU"
     },
     "stm32RebootingToBootloader": {
         "message": "Έναρξη επανεκκίνησης στον φορτωτή εκκίνησης ..."
@@ -269,6 +365,9 @@
     "stm32ContactingBootloaderFailed": {
         "message": "Η επικοινωνία με το φορτωτή εκκίνησης απέτυχε"
     },
+    "stm32ResponseBootloaderFailed": {
+        "message": "Η επικοινωνία με τον προγραμματιστή φορτωτή εκκίνησης: ΑΠΕΤΥΧΕ"
+    },
     "stm32GlobalEraseExtended": {
         "message": "Εκτελείται ολοκληρωτική διαγραφή του μικροελεγκτή (διαμέσου εκτεταμένης διαγραφής) ..."
     },
@@ -283,6 +382,158 @@
     },
     "stm32InvalidHex": {
         "message": "Μη έγκυρο δεκαεξαδικό"
+    },
+    "stm32Erase": {
+        "message": "Διαγραφή..."
+    },
+    "stm32Flashing": {
+        "message": "Εγκατάσταση ..."
+    },
+    "stm32Verifying": {
+        "message": "Γίνεται επιβεβαίωση..."
+    },
+    "stm32ProgrammingSuccessful": {
+        "message": "Προγραμματισμός: Επιτυχής"
+    },
+    "stm32ProgrammingFailed": {
+        "message": "Προγραμματισμός: ΑΠΕΤΥΧΕ"
+    },
+    "stm32AddressLoadFailed": {
+        "message": "Το φορτίο διεύθυνσης για τα bytes επιλογής τομέα απέτυχε. Πολύ πιθανό λόγω προστασίας ανάγνωσης."
+    },
+    "stm32AddressLoadSuccess": {
+        "message": "Η διεύθυνση φορτώθηκε επιτυχώς για τα bytes επιλογής."
+    },
+    "stm32AddressLoadUnknown": {
+        "message": "Η διεύθυνση δεν φορτώθηκε επιτυχώς για τα bytes επιλογής με άγνωστο σφάλμα. Ματαιώνεται."
+    },
+    "stm32NotReadProtected": {
+        "message": "Ασφάλεια εγγραφής μη ενεργή"
+    },
+    "stm32ReadProtected": {
+        "message": "Η κάρτα έχει προστασία εγγραφής. Την απενεργοποιούμε. Μην αποσυνδέετε τη συσκευή!"
+    },
+    "stm32UnprotectSuccessful": {
+        "message": "Απενεργοποίση προστασίας επιτυχής."
+    },
+    "stm32UnprotectUnplug": {
+        "message": "ΑΠΑΙΤΕΙΤΑΙ ΕΝΕΡΓΕΙΑ: Αποσυνδέστε και επανασυνδέστε τον ελεγκτή πτήσης σε λειτουργία DFU και ξαναδοκιμάστε!"
+    },
+    "stm32UnprotectFailed": {
+        "message": "Αποτυχία να καταργηθεί η προστασία της κάρτας"
+    },
+    "stm32UnprotectInitFailed": {
+        "message": "Αποτυχία αρχικοποίησης της ρουτίνας απο- προστασίας"
+    },
+    "noConfigurationReceived": {
+        "message": "Δεν έχει ληφθεί διαμόρφωση εντός<span class=\"message-negative\">10 δευτερολέπτων</span>, επικοινωνία<span class=\"message-negative\">αποτυχής</span>"
+    },
+    "firmwareVersionNotSupported": {
+        "message": "Αυτή η έκδοση λογισμικού <span class=\"message-negative\">δεν υποστηρίζεται</span>. Παρακαλώ αναβαθμίστε σε firmware που υποστηρίζει την api έκδοση <strong>$1</strong> ή υψηλότερη. Χρησιμοποιήστε το CLI για αντίγραφα ασφαλείας πριν την εγκατάσταση. Η διαδικασία δημιουργίας αντιγράφων ασφαλείας/επαναφοράς CLI είναι στο έγγραφο.<br />Εναλλακτικά κατεβάστε και χρησιμοποιήστε μια παλιά έκδοση του διαμορφωτή αν δεν είστε έτοιμοι να αναβαθμίσετε."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Firmware που δεν είναι του Betaflight <span class=\"message-negative\">δεν υποστηρίζονται</span>, εκτός από τη λειτουργία CLI."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "Το firmware σε αυτή τη συσκευή χρειάζεται αναβάθμιση σε νεότερη έκδοση. Χρησιμοποιήστε το CLI για αντίγραφα ασφαλείας πριν την εγκατάσταση. Η διαδικασία δημιουργίας αντιγράφων ασφαλείας / επαναφοράς CLI βρίσκεται στα έγγραφα.<br />Εναλλακτικά, κατεβάστε και χρησιμοποιήστε μια παλιά έκδοση του διαμορφωτή αν δεν είστε έτοιμοι να αναβαθμίσετε."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "Υπάρχουν προσαρμοσμένες προεπιλογές για ελεγκτή πτήσης σας. Κανονικά, ένας ελεγκτής πτήσης δεν θα λειτουργήσει σωστά, εκτός εάν εφαρμοστούν οι προσαρμοσμένες προεπιλογές.<br /> Θέλετε να εφαρμόσετε τις προσαρμοσμένες προεπιλογές για αυτόν τον ελεγκτή πτήσης;"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Εφαρμογή προσαρμοσμένων προεπιλογών"
+    },
+    "reportProblemsDialogHeader": {
+        "message": "Βρέθηκαν τα ακόλουθα <strong>προβλήματα στις ρυθμίσεις σας</strong>:"
+    },
+    "reportProblemsDialogFooter": {
+        "message": "Παρακαλούμε <strong>διορθώστε τα ακόλουθα προβλήματα πριν επιχειρήσετε πτήση με το σκάφος σας</strong>."
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<strong>Η εκδοχή διαμορφωτή που χρησιμοποιείτε ($3) είναι παλαιότερη από το υλικολογισμικό που χρησιμοποιείτε ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>δεν έχει επιλεγεί πρωτόκολλο εξόδου κινητήρα</strong>.<br>Παρακαλώ επιλέξτε ένα πρωτόκολλο εξόδου κινητήρα κατάλληλο για τα ESC σας στο '$t(configurationEscFeatures.message)' στην '$t(tabMotorTesting.message)' καρτέλα.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>το επιταχυνσιόμετρο είναι ενεργό αλλά μη βαθμονομημένο</strong>.<br>Εάν σκοπεύετε να χρησιμοποιήσετε το επιταχυνσιόμετρο, παρακαλώ ακολουθήστε τις οδηγίες για '$t(initialSetupButtonCalibrateAccel.message)' στην καρτέλα '$t(tabSetup.message)'. Εάν είναι ενεργή οποιαδήποτε λειτουργία η οποία απαιτεί χρήση επιταχυνσιόμετρου (ευθυγράμμιση, διάσωση GPS, ...), η όπλιση του αεροσκάφους θα απενεργοποιείται έως ότου βαθμονομηθεί το επιταχυνσιόμετρο.<br>Εάν δεν σκοπεύετε να χρησιμοποιήσετε το επιταχυνσιόμετρο, συνιστάται να το απενεργοποιήσετε '$t(configurationSystem.message)' στην καρτέλα '$t(tabConfiguration.message)'."
+    },
+    "infoVersionOs": {
+        "message": "Λειτουργικό σύστημα: <strong>{{operatingSystem}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "Διαμορφωτής: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating Configurator version"
+    },
+    "buildServerLoaded": {
+        "message": "Φορτώθηκαν οι πληροφορίες κατασκευών για $1 από το διακομιστή κατασκευής."
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>Αποτυχία δημιουργίας ερωτήματος διακομιστή για $1 εκδόσεις, χρησιμοποιώντας τις αποθηκευμένες πληροφορίες. Λόγος: <code>$2</code></b>"
+    },
+    "buildServerUsingCached": {
+        "message": "Χρησιμοποιώντας αποθηκευμένες πληροφορίες κατασκευών για $1."
+    },
+    "releaseCheckLoaded": {
+        "message": "Φορτώθηκαν οι πληροφορίες έκδοσης για $1 από GitHub."
+    },
+    "releaseCheckFailed": {
+        "message": "<b>Το ερώτημα GitHub για $1 εκδόσεις απέτυχε, χρησιμοποιώντας προσωρινά αποθηκευμένες πληροφορίες. Λόγος: <code>$2</code></b>"
+    },
+    "releaseCheckCached": {
+        "message": "Χρησιμοποιώντας αποθηκευμένες πληροφορίες έκδοσης για $1 εκδόσεις."
+    },
+    "releaseCheckNoInfo": {
+        "message": "Δεν υπάρχουν διαθέσιμες πληροφορίες για $1."
+    },
+    "tabSwitchConnectionRequired": {
+        "message": "Θα πρέπει να <strong>συνδεθείτε</strong> για να μπορέσετε να δείτε οποιαδήποτε από τις καρτέλες."
+    },
+    "tabSwitchWaitForOperation": {
+        "message": "Δεν<span class=\"message-negative\">μπορείτε να</span> το κάνετε αυτό, αυτή τη στιγμή, παρακαλώ περιμένετε την τρέχουσα διεργασία να ολοκληρωθεί ..."
+    },
+    "tabSwitchUpgradeRequired": {
+        "message": "Πρέπει να <strong>αναβαθμίσετε</strong> το firmware σας στην τελευταία έκδοση του Betaflight πριν χρησιμοποιήσετε την $1 καρτέλα."
+    },
+    "firmwareVersion": {
+        "message": "Έκδοση firmware: <strong>$1</strong>"
+    },
+    "apiVersionReceived": {
+        "message": "Έκδοση MultiWii API: <strong>$1</strong>"
+    },
+    "uniqueDeviceIdReceived": {
+        "message": "Μοναδικό αναγνωριστικό συσκευής: <strong>0x$1</strong>"
+    },
+    "craftNameReceived": {
+        "message": "Όνομα σκάφους: <strong>$1</strong>"
+    },
+    "armingDisabled": {
+        "message": "<strong>Απενεργοποίηση Όπλισης</strong>"
+    },
+    "armingEnabled": {
+        "message": "<strong>Ενεργοποίηση Όπλισης</strong>"
+    },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong>Πρόληψη Απογείωσης προσωρινά Απενεργοποιημένη</strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong>Πρόληψη Απογείωσης Ενεργοποιημένη</strong>"
+    },
+    "boardInfoReceived": {
+        "message": "Πλακέτα: <strong>$1</strong>, έκδοση: <strong>$2</strong>"
+    },
+    "buildInfoReceived": {
+        "message": "Το firmware που εκτελείται κυκλοφόρησε στις: <strong>$1</strong>"
+    },
+    "fcInfoReceived": {
+        "message": "Πληροφορίες ελεγκτή πτήσης, αναγνωριστικό: <strong>$1</strong>, έκδοση: <strong>$2</strong>"
+    },
+    "versionLabelTarget": {
+        "message": "Προορισμός"
+    },
+    "versionLabelFirmware": {
+        "message": "Υλικολογισμικό"
     },
     "notifications_click_here_to_start_app": {
         "message": "Πατήστε εδώ για να ξεκινήσετε την εφαρμογή"
@@ -319,12 +570,6 @@
     },
     "initialSetupResetText": {
         "message": "Επαναφορά <strong>προκαθορισμένων</strong> ρυθμίσεων"
-    },
-    "initialSetupButtonBackup": {
-        "message": "Αντίγραφο Ασφαλείας"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Επαναφορά"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Ενεργοποίηση Φορτωτή Εκκίνησης / DFU"
@@ -415,6 +660,18 @@
     "featureOSD": {
         "message": "Οθόνη Απεικόνισης Γραφικών"
     },
+    "configurationDigitalIdlePercent": {
+        "message": "Αδράνεια Μοτέρ (%, του στατικού)"
+    },
+    "configurationDigitalIdlePercentDisabled": {
+        "message": "Το Δυναμικό Αδρανές είναι ενεργό στο {{dynamicIdle}} rpm. Δείτε την καρτέλα ρύθμισης PID."
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Αυτή είναι η τιμή «Αδράνειας» που αποστέλλεται στα ESC όταν το σκάφος είναι οπλισμένο και ο μοχλός είναι στην ελάχιστη θέση. Αυξήστε την τιμή για να αυξήσετε την ταχύτητα περιστροφής κατά την αδράνεια. Επίσης, αυξήστε την τιμή σε περίπτωση αποσυγχρονισμών!"
+    },
+    "beeperARMED": {
+        "message": "Ηχεί προειδοποιητικά όταν η πλακέτα είναι οπλισμένη και οι κινητήρες είναι σβηστοί στο ρελαντί. (επαναλαμβάνεται μέχρι να αφοπλιστεί η πλακέτα ή να αυξηθεί το γκάζι)"
+    },
     "portsFunction_FRSKY_OSD": {
         "message": "ΟΑΓ (Πρωτόκολλο FrSky)"
     },
@@ -428,14 +685,49 @@
     "receiverStickMax": {
         "message": "Κατώφλι 'Στικ Υψηλό'"
     },
+    "receiverHelpDeadband": {
+        "message": "Αυτές είναι τιμές (σε μsec) από το πόσο η είσοδος από την τηλεκατεύθυνση μπορεί να είναι διαφορετική πριν θεωρηθεί έγκυρη. Για πομπούς με παρεμβολές στις εξόδους, αυτή η τιμή μπορεί να αυξηθεί αν η είσοδος από την τηλεκατεύθυνση έχει διακυμάνσεις ενώ είναι αδρανής."
+    },
+    "receiverHelpYawDeadband": {
+        "message": "Αυτές είναι τιμές (σε μsec) από το πόσο η είσοδος από την τηλεκατεύθυνση μπορεί να είναι διαφορετική πριν θεωρηθεί έγκυρη. Για πομπούς με παρεμβολές στις εξόδους, αυτή η τιμή μπορεί να αυξηθεί αν η είσοδος από την τηλεκατεύθυνση έχει διακυμάνσεις ενώ είναι αδρανής. <strong>Αυτή η ρύθμιση είναι μόνο για την Εκτροπή.</strong>"
+    },
     "adjustmentsFunction29": {
         "message": "Επιλογή Προφίλ ΟΑΓ"
+    },
+    "pidTuningIdleMinRpm": {
+        "message": "Τιμή Δυναμικού Αδρανούς [*100 rpm]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Το Δυναμικό Αδρανές βελτιώνει τον έλεγχο σε χαμηλές στροφές και μειώνει τον κίνδυνο αποσυγχρονισμού του κινητήρα. <br /><br /> Βελτιώνει τον έλεγχο PID, τη σταθερότητα μηδενικού γκαζιού, τον χρόνο ανεστραμμένης κρέμασης και το φρενάρισμα του κινητήρα.<br /><br />Οι ελάχιστες rpm του Δυναμικού Αδρανούς θα πρέπει να ρυθμιστούν σε περίπου 3000 - 3500 rpm. Για την έκδοση  4.2, ορίστε την τιμή αδράνειας DShot χαμηλά, π.χ. 1%. Δεν χρειάζεται να ρυθμίσετε την τιμή Αδράνειας DShot στην 4.3. <br /><br />Επισκεφθείτε <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">αυτή την καταχώρηση wiki</a> για περισσότερες πληροφορίες."
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "Το Δυναμικό Αδρανές είναι απενεργοποιημένο επειδή η Τηλεμετρία Dshot είναι απενεργοποιημένη"
+    },
+    "powerBatteryConnectedValueNo": {
+        "message": "Όχι"
+    },
+    "powerBatteryVoltage": {
+        "message": "Τάση"
+    },
+    "powerBatteryCurrentDrawn": {
+        "message": "mAh που καταναλώθηκαν"
+    },
+    "powerBatteryCapacity": {
+        "message": "Χωρητικότητα (mAh)"
     },
     "osdSetupTitle": {
         "message": "ΟΑΓ"
     },
+    "osdSetupProfilesTitle": {
+        "message": "Αριθμός Προφίλ OSD",
+        "description": "Description of the header of the OSD elements column associated to each profile"
+    },
     "osdSetupElementsTitle": {
         "message": "Στοιχεία"
+    },
+    "osdSetupPreviewSelectProfileTitle": {
+        "message": "Προεπισκόπηση για",
+        "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
     },
     "osdSetupSelectedProfileTitle": {
         "message": "Ενεργό προφίλ ΟΑΓ",
@@ -456,8 +748,62 @@
         "message": "Αυτόματο",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionPal": {
+        "message": "PAL",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionNtsc": {
+        "message": "NTSC",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupUnitsTitle": {
+        "message": "Μονάδες"
+    },
+    "osdSetupUnitsOptionImperial": {
+        "message": "Αγγλοσαξωνικό",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionMetric": {
+        "message": "Μετρικό",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Βρετανικό",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupAlarmsTitle": {
+        "message": "Ειδοποιήσεις"
+    },
+    "osdSetupStatsTitle": {
+        "message": "Στατιστικά Ολοκλήρωσης πτήσης"
+    },
+    "osdSetupVtxTitle": {
+        "message": "Ρυθμίσεις VTX"
+    },
+    "osdSetupCraftNameTitle": {
+        "message": "Όνομα Σκάφους"
+    },
+    "osdSetupWarningsTitle": {
+        "message": "Προειδοποιήσεις"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "ή"
+    },
+    "osdSetupOpenFont": {
+        "message": "Άνοιγμα Αρχείου Γραμματοσειράς"
+    },
+    "osdSetupHead": {
+        "message": "Πληροφορίες"
+    },
+    "osdSetupButtonReset": {
+        "message": "Επαναφορά Ρυθμίσεων"
+    },
     "osdDescElementMainBattVoltage": {
         "message": "Στιγμιαία τάση της κύριας μπαταρίας (αναβοσβήνει όταν είναι κάτω από το κατώφλι συναγερμού)"
+    },
+    "osdTextElementRssiValue": {
+        "message": "Τιμή RSSI",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
         "message": "Στιγμιαία τιμή RSSI (αναβοσβήνει όταν είναι κάτω από το όριο συναγερμού)"
@@ -465,6 +811,37 @@
     "osdTextElementTimer": {
         "message": "Χρονόμετρο",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementTimer": {
+        "message": "Χρονόμετρο πτήσης"
+    },
+    "osdTextElementThrottlePosition": {
+        "message": "Θέση γκαζιού",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementThrottlePosition": {
+        "message": "Τρέχουσα τιμή καναλιού γκαζιού"
+    },
+    "osdTextElementCpuLoad": {
+        "message": "Φόρτος CPU",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCpuLoad": {
+        "message": "Τρέχων φορτίο CPU"
+    },
+    "osdTextElementVtxChannel": {
+        "message": "VTX κανάλι",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementVtxChannel": {
+        "message": "Τρέχον VTX κανάλι και ισχύς"
+    },
+    "osdTextElementVoltageWarning": {
+        "message": "Προειδοποίηση τάσης μπαταρίας",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementVoltageWarning": {
+        "message": "Εμφανίζει μια προειδοποίηση όταν η τάση είναι κάτω από την τιμή συναγερμού"
     },
     "osdTextElementArmed": {
         "message": "Οπλίθηκε",
@@ -478,18 +855,62 @@
         "message": "Εικονικός ορίζοντας",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementWhDrawn": {
+        "message": "Τρέχουσα κατανάλωση μπαταρίας σε Wh",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWhDrawn": {
+        "message": "Συνολική χωρητικότητα μπαταρίας που χρησιμοποιήθηκε σε Wh"
+    },
     "osdTextElementCraftName": {
         "message": "Όνομα σκάφους",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementAltitude": {
+        "message": "Υψόμετρο",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementAltitude": {
         "message": "Τρέχον υψόμετρο (αναβοσβήνει όταν είναι πάνω από το όριο συναγερμού)"
     },
+    "osdTextElementFlyTime": {
+        "message": "Χρόνος πτήσης",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementFlyTime": {
         "message": "Συνολικός χρόνος οπλισμού του σκάφους στον τρέχοντα κύκλο λειτουργείας (αναβοσβήνει όταν είναι πάνω από το όριο συναγερμού)"
     },
+    "osdTextElementGPSSpeed": {
+        "message": "Ταχύτητα GPS",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementDebug": {
+        "message": "Αποσφαλμάτωση",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug": {
+        "message": "Μεταβλητές αποσφαλμάτωσης"
+    },
+    "osdTextElementPIDYaw": {
+        "message": "PID Εκτροπής",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPIDYaw": {
+        "message": "Υπερίσχυση PID άξονα εκτροπής"
+    },
     "osdDescElementBatteryWarning": {
         "message": "Προειδοποιητικό κείμενο που εμφανίζεται όταν η τάση της μπαταρίας πέσει κάτω από το όριο ασφαλείας"
+    },
+    "osdTextElementOsdProfileName": {
+        "message": "Προφίλ: Όνομα προφίλ OSD",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextStatUsedWh": {
+        "message": "Wh μπαταρίας που χρησιμοποιήθηκαν",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "Χωρητικότητα μπαταρίας που χρησιμοποιήθηκε σε Wh"
     },
     "osdTimerAlarmTooltip": {
         "message": "Επιλέξτε το όριο ειδοποίησης του χρονομέτρου σε λεπτά, όταν ο χρόνος υπερβεί αυτή την τιμή το στοιχείο στο OSD θα αναβοσβήνει, ορίζοντας το 0 απενεργοποιεί την ειδοποίηση"
@@ -519,6 +940,85 @@
     },
     "osdSettingsSaved": {
         "message": "Οι ρυθμίσεις της ΟΑΓ αποθηκεύτηκαν"
+    },
+    "mainHelpFailsafe": {
+        "message": "Λειτουργία Ασφαλούς Αποτυχίας"
+    },
+    "configurationDshotBidirHelp": {
+        "message": "Στέλνει τα δεδομένα του Ηλεκτρονικού Ελεγκτή Ταχύτητας (ESC) στον ελεγκτή πτήσης (FC) μέσω τηλεμετρίας DShot. Απαιτείται από το φιλτράρισμα RPM και τη δυναμική αδράνεια.<br> <br>Σημείωση: Απαιτεί ένα συμβατό ESC με κατάλληλο firmware, π. χ. JESC, Jazzmac, BLHeli-32.",
+        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
+    },
+    "configurationCurrentMeterType": {
+        "message": "Τύπος Μετρητή Έντασης"
+    },
+    "configurationCurrent": {
+        "message": "Αισθητήρας έντασης"
+    },
+    "configurationCurrentScale": {
+        "message": "Κλιμάκωση της τάσης εξόδου σε Μιλιαμπέρ [1 / 10th mV / A]"
+    },
+    "pidTuningProfile": {
+        "message": "Προφίλ"
+    },
+    "pidTuningDeltaError": {
+        "message": "Σφάλμα"
+    },
+    "pidTuningDeltaMeasurement": {
+        "message": "Μέτρηση"
+    },
+    "pidTuningFilterTip": {
+        "message": "<b>Μαλακό Φίλτρο Γυροσκοπίου:</b> Χαμηλοπερατό φίλτρο για το γυροσκόπιο. Χρησιμοποιήστε χαμηλότερη τιμή για περισσότερο φιλτράρισμα.<br><b>Φίλτρο Όρου D:</b> Χαμηλοπερατό φίλτρο για τον Όρο-D. Μπορεί να επηρεάσει το συντονισμό D. Χρησιμοποιήστε χαμηλότερη τιμή για περισσότερο φιλτράρισμα. <br><b>Φίλτρο Εκτροπής:</b> Φιλτράρει την έξοδο Εκτροπής. Μπορεί να βοηθήσει στις ρυθμίσεις με θορυβώδη άξονα εκτροπής."
+    },
+    "configurationCamera": {
+        "message": "Κάμερα"
+    },
+    "craftName": {
+        "message": "Όνομα σκάφους"
+    },
+    "onboardLoggingEraseInProgress": {
+        "message": "Διαγραφή σε εξέλιξη, παρακαλώ περιμένετε..."
+    },
+    "flashTab": {
+        "message": "Ανανέωση υλικολογισμικού"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Η εγκατάσταση της εφαρμογής <b>{{app}}</b> μπορεί να επιλύσει αυτό το πρόβλημα συμβατότητας."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Εγκαταστήστε από το Google Play Store"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "Η απεγκατάσταση της εφαρμογής <b>{{app}}</b> μπορεί να επιλύσει αυτό το πρόβλημα συμβατότητας. Εάν δεν μπορείτε να το απεγκαταστήσετε, προσπαθήστε να το απενεργοποιήσετε από τις ρυθμίσεις της εφαρμογής."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Απεγκαταστήστε το από το Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Απεγκαταστήστε / απενεργοποιήστε το από τις ρυθμίσεις"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "Η ενημέρωση της εφαρμογής <b>{{app}}</b> μπορεί να επιλύσει αυτό το πρόβλημα συμβατότητας."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Ενημέρωση από το Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Μεταβείτε στην καρτέλα των πληροφοριών σχετικά με τη συσκευή σας στις ρυθμίσεις και πατήστε 10 φορές στον αριθμό έκδοσης για να ενεργοποιήσετε τις 'Επιλογές για προγραμματιστές'. Μετά από αυτό, αναζητήστε και μεταβείτε στις επιλογές για προγραμματιστές και επιλέξτε <b>{{app}}</b> ως πάροχος προβολής ιστοσελίδας."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Άνοιγμα ρυθμίσεων"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Η συσκευή σας φαίνεται να μην είναι συμβατή. Δοκιμάστε να αναζητήσετε άλλους τρόπους για να ενημερώσετε την προβολή ιστού"
+    },
+    "cordovaNoWebview": {
+        "message": "Δεν υπάρχει εγκατεστημένη / ενεργοποιημένη εφαρμογή προβολής ιστού"
+    },
+    "cordovaWebviewUsed": {
+        "message": "χρησιμοποιείται"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Επιβεβαίωση"
     },
     "cordovaExitAppMessage": {
         "message": "Είστε σίγουροι ότι θέλετε να τερματίσετε τον διαμορφωτή (configurator);"
