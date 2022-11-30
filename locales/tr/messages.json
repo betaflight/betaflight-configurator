@@ -334,9 +334,6 @@
     "featureRSSI_ADC": {
         "message": "Analog RSSI girişi"
     },
-    "featureRX_SPI": {
-        "message": "SPI RX desteği"
-    },
     "featureOSD": {
         "message": "Ekran görünümünde"
     },
@@ -381,9 +378,6 @@
     },
     "configurationFeaturesHelp": {
         "message": "<strong>Not:</strong> Tüm kombinasyonlar geçerli değildir. Uçuş kontrolör yazılımı geçersiz özellik kombinasyonları tespit ederse, çakışan özellikler devre dışı bırakılacaktır.<br /><strong>Not:</strong> Portları kullanacak özelliklerin etkinleştirilmesinden <span class=\"message-negative\">önce</span> seri portları ayarlayın."
-    },
-    "configurationSerialRXHelp": {
-        "message": "<strong>Not:</strong> RX_SERIAL özelliğini kullanırken bir seri bağlantı noktasını (portlar bölümünden) ayarlamayı ve bir Seri Alıcı Sağlayıcı seçmeyi unutmayın."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Not:</strong> SPI RX sağlayıcısı sadece donanım panelebağlıyken veya bir SPI veri yoluna bağlıyken çalışacaktır."
@@ -441,9 +435,6 @@
     },
     "configurationDisarmKillSwitchHelp": {
         "message": "Boğma az olmadığı zaman silahlandırma her zaman devre dışıdır. Bu seçenek aktif halde uçarken anahtarla etkisiz hale getirebilireceğinize dikkat edin."
-    },
-    "configurationDigitalIdlePercent": {
-        "message": "Motor Boşta Gaz Kesme Değeri [yüzde]"
     },
     "configurationThrottleMinimum": {
         "message": "Minimum Boğma (Yüklüyken en düşük ESC değeri)"
@@ -625,12 +616,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interpolasyon aralığı [ms]"
     },
-    "pidTuningProportional": {
-        "message": "Orantılı"
-    },
-    "pidTuningIntegral": {
-        "message": "İntegral"
-    },
     "pidTuningDerivative": {
         "message": "Türev"
     },
@@ -679,12 +664,6 @@
     "pidTuningControllerHead": {
         "message": "PID Kontrolör"
     },
-    "pidTuningCopyProfile": {
-        "message": "Profil değerlerini kopyala"
-    },
-    "pidTuningCopyRateProfile": {
-        "message": "Oran profili değerlerini kopyala"
-    },
     "dialogCopyProfileText": {
         "message": "Dosyaları mevcut dosyadan şuraya kopyala"
     },
@@ -720,9 +699,6 @@
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM<span class=\"message-positive\">kaydedildi</span>"
-    },
-    "receiverHelp": {
-        "message": "Lütfen belgelerin alıcı bölümünü okuyun. Vericide tüm kanalların ~1000'den ~2000'e gitmesi için, seri portu (gerekirse), alıcı modu (seri/ppm/pwm), tedarikçiyi (seri alıcılar için) yapılandır, alıcıyı bağla, kanal haritasını ayarla, kanal sonlandırma noktalarını/aralığını yapılandır. Orta noktayı (varsayılan 1500) ayarlayın, kanalları 1500'e ayarlayın, uçak kumanda çubuğunun ölü bantını yapılandırın, TX (verici) kapalıyken veya aralık dışında olduğunda davranışını doğrulayın. <br /><span class=\"message-negative\">ÖNEMLİ:</span> Uçmadan önce, belgelerin arıza güvencesi bölümünü okuyun ve arıza güvencesini yapılandırın."
     },
     "tuningHelp": {
         "message": "<b>Ayarlama ipuçları</b><br /><span class=\"message-negative\">ÖNEMLİ:</span> İlk uçuşlarda motor sıcaklıklarını doğrulamak önemlidir. Filtre değeri yükseldikçe uçabilir, fakat motorlardan daha fazla ses alınır.<br>. Varsayılan 100Hz değeri en iyisidir, ama gürültü ayarlayıcıları için Dterm filtresini ve ek olarak muhtemelen cyro filtresini 50 Hz'e indirmeyi deneyebilirsiniz."
@@ -1039,9 +1015,6 @@
     "gpsSignalStrHead": {
         "message": "GPS Sinyal Gücü"
     },
-    "gpsSignalQty": {
-        "message": "Qty"
-    },
     "motorsText": {
         "message": "Motorlar"
     },
@@ -1224,9 +1197,6 @@
     },
     "sdcardStatusUnknown": {
         "message": "Bilinmeyen $1 durumu"
-    },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Sürüm bilgisi"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Sürüm sayfasını ziyaret edin."
@@ -1581,23 +1551,14 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Etap 2 - Ayarlar"
     },
-    "failsafeDelayItem": {
-        "message": "Sinyalin kaybolmasından sonra 2. etap aktivasyonu için bekleme süresi [1= 0.1 saniye]"
-    },
     "failsafeDelayHelp": {
         "message": "1. evreye dönme vakti"
-    },
-    "failsafeThrottleLowItem": {
-        "message": "Yedekli düşük gaz gecikmesi [1 = 0.1 saniye]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Gaz kelebeği bu süre düşük olduğunda seçilen emniyetli prosedürü yerine uçağı yumuşatmanız yeterlidir"
     },
     "failsafeThrottleItem": {
         "message": "İniş sırasında kullanılan gaz miktarı değeri"
-    },
-    "failsafeOffDelayItem": {
-        "message": "Yedek motorları kapatmak için gecikme [1 = 0.1 saniye]"
     },
     "failsafeOffDelayHelp": {
         "message": "Motorlar kapanınca ve uçak zararsız duruma gelinceye kadar iniş biçiminde kal"
@@ -1796,9 +1757,6 @@
     },
     "osdDescElementMahDrawn": {
         "message": "Kullanılan toplam pil kapasitesi"
-    },
-    "osdDescElementCraftName": {
-        "message": "Yapılandırma sekmesinde belirtildiği şekilde işleme adı"
     },
     "osdDescElementAltitude": {
         "message": "Mevcut yükseklik (alarm eşiğinin üstünde olduğunda yanıp söner)"
