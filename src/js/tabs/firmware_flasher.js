@@ -730,7 +730,15 @@ firmware_flasher.initialize = function (callback) {
                                     let config = cleanUnifiedConfigFile(e.target.result);
                                     if (config !== null) {
                                         setBoardConfig(config, file.name);
-                                        flashingMessageLocal(file.name);
+
+                                        if (self.isConfigLocal && !self.parsed_hex) {
+                                            self.flashingMessage(i18n.getMessage('firmwareFlasherLoadedConfig'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                                        }
+
+                                        if ((self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) || self.localFirmwareLoaded) {
+                                            self.enableFlashing(true);
+                                            self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                                        }
                                     }
                                 }
                             }
