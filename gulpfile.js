@@ -1103,7 +1103,7 @@ function cordova_execbrowserify(file) {
     return browserify(file, { ignoreMissing: true })
         .transform("babelify", {
             presets: ["@babel/preset-env"],
-            sourceMaps: true,
+            sourceMaps: false,
             global:true,
             ignore: [/\/node_modules\/(?!md5.js\/)/] })
         .bundle()

@@ -1,5 +1,7 @@
 import { i18n } from "../localization";
 
+const MD5 = require('md5.js');
+
 const receiver = {
     rateChartHeight: 117,
     analyticsChanges: {},
@@ -26,7 +28,6 @@ receiver.initialize = function (callback) {
       }
 
     function elrs_passphrase_to_bytes(text) {
-        const MD5 = require('md5.js');
         let uidBytes = [0,0,0,0,0,0];
 
         if (text) {
@@ -364,12 +365,7 @@ receiver.initialize = function (callback) {
                 });
             }
 
-            console.log(FC.RX_CONFIG.rxSpiProtocol);
-
-            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') &&
-                FC.RX_CONFIG.rxSpiProtocol == 19 &&
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-
+            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') && FC.RX_CONFIG.rxSpiProtocol == 19 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 tab.elrsPassphraseEnabled = true;
 
                 const elrsUid = $('span.elrsUid');
@@ -383,8 +379,8 @@ receiver.initialize = function (callback) {
                 if (passphraseString) {
                     elrsPassphrase.val(passphraseString);
                 }
-                elrsPassphrase.keyup(function() {
-                    const passphrase = $(this).val();
+                elrsPassphrase.on('keyup', function() {
+                    const passphrase = elrsPassphrase.val();
                     if (passphrase) {
                         elrsUid.text(elrs_passphrase_to_bytes(passphrase));
                     } else {
