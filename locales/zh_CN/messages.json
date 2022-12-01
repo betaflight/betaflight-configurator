@@ -2986,9 +2986,6 @@
     "sdcardStatusUnknown": {
         "message": "未知状态 $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "发布信息"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "制造商 ID："
     },

@@ -1510,6 +1510,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSkyプロトコル)"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP + ディスプレイポート)"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -1857,11 +1860,23 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTPAMode": {
+        "message": "TPA モード"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "TPA レート"
+    },
     "pidTuningTPABreakPoint": {
         "message": "TPA 区切り点"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "スロットルカーブ プレビュー"
@@ -2933,7 +2948,7 @@
         "message": "コミットを選択"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "リリース情報"
+        "message": "リリースおよびビルド情報"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "製造元 ID:"
@@ -2964,6 +2979,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "状態:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "保留中"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "処理中"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "成功しました (キャッシュ)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "成功しました"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "タイムアウトしました (再試行してください)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "失敗しました (ログを確認してください)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手動でダウンロードしてください。"
@@ -4606,6 +4639,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "単位"
     },
@@ -4832,6 +4869,83 @@
     "osdTextElementAuxValue": {
         "message": "AUX値",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "ゴーグル 電圧",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "ゴーグルで表示されるゴーグル 電圧"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "VTX 電圧",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "ゴーグルで表示されるVTX 電圧"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "VTX ビットレート",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "ゴーグルで表示されるVTX ビットレート"
+    },
+    "osdTextElementSysDelay": {
+        "message": "VTX 遅延",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "ゴーグルで描画されるVTX 遅延"
+    },
+    "osdTextElementSysDistance": {
+        "message": "VTX 伝送距離",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "ゴーグルで表示されるVTX 伝送距離"
+    },
+    "osdTextElementSysLQ": {
+        "message": "ゴーグル リンク品質",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "ゴーグルで描画されるVTX リンク品質"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "ゴーグル DVR状態",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "ゴーグルで表示されるゴーグル DVR状態"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "VTX DVR状態",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "ゴーグルで表示されるVTX DVR状態"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "ゴーグル システム警告",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "ゴーグルで表示されるVTX システム警告"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "VTX 温度",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "ゴーグルで表示されるVTX 温度"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "ゴーグル FAN速度",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "ゴーグルで表示されるゴーグル FAN速度"
     },
     "osdTextElementCraftName": {
         "message": "機体名",
@@ -5279,6 +5393,13 @@
     "osdDescElementReadyMode": {
         "message": "有効な場合、飛行するまで READY を表示"
     },
+    "osdTextElementRSNRValue": {
+        "message": "RSNR値",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "RSNR値"
+    },
     "osdTextElementUnknown": {
         "message": "不明 $1",
         "description": "One of the elements of the OSD"
@@ -5475,6 +5596,13 @@
     "osdDescStatMinRssiDbm": {
         "message": "認識されたRSSI最小値 (dBm)"
     },
+    "osdTextStatMinRSNR": {
+        "message": "最小RSNR値",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "最小RSNR値"
+    },
     "osdTextStatUnknown": {
         "message": "不明 $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5667,6 +5795,13 @@
     },
     "osdWarningOverCap": {
         "message": "消費されたmAhが設定された容量制限を超えると警告"
+    },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "RSNR値がアラーム設定を下回ったときの警告"
     },
     "osdWarningTextUnknown": {
         "message": "不明 $1"
@@ -6557,5 +6692,35 @@
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "モータープロトコル"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "設定ファイル名:"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "このビルドに含まれる送信プロトコルを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。"
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "このビルドに含まれるテレメトリープロトコルを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。またCRSFなど、選択した送信プロトコルに関係なく有効となるテレメトリープロトコルもあります。"
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "このビルドに含まれる一般的なオプションを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。AKK VTXのような修正項目はこちらに含まれます。"
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "このビルドに含まれるモーター (ESC) プロトコルを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。"
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "特に開発者にとっては便利な機能として、次のように入力することでマージされたPRを選択したり、コミットハッシュ値を指定したり『まだマージされていない』PRを指定したりすることができます: pull/{PR number}/head ."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "開発者向けには必要な定義を『スペース』で区切って追加することができますが、接頭辞【USE_】がなければ自動的に追加されます。"
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "カスタム定義"
+    },
+    "classicBuild": {
+        "message": "クラシックモード"
+    },
+    "classicBuildModeDescription": {
+        "message": "このモードでは、Commit以外のパラメータはすべて無視されます。これは基本的に古典的なナイトリービルドと同様なことを実現するもので、利便性のために提供されています。"
     }
 }

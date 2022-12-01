@@ -2175,9 +2175,6 @@
     "sdcardStatusUnknown": {
         "message": "Nezināms stāvoklis $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Relīzes informācija"
-    },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Apmeklējiet relīzes lapu."
     },

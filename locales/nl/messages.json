@@ -2637,9 +2637,6 @@
     "sdcardStatusUnknown": {
         "message": "Onbekende staat $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Release informatie"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "Fabrikant-ID:"
     },

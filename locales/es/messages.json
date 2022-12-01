@@ -1860,11 +1860,23 @@
     "pidTuningRcExpo": {
         "message": "Expo RC"
     },
+    "pidTuningTPAMode": {
+        "message": "Modo TPA"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Tasa TPA"
+    },
     "pidTuningTPABreakPoint": {
         "message": "Punto de corte del TPA"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Vista Previa de la Curva del Acelerador"
@@ -2936,7 +2948,7 @@
         "message": "Seleccionar commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Info de la versión"
+        "message": "Lanzamiento e información de compilación"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID del fabricante:"
@@ -2967,6 +2979,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Estado:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "pendiente"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "procesando"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "éxito (cacheado)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "éxito"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "tiempo agotado (vuelve a intentarlo)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "error (revisa el registro)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Descargar manualmente."
@@ -4609,6 +4639,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Unidades"
     },
@@ -4723,7 +4757,7 @@
         "message": "Voltaje instantáneo de la batería principal (parpadea por debajo del umbral de alarma)"
     },
     "osdTextElementRssiValue": {
-        "message": "RSSI: valor",
+        "message": "RX: RSSI - valor",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
@@ -4835,6 +4869,83 @@
     "osdTextElementAuxValue": {
         "message": "Valor auxiliar",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Gafas: voltaje",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Voltaje de las gafas mostrado por las gafas"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "Gafas: voltaje VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "Voltaje del VTX mostrado por las gafas"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "Gafas: tasa de bits del VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Tasa de bits del video mostrado por las gafas"
+    },
+    "osdTextElementSysDelay": {
+        "message": "Gafas: latencia",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Latencia del video mostrado por las gafas"
+    },
+    "osdTextElementSysDistance": {
+        "message": "Gafas: distancia VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Distancia de la transmisión de video mostrada por las gafas"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Gafas: calidad del enlace",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Calidad del enlace de video mostrada por las gafas"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Gafas: estado del DVR",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Estado del DVR de las gafas mostrado por las gafas"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "Gafas: estado del DVR del VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "Estado del DVR del VTX mostrado por las gafas"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Gafas: avisos de sistema",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Avisos de sistema de video mostrados por las gafas"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "Gafas: temperatura del VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "Temperatura del VTX mostrada por las gafas"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Gafas: velocidad del ventilador",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Velocidad del ventilador mostrada por las gafas"
     },
     "osdTextElementCraftName": {
         "message": "Nombre de la aeronave",
@@ -5157,7 +5268,7 @@
         "message": "Flecha que indica que lado tiene los motores arriba en modo tortuga"
     },
     "osdTextElementLinkQuality": {
-        "message": "RSSI: calidad del enlace",
+        "message": "RX: RSSI - calidad del enlace",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
@@ -5171,14 +5282,14 @@
         "message": "Distancia volada durante este vuelo."
     },
     "osdTextElementStickOverlayLeft": {
-        "message": "Mando: superposición del izquierdo",
+        "message": "RX: mando - superposición del izquierdo",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayLeft": {
         "message": "Superposición de la posición del mando izquierdo del transmisor."
     },
     "osdTextElementStickOverlayRight": {
-        "message": "Mando: superposición del derecho",
+        "message": "RX: mando - superposición del derecho",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayRight": {
@@ -5227,14 +5338,14 @@
         "message": "Nombre del perfil OSD tal como esté configurado en las variables CLI \"osd_profile_1_name\", \"osd_profile_2_name\" y \"osd_profile_3_name\""
     },
     "osdTextElementRssiDbmValue": {
-        "message": "RSSI: valor dBm",
+        "message": "RX: RSSI - valor dBm",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiDbmValue": {
         "message": "Valor en dBm de la señal RSSI si está disponible"
     },
     "osdTextElementRcChannels": {
-        "message": "RC: Canales",
+        "message": "RX: Canales RC",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRcChannels": {
@@ -5282,6 +5393,13 @@
     "osdDescElementReadyMode": {
         "message": "Cuando está activo se mostrará READY hasta que empiece el vuelo"
     },
+    "osdTextElementRSNRValue": {
+        "message": "RX: RSNR - valor",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "Valor del RSNR"
+    },
     "osdTextElementUnknown": {
         "message": "Desconocido $1",
         "description": "One of the elements of the OSD"
@@ -5304,7 +5422,7 @@
         "message": "Mínimo voltaje de batería principal registrado"
     },
     "osdTextStatMinRssi": {
-        "message": "RSSI: mínimo",
+        "message": "RX: RSSI - mínimo",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinRssi": {
@@ -5430,7 +5548,7 @@
         "message": "Máx. RPM ESC"
     },
     "osdTextStatMinLinkQuality": {
-        "message": "RSSI: calidad del enlace mínima",
+        "message": "RX: RSSI - calidad del enlace mínima",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinLinkQuality": {
@@ -5472,11 +5590,18 @@
         "message": "Distancia total recorrida"
     },
     "osdTextStatMinRssiDbm": {
-        "message": "RSSI: dBM mínimo",
+        "message": "RX: RSSI - dBM mínimo",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinRssiDbm": {
         "message": "Valor mínimo de RSSI en dBm"
+    },
+    "osdTextStatMinRSNR": {
+        "message": "RX: RSNR - valor mínimo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Mínimo valor del RSNR"
     },
     "osdTextStatUnknown": {
         "message": "Desconocido $1",
@@ -5644,21 +5769,21 @@
         "message": "Avisa cuando el GPS Rescate está desactivado"
     },
     "osdWarningTextRSSI": {
-        "message": "RSSI",
+        "message": "RX: RSSI",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningRSSI": {
         "message": "Avisa cuando el RSSI está por debajo de la alarma configurada"
     },
     "osdWarningTextLinkQuality": {
-        "message": "RSSI: calidad del enlace",
+        "message": "RX: RSSI - calidad del enlace",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningLinkQuality": {
         "message": "Avisa cuando la Calidad del Enlace está por debajo de la alarma configurada"
     },
     "osdWarningTextRssiDbm": {
-        "message": "RSSI: dBm",
+        "message": "RX: RSSI - dBm",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningRssiDbm": {
@@ -5670,6 +5795,13 @@
     },
     "osdWarningOverCap": {
         "message": "Avisa cuando los mAh consumidos exceden el límite de capacidad configurado"
+    },
+    "osdWarningTextRSNR": {
+        "message": "RX: RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Avisa cuando el valor del RSNR está por debajo del valor de alarma configurado"
     },
     "osdWarningTextUnknown": {
         "message": "Desconocido $1"
@@ -6584,5 +6716,11 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Defines personalizados"
+    },
+    "classicBuild": {
+        "message": "Modo clásico"
+    },
+    "classicBuildModeDescription": {
+        "message": "Este modo ignora todos los parámetros, excepto el del commit. Básicamente consigue lo mismo que las compilaciones clásicas, y se proporciona por comodidad."
     }
 }

@@ -467,13 +467,13 @@
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
-        "message": "Indlæst build-information for $1 fra build-server."
+        "message": "Indlæst release information for $1 fra cloud server."
     },
     "buildServerLoadFailed": {
         "message": "<b>GitHub-forespørgsel for $1-udgivelse mislykkedes, benytter cache-information. Årsag: <code>$2</code></b>"
     },
     "buildServerUsingCached": {
-        "message": "Benytter cache builds-information for $1."
+        "message": "Benytter cache release information for $1."
     },
     "releaseCheckLoaded": {
         "message": "Indlæst udgivelsesinformation for $1 fra GitHub."
@@ -1510,6 +1510,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSky protokol)"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP + Displayport)"
+    },
     "pidTuningProfileOption": {
         "message": "Profil $1"
     },
@@ -1857,11 +1860,23 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTPAMode": {
+        "message": "TPA tilstand"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "TPA hastighed"
+    },
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Gas kurve"
@@ -2341,7 +2356,7 @@
         "message": "Skift retning i TX for at matche"
     },
     "servosName": {
-        "message": "Navn"
+        "message": "Navn servo"
     },
     "servosMid": {
         "message": "MID"
@@ -2428,13 +2443,13 @@
         "message": "Sat-ID"
     },
     "gpsSignalStatusQly": {
-        "message": "Status / kvalitet"
+        "message": "Status&nbsp;&nbsp;&nbsp;&nbsp;| Anvendelse&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |  Kvalitet"
     },
     "gnssQualityNoSignal": {
         "message": "ingen signal"
     },
     "gnssQualitySearching": {
-        "message": "søger"
+        "message": "søger&nbsp;&nbsp;&nbsp;&nbsp;"
     },
     "gnssQualityAcquired": {
         "message": "opnået"
@@ -2443,16 +2458,16 @@
         "message": "uanvendelig"
     },
     "gnssQualityLocked": {
-        "message": "låst"
+        "message": "låst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     },
     "gnssQualityFullyLocked": {
-        "message": "helt låst"
+        "message": "låst helt"
     },
     "gnssUsedUnused": {
         "message": "anvendes ikke"
     },
     "gnssUsedUsed": {
-        "message": "anvendes"
+        "message": "anvendes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "ukendt"
@@ -2933,7 +2948,7 @@
         "message": "Vælg github commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Udgivelsesinfo"
+        "message": "Release og build information"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "Producent ID"
@@ -2964,6 +2979,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "afventer"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "arbejder"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "succes (cached)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "succes"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "timeout (prøv igen)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "mislykkedes (tjek log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manuelt."
@@ -4606,6 +4639,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Enheder"
     },
@@ -4622,7 +4659,7 @@
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
-        "message": "Timere"
+        "message": "Tidstagning"
     },
     "osdSetupAlarmsTitle": {
         "message": "Alarmer"
@@ -4634,7 +4671,7 @@
         "message": "Vtx indstillinger"
     },
     "osdSetupCraftNameTitle": {
-        "message": "Fartøjsnavn"
+        "message": "Navn: Fartøj"
     },
     "osdSetupWarningsTitle": {
         "message": "Advarsler"
@@ -4819,7 +4856,7 @@
         "message": "Den samlede anvendte batterikapacitet"
     },
     "osdTextElementWhDrawn": {
-        "message": "Batteris forbrug i Wh",
+        "message": "Batteri strøm forbrug i Wh",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementWhDrawn": {
@@ -4833,8 +4870,85 @@
         "message": "AUX værdi",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Videobrille spænding",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Videobrille spænding ændret af videobrille"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "VTX spænding",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "VTX spænding ændret af videobrille"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "VTX bit hastighed",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Video bit hastighed ændret af videobrille"
+    },
+    "osdTextElementSysDelay": {
+        "message": "VTX forsinkelse",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Video forsinkelse ændret af videobrille"
+    },
+    "osdTextElementSysDistance": {
+        "message": "VTX afstand",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Video transmission afstand ændret af videobrille"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Videobrille link kvalitet",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Video link kvalitet ændret af videobrille"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Videobrille DVR status",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Videobrille DVR status ændret af videobrille"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "VTX DVR status",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "VTX DVR status ændret af videobrille"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Videobrille system advarsel",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Video system advarsler ændret af videobrille"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "VTX temperatur",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "VTX temperatur ændret af videobrille"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Videobrille ventilator hastighed",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Videobrille blæser hastighed ændret af videobrille"
+    },
     "osdTextElementCraftName": {
-        "message": "Fartøjsnavn",
+        "message": "Navn: Fartøj",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
@@ -5014,7 +5128,7 @@
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
-        "message": "Timer: aktiveret tid",
+        "message": "Tidstagning: aktiveret tid",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementArmedTime": {
@@ -5042,11 +5156,11 @@
         "message": "Numerisk udlæsning af nuværende overskrift i grader"
     },
     "osdTextElementNumericalVario": {
-        "message": "Numerisk vario",
+        "message": "Hastighed lodret",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementNumericalVario": {
-        "message": "Numerisk udlæsning af lodret hastighed (i enten fødder eller meter baseret på enhedens systemindstilling)"
+        "message": "Numerisk udlæsning af lodret hastighed (angivet i m eller feet efter systemindstilling)"
     },
     "osdTextElementCompassBar": {
         "message": "Kompas krans",
@@ -5077,7 +5191,7 @@
         "message": "RPM rapporteret af ESC telemetri"
     },
     "osdTextElementRemaningTimeEstimate": {
-        "message": "Timer: estimeret resterende flyvetid",
+        "message": "Tidstagning: estimeret resterende flyvetid",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRemaningTimeEstimate": {
@@ -5098,18 +5212,18 @@
         "message": "Aktuelt aktivt justeringsområde indstilling og værdi"
     },
     "osdTextElementTimer1": {
-        "message": "Timer 1",
+        "message": "Tidstagning 1",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer1": {
-        "message": "Viser værdien af timer 1"
+        "message": "Viser værdien af tidstagning 1"
     },
     "osdTextElementTimer2": {
-        "message": "Timer 2",
+        "message": "Tidstagning 2",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer2": {
-        "message": "Viser værdien af timer 2"
+        "message": "Viser værdien af tidstagning 2"
     },
     "osdTextElementCoreTemperature": {
         "message": "CPU temperatur",
@@ -5161,7 +5275,7 @@
         "message": "Alternativ indikator for 'linkkvalitet' baseret på pakke tab - brug med forsigtighed"
     },
     "osdTextElementFlightDist": {
-        "message": "Flyveafstand i alt",
+        "message": "Tilbagelagt strækning i alt for alle flyvninger",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlightDist": {
@@ -5182,14 +5296,14 @@
         "message": "Overlay for postion af højre pind."
     },
     "osdTextElementDisplayName": {
-        "message": "Pilot navn",
+        "message": "Navn: Pilot",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
         "message": "Kan også indstilles via \"display_name\" CLI variabel."
     },
     "osdTextElementPilotName": {
-        "message": "Pilot navn",
+        "message": "Navn: Pilot",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPilotName": {
@@ -5279,6 +5393,13 @@
     "osdDescElementReadyMode": {
         "message": "Når tilstand er valgt aktiv, vises READY (klar) indtil flyvning starter"
     },
+    "osdTextElementRSNRValue": {
+        "message": "RSNR værdi",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "RSNR værdi"
+    },
     "osdTextElementUnknown": {
         "message": "Ukendt $1",
         "description": "One of the elements of the OSD"
@@ -5322,7 +5443,7 @@
         "message": "Anvendt batteri kapacitet"
     },
     "osdTextStatUsedWh": {
-        "message": "Batteri anvendt (Wh)",
+        "message": "Batteri anvendt kapacitet i Wh",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatUsedWh": {
@@ -5378,18 +5499,18 @@
         "message": "Lognummer for denne flyrejse Blackbox-log"
     },
     "osdTextStatTimer1": {
-        "message": "Timer 1",
+        "message": "Tidstagning 1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer1": {
-        "message": "Værdi for timer 1 på afkoblingstidspunkt"
+        "message": "Værdi af tidstagning 1 på afkoblingstidspunkt"
     },
     "osdTextStatTimer2": {
-        "message": "Timer 2",
+        "message": "Tidstagning 2",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer2": {
-        "message": "Værdi på timer 2 på afkoblingstidspunkt"
+        "message": "Værdi af tidstagning 2 på afkoblingstidspunkt"
     },
     "osdTextStatRtcDateTime": {
         "message": "RTC dato og tidspunkt",
@@ -5434,7 +5555,7 @@
         "message": "Alternativ indikator for 'linkkvalitet' baseret på pakke tab"
     },
     "osdTextStatFlightDistance": {
-        "message": "Flyveafstand i alt",
+        "message": "Tilbagelagt strækning i alt per flyvning",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatFlightDistance": {
@@ -5462,7 +5583,7 @@
         "message": "Samlet tid brugt flyvende"
     },
     "osdTextStatTotalFlightDistance": {
-        "message": "Flyveafstand i alt",
+        "message": "Tilbagelagt strækning i alt",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTotalFlightDistance": {
@@ -5474,6 +5595,13 @@
     },
     "osdDescStatMinRssiDbm": {
         "message": "Minimum RSSI dBm værdi"
+    },
+    "osdTextStatMinRSNR": {
+        "message": "Minimum RSNR værdi",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Minimum RSNR værdi"
     },
     "osdTextStatUnknown": {
         "message": "Ukendt $1",
@@ -5495,14 +5623,14 @@
         "message": "Kilde:"
     },
     "osdTimerSourceTooltip": {
-        "message": "Vælg timerkilden, som styrer timerens varighed/hændelse"
+        "message": "Vælg den faktor, som styrer tidstagningens varighed/hændelse"
     },
     "osdTimerSourceOptionOnTime": {
         "message": "Forbrugt tid",
         "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
     },
     "osdTimerSourceOptionTotalArmedTime": {
-        "message": "Timer: aktiveret tid",
+        "message": "Tidspunkt for fartøj blev tændt",
         "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
@@ -5517,7 +5645,7 @@
         "message": "Præcision:"
     },
     "osdTimerPrecisionTooltip": {
-        "message": "Vælg timers præcision, dette styrer til hvilken præcision tiden rapporteres i"
+        "message": "Vælg præcision til præsentation af tidstagning"
     },
     "osdTimerPrecisionOptionSecond": {
         "message": "Sekund",
@@ -5535,7 +5663,7 @@
         "message": "Alarm:"
     },
     "osdTimerAlarmTooltip": {
-        "message": "Vælg timeralarmgrænse i minutter. Når tiden overstiger denne værdi, vil OSD elementet blinke. Angives dette til 0, deaktiveres alarmen"
+        "message": "Vælg alarmgrænse i minutter. Når tiden overstiger denne værdi, vil OSD elementet blinke. Angives dette til 0, deaktiveres alarmen"
     },
     "osdTimerAlarmOptionRssi": {
         "message": "RSSI",
@@ -5668,6 +5796,13 @@
     "osdWarningOverCap": {
         "message": "Advarer når den forbrugte mAh overskrider den konfigurerede kapacitet grænse"
     },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Advar når RSNR værdi kommer under grænseværdi"
+    },
     "osdWarningTextUnknown": {
         "message": "Ukendt $1"
     },
@@ -5684,7 +5819,7 @@
         "message": "Sætter enhed, som bruges til numeriske udlæsninger."
     },
     "osdSectionHelpTimers": {
-        "message": "Konfigurer visninger styret af timere"
+        "message": "Konfigurer visninger styret med tidstagning"
     },
     "osdSectionHelpAlarms": {
         "message": "Indstil grænser for alarmtilstande til OSD elementer."
@@ -6121,7 +6256,7 @@
         "message": "Tilpasning"
     },
     "craftName": {
-        "message": "Fartøjsnavn"
+        "message": "Navn: Fartøj"
     },
     "configurationCraftNameHelp": {
         "message": "Kan vises i loggen, filnavn for sikkkerhedskopi og OSD.</br>Indstilles via <b>craft_name</b> CLI variabel."
@@ -6544,7 +6679,7 @@
         "description": "Dialog text to prompt user to review options for the preset"
     },
     "firmwareFlasherBuildConfigurationHead": {
-        "message": "Build konfirguration"
+        "message": "Release konfirguration"
     },
     "firmwareFlasherBuildOptions": {
         "message": "Andre indstillinger"
@@ -6557,5 +6692,35 @@
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Motor protokol"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Konfigurations filnavn:"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Vælg den radio protokol som du ønsker at skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Vælg den telemetri protokol du ønsker i denne release. Bemærk at du kan vælge flere elementer. Der er telemetri protokoller som er medtaget, uanset dit valg her, da det styres af den valgte radio protokol, fx. CRSF."
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Vælg det generiske tilvalg du ønsker i denne release. Bemærk at du kan vælge flere elementer. Tilvalg kan også være rettelser, fx. AKK VTX."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Vælg den motor protokol for ESC, som du ønsker at skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Særligt anvendelig for udviklere, da du kan vælge et flettet PR (Pull Request), specificere en commit SHA, eller specificere en PR som er ved at blive flettet, ved at angive: pull/{PR id}/head ."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "Er du udvikler, kan du definere Defines, adskildt af blanktegn. Skriv ikke USE_ prefix, det tilføjes automatisk."
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "Brugertilpasset Defines"
+    },
+    "classicBuild": {
+        "message": "Klassisk"
+    },
+    "classicBuildModeDescription": {
+        "message": "Denne tilstand vælger de klassiske optioner/defines for enkelthedens skyld."
     }
 }

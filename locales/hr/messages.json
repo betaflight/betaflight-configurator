@@ -2216,9 +2216,6 @@
     "sdcardStatusUnknown": {
         "message": "Nepoznato stanje $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Informacije o izdanju"
-    },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Posjetite stranicu izdanja."
     },

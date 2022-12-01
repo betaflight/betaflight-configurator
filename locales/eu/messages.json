@@ -2469,9 +2469,6 @@
     "sdcardStatusUnknown": {
         "message": "Egoera ezezaguna $1"
     },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": "Bertsioari buruzko informazioa"
-    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "Fabrikatzaile ID:"
     },
