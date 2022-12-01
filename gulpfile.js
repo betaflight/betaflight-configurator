@@ -1101,6 +1101,11 @@ function cordova_execbrowserify(file) {
     const destpath = file.replace(filename, '');
     console.log(`Include required modules in ${file}`);
     return browserify(file, { ignoreMissing: true })
+        .transform("babelify", {
+            presets: ["@babel/preset-env"],
+            sourceMaps: true,
+            global:true,
+            ignore: [/\/node_modules\/(?!md5.js\/)/] })
         .bundle()
         .pipe(source(filename))
         .pipe(gulp.dest(destpath));

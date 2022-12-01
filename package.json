@@ -52,8 +52,10 @@
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.19.1",
+    "@babel/preset-env": "^7.20.2",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@panter/vue-i18next": "^0.15.2",
+    "babelify": "^10.0.0",
     "bluebird": "^3.7.2",
     "bonjour": "^3.5.0",
     "djv": "^2.1.4",
