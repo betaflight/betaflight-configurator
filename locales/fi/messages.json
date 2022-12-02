@@ -1,6824 +1,2007 @@
 {
-    "translation_version": {
-        "message": ""
-    },
-    "yes": {
-        "message": "",
-        "description": ""
-    },
-    "no": {
-        "message": "",
-        "description": ""
-    },
-    "on": {
-        "message": ""
-    },
-    "off": {
-        "message": ""
-    },
-    "auto": {
-        "message": ""
-    },
-    "error": {
-        "message": ""
-    },
-    "errorTitle": {
-        "message": ""
-    },
     "warningTitle": {
-        "message": ""
+        "message": "Varoitus"
     },
     "noticeTitle": {
-        "message": ""
-    },
-    "dontShowAgain": {
-        "message": ""
-    },
-    "operationNotSupported": {
-        "message": ""
-    },
-    "storageDeviceNotReady": {
-        "message": ""
+        "message": "Huomio"
     },
     "options_title": {
-        "message": ""
+        "message": "Ohjelman asetukset"
     },
     "connect": {
-        "message": ""
+        "message": "Yhdistä"
     },
     "connecting": {
-        "message": ""
+        "message": "Yhdistetään"
     },
     "disconnect": {
-        "message": ""
+        "message": "Katkaise yhteys"
     },
     "portsSelectManual": {
-        "message": ""
-    },
-    "portsSelectVirtual": {
-        "message": "",
-        "description": ""
-    },
-    "virtualMSPVersion": {
-        "message": ""
+        "message": "Valitse itse"
     },
     "portOverrideText": {
-        "message": ""
+        "message": "Portti:"
     },
     "autoConnect": {
-        "message": ""
+        "message": "Automaattinen yhdistäminen"
     },
     "close": {
-        "message": ""
-    },
-    "OK": {
-        "message": ""
-    },
-    "cancel": {
-        "message": ""
+        "message": "Sulje"
     },
     "autoConnectEnabled": {
-        "message": ""
+        "message": "Automaattinen yhdistäminen: Käytössä - Configurator yrittää automaattisesti luoda yhteyden kun uusi portti havaitaan"
     },
     "autoConnectDisabled": {
-        "message": ""
+        "message": "Automaattinen yhdistäminen: Pois käytöstä - Käyttäjän tarvitsee itse valita oikea sarjaportti ja painaa \"Yhdistä\"-nappia"
     },
     "expertMode": {
-        "message": ""
-    },
-    "expertModeDescription": {
-        "message": ""
+        "message": "Kytke edistynyt tila käyttöön"
     },
     "permanentExpertMode": {
-        "message": ""
-    },
-    "warningSettings": {
-        "message": ""
-    },
-    "rememberLastTab": {
-        "message": ""
-    },
-    "analyticsOptOut": {
-        "message": ""
-    },
-    "connectionTimeout": {
-        "message": "",
-        "description": ""
-    },
-    "showAllSerialDevices": {
-        "message": "",
-        "description": ""
-    },
-    "showVirtualMode": {
-        "message": "",
-        "description": ""
-    },
-    "cordovaForceComputerUI": {
-        "message": ""
-    },
-    "language_changed": {
-        "message": ""
-    },
-    "language_choice_message": {
-        "message": "",
-        "description": ""
-    },
-    "language_default": {
-        "message": ""
-    },
-    "language_default_pretty": {
-        "message": ""
-    },
-    "language_ca": {
-        "message": "",
-        "description": ""
-    },
-    "language_da": {
-        "message": "",
-        "description": ""
-    },
-    "language_de": {
-        "message": "",
-        "description": ""
-    },
-    "language_en": {
-        "message": "",
-        "description": ""
-    },
-    "language_es": {
-        "message": "",
-        "description": ""
-    },
-    "language_eu": {
-        "message": "",
-        "description": ""
-    },
-    "language_fr": {
-        "message": "",
-        "description": ""
-    },
-    "language_gl": {
-        "message": "",
-        "description": ""
-    },
-    "language_hr": {
-        "message": "",
-        "description": ""
-    },
-    "language_hu": {
-        "message": "",
-        "description": ""
-    },
-    "language_id": {
-        "message": "",
-        "description": ""
-    },
-    "language_it": {
-        "message": "",
-        "description": ""
-    },
-    "language_ja": {
-        "message": "",
-        "description": ""
-    },
-    "language_ko": {
-        "message": "",
-        "description": ""
-    },
-    "language_lv": {
-        "message": "",
-        "description": ""
-    },
-    "language_nl": {
-        "message": "",
-        "description": ""
-    },
-    "language_pt": {
-        "message": "",
-        "description": ""
-    },
-    "language_pt_BR": {
-        "message": "",
-        "description": ""
-    },
-    "language_pl": {
-        "message": "",
-        "description": ""
-    },
-    "language_ru": {
-        "message": "",
-        "description": ""
-    },
-    "language_sv": {
-        "message": "",
-        "description": ""
-    },
-    "language_zh_CN": {
-        "message": "",
-        "description": ""
-    },
-    "language_zh_TW": {
-        "message": "",
-        "description": ""
-    },
-    "sensorDataFlashNotFound": {
-        "message": "",
-        "description": ""
-    },
-    "sensorDataFlashFreeSpace": {
-        "message": "",
-        "description": ""
+        "message": "Kytke edistynyt tila pysyvästi päälle"
     },
     "sensorStatusGyro": {
-        "message": ""
-    },
-    "sensorStatusGyroShort": {
-        "message": "",
-        "description": ""
+        "message": "Gyroskooppi"
     },
     "sensorStatusAccel": {
-        "message": ""
-    },
-    "sensorStatusAccelShort": {
-        "message": "",
-        "description": ""
+        "message": "Kiihtyvyysanturi"
     },
     "sensorStatusMag": {
-        "message": ""
-    },
-    "sensorStatusMagShort": {
-        "message": "",
-        "description": ""
+        "message": "Magnetometri"
     },
     "sensorStatusBaro": {
-        "message": ""
-    },
-    "sensorStatusBaroShort": {
-        "message": "",
-        "description": ""
+        "message": "Barometri"
     },
     "sensorStatusGPS": {
-        "message": ""
-    },
-    "sensorStatusGPSShort": {
-        "message": "",
-        "description": ""
+        "message": "GPS"
     },
     "sensorStatusSonar": {
-        "message": ""
-    },
-    "sensorStatusSonarShort": {
-        "message": "",
-        "description": ""
+        "message": "Ultraääni / Etäisyysmittari"
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": ""
-    },
-    "configuratorUpdateNotice": {
-        "message": ""
-    },
-    "configuratorUpdateHelp": {
-        "message": ""
+        "message": "Näytä päivitysilmoitukset configuratorin epävakaista versioista"
     },
     "configuratorUpdateWebsite": {
-        "message": ""
+        "message": "Mene julkaisusivulle"
     },
     "deviceRebooting": {
-        "message": ""
-    },
-    "deviceRebooting_flashBootloader": {
-        "message": ""
-    },
-    "deviceRebooting_romBootloader": {
-        "message": ""
+        "message": "Laite - <span class=\"message-negative\">Käynnistyy uudelleen</span>"
     },
     "deviceReady": {
-        "message": ""
+        "message": "Laite - <span class=\"message-positive\">Valmis</span>"
     },
     "backupFileIncompatible": {
-        "message": ""
+        "message": "Avattu varmuuskopiotiedosto on luotu configuratorin edelliselle versiolle ja se ei ole yhteensopiva tämän version kanssa. Pahoittelut."
     },
     "backupFileUnmigratable": {
-        "message": ""
+        "message": "Avattu varmuuskopiotiedosto on luotu configuratorin aikaisemmalla versiolla ja ei ole siirrettävissä tähän versioon. Pahoittelut."
     },
     "configMigrationFrom": {
-        "message": ""
+        "message": "Tuodaan asetustiedostoa, joka on luotu configuratorin versiolla: $1"
     },
     "configMigratedTo": {
-        "message": ""
+        "message": "Asetustiedosto tuotu configuratorin versioon: $1"
     },
     "configMigrationSuccessful": {
-        "message": ""
+        "message": "Asetusten tuonti valmis, muutoksia otettu käyttöön: $1"
     },
     "tabFirmwareFlasher": {
-        "message": ""
+        "message": "Laiteohjelmiston päivittäjä"
     },
     "tabLanding": {
-        "message": ""
-    },
-    "tabChangelog": {
-        "message": ""
-    },
-    "tabPrivacyPolicy": {
-        "message": ""
+        "message": "Tervetuloa"
     },
     "tabHelp": {
-        "message": ""
-    },
-    "tabOptions": {
-        "message": ""
+        "message": "Dokumentaatio & Tuki"
     },
     "tabSetup": {
-        "message": ""
+        "message": "Asetukset"
     },
     "tabSetupOSD": {
-        "message": ""
+        "message": "OSD:n Asetukset"
     },
     "tabConfiguration": {
-        "message": ""
+        "message": "Konfiguraatio"
     },
     "tabPorts": {
-        "message": ""
+        "message": "Portit"
     },
     "tabPidTuning": {
-        "message": ""
+        "message": "PID Säädöt"
     },
     "tabReceiver": {
-        "message": ""
+        "message": "Vastaanotin"
     },
     "tabModeSelection": {
-        "message": ""
+        "message": "Tilojen valinta"
     },
     "tabServos": {
-        "message": ""
+        "message": "Servot"
     },
     "tabFailsafe": {
-        "message": ""
+        "message": "Failsafe"
     },
     "tabTransponder": {
-        "message": ""
+        "message": "Kilpatransponderi"
     },
     "tabOsd": {
-        "message": ""
-    },
-    "tabVtx": {
-        "message": ""
+        "message": "OSD"
     },
     "tabPower": {
-        "message": ""
+        "message": "Virta % Akku"
     },
     "tabGPS": {
-        "message": ""
+        "message": "GPS"
     },
     "tabMotorTesting": {
-        "message": ""
+        "message": "Moottorit"
     },
     "tabLedStrip": {
-        "message": ""
+        "message": "LED nauha"
     },
     "tabRawSensorData": {
-        "message": ""
+        "message": "Anturit"
     },
     "tabCLI": {
-        "message": ""
+        "message": "CLI"
     },
     "tabLogging": {
-        "message": ""
+        "message": "Johdollinen tiedonkeruu"
     },
     "tabOnboardLogging": {
-        "message": ""
+        "message": "Blackbox"
     },
     "tabAdjustments": {
-        "message": ""
+        "message": "Säädöt"
     },
     "tabAuxiliary": {
-        "message": ""
+        "message": "Tilat"
     },
     "logActionHide": {
-        "message": ""
+        "message": "Piilota loki"
     },
     "logActionShow": {
-        "message": ""
-    },
-    "serialErrorFrameError": {
-        "message": ""
-    },
-    "serialErrorParityError": {
-        "message": ""
+        "message": "Näytä loki"
     },
     "serialPortOpened": {
-        "message": ""
+        "message": "Sarjaportti <span class=\"message-positive\">onnistuneesti</span> avattu ID: $1"
     },
     "serialPortOpenFail": {
-        "message": ""
+        "message": "Sarjaportin avaaminen<span class=\"message-negative\">Epäonnistui</span>"
     },
     "serialPortClosedOk": {
-        "message": ""
+        "message": "Sarjaportti <span class=\"message-positive\">onnistuneesti</span> suljettu"
     },
     "serialPortClosedFail": {
-        "message": ""
+        "message": "Sarjaportin sulkeminen<span class=\"message-negative\">Epäonnistui</span>"
     },
     "serialUnrecoverable": {
-        "message": ""
-    },
-    "serialPortLoading": {
-        "message": ""
+        "message": "Palautumaton <span class=\"message-negative\">virhe</span> sarjaliitännässä, yhteys katkaistaan..."
     },
     "usbDeviceOpened": {
-        "message": ""
+        "message": "USB yhteys <span class=\"message-positive\">onnistuneesti</span> avattu laitteeseen ID: $1"
     },
     "usbDeviceOpenFail": {
-        "message": ""
+        "message": "USB -yhteyden avaaminen <span class=\"message-negative\">epäonnistui!</span>"
     },
     "usbDeviceClosed": {
-        "message": ""
+        "message": "USB -yhteys <span class=\"message-positive\">onnistuneesti</span> suljettu"
     },
     "usbDeviceCloseFail": {
-        "message": ""
+        "message": "USB -yhteyden sulkeminen <span class=\"message-negative\">epäonnistui</span>"
     },
     "usbDeviceUdevNotice": {
-        "message": ""
+        "message": "Ovatko <strong>udev säännöt</strong> asennettu oikein? Katso dokumentaatiosta lisää tietoa"
     },
     "stm32UsbDfuNotFound": {
-        "message": ""
-    },
-    "stm32RebootingToBootloader": {
-        "message": ""
-    },
-    "stm32RebootingToBootloaderFailed": {
-        "message": ""
+        "message": "USB DFU:ta ei löydy"
     },
     "stm32TimedOut": {
-        "message": ""
+        "message": "STM23 - aikakatkaisu, ohjelmointi: EPÄONNISTUI"
     },
     "stm32WrongResponse": {
-        "message": ""
+        "message": "STM32 Yhteys epäonnistui, väärä vastaus, odotettiin: $1 (0x$2) vastaanotettiin: $3 (0x$4)"
     },
     "stm32ContactingBootloader": {
-        "message": ""
+        "message": "Yhdistetään bootloaderiin ..."
     },
     "stm32ContactingBootloaderFailed": {
-        "message": ""
+        "message": "Yhteys bootloaderin kanssa epäonnistui"
     },
     "stm32ResponseBootloaderFailed": {
-        "message": ""
+        "message": "Ei vastausta bootloaderilta, ohjelmointi: EPÄONNISTUI"
     },
     "stm32GlobalEraseExtended": {
-        "message": ""
+        "message": "Suoritetaan täyttä piirin tyhjennystä (pidennetyn tyhjennyksen kautta) ..."
     },
     "stm32LocalEraseExtended": {
-        "message": ""
+        "message": "Suoritetaan paikallista tyhjennystä (pidennetyn tyhjennyksen kautta) ..."
     },
     "stm32GlobalErase": {
-        "message": ""
+        "message": "Suoritetaan täyttä piirin tyhjennystä ..."
     },
     "stm32LocalErase": {
-        "message": ""
-    },
-    "stm32InvalidHex": {
-        "message": ""
+        "message": "Suoritetaan paikallista tyhjennystä ..."
     },
     "stm32Erase": {
-        "message": ""
+        "message": "Tyhjennetään ..."
     },
     "stm32Flashing": {
-        "message": ""
+        "message": "Ohjelmoidaan ..."
     },
     "stm32Verifying": {
-        "message": ""
+        "message": "Vahvistetaan ..."
     },
     "stm32ProgrammingSuccessful": {
-        "message": ""
+        "message": "Ohjelmointi: ONNISTUI"
     },
     "stm32ProgrammingFailed": {
-        "message": ""
+        "message": "Ohjelmointi: EPÄONNISTUI"
     },
     "stm32AddressLoadFailed": {
-        "message": ""
+        "message": "Asetusbittien sektorin osoitteen lataaminen epäonnistui. Syynä todennäköisesti lukusuojaus."
     },
     "stm32AddressLoadSuccess": {
-        "message": ""
+        "message": "Asetusbittien sektorin osoitteen lataaminen onnistui."
     },
     "stm32AddressLoadUnknown": {
-        "message": ""
+        "message": "Asetusbittien sektorin osoitteen lataaminen epäonnistui tuntemattoman virheen takia. Peruutetaan."
     },
     "stm32NotReadProtected": {
-        "message": ""
+        "message": "Lukusuojaus ei käytössä"
     },
     "stm32ReadProtected": {
-        "message": ""
+        "message": "Laite vaikuttaa kirjoitussuojatulta. Puretaan suojausta. Älä katkaise yhteyttä/irrota laitetta!"
     },
     "stm32UnprotectSuccessful": {
-        "message": ""
+        "message": "Suojauksen purku onnistui!"
     },
     "stm32UnprotectUnplug": {
-        "message": ""
+        "message": "TOIMIA VAADITAAN: Irrota ja kytke lento-ohjain uudelleen DFU-tilassa yrittääksesi ohjelmointia uudestaan!"
     },
     "stm32UnprotectFailed": {
-        "message": ""
+        "message": "Suojauksen purku epäonnistui"
     },
     "stm32UnprotectInitFailed": {
-        "message": ""
+        "message": "Suojauksen purkuprosessin aloittaminen epäonnistui"
     },
     "noConfigurationReceived": {
-        "message": ""
+        "message": "Asetustietoja ei vastaanotettu <span class=\"message-negative\">10 sekunnin</span>sisällä, yhteys <span class=\"message-negative\">epäonnistui</span>"
     },
     "firmwareVersionNotSupported": {
-        "message": ""
-    },
-    "firmwareTypeNotSupported": {
-        "message": ""
+        "message": "Tätä laiteohjelmistoversiota <span class=\"message-negative\">ei tueta</span>. Päivitä laiteohjelmistoversioon joka tukee api-versiota <strong>$1</strong> tai sitä uudempaa. Käytä CLI: tä varmuuskopioimiseen ennen laiteohjelmiston päivitystä. CLI varmuuskopiointi/palautusprosessi lukee dokumentaatiossa.<br />Vaihtoehtoisesti lataa ja käytä configuratorin vanhaa versiota jos et ole valmis päivitykseen."
     },
     "firmwareUpgradeRequired": {
-        "message": ""
-    },
-    "resetToCustomDefaultsDialog": {
-        "message": ""
-    },
-    "resetToCustomDefaultsAccept": {
-        "message": ""
-    },
-    "reportProblemsDialogHeader": {
-        "message": ""
-    },
-    "reportProblemsDialogFooter": {
-        "message": ""
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": ""
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": ""
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": ""
-    },
-    "infoVersionOs": {
-        "message": "",
-        "description": ""
-    },
-    "infoVersionConfigurator": {
-        "message": "",
-        "description": ""
-    },
-    "buildServerLoaded": {
-        "message": ""
-    },
-    "buildServerLoadFailed": {
-        "message": ""
-    },
-    "buildServerUsingCached": {
-        "message": ""
+        "message": "Tämän laitteen laiteohjelmisto tarvitsee päivittää uudempaan versioon. Käytä CLI:tä varmuuskopioimiseen ennen päivittämistä.CLI varmuuskopiointi/palautusprosessista lisää tietoa dokumentaatiossa.<br />Vaihtoehtoisesti lataa ja käytä configuratorin vanhaa versiota jos et ole valmis päivitykseen."
     },
     "releaseCheckLoaded": {
-        "message": ""
+        "message": "Ladattu julkaisuinformaatio koskien $1 GitHubista."
     },
     "releaseCheckFailed": {
-        "message": ""
+        "message": "<b>GitHub kysely koskien $1 julkaisuja epäonnistui, käytetään välimuistissa olevaa tietoa. Syy: <code>$2</code></b>"
     },
     "releaseCheckCached": {
-        "message": ""
+        "message": "Käytetään välimuistissa olevaa tietoa $1 julkaisuille."
     },
     "releaseCheckNoInfo": {
-        "message": ""
+        "message": "Julkaisuinformaatiota ei ole saatavilla: $1."
     },
     "tabSwitchConnectionRequired": {
-        "message": ""
+        "message": "Sinun tarvitsee <strong>yhdistää</strong> ennen kuin voit katsella välilehtiä."
     },
     "tabSwitchWaitForOperation": {
-        "message": ""
+        "message": "Et <span class=\"message-negative\">voi</span> tehdä tätä juuri nyt, odota menossa olevan toiminnon valmistumista ..."
     },
     "tabSwitchUpgradeRequired": {
-        "message": ""
+        "message": "<strong>Päivitä</strong> laiteohjelmistosi Betaflightin viimeisimpään versioon ennen kuin voit käyttää $1 välilehteä."
     },
     "firmwareVersion": {
-        "message": ""
+        "message": "Laiteohjelmiston Versio: <strong>$1</strong>"
     },
     "apiVersionReceived": {
-        "message": ""
+        "message": "MultiWii API versio: <strong>$1</strong>"
     },
     "uniqueDeviceIdReceived": {
-        "message": ""
+        "message": "Yksilöllinen laite ID: <strong>0x$1</strong>"
     },
     "craftNameReceived": {
-        "message": ""
+        "message": "Aluksen nimi: <strong>$1</strong>"
     },
     "armingDisabled": {
-        "message": ""
+        "message": "<strong>Viritys Pois</strong>"
     },
     "armingEnabled": {
-        "message": ""
-    },
-    "runawayTakeoffPreventionDisabled": {
-        "message": ""
-    },
-    "runawayTakeoffPreventionEnabled": {
-        "message": ""
+        "message": "<strong>Viritys Päällä</strong>"
     },
     "boardInfoReceived": {
-        "message": ""
+        "message": "Levy: <strong>$1</strong>, versio: <strong>$2</strong>"
     },
     "buildInfoReceived": {
-        "message": ""
+        "message": "Käytetään laiteohjelmiston julkaisuversiota: <strong>$1</strong>"
     },
     "fcInfoReceived": {
-        "message": ""
+        "message": "Lento-ohjaimen tiedot, tunniste: <strong>$1</strong>, versio: <strong>$2</strong>"
     },
     "versionLabelTarget": {
-        "message": ""
+        "message": "Kohde"
     },
     "versionLabelFirmware": {
-        "message": ""
+        "message": "Laiteohjelmisto"
     },
     "versionLabelConfigurator": {
-        "message": ""
+        "message": "Configurator"
     },
     "notifications_app_just_updated_to_version": {
-        "message": ""
+        "message": "Ohjelma päivitetty versioon: $1"
     },
     "notifications_click_here_to_start_app": {
-        "message": ""
+        "message": "Paina tästä käynnistääksesi ohjelman"
     },
     "statusbar_port_utilization": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_usage_download": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_usage_upload": {
-        "message": "",
-        "description": ""
+        "message": "Portin käyttöaste:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "",
-        "description": ""
+        "message": "Paketti virhe:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "",
-        "description": ""
+        "message": "I2C virhe:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_cpu_load": {
-        "message": "",
-        "description": ""
+        "message": "Sykliaika:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
-        "message": ""
+        "message": "DFU-laitteiden käyttämiseksi avaa Laiteohjelmiston Päivittäjä"
     },
     "dfu_erased_kilobytes": {
-        "message": ""
-    },
-    "dfu_device_flash_info": {
-        "message": ""
-    },
-    "dfu_hex_address_errors": {
-        "message": ""
-    },
-    "dfu_error_image_size": {
-        "message": ""
+        "message": "Poistettu $1 kB flash-muistia <span class=\"message-positive\">onnistuneesti</span>"
     },
     "eeprom_saved_ok": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "defaultWelcomeIntro": {
-        "message": ""
+        "message": "Tervetuloa <strong>Betaflight - Configuratoriin!</strong> Tämä ohjelma on suunniteltu yksinkertaistamaan lento-ohjaimesi päivittämistä ja asetuksien säätämistä."
     },
     "defaultWelcomeHead": {
-        "message": ""
-    },
-    "defaultWelcomeText": {
-        "message": ""
+        "message": "Laitteisto"
     },
     "defaultContributingHead": {
-        "message": ""
-    },
-    "defaultContributingText": {
-        "message": ""
-    },
-    "defaultFacebookText": {
-        "message": ""
-    },
-    "defaultDiscordText": {
-        "message": ""
+        "message": "Avustaminen"
     },
     "defaultChangelogHead": {
-        "message": ""
+        "message": "Configurator - Muutosloki"
     },
     "defaultButtonFirmwareFlasher": {
-        "message": ""
+        "message": "Laiteohjelmiston Päivittäjä"
     },
     "defaultDonateHead": {
-        "message": ""
-    },
-    "defaultDonateText": {
-        "message": ""
-    },
-    "defaultDonateBottom": {
-        "message": ""
-    },
-    "patreonLink": {
-        "message": "",
-        "description": ""
+        "message": "Avoin lähdekoodi / Lahjoitustiedot"
     },
     "defaultDonate": {
-        "message": ""
+        "message": "Lahjoita"
     },
     "defaultSponsorsHead": {
-        "message": ""
+        "message": "Sponsorit"
     },
     "defaultDocumentationHead": {
-        "message": ""
+        "message": "Dokumentaatio / Käyttöohjeet"
     },
     "defaultDocumentation": {
-        "message": ""
-    },
-    "defaultDocumentation1": {
-        "message": ""
-    },
-    "defaultDocumentation2": {
-        "message": ""
+        "message": "Betaflightin dokumentaatio on saatavilla julkaisutiedoissa ja wikissä.<br /><br />"
     },
     "defaultSupportHead": {
-        "message": ""
+        "message": "Tuki"
     },
     "defaultSupportSubline1": {
-        "message": ""
+        "message": "Tuen lähteet"
     },
     "defaultSupportSubline2": {
-        "message": ""
+        "message": "Kehittäjä"
     },
     "defaultSupport": {
-        "message": ""
-    },
-    "defaultSupport1": {
-        "message": ""
-    },
-    "defaultSupport2": {
-        "message": ""
-    },
-    "defaultSupport3": {
-        "message": ""
-    },
-    "defaultSupport4": {
-        "message": ""
-    },
-    "defaultSupport5": {
-        "message": ""
+        "message": "Jos tarvitset tukea, hae ensin tietoa foorumeilta  ja wikistä, tai ota yhteyttä laitevalmistajaan.<br /><br />"
     },
     "initialSetupBackupAndRestoreApiVersion": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Varmuuskopiointi ja palautustoiminnallisuus on pois käytöstä.</span> Käytössäsi on laiteohjelmisto, jonka API-versio on <span class=\"message-negative\">$1</span>, varmuuskopiointi ja palautus vaatii toimiakseen version <span class=\"message-positive\">$2</span>.  Ole hyvä ja varmuuskopioi asetuksesi CLI-toiminnon kautta. Katso Betaflightin dokumentaatiosta tarkemmat ohjeet."
     },
     "initialSetupButtonCalibrateAccel": {
-        "message": ""
+        "message": "Kalibroi Kiihtyvyysanturi"
     },
     "initialSetupCalibrateAccelText": {
-        "message": ""
+        "message": "Aseta lento-ohjain tai lennokki <strong>suoralle</strong> alustalle, aloita kalibrointi ja varmistu, että alusta ei liiku kalibroinnin aikana."
     },
     "initialSetupButtonCalibrateMag": {
-        "message": ""
+        "message": "Kalibroi Magnetometri"
     },
     "initialSetupCalibrateMagText": {
-        "message": ""
+        "message": "Käännä multikopteria vähintään <strong>360</strong> astetta kaikkien pyörimisakselien ympäri(pituus, leveys, horisontti). Sinulla on 30 sekuntia aikaa suorittaa tämä operaatio."
     },
     "initialSetupButtonCalibratingText": {
-        "message": ""
+        "message": "Kalibroidaan..."
     },
     "initialSetupButtonReset": {
-        "message": ""
+        "message": "Nollaa asetukset"
     },
     "initialSetupResetText": {
-        "message": ""
-    },
-    "initialSetupButtonBackup": {
-        "message": ""
-    },
-    "initialSetupButtonRestore": {
-        "message": ""
-    },
-    "initialSetupButtonRebootBootloader": {
-        "message": ""
-    },
-    "initialSetupBackupRestoreHeader": {
-        "message": ""
-    },
-    "initialSetupBackupRestoreText": {
-        "message": ""
-    },
-    "initialSetupRebootBootloaderText": {
-        "message": ""
+        "message": "Palauta asetukset <strong>vakioiksi</strong>"
     },
     "initialSetupBackupSuccess": {
-        "message": ""
+        "message": "Varmuuskopio tallennettu <span class=\"message-positive\">onnistuneesti</span>"
     },
     "initialSetupRestoreSuccess": {
-        "message": ""
+        "message": "Määritykset palautettu <span class=\"message-positive\">onnistuneesti</span>"
     },
     "initialSetupButtonResetZaxis": {
-        "message": ""
+        "message": "Nollaa Z akseli, poikkeama: 0 astetta"
     },
     "initialSetupButtonResetZaxisValue": {
-        "message": ""
+        "message": "Nollaa Z akseli, poikkeama: $1 astetta"
     },
     "initialSetupMixerHead": {
-        "message": ""
+        "message": "Mikserin tyyppi"
     },
     "initialSetupThrottleHead": {
-        "message": ""
+        "message": "Kaasun asetukset"
     },
     "initialSetupMinimum": {
-        "message": ""
+        "message": "Minimi:"
     },
     "initialSetupMaximum": {
-        "message": ""
+        "message": "Maksimi:"
     },
     "initialSetupFailsafe": {
-        "message": ""
+        "message": "Failsafe:"
     },
     "initialSetupMinCommand": {
-        "message": ""
+        "message": "Pienin Komento:"
     },
     "initialSetupBatteryHead": {
-        "message": ""
+        "message": "Akku"
     },
     "initialSetupMinCellV": {
-        "message": ""
+        "message": "Alin kennojännite:"
     },
     "initialSetupMaxCellV": {
-        "message": ""
+        "message": "Ylin kennojännite:"
     },
     "initialSetupVoltageScale": {
-        "message": ""
+        "message": "Jännitteen skaalaus:"
     },
     "initialSetupAccelTrimsHead": {
-        "message": ""
+        "message": "Kiihtyvyysanturin hienosäädöt"
     },
     "initialSetupPitch": {
-        "message": ""
+        "message": "Pituusakseli:"
     },
     "initialSetupRoll": {
-        "message": ""
+        "message": "Leveysakseli:"
     },
     "initialSetupMagHead": {
-        "message": ""
+        "message": "Magnetometri"
     },
     "initialSetupInfoHead": {
-        "message": ""
+        "message": "Info"
     },
     "initialSetupBattery": {
-        "message": ""
+        "message": "Akun jännite:"
     },
     "initialSetupBatteryValue": {
-        "message": ""
+        "message": "$1 V"
     },
     "initialSetupDrawn": {
-        "message": ""
+        "message": "Kapasiteettia käytetty:"
     },
     "initialSetupDrawing": {
-        "message": ""
+        "message": "Virrankulutus:"
     },
     "initialSetupBatteryMahValue": {
-        "message": ""
+        "message": "$1 mAh"
     },
     "initialSetupBatteryAValue": {
-        "message": ""
+        "message": "$1 A"
     },
     "initialSetupRSSI": {
-        "message": ""
+        "message": "RSSI:"
     },
     "initialSetupRSSIValue": {
-        "message": ""
+        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
-        "message": ""
+        "message": "Moottoreiden käynnistykseneston syyt (flags):"
     },
     "initialSetupArmingAllowed": {
-        "message": ""
-    },
-    "initialSetupArmingDisableFlagsTooltip": {
-        "message": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipLOAD": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCLI": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBST": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipGPS": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRESC": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
-        "message": "",
-        "description": ""
+        "message": "Moottoreiden käynnistys sallittu"
     },
     "initialSetupGPSHead": {
-        "message": ""
+        "message": "GPS"
     },
     "initialSetupInstrumentsHead": {
-        "message": ""
+        "message": "Instrumentit"
     },
     "initialSetupButtonSave": {
-        "message": ""
+        "message": "Tallenna"
     },
     "initialSetupModel": {
-        "message": ""
+        "message": "Malli: $1"
     },
     "initialSetupAttitude": {
-        "message": ""
+        "message": "$1 astetta"
     },
     "initialSetupAccelCalibStarted": {
-        "message": ""
+        "message": "Kiihtyvyysanturin kalibrointi aloitettu"
     },
     "initialSetupAccelCalibEnded": {
-        "message": ""
+        "message": "Kiihtyvyysanturin kalibrointi <span class=\"message-positive\">valmis</span>"
     },
     "initialSetupMagCalibStarted": {
-        "message": ""
+        "message": "Magnetometrin kalibrointi aloitettu"
     },
     "initialSetupMagCalibEnded": {
-        "message": ""
+        "message": "Magnetometrin kalibrointi <span class=\"message-positive\">valmis</span>"
     },
     "initialSetupSettingsRestored": {
-        "message": ""
+        "message": "Asetukset palautettu <strong>oletuksiin</strong>"
     },
     "initialSetupEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "featureNone": {
-        "message": ""
-    },
-    "featureRX_PPM": {
-        "message": ""
+        "message": "&lt;Valitse yksi&gt;"
     },
     "featureVBAT": {
-        "message": ""
+        "message": "Akun jännitteen seuranta"
     },
     "featureINFLIGHT_ACC_CAL": {
-        "message": ""
-    },
-    "featureRX_SERIAL": {
-        "message": ""
+        "message": "Lennonaikainen suoruuden kalibrointi"
     },
     "featureMOTOR_STOP": {
-        "message": ""
+        "message": "Älä pyöritä moottoreita kun moottorit on aktivoitu"
     },
     "featureSERVO_TILT": {
-        "message": ""
-    },
-    "featureSERVO_TILTTip": {
-        "message": ""
+        "message": "Servogimbaali"
     },
     "featureSOFTSERIAL": {
-        "message": ""
+        "message": "Ota CPU-pohjaiset sarjaportit käyttöön"
     },
     "featureSOFTSERIALTip": {
-        "message": ""
+        "message": "Kytkettyäsi portit käyttöön, sinun tarvitsee määrittää niiden asetukset Portit-välilehdellä."
     },
     "featureGPS": {
-        "message": ""
+        "message": "GPS navigaatiota ja telemetriaa varten"
     },
     "featureGPSTip": {
-        "message": ""
+        "message": "Määritä portin skenaario ensin"
     },
     "featureSONAR": {
-        "message": ""
+        "message": "Kaikuluotain"
     },
     "featureTELEMETRY": {
-        "message": ""
+        "message": "Telemetrian ulostulo"
     },
     "featureCURRENT_METER": {
-        "message": ""
+        "message": "Akun virran seuranta"
     },
     "feature3D": {
-        "message": ""
-    },
-    "featureRX_PARALLEL_PWM": {
-        "message": ""
-    },
-    "featureRX_MSP": {
-        "message": ""
+        "message": "3D-tila (voidaan käyttää vain kaksisuuntaisten nopeudensäätimien(ESC) kanssa)"
     },
     "featureRSSI_ADC": {
-        "message": ""
+        "message": "Analoginen RSSI sisääntulo"
     },
     "featureLED_STRIP": {
-        "message": ""
+        "message": "Monivärisen RGB-ledinauhan tuki"
     },
     "featureDISPLAY": {
-        "message": ""
+        "message": "OLED näyttölaite"
     },
     "featureDISPLAYTip": {
-        "message": ""
+        "message": "Jos tämä toiminto on kytketty käyttöön, eikä näyttölaitetta ole yhdistetty (tai näyttölaite ei ole päällä), siitä aiheutuu noin 10 sekunnin viive lento-ohjaimen käynnistymiseen joka käynnistyskerralla."
     },
     "featureONESHOT125": {
-        "message": ""
+        "message": "ONESHOT nopeudensäätimien(ESC) tuki"
     },
     "featureONESHOT125Tip": {
-        "message": ""
+        "message": "Irrota lentoakku ja potkurit ennen tämän toiminnon käyttämistä."
     },
     "featureBLACKBOX": {
-        "message": ""
+        "message": "Blackbox-lentotietotallennin"
     },
     "featureBLACKBOXTip": {
-        "message": ""
-    },
-    "featureRX_SPI": {
-        "message": ""
-    },
-    "featureESC_SENSOR": {
-        "message": ""
+        "message": "Määritä Blackbox-välilehden kautta kun olet kytkenyt tämän käyttöön."
     },
     "featureCHANNEL_FORWARDING": {
-        "message": ""
+        "message": "Lähetä AUX kanavat eteenpäin servoulostuloille"
     },
     "featureTRANSPONDER": {
-        "message": ""
+        "message": "Kisatransponderi"
     },
     "featureTRANSPONDERTip": {
-        "message": ""
+        "message": "Määritä Kisatransponderi-välilehden kautta kun olet kytkenyt tämän käyttöön."
     },
     "featureAIRMODE": {
-        "message": ""
+        "message": "Ota Airmode pysyvästi käyttöön"
     },
     "featureSUPEREXPO_RATES": {
-        "message": ""
+        "message": "Super Expo Rates"
     },
     "featureSDCARD": {
-        "message": ""
+        "message": "SD-kortin tuki (lokitiedoston keräämistä varten)"
     },
     "featureOSD": {
-        "message": ""
+        "message": "Videon päälle piirtyvä informaationäyttö"
     },
     "featureVTX": {
-        "message": ""
-    },
-    "featureANTI_GRAVITY": {
-        "message": ""
-    },
-    "featureANTI_GRAVITYTip": {
-        "message": ""
+        "message": "Videolähetin"
     },
     "featureDYNAMIC_FILTER": {
-        "message": ""
+        "message": "Dynaaminen gyron pykälän suodatus"
     },
     "featureFAILSAFE": {
-        "message": ""
+        "message": "Ota Failsafe:n vaihe 2 käyttöön"
     },
     "featureFAILSAFEOld": {
-        "message": ""
+        "message": "Ota Failsafe käyttöön"
     },
     "featureFAILSAFETip": {
-        "message": ""
+        "message": "<strong>Huomaa:</strong> Kun vaihe 2 on POISSA KÄYTÖSTÄ, palautumisasetuksena käytetään <strong>Auto</strong> -tilaa käyttäjän ohjauskanavakohtaisten asetusten sijasta."
     },
     "featureFAILSAFEOldTip": {
-        "message": ""
+        "message": "Ota Failsafe-asetukset käyttöön kun RX(vastaanotin) menettää signaalin"
     },
     "configurationFeatureEnabled": {
-        "message": ""
+        "message": "Käytössä"
     },
     "configurationFeatureName": {
-        "message": ""
+        "message": "Toiminto"
     },
     "configurationFeatureDescription": {
-        "message": ""
+        "message": "Kuvaus"
     },
     "configurationMixer": {
-        "message": ""
+        "message": "Mikseri"
     },
     "configurationFeatures": {
-        "message": ""
+        "message": "Muut toiminnot"
     },
     "configurationReceiver": {
-        "message": ""
+        "message": "Vastaanotin"
     },
     "configurationReceiverMode": {
-        "message": ""
-    },
-    "configurationTelemetry": {
-        "message": ""
-    },
-    "configurationTelemetryHelp": {
-        "message": ""
+        "message": "Vastaanottimen käyttötila"
     },
     "configurationRSSI": {
-        "message": ""
+        "message": "RSSI (signaalivahvuus)"
     },
     "configurationRSSIHelp": {
-        "message": ""
+        "message": "RSSI-arvolla mitataan lennokin vastaanottaman ohjaussignaalin vahvuutta. Tämän arvon perusteella voit päätellä milloin lennokkisi on menossa ohjauskantaman ulkopuolelle tai lennätysalueella on paljon radiohäiriöitä."
     },
     "configurationEscFeatures": {
-        "message": ""
+        "message": "Nopeudensäätimien(ESC) / Moottorien toiminnot"
     },
     "configurationFeaturesHelp": {
-        "message": ""
-    },
-    "configurationSerialRXHelp": {
-        "message": ""
+        "message": "<strong>Huomaa:</strong> Kaikki asetusyhdistelmät eivät välttämättä ole toimivia. Havaitessaan ristiriitaisia asetuksia, lento-ohjain nollaa nämä oletusarvoihinsa.<br /><strong>Huomaa:</strong> Määritä sarjaportit <span class=\"message-negative\">ennen</span> kuin kytket sarjaportteja käyttäviä toimintoja käyttöön."
     },
     "configurationSpiRxHelp": {
-        "message": ""
+        "message": "<strong>Huomaa:</strong> SPI RX-vastaanotintyyppi toimii ainoastaan jos tähän vaadittava laitteisto löytyy lento-ohjaimesta, tai sen mahdollistava laitteisto on kytketty SPI-väylään."
     },
     "configurationOtherFeaturesHelp": {
-        "message": ""
+        "message": "<strong>Huomaa:</strong> Kaikki lento-ohjaimet eivät tue kaikkia toimintoja. Jos otat jonkin tietyn toiminnon käyttöön ja se on kytketty pois sen jälkeen kun olet painanut 'Tallenna ja käynnistä uudelleen' -nappia, lento-ohjaimesi ei tue kyseistä toimintoa."
     },
     "configurationBoardAlignment": {
-        "message": ""
+        "message": "Lento-ohjainlevyn ja Anturien suuntaus"
     },
     "configurationBoardAlignmentRoll": {
-        "message": ""
+        "message": "Leveysakselin(vas.-oik.) asteet"
     },
     "configurationBoardAlignmentPitch": {
-        "message": ""
+        "message": "Pituusakselin(etu-taka) asteet"
     },
     "configurationBoardAlignmentYaw": {
-        "message": ""
+        "message": "Horisontaaliakselin(\"peräsin\") asteet"
     },
     "configurationSensorAlignmentGyro": {
-        "message": ""
-    },
-    "configurationSensorGyroToUse": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseFirst": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseSecond": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseBoth": {
-        "message": ""
-    },
-    "configurationSensorAlignmentGyro1": {
-        "message": ""
-    },
-    "configurationSensorAlignmentGyro2": {
-        "message": ""
+        "message": "Gyro:n suuntaus"
     },
     "configurationSensorAlignmentAcc": {
-        "message": ""
+        "message": "Kiihtyvyysanturin suuntaus"
     },
     "configurationSensorAlignmentMag": {
-        "message": ""
+        "message": "Magnetometrin suuntaus"
     },
     "configurationSensorAlignmentDefaultOption": {
-        "message": ""
+        "message": "Oletus"
     },
     "configurationAccelTrims": {
-        "message": ""
+        "message": "Kiihtyvyysanturin hienosäätö"
     },
     "configurationAccelTrimRoll": {
-        "message": ""
+        "message": "Kiihtyvyysanturin leveyssuuntainen hienosäätö"
     },
     "configurationAccelTrimPitch": {
-        "message": ""
+        "message": "Kiihtyvyysanturin pituussuuntainen hienosäätö"
     },
     "configurationArming": {
-        "message": ""
+        "message": "Moottoreiden ja ohjauksen aktivointi"
     },
     "configurationArmingHelp": {
-        "message": ""
+        "message": "Jotkin viritysvaihtoehdot voivat vaatia kiihtyvyysanturin päälle kytkemistä"
     },
     "configurationReverseMotorSwitch": {
-        "message": ""
-    },
-    "configurationReverseMotorSwitchHelp": {
-        "message": ""
+        "message": "Moottorin pyörimissuunta on päinvastainen"
     },
     "configurationAutoDisarmDelay": {
-        "message": ""
+        "message": "Kytke moottorit pois päältä aikaviiveen jälkeen [sekuntia] (Vaatii MOTOR_STOP toiminnon)"
     },
     "configurationDisarmKillSwitch": {
-        "message": ""
+        "message": "Kytke moottorit pois päältä riippumatta kaasutikun asennosta (Kun ARM on määritetty Tilat-välilehdellä toimimaan AUX kanavan kautta)"
     },
     "configurationDisarmKillSwitchHelp": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercent": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": ""
-    },
-    "configurationMotorPoles": {
-        "message": "",
-        "description": ""
-    },
-    "configurationMotorPolesLong": {
-        "message": "",
-        "description": ""
-    },
-    "configurationMotorPolesHelp": {
-        "message": "",
-        "description": ""
+        "message": "Moottoreiden aktivointi on aina pois päältä kun kaasutikku EI ole alhaalla. Ole varovainen, sillä voit vahingossa sammuttaa moottorit lennon aikana kytkimellä, kun tämä asetus on käytössä."
     },
     "configurationThrottleMinimum": {
-        "message": ""
+        "message": "Kaasun vähimmäisarvo (Pienin arvo joka lähetetään nopeudensäätimille(ESC), kun moottorit on aktivoitu)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": ""
+        "message": "Tämä on tyhjäkäyntiarvo joka lähetetään nopeudensäätimille(ESC), kun moottorit on aktivoitu ja kaasutikku on minimissä. Kasvata lukua nostaaksesi tyhjäkäyntinopeutta. Tyhjäkäyntiä kannattaa nostaa myös, jos moottorit eivät pysy tahdistettuna nopeudensäätimien kanssa (desync)."
     },
     "configurationThrottleMaximum": {
-        "message": ""
+        "message": "Kaasun enimmäisarvo (Suurin nopeudensäätimille(ESC) lähetettävä arvo kun moottorit on aktivoitu)"
     },
     "configurationThrottleMinimumCommand": {
-        "message": ""
+        "message": "Pienin komentoarvo (nopeudensäätimille(ESC) lähetettävä arvo kun moottorit ovat poissa käytöstä)"
     },
     "configurationThrottleMinimumCommandHelp": {
-        "message": ""
-    },
-    "configurationEscProtocolDisabled": {
-        "message": ""
-    },
-    "escProtocolDisabledMessage": {
-        "message": ""
-    },
-    "configurationDshotBeeper": {
-        "message": ""
-    },
-    "configurationUseDshotBeeper": {
-        "message": ""
-    },
-    "configurationDshotBeaconTone": {
-        "message": ""
-    },
-    "configurationDshotBeaconHelp": {
-        "message": ""
+        "message": "Tämä arvo lähetetään nopeudensäätimille(ESC) kun lennokkin moottorit eivät ole käytössä. Aseta tämä arvo siten, että moottorit ovat pysähdyksissä. (1000 toimii lähes kaikkien nopeudensäätimien kanssa)"
     },
     "configurationBeeper": {
-        "message": ""
+        "message": "Piipparin määritys"
     },
     "beeperGYRO_CALIBRATED": {
-        "message": ""
+        "message": "Toista äänimerkki kun gyro on kalibroitu"
     },
     "beeperRX_LOST": {
-        "message": ""
+        "message": "Toista äänimerkki kun TX(lähetin) on sammutettu tai signaali on menetetty (toistuu kunnes signaali palaa)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": ""
+        "message": "Toista SOS-äänimerkkiä kun moottorit on aktivoitu ja lähetin(TX) on pois päältä tai signaali on menetetty (automaattisen laskeutumisen/moottoreiden sammutuksen yhteydessä)"
     },
     "beeperDISARMING": {
-        "message": ""
+        "message": "Toista äänimerkki kun moottorit kytketään pois"
     },
     "beeperARMING": {
-        "message": ""
+        "message": "Toista äänimerkki kun moottorit kytketään päälle"
     },
     "beeperARMING_GPS_FIX": {
-        "message": ""
+        "message": "Toista erikoisääni kun moottorit kytketään päälle ja GPS on saanut lukon"
     },
     "beeperBAT_CRIT_LOW": {
-        "message": ""
+        "message": "Pidemmät äänimerkit kun akku on erittäin vähissä (toistuva)"
     },
     "beeperBAT_LOW": {
-        "message": ""
-    },
-    "beeperGPS_STATUS": {
-        "message": ""
-    },
-    "beeperRX_SET": {
-        "message": ""
+        "message": "Toista äänimerkki varoittaen akun matalasta varauksesta (toistuva)"
     },
     "beeperACC_CALIBRATION": {
-        "message": ""
+        "message": "Vahvistus kiihtyvyysanturin lennonaikaisen kalibroinnin suorituksesta"
     },
     "beeperACC_CALIBRATION_FAIL": {
-        "message": ""
+        "message": "Kiihtyvyysanturin lennonaikainen kalibrointi epäonnistui"
     },
     "beeperREADY_BEEP": {
-        "message": ""
-    },
-    "beeperMULTI_BEEPS": {
-        "message": ""
+        "message": "Toista äänimerkki kun GPS on lukittu ja valmiina"
     },
     "beeperDISARM_REPEAT": {
-        "message": ""
-    },
-    "beeperARMED": {
-        "message": ""
+        "message": "Toista äänimerkki kun tikkua pidetään moottoreiden poiskytkentäasennossa"
     },
     "beeperSYSTEM_INIT": {
-        "message": ""
-    },
-    "beeperUSB": {
-        "message": ""
+        "message": "Äänimerkki toistetaan kun lento-ohjaimeen kytketään virrat"
     },
     "beeperBLACKBOX_ERASE": {
-        "message": ""
-    },
-    "beeperCRASH_FLIP": {
-        "message": ""
-    },
-    "beeperCAM_CONNECTION_OPEN": {
-        "message": ""
-    },
-    "beeperCAM_CONNECTION_CLOSE": {
-        "message": ""
-    },
-    "beeperRC_SMOOTHING_INIT_FAIL": {
-        "message": ""
+        "message": "Toista äänimerkki kun Blackbox:n tyhjennys on valmis"
     },
     "configuration3d": {
-        "message": ""
+        "message": "3D nopeudensäädin(ESC)-/moottoritoiminnot"
     },
     "configuration3dDeadbandLow": {
-        "message": ""
+        "message": "3D ohjausalueen alaosan välys"
     },
     "configuration3dDeadbandHigh": {
-        "message": ""
+        "message": "3D ohjausalueen yläosan välys"
     },
     "configuration3dNeutral": {
-        "message": ""
+        "message": "3D ohjausalueen keskikohta"
     },
     "configuration3dDeadbandThrottle": {
-        "message": ""
+        "message": "3D ohjausalueen välys, Kaasu"
     },
     "configurationSystem": {
-        "message": ""
+        "message": "Järjestelmän määritykset"
     },
     "configurationLoopTime": {
-        "message": ""
+        "message": "Lento-ohjaimen korjaustaajuus (Loop Time)"
     },
     "configurationCalculatedCyclesSec": {
-        "message": ""
-    },
-    "configurationSpeedGyroNoGyro": {
-        "message": "",
-        "description": ""
-    },
-    "configurationSpeedPidNoGyro": {
-        "message": "",
-        "description": ""
-    },
-    "configurationKHzUnitLabel": {
-        "message": "",
-        "description": ""
+        "message": "Sykliä/Sekunti [Hz]"
     },
     "configurationLoopTimeHelp": {
-        "message": ""
+        "message": "<strong>Huom:</strong> Varmistu, että käyttämäsi lento-ohjain kykenee toimimaan annetuilla nopeuksilla! Tarkista CPU:n ja sykliajan vakaus. Voit joutua säätämään PID-arvoja uudellen jos vaihdat näitä asetuksia. Vihje: Hitaammilla prosessoreilla voit saada lisää suorituskykyä jos kytket kiihtyvyysanturin ja/tai muita sensoreita pois käytöstä."
     },
     "configurationGPS": {
-        "message": ""
+        "message": "GPS"
     },
     "configurationGPSProtocol": {
-        "message": ""
+        "message": "Protokolla"
     },
     "configurationGPSBaudrate": {
-        "message": ""
+        "message": "Baudrate (siirtonopeus)"
     },
     "configurationGPSubxSbas": {
-        "message": ""
+        "message": "Maa-avustuksen tyyppi"
     },
     "configurationGPSAutoBaud": {
-        "message": ""
+        "message": "Automaattinen Baudrate (siirtonopeus)"
     },
     "configurationGPSAutoConfig": {
-        "message": ""
-    },
-    "configurationGPSGalileo": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSGalileoHelp": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSHomeOnce": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "",
-        "description": ""
+        "message": "Automaattinen määritys"
     },
     "configurationGPSHelp": {
-        "message": ""
+        "message": "<strong>Huom:</strong> Muista määrittää sarjaportti (Portit-välilehden kautta), kun haluat käyttää GPS-toimintoja."
     },
     "configurationSerialRX": {
-        "message": ""
+        "message": "Sarjaporttivastaanottimen toimittaja"
     },
     "configurationSpiRX": {
-        "message": ""
+        "message": "SPI väylän vastaanottimen toimittaja"
     },
     "configurationEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "configurationButtonSave": {
-        "message": ""
-    },
-    "dialogDynFiltersChangeTitle": {
-        "message": ""
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": ""
+        "message": "Tallenna ja Käynnistä uudelleen"
     },
     "portsIdentifier": {
-        "message": ""
+        "message": "Tunniste"
     },
     "portsConfiguration": {
-        "message": ""
+        "message": "Määritys/MSP"
     },
     "portsSerialRx": {
-        "message": ""
+        "message": "Sarjaliikenne RX(vastaanotin)"
     },
     "portsSensorIn": {
-        "message": ""
+        "message": "Sensori sisääntulo"
     },
     "portsTelemetryOut": {
-        "message": ""
+        "message": "Telemetrian ulostulo"
     },
     "portsPeripherals": {
-        "message": ""
+        "message": "Lisälaitteet"
     },
     "portsHelp": {
-        "message": ""
-    },
-    "portsVtxTableNotSet": {
-        "message": ""
+        "message": "<strong>Huom:</strong> Kaikki yhdistelmät eivät ole mahdollisia. Lento-ohjain nollaa asetukset jos ilmenee ristiriitoja."
     },
     "portsMSPHelp": {
-        "message": ""
+        "message": "<strong>Huom:</strong><span class=\"message-negative\">ÄLÄ</span> kytke ensimmäisen sarjaportin MSP-asetusta pois, ellet tiedä mitä olet tekemässä. Voit joutua ohjelmoimaan laiteohjelmistosi uudelleen ja nollaamaan kaikki asetukset."
     },
     "portsFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Laiteohjelmiston päivitys <span class=\"message-negative\">vaaditaan</span>. Sarjaporttien määritystä ei tueta laiteohjelmiston versiossa &lt; 1.8.0."
     },
     "portsButtonSave": {
-        "message": ""
+        "message": "Tallenna ja Käynnistä uudelleen"
     },
     "portsTelemetryDisabled": {
-        "message": ""
+        "message": "Ei käytössä"
     },
     "portsFunction_MSP": {
-        "message": ""
+        "message": "MSP"
     },
     "portsFunction_GPS": {
-        "message": ""
+        "message": "GPS"
     },
     "portsFunction_TELEMETRY_FRSKY": {
-        "message": ""
+        "message": "FrSky"
     },
     "portsFunction_TELEMETRY_HOTT": {
-        "message": ""
+        "message": "HoTT"
     },
     "portsFunction_TELEMETRY_LTM": {
-        "message": ""
+        "message": "LTM"
     },
     "portsFunction_TELEMETRY_MAVLINK": {
-        "message": ""
+        "message": "MAVLink"
     },
     "portsFunction_TELEMETRY_MSP": {
-        "message": ""
+        "message": "MSP"
     },
     "portsFunction_TELEMETRY_SMARTPORT": {
-        "message": ""
+        "message": "SmartPort"
     },
     "portsFunction_TELEMETRY_IBUS": {
-        "message": ""
+        "message": "iBUS"
     },
     "portsFunction_TELEMETRY_JETIXBUS": {
-        "message": ""
+        "message": "JETIXBUS"
     },
     "portsFunction_TELEMETRY_CRSF": {
-        "message": ""
+        "message": "CRSF"
     },
     "portsFunction_TELEMETRY_SRXL": {
-        "message": ""
+        "message": "SRXL"
     },
     "portsFunction_ESC_SENSOR": {
-        "message": ""
+        "message": "ESC"
     },
     "portsFunction_RX_SERIAL": {
-        "message": ""
+        "message": "Sarjaliikenne RX(vastaanotin)"
     },
     "portsFunction_BLACKBOX": {
-        "message": ""
-    },
-    "portsFunction_TBS_SMARTAUDIO": {
-        "message": ""
-    },
-    "portsFunction_IRC_TRAMP": {
-        "message": ""
-    },
-    "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": ""
-    },
-    "portsFunction_FRSKY_OSD": {
-        "message": ""
-    },
-    "portsFunction_VTX_MSP": {
-        "message": ""
-    },
-    "pidTuningProfileOption": {
-        "message": ""
-    },
-    "pidTuningRateProfileOption": {
-        "message": ""
-    },
-    "portsFunction_LIDAR_TF": {
-        "message": ""
+        "message": "Blackbox lokitiedoston kirjoitus"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": ""
-    },
-    "pidTuningSubTabPid": {
-        "message": ""
-    },
-    "pidTuningSubTabRates": {
-        "message": ""
+        "message": "<span class=\"message-negative\">PID-ohjaimen muuttaminen estetty - voit muuttaa sitä CLI-toiminnon kautta.</span> Laiteohjelmistosi API-versio on: <span class=\"message-negative\">$1</span>, mutta tämä toiminnallisuus vaatii: <span class=\"message-positive\">$2</span>."
     },
     "pidTuningSubTabFilter": {
-        "message": ""
+        "message": "Suodattimen asetukset"
     },
     "pidTuningShowAllPids": {
-        "message": ""
+        "message": "Näytä kaikki PID-arvot"
     },
     "pidTuningHideUnusedPids": {
-        "message": ""
+        "message": "Piilota käyttämättömät PID-arvot"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": ""
-    },
-    "pidTuningAntiGravity": {
-        "message": ""
-    },
-    "pidTuningAntiGravityMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityModeOptionSmooth": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityModeOptionStep": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityGain": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityGainHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityThres": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityHelp": {
-        "message": ""
-    },
-    "pidTuningDMin": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": ""
-    },
-    "pidTuningDMinFeatureTitle": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinGain": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinAdvance": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxAdvanceHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinHelp": {
-        "message": "",
-        "description": ""
+        "message": "Profiilista riippumattomat PID-ohjaimen asetukset"
     },
     "pidTuningPidSettings": {
-        "message": ""
-    },
-    "pidTuningMotorSettings": {
-        "message": ""
-    },
-    "pidTuningMiscSettings": {
-        "message": ""
-    },
-    "receiverRcSmoothing": {
-        "message": ""
-    },
-    "receiverRcSmoothingAuto": {
-        "message": ""
-    },
-    "receiverRcSmoothingManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcFeedforwardTypeSelect": {
-        "message": ""
-    },
-    "receiverRcSetpointTypeSelect": {
-        "message": ""
-    },
-    "receiverRcSmoothingInterpolation": {
-        "message": ""
-    },
-    "receiverRcSmoothingFilter": {
-        "message": ""
-    },
-    "receiverRcSmoothingTypeHelp": {
-        "message": ""
-    },
-    "rcSmoothingSetpointCutoffHelp": {
-        "message": ""
-    },
-    "rcSmoothingFeedforwardCutoffHelp": {
-        "message": ""
-    },
-    "rcSmoothingChannelsSmoothedHelp": {
-        "message": ""
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": ""
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": ""
-    },
-    "receiverRcSmoothingSetpointManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingSetpointHz": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardCutoff": {
-        "message": ""
-    },
-    "receiverRcSetpointType": {
-        "message": ""
-    },
-    "receiverRcFeedforwardType": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardTypeAuto": {
-        "message": ""
-    },
-    "receiverRcSmoothingChannel": {
-        "message": ""
+        "message": "PID-ohjaimen asetukset"
     },
     "receiverRcInterpolation": {
-        "message": ""
+        "message": "RC Interpolointi"
     },
     "receiverRcInterpolationHelp": {
-        "message": ""
+        "message": "RC-ohjausjärjestelmät ovat hitaampia kuin PID-loopit. Tästä johtuen PID-loopit sisältävät aukkoja RC-ohjaimelta tulevassa tietovirrassa. Tämä asetus mahdollistaa RC-ohjaussignaalin interpoloinnin (tasoittaa signaalia) silloin, kun uutta ohjausdataa ei vastaanoteta. Tämä asetus mahdollistaa myös puhtaamaan P- ja D-arvojen käytöksen, sillä ohjaussignaalin hitaus ei tuota jyrkkiä ohjauskomentojen vaihteluita."
     },
     "receiverRcInterpolationIntervalHelp": {
-        "message": ""
+        "message": "Interpoloinnin aikaväli manuaaliselle RC interpolointitilalle millisekunteina"
     },
     "receiverRcInterpolationOff": {
-        "message": ""
-    },
-    "receiverRcSmoothingType": {
-        "message": ""
+        "message": "Pois"
     },
     "receiverRcInterpolationDefault": {
-        "message": ""
+        "message": "Esiasetus"
     },
     "receiverRcInterpolationAuto": {
-        "message": ""
+        "message": "Automaattinen"
     },
     "receiverRcInterpolationManual": {
-        "message": ""
+        "message": "Manuaalinen"
     },
     "receiverRcInterpolationInterval": {
-        "message": ""
-    },
-    "receiverRcSmoothingMode": {
-        "message": ""
+        "message": "RC interpoloinnin aikaväli [ms]"
     },
     "pidTuningDtermSetpointTransition": {
-        "message": ""
+        "message": "D asetuspisteen siirtymä"
     },
     "pidTuningDtermSetpoint": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransitionWarning": {
-        "message": ""
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": ""
-    },
-    "pidTuningFeedforwardGroupHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardJitter": {
-        "message": ""
-    },
-    "pidTuningFeedforwardJitterHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": ""
-    },
-    "pidTuningFeedforwardSmoothnessHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveraging": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingHelp": {
-        "message": ""
-    },
-    "pidTuningOptionOff": {
-        "message": ""
-    },
-    "pidTuningOptionOn": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption2Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption3Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption4Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardBoost": {
-        "message": ""
-    },
-    "pidTuningFeedforwardBoostHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardMaxRateLimit": {
-        "message": ""
-    },
-    "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardTransition": {
-        "message": ""
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": ""
-    },
-    "pidTuningProportional": {
-        "message": ""
-    },
-    "pidTuningProportionalHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIntegral": {
-        "message": ""
-    },
-    "pidTuningIntegralHelp": {
-        "message": "",
-        "description": ""
+        "message": "D asetuspisteen painoarvo"
     },
     "pidTuningDerivative": {
-        "message": ""
-    },
-    "pidTuningDMax": {
-        "message": ""
-    },
-    "pidTuningDMaxHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFeedforward": {
-        "message": ""
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMaxRateWarning": {
-        "message": ""
+        "message": "Johdannainen (derivative)"
     },
     "pidTuningRcRate": {
-        "message": ""
+        "message": "RC nopeus (rate)"
     },
     "pidTuningMaxVel": {
-        "message": ""
+        "message": "Suurin kiihtyvyys [astetta/s]"
     },
     "pidTuningRate": {
-        "message": ""
+        "message": "Suhde (rate)"
     },
     "pidTuningSuperRate": {
-        "message": ""
+        "message": "Super suhde (rate)"
     },
     "pidTuningRatesPreview": {
-        "message": ""
-    },
-    "pidTuningRatesTuningHelp": {
-        "message": ""
+        "message": "Suhteiden (rates) esikatselu"
     },
     "pidTuningRcExpo": {
-        "message": ""
-    },
-    "pidTuningTPAMode": {
-        "message": ""
+        "message": "RC exponentiaalisuus"
     },
     "pidTuningTPA": {
-        "message": ""
-    },
-    "pidTuningTPARate": {
-        "message": ""
+        "message": "TPA"
     },
     "pidTuningTPABreakPoint": {
-        "message": ""
-    },
-    "pidTuningTPAPD": {
-        "message": ""
-    },
-    "pidTuningTPAD": {
-        "message": ""
-    },
-    "pidTuningThrottleCurvePreview": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitType": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitPercent": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeOff": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeScale": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeClip": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeTip": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitPercentTip": {
-        "message": ""
+        "message": "TPA keskeytyspiste"
     },
     "pidTuningFilter": {
-        "message": ""
+        "message": "Suodatin"
     },
     "pidTuningFilterFrequency": {
-        "message": ""
-    },
-    "pidTuningRatesCurve": {
-        "message": ""
+        "message": "Taajuus"
     },
     "throttle": {
-        "message": ""
+        "message": "Kaasu"
     },
     "pidTuningButtonSave": {
-        "message": ""
+        "message": "Tallenna"
     },
     "pidTuningButtonRefresh": {
-        "message": ""
+        "message": "Virkistä"
     },
     "pidTuningProfileHead": {
-        "message": ""
+        "message": "Profiili"
     },
     "pidTuningControllerHead": {
-        "message": ""
-    },
-    "pidTuningCopyProfile": {
-        "message": ""
-    },
-    "pidTuningCopyRateProfile": {
-        "message": ""
-    },
-    "dialogCopyProfileText": {
-        "message": ""
-    },
-    "dialogCopyRateProfileText": {
-        "message": ""
+        "message": "PID-ohjain"
     },
     "dialogCopyProfileTitle": {
-        "message": ""
+        "message": "Kopioi profiilin arvot"
     },
     "dialogCopyProfileNote": {
-        "message": ""
+        "message": "Kaikki kohdeprofiilin arvot nollataan ja päällekirjoitetaan"
     },
     "dialogCopyProfileConfirm": {
-        "message": ""
+        "message": "Kopioi"
     },
     "dialogCopyProfileClose": {
-        "message": ""
-    },
-    "pidTuningResetPidProfile": {
-        "message": ""
-    },
-    "pidTuningPidProfileReset": {
-        "message": ""
+        "message": "Peruuta"
     },
     "pidTuningReceivedProfile": {
-        "message": ""
+        "message": "Lento-ohjain asetettu Profiili: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": ""
+        "message": "Lento-ohjain asetettu Suhdeprofiili: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": ""
+        "message": "Ladattiin Profiili: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": ""
+        "message": "Ladattiin Suhdeprofiili: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": ""
+        "message": "PID-data <strong>virkistetty</strong>"
     },
     "pidTuningEepromSaved": {
-        "message": ""
-    },
-    "tuningHelp": {
-        "message": ""
-    },
-    "tuningHelpSliders": {
-        "message": "",
-        "description": ""
-    },
-    "filterWarning": {
-        "message": ""
-    },
-    "pidTuningSliderPidsMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderModeHelp": {
-        "message": ""
-    },
-    "receiverHelp": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "receiverThrottleMid": {
-        "message": ""
+        "message": "Kaasun keskipiste"
     },
     "receiverThrottleExpo": {
-        "message": ""
+        "message": "Kaasun Eksponentti"
     },
     "receiverStickMin": {
-        "message": ""
+        "message": "'Tikku alhaalla' kynnysarvo"
     },
     "receiverHelpStickMin": {
-        "message": ""
+        "message": "Suurin arvo (mikrosekunteina) jolloin tikku tunnistetaan olevan alhaalla / vasemmalla komentosyötetta varten (MIN_CHECK)."
     },
     "receiverStickCenter": {
-        "message": ""
+        "message": "Tikun keskikohta"
     },
     "receiverHelpStickCenter": {
-        "message": ""
+        "message": "Arvo (mikrosekunteina), jolla määritetään tikun olevan keskikohdassa (MID_RC)"
     },
     "receiverStickMax": {
-        "message": ""
+        "message": "'Tikku ylhäällä' kynnysarvo"
     },
     "receiverHelpStickMax": {
-        "message": ""
+        "message": "Alin arvo (mikrosekunteina), jolla tikku havaitaan olevan ylhäällä / oikealla komentosyötettä varten (MAX_CHECK)."
     },
     "receiverDeadband": {
-        "message": ""
+        "message": "RC-ohjaussignaalin välys (deadband)"
     },
     "receiverHelpDeadband": {
-        "message": ""
+        "message": "Näillä arvoilla (mikrosekunteja) määritetään, kuinka paljon RC-ohjaussignaalissa voi olla vaihtelua ennen kuin komentoa pidetään oikeana. Tätä suodatusarvoa voidaan nostaa jos RC-ohjauslaitteiston lähettämä signaali \"elää\" tikkujen ollessa paikallaan."
     },
     "receiverYawDeadband": {
-        "message": ""
+        "message": "\"Peräsimen\" ohjauksen välys"
     },
     "receiverHelpYawDeadband": {
-        "message": ""
+        "message": "Näillä arvoilla (mikrosekunteja) määritetään, kuinka paljon RC-ohjaussignaalissa voi olla vaihtelua ennen kuin komentoa pidetään oikeana. Tätä suodatusarvoa voidaan nostaa jos RC-ohjauslaitteiston lähettämä signaali \"elää\" tikkujen ollessa paikallaan.<strong>Tämä asetus koskee vain \"peräsintä\".</strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": ""
+        "message": "3D kaasun välys (deadband)"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": ""
+        "message": "Nämä arvot ovat mikrosekunteina. Suurentaaksesi neutraalia aluetta, kasvata arvoa.<strong>Tämä asetus koskee vain 3D-tilan kaasua.</strong>"
     },
     "receiverChannelMap": {
-        "message": ""
+        "message": "Kanavakartta"
     },
     "receiverChannelDefaultOption": {
-        "message": ""
+        "message": "Oletus"
     },
     "receiverChannelMapTitle": {
-        "message": ""
+        "message": "Voit määrittää oman kanavakarttasi napauttamalla laatikon sisällä"
     },
     "receiverRssiChannel": {
-        "message": ""
+        "message": "RSSI kanava"
     },
     "receiverRssiChannelDisabledOption": {
-        "message": ""
+        "message": "Pois käytöstä"
     },
     "receiverRefreshRateTitle": {
-        "message": ""
-    },
-    "receiverResetRefreshRate": {
-        "message": ""
-    },
-    "receiverResetRefreshRateTitle": {
-        "message": ""
+        "message": "Käyrän päivitystaajuus"
     },
     "receiverButtonSave": {
-        "message": ""
+        "message": "Tallenna"
     },
     "receiverButtonRefresh": {
-        "message": ""
-    },
-    "receiverButtonBind": {
-        "message": ""
-    },
-    "receiverButtonBindMessage": {
-        "message": ""
+        "message": "Virkistä"
     },
     "receiverButtonSticks": {
-        "message": ""
+        "message": "Ohjaustikut"
     },
     "receiverDataRefreshed": {
-        "message": ""
+        "message": "RC säädön tiedot <strong>virkistetty</strong>"
     },
     "receiverEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "receiverModelPreview": {
-        "message": ""
-    },
-    "receiverMspWarningText": {
-        "message": ""
-    },
-    "receiverMspEnableButton": {
-        "message": ""
-    },
-    "auxiliaryHelp": {
-        "message": ""
-    },
-    "auxiliaryToggleUnused": {
-        "message": ""
+        "message": "Esikatselu"
     },
     "auxiliaryMin": {
-        "message": ""
+        "message": "Min"
     },
     "auxiliaryMax": {
-        "message": ""
-    },
-    "auxiliaryDisabled": {
-        "message": "",
-        "descripton": ""
+        "message": "Max"
     },
     "auxiliaryAddRange": {
-        "message": ""
-    },
-    "auxiliaryAddLink": {
-        "message": ""
+        "message": "Lisää alue"
     },
     "auxiliaryButtonSave": {
-        "message": ""
+        "message": "Tallenna"
     },
     "auxiliaryEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "auxiliaryAutoChannelSelect": {
-        "message": ""
-    },
-    "auxiliaryModeLogicOR": {
-        "message": ""
-    },
-    "auxiliaryModeLogicAND": {
-        "message": ""
-    },
-    "adjustmentsHelp": {
-        "message": ""
-    },
-    "adjustmentSlotsHelp": {
-        "message": ""
-    },
-    "adjustmentsExamples": {
-        "message": ""
-    },
-    "adjustmentsExample1": {
-        "message": ""
-    },
-    "adjustmentsExample2": {
-        "message": ""
+        "message": "AUTO"
     },
     "adjustmentsColumnEnable": {
-        "message": ""
+        "message": "Jos käytössä"
     },
     "adjustmentsColumnUsingSlot": {
-        "message": ""
+        "message": "käyttää paikkaa"
     },
     "adjustmentsColumnWhenChannel": {
-        "message": ""
+        "message": "kun kanava"
     },
     "adjustmentsColumnIsInRange": {
-        "message": ""
+        "message": "on alueella"
     },
     "adjustmentsColumnThenApplyFunction": {
-        "message": ""
+        "message": "sitten toteuta"
     },
     "adjustmentsColumnViaChannel": {
-        "message": ""
+        "message": "kanavan kautta"
     },
     "adjustmentsSlot0": {
-        "message": ""
+        "message": "Paikka 1"
     },
     "adjustmentsSlot1": {
-        "message": ""
+        "message": "Paikka 2"
     },
     "adjustmentsSlot2": {
-        "message": ""
+        "message": "Paikka 3"
     },
     "adjustmentsSlot3": {
-        "message": ""
+        "message": "Paikka 4"
     },
     "adjustmentsMin": {
-        "message": ""
+        "message": "Min"
     },
     "adjustmentsMax": {
-        "message": ""
+        "message": "Max"
     },
     "adjustmentsFunction0": {
-        "message": ""
+        "message": "Ei muutoksia"
     },
     "adjustmentsFunction1": {
-        "message": ""
+        "message": "RC suhteen (rate) säätö"
     },
     "adjustmentsFunction2": {
-        "message": ""
+        "message": "RC Eksponentin säätö"
     },
     "adjustmentsFunction3": {
-        "message": ""
+        "message": "Kaasun Eksponentin säätö"
     },
     "adjustmentsFunction4": {
-        "message": ""
+        "message": "Pituus- ja leveysakselien suhteen(rate) säätö"
     },
     "adjustmentsFunction5": {
-        "message": ""
+        "message": "\"Peräsimen\" suhteen(rate) säätö"
     },
     "adjustmentsFunction6": {
-        "message": ""
+        "message": "Pituus- ja leveysakselien P-arvon säätö"
     },
     "adjustmentsFunction7": {
-        "message": ""
+        "message": "Pituus- ja leveysakselien I-arvon säätö"
     },
     "adjustmentsFunction8": {
-        "message": ""
+        "message": "Pituus- ja leveysakselien D-arvon säätö"
     },
     "adjustmentsFunction9": {
-        "message": ""
+        "message": "\"Peräsimen\" P-arvon säätö"
     },
     "adjustmentsFunction10": {
-        "message": ""
+        "message": "\"Peräsimen\" I-arvon säätö"
     },
     "adjustmentsFunction11": {
-        "message": ""
+        "message": "\"Peräsimen\" D-arvon säätö"
     },
     "adjustmentsFunction12": {
-        "message": ""
+        "message": "Suhde(rate) profiilin valinta"
     },
     "adjustmentsFunction13": {
-        "message": ""
+        "message": "Pituusakselin suhde (rate)"
     },
     "adjustmentsFunction14": {
-        "message": ""
+        "message": "Leveysakselin suhde (rate)"
     },
     "adjustmentsFunction15": {
-        "message": ""
+        "message": "Pituusakselin P-arvon säätö"
     },
     "adjustmentsFunction16": {
-        "message": ""
+        "message": "Pituusakselin I-arvon säätö"
     },
     "adjustmentsFunction17": {
-        "message": ""
+        "message": "Pituusakselin D-arvon säätö"
     },
     "adjustmentsFunction18": {
-        "message": ""
+        "message": "Leveysakselin P-arvon säätö"
     },
     "adjustmentsFunction19": {
-        "message": ""
+        "message": "Leveysakselin I-arvon säätö"
     },
     "adjustmentsFunction20": {
-        "message": ""
+        "message": "Leveysakselin D-arvon säätö"
     },
     "adjustmentsFunction21": {
-        "message": ""
+        "message": "RC suhde (rate) \"peräsin\""
     },
     "adjustmentsFunction22": {
-        "message": ""
-    },
-    "adjustmentsFunction22_2": {
-        "message": ""
+        "message": "D asetuspiste"
     },
     "adjustmentsFunction23": {
-        "message": ""
-    },
-    "adjustmentsFunction23_2": {
-        "message": ""
+        "message": "D asetuspisteen siirtymä"
     },
     "adjustmentsFunction24": {
-        "message": ""
-    },
-    "adjustmentsFunction25": {
-        "message": ""
-    },
-    "adjustmentsFunction26": {
-        "message": ""
-    },
-    "adjustmentsFunction27": {
-        "message": ""
-    },
-    "adjustmentsFunction28": {
-        "message": ""
-    },
-    "adjustmentsFunction29": {
-        "message": ""
-    },
-    "adjustmentsFunction30": {
-        "message": ""
+        "message": "Horizon-tilan voimakkuuden säätö"
     },
     "adjustmentsSave": {
-        "message": ""
+        "message": "Tallenna"
     },
     "adjustmentsEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "transponderNotSupported": {
-        "message": ""
+        "message": "Käyttämäsi lento-ohjaimen laiteohjelmisto ei tue transponderin käyttöä."
     },
     "transponderInformation": {
-        "message": ""
+        "message": "Transponderijärjestelmät mahdollistavat kilpailujen järjestäjien mitata osallistujen kierrosaikoja. Kun transponderilla varustettu lennokki kulkee ajanottoportin lävitse, portin vastaanotin tunnistaa lennokin koodin ja tallentaa kierrosajan. Jos käytät IR-pohjaista transponderia, asettele se siten että valonsäde on suunnattu radan vastaanottimia kohti, eikä säteen edessä ole mitään esteitä esim. rungon osia, akkuremmejä, kaapeleita, potkureita yms."
     },
     "transponderConfigurationType": {
-        "message": ""
+        "message": "Transponderin tyyppi"
     },
     "transponderType0": {
-        "message": ""
+        "message": "Ei mitään"
     },
     "transponderType1": {
-        "message": ""
+        "message": "iLap"
     },
     "transponderType2": {
-        "message": ""
+        "message": "aRCiTimer"
     },
     "transponderType3": {
-        "message": ""
+        "message": "ERLT"
     },
     "transponderConfiguration1": {
-        "message": ""
+        "message": "Määritä iLap"
     },
     "transponderConfiguration2": {
-        "message": ""
+        "message": "Määritä aRCiTimer"
     },
     "transponderConfiguration3": {
-        "message": ""
+        "message": "Määritä ERLT"
     },
     "transponderData1": {
-        "message": ""
+        "message": "Data"
     },
     "transponderData2": {
-        "message": ""
+        "message": "Transponderin ID"
     },
     "transponderData3": {
-        "message": ""
+        "message": "Transponderin ID"
     },
     "transponderDataHelp1": {
-        "message": ""
-    },
-    "transponderHelp1": {
-        "message": ""
-    },
-    "transponderHelp2": {
-        "message": ""
+        "message": "Ainoastaan heksadesimaalisia merkkejä, 0-9, A-F"
     },
     "transponderDataHelp3": {
-        "message": ""
-    },
-    "transponderHelp3": {
-        "message": ""
+        "message": "Valitse ERLT ID 0-63"
     },
     "transponderButtonSave": {
-        "message": ""
+        "message": "Tallenna"
     },
     "transponderButtonSaveReboot": {
-        "message": ""
+        "message": "Tallenna ja Käynnistä uudelleen"
     },
     "transponderDataInvalid": {
-        "message": ""
+        "message": "Transponderin data <span class=\"message-negative\">ei kelpaa</span>"
     },
     "transponderEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "servosFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Servot vaativat laiteohjelmiston &gt;= 1.10.0. ja tuen lento-ohjaimen laitteistolta."
     },
     "servosChangeDirection": {
-        "message": ""
+        "message": "Muuta suuntaa lähettimessä samansuuntaiseksi"
     },
     "servosName": {
-        "message": ""
+        "message": "Nimi"
     },
     "servosMid": {
-        "message": ""
+        "message": "KESKI"
     },
     "servosMin": {
-        "message": ""
+        "message": "MIN"
     },
     "servosMax": {
-        "message": ""
+        "message": "MAX"
     },
     "servosAngleAtMin": {
-        "message": ""
+        "message": "Kulma minimissä"
     },
     "servosAngleAtMax": {
-        "message": ""
+        "message": "Kulma maksimissa"
     },
     "servosDirectionAndRate": {
-        "message": ""
+        "message": "Suunta ja suhde (rate)"
     },
     "servosLiveMode": {
-        "message": ""
+        "message": "Ota Live-tila käyttöön"
     },
     "servosButtonSave": {
-        "message": ""
+        "message": "Tallenna"
     },
     "servosNormal": {
-        "message": ""
+        "message": "Normaali"
     },
     "servosReverse": {
-        "message": ""
+        "message": "Käänteinen"
     },
     "servosEepromSave": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "gpsHead": {
-        "message": ""
+        "message": "GPS"
     },
     "gpsMapHead": {
-        "message": ""
+        "message": "Tämänhetkinen GPS-sijainti"
     },
     "gpsMapMessage1": {
-        "message": ""
+        "message": "Ole hyvä ja tarkista internet-yhteytesi"
     },
     "gpsMapMessage2": {
-        "message": ""
+        "message": "Odotetaan GPS 3D -lukitusta..."
     },
     "gps3dFix": {
-        "message": ""
+        "message": "3D lukko:"
     },
     "gpsFixTrue": {
-        "message": ""
+        "message": "<span class=\"fixtrue\">Tosi</span>"
     },
     "gpsFixFalse": {
-        "message": ""
+        "message": "<span class=\"fixfalse\">Epätosi</span>"
     },
     "gpsAltitude": {
-        "message": ""
+        "message": "Korkeus:"
     },
     "gpsLat": {
-        "message": ""
+        "message": "Leveysasteet:"
     },
     "gpsLon": {
-        "message": ""
+        "message": "Pituusasteet:"
     },
     "gpsSpeed": {
-        "message": ""
+        "message": "Nopeus:"
     },
     "gpsSats": {
-        "message": ""
+        "message": "Satelliitit:"
     },
     "gpsDistToHome": {
-        "message": ""
+        "message": "Etäisyys kotipisteeseen:"
     },
     "gpsSignalStrHead": {
-        "message": ""
+        "message": "GPS-signaalin vahvuus"
     },
     "gpsSignalStr": {
-        "message": ""
-    },
-    "gpsSignalGnssId": {
-        "message": ""
+        "message": "Signaalin vahvuus"
     },
     "gpsSignalSatId": {
-        "message": ""
-    },
-    "gpsSignalStatusQly": {
-        "message": ""
-    },
-    "gnssQualityNoSignal": {
-        "message": ""
-    },
-    "gnssQualitySearching": {
-        "message": ""
-    },
-    "gnssQualityAcquired": {
-        "message": ""
-    },
-    "gnssQualityUnusable": {
-        "message": ""
-    },
-    "gnssQualityLocked": {
-        "message": ""
-    },
-    "gnssQualityFullyLocked": {
-        "message": ""
-    },
-    "gnssUsedUnused": {
-        "message": ""
-    },
-    "gnssUsedUsed": {
-        "message": ""
-    },
-    "gnssHealthyUnknown": {
-        "message": ""
-    },
-    "gnssHealthyHealthy": {
-        "message": ""
-    },
-    "gnssHealthyUnhealthy": {
-        "message": ""
-    },
-    "motorsVoltage": {
-        "message": ""
-    },
-    "motorsADrawing": {
-        "message": ""
-    },
-    "motorsmAhDrawn": {
-        "message": ""
-    },
-    "motorsVoltageValue": {
-        "message": ""
-    },
-    "motorsADrawingValue": {
-        "message": ""
-    },
-    "motorsmAhDrawnValue": {
-        "message": ""
+        "message": "Satelliitin ID"
     },
     "motorsText": {
-        "message": ""
+        "message": "Moottorit"
     },
     "motorNumber1": {
-        "message": ""
+        "message": "Moottori - 1"
     },
     "motorNumber2": {
-        "message": ""
+        "message": "Moottori - 2"
     },
     "motorNumber3": {
-        "message": ""
+        "message": "Moottori - 3"
     },
     "motorNumber4": {
-        "message": ""
+        "message": "Moottori - 4"
     },
     "motorNumber5": {
-        "message": ""
+        "message": "Moottori - 5"
     },
     "motorNumber6": {
-        "message": ""
+        "message": "Moottori - 6"
     },
     "motorNumber7": {
-        "message": ""
+        "message": "Moottori - 7"
     },
     "motorNumber8": {
-        "message": ""
+        "message": "Moottori - 8"
     },
     "servosText": {
-        "message": ""
+        "message": "Servot"
     },
     "servoNumber1": {
-        "message": ""
+        "message": "Servo - 1"
     },
     "servoNumber2": {
-        "message": ""
+        "message": "Servo - 2"
     },
     "servoNumber3": {
-        "message": ""
+        "message": "Servo - 3"
     },
     "servoNumber4": {
-        "message": ""
+        "message": "Servo - 4"
     },
     "servoNumber5": {
-        "message": ""
+        "message": "Servo - 5"
     },
     "servoNumber6": {
-        "message": ""
+        "message": "Servo - 6"
     },
     "servoNumber7": {
-        "message": ""
+        "message": "Servo - 7"
     },
     "servoNumber8": {
-        "message": ""
+        "message": "Servo - 8"
     },
     "motorsResetMaximumButton": {
-        "message": ""
+        "message": "Nollaa"
     },
     "motorsResetMaximum": {
-        "message": ""
+        "message": "Nollaa yliajan maksimi"
     },
     "motorsSensorGyroSelect": {
-        "message": ""
+        "message": "gyro"
     },
     "motorsSensorAccelSelect": {
-        "message": ""
-    },
-    "motorsTelemetryHelp": {
-        "message": "",
-        "description": ""
-    },
-    "motorsRPM": {
-        "message": "",
-        "description": ""
-    },
-    "motorsRPMError": {
-        "message": "",
-        "description": ""
-    },
-    "motorsESCTemperature": {
-        "message": "",
-        "description": ""
+        "message": "kiihtyvyysanturi"
     },
     "motorsMaster": {
-        "message": ""
-    },
-    "motorsNotice": {
-        "message": ""
-    },
-    "motorsEnableControl": {
-        "message": ""
-    },
-    "motorsDialogMixerReset": {
-        "message": ""
-    },
-    "motorsDialogSettingsChanged": {
-        "message": ""
-    },
-    "motorsDialogSettingsChangedOk": {
-        "message": ""
-    },
-    "motorOutputReorderDialogClose": {
-        "message": ""
-    },
-    "motorOutputReorderDialogAgree": {
-        "message": ""
-    },
-    "motorsRemapDialogTitle": {
-        "message": ""
-    },
-    "motorOutputReorderDialogOpen": {
-        "message": ""
-    },
-    "motorOutputReorderDialogSelectSpinningMotor": {
-        "message": ""
-    },
-    "motorOutputReorderDialogRemapIsDone": {
-        "message": ""
-    },
-    "motorsRemapDialogUnderstandRisks": {
-        "message": ""
-    },
-    "motorsRemapDialogRiskNotice": {
-        "message": ""
-    },
-    "motorsRemapDialogExplanations": {
-        "message": ""
-    },
-    "motorsRemapDialogSave": {
-        "message": ""
-    },
-    "motorsRemapDialogStartOver": {
-        "message": ""
-    },
-    "motorsButtonReset": {
-        "message": ""
-    },
-    "motorsButtonSave": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Title": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SelectMotor": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SelectMotorSafety": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-RiskNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-UnderstandRisks": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-NormalInformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardInformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Open": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandNormal": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandReverse": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandSpin": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-ReleaseButtonToStop": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-ReleaseToStop": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Start": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-StartWizard": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SetDirectionHint": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SetDirectionHintSafety": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongFirmwareText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardActionHint": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardActionHintSecondLine": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SpinWizard": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-StopWizard": {
-        "message": ""
+        "message": "Master"
     },
     "sensorsInfo": {
-        "message": ""
+        "message": "Ota huomioon että nopeiden päivitystaajuuksien käyttäminen ja usean käyrän samanaikainen piirtäminen käyttää paljon tehoja ja akkua, jos käytät läppäriä.<br />Suosittelemme kohtuullisten päivitystaajuuksien käyttämistä ja vain tarpeellisten sensorien käyrien piirtämistä."
     },
     "sensorsRefresh": {
-        "message": ""
+        "message": "Päivitystaajuus:"
     },
     "sensorsScale": {
-        "message": ""
+        "message": "Skaala:"
     },
     "sensorsGyroSelect": {
-        "message": ""
+        "message": "Gyroskooppi"
     },
     "sensorsAccelSelect": {
-        "message": ""
+        "message": "Kiihtyvyysanturi"
     },
     "sensorsMagSelect": {
-        "message": ""
-    },
-    "sensorsAltitudeSelect": {
-        "message": ""
+        "message": "Magnetometri"
     },
     "sensorsSonarSelect": {
-        "message": ""
+        "message": "Kaikuluotain"
     },
     "sensorsDebugSelect": {
-        "message": ""
+        "message": "Vianetsintä"
     },
     "sensorsGyroTitle": {
-        "message": ""
-    },
-    "sensorsAccelTitle": {
-        "message": ""
+        "message": "Gyroskooppi - astetta/s"
     },
     "sensorsMagTitle": {
-        "message": ""
-    },
-    "sensorsAltitudeTitle": {
-        "message": ""
-    },
-    "sensorsAltitudeHint": {
-        "message": ""
+        "message": "Magnetometri - Gaussia"
     },
     "sensorsSonarTitle": {
-        "message": ""
+        "message": "Kaikuluotain - cm"
     },
     "sensorsDebugTitle": {
-        "message": ""
-    },
-    "cliInfo": {
-        "message": ""
-    },
-    "cliInputPlaceholder": {
-        "message": ""
-    },
-    "cliInputPlaceholderBuilding": {
-        "message": ""
+        "message": "Vianetsintä"
     },
     "cliEnter": {
-        "message": ""
+        "message": "CLI-tila havaittu"
     },
     "cliReboot": {
-        "message": ""
+        "message": "CLI uudelleenkäynnistys havaittu"
     },
     "cliSaveToFileBtn": {
-        "message": ""
-    },
-    "cliClearOutputHistoryBtn": {
-        "message": ""
-    },
-    "cliCopyToClipboardBtn": {
-        "message": ""
-    },
-    "cliCopySuccessful": {
-        "message": ""
-    },
-    "cliLoadFromFileBtn": {
-        "message": ""
-    },
-    "cliConfirmSnippetDialogTitle": {
-        "message": ""
-    },
-    "cliConfirmSnippetNote": {
-        "message": ""
-    },
-    "cliConfirmSnippetBtn": {
-        "message": ""
+        "message": "Tallenna tiedostoon"
     },
     "loggingNote": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Vain</span>tällä välilehdellä tallennetaan dataa lokiin. Välilehden sulkeminen <span class=\"message-negative\">peruuttaa</span> lokitiedoston kirjoittamisen ja ohjelma palaa normaaliin <strong>\"configurator\"</strong> tilaan.<br /> Voit valita globaalin päivitystaajuuden, dataa kijoitetaan lokitiedostoon joka <strong>1</strong> sekunti suorituskyvyllisistä syistä."
     },
     "loggingSamplesSaved": {
-        "message": ""
+        "message": "Näytteitä tallennettu:"
     },
     "loggingLogSize": {
-        "message": ""
+        "message": "Lokitiedoston koko:"
     },
     "loggingButtonLogFile": {
-        "message": ""
+        "message": "Valitse lokitiedosto"
     },
     "loggingStart": {
-        "message": ""
+        "message": "Aloita lokin kirjoittaminen"
     },
     "loggingStop": {
-        "message": ""
+        "message": "Lopeta lokin kirjoittaminen"
     },
     "loggingBack": {
-        "message": ""
+        "message": "Poistu lokitilasta / Katkaise yhtys"
     },
     "loggingErrorNotConnected": {
-        "message": ""
+        "message": "Sinun tarvitsee<strong>yhdistää</strong> ensin"
     },
     "loggingErrorLogFile": {
-        "message": ""
+        "message": "Valitse lokitiedosto"
     },
     "loggingErrorOneProperty": {
-        "message": ""
+        "message": "Valitse vähintään yksi lokiin kirjoitettava ominaisuus"
     },
     "loggingAutomaticallyRetained": {
-        "message": ""
+        "message": "Ladattin automaattisesti edellinen lokitiedosto: <strong>$1</strong>"
     },
     "blackboxNotSupported": {
-        "message": ""
+        "message": "Lento-ohjaimesi ei tue Blackbox lokitoimintoa."
     },
     "blackboxMaybeSupported": {
-        "message": ""
+        "message": "Lento-ohjaimesi on liian vanha tukeakseen tämän välilehden toiminnallisuutta, tai Blackbox-toiminto on kytketty pois Määritykset-välilehdeltä."
     },
     "blackboxConfiguration": {
-        "message": ""
+        "message": "Blackbox-määritykset"
     },
     "blackboxButtonSave": {
-        "message": ""
+        "message": "Tallenna ja Käynnistä uudelleen"
     },
     "blackboxLoggingNone": {
-        "message": ""
+        "message": "Ei lokitiedoston kirjoittamista"
     },
     "blackboxLoggingFlash": {
-        "message": ""
+        "message": "Sisäänrakennettu flash-muisti"
     },
     "blackboxLoggingSdCard": {
-        "message": ""
+        "message": "SD-kortti"
     },
     "blackboxLoggingSerial": {
-        "message": ""
-    },
-    "serialLoggingSupportedNote": {
-        "message": ""
+        "message": "Sarjaportti"
     },
     "sdcardNote": {
-        "message": ""
+        "message": "Lennon lokitiedostot voidaan tallentaa lento-ohjaimesi SD-korttipaikan kautta."
     },
     "dataflashUsedSpace": {
-        "message": ""
+        "message": "Käytetty tila"
     },
     "dataflashFreeSpace": {
-        "message": ""
+        "message": "Vapaa tila"
     },
     "dataflashUnavSpace": {
-        "message": ""
+        "message": "Käyttämättömissä oleva tila"
     },
     "dataflashLogsSpace": {
-        "message": ""
+        "message": "Vapaata tilaa lokitiedostoille"
     },
     "dataflashNote": {
-        "message": ""
+        "message": "Lennon lokitiedostot voidaan tallentaa lento-ohjaimesi sisäänrakennetulle dataflash-muistipiirille."
     },
     "dataflashNotPresentNote": {
-        "message": ""
+        "message": "Lento-ohjaimessasi ei ole yhteensopivaa dataflash-muistipiiriä."
     },
     "dataflashFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Dataflash vaatii laiteohjelmiston version &gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
-        "message": ""
-    },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": ""
-    },
-    "dataflashSavetoFileNote": {
-        "message": ""
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": ""
+        "message": "Tallenna flash-piiri tiedostoon..."
     },
     "dataflashButtonErase": {
-        "message": ""
+        "message": "Tyhjennä flash-muisti"
     },
     "dataflashConfirmEraseTitle": {
-        "message": ""
+        "message": "Vahvista dataflash-muistin tyhjennys"
     },
     "dataflashConfirmEraseNote": {
-        "message": ""
+        "message": "Tämä tyhjentää dataflash-piiriltä kaikki Blackbox lokitiedostot tai muun datan. Tämä kestää yleensä noin 20 sekuntia, oletko varma?"
     },
     "dataflashSavingTitle": {
-        "message": ""
+        "message": "Tallennetaan dataflash-muistia tiedostoon"
     },
     "dataflashSavingNote": {
-        "message": ""
+        "message": "Odota rauhassa, tallentamisessa voi kestää useita minuutteja."
     },
     "dataflashSavingNoteAfter": {
-        "message": ""
+        "message": "Tallennus onnistui! Paina \"Ok\" jatkaaksesi."
     },
     "dataflashButtonSaveCancel": {
-        "message": ""
+        "message": "Peruuta"
     },
     "dataflashButtonSaveDismiss": {
-        "message": ""
+        "message": "Ok"
     },
     "dataflashButtonEraseConfirm": {
-        "message": ""
+        "message": "Kyllä, tyhjennä dataflash-muisti"
     },
     "dataflashButtonEraseCancel": {
-        "message": ""
+        "message": "Peruuta"
     },
     "dataflashFileWriteFailed": {
-        "message": ""
+        "message": "Valitsemaasi tiedostoon kirjoittaminen epäonnistui, onko kansio kirjoitussuojattu?"
     },
     "sdcardStatusNoCard": {
-        "message": ""
+        "message": "Korttia ei asetettu"
     },
     "sdcardStatusReboot": {
-        "message": ""
+        "message": "Palautumaton virhe<br>Käynnistä uudelleen ja yritä uudestaan"
     },
     "sdcardStatusReady": {
-        "message": ""
+        "message": "Kortti valmis"
     },
     "sdcardStatusStarting": {
-        "message": ""
+        "message": "Kortti käynnistyy..."
     },
     "sdcardStatusFileSystem": {
-        "message": ""
+        "message": "Tiedostojärjestelmä käynnistyy..."
     },
     "sdcardStatusUnknown": {
-        "message": ""
-    },
-    "firmwareFlasherBranch": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseManufacturer": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseVersion": {
-        "message": ""
+        "message": "Tuntematon tila $1"
     },
     "firmwareFlasherReleaseVersionUrl": {
-        "message": ""
+        "message": "Vieraile julkaisusivulla."
     },
     "firmwareFlasherReleaseNotes": {
-        "message": ""
+        "message": "Huomioita julkaisusta:"
     },
     "firmwareFlasherReleaseDate": {
-        "message": ""
+        "message": "Päiväm.:"
     },
     "firmwareFlasherReleaseTarget": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseMCU": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildDetails": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildPending": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildProcessing": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildSuccessCached": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildSuccess": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": ""
+        "message": "Kohde:"
     },
     "firmwareFlasherReleaseFileUrl": {
-        "message": ""
+        "message": "Lataa käsin."
     },
     "firmwareFlasherTargetWarning": {
-        "message": ""
+        "message": "<span class=\"message-negative\">TÄRKEÄÄ</span>: Varmistu, että olet ohjelmoimassa kohteen kanssa yhteensopivaa laiteohjelmistoa. Väärän kohteen binääritiedoston ohjelmoiminen voi aiheuttaa<span class=\"message-negative\">ikäviä</span> asioita."
     },
     "firmwareFlasherPath": {
-        "message": ""
+        "message": "Polku:"
     },
     "firmwareFlasherSize": {
-        "message": ""
+        "message": "Koko:"
     },
     "firmwareFlasherStatus": {
-        "message": ""
+        "message": "Tila:"
     },
     "firmwareFlasherProgress": {
-        "message": ""
+        "message": "Edistyminen:"
     },
     "firmwareFlasherLoadFirmwareFile": {
-        "message": ""
-    },
-    "firmwareFlasherLoadedConfig": {
-        "message": ""
+        "message": "Ole hyvä ja lataa laiteohjelmiston sisältävä tiedosto"
     },
     "firmwareFlasherNoReboot": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBuildType": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": ""
+        "message": "Ei uudelleenkäynnistystä"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": ""
+        "message": "Valitse laiteohjelmiston versio"
     },
     "firmwareFlasherNoRebootDescription": {
-        "message": ""
+        "message": "Ota tämä käyttöön jos lento-ohjain on käynnistystilassa(boot mode). Eli jos olet käynnistänyt lento-ohjaimen bootloaderin nastat yhdessä, tai painaen lento-ohjaimen BOOT-nappia."
     },
     "firmwareFlasherFlashOnConnect": {
-        "message": ""
+        "message": "Aloita ohjelmointi kun yhteys havaitaan"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": ""
+        "message": "Yrittää ohjelmoida lento-ohjaimen automaattisesti (alkaa kun uusi sarjaportti havaitaan)"
     },
     "firmwareFlasherFullChipErase": {
-        "message": ""
+        "message": "Täysi piirin tyhjennys"
     },
     "firmwareFlasherFullChipEraseDescription": {
-        "message": ""
+        "message": "Tyhjentää kaikki lento-ohjaimeen tallennetut asetukset."
     },
     "firmwareFlasherFlashDevelopmentFirmware": {
-        "message": ""
+        "message": "Käytä laiteohjelmiston kehittäjäversiota"
     },
     "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": ""
+        "message": "Ohjelmoi kaikkein uusin (testaamaton) kehitysversio laiteohjelmistosta."
     },
     "firmwareFlasherManualPort": {
-        "message": ""
+        "message": "Portti"
     },
     "firmwareFlasherManualBaud": {
-        "message": ""
+        "message": "Manuaalinen baud rate"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": ""
+        "message": "Manuaalinen baud rate:n valinta lento-ohjaimille, jotka eivät tue vakionopeutta tai bluetoothin kautta ohjelmoimista.<br /><span class=\"message-negative\">Huom:</span> Ei käytössä kun ohjelmoidaan USB DFU -tilan kautta."
     },
     "firmwareFlasherBaudRate": {
-        "message": ""
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": ""
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": ""
+        "message": "Baud Rate"
     },
     "firmwareFlasherOptionLoading": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
-        "message": ""
+        "message": "Lataa ..."
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": ""
+        "message": "Valitse laiteohjelmisto / Lento-ohjain"
     },
     "firmwareFlasherOptionLabelSelectBoard": {
-        "message": ""
+        "message": "Valitse lento-ohjain"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
-        "message": ""
+        "message": "Valitse laiteohjelmiston versio"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
-        "message": ""
+        "message": "Valitse laiteohjelmiston versio kohteelle"
     },
     "firmwareFlasherButtonLoadLocal": {
-        "message": ""
+        "message": "Lataa laiteohjelmisto [paikallinen]"
     },
     "firmwareFlasherButtonLoadOnline": {
-        "message": ""
+        "message": "Lataa laiteohjelmisto [verkosta]"
     },
     "firmwareFlasherButtonDownloading": {
-        "message": ""
-    },
-    "firmwareFlasherExitDfu": {
-        "message": ""
+        "message": "Ladataan..."
     },
     "firmwareFlasherFlashFirmware": {
-        "message": ""
+        "message": "Päivitä Laiteohjelmisto"
     },
     "firmwareFlasherGithubInfoHead": {
-        "message": ""
+        "message": "GitHub tiedot laiteohjelmistosta"
     },
     "firmwareFlasherCommiter": {
-        "message": ""
+        "message": "Lataaja:"
     },
     "firmwareFlasherDate": {
-        "message": ""
+        "message": "Päiväm.:"
     },
     "firmwareFlasherHash": {
-        "message": ""
+        "message": "Hash:"
     },
     "firmwareFlasherUrl": {
-        "message": ""
+        "message": "Mene GitHubiin tarkastellaksesi tätä julkaisua"
     },
     "firmwareFlasherMessage": {
-        "message": ""
-    },
-    "firmwareFlasherWarningText": {
-        "message": ""
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": ""
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": ""
+        "message": "Viesti:"
     },
     "firmwareFlasherButtonLeave": {
-        "message": ""
+        "message": "Poistu laiteohjelmiston päivittäjästä"
     },
     "firmwareFlasherFirmwareNotLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": ""
+        "message": "Laiteohjelmistoa ei ladattu"
     },
     "firmwareFlasherHexCorrupted": {
-        "message": ""
-    },
-    "firmwareFlasherConfigCorrupted": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherConfigCorruptedLogMessage": {
-        "message": "",
-        "description": ""
+        "message": "HEX tiedosto vaikuttaa olevan korruptoitunut"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": ""
+        "message": "<span class=\"message-positive\">Verkosta ladatun laiteohjelmiston lataus valmis, valmiina ohjelmoimaan</span>"
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
-        "message": ""
-    },
-    "firmwareFlasherFailedToLoadUnifiedConfig": {
-        "message": ""
-    },
-    "firmwareFlasherLegacyLabel": {
-        "message": "",
-        "description": ""
+        "message": "Laiteohjelmiston verkosta lataaminen epäonnistui"
     },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": ""
+        "message": "<b>Ladattavaa laiteohjelmistoa ei ole valittu</b>"
     },
     "firmwareFlasherNoValidPort": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Valitse käytettävissä oleva sarjaportti</span>"
     },
     "firmwareFlasherWritePermissions": {
-        "message": ""
+        "message": "SInulla ei ole <span class=\"message-negative\">kirjoitusoikeuksia</span> tähän tiedostoon"
     },
     "firmwareFlasherFlashTrigger": {
-        "message": ""
-    },
-    "firmwareFlasherVerifyBoard": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherButtonAbort": {
-        "message": ""
-    },
-    "firmwareFlasherButtonContinue": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardQuery": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementDialog": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementAcknowledge": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementFlash": {
-        "message": ""
+        "message": "Havaittu: <strong>$1</strong> - yritetään ohjelmointia kun uusi laite havaitaan"
     },
     "firmwareFlasherPreviousDevice": {
-        "message": ""
+        "message": "Havaittu: <strong>$1</strong> - edellisen laitteen ohjelmointi kesken, yritä yhdistää uudelleen."
     },
     "ledStripHelp": {
-        "message": ""
+        "message": "Lento-ohjain voi ohjata LED-nauhan yksittäisten ledien värejä ja efektejä.<br />Määritä ledit ruudukkoon, määritä johdotusjärjestys ja asenna ledit lennokkiisi ruudukon sijaintien mukaan. Jos ledille ei ole määritetty johdotusjärjestystä, sitä ei tallenneta.<br /> Kaksoisklikkaa väriä muokataksesi sen HSV-arvoja."
     },
     "ledStripButtonSave": {
-        "message": ""
-    },
-    "ledStripColorSetupTitle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripH": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripS": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripV": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripRemainingText": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripClearSelectedButton": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripClearAllButton": {
-        "message": "",
-        "description": ""
+        "message": "Tallenna"
     },
     "ledStripEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">tallennettu</span>"
     },
     "ledStripVtxOverlay": {
-        "message": ""
+        "message": "Videolähetin (käyttää videolähettimen taajuutta värin määrittämiseen)"
     },
     "ledStripFunctionSection": {
-        "message": ""
+        "message": "LED toiminnot"
     },
     "ledStripFunctionTitle": {
-        "message": ""
-    },
-    "ledStripFunctionNoneOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionColorOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionModesOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionArmOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionBatteryOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionRSSIOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionGPSOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionRingOption": {
-        "message": "",
-        "description": ""
+        "message": "Toiminto"
     },
     "ledStripColorModifierTitle": {
-        "message": ""
-    },
-    "ledStripModeColorsTitle": {
-        "message": ""
-    },
-    "ledStripModeColorsModeOrientation": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeHeadfree": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeHorizon": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeAngle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeMag": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeBaro": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirN": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirE": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirS": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirW": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirU": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirD": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModesOrientationTitle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModesSpecialColorsTitle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeDisarmed": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeArmed": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeAnimation": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeBlinkBg": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSNoSats": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSNoLock": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSLocked": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiring": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringMode": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringClearControl": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringClearAllControl": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringMessage": {
-        "message": "",
-        "description": ""
+        "message": "Värin muokkaaja"
     },
     "ledStripVtxFunction": {
-        "message": ""
+        "message": "Larson skanneri"
     },
     "ledStripBlinkTitle": {
-        "message": ""
+        "message": "Vilkuta"
     },
     "ledStripBlinkAlwaysOverlay": {
-        "message": ""
+        "message": "Vilkuta aina"
     },
     "ledStripBlinkLandingOverlay": {
-        "message": ""
+        "message": "Vilkuta laskeutuessa"
     },
     "ledStripOverlayTitle": {
-        "message": ""
+        "message": "Päällimmäinen"
     },
     "ledStripWarningsOverlay": {
-        "message": ""
+        "message": "Varoitukset"
     },
     "ledStripIndecatorOverlay": {
-        "message": ""
+        "message": "Indikaattori (käyttää sijaintia ruudokossa)"
     },
     "colorBlack": {
-        "message": ""
+        "message": "musta"
     },
     "colorWhite": {
-        "message": ""
+        "message": "valkoinen"
     },
     "colorRed": {
-        "message": ""
+        "message": "punainen"
     },
     "colorOrange": {
-        "message": ""
+        "message": "oranssi"
     },
     "colorYellow": {
-        "message": ""
+        "message": "keltainen"
     },
     "colorLimeGreen": {
-        "message": ""
+        "message": "limevihreä"
     },
     "colorGreen": {
-        "message": ""
+        "message": "vihreä"
     },
     "colorMintGreen": {
-        "message": ""
+        "message": "mintunvihreä"
     },
     "colorCyan": {
-        "message": ""
+        "message": "syaani"
     },
     "colorLightBlue": {
-        "message": ""
+        "message": "vaaleansininen"
     },
     "colorBlue": {
-        "message": ""
+        "message": "sininen"
     },
     "colorDarkViolet": {
-        "message": ""
+        "message": "tumma violetti"
     },
     "colorMagenta": {
-        "message": ""
+        "message": "magenta"
     },
     "colorDeepPink": {
-        "message": ""
-    },
-    "controlAxisRoll": {
-        "message": ""
-    },
-    "controlAxisPitch": {
-        "message": ""
-    },
-    "controlAxisYaw": {
-        "message": ""
-    },
-    "controlAxisThrottle": {
-        "message": ""
+        "message": "tummempi vaaleanpunainen"
     },
     "controlAxisAux1": {
-        "message": ""
+        "message": "AUX 1"
     },
     "controlAxisAux2": {
-        "message": ""
+        "message": "AUX 2"
     },
     "controlAxisAux3": {
-        "message": ""
+        "message": "AUX 3"
     },
     "controlAxisAux4": {
-        "message": ""
+        "message": "AUX 4"
     },
     "controlAxisAux5": {
-        "message": ""
+        "message": "AUX 5"
     },
     "controlAxisAux6": {
-        "message": ""
+        "message": "AUX 6"
     },
     "controlAxisAux7": {
-        "message": ""
+        "message": "AUX 7"
     },
     "controlAxisAux8": {
-        "message": ""
+        "message": "AUX 8"
     },
     "controlAxisAux9": {
-        "message": ""
+        "message": "AUX 9"
     },
     "controlAxisAux10": {
-        "message": ""
+        "message": "AUX 10"
     },
     "controlAxisAux11": {
-        "message": ""
+        "message": "AUX 11"
     },
     "controlAxisAux12": {
-        "message": ""
+        "message": "AUX 12"
     },
     "controlAxisAux13": {
-        "message": ""
+        "message": "AUX 13"
     },
     "controlAxisAux14": {
-        "message": ""
+        "message": "AUX 14"
     },
     "controlAxisAux15": {
-        "message": ""
+        "message": "AUX 15"
     },
     "controlAxisAux16": {
-        "message": ""
+        "message": "AUX 16"
     },
     "pidTuningBasic": {
-        "message": ""
+        "message": "Normaali/Akro"
     },
     "pidTuningYawJumpPrevention": {
-        "message": ""
+        "message": "\"Peräsimen\" hypyn esto"
     },
     "pidTuningYawJumpPreventionHelp": {
-        "message": ""
+        "message": "Estää lennokkia hyppäämästä ylöspäin \"peräsinliikkeiden\" lopussa. Suurempi luku antaa lisää vaimennusta liikkeiden lopussa (toimii samalla tavalla kuin vanha \"peräsimen\" D-arvo, mikä ei ollut kuitenkaan oikea D-arvo, toisin kuin muilla kääntöakseleilla)"
     },
     "pidTuningRcExpoPower": {
-        "message": ""
+        "message": "RC Eksponentin voimakkuus"
     },
     "pidTuningRcExpoPowerHelp": {
-        "message": ""
+        "message": "Eksponentti jota käytetään RC Eksponentin laskemiseen. Betaflightin versiota 3.0 aikasemmissa versioissa tämä arvo on kiinteästi 3."
     },
     "pidTuningLevel": {
-        "message": ""
+        "message": "Angle/Horizon -tilat"
     },
     "pidTuningAltitude": {
-        "message": ""
+        "message": "Barometri & Kaikuluotain/Korkeus"
     },
     "pidTuningMag": {
-        "message": ""
+        "message": "Magnetometri/Suuntima"
     },
     "pidTuningGps": {
-        "message": ""
+        "message": "GPS Navigointi"
     },
     "pidTuningStrength": {
-        "message": ""
+        "message": "Voimakkuus"
     },
     "pidTuningTransition": {
-        "message": ""
+        "message": "Siirtymä"
     },
     "pidTuningHorizon": {
-        "message": ""
+        "message": "Horizon"
     },
     "pidTuningAngle": {
-        "message": ""
+        "message": "Angle"
     },
     "pidTuningLevelAngleLimit": {
-        "message": ""
+        "message": "Angle raja"
     },
     "pidTuningLevelSensitivity": {
-        "message": ""
+        "message": "Herkkyys"
     },
     "pidTuningLevelHelp": {
-        "message": ""
-    },
-    "pidTuningMotorOutputLimit": {
-        "message": ""
-    },
-    "pidTuningMotorLimit": {
-        "message": ""
-    },
-    "pidTuningMotorLimitHelp": {
-        "message": ""
-    },
-    "pidTuningCellCount": {
-        "message": ""
-    },
-    "pidTuningCellCountHelp": {
-        "message": ""
-    },
-    "pidTuningCellCountChange": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningCellCountStay": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningCellCount1S": {
-        "message": ""
-    },
-    "pidTuningCellCount2S": {
-        "message": ""
-    },
-    "pidTuningCellCount3S": {
-        "message": ""
-    },
-    "pidTuningCellCount4S": {
-        "message": ""
-    },
-    "pidTuningCellCount5S": {
-        "message": ""
-    },
-    "pidTuningCellCount6S": {
-        "message": ""
-    },
-    "pidTuningCellCount7S": {
-        "message": ""
-    },
-    "pidTuningCellCount8S": {
-        "message": ""
+        "message": "Alapuolella olevat arvot muuttavat lennokin käyttäytymistä ANGLE ja HORIZON -lentotiloissa. Eri PID-ohjaimet käsittelevät näitä arvoja eri tavoin. Luethan lisää dokumentaatiosta."
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": ""
-    },
-    "pidTuningFilterSlidersHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderLowFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderDefaultFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderHighFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroFilterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroSliderEnabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderWarning": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroSliderDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermSliderDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderEnableButton": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFilterSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderLow": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderDefault": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderHigh": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMasterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDRatioSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPitchPIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPitchPIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassMode": {
-        "message": ""
-    },
-    "pidTuningLowpassStatic": {
-        "message": ""
-    },
-    "pidTuningLowpassDynamic": {
-        "message": ""
-    },
-    "pidTuningLowpassFilterType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassDyn": {
-        "message": ""
-    },
-    "pidTuningMinCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningMaxCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass2": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass2Help": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroNotchFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter2": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter2Help": {
-        "message": ""
-    },
-    "pidTuningCenterFrequency": {
-        "message": ""
-    },
-    "pidTuningCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDynamicNotchFilterGroup": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchRange": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMinHz": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchCount": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMinHzHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMaxHzHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchCountHelp": {
-        "message": ""
-    },
-    "pidTuningRpmFilterGroup": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmHarmonics": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmMinHz": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmMinHzHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFilterSettings": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassMode": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2Help": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassType": {
-        "message": ""
-    },
-    "pidTuningStaticCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDyn": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": ""
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": ""
-    },
-    "pidTuningYawLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningYawLowpassFiltersGroupHelp": {
-        "message": ""
-    },
-    "pidTuningVbatPidCompensation": {
-        "message": ""
-    },
-    "pidTuningVbatPidCompensationHelp": {
-        "message": ""
-    },
-    "pidTuningVbatSagCompensation": {
-        "message": ""
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": ""
-    },
-    "pidTuningVbatSagValue": {
-        "message": ""
-    },
-    "pidTuningThrustLinearization": {
-        "message": ""
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": ""
-    },
-    "pidTuningThrustLinearValue": {
-        "message": ""
-    },
-    "pidTuningItermRotation": {
-        "message": ""
-    },
-    "pidTuningItermRotationHelp": {
-        "message": ""
-    },
-    "pidTuningSmartFeedforward": {
-        "message": ""
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": ""
-    },
-    "pidTuningItermRelax": {
-        "message": ""
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxes": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningOptionRP": {
-        "message": ""
-    },
-    "pidTuningOptionRPY": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxesOptionRPInc": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxesOptionRPYInc": {
-        "message": ""
-    },
-    "pidTuningItermRelaxType": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": ""
-    },
-    "pidTuningItermRelaxTypeOptionSetpoint": {
-        "message": ""
-    },
-    "pidTuningItermRelaxCutoff": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": ""
-    },
-    "pidTuningAbsoluteControlGain": {
-        "message": ""
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": ""
-    },
-    "pidTuningThrottleBoost": {
-        "message": ""
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpm": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": ""
-    },
-    "pidTuningAcroTrainerAngleLimit": {
-        "message": ""
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": ""
-    },
-    "pidTuningIntegratedYaw": {
-        "message": ""
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": ""
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": ""
-    },
-    "configHelp2": {
-        "message": ""
-    },
-    "failsafeFeaturesHelpOld": {
-        "message": ""
-    },
-    "failsafePaneTitleOld": {
-        "message": ""
-    },
-    "failsafeFeaturesHelpNew": {
-        "message": ""
-    },
-    "failsafePulsrangeTitle": {
-        "message": ""
-    },
-    "failsafePulsrangeHelp": {
-        "message": ""
-    },
-    "failsafeRxMinUsecItem": {
-        "message": ""
-    },
-    "failsafeRxMaxUsecItem": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsHelp": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsAuto": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsHold": {
-        "message": ""
-    },
-    "failsafeStageTwoSettingsTitle": {
-        "message": ""
-    },
-    "failsafeDelayItem": {
-        "message": ""
-    },
-    "failsafeDelayHelp": {
-        "message": ""
-    },
-    "failsafeThrottleLowItem": {
-        "message": ""
-    },
-    "failsafeThrottleLowHelp": {
-        "message": ""
-    },
-    "failsafeThrottleItem": {
-        "message": ""
-    },
-    "failsafeOffDelayItem": {
-        "message": ""
-    },
-    "failsafeOffDelayHelp": {
-        "message": ""
-    },
-    "failsafeSubTitle1": {
-        "message": ""
-    },
-    "failsafeProcedureItemSelect1": {
-        "message": ""
-    },
-    "failsafeProcedureItemSelect2": {
-        "message": ""
-    },
-    "failsafeProcedureItemSelect4": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAngle": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeMode": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeMaxAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeFixedAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecks": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksOff": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksOn": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksFSOnly": {
-        "message": ""
-    },
-    "failsafeKillSwitchItem": {
-        "message": ""
-    },
-    "failsafeKillSwitchHelp": {
-        "message": ""
-    },
-    "failsafeSwitchTitle": {
-        "message": ""
-    },
-    "failsafeSwitchModeItem": {
-        "message": ""
-    },
-    "failsafeSwitchModeHelp": {
-        "message": ""
-    },
-    "failsafeSwitchOptionStage1": {
-        "message": ""
-    },
-    "failsafeSwitchOptionStage2": {
-        "message": ""
-    },
-    "failsafeSwitchOptionKill": {
-        "message": ""
-    },
-    "powerButtonSave": {
-        "message": ""
-    },
-    "powerFirmwareUpgradeRequired": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterSource": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeNone": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeAdc": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeEsc": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterSource": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeNone": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeAdc": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeVirtual": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeEsc": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeMsp": {
-        "message": ""
-    },
-    "powerBatteryMinimum": {
-        "message": ""
-    },
-    "powerBatteryMaximum": {
-        "message": ""
-    },
-    "powerBatteryWarning": {
-        "message": ""
-    },
-    "powerCalibrationManagerButton": {
-        "message": ""
-    },
-    "powerCalibrationManagerTitle": {
-        "message": ""
-    },
-    "powerCalibrationManagerHelp": {
-        "message": ""
-    },
-    "powerCalibrationManagerNote": {
-        "message": ""
-    },
-    "powerCalibrationManagerWarning": {
-        "message": ""
-    },
-    "powerCalibrationManagerSourceNote": {
-        "message": ""
-    },
-    "powerCalibrationManagerConfirmationTitle": {
-        "message": ""
-    },
-    "powerCalibrationSave": {
-        "message": ""
-    },
-    "powerCalibrationApply": {
-        "message": ""
-    },
-    "powerCalibrationDiscard": {
-        "message": ""
-    },
-    "powerCalibrationConfirmHelp": {
-        "message": ""
-    },
-    "powerVoltageHead": {
-        "message": ""
-    },
-    "powerVoltageWarning": {
-        "message": ""
-    },
-    "powerVoltageValue": {
-        "message": ""
-    },
-    "powerVoltageCalibration": {
-        "message": ""
-    },
-    "powerVoltageCalibratedScale": {
-        "message": ""
-    },
-    "powerVoltageId10": {
-        "message": ""
-    },
-    "powerVoltageId20": {
-        "message": ""
-    },
-    "powerVoltageId30": {
-        "message": ""
-    },
-    "powerVoltageId40": {
-        "message": ""
-    },
-    "powerVoltageId50": {
-        "message": ""
-    },
-    "powerVoltageId60": {
-        "message": ""
-    },
-    "powerVoltageId61": {
-        "message": ""
-    },
-    "powerVoltageId62": {
-        "message": ""
-    },
-    "powerVoltageId63": {
-        "message": ""
-    },
-    "powerVoltageId64": {
-        "message": ""
-    },
-    "powerVoltageId65": {
-        "message": ""
-    },
-    "powerVoltageId66": {
-        "message": ""
-    },
-    "powerVoltageId67": {
-        "message": ""
-    },
-    "powerVoltageId68": {
-        "message": ""
-    },
-    "powerVoltageId69": {
-        "message": ""
-    },
-    "powerVoltageId70": {
-        "message": ""
-    },
-    "powerVoltageId71": {
-        "message": ""
-    },
-    "powerVoltageId80": {
-        "message": ""
-    },
-    "powerVoltageId81": {
-        "message": ""
-    },
-    "powerVoltageId82": {
-        "message": ""
-    },
-    "powerVoltageId83": {
-        "message": ""
-    },
-    "powerVoltageId84": {
-        "message": ""
-    },
-    "powerVoltageId85": {
-        "message": ""
-    },
-    "powerVoltageScale": {
-        "message": ""
-    },
-    "powerVoltageDivider": {
-        "message": ""
-    },
-    "powerVoltageMultiplier": {
-        "message": ""
-    },
-    "powerAmperageHead": {
-        "message": ""
-    },
-    "powerAmperageWarning": {
-        "message": ""
-    },
-    "powerAmperageValue": {
-        "message": ""
-    },
-    "powerAmperageId10": {
-        "message": ""
-    },
-    "powerAmperageId50": {
-        "message": ""
-    },
-    "powerAmperageId60": {
-        "message": ""
-    },
-    "powerAmperageId61": {
-        "message": ""
-    },
-    "powerAmperageId62": {
-        "message": ""
-    },
-    "powerAmperageId63": {
-        "message": ""
-    },
-    "powerAmperageId64": {
-        "message": ""
-    },
-    "powerAmperageId65": {
-        "message": ""
-    },
-    "powerAmperageId66": {
-        "message": ""
-    },
-    "powerAmperageId67": {
-        "message": ""
-    },
-    "powerAmperageId68": {
-        "message": ""
-    },
-    "powerAmperageId69": {
-        "message": ""
-    },
-    "powerAmperageId70": {
-        "message": ""
-    },
-    "powerAmperageId71": {
-        "message": ""
-    },
-    "powerAmperageId80": {
-        "message": ""
-    },
-    "powerAmperageId90": {
-        "message": ""
-    },
-    "powerMahValue": {
-        "message": ""
-    },
-    "powerAmperageScale": {
-        "message": ""
-    },
-    "powerAmperageOffset": {
-        "message": ""
-    },
-    "powerAmperageCalibration": {
-        "message": ""
-    },
-    "powerAmperageCalibratedScale": {
-        "message": ""
-    },
-    "powerBatteryHead": {
-        "message": ""
-    },
-    "powerStateHead": {
-        "message": ""
-    },
-    "powerBatteryConnected": {
-        "message": ""
-    },
-    "powerBatteryConnectedValueYes": {
-        "message": ""
-    },
-    "powerBatteryConnectedValueNo": {
-        "message": ""
-    },
-    "powerBatteryVoltage": {
-        "message": ""
-    },
-    "powerBatteryCurrentDrawn": {
-        "message": ""
-    },
-    "powerBatteryAmperage": {
-        "message": ""
-    },
-    "powerBatteryCapacity": {
-        "message": ""
-    },
-    "osdSetupTitle": {
-        "message": ""
-    },
-    "osdSetupNoOsdChipDetectWarning": {
-        "message": ""
-    },
-    "osdSetupPreviewHelp": {
-        "message": ""
-    },
-    "osdSetupUnsupportedNote1": {
-        "message": ""
-    },
-    "osdSetupUnsupportedNote2": {
-        "message": ""
-    },
-    "osdSetupProfilesTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupElementsTitle": {
-        "message": ""
-    },
-    "osdSetupPreviewTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectProfileTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewForTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupSelectedProfileTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupSelectedProfileLabel": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectProfileElement": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatTitle": {
-        "message": ""
-    },
-    "osdSetupVideoFormatOptionAuto": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionPal": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionNtsc": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionHd": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsTitle": {
-        "message": ""
-    },
-    "osdSetupUnitsOptionImperial": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsOptionMetric": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsOptionBritish": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupTimersTitle": {
-        "message": ""
-    },
-    "osdSetupAlarmsTitle": {
-        "message": ""
-    },
-    "osdSetupStatsTitle": {
-        "message": ""
-    },
-    "osdSetupVtxTitle": {
-        "message": ""
-    },
-    "osdSetupCraftNameTitle": {
-        "message": ""
-    },
-    "osdSetupWarningsTitle": {
-        "message": ""
-    },
-    "osdSetupFontPresets": {
-        "message": ""
-    },
-    "osdSetupFontPresetsSelector": {
-        "message": ""
-    },
-    "osdSetupFontPresetsSelectorCustomOption": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupFontPresetsSelectorOr": {
-        "message": ""
-    },
-    "osdSetupOpenFont": {
-        "message": ""
-    },
-    "osdSetupCustomLogoTitle": {
-        "message": ""
-    },
-    "osdSetupCustomLogoOpenImageButton": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoTitle": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoColorMap": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoUploadHint": {
-        "message": ""
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": ""
-    },
-    "osdSetupCustomLogoColorMapError": {
-        "message": ""
-    },
-    "osdSetupUploadFont": {
-        "message": ""
-    },
-    "osdSetupUploadingFont": {
-        "message": ""
-    },
-    "osdSetupUploadingFontEnd": {
-        "message": ""
-    },
-    "osdSetupSave": {
-        "message": ""
-    },
-    "osdSetupFontManager": {
-        "message": ""
-    },
-    "osdSetupUncheckAll": {
-        "message": ""
-    },
-    "osdSetupHead": {
-        "message": ""
-    },
-    "osdSetupVideoMode": {
-        "message": ""
-    },
-    "osdSetupCameraConnected": {
-        "message": ""
-    },
-    "osdSetupResetText": {
-        "message": ""
-    },
-    "osdSetupButtonReset": {
-        "message": ""
-    },
-    "osdTextElementMainBattVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMainBattVoltage": {
-        "message": ""
-    },
-    "osdTextElementRssiValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRssiValue": {
-        "message": ""
-    },
-    "osdTextElementTimer": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementTimer": {
-        "message": ""
-    },
-    "osdTextElementThrottlePosition": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementThrottlePosition": {
-        "message": ""
-    },
-    "osdTextElementCpuLoad": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCpuLoad": {
-        "message": ""
-    },
-    "osdTextElementVtxChannel": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementVtxChannel": {
-        "message": ""
-    },
-    "osdTextElementVTXchannelVariantPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementVTXchannelVariantFull": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementVoltageWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementVoltageWarning": {
-        "message": ""
-    },
-    "osdTextElementArmed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementArmed": {
-        "message": ""
-    },
-    "osdTextElementDisarmed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementDisarmed": {
-        "message": ""
-    },
-    "osdTextElementCrosshairs": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCrosshairs": {
-        "message": ""
-    },
-    "osdTextElementArtificialHorizon": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementArtificialHorizon": {
-        "message": ""
-    },
-    "osdTextElementHorizonSidebars": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementHorizonSidebars": {
-        "message": ""
-    },
-    "osdTextElementCurrentDraw": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCurrentDraw": {
-        "message": ""
-    },
-    "osdTextElementMahDrawn": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMahDrawn": {
-        "message": ""
-    },
-    "osdTextElementWhDrawn": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementWhDrawn": {
-        "message": ""
-    },
-    "osdDescElementAuxValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementAuxValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementSysGoggleVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysGoggleVoltage": {
-        "message": ""
-    },
-    "osdTextElementSysVtxVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxVoltage": {
-        "message": ""
-    },
-    "osdTextElementSysBitrate": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysBitrate": {
-        "message": ""
-    },
-    "osdTextElementSysDelay": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysDelay": {
-        "message": ""
-    },
-    "osdTextElementSysDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysDistance": {
-        "message": ""
-    },
-    "osdTextElementSysLQ": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysLQ": {
-        "message": ""
-    },
-    "osdTextElementSysGoggleDVR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysGoggleDVR": {
-        "message": ""
-    },
-    "osdTextElementSysVtxDVR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxDVR": {
-        "message": ""
-    },
-    "osdTextElementSysWarnings": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysWarnings": {
-        "message": ""
-    },
-    "osdTextElementSysVtxTemp": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxTemp": {
-        "message": ""
-    },
-    "osdTextElementSysFanSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysFanSpeed": {
-        "message": ""
-    },
-    "osdTextElementCraftName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCraftName": {
-        "message": ""
-    },
-    "osdTextElementAltitude": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAltitude": {
-        "message": ""
-    },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementOnTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementOnTime": {
-        "message": ""
-    },
-    "osdTextElementFlyTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlyTime": {
-        "message": ""
-    },
-    "osdTextElementFlyMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlyMode": {
-        "message": ""
-    },
-    "osdTextElementGPSSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSSpeed": {
-        "message": ""
-    },
-    "osdTextElementGPSSats": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSSats": {
-        "message": ""
-    },
-    "osdTextElementGPSLon": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSLon": {
-        "message": ""
-    },
-    "osdTextElementGPSLat": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSLat": {
-        "message": ""
-    },
-    "osdTextElementGPSVariant7Decimals": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariant4Decimals": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariantDegMinSec": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariantOpenLocation": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementDebug": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementDebug": {
-        "message": ""
-    },
-    "osdTextElementPIDRoll": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDRoll": {
-        "message": ""
-    },
-    "osdTextElementPIDPitch": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDPitch": {
-        "message": ""
-    },
-    "osdTextElementPIDYaw": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDYaw": {
-        "message": ""
-    },
-    "osdTextElementPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPower": {
-        "message": ""
-    },
-    "osdTextElementPIDRateProfile": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDRateProfile": {
-        "message": ""
-    },
-    "osdTextElementBatteryWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementBatteryWarning": {
-        "message": ""
-    },
-    "osdTextElementAvgCellVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAvgCellVoltage": {
-        "message": ""
-    },
-    "osdTextElementPitchAngle": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPitchAngle": {
-        "message": ""
-    },
-    "osdTextElementRollAngle": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRollAngle": {
-        "message": ""
-    },
-    "osdTextElementMainBattUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMainBattUsage": {
-        "message": ""
-    },
-    "osdTextElementMainBattUsageVariantGraphrRemain": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantGraphUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantValueRemain": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantValueUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementArmedTime": {
-        "message": ""
-    },
-    "osdTextElementHomeDirection": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementHomeDirection": {
-        "message": ""
-    },
-    "osdTextElementHomeDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementHomeDistance": {
-        "message": ""
-    },
-    "osdTextElementNumericalHeading": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementNumericalHeading": {
-        "message": ""
-    },
-    "osdTextElementNumericalVario": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementNumericalVario": {
-        "message": ""
-    },
-    "osdTextElementCompassBar": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCompassBar": {
-        "message": ""
-    },
-    "osdTextElementWarnings": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementWarnings": {
-        "message": ""
-    },
-    "osdTextElementEscTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscTemperature": {
-        "message": ""
-    },
-    "osdTextElementEscRpm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscRpm": {
-        "message": ""
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": ""
-    },
-    "osdTextElementRtcDateTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRtcDateTime": {
-        "message": ""
-    },
-    "osdTextElementAdjustmentRange": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAdjustmentRange": {
-        "message": ""
-    },
-    "osdTextElementTimer1": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementTimer1": {
-        "message": ""
-    },
-    "osdTextElementTimer2": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementTimer2": {
-        "message": ""
-    },
-    "osdTextElementCoreTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCoreTemperature": {
-        "message": ""
-    },
-    "osdTextAntiGravity": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescAntiGravity": {
-        "message": ""
-    },
-    "osdTextGForce": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescGForce": {
-        "message": ""
-    },
-    "osdTextElementMotorDiag": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMotorDiag": {
-        "message": ""
-    },
-    "osdTextElementLogStatus": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementLogStatus": {
-        "message": ""
-    },
-    "osdTextElementFlipArrow": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlipArrow": {
-        "message": ""
-    },
-    "osdTextElementLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementLinkQuality": {
-        "message": ""
-    },
-    "osdTextElementFlightDist": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlightDist": {
-        "message": ""
-    },
-    "osdTextElementStickOverlayLeft": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementStickOverlayLeft": {
-        "message": ""
-    },
-    "osdTextElementStickOverlayRight": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementStickOverlayRight": {
-        "message": ""
-    },
-    "osdTextElementDisplayName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementDisplayName": {
-        "message": ""
-    },
-    "osdTextElementPilotName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPilotName": {
-        "message": ""
-    },
-    "osdTextElementEscRpmFreq": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscRpmFreq": {
-        "message": ""
-    },
-    "osdTextElementRateProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRateProfileName": {
-        "message": ""
-    },
-    "osdTextElementPidProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPidProfileName": {
-        "message": ""
-    },
-    "osdTextElementOsdProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementOsdProfileName": {
-        "message": ""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": ""
-    },
-    "osdTextElementRcChannels": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRcChannels": {
-        "message": ""
-    },
-    "osdTextElementCameraFrame": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCameraFrame": {
-        "message": ""
-    },
-    "osdTextElementEfficiency": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEfficiency": {
-        "message": ""
-    },
-    "osdTextTotalFlights": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescTotalFlights": {
-        "message": ""
-    },
-    "osdTextElementUpDownReference": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescUpDownReference": {
-        "message": ""
-    },
-    "osdTextElementTxUplinkPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescTxUplinkPower": {
-        "message": ""
-    },
-    "osdTextElementReadyMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementReadyMode": {
-        "message": ""
-    },
-    "osdTextElementRSNRValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRSNRValue": {
-        "message": ""
-    },
-    "osdTextElementUnknown": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementUnknown": {
-        "message": ""
-    },
-    "osdTextStatMaxSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxSpeed": {
-        "message": ""
-    },
-    "osdTextStatMinBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinBattery": {
-        "message": ""
-    },
-    "osdTextStatMinRssi": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRssi": {
-        "message": ""
-    },
-    "osdTextStatMaxCurrent": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxCurrent": {
-        "message": ""
-    },
-    "osdTextStatUsedMah": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUsedMah": {
-        "message": ""
-    },
-    "osdTextStatUsedWh": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUsedWh": {
-        "message": ""
-    },
-    "osdTextStatMaxAltitude": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxAltitude": {
-        "message": ""
-    },
-    "osdTextStatBlackbox": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBlackbox": {
-        "message": ""
-    },
-    "osdTextStatEndBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEndBattery": {
-        "message": ""
-    },
-    "osdTextStatFlyTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatFlyTime": {
-        "message": ""
-    },
-    "osdTextStatArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatArmedTime": {
-        "message": ""
-    },
-    "osdTextStatMaxDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxDistance": {
-        "message": ""
-    },
-    "osdTextStatBlackboxLogNumber": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBlackboxLogNumber": {
-        "message": ""
-    },
-    "osdTextStatTimer1": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTimer1": {
-        "message": ""
-    },
-    "osdTextStatTimer2": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTimer2": {
-        "message": ""
-    },
-    "osdTextStatRtcDateTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatRtcDateTime": {
-        "message": ""
-    },
-    "osdTextStatBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBattery": {
-        "message": ""
-    },
-    "osdTextStatGForce": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatGForce": {
-        "message": ""
-    },
-    "osdTextStatEscTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEscTemperature": {
-        "message": ""
-    },
-    "osdTextStatEscRpm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEscRpm": {
-        "message": ""
-    },
-    "osdTextStatMinLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinLinkQuality": {
-        "message": ""
-    },
-    "osdTextStatFlightDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatFlightDistance": {
-        "message": ""
-    },
-    "osdTextStatMaxFFT": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxFFT": {
-        "message": ""
-    },
-    "osdTextStatTotalFlights": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlights": {
-        "message": ""
-    },
-    "osdTextStatTotalFlightTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlightTime": {
-        "message": ""
-    },
-    "osdTextStatTotalFlightDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlightDistance": {
-        "message": ""
-    },
-    "osdTextStatMinRssiDbm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRssiDbm": {
-        "message": ""
-    },
-    "osdTextStatMinRSNR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRSNR": {
-        "message": ""
-    },
-    "osdTextStatUnknown": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUnknown": {
-        "message": ""
-    },
-    "osdDescribeFontVersion1": {
-        "message": ""
-    },
-    "osdDescribeFontVersion2": {
-        "message": ""
-    },
-    "osdDescribeFontVersionCUSTOM": {
-        "message": ""
-    },
-    "osdTimerSource": {
-        "message": ""
-    },
-    "osdTimerSourceTooltip": {
-        "message": ""
-    },
-    "osdTimerSourceOptionOnTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionTotalArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionLastArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionOnArmTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecision": {
-        "message": ""
-    },
-    "osdTimerPrecisionTooltip": {
-        "message": ""
-    },
-    "osdTimerPrecisionOptionSecond": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecisionOptionHundredth": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecisionOptionTenth": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarm": {
-        "message": ""
-    },
-    "osdTimerAlarmTooltip": {
-        "message": ""
-    },
-    "osdTimerAlarmOptionRssi": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarmOptionCapacity": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarmOptionAltitude": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningTextArmingDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningArmingDisabled": {
-        "message": ""
-    },
-    "osdWarningTextBatteryNotFull": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryNotFull": {
-        "message": ""
-    },
-    "osdWarningTextBatteryWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryWarning": {
-        "message": ""
-    },
-    "osdWarningTextBatteryCritical": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryCritical": {
-        "message": ""
-    },
-    "osdWarningTextVisualBeeper": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningVisualBeeper": {
-        "message": ""
-    },
-    "osdWarningTextCrashFlipMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningCrashFlipMode": {
-        "message": ""
-    },
-    "osdWarningTextEscFail": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningEscFail": {
-        "message": ""
-    },
-    "osdWarningTextCoreTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningCoreTemperature": {
-        "message": ""
-    },
-    "osdWarningTextRcSmoothingFailure": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRcSmoothingFailure": {
-        "message": ""
-    },
-    "osdWarningTextFailsafe": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningFailsafe": {
-        "message": ""
-    },
-    "osdWarningTextLaunchControl": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningLaunchControl": {
-        "message": ""
-    },
-    "osdWarningTextGpsRescueUnavailable": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningGpsRescueUnavailable": {
-        "message": ""
-    },
-    "osdWarningTextGpsRescueDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningGpsRescueDisabled": {
-        "message": ""
-    },
-    "osdWarningTextRSSI": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRSSI": {
-        "message": ""
-    },
-    "osdWarningTextLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningLinkQuality": {
-        "message": ""
-    },
-    "osdWarningTextRssiDbm": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRssiDbm": {
-        "message": ""
-    },
-    "osdWarningTextOverCap": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningOverCap": {
-        "message": ""
-    },
-    "osdWarningTextRSNR": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRSNR": {
-        "message": ""
-    },
-    "osdWarningTextUnknown": {
-        "message": ""
-    },
-    "osdWarningUnknown": {
-        "message": ""
-    },
-    "osdSectionHelpElements": {
-        "message": ""
-    },
-    "osdSectionHelpVideoMode": {
-        "message": ""
-    },
-    "osdSectionHelpUnits": {
-        "message": ""
-    },
-    "osdSectionHelpTimers": {
-        "message": ""
-    },
-    "osdSectionHelpAlarms": {
-        "message": ""
-    },
-    "osdSectionHelpStats": {
-        "message": ""
-    },
-    "osdSectionHelpWarnings": {
-        "message": ""
-    },
-    "osdSettingsSaved": {
-        "message": ""
-    },
-    "osdWritePermissions": {
-        "message": ""
-    },
-    "osdButtonSaved": {
-        "message": ""
-    },
-    "vtxHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageNotSupported": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageTableNotConfigured": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageVerifyTable": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyChannel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyChannelHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSelectedMode": {
-        "message": "",
-        "description": ""
-    },
-    "vtxActualState": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_1": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_3": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_4": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_5": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_255": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBandHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannelHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequency": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxDeviceReady": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPowerHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitMode": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeFrequency": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeFrequencyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarm": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_1": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_2": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTable": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevels": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsValue": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsLabel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBands": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableChannels": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandsChannelsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleName": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleLetter": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleFactory": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSavedFileOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSavedFileKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadFileOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadFileKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadClipboardOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadClipboardKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaveFile": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaveLua": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLuaFileHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonLoadFile": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSave": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaving": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaved": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSmartAudioUnlocked": {
-        "message": "",
-        "description": ""
-    },
-    "mainHelpArmed": {
-        "message": ""
-    },
-    "mainHelpFailsafe": {
-        "message": ""
-    },
-    "mainHelpLink": {
-        "message": ""
-    },
-    "configurationEscProtocol": {
-        "message": ""
-    },
-    "configurationEscProtocolHelp": {
-        "message": ""
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": ""
-    },
-    "configurationunsyndePwm": {
-        "message": ""
-    },
-    "configurationUnsyncedPWMFreq": {
-        "message": ""
-    },
-    "configurationDshotBidir": {
-        "message": "",
-        "description": ""
-    },
-    "configurationDshotBidirHelp": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGyroSyncDenom": {
-        "message": ""
-    },
-    "configurationPidProcessDenom": {
-        "message": ""
-    },
-    "configurationPidProcessDenomHelp": {
-        "message": ""
-    },
-    "configurationGyroUse32kHz": {
-        "message": ""
-    },
-    "configurationGyroUse32kHzHelp": {
-        "message": ""
-    },
-    "configurationAccHardware": {
-        "message": ""
-    },
-    "configurationBaroHardware": {
-        "message": ""
-    },
-    "configurationMagHardware": {
-        "message": ""
-    },
-    "configurationSmallAngle": {
-        "message": ""
-    },
-    "configurationSmallAngleHelp": {
-        "message": ""
-    },
-    "configurationBatteryVoltage": {
-        "message": ""
-    },
-    "configurationBatteryCurrent": {
-        "message": ""
-    },
-    "configurationBatteryMeterType": {
-        "message": ""
-    },
-    "configurationBatteryMinimum": {
-        "message": ""
-    },
-    "configurationBatteryMaximum": {
-        "message": ""
-    },
-    "configurationBatteryWarning": {
-        "message": ""
-    },
-    "configurationBatteryScale": {
-        "message": ""
-    },
-    "configurationCurrentMeterType": {
-        "message": ""
-    },
-    "configurationCurrent": {
-        "message": ""
-    },
-    "configurationCurrentScale": {
-        "message": ""
-    },
-    "configurationCurrentOffset": {
-        "message": ""
-    },
-    "configurationBatteryMultiwiiCurrent": {
-        "message": ""
-    },
-    "pidTuningProfile": {
-        "message": ""
-    },
-    "pidTuningProfileTip": {
-        "message": ""
-    },
-    "pidTuningRateProfile": {
-        "message": ""
-    },
-    "pidTuningRateProfileTip": {
-        "message": ""
-    },
-    "pidTuningRateSetup": {
-        "message": ""
-    },
-    "pidTuningRateSetupHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDelta": {
-        "message": ""
-    },
-    "pidTuningDeltaError": {
-        "message": ""
-    },
-    "pidTuningDeltaMeasurement": {
-        "message": ""
-    },
-    "pidTuningDeltaTip": {
-        "message": ""
-    },
-    "pidTuningPidControllerTip": {
-        "message": ""
-    },
-    "pidTuningFilterTip": {
-        "message": ""
-    },
-    "pidTuningRatesTip": {
-        "message": ""
-    },
-    "configurationCamera": {
-        "message": ""
-    },
-    "configurationPersonalization": {
-        "message": ""
-    },
-    "craftName": {
-        "message": ""
-    },
-    "configurationCraftNameHelp": {
-        "message": ""
-    },
-    "configurationPilotName": {
-        "message": ""
-    },
-    "configurationPilotNameHelp": {
-        "message": ""
-    },
-    "configurationFpvCamAngleDegrees": {
-        "message": ""
-    },
-    "onboardLoggingBlackbox": {
-        "message": ""
-    },
-    "onboardLoggingRateOfLogging": {
-        "message": ""
-    },
-    "onboardLoggingDebugMode": {
-        "message": ""
-    },
-    "onboardLoggingDebugModeUnknown": {
-        "message": ""
-    },
-    "onboardLoggingSerialLogger": {
-        "message": ""
-    },
-    "onboardLoggingFlashLogger": {
-        "message": ""
-    },
-    "onboardLoggingEraseInProgress": {
-        "message": ""
-    },
-    "onboardLoggingOnboardSDCard": {
-        "message": ""
-    },
-    "onboardLoggingMsc": {
-        "message": ""
-    },
-    "onboardLoggingMscNote": {
-        "message": ""
-    },
-    "onboardLoggingRebootMscText": {
-        "message": ""
-    },
-    "onboardLoggingMscNotReady": {
-        "message": ""
-    },
-    "dialogConfirmResetTitle": {
-        "message": ""
-    },
-    "dialogConfirmResetNote": {
-        "message": ""
-    },
-    "dialogConfirmResetConfirm": {
-        "message": ""
-    },
-    "dialogConfirmResetClose": {
-        "message": ""
-    },
-    "modeCameraWifi": {
-        "message": ""
-    },
-    "modeCameraPower": {
-        "message": ""
-    },
-    "modeCameraChangeMode": {
-        "message": ""
-    },
-    "flashTab": {
-        "message": ""
-    },
-    "cliAutoComplete": {
-        "message": ""
-    },
-    "darkTheme": {
-        "message": ""
-    },
-    "pidTuningRatesType": {
-        "message": ""
-    },
-    "pidTuningRatesTypeTip": {
-        "message": ""
-    },
-    "pidTuningRcRateRaceflight": {
-        "message": ""
-    },
-    "pidTuningRcExpoRaceflight": {
-        "message": ""
-    },
-    "pidTuningRateRaceflight": {
-        "message": ""
-    },
-    "pidTuningRcExpoKISS": {
-        "message": ""
-    },
-    "pidTuningRateQuickRates": {
-        "message": ""
-    },
-    "pidTuningRcRateActual": {
-        "message": ""
-    },
-    "dialogRatesTypeTitle": {
-        "message": ""
-    },
-    "dialogRatesTypeNote": {
-        "message": ""
-    },
-    "dialogRatesTypeConfirm": {
-        "message": ""
-    },
-    "gpsSbasAutoDetect": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasEuropeanEGNOS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasNorthAmericanWAAS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasJapaneseMSAS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasIndianGAGAN": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasNone": {
-        "message": "",
-        "description": ""
-    },
-    "dialogFileNameTitle": {
-        "message": ""
-    },
-    "dialogFileNameDescription": {
-        "message": ""
-    },
-    "dialogFileAlreadyExistsTitle": {
-        "message": ""
-    },
-    "dialogFileAlreadyExistsDescription": {
-        "message": ""
-    },
-    "cordovaCheckingWebview": {
-        "message": ""
-    },
-    "cordovaIncompatibleWebview": {
-        "message": ""
-    },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": ""
-    },
-    "cordovaWebviewTroubleshootingMsg2": {
-        "message": ""
-    },
-    "cordovaAvailableWebviews": {
-        "message": ""
-    },
-    "cordovaWebviewInstall": {
-        "message": ""
-    },
-    "cordovaWebviewInstallBtn": {
-        "message": ""
-    },
-    "cordovaWebviewUninstall": {
-        "message": ""
-    },
-    "cordovaWebviewUninstallBtn1": {
-        "message": ""
-    },
-    "cordovaWebviewUninstallBtn2": {
-        "message": ""
-    },
-    "cordovaWebviewUpdate": {
-        "message": ""
-    },
-    "cordovaWebviewUpdateBtn": {
-        "message": ""
-    },
-    "cordovaWebviewEnable": {
-        "message": ""
-    },
-    "cordovaWebviewEnableBtn": {
-        "message": ""
-    },
-    "cordovaWebviewIncompatible": {
-        "message": ""
-    },
-    "cordovaNoWebview": {
-        "message": ""
-    },
-    "cordovaWebviewUsed": {
-        "message": ""
-    },
-    "cordovaExitAppTitle": {
-        "message": ""
-    },
-    "cordovaExitAppMessage": {
-        "message": ""
-    },
-    "dropDownSelectAll": {
-        "message": "",
-        "description": ""
-    },
-    "dropDownFilterDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "dropDownAll": {
-        "message": "",
-        "description": ""
-    },
-    "tabPresets": {
-        "message": "",
-        "description": ""
-    },
-    "presetsReload": {
-        "message": "",
-        "description": ""
-    },
-    "presetsAuthor": {
-        "message": "",
-        "description": ""
-    },
-    "presetsKeywords": {
-        "message": "",
-        "description": ""
-    },
-    "presetsVersions": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOfficial": {
-        "message": "",
-        "description": ""
-    },
-    "presetsCommunity": {
-        "message": "",
-        "description": ""
-    },
-    "presetsExperimental": {
-        "message": "",
-        "description": ""
-    },
-    "presetsApply": {
-        "message": "",
-        "description": ""
-    },
-    "presetsViewOnline": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOpenDiscussion": {
-        "message": "",
-        "description": ""
-    },
-    "presetsShowCli": {
-        "message": "",
-        "description": ""
-    },
-    "presetsHideCli": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOptions": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterCategory": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterKeyword": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterAuthor": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterFirmware": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterStatus": {
-        "message": "",
-        "description": ""
-    },
-    "presetsLoadError": {
-        "message": "",
-        "description": ""
-    },
-    "presetsButtonSave": {
-        "message": "",
-        "description": ""
-    },
-    "presetsButtonCancel": {
-        "message": "",
-        "description": ""
-    },
-    "presetsApplyingPresets": {
-        "message": "",
-        "description": ""
-    },
-    "presetsPleaseWait": {
-        "message": "",
-        "description": ""
-    },
-    "presetsCliErrorsWaring": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSaveAnyway": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogTitle": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogYesButton": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWiki": {
-        "message": "",
-        "description": ""
-    },
-    "presetsBackupSave": {
-        "message": "",
-        "description": ""
-    },
-    "presetsBackupLoad": {
-        "message": "",
-        "description": ""
-    },
-    "presetsLoadingDumpAll": {
-        "message": "",
-        "description": ""
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "",
-        "description": ""
-    },
-    "presetSources": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogTitle": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogAddNew": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogDefaultSourceName": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogSaveSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogResetSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogMakeSourceActive": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogDeleteSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningNotOfficialSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningBackup": {
-        "message": "",
-        "description": ""
-    },
-    "presets_sources_dialog_warning": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningWrongVersionConfirmation": {
-        "message": "",
-        "description": ""
-    },
-    "presetsNoPresetsFound": {
-        "message": "",
-        "description": ""
-    },
-    "presetsTooManyPresetsFound": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOptionsPlaceholder": {
-        "message": "",
-        "description": ""
-    },
-    "presetsVersionMismatch": {
-        "message": "",
-        "description": ""
-    },
-    "presetsReviewOptionsWarning": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBuildConfigurationHead": {
-        "message": ""
-    },
-    "firmwareFlasherBuildOptions": {
-        "message": ""
-    },
-    "firmwareFlasherBuildRadioProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherBuildTelemetryProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherBuildMotorProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherConfigurationFile": {
-        "message": ""
-    },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherOptionsDescription": {
-        "message": ""
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherBranchDescription": {
-        "message": ""
-    },
-    "firmwareFlasherCustomDefinesDescription": {
-        "message": ""
-    },
-    "firmwareFlasherBuildCustomDefines": {
-        "message": ""
-    },
-    "classicBuild": {
-        "message": ""
-    },
-    "classicBuildModeDescription": {
-        "message": ""
+        "message": "Profiilista riippumattomat suodattimen asetukset"
     }
 }
