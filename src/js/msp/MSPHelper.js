@@ -1,6 +1,5 @@
 'use strict';
 
-
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
 const ledFunctionLetters     = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l']; // in LSB bit order
@@ -52,6 +51,31 @@ function MspHelper() {
     self.SIGNATURE_LENGTH = 32;
 
     self.mspMultipleCache = [];
+
+    self.setText = function(buffer, type, config, length) {
+        // type byte
+        buffer.push8(type);
+
+        const size = Math.min(length, config.length);
+        // length byte followed by the actual characters
+        buffer.push8(size);
+
+        for (let i = 0; i < size; i++) {
+            buffer.push8(config.charCodeAt(i));
+        }
+    };
+
+    self.getText = function(data) {
+        // length byte followed by the actual characters
+        const size = data.readU8() || 0;
+        let str = '';
+
+        for (let i = 0; i < size; i++) {
+            str += String.fromCharCode(data.readU8());
+        }
+
+        return str;
+    };
 }
 
 
@@ -922,20 +946,25 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP2_GET_TEXT:
                 // type byte
                 const textType = data.readU8();
-                // length byte followed by the actual characters
-                const textLength = data.readU8() || 0;
 
-                if (textType === MSPCodes.MSP2TEXT_PILOT_NAME) {
-                    FC.CONFIG.pilotName = '';
-                    for (let i = 0; i < textLength; i++) {
-                        FC.CONFIG.pilotName += String.fromCharCode(data.readU8());
-                    }
-                } else if (textType === MSPCodes.MSP2TEXT_CRAFT_NAME) {
-                    FC.CONFIG.craftName = '';
-                    for (let i = 0; i < textLength; i++) {
-                        FC.CONFIG.craftName += String.fromCharCode(data.readU8());
-                    }
+                switch(textType) {
+                    case MSPCodes.PILOT_NAME:
+                        FC.CONFIG.pilotName = self.getText(data);
+                        break;
+                    case MSPCodes.CRAFT_NAME:
+                        FC.CONFIG.craftName = self.getText(data);
+                        break;
+                    case MSPCodes.PID_PROFILE_NAME:
+                        FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = self.getText(data);
+                        break;
+                    case MSPCodes.RATE_PROFILE_NAME:
+                        FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = self.getText(data);
+                        break;
+                    default:
+                        console.log('Unsupport text type');
+                        break;
                 }
+
                 break;
 
             case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
@@ -2352,40 +2381,26 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             break;
 
         case MSPCodes.MSP2_GET_TEXT:
-            if (modifierCode === MSPCodes.MSP2TEXT_PILOT_NAME) {
-                // type byte
-                buffer.push8(MSPCodes.MSP2TEXT_PILOT_NAME);
-            } else if (modifierCode === MSPCodes.MSP2TEXT_CRAFT_NAME) {
-                // type byte
-                buffer.push8(MSPCodes.MSP2TEXT_CRAFT_NAME);
-            }
+            buffer.push8(modifierCode);
             break;
 
         case MSPCodes.MSP2_SET_TEXT:
-            if (modifierCode === MSPCodes.MSP2TEXT_PILOT_NAME) {
-                // type byte
-                buffer.push8(MSPCodes.MSP2TEXT_PILOT_NAME);
-
-                const MAX_NAME_LENGTH = 16;
-                const pilotNameLength = Math.min(MAX_NAME_LENGTH, FC.CONFIG.pilotName.length);
-                // length byte followed by the actual characters
-                buffer.push8(pilotNameLength);
-
-                for (let i = 0; i < pilotNameLength; i++) {
-                    buffer.push8(FC.CONFIG.pilotName.charCodeAt(i));
-                }
-            } else if (modifierCode === MSPCodes.MSP2TEXT_CRAFT_NAME) {
-                // type byte
-                buffer.push8(MSPCodes.MSP2TEXT_CRAFT_NAME);
-
-                const MAX_NAME_LENGTH = 16;
-                const craftNameLength = Math.min(MAX_NAME_LENGTH, FC.CONFIG.craftName.length);
-                // length byte followed by the actual characters
-                buffer.push8(craftNameLength);
-
-                for (let i = 0; i < craftNameLength; i++) {
-                    buffer.push8(FC.CONFIG.craftName.charCodeAt(i));
-                }
+            switch (modifierCode) {
+                case MSPCodes.PILOT_NAME:
+                    self.setText(buffer, modifierCode, FC.CONFIG.pilotName, 16);
+                    break;
+                case MSPCodes.CRAFT_NAME:
+                    self.setText(buffer, modifierCode, FC.CONFIG.craftName, 16);
+                    break;
+                case MSPCodes.PID_PROFILE_NAME:
+                    self.setText(buffer, modifierCode, FC.CONFIG.pidProfileNames[FC.CONFIG.profile], 8);
+                    break;
+                case MSPCodes.RATE_PROFILE_NAME:
+                    self.setText(buffer, modifierCode, FC.CONFIG.pidProfileNames[FC.CONFIG.rateProfile], 8);
+                    break;
+                default:
+                    console.log('Unsupport text type');
+                    break;
             }
             break;
 

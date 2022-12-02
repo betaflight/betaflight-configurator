@@ -454,24 +454,15 @@ function processUid() {
 
 async function processCraftName() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        await MSP.promise(
-            MSPCodes.MSP2_GET_TEXT,
-            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME),
-        );
+        await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
     } else {
         await MSP.promise(MSPCodes.MSP_NAME);
     }
 
-    GUI.log(i18n.getMessage('craftNameReceived', semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-        ? [FC.CONFIG.craftName]
-        : [FC.CONFIG.name],
-    ));
+    GUI.log(i18n.getMessage('craftNameReceived', semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? [FC.CONFIG.craftName] : [FC.CONFIG.name]));
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        await MSP.promise(
-            MSPCodes.MSP2_GET_TEXT,
-            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME),
-        );
+        await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME));
     }
 
     FC.CONFIG.armingDisabled = false;

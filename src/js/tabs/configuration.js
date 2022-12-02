@@ -34,11 +34,11 @@ configuration.initialize = function (callback) {
             ? MSP.promise(MSPCodes.MSP_NAME)
             : Promise.resolve(true); })
         .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME))
+            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME))
             : Promise.resolve(true); })
         .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31) ? MSP.promise(MSPCodes.MSP_RX_CONFIG) : true; })
         .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME)) : Promise.resolve(true); })
+            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME)) : Promise.resolve(true); })
         .then(() => { return MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG); })
         .then(() => { load_html(); });
     }
@@ -636,10 +636,10 @@ configuration.initialize = function (callback) {
                 .then(() => { return MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)); })
                 .then(() => { return MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG)); })
                 .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                    ? MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_CRAFT_NAME))
+                    ? MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME))
                     : MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME)); })
                 .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ?
-                    MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.MSP2TEXT_PILOT_NAME)) : Promise.resolve(true); })
+                    MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME)) : Promise.resolve(true); })
                 .then(() => { return (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) ? MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)) : true; })
                 .then(() => { return MSP.promise(MSPCodes.MSP_EEPROM_WRITE); })
                 .then(() => { reboot(); });
