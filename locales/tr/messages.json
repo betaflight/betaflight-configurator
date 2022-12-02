@@ -1,6824 +1,1872 @@
 {
-    "translation_version": {
-        "message": ""
-    },
     "yes": {
-        "message": "",
-        "description": ""
+        "message": "Evet",
+        "description": "General Yes message to be used across the application"
     },
     "no": {
-        "message": "",
-        "description": ""
+        "message": "Hayır",
+        "description": "General No message to be used across the application"
     },
     "on": {
-        "message": ""
+        "message": "Açık"
     },
     "off": {
-        "message": ""
+        "message": "Kapalı"
     },
     "auto": {
-        "message": ""
+        "message": "Otomatik"
     },
     "error": {
-        "message": ""
+        "message": "Hata: {{errorMessage}}"
     },
     "errorTitle": {
-        "message": ""
+        "message": "Hata"
     },
     "warningTitle": {
-        "message": ""
+        "message": "Uyarı"
     },
     "noticeTitle": {
-        "message": ""
-    },
-    "dontShowAgain": {
-        "message": ""
+        "message": "Dikkat"
     },
     "operationNotSupported": {
-        "message": ""
-    },
-    "storageDeviceNotReady": {
-        "message": ""
+        "message": "Bu işlem donanımınız tarafından desteklenmiyor."
     },
     "options_title": {
-        "message": ""
+        "message": "Uygulama Seçenekleri"
     },
     "connect": {
-        "message": ""
+        "message": "Bağlan"
     },
     "connecting": {
-        "message": ""
+        "message": "Bağlanıyor"
     },
     "disconnect": {
-        "message": ""
+        "message": "Bağlantıyı kes"
     },
     "portsSelectManual": {
-        "message": ""
-    },
-    "portsSelectVirtual": {
-        "message": "",
-        "description": ""
-    },
-    "virtualMSPVersion": {
-        "message": ""
+        "message": "Manuel Seçim"
     },
     "portOverrideText": {
-        "message": ""
+        "message": "Port:"
     },
     "autoConnect": {
-        "message": ""
+        "message": "Otomatik Bağlan"
     },
     "close": {
-        "message": ""
-    },
-    "OK": {
-        "message": ""
+        "message": "Kapat"
     },
     "cancel": {
-        "message": ""
-    },
-    "autoConnectEnabled": {
-        "message": ""
-    },
-    "autoConnectDisabled": {
-        "message": ""
-    },
-    "expertMode": {
-        "message": ""
-    },
-    "expertModeDescription": {
-        "message": ""
+        "message": "İptal"
     },
     "permanentExpertMode": {
-        "message": ""
-    },
-    "warningSettings": {
-        "message": ""
+        "message": "Uzman Modunu kalıcı olarak etkinleştir"
     },
     "rememberLastTab": {
-        "message": ""
+        "message": "Bağlandığında son sekmeyi aç"
     },
     "analyticsOptOut": {
-        "message": ""
-    },
-    "connectionTimeout": {
-        "message": "",
-        "description": ""
-    },
-    "showAllSerialDevices": {
-        "message": "",
-        "description": ""
-    },
-    "showVirtualMode": {
-        "message": "",
-        "description": ""
-    },
-    "cordovaForceComputerUI": {
-        "message": ""
+        "message": "İstatistiksel bilgilerin anonim olarak toplanması programından kaydını sil"
     },
     "language_changed": {
-        "message": ""
+        "message": "Dil değişikliği kaydedildi"
     },
     "language_choice_message": {
-        "message": "",
-        "description": ""
+        "message": "Dili değiştir:",
+        "description": "Try and be brief"
     },
     "language_default": {
-        "message": ""
-    },
-    "language_default_pretty": {
-        "message": ""
-    },
-    "language_ca": {
-        "message": "",
-        "description": ""
-    },
-    "language_da": {
-        "message": "",
-        "description": ""
-    },
-    "language_de": {
-        "message": "",
-        "description": ""
-    },
-    "language_en": {
-        "message": "",
-        "description": ""
-    },
-    "language_es": {
-        "message": "",
-        "description": ""
-    },
-    "language_eu": {
-        "message": "",
-        "description": ""
-    },
-    "language_fr": {
-        "message": "",
-        "description": ""
-    },
-    "language_gl": {
-        "message": "",
-        "description": ""
-    },
-    "language_hr": {
-        "message": "",
-        "description": ""
-    },
-    "language_hu": {
-        "message": "",
-        "description": ""
-    },
-    "language_id": {
-        "message": "",
-        "description": ""
-    },
-    "language_it": {
-        "message": "",
-        "description": ""
-    },
-    "language_ja": {
-        "message": "",
-        "description": ""
-    },
-    "language_ko": {
-        "message": "",
-        "description": ""
-    },
-    "language_lv": {
-        "message": "",
-        "description": ""
-    },
-    "language_nl": {
-        "message": "",
-        "description": ""
-    },
-    "language_pt": {
-        "message": "",
-        "description": ""
-    },
-    "language_pt_BR": {
-        "message": "",
-        "description": ""
-    },
-    "language_pl": {
-        "message": "",
-        "description": ""
-    },
-    "language_ru": {
-        "message": "",
-        "description": ""
-    },
-    "language_sv": {
-        "message": "",
-        "description": ""
-    },
-    "language_zh_CN": {
-        "message": "",
-        "description": ""
-    },
-    "language_zh_TW": {
-        "message": "",
-        "description": ""
+        "message": "Sistem Varsayılanı"
     },
     "sensorDataFlashNotFound": {
-        "message": "",
-        "description": ""
+        "message": "Veri akışı yok <br>Çip bulunamadı",
+        "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "",
-        "description": ""
-    },
-    "sensorStatusGyro": {
-        "message": ""
+        "message": "Veriflaş: boş alan",
+        "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyroShort": {
-        "message": "",
-        "description": ""
-    },
-    "sensorStatusAccel": {
-        "message": ""
+        "message": "Jiroskop",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccelShort": {
-        "message": "",
-        "description": ""
+        "message": "Hızlanma",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
-        "message": ""
+        "message": "Manyetometre"
     },
     "sensorStatusMagShort": {
-        "message": "",
-        "description": ""
+        "message": "Büyüklük",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
-        "message": ""
+        "message": "Barometre"
     },
     "sensorStatusBaroShort": {
-        "message": "",
-        "description": ""
+        "message": "Static zaman ayırma ünitesi",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusGPS": {
-        "message": ""
+        "message": "GPS"
     },
     "sensorStatusGPSShort": {
-        "message": "",
-        "description": ""
+        "message": "Evrensel konumlama sistemi",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusSonar": {
-        "message": ""
+        "message": "Sonar / Uzaklık ölçer"
     },
     "sensorStatusSonarShort": {
-        "message": "",
-        "description": ""
+        "message": "Deniz radarı",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": ""
-    },
-    "configuratorUpdateNotice": {
-        "message": ""
-    },
-    "configuratorUpdateHelp": {
-        "message": ""
+        "message": "Yapılandırıcının tutarsız sürümleri için güncelleştirme bildirimlerini göster"
     },
     "configuratorUpdateWebsite": {
-        "message": ""
+        "message": "Yayın Web Sitesine gidin"
     },
     "deviceRebooting": {
-        "message": ""
-    },
-    "deviceRebooting_flashBootloader": {
-        "message": ""
-    },
-    "deviceRebooting_romBootloader": {
-        "message": ""
+        "message": "Cihaz - <span class=\"message-negative\">Yeniden yükleniyor</span>"
     },
     "deviceReady": {
-        "message": ""
+        "message": "Cihaz - <span class=\"message-positive\"> Hazır </span>"
     },
     "backupFileIncompatible": {
-        "message": ""
+        "message": "Sağlanan yedekleme dosyası yapılandırıcının önceki sürümü için oluşturulmuş ve yapılandırıcı bu sürüm ile uyumlu değildir. Üzgünüm"
     },
     "backupFileUnmigratable": {
-        "message": ""
-    },
-    "configMigrationFrom": {
-        "message": ""
-    },
-    "configMigratedTo": {
-        "message": ""
-    },
-    "configMigrationSuccessful": {
-        "message": ""
+        "message": "Sağlanan yedekleme dosyası Yapılandırıcının önceki bir sürümü tarafından oluşturulmuştur ve taşınabilir değildir. Üzgünüm."
     },
     "tabFirmwareFlasher": {
-        "message": ""
-    },
-    "tabLanding": {
-        "message": ""
-    },
-    "tabChangelog": {
-        "message": ""
+        "message": "Yazılım Yükleyici"
     },
     "tabPrivacyPolicy": {
-        "message": ""
-    },
-    "tabHelp": {
-        "message": ""
+        "message": "Gizlilik Politikası"
     },
     "tabOptions": {
-        "message": ""
-    },
-    "tabSetup": {
-        "message": ""
-    },
-    "tabSetupOSD": {
-        "message": ""
-    },
-    "tabConfiguration": {
-        "message": ""
-    },
-    "tabPorts": {
-        "message": ""
-    },
-    "tabPidTuning": {
-        "message": ""
+        "message": "Ayarlar"
     },
     "tabReceiver": {
-        "message": ""
-    },
-    "tabModeSelection": {
-        "message": ""
-    },
-    "tabServos": {
-        "message": ""
-    },
-    "tabFailsafe": {
-        "message": ""
-    },
-    "tabTransponder": {
-        "message": ""
-    },
-    "tabOsd": {
-        "message": ""
-    },
-    "tabVtx": {
-        "message": ""
-    },
-    "tabPower": {
-        "message": ""
+        "message": "Alıcı"
     },
     "tabGPS": {
-        "message": ""
-    },
-    "tabMotorTesting": {
-        "message": ""
-    },
-    "tabLedStrip": {
-        "message": ""
-    },
-    "tabRawSensorData": {
-        "message": ""
-    },
-    "tabCLI": {
-        "message": ""
-    },
-    "tabLogging": {
-        "message": ""
-    },
-    "tabOnboardLogging": {
-        "message": ""
-    },
-    "tabAdjustments": {
-        "message": ""
-    },
-    "tabAuxiliary": {
-        "message": ""
-    },
-    "logActionHide": {
-        "message": ""
-    },
-    "logActionShow": {
-        "message": ""
-    },
-    "serialErrorFrameError": {
-        "message": ""
-    },
-    "serialErrorParityError": {
-        "message": ""
-    },
-    "serialPortOpened": {
-        "message": ""
+        "message": "GPS"
     },
     "serialPortOpenFail": {
-        "message": ""
+        "message": "Seri bağlantı noktası <span class=\"message-negative\">açılamadı</span>"
     },
     "serialPortClosedOk": {
-        "message": ""
+        "message": "Seri bağlantı noktası <span class=\"message-positive\">başarıyla</span> kapandı"
     },
     "serialPortClosedFail": {
-        "message": ""
+        "message": "Seri bağlantı noktası <span class=\"message-negative\">kapanamadı</span>"
     },
     "serialUnrecoverable": {
-        "message": ""
-    },
-    "serialPortLoading": {
-        "message": ""
-    },
-    "usbDeviceOpened": {
-        "message": ""
-    },
-    "usbDeviceOpenFail": {
-        "message": ""
-    },
-    "usbDeviceClosed": {
-        "message": ""
-    },
-    "usbDeviceCloseFail": {
-        "message": ""
+        "message": "Seri bağlantıda giderilemeyen <span class=\"message-negative\">hata</span>, bağlantı kesiliyor..."
     },
     "usbDeviceUdevNotice": {
-        "message": ""
-    },
-    "stm32UsbDfuNotFound": {
-        "message": ""
-    },
-    "stm32RebootingToBootloader": {
-        "message": ""
-    },
-    "stm32RebootingToBootloaderFailed": {
-        "message": ""
-    },
-    "stm32TimedOut": {
-        "message": ""
-    },
-    "stm32WrongResponse": {
-        "message": ""
-    },
-    "stm32ContactingBootloader": {
-        "message": ""
-    },
-    "stm32ContactingBootloaderFailed": {
-        "message": ""
-    },
-    "stm32ResponseBootloaderFailed": {
-        "message": ""
-    },
-    "stm32GlobalEraseExtended": {
-        "message": ""
-    },
-    "stm32LocalEraseExtended": {
-        "message": ""
-    },
-    "stm32GlobalErase": {
-        "message": ""
-    },
-    "stm32LocalErase": {
-        "message": ""
-    },
-    "stm32InvalidHex": {
-        "message": ""
-    },
-    "stm32Erase": {
-        "message": ""
-    },
-    "stm32Flashing": {
-        "message": ""
-    },
-    "stm32Verifying": {
-        "message": ""
-    },
-    "stm32ProgrammingSuccessful": {
-        "message": ""
-    },
-    "stm32ProgrammingFailed": {
-        "message": ""
-    },
-    "stm32AddressLoadFailed": {
-        "message": ""
-    },
-    "stm32AddressLoadSuccess": {
-        "message": ""
-    },
-    "stm32AddressLoadUnknown": {
-        "message": ""
-    },
-    "stm32NotReadProtected": {
-        "message": ""
-    },
-    "stm32ReadProtected": {
-        "message": ""
-    },
-    "stm32UnprotectSuccessful": {
-        "message": ""
-    },
-    "stm32UnprotectUnplug": {
-        "message": ""
-    },
-    "stm32UnprotectFailed": {
-        "message": ""
-    },
-    "stm32UnprotectInitFailed": {
-        "message": ""
-    },
-    "noConfigurationReceived": {
-        "message": ""
+        "message": "<strong> udev kuralları </strong> doğru olarak yüklendi mi? Talimatlar için dokümanlara bakınız"
     },
     "firmwareVersionNotSupported": {
-        "message": ""
-    },
-    "firmwareTypeNotSupported": {
-        "message": ""
-    },
-    "firmwareUpgradeRequired": {
-        "message": ""
-    },
-    "resetToCustomDefaultsDialog": {
-        "message": ""
-    },
-    "resetToCustomDefaultsAccept": {
-        "message": ""
-    },
-    "reportProblemsDialogHeader": {
-        "message": ""
-    },
-    "reportProblemsDialogFooter": {
-        "message": ""
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": ""
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": ""
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": ""
-    },
-    "infoVersionOs": {
-        "message": "",
-        "description": ""
-    },
-    "infoVersionConfigurator": {
-        "message": "",
-        "description": ""
-    },
-    "buildServerLoaded": {
-        "message": ""
-    },
-    "buildServerLoadFailed": {
-        "message": ""
-    },
-    "buildServerUsingCached": {
-        "message": ""
-    },
-    "releaseCheckLoaded": {
-        "message": ""
+        "message": "Bu donanım yazılımı <span class=\"message-negative\">desteklenmiyor</span>. Lütfen api sürüm <strong>$1</strong> veya üstünü destekleyen donanım yazılımına yükseltin. Yanıp sönmeden önce yedeklemek için CLI kullanın. CLI yedekleme/geri kazanma prosedürü dökümanın içindedir.<br /> Yükseltmeye hazır değilseniz, alternatif olarak eski sürüm bir yapılandırıcıyı indirip kullanabilirsiniz."
     },
     "releaseCheckFailed": {
-        "message": ""
-    },
-    "releaseCheckCached": {
-        "message": ""
-    },
-    "releaseCheckNoInfo": {
-        "message": ""
-    },
-    "tabSwitchConnectionRequired": {
-        "message": ""
-    },
-    "tabSwitchWaitForOperation": {
-        "message": ""
-    },
-    "tabSwitchUpgradeRequired": {
-        "message": ""
-    },
-    "firmwareVersion": {
-        "message": ""
-    },
-    "apiVersionReceived": {
-        "message": ""
-    },
-    "uniqueDeviceIdReceived": {
-        "message": ""
+        "message": "<b>$1 sürümü için GitHub sorgusu başarısız oldu, önbellek bilgileri kullanılıyor. Sebep: <code>$2</code></b>"
     },
     "craftNameReceived": {
-        "message": ""
-    },
-    "armingDisabled": {
-        "message": ""
-    },
-    "armingEnabled": {
-        "message": ""
-    },
-    "runawayTakeoffPreventionDisabled": {
-        "message": ""
-    },
-    "runawayTakeoffPreventionEnabled": {
-        "message": ""
-    },
-    "boardInfoReceived": {
-        "message": ""
-    },
-    "buildInfoReceived": {
-        "message": ""
-    },
-    "fcInfoReceived": {
-        "message": ""
-    },
-    "versionLabelTarget": {
-        "message": ""
-    },
-    "versionLabelFirmware": {
-        "message": ""
+        "message": "İsim yarat:<strong>$1</strong>"
     },
     "versionLabelConfigurator": {
-        "message": ""
-    },
-    "notifications_app_just_updated_to_version": {
-        "message": ""
-    },
-    "notifications_click_here_to_start_app": {
-        "message": ""
-    },
-    "statusbar_port_utilization": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_usage_download": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_usage_upload": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_packet_error": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_i2c_error": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_cycle_time": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_cpu_load": {
-        "message": "",
-        "description": ""
-    },
-    "dfu_connect_message": {
-        "message": ""
+        "message": "Yapılandırıcı"
     },
     "dfu_erased_kilobytes": {
-        "message": ""
+        "message": "$1 kB flaş <span class=\"message-positive\">başarıyla</span> silindi"
     },
     "dfu_device_flash_info": {
-        "message": ""
-    },
-    "dfu_hex_address_errors": {
-        "message": ""
+        "message": "Toplam flaş boyutu $1 KiB olan cihaz algılandı"
     },
     "dfu_error_image_size": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Hata</span>: Verilen görüntü çipteki mevcut flaştan daha büyük!\nGörüntü: $1 KiB, sınır = $2 KiB"
     },
     "eeprom_saved_ok": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">kaydedildi</span>"
     },
     "defaultWelcomeIntro": {
-        "message": ""
-    },
-    "defaultWelcomeHead": {
-        "message": ""
-    },
-    "defaultWelcomeText": {
-        "message": ""
-    },
-    "defaultContributingHead": {
-        "message": ""
-    },
-    "defaultContributingText": {
-        "message": ""
-    },
-    "defaultFacebookText": {
-        "message": ""
-    },
-    "defaultDiscordText": {
-        "message": ""
+        "message": "Uçuş denetleyicinizi güncellemek, yapılandırmak ve ayarlamayı basitleştirmek için tasarlanmış yardımcı bir program olan <strong> Betaflight - Configurator </strong> 'a hoş geldiniz."
     },
     "defaultChangelogHead": {
-        "message": ""
+        "message": "Yapılandırıcı - Değişiklikler"
     },
     "defaultButtonFirmwareFlasher": {
-        "message": ""
+        "message": "Aygıt yazılım sinyali"
     },
     "defaultDonateHead": {
-        "message": ""
-    },
-    "defaultDonateText": {
-        "message": ""
-    },
-    "defaultDonateBottom": {
-        "message": ""
-    },
-    "patreonLink": {
-        "message": "",
-        "description": ""
-    },
-    "defaultDonate": {
-        "message": ""
+        "message": "Açık Kaynak / Bağış Bildirimi"
     },
     "defaultSponsorsHead": {
-        "message": ""
+        "message": "Sponsorlar"
     },
     "defaultDocumentationHead": {
-        "message": ""
+        "message": "Dökümantasyon / Manuel"
     },
     "defaultDocumentation": {
-        "message": ""
-    },
-    "defaultDocumentation1": {
-        "message": ""
-    },
-    "defaultDocumentation2": {
-        "message": ""
+        "message": "Betaflight dökümantasyonu sürüm notlarında ve wikide mevcuttur.<br /><br />"
     },
     "defaultSupportHead": {
-        "message": ""
+        "message": "Destek"
     },
     "defaultSupportSubline1": {
-        "message": ""
+        "message": "Destek kaynakları"
     },
     "defaultSupportSubline2": {
-        "message": ""
+        "message": "Geliştirici"
     },
     "defaultSupport": {
-        "message": ""
-    },
-    "defaultSupport1": {
-        "message": ""
-    },
-    "defaultSupport2": {
-        "message": ""
-    },
-    "defaultSupport3": {
-        "message": ""
-    },
-    "defaultSupport4": {
-        "message": ""
-    },
-    "defaultSupport5": {
-        "message": ""
+        "message": "Destek için ilk olarak forumlarda ve wiki'de arama yapın veya satıcınızla görüşün.<br /><br />"
     },
     "initialSetupBackupAndRestoreApiVersion": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Yedekleme ve geri yükleme fonksiyonları devre dışı bırakıldı.</span> API sürümü <span class=\"message-negative\">$1</span> donanım yazılına sahipsiniz, yedekleme ve geri yükleme <span class=\"message-positive\">$2</span>'yi gerektirir. Lütfen ayarlarınızı CLI ile yedekleyin, prosedür için Betaflight dökümantasyonuna bakın."
     },
     "initialSetupButtonCalibrateAccel": {
-        "message": ""
+        "message": "İvme Ölçer Kalibrasyonu"
     },
     "initialSetupCalibrateAccelText": {
-        "message": ""
+        "message": "Panoyu veya çerçeveyi <strong>düzeltilmiş</strong> yüzeye koyun, kalibrasyonla devam edin, kalibrasyon periyodu boyunca platformun hareket etmediğinden emin olun"
     },
     "initialSetupButtonCalibrateMag": {
-        "message": ""
+        "message": "Manyetometre Kalibrasyonu"
     },
     "initialSetupCalibrateMagText": {
-        "message": ""
+        "message": "Multirotoru tüm dönme eksenlerinde en az <strong>360</strong> derece hareket ettirin, bu işlemi gerçekleştirmek için 30 saniyeniz var"
     },
     "initialSetupButtonCalibratingText": {
-        "message": ""
-    },
-    "initialSetupButtonReset": {
-        "message": ""
+        "message": "Kalibrasyon yapılıyor..."
     },
     "initialSetupResetText": {
-        "message": ""
-    },
-    "initialSetupButtonBackup": {
-        "message": ""
-    },
-    "initialSetupButtonRestore": {
-        "message": ""
-    },
-    "initialSetupButtonRebootBootloader": {
-        "message": ""
-    },
-    "initialSetupBackupRestoreHeader": {
-        "message": ""
-    },
-    "initialSetupBackupRestoreText": {
-        "message": ""
-    },
-    "initialSetupRebootBootloaderText": {
-        "message": ""
+        "message": "Ayarları <strong>varsayılan</strong> a geri getir"
     },
     "initialSetupBackupSuccess": {
-        "message": ""
+        "message": "Yedekleme <span class=\"message-positive\">başarıyla</span> kaydedildi"
     },
     "initialSetupRestoreSuccess": {
-        "message": ""
+        "message": "Yapılandırma <span class=\"message-positive\">başarıyla</span> geri yüklendi"
     },
     "initialSetupButtonResetZaxis": {
-        "message": ""
+        "message": "Z eksenini sıfırla, dengeleme değeri: 0 derece"
     },
     "initialSetupButtonResetZaxisValue": {
-        "message": ""
-    },
-    "initialSetupMixerHead": {
-        "message": ""
-    },
-    "initialSetupThrottleHead": {
-        "message": ""
-    },
-    "initialSetupMinimum": {
-        "message": ""
-    },
-    "initialSetupMaximum": {
-        "message": ""
-    },
-    "initialSetupFailsafe": {
-        "message": ""
+        "message": "Z eksenini sıfırla, dengeleme değeri: $1 derece"
     },
     "initialSetupMinCommand": {
-        "message": ""
-    },
-    "initialSetupBatteryHead": {
-        "message": ""
+        "message": "MinCommand:"
     },
     "initialSetupMinCellV": {
-        "message": ""
+        "message": "Min Hücre Gerilimi:"
     },
     "initialSetupMaxCellV": {
-        "message": ""
+        "message": "Max Hücre Gerilimi:"
     },
     "initialSetupVoltageScale": {
-        "message": ""
+        "message": "Gerilim Ölçeği:"
     },
     "initialSetupAccelTrimsHead": {
-        "message": ""
+        "message": "Hızlanmaölçer kaplamaları"
     },
     "initialSetupPitch": {
-        "message": ""
+        "message": "Derece:"
     },
     "initialSetupRoll": {
-        "message": ""
+        "message": "Ön arka eksen etrafında dönüş:"
     },
     "initialSetupMagHead": {
-        "message": ""
+        "message": "Manyetometre"
     },
     "initialSetupInfoHead": {
-        "message": ""
+        "message": "Bilgi"
     },
     "initialSetupBattery": {
-        "message": ""
-    },
-    "initialSetupBatteryValue": {
-        "message": ""
+        "message": "Batarya Voltajı:"
     },
     "initialSetupDrawn": {
-        "message": ""
+        "message": "Kapasite çizildi:"
     },
     "initialSetupDrawing": {
-        "message": ""
+        "message": "Mevcut çizim:"
     },
     "initialSetupBatteryMahValue": {
-        "message": ""
+        "message": "$1 mAh"
     },
     "initialSetupBatteryAValue": {
-        "message": ""
+        "message": "$1 A"
     },
     "initialSetupRSSI": {
-        "message": ""
+        "message": "RSSI:"
     },
     "initialSetupRSSIValue": {
-        "message": ""
+        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
-        "message": ""
+        "message": "Tahliye durumu bayrakları devre dışı:"
     },
     "initialSetupArmingAllowed": {
-        "message": ""
-    },
-    "initialSetupArmingDisableFlagsTooltip": {
-        "message": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipLOAD": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCLI": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBST": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipGPS": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRESC": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupGPSHead": {
-        "message": ""
-    },
-    "initialSetupInstrumentsHead": {
-        "message": ""
-    },
-    "initialSetupButtonSave": {
-        "message": ""
-    },
-    "initialSetupModel": {
-        "message": ""
+        "message": "Silahlanmaya izin verildi"
     },
     "initialSetupAttitude": {
-        "message": ""
-    },
-    "initialSetupAccelCalibStarted": {
-        "message": ""
-    },
-    "initialSetupAccelCalibEnded": {
-        "message": ""
-    },
-    "initialSetupMagCalibStarted": {
-        "message": ""
+        "message": "$1 derece"
     },
     "initialSetupMagCalibEnded": {
-        "message": ""
-    },
-    "initialSetupSettingsRestored": {
-        "message": ""
+        "message": "Manyetometre kalibrasyonu <span class=\"message-positive\">tamamlandı</span>"
     },
     "initialSetupEepromSaved": {
-        "message": ""
+        "message": "EEPROM<span class=\"message-positive\">kaydedildi</span>"
     },
     "featureNone": {
-        "message": ""
-    },
-    "featureRX_PPM": {
-        "message": ""
-    },
-    "featureVBAT": {
-        "message": ""
-    },
-    "featureINFLIGHT_ACC_CAL": {
-        "message": ""
-    },
-    "featureRX_SERIAL": {
-        "message": ""
-    },
-    "featureMOTOR_STOP": {
-        "message": ""
-    },
-    "featureSERVO_TILT": {
-        "message": ""
-    },
-    "featureSERVO_TILTTip": {
-        "message": ""
-    },
-    "featureSOFTSERIAL": {
-        "message": ""
-    },
-    "featureSOFTSERIALTip": {
-        "message": ""
-    },
-    "featureGPS": {
-        "message": ""
-    },
-    "featureGPSTip": {
-        "message": ""
+        "message": "&lt;Birini seç&gt;"
     },
     "featureSONAR": {
-        "message": ""
+        "message": "Deniz radarı"
     },
     "featureTELEMETRY": {
-        "message": ""
-    },
-    "featureCURRENT_METER": {
-        "message": ""
-    },
-    "feature3D": {
-        "message": ""
-    },
-    "featureRX_PARALLEL_PWM": {
-        "message": ""
-    },
-    "featureRX_MSP": {
-        "message": ""
+        "message": "Telemetri çıktısı"
     },
     "featureRSSI_ADC": {
-        "message": ""
-    },
-    "featureLED_STRIP": {
-        "message": ""
-    },
-    "featureDISPLAY": {
-        "message": ""
-    },
-    "featureDISPLAYTip": {
-        "message": ""
-    },
-    "featureONESHOT125": {
-        "message": ""
-    },
-    "featureONESHOT125Tip": {
-        "message": ""
-    },
-    "featureBLACKBOX": {
-        "message": ""
-    },
-    "featureBLACKBOXTip": {
-        "message": ""
-    },
-    "featureRX_SPI": {
-        "message": ""
-    },
-    "featureESC_SENSOR": {
-        "message": ""
-    },
-    "featureCHANNEL_FORWARDING": {
-        "message": ""
-    },
-    "featureTRANSPONDER": {
-        "message": ""
-    },
-    "featureTRANSPONDERTip": {
-        "message": ""
-    },
-    "featureAIRMODE": {
-        "message": ""
-    },
-    "featureSUPEREXPO_RATES": {
-        "message": ""
-    },
-    "featureSDCARD": {
-        "message": ""
+        "message": "Analog RSSI girişi"
     },
     "featureOSD": {
-        "message": ""
-    },
-    "featureVTX": {
-        "message": ""
-    },
-    "featureANTI_GRAVITY": {
-        "message": ""
-    },
-    "featureANTI_GRAVITYTip": {
-        "message": ""
-    },
-    "featureDYNAMIC_FILTER": {
-        "message": ""
-    },
-    "featureFAILSAFE": {
-        "message": ""
+        "message": "Ekran görünümünde"
     },
     "featureFAILSAFEOld": {
-        "message": ""
+        "message": "Failsafe'i etkinleştir"
     },
     "featureFAILSAFETip": {
-        "message": ""
+        "message": "<strong>Not:</strong> Evre 2 DEVRE DIŞI BIRAKILDIĞINDA, tüm uçuş kanalları (Roll, Pitch, Yaw ve boğaz) için kullanıcı ayarları yerine geri çekilme <strong>Otomatik</strong> ayarı kullanılır."
     },
     "featureFAILSAFEOldTip": {
-        "message": ""
+        "message": "RX sinyal kaybında Failsafe ayarlarını uygula"
     },
     "configurationFeatureEnabled": {
-        "message": ""
+        "message": "Etkin"
     },
     "configurationFeatureName": {
-        "message": ""
+        "message": "Özellik"
     },
     "configurationFeatureDescription": {
-        "message": ""
+        "message": "Açıklama"
     },
     "configurationMixer": {
-        "message": ""
+        "message": "Mikser"
     },
     "configurationFeatures": {
-        "message": ""
+        "message": "Diğer özellikler"
     },
     "configurationReceiver": {
-        "message": ""
+        "message": "Alıcı"
     },
     "configurationReceiverMode": {
-        "message": ""
-    },
-    "configurationTelemetry": {
-        "message": ""
-    },
-    "configurationTelemetryHelp": {
-        "message": ""
+        "message": "Alıcı Modu"
     },
     "configurationRSSI": {
-        "message": ""
+        "message": "RSSI ( Sinyal gücü)"
     },
     "configurationRSSIHelp": {
-        "message": ""
+        "message": "RSSI bir sinyal gücü ölçümüdür ve oldukça kullanışlıdır, bu sayede uçağınızın menzilden ne zaman çıktığını veya RF engeline maruz kalıp kalmadığını bilebilirsiniz."
     },
     "configurationEscFeatures": {
-        "message": ""
+        "message": "ESC/Motor Özellikleri"
     },
     "configurationFeaturesHelp": {
-        "message": ""
-    },
-    "configurationSerialRXHelp": {
-        "message": ""
+        "message": "<strong>Not:</strong> Tüm kombinasyonlar geçerli değildir. Uçuş kontrolör yazılımı geçersiz özellik kombinasyonları tespit ederse, çakışan özellikler devre dışı bırakılacaktır.<br /><strong>Not:</strong> Portları kullanacak özelliklerin etkinleştirilmesinden <span class=\"message-negative\">önce</span> seri portları ayarlayın."
     },
     "configurationSpiRxHelp": {
-        "message": ""
+        "message": "<strong>Not:</strong> SPI RX sağlayıcısı sadece donanım panelebağlıyken veya bir SPI veri yoluna bağlıyken çalışacaktır."
     },
     "configurationOtherFeaturesHelp": {
-        "message": ""
+        "message": "<strong>Not:</strong>Tüm özellikler tüm uçuş kontrolörleri tarafından desteklenmez. Spesifik bir özelliği aktif ederseniz ve 'Kaydet ve Yeniden Başlat' tuşuna tıkladıktan sonra devre dışı bırakırsanız, bu bu özelliğin panelinizde desteklenmeyeceği anlamına gelir."
     },
     "configurationBoardAlignment": {
-        "message": ""
+        "message": "Panel ve Sensör Hizalama"
     },
     "configurationBoardAlignmentRoll": {
-        "message": ""
+        "message": "Yuvarlanma açısı"
     },
     "configurationBoardAlignmentPitch": {
-        "message": ""
+        "message": "Yükselme Derecesi"
     },
     "configurationBoardAlignmentYaw": {
-        "message": ""
+        "message": "Sapma Açısı"
     },
     "configurationSensorAlignmentGyro": {
-        "message": ""
-    },
-    "configurationSensorGyroToUse": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseFirst": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseSecond": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseBoth": {
-        "message": ""
-    },
-    "configurationSensorAlignmentGyro1": {
-        "message": ""
-    },
-    "configurationSensorAlignmentGyro2": {
-        "message": ""
+        "message": "Cyro hizalaması"
     },
     "configurationSensorAlignmentAcc": {
-        "message": ""
+        "message": "ACCEL hizalaması"
     },
     "configurationSensorAlignmentMag": {
-        "message": ""
+        "message": "MAG Hizalaması"
     },
     "configurationSensorAlignmentDefaultOption": {
-        "message": ""
+        "message": "Varsayılan"
     },
     "configurationAccelTrims": {
-        "message": ""
+        "message": "İvme Ölçer düzenlemesi"
     },
     "configurationAccelTrimRoll": {
-        "message": ""
+        "message": "İvme Ölçer Dönme düzenlemesi"
     },
     "configurationAccelTrimPitch": {
-        "message": ""
+        "message": "İvme ölçer yükselme düzenlemesi"
     },
     "configurationArming": {
-        "message": ""
+        "message": "Silahlandırılıyor"
     },
     "configurationArmingHelp": {
-        "message": ""
+        "message": "Bazı silahlandırma seçenekleri için ivme ölçerin aktif olması gerekebilir"
     },
     "configurationReverseMotorSwitch": {
-        "message": ""
-    },
-    "configurationReverseMotorSwitchHelp": {
-        "message": ""
+        "message": "Motor yönü tersine çevrildi"
     },
     "configurationAutoDisarmDelay": {
-        "message": ""
+        "message": "[seconds] gecikme ayarladıktan sonra motorları etkisizleştir. (MOTOR_STOP özelliği gerekir)"
     },
     "configurationDisarmKillSwitch": {
-        "message": ""
+        "message": "Gaz kısma değeri ne olursa olsun motorları devreden çıkarın(ARM, Modlar sekmesinde AUX kanalı üzerinden yapılandırıldığında)"
     },
     "configurationDisarmKillSwitchHelp": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercent": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": ""
-    },
-    "configurationMotorPoles": {
-        "message": "",
-        "description": ""
-    },
-    "configurationMotorPolesLong": {
-        "message": "",
-        "description": ""
-    },
-    "configurationMotorPolesHelp": {
-        "message": "",
-        "description": ""
+        "message": "Boğma az olmadığı zaman silahlandırma her zaman devre dışıdır. Bu seçenek aktif halde uçarken anahtarla etkisiz hale getirebilireceğinize dikkat edin."
     },
     "configurationThrottleMinimum": {
-        "message": ""
+        "message": "Minimum Boğma (Yüklüyken en düşük ESC değeri)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": ""
+        "message": "Bu uçak yüklendiğinde ve boğma çubuğu minimum pozisyondayken ESC ye gönderilen 'boş' değeridir. daha fazla rölanti hızı elte etmek için değeri artırın. Ayrıca senkron bozulması durumunda değeri yükseltin!"
     },
     "configurationThrottleMaximum": {
-        "message": ""
+        "message": "Maksimum Boğma( Yüklüyken en yüksek ESC değeri)"
     },
     "configurationThrottleMinimumCommand": {
-        "message": ""
+        "message": "Minimum Komut (Devreden çıkarıldığındaki ESC değeri)"
     },
     "configurationThrottleMinimumCommandHelp": {
-        "message": ""
-    },
-    "configurationEscProtocolDisabled": {
-        "message": ""
-    },
-    "escProtocolDisabledMessage": {
-        "message": ""
-    },
-    "configurationDshotBeeper": {
-        "message": ""
-    },
-    "configurationUseDshotBeeper": {
-        "message": ""
+        "message": "Bu, craft devredışı bırakıldığında ESC'ye gönderilen değerdir. Bunu motorların durduğu bir değere ayarlayınız (çoğu ESC için 1000)."
     },
     "configurationDshotBeaconTone": {
-        "message": ""
-    },
-    "configurationDshotBeaconHelp": {
-        "message": ""
-    },
-    "configurationBeeper": {
-        "message": ""
-    },
-    "beeperGYRO_CALIBRATED": {
-        "message": ""
+        "message": "Sinyal Tonu"
     },
     "beeperRX_LOST": {
-        "message": ""
+        "message": "TX kapatıldığında veya sinyal kaybedildiğinde bip sesi ver ( TX düzelene kadar tekrar et)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": ""
+        "message": "Yüklüyken ve TX kapatıldığında veya sinyal kaybolduğunda SOS bip sesi ver (otomatik iniş/otomatik boşaltım)"
     },
     "beeperDISARMING": {
-        "message": ""
+        "message": "Uçuş kumandasını devre dışı bırakırken bip sesi ver"
     },
     "beeperARMING": {
-        "message": ""
+        "message": "Uçuş kumandasını takarken bip sesi ver"
     },
     "beeperARMING_GPS_FIX": {
-        "message": ""
-    },
-    "beeperBAT_CRIT_LOW": {
-        "message": ""
-    },
-    "beeperBAT_LOW": {
-        "message": ""
-    },
-    "beeperGPS_STATUS": {
-        "message": ""
-    },
-    "beeperRX_SET": {
-        "message": ""
+        "message": "Tahtayı kurarken özel bir bip sesi ver ve GPS'i düzelt"
     },
     "beeperACC_CALIBRATION": {
-        "message": ""
+        "message": "Uçak içi ivme ölçer kalibrasyonu tamamlandı onayı"
     },
     "beeperACC_CALIBRATION_FAIL": {
-        "message": ""
+        "message": "Uçak için ivme ölçer kalibrasyonu başarısız oldu"
     },
     "beeperREADY_BEEP": {
-        "message": ""
-    },
-    "beeperMULTI_BEEPS": {
-        "message": ""
+        "message": "GPS kilitlenip hazır olduğunda bir ton çal"
     },
     "beeperDISARM_REPEAT": {
-        "message": ""
-    },
-    "beeperARMED": {
-        "message": ""
-    },
-    "beeperSYSTEM_INIT": {
-        "message": ""
-    },
-    "beeperUSB": {
-        "message": ""
-    },
-    "beeperBLACKBOX_ERASE": {
-        "message": ""
-    },
-    "beeperCRASH_FLIP": {
-        "message": ""
-    },
-    "beeperCAM_CONNECTION_OPEN": {
-        "message": ""
-    },
-    "beeperCAM_CONNECTION_CLOSE": {
-        "message": ""
-    },
-    "beeperRC_SMOOTHING_INIT_FAIL": {
-        "message": ""
-    },
-    "configuration3d": {
-        "message": ""
-    },
-    "configuration3dDeadbandLow": {
-        "message": ""
-    },
-    "configuration3dDeadbandHigh": {
-        "message": ""
-    },
-    "configuration3dNeutral": {
-        "message": ""
+        "message": "Çubuk serbest pozisyonda bırakıldığında bip sesleri duyuldu"
     },
     "configuration3dDeadbandThrottle": {
-        "message": ""
-    },
-    "configurationSystem": {
-        "message": ""
-    },
-    "configurationLoopTime": {
-        "message": ""
+        "message": "3D Deadband Boğazı"
     },
     "configurationCalculatedCyclesSec": {
-        "message": ""
-    },
-    "configurationSpeedGyroNoGyro": {
-        "message": "",
-        "description": ""
-    },
-    "configurationSpeedPidNoGyro": {
-        "message": "",
-        "description": ""
-    },
-    "configurationKHzUnitLabel": {
-        "message": "",
-        "description": ""
+        "message": "Döngü/Saniye [Hz]"
     },
     "configurationLoopTimeHelp": {
-        "message": ""
-    },
-    "configurationGPS": {
-        "message": ""
-    },
-    "configurationGPSProtocol": {
-        "message": ""
+        "message": "<strong>Not:</strong> FC nizin bu hızlarda çalışabildiğinden emin olun! CPU ve döngü zamanı kararlılığını kontrol edin. Bunu değiştirmek PID'yi yeniden ayarlamayı gerektirebilir. İPUCU: Daha fazla performans almak için ivme ölçeri ve diğer sensörleri devre dışı bırakın."
     },
     "configurationGPSBaudrate": {
-        "message": ""
-    },
-    "configurationGPSubxSbas": {
-        "message": ""
-    },
-    "configurationGPSAutoBaud": {
-        "message": ""
-    },
-    "configurationGPSAutoConfig": {
-        "message": ""
-    },
-    "configurationGPSGalileo": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSGalileoHelp": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSHomeOnce": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "",
-        "description": ""
+        "message": "Baud Hızı"
     },
     "configurationGPSHelp": {
-        "message": ""
+        "message": "<strong>Not:</strong> GPS özelliğini kullanırken bir seri portu(Portlar sekmesinden) ayarlamayı unutmayın."
     },
     "configurationSerialRX": {
-        "message": ""
+        "message": "Seri Alıcı Sağlayıcısı"
     },
     "configurationSpiRX": {
-        "message": ""
+        "message": "SPI Bus Alıcı Sağlayıcısı"
     },
     "configurationEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">kaydedildi</span>"
     },
     "configurationButtonSave": {
-        "message": ""
-    },
-    "dialogDynFiltersChangeTitle": {
-        "message": ""
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": ""
-    },
-    "portsIdentifier": {
-        "message": ""
+        "message": "Kaydet ve Yeniden başlat"
     },
     "portsConfiguration": {
-        "message": ""
+        "message": "Yapılandırma/MSP"
     },
     "portsSerialRx": {
-        "message": ""
-    },
-    "portsSensorIn": {
-        "message": ""
+        "message": "Seri Rx"
     },
     "portsTelemetryOut": {
-        "message": ""
+        "message": "Telemetri Çıktısı"
     },
     "portsPeripherals": {
-        "message": ""
+        "message": "Çevre birimleri"
     },
     "portsHelp": {
-        "message": ""
-    },
-    "portsVtxTableNotSet": {
-        "message": ""
+        "message": "<strong>Not:</strong> tüm kombinasyonlar geçerli değildir. Donanım yazılımı bunu algıladığında seri port ayarları sıfırlanacaktır."
     },
     "portsMSPHelp": {
-        "message": ""
+        "message": "<strong>Not:</strong> Ne yaptığınızı bilmiyorsanız ilk seri porttaki MSP'yi devre dışı <span class=\"message-negative\">BIRAKMAYIN</span>. Eğer yaparsanız ayarlarınızı yeniden silmeniz ve ayarlamanız gerekebilir."
     },
     "portsFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Donanım yazılımı güncellemesi <span class=\"message-negative\">gereklidir</span>. Yazılım 1.8.0'ın seri port ayarları desteklenmez."
     },
     "portsButtonSave": {
-        "message": ""
+        "message": "Kaydet ve Yeniden Başlat"
     },
     "portsTelemetryDisabled": {
-        "message": ""
+        "message": "Devre dışı bırakıldı"
     },
     "portsFunction_MSP": {
-        "message": ""
+        "message": "MSP"
     },
     "portsFunction_GPS": {
-        "message": ""
+        "message": "GPS"
     },
     "portsFunction_TELEMETRY_FRSKY": {
-        "message": ""
+        "message": "FrSky"
     },
     "portsFunction_TELEMETRY_HOTT": {
-        "message": ""
+        "message": "HoTT"
     },
     "portsFunction_TELEMETRY_LTM": {
-        "message": ""
+        "message": "LTM"
     },
     "portsFunction_TELEMETRY_MAVLINK": {
-        "message": ""
+        "message": "MAVLink"
     },
     "portsFunction_TELEMETRY_MSP": {
-        "message": ""
+        "message": "MSP"
     },
     "portsFunction_TELEMETRY_SMARTPORT": {
-        "message": ""
+        "message": "SmartPort"
     },
     "portsFunction_TELEMETRY_IBUS": {
-        "message": ""
+        "message": "iBUS"
     },
     "portsFunction_TELEMETRY_JETIXBUS": {
-        "message": ""
+        "message": "JETIXBUS"
     },
     "portsFunction_TELEMETRY_CRSF": {
-        "message": ""
+        "message": "CRSF"
     },
     "portsFunction_TELEMETRY_SRXL": {
-        "message": ""
+        "message": "SRXL"
     },
     "portsFunction_ESC_SENSOR": {
-        "message": ""
+        "message": "ESC"
     },
     "portsFunction_RX_SERIAL": {
-        "message": ""
-    },
-    "portsFunction_BLACKBOX": {
-        "message": ""
-    },
-    "portsFunction_TBS_SMARTAUDIO": {
-        "message": ""
-    },
-    "portsFunction_IRC_TRAMP": {
-        "message": ""
-    },
-    "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": ""
-    },
-    "portsFunction_FRSKY_OSD": {
-        "message": ""
-    },
-    "portsFunction_VTX_MSP": {
-        "message": ""
+        "message": "Seri RX"
     },
     "pidTuningProfileOption": {
-        "message": ""
+        "message": "Profil $1"
     },
     "pidTuningRateProfileOption": {
-        "message": ""
+        "message": "Profil $1 i oyla"
     },
     "portsFunction_LIDAR_TF": {
-        "message": ""
+        "message": "Benewake LIDAR"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": ""
-    },
-    "pidTuningSubTabPid": {
-        "message": ""
-    },
-    "pidTuningSubTabRates": {
-        "message": ""
+        "message": "<span class=\"message-negative\"> PID kontrolörü değiştirme devre dışı bırakıldı - CLI ile değiştirebilirsiniz.</span> API sürümü <span class=\"message-negative\">$1</span> olan yazılıma sahipsiniz, ama bu fonksiyonlar <span class=\"message-positive\">$2</span>'ye ihtiyaç duyar."
     },
     "pidTuningSubTabFilter": {
-        "message": ""
+        "message": "Filtre Ayarları"
     },
     "pidTuningShowAllPids": {
-        "message": ""
+        "message": "Tüm PID'leri göster"
     },
     "pidTuningHideUnusedPids": {
-        "message": ""
-    },
-    "pidTuningNonProfilePidSettings": {
-        "message": ""
-    },
-    "pidTuningAntiGravity": {
-        "message": ""
-    },
-    "pidTuningAntiGravityMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityModeOptionSmooth": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityModeOptionStep": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityGain": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityGainHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityThres": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityHelp": {
-        "message": ""
-    },
-    "pidTuningDMin": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": ""
-    },
-    "pidTuningDMinFeatureTitle": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinGain": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinAdvance": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxAdvanceHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSettings": {
-        "message": ""
-    },
-    "pidTuningMotorSettings": {
-        "message": ""
-    },
-    "pidTuningMiscSettings": {
-        "message": ""
-    },
-    "receiverRcSmoothing": {
-        "message": ""
-    },
-    "receiverRcSmoothingAuto": {
-        "message": ""
-    },
-    "receiverRcSmoothingManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcFeedforwardTypeSelect": {
-        "message": ""
-    },
-    "receiverRcSetpointTypeSelect": {
-        "message": ""
-    },
-    "receiverRcSmoothingInterpolation": {
-        "message": ""
-    },
-    "receiverRcSmoothingFilter": {
-        "message": ""
-    },
-    "receiverRcSmoothingTypeHelp": {
-        "message": ""
-    },
-    "rcSmoothingSetpointCutoffHelp": {
-        "message": ""
-    },
-    "rcSmoothingFeedforwardCutoffHelp": {
-        "message": ""
-    },
-    "rcSmoothingChannelsSmoothedHelp": {
-        "message": ""
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": ""
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": ""
-    },
-    "receiverRcSmoothingSetpointManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingSetpointHz": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardCutoff": {
-        "message": ""
-    },
-    "receiverRcSetpointType": {
-        "message": ""
-    },
-    "receiverRcFeedforwardType": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardTypeAuto": {
-        "message": ""
-    },
-    "receiverRcSmoothingChannel": {
-        "message": ""
+        "message": "Kullanılmayan PID'leri gizle"
     },
     "receiverRcInterpolation": {
-        "message": ""
-    },
-    "receiverRcInterpolationHelp": {
-        "message": ""
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": ""
+        "message": "RC interpolasyonu"
     },
     "receiverRcInterpolationOff": {
-        "message": ""
-    },
-    "receiverRcSmoothingType": {
-        "message": ""
+        "message": "Kapalı"
     },
     "receiverRcInterpolationDefault": {
-        "message": ""
+        "message": "Ön ayar"
     },
     "receiverRcInterpolationAuto": {
-        "message": ""
+        "message": "Otomatik"
     },
     "receiverRcInterpolationManual": {
-        "message": ""
+        "message": "Manuel"
     },
     "receiverRcInterpolationInterval": {
-        "message": ""
-    },
-    "receiverRcSmoothingMode": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransition": {
-        "message": ""
-    },
-    "pidTuningDtermSetpoint": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransitionWarning": {
-        "message": ""
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": ""
-    },
-    "pidTuningFeedforwardGroupHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardJitter": {
-        "message": ""
-    },
-    "pidTuningFeedforwardJitterHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": ""
-    },
-    "pidTuningFeedforwardSmoothnessHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveraging": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingHelp": {
-        "message": ""
-    },
-    "pidTuningOptionOff": {
-        "message": ""
-    },
-    "pidTuningOptionOn": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption2Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption3Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption4Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardBoost": {
-        "message": ""
-    },
-    "pidTuningFeedforwardBoostHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardMaxRateLimit": {
-        "message": ""
-    },
-    "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardTransition": {
-        "message": ""
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": ""
-    },
-    "pidTuningProportional": {
-        "message": ""
-    },
-    "pidTuningProportionalHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIntegral": {
-        "message": ""
-    },
-    "pidTuningIntegralHelp": {
-        "message": "",
-        "description": ""
+        "message": "RC interpolasyon aralığı [ms]"
     },
     "pidTuningDerivative": {
-        "message": ""
-    },
-    "pidTuningDMax": {
-        "message": ""
-    },
-    "pidTuningDMaxHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFeedforward": {
-        "message": ""
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMaxRateWarning": {
-        "message": ""
+        "message": "Türev"
     },
     "pidTuningRcRate": {
-        "message": ""
+        "message": "RC oranı"
     },
     "pidTuningMaxVel": {
-        "message": ""
+        "message": "Maksimum hız [derece/s]"
     },
     "pidTuningRate": {
-        "message": ""
+        "message": "Oran"
     },
     "pidTuningSuperRate": {
-        "message": ""
+        "message": "Süper Oran"
     },
     "pidTuningRatesPreview": {
-        "message": ""
-    },
-    "pidTuningRatesTuningHelp": {
-        "message": ""
+        "message": "Oranların Önizlemesi"
     },
     "pidTuningRcExpo": {
-        "message": ""
-    },
-    "pidTuningTPAMode": {
-        "message": ""
+        "message": "RC ifadesi"
     },
     "pidTuningTPA": {
-        "message": ""
-    },
-    "pidTuningTPARate": {
-        "message": ""
+        "message": "TPA"
     },
     "pidTuningTPABreakPoint": {
-        "message": ""
-    },
-    "pidTuningTPAPD": {
-        "message": ""
-    },
-    "pidTuningTPAD": {
-        "message": ""
-    },
-    "pidTuningThrottleCurvePreview": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitType": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitPercent": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeOff": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeScale": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeClip": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeTip": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitPercentTip": {
-        "message": ""
+        "message": "TPA Breakpoint"
     },
     "pidTuningFilter": {
-        "message": ""
+        "message": "Filtre"
     },
     "pidTuningFilterFrequency": {
-        "message": ""
-    },
-    "pidTuningRatesCurve": {
-        "message": ""
+        "message": "Frekans"
     },
     "throttle": {
-        "message": ""
+        "message": "Kısmak"
     },
     "pidTuningButtonSave": {
-        "message": ""
+        "message": "Kaydet"
     },
     "pidTuningButtonRefresh": {
-        "message": ""
+        "message": "Yenile"
     },
     "pidTuningProfileHead": {
-        "message": ""
+        "message": "Profil"
     },
     "pidTuningControllerHead": {
-        "message": ""
-    },
-    "pidTuningCopyProfile": {
-        "message": ""
-    },
-    "pidTuningCopyRateProfile": {
-        "message": ""
+        "message": "PID Kontrolör"
     },
     "dialogCopyProfileText": {
-        "message": ""
+        "message": "Dosyaları mevcut dosyadan şuraya kopyala"
     },
     "dialogCopyRateProfileText": {
-        "message": ""
+        "message": "Dosyaları mevcut oran profilinden şuraya kopyala"
     },
     "dialogCopyProfileTitle": {
-        "message": ""
+        "message": "Profil değerlerini kopyala"
     },
     "dialogCopyProfileNote": {
-        "message": ""
+        "message": "Hedef profil üzerindeki tüm değerler silinip ve üzerine yazılır"
     },
     "dialogCopyProfileConfirm": {
-        "message": ""
+        "message": "Kopya"
     },
     "dialogCopyProfileClose": {
-        "message": ""
-    },
-    "pidTuningResetPidProfile": {
-        "message": ""
-    },
-    "pidTuningPidProfileReset": {
-        "message": ""
+        "message": "İptal"
     },
     "pidTuningReceivedProfile": {
-        "message": ""
+        "message": "Uçuş kontrolörü bu profile ayarlandı: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": ""
+        "message": "Uçuş kontrolörü bu oran profile ayarlandı:<strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": ""
+        "message": "Profil yüklendi:<strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": ""
+        "message": "Oran profili yüklendi: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": ""
+        "message": "PID verisi <strong>yenilendi</strong>"
     },
     "pidTuningEepromSaved": {
-        "message": ""
+        "message": "EEPROM<span class=\"message-positive\">kaydedildi</span>"
     },
     "tuningHelp": {
-        "message": ""
-    },
-    "tuningHelpSliders": {
-        "message": "",
-        "description": ""
-    },
-    "filterWarning": {
-        "message": ""
-    },
-    "pidTuningSliderPidsMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderModeHelp": {
-        "message": ""
-    },
-    "receiverHelp": {
-        "message": ""
+        "message": "<b>Ayarlama ipuçları</b><br /><span class=\"message-negative\">ÖNEMLİ:</span> İlk uçuşlarda motor sıcaklıklarını doğrulamak önemlidir. Filtre değeri yükseldikçe uçabilir, fakat motorlardan daha fazla ses alınır.<br>. Varsayılan 100Hz değeri en iyisidir, ama gürültü ayarlayıcıları için Dterm filtresini ve ek olarak muhtemelen cyro filtresini 50 Hz'e indirmeyi deneyebilirsiniz."
     },
     "receiverThrottleMid": {
-        "message": ""
+        "message": "MID i kıs"
     },
     "receiverThrottleExpo": {
-        "message": ""
+        "message": "EXPO yu kıs"
     },
     "receiverStickMin": {
-        "message": ""
+        "message": "'Stick Low' Eşiği"
     },
     "receiverHelpStickMin": {
-        "message": ""
+        "message": "Komut girişi (MIN_CHECK) için düşük / sol olarak tanınabilecek bir çubuk için maksimum değer ( us'de)."
     },
     "receiverStickCenter": {
-        "message": ""
-    },
-    "receiverHelpStickCenter": {
-        "message": ""
+        "message": "Çubuk Merkezi"
     },
     "receiverStickMax": {
-        "message": ""
+        "message": "'Stick High' Eşiği"
     },
     "receiverHelpStickMax": {
-        "message": ""
+        "message": "Komut girişi (MAX_CHECK) için yüksek / sağ olarak tanınabilecek bir çubuk için minimum değer (us'de)."
     },
     "receiverDeadband": {
-        "message": ""
-    },
-    "receiverHelpDeadband": {
-        "message": ""
+        "message": "RC ölü bandı"
     },
     "receiverYawDeadband": {
-        "message": ""
-    },
-    "receiverHelpYawDeadband": {
-        "message": ""
+        "message": "Sapma ölü bandı"
     },
     "recevier3dDeadbandThrottle": {
-        "message": ""
-    },
-    "receiverHelp3dDeadbandThrottle": {
-        "message": ""
+        "message": "3D Kısma Ölü bandı"
     },
     "receiverChannelMap": {
-        "message": ""
+        "message": "Kanal Haritası"
     },
     "receiverChannelDefaultOption": {
-        "message": ""
-    },
-    "receiverChannelMapTitle": {
-        "message": ""
+        "message": "Varsayılan"
     },
     "receiverRssiChannel": {
-        "message": ""
+        "message": "RSSI Kanalı"
     },
     "receiverRssiChannelDisabledOption": {
-        "message": ""
+        "message": "Devre dışı bırakıldı"
     },
     "receiverRefreshRateTitle": {
-        "message": ""
-    },
-    "receiverResetRefreshRate": {
-        "message": ""
-    },
-    "receiverResetRefreshRateTitle": {
-        "message": ""
+        "message": "Grafik yenilenme oranı"
     },
     "receiverButtonSave": {
-        "message": ""
+        "message": "Kaydet"
     },
     "receiverButtonRefresh": {
-        "message": ""
-    },
-    "receiverButtonBind": {
-        "message": ""
-    },
-    "receiverButtonBindMessage": {
-        "message": ""
+        "message": "Yenile"
     },
     "receiverButtonSticks": {
-        "message": ""
+        "message": "Kontrol Çubukları"
     },
     "receiverDataRefreshed": {
-        "message": ""
+        "message": "RC Ayarlama verisi <strong>yenilendi</strong>"
     },
     "receiverEepromSaved": {
-        "message": ""
+        "message": "EEPROM<span class=\"message-positive\">kaydedildi</span>"
     },
     "receiverModelPreview": {
-        "message": ""
-    },
-    "receiverMspWarningText": {
-        "message": ""
+        "message": "Ön izleme"
     },
     "receiverMspEnableButton": {
-        "message": ""
-    },
-    "auxiliaryHelp": {
-        "message": ""
-    },
-    "auxiliaryToggleUnused": {
-        "message": ""
+        "message": "Denetimler etkin"
     },
     "auxiliaryMin": {
-        "message": ""
+        "message": "Minimum"
     },
     "auxiliaryMax": {
-        "message": ""
-    },
-    "auxiliaryDisabled": {
-        "message": "",
-        "descripton": ""
+        "message": "Maksimum"
     },
     "auxiliaryAddRange": {
-        "message": ""
-    },
-    "auxiliaryAddLink": {
-        "message": ""
+        "message": "Menzil ekle"
     },
     "auxiliaryButtonSave": {
-        "message": ""
+        "message": "Kaydet"
     },
     "auxiliaryEepromSaved": {
-        "message": ""
+        "message": "<span class=\"message-positive\">"
     },
     "auxiliaryAutoChannelSelect": {
-        "message": ""
-    },
-    "auxiliaryModeLogicOR": {
-        "message": ""
-    },
-    "auxiliaryModeLogicAND": {
-        "message": ""
-    },
-    "adjustmentsHelp": {
-        "message": ""
-    },
-    "adjustmentSlotsHelp": {
-        "message": ""
-    },
-    "adjustmentsExamples": {
-        "message": ""
-    },
-    "adjustmentsExample1": {
-        "message": ""
-    },
-    "adjustmentsExample2": {
-        "message": ""
+        "message": "OTOMATİK"
     },
     "adjustmentsColumnEnable": {
-        "message": ""
+        "message": "Etkinleştirilirse"
     },
     "adjustmentsColumnUsingSlot": {
-        "message": ""
+        "message": "oluğu kullanarak"
     },
     "adjustmentsColumnWhenChannel": {
-        "message": ""
+        "message": "kanal olduğunda"
     },
     "adjustmentsColumnIsInRange": {
-        "message": ""
+        "message": "menzil içinde"
     },
     "adjustmentsColumnThenApplyFunction": {
-        "message": ""
+        "message": "ardından uygula"
     },
     "adjustmentsColumnViaChannel": {
-        "message": ""
+        "message": "kanalla"
     },
     "adjustmentsSlot0": {
-        "message": ""
+        "message": "Yuva 1"
     },
     "adjustmentsSlot1": {
-        "message": ""
+        "message": "Yuva 2"
     },
     "adjustmentsSlot2": {
-        "message": ""
+        "message": "Yuva 3"
     },
     "adjustmentsSlot3": {
-        "message": ""
+        "message": "Yuva 4"
     },
     "adjustmentsMin": {
-        "message": ""
+        "message": "Minimum"
     },
     "adjustmentsMax": {
-        "message": ""
+        "message": "Maksimum"
     },
     "adjustmentsFunction0": {
-        "message": ""
+        "message": "Değişim yok"
     },
     "adjustmentsFunction1": {
-        "message": ""
+        "message": "RC oranı ayarlama"
     },
     "adjustmentsFunction2": {
-        "message": ""
+        "message": "RC Expo ayarlama"
     },
     "adjustmentsFunction3": {
-        "message": ""
+        "message": "Expo kısma ayarı"
     },
     "adjustmentsFunction4": {
-        "message": ""
+        "message": "Yuvarlanma & kalkış oranı ayarı"
     },
     "adjustmentsFunction5": {
-        "message": ""
+        "message": "Sapma oranı ayarı"
     },
     "adjustmentsFunction6": {
-        "message": ""
+        "message": "Kalkma & Yuvarlanma P ayarı"
     },
     "adjustmentsFunction7": {
-        "message": ""
+        "message": "Kalkma & Yuvarlanma I Ayarı"
     },
     "adjustmentsFunction8": {
-        "message": ""
+        "message": "Kalkma & Yuvarlanma D ayarı"
     },
     "adjustmentsFunction9": {
-        "message": ""
+        "message": "Sapma P ayarı"
     },
     "adjustmentsFunction10": {
-        "message": ""
+        "message": "Sapma I ayarı"
     },
     "adjustmentsFunction11": {
-        "message": ""
+        "message": "Sapma D ayarı"
     },
     "adjustmentsFunction12": {
-        "message": ""
+        "message": "Oran profili seçimi"
     },
     "adjustmentsFunction13": {
-        "message": ""
+        "message": "Kalkma oranı"
     },
     "adjustmentsFunction14": {
-        "message": ""
+        "message": "Yuvarlanma oranı"
     },
     "adjustmentsFunction15": {
-        "message": ""
+        "message": "Kalkma P ayarı"
     },
     "adjustmentsFunction16": {
-        "message": ""
+        "message": "Kalkma I ayarı"
     },
     "adjustmentsFunction17": {
-        "message": ""
+        "message": "Kalkma D Ayarı"
     },
     "adjustmentsFunction18": {
-        "message": ""
+        "message": "Yuvarlanma P Ayarı"
     },
     "adjustmentsFunction19": {
-        "message": ""
+        "message": "Yuvarlanma I Ayarı"
     },
     "adjustmentsFunction20": {
-        "message": ""
+        "message": "Yuvarlanma D ayarı"
     },
     "adjustmentsFunction21": {
-        "message": ""
+        "message": "RC sapma oranı"
     },
     "adjustmentsFunction22": {
-        "message": ""
-    },
-    "adjustmentsFunction22_2": {
-        "message": ""
+        "message": "D ayar noktası"
     },
     "adjustmentsFunction23": {
-        "message": ""
-    },
-    "adjustmentsFunction23_2": {
-        "message": ""
+        "message": "D ayar noktası geçişi"
     },
     "adjustmentsFunction24": {
-        "message": ""
-    },
-    "adjustmentsFunction25": {
-        "message": ""
-    },
-    "adjustmentsFunction26": {
-        "message": ""
-    },
-    "adjustmentsFunction27": {
-        "message": ""
-    },
-    "adjustmentsFunction28": {
-        "message": ""
-    },
-    "adjustmentsFunction29": {
-        "message": ""
-    },
-    "adjustmentsFunction30": {
-        "message": ""
+        "message": "Ufuk güç ayarı"
     },
     "adjustmentsSave": {
-        "message": ""
+        "message": "Kaydet"
     },
     "adjustmentsEepromSaved": {
-        "message": ""
-    },
-    "transponderNotSupported": {
-        "message": ""
-    },
-    "transponderInformation": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">kaydedildi</span>"
     },
     "transponderConfigurationType": {
-        "message": ""
+        "message": "Transponder tipi"
     },
     "transponderType0": {
-        "message": ""
+        "message": "Hiçbiri"
     },
     "transponderType1": {
-        "message": ""
+        "message": "iLap"
     },
     "transponderType2": {
-        "message": ""
+        "message": "aRCiTimer"
     },
     "transponderType3": {
-        "message": ""
+        "message": "ERLT"
     },
     "transponderConfiguration1": {
-        "message": ""
+        "message": "Ilap yapılandırması"
     },
     "transponderConfiguration2": {
-        "message": ""
+        "message": "aRCiTimer yapılandırması"
     },
     "transponderConfiguration3": {
-        "message": ""
+        "message": "ERLT Yapılandırması"
     },
     "transponderData1": {
-        "message": ""
+        "message": "Veri"
     },
     "transponderData2": {
-        "message": ""
+        "message": "Transponder kimliği"
     },
     "transponderData3": {
-        "message": ""
+        "message": "Transponder kimliği"
     },
     "transponderDataHelp1": {
-        "message": ""
-    },
-    "transponderHelp1": {
-        "message": ""
-    },
-    "transponderHelp2": {
-        "message": ""
+        "message": "Sadece onaltılık üniteler, 0-9, A-F"
     },
     "transponderDataHelp3": {
-        "message": ""
-    },
-    "transponderHelp3": {
-        "message": ""
+        "message": "ERLT kimliğini 0-63 seç"
     },
     "transponderButtonSave": {
-        "message": ""
+        "message": "Kaydet"
     },
     "transponderButtonSaveReboot": {
-        "message": ""
+        "message": "Kaydet ve Yeniden Başlat"
     },
     "transponderDataInvalid": {
-        "message": ""
+        "message": "Transponder verisi <span class=\"message-negative\">geçersiz</span>"
     },
     "transponderEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">kaydedildi</span>"
     },
     "servosFirmwareUpgradeRequired": {
-        "message": ""
-    },
-    "servosChangeDirection": {
-        "message": ""
-    },
-    "servosName": {
-        "message": ""
+        "message": "Servolar yazılım &gt;= 1.10.0 ı ve hedes desteği gerektirir."
     },
     "servosMid": {
-        "message": ""
+        "message": "MID"
     },
     "servosMin": {
-        "message": ""
+        "message": "MİNİMUM"
     },
     "servosMax": {
-        "message": ""
+        "message": "MAKSİMUM"
     },
     "servosAngleAtMin": {
-        "message": ""
+        "message": "Açı minimumda"
     },
     "servosAngleAtMax": {
-        "message": ""
+        "message": "Açı maksimumda"
     },
     "servosDirectionAndRate": {
-        "message": ""
+        "message": "Yön ve oran"
     },
     "servosLiveMode": {
-        "message": ""
+        "message": "Canlı modu aktifleştir"
     },
     "servosButtonSave": {
-        "message": ""
-    },
-    "servosNormal": {
-        "message": ""
-    },
-    "servosReverse": {
-        "message": ""
+        "message": "Kaydet"
     },
     "servosEepromSave": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">kaydedildi</span>"
     },
     "gpsHead": {
-        "message": ""
+        "message": "GPS"
     },
     "gpsMapHead": {
-        "message": ""
-    },
-    "gpsMapMessage1": {
-        "message": ""
+        "message": "Mevcut GPS konumu"
     },
     "gpsMapMessage2": {
-        "message": ""
+        "message": "GPS 3D ayarı için bekleniyor…"
     },
     "gps3dFix": {
-        "message": ""
+        "message": "3D ayarı:"
     },
     "gpsFixTrue": {
-        "message": ""
+        "message": "<span class=\"fixtrue\">Doğru</span>"
     },
     "gpsFixFalse": {
-        "message": ""
+        "message": "<span class=\"fixfalse\">Yanlış</span>"
     },
     "gpsAltitude": {
-        "message": ""
+        "message": "Rakım:"
     },
     "gpsLat": {
-        "message": ""
+        "message": "Enlem:"
     },
     "gpsLon": {
-        "message": ""
-    },
-    "gpsSpeed": {
-        "message": ""
-    },
-    "gpsSats": {
-        "message": ""
-    },
-    "gpsDistToHome": {
-        "message": ""
+        "message": "Boylam:"
     },
     "gpsSignalStrHead": {
-        "message": ""
-    },
-    "gpsSignalStr": {
-        "message": ""
-    },
-    "gpsSignalGnssId": {
-        "message": ""
-    },
-    "gpsSignalSatId": {
-        "message": ""
-    },
-    "gpsSignalStatusQly": {
-        "message": ""
-    },
-    "gnssQualityNoSignal": {
-        "message": ""
-    },
-    "gnssQualitySearching": {
-        "message": ""
-    },
-    "gnssQualityAcquired": {
-        "message": ""
-    },
-    "gnssQualityUnusable": {
-        "message": ""
-    },
-    "gnssQualityLocked": {
-        "message": ""
-    },
-    "gnssQualityFullyLocked": {
-        "message": ""
-    },
-    "gnssUsedUnused": {
-        "message": ""
-    },
-    "gnssUsedUsed": {
-        "message": ""
-    },
-    "gnssHealthyUnknown": {
-        "message": ""
-    },
-    "gnssHealthyHealthy": {
-        "message": ""
-    },
-    "gnssHealthyUnhealthy": {
-        "message": ""
-    },
-    "motorsVoltage": {
-        "message": ""
-    },
-    "motorsADrawing": {
-        "message": ""
-    },
-    "motorsmAhDrawn": {
-        "message": ""
-    },
-    "motorsVoltageValue": {
-        "message": ""
-    },
-    "motorsADrawingValue": {
-        "message": ""
-    },
-    "motorsmAhDrawnValue": {
-        "message": ""
+        "message": "GPS Sinyal Gücü"
     },
     "motorsText": {
-        "message": ""
+        "message": "Motorlar"
     },
     "motorNumber1": {
-        "message": ""
+        "message": "Motor - 1"
     },
     "motorNumber2": {
-        "message": ""
+        "message": "Motor - 2"
     },
     "motorNumber3": {
-        "message": ""
+        "message": "Motor - 3"
     },
     "motorNumber4": {
-        "message": ""
+        "message": "Motor - 4"
     },
     "motorNumber5": {
-        "message": ""
+        "message": "Motor - 5"
     },
     "motorNumber6": {
-        "message": ""
+        "message": "Motor - 6"
     },
     "motorNumber7": {
-        "message": ""
+        "message": "Motor - 7"
     },
     "motorNumber8": {
-        "message": ""
+        "message": "Motor - 8"
     },
     "servosText": {
-        "message": ""
+        "message": "Servolar"
     },
     "servoNumber1": {
-        "message": ""
+        "message": "Servo - 1"
     },
     "servoNumber2": {
-        "message": ""
+        "message": "Servo - 2"
     },
     "servoNumber3": {
-        "message": ""
+        "message": "Servo - 3"
     },
     "servoNumber4": {
-        "message": ""
+        "message": "Servo - 4"
     },
     "servoNumber5": {
-        "message": ""
+        "message": "Servo - 5"
     },
     "servoNumber6": {
-        "message": ""
+        "message": "Servo - 6"
     },
     "servoNumber7": {
-        "message": ""
+        "message": "Servo - 7"
     },
     "servoNumber8": {
-        "message": ""
+        "message": "Servo - 8"
     },
     "motorsResetMaximumButton": {
-        "message": ""
+        "message": "Sıfırla"
     },
     "motorsResetMaximum": {
-        "message": ""
+        "message": "Fazla süreyi sıfırla"
     },
     "motorsSensorGyroSelect": {
-        "message": ""
+        "message": "cayro"
     },
     "motorsSensorAccelSelect": {
-        "message": ""
-    },
-    "motorsTelemetryHelp": {
-        "message": "",
-        "description": ""
-    },
-    "motorsRPM": {
-        "message": "",
-        "description": ""
-    },
-    "motorsRPMError": {
-        "message": "",
-        "description": ""
-    },
-    "motorsESCTemperature": {
-        "message": "",
-        "description": ""
+        "message": "hızlanma"
     },
     "motorsMaster": {
-        "message": ""
+        "message": "Ana"
     },
     "motorsNotice": {
-        "message": ""
+        "message": "<strong>Motor Test Modu / Yükleme Bildirimi:</strong><br />Kaydırıcıları hareket ettirmek veya aracınızı verici ile yüklemek motorların <strong>dönmesine</strong> sebep olacaktır. Yaralanmayı engellemek için bu özelliği kullanmadan önce <strong class=\"message-negative\"> TÜM pervaneleri kaldırın</strong>.<br /> Motor test modunun etkinleştirilmesi, pervanesiz bench testi yaparken uçağın yüklenmesini engellemek için, Kaçak Kalkış Önleme'yi geçici olarak devre dışı bırakacaktır.<br />"
     },
     "motorsEnableControl": {
-        "message": ""
-    },
-    "motorsDialogMixerReset": {
-        "message": ""
-    },
-    "motorsDialogSettingsChanged": {
-        "message": ""
-    },
-    "motorsDialogSettingsChangedOk": {
-        "message": ""
-    },
-    "motorOutputReorderDialogClose": {
-        "message": ""
-    },
-    "motorOutputReorderDialogAgree": {
-        "message": ""
-    },
-    "motorsRemapDialogTitle": {
-        "message": ""
-    },
-    "motorOutputReorderDialogOpen": {
-        "message": ""
-    },
-    "motorOutputReorderDialogSelectSpinningMotor": {
-        "message": ""
-    },
-    "motorOutputReorderDialogRemapIsDone": {
-        "message": ""
-    },
-    "motorsRemapDialogUnderstandRisks": {
-        "message": ""
-    },
-    "motorsRemapDialogRiskNotice": {
-        "message": ""
-    },
-    "motorsRemapDialogExplanations": {
-        "message": ""
-    },
-    "motorsRemapDialogSave": {
-        "message": ""
-    },
-    "motorsRemapDialogStartOver": {
-        "message": ""
-    },
-    "motorsButtonReset": {
-        "message": ""
-    },
-    "motorsButtonSave": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Title": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SelectMotor": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SelectMotorSafety": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-RiskNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-UnderstandRisks": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-NormalInformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardInformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Open": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandNormal": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandReverse": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandSpin": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-ReleaseButtonToStop": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-ReleaseToStop": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Start": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-StartWizard": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SetDirectionHint": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SetDirectionHintSafety": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongFirmwareText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardActionHint": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardActionHintSecondLine": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SpinWizard": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-StopWizard": {
-        "message": ""
-    },
-    "sensorsInfo": {
-        "message": ""
+        "message": "<strong>Riskleri anladım</strong>, pervaneler kaldırıldı- motor kontrolü ve yükleme etkinleştirildi, ve Kaçak Kalkış Önleme devre dışı bırakıldı."
     },
     "sensorsRefresh": {
-        "message": ""
+        "message": "Yenile:"
     },
     "sensorsScale": {
-        "message": ""
+        "message": "Ölçek:"
     },
     "sensorsGyroSelect": {
-        "message": ""
+        "message": "Jiroskop"
     },
     "sensorsAccelSelect": {
-        "message": ""
+        "message": "İvme ölçer"
     },
     "sensorsMagSelect": {
-        "message": ""
-    },
-    "sensorsAltitudeSelect": {
-        "message": ""
+        "message": "Manyetometre"
     },
     "sensorsSonarSelect": {
-        "message": ""
+        "message": "Sonar"
     },
     "sensorsDebugSelect": {
-        "message": ""
+        "message": "Hata ayıklama"
     },
     "sensorsGyroTitle": {
-        "message": ""
-    },
-    "sensorsAccelTitle": {
-        "message": ""
+        "message": "Jiroskop - derece/saniye"
     },
     "sensorsMagTitle": {
-        "message": ""
-    },
-    "sensorsAltitudeTitle": {
-        "message": ""
-    },
-    "sensorsAltitudeHint": {
-        "message": ""
+        "message": "Manyetometre - Ga"
     },
     "sensorsSonarTitle": {
-        "message": ""
+        "message": "Sonar - santimetre"
     },
     "sensorsDebugTitle": {
-        "message": ""
-    },
-    "cliInfo": {
-        "message": ""
-    },
-    "cliInputPlaceholder": {
-        "message": ""
-    },
-    "cliInputPlaceholderBuilding": {
-        "message": ""
+        "message": "Hata ayıklama"
     },
     "cliEnter": {
-        "message": ""
+        "message": "CLI modu algılandı"
     },
     "cliReboot": {
-        "message": ""
+        "message": "CLI yeniden başlatma algılandı"
     },
     "cliSaveToFileBtn": {
-        "message": ""
-    },
-    "cliClearOutputHistoryBtn": {
-        "message": ""
-    },
-    "cliCopyToClipboardBtn": {
-        "message": ""
-    },
-    "cliCopySuccessful": {
-        "message": ""
-    },
-    "cliLoadFromFileBtn": {
-        "message": ""
-    },
-    "cliConfirmSnippetDialogTitle": {
-        "message": ""
-    },
-    "cliConfirmSnippetNote": {
-        "message": ""
-    },
-    "cliConfirmSnippetBtn": {
-        "message": ""
+        "message": "Dosyaya Kaydet"
     },
     "loggingNote": {
-        "message": ""
+        "message": "Veri <span class=\"message-negative\">sadece</span> bu sekmede kaydedilecek, bu sekmeden ayrılmak kaydetmeyi <span class=\"message-negative\"> iptal edecek</span> ve uygulama normal <strong>\"yapılandırıcı\"</strong> durumuna geri dönecektir. <br />Genel güncelleme periyodunu seçmekte özgürsünüz, performans sebepleriyle, veri her <strong>1</strong> saniyede günlük dosyasına yazılacaktır."
     },
     "loggingSamplesSaved": {
-        "message": ""
+        "message": "Örnekler Kaydedildi:"
     },
     "loggingLogSize": {
-        "message": ""
+        "message": "Günlük boyutu:"
     },
     "loggingButtonLogFile": {
-        "message": ""
+        "message": "Günlük Dosyasını seç"
     },
     "loggingStart": {
-        "message": ""
+        "message": "Günlüğe yazmayı başlat"
     },
     "loggingStop": {
-        "message": ""
+        "message": "Günlük tutmayı bırak"
     },
     "loggingBack": {
-        "message": ""
+        "message": "Günlük tutmadan çık / bağlantıyı kes"
     },
     "loggingErrorNotConnected": {
-        "message": ""
+        "message": "Önce <strong>bağlanmanız</strong> gerekir"
     },
     "loggingErrorLogFile": {
-        "message": ""
+        "message": "Lütfen günlük tutma dosyası seçin"
     },
     "loggingErrorOneProperty": {
-        "message": ""
+        "message": "Günlük tutmak için en azından bir özellik seçin"
     },
     "loggingAutomaticallyRetained": {
-        "message": ""
+        "message": "Önceki günlük dosyaları otomatik olarak yüklendi:<strong>$1</strong>"
     },
     "blackboxNotSupported": {
-        "message": ""
-    },
-    "blackboxMaybeSupported": {
-        "message": ""
+        "message": "Uçuş kontrolörünüzün yazılımı Kara kutu günlük kaydını desteklemiyor."
     },
     "blackboxConfiguration": {
-        "message": ""
-    },
-    "blackboxButtonSave": {
-        "message": ""
+        "message": "Kara kutu yapılandırması"
     },
     "blackboxLoggingNone": {
-        "message": ""
+        "message": "Günlük yok"
     },
     "blackboxLoggingFlash": {
-        "message": ""
+        "message": "Tümleşik Flash"
     },
     "blackboxLoggingSdCard": {
-        "message": ""
+        "message": "SD Kartı"
     },
     "blackboxLoggingSerial": {
-        "message": ""
-    },
-    "serialLoggingSupportedNote": {
-        "message": ""
+        "message": "Seri port"
     },
     "sdcardNote": {
-        "message": ""
-    },
-    "dataflashUsedSpace": {
-        "message": ""
-    },
-    "dataflashFreeSpace": {
-        "message": ""
-    },
-    "dataflashUnavSpace": {
-        "message": ""
-    },
-    "dataflashLogsSpace": {
-        "message": ""
-    },
-    "dataflashNote": {
-        "message": ""
-    },
-    "dataflashNotPresentNote": {
-        "message": ""
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": ""
-    },
-    "dataflashButtonSaveFile": {
-        "message": ""
-    },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": ""
-    },
-    "dataflashSavetoFileNote": {
-        "message": ""
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": ""
-    },
-    "dataflashButtonErase": {
-        "message": ""
-    },
-    "dataflashConfirmEraseTitle": {
-        "message": ""
-    },
-    "dataflashConfirmEraseNote": {
-        "message": ""
-    },
-    "dataflashSavingTitle": {
-        "message": ""
-    },
-    "dataflashSavingNote": {
-        "message": ""
-    },
-    "dataflashSavingNoteAfter": {
-        "message": ""
-    },
-    "dataflashButtonSaveCancel": {
-        "message": ""
-    },
-    "dataflashButtonSaveDismiss": {
-        "message": ""
-    },
-    "dataflashButtonEraseConfirm": {
-        "message": ""
-    },
-    "dataflashButtonEraseCancel": {
-        "message": ""
-    },
-    "dataflashFileWriteFailed": {
-        "message": ""
-    },
-    "sdcardStatusNoCard": {
-        "message": ""
-    },
-    "sdcardStatusReboot": {
-        "message": ""
+        "message": "Uçuş kayıtları, uluş kontrolörünüzde olan panelin SD kart yerine kaydedilebilir."
     },
     "sdcardStatusReady": {
-        "message": ""
+        "message": "Kart hazır"
     },
     "sdcardStatusStarting": {
-        "message": ""
+        "message": "Kart başlatılıyor..."
     },
     "sdcardStatusFileSystem": {
-        "message": ""
+        "message": "Dosya sistemi başlatılıyor..."
     },
     "sdcardStatusUnknown": {
-        "message": ""
-    },
-    "firmwareFlasherBranch": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseManufacturer": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseVersion": {
-        "message": ""
+        "message": "Bilinmeyen $1 durumu"
     },
     "firmwareFlasherReleaseVersionUrl": {
-        "message": ""
+        "message": "Sürüm sayfasını ziyaret edin."
     },
     "firmwareFlasherReleaseNotes": {
-        "message": ""
+        "message": "Sürüm notları:"
     },
     "firmwareFlasherReleaseDate": {
-        "message": ""
+        "message": "Tarih:"
     },
     "firmwareFlasherReleaseTarget": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseMCU": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildDetails": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildPending": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildProcessing": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildSuccessCached": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildSuccess": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": ""
+        "message": "Hedef:"
     },
     "firmwareFlasherReleaseFileUrl": {
-        "message": ""
+        "message": "El ile indir."
     },
     "firmwareFlasherTargetWarning": {
-        "message": ""
+        "message": "<span class=\"message-negative\">ÖNEMLİ</span>: Hedefinize uygun bir dosyayı flaşladığınuzdan emin olun. Yanlış bir hedef için bir ikilik flaşlamak <span class=\"message-negative\">kötü</span> şeylerin olmasına sebep olabilir."
     },
     "firmwareFlasherPath": {
-        "message": ""
+        "message": "Yol:"
     },
     "firmwareFlasherSize": {
-        "message": ""
-    },
-    "firmwareFlasherStatus": {
-        "message": ""
-    },
-    "firmwareFlasherProgress": {
-        "message": ""
+        "message": "Boyut:"
     },
     "firmwareFlasherLoadFirmwareFile": {
-        "message": ""
-    },
-    "firmwareFlasherLoadedConfig": {
-        "message": ""
+        "message": "Lütfen aygıt yazılımı dosyasını yükleyin"
     },
     "firmwareFlasherNoReboot": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBuildType": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": ""
+        "message": "Yeniden başlatma dizisi yok"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": ""
-    },
-    "firmwareFlasherNoRebootDescription": {
-        "message": ""
+        "message": "Paneliniz için uygun yazılım sürümü seçin."
     },
     "firmwareFlasherFlashOnConnect": {
-        "message": ""
-    },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": ""
+        "message": "Bağlantı yanıyor"
     },
     "firmwareFlasherFullChipErase": {
-        "message": ""
-    },
-    "firmwareFlasherFullChipEraseDescription": {
-        "message": ""
-    },
-    "firmwareFlasherFlashDevelopmentFirmware": {
-        "message": ""
-    },
-    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": ""
+        "message": "Tüm çipi sil"
     },
     "firmwareFlasherManualPort": {
-        "message": ""
-    },
-    "firmwareFlasherManualBaud": {
-        "message": ""
+        "message": "Bağlantı noktası"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": ""
+        "message": "Paneller için baud hızının el ile seçilmesi varsayılan hızı veya bluetooth ile flaşlamayı desteklemez.<br /><span class=\"message-negative\">Not:</span> USB DFU ile gönderildiğinde kullanılmaz"
     },
     "firmwareFlasherBaudRate": {
-        "message": ""
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": ""
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": ""
+        "message": "Baud hızı"
     },
     "firmwareFlasherOptionLoading": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
-        "message": ""
+        "message": "Yükleniyor ..."
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": ""
+        "message": "Bir Aygıt Yazılımı / Panel seçin"
     },
     "firmwareFlasherOptionLabelSelectBoard": {
-        "message": ""
+        "message": "Bir panel seçin"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
-        "message": ""
+        "message": "Bir aygıt yazılımı sürümü seçin"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
-        "message": ""
+        "message": "İçin bir aygıt yazılımı sürümü seçin"
     },
     "firmwareFlasherButtonLoadLocal": {
-        "message": ""
+        "message": "Aygıt yazılımı yükle [Local]"
     },
     "firmwareFlasherButtonLoadOnline": {
-        "message": ""
-    },
-    "firmwareFlasherButtonDownloading": {
-        "message": ""
-    },
-    "firmwareFlasherExitDfu": {
-        "message": ""
+        "message": "Aygıt yazılımı yükle [Online]"
     },
     "firmwareFlasherFlashFirmware": {
-        "message": ""
+        "message": "Aygıt yazılımını flaşla"
     },
     "firmwareFlasherGithubInfoHead": {
-        "message": ""
-    },
-    "firmwareFlasherCommiter": {
-        "message": ""
-    },
-    "firmwareFlasherDate": {
-        "message": ""
+        "message": "Github aygıt yazılımı bilgisi"
     },
     "firmwareFlasherHash": {
-        "message": ""
-    },
-    "firmwareFlasherUrl": {
-        "message": ""
-    },
-    "firmwareFlasherMessage": {
-        "message": ""
-    },
-    "firmwareFlasherWarningText": {
-        "message": ""
+        "message": "Karıştır:"
     },
     "firmwareFlasherRecoveryHead": {
-        "message": ""
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": ""
+        "message": "<strong>Kurtarma / Kayıp iletişimi</strong>"
     },
     "firmwareFlasherButtonLeave": {
-        "message": ""
+        "message": "Yazılım flaşlayıcısından çıkın"
     },
     "firmwareFlasherFirmwareNotLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": ""
+        "message": "Yazılım yüklenmedi"
     },
     "firmwareFlasherHexCorrupted": {
-        "message": ""
-    },
-    "firmwareFlasherConfigCorrupted": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherConfigCorruptedLogMessage": {
-        "message": "",
-        "description": ""
+        "message": "HEX dosyası bozuk olarak görünüyor"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": ""
+        "message": "<span class=\"message-positive\">Uzaktan Yazılım yüklendi, flaşlanmaya hazır</span>"
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
-        "message": ""
-    },
-    "firmwareFlasherFailedToLoadUnifiedConfig": {
-        "message": ""
-    },
-    "firmwareFlasherLegacyLabel": {
-        "message": "",
-        "description": ""
+        "message": "Uzaktan yazılım yüklenemedi"
     },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": ""
+        "message": "<b>Yüklemek için yazılım seçilmedi</b>"
     },
     "firmwareFlasherNoValidPort": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Lütfen geçerli bir seri bağlantı noktası seçin</span>"
     },
     "firmwareFlasherWritePermissions": {
-        "message": ""
+        "message": "Bu dosya için <span class=\"message-negative\">yazma izniniz</span> yok"
     },
     "firmwareFlasherFlashTrigger": {
-        "message": ""
-    },
-    "firmwareFlasherVerifyBoard": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherButtonAbort": {
-        "message": ""
-    },
-    "firmwareFlasherButtonContinue": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardQuery": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementDialog": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementAcknowledge": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementFlash": {
-        "message": ""
+        "message": "Tespit edildi <strong>$1</strong>- bağlantı kurulduğunda flaş tetikleniyor"
     },
     "firmwareFlasherPreviousDevice": {
-        "message": ""
+        "message": "Tespit edildi:<strong>$1</strong> - önceki cihaz hala flaşlanıyor, lütfen yeniden denemek için tekrar takın"
     },
     "ledStripHelp": {
-        "message": ""
+        "message": "Uçuş kontrolörü şerit üzerindeki tekli LEDlerin renklerini ve etkilerini kontrol edebilir.<br />LEDleri şebekede yapılandırın, kablolama düzenini yapılandırın ardından uçağınıza LEDleri şebeke pozisyonlarına göre ekleyin. Tel sıra numarası olmayan LEDler kaydedilmeyecektir.<br />HSV değerlerini düzenlemek için bir renge çift tıklayın."
     },
     "ledStripButtonSave": {
-        "message": ""
-    },
-    "ledStripColorSetupTitle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripH": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripS": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripV": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripRemainingText": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripClearSelectedButton": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripClearAllButton": {
-        "message": "",
-        "description": ""
+        "message": "Kaydet"
     },
     "ledStripEepromSaved": {
-        "message": ""
+        "message": "EEPROM<span class=\"message-positive\">kaydedildi</span>"
     },
     "ledStripVtxOverlay": {
-        "message": ""
+        "message": "VTX (Vidyo vericisi) (renkleri atamak için vtx frekansını kullanır)"
     },
     "ledStripFunctionSection": {
-        "message": ""
-    },
-    "ledStripFunctionTitle": {
-        "message": ""
-    },
-    "ledStripFunctionNoneOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionColorOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionModesOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionArmOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionBatteryOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionRSSIOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionGPSOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionRingOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripColorModifierTitle": {
-        "message": ""
-    },
-    "ledStripModeColorsTitle": {
-        "message": ""
-    },
-    "ledStripModeColorsModeOrientation": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeHeadfree": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeHorizon": {
-        "message": "",
-        "description": ""
+        "message": "LED fonksiyonları"
     },
     "ledStripModeColorsModeAngle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeMag": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeBaro": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirN": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirE": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirS": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirW": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirU": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirD": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModesOrientationTitle": {
-        "message": "",
-        "description": ""
+        "message": "Açı",
+        "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModesSpecialColorsTitle": {
-        "message": "",
-        "description": ""
+        "message": "Özel renkler",
+        "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeDisarmed": {
-        "message": "",
-        "description": ""
+        "message": "Zararsız hale getirmek",
+        "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeArmed": {
-        "message": "",
-        "description": ""
+        "message": "Silahlı",
+        "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeAnimation": {
-        "message": "",
-        "description": ""
+        "message": "Canlandırma",
+        "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeBlinkBg": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSNoSats": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSNoLock": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSLocked": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiring": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringMode": {
-        "message": "",
-        "description": ""
+        "message": "Parlak arkaplan",
+        "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripWiringClearControl": {
-        "message": "",
-        "description": ""
+        "message": "Seçilenleri temizle",
+        "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripWiringClearAllControl": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringMessage": {
-        "message": "",
-        "description": ""
+        "message": "Tüm kabloları temizle",
+        "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
-        "message": ""
+        "message": "Larson tarayıcı"
     },
     "ledStripBlinkTitle": {
-        "message": ""
+        "message": "Yanıp sönme"
     },
     "ledStripBlinkAlwaysOverlay": {
-        "message": ""
+        "message": "Her zaman yanıp sön"
     },
     "ledStripBlinkLandingOverlay": {
-        "message": ""
+        "message": "İnişte yanıp sön"
     },
     "ledStripOverlayTitle": {
-        "message": ""
+        "message": "Kaplama"
     },
     "ledStripWarningsOverlay": {
-        "message": ""
+        "message": "Uyarılar"
     },
     "ledStripIndecatorOverlay": {
-        "message": ""
-    },
-    "colorBlack": {
-        "message": ""
-    },
-    "colorWhite": {
-        "message": ""
-    },
-    "colorRed": {
-        "message": ""
-    },
-    "colorOrange": {
-        "message": ""
-    },
-    "colorYellow": {
-        "message": ""
-    },
-    "colorLimeGreen": {
-        "message": ""
+        "message": "Gösterge ( matristeki konumu kullanır)"
     },
     "colorGreen": {
-        "message": ""
+        "message": "yeşil"
     },
     "colorMintGreen": {
-        "message": ""
+        "message": "nane yeşili"
     },
     "colorCyan": {
-        "message": ""
+        "message": "camgöbeği"
     },
     "colorLightBlue": {
-        "message": ""
-    },
-    "colorBlue": {
-        "message": ""
+        "message": "açık mavi"
     },
     "colorDarkViolet": {
-        "message": ""
+        "message": "koyu mor"
     },
     "colorMagenta": {
-        "message": ""
+        "message": "eflatun"
     },
     "colorDeepPink": {
-        "message": ""
+        "message": "derin pembe"
     },
     "controlAxisRoll": {
-        "message": ""
+        "message": "Çevir"
     },
     "controlAxisPitch": {
-        "message": ""
+        "message": "Fırlat"
     },
     "controlAxisYaw": {
-        "message": ""
+        "message": "Savrul"
     },
     "controlAxisThrottle": {
-        "message": ""
+        "message": "Kısma [T]"
     },
     "controlAxisAux1": {
-        "message": ""
+        "message": "AUX 1"
     },
     "controlAxisAux2": {
-        "message": ""
+        "message": "AUX 2"
     },
     "controlAxisAux3": {
-        "message": ""
+        "message": "AUX 3"
     },
     "controlAxisAux4": {
-        "message": ""
+        "message": "AUX 4"
     },
     "controlAxisAux5": {
-        "message": ""
+        "message": "AUX 5"
     },
     "controlAxisAux6": {
-        "message": ""
+        "message": "AUX 6"
     },
     "controlAxisAux7": {
-        "message": ""
+        "message": "AUX 7"
     },
     "controlAxisAux8": {
-        "message": ""
+        "message": "AUX 8"
     },
     "controlAxisAux9": {
-        "message": ""
+        "message": "AUX 9"
     },
     "controlAxisAux10": {
-        "message": ""
+        "message": "AUX 10"
     },
     "controlAxisAux11": {
-        "message": ""
+        "message": "AUX 11"
     },
     "controlAxisAux12": {
-        "message": ""
+        "message": "AUX 12"
     },
     "controlAxisAux13": {
-        "message": ""
+        "message": "AUX 13"
     },
     "controlAxisAux14": {
-        "message": ""
+        "message": "AUX 14"
     },
     "controlAxisAux15": {
-        "message": ""
+        "message": "AUX 15"
     },
     "controlAxisAux16": {
-        "message": ""
+        "message": "AUX 16"
     },
     "pidTuningBasic": {
-        "message": ""
+        "message": "Temel/Yükseklik"
     },
     "pidTuningYawJumpPrevention": {
-        "message": ""
+        "message": "Rotadan çıkmayı engelle"
     },
     "pidTuningYawJumpPreventionHelp": {
-        "message": ""
+        "message": "Sapmaların sonunda aracın zıplamasını engeller. Yüksek sayı, sapma hareketlerinin sonunda daha fazla sönüm verir (diğer eksende olduğu gibi gerçek bir D olmayan, eski sapma D gibi çalışır)"
     },
     "pidTuningRcExpoPower": {
-        "message": ""
+        "message": "RC Expo Gücü"
     },
     "pidTuningRcExpoPowerHelp": {
-        "message": ""
+        "message": "RC Expoyu hesaplarken kullanılan üs. Betaflight 3.0'dan önceki sürümlerde değer 3 olarak sabitlenmiştir."
     },
     "pidTuningLevel": {
-        "message": ""
+        "message": "Açı/Ufuk"
     },
     "pidTuningAltitude": {
-        "message": ""
+        "message": "Barometre & Sonar/Yükseklik"
     },
     "pidTuningMag": {
-        "message": ""
+        "message": "Manyometre/Başlık"
     },
     "pidTuningGps": {
-        "message": ""
+        "message": "GPS Navigasyonu"
     },
     "pidTuningStrength": {
-        "message": ""
+        "message": "Güç"
     },
     "pidTuningTransition": {
-        "message": ""
+        "message": "Geçiş"
     },
     "pidTuningHorizon": {
-        "message": ""
+        "message": "Ufuk"
     },
     "pidTuningAngle": {
-        "message": ""
+        "message": "Açı"
     },
     "pidTuningLevelAngleLimit": {
-        "message": ""
+        "message": "Açı sınırı"
     },
     "pidTuningLevelSensitivity": {
-        "message": ""
+        "message": "Hassaslık"
     },
     "pidTuningLevelHelp": {
-        "message": ""
-    },
-    "pidTuningMotorOutputLimit": {
-        "message": ""
-    },
-    "pidTuningMotorLimit": {
-        "message": ""
-    },
-    "pidTuningMotorLimitHelp": {
-        "message": ""
-    },
-    "pidTuningCellCount": {
-        "message": ""
-    },
-    "pidTuningCellCountHelp": {
-        "message": ""
-    },
-    "pidTuningCellCountChange": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningCellCountStay": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningCellCount1S": {
-        "message": ""
-    },
-    "pidTuningCellCount2S": {
-        "message": ""
-    },
-    "pidTuningCellCount3S": {
-        "message": ""
-    },
-    "pidTuningCellCount4S": {
-        "message": ""
-    },
-    "pidTuningCellCount5S": {
-        "message": ""
-    },
-    "pidTuningCellCount6S": {
-        "message": ""
-    },
-    "pidTuningCellCount7S": {
-        "message": ""
-    },
-    "pidTuningCellCount8S": {
-        "message": ""
+        "message": "Aşağıdaki değerler, AÇI ve UFUK uluş modlarının davranışı değiştirir. Farklı PID kontrolörleri değerleri farklı şekilde ele alır. Lütfen dökümantasyonu kontrol edin."
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": ""
-    },
-    "pidTuningFilterSlidersHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderLowFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderDefaultFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderHighFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroFilterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroSliderEnabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderWarning": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroSliderDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermSliderDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderEnableButton": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFilterSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderLow": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderDefault": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderHigh": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMasterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDRatioSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPitchPIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPitchPIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassMode": {
-        "message": ""
-    },
-    "pidTuningLowpassStatic": {
-        "message": ""
-    },
-    "pidTuningLowpassDynamic": {
-        "message": ""
-    },
-    "pidTuningLowpassFilterType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassDyn": {
-        "message": ""
-    },
-    "pidTuningMinCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningMaxCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass2": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass2Help": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroNotchFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter2": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter2Help": {
-        "message": ""
-    },
-    "pidTuningCenterFrequency": {
-        "message": ""
-    },
-    "pidTuningCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDynamicNotchFilterGroup": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchRange": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMinHz": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchCount": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMinHzHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMaxHzHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchCountHelp": {
-        "message": ""
-    },
-    "pidTuningRpmFilterGroup": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmHarmonics": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmMinHz": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmMinHzHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFilterSettings": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassMode": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2Help": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassType": {
-        "message": ""
-    },
-    "pidTuningStaticCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDyn": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": ""
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": ""
-    },
-    "pidTuningYawLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningYawLowpassFiltersGroupHelp": {
-        "message": ""
+        "message": "Profilden bağımsız Filtre Ayarları"
     },
     "pidTuningVbatPidCompensation": {
-        "message": ""
-    },
-    "pidTuningVbatPidCompensationHelp": {
-        "message": ""
-    },
-    "pidTuningVbatSagCompensation": {
-        "message": ""
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": ""
-    },
-    "pidTuningVbatSagValue": {
-        "message": ""
-    },
-    "pidTuningThrustLinearization": {
-        "message": ""
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": ""
-    },
-    "pidTuningThrustLinearValue": {
-        "message": ""
-    },
-    "pidTuningItermRotation": {
-        "message": ""
-    },
-    "pidTuningItermRotationHelp": {
-        "message": ""
-    },
-    "pidTuningSmartFeedforward": {
-        "message": ""
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": ""
-    },
-    "pidTuningItermRelax": {
-        "message": ""
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxes": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningOptionRP": {
-        "message": ""
-    },
-    "pidTuningOptionRPY": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxesOptionRPInc": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxesOptionRPYInc": {
-        "message": ""
-    },
-    "pidTuningItermRelaxType": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": ""
-    },
-    "pidTuningItermRelaxTypeOptionSetpoint": {
-        "message": ""
-    },
-    "pidTuningItermRelaxCutoff": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": ""
-    },
-    "pidTuningAbsoluteControlGain": {
-        "message": ""
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": ""
-    },
-    "pidTuningThrottleBoost": {
-        "message": ""
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpm": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": ""
-    },
-    "pidTuningAcroTrainerAngleLimit": {
-        "message": ""
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": ""
-    },
-    "pidTuningIntegratedYaw": {
-        "message": ""
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": ""
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": ""
+        "message": "Vbat PID dengelemesi"
     },
     "configHelp2": {
-        "message": ""
+        "message": "İsteğe bağlı pano dönüşü dereceleri, yanlamasına/ alt üst / döndürülerek vb takılmasına izin verilir. Harici sensörler çalıştığında sensör konumunu pano yönünden bağımsız olarak tanımlamak için sensör hizalamalarını (Jiroskop, hızlanma, büyüklük) kullanın. "
     },
     "failsafeFeaturesHelpOld": {
-        "message": ""
+        "message": "Failsafe yapılandırması önemli ölçüde değişti. Gelişmiş yapılandırma panelini aktif etmek için Betaflight <strong>v1.12.0+</strong>'yı kullanın."
     },
     "failsafePaneTitleOld": {
-        "message": ""
+        "message": "Failsafe alıcısı"
     },
     "failsafeFeaturesHelpNew": {
-        "message": ""
+        "message": "Failsafe iki aşamadan oluşur. Bir uçuş kanalı geçersiz bir darbe uzunluğuna sahip olduğunda <strong>Aşama 1</strong> 'e girilir, alıcı failsafe modunu bildirir veya alıcıdan hiçbir sinyal gelmez, kanal geri çekilme ayarları <span class=\"message-negative\">tüm kanallara</span> uygulanır ve kurtarma işlemine izin vermek için kısa bir zaman verilir. Uçak <span class=\"message-negative\">silahlandırılmışken</span> hata durumu ayarlanmış koruma zamanından daha uzun olduğu zaman <strong>aşama 2</strong> ye girilir, seçilen prosedür tarafından geçersiz kılınmadığı sürece, tüm kanallar uygulanan kanal geri çekilme ayarında kalır.<br /><strong>Not:</strong> Aşama 1 e girmeden önce, kanal geri çekilme ayarı, geçersiz darbelere sahip AUX kanallarına da tek tek uygulanır."
     },
     "failsafePulsrangeTitle": {
-        "message": ""
+        "message": "Geçerli darbe aralığı ayarları"
     },
     "failsafePulsrangeHelp": {
-        "message": ""
+        "message": "Minimum değerden daha kısa veya maksimum değerden daha uzun olan darbeler geçersizdir ve AUX kanalları için ayrı kanal geri dönüş ayarlarının uygulanmasını veya uçuş kanalları için 1. evreye girilmesini tetikleyecektir"
     },
     "failsafeRxMinUsecItem": {
-        "message": ""
+        "message": "En az uzunluk"
     },
     "failsafeRxMaxUsecItem": {
-        "message": ""
+        "message": "En fazla uzunluk"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": ""
+        "message": "Kanal önbellek ayarları"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": ""
+        "message": "Bu ayarlar, geçersiz bireysel AUX kanallarına veya evre 1'e girerken tüm kanallara uygulanır. <strong>Not:</strong> değerler 25 usec'lik adımlarla kaydedilir, bu nedenle küçük değişiklikler kaybolur"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": ""
+        "message": "Otomatik sağa ve sola yatmak, ileri geri hareket ve kuyruk dönüşü ve düşük gaz anlamına gelmektedir.\nTutuş alınan son iyi değerleri korumak anlamına gelmektedir"
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": ""
+        "message": "Tutuş alınan son iyi değerleri korumak demektir. Kurmak burada verilen değer kullanılacak demektir"
     },
     "failsafeStageTwoSettingsTitle": {
-        "message": ""
-    },
-    "failsafeDelayItem": {
-        "message": ""
+        "message": "Etap 2 - Ayarlar"
     },
     "failsafeDelayHelp": {
-        "message": ""
-    },
-    "failsafeThrottleLowItem": {
-        "message": ""
+        "message": "1. evreye dönme vakti"
     },
     "failsafeThrottleLowHelp": {
-        "message": ""
+        "message": "Gaz kelebeği bu süre düşük olduğunda seçilen emniyetli prosedürü yerine uçağı yumuşatmanız yeterlidir"
     },
     "failsafeThrottleItem": {
-        "message": ""
-    },
-    "failsafeOffDelayItem": {
-        "message": ""
+        "message": "İniş sırasında kullanılan gaz miktarı değeri"
     },
     "failsafeOffDelayHelp": {
-        "message": ""
+        "message": "Motorlar kapanınca ve uçak zararsız duruma gelinceye kadar iniş biçiminde kal"
     },
     "failsafeSubTitle1": {
-        "message": ""
+        "message": "Etap 2 - Yedek yöntem"
     },
     "failsafeProcedureItemSelect1": {
-        "message": ""
+        "message": "Kara"
     },
     "failsafeProcedureItemSelect2": {
-        "message": ""
-    },
-    "failsafeProcedureItemSelect4": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAngle": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeMode": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeMaxAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeFixedAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecks": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksOff": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksOn": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksFSOnly": {
-        "message": ""
-    },
-    "failsafeKillSwitchItem": {
-        "message": ""
+        "message": "İniş"
     },
     "failsafeKillSwitchHelp": {
-        "message": ""
-    },
-    "failsafeSwitchTitle": {
-        "message": ""
-    },
-    "failsafeSwitchModeItem": {
-        "message": ""
-    },
-    "failsafeSwitchModeHelp": {
-        "message": ""
-    },
-    "failsafeSwitchOptionStage1": {
-        "message": ""
-    },
-    "failsafeSwitchOptionStage2": {
-        "message": ""
-    },
-    "failsafeSwitchOptionKill": {
-        "message": ""
+        "message": "Seçilen arıza güvencesi prosedürünü atlayarak, arıza güvencesi anahtarını (Modlar Sekmesi) doğrudan acil anahtarı yapmak için bu seçeneği ayarlayın. <strong>Not:</strong> AÇIK konumda, silahlandırılma arıza güvenceli acil anahtarıyla engellenir"
     },
     "powerButtonSave": {
-        "message": ""
+        "message": "Kaydet"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Aygıt yazılımı yükseltmesi <span class=\"message-negative\">gereklidir</span>. API &lt; 1.33.0 (Betaflight yayın &lt;=3.17) kullanarak pil/amper/voltaj yapılandırmaları desteklenmiyor."
     },
     "powerBatteryVoltageMeterSource": {
-        "message": ""
+        "message": "Gerilim ölçer kaynağı"
     },
     "powerBatteryVoltageMeterTypeNone": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeAdc": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeEsc": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterSource": {
-        "message": ""
+        "message": "Hiçbiri"
     },
     "powerBatteryCurrentMeterTypeNone": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeAdc": {
-        "message": ""
+        "message": "Hiçbiri"
     },
     "powerBatteryCurrentMeterTypeVirtual": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeEsc": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeMsp": {
-        "message": ""
+        "message": "Sanal"
     },
     "powerBatteryMinimum": {
-        "message": ""
+        "message": "Asgari pil gerilimi"
     },
     "powerBatteryMaximum": {
-        "message": ""
+        "message": "Azami pil gerilimi"
     },
     "powerBatteryWarning": {
-        "message": ""
-    },
-    "powerCalibrationManagerButton": {
-        "message": ""
-    },
-    "powerCalibrationManagerTitle": {
-        "message": ""
-    },
-    "powerCalibrationManagerHelp": {
-        "message": ""
-    },
-    "powerCalibrationManagerNote": {
-        "message": ""
-    },
-    "powerCalibrationManagerWarning": {
-        "message": ""
-    },
-    "powerCalibrationManagerSourceNote": {
-        "message": ""
-    },
-    "powerCalibrationManagerConfirmationTitle": {
-        "message": ""
-    },
-    "powerCalibrationSave": {
-        "message": ""
-    },
-    "powerCalibrationApply": {
-        "message": ""
-    },
-    "powerCalibrationDiscard": {
-        "message": ""
-    },
-    "powerCalibrationConfirmHelp": {
-        "message": ""
+        "message": "Pil gerilim uyarısı"
     },
     "powerVoltageHead": {
-        "message": ""
-    },
-    "powerVoltageWarning": {
-        "message": ""
-    },
-    "powerVoltageValue": {
-        "message": ""
-    },
-    "powerVoltageCalibration": {
-        "message": ""
-    },
-    "powerVoltageCalibratedScale": {
-        "message": ""
-    },
-    "powerVoltageId10": {
-        "message": ""
-    },
-    "powerVoltageId20": {
-        "message": ""
-    },
-    "powerVoltageId30": {
-        "message": ""
-    },
-    "powerVoltageId40": {
-        "message": ""
-    },
-    "powerVoltageId50": {
-        "message": ""
-    },
-    "powerVoltageId60": {
-        "message": ""
-    },
-    "powerVoltageId61": {
-        "message": ""
-    },
-    "powerVoltageId62": {
-        "message": ""
-    },
-    "powerVoltageId63": {
-        "message": ""
-    },
-    "powerVoltageId64": {
-        "message": ""
+        "message": "Gerilim ölçer"
     },
     "powerVoltageId65": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 6"
     },
     "powerVoltageId66": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 7"
     },
     "powerVoltageId67": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 8"
     },
     "powerVoltageId68": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 9"
     },
     "powerVoltageId69": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 10"
     },
     "powerVoltageId70": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 11"
     },
     "powerVoltageId71": {
-        "message": ""
-    },
-    "powerVoltageId80": {
-        "message": ""
-    },
-    "powerVoltageId81": {
-        "message": ""
-    },
-    "powerVoltageId82": {
-        "message": ""
-    },
-    "powerVoltageId83": {
-        "message": ""
-    },
-    "powerVoltageId84": {
-        "message": ""
-    },
-    "powerVoltageId85": {
-        "message": ""
-    },
-    "powerVoltageScale": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 12"
     },
     "powerVoltageDivider": {
-        "message": ""
+        "message": "Bölücü değer"
     },
     "powerVoltageMultiplier": {
-        "message": ""
+        "message": "Çarpan değeri"
     },
     "powerAmperageHead": {
-        "message": ""
-    },
-    "powerAmperageWarning": {
-        "message": ""
-    },
-    "powerAmperageValue": {
-        "message": ""
+        "message": "Amperaj metre"
     },
     "powerAmperageId10": {
-        "message": ""
-    },
-    "powerAmperageId50": {
-        "message": ""
+        "message": "Pil"
     },
     "powerAmperageId60": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 1"
     },
     "powerAmperageId61": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 2"
     },
     "powerAmperageId62": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 3"
     },
     "powerAmperageId63": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 4"
     },
     "powerAmperageId64": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 5"
     },
     "powerAmperageId65": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 6"
     },
     "powerAmperageId66": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 7"
     },
     "powerAmperageId67": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 8"
     },
     "powerAmperageId68": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 9"
     },
     "powerAmperageId69": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 10"
     },
     "powerAmperageId70": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 11"
     },
     "powerAmperageId71": {
-        "message": ""
+        "message": "Elektronik Hız Kontrol Motoru 12"
     },
     "powerAmperageId80": {
-        "message": ""
-    },
-    "powerAmperageId90": {
-        "message": ""
-    },
-    "powerMahValue": {
-        "message": ""
-    },
-    "powerAmperageScale": {
-        "message": ""
-    },
-    "powerAmperageOffset": {
-        "message": ""
-    },
-    "powerAmperageCalibration": {
-        "message": ""
-    },
-    "powerAmperageCalibratedScale": {
-        "message": ""
+        "message": "Sanal"
     },
     "powerBatteryHead": {
-        "message": ""
+        "message": "Pil"
     },
     "powerStateHead": {
-        "message": ""
+        "message": "Güç durumu"
     },
     "powerBatteryConnected": {
-        "message": ""
-    },
-    "powerBatteryConnectedValueYes": {
-        "message": ""
+        "message": "Bağlı"
     },
     "powerBatteryConnectedValueNo": {
-        "message": ""
+        "message": "Hayır"
     },
     "powerBatteryVoltage": {
-        "message": ""
+        "message": "Gerilim"
     },
     "powerBatteryCurrentDrawn": {
-        "message": ""
+        "message": "kullanılan mAh"
     },
     "powerBatteryAmperage": {
-        "message": ""
+        "message": "Amper gücü"
     },
     "powerBatteryCapacity": {
-        "message": ""
-    },
-    "osdSetupTitle": {
-        "message": ""
-    },
-    "osdSetupNoOsdChipDetectWarning": {
-        "message": ""
-    },
-    "osdSetupPreviewHelp": {
-        "message": ""
-    },
-    "osdSetupUnsupportedNote1": {
-        "message": ""
-    },
-    "osdSetupUnsupportedNote2": {
-        "message": ""
-    },
-    "osdSetupProfilesTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupElementsTitle": {
-        "message": ""
-    },
-    "osdSetupPreviewTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectProfileTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewForTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupSelectedProfileTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupSelectedProfileLabel": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectProfileElement": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "",
-        "description": ""
+        "message": "Kapasite (mAh)"
     },
     "osdSetupVideoFormatTitle": {
-        "message": ""
-    },
-    "osdSetupVideoFormatOptionAuto": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionPal": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionNtsc": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionHd": {
-        "message": "",
-        "description": ""
+        "message": "Video formatı"
     },
     "osdSetupUnitsTitle": {
-        "message": ""
-    },
-    "osdSetupUnitsOptionImperial": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsOptionMetric": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsOptionBritish": {
-        "message": "",
-        "description": ""
+        "message": "Birimler"
     },
     "osdSetupTimersTitle": {
-        "message": ""
-    },
-    "osdSetupAlarmsTitle": {
-        "message": ""
+        "message": "Sayaçlar"
     },
     "osdSetupStatsTitle": {
-        "message": ""
-    },
-    "osdSetupVtxTitle": {
-        "message": ""
-    },
-    "osdSetupCraftNameTitle": {
-        "message": ""
-    },
-    "osdSetupWarningsTitle": {
-        "message": ""
-    },
-    "osdSetupFontPresets": {
-        "message": ""
-    },
-    "osdSetupFontPresetsSelector": {
-        "message": ""
-    },
-    "osdSetupFontPresetsSelectorCustomOption": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupFontPresetsSelectorOr": {
-        "message": ""
+        "message": "Uçuş sonrası istatistikler"
     },
     "osdSetupOpenFont": {
-        "message": ""
-    },
-    "osdSetupCustomLogoTitle": {
-        "message": ""
-    },
-    "osdSetupCustomLogoOpenImageButton": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoTitle": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoColorMap": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoUploadHint": {
-        "message": ""
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": ""
-    },
-    "osdSetupCustomLogoColorMapError": {
-        "message": ""
+        "message": "Yazı tipi dosyasını aç"
     },
     "osdSetupUploadFont": {
-        "message": ""
-    },
-    "osdSetupUploadingFont": {
-        "message": ""
-    },
-    "osdSetupUploadingFontEnd": {
-        "message": ""
-    },
-    "osdSetupSave": {
-        "message": ""
+        "message": "Yazı tipi yükle"
     },
     "osdSetupFontManager": {
-        "message": ""
+        "message": "Yazı tipi yöneticisi"
     },
     "osdSetupUncheckAll": {
-        "message": ""
-    },
-    "osdSetupHead": {
-        "message": ""
-    },
-    "osdSetupVideoMode": {
-        "message": ""
+        "message": "Hepsinin işaretini kaldır"
     },
     "osdSetupCameraConnected": {
-        "message": ""
-    },
-    "osdSetupResetText": {
-        "message": ""
+        "message": "Kamera bağlı"
     },
     "osdSetupButtonReset": {
-        "message": ""
-    },
-    "osdTextElementMainBattVoltage": {
-        "message": "",
-        "description": ""
+        "message": "Ayarları sıfırla"
     },
     "osdDescElementMainBattVoltage": {
-        "message": ""
-    },
-    "osdTextElementRssiValue": {
-        "message": "",
-        "description": ""
+        "message": "Ani ana akü gerilimi (alarm eşiğinin altındayken yanar söner)"
     },
     "osdDescElementRssiValue": {
-        "message": ""
-    },
-    "osdTextElementTimer": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementTimer": {
-        "message": ""
-    },
-    "osdTextElementThrottlePosition": {
-        "message": "",
-        "description": ""
+        "message": "Ani alınan sinyal gücü göstergesi değeri (alarm eşiğinin altındayken yanar söner)"
     },
     "osdDescElementThrottlePosition": {
-        "message": ""
-    },
-    "osdTextElementCpuLoad": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCpuLoad": {
-        "message": ""
-    },
-    "osdTextElementVtxChannel": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementVtxChannel": {
-        "message": ""
-    },
-    "osdTextElementVTXchannelVariantPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementVTXchannelVariantFull": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementVoltageWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementVoltageWarning": {
-        "message": ""
-    },
-    "osdTextElementArmed": {
-        "message": "",
-        "description": ""
+        "message": "Mevcut gaz kanal değeri"
     },
     "osdDescElementArmed": {
-        "message": ""
-    },
-    "osdTextElementDisarmed": {
-        "message": "",
-        "description": ""
+        "message": "Yazılı silahlı mesaj"
     },
     "osdDescElementDisarmed": {
-        "message": ""
-    },
-    "osdTextElementCrosshairs": {
-        "message": "",
-        "description": ""
+        "message": "Metinsel silahsız mesaj"
     },
     "osdDescElementCrosshairs": {
-        "message": ""
-    },
-    "osdTextElementArtificialHorizon": {
-        "message": "",
-        "description": ""
+        "message": "Artı ekranı ortası"
     },
     "osdDescElementArtificialHorizon": {
-        "message": ""
-    },
-    "osdTextElementHorizonSidebars": {
-        "message": "",
-        "description": ""
+        "message": "Grafiksel yapay ufuk göstergesi"
     },
     "osdDescElementHorizonSidebars": {
-        "message": ""
-    },
-    "osdTextElementCurrentDraw": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCurrentDraw": {
-        "message": ""
-    },
-    "osdTextElementMahDrawn": {
-        "message": "",
-        "description": ""
+        "message": "Yapay ufuk göstergesi etrafındaki yan çubuklar"
     },
     "osdDescElementMahDrawn": {
-        "message": ""
-    },
-    "osdTextElementWhDrawn": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementWhDrawn": {
-        "message": ""
-    },
-    "osdDescElementAuxValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementAuxValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementSysGoggleVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysGoggleVoltage": {
-        "message": ""
-    },
-    "osdTextElementSysVtxVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxVoltage": {
-        "message": ""
-    },
-    "osdTextElementSysBitrate": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysBitrate": {
-        "message": ""
-    },
-    "osdTextElementSysDelay": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysDelay": {
-        "message": ""
-    },
-    "osdTextElementSysDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysDistance": {
-        "message": ""
-    },
-    "osdTextElementSysLQ": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysLQ": {
-        "message": ""
-    },
-    "osdTextElementSysGoggleDVR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysGoggleDVR": {
-        "message": ""
-    },
-    "osdTextElementSysVtxDVR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxDVR": {
-        "message": ""
-    },
-    "osdTextElementSysWarnings": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysWarnings": {
-        "message": ""
-    },
-    "osdTextElementSysVtxTemp": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxTemp": {
-        "message": ""
-    },
-    "osdTextElementSysFanSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysFanSpeed": {
-        "message": ""
-    },
-    "osdTextElementCraftName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCraftName": {
-        "message": ""
-    },
-    "osdTextElementAltitude": {
-        "message": "",
-        "description": ""
+        "message": "Kullanılan toplam pil kapasitesi"
     },
     "osdDescElementAltitude": {
-        "message": ""
-    },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementOnTime": {
-        "message": "",
-        "description": ""
+        "message": "Mevcut yükseklik (alarm eşiğinin üstünde olduğunda yanıp söner)"
     },
     "osdDescElementOnTime": {
-        "message": ""
-    },
-    "osdTextElementFlyTime": {
-        "message": "",
-        "description": ""
+        "message": "Uçağın enerjilendirildiği toplam zaman"
     },
     "osdDescElementFlyTime": {
-        "message": ""
-    },
-    "osdTextElementFlyMode": {
-        "message": "",
-        "description": ""
+        "message": "Uçağın mevcut güç çevriminde silahlandırıldığı toplam süre (alarm eşiğinin üstünde olduğunda yanıp söner)"
     },
     "osdDescElementFlyMode": {
-        "message": ""
-    },
-    "osdTextElementGPSSpeed": {
-        "message": "",
-        "description": ""
+        "message": "Şimdiki uçuş modu"
     },
     "osdDescElementGPSSpeed": {
-        "message": ""
-    },
-    "osdTextElementGPSSats": {
-        "message": "",
-        "description": ""
+        "message": "Global konumlandırma sistemi sağlanan hızı"
     },
     "osdDescElementGPSSats": {
-        "message": ""
-    },
-    "osdTextElementGPSLon": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSLon": {
-        "message": ""
-    },
-    "osdTextElementGPSLat": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSLat": {
-        "message": ""
-    },
-    "osdTextElementGPSVariant7Decimals": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariant4Decimals": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariantDegMinSec": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariantOpenLocation": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementDebug": {
-        "message": "",
-        "description": ""
+        "message": "Global konumlandırma sistemi düzeltme sağlayan uyduların sayısı"
     },
     "osdDescElementDebug": {
-        "message": ""
-    },
-    "osdTextElementPIDRoll": {
-        "message": "",
-        "description": ""
+        "message": "Değişkenlerde hata ayıklama"
     },
     "osdDescElementPIDRoll": {
-        "message": ""
-    },
-    "osdTextElementPIDPitch": {
-        "message": "",
-        "description": ""
+        "message": "Yuvarlanma ekseni PID kazançları"
     },
     "osdDescElementPIDPitch": {
-        "message": ""
-    },
-    "osdTextElementPIDYaw": {
-        "message": "",
-        "description": ""
+        "message": "Pitch ekseni PID kazancı"
     },
     "osdDescElementPIDYaw": {
-        "message": ""
-    },
-    "osdTextElementPower": {
-        "message": "",
-        "description": ""
+        "message": "Yaw ekseni PID gaing"
     },
     "osdDescElementPower": {
-        "message": ""
-    },
-    "osdTextElementPIDRateProfile": {
-        "message": "",
-        "description": ""
+        "message": "Anlık elektrik güç tüketimi"
     },
     "osdDescElementPIDRateProfile": {
-        "message": ""
-    },
-    "osdTextElementBatteryWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementBatteryWarning": {
-        "message": ""
-    },
-    "osdTextElementAvgCellVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAvgCellVoltage": {
-        "message": ""
-    },
-    "osdTextElementPitchAngle": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPitchAngle": {
-        "message": ""
-    },
-    "osdTextElementRollAngle": {
-        "message": "",
-        "description": ""
+        "message": "Aktif PID ve oran profillerin sayısal gösterimi"
     },
     "osdDescElementRollAngle": {
-        "message": ""
-    },
-    "osdTextElementMainBattUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMainBattUsage": {
-        "message": ""
-    },
-    "osdTextElementMainBattUsageVariantGraphrRemain": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantGraphUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantValueRemain": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantValueUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementArmedTime": {
-        "message": "",
-        "description": ""
+        "message": "Derece cinsinden sayısal yuvarlanma açısı"
     },
     "osdDescElementArmedTime": {
-        "message": ""
-    },
-    "osdTextElementHomeDirection": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementHomeDirection": {
-        "message": ""
-    },
-    "osdTextElementHomeDistance": {
-        "message": "",
-        "description": ""
+        "message": "Uçağın en son silahlandırılmasından itibaren geçen süre"
     },
     "osdDescElementHomeDistance": {
-        "message": ""
-    },
-    "osdTextElementNumericalHeading": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementNumericalHeading": {
-        "message": ""
-    },
-    "osdTextElementNumericalVario": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementNumericalVario": {
-        "message": ""
-    },
-    "osdTextElementCompassBar": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCompassBar": {
-        "message": ""
-    },
-    "osdTextElementWarnings": {
-        "message": "",
-        "description": ""
+        "message": "Ana konuma olan uzaklık ( birim sistem ayarları baz alınarak feet veya metre cinsinden)"
     },
     "osdDescElementWarnings": {
-        "message": ""
-    },
-    "osdTextElementEscTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscTemperature": {
-        "message": ""
-    },
-    "osdTextElementEscRpm": {
-        "message": "",
-        "description": ""
+        "message": "Uyarılar (örn. düşük pil), uyarılar (örn. silahlandırılmama sebepleri, kritik derecede düşük pil) ve görsel bipleyici (yanıp sönen 4 yıldız)."
     },
     "osdDescElementEscRpm": {
-        "message": ""
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": ""
-    },
-    "osdTextElementRtcDateTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRtcDateTime": {
-        "message": ""
-    },
-    "osdTextElementAdjustmentRange": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAdjustmentRange": {
-        "message": ""
-    },
-    "osdTextElementTimer1": {
-        "message": "",
-        "description": ""
+        "message": "RPM ESC telemetrisi tarafından raporlandı"
     },
     "osdDescElementTimer1": {
-        "message": ""
-    },
-    "osdTextElementTimer2": {
-        "message": "",
-        "description": ""
+        "message": "Zamanlayıcı 1'in değerini gösterir"
     },
     "osdDescElementTimer2": {
-        "message": ""
-    },
-    "osdTextElementCoreTemperature": {
-        "message": "",
-        "description": ""
+        "message": "Zamanlayıcı 2'nin değerini gösterir"
     },
     "osdDescElementCoreTemperature": {
-        "message": ""
-    },
-    "osdTextAntiGravity": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescAntiGravity": {
-        "message": ""
-    },
-    "osdTextGForce": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescGForce": {
-        "message": ""
-    },
-    "osdTextElementMotorDiag": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMotorDiag": {
-        "message": ""
-    },
-    "osdTextElementLogStatus": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementLogStatus": {
-        "message": ""
-    },
-    "osdTextElementFlipArrow": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlipArrow": {
-        "message": ""
-    },
-    "osdTextElementLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementLinkQuality": {
-        "message": ""
-    },
-    "osdTextElementFlightDist": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlightDist": {
-        "message": ""
-    },
-    "osdTextElementStickOverlayLeft": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementStickOverlayLeft": {
-        "message": ""
-    },
-    "osdTextElementStickOverlayRight": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementStickOverlayRight": {
-        "message": ""
-    },
-    "osdTextElementDisplayName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementDisplayName": {
-        "message": ""
-    },
-    "osdTextElementPilotName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPilotName": {
-        "message": ""
-    },
-    "osdTextElementEscRpmFreq": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscRpmFreq": {
-        "message": ""
-    },
-    "osdTextElementRateProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRateProfileName": {
-        "message": ""
-    },
-    "osdTextElementPidProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPidProfileName": {
-        "message": ""
-    },
-    "osdTextElementOsdProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementOsdProfileName": {
-        "message": ""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": ""
-    },
-    "osdTextElementRcChannels": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRcChannels": {
-        "message": ""
-    },
-    "osdTextElementCameraFrame": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCameraFrame": {
-        "message": ""
-    },
-    "osdTextElementEfficiency": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEfficiency": {
-        "message": ""
-    },
-    "osdTextTotalFlights": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescTotalFlights": {
-        "message": ""
-    },
-    "osdTextElementUpDownReference": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescUpDownReference": {
-        "message": ""
-    },
-    "osdTextElementTxUplinkPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescTxUplinkPower": {
-        "message": ""
-    },
-    "osdTextElementReadyMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementReadyMode": {
-        "message": ""
-    },
-    "osdTextElementRSNRValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRSNRValue": {
-        "message": ""
-    },
-    "osdTextElementUnknown": {
-        "message": "",
-        "description": ""
+        "message": "STM32 MCU çekirdeğinin sıcaklığı"
     },
     "osdDescElementUnknown": {
-        "message": ""
-    },
-    "osdTextStatMaxSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxSpeed": {
-        "message": ""
-    },
-    "osdTextStatMinBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinBattery": {
-        "message": ""
-    },
-    "osdTextStatMinRssi": {
-        "message": "",
-        "description": ""
+        "message": "Bilinmeyen öğe(detaylar sonraki bir sürümde eklenecektir)"
     },
     "osdDescStatMinRssi": {
-        "message": ""
-    },
-    "osdTextStatMaxCurrent": {
-        "message": "",
-        "description": ""
+        "message": "Kaydedilen en küçük RSSI"
     },
     "osdDescStatMaxCurrent": {
-        "message": ""
-    },
-    "osdTextStatUsedMah": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUsedMah": {
-        "message": ""
-    },
-    "osdTextStatUsedWh": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUsedWh": {
-        "message": ""
-    },
-    "osdTextStatMaxAltitude": {
-        "message": "",
-        "description": ""
+        "message": "Kayıtlı maksimum akım çekimi"
     },
     "osdDescStatMaxAltitude": {
-        "message": ""
-    },
-    "osdTextStatBlackbox": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBlackbox": {
-        "message": ""
-    },
-    "osdTextStatEndBattery": {
-        "message": "",
-        "description": ""
+        "message": "Kaydedilen maksimum irtifa"
     },
     "osdDescStatEndBattery": {
-        "message": ""
-    },
-    "osdTextStatFlyTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatFlyTime": {
-        "message": ""
-    },
-    "osdTextStatArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatArmedTime": {
-        "message": ""
-    },
-    "osdTextStatMaxDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxDistance": {
-        "message": ""
-    },
-    "osdTextStatBlackboxLogNumber": {
-        "message": "",
-        "description": ""
+        "message": "Silahsızlandırma anında pil voltajı"
     },
     "osdDescStatBlackboxLogNumber": {
-        "message": ""
-    },
-    "osdTextStatTimer1": {
-        "message": "",
-        "description": ""
+        "message": "Bu uçuşların kayıt numarası için karakutu kayıtları"
     },
     "osdDescStatTimer1": {
-        "message": ""
-    },
-    "osdTextStatTimer2": {
-        "message": "",
-        "description": ""
+        "message": "Silahsızlandırma anında zamanlayıcı 1in değeri"
     },
     "osdDescStatTimer2": {
-        "message": ""
-    },
-    "osdTextStatRtcDateTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatRtcDateTime": {
-        "message": ""
-    },
-    "osdTextStatBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBattery": {
-        "message": ""
-    },
-    "osdTextStatGForce": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatGForce": {
-        "message": ""
-    },
-    "osdTextStatEscTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEscTemperature": {
-        "message": ""
-    },
-    "osdTextStatEscRpm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEscRpm": {
-        "message": ""
-    },
-    "osdTextStatMinLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinLinkQuality": {
-        "message": ""
-    },
-    "osdTextStatFlightDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatFlightDistance": {
-        "message": ""
-    },
-    "osdTextStatMaxFFT": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxFFT": {
-        "message": ""
-    },
-    "osdTextStatTotalFlights": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlights": {
-        "message": ""
-    },
-    "osdTextStatTotalFlightTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlightTime": {
-        "message": ""
-    },
-    "osdTextStatTotalFlightDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlightDistance": {
-        "message": ""
-    },
-    "osdTextStatMinRssiDbm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRssiDbm": {
-        "message": ""
-    },
-    "osdTextStatMinRSNR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRSNR": {
-        "message": ""
-    },
-    "osdTextStatUnknown": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUnknown": {
-        "message": ""
-    },
-    "osdDescribeFontVersion1": {
-        "message": ""
-    },
-    "osdDescribeFontVersion2": {
-        "message": ""
-    },
-    "osdDescribeFontVersionCUSTOM": {
-        "message": ""
-    },
-    "osdTimerSource": {
-        "message": ""
-    },
-    "osdTimerSourceTooltip": {
-        "message": ""
-    },
-    "osdTimerSourceOptionOnTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionTotalArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionLastArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionOnArmTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecision": {
-        "message": ""
-    },
-    "osdTimerPrecisionTooltip": {
-        "message": ""
-    },
-    "osdTimerPrecisionOptionSecond": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecisionOptionHundredth": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecisionOptionTenth": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarm": {
-        "message": ""
+        "message": "Silahsızlandırma anında zamanlayıcı 2nin değeri"
     },
     "osdTimerAlarmTooltip": {
-        "message": ""
-    },
-    "osdTimerAlarmOptionRssi": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarmOptionCapacity": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarmOptionAltitude": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningTextArmingDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningArmingDisabled": {
-        "message": ""
-    },
-    "osdWarningTextBatteryNotFull": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryNotFull": {
-        "message": ""
-    },
-    "osdWarningTextBatteryWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryWarning": {
-        "message": ""
-    },
-    "osdWarningTextBatteryCritical": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryCritical": {
-        "message": ""
-    },
-    "osdWarningTextVisualBeeper": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningVisualBeeper": {
-        "message": ""
-    },
-    "osdWarningTextCrashFlipMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningCrashFlipMode": {
-        "message": ""
-    },
-    "osdWarningTextEscFail": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningEscFail": {
-        "message": ""
-    },
-    "osdWarningTextCoreTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningCoreTemperature": {
-        "message": ""
-    },
-    "osdWarningTextRcSmoothingFailure": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRcSmoothingFailure": {
-        "message": ""
-    },
-    "osdWarningTextFailsafe": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningFailsafe": {
-        "message": ""
-    },
-    "osdWarningTextLaunchControl": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningLaunchControl": {
-        "message": ""
-    },
-    "osdWarningTextGpsRescueUnavailable": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningGpsRescueUnavailable": {
-        "message": ""
-    },
-    "osdWarningTextGpsRescueDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningGpsRescueDisabled": {
-        "message": ""
-    },
-    "osdWarningTextRSSI": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRSSI": {
-        "message": ""
-    },
-    "osdWarningTextLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningLinkQuality": {
-        "message": ""
-    },
-    "osdWarningTextRssiDbm": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRssiDbm": {
-        "message": ""
-    },
-    "osdWarningTextOverCap": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningOverCap": {
-        "message": ""
-    },
-    "osdWarningTextRSNR": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRSNR": {
-        "message": ""
-    },
-    "osdWarningTextUnknown": {
-        "message": ""
-    },
-    "osdWarningUnknown": {
-        "message": ""
-    },
-    "osdSectionHelpElements": {
-        "message": ""
+        "message": "Zamanlayıcı alarm eşiğini dakika cinsinden seçin, zaman bu değeri aşarsa, OSD öğesi yanıp sönecektir, bunu 0 olarak ayarlamak alarmı devre dışı bırakır"
     },
     "osdSectionHelpVideoMode": {
-        "message": ""
-    },
-    "osdSectionHelpUnits": {
-        "message": ""
-    },
-    "osdSectionHelpTimers": {
-        "message": ""
-    },
-    "osdSectionHelpAlarms": {
-        "message": ""
-    },
-    "osdSectionHelpStats": {
-        "message": ""
-    },
-    "osdSectionHelpWarnings": {
-        "message": ""
-    },
-    "osdSettingsSaved": {
-        "message": ""
-    },
-    "osdWritePermissions": {
-        "message": ""
-    },
-    "osdButtonSaved": {
-        "message": ""
-    },
-    "vtxHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageNotSupported": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageTableNotConfigured": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageVerifyTable": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyChannel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyChannelHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSelectedMode": {
-        "message": "",
-        "description": ""
-    },
-    "vtxActualState": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_1": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_3": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_4": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_5": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_255": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBandHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannelHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequency": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxDeviceReady": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPowerHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitMode": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeFrequency": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeFrequencyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarm": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_1": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_2": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTable": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevels": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsValue": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsLabel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBands": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableChannels": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandsChannelsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleName": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleLetter": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleFactory": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSavedFileOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSavedFileKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadFileOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadFileKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadClipboardOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadClipboardKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaveFile": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaveLua": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLuaFileHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonLoadFile": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSave": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaving": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaved": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSmartAudioUnlocked": {
-        "message": "",
-        "description": ""
-    },
-    "mainHelpArmed": {
-        "message": ""
-    },
-    "mainHelpFailsafe": {
-        "message": ""
-    },
-    "mainHelpLink": {
-        "message": ""
-    },
-    "configurationEscProtocol": {
-        "message": ""
+        "message": "Kameranın beklenen video modunu ayarlayın (bu tipik olarak otomatik bırakılabilir, eğer zorluklarla karşılaşırsanız kameranın çıkışıyla eşleşecek şekilde ayarlayın)."
     },
     "configurationEscProtocolHelp": {
-        "message": ""
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": ""
-    },
-    "configurationunsyndePwm": {
-        "message": ""
-    },
-    "configurationUnsyncedPWMFreq": {
-        "message": ""
-    },
-    "configurationDshotBidir": {
-        "message": "",
-        "description": ""
-    },
-    "configurationDshotBidirHelp": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGyroSyncDenom": {
-        "message": ""
-    },
-    "configurationPidProcessDenom": {
-        "message": ""
+        "message": "Motor protokolünü seçin. <br>Protokolün ESC'niz tarafından desteklendiğini doğruladığınızdan emin olun, bu bilgiler üreticilerin web sitesinde olmalıdır. <br> <b>Pek çok ESC'nin desteği olmadığı için DSHOT900 ve DSHOT1200'yi kullanırken dikkatli olun!</b>"
     },
     "configurationPidProcessDenomHelp": {
-        "message": ""
-    },
-    "configurationGyroUse32kHz": {
-        "message": ""
+        "message": "PID döngüsünün maksimum frekansı, güncellemelerin seçilen ESC/motor protokolü tarafından gönderilebilecek azami frekansla sınırlanır."
     },
     "configurationGyroUse32kHzHelp": {
-        "message": ""
-    },
-    "configurationAccHardware": {
-        "message": ""
-    },
-    "configurationBaroHardware": {
-        "message": ""
-    },
-    "configurationMagHardware": {
-        "message": ""
-    },
-    "configurationSmallAngle": {
-        "message": ""
+        "message": "32 kHz cayro güncelleme frekansı ancak, cayro çipi onu destekliyorsa (şu an MPU6500, MPU9250 ve SPI üzerinden bağlıysa ICM20xxx) mümkündür. Şüpheniz varsa, aracınızın özelliklerine bakın."
     },
     "configurationSmallAngleHelp": {
-        "message": ""
-    },
-    "configurationBatteryVoltage": {
-        "message": ""
-    },
-    "configurationBatteryCurrent": {
-        "message": ""
-    },
-    "configurationBatteryMeterType": {
-        "message": ""
-    },
-    "configurationBatteryMinimum": {
-        "message": ""
-    },
-    "configurationBatteryMaximum": {
-        "message": ""
-    },
-    "configurationBatteryWarning": {
-        "message": ""
-    },
-    "configurationBatteryScale": {
-        "message": ""
-    },
-    "configurationCurrentMeterType": {
-        "message": ""
-    },
-    "configurationCurrent": {
-        "message": ""
-    },
-    "configurationCurrentScale": {
-        "message": ""
-    },
-    "configurationCurrentOffset": {
-        "message": ""
-    },
-    "configurationBatteryMultiwiiCurrent": {
-        "message": ""
-    },
-    "pidTuningProfile": {
-        "message": ""
+        "message": "Araç, belirtilen derece sayısından fazla eğilmişse, SİLAHLANDIRILMAZ. Sadece ivme ölçer etkinleştirilirse geçerlidir. 180'e ayarlamak etkili bir şekilde kontrol işlemini devre dışı bırakacaktır"
     },
     "pidTuningProfileTip": {
-        "message": ""
-    },
-    "pidTuningRateProfile": {
-        "message": ""
-    },
-    "pidTuningRateProfileTip": {
-        "message": ""
-    },
-    "pidTuningRateSetup": {
-        "message": ""
-    },
-    "pidTuningRateSetupHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDelta": {
-        "message": ""
-    },
-    "pidTuningDeltaError": {
-        "message": ""
-    },
-    "pidTuningDeltaMeasurement": {
-        "message": ""
-    },
-    "pidTuningDeltaTip": {
-        "message": ""
+        "message": "Uçuş denetleyicisinde 3'e kadar (bazı kontrolörler için 2) farklı Pid profilleri saklanabilir. Pid profilleri, bu sekmede pid, d ayar noktası ve açı/ufuk ayarlarını içerir. Sahaya girdikten sonra, profiller arasında geçiş yapmak için basit uçak kumanda çubuğu komutları (çevrim içi talimatlara bakın) kullanılabilir."
     },
     "pidTuningPidControllerTip": {
-        "message": ""
+        "message": "<b>Legacy vs Betaflight (reel sayı):</b> PID ölçekleme ve PID mantığı tamamen aynıdır. Tekrar ayarlamak gerekli değildir. Legacy tamsayı matematik tabanlı temel PID denetleyicisi olan, eski evrim geçirmiş yeniden yazılmış betaflighttır. Betaflight PID denetleyicisi kayan nokta matematiği kullanıyor ve multirotor uygulamaları için özel olarak tasarlanmış pek çok yeni özelliği var <br><b> Reel sayı vs Tam sayı:</b> PID ölçekleme ve PID mantığı tamamen aynıdır. Tekrar ayarlamak gerekli değildir. F1 panolarında yerleşik FPU yoktur ve kayan nokta matematiği CPU yükünü arttırır ve tam sayı matematiği performansı geliştirir ancak kayan nokta matematiği biraz daha fazla hassasiyet kazanabilir."
     },
     "pidTuningFilterTip": {
-        "message": ""
-    },
-    "pidTuningRatesTip": {
-        "message": ""
-    },
-    "configurationCamera": {
-        "message": ""
-    },
-    "configurationPersonalization": {
-        "message": ""
-    },
-    "craftName": {
-        "message": ""
-    },
-    "configurationCraftNameHelp": {
-        "message": ""
-    },
-    "configurationPilotName": {
-        "message": ""
-    },
-    "configurationPilotNameHelp": {
-        "message": ""
-    },
-    "configurationFpvCamAngleDegrees": {
-        "message": ""
-    },
-    "onboardLoggingBlackbox": {
-        "message": ""
-    },
-    "onboardLoggingRateOfLogging": {
-        "message": ""
-    },
-    "onboardLoggingDebugMode": {
-        "message": ""
-    },
-    "onboardLoggingDebugModeUnknown": {
-        "message": ""
-    },
-    "onboardLoggingSerialLogger": {
-        "message": ""
-    },
-    "onboardLoggingFlashLogger": {
-        "message": ""
-    },
-    "onboardLoggingEraseInProgress": {
-        "message": ""
-    },
-    "onboardLoggingOnboardSDCard": {
-        "message": ""
-    },
-    "onboardLoggingMsc": {
-        "message": ""
-    },
-    "onboardLoggingMscNote": {
-        "message": ""
-    },
-    "onboardLoggingRebootMscText": {
-        "message": ""
-    },
-    "onboardLoggingMscNotReady": {
-        "message": ""
-    },
-    "dialogConfirmResetTitle": {
-        "message": ""
-    },
-    "dialogConfirmResetNote": {
-        "message": ""
-    },
-    "dialogConfirmResetConfirm": {
-        "message": ""
-    },
-    "dialogConfirmResetClose": {
-        "message": ""
-    },
-    "modeCameraWifi": {
-        "message": ""
-    },
-    "modeCameraPower": {
-        "message": ""
-    },
-    "modeCameraChangeMode": {
-        "message": ""
-    },
-    "flashTab": {
-        "message": ""
-    },
-    "cliAutoComplete": {
-        "message": ""
-    },
-    "darkTheme": {
-        "message": ""
-    },
-    "pidTuningRatesType": {
-        "message": ""
-    },
-    "pidTuningRatesTypeTip": {
-        "message": ""
-    },
-    "pidTuningRcRateRaceflight": {
-        "message": ""
-    },
-    "pidTuningRcExpoRaceflight": {
-        "message": ""
-    },
-    "pidTuningRateRaceflight": {
-        "message": ""
-    },
-    "pidTuningRcExpoKISS": {
-        "message": ""
-    },
-    "pidTuningRateQuickRates": {
-        "message": ""
-    },
-    "pidTuningRcRateActual": {
-        "message": ""
-    },
-    "dialogRatesTypeTitle": {
-        "message": ""
-    },
-    "dialogRatesTypeNote": {
-        "message": ""
-    },
-    "dialogRatesTypeConfirm": {
-        "message": ""
-    },
-    "gpsSbasAutoDetect": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasEuropeanEGNOS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasNorthAmericanWAAS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasJapaneseMSAS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasIndianGAGAN": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasNone": {
-        "message": "",
-        "description": ""
-    },
-    "dialogFileNameTitle": {
-        "message": ""
-    },
-    "dialogFileNameDescription": {
-        "message": ""
-    },
-    "dialogFileAlreadyExistsTitle": {
-        "message": ""
-    },
-    "dialogFileAlreadyExistsDescription": {
-        "message": ""
-    },
-    "cordovaCheckingWebview": {
-        "message": ""
-    },
-    "cordovaIncompatibleWebview": {
-        "message": ""
-    },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": ""
-    },
-    "cordovaWebviewTroubleshootingMsg2": {
-        "message": ""
-    },
-    "cordovaAvailableWebviews": {
-        "message": ""
-    },
-    "cordovaWebviewInstall": {
-        "message": ""
-    },
-    "cordovaWebviewInstallBtn": {
-        "message": ""
-    },
-    "cordovaWebviewUninstall": {
-        "message": ""
-    },
-    "cordovaWebviewUninstallBtn1": {
-        "message": ""
-    },
-    "cordovaWebviewUninstallBtn2": {
-        "message": ""
-    },
-    "cordovaWebviewUpdate": {
-        "message": ""
-    },
-    "cordovaWebviewUpdateBtn": {
-        "message": ""
-    },
-    "cordovaWebviewEnable": {
-        "message": ""
-    },
-    "cordovaWebviewEnableBtn": {
-        "message": ""
-    },
-    "cordovaWebviewIncompatible": {
-        "message": ""
-    },
-    "cordovaNoWebview": {
-        "message": ""
-    },
-    "cordovaWebviewUsed": {
-        "message": ""
-    },
-    "cordovaExitAppTitle": {
-        "message": ""
-    },
-    "cordovaExitAppMessage": {
-        "message": ""
-    },
-    "dropDownSelectAll": {
-        "message": "",
-        "description": ""
-    },
-    "dropDownFilterDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "dropDownAll": {
-        "message": "",
-        "description": ""
-    },
-    "tabPresets": {
-        "message": "",
-        "description": ""
-    },
-    "presetsReload": {
-        "message": "",
-        "description": ""
-    },
-    "presetsAuthor": {
-        "message": "",
-        "description": ""
-    },
-    "presetsKeywords": {
-        "message": "",
-        "description": ""
-    },
-    "presetsVersions": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOfficial": {
-        "message": "",
-        "description": ""
-    },
-    "presetsCommunity": {
-        "message": "",
-        "description": ""
-    },
-    "presetsExperimental": {
-        "message": "",
-        "description": ""
-    },
-    "presetsApply": {
-        "message": "",
-        "description": ""
-    },
-    "presetsViewOnline": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOpenDiscussion": {
-        "message": "",
-        "description": ""
-    },
-    "presetsShowCli": {
-        "message": "",
-        "description": ""
-    },
-    "presetsHideCli": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOptions": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterCategory": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterKeyword": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterAuthor": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterFirmware": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterStatus": {
-        "message": "",
-        "description": ""
-    },
-    "presetsLoadError": {
-        "message": "",
-        "description": ""
-    },
-    "presetsButtonSave": {
-        "message": "",
-        "description": ""
-    },
-    "presetsButtonCancel": {
-        "message": "",
-        "description": ""
-    },
-    "presetsApplyingPresets": {
-        "message": "",
-        "description": ""
-    },
-    "presetsPleaseWait": {
-        "message": "",
-        "description": ""
-    },
-    "presetsCliErrorsWaring": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSaveAnyway": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogTitle": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogYesButton": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWiki": {
-        "message": "",
-        "description": ""
-    },
-    "presetsBackupSave": {
-        "message": "",
-        "description": ""
-    },
-    "presetsBackupLoad": {
-        "message": "",
-        "description": ""
-    },
-    "presetsLoadingDumpAll": {
-        "message": "",
-        "description": ""
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "",
-        "description": ""
-    },
-    "presetSources": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogTitle": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogAddNew": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogDefaultSourceName": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogSaveSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogResetSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogMakeSourceActive": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogDeleteSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningNotOfficialSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningBackup": {
-        "message": "",
-        "description": ""
-    },
-    "presets_sources_dialog_warning": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningWrongVersionConfirmation": {
-        "message": "",
-        "description": ""
-    },
-    "presetsNoPresetsFound": {
-        "message": "",
-        "description": ""
-    },
-    "presetsTooManyPresetsFound": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOptionsPlaceholder": {
-        "message": "",
-        "description": ""
-    },
-    "presetsVersionMismatch": {
-        "message": "",
-        "description": ""
-    },
-    "presetsReviewOptionsWarning": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBuildConfigurationHead": {
-        "message": ""
-    },
-    "firmwareFlasherBuildOptions": {
-        "message": ""
-    },
-    "firmwareFlasherBuildRadioProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherBuildTelemetryProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherBuildMotorProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherConfigurationFile": {
-        "message": ""
-    },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherOptionsDescription": {
-        "message": ""
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherBranchDescription": {
-        "message": ""
-    },
-    "firmwareFlasherCustomDefinesDescription": {
-        "message": ""
-    },
-    "firmwareFlasherBuildCustomDefines": {
-        "message": ""
-    },
-    "classicBuild": {
-        "message": ""
-    },
-    "classicBuildModeDescription": {
-        "message": ""
+        "message": "<b>Cayro Yumuşak Filtresi:</b> Cayro için alçak geçiren filtre. Daha fazla filtreleme için daha düşük değeri kullanın.<br><b>D terimi Filtresi:</b> D terimi için alçak geçiren filtre. D ayarını etkileyebilir. Daha fazla filtreleme için daha düşük değeri kullanın. <br><b>Sapma Filtresi:</b> sapma çıkışlarını filtreler. Gürültülü sapma ekseninin kurulumlarında yardımcı olabilir."
     }
 }
