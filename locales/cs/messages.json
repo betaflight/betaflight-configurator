@@ -1,6824 +1,1447 @@
 {
-    "translation_version": {
-        "message": ""
-    },
-    "yes": {
-        "message": "",
-        "description": ""
-    },
-    "no": {
-        "message": "",
-        "description": ""
-    },
-    "on": {
-        "message": ""
-    },
-    "off": {
-        "message": ""
-    },
-    "auto": {
-        "message": ""
-    },
     "error": {
-        "message": ""
+        "message": "Chyba: {{errorMessage}}"
     },
     "errorTitle": {
-        "message": ""
+        "message": "Chyba"
     },
     "warningTitle": {
-        "message": ""
+        "message": "Varování"
     },
     "noticeTitle": {
-        "message": ""
-    },
-    "dontShowAgain": {
-        "message": ""
+        "message": "Oznámení"
     },
     "operationNotSupported": {
-        "message": ""
+        "message": "Tato operace není podporována Vašim hardwarem."
     },
     "storageDeviceNotReady": {
-        "message": ""
+        "message": "Toto úložiště není připraveno. Pokud je to microSD karta, ujistěte se, že je správně rozpoznána Vaší řídící jednotkou."
     },
     "options_title": {
-        "message": ""
+        "message": "Možnosti aplikace"
     },
     "connect": {
-        "message": ""
+        "message": "Připojit"
     },
     "connecting": {
-        "message": ""
+        "message": "Připojování"
     },
     "disconnect": {
-        "message": ""
+        "message": "Odpojit"
     },
     "portsSelectManual": {
-        "message": ""
-    },
-    "portsSelectVirtual": {
-        "message": "",
-        "description": ""
-    },
-    "virtualMSPVersion": {
-        "message": ""
+        "message": "Manuální výběr"
     },
     "portOverrideText": {
-        "message": ""
+        "message": "Port:"
     },
     "autoConnect": {
-        "message": ""
+        "message": "Připojovat automaticky"
     },
     "close": {
-        "message": ""
-    },
-    "OK": {
-        "message": ""
-    },
-    "cancel": {
-        "message": ""
+        "message": "Zavřít"
     },
     "autoConnectEnabled": {
-        "message": ""
+        "message": "Připojovat automaticky: Zapnuto - Konfigurátor se pokusí o automatické připojení při detekci nového portu"
     },
     "autoConnectDisabled": {
-        "message": ""
+        "message": "Připojovat automaticky: Vypnuto - Uživatel musí sám vybrat správný port a kliknout \"Připojit\""
     },
     "expertMode": {
-        "message": ""
+        "message": "Povolit mód Expert"
     },
     "expertModeDescription": {
-        "message": ""
+        "message": "Ukázat nevydané a možná nestabilní verze"
     },
     "permanentExpertMode": {
-        "message": ""
-    },
-    "warningSettings": {
-        "message": ""
+        "message": "Trvale povolit Expert mód"
     },
     "rememberLastTab": {
-        "message": ""
+        "message": "Znovu otevřít poslední záložku po připojení"
     },
     "analyticsOptOut": {
-        "message": ""
-    },
-    "connectionTimeout": {
-        "message": "",
-        "description": ""
-    },
-    "showAllSerialDevices": {
-        "message": "",
-        "description": ""
-    },
-    "showVirtualMode": {
-        "message": "",
-        "description": ""
-    },
-    "cordovaForceComputerUI": {
-        "message": ""
-    },
-    "language_changed": {
-        "message": ""
-    },
-    "language_choice_message": {
-        "message": "",
-        "description": ""
-    },
-    "language_default": {
-        "message": ""
-    },
-    "language_default_pretty": {
-        "message": ""
-    },
-    "language_ca": {
-        "message": "",
-        "description": ""
-    },
-    "language_da": {
-        "message": "",
-        "description": ""
-    },
-    "language_de": {
-        "message": "",
-        "description": ""
-    },
-    "language_en": {
-        "message": "",
-        "description": ""
-    },
-    "language_es": {
-        "message": "",
-        "description": ""
-    },
-    "language_eu": {
-        "message": "",
-        "description": ""
-    },
-    "language_fr": {
-        "message": "",
-        "description": ""
-    },
-    "language_gl": {
-        "message": "",
-        "description": ""
-    },
-    "language_hr": {
-        "message": "",
-        "description": ""
-    },
-    "language_hu": {
-        "message": "",
-        "description": ""
-    },
-    "language_id": {
-        "message": "",
-        "description": ""
-    },
-    "language_it": {
-        "message": "",
-        "description": ""
-    },
-    "language_ja": {
-        "message": "",
-        "description": ""
-    },
-    "language_ko": {
-        "message": "",
-        "description": ""
-    },
-    "language_lv": {
-        "message": "",
-        "description": ""
-    },
-    "language_nl": {
-        "message": "",
-        "description": ""
-    },
-    "language_pt": {
-        "message": "",
-        "description": ""
-    },
-    "language_pt_BR": {
-        "message": "",
-        "description": ""
-    },
-    "language_pl": {
-        "message": "",
-        "description": ""
-    },
-    "language_ru": {
-        "message": "",
-        "description": ""
-    },
-    "language_sv": {
-        "message": "",
-        "description": ""
-    },
-    "language_zh_CN": {
-        "message": "",
-        "description": ""
-    },
-    "language_zh_TW": {
-        "message": "",
-        "description": ""
+        "message": "Neúčastnit se anonymního sběru dat o používání"
     },
     "sensorDataFlashNotFound": {
-        "message": "",
-        "description": ""
+        "message": "Paměťový čip <br>nenalezen",
+        "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "",
-        "description": ""
+        "message": "Paměť: volné místo",
+        "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
-        "message": ""
+        "message": "Gyroskop"
     },
     "sensorStatusGyroShort": {
-        "message": "",
-        "description": ""
+        "message": "Gyro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
-        "message": ""
+        "message": "Akcelerometr"
     },
     "sensorStatusAccelShort": {
-        "message": "",
-        "description": ""
+        "message": "Akcel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
-        "message": ""
+        "message": "Kompas"
     },
     "sensorStatusMagShort": {
-        "message": "",
-        "description": ""
+        "message": "Komp",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
-        "message": ""
+        "message": "Barometr"
     },
     "sensorStatusBaroShort": {
-        "message": "",
-        "description": ""
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusGPS": {
-        "message": ""
+        "message": "GPS"
     },
     "sensorStatusGPSShort": {
-        "message": "",
-        "description": ""
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusSonar": {
-        "message": ""
+        "message": "Sonar / Dálkoměr"
     },
     "sensorStatusSonarShort": {
-        "message": "",
-        "description": ""
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": ""
-    },
-    "configuratorUpdateNotice": {
-        "message": ""
-    },
-    "configuratorUpdateHelp": {
-        "message": ""
+        "message": "Zobrazit oznámení o aktualizacích pro nestabilní verze konfigurátoru"
     },
     "configuratorUpdateWebsite": {
-        "message": ""
+        "message": "Jít na stránku vydavatele programu"
     },
     "deviceRebooting": {
-        "message": ""
-    },
-    "deviceRebooting_flashBootloader": {
-        "message": ""
-    },
-    "deviceRebooting_romBootloader": {
-        "message": ""
+        "message": "Zařízení - <span class=\"message-negative\">restartuje se</span>"
     },
     "deviceReady": {
-        "message": ""
+        "message": "Zařízení - <span class=\"message-positive\">připraveno</span>"
     },
     "backupFileIncompatible": {
-        "message": ""
+        "message": "Záložní soubor byl vytvořen pro předchozí verzi konfigurátoru a je nekompatibilní s touto verzí konfigurátoru. Omlouváme se"
     },
     "backupFileUnmigratable": {
-        "message": ""
+        "message": "Záložní soubor byl generován předchozí verzí konfigurátoru a není přenositelný. Omlouváme se."
     },
     "configMigrationFrom": {
-        "message": ""
+        "message": "Přenášený konfigurační soubor vygenerovaný konfigurátem: $1"
     },
     "configMigratedTo": {
-        "message": ""
+        "message": "Konfigurace přenesena do konfigurátu: $1"
     },
     "configMigrationSuccessful": {
-        "message": ""
+        "message": "Přenos konfigurace dokončen a použit: $1"
     },
     "tabFirmwareFlasher": {
-        "message": ""
+        "message": "Aktualizace firmwaru"
     },
     "tabLanding": {
-        "message": ""
-    },
-    "tabChangelog": {
-        "message": ""
-    },
-    "tabPrivacyPolicy": {
-        "message": ""
+        "message": "Vítejte"
     },
     "tabHelp": {
-        "message": ""
-    },
-    "tabOptions": {
-        "message": ""
+        "message": "Dokumentace a podpora"
     },
     "tabSetup": {
-        "message": ""
+        "message": "Nastavení"
     },
     "tabSetupOSD": {
-        "message": ""
+        "message": "Nastavení OSD displeje"
     },
     "tabConfiguration": {
-        "message": ""
+        "message": "Konfigurace"
     },
     "tabPorts": {
-        "message": ""
+        "message": "Porty"
     },
     "tabPidTuning": {
-        "message": ""
+        "message": "Ladění PID"
     },
     "tabReceiver": {
-        "message": ""
+        "message": "Přijímač"
     },
     "tabModeSelection": {
-        "message": ""
+        "message": "Výběr módu"
     },
     "tabServos": {
-        "message": ""
+        "message": "Serva"
     },
     "tabFailsafe": {
-        "message": ""
+        "message": "Pojistka proti poruchám (Failsafe)"
     },
     "tabTransponder": {
-        "message": ""
+        "message": "Závodní odpovídač"
     },
     "tabOsd": {
-        "message": ""
-    },
-    "tabVtx": {
-        "message": ""
+        "message": "OSD displej"
     },
     "tabPower": {
-        "message": ""
+        "message": "Nápájení & baterie"
     },
     "tabGPS": {
-        "message": ""
+        "message": "GPS"
     },
     "tabMotorTesting": {
-        "message": ""
+        "message": "Motory"
     },
     "tabLedStrip": {
-        "message": ""
+        "message": "LED pásek"
     },
     "tabRawSensorData": {
-        "message": ""
+        "message": "Senzory"
     },
     "tabCLI": {
-        "message": ""
+        "message": "Manuální příkazový řádek (CLI)"
     },
     "tabLogging": {
-        "message": ""
+        "message": "Tethered logování"
     },
     "tabOnboardLogging": {
-        "message": ""
+        "message": "Černá skřínka (Blackbox)"
     },
     "tabAdjustments": {
-        "message": ""
+        "message": "Seřízení"
     },
     "tabAuxiliary": {
-        "message": ""
+        "message": "Módy"
     },
     "logActionHide": {
-        "message": ""
+        "message": "Skrýt log"
     },
     "logActionShow": {
-        "message": ""
-    },
-    "serialErrorFrameError": {
-        "message": ""
-    },
-    "serialErrorParityError": {
-        "message": ""
+        "message": "Zobrazit log"
     },
     "serialPortOpened": {
-        "message": ""
+        "message": "Sériový port <span class=\"message-positive\">úspěšně</span> připojen s ID: $1"
     },
     "serialPortOpenFail": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Nepodařilo se</span> připojit sériový port"
     },
     "serialPortClosedOk": {
-        "message": ""
+        "message": "Sériový port <span class=\"message-positive\">úspěšně</span> odpojen"
     },
     "serialPortClosedFail": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Nepodařilo se</span> odpojit sériový port"
     },
     "serialUnrecoverable": {
-        "message": ""
-    },
-    "serialPortLoading": {
-        "message": ""
+        "message": "Nezotavitelné <span class=\"message-negative\">selhání</span> sériového připojení, odpojuji..."
     },
     "usbDeviceOpened": {
-        "message": ""
+        "message": "USB zařízení <span class=\"message-positive\">úspěšně</span> připojeno s ID: $1"
     },
     "usbDeviceOpenFail": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Nepodařilo se</span> připojit USB zařízení!"
     },
     "usbDeviceClosed": {
-        "message": ""
+        "message": "USB zařízení <span class=\"message-positive\">úspěšně</span> odpojeno"
     },
     "usbDeviceCloseFail": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Nepodařilo se</span> odpojit USB zařízení"
     },
     "usbDeviceUdevNotice": {
-        "message": ""
+        "message": "Jsou <strong>udev pravidla</strong> správně nainstalovány? Pokyny naleznete v dokumentaci"
     },
     "stm32UsbDfuNotFound": {
-        "message": ""
-    },
-    "stm32RebootingToBootloader": {
-        "message": ""
-    },
-    "stm32RebootingToBootloaderFailed": {
-        "message": ""
+        "message": "USB DFU nenalezeno"
     },
     "stm32TimedOut": {
-        "message": ""
+        "message": "STM32 - vypršení časového limitu, programování: SELHALO"
     },
     "stm32WrongResponse": {
-        "message": ""
+        "message": "STM32 komunikace selhala kvůli chybné odpovědi, očekáváno: $1 (0x$2) přijato: $3 (0x$4)"
     },
     "stm32ContactingBootloader": {
-        "message": ""
+        "message": "Kontaktuji bootloader ...."
     },
     "stm32ContactingBootloaderFailed": {
-        "message": ""
+        "message": "Komunikace s bootloaderem byla neúspěšná"
     },
     "stm32ResponseBootloaderFailed": {
-        "message": ""
+        "message": "Bootloader neodpovědel, programování: NEÚSPĚCH"
     },
     "stm32GlobalEraseExtended": {
-        "message": ""
+        "message": "Provádění kompletního vymazání čipu (prostřednictvím rozšířeného vymazání) ..."
     },
     "stm32LocalEraseExtended": {
-        "message": ""
+        "message": "Provádění částečného vymazání (prostřednictvím rozšířeného vymazání) ..."
     },
     "stm32GlobalErase": {
-        "message": ""
+        "message": "Provádění kompletního vymazání čipu ..."
     },
     "stm32LocalErase": {
-        "message": ""
-    },
-    "stm32InvalidHex": {
-        "message": ""
+        "message": "Provádění částečného vymazání ..."
     },
     "stm32Erase": {
-        "message": ""
+        "message": "Mazání ..."
     },
     "stm32Flashing": {
-        "message": ""
+        "message": "Nahrávání ..."
     },
     "stm32Verifying": {
-        "message": ""
+        "message": "Ověřování ..."
     },
     "stm32ProgrammingSuccessful": {
-        "message": ""
+        "message": "Instalace: ÚSPĚŠNÁ"
     },
     "stm32ProgrammingFailed": {
-        "message": ""
-    },
-    "stm32AddressLoadFailed": {
-        "message": ""
-    },
-    "stm32AddressLoadSuccess": {
-        "message": ""
-    },
-    "stm32AddressLoadUnknown": {
-        "message": ""
+        "message": "Instalace: NEÚSPĚŠNÁ"
     },
     "stm32NotReadProtected": {
-        "message": ""
+        "message": "Ochrana před čtením neaktivní"
     },
     "stm32ReadProtected": {
-        "message": ""
+        "message": "Zdá se, že deska má ochranu proti čtení. Vypínám ochranu. Neodpojujte desku!"
     },
     "stm32UnprotectSuccessful": {
-        "message": ""
+        "message": "Ochrana úspěšně vypnuta."
     },
     "stm32UnprotectUnplug": {
-        "message": ""
+        "message": "VYŽADOVÁNA AKCE: Odpojte řídící jednotku a znovu ji připojte v DFU režimu pro zopakování zápisu!"
     },
     "stm32UnprotectFailed": {
-        "message": ""
+        "message": "Nastala chyba při vypnutí ochrany desky"
     },
     "stm32UnprotectInitFailed": {
-        "message": ""
+        "message": "Chyba při inicializaci rutiny pro vypnutí ochrany"
     },
     "noConfigurationReceived": {
-        "message": ""
+        "message": "Během <span class=\"message-negative\">10 vteřin</span> nebyla přijata žádná konfigurace, komunikace <span class=\"message-negative\">selhala</span>"
     },
     "firmwareVersionNotSupported": {
-        "message": ""
-    },
-    "firmwareTypeNotSupported": {
-        "message": ""
+        "message": "Tato verze firmwaru <span class=\"message-negative\">není podporována</span>. Prosím upgradujte na firmware, který podporuje API ve verzi <strong>$1</strong> nebo vyšší. Použijte CLI pro zálohování před aktualizací firmwaru. Postup pro CLI zálohu/obnovení je v dokumentaci.<br />Alternativně můžete použít starší verzi konfigurátoru, pokud nejste připraveni firmware aktualizovat."
     },
     "firmwareUpgradeRequired": {
-        "message": ""
-    },
-    "resetToCustomDefaultsDialog": {
-        "message": ""
-    },
-    "resetToCustomDefaultsAccept": {
-        "message": ""
-    },
-    "reportProblemsDialogHeader": {
-        "message": ""
-    },
-    "reportProblemsDialogFooter": {
-        "message": ""
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": ""
-    },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": ""
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": ""
-    },
-    "infoVersionOs": {
-        "message": "",
-        "description": ""
-    },
-    "infoVersionConfigurator": {
-        "message": "",
-        "description": ""
+        "message": "Firmware na tomto zařízení vyžaduje aktualizaci na novější verzi. Použijte CLI režim pro zálohování před instalací. Procedura CLI zálohování a obnovení je popsána v dokumentaci.<br />Můžete také stáhnout starší verzi konfigurátoru, pokud nechcete provést aktualizaci."
     },
     "buildServerLoaded": {
-        "message": ""
-    },
-    "buildServerLoadFailed": {
-        "message": ""
+        "message": "Načteny informace o $1 z buildovacího serveru."
     },
     "buildServerUsingCached": {
-        "message": ""
+        "message": "Použít informace o verzi z mezipaměti pro $1."
     },
     "releaseCheckLoaded": {
-        "message": ""
+        "message": "Načteny informace o verzi pro $1 z GitHubu."
     },
     "releaseCheckFailed": {
-        "message": ""
+        "message": "<b>GitHub požadavek na verzi $1 selhal, používám informace z mezipaměti. Důvod: <code>$2</code></b>"
     },
     "releaseCheckCached": {
-        "message": ""
+        "message": "Používám informace z mezipaměti pro verzi $1."
     },
     "releaseCheckNoInfo": {
-        "message": ""
+        "message": "Nejsou dostupné žádné informace o verzi $1."
     },
     "tabSwitchConnectionRequired": {
-        "message": ""
+        "message": "Je potřeba se <strong>připojit</strong> než budete moci zobrazit některou ze záložek."
     },
     "tabSwitchWaitForOperation": {
-        "message": ""
+        "message": "Momentálně tuto akci <span class=\"message-negative\">nelze provést</span>, prosím vyčkejte na dokončení současné operace ..."
     },
     "tabSwitchUpgradeRequired": {
-        "message": ""
+        "message": "Před použitím záložky $1 musíte <strong>aktualizovat</strong> firmware na nejnovější verzi Betaflight."
     },
     "firmwareVersion": {
-        "message": ""
+        "message": "Verze firmwaru: <strong>$1</strong>"
     },
     "apiVersionReceived": {
-        "message": ""
+        "message": "MultiWii API verze: <strong>$1</strong>"
     },
     "uniqueDeviceIdReceived": {
-        "message": ""
+        "message": "Jedinečné ID zařízení: <strong>0x$1</strong>"
     },
     "craftNameReceived": {
-        "message": ""
+        "message": "Jméno letounu: <strong>$1</strong>"
     },
     "armingDisabled": {
-        "message": ""
+        "message": "<strong>Odjištění zakázáno</strong>"
     },
     "armingEnabled": {
-        "message": ""
+        "message": "<strong>Odjištění povoleno</strong>"
     },
     "runawayTakeoffPreventionDisabled": {
-        "message": ""
+        "message": "<strong>Předejití nekontrolovanému vzletu dočasně vypnuto</strong>"
     },
     "runawayTakeoffPreventionEnabled": {
-        "message": ""
+        "message": "<strong>Ochrana proti nekontrolovanému startu zapnuta</strong>"
     },
     "boardInfoReceived": {
-        "message": ""
+        "message": "Deska: <strong>$1</strong>, verze: <strong>$2</strong>"
     },
     "buildInfoReceived": {
-        "message": ""
+        "message": "Aktuálně používaný firmware vydán: <strong>$1</strong>"
     },
     "fcInfoReceived": {
-        "message": ""
+        "message": "Info o řídící jednotce, identifikátor: <strong>$1</strong>, verze: <strong>$2</strong>"
     },
     "versionLabelTarget": {
-        "message": ""
+        "message": "Cíl"
     },
     "versionLabelFirmware": {
-        "message": ""
+        "message": "Firmware"
     },
     "versionLabelConfigurator": {
-        "message": ""
+        "message": "Konfigurátor"
     },
     "notifications_app_just_updated_to_version": {
-        "message": ""
+        "message": "Aplikace právě aktualizována na verzi: $1"
     },
     "notifications_click_here_to_start_app": {
-        "message": ""
+        "message": "Klikněte zde pro start aplikace"
     },
     "statusbar_port_utilization": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_usage_download": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_usage_upload": {
-        "message": "",
-        "description": ""
+        "message": "Využití portu:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "",
-        "description": ""
+        "message": "Chybné pakety:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "",
-        "description": ""
+        "message": "I2C chyb:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "",
-        "description": ""
-    },
-    "statusbar_cpu_load": {
-        "message": "",
-        "description": ""
+        "message": "Čas cyklu:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
-        "message": ""
+        "message": "Prosím, použijte utilitu pro flashování firmwaru pro přístup k DFU zařízením"
     },
     "dfu_erased_kilobytes": {
-        "message": ""
+        "message": "<span class=\"message-positive\">Úspěšně</span> vymazáno $1 kB paměti"
     },
     "dfu_device_flash_info": {
-        "message": ""
-    },
-    "dfu_hex_address_errors": {
-        "message": ""
+        "message": "Detekováno zařízení s celkovou velikostí paměti $1 KiB"
     },
     "dfu_error_image_size": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Chyba</span>: Načtená bitová kopie je větší než velikost dostupné paměti na čipu! Bitová kopie: $1 KiB, limit = $2 KiB"
     },
     "eeprom_saved_ok": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">uložena</span>"
     },
     "defaultWelcomeIntro": {
-        "message": ""
+        "message": "Vítejte v <strong>Betaflight Konfigurátoru<strong>, nástroji pro snadnou aktualizaci, nastavení a laďení vašeho FC."
     },
     "defaultWelcomeHead": {
-        "message": ""
-    },
-    "defaultWelcomeText": {
-        "message": ""
+        "message": "Hardware"
     },
     "defaultContributingHead": {
-        "message": ""
-    },
-    "defaultContributingText": {
-        "message": ""
-    },
-    "defaultFacebookText": {
-        "message": ""
-    },
-    "defaultDiscordText": {
-        "message": ""
+        "message": "Spolupráce"
     },
     "defaultChangelogHead": {
-        "message": ""
+        "message": "Konfigurátor - Seznam změn"
     },
     "defaultButtonFirmwareFlasher": {
-        "message": ""
+        "message": "Aktualizace firmwaru"
     },
     "defaultDonateHead": {
-        "message": ""
-    },
-    "defaultDonateText": {
-        "message": ""
-    },
-    "defaultDonateBottom": {
-        "message": ""
-    },
-    "patreonLink": {
-        "message": "",
-        "description": ""
+        "message": "Poznámka k Open Source / sponzorským darům"
     },
     "defaultDonate": {
-        "message": ""
+        "message": "Přispějte"
     },
     "defaultSponsorsHead": {
-        "message": ""
+        "message": "Sponzoři"
     },
     "defaultDocumentationHead": {
-        "message": ""
+        "message": "Dokumentace / Manuál"
     },
     "defaultDocumentation": {
-        "message": ""
-    },
-    "defaultDocumentation1": {
-        "message": ""
-    },
-    "defaultDocumentation2": {
-        "message": ""
+        "message": "Dokumentace k Betaflightu je dostupná v poznámkách k verzím a na wiki.<br /><br />"
     },
     "defaultSupportHead": {
-        "message": ""
+        "message": "Podpora"
     },
     "defaultSupportSubline1": {
-        "message": ""
+        "message": "Zdroje podpory"
     },
     "defaultSupportSubline2": {
-        "message": ""
+        "message": "Vývojář"
     },
     "defaultSupport": {
-        "message": ""
-    },
-    "defaultSupport1": {
-        "message": ""
-    },
-    "defaultSupport2": {
-        "message": ""
-    },
-    "defaultSupport3": {
-        "message": ""
-    },
-    "defaultSupport4": {
-        "message": ""
-    },
-    "defaultSupport5": {
-        "message": ""
+        "message": "Pro pomoc a radu si nejprve projděte fóra nebo kontaktujte svého dodavatele.<br /><br />"
     },
     "initialSetupBackupAndRestoreApiVersion": {
-        "message": ""
+        "message": "<span class=\"message-negative\">Funkce zálohování a obnovení zakázána.</span> Používáte firmware s API verzí <span class=\"message-negative\">$1</span>, záloha a obnovení vyžadují <span class=\"message-positive\">$2</span>. Prosím zálohujte Vaší konfiguraci pomocí CLI a přečtěte si dokumentaci Betaflight pro další postup."
     },
     "initialSetupButtonCalibrateAccel": {
-        "message": ""
+        "message": "Kalibrovat akcelerometr"
     },
     "initialSetupCalibrateAccelText": {
-        "message": ""
+        "message": "Položte řídící jednotku nebo dron na <strong>vodorovný</strong> povrch, spusťte kalibraci a zajistěte, aby během kalibrace nedošlo k jejich pohybu"
     },
     "initialSetupButtonCalibrateMag": {
-        "message": ""
+        "message": "Kalibrovat magnetometr"
     },
     "initialSetupCalibrateMagText": {
-        "message": ""
+        "message": "Otočte multikoptérou alespoň o <strong>360</strong> stupňů ve všech osách, máte na to 30 sekund"
     },
     "initialSetupButtonCalibratingText": {
-        "message": ""
+        "message": "Kalibruje se..."
     },
     "initialSetupButtonReset": {
-        "message": ""
+        "message": "Resetovat nastavení"
     },
     "initialSetupResetText": {
-        "message": ""
-    },
-    "initialSetupButtonBackup": {
-        "message": ""
-    },
-    "initialSetupButtonRestore": {
-        "message": ""
+        "message": "Obnovit <strong>výchozí</strong> nastavení"
     },
     "initialSetupButtonRebootBootloader": {
-        "message": ""
-    },
-    "initialSetupBackupRestoreHeader": {
-        "message": ""
+        "message": "Aktivovat Boot Loader / DFU"
     },
     "initialSetupBackupRestoreText": {
-        "message": ""
+        "message": "<strong>Zálohujte</strong> si Vaše nastavení pro případ nehody, nastavení <strong>CLI</strong> <span class=\"message-negative\">není</span> zahrnuto - Pro zahrnutí použijte příkaz 'diff all' v CLI."
     },
     "initialSetupRebootBootloaderText": {
-        "message": ""
+        "message": "Restartujte do <strong> boot loader / DFU</strong> režimu."
     },
     "initialSetupBackupSuccess": {
-        "message": ""
+        "message": "Záloha <span class=\"message-positive\">úspěšně</span> uložena"
     },
     "initialSetupRestoreSuccess": {
-        "message": ""
+        "message": "Konfigurace <span class=\"message-positive\">úspěšně</span> obnovena"
     },
     "initialSetupButtonResetZaxis": {
-        "message": ""
+        "message": "Reset osy Z, posun: 0 stupňů"
     },
     "initialSetupButtonResetZaxisValue": {
-        "message": ""
-    },
-    "initialSetupMixerHead": {
-        "message": ""
+        "message": "Reset osy Z, odchylka: $1 stupňů"
     },
     "initialSetupThrottleHead": {
-        "message": ""
+        "message": "Nastavení plynu"
     },
     "initialSetupMinimum": {
-        "message": ""
+        "message": "Minimum:"
     },
     "initialSetupMaximum": {
-        "message": ""
+        "message": "Maximum:"
     },
     "initialSetupFailsafe": {
-        "message": ""
-    },
-    "initialSetupMinCommand": {
-        "message": ""
+        "message": "Pojistka proti poruchám (Failsafe):"
     },
     "initialSetupBatteryHead": {
-        "message": ""
+        "message": "Baterie"
     },
     "initialSetupMinCellV": {
-        "message": ""
+        "message": "Min. napětí článku:"
     },
     "initialSetupMaxCellV": {
-        "message": ""
+        "message": "Max. napětí článku:"
     },
     "initialSetupVoltageScale": {
-        "message": ""
+        "message": "Měřítko napětí:"
     },
     "initialSetupAccelTrimsHead": {
-        "message": ""
+        "message": "Trimy akcelerometru"
     },
     "initialSetupPitch": {
-        "message": ""
+        "message": "Sklon:"
     },
     "initialSetupRoll": {
-        "message": ""
+        "message": "Náklon:"
     },
     "initialSetupMagHead": {
-        "message": ""
+        "message": "Magnetometr"
     },
     "initialSetupInfoHead": {
-        "message": ""
+        "message": "Informace"
     },
     "initialSetupBattery": {
-        "message": ""
+        "message": "Napětí baterie:"
     },
     "initialSetupBatteryValue": {
-        "message": ""
+        "message": "$1 V"
     },
     "initialSetupDrawn": {
-        "message": ""
+        "message": "Spotřebovaná kapacita:"
     },
     "initialSetupDrawing": {
-        "message": ""
+        "message": "Odběr proudu:"
     },
     "initialSetupBatteryMahValue": {
-        "message": ""
+        "message": "$1 mAh"
     },
     "initialSetupBatteryAValue": {
-        "message": ""
+        "message": "$1 A"
     },
     "initialSetupRSSI": {
-        "message": ""
+        "message": "RSSI:"
     },
     "initialSetupRSSIValue": {
-        "message": ""
+        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
-        "message": ""
+        "message": "Problémy odjištění:"
     },
     "initialSetupArmingAllowed": {
-        "message": ""
-    },
-    "initialSetupArmingDisableFlagsTooltip": {
-        "message": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipLOAD": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCLI": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipBST": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipGPS": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRESC": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "",
-        "description": ""
-    },
-    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
-        "message": "",
-        "description": ""
+        "message": "Odjištění povoleno"
     },
     "initialSetupGPSHead": {
-        "message": ""
+        "message": "GPS"
     },
     "initialSetupInstrumentsHead": {
-        "message": ""
+        "message": "Přístroje"
     },
     "initialSetupButtonSave": {
-        "message": ""
+        "message": "Uložit"
     },
     "initialSetupModel": {
-        "message": ""
+        "message": "Model: $1"
     },
     "initialSetupAttitude": {
-        "message": ""
+        "message": "$1°"
     },
     "initialSetupAccelCalibStarted": {
-        "message": ""
+        "message": "Kalibrace akcelerometru zahájena"
     },
     "initialSetupAccelCalibEnded": {
-        "message": ""
+        "message": "Kalibrace akcelerometru <span class=\"message-positive\">dokončena</span>"
     },
     "initialSetupMagCalibStarted": {
-        "message": ""
+        "message": "Kalibrace magnetometru zahájena"
     },
     "initialSetupMagCalibEnded": {
-        "message": ""
+        "message": "Kalibrace magnetometru <span class=\"message-positive\">dokončena</span>"
     },
     "initialSetupSettingsRestored": {
-        "message": ""
+        "message": "<strong>Výchozí hodnoty</strong> byly obnoveny"
     },
     "initialSetupEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">uložena</span>"
     },
     "featureNone": {
-        "message": ""
-    },
-    "featureRX_PPM": {
-        "message": ""
+        "message": "&lt;Vyber Jedno&gt;"
     },
     "featureVBAT": {
-        "message": ""
+        "message": "Monitorování napětí baterie"
     },
     "featureINFLIGHT_ACC_CAL": {
-        "message": ""
-    },
-    "featureRX_SERIAL": {
-        "message": ""
+        "message": "Kalibrace horizontu za letu"
     },
     "featureMOTOR_STOP": {
-        "message": ""
+        "message": "Odjištěný dron automaticky nezapne motory"
     },
     "featureSERVO_TILT": {
-        "message": ""
-    },
-    "featureSERVO_TILTTip": {
-        "message": ""
+        "message": "Gimbal ze serva"
     },
     "featureSOFTSERIAL": {
-        "message": ""
-    },
-    "featureSOFTSERIALTip": {
-        "message": ""
+        "message": "Povolit sériové porty CPU"
     },
     "featureGPS": {
-        "message": ""
-    },
-    "featureGPSTip": {
-        "message": ""
+        "message": "GPS pro navigaci a telemetrii"
     },
     "featureSONAR": {
-        "message": ""
+        "message": "Sonar"
     },
     "featureTELEMETRY": {
-        "message": ""
+        "message": "Výstup telemetrie"
     },
     "featureCURRENT_METER": {
-        "message": ""
+        "message": "Monitorování proudu baterie"
     },
     "feature3D": {
-        "message": ""
-    },
-    "featureRX_PARALLEL_PWM": {
-        "message": ""
-    },
-    "featureRX_MSP": {
-        "message": ""
+        "message": "3D mód (pro použití s obousměrnými ESC)"
     },
     "featureRSSI_ADC": {
-        "message": ""
+        "message": "Analogový RSSI vstup"
     },
     "featureLED_STRIP": {
-        "message": ""
+        "message": "Podpora vícebarevných LED pásků"
     },
     "featureDISPLAY": {
-        "message": ""
+        "message": "OLED obrazovka jako displej"
     },
     "featureDISPLAYTip": {
-        "message": ""
+        "message": "Pokud je tato funkce zapnuta a není připojen žádný displej (nebo není žádný displej zapnutý, bude letový ovladač čekat cca. 10 sekund při každém restartu"
     },
     "featureONESHOT125": {
-        "message": ""
+        "message": "Podpora ESC protokolu ONESHOT"
     },
     "featureONESHOT125Tip": {
-        "message": ""
+        "message": "Než zapnete tuto funkci, odpojte baterii a sundejte vrtule"
     },
     "featureBLACKBOX": {
-        "message": ""
+        "message": "Černá skřínky - nahrávání letu"
     },
     "featureBLACKBOXTip": {
-        "message": ""
-    },
-    "featureRX_SPI": {
-        "message": ""
-    },
-    "featureESC_SENSOR": {
-        "message": ""
+        "message": "Po zapnutí nastavte na záložce Blackbox."
     },
     "featureCHANNEL_FORWARDING": {
-        "message": ""
+        "message": "Předat aux kanály servo výstupům"
     },
     "featureTRANSPONDER": {
-        "message": ""
+        "message": "Závodní odpovídač"
     },
     "featureTRANSPONDERTip": {
-        "message": ""
+        "message": "Po nastavení konfigurujte pomocí záložky Závodní odpovídač."
     },
     "featureAIRMODE": {
-        "message": ""
-    },
-    "featureSUPEREXPO_RATES": {
-        "message": ""
+        "message": "Trvale zapnout Airmode"
     },
     "featureSDCARD": {
-        "message": ""
+        "message": "Podpora SD karty (pro logování)"
     },
     "featureOSD": {
-        "message": ""
+        "message": "Informace na obrazovce"
     },
     "featureVTX": {
-        "message": ""
-    },
-    "featureANTI_GRAVITY": {
-        "message": ""
-    },
-    "featureANTI_GRAVITYTip": {
-        "message": ""
-    },
-    "featureDYNAMIC_FILTER": {
-        "message": ""
-    },
-    "featureFAILSAFE": {
-        "message": ""
-    },
-    "featureFAILSAFEOld": {
-        "message": ""
-    },
-    "featureFAILSAFETip": {
-        "message": ""
-    },
-    "featureFAILSAFEOldTip": {
-        "message": ""
+        "message": "Video vysílač"
     },
     "configurationFeatureEnabled": {
-        "message": ""
+        "message": "Povoleno"
     },
     "configurationFeatureName": {
-        "message": ""
+        "message": "Funkce"
     },
     "configurationFeatureDescription": {
-        "message": ""
+        "message": "Popis"
     },
     "configurationMixer": {
-        "message": ""
+        "message": "Nastavení motorů"
     },
     "configurationFeatures": {
-        "message": ""
+        "message": "Další funkce"
     },
     "configurationReceiver": {
-        "message": ""
+        "message": "Přijímač"
     },
     "configurationReceiverMode": {
-        "message": ""
-    },
-    "configurationTelemetry": {
-        "message": ""
-    },
-    "configurationTelemetryHelp": {
-        "message": ""
+        "message": "Mód přijímače"
     },
     "configurationRSSI": {
-        "message": ""
-    },
-    "configurationRSSIHelp": {
-        "message": ""
+        "message": "RSSI (síla signálu)"
     },
     "configurationEscFeatures": {
-        "message": ""
+        "message": "ESC/nastavení motorů"
     },
     "configurationFeaturesHelp": {
-        "message": ""
-    },
-    "configurationSerialRXHelp": {
-        "message": ""
-    },
-    "configurationSpiRxHelp": {
-        "message": ""
-    },
-    "configurationOtherFeaturesHelp": {
-        "message": ""
+        "message": "<strong>Poznámka:</strong> ne všechny kombinace jsou letuschopné. Když systém FC zjistí, že je konfigurace špatná, nastavení bude resetováno.<br /><strong>Poznámka:</strong> Nastavte porty <span class=\"message-negative\">před</span> povolením funkcí, které je budou používat."
     },
     "configurationBoardAlignment": {
-        "message": ""
+        "message": "Orientace desky a senzorů"
     },
     "configurationBoardAlignmentRoll": {
-        "message": ""
+        "message": "Stupňů náklonu"
     },
     "configurationBoardAlignmentPitch": {
-        "message": ""
+        "message": "Stupňů sklonu"
     },
     "configurationBoardAlignmentYaw": {
-        "message": ""
+        "message": "Stupňů otočení"
     },
     "configurationSensorAlignmentGyro": {
-        "message": ""
-    },
-    "configurationSensorGyroToUse": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseNotFound": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseFirst": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseSecond": {
-        "message": ""
-    },
-    "configurationSensorGyroToUseBoth": {
-        "message": ""
-    },
-    "configurationSensorAlignmentGyro1": {
-        "message": ""
-    },
-    "configurationSensorAlignmentGyro2": {
-        "message": ""
+        "message": "Poloha gyroskopu"
     },
     "configurationSensorAlignmentAcc": {
-        "message": ""
+        "message": "Poloha akcelerometru"
     },
     "configurationSensorAlignmentMag": {
-        "message": ""
+        "message": "Poloha kompasu"
     },
     "configurationSensorAlignmentDefaultOption": {
-        "message": ""
+        "message": "Výchozí"
     },
     "configurationAccelTrims": {
-        "message": ""
+        "message": "Trimy akcelerometru"
     },
     "configurationAccelTrimRoll": {
-        "message": ""
+        "message": "Trim náklonu akcelerometru"
     },
     "configurationAccelTrimPitch": {
-        "message": ""
+        "message": "Trim sklonu akcelerometru"
     },
     "configurationArming": {
-        "message": ""
-    },
-    "configurationArmingHelp": {
-        "message": ""
+        "message": "Odjištění"
     },
     "configurationReverseMotorSwitch": {
-        "message": ""
-    },
-    "configurationReverseMotorSwitchHelp": {
-        "message": ""
-    },
-    "configurationAutoDisarmDelay": {
-        "message": ""
-    },
-    "configurationDisarmKillSwitch": {
-        "message": ""
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercent": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": ""
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": ""
-    },
-    "configurationMotorPoles": {
-        "message": "",
-        "description": ""
-    },
-    "configurationMotorPolesLong": {
-        "message": "",
-        "description": ""
-    },
-    "configurationMotorPolesHelp": {
-        "message": "",
-        "description": ""
+        "message": "Směr motorů je opačný"
     },
     "configurationThrottleMinimum": {
-        "message": ""
-    },
-    "configurationThrottleMinimumHelp": {
-        "message": ""
+        "message": "Minimální plyn (Nejnižší ESC hodnota, když je odjištěno)"
     },
     "configurationThrottleMaximum": {
-        "message": ""
-    },
-    "configurationThrottleMinimumCommand": {
-        "message": ""
-    },
-    "configurationThrottleMinimumCommandHelp": {
-        "message": ""
-    },
-    "configurationEscProtocolDisabled": {
-        "message": ""
-    },
-    "escProtocolDisabledMessage": {
-        "message": ""
+        "message": "Maximální plyn (Nejvyšší ESC hodnota, když je odjištěno)"
     },
     "configurationDshotBeeper": {
-        "message": ""
-    },
-    "configurationUseDshotBeeper": {
-        "message": ""
+        "message": "Nastavení ESC Dshot bzučáku"
     },
     "configurationDshotBeaconTone": {
-        "message": ""
-    },
-    "configurationDshotBeaconHelp": {
-        "message": ""
+        "message": "Použít motory/ESC jako bzučák"
     },
     "configurationBeeper": {
-        "message": ""
+        "message": "Nastavení bzučáku"
     },
     "beeperGYRO_CALIBRATED": {
-        "message": ""
-    },
-    "beeperRX_LOST": {
-        "message": ""
-    },
-    "beeperRX_LOST_LANDING": {
-        "message": ""
+        "message": "Pípnutí po kalibraci gyroskopu"
     },
     "beeperDISARMING": {
-        "message": ""
+        "message": "Pípnout, když se zajistí řídící jednotka"
     },
     "beeperARMING": {
-        "message": ""
+        "message": "Pípnout, když se dron odjistí"
     },
     "beeperARMING_GPS_FIX": {
-        "message": ""
+        "message": "Pípnout speciální tón, když se odjišťuje FC a GPS je zaměřeno"
     },
     "beeperBAT_CRIT_LOW": {
-        "message": ""
+        "message": "Delší varovné pípání, když má baterie kriticky nízké napětí (opakované)"
     },
     "beeperBAT_LOW": {
-        "message": ""
+        "message": "Varovné pípání, když se baterie vybíjí (opakované)"
     },
     "beeperGPS_STATUS": {
-        "message": ""
+        "message": "Použít počet pípnutí k indikaci, kolik GPS satelitů bylo nalezeno"
     },
     "beeperRX_SET": {
-        "message": ""
-    },
-    "beeperACC_CALIBRATION": {
-        "message": ""
-    },
-    "beeperACC_CALIBRATION_FAIL": {
-        "message": ""
+        "message": "Pípnout, když je vybrán AUX kanál pro bzučák"
     },
     "beeperREADY_BEEP": {
-        "message": ""
-    },
-    "beeperMULTI_BEEPS": {
-        "message": ""
+        "message": "Zahrát melodii, když GPS najde polohu a je připravené"
     },
     "beeperDISARM_REPEAT": {
-        "message": ""
-    },
-    "beeperARMED": {
-        "message": ""
-    },
-    "beeperSYSTEM_INIT": {
-        "message": ""
-    },
-    "beeperUSB": {
-        "message": ""
-    },
-    "beeperBLACKBOX_ERASE": {
-        "message": ""
-    },
-    "beeperCRASH_FLIP": {
-        "message": ""
-    },
-    "beeperCAM_CONNECTION_OPEN": {
-        "message": ""
-    },
-    "beeperCAM_CONNECTION_CLOSE": {
-        "message": ""
-    },
-    "beeperRC_SMOOTHING_INIT_FAIL": {
-        "message": ""
+        "message": "Pípání, když je páka držena v pozici zajištění dronu"
     },
     "configuration3d": {
-        "message": ""
-    },
-    "configuration3dDeadbandLow": {
-        "message": ""
-    },
-    "configuration3dDeadbandHigh": {
-        "message": ""
-    },
-    "configuration3dNeutral": {
-        "message": ""
-    },
-    "configuration3dDeadbandThrottle": {
-        "message": ""
+        "message": "Funkce pro 3D ESC/Motor"
     },
     "configurationSystem": {
-        "message": ""
-    },
-    "configurationLoopTime": {
-        "message": ""
+        "message": "Konfigurace systému"
     },
     "configurationCalculatedCyclesSec": {
-        "message": ""
-    },
-    "configurationSpeedGyroNoGyro": {
-        "message": "",
-        "description": ""
-    },
-    "configurationSpeedPidNoGyro": {
-        "message": "",
-        "description": ""
-    },
-    "configurationKHzUnitLabel": {
-        "message": "",
-        "description": ""
+        "message": "Cyklů/s [Hz]"
     },
     "configurationLoopTimeHelp": {
-        "message": ""
+        "message": "<strong>Poznámka:</strong> Ujistěte se, že FC zvládne fungovat na takové frekvenci! Ověřte stabilitu provozu. Změna může vyžadovat úpravu PID hodnot. TIP: zakažte akcelerometr a další senzory pro zvýšení výkonu CPU."
     },
     "configurationGPS": {
-        "message": ""
+        "message": "GPS"
     },
     "configurationGPSProtocol": {
-        "message": ""
+        "message": "Protokol"
     },
     "configurationGPSBaudrate": {
-        "message": ""
-    },
-    "configurationGPSubxSbas": {
-        "message": ""
+        "message": "Frekvence"
     },
     "configurationGPSAutoBaud": {
-        "message": ""
+        "message": "Automatická frekvence"
     },
     "configurationGPSAutoConfig": {
-        "message": ""
-    },
-    "configurationGPSGalileo": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSGalileoHelp": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSHomeOnce": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGPSHelp": {
-        "message": ""
-    },
-    "configurationSerialRX": {
-        "message": ""
-    },
-    "configurationSpiRX": {
-        "message": ""
-    },
-    "configurationEepromSaved": {
-        "message": ""
+        "message": "Auto Config"
     },
     "configurationButtonSave": {
-        "message": ""
-    },
-    "dialogDynFiltersChangeTitle": {
-        "message": ""
-    },
-    "dialogDynFiltersChangeNote": {
-        "message": ""
+        "message": "Uložit a restartovat"
     },
     "portsIdentifier": {
-        "message": ""
+        "message": "Identifikátor"
     },
     "portsConfiguration": {
-        "message": ""
+        "message": "Konfigurace/MSP"
     },
     "portsSerialRx": {
-        "message": ""
+        "message": "Sériový Rx"
     },
     "portsSensorIn": {
-        "message": ""
+        "message": "Vstup čidla"
     },
     "portsTelemetryOut": {
-        "message": ""
+        "message": "Výstup telemetrie"
     },
     "portsPeripherals": {
-        "message": ""
+        "message": "Periferie"
     },
     "portsHelp": {
-        "message": ""
-    },
-    "portsVtxTableNotSet": {
-        "message": ""
+        "message": "<strong>Poznámka:</strong> ne všechny kombinace jsou letuschopné. Když systém řídící jednotky zjistí, že je konfigurace neplatná, nastavení bude resetováno."
     },
     "portsMSPHelp": {
-        "message": ""
+        "message": "<strong>Poznámka:</strong> <span class=\"message-negative\">Nezakazujte</span> MSP na prvním sériovém protu, pokud nevíte, co děláte. Pro opravu může být nutné přeinstalování firmware a všechna nastavení by byla resetována."
     },
     "portsFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Upgrade firmware <span class=\"message-negative\">vyžadován</span>. Nastavení sériových portů u firmware &lt; 1.8.0 není podporované."
     },
     "portsButtonSave": {
-        "message": ""
+        "message": "Uložit a restartovat"
     },
     "portsTelemetryDisabled": {
-        "message": ""
+        "message": "Zakázáno"
     },
     "portsFunction_MSP": {
-        "message": ""
+        "message": "MSP"
     },
     "portsFunction_GPS": {
-        "message": ""
+        "message": "GPS"
     },
     "portsFunction_TELEMETRY_FRSKY": {
-        "message": ""
+        "message": "FrSky"
     },
     "portsFunction_TELEMETRY_HOTT": {
-        "message": ""
+        "message": "HoTT"
     },
     "portsFunction_TELEMETRY_LTM": {
-        "message": ""
+        "message": "LTM"
     },
     "portsFunction_TELEMETRY_MAVLINK": {
-        "message": ""
+        "message": "MAVLink"
     },
     "portsFunction_TELEMETRY_MSP": {
-        "message": ""
+        "message": "MSP"
     },
     "portsFunction_TELEMETRY_SMARTPORT": {
-        "message": ""
+        "message": "SmartPort"
     },
     "portsFunction_TELEMETRY_IBUS": {
-        "message": ""
+        "message": "iBUS"
     },
     "portsFunction_TELEMETRY_JETIXBUS": {
-        "message": ""
+        "message": "JETIXBUS"
     },
     "portsFunction_TELEMETRY_CRSF": {
-        "message": ""
+        "message": "CRSF"
     },
     "portsFunction_TELEMETRY_SRXL": {
-        "message": ""
+        "message": "SRXL"
     },
     "portsFunction_ESC_SENSOR": {
-        "message": ""
+        "message": "ESC"
     },
     "portsFunction_RX_SERIAL": {
-        "message": ""
+        "message": "Sériový RX"
     },
     "portsFunction_BLACKBOX": {
-        "message": ""
-    },
-    "portsFunction_TBS_SMARTAUDIO": {
-        "message": ""
-    },
-    "portsFunction_IRC_TRAMP": {
-        "message": ""
-    },
-    "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": ""
-    },
-    "portsFunction_FRSKY_OSD": {
-        "message": ""
-    },
-    "portsFunction_VTX_MSP": {
-        "message": ""
+        "message": "Blackbox logování"
     },
     "pidTuningProfileOption": {
-        "message": ""
+        "message": "Profil $1"
     },
     "pidTuningRateProfileOption": {
-        "message": ""
-    },
-    "portsFunction_LIDAR_TF": {
-        "message": ""
-    },
-    "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": ""
-    },
-    "pidTuningSubTabPid": {
-        "message": ""
-    },
-    "pidTuningSubTabRates": {
-        "message": ""
+        "message": "Profil poměrů $1"
     },
     "pidTuningSubTabFilter": {
-        "message": ""
+        "message": "Nastavení filtrů"
     },
     "pidTuningShowAllPids": {
-        "message": ""
+        "message": "Zobrazit všechna PID"
     },
     "pidTuningHideUnusedPids": {
-        "message": ""
-    },
-    "pidTuningNonProfilePidSettings": {
-        "message": ""
-    },
-    "pidTuningAntiGravity": {
-        "message": ""
-    },
-    "pidTuningAntiGravityMode": {
-        "message": "",
-        "description": ""
+        "message": "Skrýt nepoužívané PID"
     },
     "pidTuningAntiGravityModeOptionSmooth": {
-        "message": "",
-        "description": ""
+        "message": "Plynulá",
+        "description": "One of the modes of anti gravity"
     },
     "pidTuningAntiGravityModeOptionStep": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityGain": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityGainHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityThres": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningAntiGravityHelp": {
-        "message": ""
-    },
-    "pidTuningDMin": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": ""
-    },
-    "pidTuningDMinFeatureTitle": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxSettingTitle": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinGain": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinAdvance": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxAdvanceHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMinHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSettings": {
-        "message": ""
-    },
-    "pidTuningMotorSettings": {
-        "message": ""
-    },
-    "pidTuningMiscSettings": {
-        "message": ""
+        "message": "Kroková",
+        "description": "One of the modes of anti gravity"
     },
     "receiverRcSmoothing": {
-        "message": ""
+        "message": "Vyhlazování vstupů příjmače"
     },
     "receiverRcSmoothingAuto": {
-        "message": ""
+        "message": "Auto"
     },
     "receiverRcSmoothingManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "",
-        "description": ""
-    },
-    "receiverRcFeedforwardTypeSelect": {
-        "message": ""
-    },
-    "receiverRcSetpointTypeSelect": {
-        "message": ""
+        "message": "Manuální"
     },
     "receiverRcSmoothingInterpolation": {
-        "message": ""
+        "message": "Interpolace"
     },
     "receiverRcSmoothingFilter": {
-        "message": ""
-    },
-    "receiverRcSmoothingTypeHelp": {
-        "message": ""
-    },
-    "rcSmoothingSetpointCutoffHelp": {
-        "message": ""
-    },
-    "rcSmoothingFeedforwardCutoffHelp": {
-        "message": ""
-    },
-    "rcSmoothingChannelsSmoothedHelp": {
-        "message": ""
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": ""
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": ""
-    },
-    "receiverRcSmoothingSetpointManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardManual": {
-        "message": ""
-    },
-    "receiverRcSmoothingSetpointHz": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardCutoff": {
-        "message": ""
-    },
-    "receiverRcSetpointType": {
-        "message": ""
-    },
-    "receiverRcFeedforwardType": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": ""
-    },
-    "receiverRcSmoothingFeedforwardTypeAuto": {
-        "message": ""
+        "message": "Filtr"
     },
     "receiverRcSmoothingChannel": {
-        "message": ""
-    },
-    "receiverRcInterpolation": {
-        "message": ""
-    },
-    "receiverRcInterpolationHelp": {
-        "message": ""
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": ""
+        "message": "Vyhlazování kanálů"
     },
     "receiverRcInterpolationOff": {
-        "message": ""
+        "message": "Vypnuto"
     },
     "receiverRcSmoothingType": {
-        "message": ""
+        "message": "Typ vyhlazování"
     },
     "receiverRcInterpolationDefault": {
-        "message": ""
+        "message": "Profil"
     },
     "receiverRcInterpolationAuto": {
-        "message": ""
+        "message": "Auto"
     },
     "receiverRcInterpolationManual": {
-        "message": ""
-    },
-    "receiverRcInterpolationInterval": {
-        "message": ""
-    },
-    "receiverRcSmoothingMode": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransition": {
-        "message": ""
-    },
-    "pidTuningDtermSetpoint": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": ""
-    },
-    "pidTuningDtermSetpointTransitionWarning": {
-        "message": ""
-    },
-    "pidTuningFeedforwardGroup": {
-        "message": ""
-    },
-    "pidTuningFeedforwardGroupHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardJitter": {
-        "message": ""
-    },
-    "pidTuningFeedforwardJitterHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": ""
-    },
-    "pidTuningFeedforwardSmoothnessHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveraging": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingHelp": {
-        "message": ""
-    },
-    "pidTuningOptionOff": {
-        "message": ""
-    },
-    "pidTuningOptionOn": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption2Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption3Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardAveragingOption4Point": {
-        "message": ""
-    },
-    "pidTuningFeedforwardBoost": {
-        "message": ""
-    },
-    "pidTuningFeedforwardBoostHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardMaxRateLimit": {
-        "message": ""
-    },
-    "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": ""
-    },
-    "pidTuningFeedforwardTransition": {
-        "message": ""
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": ""
-    },
-    "pidTuningProportional": {
-        "message": ""
-    },
-    "pidTuningProportionalHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIntegral": {
-        "message": ""
-    },
-    "pidTuningIntegralHelp": {
-        "message": "",
-        "description": ""
+        "message": "Manuální"
     },
     "pidTuningDerivative": {
-        "message": ""
-    },
-    "pidTuningDMax": {
-        "message": ""
-    },
-    "pidTuningDMaxHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFeedforward": {
-        "message": ""
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMaxRateWarning": {
-        "message": ""
+        "message": "Derivace"
     },
     "pidTuningRcRate": {
-        "message": ""
+        "message": "RC poměr"
     },
     "pidTuningMaxVel": {
-        "message": ""
+        "message": "Max rychlost [°/s]"
     },
     "pidTuningRate": {
-        "message": ""
+        "message": "Poměr"
     },
     "pidTuningSuperRate": {
-        "message": ""
-    },
-    "pidTuningRatesPreview": {
-        "message": ""
-    },
-    "pidTuningRatesTuningHelp": {
-        "message": ""
+        "message": "Super poměr"
     },
     "pidTuningRcExpo": {
-        "message": ""
-    },
-    "pidTuningTPAMode": {
-        "message": ""
+        "message": "RC Exponent"
     },
     "pidTuningTPA": {
-        "message": ""
-    },
-    "pidTuningTPARate": {
-        "message": ""
-    },
-    "pidTuningTPABreakPoint": {
-        "message": ""
-    },
-    "pidTuningTPAPD": {
-        "message": ""
-    },
-    "pidTuningTPAD": {
-        "message": ""
-    },
-    "pidTuningThrottleCurvePreview": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitType": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitPercent": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeOff": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeScale": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeClip": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitTypeTip": {
-        "message": ""
-    },
-    "pidTuningThrottleLimitPercentTip": {
-        "message": ""
+        "message": "TPA"
     },
     "pidTuningFilter": {
-        "message": ""
+        "message": "Filtr"
     },
     "pidTuningFilterFrequency": {
-        "message": ""
-    },
-    "pidTuningRatesCurve": {
-        "message": ""
+        "message": "Frekvence"
     },
     "throttle": {
-        "message": ""
-    },
-    "pidTuningButtonSave": {
-        "message": ""
-    },
-    "pidTuningButtonRefresh": {
-        "message": ""
-    },
-    "pidTuningProfileHead": {
-        "message": ""
-    },
-    "pidTuningControllerHead": {
-        "message": ""
-    },
-    "pidTuningCopyProfile": {
-        "message": ""
-    },
-    "pidTuningCopyRateProfile": {
-        "message": ""
-    },
-    "dialogCopyProfileText": {
-        "message": ""
-    },
-    "dialogCopyRateProfileText": {
-        "message": ""
-    },
-    "dialogCopyProfileTitle": {
-        "message": ""
-    },
-    "dialogCopyProfileNote": {
-        "message": ""
-    },
-    "dialogCopyProfileConfirm": {
-        "message": ""
-    },
-    "dialogCopyProfileClose": {
-        "message": ""
-    },
-    "pidTuningResetPidProfile": {
-        "message": ""
-    },
-    "pidTuningPidProfileReset": {
-        "message": ""
-    },
-    "pidTuningReceivedProfile": {
-        "message": ""
-    },
-    "pidTuningReceivedRateProfile": {
-        "message": ""
-    },
-    "pidTuningLoadedProfile": {
-        "message": ""
-    },
-    "pidTuningLoadedRateProfile": {
-        "message": ""
-    },
-    "pidTuningDataRefreshed": {
-        "message": ""
-    },
-    "pidTuningEepromSaved": {
-        "message": ""
-    },
-    "tuningHelp": {
-        "message": ""
-    },
-    "tuningHelpSliders": {
-        "message": "",
-        "description": ""
-    },
-    "filterWarning": {
-        "message": ""
-    },
-    "pidTuningSliderPidsMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderModeHelp": {
-        "message": ""
-    },
-    "receiverHelp": {
-        "message": ""
-    },
-    "receiverThrottleMid": {
-        "message": ""
-    },
-    "receiverThrottleExpo": {
-        "message": ""
+        "message": "Plyn"
     },
     "receiverStickMin": {
-        "message": ""
-    },
-    "receiverHelpStickMin": {
-        "message": ""
+        "message": "Limit \"stažené páky\""
     },
     "receiverStickCenter": {
-        "message": ""
-    },
-    "receiverHelpStickCenter": {
-        "message": ""
+        "message": "Střed pák"
     },
     "receiverStickMax": {
-        "message": ""
-    },
-    "receiverHelpStickMax": {
-        "message": ""
+        "message": "Limit \"páka na plno\""
     },
     "receiverDeadband": {
-        "message": ""
-    },
-    "receiverHelpDeadband": {
-        "message": ""
+        "message": "Deadzóna RC"
     },
     "receiverYawDeadband": {
-        "message": ""
-    },
-    "receiverHelpYawDeadband": {
-        "message": ""
+        "message": "Deadzóna zatáčení"
     },
     "recevier3dDeadbandThrottle": {
-        "message": ""
-    },
-    "receiverHelp3dDeadbandThrottle": {
-        "message": ""
+        "message": "Deadzóna 3D plynu"
     },
     "receiverChannelMap": {
-        "message": ""
-    },
-    "receiverChannelDefaultOption": {
-        "message": ""
+        "message": "Mapování kanálů"
     },
     "receiverChannelMapTitle": {
-        "message": ""
+        "message": "Kliknutím do pole můžete nastavit vlastní mapování kanálů"
     },
     "receiverRssiChannel": {
-        "message": ""
+        "message": "Kanál RSSI"
     },
     "receiverRssiChannelDisabledOption": {
-        "message": ""
-    },
-    "receiverRefreshRateTitle": {
-        "message": ""
-    },
-    "receiverResetRefreshRate": {
-        "message": ""
-    },
-    "receiverResetRefreshRateTitle": {
-        "message": ""
-    },
-    "receiverButtonSave": {
-        "message": ""
-    },
-    "receiverButtonRefresh": {
-        "message": ""
-    },
-    "receiverButtonBind": {
-        "message": ""
-    },
-    "receiverButtonBindMessage": {
-        "message": ""
+        "message": "Zakázáno"
     },
     "receiverButtonSticks": {
-        "message": ""
-    },
-    "receiverDataRefreshed": {
-        "message": ""
-    },
-    "receiverEepromSaved": {
-        "message": ""
+        "message": "Ovládací páky"
     },
     "receiverModelPreview": {
-        "message": ""
-    },
-    "receiverMspWarningText": {
-        "message": ""
+        "message": "Náhled"
     },
     "receiverMspEnableButton": {
-        "message": ""
-    },
-    "auxiliaryHelp": {
-        "message": ""
-    },
-    "auxiliaryToggleUnused": {
-        "message": ""
+        "message": "Povolit ovládání"
     },
     "auxiliaryMin": {
-        "message": ""
+        "message": "Min"
     },
     "auxiliaryMax": {
-        "message": ""
-    },
-    "auxiliaryDisabled": {
-        "message": "",
-        "descripton": ""
+        "message": "Max"
     },
     "auxiliaryAddRange": {
-        "message": ""
-    },
-    "auxiliaryAddLink": {
-        "message": ""
+        "message": "Přidat rozsah"
     },
     "auxiliaryButtonSave": {
-        "message": ""
-    },
-    "auxiliaryEepromSaved": {
-        "message": ""
+        "message": "Uložit"
     },
     "auxiliaryAutoChannelSelect": {
-        "message": ""
-    },
-    "auxiliaryModeLogicOR": {
-        "message": ""
-    },
-    "auxiliaryModeLogicAND": {
-        "message": ""
-    },
-    "adjustmentsHelp": {
-        "message": ""
-    },
-    "adjustmentSlotsHelp": {
-        "message": ""
-    },
-    "adjustmentsExamples": {
-        "message": ""
-    },
-    "adjustmentsExample1": {
-        "message": ""
-    },
-    "adjustmentsExample2": {
-        "message": ""
+        "message": "AUTO"
     },
     "adjustmentsColumnEnable": {
-        "message": ""
+        "message": "Pokud je povoleno"
     },
     "adjustmentsColumnUsingSlot": {
-        "message": ""
+        "message": "používá slot"
     },
     "adjustmentsColumnWhenChannel": {
-        "message": ""
+        "message": "když kanál"
     },
     "adjustmentsColumnIsInRange": {
-        "message": ""
+        "message": "je v rozsahu"
     },
     "adjustmentsColumnThenApplyFunction": {
-        "message": ""
+        "message": "pak použít"
     },
     "adjustmentsColumnViaChannel": {
-        "message": ""
+        "message": "kanálem"
     },
     "adjustmentsSlot0": {
-        "message": ""
+        "message": "Slot 1"
     },
     "adjustmentsSlot1": {
-        "message": ""
+        "message": "Slot 2"
     },
     "adjustmentsSlot2": {
-        "message": ""
+        "message": "Slot 3"
     },
     "adjustmentsSlot3": {
-        "message": ""
+        "message": "Slot 4"
     },
     "adjustmentsMin": {
-        "message": ""
+        "message": "Min"
     },
     "adjustmentsMax": {
-        "message": ""
+        "message": "Max"
     },
     "adjustmentsFunction0": {
-        "message": ""
-    },
-    "adjustmentsFunction1": {
-        "message": ""
-    },
-    "adjustmentsFunction2": {
-        "message": ""
-    },
-    "adjustmentsFunction3": {
-        "message": ""
-    },
-    "adjustmentsFunction4": {
-        "message": ""
-    },
-    "adjustmentsFunction5": {
-        "message": ""
-    },
-    "adjustmentsFunction6": {
-        "message": ""
-    },
-    "adjustmentsFunction7": {
-        "message": ""
-    },
-    "adjustmentsFunction8": {
-        "message": ""
-    },
-    "adjustmentsFunction9": {
-        "message": ""
-    },
-    "adjustmentsFunction10": {
-        "message": ""
-    },
-    "adjustmentsFunction11": {
-        "message": ""
-    },
-    "adjustmentsFunction12": {
-        "message": ""
-    },
-    "adjustmentsFunction13": {
-        "message": ""
-    },
-    "adjustmentsFunction14": {
-        "message": ""
-    },
-    "adjustmentsFunction15": {
-        "message": ""
-    },
-    "adjustmentsFunction16": {
-        "message": ""
-    },
-    "adjustmentsFunction17": {
-        "message": ""
-    },
-    "adjustmentsFunction18": {
-        "message": ""
-    },
-    "adjustmentsFunction19": {
-        "message": ""
-    },
-    "adjustmentsFunction20": {
-        "message": ""
-    },
-    "adjustmentsFunction21": {
-        "message": ""
-    },
-    "adjustmentsFunction22": {
-        "message": ""
-    },
-    "adjustmentsFunction22_2": {
-        "message": ""
-    },
-    "adjustmentsFunction23": {
-        "message": ""
-    },
-    "adjustmentsFunction23_2": {
-        "message": ""
-    },
-    "adjustmentsFunction24": {
-        "message": ""
-    },
-    "adjustmentsFunction25": {
-        "message": ""
-    },
-    "adjustmentsFunction26": {
-        "message": ""
-    },
-    "adjustmentsFunction27": {
-        "message": ""
-    },
-    "adjustmentsFunction28": {
-        "message": ""
-    },
-    "adjustmentsFunction29": {
-        "message": ""
-    },
-    "adjustmentsFunction30": {
-        "message": ""
+        "message": "Žádné změny"
     },
     "adjustmentsSave": {
-        "message": ""
-    },
-    "adjustmentsEepromSaved": {
-        "message": ""
+        "message": "Uložit"
     },
     "transponderNotSupported": {
-        "message": ""
-    },
-    "transponderInformation": {
-        "message": ""
+        "message": "Firmware Vaší řídící jednotky nepodporuje funkci odpovídače."
     },
     "transponderConfigurationType": {
-        "message": ""
+        "message": "Typ odpovídače"
     },
     "transponderType0": {
-        "message": ""
+        "message": "Nic"
     },
     "transponderType1": {
-        "message": ""
-    },
-    "transponderType2": {
-        "message": ""
+        "message": "iLap"
     },
     "transponderType3": {
-        "message": ""
+        "message": "ERLT"
     },
     "transponderConfiguration1": {
-        "message": ""
+        "message": "Konfigurace iLap"
     },
     "transponderConfiguration2": {
-        "message": ""
+        "message": "Konfigurace aRCiTimeru"
     },
     "transponderConfiguration3": {
-        "message": ""
+        "message": "Konfigurace ERLT"
     },
     "transponderData1": {
-        "message": ""
+        "message": "Data"
     },
     "transponderData2": {
-        "message": ""
+        "message": "ID odpovídače"
     },
     "transponderData3": {
-        "message": ""
+        "message": "ID odpovídače"
     },
     "transponderDataHelp1": {
-        "message": ""
-    },
-    "transponderHelp1": {
-        "message": ""
-    },
-    "transponderHelp2": {
-        "message": ""
+        "message": "Pouze hexadecimální znaky, 0-9, A-F"
     },
     "transponderDataHelp3": {
-        "message": ""
-    },
-    "transponderHelp3": {
-        "message": ""
+        "message": "Vyberte ERLT ID 0-63"
     },
     "transponderButtonSave": {
-        "message": ""
+        "message": "Uložit"
     },
     "transponderButtonSaveReboot": {
-        "message": ""
+        "message": "Uložit a restartovat"
     },
     "transponderDataInvalid": {
-        "message": ""
+        "message": "Data odpovídače jsou <span class=\"message-negative\">neplatná</span>"
     },
     "transponderEepromSaved": {
-        "message": ""
+        "message": "EEPROM <span class=\"message-positive\">uložena</span>"
     },
     "servosFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Serva vyžadují firmware &gt; 1.10.0."
     },
     "servosChangeDirection": {
-        "message": ""
+        "message": "Změňte směr v TX na odpovídající"
     },
     "servosName": {
-        "message": ""
+        "message": "Název"
     },
     "servosMid": {
-        "message": ""
+        "message": "MID"
     },
     "servosMin": {
-        "message": ""
+        "message": "MIN"
     },
     "servosMax": {
-        "message": ""
+        "message": "MAX"
     },
     "servosAngleAtMin": {
-        "message": ""
+        "message": "Min úhel"
     },
     "servosAngleAtMax": {
-        "message": ""
+        "message": "Max úhel"
     },
     "servosDirectionAndRate": {
-        "message": ""
-    },
-    "servosLiveMode": {
-        "message": ""
+        "message": "Směr a poměr"
     },
     "servosButtonSave": {
-        "message": ""
+        "message": "Uložit"
     },
     "servosNormal": {
-        "message": ""
+        "message": "Normální"
     },
     "servosReverse": {
-        "message": ""
-    },
-    "servosEepromSave": {
-        "message": ""
-    },
-    "gpsHead": {
-        "message": ""
-    },
-    "gpsMapHead": {
-        "message": ""
-    },
-    "gpsMapMessage1": {
-        "message": ""
-    },
-    "gpsMapMessage2": {
-        "message": ""
-    },
-    "gps3dFix": {
-        "message": ""
-    },
-    "gpsFixTrue": {
-        "message": ""
-    },
-    "gpsFixFalse": {
-        "message": ""
-    },
-    "gpsAltitude": {
-        "message": ""
-    },
-    "gpsLat": {
-        "message": ""
-    },
-    "gpsLon": {
-        "message": ""
-    },
-    "gpsSpeed": {
-        "message": ""
-    },
-    "gpsSats": {
-        "message": ""
-    },
-    "gpsDistToHome": {
-        "message": ""
-    },
-    "gpsSignalStrHead": {
-        "message": ""
-    },
-    "gpsSignalStr": {
-        "message": ""
-    },
-    "gpsSignalGnssId": {
-        "message": ""
-    },
-    "gpsSignalSatId": {
-        "message": ""
-    },
-    "gpsSignalStatusQly": {
-        "message": ""
-    },
-    "gnssQualityNoSignal": {
-        "message": ""
-    },
-    "gnssQualitySearching": {
-        "message": ""
-    },
-    "gnssQualityAcquired": {
-        "message": ""
-    },
-    "gnssQualityUnusable": {
-        "message": ""
-    },
-    "gnssQualityLocked": {
-        "message": ""
-    },
-    "gnssQualityFullyLocked": {
-        "message": ""
-    },
-    "gnssUsedUnused": {
-        "message": ""
-    },
-    "gnssUsedUsed": {
-        "message": ""
-    },
-    "gnssHealthyUnknown": {
-        "message": ""
-    },
-    "gnssHealthyHealthy": {
-        "message": ""
-    },
-    "gnssHealthyUnhealthy": {
-        "message": ""
+        "message": "Obráceně"
     },
     "motorsVoltage": {
-        "message": ""
+        "message": "Napětí:"
     },
     "motorsADrawing": {
-        "message": ""
+        "message": "Proud:"
     },
     "motorsmAhDrawn": {
-        "message": ""
+        "message": "Spotřebováno:"
     },
     "motorsVoltageValue": {
-        "message": ""
+        "message": "$1 V"
     },
     "motorsADrawingValue": {
-        "message": ""
+        "message": "$1 A"
     },
     "motorsmAhDrawnValue": {
-        "message": ""
+        "message": "$1 mAh"
     },
     "motorsText": {
-        "message": ""
+        "message": "Motory"
     },
     "motorNumber1": {
-        "message": ""
+        "message": "Motor - 1"
     },
     "motorNumber2": {
-        "message": ""
+        "message": "Motor - 2"
     },
     "motorNumber3": {
-        "message": ""
+        "message": "Motor - 3"
     },
     "motorNumber4": {
-        "message": ""
+        "message": "Motor - 4"
     },
     "motorNumber5": {
-        "message": ""
+        "message": "Motor - 5"
     },
     "motorNumber6": {
-        "message": ""
+        "message": "Motor - 6"
     },
     "motorNumber7": {
-        "message": ""
+        "message": "Motor - 7"
     },
     "motorNumber8": {
-        "message": ""
+        "message": "Motor - 8"
     },
     "servosText": {
-        "message": ""
+        "message": "Serva"
     },
     "servoNumber1": {
-        "message": ""
+        "message": "Servo - 1"
     },
     "servoNumber2": {
-        "message": ""
+        "message": "Servo - 2"
     },
     "servoNumber3": {
-        "message": ""
+        "message": "Servo - 3"
     },
     "servoNumber4": {
-        "message": ""
+        "message": "Servo - 4"
     },
     "servoNumber5": {
-        "message": ""
+        "message": "Servo - 5"
     },
     "servoNumber6": {
-        "message": ""
+        "message": "Servo - 6"
     },
     "servoNumber7": {
-        "message": ""
+        "message": "Servo - 7"
     },
     "servoNumber8": {
-        "message": ""
+        "message": "Servo - 8"
     },
     "motorsResetMaximumButton": {
-        "message": ""
-    },
-    "motorsResetMaximum": {
-        "message": ""
+        "message": "Reset"
     },
     "motorsSensorGyroSelect": {
-        "message": ""
-    },
-    "motorsSensorAccelSelect": {
-        "message": ""
-    },
-    "motorsTelemetryHelp": {
-        "message": "",
-        "description": ""
-    },
-    "motorsRPM": {
-        "message": "",
-        "description": ""
-    },
-    "motorsRPMError": {
-        "message": "",
-        "description": ""
-    },
-    "motorsESCTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "motorsMaster": {
-        "message": ""
+        "message": "gyroskop"
     },
     "motorsNotice": {
-        "message": ""
+        "message": "<strong>Upozornění před testem motorů/odjištěním:</strong><br />Posunutím sliderů nebo odjištěním dronu způsobíte <strong>roztočení motorů</strong>.<br />Abyste předešli zraněním, <strong class=\"message-negative\">sundejte VŠECHNY vrtule</strong>, než použijete tuto funkci.<br />Zapnutím módu testu motorů se dočasně vypne funkce pro ochranu před nekontrolovaným startem, aby se mohly spustit motory bez vrtulí.<br />"
     },
     "motorsEnableControl": {
-        "message": ""
-    },
-    "motorsDialogMixerReset": {
-        "message": ""
-    },
-    "motorsDialogSettingsChanged": {
-        "message": ""
-    },
-    "motorsDialogSettingsChangedOk": {
-        "message": ""
-    },
-    "motorOutputReorderDialogClose": {
-        "message": ""
-    },
-    "motorOutputReorderDialogAgree": {
-        "message": ""
-    },
-    "motorsRemapDialogTitle": {
-        "message": ""
-    },
-    "motorOutputReorderDialogOpen": {
-        "message": ""
-    },
-    "motorOutputReorderDialogSelectSpinningMotor": {
-        "message": ""
-    },
-    "motorOutputReorderDialogRemapIsDone": {
-        "message": ""
-    },
-    "motorsRemapDialogUnderstandRisks": {
-        "message": ""
-    },
-    "motorsRemapDialogRiskNotice": {
-        "message": ""
-    },
-    "motorsRemapDialogExplanations": {
-        "message": ""
-    },
-    "motorsRemapDialogSave": {
-        "message": ""
-    },
-    "motorsRemapDialogStartOver": {
-        "message": ""
-    },
-    "motorsButtonReset": {
-        "message": ""
-    },
-    "motorsButtonSave": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Title": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SelectMotor": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SelectMotorSafety": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-RiskNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-UnderstandRisks": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-NormalInformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardInformationNotice": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Open": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandNormal": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandReverse": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-CommandSpin": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-ReleaseButtonToStop": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-ReleaseToStop": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-Start": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-StartWizard": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SetDirectionHint": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SetDirectionHintSafety": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WrongFirmwareText": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardActionHint": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-WizardActionHintSecondLine": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-SpinWizard": {
-        "message": ""
-    },
-    "escDshotDirectionDialog-StopWizard": {
-        "message": ""
-    },
-    "sensorsInfo": {
-        "message": ""
+        "message": "<strong>Rozumím rizikům</strong>, všechny vrtule jsem sundal - chci začít testovat motory."
     },
     "sensorsRefresh": {
-        "message": ""
+        "message": "Obnovit:"
     },
     "sensorsScale": {
-        "message": ""
-    },
-    "sensorsGyroSelect": {
-        "message": ""
-    },
-    "sensorsAccelSelect": {
-        "message": ""
-    },
-    "sensorsMagSelect": {
-        "message": ""
-    },
-    "sensorsAltitudeSelect": {
-        "message": ""
-    },
-    "sensorsSonarSelect": {
-        "message": ""
-    },
-    "sensorsDebugSelect": {
-        "message": ""
-    },
-    "sensorsGyroTitle": {
-        "message": ""
-    },
-    "sensorsAccelTitle": {
-        "message": ""
-    },
-    "sensorsMagTitle": {
-        "message": ""
-    },
-    "sensorsAltitudeTitle": {
-        "message": ""
-    },
-    "sensorsAltitudeHint": {
-        "message": ""
-    },
-    "sensorsSonarTitle": {
-        "message": ""
-    },
-    "sensorsDebugTitle": {
-        "message": ""
-    },
-    "cliInfo": {
-        "message": ""
-    },
-    "cliInputPlaceholder": {
-        "message": ""
-    },
-    "cliInputPlaceholderBuilding": {
-        "message": ""
-    },
-    "cliEnter": {
-        "message": ""
-    },
-    "cliReboot": {
-        "message": ""
-    },
-    "cliSaveToFileBtn": {
-        "message": ""
+        "message": "Měřítko:"
     },
     "cliClearOutputHistoryBtn": {
-        "message": ""
-    },
-    "cliCopyToClipboardBtn": {
-        "message": ""
-    },
-    "cliCopySuccessful": {
-        "message": ""
-    },
-    "cliLoadFromFileBtn": {
-        "message": ""
-    },
-    "cliConfirmSnippetDialogTitle": {
-        "message": ""
-    },
-    "cliConfirmSnippetNote": {
-        "message": ""
-    },
-    "cliConfirmSnippetBtn": {
-        "message": ""
-    },
-    "loggingNote": {
-        "message": ""
-    },
-    "loggingSamplesSaved": {
-        "message": ""
-    },
-    "loggingLogSize": {
-        "message": ""
-    },
-    "loggingButtonLogFile": {
-        "message": ""
-    },
-    "loggingStart": {
-        "message": ""
-    },
-    "loggingStop": {
-        "message": ""
-    },
-    "loggingBack": {
-        "message": ""
-    },
-    "loggingErrorNotConnected": {
-        "message": ""
-    },
-    "loggingErrorLogFile": {
-        "message": ""
-    },
-    "loggingErrorOneProperty": {
-        "message": ""
-    },
-    "loggingAutomaticallyRetained": {
-        "message": ""
-    },
-    "blackboxNotSupported": {
-        "message": ""
+        "message": "Vymazat historii výstupu"
     },
     "blackboxMaybeSupported": {
-        "message": ""
+        "message": "Firmware vaší řídící jednotky je příliš starý a nepodporuje tuto funkci, nebo je funkce Blackbox zakázaná v nastavení."
     },
     "blackboxConfiguration": {
-        "message": ""
+        "message": "Nastavení Blackboxu"
     },
     "blackboxButtonSave": {
-        "message": ""
+        "message": "Uložit a restartovat"
     },
     "blackboxLoggingNone": {
-        "message": ""
-    },
-    "blackboxLoggingFlash": {
-        "message": ""
-    },
-    "blackboxLoggingSdCard": {
-        "message": ""
-    },
-    "blackboxLoggingSerial": {
-        "message": ""
-    },
-    "serialLoggingSupportedNote": {
-        "message": ""
+        "message": "Bez záznamu"
     },
     "sdcardNote": {
-        "message": ""
-    },
-    "dataflashUsedSpace": {
-        "message": ""
-    },
-    "dataflashFreeSpace": {
-        "message": ""
-    },
-    "dataflashUnavSpace": {
-        "message": ""
-    },
-    "dataflashLogsSpace": {
-        "message": ""
-    },
-    "dataflashNote": {
-        "message": ""
-    },
-    "dataflashNotPresentNote": {
-        "message": ""
-    },
-    "dataflashFirmwareUpgradeRequired": {
-        "message": ""
-    },
-    "dataflashButtonSaveFile": {
-        "message": ""
-    },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": ""
-    },
-    "dataflashSavetoFileNote": {
-        "message": ""
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": ""
-    },
-    "dataflashButtonErase": {
-        "message": ""
-    },
-    "dataflashConfirmEraseTitle": {
-        "message": ""
-    },
-    "dataflashConfirmEraseNote": {
-        "message": ""
-    },
-    "dataflashSavingTitle": {
-        "message": ""
-    },
-    "dataflashSavingNote": {
-        "message": ""
-    },
-    "dataflashSavingNoteAfter": {
-        "message": ""
-    },
-    "dataflashButtonSaveCancel": {
-        "message": ""
-    },
-    "dataflashButtonSaveDismiss": {
-        "message": ""
-    },
-    "dataflashButtonEraseConfirm": {
-        "message": ""
-    },
-    "dataflashButtonEraseCancel": {
-        "message": ""
-    },
-    "dataflashFileWriteFailed": {
-        "message": ""
+        "message": "Záznamy z letů můžou být uloženy na SD kartu vloženou ve vašem FC."
     },
     "sdcardStatusNoCard": {
-        "message": ""
-    },
-    "sdcardStatusReboot": {
-        "message": ""
-    },
-    "sdcardStatusReady": {
-        "message": ""
-    },
-    "sdcardStatusStarting": {
-        "message": ""
-    },
-    "sdcardStatusFileSystem": {
-        "message": ""
-    },
-    "sdcardStatusUnknown": {
-        "message": ""
-    },
-    "firmwareFlasherBranch": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseSummaryHead": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseManufacturer": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseVersion": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseVersionUrl": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseNotes": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseDate": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseTarget": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseMCU": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildDetails": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildStatus": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildPending": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildProcessing": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildSuccessCached": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildSuccess": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": ""
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": ""
-    },
-    "firmwareFlasherReleaseFileUrl": {
-        "message": ""
-    },
-    "firmwareFlasherTargetWarning": {
-        "message": ""
-    },
-    "firmwareFlasherPath": {
-        "message": ""
-    },
-    "firmwareFlasherSize": {
-        "message": ""
-    },
-    "firmwareFlasherStatus": {
-        "message": ""
-    },
-    "firmwareFlasherProgress": {
-        "message": ""
-    },
-    "firmwareFlasherLoadFirmwareFile": {
-        "message": ""
-    },
-    "firmwareFlasherLoadedConfig": {
-        "message": ""
+        "message": "Není vložena žádná karta"
     },
     "firmwareFlasherNoReboot": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBuildType": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": ""
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": ""
+        "message": "Bez restartu"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": ""
+        "message": "Vyberte verzi firmware pro vaši desku."
     },
     "firmwareFlasherNoRebootDescription": {
-        "message": ""
-    },
-    "firmwareFlasherFlashOnConnect": {
-        "message": ""
-    },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": ""
+        "message": "Povolte, pokud je vaše deska v boot režimu. Tzn. pokud jste zapnuli FC se zkratovanými bootloader piny, nebo jste drželi tlačítko BOOT."
     },
     "firmwareFlasherFullChipErase": {
-        "message": ""
+        "message": "Kompletní vymazání paměti"
     },
     "firmwareFlasherFullChipEraseDescription": {
-        "message": ""
-    },
-    "firmwareFlasherFlashDevelopmentFirmware": {
-        "message": ""
-    },
-    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": ""
-    },
-    "firmwareFlasherManualPort": {
-        "message": ""
-    },
-    "firmwareFlasherManualBaud": {
-        "message": ""
+        "message": "Vymaže všechna data uložená na desce."
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": ""
-    },
-    "firmwareFlasherBaudRate": {
-        "message": ""
+        "message": "Manuální výběr přenosové rychlosti pro desky, které nepodporují výchozí rychlost, nebo pro instalaci přes Bluetooth. <br /><span class=\"message-negative\">Poznámka:</span> Nepoužívá se, pokud se instaluje přes USB DFU režim"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": ""
+        "message": "Zobrazit nestabilní verze"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLoading": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": ""
+        "message": "Zobrazit ke stabilním verzím i verze nestabilní"
     },
     "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelSelectBoard": {
-        "message": ""
-    },
-    "firmwareFlasherOptionLabelSelectFirmwareVersion": {
-        "message": ""
+        "message": "Stabilní a nestabilní verze"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
-        "message": ""
-    },
-    "firmwareFlasherButtonLoadLocal": {
-        "message": ""
-    },
-    "firmwareFlasherButtonLoadOnline": {
-        "message": ""
-    },
-    "firmwareFlasherButtonDownloading": {
-        "message": ""
-    },
-    "firmwareFlasherExitDfu": {
-        "message": ""
-    },
-    "firmwareFlasherFlashFirmware": {
-        "message": ""
-    },
-    "firmwareFlasherGithubInfoHead": {
-        "message": ""
-    },
-    "firmwareFlasherCommiter": {
-        "message": ""
-    },
-    "firmwareFlasherDate": {
-        "message": ""
-    },
-    "firmwareFlasherHash": {
-        "message": ""
-    },
-    "firmwareFlasherUrl": {
-        "message": ""
-    },
-    "firmwareFlasherMessage": {
-        "message": ""
-    },
-    "firmwareFlasherWarningText": {
-        "message": ""
-    },
-    "firmwareFlasherRecoveryHead": {
-        "message": ""
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": ""
-    },
-    "firmwareFlasherButtonLeave": {
-        "message": ""
-    },
-    "firmwareFlasherFirmwareNotLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherFirmwareLocalLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherHexCorrupted": {
-        "message": ""
-    },
-    "firmwareFlasherConfigCorrupted": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherConfigCorruptedLogMessage": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": ""
-    },
-    "firmwareFlasherFailedToLoadOnlineFirmware": {
-        "message": ""
-    },
-    "firmwareFlasherFailedToLoadUnifiedConfig": {
-        "message": ""
-    },
-    "firmwareFlasherLegacyLabel": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherNoFirmwareSelected": {
-        "message": ""
-    },
-    "firmwareFlasherNoValidPort": {
-        "message": ""
-    },
-    "firmwareFlasherWritePermissions": {
-        "message": ""
-    },
-    "firmwareFlasherFlashTrigger": {
-        "message": ""
-    },
-    "firmwareFlasherVerifyBoard": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherButtonAbort": {
-        "message": ""
-    },
-    "firmwareFlasherButtonContinue": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": ""
-    },
-    "firmwareFlasherDetectBoardQuery": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementDialog": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementAcknowledge": {
-        "message": ""
-    },
-    "unstableFirmwareAcknoledgementFlash": {
-        "message": ""
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": ""
-    },
-    "ledStripHelp": {
-        "message": ""
-    },
-    "ledStripButtonSave": {
-        "message": ""
-    },
-    "ledStripColorSetupTitle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripH": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripS": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripV": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripRemainingText": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripClearSelectedButton": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripClearAllButton": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripEepromSaved": {
-        "message": ""
-    },
-    "ledStripVtxOverlay": {
-        "message": ""
-    },
-    "ledStripFunctionSection": {
-        "message": ""
-    },
-    "ledStripFunctionTitle": {
-        "message": ""
-    },
-    "ledStripFunctionNoneOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionColorOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionModesOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionArmOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionBatteryOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionRSSIOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionGPSOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripFunctionRingOption": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripColorModifierTitle": {
-        "message": ""
-    },
-    "ledStripModeColorsTitle": {
-        "message": ""
-    },
-    "ledStripModeColorsModeOrientation": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeHeadfree": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeHorizon": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeAngle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeMag": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeBaro": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirN": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirE": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirS": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirW": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirU": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripDirD": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModesOrientationTitle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModesSpecialColorsTitle": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeDisarmed": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeArmed": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeAnimation": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeBlinkBg": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSNoSats": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSNoLock": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripModeColorsModeGPSLocked": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiring": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringMode": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringClearControl": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringClearAllControl": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripWiringMessage": {
-        "message": "",
-        "description": ""
-    },
-    "ledStripVtxFunction": {
-        "message": ""
-    },
-    "ledStripBlinkTitle": {
-        "message": ""
-    },
-    "ledStripBlinkAlwaysOverlay": {
-        "message": ""
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": ""
-    },
-    "ledStripOverlayTitle": {
-        "message": ""
-    },
-    "ledStripWarningsOverlay": {
-        "message": ""
-    },
-    "ledStripIndecatorOverlay": {
-        "message": ""
-    },
-    "colorBlack": {
-        "message": ""
-    },
-    "colorWhite": {
-        "message": ""
-    },
-    "colorRed": {
-        "message": ""
-    },
-    "colorOrange": {
-        "message": ""
-    },
-    "colorYellow": {
-        "message": ""
-    },
-    "colorLimeGreen": {
-        "message": ""
-    },
-    "colorGreen": {
-        "message": ""
-    },
-    "colorMintGreen": {
-        "message": ""
-    },
-    "colorCyan": {
-        "message": ""
-    },
-    "colorLightBlue": {
-        "message": ""
-    },
-    "colorBlue": {
-        "message": ""
-    },
-    "colorDarkViolet": {
-        "message": ""
-    },
-    "colorMagenta": {
-        "message": ""
-    },
-    "colorDeepPink": {
-        "message": ""
+        "message": "Zvolte verzi firmwaru pro"
     },
     "controlAxisRoll": {
-        "message": ""
+        "message": "Náklon [A]"
     },
     "controlAxisPitch": {
-        "message": ""
+        "message": "Sklon [E]"
     },
     "controlAxisYaw": {
-        "message": ""
+        "message": "Zatáčení [R]"
     },
     "controlAxisThrottle": {
-        "message": ""
+        "message": "Plyn [T]"
     },
     "controlAxisAux1": {
-        "message": ""
+        "message": "AUX 1"
     },
     "controlAxisAux2": {
-        "message": ""
+        "message": "AUX 2"
     },
     "controlAxisAux3": {
-        "message": ""
+        "message": "AUX 3"
     },
     "controlAxisAux4": {
-        "message": ""
-    },
-    "controlAxisAux5": {
-        "message": ""
-    },
-    "controlAxisAux6": {
-        "message": ""
-    },
-    "controlAxisAux7": {
-        "message": ""
-    },
-    "controlAxisAux8": {
-        "message": ""
-    },
-    "controlAxisAux9": {
-        "message": ""
-    },
-    "controlAxisAux10": {
-        "message": ""
-    },
-    "controlAxisAux11": {
-        "message": ""
-    },
-    "controlAxisAux12": {
-        "message": ""
-    },
-    "controlAxisAux13": {
-        "message": ""
-    },
-    "controlAxisAux14": {
-        "message": ""
-    },
-    "controlAxisAux15": {
-        "message": ""
-    },
-    "controlAxisAux16": {
-        "message": ""
+        "message": "AUX 4"
     },
     "pidTuningBasic": {
-        "message": ""
-    },
-    "pidTuningYawJumpPrevention": {
-        "message": ""
-    },
-    "pidTuningYawJumpPreventionHelp": {
-        "message": ""
-    },
-    "pidTuningRcExpoPower": {
-        "message": ""
-    },
-    "pidTuningRcExpoPowerHelp": {
-        "message": ""
+        "message": "Základní/Acro"
     },
     "pidTuningLevel": {
-        "message": ""
-    },
-    "pidTuningAltitude": {
-        "message": ""
-    },
-    "pidTuningMag": {
-        "message": ""
-    },
-    "pidTuningGps": {
-        "message": ""
-    },
-    "pidTuningStrength": {
-        "message": ""
-    },
-    "pidTuningTransition": {
-        "message": ""
+        "message": "Acro/Horizont"
     },
     "pidTuningHorizon": {
-        "message": ""
+        "message": "Horizont"
     },
     "pidTuningAngle": {
-        "message": ""
-    },
-    "pidTuningLevelAngleLimit": {
-        "message": ""
-    },
-    "pidTuningLevelSensitivity": {
-        "message": ""
-    },
-    "pidTuningLevelHelp": {
-        "message": ""
-    },
-    "pidTuningMotorOutputLimit": {
-        "message": ""
-    },
-    "pidTuningMotorLimit": {
-        "message": ""
-    },
-    "pidTuningMotorLimitHelp": {
-        "message": ""
-    },
-    "pidTuningCellCount": {
-        "message": ""
-    },
-    "pidTuningCellCountHelp": {
-        "message": ""
-    },
-    "pidTuningCellCountChange": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningCellCountStay": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningCellCount1S": {
-        "message": ""
-    },
-    "pidTuningCellCount2S": {
-        "message": ""
-    },
-    "pidTuningCellCount3S": {
-        "message": ""
-    },
-    "pidTuningCellCount4S": {
-        "message": ""
-    },
-    "pidTuningCellCount5S": {
-        "message": ""
-    },
-    "pidTuningCellCount6S": {
-        "message": ""
-    },
-    "pidTuningCellCount7S": {
-        "message": ""
-    },
-    "pidTuningCellCount8S": {
-        "message": ""
-    },
-    "pidTuningNonProfileFilterSettings": {
-        "message": ""
-    },
-    "pidTuningFilterSlidersHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderLowFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderDefaultFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderHighFiltering": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroFilterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroSliderEnabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermFilterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermSliderEnabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderWarning": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroSliderDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermSliderDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderEnableButton": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPidSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFilterSlidersNonExpertMode": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderLow": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderDefault": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningSliderHigh": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMasterSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDRatioSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDMaxGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPitchPIGainSlider": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningPitchPIGainSliderHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassMode": {
-        "message": ""
-    },
-    "pidTuningLowpassStatic": {
-        "message": ""
-    },
-    "pidTuningLowpassDynamic": {
-        "message": ""
-    },
-    "pidTuningLowpassFilterType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassDyn": {
-        "message": ""
-    },
-    "pidTuningMinCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningMaxCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass2": {
-        "message": ""
-    },
-    "pidTuningGyroLowpass2Help": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroLowpassFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningGyroNotchFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter2": {
-        "message": ""
-    },
-    "pidTuningGyroNotchFilter2Help": {
-        "message": ""
-    },
-    "pidTuningCenterFrequency": {
-        "message": ""
-    },
-    "pidTuningCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDynamicNotchFilterGroup": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchRange": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchQ": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMinHz": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchCount": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchQHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMinHzHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchMaxHzHelp": {
-        "message": ""
-    },
-    "pidTuningDynamicNotchCountHelp": {
-        "message": ""
-    },
-    "pidTuningRpmFilterGroup": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmFilterHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmHarmonics": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmMinHz": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningRpmMinHzHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningFilterSettings": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassMode": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2Help": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDTermLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassType": {
-        "message": ""
-    },
-    "pidTuningStaticCutoffFrequency": {
-        "message": ""
-    },
-    "pidTuningDTermLowpass2Type": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDyn": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDynExpo": {
-        "message": ""
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": ""
-    },
-    "pidTuningDTermNotchFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": ""
-    },
-    "pidTuningYawLowpassFiltersGroup": {
-        "message": ""
-    },
-    "pidTuningYawLowpassFiltersGroupHelp": {
-        "message": ""
-    },
-    "pidTuningVbatPidCompensation": {
-        "message": ""
-    },
-    "pidTuningVbatPidCompensationHelp": {
-        "message": ""
-    },
-    "pidTuningVbatSagCompensation": {
-        "message": ""
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": ""
-    },
-    "pidTuningVbatSagValue": {
-        "message": ""
-    },
-    "pidTuningThrustLinearization": {
-        "message": ""
-    },
-    "pidTuningThrustLinearizationHelp": {
-        "message": ""
-    },
-    "pidTuningThrustLinearValue": {
-        "message": ""
-    },
-    "pidTuningItermRotation": {
-        "message": ""
-    },
-    "pidTuningItermRotationHelp": {
-        "message": ""
-    },
-    "pidTuningSmartFeedforward": {
-        "message": ""
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": ""
-    },
-    "pidTuningItermRelax": {
-        "message": ""
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxes": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningOptionRP": {
-        "message": ""
-    },
-    "pidTuningOptionRPY": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxesOptionRPInc": {
-        "message": ""
-    },
-    "pidTuningItermRelaxAxesOptionRPYInc": {
-        "message": ""
-    },
-    "pidTuningItermRelaxType": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": ""
-    },
-    "pidTuningItermRelaxTypeOptionSetpoint": {
-        "message": ""
-    },
-    "pidTuningItermRelaxCutoff": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": ""
-    },
-    "pidTuningAbsoluteControlGain": {
-        "message": ""
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": ""
-    },
-    "pidTuningThrottleBoost": {
-        "message": ""
-    },
-    "pidTuningThrottleBoostHelp": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpm": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": ""
-    },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": ""
-    },
-    "pidTuningAcroTrainerAngleLimit": {
-        "message": ""
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": ""
-    },
-    "pidTuningIntegratedYaw": {
-        "message": ""
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": ""
-    },
-    "pidTuningIntegratedYawHelp": {
-        "message": ""
-    },
-    "configHelp2": {
-        "message": ""
-    },
-    "failsafeFeaturesHelpOld": {
-        "message": ""
-    },
-    "failsafePaneTitleOld": {
-        "message": ""
-    },
-    "failsafeFeaturesHelpNew": {
-        "message": ""
-    },
-    "failsafePulsrangeTitle": {
-        "message": ""
-    },
-    "failsafePulsrangeHelp": {
-        "message": ""
-    },
-    "failsafeRxMinUsecItem": {
-        "message": ""
-    },
-    "failsafeRxMaxUsecItem": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsHelp": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsAuto": {
-        "message": ""
-    },
-    "failsafeChannelFallbackSettingsHold": {
-        "message": ""
-    },
-    "failsafeStageTwoSettingsTitle": {
-        "message": ""
-    },
-    "failsafeDelayItem": {
-        "message": ""
-    },
-    "failsafeDelayHelp": {
-        "message": ""
-    },
-    "failsafeThrottleLowItem": {
-        "message": ""
-    },
-    "failsafeThrottleLowHelp": {
-        "message": ""
-    },
-    "failsafeThrottleItem": {
-        "message": ""
-    },
-    "failsafeOffDelayItem": {
-        "message": ""
-    },
-    "failsafeOffDelayHelp": {
-        "message": ""
-    },
-    "failsafeSubTitle1": {
-        "message": ""
-    },
-    "failsafeProcedureItemSelect1": {
-        "message": ""
-    },
-    "failsafeProcedureItemSelect2": {
-        "message": ""
-    },
-    "failsafeProcedureItemSelect4": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAngle": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeMode": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeMaxAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeFixedAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecks": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksOff": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksOn": {
-        "message": ""
-    },
-    "failsafeGpsRescueItemSanityChecksFSOnly": {
-        "message": ""
+        "message": "Acro"
     },
     "failsafeKillSwitchItem": {
-        "message": ""
-    },
-    "failsafeKillSwitchHelp": {
-        "message": ""
-    },
-    "failsafeSwitchTitle": {
-        "message": ""
-    },
-    "failsafeSwitchModeItem": {
-        "message": ""
-    },
-    "failsafeSwitchModeHelp": {
-        "message": ""
-    },
-    "failsafeSwitchOptionStage1": {
-        "message": ""
-    },
-    "failsafeSwitchOptionStage2": {
-        "message": ""
-    },
-    "failsafeSwitchOptionKill": {
-        "message": ""
-    },
-    "powerButtonSave": {
-        "message": ""
-    },
-    "powerFirmwareUpgradeRequired": {
-        "message": ""
+        "message": "Failsafe Kill Switch (nastavení Failsafe v záložce módů)"
     },
     "powerBatteryVoltageMeterSource": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeNone": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeAdc": {
-        "message": ""
-    },
-    "powerBatteryVoltageMeterTypeEsc": {
-        "message": ""
+        "message": "Typ voltmetru"
     },
     "powerBatteryCurrentMeterSource": {
-        "message": ""
+        "message": "Typ ampérmetru"
     },
     "powerBatteryCurrentMeterTypeNone": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeAdc": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeVirtual": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeEsc": {
-        "message": ""
-    },
-    "powerBatteryCurrentMeterTypeMsp": {
-        "message": ""
+        "message": "Žádný"
     },
     "powerBatteryMinimum": {
-        "message": ""
+        "message": "Minimální napětí článku"
     },
     "powerBatteryMaximum": {
-        "message": ""
+        "message": "Maximální napětí článku"
     },
     "powerBatteryWarning": {
-        "message": ""
-    },
-    "powerCalibrationManagerButton": {
-        "message": ""
-    },
-    "powerCalibrationManagerTitle": {
-        "message": ""
-    },
-    "powerCalibrationManagerHelp": {
-        "message": ""
-    },
-    "powerCalibrationManagerNote": {
-        "message": ""
-    },
-    "powerCalibrationManagerWarning": {
-        "message": ""
-    },
-    "powerCalibrationManagerSourceNote": {
-        "message": ""
-    },
-    "powerCalibrationManagerConfirmationTitle": {
-        "message": ""
-    },
-    "powerCalibrationSave": {
-        "message": ""
-    },
-    "powerCalibrationApply": {
-        "message": ""
-    },
-    "powerCalibrationDiscard": {
-        "message": ""
-    },
-    "powerCalibrationConfirmHelp": {
-        "message": ""
-    },
-    "powerVoltageHead": {
-        "message": ""
-    },
-    "powerVoltageWarning": {
-        "message": ""
+        "message": "Výstraha při napětí článku"
     },
     "powerVoltageValue": {
-        "message": ""
-    },
-    "powerVoltageCalibration": {
-        "message": ""
-    },
-    "powerVoltageCalibratedScale": {
-        "message": ""
+        "message": "$1 V"
     },
     "powerVoltageId10": {
-        "message": ""
-    },
-    "powerVoltageId20": {
-        "message": ""
-    },
-    "powerVoltageId30": {
-        "message": ""
-    },
-    "powerVoltageId40": {
-        "message": ""
-    },
-    "powerVoltageId50": {
-        "message": ""
-    },
-    "powerVoltageId60": {
-        "message": ""
-    },
-    "powerVoltageId61": {
-        "message": ""
-    },
-    "powerVoltageId62": {
-        "message": ""
-    },
-    "powerVoltageId63": {
-        "message": ""
-    },
-    "powerVoltageId64": {
-        "message": ""
-    },
-    "powerVoltageId65": {
-        "message": ""
-    },
-    "powerVoltageId66": {
-        "message": ""
-    },
-    "powerVoltageId67": {
-        "message": ""
-    },
-    "powerVoltageId68": {
-        "message": ""
-    },
-    "powerVoltageId69": {
-        "message": ""
-    },
-    "powerVoltageId70": {
-        "message": ""
-    },
-    "powerVoltageId71": {
-        "message": ""
-    },
-    "powerVoltageId80": {
-        "message": ""
-    },
-    "powerVoltageId81": {
-        "message": ""
-    },
-    "powerVoltageId82": {
-        "message": ""
-    },
-    "powerVoltageId83": {
-        "message": ""
-    },
-    "powerVoltageId84": {
-        "message": ""
-    },
-    "powerVoltageId85": {
-        "message": ""
-    },
-    "powerVoltageScale": {
-        "message": ""
-    },
-    "powerVoltageDivider": {
-        "message": ""
-    },
-    "powerVoltageMultiplier": {
-        "message": ""
+        "message": "Baterie"
     },
     "powerAmperageHead": {
-        "message": ""
-    },
-    "powerAmperageWarning": {
-        "message": ""
+        "message": "Ampérmetr"
     },
     "powerAmperageValue": {
-        "message": ""
-    },
-    "powerAmperageId10": {
-        "message": ""
-    },
-    "powerAmperageId50": {
-        "message": ""
-    },
-    "powerAmperageId60": {
-        "message": ""
-    },
-    "powerAmperageId61": {
-        "message": ""
-    },
-    "powerAmperageId62": {
-        "message": ""
-    },
-    "powerAmperageId63": {
-        "message": ""
-    },
-    "powerAmperageId64": {
-        "message": ""
-    },
-    "powerAmperageId65": {
-        "message": ""
-    },
-    "powerAmperageId66": {
-        "message": ""
-    },
-    "powerAmperageId67": {
-        "message": ""
-    },
-    "powerAmperageId68": {
-        "message": ""
-    },
-    "powerAmperageId69": {
-        "message": ""
-    },
-    "powerAmperageId70": {
-        "message": ""
-    },
-    "powerAmperageId71": {
-        "message": ""
-    },
-    "powerAmperageId80": {
-        "message": ""
-    },
-    "powerAmperageId90": {
-        "message": ""
+        "message": "$1 A"
     },
     "powerMahValue": {
-        "message": ""
-    },
-    "powerAmperageScale": {
-        "message": ""
-    },
-    "powerAmperageOffset": {
-        "message": ""
-    },
-    "powerAmperageCalibration": {
-        "message": ""
-    },
-    "powerAmperageCalibratedScale": {
-        "message": ""
-    },
-    "powerBatteryHead": {
-        "message": ""
+        "message": "$1 mAh"
     },
     "powerStateHead": {
-        "message": ""
+        "message": "Stav napájení"
     },
     "powerBatteryConnected": {
-        "message": ""
-    },
-    "powerBatteryConnectedValueYes": {
-        "message": ""
+        "message": "Připojeno"
     },
     "powerBatteryConnectedValueNo": {
-        "message": ""
+        "message": "Ne"
     },
     "powerBatteryVoltage": {
-        "message": ""
+        "message": "Napětí"
     },
     "powerBatteryCurrentDrawn": {
-        "message": ""
+        "message": "mAh použito"
     },
     "powerBatteryAmperage": {
-        "message": ""
+        "message": "Proud"
     },
     "powerBatteryCapacity": {
-        "message": ""
+        "message": "Kapacita (mAh)"
     },
     "osdSetupTitle": {
-        "message": ""
-    },
-    "osdSetupNoOsdChipDetectWarning": {
-        "message": ""
-    },
-    "osdSetupPreviewHelp": {
-        "message": ""
-    },
-    "osdSetupUnsupportedNote1": {
-        "message": ""
-    },
-    "osdSetupUnsupportedNote2": {
-        "message": ""
-    },
-    "osdSetupProfilesTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupElementsTitle": {
-        "message": ""
-    },
-    "osdSetupPreviewTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectProfileTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewForTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupSelectedProfileTitle": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupSelectedProfileLabel": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectProfileElement": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatTitle": {
-        "message": ""
-    },
-    "osdSetupVideoFormatOptionAuto": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionPal": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionNtsc": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupVideoFormatOptionHd": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsTitle": {
-        "message": ""
-    },
-    "osdSetupUnitsOptionImperial": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsOptionMetric": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupUnitsOptionBritish": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupTimersTitle": {
-        "message": ""
-    },
-    "osdSetupAlarmsTitle": {
-        "message": ""
-    },
-    "osdSetupStatsTitle": {
-        "message": ""
-    },
-    "osdSetupVtxTitle": {
-        "message": ""
-    },
-    "osdSetupCraftNameTitle": {
-        "message": ""
-    },
-    "osdSetupWarningsTitle": {
-        "message": ""
-    },
-    "osdSetupFontPresets": {
-        "message": ""
-    },
-    "osdSetupFontPresetsSelector": {
-        "message": ""
-    },
-    "osdSetupFontPresetsSelectorCustomOption": {
-        "message": "",
-        "description": ""
-    },
-    "osdSetupFontPresetsSelectorOr": {
-        "message": ""
-    },
-    "osdSetupOpenFont": {
-        "message": ""
-    },
-    "osdSetupCustomLogoTitle": {
-        "message": ""
-    },
-    "osdSetupCustomLogoOpenImageButton": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoTitle": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoColorMap": {
-        "message": ""
-    },
-    "osdSetupCustomLogoInfoUploadHint": {
-        "message": ""
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": ""
-    },
-    "osdSetupCustomLogoColorMapError": {
-        "message": ""
-    },
-    "osdSetupUploadFont": {
-        "message": ""
-    },
-    "osdSetupUploadingFont": {
-        "message": ""
-    },
-    "osdSetupUploadingFontEnd": {
-        "message": ""
-    },
-    "osdSetupSave": {
-        "message": ""
-    },
-    "osdSetupFontManager": {
-        "message": ""
-    },
-    "osdSetupUncheckAll": {
-        "message": ""
-    },
-    "osdSetupHead": {
-        "message": ""
-    },
-    "osdSetupVideoMode": {
-        "message": ""
-    },
-    "osdSetupCameraConnected": {
-        "message": ""
-    },
-    "osdSetupResetText": {
-        "message": ""
-    },
-    "osdSetupButtonReset": {
-        "message": ""
-    },
-    "osdTextElementMainBattVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMainBattVoltage": {
-        "message": ""
-    },
-    "osdTextElementRssiValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRssiValue": {
-        "message": ""
-    },
-    "osdTextElementTimer": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementTimer": {
-        "message": ""
-    },
-    "osdTextElementThrottlePosition": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementThrottlePosition": {
-        "message": ""
-    },
-    "osdTextElementCpuLoad": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCpuLoad": {
-        "message": ""
-    },
-    "osdTextElementVtxChannel": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementVtxChannel": {
-        "message": ""
-    },
-    "osdTextElementVTXchannelVariantPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementVTXchannelVariantFull": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementVoltageWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementVoltageWarning": {
-        "message": ""
-    },
-    "osdTextElementArmed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementArmed": {
-        "message": ""
-    },
-    "osdTextElementDisarmed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementDisarmed": {
-        "message": ""
-    },
-    "osdTextElementCrosshairs": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCrosshairs": {
-        "message": ""
-    },
-    "osdTextElementArtificialHorizon": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementArtificialHorizon": {
-        "message": ""
-    },
-    "osdTextElementHorizonSidebars": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementHorizonSidebars": {
-        "message": ""
-    },
-    "osdTextElementCurrentDraw": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCurrentDraw": {
-        "message": ""
-    },
-    "osdTextElementMahDrawn": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMahDrawn": {
-        "message": ""
-    },
-    "osdTextElementWhDrawn": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementWhDrawn": {
-        "message": ""
-    },
-    "osdDescElementAuxValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementAuxValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementSysGoggleVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysGoggleVoltage": {
-        "message": ""
-    },
-    "osdTextElementSysVtxVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxVoltage": {
-        "message": ""
-    },
-    "osdTextElementSysBitrate": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysBitrate": {
-        "message": ""
-    },
-    "osdTextElementSysDelay": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysDelay": {
-        "message": ""
-    },
-    "osdTextElementSysDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysDistance": {
-        "message": ""
-    },
-    "osdTextElementSysLQ": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysLQ": {
-        "message": ""
-    },
-    "osdTextElementSysGoggleDVR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysGoggleDVR": {
-        "message": ""
-    },
-    "osdTextElementSysVtxDVR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxDVR": {
-        "message": ""
-    },
-    "osdTextElementSysWarnings": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysWarnings": {
-        "message": ""
-    },
-    "osdTextElementSysVtxTemp": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysVtxTemp": {
-        "message": ""
-    },
-    "osdTextElementSysFanSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementSysFanSpeed": {
-        "message": ""
-    },
-    "osdTextElementCraftName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCraftName": {
-        "message": ""
-    },
-    "osdTextElementAltitude": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAltitude": {
-        "message": ""
-    },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementOnTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementOnTime": {
-        "message": ""
-    },
-    "osdTextElementFlyTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlyTime": {
-        "message": ""
-    },
-    "osdTextElementFlyMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlyMode": {
-        "message": ""
-    },
-    "osdTextElementGPSSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSSpeed": {
-        "message": ""
-    },
-    "osdTextElementGPSSats": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSSats": {
-        "message": ""
-    },
-    "osdTextElementGPSLon": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSLon": {
-        "message": ""
-    },
-    "osdTextElementGPSLat": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementGPSLat": {
-        "message": ""
-    },
-    "osdTextElementGPSVariant7Decimals": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariant4Decimals": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariantDegMinSec": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementGPSVariantOpenLocation": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementDebug": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementDebug": {
-        "message": ""
-    },
-    "osdTextElementPIDRoll": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDRoll": {
-        "message": ""
-    },
-    "osdTextElementPIDPitch": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDPitch": {
-        "message": ""
-    },
-    "osdTextElementPIDYaw": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDYaw": {
-        "message": ""
-    },
-    "osdTextElementPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPower": {
-        "message": ""
-    },
-    "osdTextElementPIDRateProfile": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPIDRateProfile": {
-        "message": ""
-    },
-    "osdTextElementBatteryWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementBatteryWarning": {
-        "message": ""
-    },
-    "osdTextElementAvgCellVoltage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAvgCellVoltage": {
-        "message": ""
-    },
-    "osdTextElementPitchAngle": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPitchAngle": {
-        "message": ""
-    },
-    "osdTextElementRollAngle": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRollAngle": {
-        "message": ""
-    },
-    "osdTextElementMainBattUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMainBattUsage": {
-        "message": ""
-    },
-    "osdTextElementMainBattUsageVariantGraphrRemain": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantGraphUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantValueRemain": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementMainBattUsageVariantValueUsage": {
-        "message": "",
-        "description": ""
-    },
-    "osdTextElementArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementArmedTime": {
-        "message": ""
-    },
-    "osdTextElementHomeDirection": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementHomeDirection": {
-        "message": ""
-    },
-    "osdTextElementHomeDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementHomeDistance": {
-        "message": ""
-    },
-    "osdTextElementNumericalHeading": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementNumericalHeading": {
-        "message": ""
-    },
-    "osdTextElementNumericalVario": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementNumericalVario": {
-        "message": ""
-    },
-    "osdTextElementCompassBar": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCompassBar": {
-        "message": ""
-    },
-    "osdTextElementWarnings": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementWarnings": {
-        "message": ""
-    },
-    "osdTextElementEscTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscTemperature": {
-        "message": ""
-    },
-    "osdTextElementEscRpm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscRpm": {
-        "message": ""
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": ""
-    },
-    "osdTextElementRtcDateTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRtcDateTime": {
-        "message": ""
-    },
-    "osdTextElementAdjustmentRange": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementAdjustmentRange": {
-        "message": ""
-    },
-    "osdTextElementTimer1": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementTimer1": {
-        "message": ""
-    },
-    "osdTextElementTimer2": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementTimer2": {
-        "message": ""
-    },
-    "osdTextElementCoreTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCoreTemperature": {
-        "message": ""
-    },
-    "osdTextAntiGravity": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescAntiGravity": {
-        "message": ""
-    },
-    "osdTextGForce": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescGForce": {
-        "message": ""
-    },
-    "osdTextElementMotorDiag": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementMotorDiag": {
-        "message": ""
-    },
-    "osdTextElementLogStatus": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementLogStatus": {
-        "message": ""
-    },
-    "osdTextElementFlipArrow": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlipArrow": {
-        "message": ""
-    },
-    "osdTextElementLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementLinkQuality": {
-        "message": ""
-    },
-    "osdTextElementFlightDist": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementFlightDist": {
-        "message": ""
-    },
-    "osdTextElementStickOverlayLeft": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementStickOverlayLeft": {
-        "message": ""
-    },
-    "osdTextElementStickOverlayRight": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementStickOverlayRight": {
-        "message": ""
-    },
-    "osdTextElementDisplayName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementDisplayName": {
-        "message": ""
-    },
-    "osdTextElementPilotName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPilotName": {
-        "message": ""
-    },
-    "osdTextElementEscRpmFreq": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEscRpmFreq": {
-        "message": ""
-    },
-    "osdTextElementRateProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRateProfileName": {
-        "message": ""
-    },
-    "osdTextElementPidProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementPidProfileName": {
-        "message": ""
-    },
-    "osdTextElementOsdProfileName": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementOsdProfileName": {
-        "message": ""
-    },
-    "osdTextElementRssiDbmValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRssiDbmValue": {
-        "message": ""
-    },
-    "osdTextElementRcChannels": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRcChannels": {
-        "message": ""
-    },
-    "osdTextElementCameraFrame": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementCameraFrame": {
-        "message": ""
-    },
-    "osdTextElementEfficiency": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementEfficiency": {
-        "message": ""
-    },
-    "osdTextTotalFlights": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescTotalFlights": {
-        "message": ""
-    },
-    "osdTextElementUpDownReference": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescUpDownReference": {
-        "message": ""
-    },
-    "osdTextElementTxUplinkPower": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescTxUplinkPower": {
-        "message": ""
-    },
-    "osdTextElementReadyMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementReadyMode": {
-        "message": ""
-    },
-    "osdTextElementRSNRValue": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementRSNRValue": {
-        "message": ""
-    },
-    "osdTextElementUnknown": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescElementUnknown": {
-        "message": ""
-    },
-    "osdTextStatMaxSpeed": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxSpeed": {
-        "message": ""
-    },
-    "osdTextStatMinBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinBattery": {
-        "message": ""
-    },
-    "osdTextStatMinRssi": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRssi": {
-        "message": ""
-    },
-    "osdTextStatMaxCurrent": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxCurrent": {
-        "message": ""
-    },
-    "osdTextStatUsedMah": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUsedMah": {
-        "message": ""
-    },
-    "osdTextStatUsedWh": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUsedWh": {
-        "message": ""
-    },
-    "osdTextStatMaxAltitude": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxAltitude": {
-        "message": ""
-    },
-    "osdTextStatBlackbox": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBlackbox": {
-        "message": ""
-    },
-    "osdTextStatEndBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEndBattery": {
-        "message": ""
-    },
-    "osdTextStatFlyTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatFlyTime": {
-        "message": ""
-    },
-    "osdTextStatArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatArmedTime": {
-        "message": ""
-    },
-    "osdTextStatMaxDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxDistance": {
-        "message": ""
-    },
-    "osdTextStatBlackboxLogNumber": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBlackboxLogNumber": {
-        "message": ""
-    },
-    "osdTextStatTimer1": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTimer1": {
-        "message": ""
-    },
-    "osdTextStatTimer2": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTimer2": {
-        "message": ""
-    },
-    "osdTextStatRtcDateTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatRtcDateTime": {
-        "message": ""
-    },
-    "osdTextStatBattery": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatBattery": {
-        "message": ""
-    },
-    "osdTextStatGForce": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatGForce": {
-        "message": ""
-    },
-    "osdTextStatEscTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEscTemperature": {
-        "message": ""
-    },
-    "osdTextStatEscRpm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatEscRpm": {
-        "message": ""
-    },
-    "osdTextStatMinLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinLinkQuality": {
-        "message": ""
-    },
-    "osdTextStatFlightDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatFlightDistance": {
-        "message": ""
-    },
-    "osdTextStatMaxFFT": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMaxFFT": {
-        "message": ""
-    },
-    "osdTextStatTotalFlights": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlights": {
-        "message": ""
-    },
-    "osdTextStatTotalFlightTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlightTime": {
-        "message": ""
-    },
-    "osdTextStatTotalFlightDistance": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatTotalFlightDistance": {
-        "message": ""
-    },
-    "osdTextStatMinRssiDbm": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRssiDbm": {
-        "message": ""
-    },
-    "osdTextStatMinRSNR": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatMinRSNR": {
-        "message": ""
-    },
-    "osdTextStatUnknown": {
-        "message": "",
-        "description": ""
-    },
-    "osdDescStatUnknown": {
-        "message": ""
-    },
-    "osdDescribeFontVersion1": {
-        "message": ""
-    },
-    "osdDescribeFontVersion2": {
-        "message": ""
-    },
-    "osdDescribeFontVersionCUSTOM": {
-        "message": ""
-    },
-    "osdTimerSource": {
-        "message": ""
-    },
-    "osdTimerSourceTooltip": {
-        "message": ""
-    },
-    "osdTimerSourceOptionOnTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionTotalArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionLastArmedTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerSourceOptionOnArmTime": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecision": {
-        "message": ""
-    },
-    "osdTimerPrecisionTooltip": {
-        "message": ""
-    },
-    "osdTimerPrecisionOptionSecond": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecisionOptionHundredth": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerPrecisionOptionTenth": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarm": {
-        "message": ""
-    },
-    "osdTimerAlarmTooltip": {
-        "message": ""
-    },
-    "osdTimerAlarmOptionRssi": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarmOptionCapacity": {
-        "message": "",
-        "description": ""
-    },
-    "osdTimerAlarmOptionAltitude": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningTextArmingDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningArmingDisabled": {
-        "message": ""
-    },
-    "osdWarningTextBatteryNotFull": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryNotFull": {
-        "message": ""
-    },
-    "osdWarningTextBatteryWarning": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryWarning": {
-        "message": ""
-    },
-    "osdWarningTextBatteryCritical": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningBatteryCritical": {
-        "message": ""
-    },
-    "osdWarningTextVisualBeeper": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningVisualBeeper": {
-        "message": ""
-    },
-    "osdWarningTextCrashFlipMode": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningCrashFlipMode": {
-        "message": ""
-    },
-    "osdWarningTextEscFail": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningEscFail": {
-        "message": ""
-    },
-    "osdWarningTextCoreTemperature": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningCoreTemperature": {
-        "message": ""
-    },
-    "osdWarningTextRcSmoothingFailure": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRcSmoothingFailure": {
-        "message": ""
-    },
-    "osdWarningTextFailsafe": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningFailsafe": {
-        "message": ""
-    },
-    "osdWarningTextLaunchControl": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningLaunchControl": {
-        "message": ""
-    },
-    "osdWarningTextGpsRescueUnavailable": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningGpsRescueUnavailable": {
-        "message": ""
-    },
-    "osdWarningTextGpsRescueDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningGpsRescueDisabled": {
-        "message": ""
-    },
-    "osdWarningTextRSSI": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRSSI": {
-        "message": ""
-    },
-    "osdWarningTextLinkQuality": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningLinkQuality": {
-        "message": ""
-    },
-    "osdWarningTextRssiDbm": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRssiDbm": {
-        "message": ""
-    },
-    "osdWarningTextOverCap": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningOverCap": {
-        "message": ""
-    },
-    "osdWarningTextRSNR": {
-        "message": "",
-        "description": ""
-    },
-    "osdWarningRSNR": {
-        "message": ""
-    },
-    "osdWarningTextUnknown": {
-        "message": ""
-    },
-    "osdWarningUnknown": {
-        "message": ""
-    },
-    "osdSectionHelpElements": {
-        "message": ""
-    },
-    "osdSectionHelpVideoMode": {
-        "message": ""
-    },
-    "osdSectionHelpUnits": {
-        "message": ""
-    },
-    "osdSectionHelpTimers": {
-        "message": ""
-    },
-    "osdSectionHelpAlarms": {
-        "message": ""
-    },
-    "osdSectionHelpStats": {
-        "message": ""
-    },
-    "osdSectionHelpWarnings": {
-        "message": ""
-    },
-    "osdSettingsSaved": {
-        "message": ""
-    },
-    "osdWritePermissions": {
-        "message": ""
-    },
-    "osdButtonSaved": {
-        "message": ""
-    },
-    "vtxHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageNotSupported": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageTableNotConfigured": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageFactoryBandsNotSupported": {
-        "message": "",
-        "description": ""
-    },
-    "vtxMessageVerifyTable": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyChannel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyChannelHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSelectedMode": {
-        "message": "",
-        "description": ""
-    },
-    "vtxActualState": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_1": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_3": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_4": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_5": {
-        "message": "",
-        "description": ""
-    },
-    "vtxType_255": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBandHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxBand_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower_X": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxChannelHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequency": {
-        "message": "",
-        "description": ""
-    },
-    "vtxFrequencyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxDeviceReady": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPower": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPowerHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitMode": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeFrequency": {
-        "message": "",
-        "description": ""
-    },
-    "vtxPitModeFrequencyHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarm": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_0": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_1": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLowPowerDisarmOption_2": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTable": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevels": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsValue": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTablePowerLevelsLabel": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBands": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableChannels": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandsChannelsHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleName": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleLetter": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandTitleFactory": {
-        "message": "",
-        "description": ""
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSavedFileOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSavedFileKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadFileOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadFileKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadClipboardOk": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLoadClipboardKo": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaveFile": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaveLua": {
-        "message": "",
-        "description": ""
-    },
-    "vtxLuaFileHelp": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonLoadFile": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonLoadClipboard": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSave": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaving": {
-        "message": "",
-        "description": ""
-    },
-    "vtxButtonSaved": {
-        "message": "",
-        "description": ""
-    },
-    "vtxSmartAudioUnlocked": {
-        "message": "",
-        "description": ""
-    },
-    "mainHelpArmed": {
-        "message": ""
-    },
-    "mainHelpFailsafe": {
-        "message": ""
-    },
-    "mainHelpLink": {
-        "message": ""
-    },
-    "configurationEscProtocol": {
-        "message": ""
-    },
-    "configurationEscProtocolHelp": {
-        "message": ""
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": ""
-    },
-    "configurationunsyndePwm": {
-        "message": ""
-    },
-    "configurationUnsyncedPWMFreq": {
-        "message": ""
-    },
-    "configurationDshotBidir": {
-        "message": "",
-        "description": ""
-    },
-    "configurationDshotBidirHelp": {
-        "message": "",
-        "description": ""
-    },
-    "configurationGyroSyncDenom": {
-        "message": ""
-    },
-    "configurationPidProcessDenom": {
-        "message": ""
-    },
-    "configurationPidProcessDenomHelp": {
-        "message": ""
-    },
-    "configurationGyroUse32kHz": {
-        "message": ""
-    },
-    "configurationGyroUse32kHzHelp": {
-        "message": ""
-    },
-    "configurationAccHardware": {
-        "message": ""
-    },
-    "configurationBaroHardware": {
-        "message": ""
-    },
-    "configurationMagHardware": {
-        "message": ""
-    },
-    "configurationSmallAngle": {
-        "message": ""
-    },
-    "configurationSmallAngleHelp": {
-        "message": ""
-    },
-    "configurationBatteryVoltage": {
-        "message": ""
-    },
-    "configurationBatteryCurrent": {
-        "message": ""
-    },
-    "configurationBatteryMeterType": {
-        "message": ""
-    },
-    "configurationBatteryMinimum": {
-        "message": ""
-    },
-    "configurationBatteryMaximum": {
-        "message": ""
-    },
-    "configurationBatteryWarning": {
-        "message": ""
-    },
-    "configurationBatteryScale": {
-        "message": ""
-    },
-    "configurationCurrentMeterType": {
-        "message": ""
-    },
-    "configurationCurrent": {
-        "message": ""
-    },
-    "configurationCurrentScale": {
-        "message": ""
-    },
-    "configurationCurrentOffset": {
-        "message": ""
-    },
-    "configurationBatteryMultiwiiCurrent": {
-        "message": ""
+        "message": "OSD"
     },
     "pidTuningProfile": {
-        "message": ""
-    },
-    "pidTuningProfileTip": {
-        "message": ""
-    },
-    "pidTuningRateProfile": {
-        "message": ""
-    },
-    "pidTuningRateProfileTip": {
-        "message": ""
-    },
-    "pidTuningRateSetup": {
-        "message": ""
-    },
-    "pidTuningRateSetupHelp": {
-        "message": "",
-        "description": ""
-    },
-    "pidTuningDelta": {
-        "message": ""
-    },
-    "pidTuningDeltaError": {
-        "message": ""
-    },
-    "pidTuningDeltaMeasurement": {
-        "message": ""
-    },
-    "pidTuningDeltaTip": {
-        "message": ""
-    },
-    "pidTuningPidControllerTip": {
-        "message": ""
-    },
-    "pidTuningFilterTip": {
-        "message": ""
-    },
-    "pidTuningRatesTip": {
-        "message": ""
-    },
-    "configurationCamera": {
-        "message": ""
-    },
-    "configurationPersonalization": {
-        "message": ""
-    },
-    "craftName": {
-        "message": ""
-    },
-    "configurationCraftNameHelp": {
-        "message": ""
-    },
-    "configurationPilotName": {
-        "message": ""
-    },
-    "configurationPilotNameHelp": {
-        "message": ""
-    },
-    "configurationFpvCamAngleDegrees": {
-        "message": ""
+        "message": "Profil"
     },
     "onboardLoggingBlackbox": {
-        "message": ""
+        "message": "Blackbox logovací zařízení"
     },
     "onboardLoggingRateOfLogging": {
-        "message": ""
-    },
-    "onboardLoggingDebugMode": {
-        "message": ""
-    },
-    "onboardLoggingDebugModeUnknown": {
-        "message": ""
+        "message": "Rychlost záznamu Blackboxu"
     },
     "onboardLoggingSerialLogger": {
-        "message": ""
-    },
-    "onboardLoggingFlashLogger": {
-        "message": ""
-    },
-    "onboardLoggingEraseInProgress": {
-        "message": ""
-    },
-    "onboardLoggingOnboardSDCard": {
-        "message": ""
+        "message": "Externí logovací zařízení"
     },
     "onboardLoggingMsc": {
-        "message": ""
+        "message": "Režim velkokapacitní paměti"
     },
     "onboardLoggingMscNote": {
-        "message": ""
-    },
-    "onboardLoggingRebootMscText": {
-        "message": ""
+        "message": "Restartujte do <strong>režimu velkokapacitní paměti (MSC)</strong>. Po aktivaci MSC režimu bude karta vložená ve vašem FC připojena k PC jako flashdisk. Poté si můžete stáhnout soubory záznamů stáhnout do PC. Až budete mít záznamy stažené, bezpečně odpojte jednotku od Windows a restartujte FC pro vypnutí MSC režimu."
     },
     "onboardLoggingMscNotReady": {
-        "message": ""
-    },
-    "dialogConfirmResetTitle": {
-        "message": ""
-    },
-    "dialogConfirmResetNote": {
-        "message": ""
-    },
-    "dialogConfirmResetConfirm": {
-        "message": ""
-    },
-    "dialogConfirmResetClose": {
-        "message": ""
-    },
-    "modeCameraWifi": {
-        "message": ""
-    },
-    "modeCameraPower": {
-        "message": ""
-    },
-    "modeCameraChangeMode": {
-        "message": ""
+        "message": "Zařízení není připravené, není možné aktivovat režim velkokapacitní paměti."
     },
     "flashTab": {
-        "message": ""
-    },
-    "cliAutoComplete": {
-        "message": ""
-    },
-    "darkTheme": {
-        "message": ""
-    },
-    "pidTuningRatesType": {
-        "message": ""
-    },
-    "pidTuningRatesTypeTip": {
-        "message": ""
-    },
-    "pidTuningRcRateRaceflight": {
-        "message": ""
-    },
-    "pidTuningRcExpoRaceflight": {
-        "message": ""
-    },
-    "pidTuningRateRaceflight": {
-        "message": ""
-    },
-    "pidTuningRcExpoKISS": {
-        "message": ""
-    },
-    "pidTuningRateQuickRates": {
-        "message": ""
-    },
-    "pidTuningRcRateActual": {
-        "message": ""
-    },
-    "dialogRatesTypeTitle": {
-        "message": ""
-    },
-    "dialogRatesTypeNote": {
-        "message": ""
-    },
-    "dialogRatesTypeConfirm": {
-        "message": ""
-    },
-    "gpsSbasAutoDetect": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasEuropeanEGNOS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasNorthAmericanWAAS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasJapaneseMSAS": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasIndianGAGAN": {
-        "message": "",
-        "description": ""
-    },
-    "gpsSbasNone": {
-        "message": "",
-        "description": ""
-    },
-    "dialogFileNameTitle": {
-        "message": ""
-    },
-    "dialogFileNameDescription": {
-        "message": ""
-    },
-    "dialogFileAlreadyExistsTitle": {
-        "message": ""
-    },
-    "dialogFileAlreadyExistsDescription": {
-        "message": ""
-    },
-    "cordovaCheckingWebview": {
-        "message": ""
-    },
-    "cordovaIncompatibleWebview": {
-        "message": ""
-    },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": ""
-    },
-    "cordovaWebviewTroubleshootingMsg2": {
-        "message": ""
-    },
-    "cordovaAvailableWebviews": {
-        "message": ""
-    },
-    "cordovaWebviewInstall": {
-        "message": ""
-    },
-    "cordovaWebviewInstallBtn": {
-        "message": ""
-    },
-    "cordovaWebviewUninstall": {
-        "message": ""
-    },
-    "cordovaWebviewUninstallBtn1": {
-        "message": ""
-    },
-    "cordovaWebviewUninstallBtn2": {
-        "message": ""
-    },
-    "cordovaWebviewUpdate": {
-        "message": ""
-    },
-    "cordovaWebviewUpdateBtn": {
-        "message": ""
-    },
-    "cordovaWebviewEnable": {
-        "message": ""
-    },
-    "cordovaWebviewEnableBtn": {
-        "message": ""
-    },
-    "cordovaWebviewIncompatible": {
-        "message": ""
-    },
-    "cordovaNoWebview": {
-        "message": ""
-    },
-    "cordovaWebviewUsed": {
-        "message": ""
-    },
-    "cordovaExitAppTitle": {
-        "message": ""
-    },
-    "cordovaExitAppMessage": {
-        "message": ""
-    },
-    "dropDownSelectAll": {
-        "message": "",
-        "description": ""
-    },
-    "dropDownFilterDisabled": {
-        "message": "",
-        "description": ""
-    },
-    "dropDownAll": {
-        "message": "",
-        "description": ""
-    },
-    "tabPresets": {
-        "message": "",
-        "description": ""
-    },
-    "presetsReload": {
-        "message": "",
-        "description": ""
-    },
-    "presetsAuthor": {
-        "message": "",
-        "description": ""
-    },
-    "presetsKeywords": {
-        "message": "",
-        "description": ""
-    },
-    "presetsVersions": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOfficial": {
-        "message": "",
-        "description": ""
-    },
-    "presetsCommunity": {
-        "message": "",
-        "description": ""
-    },
-    "presetsExperimental": {
-        "message": "",
-        "description": ""
-    },
-    "presetsApply": {
-        "message": "",
-        "description": ""
-    },
-    "presetsViewOnline": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOpenDiscussion": {
-        "message": "",
-        "description": ""
-    },
-    "presetsShowCli": {
-        "message": "",
-        "description": ""
-    },
-    "presetsHideCli": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOptions": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterCategory": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterKeyword": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterAuthor": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterFirmware": {
-        "message": "",
-        "description": ""
-    },
-    "presetsFilterStatus": {
-        "message": "",
-        "description": ""
-    },
-    "presetsLoadError": {
-        "message": "",
-        "description": ""
-    },
-    "presetsButtonSave": {
-        "message": "",
-        "description": ""
-    },
-    "presetsButtonCancel": {
-        "message": "",
-        "description": ""
-    },
-    "presetsApplyingPresets": {
-        "message": "",
-        "description": ""
-    },
-    "presetsPleaseWait": {
-        "message": "",
-        "description": ""
-    },
-    "presetsCliErrorsWaring": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSaveAnyway": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogTitle": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogYesButton": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningDialogNoButton": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWiki": {
-        "message": "",
-        "description": ""
-    },
-    "presetsBackupSave": {
-        "message": "",
-        "description": ""
-    },
-    "presetsBackupLoad": {
-        "message": "",
-        "description": ""
-    },
-    "presetsLoadingDumpAll": {
-        "message": "",
-        "description": ""
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "",
-        "description": ""
-    },
-    "presetSources": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogTitle": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogAddNew": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogDefaultSourceName": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogSaveSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogResetSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogMakeSourceActive": {
-        "message": "",
-        "description": ""
-    },
-    "presetsSourcesDialogDeleteSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningNotOfficialSource": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningBackup": {
-        "message": "",
-        "description": ""
-    },
-    "presets_sources_dialog_warning": {
-        "message": "",
-        "description": ""
-    },
-    "presetsWarningWrongVersionConfirmation": {
-        "message": "",
-        "description": ""
-    },
-    "presetsNoPresetsFound": {
-        "message": "",
-        "description": ""
-    },
-    "presetsTooManyPresetsFound": {
-        "message": "",
-        "description": ""
-    },
-    "presetsOptionsPlaceholder": {
-        "message": "",
-        "description": ""
-    },
-    "presetsVersionMismatch": {
-        "message": "",
-        "description": ""
-    },
-    "presetsReviewOptionsWarning": {
-        "message": "",
-        "description": ""
-    },
-    "firmwareFlasherBuildConfigurationHead": {
-        "message": ""
-    },
-    "firmwareFlasherBuildOptions": {
-        "message": ""
-    },
-    "firmwareFlasherBuildRadioProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherBuildTelemetryProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherBuildMotorProtocols": {
-        "message": ""
-    },
-    "firmwareFlasherConfigurationFile": {
-        "message": ""
-    },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherOptionsDescription": {
-        "message": ""
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": ""
-    },
-    "firmwareFlasherBranchDescription": {
-        "message": ""
-    },
-    "firmwareFlasherCustomDefinesDescription": {
-        "message": ""
-    },
-    "firmwareFlasherBuildCustomDefines": {
-        "message": ""
-    },
-    "classicBuild": {
-        "message": ""
-    },
-    "classicBuildModeDescription": {
-        "message": ""
+        "message": "Aktualizovat firmware"
     }
 }
