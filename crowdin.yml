@@ -1,7 +1,7 @@
 #
 # Files configuration
 #
-"preserve_hierarchy": false
+"preserve_hierarchy": true
 
 files: [
  {
