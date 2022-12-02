@@ -47,6 +47,9 @@
         </config-file>
         <resource-file src="usb_device_filter.xml" target="app/src/main/res/xml/usb_device_filter.xml"/>
         <resource-file src="manifest.json" target="app/src/main/assets/www/manifest.json"/>
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*"/>
