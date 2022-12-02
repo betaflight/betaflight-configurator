@@ -17,9 +17,6 @@ files: [
   #
   "translation" : "/locales/%two_letters_code%/%original_file_name%",
 
-  # ONLY AS TEMPORARY WORKAROUND
-  # preserve translations and validations of changed strings
-  "update_option": "update_without_changes",
   #
   # Often software projects have custom names for locale directories. crowdin-cli allows you to map your own languages to be understandable by Crowdin.
   #
