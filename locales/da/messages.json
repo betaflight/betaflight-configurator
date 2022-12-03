@@ -1042,7 +1042,7 @@
         "message": "Efter aktivering, opsæt via fanen Race Transponder."
     },
     "featureAIRMODE": {
-        "message": "Aktivér Airmode permanent"
+        "message": "Aktiver Airmode permanent"
     },
     "featureSUPEREXPO_RATES": {
         "message": "Super Expo Rates"
@@ -4215,7 +4215,7 @@
         "message": "Drop - sluk alt"
     },
     "failsafeProcedureItemSelect4": {
-        "message": "Flyv hjem med GPS"
+        "message": "Flyv hjem med GPS (Return To Home)"
     },
     "failsafeGpsRescueItemAngle": {
         "message": "Vinkel"
@@ -5996,7 +5996,7 @@
         "description": "One of the options for the Low Power Disarm mode of the VTX"
     },
     "vtxLowPowerDisarmOption_2": {
-        "message": "Til indtil første aktivering",
+        "message": "Indtil første aktivering",
         "description": "One of the options for the Low Power Disarm mode of the VTX"
     },
     "vtxTable": {
@@ -6052,7 +6052,7 @@
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
-        "message": "VTX konfiguration <span class=\"message-positive\">indlæst</span> fra fil",
+        "message": "VTX konfiguration <span class=\"message-positive\">gemt</span> i fil",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
     "vtxSavedFileKo": {
@@ -6322,10 +6322,10 @@
         "message": "KAMERA WI-FI KNAP"
     },
     "modeCameraPower": {
-        "message": "KAMERA TÆND/SLUK KNAP"
+        "message": "KAMERA TÆND/SLUK"
     },
     "modeCameraChangeMode": {
-        "message": "KAMERA KONFIGURATION MODE"
+        "message": "KAMERA KONFIGURATION TILSTAND"
     },
     "flashTab": {
         "message": "Brænd firmware"
@@ -6697,7 +6697,7 @@
         "message": "Konfigurations filnavn:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Vælg den radio protokol som du ønsker at skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+        "message": "Vælg den radio protokol som du ønsker skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Vælg den telemetri protokol du ønsker i denne release. Bemærk at du kan vælge flere elementer. Der er telemetri protokoller som er medtaget, uanset dit valg her, da det styres af den valgte radio protokol, fx. CRSF."
@@ -6706,7 +6706,7 @@
         "message": "Vælg det generiske tilvalg du ønsker i denne release. Bemærk at du kan vælge flere elementer. Tilvalg kan også være rettelser, fx. AKK VTX."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Vælg den motor protokol for ESC, som du ønsker at skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+        "message": "Vælg den motor protokol for ESC, som du ønsker skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Særligt anvendelig for udviklere, da du kan vælge et flettet PR (Pull Request), specificere en commit SHA, eller specificere en PR som er ved at blive flettet, ved at angive: pull/{PR id}/head ."
