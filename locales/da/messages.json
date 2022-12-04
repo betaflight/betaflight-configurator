@@ -3780,10 +3780,6 @@
         "message": "Dæmpning:<br /><i><small>D forstærkning</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "Ændringer D og D maks. Relativt høj D forstærkning vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre prop-wash svingninger.<br /><br />Relativt lav D-term giver hurtigere pind respons, men vil svække prop-vask ydeevne og reagere på eksterne kræfter (vind).",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "Sporing:<br /><i><small>P & I forstærkning</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3803,10 +3799,6 @@
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br /><i><small>I forstærkning</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Øger eller sænker I. Højere I kan forbedre sporing i spiraldrejninger, baner, eller 0% gas kommandoer. For meget I, især med ikke nok P, kan forårsage wobbles eller bounceback efter flips/krængning eller ved at hugge gas til 0 %.<br /><br />Generelt ønsker du, at skyderen ‘Drift – Wobble’ skal være så høj som det kan være at holde fartøj sporingen i spiraldrejninger, orbits, etc . men ikke så højt, at du begynder at se wobbles på at hugge gas til 0 %.<br /><br /><strong>Bemærk:</strong><br />Hvis du oplever bounceback på et hvilket som helst tidspunkt, der er let at se, sørg for, at “I-term Relax” er aktiveret, og prøv at sænke værdien iterm_relax_cutoff.",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Dynamisk dæmpning:<br /><i><small>D Max</small></i>",
