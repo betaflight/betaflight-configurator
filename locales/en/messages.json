@@ -3921,7 +3921,7 @@
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
-        "message": "Relatively high D-gain will dampen stick responsiveness and may make motors hot, but should help control fast oscillations and willimprove prop-wash.<br /><br />Relatively low D-term gives quicker stick responsiveness, but will weaken prop-wash performance and reacting to external forces (wind).",
+        "message": "Relatively high D-gain will dampen stick responsiveness and may make motors hot, but should help control fast oscillations and will improve prop-wash.<br /><br />Relatively low D-term gives quicker stick responsiveness, but will weaken prop-wash performance and reacting to external forces (wind).",
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
@@ -3945,7 +3945,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Increases or decreases I. Higher I may improve tracking in spiral turns, orbits, or 0% throttle commands. Too much I, particularly with not enough P, may cause wobbles or bounceback after flips/rolls or on chopping the throttle to 0%.<br /><br />Generally you want the ‘Drift – Wobble’ slider to be as high as it can be to keep the quad tracking in spiral turns, orbits, ect... but not so high that you start to see wobbles on chopping the throttleto 0%.<br /><br /><strong>Note:</strong><br />If you experience bounceback at any time that is easy to see, make sure that “I-term Relax” is enabled, and try lowering the iterm_relax_cutoff value.",
+        "message": "Increases or decreases I. Higher I may improve tracking in spiral turns, orbits, or 0% throttle commands. Too much I, particularly with not enough P, may cause wobbles or bounceback after flips/rolls or on chopping the throttle to 0%.<br /><br />Generally you want the ‘Drift – Wobble’ slider to be as high as it can be to keep the quad tracking in spiral turns, orbits, ect... but not so high that you start to see wobbles on chopping the throttle to 0%.<br /><br /><strong>Note:</strong><br />If you experience bounceback at any time that is easy to see, make sure that “I-term Relax” is enabled, and try lowering the iterm_relax_cutoff value.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
