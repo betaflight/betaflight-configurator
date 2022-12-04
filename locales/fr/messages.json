@@ -3841,10 +3841,6 @@
         "message": "Atténuation:<br /><i><small>D Gains</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "Un gain relativement élevé en D atténuera la réactivité des sticks et peut faire chauffer les moteurs, mais devrait aider à contrôler les oscillations rapides et le propwash.<br /><br />D-term relativement bas donne une réactivité des sticks plus rapide, mais affaiblira les performances de prop-wash et la réaction aux forces extérieures (vent).",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "Suivi :<br /><i><small>Gains P & I</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3864,10 +3860,6 @@
     "pidTuningIGainSlider": {
         "message": "Dérive - Oscillations :<br /><i><small>Gains I</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Augmente ou réduit I. Un I élevé peut améliorer le suivi lors de virages en spirale, d'oribites ou lors de commandes avec gaz coupés. Trop de I, en particulier avec un P insuffisant, peut causer des problèmes d'oscillations ou de rebonds après des flips ou rolls, ou lors de la coupure des gaz.<br /><br />En général, vous voulez le curseur ‘Dérive - Oscillations’ aussi haut que possible pour autoriser les mouvements en spirale etc... mais pas assez afin de ne pas avoir d'oscillations lors de la coupure des gaz.<br /><br /><strong>Note:</strong><br />Si vous avez des rebonds très visibles à un moment, assurez-vous que “I-term Relax” est actif, puis essayez de réduire la valeur de iterm_relax_cutoff.",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Atténuation dynamique:<br /><i><small>D Max</small></i>",
