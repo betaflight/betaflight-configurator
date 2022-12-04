@@ -3780,10 +3780,6 @@
         "message": "Damping:<br /><i><small>Guadagni D</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "Un guadagno D relativamente alto smorzerà la risposta agli stick e potrebbe far riscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni rapide del P-term e migliorerà la gestione del propwash.<br /><br />Un D-term relativamente basso dà una risposta agli stick più veloce ma peggiorerà la gestione del propwash e la reazione a forze esterne (vento).",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "Tracking:<br /><i><small>Guadagni P e I</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3803,10 +3799,6 @@
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br /><i><small>Guadagni I</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Aumenta o diminuisce la I. Un I più alto migliorerà il tracking in virate a spirale, orbite o comandi con gas al 0%. Troppo I, particolarmente con P insufficiente, può causare wobble o rimbalzi dopo flip/roll o dopo tagli di gas allo 0%.<br /><br />Generalmente si vuole lo slider 'Drift - Wobble' il più alto possibile per mantenere il tracking del quad virate a spirale, orbite, ecc... ma non così alto da vedere wobble con tagli di gas allo 0%.<br /><br /><strong>Nota:</strong><br />Se si verificano rimbalzi in qualsiasi momento e facili da vedere assicurati che sia abilitato \"I-term Relax\" e prova ad abbassare il valore di iterm_relax_cutoff.",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Damping dinamico:<br /><i><small>D Max</small></i>",
