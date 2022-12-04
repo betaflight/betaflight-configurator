@@ -3879,7 +3879,7 @@
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
-        "message": "crwdns10633:0crwdne10633:0",
+        "message": "crwdns32337:0crwdne32337:0",
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
@@ -3903,7 +3903,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "crwdns10645:0crwdne10645:0",
+        "message": "crwdns32339:0crwdne32339:0",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
