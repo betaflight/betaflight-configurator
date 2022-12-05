@@ -6452,10 +6452,6 @@
         "message": "已选择预设需要固件版本为 $1<br/> 但当前固件版本为 $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
-    "presetsNoPresetsFound": {
-        "message": "没有找到符合搜索条件的预设",
-        "description": "Message that apprears on presets tab if no presets were found"
-    },
     "presetsTooManyPresetsFound": {
         "message": "已达到可显示预设数的最大限制",
         "description": "Message that apprears on presets tab if too many presets found"
