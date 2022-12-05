@@ -1,0 +1,46 @@
+name: Translations download and PR
+
+on: 
+  workflow_dispatch:
+  schedule:
+  - cron: '00 3 * * 1'
+
+
+
+jobs:
+  crowdin-translations-to-pr:
+    name: Create a PR with the latest translations from Crowdin
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Download Crowdin translations and create PR
+      uses: crowdin/github-action@1.5.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+        token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        config: 'crowdin.yml'
+
+        upload_sources: false
+        upload_translations: false
+
+        download_translations: true
+        crowdin_branch_name: master
+        download_translations_args: '-l ca -l da -l de -l es-ES -l eu -l fr -l gl -l hr -l hu -l id -l it -l ja -l ko -l lv -l nl -l pt-PT -l pt-BR -l pl -l ru -l sv-SE -l zh-CN -l zh-TW'
+        localization_branch_name: update_translations_crowdin
+        push_translations: true
+        commit_message: 'Update translations'
+
+        create_pull_request: true
+        pull_request_title: 'Update translations'
+        pull_request_body: |
+          **This is an automated PR.**
+
+          This PR updates the translations using the content from Crowdin. Thanks to all the translators for the really hard work!!!
+
+          If you want to help to make the localization better, or add a new language, go to [Crowdin](https://crowdin.com/project/betaflight-configurator) and start helping!.
+
+          [![Crowdin](https://d322cqt584bo4o.cloudfront.net/betaflight-configurator/localized.svg)](https://crowdin.com/project/betaflight-configurator)
