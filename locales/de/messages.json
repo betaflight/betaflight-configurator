@@ -6369,10 +6369,6 @@
         "message": "Ausgewählte Voreinstellung erfordert Firmware-Version $1<br/> Aktuelle Firmware-Version ist $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
-    "presetsNoPresetsFound": {
-        "message": "Kein Preset für die angegebenen Suchparameter gefunden",
-        "description": "Message that apprears on presets tab if no presets were found"
-    },
     "presetsTooManyPresetsFound": {
         "message": "Maximale Anzahl der angezeigten Presets erreicht",
         "description": "Message that apprears on presets tab if too many presets found"
