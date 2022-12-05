@@ -51,11 +51,8 @@
     "node": "16.x"
   },
   "dependencies": {
-    "@babel/eslint-parser": "^7.19.1",
-    "@babel/preset-env": "^7.20.2",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@panter/vue-i18next": "^0.15.2",
-    "babelify": "^10.0.0",
     "bluebird": "^3.7.2",
     "bonjour": "^3.5.0",
     "djv": "^2.1.4",
@@ -85,6 +82,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
+    "@babel/eslint-parser": "^7.19.1",
+    "@babel/preset-env": "^7.20.2",
     "@quanle94/innosetup": "^6.0.2",
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^22.0.2",
@@ -95,6 +94,7 @@
     "@storybook/addon-links": "^6.5.12",
     "@storybook/vue": "^6.5.12",
     "babel-loader": "^8.2.5",
+    "babelify": "^10.0.0",
     "browserify": "^17.0.0",
     "chai": "^4.3.6",
     "command-exists": "^1.2.9",
