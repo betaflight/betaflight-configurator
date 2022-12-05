@@ -6650,10 +6650,6 @@
         "message": "選択したプリセットは、ファームウェアのバージョン $1 が必要です。<br/>現在のファームウェアバージョンは $2 です。",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
-    "presetsNoPresetsFound": {
-        "message": "指定された検索パラメータに対応するプリセットが見つかりません",
-        "description": "Message that apprears on presets tab if no presets were found"
-    },
     "presetsTooManyPresetsFound": {
         "message": "表示されるプリセット数の上限に達しました",
         "description": "Message that apprears on presets tab if too many presets found"
