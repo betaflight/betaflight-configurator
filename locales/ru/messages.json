@@ -5928,10 +5928,6 @@
         "message": "Выбранная предустановка требует версию прошивки $1<br/> Текущая версия прошивки $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
-    "presetsNoPresetsFound": {
-        "message": "Предустановки с указанными параметрами не найдены",
-        "description": "Message that apprears on presets tab if no presets were found"
-    },
     "presetsTooManyPresetsFound": {
         "message": "Достигнуто максимальное количество отображаемых предустановок",
         "description": "Message that apprears on presets tab if too many presets found"
