@@ -2694,12 +2694,6 @@ OSD.GUI.preview = {
     },
 };
 
-async function getCanvas() {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        return MSP.promise(MSPCodes.MSP_OSD_CANVAS);
-    }
-}
-
 const osd = {
     analyticsChanges: {},
 };
@@ -2797,12 +2791,16 @@ osd.initialize = function(callback) {
 
         // 2 way binding... sorta
         function updateOsdView() {
+
             // ask for the OSD canvas data
-            getCanvas();
+            let p;
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                p = MSP.promise(MSPCodes.MSP_OSD_CANVAS);
+            }
 
             // ask for the OSD config data
-            MSP.promise(MSPCodes.MSP_OSD_CONFIG)
-                .then(function(info) {
+            p.then(() => MSP.promise(MSPCodes.MSP_OSD_CONFIG))
+                .then(info => {
 
                     OSD.chooseFields();
 
@@ -2838,9 +2836,7 @@ osd.initialize = function(callback) {
                     $videoTypes.find(':radio').click(function() {
                         OSD.data.video_system = $(this).data('type');
                         MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
-                            .then(function() {
-                                updateOsdView();
-                            });
+                            .then(updateOsdView);
                     });
 
                     if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
@@ -2861,9 +2857,7 @@ osd.initialize = function(callback) {
                         $unitMode.find(':radio').click(function() {
                             OSD.data.unit_mode = $(this).data('type');
                             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
-                                .then(function() {
-                                    updateOsdView();
-                                });
+                                .then(updateOsdView);
                         });
                         // alarms
                         $('.alarms-container').show();
@@ -2875,9 +2869,7 @@ osd.initialize = function(callback) {
                             alarmInput.focusout(function() {
                                 OSD.data.alarms[$(this)[0].id].value = $(this)[0].value;
                                 MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
-                                    .then(function() {
-                                        updateOsdView();
-                                    });
+                                    .then(updateOsdView);
                             });
                             const $input = $('<label/>').append(alarmInput);
                             $alarms.append($input);
@@ -2911,9 +2903,7 @@ osd.initialize = function(callback) {
                                     const idx = $(this)[0].id.split("_")[1];
                                     OSD.data.timers[idx].src = $(this)[0].selectedIndex;
                                     MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
-                                        .then(function() {
-                                            updateOsdView();
-                                        });
+                                        .then(updateOsdView);
                                 });
                                 sourceTimerTableData.append(src);
                                 timerTableRow.append(sourceTimerTableData);
@@ -2934,9 +2924,7 @@ osd.initialize = function(callback) {
                                     const idx = $(this)[0].id.split("_")[1];
                                     OSD.data.timers[idx].precision = $(this)[0].selectedIndex;
                                     MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
-                                        .then(function() {
-                                            updateOsdView();
-                                        });
+                                        .then(updateOsdView);
                                 });
                                 precisionTimerTableData.append(precision);
                                 timerTableRow.append('<td></td>');
@@ -2954,9 +2942,7 @@ osd.initialize = function(callback) {
                                     const idx = $(this)[0].id.split("_")[1];
                                     OSD.data.timers[idx].alarm = $(this)[0].value;
                                     MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
-                                        .then(function() {
-                                            updateOsdView();
-                                        });
+                                        .then(updateOsdView);
                                 });
                                 alarmTimerTableData.append(alarm);
                                 timerTableRow.append('<td></td>');
@@ -2998,9 +2984,7 @@ osd.initialize = function(callback) {
                                             self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
 
                                             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeStatistics(fieldChanged))
-                                                .then(function() {
-                                                    updateOsdView();
-                                                });
+                                                .then(updateOsdView);
                                         }),
                                 );
                                 $field.append(`<label for="${field.name}" class="char-label">${titleizeField(field)}</label>`);
@@ -3042,9 +3026,7 @@ osd.initialize = function(callback) {
                                             self.analyticsChanges[`OSDWarning${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
 
                                             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
-                                                .then(function() {
-                                                    updateOsdView();
-                                                });
+                                                .then(updateOsdView);
                                         }),
                                 );
 

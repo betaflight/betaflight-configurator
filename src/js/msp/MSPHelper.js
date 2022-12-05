@@ -1729,6 +1729,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 OSD.data.VIDEO_BUFFER_CHARS['HD'] = OSD.data.VIDEO_COLS['HD'] * OSD.data.VIDEO_ROWS['HD'];
                 console.log(`Canvas ${OSD.data.VIDEO_COLS['HD']} x ${OSD.data.VIDEO_ROWS['HD']}`);
                 break;
+            case MSPCodes.MSP_SET_OSD_CANVAS:
+                console.log('OSD Canvas config set');
+                break;
             case MSPCodes.MSP_OSD_CONFIG:
                 break;
             case MSPCodes.MSP_SET_OSD_CONFIG:
