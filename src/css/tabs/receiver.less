@@ -486,6 +486,12 @@
 		fill: none;
 	}
 	.axis {
+		line {
+			fill: none;
+			stroke: #ccc;
+			stroke-width: 1px;
+			shape-rendering: crispEdges;
+		}
 		path {
 			fill: none;
 			stroke: #ccc;
@@ -605,6 +611,30 @@
 			margin-bottom: 0;
 		}
 	}
+	.number {
+		input {
+			width: 220px;
+			margin-right: 11px;
+			border: solid 1px var(--subtleAccent);
+			border-radius: 3px;
+			min-height: 20px;
+			padding: 2px 4px 2px 4px;
+		}
+	}
+	.elrsContainer {
+		float: left;
+		width: calc(100% - 20px);
+	}
+	.elrsPassphrase {
+		margin-left: 5px;
+	}
+	.elrsUid {
+		float: left;
+		width: 223px;
+		margin: 10px 0 0 6px;
+		border: solid 1px var(--subtleAccent);
+		padding-left: 4px;
+	}
 	.gui_box_titlebar {
 		margin-bottom: 0;
 	}
@@ -628,6 +658,9 @@
 			&:nth-child(2) {
 				width: 20px;
 			}
+			div {
+				width: 27px;
+			}
 		}
 		.gui_box {
 			float: left;
@@ -636,17 +669,19 @@
 	.serialRXBox {
 		padding-top: 0;
 	}
-}
-.axis {
-	line {
-		fill: none;
-		stroke: #ccc;
-		stroke-width: 1px;
-		shape-rendering: crispEdges;
+	.spiRxBox {
+		padding-top: 0;
+		.select2 {
+			width: 230px;
+			height: 20px;
+			float: left;
+			margin-left: 4px;
+			margin-right: 15px;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+            color: #3f4241;
+        }
 	}
-}
-.spiRxBox {
-	padding-top: 0;
 }
 @media all and (max-width: 575px) {
 	.tab-receiver {

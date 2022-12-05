@@ -2192,6 +2192,9 @@
     "receiverButtonBindMessage": {
         "message": "Bind request sent to the flight controller."
     },
+    "receiverButtonPassphrase": {
+        "message": "Passphrase"
+    },
     "receiverButtonSticks": {
         "message": "Control sticks"
     },
@@ -6821,7 +6824,7 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
-        "message": "No presets found for the given search paramteres",
+        "message": "No presets found for the given search parameters",
         "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
