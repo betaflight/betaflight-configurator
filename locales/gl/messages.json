@@ -6741,10 +6741,6 @@
         "message": "O Preset seleccionado require a versión de firmware $1<br/> A versión actual do firmware é $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
-    "presetsNoPresetsFound": {
-        "message": "Non se atoparon presets para os parámetros de busca dados",
-        "description": "Message that apprears on presets tab if no presets were found"
-    },
     "presetsTooManyPresetsFound": {
         "message": "Alcanzou o límite máximo do número de presets mostrados",
         "description": "Message that apprears on presets tab if too many presets found"
