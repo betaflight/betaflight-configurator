@@ -2170,6 +2170,9 @@
     "receiverButtonBindMessage": {
         "message": "crwdns9951:0crwdne9951:0"
     },
+    "receiverButtonPassphrase": {
+        "message": "crwdns32341:0crwdne32341:0"
+    },
     "receiverButtonSticks": {
         "message": "crwdns5757:0crwdne5757:0"
     },
@@ -6757,7 +6760,7 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
-        "message": "crwdns10843:0crwdne10843:0",
+        "message": "crwdns32343:0crwdne32343:0",
         "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
