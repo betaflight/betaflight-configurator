@@ -2072,6 +2072,9 @@
     "receiverButtonBindMessage": {
         "message": "Petición de enlace enviada al controlador de vuelo."
     },
+    "receiverButtonPassphrase": {
+        "message": "Frase de seguridad"
+    },
     "receiverButtonSticks": {
         "message": "Palancas de control"
     },
@@ -6659,7 +6662,7 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
-        "message": "No se encontraron presets para los parámetros de búsqueda dados",
+        "message": "No se encontraron preajustes para los parámetros de búsqueda dados",
         "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
