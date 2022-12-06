@@ -4935,7 +4935,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdTextElementSysGoggleVoltage": {
-        "message": "Tension des goggles",
+        "message": "Goggle : Tension",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysGoggleVoltage": {
@@ -4970,14 +4970,14 @@
         "message": "Distance de transmission vidéo rendue par les goggles"
     },
     "osdTextElementSysLQ": {
-        "message": "Qualité du lien des goggles",
+        "message": "Goggle :  Qualité du lien",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysLQ": {
         "message": "Qualité du lien vidéo rendue par les goggles"
     },
     "osdTextElementSysGoggleDVR": {
-        "message": "Statut DVR des goggles",
+        "message": "Goggle : Statut DVR ",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysGoggleDVR": {
@@ -4991,7 +4991,7 @@
         "message": "Statut DVR VTX rendu par les goggles"
     },
     "osdTextElementSysWarnings": {
-        "message": "Avertissements système des goggles",
+        "message": "Goggle : Avertissements système",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysWarnings": {
@@ -5005,7 +5005,7 @@
         "message": "Température du VTX rendue par les goggles"
     },
     "osdTextElementSysFanSpeed": {
-        "message": "Vitesse du ventilateur des goggles",
+        "message": "Goggle : Vitesse du ventilateur",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysFanSpeed": {
