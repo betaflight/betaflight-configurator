@@ -2080,6 +2080,9 @@
     "receiverButtonBindMessage": {
         "message": "Sol·licitud d’enllaç enviada al controlador de vol."
     },
+    "receiverButtonPassphrase": {
+        "message": "Contrasenya"
+    },
     "receiverButtonSticks": {
         "message": "Sticks de control"
     },
@@ -6665,6 +6668,10 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "La configuració predeterminada seleccionada requereix la versió de microprogramari $1<br/> La versió actual de microprogramari és $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "No s'han trobat preajustos per als paràmetres de cerca entrats",
+        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "S'ha assolit el límit màxim del nombre de preajustos mostrats",
