@@ -2072,6 +2072,9 @@
     "receiverButtonBindMessage": {
         "message": "Pedido de associação enviado para a controladora de voo."
     },
+    "receiverButtonPassphrase": {
+        "message": "Senha"
+    },
     "receiverButtonSticks": {
         "message": "Sticks de controlo"
     },
@@ -3805,7 +3808,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Aumenta ou diminui o I. Mais elevado pode melhorar o seguimento em espirais, órbitas, ou comandos de 0% de acelerador. Demasiado I, principalmente com pouco P, pode causar oscilações ou bounceback depois de flips/rolls ou quando corta o acelerador para 0%.<br /><br />Normalmente quer que o slider 'Deriva – Oscilação' seja o mais alto possível para manter o rastreio nas espirais, órbitas, etc... mas não tão elevado que comece a ver oscilações quando corta o acelerador para 0%.<br /><br /><strong>Nota:</strong><br />Se experienciar bounceback em algum momento certifique-se que o \"I-term Relax\" está ativo e tente reduzir o valor do iterm_relax_cutoff.",
+        "message": "Aumenta ou diminui o I. Mais elevado pode melhorar o seguimento em espirais, órbitas, ou comandos de 0% de acelerador. Demasiado I, principalmente com pouco P, pode causar oscilações ou bounceback depois de flips/rolls ou quando corta o acelerador para 0%.<br /><br />Normalmente quer que o slider 'Deriva – Oscilação' seja o mais alto possível para manter o seguimento nas espirais, órbitas, etc... mas não tão elevado que comece a ver oscilações quando corta o acelerador para 0%.<br /><br /><strong>Nota:</strong><br />Se experienciar bounceback em algum momento certifique-se que o \"I-term Relax\" está ativo e tente reduzir o valor do iterm_relax_cutoff.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -6659,7 +6662,7 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
-        "message": "Não foram encontradas predefinições para os parâmetros de pesquisa especificados",
+        "message": "Não foram encontradas predefinições para os parâmetros de pesquisa",
         "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {

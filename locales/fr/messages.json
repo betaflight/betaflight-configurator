@@ -660,6 +660,9 @@
     "defaultWelcomeHead": {
         "message": "Matériel"
     },
+    "defaultWelcomeText": {
+        "message": "L'application est compatible avec toute carte sous Betaflight. La liste complète est disponible dans l'onglet flash.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Télécharger les Scripts TX Lua Betaflight</a><br /><br />Le code source du firmware est disponible <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br /><br />Pour les cartes plus anciennes avec puce CP210x USB vers Série:<br />La dernière version <b>des pilotes CP210x</b> peut être téléchargé <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br />La dernière version de<b>Zadig</b> utilitaire pour l'installation de pilotes USB pour Windows est <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a><br /><b>ImpulseRC Driver Fixer</b> peut être téléchargé <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">ici</a>"
+    },
     "defaultContributingHead": {
         "message": "Participation"
     },
@@ -2129,6 +2132,9 @@
     },
     "receiverButtonBindMessage": {
         "message": "Demande d'appairage envoyée au contrôleur de vol."
+    },
+    "receiverButtonPassphrase": {
+        "message": "Phrase secrète"
     },
     "receiverButtonSticks": {
         "message": "Contrôle des manches"
@@ -3668,6 +3674,9 @@
     "pidTuningCellCount": {
         "message": "Nombre de cellules - pour le changement automatique de profil"
     },
+    "pidTuningCellCountHelp": {
+        "message": "Active automatiquement le premier profil qui a un nombre de cellules égal à celui de la batterie connectée.<br><br><ul><li><b>Changer</b>: Passez toujours à un profil avec le nombre de cellules correspondantes s'il y en a un.</li><li><b>Désactiver</b>: Désactiver le changement de profil automatique</li><b>1S-8S</b>: Sélectionnez le profil du nombre de cellules à utiliser pour ce profil</li></ul>"
+    },
     "pidTuningCellCountChange": {
         "message": "Changer",
         "description": "Switch profile if there are no profiles matching cell count"
@@ -3836,7 +3845,7 @@
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
-        "message": "Un gain relativement élevé en D atténuera la réactivité des sticks et peut faire chauffer les moteurs, mais devrait aider à contrôler les oscillations rapides et le propwash.<br /><br />D-term relativement bas donne une réactivité des sticks plus rapide, mais affaiblira les performances de prop-wash et la réaction aux forces extérieures (vent).",
+        "message": "Un gain relativement élevé en D atténuera la réactivité des sticks et peut faire chauffer les moteurs, mais devrait aider à contrôler les oscillations rapides et le propwash.<br /><br />Un D-term relativement bas donne une réactivité des sticks plus rapide, mais affaiblira les performances de prop-wash et la réaction aux forces extérieures (vent).",
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
@@ -3860,7 +3869,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Augmente ou réduit I. Un I élevé peut améliorer le suivi lors de virages en spirale, d'oribites ou lors de commandes avec gaz coupés. Trop de I, en particulier avec un P insuffisant, peut causer des problèmes d'oscillations ou de rebonds après des flips ou rolls, ou lors de la coupure des gaz.<br /><br />En général, vous voulez le curseur ‘Dérive - Oscillations’ aussi haut que possible pour autoriser les mouvements en spirale etc... mais pas assez afin de ne pas avoir d'oscillations lors de la coupure des gaz.<br /><br /><strong>Note:</strong><br />Si vous avez des rebonds très visibles à un moment, assurez-vous que “I-term Relax” est actif, puis essayez de réduire la valeur de iterm_relax_cutoff.",
+        "message": "Augmente ou réduit I. Un I élevé peut améliorer le suivi lors de virages en spirale, d'orbites ou lors de commandes avec gaz coupés. Trop de I, en particulier avec un P insuffisant, peut causer des problèmes d'oscillations ou de rebonds après des flips ou des rolls, ou lors de la coupure des gaz.<br /><br />En général, vous voulez le curseur ‘Dérive - Oscillations’ aussi haut que possible pour autoriser les mouvements en spirale etc... mais pas assez afin de ne pas avoir d'oscillations lors de la coupure des gaz.<br /><br /><strong>Note:</strong><br />Si vous avez des rebonds très visibles à un moment, assurez-vous que “I-term Relax” est actif, puis essayez de réduire la valeur de iterm_relax_cutoff.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {

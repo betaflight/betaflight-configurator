@@ -1042,7 +1042,7 @@
         "message": "Efter aktivering, opsæt via fanen Race Transponder."
     },
     "featureAIRMODE": {
-        "message": "Aktivér Airmode permanent"
+        "message": "Aktiver Airmode permanent"
     },
     "featureSUPEREXPO_RATES": {
         "message": "Super Expo Rates"
@@ -1593,7 +1593,7 @@
         "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
-        "message": "D Max forstærkning øger følsomheden af det system, der øger D når fartøj skifter hurtigt eller ryster i propwash.<br><br>Højere forstærknings værdier bringer D hurtigere op end lavere værdier, løft D mod D Max hurtigere. Værdier af 40 eller endda 50 kan fungere godt for ren Freestyle fartøjer.<br><br>Lavere værdier vil ikke hæve D mod DMax undtagen i virkelig hurtige bevægelser, og kan passe race fartøjer bedre ved at minimere D lag.<br><br>ADVARSEL: Enten forstærkning, eller Advance, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
+        "message": "D Max forstærkning øger følsomheden af det system, der øger D når fartøj skifter hurtigt eller ryster pga propel turbulens.<br><br>Højere forstærknings værdier bringer D hurtigere op end lavere værdier, løft D mod D Max hurtigere. Værdier af 40 eller endda 50 kan fungere godt for ren Freestyle fartøjer.<br><br>Lavere værdier vil ikke hæve D mod DMax undtagen i virkelig hurtige bevægelser, og kan passe ræs fartøjer bedre ved at minimere D lag.<br><br>ADVARSEL: Enten forstærkning, eller Advance, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMinAdvance": {
@@ -1601,15 +1601,15 @@
         "description": "Advance of the D Max feature"
     },
     "pidTuningDMaxAdvanceHelp": {
-        "message": "D Max Advance tilføjer følsomhed til forstærknings faktor, når pinde flyttes hurtigt.<br><br>Advance reagerer ikke på gyro eller propwash. Det virker tidligere end forstærknings faktor og er lejlighedsvis nyttigt for langsomme fartøjer, der har tendens til at reagere dårligt i starten af et træk i pinden.<br><br>Generelt er det bedst at stille værdien på nul.<br><br>ADVARSEL: Enten Advance, eller forstærkning, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
+        "message": "D Max Advance tilføjer følsomhed til forstærknings faktor, når pinde flyttes hurtigt.<br><br>Advance reagerer ikke på gyro eller propel turbulens.. Det virker tidligere end forstærknings faktor og er lejlighedsvis nyttigt for langsomme fartøjer, der har tendens til at reagere dårligt i starten af et træk i pinden.<br><br>Generelt er det bedst at stille værdien på nul.<br><br>ADVARSEL: Enten Advance, eller forstærkning, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMinFeatureHelp": {
-        "message": "D Max øger D under hurtigere gyro og / eller pind bevægelser.<br><br>'forstærkning' faktoren øger D, når fartøjet bliver hurtigt eller ryster i propwash. Normalt er kun 'forstærkning' nødvendig. <br><br>'Advance' faktoren øger D mod D Max under stigende pind værdi. Normalt er det ikke nødvendigt og bør sættes til nul. Advance kan være nyttigt for langsomme fartøjer, som har tendens til at overskride kraftigt.<br><br>Højere forstærknings værdier (fx 40) kan være mere egnede til freestyle fartøjer ved at løfte D mere let.<br><br>ADVARSEL: En af forstærkning eller Advance værdier skal sættes over ca. 20 ellers vil D ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
+        "message": "D Max øger D under hurtigere gyro og / eller pind bevægelser.<br><br>'forstærkning' faktoren øger D, når fartøjet bliver hurtigt eller ryster pga propel turbulens. Normalt er kun 'forstærkning' nødvendig. <br><br>'Advance' faktoren øger D mod D Max under stigende pind værdi. Normalt er det ikke nødvendigt og bør sættes til nul. Advance kan være nyttigt for langsomme fartøjer, som har tendens til at overskride kraftigt.<br><br>Højere forstærknings værdier (fx 40) kan være mere egnede til freestyle fartøjer ved at løfte D mere let.<br><br>ADVARSEL: En af forstærkning eller Advance værdier skal sættes over ca. 20 ellers vil D ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Baseline dæmpning af enhver bevægelse af fartøjet. <br /><br />modsætter sig bevægelse, uanset om forårsaget af stick input eller eksterne påvirkninger (f. eks. . prop-wash eller vindstød)<br /><br />Højere D Min forstærkning giver mere stabilitet og reducerer overskridelsen.<br /><br />D forstærker støj (forstørrer med 10x til 100x). Dette kan brænde ud motorer, hvis forstærkning er for høj eller D er ikke filtreret godt.<br /><br />D-term er lidt ligesom støddæmperen på din bil.",
+        "message": "Baseline dæmpning af enhver bevægelse af fartøjet. <br /><br />modsætter sig bevægelse, uanset om forårsaget af pind bevægelse eller eksterne påvirkninger (fx. propel turbulens eller vindstød)<br /><br />Højere D Min forstærkning giver mere stabilitet og reducerer overskridelsen.<br /><br />D forstærker støj (forstørrer med 10x til 100x). Dette kan brænde en motor af, hvis forstærkning er for høj eller D er ikke filtreret godt.<br /><br />D-term er lidt ligesom støddæmperen på din bil.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1826,7 +1826,7 @@
         "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Styrer styrken af at dæmpe til en bevægelse på fartøjet. For pind bevæger sig, dæmper D-udtrykket kommandoen. For en udvendig indflydelse (prop vask ELLER vindvind) dæmper D-udtrykket indflydelse.<br><br>Højere gevinster giver mere dæmpning og reducerer overskridelse af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab forstørrelsesglas højfrekvente gyro støj.",
+        "message": "Styrer styrken af at dæmpe til en bevægelse på fartøjet. For pind bevæger sig, dæmper D-udtrykket kommandoen. For en udvendig indflydelse (probel turbulens ELLER vind stød) dæmper D-term indflydelse.<br><br>Højere værdier giver mere dæmpning og reducerer overskridelse af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab at det kan forstørrelse højfrekvent gyro støj.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
@@ -1978,7 +1978,7 @@
         "message": "<b>Tuningtips</b><br/><span class=\"message-negative\">VIGTIGT:</span> Det er vigtigt at kontrollere motor temperaturer under de første flyvninger. Højere filterværdier kan give en bedre håndtering, men også mere støj i motorerne. <br>Standardværdien på 100Hz er optimal, men ved mere støjende opsætninger kan du prøve at sænke Dterm-filteret til 50Hz og muligvis også gyrofilteret."
     },
     "tuningHelpSliders": {
-        "message": "Brug skyderne til at justere dine filtre. Skyderne skal være slået fra for at foretage manuelle ændringer.<br>Flytning skydere til højre giver højere afskæringsværdier og kan forbedre propwash, men vil tillade mere støj gennem til motorerne, hvilket gør dem varme.<br>De fleste rene builds med rpm filtrering vil være OK med gyro lowpass skyderen hård højre, eller kun med lowpass 2 aktiv og skyderne i midten.<br><strong>ADVARSEL:</strong> Vær meget forsigtig, når du flytter D-skyderne til højre! Tjek motortemperaturen efter hver ændring!<br><strong>Bemærk:</strong> Ændring af profiler vil kun ændre indstillingerne for D-term filter. Gyrofilterindstillinger er de samme for alle profiler.",
+        "message": "Brug skyderne til at justere dine filtre. Skyderne skal være slået fra for at foretage manuelle ændringer.<br>Flytning skydere til højre giver højere afskæringsværdier og kan forbedre mod propel turbulens, men vil tillade mere støj gennem til motorerne, hvilket gør dem varme.<br>De fleste rene builds med rpm filtrering vil være OK med gyro lowpass skyderen hård højre, eller kun med lowpass 2 aktiv og skyderne i midten.<br><strong>ADVARSEL:</strong> Vær meget forsigtig, når du flytter D-skyderne til højre! Tjek motortemperaturen efter hver ændring!<br><strong>Bemærk:</strong> Ændring af profiler vil kun ændre indstillingerne for D-term filter. Gyrofilterindstillinger er de samme for alle profiler.",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
@@ -3649,7 +3649,7 @@
         "message": "Profiluafhængige filter indstillinger"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "Disse skydere justere Gyro og D-term filtre.<br /><br />For mere filtrering:<br /> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br /><br /> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere og kan forværre prop-vask eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br /> - Skydere til højre<br /> - Højere cutoff frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og ofte forbedrer propwash. Bevæger gyro lowpass filter højre er normalt OK, men det er normalt ikke nødvendigt at flytte D-filteret til højre, og det kan nemt resultere i meget varme motorer.",
+        "message": "Disse skydere justere Gyro og D-term filtre.<br /><br />For mere filtrering:<br /> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br /><br /> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere og kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br /> - Skydere til højre<br /> - Højere cutoff frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. Bevæger gyro lowpass filter højre er normalt OK, men det er normalt ikke nødvendigt at flytte D-filteret til højre, og det kan nemt resultere i meget varme motorer.",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -3669,7 +3669,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Ændrer Gyro Lowpass filter cutoffs.<br /><br />Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere cutoff frekvens).<br /><br />Flytning af skyderen til højre giver mindre Gyro filtrering (højere cutoff frekvens).<br /><br />Når skyderen flyttes til højre for at forbedre propwash håndtering, VÆRE CAREFUL for ikke at blive for radikal. Du vil tillade mere støj i både P og D og kan få fly-aways eller brændte motorer.<br /><br />Du kan være nødt til at flytte skyderen til venstre, hvis du har rammeresonansproblemer, dårlige lejer, slå op rekvisitter, varme motorer, osv.<br /><br />Gyro filtrering anvendes før, og i tillæg til D filtrering.",
+        "message": "Ændrer Gyro Lowpass filter cutoffs.<br /><br />Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere cutoff frekvens).<br /><br />Flytning af skyderen til højre giver mindre Gyro filtrering (højere cutoff frekvens).<br /><br />Når skyderen flyttes til højre for at forbedre  mod propel turbulens, skal du være FORSIGTIG for ikke at blive for radikal. Du vil tillade mere støj i både P og D og kan få et fartøj som flyver væk eller brændte motorer.<br /><br />Du kan være nødt til at flytte skyderen til venstre, hvis du har resonans problemer, dårlige lejer, ødelagte propeller, varme motorer, osv.<br /><br />Gyro filtrering anvendes før, og i tillæg til D filtrering.",
         "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningGyroSliderEnabled": {
@@ -3681,7 +3681,7 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Ændrer D-termen Lowpass Filter cutoffs.<br /><br />Flytning skyderen til venstre giver stærkere D filtrering (lavere cutoff frekvens).<br /><br />Flytning af skyderen til højre giver mindre filtrering (højere afskæring frekvens).<br /><br />D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter cutoffs meget lavere end gyro filtre.<br /><br />D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og sjældent skal ændres.<br /><br />Flytter denne skyder til venstre reducerer motorvarme i frekvens støjende fartøjer og med høj PID 'D' toner, men vi kan se mere propwash og lavere frekvens D resonans.<br /><br />Flytning af skyderen til højre anbefales ikke, men kan forbedre propwash på rene fartøjer. Det kan forårsage motorisk slibning ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
+        "message": "Ændrer D-termen Lowpass Filter cutoffs.<br /><br />Flytning skyderen til venstre giver stærkere D filtrering (lavere cutoff frekvens).<br /><br />Flytning af skyderen til højre giver mindre filtrering (højere afskærings frekvens).<br /><br />D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter cutoffs meget lavere end gyro filtre.<br /><br />D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og skal sjældent ændres.<br /><br />Flyttes denne skyder til venstre reduceres motorvarme i frekvens støjende fartøjer og med høj PID 'D' term, men vi kan også se mere propel turbulens og lavere frekvens D resonans.<br /><br />Flytning af skyderen til højre anbefales ikke, men kan forbedre mod propel turbulens på rene fartøjer. Det kan forårsage uønsket slid på motor ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
@@ -3757,7 +3757,7 @@
         "description": "PD balance tuning slider label"
     },
     "pidTuningPDRatioSliderHelp": {
-        "message": "Ændringer D og D maks. Relativt høj D vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre prop-wash svingninger.<br /><br />Relativt lav D-term giver hurtigere pind respons, men vil svække prop-vask ydeevne og reagere på eksterne kræfter (vind).",
+        "message": "Ændringer D og D maks. Relativt høj D vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre mod svinginger fra propel turbulens.<br /><br />Relativt lav D-term giver hurtigere pind respons, men vil svække ydelse mod propel turbulens og reagere på eksterne kræfter (vind).",
         "description": "D_term tuning slider helpicon message"
     },
     "pidTuningPDGainSlider": {
@@ -3765,7 +3765,7 @@
         "description": "P and D Gain tuning slider label"
     },
     "pidTuningPDGainSliderHelp": {
-        "message": "Lavere P og D forstærkning vil resultere i køligere motorer, men også i mere prop-vask svingning. For lav værdi kan forårsage at fartøjet er  ustabilt.<br /><br />P og D vilkår arbejder sammen for at reducere prop-wash.<br /><br />Højere værdier vil øge motorvarmen og kan øge svingninger under glat fremadgående flyvning på grund af højere D term forstærkning.",
+        "message": "Lavere P og D forstærkning vil resultere i mere kølig motor, men også i mere svingning fra propel turbulens. For lav værdi kan forårsage at fartøjet er  ustabilt.<br /><br />P og D vilkår arbejder sammen for at reducere propel turbulens.<br /><br />Højere værdier vil øge motorvarme og kan øge svingninger under glat fremadgående flyvning på grund af højere D term forstærkning.",
         "description": "P and D gain tuning slider helpicon message"
     },
     "pidTuningResponseSliderLegacy": {
@@ -3781,7 +3781,7 @@
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
-        "message": "Ændringer D og D maks. Relativt høj D forstærkning vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre prop-wash svingninger.<br /><br />Relativt lav D-term giver hurtigere pind respons, men vil svække prop-vask ydeevne og reagere på eksterne kræfter (vind).",
+        "message": "Ændringer D og D maks. Relativt høj D forstærkning vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre mod svingninger fra propel turbulens.<br /><br />Relativt lav D-term giver hurtigere pind respons, men vil svække ydelse mod propel turbulens og reagere på eksterne kræfter (vind).",
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
@@ -3789,7 +3789,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Forøg Skyderen til sporing for at skærpe fartøjets respons på dine kommandoer og også eksterne indflydelser; undgå at næsen på fartøjer går ud af kurs i enhver tilstand.<br /><br />Lavere 'Tracking' værdier vil have masser af bobler og vil gå ud kurs på pind bevægelser og i prop vask. Høj ‘Tracking’ kan resultere i svingninger og hurtig bounceback (svært at se, men du kan høre dem). Overdreven sporing kan resultere i svingninger og varme motorer.",
+        "message": "Forøg sporings skyder for at skærpe fartøjets respons på dine kommandoer og også eksterne indflydelser; undgå at næsen på fartøjer går ud af kurs i enhver tilstand.<br /><br />Lavere sporings værdier vil give mange hop, tab af ønsket kurs ved pind bevægelser og i probel turbulens. Høje sporingd værdier kan resultere i svingninger og hurtig tilbagehop (svært at se, men du kan høre dem). Overdreven sporing kan resultere i uønsket resonnans og for varme motorer.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -3805,7 +3805,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Øger eller sænker I. Højere I kan forbedre sporing i spiraldrejninger, baner, eller 0% gas kommandoer. For meget I, især med ikke nok P, kan forårsage wobbles eller bounceback efter flips/krængning eller ved at hugge gas til 0 %.<br /><br />Generelt ønsker du, at skyderen ‘Drift – Wobble’ skal være så høj som det kan være at holde fartøj sporingen i spiraldrejninger, orbits, etc . men ikke så højt, at du begynder at se wobbles på at hugge gas til 0 %.<br /><br /><strong>Bemærk:</strong><br />Hvis du oplever bounceback på et hvilket som helst tidspunkt, der er let at se, sørg for, at “I-term Relax” er aktiveret, og prøv at sænke værdien iterm_relax_cutoff.",
+        "message": "Øger eller sænker I. Højere I kan forbedre sporing i spiraldrejninger, baner, eller 0% gas kommandoer. For meget I, især med ikke nok P, kan forårsage slingren eller tilbagehop efter flips/krængning eller ved at hugge gas til 0 %.<br /><br />Generelt ønsker du, at skyderen ‘Drift – slingren’ skal være så høj som det kan være at holde fartøjs retning i spiraldrejninger, kredsløb, etc . men ikke så højt, at du begynder at se slingeren ved at hugge gas til 0 %.<br /><br /><strong>Bemærk:</strong><br />Hvis du oplever tilbagehop på et hvilket som helst tidspunkt, der er let at se, sørg for at “I-term Relax” er aktiveret, og prøv at sænke værdien iterm_relax_cutoff.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -3877,11 +3877,11 @@
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Gyro lowpass filtre dæmper høj frekvens støj ved at holde støjen ude af PID loop. Der er to uafhængigt konfigurerbare gyro filtre; som standard begge er aktive.<br /><br />Med RPM filtrering kan gyro filter skyderen ofte flyttes et stykke til højre, alternativt kan et enkelt statisk gyro lowpasfilter på 500 hz være tilstrækkeligt.<br /><br />Et fartøj vil have mindre propwash med den mindste gyro filter delay.<br /><br />Kontroller altid for motorvarme, når skydere flyttes til højre. Med minimal gyro filtrering, er det vigtigt at have nok D filtrering! Vær forsigtig!",
+        "message": "Gyro lowpass filtre dæmper høj frekvens støj ved at holde støjen ude af PID loop. Der er to uafhængigt konfigurerbare gyro filtre; som standard begge er aktive.<br /><br />Med RPM filtrering kan gyro filter skyderen ofte flyttes et stykke til højre, alternativt kan et enkelt statisk gyro lowpasfilter på 500 hz være tilstrækkeligt.<br /><br />Et fartøj vil have mindre probel turbulens med den mindste gyro filter forsinkelse.<br /><br />Kontroller altid for motorvarme, når skydere flyttes til højre. Med minimal gyro filtrering, er det vigtigt at have nok D filtrering! Vær forsigtig!",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "D-term lowpass filtre dæmper højere frekvens støj og resonanser, der ellers ville blive forstærket af D forstærkning.<br /><br />Der er to D-filtre, og deres virkninger er additive. Begge er nødvendige i næsten alle fartøjer, selvom en enkelt PT2 kan anvendes i stedet for dobbelt PT1's.<br /><br />Generelle fartøjer vil flyve bedst og have den mindste propwash når der er konfigureret til at have den mindste filterforsinkelse (skydere til højre, højere cutoff værdier). Men især med D-filtre, skydere til højre kan i høj grad øge chancen for at få varme motorer.<br /><br />Det er meget nemt at brænde motorer, hvis du ikke har nok D-filtrering - vær forsigtig!",
+        "message": "D-term lowpass filtre dæmper højere frekvens støj og resonanser, der ellers ville blive forstærket af D forstærkning.<br /><br />Der er to D-filtre, og deres virkninger er additive. Begge er nødvendige i næsten alle fartøjer, selvom en enkelt PT2 kan anvendes i stedet for dobbelt PT1's.<br /><br />Generelle fartøjer vil flyve bedst og have den mindste probel turbulens når der er konfigureret til at have den mindste filterforsinkelse (skydere til højre, højere cutoff værdier). Men især med D-filtre, skydere til højre kan i høj grad øge chancen for at få varme motorer.<br /><br />Det er meget nemt at brænde motorer, hvis du ikke har nok D-filtrering - vær forsigtig!",
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
@@ -3988,7 +3988,7 @@
         "message": "D Term Lowpass 1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "Den første af to D-term lowpass filtre.<br /><br />I dynamisk tilstand vil filtrering være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Dette hjælper med at styre grinding eller uventede sittuationer hvor fartøj flyver væk ved aktivering og samtidig reducere delay og propwash efter takeoff. Overgangen fra lav til høj cutoff vil ske tidligere, da gas er steget, med højere D-term lowpass expo værdier.<br /><br />I statisk tilstand er afskæringsfrekvensen fast. Dette anbefales ikke til D filtrering.<br /><br />Filtertypen er som standard PT1, selvom nogle brugere kun har brugt et enkelt dynamisk Biquad-filter her, uden anden PT1.<br /><br />Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller at fartøjet flyver væk ved aktivering.",
+        "message": "Den første af to D-term lowpass filtre.<br /><br />I dynamisk tilstand vil filtrering være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Dette hjælper med at styre mortor slid eller uventede situationer hvor fartøj flyver væk ved aktivering og samtidig reducere delay og probel turbulens efter takeoff. Overgangen fra lav til høj cutoff vil ske tidligere, da gas er steget, med højere D-term lowpass expo værdier.<br /><br />I statisk tilstand er afskæringsfrekvensen fast. Dette anbefales ikke til D filtrering.<br /><br />Filtertypen er som standard PT1, selvom nogle brugere kun har brugt et enkelt dynamisk Biquad-filter her, uden anden PT1.<br /><br />Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller at fartøjet flyver væk ved aktivering.",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpassMode": {
@@ -4215,7 +4215,7 @@
         "message": "Drop - sluk alt"
     },
     "failsafeProcedureItemSelect4": {
-        "message": "Flyv hjem med GPS"
+        "message": "Flyv hjem med GPS (Return To Home)"
     },
     "failsafeGpsRescueItemAngle": {
         "message": "Vinkel"
@@ -5996,7 +5996,7 @@
         "description": "One of the options for the Low Power Disarm mode of the VTX"
     },
     "vtxLowPowerDisarmOption_2": {
-        "message": "Til indtil første aktivering",
+        "message": "Indtil første aktivering",
         "description": "One of the options for the Low Power Disarm mode of the VTX"
     },
     "vtxTable": {
@@ -6052,7 +6052,7 @@
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
-        "message": "VTX konfiguration <span class=\"message-positive\">indlæst</span> fra fil",
+        "message": "VTX konfiguration <span class=\"message-positive\">gemt</span> i fil",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
     "vtxSavedFileKo": {
@@ -6322,10 +6322,10 @@
         "message": "KAMERA WI-FI KNAP"
     },
     "modeCameraPower": {
-        "message": "KAMERA TÆND/SLUK KNAP"
+        "message": "KAMERA TÆND/SLUK"
     },
     "modeCameraChangeMode": {
-        "message": "KAMERA KONFIGURATION MODE"
+        "message": "KAMERA KONFIGURATION TILSTAND"
     },
     "flashTab": {
         "message": "Brænd firmware"
@@ -6658,10 +6658,6 @@
         "message": "Valgte opsætning kræver firmware version $1<br/> Nuværende firmware version er $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
-    "presetsNoPresetsFound": {
-        "message": "Ingen opsætninger fundet med de givne søgeparametere",
-        "description": "Message that apprears on presets tab if no presets were found"
-    },
     "presetsTooManyPresetsFound": {
         "message": "Nået den øverste grænse for antallet af viste predefinerede forudstillinger",
         "description": "Message that apprears on presets tab if too many presets found"
@@ -6697,7 +6693,7 @@
         "message": "Konfigurations filnavn:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Vælg den radio protokol som du ønsker at skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+        "message": "Vælg den radio protokol som du ønsker skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Vælg den telemetri protokol du ønsker i denne release. Bemærk at du kan vælge flere elementer. Der er telemetri protokoller som er medtaget, uanset dit valg her, da det styres af den valgte radio protokol, fx. CRSF."
@@ -6706,7 +6702,7 @@
         "message": "Vælg det generiske tilvalg du ønsker i denne release. Bemærk at du kan vælge flere elementer. Tilvalg kan også være rettelser, fx. AKK VTX."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Vælg den motor protokol for ESC, som du ønsker at skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+        "message": "Vælg den motor protokol for ESC, som du ønsker skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Særligt anvendelig for udviklere, da du kan vælge et flettet PR (Pull Request), specificere en commit SHA, eller specificere en PR som er ved at blive flettet, ved at angive: pull/{PR id}/head ."

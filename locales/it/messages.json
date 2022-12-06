@@ -2037,7 +2037,7 @@
         "message": "Questi sono valori (in us). Per allargare la zona neutra aumenta il valore. <strong>Questa impostazione è solo per il Gas 3D.</strong>"
     },
     "receiverChannelMap": {
-        "message": "Mappatura Canali"
+        "message": "Mappa Canali"
     },
     "receiverChannelDefaultOption": {
         "message": "Predefinito"
@@ -2669,7 +2669,7 @@
         "message": "Invertita"
     },
     "escDshotDirectionDialog-CommandSpin": {
-        "message": "Prova motore"
+        "message": "Test motori"
     },
     "escDshotDirectionDialog-ReleaseButtonToStop": {
         "message": "Rilascia il pulsante per fermare"
@@ -2690,7 +2690,7 @@
         "message": "I motori gireranno quando si imposta la direzione!"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "Funziona solo con ESC DSHOT.<br />Verifica il supporto del protocollo DSHOT da parte del tuo ESC o cambialo nella scheda $t(tabMotorTesting.message)."
+        "message": "Funziona solo con ESC DSHOT.<br />Verifica che il tuo ESC (Electric Speed Controller) supporti il protocollo DSHOT e cambialo nella scheda $t(tabMotorTesting.message)."
     },
     "escDshotDirectionDialog-WrongMixerText": {
         "message": "Il numero di motori è 0.<br />Verifica il Mixer attuale nella scheda $t(tabMotorTesting.message) oppure impostane uno personalizzato via CLI. Fai riferimento a questa <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
@@ -2711,10 +2711,10 @@
         "message": "Ferma i motori"
     },
     "sensorsInfo": {
-        "message": "Tieni in considerazione che usando una frequenza di aggiornamento veloce e renderizzando molti grafici allo stesso momento userai molte risorse e consumerai più velocemente la batteria se stai usando un computer portatile.<br />Raccomandiamo di renderizzare solo i grafici dei sensori che ti interessano e di usare una frequenza di aggiornamento appropriata."
+        "message": "Considera che usando una frequenza di aggiornamento veloce e renderizzando più grafici contemporaneamente userai molte risorse e consumerai più velocemente la batteria se stai usando un computer portatile.<br />Raccomandiamo di renderizzare solo i grafici dei sensori che ti interessano e per un periodo ragionevole."
     },
     "sensorsRefresh": {
-        "message": "Agg.:"
+        "message": "Aggiorna:"
     },
     "sensorsScale": {
         "message": "Scala:"
@@ -2801,7 +2801,7 @@
         "message": "I dati saranno registrati <span class=\"message-negative\">soltanto</span> in questa schermata, spostandoti da questa la registrazione sarà <span class=\"message-negative\">annullata</span> ed il programma tornerà nel suo stato normale di <strong>\"configuratore\"</strong><br />. Sei libero di selezionare la frequenza di aggiornamento globale, i dati saranno scritti nel file di registro <strong>ogni secondo</strong> per questioni di prestazioni."
     },
     "loggingSamplesSaved": {
-        "message": "Campioni salvati:"
+        "message": "Esempi salvati:"
     },
     "loggingLogSize": {
         "message": "Dimensioni del registro:"
@@ -2858,7 +2858,7 @@
         "message": "Puoi registrare i dati su un dispositivo esterno (come OpenLager) usando una porta seriale. Configura la porta nella scheda Porte."
     },
     "sdcardNote": {
-        "message": "I registri di volo possono essere memorizzati sulla scheda SD inserita nell'apposito alloggiamento sul controllore di volo."
+        "message": "I registri di volo possono essere memorizzati sulla scheda SD del controllore di volo."
     },
     "dataflashUsedSpace": {
         "message": "Spazio utilizzato"
@@ -2873,7 +2873,7 @@
         "message": "Spazio libero per la registrazione dati"
     },
     "dataflashNote": {
-        "message": "I registri di volo possono essere registrati sul chip dataflash integrato nel controllore di volo."
+        "message": "I registri di volo possono essere registrati sul chip dataflash del controllore di volo."
     },
     "dataflashNotPresentNote": {
         "message": "Il tuo controllore di volo non ha un chip dataflash compatibile disponibile."
@@ -2888,10 +2888,10 @@
         "message": "Salva flash su file... (non supportato)"
     },
     "dataflashSavetoFileNote": {
-        "message": "Il salvataggio diretto della flash su file è lento e intrinsecamente incline a errori / corruzione del file.<br>In alcuni casi funzionerà per piccoli file, ma questo non è supportato e le richieste di supporto per esso saranno chiuse senza commenti - utilizza la modalità di archiviazione di massa."
+        "message": "Il salvataggio diretto della flash su file è lento e propensa a causare a errori / corruzione del file.<br>In alcuni casi funzionerà per piccoli file, ma questo non è supportato e le richieste di supporto per esso saranno chiuse senza commenti - utilizza la modalità di archiviazione di massa."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Questo metodo è lento e intrinsecamente incline a errori / corruzione del file perché la stessa connessione MSP ha limitazioni fondamentali che la rendono inadatta per trasferimenti di file. Potrebbe funzionare solo per i piccoli file di log. Non creare richieste di supporto se i trasferimenti di file non vengono salvati utilizzando questo metodo. Il metodo raccomandato è quello di usare '<b>$t(onboardLoggingRebootMscText.message)</b>' (sotto) per attivare la modalità di archiviazione di massa, e accedere al tuo controllore di volo come dispositivo di archiviazione per scaricare i file di log."
+        "message": "Questo metodo è lento e propenso a causare errori / corruzione del file perché la stessa connessione MSP ha limitazioni fondamentali che la rendono inadatta per trasferimenti di file. Potrebbe funzionare solo per i piccoli file di log. Non creare richieste di supporto se i trasferimenti di file non vengono salvati utilizzando questo metodo. Il metodo raccomandato è quello di usare '<b>$t(onboardLoggingRebootMscText.message)</b>' (sotto) per attivare la modalità di archiviazione di massa, e accedere al tuo controllore di volo come dispositivo di archiviazione per scaricare i file di log."
     },
     "dataflashButtonErase": {
         "message": "Cancella flash"
@@ -2924,7 +2924,7 @@
         "message": "Annulla"
     },
     "dataflashFileWriteFailed": {
-        "message": "La scrittura sul file selezionato è fallita, assicurati di avere i permessi necessari sul file o la cartella che lo contiene"
+        "message": "Scrittura fallita del file selezionato, puoi controllare i premessi sulla cartella?"
     },
     "sdcardStatusNoCard": {
         "message": "Nessuna scheda inserita"
@@ -3185,10 +3185,10 @@
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
     },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": "<b>Nessun firmware selezionato per il caricamento</b>"
+        "message": "<b>Nessun firmware selezionato da caricare</b>"
     },
     "firmwareFlasherNoValidPort": {
-        "message": "<span class=\"message-negative\">Si prega di selezionare una porta seriale valida</span>"
+        "message": "<span class=\"message-negative\">Per favore seleziona una porta seriale valida</span>"
     },
     "firmwareFlasherWritePermissions": {
         "message": "Non hai i <span class=\"message-negative\">permessi di scrittura</span> per questo file"
@@ -3780,10 +3780,6 @@
         "message": "Damping:<br /><i><small>Guadagni D</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "Un guadagno D relativamente alto smorzerà la risposta agli stick e potrebbe far riscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni rapide del P-term e migliorerà la gestione del propwash.<br /><br />Un D-term relativamente basso dà una risposta agli stick più veloce ma peggiorerà la gestione del propwash e la reazione a forze esterne (vento).",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "Tracking:<br /><i><small>Guadagni P e I</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3803,10 +3799,6 @@
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br /><i><small>Guadagni I</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Aumenta o diminuisce la I. Un I più alto migliorerà il tracking in virate a spirale, orbite o comandi con gas al 0%. Troppo I, particolarmente con P insufficiente, può causare wobble o rimbalzi dopo flip/roll o dopo tagli di gas allo 0%.<br /><br />Generalmente si vuole lo slider 'Drift - Wobble' il più alto possibile per mantenere il tracking del quad virate a spirale, orbite, ecc... ma non così alto da vedere wobble con tagli di gas allo 0%.<br /><br /><strong>Nota:</strong><br />Se si verificano rimbalzi in qualsiasi momento e facili da vedere assicurati che sia abilitato \"I-term Relax\" e prova ad abbassare il valore di iterm_relax_cutoff.",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Damping dinamico:<br /><i><small>D Max</small></i>",
@@ -6657,10 +6649,6 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "Il preset selezionato richiede un firmware con versione $1<br/> La versione attuale del firmware è $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
-    },
-    "presetsNoPresetsFound": {
-        "message": "Nessun preset trovato per i parametri di ricerca indicati",
-        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Raggiunto il limite massimo del numero di preset mostrato",

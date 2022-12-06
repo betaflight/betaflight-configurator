@@ -3747,10 +3747,6 @@
         "message": "Amortecedor:<br /><i><small>Ganho D</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "Um valor no Termo D mais alto vai suavizar a resposta do stick e pode fazer os motores esquentar, mas deve ajudar a controlar a oscilação do Termo P e ajuda a controlar as oscilações causadas por turbulência nas hélices.<br /><br />Um valor D mais baixo oferece uma resposta mais rápida dos sticks, mas a aeronave não vai conseguir lidar muito bem com a turbulência e vento nas hélices.",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "Rastreio:<br /><i><small>Ganhos P & I</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3770,10 +3766,6 @@
     "pidTuningIGainSlider": {
         "message": "Deriva - Oscilação:<br /><i><small>Ganho I</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Aumenta ou reduz I. I alto pode melhorar o controle em curvas espirais, órbitas ou comandos com potência/acelerador em 0%. Muito I, quando não combinado com P suficiente, pode causar oscilações ou movimentos indesejados após flips e rolls ou quando a potência/acelerador for cortado para 0%.<br /><br />Normalmente você deseja que o slider 'Deriva - Oscilações' seja alto o suficiente para manter o controle do quadricóptero em espirais, órbitas, etc... mas não tão alto a ponto de se ver oscilações quando a potência/acelerador for cortado para 0%.<br /><br /><strong>Nota:</strong><br />Se você notar movimentos indesejados a qualquer momento, tenha certeza que o \"I-term Relax\" esteja ativado, tente diminuir o valor do iterm_relax_cutoff.",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Amortecedor Dinâmico:<br /><i><small>D Max</small></i>",
@@ -6522,10 +6514,6 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "A predefinição escolhida requer versão de firmware $1<br/> A versão atual do firmware é $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
-    },
-    "presetsNoPresetsFound": {
-        "message": "Não foram encontradas predefinições para os parâmetros de pesquisa especificados",
-        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Você chegou no limite de quantidade de predefinições que podem ser exibidas",

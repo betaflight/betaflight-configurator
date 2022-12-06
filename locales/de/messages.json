@@ -3681,10 +3681,6 @@
         "message": "Dämpfung:<br /><i><small>D Verstärkung(Gain)</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "Ein relativ hoher D-Wert dämpft die Reaktion der Sticks und kann die Motoren heiß werden lassen, sollte jedoch helfen Oszillation zu dämpfen, die von hohen P-Werten oder Propwash erzeugt werden.<br /><br />Ein relativ niedriger D-Wert erzeugt eine schnellere Stick Reaktion, kann aber mehr Probleme mit Propwash erzeugen).",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "Nachverfolgung:<br /><i><small>P & I Verstärkung</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3704,10 +3700,6 @@
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br /><i><small>I-Verstärkung</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Erhöht oder verringert I. Höhere I-Werte können das Nachverfolgen in Spiraldrehungen, Orbits oder 0% Throttle-Befehlen. Zu viel I, insbesondere mit nicht genug P, kann nach Flips/Rolls oder beim plötzlichen 0% Throttle Signalen zu Wobbeln oder Bounceback führen.<br /><br />Normalerweise möchtest du den Schieberegler „Drift – Wobble“ so hoch wie möglich halten, um die Quad Nachverfolgung in Spiraldrehungen zu halten, Orbits, etc., aber nicht so hoch, dass Du Wobbles beim 0% Throttle siehst.<br /><br /><strong>Hinweis:</strong><br />Wenn Du zu jeder Zeit einen Bounceback bemerkst, der leicht zu sehen ist, stelle sicher, dass „I-Term Relax“ aktiviert ist und versuche den Wert <b>iterm_relax_cutoff</b> zu senken.",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Dynamische Dämpfung:<br /><i><small>D Max</small></i>",
@@ -6376,10 +6368,6 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "Ausgewählte Voreinstellung erfordert Firmware-Version $1<br/> Aktuelle Firmware-Version ist $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
-    },
-    "presetsNoPresetsFound": {
-        "message": "Kein Preset für die angegebenen Suchparameter gefunden",
-        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Maximale Anzahl der angezeigten Presets erreicht",
