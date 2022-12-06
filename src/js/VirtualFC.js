@@ -182,7 +182,7 @@ const VirtualFC = {
         virtualOSD.data.unit_mode = 1;
 
         virtualOSD.virtualMode = {
-            itemPositions: Array.from({length: 60}),
+            itemPositions: Array.from({length: 77}),
             statisticsState: [],
             warningFlags: 0,
             timerData: [],
