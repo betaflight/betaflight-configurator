@@ -2790,16 +2790,14 @@ osd.initialize = function(callback) {
         }
 
         // 2 way binding... sorta
-        function updateOsdView() {
+        async function updateOsdView() {
 
             // ask for the OSD canvas data
-            let p;
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                p = MSP.promise(MSPCodes.MSP_OSD_CANVAS);
+                await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
             }
 
-            // ask for the OSD config data
-            p.then(() => MSP.promise(MSPCodes.MSP_OSD_CONFIG))
+            MSP.promise(MSPCodes.MSP_OSD_CONFIG)
                 .then(info => {
 
                     OSD.chooseFields();
