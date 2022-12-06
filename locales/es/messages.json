@@ -1897,7 +1897,7 @@
         "message": "ACORTAR"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Selecciona el tipo de límite del acelerador. <b>APAGADO</b> desactiva la funcionalidad, <b>ESCALAR</b> transforma el rango del acelerador de 0 al porcentaje seleccionado usando el recorrido completo del mando, <b>ACORTAR</b> asigna un porcentaje máximo de acelerador y el recorrido del mando por encimo de este no tiene ningún efecto adicional"
+        "message": "Selecciona el tipo de límite del acelerador. <b>APAGADO</b> desactiva la funcionalidad, <b>ESCALAR</b> transforma el rango del acelerador de 0 al porcentaje seleccionado usando el recorrido completo del mando, <b>ACORTAR</b> asigna un porcentaje máximo de acelerador y el recorrido del mando por encima de este no tiene ningún efecto adicional"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Ajusta el porcentaje límite de acelerador deseado. Un valor de 100% desactiva la funcionalidad."
@@ -2071,6 +2071,9 @@
     },
     "receiverButtonBindMessage": {
         "message": "Petición de enlace enviada al controlador de vuelo."
+    },
+    "receiverButtonPassphrase": {
+        "message": "Frase de seguridad"
     },
     "receiverButtonSticks": {
         "message": "Palancas de control"
@@ -3817,7 +3820,7 @@
         "description": "D_min slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Amortiguación de Pitch:<br /><i><small>Pitch: Roll D</small></i>",
+        "message": "Amortiguación de Pitch:<br /><i><small>Pitch:Roll D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
@@ -3974,7 +3977,7 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Giro Filtro RPM Frecuencia Min [Hz]",
+        "message": "Frecuencia mínima de corte [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
@@ -4362,7 +4365,7 @@
         "message": "<strong>Nota:</strong> Antes de calibrar la escala asegúrate de que el divisor y el multiplicador para el voltaje y el desplazamiento para la corriente sean correctos.<br>Dejando estos valores a 0 no se efectuará ninguna calibración.</br><strong>¡Recuerda quitar las hélices antes de enchufar una batería!</strong>"
     },
     "powerCalibrationManagerWarning": {
-        "message": "<span class=\"message-negative\">Atención:</span> La batería <span class=\"message-negative\">no está enchufada</span> o el origen de los sensores de voltaje y corriente <span class=\"message-negative\">no están configurados correctamente.</span> Asegúrate de que el voltaje y/o corriente marcan un valor sobre 0. The otro modo no podrás usar esta herramienta para calibrar."
+        "message": "<span class=\"message-negative\">Atención:</span> La batería <span class=\"message-negative\">no está enchufada</span> o el origen de los sensores de voltaje y corriente <span class=\"message-negative\">no están configurados correctamente.</span> Asegúrate de que el voltaje y/o corriente marcan un valor sobre 0. De otro modo no podrás usar esta herramienta para calibrar."
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">Atención:</span> Los orígenes de los sensores de voltaje y/o corriente <strong>han cambiado pero no han sido salvados.</strong> Por favor configura los orígenes de los sensores correctamente y guárdalo antes de intentar calibrar."
@@ -4948,7 +4951,7 @@
         "message": "Velocidad del ventilador mostrada por las gafas"
     },
     "osdTextElementCraftName": {
-        "message": "Nombre de la aeronave",
+        "message": "Identificador: nombre de la aeronave",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
@@ -5349,7 +5352,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRcChannels": {
-        "message": "Muestra los valores de hasta 4 canales. Los canales deben ser especificados con la variable CLI ' osd_rcchannels'"
+        "message": "Muestra los valores de hasta 4 canales. Los canales deben ser especificados con la variable CLI 'osd_rcchannels'"
     },
     "osdTextElementCameraFrame": {
         "message": "Cámara: marco",
@@ -6659,7 +6662,7 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
-        "message": "No se encontraron presets para los parámetros de búsqueda dados",
+        "message": "No se encontraron preajustes para los parámetros de búsqueda dados",
         "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {

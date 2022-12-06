@@ -3780,10 +3780,6 @@
         "message": "ダンピング:<br /><i><small>D 強度</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "D値を比較的高くするとスティック応答性が鈍くなり、モーターが高温になりますが、P値の振動を抑え、プロップウォッシュの振動を改善します。<br /><br />D値が比較的低いとスティック応答性は速くなりますが、プロップウォッシュの処理や外力 (風) への反応が弱くなります。",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "トラッキング:<br /><i><small>P & I 強度</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3803,10 +3799,6 @@
     "pidTuningIGainSlider": {
         "message": "ドリフト - ふらつき<br /><i><small>I 強度</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "I値を増加または減少させます。I値を高くすると、スパイラルターンやオービット、スロットルゼロでの操作のトラッキングが向上する場合があります。Iが高過ぎると、特にP値が足りない場合フリップ/ロールの後やスロットルを0%にしたときに、ふらつきやバウンスバックが発生することがあります。<br /><br />一般的に『ドリフト - ふらつき』スライダーは、スパイラルターンやオービットなどで機体のトラッキングを維持するために、できるだけ値を高くしますが、スロットルを0%にしたときにふらつきが発生するほど高くはしません。<br /><br /><strong>注:</strong><br />目に見える形でバウンスバックが発生した場合は、『I値リラックス』が有効になっていることを確認し iterm_relax_cutoff の値を下げてみてください。",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "動的ダンピング:<br /><i><small>D Max</small></i>",
@@ -6657,10 +6649,6 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "選択したプリセットは、ファームウェアのバージョン $1 が必要です。<br/>現在のファームウェアバージョンは $2 です。",
         "description": "Warning message that shows up at the top of the preset sources dialog"
-    },
-    "presetsNoPresetsFound": {
-        "message": "指定された検索パラメータに対応するプリセットが見つかりません",
-        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "表示されるプリセット数の上限に達しました",

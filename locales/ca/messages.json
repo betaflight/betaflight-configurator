@@ -194,7 +194,7 @@
         "message": "Si utilitzeu una versió més recent del firmware amb una versió obsoleta de configurador, significa que canviar algunes configuracions tindrà com a resultat una <strong>configuració del firmware corrompuda i un aeronau que no funciona</strong>. A més, algunes funcions del firmware només es podran configurar en CLI.<br><strong> La versió del configurador Betaflight<b>$1</b> està disponible per a la descàrrega en línia</strong>, visiteu <a href=\"$2\" target=\"_ blank\"rel=\"noopener noreferrer\">aquesta pàgina </a> per descarregar i instal·lar la versió més recent amb solucions i millores.<br>Tanqueu la finestra del configurador abans de l’actualització."
     },
     "configuratorUpdateWebsite": {
-        "message": "Ves a la pàgina de llançament"
+        "message": "Ves a la pàgina de publicació"
     },
     "deviceRebooting": {
         "message": "Dispositiu - <span class=\"message-negative\">Reiniciant</span>"
@@ -1518,6 +1518,9 @@
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocol FrSky)"
     },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP + Displayport)"
+    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1865,11 +1868,23 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTPAMode": {
+        "message": "TPA Mode"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "TPA Rate"
+    },
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Vista prèvia de la corba d’acceleració (Throttle)"
@@ -2064,6 +2079,9 @@
     },
     "receiverButtonBindMessage": {
         "message": "Sol·licitud d’enllaç enviada al controlador de vol."
+    },
+    "receiverButtonPassphrase": {
+        "message": "Contrasenya"
     },
     "receiverButtonSticks": {
         "message": "Sticks de control"
@@ -2940,6 +2958,9 @@
     "firmwareFlasherBranch": {
         "message": "Selecciona aplicar"
     },
+    "firmwareFlasherReleaseSummaryHead": {
+        "message": "Versió i informació de compilació"
+    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID Fabricant:"
     },
@@ -2969,6 +2990,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Estat:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "pendent"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "processant"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "éxit (caché)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "èxit"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "s'ha esgotat el temps d'espera (torneu-ho a provar)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "ha fallat (comproveu el registre)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Descarrega manualment."
@@ -4611,6 +4650,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Unitats"
     },
@@ -4837,6 +4880,83 @@
     "osdTextElementAuxValue": {
         "message": "Valor auxiliar",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Tensió de les ulleres",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Tensió de les ulleres proporcionada per les ulleres"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "Voltage VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "Tensió de les ulleres proporcionada per les ulleres"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "Bitrate VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Tensió de les ulleres proporcionada per les ulleres"
+    },
+    "osdTextElementSysDelay": {
+        "message": "Retard VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Retard de vídeo proporcionat per les ulleres"
+    },
+    "osdTextElementSysDistance": {
+        "message": "Un dels elements de sistema del OSD",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Distància de transmissió de vídeo representada per les ulleres"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Qualitat del enllaç de les ulleres",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Qualitat del enllaç de les ulleres proporcionada per les ulleres"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Estat del DVR de les ulleres",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Estat del DVR proporcionat per les ulleres"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "Estat del VTX DVR",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "Estat del DVR VTX proporcionat per les ulleres"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Avisos de sistema de les ulleres",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Avisos del sistema de vídeo proporcionat per les ulleres"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "Temperatura VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "Temperatura del VTX proporcionat per les ulleres"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Velocitta del ventilador de les ulleres",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Velocitat del ventilador proporcionat per les ulleres"
     },
     "osdTextElementCraftName": {
         "message": "Nom de l'aeronau",
@@ -5284,6 +5404,13 @@
     "osdDescElementReadyMode": {
         "message": "Quan estigui actiu, es mostrarà READY fins a volar"
     },
+    "osdTextElementRSNRValue": {
+        "message": "Valor RSNR",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "Valor RSNR"
+    },
     "osdTextElementUnknown": {
         "message": "Desconegut $1",
         "description": "One of the elements of the OSD"
@@ -5480,6 +5607,13 @@
     "osdDescStatMinRssiDbm": {
         "message": "Valor mínim RSSI dBm"
     },
+    "osdTextStatMinRSNR": {
+        "message": "Valor mínim RSNR",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Valor mínim RSNR"
+    },
     "osdTextStatUnknown": {
         "message": "Desconegut $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5672,6 +5806,13 @@
     },
     "osdWarningOverCap": {
         "message": "Adverteix quan els mAh consumits superan el límit de capacitat configurat"
+    },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Avisa quan el RSNR està per sota del ajust d'alarma"
     },
     "osdWarningTextUnknown": {
         "message": "Desconegut $1"
@@ -6562,5 +6703,35 @@
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocols motors"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Configuració del arxiu:"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Seleccioneu els protocols de ràdio que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Seleccioneu els protocols de telemetria que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements. També hi ha alguns protocols de telemetria que s'habilitaran, independentment de la vostra selecció aquí en funció del protocol de ràdio seleccionat, p. CRSF."
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Seleccioneu les opcions genèriques que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements. Elements com ara correccions, p. AKK VTX, s'inclouen aquí."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Seleccioneu els protocols motor (ESC) que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Especialment útil per als desenvolupadors, podeu seleccionar un PR combinat, especificar un commit sha o especificar un PR \"encara per combinar\" escrivint: pull/{PR number}/head ."
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "Per als desenvolupadors, podeu afegir qualsevol definició que necessiteu, separades per un `espai`, però sense el prefix `USE_`, s'afegirà automàticament."
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "Definicions personalitzades"
+    },
+    "classicBuild": {
+        "message": "Mode clàssic"
+    },
+    "classicBuildModeDescription": {
+        "message": "Aquest mode ignora tots els paràmetres aquí, excepte el commit. Això bàsicament aconsegueix el mateix que les clàssiques versions intermitjas, i es proporciona per comoditat."
     }
 }

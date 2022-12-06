@@ -3871,10 +3871,6 @@
         "message": "Amortiguamento:<br /><i><small>Ganancia D</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "A ganancia D relativamente alta diminúe a capacidade de resposta do stick e pode quentar os motores, pero debería axudar a controlar as oscilacións rápidas e mellorará o propwash.<br /><br />A ganancia D relativamente baixa aumenta a resposta do stick, pero empeora o rendemento o propweash e a reacción a forzas externas (vento).",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "Seguimento:<br /><i><small>P & I Gains</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3894,10 +3890,6 @@
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br /><i><small>I Gains</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Aumenta ou diminúe I. Un I máis alto pode mellorar o seguimento de xiros en espiral, órbitas ou comandos de aceleración 0%. Demasiada I, particularmente sen moita P, pode causar bamboleos ou rebotes despois de flips/rolls ou ó cortar o acelerador a 0%.<br /><br />Xeralmente quere que o control deslizante 'Rumbo - Oscilación' sexa tan alto como para poder manter o seguimento do quad en xiros de espiral, órbitas, ect... pero non tan alto que comeza a ver bamboleos ó cortar o gas a 0%.<br /><br /><strong>Nota:</strong><br />Se experimenta rebotes en calquera momento que sexa fácil de ver, asegúrese de que \"Relaxar I-term\" está habilitado e tente baixar o valor I-term_Relax_Cutoff.",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Amortiguamento dinámico:<br /><i><small>D Max</small></i>",
@@ -6748,10 +6740,6 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "O Preset seleccionado require a versión de firmware $1<br/> A versión actual do firmware é $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
-    },
-    "presetsNoPresetsFound": {
-        "message": "Non se atoparon presets para os parámetros de busca dados",
-        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Alcanzou o límite máximo do número de presets mostrados",

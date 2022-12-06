@@ -3751,10 +3751,6 @@
         "message": "阻尼: <br /><i><small>D 增益</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
-    "pidTuningDGainSliderHelp": {
-        "message": "相对较高的 D 值将削弱摇杆响应力，并且可能会使电机变热，但有助于抑制由 P 造成的晃动，并且会改善洗桨。<br /><br />相对较低的 D 值将会提供较快的摇杆响应力，但可能会削弱抑制洗桨的能力。",
-        "description": "D gain balance tuning slider helpicon message"
-    },
     "pidTuningPIGainSlider": {
         "message": "跟踪: <br /><i><small>P & I 增益</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3774,10 +3770,6 @@
     "pidTuningIGainSlider": {
         "message": "漂移 - 晃动: <br /><i><small>I 增益</small></i>",
         "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "增加或者降低 I。更高的 I 可以提升旋转、刷圈或0油门时候的“跟踪”力。过高的 I，尤其是没有足够的 P，将会导致在翻滚或瞬间降至0油门时出现晃动或回弹。<br /><br />通常来说，你会希望将“漂移 - 晃动”滑块推得更高，因为这可以使飞机在绕圈飞行时更易于操控；但如若太高你将会在快速将油门降低至0时发现晃动。<br /><br /><strong>注意：</strong><br />如果你在任何时候都能看到显而易见的晃动，请确保已启用 “I 值释放”，并尝试降低 I 值释放截止频率值。",
-        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "动态阻尼: <br /><i><small>D Max</small></i>",
@@ -6459,10 +6451,6 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "已选择预设需要固件版本为 $1<br/> 但当前固件版本为 $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
-    },
-    "presetsNoPresetsFound": {
-        "message": "没有找到符合搜索条件的预设",
-        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "已达到可显示预设数的最大限制",

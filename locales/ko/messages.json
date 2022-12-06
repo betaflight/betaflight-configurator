@@ -2140,6 +2140,9 @@
     "receiverButtonBindMessage": {
         "message": "비행 컨트롤러에 바인드 요청을 보냅니다."
     },
+    "receiverButtonPassphrase": {
+        "message": "암호문구"
+    },
     "receiverButtonSticks": {
         "message": "제어 스틱"
     },
