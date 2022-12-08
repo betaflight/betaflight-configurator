@@ -6221,12 +6221,12 @@
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
     "vtxSavedLuaFileOk": {
-        "message": "lua VTX Config file <span class="message-positive">saved",
+        "message": "lua VTX Config file <span class=\"message-positive\">saved",
         "description": "Message in the GUI log when the lua VTX Config file is saved"
     },
         "vtxSavedLuaFileKo": {
-        "message": "<span class="message-negative">Error while saving the lua VTX Config file",
-        "description": "Message in the GUI log when the lau VTX Config file saving has failed"
+        "message": "<span class=\"message-negative\">Error while saving the lua VTX Config file",
+        "description": "Message in the GUI log when the lua VTX Config file saving has failed"
     },
     "vtxLoadFileOk": {
         "message": "VTX Config file <span class=\"message-positive\">loaded</span>",
