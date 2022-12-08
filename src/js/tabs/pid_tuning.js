@@ -3042,7 +3042,7 @@ pid_tuning.changeRatesSystem = function(sameType) {
     let rcRateMax = 2.55, rcRateMin = 0.01, rcRateStep = 0.01;
     let rateMax = 1.0, rateStep = 0.01;
     let expoMax = 1.0, expoStep = 0.01;
-    const rateMin = 0;
+    let rateMin = 0;
     const expoMin = 0;
 
     const pitch_rate_e = $('.pid_tuning input[name="pitch_rate"]');
@@ -3120,6 +3120,7 @@ pid_tuning.changeRatesSystem = function(sameType) {
             rateLabel.text(i18n.getMessage("pidTuningRateQuickRates"));
             rcExpoLabel.text(i18n.getMessage("pidTuningRcExpoRaceflight"));
 
+            rateMin = 10;
             rateMax = 2000;
             rateStep = 10;
             rcRateMax = 2000;
@@ -3150,6 +3151,7 @@ pid_tuning.changeRatesSystem = function(sameType) {
             rateLabel.text(i18n.getMessage("pidTuningRateQuickRates"));
             rcExpoLabel.text(i18n.getMessage("pidTuningRcExpoRaceflight"));
 
+            rateMin = 10;
             rateMax = 2000;
             rateStep = 10;
 
