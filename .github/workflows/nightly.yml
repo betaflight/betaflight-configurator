@@ -31,7 +31,10 @@ jobs:
     name: Upload translations
     needs: ci
     uses: ./.github/workflows/translations-upload.yml
-  
+    secrets:
+      CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+      CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
   release:
     name: Nightly release
     needs: ci
