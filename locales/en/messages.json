@@ -6220,7 +6220,7 @@
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
     "vtxSavedLuaFileOk": {
-        "message": "lua VTX Config file <span class=\"message-positive\">saved",
+        "message": "lua VTX Config file <span class=\"message-positive\">saved</span>",
         "description": "Message in the GUI log when the lua VTX Config file is saved"
     },
         "vtxSavedLuaFileKo": {
