@@ -28,6 +28,7 @@ jobs:
       debug_build: true
 
   upload-translations:
+    if: ${{ github.ref_name == 'master' }}
     name: Upload translations
     needs: ci
     uses: ./.github/workflows/translations-upload.yml
