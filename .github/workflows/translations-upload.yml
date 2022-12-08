@@ -1,0 +1,29 @@
+name: Translations upload to Crowdin
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  betaflight-messages-to-crowdin:
+    name: Messages file to Crowdin
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Upload messages file
+      uses: crowdin/github-action@1.5.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+        token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        config: 'crowdin.yml'
+        crowdin_branch_name: ${{ github.ref_name }}
+
+        upload_sources: true
+        upload_translations: false
+
+        download_translations: false
+        

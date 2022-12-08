@@ -27,6 +27,11 @@ jobs:
     with:
       debug_build: true
 
+  upload-translations:
+    name: Upload translations
+    needs: ci
+    uses: ./.github/workflows/translations-upload.yml
+  
   release:
     name: Nightly release
     needs: ci
