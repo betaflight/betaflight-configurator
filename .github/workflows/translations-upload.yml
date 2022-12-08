@@ -1,8 +1,13 @@
 name: Translations upload to Crowdin
 
 on:
-  workflow_call:
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      CROWDIN_PROJECT_ID:
+        required: true
+      CROWDIN_PERSONAL_TOKEN:
+        required: true
 
 jobs:
   betaflight-messages-to-crowdin:
