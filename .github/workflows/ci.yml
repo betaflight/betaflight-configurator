@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules/
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -66,13 +66,13 @@ jobs:
         uses: actions/cache@v3
         with:
           path: cache/
-          key: ${{ runner.os }}-${{ hashFiles('gulpfile.js') }}
+          key: nwjs-${{ inputs.debug_build && 'debug' || 'release' }}-${{ runner.os }}-${{ hashFiles('gulpfile.js') }}
 
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
           path: node_modules/
-          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install Node.js
         uses: actions/setup-node@v3
