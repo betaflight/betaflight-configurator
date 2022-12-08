@@ -633,7 +633,7 @@ vtx.initialize = function (callback) {
 
                 writer.onerror = function(){
                     console.error('Failed to write VTX table lua file');
-                    GUI.log(i18n.getMessage('vtxSavedFileKo'));
+                    GUI.log(i18n.getMessage('vtxSavedLuaFileKo'));
                 };
 
                 writer.onwriteend = function() {
@@ -646,7 +646,7 @@ vtx.initialize = function (callback) {
                     writer.onwriteend = function() {
                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
                         console.log('Write VTX table lua file end');
-                        GUI.log(i18n.getMessage('vtxSavedFileOk'));
+                        GUI.log(i18n.getMessage('vtxSavedLuaFileOk'));
                     };
 
                     writer.write(data);
@@ -656,7 +656,7 @@ vtx.initialize = function (callback) {
 
             }, function (){
                 console.error('Failed to get VTX table lua file writer');
-                GUI.log(i18n.getMessage('vtxSavedFileKo'));
+                GUI.log(i18n.getMessage('vtxSavedLuaFileKo'));
             });
         });
     }
