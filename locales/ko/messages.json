@@ -150,14 +150,6 @@
         "message": "Galego",
         "description": "Don't translate!!!"
     },
-    "language_hr": {
-        "message": "Hrvatski",
-        "description": "Don't translate!!!"
-    },
-    "language_id": {
-        "message": "Bahasa Indonesia",
-        "description": "Don't translate!!!"
-    },
     "language_it": {
         "message": "Italiano",
         "description": "Don't translate!!!"
@@ -170,10 +162,6 @@
         "message": "한국어",
         "description": "Don't translate!!!"
     },
-    "language_lv": {
-        "message": "Latviešu",
-        "description": "Don't translate!!!"
-    },
     "language_pt": {
         "message": "Português",
         "description": "Don't translate!!!"
@@ -184,10 +172,6 @@
     },
     "language_ru": {
         "message": "Русский язык",
-        "description": "Don't translate!!!"
-    },
-    "language_sv": {
-        "message": "Svenska",
         "description": "Don't translate!!!"
     },
     "language_zh_CN": {

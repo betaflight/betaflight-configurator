@@ -267,7 +267,7 @@
         "message": "OSD"
     },
     "tabVtx": {
-        "message": "Trasmettitore Video"
+        "message": "Video Trasmettitore"
     },
     "tabPower": {
         "message": "Sensori batteria"
@@ -1054,7 +1054,7 @@
         "message": "OSD (On Screen Display)"
     },
     "featureVTX": {
-        "message": "Trasmettitore Video"
+        "message": "Video Trasmettitore"
     },
     "featureANTI_GRAVITY": {
         "message": "Abilita permanentemente"
@@ -2071,6 +2071,9 @@
     },
     "receiverButtonBindMessage": {
         "message": "Richiesta di collegamento inviata al controllore di volo."
+    },
+    "receiverButtonPassphrase": {
+        "message": "Password"
     },
     "receiverButtonSticks": {
         "message": "Stick di comando"
@@ -3780,6 +3783,10 @@
         "message": "Damping:<br /><i><small>Guadagni D</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
+    "pidTuningDGainSliderHelp": {
+        "message": "Un guadagno D alto diminuirà la reattività dello stick e potrebbe surriscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni veloci e migliorare il flusso d'aria sulle eliche.<br /><br />Un D-term relativamente basso dà una risposta più rapida dello stick, ma indebolirà le prestazioni sui flussi d'aria delle eliche e la reazione alle forze esterne (vento).",
+        "description": "D gain balance tuning slider helpicon message"
+    },
     "pidTuningPIGainSlider": {
         "message": "Tracking:<br /><i><small>Guadagni P e I</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3799,6 +3806,10 @@
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br /><i><small>Guadagni I</small></i>",
         "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Aumenta o diminuisce I. Un I più alto puo' migliorare il volo nelle virate a spirale, orbitale o i comandi a 0% di gas. Troppo I, in particolare con un P insufficiente, potrebbe causare oscillazioni o rimbalzi dopo flip/roll oppure abbassando il gas a 0%.<br /><br />Generalmente vogliamo che il il cursore \"Drift - Wobble\" sia il più alto possibile per mantenere il volo ottimale del quad in giri a spirale, orbite, ecc... ma non così in alto da vedere oscillazioni quando si abbassa l'acceleratore a 0%.<br /><br /><strong>Nota:</strong><br />Se riscontri un rimbalzo in qualsiasi momento, assicurati che \"I-term Relax\" sia abilitato e prova ad abbassare il valore di iterm_relax_cutoff.",
+        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Damping dinamico:<br /><i><small>D Max</small></i>",
@@ -6649,6 +6660,10 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "Il preset selezionato richiede un firmware con versione $1<br/> La versione attuale del firmware è $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "Nessun preset trovato nella ricerca",
+        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Raggiunto il limite massimo del numero di preset mostrato",

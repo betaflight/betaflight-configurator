@@ -150,14 +150,6 @@
         "message": "Galego",
         "description": "Don't translate!!!"
     },
-    "language_hr": {
-        "message": "Hrvatski",
-        "description": "Don't translate!!!"
-    },
-    "language_id": {
-        "message": "Bahasa Indonesia",
-        "description": "Don't translate!!!"
-    },
     "language_it": {
         "message": "Italiano",
         "description": "Don't translate!!!"
@@ -170,20 +162,12 @@
         "message": "한국어",
         "description": "Don't translate!!!"
     },
-    "language_lv": {
-        "message": "Latviešu",
-        "description": "Don't translate!!!"
-    },
     "language_pt": {
         "message": "Português",
         "description": "Don't translate!!!"
     },
     "language_ru": {
         "message": "Русский язык",
-        "description": "Don't translate!!!"
-    },
-    "language_sv": {
-        "message": "Svenska",
         "description": "Don't translate!!!"
     },
     "language_zh_CN": {
@@ -4732,7 +4716,7 @@
         "message": "Statistiques de vol"
     },
     "osdSetupVtxTitle": {
-        "message": "Réglages VTX"
+        "message": "VTX : Réglages"
     },
     "osdSetupCraftNameTitle": {
         "message": "Nom du modèle"
@@ -4821,7 +4805,7 @@
         "message": "Tension instantanée de la batterie principale (clignote lorsque le seuil d'alarme est atteint)"
     },
     "osdTextElementRssiValue": {
-        "message": "Valeur RSSI",
+        "message": "RSSI : Valeur",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
@@ -4849,14 +4833,14 @@
         "message": "Utilisation CPU actuelle"
     },
     "osdTextElementVtxChannel": {
-        "message": "Canal VTX",
+        "message": "VTX : Canal",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementVtxChannel": {
         "message": "Canal et puissance VTX actuels"
     },
     "osdTextElementVTXchannelVariantPower": {
-        "message": "Puissance VTX",
+        "message": "VTX : Puissance",
         "description": "One of the variants of the VTX channel element of the OSD"
     },
     "osdTextElementVTXchannelVariantFull": {
@@ -4935,77 +4919,77 @@
         "description": "One of the elements of the OSD"
     },
     "osdTextElementSysGoggleVoltage": {
-        "message": "Tension des goggles",
+        "message": "Goggle : Tension",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysGoggleVoltage": {
         "message": "Tension des goggles rendue par les goggles"
     },
     "osdTextElementSysVtxVoltage": {
-        "message": "Tension VTX",
+        "message": "VTX : Tension",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysVtxVoltage": {
         "message": "Tension des goggles rendue par les goggles"
     },
     "osdTextElementSysBitrate": {
-        "message": "Débit VTX",
+        "message": "VTX : Débit",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysBitrate": {
         "message": "Débit vidéo rendu par les goggles"
     },
     "osdTextElementSysDelay": {
-        "message": "Délai VTX",
+        "message": "VTX : Délai",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysDelay": {
         "message": "Délais de la vidéo rendue par les goggles"
     },
     "osdTextElementSysDistance": {
-        "message": "Distance VTX",
+        "message": "VTX : Distance",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysDistance": {
         "message": "Distance de transmission vidéo rendue par les goggles"
     },
     "osdTextElementSysLQ": {
-        "message": "Qualité du lien des goggles",
+        "message": "Goggle :  Qualité du lien",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysLQ": {
         "message": "Qualité du lien vidéo rendue par les goggles"
     },
     "osdTextElementSysGoggleDVR": {
-        "message": "Statut DVR des goggles",
+        "message": "Goggle : Statut DVR ",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysGoggleDVR": {
         "message": "Statut DVR des goggles rendu par les goggles"
     },
     "osdTextElementSysVtxDVR": {
-        "message": "Statut DVR VTX",
+        "message": "VTX : Statut DVR",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysVtxDVR": {
         "message": "Statut DVR VTX rendu par les goggles"
     },
     "osdTextElementSysWarnings": {
-        "message": "Avertissements système des goggles",
+        "message": "Goggle : Avertissements système",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysWarnings": {
         "message": "Avertissements du système vidéo rendus par les goggles"
     },
     "osdTextElementSysVtxTemp": {
-        "message": "Température du VTX",
+        "message": "VTX : Température",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysVtxTemp": {
         "message": "Température du VTX rendue par les goggles"
     },
     "osdTextElementSysFanSpeed": {
-        "message": "Vitesse du ventilateur des goggles",
+        "message": "Goggle : Vitesse du ventilateur",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysFanSpeed": {
@@ -5055,28 +5039,28 @@
         "message": "Mode de vol"
     },
     "osdTextElementGPSSpeed": {
-        "message": "Vitesse GPS",
+        "message": "GPS : Vitesse",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSSpeed": {
         "message": "Vitesse fournie par le GPS"
     },
     "osdTextElementGPSSats": {
-        "message": "Satellites GPS",
+        "message": "GPS : Satellites",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSSats": {
         "message": "Nombre de satellites GPS"
     },
     "osdTextElementGPSLon": {
-        "message": "Longitude GPS",
+        "message": "GPS : Longitude",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLon": {
         "message": "Longitude GPS"
     },
     "osdTextElementGPSLat": {
-        "message": "Latitude GPS",
+        "message": "GPS : Latitude",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLat": {
@@ -5241,14 +5225,14 @@
         "message": "Alertes (par exemple: batterie faible), Avertissements (par exemple: raisons de ne pas armer, batterie critique) et signal sonore (4 astérisques clignotants)."
     },
     "osdTextElementEscTemperature": {
-        "message": "Température ESC",
+        "message": "ESC : Température",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
         "message": "Température reportée par la télémétrie des ESC"
     },
     "osdTextElementEscRpm": {
-        "message": "RPM ESC",
+        "message": "ESC : RPM",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscRpm": {
@@ -5374,7 +5358,7 @@
         "message": "Nom du pilote tel que défini dans l'onglet Paramètres.</br>Peut également être défini via la variable CLI \"pilot_name\"."
     },
     "osdTextElementEscRpmFreq": {
-        "message": "Fréquence RPM ESC",
+        "message": "ESC : Fréquence RPM",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscRpmFreq": {
@@ -5402,7 +5386,7 @@
         "message": "Nom du profil OSD tel que défini dans les variables CLI \"osd_profile_1_name\", \"osd_profile_2_name\" et \"osd_profile_3_name\""
     },
     "osdTextElementRssiDbmValue": {
-        "message": "Valeur dBm RSSI",
+        "message": "RSSI : Valeur dBm",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiDbmValue": {
@@ -6122,6 +6106,14 @@
     "vtxSavedFileKo": {
         "message": "<span class=\"message-negative\">Erreur</span> lors de la sauvegarde du fichier de Config VTX",
         "description": "Message in the GUI log when the VTX Config file is saved"
+    },
+    "vtxSavedLuaFileOk": {
+        "message": "Fichier de configuration lua du VTX <span class=\"message-positive\">sauvegardé</span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
+    "vtxSavedLuaFileKo": {
+        "message": "<span class=\"message-negative\">Erreur</span> lors de la sauvegarde du fichier de Configuration lua du VTX",
+        "description": "Message in the GUI log when the lua VTX Config file saving has failed"
     },
     "vtxLoadFileOk": {
         "message": "Fichier de configuration VTX <span class=\"message-positive\">chargé</span>",
