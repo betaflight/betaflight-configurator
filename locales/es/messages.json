@@ -6062,6 +6062,14 @@
         "message": "<span class=\"message-negative\">Error</span> al guardar el archivo de Configuración VTX",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileOk": {
+        "message": "Archivo de Configuración Lua para el VTX <span class=\"message-positive\">guardado</span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
+    "vtxSavedLuaFileKo": {
+        "message": "<span class=\"message-negative\">Error</span> al guardar el archivo de Configuración Lua para el VTX",
+        "description": "Message in the GUI log when the lua VTX Config file saving has failed"
+    },
     "vtxLoadFileOk": {
         "message": "Archivo de Configuración VTX <span class=\"message-positive\">cargado</span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
