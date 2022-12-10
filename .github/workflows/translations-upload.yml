@@ -1,13 +1,14 @@
 name: Translations upload to Crowdin
 
+concurrency: upload-crowdin
+
 on:
   workflow_dispatch:
-  workflow_call:
-    secrets:
-      CROWDIN_PROJECT_ID:
-        required: true
-      CROWDIN_PERSONAL_TOKEN:
-        required: true
+  push:
+    branches:
+      - master
+    paths:
+      - 'locales/en/**'
 
 jobs:
   betaflight-messages-to-crowdin:
@@ -31,4 +32,3 @@ jobs:
         upload_translations: false
 
         download_translations: false
-        
