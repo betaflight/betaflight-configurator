@@ -289,38 +289,24 @@ adjustments.cleanup = function (callback) {
 adjustments.adjust_template = function () {
 
     const selectFunction = $('#functionSelectionSelect');
-    let elementsNumber;
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-        elementsNumber = 31; // OSD Profile Select & LED Profile Select
-    } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-        elementsNumber = 29; // PID Audio
-    } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-        elementsNumber = 26; // PID Audio
-    } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-        elementsNumber = 25; // Horizon Strength
-    } else {
-        elementsNumber = 24; // Setpoint transition
-    }
+    const elementsNumber = 31; // OSD Profile Select & LED Profile Select
 
     for (let i = 0; i < elementsNumber; i++) {
         selectFunction.append(new Option(i18n.getMessage(`adjustmentsFunction${i}`), i));
     }
 
     // For 1.40, the D Setpoint has been replaced, so we replace it with the correct values
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
 
-        const element22 = selectFunction.find("option[value='22']");
-        const element23 = selectFunction.find("option[value='23']");
+    const element22 = selectFunction.find("option[value='22']");
+    const element23 = selectFunction.find("option[value='23']");
 
-        // Change the "text"
-        element22.text(i18n.getMessage('adjustmentsFunction22_2'));
-        element23.text(i18n.getMessage('adjustmentsFunction23_2'));
+    // Change the "text"
+    element22.text(i18n.getMessage('adjustmentsFunction22_2'));
+    element23.text(i18n.getMessage('adjustmentsFunction23_2'));
 
-        // Reorder, we insert it with the other FF elements to be coherent...
-        element22.insertAfter(selectFunction.find("option[value='25']"));
-        element23.insertAfter(selectFunction.find("option[value='28']"));
-    }
+    // Reorder, we insert it with the other FF elements to be coherent...
+    element22.insertAfter(selectFunction.find("option[value='25']"));
+    element23.insertAfter(selectFunction.find("option[value='28']"));
 };
 
 window.TABS.adjustments = adjustments;

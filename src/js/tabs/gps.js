@@ -54,9 +54,6 @@ gps.initialize = function (callback) {
             const usedArray = ['gnssUsedUnused', 'gnssUsedUsed'];
             const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
             let alt = FC.GPS_DATA.alt;
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                alt = alt / 10;
-            }
 
             $('.GPS_info td.fix').html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info td.alt').text(`${alt} m`);

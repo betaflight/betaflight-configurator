@@ -11,19 +11,9 @@ led_strip.initialize = function (callback, scrollPosition) {
     let selectedModeColor = null;
     const functionTag = '.function-';
 
-    if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
-        TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b'];
-        TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'b', 'g', 'r'];
-        TABS.led_strip.overlays = ['t', 's', 'i', 'w'];
-    } else {
-        TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'n'];
-        TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'l', 's', 'g', 'r'];
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            TABS.led_strip.overlays =  ['t', 'o', 'b', 'n', 'i', 'w'];
-        } else {
-            TABS.led_strip.overlays =  ['t', 'o', 'b', 'v', 'i', 'w'];
-        }
-    }
+    TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'n'];
+    TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'l', 's', 'g', 'r'];
+    TABS.led_strip.overlays =  ['t', 'o', 'b', 'v', 'i', 'w'];
 
     TABS.led_strip.wireMode = false;
 
@@ -40,10 +30,7 @@ led_strip.initialize = function (callback, scrollPosition) {
     }
 
     function load_led_mode_colors() {
-        if (semver.gte(FC.CONFIG.apiVersion, "1.19.0"))
-            MSP.send_message(MSPCodes.MSP_LED_STRIP_MODECOLOR, false, false, load_html);
-        else
-            load_html();
+        MSP.send_message(MSPCodes.MSP_LED_STRIP_MODECOLOR, false, false, load_html);
     }
 
 
@@ -73,13 +60,7 @@ led_strip.initialize = function (callback, scrollPosition) {
         const theHTML = [];
         let theHTMLlength = 0;
         for (let i = 0; i < 256; i++) {
-            if (semver.lte(FC.CONFIG.apiVersion, "1.19.0")) {
-                theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-s"> </span><span class="overlay-w"> </span><span class="overlay-i"> </span><span class="overlay-color"> </span></div>');
-            } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-b"> </span><span class="overlay-n"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
-            } else {
-                theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-b"> </span><span class="overlay-v"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
-            }
+            theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-b"> </span><span class="overlay-v"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
         }
         $('.mainGrid').html(theHTML.join(''));
 
@@ -88,31 +69,20 @@ led_strip.initialize = function (callback, scrollPosition) {
         });
 
         // Aux channel drop-down
-        if (semver.lte(FC.CONFIG.apiVersion, "1.20.0")) {
-            $('.auxSelect').hide();
-            $('.labelSelect').show();
-        } else {
-            $('.auxSelect').show();
-            $('.labelSelect').hide();
+        $('.auxSelect').show();
+        $('.labelSelect').hide();
 
-            const AuxMode = 7;
-            const AuxDir = 0;
+        const AuxMode = 7;
+        const AuxDir = 0;
 
-            $('.auxSelect').val(getModeColor(AuxMode, AuxDir));
+        $('.auxSelect').val(getModeColor(AuxMode, AuxDir));
 
-            $('.auxSelect').on('change', function() {
-                setModeColor(AuxMode, AuxDir, $('.auxSelect').val());
-            });
-        }
+        $('.auxSelect').on('change', function() {
+            setModeColor(AuxMode, AuxDir, $('.auxSelect').val());
+        });
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            $('.vtxOverlay').hide();
-            $('.landingBlinkOverlay').show();
-        }
-        else {
-            $('.landingBlinkOverlay').css("visibility", "hidden");
-            $('.vtxOverlay').show();
-        }
+        $('.landingBlinkOverlay').css("visibility", "hidden");
+        $('.vtxOverlay').show();
 
         // Clear button
         $('.funcClear').click(function() {
@@ -603,10 +573,7 @@ led_strip.initialize = function (callback, scrollPosition) {
             }
 
             function send_led_strip_mode_colors() {
-                if (semver.gte(FC.CONFIG.apiVersion, "1.19.0"))
-                    mspHelper.sendLedStripModeColors(save_to_eeprom);
-                else
-                    save_to_eeprom();
+                mspHelper.sendLedStripModeColors(save_to_eeprom);
             }
 
             function save_to_eeprom() {
@@ -727,19 +694,17 @@ led_strip.initialize = function (callback, scrollPosition) {
 
     // refresh mode color buttons
     function setModeBackgroundColor(element) {
-        if (semver.gte(FC.CONFIG.apiVersion, "1.19.0")) {
-            element.find('[class*="mode_color"]').each(function() {
-                let m = 0;
-                let d = 0;
+        element.find('[class*="mode_color"]').each(function() {
+            let m = 0;
+            let d = 0;
 
-                const match = $(this).attr("class").match(/(^|\s)mode_color-([0-9]+)-([0-9]+)(\s|$)/);
-                if (match) {
-                    m = Number(match[2]);
-                    d = Number(match[3]);
-                    $(this).css('background-color', HsvToColor(FC.LED_COLORS[getModeColor(m, d)]));
-                }
-            });
-        }
+            const match = $(this).attr("class").match(/(^|\s)mode_color-([0-9]+)-([0-9]+)(\s|$)/);
+            if (match) {
+                m = Number(match[2]);
+                d = Number(match[3]);
+                $(this).css('background-color', HsvToColor(FC.LED_COLORS[getModeColor(m, d)]));
+            }
+        });
     }
 
     function setBackgroundColor(element) {
@@ -767,45 +732,31 @@ led_strip.initialize = function (callback, scrollPosition) {
     }
 
     function areOverlaysActive(activeFunction) {
-        if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
-            switch (activeFunction) {
-                case "function-c":
-                case "function-a":
-                case "function-f":
-                case "function-g":
-                    return true;
-                default:
-                    break;
-            }
-        } else {
-            switch (activeFunction) {
-                case "":
-                case "function-c":
-                case "function-a":
-                case "function-f":
-                case "function-s":
-                case "function-l":
-                case "function-r":
-                case "function-o":
-                case "function-g":
-                    return true;
-                default:
-                    break;
-            }
+        switch (activeFunction) {
+            case "":
+            case "function-c":
+            case "function-a":
+            case "function-f":
+            case "function-s":
+            case "function-l":
+            case "function-r":
+            case "function-o":
+            case "function-g":
+                return true;
+            default:
+                break;
         }
         return false;
     }
 
     function areBlinkersActive(activeFunction) {
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            switch (activeFunction) {
-                case "function-c":
-                case "function-a":
-                case "function-f":
-                    return true;
-                default:
-                    break;
-            }
+        switch (activeFunction) {
+            case "function-c":
+            case "function-a":
+            case "function-f":
+                return true;
+            default:
+                break;
         }
         return false;
     }
@@ -818,26 +769,20 @@ led_strip.initialize = function (callback, scrollPosition) {
                 return false;
             case "function-r":
             case "function-b":
-                if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
-                    return false;
-                }
-                break;
             default:
                 return true;
         }
     }
 
     function isVtxActive(activeFunction) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            switch (activeFunction) {
-                case "function-v":
-                case "function-c":
-                case "function-a":
-                case "function-f":
-                    return true;
-                default:
-                    return false;
-            }
+        switch (activeFunction) {
+            case "function-v":
+            case "function-c":
+            case "function-a":
+            case "function-f":
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -846,23 +791,12 @@ led_strip.initialize = function (callback, scrollPosition) {
         const activeFunction = $('select.functionSelect').val();
         $('select.functionSelect').addClass(activeFunction);
 
-
-        if (semver.lte(FC.CONFIG.apiVersion, "1.18.0")) {
-            // <= 18
-            // Hide GPS (Func)
-            // Hide RSSI (O/L), Blink (Func)
-            // Hide Battery, RSSI (Func), Larson (O/L), Blink (O/L), Landing (O/L)
-            $(".extra_functions20").hide();
-            $(".mode_colors").hide();
-        } else {
-            // >= 20
-            // Show GPS (Func)
-            // Hide RSSI (O/L), Blink (Func)
-            // Show Battery, RSSI (Func), Larson (O/L), Blink (O/L), Landing (O/L)
-            $(".extra_functions20").show();
-            $(".mode_colors").show();
-        }
-
+        // >= 20
+        // Show GPS (Func)
+        // Hide RSSI (O/L), Blink (Func)
+        // Show Battery, RSSI (Func), Larson (O/L), Blink (O/L), Landing (O/L)
+        $(".extra_functions20").show();
+        $(".mode_colors").show();
 
         // set color modifiers (check-boxes) visibility
         $('.overlays').toggle(areOverlaysActive(activeFunction));
@@ -875,67 +809,50 @@ led_strip.initialize = function (callback, scrollPosition) {
 
         $('.vtxOverlay').toggle(isVtxActive(activeFunction));
 
-        // set directions visibility
-        if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
-            switch (activeFunction) {
-                case "function-r":
-                    $('.indicatorOverlay').hide();
-                    $('.directions').hide();
-                    break;
-                default:
-                    $('.indicatorOverlay').show();
-                    $('.directions').show();
-                    break;
-            }
+        $('.mode_colors').hide();
+
+        // set mode colors visibility
+
+        if (activeFunction === "function-f") {
+            $('.mode_colors').show();
         }
 
-        $('.mode_colors').hide();
-        if (semver.gte(FC.CONFIG.apiVersion, "1.19.0")) {
-            // set mode colors visibility
+        // set special colors visibility
+        $('.special_colors').show();
+        $('.mode_color-6-0').hide();
+        $('.mode_color-6-1').hide();
+        $('.mode_color-6-2').hide();
+        $('.mode_color-6-3').hide();
+        $('.mode_color-6-4').hide();
+        $('.mode_color-6-5').hide();
+        $('.mode_color-6-6').hide();
+        $('.mode_color-6-7').hide();
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-                if (activeFunction === "function-f") {
-                    $('.mode_colors').show();
-                }
-            }
-
-            // set special colors visibility
-            $('.special_colors').show();
-            $('.mode_color-6-0').hide();
-            $('.mode_color-6-1').hide();
-            $('.mode_color-6-2').hide();
-            $('.mode_color-6-3').hide();
-            $('.mode_color-6-4').hide();
-            $('.mode_color-6-5').hide();
-            $('.mode_color-6-6').hide();
-            $('.mode_color-6-7').hide();
-
-            switch (activeFunction) {
-                case "":           // none
-                case "function-f": // Modes & Orientation
-                case "function-l": // Battery
-                    // $('.mode_color-6-3').show(); // background
-                    $('.special_colors').hide();
-                    break;
-                case "function-g": // GPS
-                    $('.mode_color-6-5').show(); // no sats
-                    $('.mode_color-6-6').show(); // no lock
-                    $('.mode_color-6-7').show(); // locked
-                    // $('.mode_color-6-3').show(); // background
-                    break;
-                case "function-b": // Blink
-                    $('.mode_color-6-4').show(); // blink background
-                    break;
-                case "function-a": // Arm state
-                    $('.mode_color-6-0').show(); // disarmed
-                    $('.mode_color-6-1').show(); // armed
-                    break;
-
-                case "function-r": // Ring
-                default:
-                    $('.special_colors').hide();
+        switch (activeFunction) {
+            case "":           // none
+            case "function-f": // Modes & Orientation
+            case "function-l": // Battery
+                // $('.mode_color-6-3').show(); // background
+                $('.special_colors').hide();
                 break;
-            }
+            case "function-g": // GPS
+                $('.mode_color-6-5').show(); // no sats
+                $('.mode_color-6-6').show(); // no lock
+                $('.mode_color-6-7').show(); // locked
+                // $('.mode_color-6-3').show(); // background
+                break;
+            case "function-b": // Blink
+                $('.mode_color-6-4').show(); // blink background
+                break;
+            case "function-a": // Arm state
+                $('.mode_color-6-0').show(); // disarmed
+                $('.mode_color-6-1').show(); // armed
+                break;
+
+            case "function-r": // Ring
+            default:
+                $('.special_colors').hide();
+            break;
         }
     }
 
@@ -966,32 +883,20 @@ led_strip.initialize = function (callback, scrollPosition) {
     }
 
     function unselectOverlays(letter) {
-        if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
-            if (letter == 'b' || letter == 'r') {
-                unselectOverlay(letter, 'i');
-            }
-            if (letter == 'b' || letter == 'r' || letter == 'l' || letter == 'g') {
-                unselectOverlay(letter, 'w');
-                unselectOverlay(letter, 'v');
-                unselectOverlay(letter, 't');
-                unselectOverlay(letter, 's');
-            }
-        } else {
-            // MSP 1.20
-            if (letter == 'r' || letter == '') {
-                unselectOverlay(letter, 'o');
-                unselectOverlay(letter, 'b');
-                unselectOverlay(letter, 'n');
-                unselectOverlay(letter, 't');
-            }
-            if (letter == 'l' || letter == 'g' || letter == 's') {
-                unselectOverlay(letter, 'w');
-                unselectOverlay(letter, 'v');
-                unselectOverlay(letter, 't');
-                unselectOverlay(letter, 'o');
-                unselectOverlay(letter, 'b');
-                unselectOverlay(letter, 'n');
-            }
+        // MSP 1.20
+        if (letter == 'r' || letter == '') {
+            unselectOverlay(letter, 'o');
+            unselectOverlay(letter, 'b');
+            unselectOverlay(letter, 'n');
+            unselectOverlay(letter, 't');
+        }
+        if (letter == 'l' || letter == 'g' || letter == 's') {
+            unselectOverlay(letter, 'w');
+            unselectOverlay(letter, 'v');
+            unselectOverlay(letter, 't');
+            unselectOverlay(letter, 'o');
+            unselectOverlay(letter, 'b');
+            unselectOverlay(letter, 'n');
         }
     }
 

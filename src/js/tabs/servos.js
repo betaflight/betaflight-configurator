@@ -30,7 +30,7 @@ servos.initialize = function (callback) {
 
     function update_ui() {
 
-        if (semver.lt(FC.CONFIG.apiVersion, "1.12.0") || FC.SERVO_CONFIG.length === 0) {
+        if (FC.SERVO_CONFIG.length === 0) {
 
             $(".tab-servos").removeClass("supported");
             return;

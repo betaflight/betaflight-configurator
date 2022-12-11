@@ -76,9 +76,7 @@ motors.initialize = async function (callback) {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
         await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     }
-    if (semver.gte(FC.CONFIG.apiVersion, "1.8.0")) {
-        await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
-    }
+    await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
 
     load_html();
 
@@ -1127,10 +1125,6 @@ motors.initialize = async function (callback) {
             FC.PID_ADVANCED_CONFIG.use_unsyncedPwm = unsyncedPWMSwitchElement.is(':checked') ? 1 : 0;
             FC.PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
             FC.PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
-
-            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                FC.PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
-            }
 
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));

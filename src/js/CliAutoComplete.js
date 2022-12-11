@@ -532,34 +532,25 @@ CliAutoComplete._initTextcomplete = function() {
         }),
     ]);
 
-    if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
-        $textarea.textcomplete('register', [
-            strategy({ // "resource show all", from BF 4.0.0 onwards
-                match: /^(\s*resource\s+show\s+)(\w*)$/i,
-                search:  function(term, callback) {
-                    sendOnEnter = true;
-                    searcher(term, callback, ['all'], 1, true);
-                },
-                template: highlighterPrefix,
-            }),
-        ]);
-    }
-
+    $textarea.textcomplete('register', [
+        strategy({ // "resource show all", from BF 4.0.0 onwards
+            match: /^(\s*resource\s+show\s+)(\w*)$/i,
+            search:  function(term, callback) {
+                sendOnEnter = true;
+                searcher(term, callback, ['all'], 1, true);
+            },
+            template: highlighterPrefix,
+        }),
+    ]);
 
     // diff command
     const diffArgs1 = ["master", "profile", "rates", "all"];
     const diffArgs2 = [];
 
-    if (semver.lt(FC.CONFIG.flightControllerVersion, "3.4.0")) {
-        diffArgs2.push("showdefaults");
-    } else {
-        // above 3.4.0
-        diffArgs2.push("defaults");
-        if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
-            diffArgs1.push("hardware");
-            diffArgs2.push("bare");
-        }
-    }
+    // above 3.4.0
+    diffArgs2.push("defaults");
+    diffArgs1.push("hardware");
+    diffArgs2.push("bare");
 
     diffArgs1.sort();
     diffArgs2.sort();

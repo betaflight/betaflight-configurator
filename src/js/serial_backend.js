@@ -445,11 +445,7 @@ function processUid() {
         connectionTimestamp = Date.now();
         GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            processCraftName();
-        } else {
-            setRtc();
-        }
+        processCraftName();
     });
 }
 
@@ -471,19 +467,12 @@ async function processCraftName() {
 }
 
 function setRtc() {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-        MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
-    } else {
-        finishOpen();
-    }
+    MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
 }
 
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
     GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
-    if (semver.lt(FC.CONFIG.apiVersion, "1.4.0")) {
-        GUI.allowedTabs.splice(GUI.allowedTabs.indexOf('led_strip'), 1);
-    }
 
     if (GUI.isCordova()) {
         UI_PHONES.reset();
@@ -689,11 +678,7 @@ function have_sensor(sensors_detected, sensor_code) {
         case 'sonar':
             return bit_check(sensors_detected, 4);
         case 'gyro':
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                return bit_check(sensors_detected, 5);
-            } else {
-                return true;
-            }
+            return bit_check(sensors_detected, 5);
     }
     return false;
 }
@@ -704,11 +689,7 @@ function startLiveDataRefreshTimer() {
 }
 
 async function getStatus() {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
-        return MSP.promise(MSPCodes.MSP_STATUS_EX);
-    } else {
-        return MSP.promise(MSPCodes.MSP_STATUS);
-    }
+    return MSP.promise(MSPCodes.MSP_STATUS_EX);
 }
 
 async function update_live_status() {

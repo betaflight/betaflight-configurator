@@ -70,7 +70,7 @@ onboard_logging.initialize = function (callback) {
              *
              * The best we can do on those targets is check the BLACKBOX feature bit to identify support for Blackbox instead.
              */
-            if ((FC.BLACKBOX.supported || FC.DATAFLASH.supported) && (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33) || FC.FEATURE_CONFIG.features.isEnabled('BLACKBOX'))) {
+            if ((FC.BLACKBOX.supported || FC.DATAFLASH.supported) || FC.FEATURE_CONFIG.features.isEnabled('BLACKBOX')) {
                 blackboxSupport = 'yes';
             } else {
                 blackboxSupport = 'no';
@@ -107,12 +107,7 @@ onboard_logging.initialize = function (callback) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                         FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
-                    } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                         FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
-                    } else {
-                        const rate = loggingRatesSelect.val().split('/');
-                        FC.BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
-                        FC.BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
                     }
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
@@ -135,30 +130,24 @@ onboard_logging.initialize = function (callback) {
                 }
             }).change();
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-                if ((FC.SDCARD.supported && deviceSelect.val() == 2) || (FC.DATAFLASH.supported && deviceSelect.val() == 1)) {
+            if ((FC.SDCARD.supported && deviceSelect.val() == 2) || (FC.DATAFLASH.supported && deviceSelect.val() == 1)) {
 
-                    $(".tab-onboard_logging")
-                        .toggleClass("msc-supported", true);
+                $(".tab-onboard_logging")
+                    .toggleClass("msc-supported", true);
 
-                    $('a.onboardLoggingRebootMsc').click(function () {
-                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
+                $('a.onboardLoggingRebootMsc').click(function () {
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
 
-                        const buffer = [];
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                            if (GUI.operating_system === "Linux") {
-                                // Reboot into MSC using UTC time offset instead of user timezone
-                                // Linux seems to expect that the FAT file system timestamps are UTC based
-                                buffer.push(mspHelper.REBOOT_TYPES.MSC_UTC);
-                            } else {
-                                buffer.push(mspHelper.REBOOT_TYPES.MSC);
-                            }
-                        } else {
-                            buffer.push(mspHelper.REBOOT_TYPES.MSC);
-                        }
-                        MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
-                    });
-                }
+                    const buffer = [];
+                    if (GUI.operating_system === "Linux") {
+                        // Reboot into MSC using UTC time offset instead of user timezone
+                        // Linux seems to expect that the FAT file system timestamps are UTC based
+                        buffer.push(mspHelper.REBOOT_TYPES.MSC_UTC);
+                    } else {
+                        buffer.push(mspHelper.REBOOT_TYPES.MSC);
+                    }
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+                });
             }
 
             update_html();
@@ -170,24 +159,14 @@ onboard_logging.initialize = function (callback) {
     function populateDevices(deviceSelect) {
         deviceSelect.empty();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-            deviceSelect.append(`<option value="0">${i18n.getMessage('blackboxLoggingNone')}</option>`);
-            if (FC.DATAFLASH.supported) {
-                deviceSelect.append(`<option value="1">${i18n.getMessage('blackboxLoggingFlash')}</option>`);
-            }
-            if (FC.SDCARD.supported) {
-                deviceSelect.append(`<option value="2">${i18n.getMessage('blackboxLoggingSdCard')}</option>`);
-            }
-            deviceSelect.append(`<option value="3">${i18n.getMessage('blackboxLoggingSerial')}</option>`);
-        } else {
-            deviceSelect.append(`<option value="0">${i18n.getMessage('blackboxLoggingSerial')}</option>`);
-            if (FC.DATAFLASH.ready) {
-                deviceSelect.append(`<option value="1">${i18n.getMessage('blackboxLoggingFlash')}</option>`);
-            }
-            if (FC.SDCARD.supported) {
-                deviceSelect.append(`<option value="2">${i18n.getMessage('blackboxLoggingSdCard')}</option>`);
-            }
+        deviceSelect.append(`<option value="0">${i18n.getMessage('blackboxLoggingNone')}</option>`);
+        if (FC.DATAFLASH.supported) {
+            deviceSelect.append(`<option value="1">${i18n.getMessage('blackboxLoggingFlash')}</option>`);
         }
+        if (FC.SDCARD.supported) {
+            deviceSelect.append(`<option value="2">${i18n.getMessage('blackboxLoggingSdCard')}</option>`);
+        }
+        deviceSelect.append(`<option value="3">${i18n.getMessage('blackboxLoggingSerial')}</option>`);
 
         deviceSelect.val(FC.BLACKBOX.blackboxDevice);
     }
@@ -205,9 +184,6 @@ onboard_logging.initialize = function (callback) {
 
             let pidRateBase = 8000;
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41) && FC.PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
-                pidRateBase = 32000;
-            }
             pidRate = pidRateBase / FC.PID_ADVANCED_CONFIG.gyro_sync_denom / FC.PID_ADVANCED_CONFIG.pid_process_denom;
         }
 
@@ -223,7 +199,7 @@ onboard_logging.initialize = function (callback) {
                 loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
             }
             loggingRatesSelect.val(FC.BLACKBOX.blackboxSampleRate);
-        } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+        } else {
             loggingRates = [
                 {text: "Disabled", hz: 0,     p_denom: 0},
                 {text: "500 Hz",   hz: 500,   p_denom: 16},
@@ -243,36 +219,6 @@ onboard_logging.initialize = function (callback) {
             });
 
             loggingRatesSelect.val(FC.BLACKBOX.blackboxPDenom);
-        }
-        else {
-            loggingRates = [
-                    {num: 1, denom: 1},
-                    {num: 1, denom: 2},
-                    {num: 1, denom: 3},
-                    {num: 1, denom: 4},
-                    {num: 1, denom: 5},
-                    {num: 1, denom: 6},
-                    {num: 1, denom: 7},
-                    {num: 1, denom: 8},
-                    {num: 1, denom: 16},
-                    {num: 1, denom: 32},
-                ];
-
-
-            for (let i = 0; i < loggingRates.length; i++) {
-                let loggingRate = Math.round(pidRate / loggingRates[i].denom);
-                let loggingRateUnit = " Hz";
-                if (loggingRate !== Infinity) {
-                    if (gcd(loggingRate, 1000) === 1000) {
-                        loggingRate /= 1000;
-                        loggingRateUnit = " kHz";
-                    }
-                }
-                loggingRatesSelect.append(`<option value="${loggingRates[i].num}/${loggingRates[i].denom}">${
-                     loggingRate}${loggingRateUnit} (${Math.round(loggingRates[i].num / loggingRates[i].denom * 100)}%)</option>`);
-
-            }
-            loggingRatesSelect.val(`${FC.BLACKBOX.blackboxRateNum}/${FC.BLACKBOX.blackboxRateDenom}`);
         }
     }
 
@@ -448,16 +394,14 @@ onboard_logging.initialize = function (callback) {
             .toggleClass("sdcard-initializing", FC.SDCARD.state === MSP.SDCARD_STATE_CARD_INIT || FC.SDCARD.state === MSP.SDCARD_STATE_FS_INIT)
             .toggleClass("sdcard-ready", FC.SDCARD.state === MSP.SDCARD_STATE_READY);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-            const mscIsReady = dataflashPresent || (FC.SDCARD.state === MSP.SDCARD_STATE_READY);
-            $(".tab-onboard_logging")
-                .toggleClass("msc-not-ready", !mscIsReady);
+        const mscIsReady = dataflashPresent || (FC.SDCARD.state === MSP.SDCARD_STATE_READY);
+        $(".tab-onboard_logging")
+            .toggleClass("msc-not-ready", !mscIsReady);
 
-            if (!mscIsReady) {
-                $('a.onboardLoggingRebootMsc').addClass('disabled');
-            } else {
-                $('a.onboardLoggingRebootMsc').removeClass('disabled');
-            }
+        if (!mscIsReady) {
+            $('a.onboardLoggingRebootMsc').addClass('disabled');
+        } else {
+            $('a.onboardLoggingRebootMsc').removeClass('disabled');
         }
 
         let loggingStatus;
@@ -548,11 +492,7 @@ onboard_logging.initialize = function (callback) {
     function flash_save_begin() {
         if (GUI.connected_to) {
             if (FC.boardHasVcp()) {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-                    self.blockSize = self.VCP_BLOCK_SIZE;
-                } else {
-                    self.blockSize = self.VCP_BLOCK_SIZE_3_0;
-                }
+                self.blockSize = self.VCP_BLOCK_SIZE;
             } else {
                 self.blockSize = self.BLOCK_SIZE;
             }
