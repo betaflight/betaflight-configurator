@@ -25,9 +25,36 @@ setup.initialize = function (callback) {
 
     MSP.send_message(MSPCodes.MSP_ACC_TRIM, false, false, load_status);
 
+    function experimentalBackupRestore() {
+        const backupButton = $('#content .backup');
+        const restoreButton = $('#content .restore');
+
+        backupButton.on('click', () => configuration_backup(() => GUI.log(i18n.getMessage('initialSetupBackupSuccess'))));
+
+        restoreButton.on('click', () => configuration_restore(() => {
+            // get latest settings
+            TABS.setup.initialize();
+
+            GUI.log(i18n.getMessage('initialSetupRestoreSuccess'));
+        }));
+
+        if (CONFIGURATOR.virtualMode) {
+            // saving and uploading an imaginary config to hardware is a bad idea
+            backupButton.addClass('disabled');
+        } else {
+            restoreButton.addClass('disabled');
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                $('.backupRestore').hide();
+            }
+        }
+    }
+
     function process_html() {
         // translate to user-selected language
         i18n.localizePage();
+
+        experimentalBackupRestore();
 
         // initialize 3D Model
         self.initModel();
@@ -160,8 +187,6 @@ setup.initialize = function (callback) {
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading');
 
-        arming_disable_flags_e.hide();
-
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
         const prepareDisarmFlags = function() {
@@ -232,7 +257,9 @@ setup.initialize = function (callback) {
 
         function get_slow_data() {
 
-            MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
+            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
+
+                console.log(FC.CONFIG.armingDisableFlags);
 
                 $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags == 0);
 

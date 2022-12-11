@@ -44,25 +44,18 @@ class EscProtocols
             EscProtocols.PROTOCOL_ONESHOT125,
             EscProtocols.PROTOCOL_ONESHOT42,
             EscProtocols.PROTOCOL_MULTISHOT,
+            EscProtocols.PROTOCOL_BRUSHED,
+            EscProtocols.PROTOCOL_DSHOT150,
+            EscProtocols.PROTOCOL_DSHOT300,
+            EscProtocols.PROTOCOL_DSHOT600,
         ];
 
-        if (semver.gte(apiVersion, "1.20.0")) {
-            escProtocols.push(EscProtocols.PROTOCOL_BRUSHED);
+
+        if (semver.lt(apiVersion, API_VERSION_1_42)) {
+            escProtocols.push(EscProtocols.PROTOCOL_DSHOT1200);
         }
 
-        if (semver.gte(apiVersion, API_VERSION_1_31)) {
-            escProtocols.push(EscProtocols.PROTOCOL_DSHOT150);
-            escProtocols.push(EscProtocols.PROTOCOL_DSHOT300);
-            escProtocols.push(EscProtocols.PROTOCOL_DSHOT600);
-
-            if (semver.lt(apiVersion, API_VERSION_1_42)) {
-                escProtocols.push(EscProtocols.PROTOCOL_DSHOT1200);
-            }
-        }
-
-        if (semver.gte(apiVersion, API_VERSION_1_36)) {
-            escProtocols.push(EscProtocols.PROTOCOL_PROSHOT1000);
-        }
+        escProtocols.push(EscProtocols.PROTOCOL_PROSHOT1000);
 
         if (semver.gte(apiVersion, API_VERSION_1_43)) {
             escProtocols.push(EscProtocols.PROTOCOL_DISABLED);
@@ -73,22 +66,7 @@ class EscProtocols
 
     static ReorderPwmProtocols(apiVersion, protocolIndex)
     {
-        let result = protocolIndex;
-
-        if (semver.lt(apiVersion, "1.26.0")) {
-            switch (protocolIndex) {
-                case 5:
-                    result = 7;
-                    break;
-                case 7:
-                    result = 5;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return result;
+        return protocolIndex;
     }
 
 

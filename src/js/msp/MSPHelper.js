@@ -2220,14 +2220,9 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
         if (!response.crcError) {
             const chunkAddress = response.data.readU32();
 
-            let headerSize = 4;
-            let dataSize = response.data.buffer.byteLength - headerSize;
-            let dataCompressionType = 0;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-                headerSize = headerSize + 3;
-                dataSize = response.data.readU16();
-                dataCompressionType = response.data.readU8();
-            }
+            const headerSize = 7;
+            const dataSize = response.data.readU16();
+            const dataCompressionType = response.data.readU8();
 
             // Verify that the address of the memory returned matches what the caller asked for and there was not a CRC error
             if (chunkAddress == address) {

@@ -44,21 +44,19 @@ export function checkChromeRuntimeError() {
 }
 
 const majorFirmwareVersions = {
+    "1.45": "4.4.*",
+    "1.44": "4.3.*",
     "1.43": "4.2.*",
     "1.42": "4.1.*",
     "1.41": "4.0.*",
-    "1.40": "3.5.*",
-    "1.39": "3.4.*",
-    "1.37": "3.3.0",
-    "1.36": "3.2.*",
-    "1.31": "3.1.0",
 };
 
 export function generateVirtualApiVersions() {
     const firmwareVersionDropdown = document.getElementById("firmware-version-dropdown");
     const max = semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
+    const min = semver.minor(CONFIGURATOR.API_VERSION_ACCEPTED);
 
-    for (let i = max; i > 0; i--) {
+    for (let i = max; i >= min; i--) {
         const option = document.createElement("option");
         const verNum = `1.${i}`;
         option.value = `${verNum}.0`;
@@ -73,13 +71,9 @@ export function generateVirtualApiVersions() {
         firmwareVersionDropdown.appendChild(option);
     }
 }
-export function getMixerImageSrc(mixerIndex, reverseMotorDir, apiVersion)
-{
-    let reverse = "";
 
-    if (semver.gte(apiVersion, API_VERSION_1_36)) {
-        reverse = reverseMotorDir ? "_reversed" : "";
-    }
+export function getMixerImageSrc(mixerIndex, reverseMotorDir) {
+    const reverse = reverseMotorDir ? "_reversed" : "";
 
     return `./resources/motor_order/${mixerList[mixerIndex - 1].image}${reverse}.svg`;
 }
