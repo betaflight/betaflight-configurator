@@ -653,7 +653,7 @@ OSD.loadDisplayFields = function() {
             },
             draw_order: 40,
             positionable() {
-                return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39) ? true : false;
+                return true;
             },
             preview() {
                 return FONT.symbol(SYM.AH_CENTER_LINE) + FONT.symbol(SYM.AH_CENTER) + FONT.symbol(SYM.AH_CENTER_LINE_RIGHT);
@@ -668,7 +668,7 @@ OSD.loadDisplayFields = function() {
             },
             draw_order: 10,
             positionable() {
-                return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39) ? true : false;
+                return true;
             },
             preview() {
                 const artificialHorizon = [];
@@ -701,7 +701,7 @@ OSD.loadDisplayFields = function() {
             },
             draw_order: 50,
             positionable() {
-                return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39) ? true : false;
+                return true;
             },
             preview() {
 
@@ -747,7 +747,7 @@ OSD.loadDisplayFields = function() {
             draw_order: 130,
             positionable: true,
             preview() {
-                return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36) ? ` 42.00${FONT.symbol(SYM.AMP)}` : `${FONT.symbol(SYM.AMP)}42.0`;
+                return ` 42.00${FONT.symbol(SYM.AMP)}`;
             },
         },
         MAH_DRAWN: {
@@ -758,7 +758,7 @@ OSD.loadDisplayFields = function() {
             draw_order: 140,
             positionable: true,
             preview() {
-                return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36) ? ` 690${FONT.symbol(SYM.MAH)}` : `${FONT.symbol(SYM.MAH)}690`;
+                return ` 690${FONT.symbol(SYM.MAH)}`;
             },
         },
         CRAFT_NAME: {
@@ -910,7 +910,7 @@ OSD.loadDisplayFields = function() {
             draw_order: 200,
             positionable: true,
             preview() {
-                return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36) ? ' 142W' : '142W';
+                return ' 142W';
             },
         },
         PID_RATE_PROFILE: {
@@ -1801,173 +1801,106 @@ OSD.searchLimitsElement = function(arrayElements) {
 // Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
 OSD.chooseFields = function() {
     let F = OSD.ALL_DISPLAY_FIELDS;
-    // version 3.0.1
-    if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-        OSD.constants.DISPLAY_FIELDS = [
-            F.RSSI_VALUE,
-            F.MAIN_BATT_VOLTAGE,
-            F.CROSSHAIRS,
-            F.ARTIFICIAL_HORIZON,
-            F.HORIZON_SIDEBARS,
-        ];
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                F.ONTIME,
-                F.FLYTIME,
-            ]);
-        } else {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                F.TIMER_1,
-                F.TIMER_2,
-            ]);
-        }
+    OSD.constants.DISPLAY_FIELDS = [
+        F.RSSI_VALUE,
+        F.MAIN_BATT_VOLTAGE,
+        F.CROSSHAIRS,
+        F.ARTIFICIAL_HORIZON,
+        F.HORIZON_SIDEBARS,
+        F.TIMER_1,
+        F.TIMER_2,
+        F.FLYMODE,
+        F.CRAFT_NAME,
+        F.THROTTLE_POSITION,
+        F.VTX_CHANNEL,
+        F.CURRENT_DRAW,
+        F.MAH_DRAWN,
+        F.GPS_SPEED,
+        F.GPS_SATS,
+        F.ALTITUDE,
+        F.PID_ROLL,
+        F.PID_PITCH,
+        F.PID_YAW,
+        F.POWER,
+        F.PID_RATE_PROFILE,
+        F.WARNINGS,
+        F.AVG_CELL_VOLTAGE,
+        F.GPS_LON,
+        F.GPS_LAT,
+        F.DEBUG,
+        F.PITCH_ANGLE,
+        F.ROLL_ANGLE,
+        F.MAIN_BATT_USAGE,
+        F.DISARMED,
+        F.HOME_DIR,
+        F.HOME_DIST,
+        F.NUMERICAL_HEADING,
+        F.NUMERICAL_VARIO,
+        F.COMPASS_BAR,
+        F.ESC_TEMPERATURE,
+        F.ESC_RPM,
+        F.REMAINING_TIME_ESTIMATE,
+        F.RTC_DATE_TIME,
+        F.ADJUSTMENT_RANGE,
+        F.CORE_TEMPERATURE,
+        F.ANTI_GRAVITY,
+        F.G_FORCE,
+        F.MOTOR_DIAG,
+        F.LOG_STATUS,
+        F.FLIP_ARROW,
+        F.LINK_QUALITY,
+        F.FLIGHT_DIST,
+        F.STICK_OVERLAY_LEFT,
+        F.STICK_OVERLAY_RIGHT,
+        // show either DISPLAY_NAME or PILOT_NAME depending on the MSP version
+        (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME),
+        F.ESC_RPM_FREQ,
+    ];
 
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-            F.FLYMODE,
-            F.CRAFT_NAME,
-            F.THROTTLE_POSITION,
-            F.VTX_CHANNEL,
-            F.CURRENT_DRAW,
-            F.MAH_DRAWN,
-            F.GPS_SPEED,
-            F.GPS_SATS,
-            F.ALTITUDE,
+            F.RATE_PROFILE_NAME,
+            F.PID_PROFILE_NAME,
+            F.OSD_PROFILE_NAME,
+            F.RSSI_DBM_VALUE,
         ]);
+    }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                F.PID_ROLL,
-                F.PID_PITCH,
-                F.PID_YAW,
-                F.POWER,
-            ]);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
-                OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                    F.PID_RATE_PROFILE,
-                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36) ? F.WARNINGS : F.BATTERY_WARNING,
-                    F.AVG_CELL_VOLTAGE,
-                ]);
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_34)) {
-                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                        F.GPS_LON,
-                        F.GPS_LAT,
-                        F.DEBUG,
-                    ]);
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_35)) {
-                        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                            F.PITCH_ANGLE,
-                            F.ROLL_ANGLE,
-                        ]);
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                F.MAIN_BATT_USAGE,
-                                F.DISARMED,
-                                F.HOME_DIR,
-                                F.HOME_DIST,
-                                F.NUMERICAL_HEADING,
-                                F.NUMERICAL_VARIO,
-                                F.COMPASS_BAR,
-                                F.ESC_TEMPERATURE,
-                                F.ESC_RPM,
-                            ]);
-                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-                                OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                    F.REMAINING_TIME_ESTIMATE,
-                                    F.RTC_DATE_TIME,
-                                    F.ADJUSTMENT_RANGE,
-                                    F.CORE_TEMPERATURE,
-                                ]);
-                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                        F.ANTI_GRAVITY,
-                                    ]);
-                                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-                                        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                            F.G_FORCE,
-                                        ]);
-                                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                                            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                                F.MOTOR_DIAG,
-                                                F.LOG_STATUS,
-                                                F.FLIP_ARROW,
-                                                F.LINK_QUALITY,
-                                                F.FLIGHT_DIST,
-                                                F.STICK_OVERLAY_LEFT,
-                                                F.STICK_OVERLAY_RIGHT,
-                                                // show either DISPLAY_NAME or PILOT_NAME depending on the MSP version
-                                                (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME),
-                                                F.ESC_RPM_FREQ,
-                                            ]);
-                                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                                                OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                                    F.RATE_PROFILE_NAME,
-                                                    F.PID_PROFILE_NAME,
-                                                    F.OSD_PROFILE_NAME,
-                                                    F.RSSI_DBM_VALUE,
-                                                ]);
-                                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                                                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                                        F.RC_CHANNELS,
-                                                        F.CAMERA_FRAME,
-                                                        F.OSD_EFFICIENCY,
-                                                    ]);
-                                                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                                                        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                                            F.TOTAL_FLIGHTS,
-                                                            F.OSD_UP_DOWN_REFERENCE,
-                                                            F.OSD_TX_UPLINK_POWER,
-                                                        ]);
-                                                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                                                            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                                                                F.WH_DRAWN,
-                                                                F.AUX_VALUE,
-                                                                F.READY_MODE,
-                                                                F.RSNR_VALUE,
-                                                                F.SYS_GOGGLE_VOLTAGE,
-                                                                F.SYS_VTX_VOLTAGE,
-                                                                F.SYS_BITRATE,
-                                                                F.SYS_DELAY,
-                                                                F.SYS_DISTANCE,
-                                                                F.SYS_LQ,
-                                                                F.SYS_GOGGLE_DVR,
-                                                                F.SYS_VTX_DVR,
-                                                                F.SYS_WARNINGS,
-                                                                F.SYS_VTX_TEMP,
-                                                                F.SYS_FAN_SPEED,
-                                                            ]);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        // version 3.0.0
-        OSD.constants.DISPLAY_FIELDS = [
-            F.MAIN_BATT_VOLTAGE,
-            F.RSSI_VALUE,
-            F.TIMER,
-            F.THROTTLE_POSITION,
-            F.CPU_LOAD,
-            F.VTX_CHANNEL,
-            F.VOLTAGE_WARNING,
-            F.ARMED,
-            F.DISARMED,
-            F.ARTIFICIAL_HORIZON,
-            F.HORIZON_SIDEBARS,
-            F.CURRENT_DRAW,
-            F.MAH_DRAWN,
-            F.CRAFT_NAME,
-            F.ALTITUDE,
-        ];
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.RC_CHANNELS,
+            F.CAMERA_FRAME,
+            F.OSD_EFFICIENCY,
+        ]);
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.TOTAL_FLIGHTS,
+            F.OSD_UP_DOWN_REFERENCE,
+            F.OSD_TX_UPLINK_POWER,
+        ]);
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.WH_DRAWN,
+            F.AUX_VALUE,
+            F.READY_MODE,
+            F.RSNR_VALUE,
+            F.SYS_GOGGLE_VOLTAGE,
+            F.SYS_VTX_VOLTAGE,
+            F.SYS_BITRATE,
+            F.SYS_DELAY,
+            F.SYS_DISTANCE,
+            F.SYS_LQ,
+            F.SYS_GOGGLE_DVR,
+            F.SYS_VTX_DVR,
+            F.SYS_WARNINGS,
+            F.SYS_VTX_TEMP,
+            F.SYS_FAN_SPEED,
+        ]);
     }
 
     // Choose statistic fields
@@ -1982,72 +1915,50 @@ OSD.chooseFields = function() {
     // that needs to be implemented here as well. Simply appending new stats does not
     // require a completely new section for the version - only reordering.
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-        OSD.constants.STATISTIC_FIELDS = [
-            F.MAX_SPEED,
-            F.MIN_BATTERY,
-            F.MIN_RSSI,
-            F.MAX_CURRENT,
-            F.USED_MAH,
-            F.MAX_ALTITUDE,
-            F.BLACKBOX,
-            F.END_BATTERY,
-            F.TIMER_1,
-            F.TIMER_2,
-            F.MAX_DISTANCE,
-            F.BLACKBOX_LOG_NUMBER,
-        ];
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-            OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-                F.RTC_DATE_TIME,
-            ]);
-        }
-    } else {  // Starting with 1.39.0 OSD stats are reordered to match how they're presented on screen
-        OSD.constants.STATISTIC_FIELDS = [
-            F.RTC_DATE_TIME,
-            F.TIMER_1,
-            F.TIMER_2,
-            F.MAX_SPEED,
-            F.MAX_DISTANCE,
-            F.MIN_BATTERY,
-            F.END_BATTERY,
-            F.STAT_BATTERY,
-            F.MIN_RSSI,
-            F.MAX_CURRENT,
-            F.USED_MAH,
-            F.MAX_ALTITUDE,
-            F.BLACKBOX,
-            F.BLACKBOX_LOG_NUMBER,
-        ];
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-            OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-                F.MAX_G_FORCE,
-                F.MAX_ESC_TEMP,
-                F.MAX_ESC_RPM,
-                F.MIN_LINK_QUALITY,
-                F.FLIGHT_DISTANCE,
-                F.MAX_FFT,
-            ]);
-        }
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-                F.STAT_TOTAL_FLIGHTS,
-                F.STAT_TOTAL_FLIGHT_TIME,
-                F.STAT_TOTAL_FLIGHT_DIST,
-                F.MIN_RSSI_DBM,
-            ]);
-        }
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-                F.USED_WH,
-                F.MIN_RSNR,
-            ]);
-        }
+    // Starting with 1.39.0 OSD stats are reordered to match how they're presented on screen
+    OSD.constants.STATISTIC_FIELDS = [
+        F.RTC_DATE_TIME,
+        F.TIMER_1,
+        F.TIMER_2,
+        F.MAX_SPEED,
+        F.MAX_DISTANCE,
+        F.MIN_BATTERY,
+        F.END_BATTERY,
+        F.STAT_BATTERY,
+        F.MIN_RSSI,
+        F.MAX_CURRENT,
+        F.USED_MAH,
+        F.MAX_ALTITUDE,
+        F.BLACKBOX,
+        F.BLACKBOX_LOG_NUMBER,
+        F.MAX_G_FORCE,
+        F.MAX_ESC_TEMP,
+        F.MAX_ESC_RPM,
+        F.MIN_LINK_QUALITY,
+        F.FLIGHT_DISTANCE,
+        F.MAX_FFT,
+    ];
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+            F.STAT_TOTAL_FLIGHTS,
+            F.STAT_TOTAL_FLIGHT_TIME,
+            F.STAT_TOTAL_FLIGHT_DIST,
+            F.MIN_RSSI_DBM,
+        ]);
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+            F.USED_WH,
+            F.MIN_RSNR,
+        ]);
     }
 
     // Choose warnings
     // Nothing much to do here, I'm preempting there being new warnings
     F = OSD.constants.ALL_WARNINGS;
+
     OSD.constants.WARNINGS = [
         F.ARMING_DISABLED,
         F.BATTERY_NOT_FULL,
@@ -2055,28 +1966,21 @@ OSD.chooseFields = function() {
         F.BATTERY_CRITICAL,
         F.VISUAL_BEEPER,
         F.CRASH_FLIP_MODE,
+        F.ESC_FAIL,
+        F.CORE_TEMPERATURE,
+        F.RC_SMOOTHING_FAILURE,
+        F.FAILSAFE,
+        F.LAUNCH_CONTROL,
+        F.GPS_RESCUE_UNAVAILABLE,
+        F.GPS_RESCUE_DISABLED,
     ];
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
-            F.ESC_FAIL,
-            F.CORE_TEMPERATURE,
-            F.RC_SMOOTHING_FAILURE,
-        ]);
-    }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
-            F.FAILSAFE,
-            F.LAUNCH_CONTROL,
-            F.GPS_RESCUE_UNAVAILABLE,
-            F.GPS_RESCUE_DISABLED,
-        ]);
-    }
 
     OSD.constants.TIMER_TYPES = [
         'ON_TIME',
         'TOTAL_ARMED_TIME',
         'LAST_ARMED_TIME',
     ];
+
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
         OSD.constants.TIMER_TYPES = OSD.constants.TIMER_TYPES.concat([
             'ON_ARM_TIME',
@@ -2212,44 +2116,36 @@ OSD.msp = {
     },
     encodeOther() {
         const result = [-1, OSD.data.video_system];
-        if (OSD.data.state.haveOsdFeature && semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
+        if (OSD.data.state.haveOsdFeature) {
             result.push8(OSD.data.unit_mode);
             // watch out, order matters! match the firmware
             result.push8(OSD.data.alarms.rssi.value);
             result.push16(OSD.data.alarms.cap.value);
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                result.push16(OSD.data.alarms.time.value);
-            } else {
-                // This value is unused by the firmware with configurable timers
-                result.push16(0);
-            }
+            result.push16(0); // This value is unused by the firmware with configurable timers
             result.push16(OSD.data.alarms.alt.value);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-                let warningFlags = 0;
-                for (let i = 0; i < OSD.data.warnings.length; i++) {
-                    if (OSD.data.warnings[i].enabled) {
-                        warningFlags |= (1 << i);
-                    }
+
+            let warningFlags = 0;
+            for (let i = 0; i < OSD.data.warnings.length; i++) {
+                if (OSD.data.warnings[i].enabled) {
+                    warningFlags |= (1 << i);
                 }
+            }
 
-                if (CONFIGURATOR.virtualMode) {
-                    OSD.virtualMode.warningFlags = warningFlags;
-                }
+            if (CONFIGURATOR.virtualMode) {
+                OSD.virtualMode.warningFlags = warningFlags;
+            }
 
-                console.log(warningFlags);
-                result.push16(warningFlags);
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                    result.push32(warningFlags);
+            console.log(warningFlags);
+            result.push16(warningFlags);
+            result.push32(warningFlags);
 
-                    result.push8(OSD.data.osd_profiles.selected + 1);
+            result.push8(OSD.data.osd_profiles.selected + 1);
 
-                    result.push8(OSD.data.parameters.overlayRadioMode);
-                }
+            result.push8(OSD.data.parameters.overlayRadioMode);
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    result.push8(OSD.data.parameters.cameraFrameWidth);
-                    result.push8(OSD.data.parameters.cameraFrameHeight);
-                }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                result.push8(OSD.data.parameters.cameraFrameWidth);
+                result.push8(OSD.data.parameters.cameraFrameHeight);
             }
         }
         return result;
@@ -2331,21 +2227,14 @@ OSD.msp = {
 
         if (d.flags > 0 && payload.length > 1) {
             d.video_system = view.readU8();
-            if (semver.gte(FC.CONFIG.apiVersion, "1.21.0") && bit_check(d.flags, 0)) {
+            if (bit_check(d.flags, 0)) {
                 d.unit_mode = view.readU8();
                 d.alarms = {};
                 d.alarms['rssi'] = { display_name: i18n.getMessage('osdTimerAlarmOptionRssi'), value: view.readU8() };
                 d.alarms['cap'] = { display_name: i18n.getMessage('osdTimerAlarmOptionCapacity'), value: view.readU16() };
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                    d.alarms['time'] = { display_name: 'Minutes', value: view.readU16() };
-                } else {
-                    // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
-                    view.readU8();
-                    const tmp = view.readU8();
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-                        displayItemsCountActual = tmp;
-                    }
-                }
+                // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
+                view.readU8();
+                displayItemsCountActual = view.readU8();
 
                 d.alarms['alt'] = { display_name: i18n.getMessage('osdTimerAlarmOptionAltitude'), value: view.readU16() };
             }
@@ -2353,12 +2242,12 @@ OSD.msp = {
 
         d.state = {};
         d.state.haveSomeOsd = (d.flags !== 0);
-        d.state.haveMax7456Configured = bit_check(d.flags, 4) || (d.flags === 1 && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_34));
+        d.state.haveMax7456Configured = bit_check(d.flags, 4);
         d.state.haveFrSkyOSDConfigured = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) && bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
         d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5) || (d.state.haveMax7456FontDeviceConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_43));
-        d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags === 1 && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_34));
-        d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_34);
+        d.state.haveOsdFeature = bit_check(d.flags, 0);
+        d.state.isOsdSlave = bit_check(d.flags, 1);
         d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
         d.displayItems = [];
@@ -2374,110 +2263,95 @@ OSD.msp = {
         // Read display element positions, the parsing is done later because we need the number of profiles
         const itemsPositionsRead = [];
         while (view.offset < view.byteLength && itemsPositionsRead.length < displayItemsCountActual) {
-            let v = null;
-            if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-                v = view.readU16();
-            } else {
-                v = view.read16();
-            }
+            const v = view.readU16();
             itemsPositionsRead.push(v);
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            // Parse statistics display enable
-            const expectedStatsCount = view.readU8();
-            if (expectedStatsCount !== OSD.constants.STATISTIC_FIELDS.length) {
-                console.error(`Firmware is transmitting a different number of statistics (${expectedStatsCount}) to what the configurator ` +
-                    `is expecting (${OSD.constants.STATISTIC_FIELDS.length})`);
-            }
+        // Parse statistics display enable
+        const expectedStatsCount = view.readU8();
+        if (expectedStatsCount !== OSD.constants.STATISTIC_FIELDS.length) {
+            console.error(`Firmware is transmitting a different number of statistics (${expectedStatsCount}) to what the configurator ` +
+                `is expecting (${OSD.constants.STATISTIC_FIELDS.length})`);
+        }
 
-            for (let i = 0; i < expectedStatsCount; i++) {
+        for (let i = 0; i < expectedStatsCount; i++) {
 
-                const v = view.readU8();
+            const v = view.readU8();
 
-                // Known statistics field
-                if (i < OSD.constants.STATISTIC_FIELDS.length) {
+            // Known statistics field
+            if (i < OSD.constants.STATISTIC_FIELDS.length) {
 
-                    const c = OSD.constants.STATISTIC_FIELDS[i];
-                    d.statItems.push({
-                        name: c.name,
-                        text: c.text,
-                        desc: c.desc,
-                        index: i,
-                        enabled: v === 1,
-                    });
+                const c = OSD.constants.STATISTIC_FIELDS[i];
+                d.statItems.push({
+                    name: c.name,
+                    text: c.text,
+                    desc: c.desc,
+                    index: i,
+                    enabled: v === 1,
+                });
 
-                // Read all the data for any statistics we don't know about
-                } else {
-                    const statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
-                    d.statItems.push({
-                        name: 'UNKNOWN',
-                        text: ['osdTextStatUnknown', statisticNumber],
-                        desc: 'osdDescStatUnknown',
-                        index: i,
-                        enabled: v === 1,
-                    });
-                }
-            }
-
-            // Parse configurable timers
-            let expectedTimersCount = view.readU8();
-            while (view.offset < view.byteLength && expectedTimersCount > 0) {
-                const v = view.readU16();
-                const j = d.timers.length;
-                d.timers.push($.extend({
-                    index: j,
-                }, this.helpers.unpack.timer(v)));
-                expectedTimersCount--;
-            }
-            // Read all the data for any timers we don't know about
-            while (expectedTimersCount > 0) {
-                view.readU16();
-                expectedTimersCount--;
-            }
-
-            // Parse enabled warnings
-            let warningCount = OSD.constants.WARNINGS.length;
-            let warningFlags = view.readU16();
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                warningCount = view.readU8();
-                // the flags were replaced with a 32bit version
-                warningFlags = view.readU32();
-            }
-            for (let i = 0; i < warningCount; i++) {
-
-                const enabled = (warningFlags & (1 << i)) !== 0;
-
-                // Known warning field
-                if (i < OSD.constants.WARNINGS.length) {
-                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
-
-                // Push Unknown Warning field
-                } else {
-                    const  warningNumber = i - OSD.constants.WARNINGS.length + 1;
-                    d.warnings.push({
-                        name: 'UNKNOWN',
-                        text: ['osdWarningTextUnknown', warningNumber],
-                        desc: 'osdWarningUnknown',
-                        enabled,
-                    });
-
-                }
+            // Read all the data for any statistics we don't know about
+            } else {
+                const statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
+                d.statItems.push({
+                    name: 'UNKNOWN',
+                    text: ['osdTextStatUnknown', statisticNumber],
+                    desc: 'osdDescStatUnknown',
+                    index: i,
+                    enabled: v === 1,
+                });
             }
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-            // OSD profiles
-            d.osd_profiles.number = view.readU8();
-            d.osd_profiles.selected = view.readU8() - 1;
-
-            // Overlay radio mode
-            d.parameters.overlayRadioMode = view.readU8();
-
-        } else {
-            d.osd_profiles.number = 1;
-            d.osd_profiles.selected = 0;
+        // Parse configurable timers
+        let expectedTimersCount = view.readU8();
+        while (view.offset < view.byteLength && expectedTimersCount > 0) {
+            const v = view.readU16();
+            const j = d.timers.length;
+            d.timers.push($.extend({
+                index: j,
+            }, this.helpers.unpack.timer(v)));
+            expectedTimersCount--;
         }
+        // Read all the data for any timers we don't know about
+        while (expectedTimersCount > 0) {
+            view.readU16();
+            expectedTimersCount--;
+        }
+
+        // Parse enabled warnings
+        view.readU16(); // obsolete
+        const warningCount = view.readU8();
+        // the flags were replaced with a 32bit version
+        const warningFlags = view.readU32();
+
+        for (let i = 0; i < warningCount; i++) {
+
+            const enabled = (warningFlags & (1 << i)) !== 0;
+
+            // Known warning field
+            if (i < OSD.constants.WARNINGS.length) {
+                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+
+            // Push Unknown Warning field
+            } else {
+                const  warningNumber = i - OSD.constants.WARNINGS.length + 1;
+                d.warnings.push({
+                    name: 'UNKNOWN',
+                    text: ['osdWarningTextUnknown', warningNumber],
+                    desc: 'osdWarningUnknown',
+                    enabled,
+                });
+
+            }
+        }
+
+        // OSD profiles
+        d.osd_profiles.number = view.readU8();
+        d.osd_profiles.selected = view.readU8() - 1;
+
+        // Overlay radio mode
+        d.parameters.overlayRadioMode = view.readU8();
 
         // Camera frame size
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
@@ -2497,66 +2371,64 @@ OSD.msp = {
         d.warnings = [];
         d.timers = [];
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            // Parse statistics display enable
-            const expectedStatsCount = OSD.constants.STATISTIC_FIELDS.length;
+        // Parse statistics display enable
+        const expectedStatsCount = OSD.constants.STATISTIC_FIELDS.length;
 
-            for (let i = 0; i < expectedStatsCount; i++) {
-                const v = OSD.virtualMode.statisticsState[i] ? 1 : 0;
+        for (let i = 0; i < expectedStatsCount; i++) {
+            const v = OSD.virtualMode.statisticsState[i] ? 1 : 0;
 
-                // Known statistics field
-                if (i < expectedStatsCount) {
-                    const c = OSD.constants.STATISTIC_FIELDS[i];
-                    d.statItems.push({
-                        name: c.name,
-                        text: c.text,
-                        desc: c.desc,
-                        index: i,
-                        enabled: v === 1,
-                    });
-
-                // Read all the data for any statistics we don't know about
-                } else {
-                    const statisticNumber = i - expectedStatsCount + 1;
-                    d.statItems.push({
-                        name: 'UNKNOWN',
-                        text: ['osdTextStatUnknown', statisticNumber],
-                        desc: 'osdDescStatUnknown',
-                        index: i,
-                        enabled: v === 1,
-                    });
-                }
-            }
-
-            // Parse configurable timers
-            const expectedTimersCount = 3;
-            for (let i = 0; i < expectedTimersCount; i++) {
-                d.timers.push($.extend({
+            // Known statistics field
+            if (i < expectedStatsCount) {
+                const c = OSD.constants.STATISTIC_FIELDS[i];
+                d.statItems.push({
+                    name: c.name,
+                    text: c.text,
+                    desc: c.desc,
                     index: i,
-                }, OSD.virtualMode.timerData[i]));
+                    enabled: v === 1,
+                });
+
+            // Read all the data for any statistics we don't know about
+            } else {
+                const statisticNumber = i - expectedStatsCount + 1;
+                d.statItems.push({
+                    name: 'UNKNOWN',
+                    text: ['osdTextStatUnknown', statisticNumber],
+                    desc: 'osdDescStatUnknown',
+                    index: i,
+                    enabled: v === 1,
+                });
             }
+        }
 
-            // Parse enabled warnings
-            const warningCount = OSD.constants.WARNINGS.length;
-            const warningFlags = OSD.virtualMode.warningFlags;
+        // Parse configurable timers
+        const expectedTimersCount = 3;
+        for (let i = 0; i < expectedTimersCount; i++) {
+            d.timers.push($.extend({
+                index: i,
+            }, OSD.virtualMode.timerData[i]));
+        }
 
-            for (let i = 0; i < warningCount; i++) {
-                const enabled = (warningFlags & (1 << i)) !== 0;
+        // Parse enabled warnings
+        const warningCount = OSD.constants.WARNINGS.length;
+        const warningFlags = OSD.virtualMode.warningFlags;
 
-                // Known warning field
-                if (i < warningCount) {
-                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+        for (let i = 0; i < warningCount; i++) {
+            const enabled = (warningFlags & (1 << i)) !== 0;
 
-                // Push Unknown Warning field
-                } else {
-                    const  warningNumber = i - warningCount + 1;
-                    d.warnings.push({
-                        name: 'UNKNOWN',
-                        text: ['osdWarningTextUnknown', warningNumber],
-                        desc: 'osdWarningUnknown',
-                        enabled,
-                    });
-                }
+            // Known warning field
+            if (i < warningCount) {
+                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+
+            // Push Unknown Warning field
+            } else {
+                const  warningNumber = i - warningCount + 1;
+                d.warnings.push({
+                    name: 'UNKNOWN',
+                    text: ['osdWarningTextUnknown', warningNumber],
+                    desc: 'osdWarningUnknown',
+                    enabled,
+                });
             }
         }
 
@@ -2683,13 +2555,6 @@ OSD.GUI.preview = {
             }
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-            // unsigned now
-        } else {
-            if (position > OSD.data.displaySize.total / 2) {
-                position = position - OSD.data.displaySize.total;
-            }
-        }
         $(`input.${fieldId}.position`).val(position).change();
     },
 };
@@ -2837,206 +2702,203 @@ osd.initialize = function(callback) {
                             .then(updateOsdView);
                     });
 
-                    if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-                        // units
-                        $('.units-container').show();
-                        const $unitMode = $('.units').empty();
-                        for (let i = 0; i < OSD.constants.UNIT_TYPES.length; i++) {
-                            const type = OSD.constants.UNIT_TYPES[i];
-                            const setupUnitOptionText = i18n.getMessage(`osdSetupUnitsOption${inflection.camelize(type.toLowerCase())}`);
-                            const $checkbox = $('<label/>')
-                                .append($(`<input name="unit_mode" type="radio"/>${setupUnitOptionText}</label>`)
-                                .prop('checked', i === OSD.data.unit_mode)
-                                .data('type', type)
-                                .data('type', i),
-                            );
-                            $unitMode.append($checkbox);
-                        }
-                        $unitMode.find(':radio').click(function() {
-                            OSD.data.unit_mode = $(this).data('type');
+                    // units
+                    $('.units-container').show();
+                    const $unitMode = $('.units').empty();
+                    for (let i = 0; i < OSD.constants.UNIT_TYPES.length; i++) {
+                        const type = OSD.constants.UNIT_TYPES[i];
+                        const setupUnitOptionText = i18n.getMessage(`osdSetupUnitsOption${inflection.camelize(type.toLowerCase())}`);
+                        const $checkbox = $('<label/>')
+                            .append($(`<input name="unit_mode" type="radio"/>${setupUnitOptionText}</label>`)
+                            .prop('checked', i === OSD.data.unit_mode)
+                            .data('type', type)
+                            .data('type', i),
+                        );
+                        $unitMode.append($checkbox);
+                    }
+                    $unitMode.find(':radio').click(function() {
+                        OSD.data.unit_mode = $(this).data('type');
+                        MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
+                            .then(updateOsdView);
+                    });
+                    // alarms
+                    $('.alarms-container').show();
+                    const $alarms = $('.alarms').empty();
+                    for (const k in OSD.data.alarms) {
+                        const alarm = OSD.data.alarms[k];
+                        const alarmInput = $(`<input name="alarm" type="number" id="${k}"/>${alarm.display_name}</label>`);
+                        alarmInput.val(alarm.value);
+                        alarmInput.focusout(function() {
+                            OSD.data.alarms[$(this)[0].id].value = $(this)[0].value;
                             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
                                 .then(updateOsdView);
                         });
-                        // alarms
-                        $('.alarms-container').show();
-                        const $alarms = $('.alarms').empty();
-                        for (const k in OSD.data.alarms) {
-                            const alarm = OSD.data.alarms[k];
-                            const alarmInput = $(`<input name="alarm" type="number" id="${k}"/>${alarm.display_name}</label>`);
-                            alarmInput.val(alarm.value);
-                            alarmInput.focusout(function() {
-                                OSD.data.alarms[$(this)[0].id].value = $(this)[0].value;
-                                MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
-                                    .then(updateOsdView);
-                            });
-                            const $input = $('<label/>').append(alarmInput);
-                            $alarms.append($input);
+                        const $input = $('<label/>').append(alarmInput);
+                        $alarms.append($input);
+                    }
+
+                    // Timers
+                    $('.timers-container').show();
+                    const $timers = $('#timer-fields').empty();
+                    for (const tim of OSD.data.timers) {
+                        const $timerConfig = $(`<div class="switchable-field field-${tim.index}"></div>`);
+                        const timerTable = $('<table />');
+                        $timerConfig.append(timerTable);
+                        let timerTableRow = $('<tr />');
+                        timerTable.append(timerTableRow);
+
+                        // Timer number
+                        timerTableRow.append(`<td>${tim.index + 1}</td>`);
+
+                        // Source
+                        const sourceTimerTableData = $('<td class="timer-detail osd_tip"></td>');
+                        sourceTimerTableData.attr('title', i18n.getMessage('osdTimerSourceTooltip'));
+                        sourceTimerTableData.append(`<label for="timerSource_${tim.index}" class="char-label">${i18n.getMessage('osdTimerSource')}</label>`);
+                        const src = $(`<select class="timer-option" id="timerSource_${tim.index}"></select>`);
+                        OSD.constants.TIMER_TYPES.forEach(function(e, i) {
+                            const timerSourceOptionText = i18n.getMessage(`osdTimerSourceOption${inflection.camelize(e.toLowerCase())}`);
+                            src.append(`<option value="${i}">${timerSourceOptionText}</option>`);
+                        });
+                        src[0].selectedIndex = tim.src;
+                        src.blur(function() {
+                            const idx = $(this)[0].id.split("_")[1];
+                            OSD.data.timers[idx].src = $(this)[0].selectedIndex;
+                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
+                                .then(updateOsdView);
+                        });
+                        sourceTimerTableData.append(src);
+                        timerTableRow.append(sourceTimerTableData);
+
+                        // Precision
+                        timerTableRow = $('<tr />');
+                        timerTable.append(timerTableRow);
+                        const precisionTimerTableData = $('<td class="timer-detail osd_tip"></td>');
+                        precisionTimerTableData.attr('title', i18n.getMessage('osdTimerPrecisionTooltip'));
+                        precisionTimerTableData.append(`<label for="timerPrec_${tim.index}" class="char-label">${i18n.getMessage('osdTimerPrecision')}</label>`);
+                        const precision = $(`<select class="timer-option osd_tip" id="timerPrec_${tim.index}"></select>`);
+                        OSD.constants.TIMER_PRECISION.forEach(function(e, i) {
+                            const timerPrecisionOptionText = i18n.getMessage(`osdTimerPrecisionOption${inflection.camelize(e.toLowerCase())}`);
+                            precision.append(`<option value="${i}">${timerPrecisionOptionText}</option>`);
+                        });
+                        precision[0].selectedIndex = tim.precision;
+                        precision.blur(function() {
+                            const idx = $(this)[0].id.split("_")[1];
+                            OSD.data.timers[idx].precision = $(this)[0].selectedIndex;
+                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
+                                .then(updateOsdView);
+                        });
+                        precisionTimerTableData.append(precision);
+                        timerTableRow.append('<td></td>');
+                        timerTableRow.append(precisionTimerTableData);
+
+                        // Alarm
+                        timerTableRow = $('<tr />');
+                        timerTable.append(timerTableRow);
+                        const alarmTimerTableData = $('<td class="timer-detail osd_tip"></td>');
+                        alarmTimerTableData.attr('title', i18n.getMessage('osdTimerAlarmTooltip'));
+                        alarmTimerTableData.append(`<label for="timerAlarm_${tim.index}" class="char-label">${i18n.getMessage('osdTimerAlarm')}</label>`);
+                        const alarm = $(`<input class="timer-option osd_tip" name="alarm" type="number" min=0 id="timerAlarm_${tim.index}"/>`);
+                        alarm[0].value = tim.alarm;
+                        alarm.blur(function() {
+                            const idx = $(this)[0].id.split("_")[1];
+                            OSD.data.timers[idx].alarm = $(this)[0].value;
+                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
+                                .then(updateOsdView);
+                        });
+                        alarmTimerTableData.append(alarm);
+                        timerTableRow.append('<td></td>');
+                        timerTableRow.append(alarmTimerTableData);
+
+                        $timers.append($timerConfig);
+
+                        // Post flight statistics
+                        $('.stats-container').show();
+                        const $statsFields = $('#post-flight-stat-fields').empty();
+
+                        for (const field of OSD.data.statItems) {
+                            if (!field.name) {
+                                continue;
+                            }
+
+                            const $field = $(`<div class="switchable-field field-${field.index}"></div>`);
+                            let desc = null;
+                            if (field.desc && field.desc.length) {
+                                desc = i18n.getMessage(field.desc);
+                            }
+                            if (desc && desc.length) {
+                                $field[0].classList.add('osd_tip');
+                                $field.attr('title', desc);
+                            }
+                            $field.append(
+                                $(`<input type="checkbox" name="${field.name}" class="togglesmall"></input>`)
+                                    .data('field', field)
+                                    .attr('checked', field.enabled)
+                                    .change(function() {
+                                        const fieldChanged = $(this).data('field');
+
+                                        fieldChanged.enabled = !fieldChanged.enabled;
+
+                                        if (self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] === undefined) {
+                                            self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] = 0;
+                                        }
+                                        self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
+
+                                        MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeStatistics(fieldChanged))
+                                            .then(updateOsdView);
+                                    }),
+                            );
+                            $field.append(`<label for="${field.name}" class="char-label">${titleizeField(field)}</label>`);
+
+                            // Insert in alphabetical order, with unknown fields at the end
+                            $field.name = field.name;
+                            insertOrdered($statsFields, $field);
                         }
 
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                            // Timers
-                            $('.timers-container').show();
-                            const $timers = $('#timer-fields').empty();
-                            for (const tim of OSD.data.timers) {
-                                const $timerConfig = $(`<div class="switchable-field field-${tim.index}"></div>`);
-                                const timerTable = $('<table />');
-                                $timerConfig.append(timerTable);
-                                let timerTableRow = $('<tr />');
-                                timerTable.append(timerTableRow);
+                        // Warnings
+                        $('.warnings-container').show();
+                        const $warningFields = $('#warnings-fields').empty();
 
-                                // Timer number
-                                timerTableRow.append(`<td>${tim.index + 1}</td>`);
-
-                                // Source
-                                const sourceTimerTableData = $('<td class="timer-detail osd_tip"></td>');
-                                sourceTimerTableData.attr('title', i18n.getMessage('osdTimerSourceTooltip'));
-                                sourceTimerTableData.append(`<label for="timerSource_${tim.index}" class="char-label">${i18n.getMessage('osdTimerSource')}</label>`);
-                                const src = $(`<select class="timer-option" id="timerSource_${tim.index}"></select>`);
-                                OSD.constants.TIMER_TYPES.forEach(function(e, i) {
-                                    const timerSourceOptionText = i18n.getMessage(`osdTimerSourceOption${inflection.camelize(e.toLowerCase())}`);
-                                    src.append(`<option value="${i}">${timerSourceOptionText}</option>`);
-                                });
-                                src[0].selectedIndex = tim.src;
-                                src.blur(function() {
-                                    const idx = $(this)[0].id.split("_")[1];
-                                    OSD.data.timers[idx].src = $(this)[0].selectedIndex;
-                                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
-                                        .then(updateOsdView);
-                                });
-                                sourceTimerTableData.append(src);
-                                timerTableRow.append(sourceTimerTableData);
-
-                                // Precision
-                                timerTableRow = $('<tr />');
-                                timerTable.append(timerTableRow);
-                                const precisionTimerTableData = $('<td class="timer-detail osd_tip"></td>');
-                                precisionTimerTableData.attr('title', i18n.getMessage('osdTimerPrecisionTooltip'));
-                                precisionTimerTableData.append(`<label for="timerPrec_${tim.index}" class="char-label">${i18n.getMessage('osdTimerPrecision')}</label>`);
-                                const precision = $(`<select class="timer-option osd_tip" id="timerPrec_${tim.index}"></select>`);
-                                OSD.constants.TIMER_PRECISION.forEach(function(e, i) {
-                                    const timerPrecisionOptionText = i18n.getMessage(`osdTimerPrecisionOption${inflection.camelize(e.toLowerCase())}`);
-                                    precision.append(`<option value="${i}">${timerPrecisionOptionText}</option>`);
-                                });
-                                precision[0].selectedIndex = tim.precision;
-                                precision.blur(function() {
-                                    const idx = $(this)[0].id.split("_")[1];
-                                    OSD.data.timers[idx].precision = $(this)[0].selectedIndex;
-                                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
-                                        .then(updateOsdView);
-                                });
-                                precisionTimerTableData.append(precision);
-                                timerTableRow.append('<td></td>');
-                                timerTableRow.append(precisionTimerTableData);
-
-                                // Alarm
-                                timerTableRow = $('<tr />');
-                                timerTable.append(timerTableRow);
-                                const alarmTimerTableData = $('<td class="timer-detail osd_tip"></td>');
-                                alarmTimerTableData.attr('title', i18n.getMessage('osdTimerAlarmTooltip'));
-                                alarmTimerTableData.append(`<label for="timerAlarm_${tim.index}" class="char-label">${i18n.getMessage('osdTimerAlarm')}</label>`);
-                                const alarm = $(`<input class="timer-option osd_tip" name="alarm" type="number" min=0 id="timerAlarm_${tim.index}"/>`);
-                                alarm[0].value = tim.alarm;
-                                alarm.blur(function() {
-                                    const idx = $(this)[0].id.split("_")[1];
-                                    OSD.data.timers[idx].alarm = $(this)[0].value;
-                                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
-                                        .then(updateOsdView);
-                                });
-                                alarmTimerTableData.append(alarm);
-                                timerTableRow.append('<td></td>');
-                                timerTableRow.append(alarmTimerTableData);
-
-                                $timers.append($timerConfig);
+                        for (const field of OSD.data.warnings) {
+                            if (!field.name) {
+                                continue;
                             }
 
-                            // Post flight statistics
-                            $('.stats-container').show();
-                            const $statsFields = $('#post-flight-stat-fields').empty();
-
-                            for (const field of OSD.data.statItems) {
-                                if (!field.name) {
-                                    continue;
-                                }
-
-                                const $field = $(`<div class="switchable-field field-${field.index}"></div>`);
-                                let desc = null;
-                                if (field.desc && field.desc.length) {
-                                    desc = i18n.getMessage(field.desc);
-                                }
-                                if (desc && desc.length) {
-                                    $field[0].classList.add('osd_tip');
-                                    $field.attr('title', desc);
-                                }
-                                $field.append(
-                                    $(`<input type="checkbox" name="${field.name}" class="togglesmall"></input>`)
-                                        .data('field', field)
-                                        .attr('checked', field.enabled)
-                                        .change(function() {
-                                            const fieldChanged = $(this).data('field');
-
-                                            fieldChanged.enabled = !fieldChanged.enabled;
-
-                                            if (self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] === undefined) {
-                                                self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] = 0;
-                                            }
-                                            self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
-
-                                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeStatistics(fieldChanged))
-                                                .then(updateOsdView);
-                                        }),
-                                );
-                                $field.append(`<label for="${field.name}" class="char-label">${titleizeField(field)}</label>`);
-
-                                // Insert in alphabetical order, with unknown fields at the end
-                                $field.name = field.name;
-                                insertOrdered($statsFields, $field);
+                            const $field = $(`<div class="switchable-field field-${field.index}"></div>`);
+                            let desc = null;
+                            if (field.desc && field.desc.length) {
+                                desc = i18n.getMessage(field.desc);
                             }
-
-                            // Warnings
-                            $('.warnings-container').show();
-                            const $warningFields = $('#warnings-fields').empty();
-
-                            for (const field of OSD.data.warnings) {
-                                if (!field.name) {
-                                    continue;
-                                }
-
-                                const $field = $(`<div class="switchable-field field-${field.index}"></div>`);
-                                let desc = null;
-                                if (field.desc && field.desc.length) {
-                                    desc = i18n.getMessage(field.desc);
-                                }
-                                if (desc && desc.length) {
-                                    $field[0].classList.add('osd_tip');
-                                    $field.attr('title', desc);
-                                }
-                                $field.append(
-                                    $(`<input type="checkbox" name="${field.name}" class="togglesmall"></input>`)
-                                        .data('field', field)
-                                        .attr('checked', field.enabled)
-                                        .change(function() {
-                                            const fieldChanged = $(this).data('field');
-                                            fieldChanged.enabled = !fieldChanged.enabled;
-
-                                            if (self.analyticsChanges[`OSDWarning${fieldChanged.name}`] === undefined) {
-                                                self.analyticsChanges[`OSDWarning${fieldChanged.name}`] = 0;
-                                            }
-                                            self.analyticsChanges[`OSDWarning${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
-
-                                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
-                                                .then(updateOsdView);
-                                        }),
-                                );
-
-                                const finalFieldName = titleizeField(field);
-                                $field.append(`<label for="${field.name}" class="char-label">${finalFieldName}</label>`);
-
-                                // Insert in alphabetical order, with unknown fields at the end
-                                $field.name = field.name;
-                                insertOrdered($warningFields, $field);
-
+                            if (desc && desc.length) {
+                                $field[0].classList.add('osd_tip');
+                                $field.attr('title', desc);
                             }
+                            $field.append(
+                                $(`<input type="checkbox" name="${field.name}" class="togglesmall"></input>`)
+                                    .data('field', field)
+                                    .attr('checked', field.enabled)
+                                    .change(function() {
+                                        const fieldChanged = $(this).data('field');
+                                        fieldChanged.enabled = !fieldChanged.enabled;
+
+                                        if (self.analyticsChanges[`OSDWarning${fieldChanged.name}`] === undefined) {
+                                            self.analyticsChanges[`OSDWarning${fieldChanged.name}`] = 0;
+                                        }
+                                        self.analyticsChanges[`OSDWarning${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
+
+                                        MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
+                                            .then(updateOsdView);
+                                    }),
+                            );
+
+                            const finalFieldName = titleizeField(field);
+                            $field.append(`<label for="${field.name}" class="char-label">${finalFieldName}</label>`);
+
+                            // Insert in alphabetical order, with unknown fields at the end
+                            $field.name = field.name;
+                            insertOrdered($warningFields, $field);
+
                         }
+
                     }
 
                     if (!(OSD.data.state.haveMax7456Configured || OSD.data.state.isMspDevice)) {

@@ -211,7 +211,7 @@ motors.initialize = async function (callback) {
     }
 
     function update_model(mixer) {
-        const imgSrc = getMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
+        const imgSrc = getMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir);
         $('.mixerPreview img').attr('src', imgSrc);
 
         const motorOutputReorderConfig = new MotorOutputReorderConfig(100);

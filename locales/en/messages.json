@@ -770,11 +770,29 @@
     "initialSetupResetText": {
         "message": "Restore settings to <strong>default</strong>"
     },
+    "initialSetupButtonBackup": {
+        "message": "Backup JSON"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Restore JSON"
+    },
     "initialSetupButtonRebootBootloader": {
         "message": "Activate Boot Loader / DFU"
     },
+    "initialSetupBackupRestoreHeader": {
+        "message": "Experimental Backup and Restore"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span class=\"message-negative\">not</span> included - use the command 'diff all' in CLI for this."
+    },
     "initialSetupRebootBootloaderText": {
         "message": "Reboot into <strong>boot loader / DFU</strong> mode."
+    },
+    "initialSetupBackupSuccess": {
+        "message": "Backup saved <span class=\"message-positive\">successfully</span>"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "Configuration restored <span class=\"message-positive\">successfully</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Reset Z axis, offset: 0 deg"
