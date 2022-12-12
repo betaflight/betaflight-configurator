@@ -129,74 +129,6 @@
     "language_default_pretty": {
         "message": "Sistema Predeterminado ($t(detectedLanguage))"
     },
-    "language_ca": {
-        "message": "Català",
-        "description": "Don't translate!!!"
-    },
-    "language_de": {
-        "message": "Deutsch",
-        "description": "Don't translate!!!"
-    },
-    "language_en": {
-        "message": "English",
-        "description": "Don't translate!!!"
-    },
-    "language_es": {
-        "message": "Español",
-        "description": "Don't translate!!!"
-    },
-    "language_eu": {
-        "message": "Euskera",
-        "description": "Don't translate!!!"
-    },
-    "language_fr": {
-        "message": "Français",
-        "description": "Don't translate!!!"
-    },
-    "language_gl": {
-        "message": "Galego",
-        "description": "Don't translate!!!"
-    },
-    "language_it": {
-        "message": "Italiano",
-        "description": "Don't translate!!!"
-    },
-    "language_ja": {
-        "message": "日本語",
-        "description": "Don't translate!!!"
-    },
-    "language_ko": {
-        "message": "한국어",
-        "description": "Don't translate!!!"
-    },
-    "language_nl": {
-        "message": "Holandés",
-        "description": "Don't translate!!!"
-    },
-    "language_pt": {
-        "message": "Português",
-        "description": "Don't translate!!!"
-    },
-    "language_pt_BR": {
-        "message": "Português Brasileiro",
-        "description": "Don't translate!!!"
-    },
-    "language_pl": {
-        "message": "polski",
-        "description": "Don't translate!!!"
-    },
-    "language_ru": {
-        "message": "Русский язык",
-        "description": "Don't translate!!!"
-    },
-    "language_zh_CN": {
-        "message": "简体中文",
-        "description": "Don't translate!!!"
-    },
-    "language_zh_TW": {
-        "message": "繁體中文",
-        "description": "Don't translate!!!"
-    },
     "sensorDataFlashNotFound": {
         "message": "Memoria flash <br> non dispoñible",
         "description": "Text of the dataflash image in the header of the page."
@@ -270,21 +202,6 @@
     },
     "deviceReady": {
         "message": "Dispositivo -  <span class=\"message-positive\">Preparado</span>"
-    },
-    "backupFileIncompatible": {
-        "message": "O arquivo de resgardo facilitado foi creado para unha versión anterior do configurador polo que e incompatible coa versión. Sentímolo"
-    },
-    "backupFileUnmigratable": {
-        "message": "Este arquivo de copia de seguridad foi xerado cunha versión anterior do configurador e non se pode migrar. Sentímolo."
-    },
-    "configMigrationFrom": {
-        "message": "Migrando arquivo de configuración xerado por: $1"
-    },
-    "configMigratedTo": {
-        "message": "Configuracións migradas ó configurador: $1"
-    },
-    "configMigrationSuccessful": {
-        "message": "Migración da configuración completada, migracións aplicadas: $1"
     },
     "tabFirmwareFlasher": {
         "message": "Flasheador de Firmware"
@@ -746,9 +663,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Desenvolvedores do Betaflight no slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\"> Desactivada función de copia de seguridade e restauración. </span> Ten firmware con versión API <span class=\"message-negative\">$1</span>, requere copia de seguridade e restauración <span class=\"mensaxe positiva\">$2</span>. Por favor, faga unha copia de seguridade dos axustes mediante a CLI, consulte a documentación de Betaflight para o procedemento."
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerómetro"
     },
@@ -770,29 +684,11 @@
     "initialSetupResetText": {
         "message": "Reiniciar axustes a valores por <strong>defecto</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "Copia de seguridade JSON"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Restaurar JSON"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Activar o cargador de arranque / DFU"
     },
-    "initialSetupBackupRestoreHeader": {
-        "message": "Copia de seguridade e restauración experimental"
-    },
-    "initialSetupBackupRestoreText": {
-        "message": "<strong>Copia seguridade</strong> da súa configuración en caso de accidente,<strong>CLI</strong>ten opcións<span class=\"message-negative\">non</span>incluídas - usa o comando 'diff all' en CLI para isto."
-    },
     "initialSetupRebootBootloaderText": {
         "message": "Reinicia en modo<strong>cargador de arranque / DFU </strong>."
-    },
-    "initialSetupBackupSuccess": {
-        "message": "Backup gardado <span class=\"message-positive\">exitosamente</span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuración restaurada <span class=\"message-positive\">correctamente</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Reiniciar eixo Z, offset: 0 º"
@@ -2142,6 +2038,9 @@
     },
     "receiverButtonBindMessage": {
         "message": "Solicitude de enlace enviada ao controlador de voo."
+    },
+    "receiverButtonPassphrase": {
+        "message": "Frase de contrasinal"
     },
     "receiverButtonSticks": {
         "message": "Sticks de control"
@@ -3850,6 +3749,10 @@
     "pidTuningDGainSlider": {
         "message": "Amortiguamento:<br /><i><small>Ganancia D</small></i>",
         "description": "D Gain (Damping) tuning slider label"
+    },
+    "pidTuningDGainSliderHelp": {
+        "message": "Valor D relativamente alto diminúe a resposta do stick e pode quentar os motores, pero debería axudar a controlar as oscilacións rápidas e mellorará o prop-wash.<br /><br />O termo D relativamente baixo dá unha resposta máis rápida do stick, pero debilitará a resposta o prop-wash e a reacción ás forzas externas (vento).",
+        "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
         "message": "Seguimento:<br /><i><small>P & I Gains</small></i>",
@@ -6122,6 +6025,14 @@
         "message": "<span class=\"message-negative\">Erro</span>ao gardar o ficheiro de configuración VTX",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileOk": {
+        "message": "Arquivo de configuración Lua para o VTX <span class=\"message-positive\">gardado</span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
+    "vtxSavedLuaFileKo": {
+        "message": "<span class=\"message-negative\">Fallo</span> mentres se gardaba o ficheiro de configuración Lua para o VTX",
+        "description": "Message in the GUI log when the lua VTX Config file saving has failed"
+    },
     "vtxLoadFileOk": {
         "message": "Arquivo de configuración VTX <span class=\"message-positive\">gardado</span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
@@ -6720,6 +6631,10 @@
     "presetsWarningWrongVersionConfirmation": {
         "message": "O Preset seleccionado require a versión de firmware $1<br/> A versión actual do firmware é $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "Non se atopou ningunha configuración predeterminada para os parámetros de busca indicados",
+        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Alcanzou o límite máximo do número de presets mostrados",

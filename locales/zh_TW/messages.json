@@ -172,21 +172,6 @@
     "deviceReady": {
         "message": "設備 - <span class=\"message-positive\">已就緒</span>"
     },
-    "backupFileIncompatible": {
-        "message": "上一版本配置程式生成的備份文件和當前版本的配置程式不兼容"
-    },
-    "backupFileUnmigratable": {
-        "message": "上一版本配置程式生成的備份文件無法移植到當前版本的配置程式中。抱歉。"
-    },
-    "configMigrationFrom": {
-        "message": "正在遷移配置程式生成的配置文件：$1"
-    },
-    "configMigratedTo": {
-        "message": "配置程式配置文件 $1 已移植"
-    },
-    "configMigrationSuccessful": {
-        "message": "配置文件移植完成，使用配置文件 $1 。"
-    },
     "tabFirmwareFlasher": {
         "message": "固件燒寫工具"
     },
@@ -609,9 +594,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight 開發者 Slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">備份和恢復功能被禁用。</span>當前飛控固件的API版本為 <span class=\"message-negative\">$1</span>，而備份和恢復功能需要版本 <span class=\"message-positive\">$2</span>。請通過 CLI 命令列手工備份，具體操作流程請參閱 Betaflight 文檔。"
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "校準加速度計"
     },
@@ -636,17 +618,8 @@
     "initialSetupButtonRebootBootloader": {
         "message": "激活啟動引導程式/DFU"
     },
-    "initialSetupBackupRestoreText": {
-        "message": "在 CLI 命令列中使用 ‘dump’ 命令來<strong>備份</strong>你的設置以防意外丟失，注意<strong>CLI命令行</strong>設置<span class=\"message-negative\">沒有</span>包括在內。"
-    },
     "initialSetupRebootBootloaderText": {
         "message": "重新啟動到<strong>啟動引導程式/DFU</strong>模式"
-    },
-    "initialSetupBackupSuccess": {
-        "message": "備份保存<span class=\"message-positive\">成功</span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "配置恢復<span class=\"message-positive\">成功</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "重置 Z 軸，補償：0 度"
@@ -1444,6 +1417,9 @@
     "pidTuningAntiGravityThres": {
         "message": "閾值",
         "description": "Anti Gravity Threshold Parameter"
+    },
+    "pidTuningDMinDisabledNote": {
+        "message": "<strong>注意:</strong>D Min功能已被禁用，其參數已隱藏。要使用D Min，請在$t(pidTuningPidSettings.message)中啟用它。"
     },
     "pidTuningDMinGain": {
         "message": "增益",

@@ -126,54 +126,6 @@
     "language_default_pretty": {
         "message": "Sélection par défaut ($t(detectedLanguage))"
     },
-    "language_ca": {
-        "message": "Català",
-        "description": "Don't translate!!!"
-    },
-    "language_de": {
-        "message": "Deutsch",
-        "description": "Don't translate!!!"
-    },
-    "language_en": {
-        "message": "English",
-        "description": "Don't translate!!!"
-    },
-    "language_es": {
-        "message": "Español",
-        "description": "Don't translate!!!"
-    },
-    "language_fr": {
-        "message": "Français",
-        "description": "Don't translate!!!"
-    },
-    "language_gl": {
-        "message": "Galego",
-        "description": "Don't translate!!!"
-    },
-    "language_it": {
-        "message": "Italiano",
-        "description": "Don't translate!!!"
-    },
-    "language_ja": {
-        "message": "日本語",
-        "description": "Don't translate!!!"
-    },
-    "language_ko": {
-        "message": "한국어",
-        "description": "Don't translate!!!"
-    },
-    "language_pt": {
-        "message": "Português",
-        "description": "Don't translate!!!"
-    },
-    "language_ru": {
-        "message": "Русский язык",
-        "description": "Don't translate!!!"
-    },
-    "language_zh_CN": {
-        "message": "简体中文",
-        "description": "Don't translate!!!"
-    },
     "sensorDataFlashNotFound": {
         "message": "Aucune donnée de flash<br>puce trouvée",
         "description": "Text of the dataflash image in the header of the page."
@@ -247,21 +199,6 @@
     },
     "deviceReady": {
         "message": "Périphérique - <span class=\"message-positive\">Prêt</span>"
-    },
-    "backupFileIncompatible": {
-        "message": "Ce fichier de sauvegarde a été généré avec une version précédente du configurateur et n'est pas compatible. Désolé."
-    },
-    "backupFileUnmigratable": {
-        "message": "Ce fichier de sauvegarde a été généré à partir d'une version précédente du configurateur et ne peut pas être migré. Désolé."
-    },
-    "configMigrationFrom": {
-        "message": "Fichier de configuration de migration généré par le configurateur: $1"
-    },
-    "configMigratedTo": {
-        "message": "Configuration migrée vers le configurateur: $1"
-    },
-    "configMigrationSuccessful": {
-        "message": "Migration de la configuration effectuée, migrations appliquées: $1"
     },
     "tabFirmwareFlasher": {
         "message": "Flasher un microprogramme"
@@ -723,9 +660,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Développeurs de Betaflight sur Slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">La sauvegarde et la restauration sont désactivés.</span> La version API de votre microprogramme est <span class=\"message-negative\">$1</span>, la version minimum requise est <span class=\"message-positive\">$2</span>.  Veuillez sauvegarder vos paramètres en CLI, voir la procédure dans l'aide Betaflight."
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrer l'accéléromètre"
     },
@@ -751,7 +685,7 @@
         "message": "Sauvegarde JSON"
     },
     "initialSetupButtonRestore": {
-        "message": "Rétablir JSON"
+        "message": "Restaurer JSON"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Activer le Boot Loader / DFU"
@@ -760,7 +694,7 @@
         "message": "Sauvegarde et restauration expérimentales"
     },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>Sauvegardez</strong> votre configuration, les paramètres <strong>CLI</strong> ne seront <span class=\"message-negative\">pas</span> inclus - utilisez la commande CLI 'diff all' afin de les sauver."
+        "message": "<strong>Sauvegardez</strong> votre configuration en cas d'accident, les paramètres <strong>CLI</strong> ne seront <span class=\"message-negative\">pas</span> inclus - utilisez la commande CLI 'diff all' afin de les sauver."
     },
     "initialSetupRebootBootloaderText": {
         "message": "Redémarrer en mode <strong>boot loader / DFU</strong>."

@@ -127,7 +127,7 @@
         "message": "Predefinita di sistema ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
-        "message": "Nessun chip per <br>flashare i dati trovato",
+        "message": "Nessun chip trovato per <br> flashare i dati",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
@@ -199,21 +199,6 @@
     },
     "deviceReady": {
         "message": "Dispositivo - <span class=\"message-positive\">Pronto</span>"
-    },
-    "backupFileIncompatible": {
-        "message": "I file di backup sono per una versione precedente del software. Ci dispiace ma non sono compatibili con questa versione del configuratore"
-    },
-    "backupFileUnmigratable": {
-        "message": "I file di backup sono per una versione precedente del software e non sono trasferibili."
-    },
-    "configMigrationFrom": {
-        "message": "Trasferimento dei file di configurazione generato dal configuratore: $1"
-    },
-    "configMigratedTo": {
-        "message": "Configurazioni trasferite al configuratore: $1"
-    },
-    "configMigrationSuccessful": {
-        "message": "Trasferimento della configurazione completata, trasferimenti applicati: $1"
     },
     "tabFirmwareFlasher": {
         "message": "Flash del Firmware"
@@ -467,7 +452,7 @@
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
-        "message": "Caricate informazioni della build per $1 dal server."
+        "message": "Informazioni della build per $1 caricate dal server."
     },
     "buildServerLoadFailed": {
         "message": "<b>La richiesta delle versioni per $1 non è riuscita, stai utilizzando informazioni memorizzate nella cache. Motivo: <code>$2</code></b>"
@@ -597,7 +582,7 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "L'applicazione supporta tutto l'hardware che può eseguire Betaflight. Controlla la scheda per il flash per una lista completa dell'hardware.<br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica il Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica gli script LUA di Betaflight per la trasmittente</a><br /><br />Il codice sorgente del firmware può essere scaricato da <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br /><br />Per hardware obsoleti che usano un chip USB-seriale CP210x:<br />gli ultimi <b>driver CP210x</b>possono essere scaricati da <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br />L'ultima versione di <b>Zadig</b> per l'installazione dei driver Windows USB può essere scaricata da <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br /><b>ImpulseRC Driver Fixer</b> può essere scaricato da <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">qui</a>"
+        "message": "L'applicazione supporta tutto l'hardware che può eseguire Betaflight. Controlla la scheda per il flash per una lista completa dell'hardware.<br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica il Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica gli script LUA di Betaflight per la trasmittente</a><br /><br />Il codice sorgente del firmware può essere scaricato da <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br /><br />Per hardware obsoleti che usano un chip USB-seriale CP210x:<br />gli ultimi <b>driver CP210x</b> possono essere scaricati da <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br />L'ultima versione di <b>Zadig</b> per l'installazione dei driver Windows USB può essere scaricata da <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a><br /><b>ImpulseRC Driver Fixer</b> può essere scaricato da <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">qui</a>"
     },
     "defaultContributingHead": {
         "message": "Contribuisci"
@@ -675,9 +660,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Sviluppatori di Betaflight su slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">Funzione di Backup e ripristino disabilitata.</span>La versione API del tuo firmware è <span class=\"message-negative\">$1</span>, per eseguire backup e ripristino è necessaria la versione<span class=\"message-positive\">$2</span>. Puoi eseguire il backup dei tuoi settaggi via CLI, vedi la documentazione Betaflight per la procedura."
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibra Accelerometro"
     },
@@ -709,19 +691,19 @@
         "message": "Attiva Boot Loader / DFU"
     },
     "initialSetupBackupRestoreHeader": {
-        "message": "Backup e Ripristino sperimentali"
+        "message": "Backup e Ripristino Sperimentale"
     },
     "initialSetupBackupRestoreText": {
-        "message": "Effettua un <strong>backup</strong> della tua configurazione in caso di incidente. Le impostazioni <strong>CLI</strong> <span class=\"message-negative\">NON</span> sono incluse - usa il comando 'diff all' nella CLI per salvarli."
+        "message": "Effettua un <strong>Backup</strong> della configurazione in caso d' incidente. Le impostazioni <strong>CLI</strong> <span class=\"message-negative\">NON</span> sono incluse - usa il comando 'diff all' nella CLI per salvarli."
     },
     "initialSetupRebootBootloaderText": {
         "message": "Riavvia in modalità <strong>boot loader / DFU</strong>."
     },
     "initialSetupBackupSuccess": {
-        "message": "Backup salvato <span class=\"message-positive\">correttamente</span>"
+        "message": "Backup salvato <span class=\"message-positive\">con successo</span>"
     },
     "initialSetupRestoreSuccess": {
-        "message": "Configurazione ripristinata<span class=\"message-positive\">correttamente</span>"
+        "message": "Configurazione ripristinata <span class=\"message-positive\">con successo</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Reset asse Z, offset: 0 gradi"
@@ -1123,7 +1105,7 @@
         "message": "<strong>Nota:</strong> il provider SPI RX funzionerà solo se l'hardware necessario è incluso nella scheda o se collegato ad un bus SPI."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>Nota:</strong> Non tutte le funzionalità sono supportate da tutti i controller di volo. Se abiliti una specifica impostazione, e risulta disabilitata dopo aver fatto 'Salva e Riavvia', vuol dire che tale impostazione non è supportata dalla tua scheda."
+        "message": "<strong>Nota:</strong> Non tutte le funzionalità sono supportate da tutti i controller di volo. Se abiliti una impostazione specifica e risulta disabilitata dopo aver fatto 'Salva e Riavvia', vuol dire che questa impostazione non è supportata dalla tua scheda."
     },
     "configurationBoardAlignment": {
         "message": "Allineamento Scheda e Sensori"
@@ -1315,10 +1297,10 @@
         "message": "Beep quando è attiva la modalità crash flip"
     },
     "beeperCAM_CONNECTION_OPEN": {
-        "message": "Beep quando si entra nel controllo a 5 tasti della fotocamera"
+        "message": "Beep quando il controllo a 5 tasti della fotocamera è inserito"
     },
     "beeperCAM_CONNECTION_CLOSE": {
-        "message": "Beep quando si esce dal controllo a 5 tasti della fotocamera"
+        "message": "Beep quando il controllo a 5 tasti della fotocamera non è inserito"
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Beep quando si arma e l'rc smoothing non ha inizializzato i filtri"
@@ -1529,7 +1511,7 @@
         "message": "Impostazioni profilo PID"
     },
     "pidTuningSubTabRates": {
-        "message": "Impostazioni profilo rate"
+        "message": "Impostazioni profilo Rate"
     },
     "pidTuningSubTabFilter": {
         "message": "Impostazioni Filtri"
@@ -1992,7 +1974,7 @@
         "message": "<strong>Modalità slider per tuning PID</strong><br><br>La modalità slider per tuning PID può essere:<br><br>&bull; OFF - no slider, inserisci manualmente i valori<br>&bull; RP - i cursori controllano solo Roll e Pitch, inserisci manualmente i valori Yaw<br>&bull; RPY - i cursori controllano tutti i valori PID<br><br><span class=\"message-negative\"><b>Attenzione:</b></span>Passando dalla modalità RP a RPY sovrascriverà le impostazioni di Yaw con quelle del firmware."
     },
     "receiverHelp": {
-        "message": "&#8226;<b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il Failsafe funzioni correttamente!</a></strong></b> Le impostazioni sono nella scheda del Failsafe, la quale richiede la modalità esperto.<br> &#8226; <b>Usa l'ultimo firmware della TX!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita i filtri ADC hardware</a></strong> nella trasmittente se usi OpenTx o EdgeTx.<br>Impostazione di base: Configura le impostazioni della ricevente correttamente. Scegli la mappa canali corretta per la tua radio. Controlla che Roll, Pitch e gli altri grafici si muovano correttamente. Regola i limiti dei canali e i valori del range nella tua trasmittente da ~1000 a ~2000, e imposta il punto medio su ~1500. Per maggiori informazioni leggi la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione</a></strong>."
+        "message": "&#8226;<b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il Failsafe funzioni correttamente!</a></strong></b> Le impostazioni sono nella scheda del Failsafe, abilita la modalità esperto.<br> &#8226; <b>Usa l'ultimo firmware della TX!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita i filtri ADC hardware</a></strong> nella trasmittente se usi OpenTx o EdgeTx.<br>Impostazione di base: Configura le impostazioni della ricevente correttamente. Scegli la mappa canali corretta per la tua radio. Controlla che Roll, Pitch e gli altri grafici si muovano correttamente. Regola i limiti dei canali e i valori del range nella tua trasmittente da ~1000 a ~2000, e imposta il punto medio su ~1500. Per maggiori informazioni leggi la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas Medio"
@@ -2807,7 +2789,7 @@
         "message": "Esempi salvati:"
     },
     "loggingLogSize": {
-        "message": "Dimensioni del registro:"
+        "message": "Dimensione registro:"
     },
     "loggingButtonLogFile": {
         "message": "Seleziona file di registro"
@@ -3005,7 +2987,7 @@
         "message": "Scarica manualmente."
     },
     "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">IMPORTANTE</span>: assicurati di flashare il file appropriato per  la tua scheda. Caricare un file errato può far accadere cose molto <span class=\"message-negative\">spiacevoli</span>."
+        "message": "<span class=\"message-negative\">IMPORTANTE</span>: assicurati di flashare il file appropriato per  la tua scheda. Flashare un file errato può causare cose molto <span class=\"message-negative\">spiacevoli</span>."
     },
     "firmwareFlasherPath": {
         "message": "Percorso:"
@@ -3143,7 +3125,7 @@
         "message": "Messaggio:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Si prega di <span class=\"message-negative\">non</span> provare a flashare hardware <strong>non-Betaflight</strong> con questo firmware flasher.<br /> <span class=\"message-negative\">Non</span> <strong>disconnettere</strong> la scheda e <strong>non spegnere</strong> il tuo computer mentre stai flashando. <br /> <br /> <strong>Nota:</strong> il bootloader STM32 è memorizzato nella ROM, non può essere corrotto. <br /> <strong>Nota:</strong><span class=\"message-negative\"> La connessione automatica</span> è sempre disabilitata mentre ci si trova all'interno del firmware flasher. <br /> <strong>Nota:</strong> assicurati di avere un backup; alcuni upgrade/downgrade cancelleranno la tua configurazione.<br /><strong>Nota:</strong> se hai problemi a flashare il controllore di volo<strong> prova prima a scollegare prima tutti i cavi dalla scheda</strong>, prova a riavviare ead aggiornare i driver.<br /><strong>Nota:</strong> quando provi a flashare schede che hanno collegato direttamente le prese USB (le schede più recenti) assicurati di aver letto la sezione USB Flashing del manuale di Betaflight e di aver installato il software e i driver corretti"
+        "message": "Si prega di <span class=\"message-negative\">non</span> provare a flashare hardware <strong>non-Betaflight</strong> con questo firmware flasher.<br /> <span class=\"message-negative\">Non</span> <strong>disconnettere</strong> la scheda e <strong>non spegnere</strong> il tuo computer mentre stai flashando. <br /> <br /> <strong>Nota:</strong> il bootloader STM32 è memorizzato nella ROM, non può essere corrotto. <br /> <strong>Nota:</strong><span class=\"message-negative\"> La connessione automatica</span> è sempre disabilitata mentre ci si trova all'interno del firmware flasher. <br /> <strong>Nota:</strong> assicurati di avere un backup; alcuni upgrade/downgrade cancelleranno la tua configurazione.<br /><strong>Nota:</strong> se hai problemi a flashare il controllore di volo<strong> prova prima a scollegare prima tutti i cavi dalla scheda</strong>, prova a riavviare e ad aggiornare i driver.<br /><strong>Nota:</strong> quando provi a flashare schede con connessione diretta USB (le schede più recenti) assicurati di aver letto la sezione USB Flashing del manuale Betaflight e di avere il software e i driver corretti"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> Recupero / comunicazione persa </strong>"
@@ -3446,7 +3428,7 @@
         "message": "Sovrapposizione"
     },
     "ledStripWarningsOverlay": {
-        "message": "Messaggi di avvertimento"
+        "message": "Messaggi di avviso"
     },
     "ledStripIndecatorOverlay": {
         "message": "Indicatore (usa la posizione sulla matrice)"
@@ -3784,7 +3766,7 @@
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
-        "message": "Un guadagno D alto diminuirà la reattività dello stick e potrebbe surriscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni veloci e migliorare il flusso d'aria sulle eliche.<br /><br />Un D-term relativamente basso dà una risposta più rapida dello stick, ma indebolirà le prestazioni sui flussi d'aria delle eliche e la reazione alle forze esterne (vento).",
+        "message": "Un guadagno D alto diminuirà la reattività dello stick e potrebbe surriscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni veloci e migliorare il propwash.<br /><br />Un D-term relativamente basso dà una risposta più rapida dello stick, ma indebolirà le prestazioni del propwash e la reazione alle forze esterne (vento).",
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
@@ -3808,7 +3790,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Aumenta o diminuisce I. Un I più alto puo' migliorare il volo nelle virate a spirale, orbitale o i comandi a 0% di gas. Troppo I, in particolare con un P insufficiente, potrebbe causare oscillazioni o rimbalzi dopo flip/roll oppure abbassando il gas a 0%.<br /><br />Generalmente vogliamo che il il cursore \"Drift - Wobble\" sia il più alto possibile per mantenere il volo ottimale del quad in giri a spirale, orbite, ecc... ma non così in alto da vedere oscillazioni quando si abbassa l'acceleratore a 0%.<br /><br /><strong>Nota:</strong><br />Se riscontri un rimbalzo in qualsiasi momento, assicurati che \"I-term Relax\" sia abilitato e prova ad abbassare il valore di iterm_relax_cutoff.",
+        "message": "Aumenta o diminuisce I. Un I più alto puo' migliorare il volo nelle virate a spirale, orbitale o i comandi a 0% di gas. Troppo I, in particolare con un P insufficiente, potrebbe causare oscillazioni o rimbalzi dopo flip/roll oppure abbassando il gas a 0%.<br /><br />Generalmente vogliamo che il il cursore \"Drift - Wobble\" sia il più alto possibile per mantenere il volo ottimale del quad in giri a spirale, orbite, ecc... ma non così alto da vedere oscillazioni quando si abbassa l'acceleratore a 0%.<br /><br /><strong>Nota:</strong><br />Se riscontri un rimbalzo in qualsiasi momento, assicurati che \"I-term Relax\" sia abilitato e prova ad abbassare il valore di iterm_relax_cutoff.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -4584,7 +4566,7 @@
         "message": "<span class=\"message-negative\"><b>ATTENZIONE:</b></span> Nessun chip OSD rilevato. Alcuni controllori di volo non alimentano correttamente il chip OSD a meno che non sia collegata la batteria. Si prega di collegare la batteria prima di collegare l'USB (RIMUOVI LE ELICHE!)."
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Nota:</strong> l'anteprima OSD potrebbe non mostrare il carattere effettivo installato sul controllore di volo. Il layout dei singoli elementi potrebbe risultare differente nelle versioni vecchie del firmware - verifica attraverso il tuo monitor/occhialini prima di volare."
+        "message": "<strong>Nota:</strong> l'anteprima OSD potrebbe non mostrare il carattere effettivo installato sul controllore di volo. Il layout dei singoli elementi potrebbe risultare differente nelle versioni vecchie del firmware - verifica tramite il tuo monitor/occhiali prima di volare."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Il tuo controllore di volo non risponde ai comandi OSD. Questo probabilmente significa che non ha un OSD BetaFlight integrato."
@@ -6062,6 +6044,14 @@
         "message": "<span class=\"message-negative\">Errore</span> durante il salvataggio del file di configurazione VTX",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileOk": {
+        "message": "file lua per la configurazione VTX <span class=\"message-positive\">salvato</span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
+    "vtxSavedLuaFileKo": {
+        "message": "<span class=\"message-negative\">Errore</span> salvando il lua per la configurazione VTX",
+        "description": "Message in the GUI log when the lua VTX Config file saving has failed"
+    },
     "vtxLoadFileOk": {
         "message": "File di configurazione VTX <span class=\"message-positive\">caricato</span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
@@ -6222,7 +6212,7 @@
         "message": "Profilo Rate"
     },
     "pidTuningRateProfileTip": {
-        "message": "Fino a 3 differenti Profili Rate possono essere salvati sul controllore di volo. I Profili Rate includono le impostazioni per \"Rate RC\", \"Rate\", \"Esponenziale\", \"Gas\", e \"TPA\". Il passaggio da un profilo all'altro è possibile durante il volo, impostando uno switch a 3 posizioni per \"Selezione Profilo Rate\" nella tab \"Regolazioni\"."
+        "message": "Fino a 3 differenti profili Rate possono essere salvati sul controllore di volo. I profili Rate includono le impostazioni per \"Rate RC\", \"Rate\", \"Esponenziale\", \"Gas\", e \"TPA\". Il passaggio da un profilo all'altro è possibile durante il volo, impostando uno switch a 3 posizioni per \"Selezione Profilo Rate\" nella tab \"Regolazioni\"."
     },
     "pidTuningRateSetup": {
         "message": "Rates di base/acro"
@@ -6666,7 +6656,7 @@
         "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
-        "message": "Raggiunto il limite massimo del numero di preset mostrato",
+        "message": "Raggiunto il limite massimo del numero di preset mostrati",
         "description": "Message that apprears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
@@ -6674,7 +6664,7 @@
         "description": "Placeholder for the options list dropdown"
     },
     "presetsVersionMismatch": {
-        "message": "Mismatch della versione della sorgente dei preset.<br/>Versione richiesta: {{versionRequired}}<br/>Versione della sorgente dei preset: {{versionSource}}<br/>Usando questa sorgente di preset potrebbe essere pericoloso.<br/>Vuoi procedere?",
+        "message": "Versione della sorgente dei preset non corrispondente.<br/>Versione richiesta: {{versionRequired}}<br/>Versione della sorgente dei preset: {{versionSource}}<br/>Usando questa sorgente di preset potrebbe essere pericoloso.<br/>Vuoi procedere?",
         "description": "Placeholder for the options list dropdown"
     },
     "presetsReviewOptionsWarning": {

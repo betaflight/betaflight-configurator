@@ -200,21 +200,6 @@
     "deviceReady": {
         "message": "Dispositivo - <span class=\"message-positive\"> Pronto</span>"
     },
-    "backupFileIncompatible": {
-        "message": "O arquivo de backup fornecido foi gerado para uma versão antiga do configurador e é incompatível com esta versão. Lamentamos"
-    },
-    "backupFileUnmigratable": {
-        "message": "O arquivo de backup fornecido foi gerado por uma versão antiga do configurador e não é possível importar. Lamentamos."
-    },
-    "configMigrationFrom": {
-        "message": "Migrando o arquivo de configuração gerado pelo configurador: $1"
-    },
-    "configMigratedTo": {
-        "message": "Configuração enviada para o configurador: $1"
-    },
-    "configMigrationSuccessful": {
-        "message": "Migração da configuração completa, migrações aplicadas: $1"
-    },
     "tabFirmwareFlasher": {
         "message": "Atualização de firmware"
     },
@@ -675,9 +660,6 @@
     "defaultSupport5": {
         "message": "<a href=\"http://betaflight.tk/slack\" target=\"_blank\" rel=\"noopener noreferrer\">Desenvolvedores do Betaflight no Slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">Funcionalidades de Backup e restauração desativadas.</span>Seu firmware está na versão <span class=\"message-negative\">$1</span> da API, O Backup e restauração requer a versão <span class=\"message-positive\">$2</span>. Por favor realize uma cópia de segurança pela Linha de comandos (CLI), veja a documentação do Betaflight para o procedimento."
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerômetro"
     },
@@ -699,29 +681,11 @@
     "initialSetupResetText": {
         "message": "Restaura as configurações para o <strong>padrão</strong>"
     },
-    "initialSetupButtonBackup": {
-        "message": "Backup JSON"
-    },
-    "initialSetupButtonRestore": {
-        "message": "Restaurar JSON"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Ativar Boot Loader / DFU"
     },
-    "initialSetupBackupRestoreHeader": {
-        "message": "Restauração e Backup Experimentais"
-    },
-    "initialSetupBackupRestoreText": {
-        "message": "Faz um <strong>backup</strong> das configurações, as configurações feitas pela <strong>Linha de comandos (CLI)</strong> <span class=\"message-negative\">não</span> são salvas - para isso, use o comando 'diff all' na linha de comandos."
-    },
     "initialSetupRebootBootloaderText": {
         "message": "Reiniciar no modo <strong>boot loader / DFU</strong>."
-    },
-    "initialSetupBackupSuccess": {
-        "message": "Backup salvo com <span class=\"message-positive\">sucesso</span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuração restaurada <span class=\"message-positive\"> com sucesso</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Redefinir eixo Z, offset: 0 graus"

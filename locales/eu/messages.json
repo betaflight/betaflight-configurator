@@ -175,21 +175,6 @@
     "deviceReady": {
         "message": "Device - <span class=\"message-positive\">Prest</span>"
     },
-    "backupFileIncompatible": {
-        "message": "Barkatu, baina, BACKUPa aurreko bertsiorako egina dago eta bertsio honekin ez du balio"
-    },
-    "backupFileUnmigratable": {
-        "message": "Barkatu, baina, BACKUPa aurreko bertsioak egina dago eta ezin da bertsio honetan erabili."
-    },
-    "configMigrationFrom": {
-        "message": "Eguneratzen konfigurazio fitxategia sortuta konfiguratzaile honekin: $1"
-    },
-    "configMigratedTo": {
-        "message": "$1 -kin egindako configurazioa eguneratua"
-    },
-    "configMigrationSuccessful": {
-        "message": "$1 -kin egindako configurazioa eguneratua eta ipinita"
-    },
     "tabFirmwareFlasher": {
         "message": "Firmware Flasheatzailea"
     },
@@ -627,9 +612,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight garatzaileak Slack-en</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">Backupak eta leheneratzea funtzioak itzalita daude.</span> Zuk daukazun firmwarearen API bertsioa <span class=\"message-negative\">$1</span>, Backupa eta leheneratzea beharrezkoak dira<span class=\"message-positive\">$2</span>.  Mezedez, gorde zure backupa CLI-re bitartez, begiratu Betaflight-ren dokumentazioa jakiteko nola egin."
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "Azelerometroa kalibratu"
     },
@@ -654,17 +636,8 @@
     "initialSetupButtonRebootBootloader": {
         "message": "Boot Loader / DFU aktibatu"
     },
-    "initialSetupBackupRestoreText": {
-        "message": "<strong> Babeskopia </strong> zure konfigurazioa istripu baten kasuan, <strong> CLI</strong> ezarpenak <span class=\"message-negative\"> ez daude </span> barne - erabili CLI 'diff all' komandoa horretarako."
-    },
     "initialSetupRebootBootloaderText": {
         "message": "<strong>Boot loader / DFU</strong> moduan berrabiarazi."
-    },
-    "initialSetupBackupSuccess": {
-        "message": "Babeskopia <span class=\"message-positive\">arrakastaz</span> gordeta"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Konfigurazioa <span class=\"message-positive\">arraskataz</span> leheneratua"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Berrezarri Z ardatza, desplazatu: 0 gradu"
