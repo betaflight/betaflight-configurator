@@ -200,21 +200,6 @@
     "deviceReady": {
         "message": "デバイス - <span class=\"message-positive\">準備完了</span>"
     },
-    "backupFileIncompatible": {
-        "message": "申し訳ありませんが、指定されたバックアップファイルは以前のバージョンで作成されているため、このバージョンと互換性がありません。"
-    },
-    "backupFileUnmigratable": {
-        "message": "申し訳ありませんが、指定されたバックアップファイルは以前のバージョンで作成されているため、移行できません。"
-    },
-    "configMigrationFrom": {
-        "message": "Configuratorによって作られた設定ファイルの移行: $1"
-    },
-    "configMigratedTo": {
-        "message": "設定をConfiguratorへ移行: $1"
-    },
-    "configMigrationSuccessful": {
-        "message": "設定の移行成功、適用します: $1"
-    },
     "tabFirmwareFlasher": {
         "message": "ファームフラッシャー"
     },
@@ -675,9 +660,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight devs on slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">バックアップと復元の機能が無効です。</span>ファームウェアのAPIバージョンは<span class=\"message-negative\">$1</span>ですが、バックアップと復元には<span class=\"message-positive\">$2</span>が必要です。バックアップにはCLIをご利用ください。方法についてはBetaflightドキュメントを参照してください。"
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "水平 キャリブレーション"
     },
@@ -699,29 +681,11 @@
     "initialSetupResetText": {
         "message": "<strong>デフォルト</strong>設定に戻します。"
     },
-    "initialSetupButtonBackup": {
-        "message": "JSONのバックアップ"
-    },
-    "initialSetupButtonRestore": {
-        "message": "JSONのリストア"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "ブートローダー / DFU を有効化"
     },
-    "initialSetupBackupRestoreHeader": {
-        "message": "試験的なバックアップとリストア"
-    },
-    "initialSetupBackupRestoreText": {
-        "message": "不測の事態に備え必ず設定の<strong>バックアップ</strong>を行ってください。また<strong>CLIのみで行った設定</strong>は<span class=\"message-negative\">このバックアップには含まれません</span>。- そのため、CLIコマンド [diff all] をご利用ください。"
-    },
     "initialSetupRebootBootloaderText": {
         "message": "<strong>ブートローダー / DFU</strong> モードで再起動します。"
-    },
-    "initialSetupBackupSuccess": {
-        "message": "バックアップが<span class=\"message-positive\">正常</span>に保存されました"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "設定のリストアが<span class=\"message-positive\">成功</span>しました"
     },
     "initialSetupButtonResetZaxis": {
         "message": "リセット Z 軸、オフセット: 0 度"

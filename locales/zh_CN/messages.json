@@ -126,54 +126,6 @@
     "language_default_pretty": {
         "message": "系统默认($t(detectedLanguage))"
     },
-    "language_ca": {
-        "message": "Català",
-        "description": "Don't translate!!!"
-    },
-    "language_de": {
-        "message": "Deutsch",
-        "description": "Don't translate!!!"
-    },
-    "language_en": {
-        "message": "English",
-        "description": "Don't translate!!!"
-    },
-    "language_es": {
-        "message": "Español",
-        "description": "Don't translate!!!"
-    },
-    "language_fr": {
-        "message": "Français",
-        "description": "Don't translate!!!"
-    },
-    "language_gl": {
-        "message": "Galego",
-        "description": "Don't translate!!!"
-    },
-    "language_it": {
-        "message": "Italiano",
-        "description": "Don't translate!!!"
-    },
-    "language_ja": {
-        "message": "日本語",
-        "description": "Don't translate!!!"
-    },
-    "language_ko": {
-        "message": "한국어",
-        "description": "Don't translate!!!"
-    },
-    "language_pt": {
-        "message": "Português",
-        "description": "Don't translate!!!"
-    },
-    "language_ru": {
-        "message": "Русский язык",
-        "description": "Don't translate!!!"
-    },
-    "language_zh_CN": {
-        "message": "简体中文",
-        "description": "Don't translate!!!"
-    },
     "sensorDataFlashNotFound": {
         "message": "未发现<br>闪存芯片",
         "description": "Text of the dataflash image in the header of the page."
@@ -247,21 +199,6 @@
     },
     "deviceReady": {
         "message": "设备 - <span class=\"message-positive\">已就绪</span>"
-    },
-    "backupFileIncompatible": {
-        "message": "上一版本配置程序生成的备份文件和当前版本的配置程序不兼容"
-    },
-    "backupFileUnmigratable": {
-        "message": "上一版本配置程序生成的备份文件无法移植到当前版本的配置配置程序中。抱歉。"
-    },
-    "configMigrationFrom": {
-        "message": "正在迁移配置程序生成的配置文件: $1"
-    },
-    "configMigratedTo": {
-        "message": "配置程序配置文件 $1 已移植"
-    },
-    "configMigrationSuccessful": {
-        "message": "配置文件移植完成，使用配置文件 $1。"
     },
     "tabFirmwareFlasher": {
         "message": "固件烧写工具"
@@ -720,9 +657,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight 开发者 Slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">备份和恢复功能被禁用。</span>当前飞控固件的API版本为 <span class=\"message-negative\">$1</span>，而备份和恢复功能需要版本 <span class=\"message-positive\">$2</span>。请通过 CLI 命令行手工备份，具体操作流程请参阅 Betaflight 文档。"
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "校准加速度计"
     },
@@ -744,29 +678,11 @@
     "initialSetupResetText": {
         "message": "恢复<strong>默认</strong>设置"
     },
-    "initialSetupButtonBackup": {
-        "message": "备份 JSON"
-    },
-    "initialSetupButtonRestore": {
-        "message": "恢复 JSON"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "激活启动引导程序/DFU"
     },
-    "initialSetupBackupRestoreHeader": {
-        "message": "实验性备份和恢复"
-    },
-    "initialSetupBackupRestoreText": {
-        "message": "在 CLI 命令行中使用 'dump' 命令来<strong>备份</strong>你的设置以防意外丢失，注意<strong>CLI命令行</strong>设置 <span class=\"message-negative\">没有</span> 包括在内。"
-    },
     "initialSetupRebootBootloaderText": {
         "message": "重新启动到 <strong>启动引导程序/DFU</strong> 模式。"
-    },
-    "initialSetupBackupSuccess": {
-        "message": "备份保存<span class=\"message-positive\">成功</span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "配置恢复<span class=\"message-positive\">成功</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "重置 Z 轴，补偿：0 度"

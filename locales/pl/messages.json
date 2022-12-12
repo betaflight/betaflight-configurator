@@ -179,21 +179,6 @@
     "deviceReady": {
         "message": "Urządzenie - <span class=\"message-positive\">Gotowe</span>"
     },
-    "backupFileIncompatible": {
-        "message": "Przepraszamy. Plik kopii zapasowej był wygenerowany przez poprzednią wersję konfiguratora i nie jest kompatybilny z bieżącą wersją."
-    },
-    "backupFileUnmigratable": {
-        "message": "Przepraszamy. Plik kopii zapasowej był wygenerowany przez poprzednią wersję konfiguratora i nie może zostać zaimportowany."
-    },
-    "configMigrationFrom": {
-        "message": "Importowanie pliku konfiguracji wygenerowanej przez konfigurator: $1"
-    },
-    "configMigratedTo": {
-        "message": "Zaimportowano konfigurację do konfiguratora: $1"
-    },
-    "configMigrationSuccessful": {
-        "message": "Import konfiguracji zakończony: $1"
-    },
     "tabFirmwareFlasher": {
         "message": "Wgraj oprogramowanie"
     },
@@ -634,9 +619,6 @@
     "defaultSupport5": {
         "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Deweloperzy Betaflight na platformie slack</a>"
     },
-    "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">Zapis i odtwarzanie konfiguracji jest wyłączone.</span> Posiadasz oprogramowanieFC z API w wersji <span class=\"message-negative\">$1</span>. Zapis i odtwarzanie konfiguracji wymaga wersji<span class=\"message-positive\">$2</span>. Prosimy, zapisz swoją konfigurację za pomocą CLI. Opis procedury znajdziesz w dokumentacji Betaflight."
-    },
     "initialSetupButtonCalibrateAccel": {
         "message": "Kalibracja akcelerometru"
     },
@@ -661,17 +643,8 @@
     "initialSetupButtonRebootBootloader": {
         "message": "Aktywacja Boot Loadera / DFU"
     },
-    "initialSetupBackupRestoreText": {
-        "message": "<strong>Utwórz kopię zapasową</strong> swojej konfiguracji na wypadek utraty, <strong>Ustawienia CLI</strong> <span class=\"message-negative\">nie są</span> uwzględniane - użyj do tego komendy 'diff all' w CLI."
-    },
     "initialSetupRebootBootloaderText": {
         "message": "Uruchomienie <strong>boot loadera / DFU</strong>."
-    },
-    "initialSetupBackupSuccess": {
-        "message": "Kopia zapasowa została <span class=\"message-positive\">zapisana</span>."
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Kopia zapasowa została <span class=\"message-positive\">przywrócona</span>."
     },
     "initialSetupButtonResetZaxis": {
         "message": "Resetuj oś Z, położenie: 0 stopni"
