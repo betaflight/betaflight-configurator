@@ -259,8 +259,6 @@ setup.initialize = function (callback) {
 
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
 
-                console.log(FC.CONFIG.armingDisableFlags);
-
                 $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags == 0);
 
                 for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
