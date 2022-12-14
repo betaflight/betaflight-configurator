@@ -70,9 +70,6 @@
     "expertMode": {
         "message": "啟用專家模式"
     },
-    "expertModeDescription": {
-        "message": "顯示未發佈和可能不穩定的版本"
-    },
     "permanentExpertMode": {
         "message": "默認啟用專家模式"
     },
@@ -2462,9 +2459,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "鮑率"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "顯示非穩定版本"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "除了穩定的版本外，還顯示候選版本"

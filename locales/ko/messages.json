@@ -84,7 +84,7 @@
         "message": "전문가 모드 활성"
     },
     "expertModeDescription": {
-        "message": "출시되지 않은 잠재적으로 불안정한 빌드 보기"
+        "message": "잠재적으로 불안정한 개발 빌드 보기"
     },
     "permanentExpertMode": {
         "message": "전문가 모드 영구 활성"
@@ -1054,7 +1054,7 @@
         "message": "페일세이프 활성"
     },
     "featureFAILSAFETip": {
-        "message": "<strong>노트:</strong> 단계 2가 비활성화되어 있으면, 폴백 설정 <strong>자동</strong>이 사용자가 설정한 모든 비행채널 (롤, 피치, 요 및 스로틀)을 대신하여 사용됩니다."
+        "message": "<strong>참고:</strong> 단계 2가 비활성화되어 있으면, 폴백 설정 <strong>자동</strong>이 사용자가 설정한 모든 비행채널 (롤, 피치, 요 및 스로틀)을 대신하여 사용됩니다."
     },
     "featureFAILSAFEOldTip": {
         "message": "RX 신호 손실에 페일세이프 설정을 적용하십시오."
@@ -1096,16 +1096,16 @@
         "message": "ESC/모터 기능"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>노트:</strong> 모든 기능 조합이 유효하지는 않습니다. 비행 컨트롤러 펌웨어가 잘못된 기능 조합을 감지하면 충돌하는 기능이 비활성화됩니다.<br /><strong>노트:</strong> 포트를 사용할 기능을 활성화 하기  <span class=\"message-negative\">전에</span> 시리얼 포트를 설정하십시오."
+        "message": "<strong>참고:</strong> 모든 기능 조합이 유효하지는 않습니다. 비행 컨트롤러 펌웨어가 잘못된 기능 조합을 감지하면 충돌하는 기능이 비활성화됩니다.<br /><strong>참고:</strong> 포트를 사용할 기능을 활성화 하기  <span class=\"message-negative\">전에</span> 시리얼 포트를 설정하십시오."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; 수신기를 위한 UART는 (<i>포트</i> 탭에서) 반드시 '시리얼 Rx'로 설정되어야 합니다<br>&#8226; 아래 드롭-다운으로부터 올바른 데이터 형식을 선택하세요:"
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>알림:</strong> SPI RX 공급자는 필요한 하드웨어가 탑재되어 있거나 SPI 버스에 연결된 경우에만 작동합니다."
+        "message": "<strong>참고:</strong> SPI RX 공급자는 필요한 하드웨어가 탑재되어 있거나 SPI 버스에 연결된 경우에만 작동합니다."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>노트:</strong> 모든 기능이 모든 비행 컨트롤러에 의해 지원되지는 않습니다. 만약 특별한 기능을 활성화하고, '저장 및 재부팅'을 누른 후에 비활성된다면, 이는 이 기능이 당신의 보드에 지원되지 않음을 의미합니다."
+        "message": "<strong>참고:</strong> 모든 기능이 모든 비행 컨트롤러에 의해 지원되지는 않습니다. 만약 특별한 기능을 활성화하고, '저장 및 재부팅'을 누른 후에 비활성된다면, 이는 이 기능이 당신의 보드에 지원되지 않음을 의미합니다."
     },
     "configurationBoardAlignment": {
         "message": "보드 및 센서 정렬"
@@ -1342,7 +1342,7 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>도움말:</strong> FC가 이러한 속도로 동작할 수 있는지 확인하십시오! CPU 및 사이클 시간의 안정성을 점검하십시오. 이를 변경하면 PID 재조정이 필요할 수 있습니다. 팁: 가속도계 및 기타 센서를 비활성화하여 더 많은 성능을 얻으십시오."
+        "message": "<strong>참고:</strong> FC가 이러한 속도로 동작할 수 있는지 확인하십시오! CPU 및 사이클 시간의 안정성을 점검하십시오. 이를 변경하면 PID 재조정이 필요할 수 있습니다. 팁: 가속도계 및 기타 센서를 비활성화하여 더 많은 성능을 얻으십시오."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1379,7 +1379,7 @@
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHelp": {
-        "message": "<strong>노트:</strong> GPS 기능을 사용할 때는 시리얼 포트(포트 탭을 통해)를 설정하는 것을 잊지 마십시오."
+        "message": "<strong>참고:</strong> GPS 기능을 사용할 때는 시리얼 포트(포트 탭을 통해)를 설정하는 것을 잊지 마십시오."
     },
     "configurationSerialRX": {
         "message": "시리얼 수신기 공급자"
@@ -1418,13 +1418,13 @@
         "message": "주변 장치"
     },
     "portsHelp": {
-        "message": "<strong>노트:</strong> 모든 조합이 유효하지는 않습니다. 비행 컨트롤러 펌웨어가 이를 감지하면 시리얼 포트 환경설정이 재설정됩니다."
+        "message": "<strong>참고:</strong> 모든 조합이 유효하지는 않습니다. 비행 컨트롤러 펌웨어가 이를 감지하면 시리얼 포트 환경설정이 재설정됩니다."
     },
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">경고:</span> VTX 테이블이 올바르게 설정되지 않았으며, 그것이 없으면 VTX 제어가 불가능합니다. VTX 테이블을 $t(tabVtx.message) 탭에서 설정하십시오."
     },
     "portsMSPHelp": {
-        "message": "<strong>노트:</strong> 당신이 하는 일을 모르는 경우 첫 번째 시리얼 포트의 MSP를 비활성화 하지  <span class=\"message-negative\">마십시오</span>. 만약 그렇게 할 경우 펌웨어 플래싱을 다시 하고 환경설정을 지워야 할 수도 있습니다."
+        "message": "<strong>참고:</strong> 당신이 하는 일을 모르는 경우 첫 번째 시리얼 포트의 MSP를 비활성화 하지  <span class=\"message-negative\">마십시오</span>. 만약 그렇게 할 경우 펌웨어 플래싱을 다시 하고 환경설정을 지워야 할 수도 있습니다."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "펌웨어 업그레이드가 <span class=\"message-negative\">필요함</span>.  펌웨어 &lt; 1.8.0의 시리얼 포트 설정은 지원하지 않습니다."
@@ -1560,7 +1560,7 @@
         "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {
-        "message": "<strong>노트:</strong> D 최대값 기능이 비활성화되고 매개변수가 숨겨집니다. D 최대값을 사용하려면 $t(pidTuningPidSettings.message)에서 활성화하십시오."
+        "message": "<strong>참고:</strong> D 최대값 기능이 비활성화되고 매개변수가 숨겨집니다. D 최대값을 사용하려면 $t(pidTuningPidSettings.message)에서 활성화하십시오."
     },
     "pidTuningDMinFeatureTitle": {
         "message": "다이나믹 댐핑 / D 최대 설정",
@@ -2311,7 +2311,7 @@
         "message": "16 진수 만, 0-9, A-F"
     },
     "transponderHelp1": {
-        "message": "여기서 트랜스폰더 코드를 환경설정하십시오. 노트: 유효한 코드만 레이스 타이밍 시스템에 의해 인식됩니다. 유효한 트랜스폰더 코드는 <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro</a>에서 얻을 수 있습니다."
+        "message": "여기서 트랜스폰더 코드를 환경설정하십시오. 참고: 유효한 코드만 레이스 타이밍 시스템에 의해 인식됩니다. 유효한 트랜스폰더 코드는 <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro</a>에서 얻을 수 있습니다."
     },
     "transponderHelp2": {
         "message": "자세한 내용은 <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 사이트</a>를 방문하십시오."
@@ -2744,7 +2744,7 @@
         "message": "디버그 0"
     },
     "cliInfo": {
-        "message": "<strong>노트:</strong> CLI 탭을 빠져 나가거나 연결끊기를 누르면 <strong>자동으로</strong>보드에 \"<strong>exit</strong>\"를 보냅니다. 최신 펌웨어를 사용하면 컨트롤러를 <strong>재시작</strong>하고, 저장되지 않은 변경은 <strong>상실</strong>합니다. <p><strong><span class=\"message-negative\">경고:</span></strong> CLI에서 일부 명령은 임의로 신호를 모터 출력 핀으로 보내는 결과를 초래할 수 있습니다. 이것은 만약 배터리가 연결된 상태에서 모터의 회전을 유발할 수 있습니다. 그러므로 <strong>CLI에서 명령을 입력하기 전에 배터리를 연결하지 말 것을</strong> 강력히 권장합니다."
+        "message": "<strong>참고:</strong> CLI 탭을 빠져 나가거나 연결끊기를 누르면 <strong>자동으로</strong>보드에 \"<strong>exit</strong>\"를 보냅니다. 최신 펌웨어를 사용하면 컨트롤러를 <strong>재시작</strong>하고, 저장되지 않은 변경은 <strong>상실</strong>합니다. <p><strong><span class=\"message-negative\">경고:</span></strong> CLI에서 일부 명령은 임의로 신호를 모터 출력 핀으로 보내는 결과를 초래할 수 있습니다. 이것은 만약 배터리가 연결된 상태에서 모터의 회전을 유발할 수 있습니다. 그러므로 <strong>CLI에서 명령을 입력하기 전에 배터리를 연결하지 말 것을</strong> 강력히 권장합니다."
     },
     "cliInputPlaceholder": {
         "message": "당신의 명령어를 여기에 작성하세요. 자동완성을 위해 탭을 누르세요."
@@ -2777,7 +2777,7 @@
         "message": "파일 <strong>{{fileName}}</strong> 로드됨. 로드된 명령어를 검토하세요."
     },
     "cliConfirmSnippetNote": {
-        "message": "<strong>노트</strong>: 실행하기 전에 명령을 검토하고 편집할 수 있습니다."
+        "message": "<strong>참고</strong>: 실행하기 전에 명령을 검토하고 편집할 수 있습니다."
     },
     "cliConfirmSnippetBtn": {
         "message": "실행"
@@ -3050,13 +3050,13 @@
         "message": "수동 전송 속도"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "보드가 기본 속도를 지원하지 않거나 블루투스를 통해 플래시할 경우 전송속도를 수동으로 선택하세요.<br /><span class=\"message-negative\">노트:</span> USB DFU를 통하여 플래시하는 경우는 사용하지 마십시오."
+        "message": "보드가 기본 속도를 지원하지 않거나 블루투스를 통해 플래시할 경우 전송속도를 수동으로 선택하세요.<br /><span class=\"message-negative\">참고:</span> USB DFU를 통하여 플래시하는 경우는 사용하지 마십시오."
     },
     "firmwareFlasherBaudRate": {
         "message": "전송 속도"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "불안정 릴리즈 보기"
+        "message": "릴리스 후보 보기"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "안정된 릴리즈 외에 릴리즈 후보 보기"
@@ -3125,7 +3125,7 @@
         "message": "메시지:"
     },
     "firmwareFlasherWarningText": {
-        "message": "이 펌웨어 플래시 도구로 <strong>베타플라이트가 아닌</strong> 하드웨어를 플래시하지 <span class=\"message-negative\">마십시오</span>.<br />플래시하는 중에 보드의 <strong>연결을 끊거나</strong> 컴퓨터의 <strong>전원을 끄지</strong> <span class=\"message-negative\">마십시오</span>.<br /><br /><strong>노트: </strong>STM32 부트로더는 ROM에 저장되어 있어, 벽돌상태가 될 수 없습니다.<br /><strong>노트: </strong><span class=\"message-negative\">자동-연결</span>은 당신이 펌웨어 플래시 도구에 있는 동안 항상 비활성화됩니다.<br /><strong>노트: </strong>반드시 백업을 하십시오; 일부 업그레이드/다운그레이드는 당신의 환경설정을 지워질 것입니다.<br /><strong>노트:</strong> 플래시하는 데 문제가 있는 경우 먼저 <strong>FC에서 모든 케이블의 연결을 끊고</strong>, 재부팅, 드라이브 업그레이드를 시도하십시오.<br /><strong>노트:</strong> 직접 연결된 USB 소켓(대부분의 새로운 보드들) 이 있는 보드를 플래시할 경우, 베타플라이트 매뉴얼의 USB 플래싱 섹션을 읽고 올바른 소프트웨어 및 드라이버를 설치했는지 확인하십시오."
+        "message": "이 펌웨어 플래시 도구로 <strong>베타플라이트가 아닌</strong> 하드웨어를 플래시하지 <span class=\"message-negative\">마십시오</span>.<br />플래시하는 중에 보드의 <strong>연결을 끊거나</strong> 컴퓨터의 <strong>전원을 끄지</strong> <span class=\"message-negative\">마십시오</span>.<br /><br /><strong>참고: </strong>STM32 부트로더는 ROM에 저장되어 있어, 벽돌상태가 될 수 없습니다.<br /><strong>참고: </strong><span class=\"message-negative\">자동-연결</span>은 당신이 펌웨어 플래시 도구에 있는 동안 항상 비활성화됩니다.<br /><strong>참고: </strong>반드시 백업을 하십시오; 일부 업그레이드/다운그레이드는 당신의 환경설정을 지워질 것입니다.<br /><strong>참고:</strong> 플래시하는 데 문제가 있는 경우 먼저 <strong>FC에서 모든 케이블의 연결을 끊고</strong>, 재부팅, 드라이브 업그레이드를 시도하십시오.<br /><strong>참고:</strong> 직접 연결된 USB 소켓(대부분의 새로운 보드들) 이 있는 보드를 플래시할 경우, 베타플라이트 매뉴얼의 USB 플래싱 섹션을 읽고 올바른 소프트웨어 및 드라이버를 설치했는지 확인하십시오."
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>통신 복구 / 손실</strong>"
@@ -3682,15 +3682,15 @@
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
-        "message": "<strong>노트:</strong> 값이 수동으로 변경되었기 때문에 슬라이더가 비활성화됩니다. '$t(pidTuningSliderEnableButton.message)' 버튼을 클릭하면 그것들이 다시 활성화됩니다. 이는 값이 재설정되고 저장되지 않은 변경 사항이 손실될 것입니다.",
+        "message": "<strong>참고:</strong> 값이 수동으로 변경되었기 때문에 슬라이더가 비활성화됩니다. '$t(pidTuningSliderEnableButton.message)' 버튼을 클릭하면 그것들이 다시 활성화됩니다. 이는 값이 재설정되고 저장되지 않은 변경 사항이 손실될 것입니다.",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningGyroSliderDisabled": {
-        "message": "<strong>노트:</strong> 값이 수동으로 변경되었기 때문에 자이로 슬라이더가 비활성화됩니다. '$t(pidTuningGyroSliderEnableButton.message)' 버튼을 클릭하면 그것들이 다시 활성화됩니다. 이는 값이 재설정되고 저장되지 않은 변경 사항이 손실될 것입니다.",
+        "message": "<strong>참고:</strong> 값이 수동으로 변경되었기 때문에 자이로 슬라이더가 비활성화됩니다. '$t(pidTuningGyroSliderEnableButton.message)' 버튼을 클릭하면 그것들이 다시 활성화됩니다. 이는 값이 재설정되고 저장되지 않은 변경 사항이 손실될 것입니다.",
         "description": "Gyro Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningDTermSliderDisabled": {
-        "message": "<strong>노트:</strong> 값이 수동으로 변경되었기 때문에 D 텀 슬라이더가 비활성화됩니다. '$t(pidTuningDTermSliderEnableButton.message)' 버튼을 클릭하면 그것들이 다시 활성화됩니다. 이는 값이 재설정되고 저장되지 않은 변경 사항이 손실될 것입니다.",
+        "message": "<strong>참고:</strong> 값이 수동으로 변경되었기 때문에 D 텀 슬라이더가 비활성화됩니다. '$t(pidTuningDTermSliderEnableButton.message)' 버튼을 클릭하면 그것들이 다시 활성화됩니다. 이는 값이 재설정되고 저장되지 않은 변경 사항이 손실될 것입니다.",
         "description": "DTerm Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningPidSlidersDisabled": {
@@ -3702,15 +3702,15 @@
         "description": "Button label for enabling sliders"
     },
     "pidTuningSlidersNonExpertMode": {
-        "message": "<strong>노트:</strong> 당신이 전문가 모드가 아니므로 슬라이더 범위가 제한됩니다. 이 범위는 대부분의 빌드와 초보자에게 적합합니다.",
+        "message": "<strong>참고:</strong> 당신이 전문가 모드가 아니므로 슬라이더 범위가 제한됩니다. 이 범위는 대부분의 빌드와 초보자에게 적합합니다.",
         "description": "Sliders restricted message"
     },
     "pidTuningPidSlidersNonExpertMode": {
-        "message": "<strong>노트:</strong> 당신은 전문가 모드가 아니므로 슬라이더 접근과 범위가 제한됩니다. 기본 모드는 대부분의 빌드와 초보자에게 적합합니다.",
+        "message": "<strong>참고:</strong> 당신은 전문가 모드가 아니므로 슬라이더 접근과 범위가 제한됩니다. 기본 모드는 대부분의 빌드와 초보자에게 적합합니다.",
         "description": "Firmware Pid sliders restricted message"
     },
     "pidTuningFilterSlidersNonExpertMode": {
-        "message": "<strong>노트:</strong> 당신이 전문가 모드가 아니므로 슬라이더 범위가 제한됩니다. 이 범위는 대부분의 빌드와 초보자에게 적합합니다.",
+        "message": "<strong>참고:</strong> 당신이 전문가 모드가 아니므로 슬라이더 범위가 제한됩니다. 이 범위는 대부분의 빌드와 초보자에게 적합합니다.",
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
@@ -3758,7 +3758,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderLegacyHelp": {
-        "message": "낮은 FF 값은 스틱 반응을 더 나쁘게 할 수 있고, 플립이나 롤의 끝에서 쿼드가 스틱에 너무 많이 뒤쳐져 느린 바운스백과 I-텀 윈딩 업 및 'I-텀 바운스백'을 유발할 수 있습니다.<br /><br />높은 FF 값은 날카로운 움직임에서 딱딱한 스틱 반응을 가져올 수 있습니다. 지나치게 높은 FF 값은 플립이나 롤의 끝에서 오버슈트와 빠른 바운스백을 유발할 수 있습니다.<br /><br />노트:<br />I-텀 릴렉스 기능은 낮은 권위의 쿼드나 낮은 스틱 반응 게인이 사용될 경우에 대한 스틱 움직임에서 윈딩 업으로부터 I-텀을 멈추게 할 수 있습니다.",
+        "message": "낮은 FF 값은 스틱 반응을 더 나쁘게 할 수 있고, 플립이나 롤의 끝에서 쿼드가 스틱에 너무 많이 뒤쳐져 느린 바운스백과 I-텀 윈딩 업 및 'I-텀 바운스백'을 유발할 수 있습니다.<br /><br />높은 FF 값은 날카로운 움직임에서 딱딱한 스틱 반응을 가져올 수 있습니다. 지나치게 높은 FF 값은 플립이나 롤의 끝에서 오버슈트와 빠른 바운스백을 유발할 수 있습니다.<br /><br />참고:<br />I-텀 릴렉스 기능은 낮은 권위의 쿼드나 낮은 스틱 반응 게인이 사용될 경우에 대한 스틱 움직임에서 윈딩 업으로부터 I-텀을 멈추게 할 수 있습니다.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningDGainSlider": {
@@ -4140,7 +4140,7 @@
         "message": "수신기 페일세이프"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "페일세이프에는 두 단계가 있습니다. <strong>단계 1</strong>은 비행 채널의 펄스 길이가 유효하지 않거나 수신기가 페일세이프 모드를 보고하거나 수신기에서 아무 신호도 없는 경우 적용되며, 채널 폴백 설정이  <span class=\"message-negative\">모든 채널</span>에 적용되고 복구에 짧은 시간이 걸립니다. <strong>단계 2</strong>는 기체가  <span class=\"message-negative\">아밍이 된</span> 동안 환경설정된 시간보다 오류 상태가 오래 걸릴 때 적용됩니다. 선택한 절차에 의해 무시되지 않는 한 모든 채널은 적용된 채널 폴백 설정으로 유지됩니다.<br /><strong>노트:</strong> 단계 1에 들어가기에 앞서 채널 폴백 설정은 유효하지 않은 펄스가 있는 개별 AUX 채널에도 적용됩니다."
+        "message": "페일세이프에는 두 단계가 있습니다. <strong>단계 1</strong>은 비행 채널의 펄스 길이가 유효하지 않거나 수신기가 페일세이프 모드를 보고하거나 수신기에서 아무 신호도 없는 경우 적용되며, 채널 폴백 설정이 <span class=\"message-negative\">모든 채널</span>에 적용되고 복구에 짧은 시간이 걸립니다. <strong>단계 2</strong>는 기체가 <span class=\"message-negative\">아밍이 된</span> 동안 환경설정된 시간보다 오류 상태가 오래 걸릴 때 적용됩니다. 선택한 절차에 의해 무시되지 않는 한 모든 채널은 적용된 채널 폴백 설정으로 유지됩니다.<br /><strong>참고:</strong> 단계 1에 들어가기에 앞서 채널 폴백 설정은 유효하지 않은 펄스가 있는 개별 AUX 채널에도 적용됩니다."
     },
     "failsafePulsrangeTitle": {
         "message": "유효한 펄스 범위 설정"
@@ -4158,7 +4158,7 @@
         "message": "채널 폴백 설정"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "이러한 설정은 유효하지 않은 개별 AUX 채널 또는 스테이지 1에 들어갈 때 모든 채널에 적용됩니다. <strong>노트:</strong> 값은 25us 단위로 저장되므로 작은 변화가 사라집니다."
+        "message": "이러한 설정은 유효하지 않은 개별 AUX 채널 또는 스테이지 1에 들어갈 때 모든 채널에 적용됩니다. <strong>참고:</strong> 값은 25us 단위로 저장되므로 작은 변화가 사라집니다."
     },
     "failsafeChannelFallbackSettingsAuto": {
         "message": "<strong>자동</strong>은 롤, 피치, 요는 중앙값을, 스로틀은 최저값으로 변경 됨을 의미합니다. <strong>홀드</strong>는 수신한 마지막 값을 유지한다는 의미입니다."
@@ -4269,7 +4269,7 @@
         "message": "페일세이프 킬 스위치 (모드 탭에서 페일세이프 설정)"
     },
     "failsafeKillSwitchHelp": {
-        "message": "페일 세이프 스위치 (모드 탭)가 선택한 페일 세이프 절차를 우회하여 직접적인 강제 종료 스위치로 작동하게 하려면 이 옵션을 설정하십시오. <strong>노트:</strong> 페일세이프 킬 스위치가 ON 위치에 있을 때 아밍이 차단됩니다."
+        "message": "페일 세이프 스위치(모드 탭) 가 선택한 페일 세이프 절차를 우회하여 직접적인 강제 종료 스위치로 작동하게 하려면 이 옵션을 설정하십시오. <strong>참고:</strong> 페일세이프 킬 스위치가 ON 위치에 있을 때 아밍이 차단됩니다."
     },
     "failsafeSwitchTitle": {
         "message": "페일세이프 스위치"
@@ -4344,7 +4344,7 @@
         "message": "교정하려면 멀티미터를 사용하여 기체에서 실제 전압 / 전류 드로잉을 측정하고(배터리가 연결된 상태에서) 아래 값을 입력하십시오. 그런 다음 동일한 배터리를 계속 연결한 상태에서 [Calibrate] 를 클릭하십시오."
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>노트:</strong> 스케일을 교정하기 전에 전압에 대한 분배기 및 승수와 전류 오프셋이 올바르게 설정되어 있는지 확인하십시오.<br>값을 0으로 두면 교정이 적용되지 않습니다.</br> <strong>배터리를 꽂기 전에 프로펠러를 분리하는 것을 명심하세요!</strong>"
+        "message": "<strong>참고:</strong> 스케일을 교정하기 전에 전압에 대한 분배기 및 승수와 전류 오프셋이 올바르게 설정되어 있는지 확인하십시오.<br>값을 0으로 두면 교정이 적용되지 않습니다.</br> <strong>배터리를 꽂기 전에 프로펠러를 분리하는 것을 명심하세요!</strong>"
     },
     "powerCalibrationManagerWarning": {
         "message": "<span class=\"message-negative\">경고:</span> 배터리가 <span class=\"message-negative\">연결되지 않으면</span> 전압과 전류 측정소스가 <span class=\"message-negative\">제대로 설정되지 않습니다.</span> 전압과/또는 전류가 0 이상의 수치로 읽혀져야 합니다. 그렇지 않으면 당신은 이 도구를 사용하여 교정할 수 없을 것입니다."
@@ -4566,7 +4566,7 @@
         "message": "<span class=\"message-negative\"><b>경고:</b></span> OSD 칩이 검출되지 않았습니다. 일부 비행 컨트롤러들은 배터리 전원에 연결되지 않는 한 OSD 칩의 전원을 제대로 공급하지 못합니다. USB를 연결하기 전에 (프롭을 제거하고!) 배터리를 연결하십시오."
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>공지:</strong> OSD 미리보기는 비행 컨트롤러에 설치된 실제 폰트로 보여지지 않을 수도 있습니다. 또한 개별적인 항목의 레이아웃은 오래된 버전의 펌웨어를 사용할 때 다르게 보여질 수 있습니다 - 비행하기 전 당신의 고글로 화면을 점검하세요."
+        "message": "<strong>참고:</strong> OSD 미리보기는 비행 컨트롤러에 설치된 실제 폰트로 보여지지 않을 수도 있습니다. 또한 개별적인 항목의 레이아웃은 오래된 버전의 펌웨어를 사용할 때 다르게 보여질 수 있습니다 - 비행하기 전 당신의 고글로 화면을 점검하세요."
     },
     "osdSetupUnsupportedNote1": {
         "message": "비행 컨트롤러가 OSD 명령에 응답하지 않습니다. 이는 통합된 BetaFlight OSD가 없다는 것을 의미합니다."
@@ -5953,7 +5953,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "활성화되면 VTX는 다른 조종사를 방해하지 않고 쿼드가 벤치에 있도록 매우 낮은 출력 모드로 진입합니다. 보통 이 모드의 범위는 5m 미만입니다.<br /><br />노트: 스마트오디오와 같은 일부 프로토콜은 전원을 켠 후 소프트웨어를 통해 Pit 모드를 활성화할 수 없습니다.",
+        "message": "활성화되면 VTX는 다른 조종사를 방해하지 않고 쿼드가 벤치에 있도록 매우 낮은 출력 모드로 진입합니다. 보통 이 모드의 범위는 5m 미만입니다.<br /><br />참고: 스마트오디오와 같은 일부 프로토콜은 전원을 켠 후 소프트웨어를 통해 Pit 모드를 활성화할 수 없습니다.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -6133,7 +6133,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "DShot 텔레메트리를 통해 FC에 ESC 데이터 전송하세요. RPM 필터링 및 다이나믹 아이들에 필요합니다. <br> <br>노트: JESC, Jazzmac, BLHeli-32와 같은 적절한 펌웨어와 호환되는 ESC가 필요합니다.\n\n컨텍스트편집",
+        "message": "DShot 텔레메트리를 통해 FC에 ESC 데이터 전송하세요. RPM 필터링 및 다이나믹 아이들에 필요합니다. <br> <br>참고: JESC, Jazzmac, BLHeli-32와 같은 적절한 펌웨어와 호환되는 ESC가 필요합니다.\n\n컨텍스트편집",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
@@ -6702,7 +6702,7 @@
         "message": "이 빌드에 포함할 모터(ESC) 프로토콜을 선택하십시오. 이것은 드롭다운으로 여러 항목을 선택할 수 있습니다."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "특히 개발자에게 유용한데, 다음에 입력하여 병합된 PR을 선택하거나 커밋 sha를 지정하거나 '아직 병합되지 않은' PR을 지정할 수 있습니다: pull/{PR number}/head ."
+        "message": "개발자에게 특히 유용한 것은 병합된 PR을 선택하거나 커밋 sha를 지정하거나 # 뒤에 PR 번호 예: #1234(이것은 'pull/1234/head'의 줄임말)를 입력하여 '아직 병합되지 않은' PR을 지정할 수 있습니다."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "개발자의 경우 '스페이스'로 구분하여 필요한 정의를 추가할 수 있지만, 'USE_' 접두사가 없으면 자동으로 추가됩니다."
@@ -6714,6 +6714,6 @@
         "message": "클래식 모드"
     },
     "classicBuildModeDescription": {
-        "message": "이 모드는 커밋을 제외한 모든 매개 변수를 무시합니다. 이것은 기본적으로 고전적인 집합체와 동일한 것을 달성하며, 편의를 위해 제공됩니다."
+        "message": "이 모드는 여기에서 모든 매개변수를 무시합니다(전문가 모드일 때 커밋을 제외하고). 이것은 기본적으로 고전적인 집합체와 동일한 것을 달성하며, 편의를 위해 제공됩니다."
     }
 }

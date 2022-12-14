@@ -73,9 +73,6 @@
     "expertMode": {
         "message": "Adituen modua"
     },
-    "expertModeDescription": {
-        "message": "Erakutsi eraikinik gabeko eta balizko ezegonkorrak"
-    },
     "permanentExpertMode": {
         "message": "Aditu modua etengabe gaitu"
     },
@@ -2525,9 +2522,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud tasa"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Ezegonkor bertsioak erakutsi"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Erakutsi hautagai bertsioak, egonkor bertsioak gain"

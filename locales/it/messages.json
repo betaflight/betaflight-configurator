@@ -83,9 +83,6 @@
     "expertMode": {
         "message": "Abilita modalità esperto"
     },
-    "expertModeDescription": {
-        "message": "Mostra build non rilasciate e potenzialmente instabili"
-    },
     "permanentExpertMode": {
         "message": "Modalità esperto sempre abilitata"
     },
@@ -3054,9 +3051,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostra versioni instabili"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Mostra i candidati al rilascio oltre alle versioni stabili"
@@ -6701,9 +6695,6 @@
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Selezionare i protocolli dei motori (ESC) che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi."
     },
-    "firmwareFlasherBranchDescription": {
-        "message": "Particolarmente utile per gli sviluppatori, è possibile selezionare un PR, specificare un sha di commit, o specificare un PR 'in attesa di merge' digitando: pull/{PR number}/head ."
-    },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Per gli sviluppatori, puoi aggiungere qualsiasi define necessaria, separata da uno `spazio`, ma senza il prefisso `USE_`, il quale verrà aggiunto automaticamente."
     },
@@ -6712,8 +6703,5 @@
     },
     "classicBuild": {
         "message": "Modalità Classica"
-    },
-    "classicBuildModeDescription": {
-        "message": "Questa modalità ignora tutti i parametri, eccetto per i commit. Questo essenzialmente ottiene lo stesso risultato delle classiche nightly build ed è fornito per comodità."
     }
 }

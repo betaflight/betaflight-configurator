@@ -84,7 +84,7 @@
         "message": "Expertモード 有効"
     },
     "expertModeDescription": {
-        "message": "未リリース、未検証ビルド版を表示"
+        "message": "不安定要素のある開発用ビルドを表示"
     },
     "permanentExpertMode": {
         "message": "Expertモード 常時有効"
@@ -681,11 +681,29 @@
     "initialSetupResetText": {
         "message": "<strong>デフォルト</strong>設定に戻します。"
     },
+    "initialSetupButtonBackup": {
+        "message": "JSONのバックアップ"
+    },
+    "initialSetupButtonRestore": {
+        "message": "JSONのリストア"
+    },
     "initialSetupButtonRebootBootloader": {
         "message": "ブートローダー / DFU を有効化"
     },
+    "initialSetupBackupRestoreHeader": {
+        "message": "試験的なバックアップとリストア"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "不測の事態に備え必ず設定の<strong>バックアップ</strong>を行って下さい。<strong>CLI</strong>設定は<span class=\"message-negative\">自動バックアップされません</span>。- CLIコマンドの [diff all] をご利用下さい。"
+    },
     "initialSetupRebootBootloaderText": {
         "message": "<strong>ブートローダー / DFU</strong> モードで再起動します。"
+    },
+    "initialSetupBackupSuccess": {
+        "message": "バックアップが<span class=\"message-positive\">正常</span>に保存されました"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "設定のリストアが<span class=\"message-positive\">成功</span>しました"
     },
     "initialSetupButtonResetZaxis": {
         "message": "リセット Z 軸、オフセット: 0 度"
@@ -3038,7 +3056,7 @@
         "message": "伝送速度"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "未検証版リリースを表示"
+        "message": "リリース候補を表示"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "安定版リリースに加えRC版リリースも表示"
@@ -6684,7 +6702,7 @@
         "message": "このビルドに含まれるモーター (ESC) プロトコルを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。"
     },
     "firmwareFlasherBranchDescription": {
-        "message": "特に開発者にとっては便利な機能として、次のように入力することでマージされたPRを選択したり、コミットハッシュ値を指定したり『まだマージされていない』PRを指定したりすることができます: pull/{PR number}/head ."
+        "message": "特に開発者にとっては便利な機能で、#の後にPR番号 [例: #1234] を入力することで、マージ済みのPRを選択したり、コミットshaを指定したり「まだマージされていない」PRを指定したりできます。 (これは『pull/1234/head』ブランチの省略です)"
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "開発者向けには必要な定義を『スペース』で区切って追加することができますが、接頭辞【USE_】がなければ自動的に追加されます。"
@@ -6696,6 +6714,6 @@
         "message": "クラシックモード"
     },
     "classicBuildModeDescription": {
-        "message": "このモードでは、Commit以外のパラメータはすべて無視されます。これは基本的に古典的なナイトリービルドと同様なことを実現するもので、利便性のために提供されています。"
+        "message": "このモードでは、(Expertモード時のコミットは除き) ここにあるすべてのパラメータが無視されます。これは基本的に古典的なナイトリービルド同様なことを実現するもので、利便性のために提供されています。"
     }
 }
