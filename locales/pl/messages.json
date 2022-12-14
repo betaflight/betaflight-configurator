@@ -77,9 +77,6 @@
     "expertMode": {
         "message": "Uruchom Tryb Eksperta"
     },
-    "expertModeDescription": {
-        "message": "Pokaż niepublikowane i możliwie niestabilne wersje"
-    },
     "permanentExpertMode": {
         "message": "Uruchom Tryb Eksperta na stałe"
     },
@@ -2616,9 +2613,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Prędkość transmisji"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Pokaż niestabilne wydania"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Pokaż wersje przedpremierowe oprócz wersji stabilnych"

@@ -83,9 +83,6 @@
     "expertMode": {
         "message": "Modo avançado"
     },
-    "expertModeDescription": {
-        "message": "Exibir versões não liberadas e potencialmente instáveis"
-    },
     "permanentExpertMode": {
         "message": "Sempre usar o modo avançado"
     },
@@ -3000,9 +2997,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Exibir versões instáveis"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Exibir versões candidatas em conjunto com versões estáveis"
@@ -6524,9 +6518,6 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Selecione os protocolos de motor (ESC) que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
-    },
-    "firmwareFlasherBranchDescription": {
-        "message": "Especialmente útil para desenvolvedores, você pode selecionar um PR específico, o SHA de um commit, ou um PR que ainda vai ser mesclado, digitando: pull/{PR number}/head"
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para desenvolvedores, você pode adicionar qualquer define que precisar, separados por um `espaço`, mas sem o prefixo `USE_`, ele será adicionado automaticamente para você."

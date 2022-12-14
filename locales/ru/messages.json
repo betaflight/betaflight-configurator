@@ -83,9 +83,6 @@
     "expertMode": {
         "message": "Включить режим эксперта"
     },
-    "expertModeDescription": {
-        "message": "Показать невыпущенные и потенциально нестабильные сборки"
-    },
     "permanentExpertMode": {
         "message": "Всегда включать режим эксперта"
     },
@@ -2762,9 +2759,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Скорость передачи"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Показать нестабильные релизы"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Показать предварительные релизы в дополнение к стабильным релизам"

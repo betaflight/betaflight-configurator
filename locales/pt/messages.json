@@ -84,7 +84,7 @@
         "message": "Ativar Modo de Perito"
     },
     "expertModeDescription": {
-        "message": "Exibir compilações não lançadas e potencialmente instáveis"
+        "message": "Mostrar compilações de desenvolvimento que são potencialmente instáveis"
     },
     "permanentExpertMode": {
         "message": "Ativar permanentemente o Modo de Perito"
@@ -3056,7 +3056,7 @@
         "message": "Baud Rate"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostrar versões instáveis"
+        "message": "Mostrar versões candidatas"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Mostrar versões candidatas em conjunto com versões estáveis"
@@ -6702,7 +6702,7 @@
         "message": "Selecione os protocolos de motor (ESC) que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Especialmente útil para programadores, pode selecionar um merged PR, especificar um commit sha, ou especificar um PR 'yet to be merged' digitando in: pull/{PR number}/head ."
+        "message": "Especialmente útil para desenvolvedores, pode selecionar uma versão PR, especificar uma commit sha, ou especificar um PR 'ainda a ser mesclado' digitando um # seguido pelo número do PR. ex. #1234 (abreviatura para o branch 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para programadores, pode adicionar quaisquer 'defines' que precise, separadas por um `espaço`, mas sem o prefixo `USE_`, que será adicionado automaticamente para si."
@@ -6714,6 +6714,6 @@
         "message": "Modo Clássico"
     },
     "classicBuildModeDescription": {
-        "message": "Este modo ignora todos os parâmetros aqui, exceto para o commit. Isto essencialmente consegue o mesmo que as clássicas nightlies e é fornecido por conveniência."
+        "message": "Este modo ignora todos os parâmetros aqui (exceto para o commit quando no modo especialista). Basicamente, isto consegue o mesmo que as classic nightlies, e é fornecido por conveniência."
     }
 }

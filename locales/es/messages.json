@@ -84,7 +84,7 @@
         "message": "Modo Experto"
     },
     "expertModeDescription": {
-        "message": "Mostrar versiones no publicadas y potencialmente inestables"
+        "message": "Mostrar versiones de desarrollo potencialmente inestables"
     },
     "permanentExpertMode": {
         "message": "Activar permanentemente el Modo Experto"
@@ -3056,7 +3056,7 @@
         "message": "Velocidad de Transmisión"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostrar versiones inestables"
+        "message": "Mostrar versiones candidatas"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Mostrar versiones candidatas además de versiones estables"
@@ -6702,7 +6702,7 @@
         "message": "Selecciona los protocolos de motor (ESC) que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Especialmente útil para desarrolladores, puedes seleccionar un PR incluido en el código, especificar el sha de un commit, o incluso un PR 'todavía no incluido' escribiendo: pull/{número de PR}/head ."
+        "message": "Especialmente útil para desarrolladores, puedes seleccionar un PR incluido en el código, especificar el sha de un commit, o especificar un PR 'todavía no incluido' escribiendo una # seguida por el número de PR por eje. #1234 (esto es una abreviatura para la rama 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para desarrolladores, puedes añadir cualquier define que necesites, separados por un `espacio`, pero sin el prefijo `USE_`, se añadirá automáticamente."
@@ -6714,6 +6714,6 @@
         "message": "Modo clásico"
     },
     "classicBuildModeDescription": {
-        "message": "Este modo ignora todos los parámetros, excepto el del commit. Básicamente consigue lo mismo que las compilaciones clásicas, y se proporciona por comodidad."
+        "message": "Este modo ignora todos los parámetros de aquí (excepto el del commit cuando está en modo experto). Básicamente consigue lo mismo que las compilaciones clásicas, y se proporciona por comodidad."
     }
 }

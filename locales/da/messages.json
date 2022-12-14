@@ -84,7 +84,7 @@
         "message": "Aktiver eksperttilstand"
     },
     "expertModeDescription": {
-        "message": "Vis ikke-udgivne og potentielt utestede builds"
+        "message": "Vis udviklings releases som muligvis ikke er fejlfri"
     },
     "permanentExpertMode": {
         "message": "Aktivér Eksperttilstand permanent"
@@ -3056,7 +3056,7 @@
         "message": "Baudhastighed"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Vis versioner som ikke er fejlfri"
+        "message": "Vis udviklings releases"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Vis foreløbige mulige versioner, sammen med endelige versioner"
@@ -6702,7 +6702,7 @@
         "message": "Vælg den motor protokol for ESC, som du ønsker skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Særligt anvendelig for udviklere, da du kan vælge et flettet PR (Pull Request), specificere en commit SHA, eller specificere en PR som er ved at blive flettet, ved at angive: pull/{PR id}/head ."
+        "message": "Særligt brugbar for udvikling, da du her kan vælge et flettet PR (Pull request), angive et commit punkt, eller en kommende PR, ved at angive #efterfulgt af PR nummer, fx #1234 (som er kort for branch 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Er du udvikler, kan du definere Defines, adskildt af blanktegn. Skriv ikke USE_ prefix, det tilføjes automatisk."
@@ -6714,6 +6714,6 @@
         "message": "Klassisk"
     },
     "classicBuildModeDescription": {
-        "message": "Denne tilstand vælger de klassiske optioner/defines for enkelthedens skyld."
+        "message": "Denne tilstand alle parametre herunder (untagen hvis du er i ekspert tilstand). Overordnet set er det samme indstilling, som er for et natligt byg, og kan anvendes for bekvemmelighed."
     }
 }

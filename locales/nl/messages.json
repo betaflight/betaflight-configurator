@@ -77,9 +77,6 @@
     "expertMode": {
         "message": "Schakel expert modus in"
     },
-    "expertModeDescription": {
-        "message": "Toon niet uitgebrachte en mogelijk onstabiele versies"
-    },
     "permanentExpertMode": {
         "message": "Expert modus permanent inschakelen"
     },
@@ -2693,9 +2690,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Toon onstabiele releases"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Toon ook release candidaten naast de stabiele releases"
