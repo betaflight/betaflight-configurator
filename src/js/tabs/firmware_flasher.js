@@ -279,17 +279,17 @@ firmware_flasher.initialize = function (callback) {
                     const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
                     if (!expertMode) {
                         $('div.commitSelection').hide();
-                        return;
-                    }
-                    $('div.commitSelection').show();
+                    } else {
+                        $('div.commitSelection').show();
 
-                    self.releaseLoader.loadCommits(summary.release, (commits) => {
-                        const select_e = $('select[name="commits"]');
-                        select_e.empty();
-                        commits.forEach((commit) => {
-                            select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
+                        self.releaseLoader.loadCommits(summary.release, (commits) => {
+                            const select_e = $('select[name="commits"]');
+                            select_e.empty();
+                            commits.forEach((commit) => {
+                                select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
+                            });
                         });
-                    });
+                    }
                 }
 
                 if (summary.configuration && !self.isConfigLocal) {
