@@ -784,7 +784,7 @@ firmware_flasher.initialize = function (callback) {
                     classicBuild: false,
                 };
 
-                request.classicBuild = $('input[name="classicBuildModeCheckbox"]').is(':checked');
+                request.classicBuild = !summary.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
                 if (!request.classicBuild) {
                     $('select[name="radioProtocols"] option:selected').each(function () {
                         request.radioProtocols.push($(this).val());
@@ -801,17 +801,26 @@ firmware_flasher.initialize = function (callback) {
                     $('select[name="motorProtocols"] option:selected').each(function () {
                         request.motorProtocols.push($(this).val());
                     });
-                }
 
-                if (summary.releaseType === "Unstable") {
-                    request.commit = $('select[name="commits"] option:selected').val();
-                    $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
-                        request.options.push(v);
-                    });
+                    if ($('input[name="expertModeCheckbox"]').is(':checked')) {
+                        if (summary.releaseType === "Unstable") {
+                            request.commit = $('select[name="commits"] option:selected').val();
+                        }
+
+                        $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
+                            request.options.push(v);
+                        });
+                    }
                 }
 
                 self.releaseLoader.requestBuild(request, (info) => {
                     console.info("Build requested:", info);
+
+                    if (!summary.cloudBuild) {
+                        // it is a previous release, so simply load the hex
+                        self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
+                        return;
+                    }
 
                     updateStatus('Pending', info.key, 0, false);
                     let retries = 1;
@@ -855,21 +864,13 @@ firmware_flasher.initialize = function (callback) {
                 }, onLoadFailed);
             }
 
-            function requestLegacyBuild(summary) {
-                self.releaseLoader.loadTargetHex(summary.url, (hex) => onLoadSuccess(hex, summary.file), onLoadFailed);
-            }
-
             if (self.summary) { // undefined while list is loading or while running offline
                 $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonDownloading'));
                 $("a.load_remote_file").addClass('disabled');
 
                 showReleaseNotes(self.summary);
 
-                if (self.summary.cloudBuild === true) {
-                    requestCloudBuild(self.summary);
-                } else {
-                    requestLegacyBuild(self.summary);
-                }
+                requestCloudBuild(self.summary);
             } else {
                 $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');
                 i18n.localizePage();
