@@ -1567,6 +1567,35 @@ dialog {
 	color: var(--pushedButton-fontColor);
 	border-radius: 3px;
 }
+
+.danger-button {
+	-webkit-user-drag: none;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-right: 10px;
+	background-color: #e60000;
+	border-radius: 3px;
+	border: 1px solid #fe0000;
+	color: #fff;
+	font-weight: bold;
+	font-size: 12px;
+	text-shadow: 0 1px rgba(255, 255, 255, 0.25);
+	display: inline-block;
+	cursor: pointer;
+	transition: all ease 0.2s;
+	padding: 0 9px;
+	line-height: 28px;
+	user-select: none;
+	&:hover {
+		background-color: #f21212;
+	}
+}
+.danger-button.pushed {
+	background-color: #ff1b1b;
+	color: #fff;
+	border-radius: 3px;
+}
+
 .small {
 	width: auto;
 	position: relative;

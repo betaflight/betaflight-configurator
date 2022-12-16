@@ -6439,7 +6439,7 @@
         "message": "Confirm"
     },
     "dialogConfirmResetNote": {
-        "message": "WARNING: Are you sure you want to reset ALL settings to default?"
+        "message": "WARNING: Are you sure you want to reset <strong>ALL settings</strong> to default? This is <strong>not</strong> a \"factory reset\". It may cause unexpected issues, and it may be necessary to re-flash your firmware to be able to connect again."
     },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
