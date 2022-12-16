@@ -84,7 +84,7 @@
         "message": "Mode Expert"
     },
     "expertModeDescription": {
-        "message": "Montrer les version non finalisées et potentiellement instables"
+        "message": "Afficher les versions de développement potentiellement instables"
     },
     "permanentExpertMode": {
         "message": "Activer le mode expert de façon permanente"
@@ -3053,7 +3053,7 @@
         "message": "Baud rate"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Montrer les versions non finalisées"
+        "message": "Afficher les versions RC"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Montrer les releases candidates en plus des versions stables"
@@ -6699,7 +6699,7 @@
         "message": "Sélectionnez les protocoles du moteur (ESC) que vous souhaitez inclure dans cette build. Notez que c'est une liste déroulante, et plusieurs éléments peuvent être sélectionnés."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Particulièrement utile pour les développeurs, vous pouvez sélectionner une PR fusionnée, spécifier un commit sha, ou spécifiez un PR 'encore à fusionner' en tapant dans: pull/{PR number}/head."
+        "message": "Particulièrement utile pour les développeurs, vous pouvez sélectionner une PR fusionnée, spécifier un commit sha, ou spécifier un PR 'encore à fusionner' en tapant # suivi du numéro de PR. #1234 (c'est un raccourci pour la branche 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Pour les développeurs, vous pouvez ajouter les définitions dont vous avez besoin, séparées par un `espace`, mais sans le préfixe `USE_`, il sera ajouté automatiquement pour vous."
@@ -6711,6 +6711,6 @@
         "message": "Mode Classique"
     },
     "classicBuildModeDescription": {
-        "message": "Ce mode ignore tous les paramètres ici, à l'exception du commit. Cela est essentiellement le même que les nightlies classiques, et est fourni pour la commodité."
+        "message": "Ce mode ignore tous les paramètres (sauf pour le commit en mode expert). Ceci réalise essentiellement le même chose que les nocturnes classiques (nightlies) et est prévu pour plus de commodité."
     }
 }

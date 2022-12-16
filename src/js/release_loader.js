@@ -90,7 +90,6 @@ class ReleaseLoader {
             contentType: "application/json",
             dataType: "json",
             success: function(data) {
-                data.url = `/api/builds/${data.key}/hex`;
                 onSuccess(data);
             },
         }).fail(xhr => {

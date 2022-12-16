@@ -7,9 +7,7 @@ const setup = {
 setup.initialize = function (callback) {
     const self = this;
 
-    if (GUI.active_tab != 'setup') {
-        GUI.active_tab = 'setup';
-    }
+    GUI.active_tab = 'setup';
 
     function load_status() {
         MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_mixer_config);
@@ -258,8 +256,6 @@ setup.initialize = function (callback) {
         function get_slow_data() {
 
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
-
-                console.log(FC.CONFIG.armingDisableFlags);
 
                 $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags == 0);
 

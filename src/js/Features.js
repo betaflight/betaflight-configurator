@@ -39,23 +39,14 @@ const Features = function (config) {
 
     self._features = features;
     self._featureMask = 0;
-
-    self._analyticsChanges = {};
 };
 
 Features.prototype.getMask = function () {
-    const self = this;
-
-    analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self._analyticsChanges);
-    self._analyticsChanges = {};
-
-    return self._featureMask;
+    return this._featureMask;
 };
 
 Features.prototype.setMask = function (featureMask) {
-    const self = this;
-
-    self._featureMask = featureMask;
+    this._featureMask = featureMask;
 };
 
 Features.prototype.isEnabled = function (featureName) {
@@ -168,32 +159,24 @@ Features.prototype.updateData = function (featureElement) {
 
     if (featureElement.attr('type') === 'checkbox') {
         const bit = featureElement.data('bit');
-        let featureValue;
 
         if (featureElement.is(':checked')) {
             self._featureMask = bit_set(self._featureMask, bit);
-            featureValue = 'On';
         } else {
             self._featureMask = bit_clear(self._featureMask, bit);
-            featureValue = 'Off';
         }
-        self._analyticsChanges[`Feature${self.findFeatureByBit(bit).name}`] = featureValue;
     } else if (featureElement.prop('localName') === 'select') {
         const controlElements = featureElement.children();
         const selectedBit = featureElement.val();
+
         if (selectedBit !== -1) {
-            let selectedFeature;
             for (const controlElement of controlElements) {
                 const bit = controlElement.value;
                 if (selectedBit === bit) {
                     self._featureMask = bit_set(self._featureMask, bit);
-                    selectedFeature = self.findFeatureByBit(bit);
                 } else {
                     self._featureMask = bit_clear(self._featureMask, bit);
                 }
-            }
-            if (selectedFeature) {
-                self._analyticsChanges[`FeatureGroup-${selectedFeature.group}`] = selectedFeature.name;
             }
         }
     }

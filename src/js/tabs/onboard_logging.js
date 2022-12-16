@@ -136,8 +136,6 @@ onboard_logging.initialize = function (callback) {
                     .toggleClass("msc-supported", true);
 
                 $('a.onboardLoggingRebootMsc').click(function () {
-                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
-
                     const buffer = [];
                     if (GUI.operating_system === "Linux") {
                         // Reboot into MSC using UTC time offset instead of user timezone
@@ -307,6 +305,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "ATTITUDE"},
                 {text: "VTX_MSP"},
                 {text: "GPS_DOP"},
+                {text: "ANGLEMODE"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
@@ -404,37 +403,25 @@ onboard_logging.initialize = function (callback) {
             $('a.onboardLoggingRebootMsc').removeClass('disabled');
         }
 
-        let loggingStatus;
         switch (FC.SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusNoCard'));
-                loggingStatus = 'SdCard: NotPresent';
-            break;
+                break;
             case MSP.SDCARD_STATE_FATAL:
                 $(".sdcard-status").html(i18n.getMessage('sdcardStatusReboot'));
-                loggingStatus = 'SdCard: Error';
-            break;
+                break;
             case MSP.SDCARD_STATE_READY:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusReady'));
-                loggingStatus = 'SdCard: Ready';
-            break;
+                break;
             case MSP.SDCARD_STATE_CARD_INIT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusStarting'));
-                loggingStatus = 'SdCard: Init';
-            break;
+                break;
             case MSP.SDCARD_STATE_FS_INIT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusFileSystem'));
-                loggingStatus = 'SdCard: FsInit';
-            break;
+                break;
             default:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusUnknown',[FC.SDCARD.state]));
         }
-
-        if (dataflashPresent && FC.SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
-            loggingStatus = 'Dataflash';
-            analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, FC.DATAFLASH.usedSize);
-        }
-        analytics.setFlightControllerData(analytics.DATA.LOGGING_STATUS, loggingStatus);
 
         if (FC.SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status
@@ -467,9 +454,8 @@ onboard_logging.initialize = function (callback) {
     }
 
     function mark_saving_dialog_done(startTime, totalBytes, totalBytesCompressed) {
-        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SaveDataflash');
-
         const totalTime = (new Date().getTime() - startTime) / 1000;
+
         console.log(`Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${
              (totalBytes / totalTime / 1024).toFixed(2)}kB / s) with block size ${self.blockSize}.`);
         if (!isNaN(totalBytesCompressed)) {
@@ -629,9 +615,6 @@ onboard_logging.initialize = function (callback) {
 };
 
 onboard_logging.cleanup = function (callback) {
-    analytics.setFlightControllerData(analytics.DATA.LOGGING_STATUS, undefined);
-    analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, undefined);
-
     if (sdcardTimer) {
         clearTimeout(sdcardTimer);
         sdcardTimer = false;

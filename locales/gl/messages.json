@@ -86,9 +86,6 @@
     "expertMode": {
         "message": "Activar Modo Experto"
     },
-    "expertModeDescription": {
-        "message": "Mostrar versións inéditas e potencialmente inestables"
-    },
     "permanentExpertMode": {
         "message": "Activar permanentemente o Modo Experto"
     },
@@ -3039,9 +3036,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Velocidade de Transmisión"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostra versións inestables"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Mostrar versións candidatas ademais de versións estables"
@@ -6682,9 +6676,6 @@
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Seleccione os protocolos de motor (ESC) que desexa incluír nesta compilación. Teña en conta que este é un menú despregable e é posible que se seleccionen varios elementos."
     },
-    "firmwareFlasherBranchDescription": {
-        "message": "Especialmente útil para os desenvolvedores, pode seleccionar un PR fusionado, especificar un sha commit ou especificar un PR \"aínda por fusionar\" escribindo: pull/{PR number}/head ."
-    },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para os desenvolvedores, vostede pode engadir as definicións que precise, separadas por un \"espazo\", pero sen o prefixo \"USE_\", engadirase automaticamente para vostede."
     },
@@ -6693,8 +6684,5 @@
     },
     "classicBuild": {
         "message": "Modo clásico"
-    },
-    "classicBuildModeDescription": {
-        "message": "Este modo ignora todos estes parámetros, excepto o commit. Isto esencialmente consegue o mesmo que as compilacións clásicas, e preséntase por comodidade."
     }
 }

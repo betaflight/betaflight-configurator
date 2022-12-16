@@ -83,9 +83,6 @@
     "expertMode": {
         "message": "启用专家模式"
     },
-    "expertModeDescription": {
-        "message": "显示未发布和可能不稳定的版本"
-    },
     "permanentExpertMode": {
         "message": "默认启用专家模式"
     },
@@ -2975,9 +2972,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "波特率"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "显示非稳定版本"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "除了稳定的版本外, 还显示候选版本"

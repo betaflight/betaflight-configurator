@@ -84,7 +84,7 @@
         "message": "Habilita el mode expert"
     },
     "expertModeDescription": {
-        "message": "Mostra versions inèdites i potencialment inestables"
+        "message": "Mostra les compilacions de desenvolupament que són potencialment inestables"
     },
     "permanentExpertMode": {
         "message": "Habilita el mode expert permanentment"
@@ -3064,7 +3064,7 @@
         "message": "Velocitat de bauds"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostra versions inestables"
+        "message": "Mostra les versions candidates"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Mostra versions candidates afegides a versions estables"
@@ -6710,7 +6710,7 @@
         "message": "Seleccioneu els protocols motor (ESC) que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Especialment útil per als desenvolupadors, podeu seleccionar un PR combinat, especificar un commit sha o especificar un PR \"encara per combinar\" escrivint: pull/{PR number}/head ."
+        "message": "Especialment útil per als desenvolupadors, podeu seleccionar un PR combinat, especificar un commit sha o especificar un PR \"encara per combinar\" escrivint un # seguit del número de PR, p. #1234 (aquesta és l'abreviatura de la branca 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Per als desenvolupadors, podeu afegir qualsevol definició que necessiteu, separades per un `espai`, però sense el prefix `USE_`, s'afegirà automàticament."
@@ -6722,6 +6722,6 @@
         "message": "Mode clàssic"
     },
     "classicBuildModeDescription": {
-        "message": "Aquest mode ignora tots els paràmetres aquí, excepte el commit. Això bàsicament aconsegueix el mateix que les clàssiques versions intermitjas, i es proporciona per comoditat."
+        "message": "Aquest mode ignora tots els paràmetres aquí (excepte el commit quan està en mode expert). Això bàsicament aconsegueix el mateix que les clàssiques versions nocturnes (nightlies), i es proporciona per comoditat."
     }
 }

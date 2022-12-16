@@ -50,7 +50,6 @@ function getCliCommand(command, cliBuffer) {
 function copyToClipboard(text) {
     function onCopySuccessful() {
 
-        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliCopyToClipboard', text.length);
         const button = TABS.cli.GUI.copyButton;
         const origText = button.text();
         const origWidth = button.css("width");
@@ -168,8 +167,6 @@ cli.initialize = function (callback) {
                         if (self.outputHistory.length > 0 && writer.length === 0) {
                             writer.write(new Blob([self.outputHistory], {type: 'text/plain'}));
                         } else {
-                            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliSave', self.outputHistory.length);
-
                             console.log('write complete');
                         }
                     };
@@ -213,8 +210,6 @@ cli.initialize = function (callback) {
 
                 function executeSnippet(fileName) {
                     const commands = previewArea.val();
-
-                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliExecuteFromFile', fileName);
 
                     executeCommands(commands);
                     self.GUI.snippetPreviewWindow.close();

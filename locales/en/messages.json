@@ -87,7 +87,7 @@
         "message": "Enable Expert Mode"
     },
     "expertModeDescription": {
-        "message": "Show unreleased and potentially unstable builds"
+        "message": "Show development builds that are potentially unstable"
     },
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
@@ -3180,7 +3180,7 @@
         "message": "Baud Rate"
     },
     "firmwareFlasherShowDevelopmentReleases":{
-        "message": "Show unstable releases"
+        "message": "Show release candidates"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription":{
         "message": "Show release candidates in addition to stable releases"
@@ -6451,7 +6451,7 @@
         "message": "Confirm"
     },
     "dialogConfirmResetNote": {
-        "message": "WARNING: Are you sure you want to reset ALL settings to default?"
+        "message": "WARNING: Are you sure you want to reset <strong>ALL settings</strong> to default? This is <strong>not</strong> a \"factory reset\". It may cause unexpected issues, and it may be necessary to re-flash your firmware to be able to connect again."
     },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
@@ -6850,7 +6850,7 @@
         "message": "Select the motor (ESC) protocols you would like included in this build. Note this is a drop down, and multiple items maybe selected."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Especially useful for developers, you can select a merged PR, specify a commit sha, or specify a 'yet to be merged' PR by typing in: pull/{PR number}/head ."
+        "message": "Especially useful for developers, you can select a merged PR, specify a commit sha, or specify a 'yet to be merged' PR by typing in a # followed by the PR number e.g. #1234 (this is shorthand for the branch 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "For developers, you can add any defines you need, separated by a `space`, but without the `USE_` prefix, it will be added automatically for you."
@@ -6862,6 +6862,6 @@
         "message": "Classic Mode"
     },
     "classicBuildModeDescription": {
-        "message": "This mode ignores all the parameters here, except for the commit. This essentially achieves the same as the classic nightlies, and is provided for convenience."
+        "message": "This mode ignores all the parameters here (except for the commit when in expert mode). This essentially achieves the same as the classic nightlies, and is provided for convenience."
     }
 }
