@@ -2560,7 +2560,7 @@ OSD.GUI.preview = {
 };
 
 const osd = {
-    analyticsChanges: {},
+    // intentional
 };
 
 osd.initialize = function(callback) {
@@ -2838,11 +2838,6 @@ osd.initialize = function(callback) {
 
                                         fieldChanged.enabled = !fieldChanged.enabled;
 
-                                        if (self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] === undefined) {
-                                            self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] = 0;
-                                        }
-                                        self.analyticsChanges[`OSDStatistic${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
-
                                         MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeStatistics(fieldChanged))
                                             .then(updateOsdView);
                                     }),
@@ -2879,11 +2874,6 @@ osd.initialize = function(callback) {
                                     .change(function() {
                                         const fieldChanged = $(this).data('field');
                                         fieldChanged.enabled = !fieldChanged.enabled;
-
-                                        if (self.analyticsChanges[`OSDWarning${fieldChanged.name}`] === undefined) {
-                                            self.analyticsChanges[`OSDWarning${fieldChanged.name}`] = 0;
-                                        }
-                                        self.analyticsChanges[`OSDWarning${fieldChanged.name}`] += fieldChanged.enabled ? 1 : -1;
 
                                         MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
                                             .then(updateOsdView);
@@ -3001,11 +2991,6 @@ osd.initialize = function(callback) {
                                             const profile = $(this).data('osd_profile');
                                             const $position = $(this).parent().find(`.position.${fieldChanged.name}`);
                                             fieldChanged.isVisible[profile] = !fieldChanged.isVisible[profile];
-
-                                            if (self.analyticsChanges[`OSDElement${fieldChanged.name}`] === undefined) {
-                                                self.analyticsChanges[`OSDElement${fieldChanged.name}`] = 0;
-                                            }
-                                            self.analyticsChanges[`OSDElement${fieldChanged.name}`] += fieldChanged.isVisible[profile] ? 1 : -1;
 
                                             if (fieldChanged.isVisible[OSD.getCurrentPreviewProfile()]) {
                                                 $position.show();
@@ -3246,20 +3231,6 @@ osd.initialize = function(callback) {
             setTimeout(() => {
                 $(this).html(oldText);
             }, 1500);
-
-            Object.keys(self.analyticsChanges).forEach(function(change) {
-                const value = self.analyticsChanges[change];
-                if (value > 0) {
-                    self.analyticsChanges[change] = 'On';
-                } else if (value < 0) {
-                    self.analyticsChanges[change] = 'Off';
-                } else {
-                    self.analyticsChanges[change] = undefined;
-                }
-            });
-
-            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'osd');
-            self.analyticsChanges = {};
         });
 
         // font preview window
@@ -3373,8 +3344,6 @@ osd.initialize = function(callback) {
                 $('a.flash_font').click();
             }
         });
-
-        self.analyticsChanges = {};
 
         MSP.promise(MSPCodes.MSP_RX_CONFIG)
             .finally(() => {
