@@ -57,64 +57,11 @@ function appReady() {
     i18n.init(function() {
         startProcess();
 
-        checkSetupAnalytics(function (analyticsService) {
-            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
-        });
-
         initializeSerialBackend();
+
+        $('.connect_b a.connect').removeClass('disabled');
+        $('.firmware_b a.flash').removeClass('disabled');
     });
-}
-
-function checkSetupAnalytics(callback) {
-    if (!analytics) {
-        setTimeout(function () {
-            const result = ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
-            if (!analytics) {
-                setupAnalytics(result);
-            }
-
-            callback(analytics);
-        });
-    } else if (callback) {
-        callback(analytics);
-    }
-}
-
-function getBuildType() {
-    return GUI.Mode;
-}
-
-function setupAnalytics(result) {
-    let userId;
-    if (result.userId) {
-        userId = result.userId;
-    } else {
-        const uid = new ShortUniqueId();
-        userId = uid.randomUUID(13);
-
-        ConfigStorage.set({ 'userId': userId });
-    }
-
-    const optOut = !!result.analyticsOptOut;
-    const checkForDebugVersions = !!result.checkForConfiguratorUnstableVersions;
-
-    const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
-
-    window.analytics = new Analytics('UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system,
-        checkForDebugVersions, optOut, debugMode, getBuildType());
-
-    function logException(exception) {
-        analytics.sendException(exception.stack);
-    }
-
-    if (typeof process === "object") {
-        process.on('uncaughtException', logException);
-    }
-
-    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
-
-    $('.connect_b a.connect').removeClass('disabled');
-    $('.firmware_b a.flash').removeClass('disabled');
 }
 
 function closeSerial() {
@@ -176,8 +123,6 @@ function closeHandler() {
     if (!GUI.isCordova()) {
         this.hide();
     }
-
-    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
 
     closeSerial();
 
@@ -312,10 +257,6 @@ function startProcess() {
                 function content_ready() {
                     GUI.tab_switch_in_progress = false;
                 }
-
-                checkSetupAnalytics(function (analyticsService) {
-                    analyticsService.sendAppView(tab);
-                });
 
                 switch (tab) {
                     case 'landing':
@@ -573,9 +514,6 @@ function startProcess() {
 
     $(expertModeCheckbox).on("change", () => {
         const checked = $(expertModeCheckbox).is(':checked');
-        checkSetupAnalytics(function (analyticsService) {
-            analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
-        });
 
         if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
             updateTabList(FC.FEATURE_CONFIG.features);
@@ -619,10 +557,6 @@ function startProcess() {
 
 function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
-
-    checkSetupAnalytics(function (analyticsService) {
-        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', enabled);
-    });
 }
 
 
@@ -788,8 +722,6 @@ function showErrorDialog(message) {
 
 // TODO: all of these are used as globals in other parts.
 // once moved to modules extract to own module.
-window.googleAnalytics = analytics;
-window.analytics = null;
 window.showErrorDialog = showErrorDialog;
 window.generateFilename = generateFilename;
 window.updateTabList = updateTabList;
@@ -797,4 +729,3 @@ window.isExpertModeEnabled = isExpertModeEnabled;
 window.checkForConfiguratorUpdates = checkForConfiguratorUpdates;
 window.setDarkTheme = setDarkTheme;
 window.appReady = appReady;
-window.checkSetupAnalytics = checkSetupAnalytics;
