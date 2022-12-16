@@ -2033,10 +2033,10 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                     self.setText(buffer, modifierCode, FC.CONFIG.pidProfileNames[FC.CONFIG.profile], 8);
                     break;
                 case MSPCodes.RATE_PROFILE_NAME:
-                    self.setText(buffer, modifierCode, FC.CONFIG.pidProfileNames[FC.CONFIG.rateProfile], 8);
+                    self.setText(buffer, modifierCode, FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile], 8);
                     break;
                 default:
-                    console.log('Unsupport text type');
+                    console.log('Unsupported text type');
                     break;
             }
             break;

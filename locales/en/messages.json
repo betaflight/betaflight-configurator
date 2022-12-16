@@ -1608,6 +1608,18 @@
     "pidTuningSubTabFilter": {
         "message": "Filter Settings"
     },
+    "pidProfileName": {
+        "message": "PID profile name"
+    },
+    "pidProfileNameHelp": {
+        "message": "PID profile name which can describe what conditions this profile was tuned to: lighter/heavier battery, action camera/no action camera, higher elevation, etc."
+    },
+    "rateProfileName": {
+        "message": "Rate profile name"
+    },
+    "rateProfileNameHelp": {
+        "message": "Rate profile name which can describe what type of flying this profile is for: cine, race, freestyle, etc."
+    },
     "pidTuningShowAllPids": {
         "message": "Show all PIDs"
     },
