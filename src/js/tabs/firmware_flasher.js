@@ -802,8 +802,11 @@ firmware_flasher.initialize = function (callback) {
                         request.motorProtocols.push($(this).val());
                     });
 
-                    if (summary.releaseType === "Unstable") {
-                        request.commit = $('select[name="commits"] option:selected').val();
+                    if ($('input[name="expertModeCheckbox"]').is(':checked')) {
+                        if (summary.releaseType === "Unstable") {
+                            request.commit = $('select[name="commits"] option:selected').val();
+                        }
+
                         $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
                             request.options.push(v);
                         });
