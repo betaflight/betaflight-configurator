@@ -48,6 +48,10 @@ pid_tuning.initialize = function (callback) {
         .then(() => MSP.promise(MSPCodes.MSP_FILTER_CONFIG))
         .then(() => MSP.promise(MSPCodes.MSP_RC_DEADBAND))
         .then(() => MSP.promise(MSPCodes.MSP_MOTOR_CONFIG))
+        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? MSP.promise(MSPCodes.MSP2_GET_TEXT,
+            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME)) : true)
+        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? MSP.promise(MSPCodes.MSP2_GET_TEXT,
+            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME)) : true)
         .then(() => {
             let promise;
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -67,6 +71,14 @@ pid_tuning.initialize = function (callback) {
     function pid_and_rc_to_form() {
         self.setProfile();
         self.setRateProfile();
+
+        // Profile names
+        if (semver.gte(FC.CONFIG.apiVersion, "1.45.0")) {
+            $('input[name="pidProfileName"]').val(FC.CONFIG.pidProfileNames[FC.CONFIG.profile]);
+            $('input[name="rateProfileName"]').val(FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile]);
+        } else {
+            $('.profile_name').hide();
+        }
 
         // Fill in the data from PIDs array for each pid name
         FC.PID_NAMES.forEach(function(elementPid, indexPid) {
@@ -999,6 +1011,12 @@ pid_tuning.initialize = function (callback) {
     function form_to_pid_and_rc() {
         // Fill in the data from PIDs array
         // Catch all the changes and stuff the inside PIDs array
+
+        // Profile names
+        if (semver.gte(FC.CONFIG.apiVersion, "1.45.0")) {
+            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = $('input[name="pidProfileName"]').val().trim();
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = $('input[name="rateProfileName"]').val().trim();
+        }
 
         // For each pid name
         FC.PID_NAMES.forEach(function(elementPid, indexPid) {
@@ -2188,6 +2206,10 @@ pid_tuning.initialize = function (callback) {
 
             MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID))
             .then(() => MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED)))
+            .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? MSP.promise(MSPCodes.MSP2_SET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME)) : true)
+            .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? MSP.promise(MSPCodes.MSP2_SET_TEXT,
+                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME)) : true)
             .then(() => {
                 self.updatePIDColors();
                 return MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
