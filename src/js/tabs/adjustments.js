@@ -303,14 +303,6 @@ adjustments.adjust_template = function () {
         selectFunction.append(new Option(i18n.getMessage(`adjustmentsFunction${i}`), i));
     }
 
-    // For 1.40, the D Setpoint has been replaced, so we replace it with the correct values
-    const element22 = selectFunction.find("option[value='22']");
-    const element23 = selectFunction.find("option[value='23']");
-
-    // Change the "text"
-    element22.text(i18n.getMessage('adjustmentsFunction22_2'));
-    element23.text(i18n.getMessage('adjustmentsFunction23_2'));
-
     // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
     selectFunction.sortSelect();
 };
