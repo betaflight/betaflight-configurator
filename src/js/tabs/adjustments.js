@@ -286,6 +286,14 @@ adjustments.cleanup = function (callback) {
     if (callback) callback();
 };
 
+$.fn.sortSelect = function() {
+    const op = this.children("option");
+    op.sort(function(a, b) {
+        return a.text > b.text ? 1 : -1;
+    });
+    return this.empty().append(op);
+};
+
 adjustments.adjust_template = function () {
 
     const selectFunction = $('#functionSelectionSelect');
@@ -296,7 +304,6 @@ adjustments.adjust_template = function () {
     }
 
     // For 1.40, the D Setpoint has been replaced, so we replace it with the correct values
-
     const element22 = selectFunction.find("option[value='22']");
     const element23 = selectFunction.find("option[value='23']");
 
@@ -304,9 +311,8 @@ adjustments.adjust_template = function () {
     element22.text(i18n.getMessage('adjustmentsFunction22_2'));
     element23.text(i18n.getMessage('adjustmentsFunction23_2'));
 
-    // Reorder, we insert it with the other FF elements to be coherent...
-    element22.insertAfter(selectFunction.find("option[value='25']"));
-    element23.insertAfter(selectFunction.find("option[value='28']"));
+    // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+    selectFunction.sortSelect();
 };
 
 window.TABS.adjustments = adjustments;
