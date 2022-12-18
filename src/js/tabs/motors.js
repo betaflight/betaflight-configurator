@@ -674,7 +674,7 @@ motors.initialize = async function (callback) {
             self.previousFilterDynCount = FC.FILTER_CONFIG.dyn_notch_count;
 
             dshotBidirElement.on("change", function () {
-                FC.MOTOR_CONFIG.use_dshot_telemetry = $(this).prop('checked');
+                FC.MOTOR_CONFIG.use_dshot_telemetry = dshotBidirElement.is(':checked');
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
@@ -691,10 +691,10 @@ motors.initialize = async function (callback) {
                     };
 
                     const _dynFilterChange = function() {
-                        if (value && !self.previousDshotBidir) {
+                        if (FC.MOTOR_CONFIG.use_dshot_telemetry && !self.previousDshotBidir) {
                             FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
                             FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q_rpm;
-                        } else if (!value && self.previousDshotBidir) {
+                        } else if (!FC.MOTOR_CONFIG.use_dshot_telemetry && self.previousDshotBidir) {
                             FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count;
                             FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q;
                         }
