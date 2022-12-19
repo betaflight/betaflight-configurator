@@ -107,7 +107,7 @@
     "glob": "^8.0.3",
     "gulp": "^4.0.2",
     "gulp-concat": "~2.6.1",
-    "gulp-debian": "^0.1.9",
+    "gulp-debian": "^0.3.2",
     "gulp-json-editor": "^2.5.6",
     "gulp-less": "^5.0.0",
     "gulp-prompt": "^1.2.0",

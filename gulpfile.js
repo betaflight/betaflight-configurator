@@ -11,6 +11,7 @@ const del = require('del');
 const NwBuilder = require('nw-builder');
 const innoSetup = require('@quanle94/innosetup');
 const deb = require('gulp-debian');
+const conffiles = './test/configs';
 const buildRpm = require('rpm-builder');
 const commandExistsSync = require('command-exists').sync;
 const targz = require('targz');
@@ -742,6 +743,7 @@ function release_deb(arch, appDirectory, done) {
                 `chmod -R +Xr ${LINUX_INSTALL_DIR}/${metadata.name}/`,
             ],
             prerm: [`xdg-desktop-menu uninstall ${metadata.name}.desktop`],
+            conffiles: './test/configs/opt/etc/dummy.cfg',
             depends: ['libgconf-2-4', 'libatomic1'],
             changelog: [],
             _target: `${LINUX_INSTALL_DIR}/${metadata.name}`,
