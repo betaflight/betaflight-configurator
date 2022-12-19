@@ -6277,9 +6277,6 @@
     "dialogConfirmResetTitle": {
         "message": "Confirmar"
     },
-    "dialogConfirmResetNote": {
-        "message": "ATENCIÓN: ¿Estás seguro de restaurar tódolos axustes a os valores por defecto?"
-    },
     "dialogConfirmResetConfirm": {
         "message": "Resetear"
     },

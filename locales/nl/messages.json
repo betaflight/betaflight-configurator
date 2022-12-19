@@ -5394,9 +5394,6 @@
     "dialogConfirmResetTitle": {
         "message": "Bevestig"
     },
-    "dialogConfirmResetNote": {
-        "message": "WAARSCHUWING: Weet u zeker dat u alle instellingen wilt resetten naar de standaardwaardes?"
-    },
     "dialogConfirmResetConfirm": {
         "message": "Resetten"
     },

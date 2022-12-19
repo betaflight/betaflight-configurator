@@ -1516,6 +1516,18 @@
     "pidTuningSubTabFilter": {
         "message": "Filtros"
     },
+    "pidProfileName": {
+        "message": "Nombre del perfil PID"
+    },
+    "pidProfileNameHelp": {
+        "message": "Nombre de perfil PID que puede describir las condiciones para las que se configuró este perfil: batería más ligera/más pesada, con /sin cámara de acción, mayor elevación, etc."
+    },
+    "rateProfileName": {
+        "message": "Nombre del perfil de tasas"
+    },
+    "rateProfileNameHelp": {
+        "message": "Nombre del perfil de tasas que describe para que tipo de vuelo es este perfil: cine, carrera, freestyle, etc."
+    },
     "pidTuningShowAllPids": {
         "message": "Ver todos los PIDs"
     },
@@ -6303,7 +6315,7 @@
         "message": "Confirmar"
     },
     "dialogConfirmResetNote": {
-        "message": "ATENCIÓN: ¿Estás seguro de restaurar TODOS los ajustes a los valores por defecto?"
+        "message": "ATENCIÓN: ¿Estás seguro de que deseas restablecer <strong>TODOS los ajustes</strong> al valor por defecto? Esto <strong>no</strong> es un \"restablecimiento de fábrica\". Puede causar problemas inesperados, y puede ser necesario volver a instalar el firmware para poder conectar de nuevo."
     },
     "dialogConfirmResetConfirm": {
         "message": "Restaurar"
@@ -6524,7 +6536,7 @@
         "description": "Text label for Options drop down select"
     },
     "presetsFilterCategory": {
-        "message": "Categorìas",
+        "message": "Categorías",
         "description": "UI filter name"
     },
     "presetsFilterKeyword": {

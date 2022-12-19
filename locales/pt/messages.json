@@ -6303,7 +6303,7 @@
         "message": "Confirmar"
     },
     "dialogConfirmResetNote": {
-        "message": "AVISO: Tem certeza que deseja repor TODAS as definições para os valores padrão?"
+        "message": "AVISO: Tem certeza que quer repor <strong>TODAS as configurações</strong> para a predefinição? Isto <strong>não</strong> é uma \"reposição de fábrica\". Pode causar problemas inesperados e pode ser necessário reinstalar o seu firmware para se poder conectar novamente."
     },
     "dialogConfirmResetConfirm": {
         "message": "Repor"
