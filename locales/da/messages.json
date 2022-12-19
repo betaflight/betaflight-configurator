@@ -38,7 +38,7 @@
         "message": "Lagerenheden er ikke klar. Ved microSD-kort skal du sørge for, at det er korrekt genkendt af din flight controller."
     },
     "options_title": {
-        "message": "Programindstillinger"
+        "message": "Program indstillinger"
     },
     "connect": {
         "message": "Tilslut"
@@ -1496,7 +1496,7 @@
         "message": "VTX (MSP + Displayport)"
     },
     "pidTuningProfileOption": {
-        "message": "Profil $1"
+        "message": "PID profil $1"
     },
     "pidTuningRateProfileOption": {
         "message": "Rate profil $1"
@@ -1511,16 +1511,28 @@
         "message": "PID profiler"
     },
     "pidTuningSubTabRates": {
-        "message": "Rateprofiler"
+        "message": "Rate profiler"
     },
     "pidTuningSubTabFilter": {
-        "message": "Filterindstillinger"
+        "message": "Filter indstillinger"
+    },
+    "pidProfileName": {
+        "message": "PID profil beskrivelse"
+    },
+    "pidProfileNameHelp": {
+        "message": "Beskrivelse af PID profil, som kan angive hvad profilen er beregnet til, fx let/tungere batteri, actionkamera/intet actionkamera, højere højde osv."
+    },
+    "rateProfileName": {
+        "message": "Rate profil beskrivelse"
+    },
+    "rateProfileNameHelp": {
+        "message": "Beskrivelse af Rate profil, som kan angive hvad profilen er beregnet til, fx Filme, Ræs, etc"
     },
     "pidTuningShowAllPids": {
-        "message": "Vis alle PID'er"
+        "message": "Vis alle PID profiler"
     },
     "pidTuningHideUnusedPids": {
-        "message": "Skjul ubenyttede PID'er"
+        "message": "Skjul ubenyttede PID profiler"
     },
     "pidTuningNonProfilePidSettings": {
         "message": "Profiluafhængige PID controller indstillinger"
@@ -1775,7 +1787,7 @@
         "message": "Maksimal grænse for Rate"
     },
     "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "Afskærer foderet fremad, efterhånden som pindene bevæger sig mod maksimal afbøjning for at minimere overskridelsen ved starten af en flip- eller krænging.<br><br>Gør intet i slutningen af et flip eller krænging. Lavere værdier får dæmpning til at begynde tidligere.<br><br>Normalt kræver denne værdi ikke ændring. Den højeste værdi, der er i overensstemmelse med acceptabel overskridelse ved starten af krængning eller flips, er bedst."
+        "message": "Sænker hastighed fremad, efterhånden som pindene bevæger sig mod maksimal position, for at minimere overskydning ved starten af en flip- eller krænging.<br><br>Gør intet i slutningen af et flip eller krænging. \nLavere værdier får dæmpning til at begynde tidligere.<br><br>Normalt kræver denne værdi ikke ændring. Den højeste værdi, der er i overensstemmelse med acceptabel overskridelse ved starten af krængning eller flips, er bedst."
     },
     "pidTuningFeedforwardTransition": {
         "message": "Overgang"
@@ -1837,7 +1849,7 @@
         "message": "Forhåndsvisning bevægelse"
     },
     "pidTuningRatesTuningHelp": {
-        "message": "<b>Priser og Expo</b>: Bestemme din stick føler baseret på disse parametre. Brug grafen og live 3D-modellen til at finde din foretrukne kursindstilling."
+        "message": "<b>Maksinal sats og Expo</b>: Bestemmer din pind bevægelse baseret på disse parametre. Brug kurve og forhåndsvisning til at finde din foretrukne kursindstilling."
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
@@ -1903,16 +1915,16 @@
         "message": "Opfrisk"
     },
     "pidTuningProfileHead": {
-        "message": "Profil"
+        "message": "PID profil"
     },
     "pidTuningControllerHead": {
         "message": "PID kontroller"
     },
     "pidTuningCopyProfile": {
-        "message": "Kopier profil"
+        "message": "Kopier PID profil"
     },
     "pidTuningCopyRateProfile": {
-        "message": "Kopier profil"
+        "message": "Kopier Rate profil"
     },
     "dialogCopyProfileText": {
         "message": "Kopiér værdier fra aktuel profil til"
@@ -1921,10 +1933,10 @@
         "message": "Kopiér værdier fra aktuel rate-profil til"
     },
     "dialogCopyProfileTitle": {
-        "message": "Kopiér Profilværdier"
+        "message": "Kopier profil"
     },
     "dialogCopyProfileNote": {
-        "message": "Alle destinationsprofilens værdier bliver ryddes og overskreves"
+        "message": "Bemærk: Alle destinationsprofilens værdier overskrives"
     },
     "dialogCopyProfileConfirm": {
         "message": "Kopiér"
@@ -1933,19 +1945,19 @@
         "message": "Annullér"
     },
     "pidTuningResetPidProfile": {
-        "message": "Slet denne profil"
+        "message": "Nulstil denne profil"
     },
     "pidTuningPidProfileReset": {
         "message": "Indlæst standardværdier for aktuel PID profil."
     },
     "pidTuningReceivedProfile": {
-        "message": "Opsat FC profil: <strong class=\"message-positive\">$1</strong>"
+        "message": "Opsat PID profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "Opsat FC Rate profil: <strong class=\"message-positive\">$1</strong>"
+        "message": "Opsat Rate profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": "Indlæst Profil: <strong class=\"message-positive\">$1</strong>"
+        "message": "Indlæst PID profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedRateProfile": {
         "message": "Indlæst Rate profil: <strong class=\"message-positive\">$1</strong>"
@@ -2125,7 +2137,7 @@
         "message": "Brug en 3-positions kontakt på AUX1 for at vælge mellem højderor/krængror P, I og D. Brug en anden 3-positionskontakt på AUX2 for plus og minus."
     },
     "adjustmentsExample2": {
-        "message": "Brug en 3- positions kontakt på AUX4 for at skifte Rate Profilvalg med de samme tre positionskontakt på den samme kanal."
+        "message": "Brug en 3- positions kontakt på AUX4 for at skifte 'Profilvalg Rate' på den samme kanal."
     },
     "adjustmentsColumnEnable": {
         "message": "Hvis aktiveret"
@@ -2200,7 +2212,7 @@
         "message": "Sideror D justering"
     },
     "adjustmentsFunction12": {
-        "message": "Rate Profil-valg"
+        "message": "Profilvalg Rate"
     },
     "adjustmentsFunction13": {
         "message": "Højderor hastighed"
@@ -2245,7 +2257,7 @@
         "message": "Horizon Strength-justering"
     },
     "adjustmentsFunction25": {
-        "message": "PID-lydvalg"
+        "message": "Profilvalg PID"
     },
     "adjustmentsFunction26": {
         "message": "Højderor F justering"
@@ -2257,10 +2269,10 @@
         "message": "Sideror F justering"
     },
     "adjustmentsFunction29": {
-        "message": "OSD-profilvalg"
+        "message": "Profilvalg OSD"
     },
     "adjustmentsFunction30": {
-        "message": "LED-profilvalg"
+        "message": "Profilvalg LED"
     },
     "adjustmentsSave": {
         "message": "Gem"
@@ -3325,7 +3337,7 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeMag": {
-        "message": "Retning (Mag)",
+        "message": "Kompas retning (Mag)",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeBaro": {
@@ -3631,7 +3643,7 @@
         "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "Profiluafhængige filter indstillinger"
+        "message": "Profil <strong>u</strong>afhængige filter indstillinger"
     },
     "pidTuningFilterSlidersHelp": {
         "message": "Disse skydere justere Gyro og D-term filtre.<br /><br />For mere filtrering:<br /> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br /><br /> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere og kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br /> - Skydere til højre<br /> - Højere cutoff frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. Bevæger gyro lowpass filter højre er normalt OK, men det er normalt ikke nødvendigt at flytte D-filteret til højre, og det kan nemt resultere i meget varme motorer.",
@@ -3870,7 +3882,7 @@
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
-        "message": "Gyro Notch filtre"
+        "message": "Gyro Notch filter"
     },
     "pidTuningGyroNotchFilter": {
         "message": "Gyrohak filter 1"
@@ -3895,7 +3907,7 @@
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
-        "message": "Dynamisk Notch Filter"
+        "message": "Dynamisk Notch filter"
     },
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Dynamic Notch Filter sporer frekvens spidser fra motors støj og placerer hak filtre ved disse frekvenser, uafhængigt for hver akse."
@@ -3907,7 +3919,7 @@
         "message": "<strong>Bemærk:</strong> Det dynamiske notch filter er slået fra. For at konfigurere og bruge det, skal du aktivere funktionen 'DYNAMIC_FILTER' i afsnittet '$t(configurationFeatures.message)' i fanen '$t(tabConfiguration.message). Sørg også for, at PID loop rate er mindst 2 kHz."
     },
     "pidTuningDynamicNotchRange": {
-        "message": "Dynamisk Notch Filter Område"
+        "message": "Dynamisk Notch filter område"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Dynamisk Notch bredde i pct"
@@ -3951,7 +3963,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "Gyro RPM filter overtone nummer",
+        "message": "Gyro RPM filter overtone antal",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -3967,7 +3979,7 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
-        "message": "Profil afhængige Filterindstillinger"
+        "message": "Profil <strong>af</strong>hængige filter indstillinger"
     },
     "pidTuningDTermLowpass": {
         "message": "D Term Lowpass 1"
@@ -5055,11 +5067,11 @@
         "message": "Effektforbrug "
     },
     "osdTextElementPIDRateProfile": {
-        "message": "Profil: PID og hastighed",
+        "message": "Profil: PID og Rate",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRateProfile": {
-        "message": "Numerisk visning af de aktive PID og rate profiler"
+        "message": "Numerisk visning af den aktive PID og Rate profil"
     },
     "osdTextElementBatteryWarning": {
         "message": "Batteri advarsel",
@@ -6203,22 +6215,22 @@
         "message": "Aktiver understøttelse af ældre Multiwii MSP strøm output"
     },
     "pidTuningProfile": {
-        "message": "Profil"
+        "message": "PID profil"
     },
     "pidTuningProfileTip": {
-        "message": "Op til 3 (2 på visse controllere) forskellige PID-profiler kan gemmes på flight controlleren. PID-profilerne omfatter PID, d setpoint og vinkel-/horisontindstillinger på denne fane. Når man er i feltet, kan enkle styrepindskommandoer (se onlineinstruktionerne) benyttes til at skifte mellem profilerne."
+        "message": "Op til 3 forskellige PID profiler kan gemmes på FC. PID profilerne omfatter PID, D forstærkning og vinkel-/horisont indstillinger. \nDu kan skifte PID profil under flyvning, ved fx at oprette en 3 positionskontakt for 'Profilvalg Rate' på fanen 'Kanal justeringer'."
     },
     "pidTuningRateProfile": {
-        "message": "Rateprofil"
+        "message": "Rate profil"
     },
     "pidTuningRateProfileTip": {
-        "message": "Op til 3 forskellige rateprofiler pr. profil kan gemmes på flycontrolleren. Rateprofilerne inkluderer indstillingerne for 'RC Rate', 'Rate', 'RC Expo', 'Throttle' og 'TPA'. Skift mellem hastighedsprofiler er muligt under flyvning, ved at oprette en 3 positionskontakt for 'Rate Profile Selection' på fanen 'Justeringer'."
+        "message": "Op til 3 forskellige Rate profiler kan gemmes i FC. Rateprofilerne inkluderer indstillingerne for 'RC Rate', 'Rate', 'Expo', 'Gas' og 'TPA'. \nDu kan skifte Rate profil under flyvning, ved fx at oprette en 3 positionskontakt for 'Profilvalg Rate' på fanen 'Kanal justeringer'."
     },
     "pidTuningRateSetup": {
         "message": "Begynder/Acro"
     },
     "pidTuningRateSetupHelp": {
-        "message": "Juster disse værdier for at indstille dine rater. Brug RC Rate til at øge den maksimale hastighed generelt, bruge Super Rate til at have højere satser i slutningen af stick rejse, bruge RC Expo til at få den midterste stick til at føle sig glat.",
+        "message": "Juster disse værdier for at indstille din Rate. Brug RC Rate til at øge den maksimale hastighed generelt, brug Super Rate til at have højere satser i slutningen af pind bevægelse, brug Expo til at få den pind midter position til at føles glat.",
         "description": "Rate table helpicon message"
     },
     "pidTuningDelta": {
@@ -6303,7 +6315,7 @@
         "message": "Bekræft"
     },
     "dialogConfirmResetNote": {
-        "message": "ADVARSEL: Er du sikker på, at du vil nulstille ALLE indstillinger til standard?"
+        "message": "ADVARSEL: Er du sikker på du ønsker at nulstille <strong>ALLE indstillinger/strong> til standard værdier? Dette er <strong>ikke</strong> en \"nulstil til fabriks indstillinger\", men nulstil af alt. Det kan betyde uventede problemer, og det kan være nødvendigt af brænde firmware igen på FC, for at kunne forbinde til FC."
     },
     "dialogConfirmResetConfirm": {
         "message": "Nulstil"
@@ -6330,10 +6342,10 @@
         "message": "Brug mørkt tema for Configuration"
     },
     "pidTuningRatesType": {
-        "message": "Rates type"
+        "message": "Rate type"
     },
     "pidTuningRatesTypeTip": {
-        "message": "Ændring af satser type vil ændre kurven og den måde, du kan indstille det"
+        "message": "Ændring af Rate type vil ændre kurven og den måde, du kan indstille den"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Hastighed"
@@ -6348,16 +6360,16 @@
         "message": "RC kurve"
     },
     "pidTuningRateQuickRates": {
-        "message": "Maksimal Rate"
+        "message": "Maksimal sats"
     },
     "pidTuningRcRateActual": {
         "message": "Centrer følsomhed"
     },
     "dialogRatesTypeTitle": {
-        "message": "Ændring af hastigheds type"
+        "message": "Ændring af Rate type"
     },
     "dialogRatesTypeNote": {
-        "message": "<span class=\"message-negative\"><b>ADVARSEL: Du ændrer ratetypen.</b></span> Hvis du ændrer satserne, vil dine satser blive sat til en standardkurve."
+        "message": "<span class=\"message-negative\"><b>ADVARSEL: Du ændrer Rate typen.</b></span> Hvis du ændrer Rate, vil værder blive sat til en standardkurve."
     },
     "dialogRatesTypeConfirm": {
         "message": "Skift"

@@ -5978,9 +5978,6 @@
     "dialogConfirmResetTitle": {
         "message": "Bestätigen"
     },
-    "dialogConfirmResetNote": {
-        "message": "WARNUNG: Wollen Sie wirklich ALLE Einstellungen zurücksetzen?"
-    },
     "dialogConfirmResetConfirm": {
         "message": "Zurücksetzen"
     },

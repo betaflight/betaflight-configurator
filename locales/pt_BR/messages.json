@@ -6124,9 +6124,6 @@
     "dialogConfirmResetTitle": {
         "message": "Confirmar"
     },
-    "dialogConfirmResetNote": {
-        "message": "ATENÇÃO: Tem certeza que deseja restaurar TODAS as configurações para os valores padrão?"
-    },
     "dialogConfirmResetConfirm": {
         "message": "Restaurar"
     },

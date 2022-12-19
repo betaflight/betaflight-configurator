@@ -1516,6 +1516,18 @@
     "pidTuningSubTabFilter": {
         "message": "필터 설정"
     },
+    "pidProfileName": {
+        "message": "PID 프로파일 이름"
+    },
+    "pidProfileNameHelp": {
+        "message": "조정된 조건을 설명할 수 있는 PID 프로파일 이름: 더 가벼운/더 무거운 배터리, 액션 카메라/노 액션 카메라, 더 높은 고도 등."
+    },
+    "rateProfileName": {
+        "message": "레이트 프로파일 이름"
+    },
+    "rateProfileNameHelp": {
+        "message": "비행 유형을 설명할 수 있는 레이트 프로파일 이름: 씨네, 레이스, 프리스타일 등."
+    },
     "pidTuningShowAllPids": {
         "message": "모든 PID 보기"
     },
@@ -6303,7 +6315,7 @@
         "message": "확인"
     },
     "dialogConfirmResetNote": {
-        "message": "경고: 모든 설정을 기본값으로 초기화 하시겠습니까?"
+        "message": "경고: <strong>모든 설정을</strong> 기본값으로 설정하시겠습니까? 이것은 \"공장 초기화\"가 <strong>아닙니다</strong>. 이로 인해 예기치 않은 문제가 발생할 수 있으며, 다시 연결하려면 펌웨어를 다시 플래시해야 할 수도 있습니다."
     },
     "dialogConfirmResetConfirm": {
         "message": "초기화"

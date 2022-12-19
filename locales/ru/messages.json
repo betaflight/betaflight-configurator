@@ -5537,9 +5537,6 @@
     "dialogConfirmResetTitle": {
         "message": "Подтвердить"
     },
-    "dialogConfirmResetNote": {
-        "message": "ВНИМАНИЕ: Вы уверены, что хотите сбросить ВСЕ настройки до заводских значений?"
-    },
     "dialogConfirmResetConfirm": {
         "message": "Сброс"
     },

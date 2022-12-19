@@ -57,7 +57,7 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "virtualMSPVersion": {
-        "message": "Version du firmware virtuel"
+        "message": "Version du Firmware virtuel"
     },
     "portOverrideText": {
         "message": "Port:"
@@ -201,7 +201,7 @@
         "message": "Périphérique - <span class=\"message-positive\">Prêt</span>"
     },
     "tabFirmwareFlasher": {
-        "message": "Flasher un microprogramme"
+        "message": "Flasher le Firmware"
     },
     "tabLanding": {
         "message": "Bienvenue"
@@ -414,13 +414,13 @@
         "message": "Aucune donnée reçue depuis <span class=\"message-negative\">10 secondes</span>, <span class=\"message-negative\">échec</span> de communication."
     },
     "firmwareVersionNotSupported": {
-        "message": "Cette version du microprogramme <span class=\"message-negative\">n'est pas supportée</span>. Veuillez le mettre à jour vers une version compatible avec l'API <strong>$1</strong> ou ultérieure. Utiliser le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde / restauration par CLI sont décrites dans l'aide.<br /> Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à mettre à jour."
+        "message": "Cette version du Firmware <span class=\"message-negative\">n'est pas supportée</span>. Veuillez le mettre à jour vers une version compatible avec l'API <strong>$1</strong> ou ultérieure. Utiliser le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde / restauration par CLI sont décrites dans l'aide.<br /> Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à mettre à jour."
     },
     "firmwareTypeNotSupported": {
         "message": "Les firmwares autres que Betaflight <span class=\"message-negative\">ne sont pas supportés</span>, à part en mode CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "Le microprogramme de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde/restauration par le CLI sont décrites dans l'aide.<br /> Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
+        "message": "Le firmware de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde/restauration par le CLI sont décrites dans l'aide.<br />Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Des valeurs de réglage par défaut sont disponibles pour cette carte. Avec des valeurs par défaut propres à cette carte, celle-ci devrait fonctionner correctement.<br/>Souhaitez vous appliquer les réglages par défaut propres à cette carte ?"
@@ -482,7 +482,7 @@
         "message": "Veuillez <strong>mettre à jour</strong> le microprogramme pour accéder à la rubrique $1 tab."
     },
     "firmwareVersion": {
-        "message": "Version de microprogramme: <strong>$1</strong>"
+        "message": "Version de Firmware: <strong>$1</strong>"
     },
     "apiVersionReceived": {
         "message": "Version de l'API MultiWii: <strong>$1</strong>"
@@ -518,7 +518,7 @@
         "message": "Cible"
     },
     "versionLabelFirmware": {
-        "message": "Microprogramme"
+        "message": "Firmware"
     },
     "versionLabelConfigurator": {
         "message": "Configurateur"
@@ -600,7 +600,7 @@
         "message": "Configurateur - Changelog"
     },
     "defaultButtonFirmwareFlasher": {
-        "message": "Flasher le microprogramme"
+        "message": "Flasher le Firmware"
     },
     "defaultDonateHead": {
         "message": "Open Source / Avis de dons"
@@ -1427,7 +1427,7 @@
         "message": "<strong>Note:</strong> NE <span class=\"message-negative\">PAS</span> désactiver MSP sur le premier port série sauf si vous savez exactement ce que vous faites. Vous pourriez être obligé de reflasher entièrement ."
     },
     "portsFirmwareUpgradeRequired": {
-        "message": "Mise à jour du microprogramme <span class=\"message-negative\">requise</span>. La configuration port série du microprogramme &lt; 1.8.0 n'est pas supportée."
+        "message": "Mise à jour du firmware <span class=\"message-negative\">requise</span>. La configuration port série du firmware &lt; 1.8.0 n'est pas supportée."
     },
     "portsButtonSave": {
         "message": "Sauvegarder et Redémarrer"
@@ -1505,7 +1505,7 @@
         "message": "Benewake LIDAR"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">Changement de contrôleur PID désactivé - mais possible en CLI.</span> Votre microprogramme dispose de l'API version <span class=\"message-negative\">$1</span>, cette fonctionnalité nécessite la version <span class=\"message-positive\">$2</span>."
+        "message": "<span class=\"message-negative\">Changement de contrôleur PID désactivé - mais possible en CLI.</span> Votre firmware dispose de l'API version <span class=\"message-negative\">$1</span>, cette fonctionnalité nécessite la version <span class=\"message-positive\">$2</span>."
     },
     "pidTuningSubTabPid": {
         "message": "Paramètres PID du profil"
@@ -1515,6 +1515,18 @@
     },
     "pidTuningSubTabFilter": {
         "message": "Réglages filtres"
+    },
+    "pidProfileName": {
+        "message": "Nom du profil PID"
+    },
+    "pidProfileNameHelp": {
+        "message": "Nom du profil PID qui peut décrire les conditions sur lesquelles ce profil a été réglé : batterie plus légère/plus lourde, caméra d'action/sans caméra d'action, élévation plus élevée, etc."
+    },
+    "rateProfileName": {
+        "message": "Nom du profil Rate"
+    },
+    "rateProfileNameHelp": {
+        "message": "Nom du profil Rate qui peut décrire le type de vol de ce profil : cinéma, race, freestyle, etc."
     },
     "pidTuningShowAllPids": {
         "message": "Montrer tous les PIDs"
@@ -2332,7 +2344,7 @@
         "message": "EEPROM <span class=\"message-positive\">enregistrée</span>"
     },
     "servosFirmwareUpgradeRequired": {
-        "message": "Utiliser les servos nécessite un microprogramme &gt;= 1.10.0. et une carte compatible."
+        "message": "Utiliser les servos nécessite un firmware &gt;= 1.10.0. et une carte compatible."
     },
     "servosChangeDirection": {
         "message": "Changer la direction dans la télécommande afin de correspondre"
@@ -2861,7 +2873,7 @@
         "message": "Votre contrôleur de vol ne dispose pas de mémoire d'enregistrement."
     },
     "dataflashFirmwareUpgradeRequired": {
-        "message": "La mémoire interne nécessite un micrprogramme &gt;= 1.8.0."
+        "message": "La mémoire interne nécessite un firmware &gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
         "message": "Enregistrer sous..."
@@ -2999,7 +3011,7 @@
         "message": "Avancement:"
     },
     "firmwareFlasherLoadFirmwareFile": {
-        "message": "Veuillez charger le fichier du microprogramme"
+        "message": "Veuillez charger le fichier du firmware"
     },
     "firmwareFlasherLoadedConfig": {
         "message": "Cible chargée, veuillez charger le fichier du firmware"
@@ -3017,7 +3029,7 @@
         "message": "Depuis Betaflight 4.1, le support pour les <strong>Cibles unifiées</strong> a été ajouté.\nLe concept de Cible unifiée signifique qu'un même fichier .hex de firmware peut être utilisé pour toutes les cartes utilisant le même MCU (F4, F7). Pour rendre les différentes cartes fonctionnelles avec un même firmware, un fichier de configuration spécifique et déployé en même temps que le firmware quand une Cible unifiée est flashée.<br>Cette version du configurateur Betaflight permet de flasher des cibles unifiées ainsi que la configuration spécifique à la carte en une seule étape. Les différents types de firmware qui sont disponibles pour chaque carte sont affichés dans le menu déroulant comme suit:<br /><br /><strong>&lt;nom de carte&gt;</strong> ou<br><strong>&lt;nom de carte&gt; (Legacy)</strong>:<br>cibles non unifiées, ou versions pre-4.1 du firmware pour les cibles unifiées.<br /><br /><strong>&lt;nom de carte&gt; (&lt;id constructeur&gt;)</strong>:<br>(code 4 caractères du constructeur)<br>Cible Unifiée.<br /><br /><strong>Veuillez utiliser une cible unifiée si disponible.</strong> Si vous rencontrez un problème lors de l'usage d'une cible unifiée, veuillez ouvrir une <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">anomalie</a> puis utilisez une cible non-unifiée jusqu'à ce que le problème soit résolu."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": "Sélectionnez la version du microprogramme pour votre carte."
+        "message": "Sélectionnez la version du firmware pour votre carte."
     },
     "firmwareFlasherNoRebootDescription": {
         "message": "Activer si votre contrôleur de vol est en boot mode (Si vous l'avez branché en faisant contact entre les pins bootloader ou en maintenant le bouton BOOT, connu aussi en tant que DFU mode)"
@@ -3035,10 +3047,10 @@
         "message": "Efface toutes les données de configuration enregistrées sur la carte"
     },
     "firmwareFlasherFlashDevelopmentFirmware": {
-        "message": "Utiliser un microprogramme en développement"
+        "message": "Utiliser un firmware en développement"
     },
     "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": "Flasher le dernier microprogramme (non testé)  en développement"
+        "message": "Flasher le dernier firmware (non testé)  en développement."
     },
     "firmwareFlasherManualPort": {
         "message": "Port"
@@ -3077,22 +3089,22 @@
         "message": "Patch 3.4 AKK & RDQ VTX"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": "Choisir un microprogramme / une carte"
+        "message": "Choisir un firmware / une carte"
     },
     "firmwareFlasherOptionLabelSelectBoard": {
         "message": "Choisir une carte"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
-        "message": "Choisir la version du microprogramme"
+        "message": "Choisir la version du Firmware"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
         "message": "Choisir la version de firmware pour"
     },
     "firmwareFlasherButtonLoadLocal": {
-        "message": "Charger un microprogramme [Local]"
+        "message": "Charger un Firmware [Local]"
     },
     "firmwareFlasherButtonLoadOnline": {
-        "message": "Charger un microprogramme [En ligne]"
+        "message": "Charger un Firmware [Online]"
     },
     "firmwareFlasherButtonDownloading": {
         "message": "Téléchargement..."
@@ -3101,10 +3113,10 @@
         "message": "Exit DFU Mode"
     },
     "firmwareFlasherFlashFirmware": {
-        "message": "Flasher le microprogramme"
+        "message": "Flasher le Firmware"
     },
     "firmwareFlasherGithubInfoHead": {
-        "message": "Info Github sur le microprogramme"
+        "message": "Info Github sur le Firmware"
     },
     "firmwareFlasherCommiter": {
         "message": "Committer:"
@@ -3134,7 +3146,7 @@
         "message": "Quitter le firmware flasheur"
     },
     "firmwareFlasherFirmwareNotLoaded": {
-        "message": "Microprogramme non chargé"
+        "message": "Firmware non chargé"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Firmware local chargé: {{filename}} ({{bytes}} octets)"
@@ -3154,10 +3166,10 @@
         "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": "<span class=\"message-positive\">Microprogramme chargé, prêt pour le flashage</span>"
+        "message": "<span class=\"message-positive\">Firmware chargé, prêt pour le flashage</span>"
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
-        "message": "Erreur de chargement du microprogramme"
+        "message": "Erreur de chargement du Firmware"
     },
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Échec de chargement de la configuration distante pour {{remote_file}}"
@@ -3167,7 +3179,7 @@
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
     },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": "<b>Aucun microprogramme choisi</b>"
+        "message": "<b>Aucun Firmware choisi</b>"
     },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Merci de choisir un port valide</span>"
@@ -6300,7 +6312,7 @@
         "message": "Confirmer"
     },
     "dialogConfirmResetNote": {
-        "message": "ATTENTION : Êtes-vous sûr de vouloir réinitialiser TOUS les paramètres par défaut ?"
+        "message": "ATTENTION : Êtes-vous sûr de vouloir réinitialiser <strong>TOUS les paramètres</strong> par défaut ? C'est n'est <strong>pas</strong> une \"réinitialisation d'usine\". Cela peut causer des problèmes inattendus, et il peut être nécessaire de réinstaller votre firmware pour pouvoir se connecter à nouveau."
     },
     "dialogConfirmResetConfirm": {
         "message": "Réinitialiser"
@@ -6533,7 +6545,7 @@
         "description": "UI filter name"
     },
     "presetsFilterFirmware": {
-        "message": "Microprogrammes",
+        "message": "Firmwares",
         "description": "UI filter name"
     },
     "presetsFilterStatus": {

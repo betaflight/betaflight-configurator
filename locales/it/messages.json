@@ -83,6 +83,9 @@
     "expertMode": {
         "message": "Abilita modalità esperto"
     },
+    "expertModeDescription": {
+        "message": "Mostra le build di sviluppo che sono potenzialmente instabili"
+    },
     "permanentExpertMode": {
         "message": "Modalità esperto sempre abilitata"
     },
@@ -1513,6 +1516,18 @@
     "pidTuningSubTabFilter": {
         "message": "Impostazioni Filtri"
     },
+    "pidProfileName": {
+        "message": "Nome profilo PID"
+    },
+    "pidProfileNameHelp": {
+        "message": "Nome del profilo PID che descrive per quali condizioni questo profilo è stato regolato: batteria più leggera/più pesante, action camera/nessuna action camera, altezza elevata, ecc."
+    },
+    "rateProfileName": {
+        "message": "Nome profilo Rate"
+    },
+    "rateProfileNameHelp": {
+        "message": "Nome del profilo Rate che descrive questo profilo per quale tipo di volo sarà usato: cine, race, freestyle, etc."
+    },
     "pidTuningShowAllPids": {
         "message": "Mostra tutti i PID"
     },
@@ -1658,7 +1673,7 @@
         "message": "Seleziona se la frequenza di taglio del filtro del feedforward viene calcolata automaticamente (consigliata) o selezionata manualmente dall'utente. L'uso di \"Manuale\" non è raccomandato per i protocolli di ricezione che cambiano in volo come Crossfire."
     },
     "receiverRcSmoothingSetpointHz": {
-        "message": "Frequenza di taglio del setpoint"
+        "message": "Frequenza di taglio del Setpoint"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Frequenza di taglio del Feedforward"
@@ -3023,10 +3038,10 @@
         "message": "Abilita se il tuo FC è in modalità boot. Vale a dire se hai acceso il FC con i pin del bootloader collegati o tenendo premuto il pulsante BOOT"
     },
     "firmwareFlasherFlashOnConnect": {
-        "message": "Flasha alla connessione"
+        "message": "Flash alla connessione"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Tentare di flashare automaticamente la scheda (attivata dalla porta seriale appena rilevata)."
+        "message": "Tenta di flashare automaticamente la scheda (attivata dalla porta seriale appena rilevata)."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Cancella completamente il chip"
@@ -3047,10 +3062,13 @@
         "message": "Baud rate manuale"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "Seleziona manualmente la velocità di trasmissione per schede che non supportano la velocità predefinita o per il flashing via bluetooth.<br /><span class=\"message-negative\">Nota:</span> Non utilizzato quando si flasha tramite USB DFU"
+        "message": "Seleziona manualmente la velocità di trasmissione per schede che non supportano la velocità predefinita o per il flash via bluetooth.<br /><span class=\"message-negative\">Nota:</span> Non usato per il flash tramite USB DFU"
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Mostra versioni candidate"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Mostra i candidati al rilascio oltre alle versioni stabili"
@@ -3062,7 +3080,7 @@
         "message": "Versione"
     },
     "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Versioni pubblicate e candidate alla pubblicazione"
+        "message": "Versioni pubblicate e candidate"
     },
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
         "message": "Sviluppo"
@@ -6297,7 +6315,7 @@
         "message": "Conferma"
     },
     "dialogConfirmResetNote": {
-        "message": "ATTENZIONE: Sei sicuro di voler ripristinare TUTTE le impostazioni di fabbrica?"
+        "message": "ATTENZIONE: Sei sicuro di voler resettare <strong>TUTTE le impostazioni</strong> a default? Questo <strong>non è</strong> un \"reset di fabbrica\". Potrebbe causare problemi inattesi e potrebbe essere necessario un re-flash del firmware per potersi connettersi di nuovo."
     },
     "dialogConfirmResetConfirm": {
         "message": "Ripristina"
@@ -6695,6 +6713,9 @@
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Selezionare i protocolli dei motori (ESC) che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi."
     },
+    "firmwareFlasherBranchDescription": {
+        "message": "Particolarmente utile per gli sviluppatori, è possibile selezionare un PR, specificare un commit sha oppure specificare un PR ancora da integrare digitando un # seguito dal numero PR es. #1234 (questa è la scorciatoia per il branch 'pull/1234/head')."
+    },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Per gli sviluppatori, puoi aggiungere qualsiasi define necessaria, separata da uno `spazio`, ma senza il prefisso `USE_`, il quale verrà aggiunto automaticamente."
     },
@@ -6703,5 +6724,8 @@
     },
     "classicBuild": {
         "message": "Modalità Classica"
+    },
+    "classicBuildModeDescription": {
+        "message": "Questa modalità ignora tutti i parametri (eccetto per i commit se in modalità esperto). Questo essenzialmente ottiene lo stesso risultato delle classiche nightly build ed è fornito per comodità."
     }
 }

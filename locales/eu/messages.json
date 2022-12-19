@@ -5111,9 +5111,6 @@
     "dialogConfirmResetTitle": {
         "message": "Baieztatu"
     },
-    "dialogConfirmResetNote": {
-        "message": "KONTUZ: Ziur al zaude ezarpen GUZTIAK lehenetsi nahi dituzula?"
-    },
     "dialogConfirmResetConfirm": {
         "message": "Leheneratu"
     },

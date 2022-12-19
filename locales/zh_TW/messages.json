@@ -5031,9 +5031,6 @@
     "dialogConfirmResetTitle": {
         "message": "確認"
     },
-    "dialogConfirmResetNote": {
-        "message": "警告：確定要將所有設置重置到默認設置？"
-    },
     "dialogConfirmResetConfirm": {
         "message": "重置"
     },

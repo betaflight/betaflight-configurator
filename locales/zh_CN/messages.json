@@ -5997,9 +5997,6 @@
     "dialogConfirmResetTitle": {
         "message": "确认"
     },
-    "dialogConfirmResetNote": {
-        "message": "警告：确定要将所有设置重置到默认设置？"
-    },
     "dialogConfirmResetConfirm": {
         "message": "重置"
     },

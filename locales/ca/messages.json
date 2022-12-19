@@ -1524,6 +1524,18 @@
     "pidTuningSubTabFilter": {
         "message": "Configuració de Filtres"
     },
+    "pidProfileName": {
+        "message": "Nom del perfil PID"
+    },
+    "pidProfileNameHelp": {
+        "message": "Nom del perfil PID que pot descriure en quines condicions s'ha ajustat aquest perfil: bateria més lleugera/pesada, càmera d'acció/sense càmera d'acció, elevació més alta, etc."
+    },
+    "rateProfileName": {
+        "message": "Nom del perfil Rate"
+    },
+    "rateProfileNameHelp": {
+        "message": "Nom del perfil de valoració que pot descriure per a quin tipus de vol és aquest perfil: cinema, cursa, estil lliure, etc."
+    },
     "pidTuningShowAllPids": {
         "message": "Mostra tots els PIDs"
     },
@@ -6311,7 +6323,7 @@
         "message": "Confirmar"
     },
     "dialogConfirmResetNote": {
-        "message": "AVÍS: Estàs segur que vols resetejar TOTS els paràmetres als valors per defecte?"
+        "message": "ADVERTIMENT: esteu segur que voleu restablir <strong>TOTA la configuració</strong> als valors predeterminats? Això <strong>no</strong> és un \"restabliment de fàbrica\". Pot causar problemes inesperats i pot ser necessari tornar a flashejar el microprogramari per poder connectar-se de nou."
     },
     "dialogConfirmResetConfirm": {
         "message": "Resetejar"

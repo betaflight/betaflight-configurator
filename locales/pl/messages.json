@@ -5219,9 +5219,6 @@
     "dialogConfirmResetTitle": {
         "message": "Potwierdź"
     },
-    "dialogConfirmResetNote": {
-        "message": "OSTRZEŻENIE: Czy na pewno chcesz przywrócić WSZYSTKIE ustawienia do wartości domyślnych?"
-    },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
     },

@@ -1516,6 +1516,18 @@
     "pidTuningSubTabFilter": {
         "message": "フィルター設定"
     },
+    "pidProfileName": {
+        "message": "PID profile名"
+    },
+    "pidProfileNameHelp": {
+        "message": "PID profile名は、このプロファイルがどのような条件でチューニングされたかを記述することができます: バッテリー重量の増減、アクションカメラの有無、標高が高い等。"
+    },
+    "rateProfileName": {
+        "message": "Rate profile名"
+    },
+    "rateProfileNameHelp": {
+        "message": "Rate profile名は、このプロファイルがどのような飛行スタイルであるかを記述することができます: シネマティック飛行、レース、フリースタイル等。"
+    },
     "pidTuningShowAllPids": {
         "message": "全PID値の表示"
     },
@@ -6303,7 +6315,7 @@
         "message": "確定"
     },
     "dialogConfirmResetNote": {
-        "message": "警告: 本当にすべての設定を初期化しますか？"
+        "message": "警告: 本当に<strong>すべての設定</strong>をデフォルト値にリセットしますか？これは『ファクトリーリセット (工場出荷時初期化) 』では<strong>ありません</strong>。予期せぬ問題が発生し、再び接続できるようにするために再度ファームウェアの書き込みが必要になる場合があります。"
     },
     "dialogConfirmResetConfirm": {
         "message": "リセット"
