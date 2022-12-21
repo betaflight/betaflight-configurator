@@ -87,6 +87,9 @@ jobs:
 
       - run: yarn install --immutable --immutable-cache --check-cache
 
+      - run: yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
+        if: ${{ !inputs.debug_build }}
+
       - run: yarn gulp release ${{ matrix.releaseArgs }}
         if: ${{ !inputs.debug_build && matrix.name != 'Android' }}
 
