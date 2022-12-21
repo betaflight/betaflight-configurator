@@ -93,6 +93,22 @@ jobs:
       - run: yarn gulp debug-release ${{ matrix.releaseArgs }}
         if: ${{ inputs.debug_build || matrix.name == 'Android' }}
 
+      # Modern Ubuntu builds .deb with ZST compression; however, Debian does not yet support
+      - name: repack .deb file with xz compression
+        if: ${{ matrix.name == 'Linux' }}
+        run: |
+          set -x
+          sudo apt install binutils zstd
+          cd release
+          debfile=$(find ./ -name "*.deb")
+          ar x $debfile
+          zstd -d < control.tar.zst | xz > control.tar.xz  
+          zstd -d < data.tar.zst | xz > data.tar.xz  
+          rm *.deb
+          rm *.zst
+          ar -m -c -a sdsd $debfile debian-binary control.tar.xz data.tar.xz
+          rm debian-binary control.tar.xz data.tar.xz
+
       - name: Publish build artifacts
         uses: actions/upload-artifact@v3
         with:
