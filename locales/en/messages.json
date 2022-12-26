@@ -6826,10 +6826,10 @@
         "message": "Other Options"
     },
     "firmwareFlasherBuildRadioProtocols": {
-        "message": "Radio Protocols"
+        "message": "Radio Protocol"
     },
     "firmwareFlasherBuildTelemetryProtocols": {
-        "message": "Telemetry Protocols"
+        "message": "Telemetry Protocol"
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Motor Protocols"

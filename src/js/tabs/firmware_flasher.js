@@ -777,9 +777,6 @@ firmware_flasher.initialize = function (callback) {
                 let request = {
                     target: summary.target,
                     release: summary.release,
-                    radioProtocols: [],
-                    telemetryProtocols: [],
-                    motorProtocols: [],
                     options: [],
                     classicBuild: false,
                 };
@@ -787,11 +784,11 @@ firmware_flasher.initialize = function (callback) {
                 request.classicBuild = !summary.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
                 if (!request.classicBuild) {
                     $('select[name="radioProtocols"] option:selected').each(function () {
-                        request.radioProtocols.push($(this).val());
+                        request.options.push($(this).val());
                     });
 
                     $('select[name="telemetryProtocols"] option:selected').each(function () {
-                        request.telemetryProtocols.push($(this).val());
+                        request.options.push($(this).val());
                     });
 
                     $('select[name="options"] option:selected').each(function () {
@@ -799,7 +796,7 @@ firmware_flasher.initialize = function (callback) {
                     });
 
                     $('select[name="motorProtocols"] option:selected').each(function () {
-                        request.motorProtocols.push($(this).val());
+                        request.options.push($(this).val());
                     });
 
                     if ($('input[name="expertModeCheckbox"]').is(':checked')) {
