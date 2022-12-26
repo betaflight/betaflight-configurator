@@ -6689,12 +6689,6 @@
     "firmwareFlasherBuildOptions": {
         "message": "기타 옵션"
     },
-    "firmwareFlasherBuildRadioProtocols": {
-        "message": "무선 프로토콜"
-    },
-    "firmwareFlasherBuildTelemetryProtocols": {
-        "message": "텔레메트리 프로토콜"
-    },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "모터 프로토콜"
     },

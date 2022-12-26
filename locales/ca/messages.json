@@ -6698,10 +6698,10 @@
         "message": "Altres opciones"
     },
     "firmwareFlasherBuildRadioProtocols": {
-        "message": "Protocols de ràdio"
+        "message": "Protocol de ràdio"
     },
     "firmwareFlasherBuildTelemetryProtocols": {
-        "message": "Protocols de telemetria"
+        "message": "Protocol de telemetria"
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocols motors"

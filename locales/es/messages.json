@@ -6690,10 +6690,10 @@
         "message": "Otras opciones"
     },
     "firmwareFlasherBuildRadioProtocols": {
-        "message": "Protocols de radio"
+        "message": "Protocolo de radio"
     },
     "firmwareFlasherBuildTelemetryProtocols": {
-        "message": "Protocolos de telemetría"
+        "message": "Protocolo de telemetría"
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocolos de motor"
