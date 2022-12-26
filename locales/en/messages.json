@@ -6832,7 +6832,7 @@
         "message": "Telemetry Protocol"
     },
     "firmwareFlasherBuildMotorProtocols": {
-        "message": "Motor Protocols"
+        "message": "Motor Protocol"
     },
     "firmwareFlasherConfigurationFile": {
         "message": "Configuration Filename:"
