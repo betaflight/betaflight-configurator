@@ -6687,10 +6687,10 @@
         "message": "Autres Options"
     },
     "firmwareFlasherBuildRadioProtocols": {
-        "message": "Protocoles Radio"
+        "message": "Protocole radio"
     },
     "firmwareFlasherBuildTelemetryProtocols": {
-        "message": "Protocoles de télémétrie"
+        "message": "Protocole de télémétrie"
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocoles du Moteur"

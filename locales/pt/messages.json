@@ -1516,6 +1516,18 @@
     "pidTuningSubTabFilter": {
         "message": "Definições do Filtro"
     },
+    "pidProfileName": {
+        "message": "Nome do perfil PID"
+    },
+    "pidProfileNameHelp": {
+        "message": "Nome do perfil PID que pode descrever quais as condições a que este perfil estava ligado: bateria mais leve/pesada, câmera de ação/nenhuma câmera de ação, maior elevação, etc."
+    },
+    "rateProfileName": {
+        "message": "Nome do perfil Rate"
+    },
+    "rateProfileNameHelp": {
+        "message": "Nome do perfil Rate que pode descrever para que tipo de voo este perfil é: cine, race, freestyle, etc."
+    },
     "pidTuningShowAllPids": {
         "message": "Mostrar todos os PIDs"
     },
@@ -6678,10 +6690,10 @@
         "message": "Outras Opções"
     },
     "firmwareFlasherBuildRadioProtocols": {
-        "message": "Protocolos de Rádio"
+        "message": "Protocolo de Rádio"
     },
     "firmwareFlasherBuildTelemetryProtocols": {
-        "message": "Protocolos de Telemetria"
+        "message": "Protocolo de Telemetria"
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocolos de Motores"

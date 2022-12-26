@@ -6492,12 +6492,6 @@
     "firmwareFlasherBuildOptions": {
         "message": "Outras Opções"
     },
-    "firmwareFlasherBuildRadioProtocols": {
-        "message": "Protocolos de Rádio"
-    },
-    "firmwareFlasherBuildTelemetryProtocols": {
-        "message": "Protocolos de telemetria"
-    },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocolos do Motor"
     },
