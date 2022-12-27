@@ -98,7 +98,6 @@ $.fn.sortSelect = function(text = "") {
     const op = this.children("option");
 
     op.sort((a, b) => {
-        console.log(a.value, a.text);
         if (a.text === text) {
             return -1;
         }
