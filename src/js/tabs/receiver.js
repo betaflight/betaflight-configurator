@@ -252,13 +252,7 @@ receiver.initialize = function (callback) {
 
         // Convert to select2 and order alphabetic
         if (!GUI.isCordova()) {
-            serialRxSelectElement.select2({
-                sorter(data) {
-                    return data.sort(function(a, b) {
-                        return a.text.localeCompare(b.text);
-                    });
-                },
-            });
+            serialRxSelectElement.sortSelect().select2();
         }
 
         const spiRxTypes = [
@@ -314,13 +308,7 @@ receiver.initialize = function (callback) {
 
         if (!GUI.isCordova()) {
             // Convert to select2 and order alphabetic
-            spiRxElement.select2({
-                sorter(data) {
-                    return data.sort(function(a, b) {
-                        return a.text.localeCompare(b.text);
-                    });
-                },
-            });
+            spiRxElement.sortSelect().select2();
         }
 
         if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') && FC.RX_CONFIG.rxSpiProtocol == 19 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
