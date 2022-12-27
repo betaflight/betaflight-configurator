@@ -286,25 +286,16 @@ adjustments.cleanup = function (callback) {
     if (callback) callback();
 };
 
-$.fn.sortSelect = function() {
-    const op = this.children("option");
-    op.sort(function(a, b) {
-        return a.text > b.text ? 1 : -1;
-    });
-    return this.empty().append(op);
-};
-
 adjustments.adjust_template = function () {
-
     const selectFunction = $('#functionSelectionSelect');
-    const elementsNumber = 31; // OSD Profile Select & LED Profile Select
+    const elementsNumber = 31; // 'LED Profile Select' are the last adjustmentsFunction
 
     for (let i = 0; i < elementsNumber; i++) {
         selectFunction.append(new Option(i18n.getMessage(`adjustmentsFunction${i}`), i));
     }
 
     // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
-    selectFunction.sortSelect();
+    selectFunction.sortSelect(i18n.getMessage("adjustmentsFunction0"));
 };
 
 window.TABS.adjustments = adjustments;
