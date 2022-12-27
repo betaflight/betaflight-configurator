@@ -6838,16 +6838,16 @@
         "message": "Configuration Filename:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Select the radio protocols you would like included in this build. Note this is a drop down, and multiple items maybe selected."
+        "message": "Select the radio protocol you would like included in this build. Note this is a drop down, but only one item maybe selected."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Select the telemetry protocols you would like included in this build. Note this is a drop down, and multiple items maybe selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
+        "message": "Select the telemetry protocol you would like included in this build. Note this is a drop down, but only one item maybe selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items maybe selected. Such items as fixes, e.g. AKK VTX, are included here."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Select the motor (ESC) protocols you would like included in this build. Note this is a drop down, and multiple items maybe selected."
+        "message": "Select the motor (ESC) protocol you would like included in this build. Note this is a drop down, but only one item maybe selected."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especially useful for developers, you can select a merged PR, specify a commit sha, or specify a 'yet to be merged' PR by typing in a # followed by the PR number e.g. #1234 (this is shorthand for the branch 'pull/1234/head')."
