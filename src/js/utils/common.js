@@ -87,20 +87,29 @@ export function getTextWidth(text) {
     return Math.ceil(context.measureText(text).width);
 }
 
-export function sortElement(element, keepDown = "DISABLED") {
-    const list = document.querySelector(element);
-    [...list.children]
-        .sort((a, b) => {
-            if (a.innerText === keepDown) {
-                return 1;
-            } else if (b.innerText === keepDown) {
-                return -1;
-            } else {
-                return a.innerText > b.innerText ? 1 : -1;
-            }
-        })
-        .forEach(node => list.appendChild(node));
-}
+/**
+ * Returns jquery sorted option list with optional value staying on top of the list.
+ *
+ * @param {string} optional value staying on top of the list.
+ * @return {object} sorted option list.
+ */
+
+$.fn.sortSelect = function(text = "") {
+    const op = this.children("option");
+
+    op.sort((a, b) => {
+        console.log(a.value, a.text);
+        if (a.text === text) {
+            return -1;
+        }
+        if (b.text === text) {
+            return 1;
+        }
+        return a.text.localeCompare(b.text, window.navigator.language, { ignorePunctuation: true });
+    });
+
+    return this.empty().append(op);
+};
 
 // TODO: these are temp binding while transition to module happens
 window.degToRad = degToRad;
@@ -110,4 +119,3 @@ window.checkChromeRuntimeError = checkChromeRuntimeError;
 window.generateVirtualApiVersions = generateVirtualApiVersions;
 window.getMixerImageSrc = getMixerImageSrc;
 window.getTextWidth = getTextWidth;
-window.sortElement = sortElement;

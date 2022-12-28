@@ -333,7 +333,7 @@ motors.initialize = async function (callback) {
             });
         }
 
-        sortElement('select.mixerList');
+        mixerListElement.sortSelect();
 
         function refreshMixerPreview() {
             const mixer = FC.MIXER_CONFIG.mixer;
@@ -648,7 +648,7 @@ motors.initialize = async function (callback) {
             escProtocolElement.append(`<option value="${j + 1}">${escProtocols[j]}</option>`);
         }
 
-        sortElement('select.escprotocol');
+        escProtocolElement.sortSelect("DISABLED");
 
         const unsyncedPWMSwitchElement = $("input[id='unsyncedPWMSwitch']");
         const divUnsyncedPWMFreq = $('div.unsyncedpwmfreq');
