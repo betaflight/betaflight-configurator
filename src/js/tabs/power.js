@@ -171,7 +171,7 @@ power.initialize = function (callback) {
         $("#calibrationmanagercontent").hide();
         $("#calibrationmanagerconfirmcontent").hide();
 
-       // battery
+        // battery
         const templateBatteryState = $('#tab-power-templates .battery-state .battery-state');
         const destinationBatteryState = $('.tab-power .battery-state');
         const elementBatteryState = templateBatteryState.clone();
@@ -198,6 +198,7 @@ power.initialize = function (callback) {
 
         const haveFc = FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2;
 
+        // fill voltage
         const batteryMeterTypes = [
             i18n.getMessage('powerBatteryVoltageMeterTypeNone'),
             i18n.getMessage('powerBatteryVoltageMeterTypeAdc'),
@@ -207,11 +208,11 @@ power.initialize = function (callback) {
             batteryMeterTypes.push(i18n.getMessage('powerBatteryVoltageMeterTypeEsc'));
         }
 
-        let batteryMeterType_e = $('select.batterymetersource');
-
+        let batteryMeterType_e = $('#batterymetersourceSelect');
         for (let i = 0; i < batteryMeterTypes.length; i++) {
-            batteryMeterType_e.append(`<option value="${i}">${batteryMeterTypes[i]}</option>`);
+            batteryMeterType_e.append(new Option(batteryMeterTypes[i], i));
         }
+        batteryMeterType_e.sortSelect(batteryMeterTypes[0]);
 
         // fill current
         const currentMeterTypes = [
@@ -225,11 +226,11 @@ power.initialize = function (callback) {
             currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeMsp'));
         }
 
-        let currentMeterType_e = $('select.currentmetersource');
-
+        let currentMeterType_e = $('#currentmetersourceSelect');
         for (let i = 0; i < currentMeterTypes.length; i++) {
-            currentMeterType_e.append(`<option value="${i}">${currentMeterTypes[i]}</option>`);
+            currentMeterType_e.append(new Option(currentMeterTypes[i], i));
         }
+        currentMeterType_e.sortSelect(currentMeterTypes[0]);
 
         updateDisplay(FC.VOLTAGE_METER_CONFIGS, FC.CURRENT_METER_CONFIGS);
 
@@ -461,9 +462,10 @@ power.initialize = function (callback) {
     }
 
     function process_html() {
-        initDisplay();
         // translate to user-selected language
         i18n.localizePage();
+
+        initDisplay();
 
         GUI.content_ready(callback);
     }
