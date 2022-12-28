@@ -1186,7 +1186,7 @@
         "message": "Ralentí Motor (%, estático)"
     },
     "configurationDigitalIdlePercentDisabled": {
-        "message": "Ralentí Dinámico está activo en {{dynamicIdle}} rpm. Mira la pestaña de ajuste del PID."
+        "message": "Ralentí Estático. El Ralentí Dinámico está activo en {{dynamicIdle}} rpm y tiene preferencia. Mira la pestaña de ajuste del PID."
     },
     "configurationDigitalIdlePercentHelp": {
         "message": "El valor 'Ralentí Motor (estático)' es el porcentaje de velocidad máxima que se envía a los ESCs cuando el mando del acelerador está al mínimo y la aeronave está armada. <br><br>Auméntalo para ganar más velocidad en ralentí y evitar desincronizaciones. Demasiado alto y la aeronave se notará muy flotante. Demasiado bajo y los motores se pueden desincronizar o ser lentos al acelerar.<br><br>En 4.3, cuando el Ralentí Dinámico está activo, el Ralentí estático se descarta, porque el ralentí se ajusta continuamente para mantener las rpm mínimas configuradas en el motor más lento."
@@ -1487,7 +1487,7 @@
         "message": "VTX (IRC Tramp)"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "Cámara (RunCam Protocol)"
+        "message": "Cámara (Protocolo RunCam)"
     },
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (Protocolo FrSky)"
@@ -4050,7 +4050,7 @@
         "message": "Linearización de Empuje"
     },
     "pidTuningThrustLinearizationHelp": {
-        "message": "Mejora la autoridad con acelerador bajo y la capacidad de respuesta.<br><br> Especialmente útil para whoops y ESCs de 48k. No tiene efecto con acelerador alto.<br><br>La cantidad de compensación puede variar entre 0 y 150 %. Generalmente el 30-40 % es suficiente."
+        "message": "Mejora la autoridad con acelerador bajo y la capacidad de respuesta.<br><br> Especialmente útil para whoops y ESCs de 48kHz. No tiene efecto con acelerador alto.<br><br>La cantidad de compensación puede variar entre 0 y 150 %. Generalmente el 30-40 % es suficiente."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -4188,7 +4188,7 @@
         "message": "Tiempo a esperar en etapa 1 para recuperación"
     },
     "failsafeThrottleLowItem": {
-        "message": "Retardo Acelerador Bajo Modo de Seguridad [segundos]"
+        "message": "Retardo del Modo de Seguridad con Acelerador Bajo [segundos]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Simplemente desarma la aeronave en lugar de ejecutar el proceso de modo de seguridad seleccionado cuando el acelerador está al mínimo durante este tiempo"
@@ -6696,22 +6696,22 @@
         "message": "Protocolo de telemetría"
     },
     "firmwareFlasherBuildMotorProtocols": {
-        "message": "Protocolos de motor"
+        "message": "Protocolo de motor"
     },
     "firmwareFlasherConfigurationFile": {
         "message": "Nombre de archivo de configuración:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Selecciona los protocolos de radio que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos."
+        "message": "Selecciona el protocolo de motor que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, pero sólo se puede seleccionar un elemento."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Selecciona los protocolos de telemetría que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos. También hay algunos protocolos de telemetría que se habilitarán, independientemente de tu selección aquí, dependiendo del protocolo de radio seleccionado, por ejemplo, CRSF."
+        "message": "Selecciona el protocolo de telemetría que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, pero sólo se puede seleccionar un único elemento. También hay algunos protocolos de telemetría que se habilitarán, independientemente de tu selección aquí, dependiendo del protocolo de radio seleccionado, por ejemplo, CRSF."
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Selecciona las opciones generales que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos. Algunos elementos como parches, por ejemplo, AKK VTX, están incluidos aquí."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Selecciona los protocolos de motor (ESC) que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos."
+        "message": "Selecciona el protocolo de motor (ESC) que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, pero sólo se puede seleccionar un elemento."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialmente útil para desarrolladores, puedes seleccionar un PR incluido en el código, especificar el sha de un commit, o especificar un PR 'todavía no incluido' escribiendo una # seguida por el número de PR por eje. #1234 (esto es una abreviatura para la rama 'pull/1234/head')."

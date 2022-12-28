@@ -6695,23 +6695,11 @@
     "firmwareFlasherBuildTelemetryProtocols": {
         "message": "テレメトリープロトコル"
     },
-    "firmwareFlasherBuildMotorProtocols": {
-        "message": "モータープロトコル"
-    },
     "firmwareFlasherConfigurationFile": {
         "message": "設定ファイル名:"
     },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": "このビルドに含まれる送信プロトコルを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。"
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "このビルドに含まれるテレメトリープロトコルを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。またCRSFなど、選択した送信プロトコルに関係なく有効となるテレメトリープロトコルもあります。"
-    },
     "firmwareFlasherOptionsDescription": {
         "message": "このビルドに含まれる一般的なオプションを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。AKK VTXのような修正項目はこちらに含まれます。"
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": "このビルドに含まれるモーター (ESC) プロトコルを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。"
     },
     "firmwareFlasherBranchDescription": {
         "message": "特に開発者にとっては便利な機能で、#の後にPR番号 [例: #1234] を入力することで、マージ済みのPRを選択したり、コミットshaを指定したり「まだマージされていない」PRを指定したりできます。 (これは『pull/1234/head』ブランチの省略です)"

@@ -6689,23 +6689,29 @@
     "firmwareFlasherBuildOptions": {
         "message": "Altre Opzioni"
     },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Protocollo Radio"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Protocollo Telemetria"
+    },
     "firmwareFlasherBuildMotorProtocols": {
-        "message": "Protocolli Motori"
+        "message": "Protocollo Motore"
     },
     "firmwareFlasherConfigurationFile": {
         "message": "Nome file configurazione:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Selezionare i protocolli radio che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi."
+        "message": "Seleziona il protocollo radio che vuoi includere in questa build. Della lista, puoi selezionare una sola voce."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Selezionare i protocolli di telemetria che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi. Ci sono alcuni protocolli di telemetria che verranno attivati indipendentemente dalla tua selezione ma in base ai protocolli radio, es CRSF."
+        "message": "Seleziona il protocollo telemetria che vuoi includere nella build. Della lista, puoi selezionare una sola voce. Ci sono anche alcuni protocolli per la telemetria che saranno abilitati, anche se la tua selezione è basata su un solo protocollo radio, es. CRSF."
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Selezionare le opzioni generiche che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi. Elementi come fix, es AKK VTX, sono inclusi qui."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Selezionare i protocolli dei motori (ESC) che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi."
+        "message": "Seleziona il protocollo motore (ESC) che vuoi includere nella build. Della lista, puoi selezionare una sola voce."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Particolarmente utile per gli sviluppatori, è possibile selezionare un PR, specificare un commit sha oppure specificare un PR ancora da integrare digitando un # seguito dal numero PR es. #1234 (questa è la scorciatoia per il branch 'pull/1234/head')."

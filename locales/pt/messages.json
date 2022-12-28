@@ -6696,22 +6696,22 @@
         "message": "Protocolo de Telemetria"
     },
     "firmwareFlasherBuildMotorProtocols": {
-        "message": "Protocolos de Motores"
+        "message": "Protocolo do Motor"
     },
     "firmwareFlasherConfigurationFile": {
         "message": "Nome do ficheiro de Configuração:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Selecione os protocolos de rádio que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
+        "message": "Selecione o protocolo de rádio que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Selecione os protocolos de rádio que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Existem também alguns protocolos de telemetria que serão ativados, independentemente da sua seleção aqui, baseados no protocolo de rádio selecionado, por exemplo, CRSF."
+        "message": "Selecione o protocolo de telemetria que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado. Existem também alguns protocolos de telemetria que serão ativados independentemente da sua seleção aqui baseada no protocolo de rádio selecionado, por exemplo, CRSF."
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Selecione as opções genéricas que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Tais itens como correções, por exemplo, VTX AKK, estão incluídos aqui."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Selecione os protocolos de motor (ESC) que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
+        "message": "Selecione o protocolo (ESC) do motor que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialmente útil para desenvolvedores, pode selecionar uma versão PR, especificar uma commit sha, ou especificar um PR 'ainda a ser mesclado' digitando um # seguido pelo número do PR. ex. #1234 (abreviatura para o branch 'pull/1234/head')."
