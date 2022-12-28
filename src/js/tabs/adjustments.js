@@ -287,26 +287,15 @@ adjustments.cleanup = function (callback) {
 };
 
 adjustments.adjust_template = function () {
-
     const selectFunction = $('#functionSelectionSelect');
-    const elementsNumber = 31; // OSD Profile Select & LED Profile Select
+    const elementsNumber = 31; // 'LED Profile Select' are the last adjustmentsFunction
 
     for (let i = 0; i < elementsNumber; i++) {
         selectFunction.append(new Option(i18n.getMessage(`adjustmentsFunction${i}`), i));
     }
 
-    // For 1.40, the D Setpoint has been replaced, so we replace it with the correct values
-
-    const element22 = selectFunction.find("option[value='22']");
-    const element23 = selectFunction.find("option[value='23']");
-
-    // Change the "text"
-    element22.text(i18n.getMessage('adjustmentsFunction22_2'));
-    element23.text(i18n.getMessage('adjustmentsFunction23_2'));
-
-    // Reorder, we insert it with the other FF elements to be coherent...
-    element22.insertAfter(selectFunction.find("option[value='25']"));
-    element23.insertAfter(selectFunction.find("option[value='28']"));
+    // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+    selectFunction.sortSelect(i18n.getMessage("adjustmentsFunction0"));
 };
 
 window.TABS.adjustments = adjustments;
