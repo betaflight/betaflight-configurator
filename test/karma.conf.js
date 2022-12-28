@@ -17,7 +17,7 @@ module.exports = function(config) {
             './src/js/serial.js',
             './src/js/data_storage.js',
             { pattern: './src/js/localization.js', type: 'module', watched: false },
-            './src/js/gui.js',
+            { pattern: './src/js/gui.js', type: 'module', watched: false },
             './src/js/CliAutoComplete.js',
             { pattern: './src/js/tabs/cli.js', type: 'module', watched: false },
             './src/js/phones_ui.js',
@@ -41,6 +41,7 @@ module.exports = function(config) {
         preprocessors: {
              './src/js/localization.js': ['rollup'],
              './src/js/tabs/cli.js': ['rollup'],
+             './src/js/gui.js': ['rollup'],
         },
         rollupPreprocessor: {
             plugins: [

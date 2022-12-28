@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import i18nextXHRBackend from 'i18next-xhr-backend';
+import GUI from './gui.js';
 
 const i18n = {};
 /*

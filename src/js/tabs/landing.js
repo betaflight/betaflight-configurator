@@ -1,3 +1,5 @@
+import GUI from '../gui';
+
 const landing = {};
 landing.initialize = function (callback) {
 

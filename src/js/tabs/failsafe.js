@@ -1,4 +1,5 @@
 import { i18n } from "../localization";
+import GUI from '../gui';
 
 const failsafe = {};
 

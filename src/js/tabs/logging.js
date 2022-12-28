@@ -1,4 +1,5 @@
 import { millitime } from '../utils/common.js';
+import GUI from '../gui';
 
 const logging = {};
 logging.initialize = function (callback) {

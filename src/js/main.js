@@ -1,5 +1,6 @@
 import '../components/init.js';
 import { i18n } from './localization.js';
+import GUI from './gui.js';
 
 $(document).ready(function () {
 
