@@ -6704,22 +6704,22 @@
         "message": "Protocol de telemetria"
     },
     "firmwareFlasherBuildMotorProtocols": {
-        "message": "Protocols motors"
+        "message": "Protocol motor"
     },
     "firmwareFlasherConfigurationFile": {
         "message": "Configuració del arxiu:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Seleccioneu els protocols de ràdio que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements."
+        "message": "Seleccioneu el protocol de ràdio que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, però només es pot seleccionar un element."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Seleccioneu els protocols de telemetria que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements. També hi ha alguns protocols de telemetria que s'habilitaran, independentment de la vostra selecció aquí en funció del protocol de ràdio seleccionat, p. CRSF."
+        "message": "Seleccioneu el protocol de telemetria que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, però només es pot seleccionar un element.. També hi ha alguns protocols de telemetria que s'habilitaran, independentment de la vostra selecció aquí en funció del protocol de ràdio seleccionat, p. CRSF."
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Seleccioneu les opcions genèriques que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements. Elements com ara correccions, p. AKK VTX, s'inclouen aquí."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Seleccioneu els protocols motor (ESC) que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements."
+        "message": "Seleccioneu el protocol motor (ESC) que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, però només es pot seleccionar un element."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialment útil per als desenvolupadors, podeu seleccionar un PR combinat, especificar un commit sha o especificar un PR \"encara per combinar\" escrivint un # seguit del número de PR, p. #1234 (aquesta és l'abreviatura de la branca 'pull/1234/head')."

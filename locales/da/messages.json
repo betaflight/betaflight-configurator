@@ -2831,7 +2831,7 @@
         "message": "Din FC har ikke firmware som understøtter Blackbox-logning."
     },
     "blackboxMaybeSupported": {
-        "message": "Din FC har firmware som er for gammel til at understøtte Blackbox funktionalitet eller Blacckbox er ikke valgt på fanen Opsætning."
+        "message": "Din FC har firmware som er for gammel til at understøtte Blackbox funktionalitet eller Blackbox er ikke valgt på fanen Opsætning."
     },
     "blackboxConfiguration": {
         "message": "Blackbox konfiguration"
@@ -2852,7 +2852,7 @@
         "message": "Seriel port"
     },
     "serialLoggingSupportedNote": {
-        "message": "Du kan logge til en ekstern logningsenhed (såsom OpenLager) ved at bruge en seriel port. Indstil seriel port på fanen Port."
+        "message": "Du kan logge til en ekstern logningsenhed (såsom OpenLager) ved at bruge en seriel port. Indstil seriel port på fanen Porte."
     },
     "sdcardNote": {
         "message": "Flyvelog kan optages vha. din indbyggede flash i FC eller dit SD kort."
@@ -5370,11 +5370,11 @@
         "message": "Omtrentlig samlet antal flyvninger"
     },
     "osdTextElementUpDownReference": {
-        "message": "Op (Pitch 90 grader)/Ned (Pitch -90 grader) reference",
+        "message": "Symbol U / D for højderor op 90 grader eller ned -90 grader",
         "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
     },
     "osdDescUpDownReference": {
-        "message": "OSD symbol der vises, når Pitch nærmer sig lodret (90 grader, U) og D for næse ned (-90 grader, D)"
+        "message": "OSD symbol der vises, når højderor nærmer sig lodret op (U, 90 grader, Up) og lodret ned (D, -90 grader, Down)"
     },
     "osdTextElementTxUplinkPower": {
         "message": "Tx oplink effekt",
@@ -6689,23 +6689,29 @@
     "firmwareFlasherBuildOptions": {
         "message": "Andre indstillinger"
     },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Radio protokol"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Telemetri protokol"
+    },
     "firmwareFlasherBuildMotorProtocols": {
-        "message": "Motor protokol"
+        "message": "Motor protocol"
     },
     "firmwareFlasherConfigurationFile": {
         "message": "Konfigurations filnavn:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Vælg den radio protokol som du ønsker skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+        "message": "Vælg den radio protokol som skal være med i denne release. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Vælg den telemetri protokol du ønsker i denne release. Bemærk at du kan vælge flere elementer. Der er telemetri protokoller som er medtaget, uanset dit valg her, da det styres af den valgte radio protokol, fx. CRSF."
+        "message": "Vælg den telemetri protokol som skal være med i denne release. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol.. Der er protokoller som er medtaget, uanset dit valg, da det også styres af den valgte radio protokol, fx. CRSF."
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Vælg det generiske tilvalg du ønsker i denne release. Bemærk at du kan vælge flere elementer. Tilvalg kan også være rettelser, fx. AKK VTX."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Vælg den motor protokol for ESC, som du ønsker skal være indeholdt i releasen. Bemærk at du kan vælge flere elementer."
+        "message": "Vælg den motor (ESC) protokol som skal være med i denne release. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Særligt brugbar for udvikling, da du her kan vælge et flettet PR (Pull request), angive et commit punkt, eller en kommende PR, ved at angive #efterfulgt af PR nummer, fx #1234 (som er kort for branch 'pull/1234/head')."

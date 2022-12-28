@@ -6492,23 +6492,11 @@
     "firmwareFlasherBuildOptions": {
         "message": "Outras Opções"
     },
-    "firmwareFlasherBuildMotorProtocols": {
-        "message": "Protocolos do Motor"
-    },
     "firmwareFlasherConfigurationFile": {
         "message": "Arquivo de Configuração:"
     },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": "Selecione os protocolos de rádio que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Selecione os protocolos de telemetria que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Existem também alguns protocolos de telemetria que serão ativados independente da sua seleção, baseada no protocolo de rádio selecionado, por exemplo: CRSF."
-    },
     "firmwareFlasherOptionsDescription": {
         "message": "Selecione as opções genéricas que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Também estão inclusos aqui algumas opções de correção, como por exemplo: AKK VTX."
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": "Selecione os protocolos de motor (ESC) que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para desenvolvedores, você pode adicionar qualquer define que precisar, separados por um `espaço`, mas sem o prefixo `USE_`, ele será adicionado automaticamente para você."
