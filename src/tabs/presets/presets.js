@@ -644,10 +644,6 @@ presets.resetInitialValues = function() {
     this._domProgressDialog.close();
 };
 
-presets.expertModeChanged = function(expertModeEnabled) {
-    this._domShowHideCli.toggle(expertModeEnabled);
-};
-
 window.TABS.presets = presets;
 export {
     presets,
