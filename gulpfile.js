@@ -11,14 +11,12 @@ const del = require('del');
 const NwBuilder = require('nw-builder');
 const innoSetup = require('@quanle94/innosetup');
 const deb = require('gulp-debian');
-const conffiles = './test/configs';
 const buildRpm = require('rpm-builder');
 const commandExistsSync = require('command-exists').sync;
 const targz = require('targz');
 
 const gulp = require('gulp');
 const rollup = require('rollup');
-const concat = require('gulp-concat');
 const yarn = require("gulp-yarn");
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
@@ -33,9 +31,6 @@ const less = require('gulp-less');
 const sourcemaps = require('gulp-sourcemaps');
 
 const cordova = require("cordova-lib").cordova;
-
-const browserify = require('browserify');
-const glob = require('glob');
 
 const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
@@ -90,8 +85,6 @@ gulp.task('clean-release', clean_release);
 gulp.task('clean-cache', clean_cache);
 
 gulp.task('clean-cordova', clean_cordova);
-
-gulp.task('test-cordova', cordova_browserify);
 
 
 // Function definitions are processed before function calls.
@@ -968,7 +961,6 @@ function cordova_dist() {
         distTasks.push(cordova_manifestjson);
         distTasks.push(cordova_configxml);
         distTasks.push(cordova_rename_build_json);
-        distTasks.push(cordova_browserify);
         distTasks.push(cordova_depedencies);
         if (cordovaDependencies) {
             distTasks.push(cordova_platforms);
@@ -1086,51 +1078,6 @@ function cordova_rename_build_json() {
     return gulp.src(`${CORDOVA_DIR}build_template.json`)
         .pipe(rename('build.json'))
         .pipe(gulp.dest(CORDOVA_DIST_DIR));
-}
-
-function cordova_browserify(done) {
-    const readFile = function(file) {
-        return new Promise(function(resolve) {
-            if (!file.includes("node_modules")) {
-                fs.readFile(file, 'utf8', async function (err,data) {
-                    if (data.match('require\\(.*\\)')) {
-                        await cordova_execbrowserify(file);
-                    }
-                    resolve();
-                });
-            } else {
-                resolve();
-            }
-        });
-    };
-    glob(`${CORDOVA_DIST_DIR}www/**/*.js`, {}, function (err, files) {
-        const readLoop = function() {
-            if (files.length === 0) {
-                done();
-            } else {
-                const file = files.pop();
-                readFile(file).then(function() {
-                    readLoop();
-                });
-            }
-        };
-        readLoop();
-    });
-}
-
-function cordova_execbrowserify(file) {
-    const filename = file.split('/').pop();
-    const destpath = file.replace(filename, '');
-    console.log(`Include required modules in ${file}`);
-    return browserify(file, { ignoreMissing: true })
-        .transform("babelify", {
-            presets: ["@babel/preset-env"],
-            sourceMaps: false,
-            global:true,
-            ignore: [/\/node_modules\/(?!md5.js\/)/] })
-        .bundle()
-        .pipe(source(filename))
-        .pipe(gulp.dest(destpath));
 }
 
 function cordova_depedencies() {
