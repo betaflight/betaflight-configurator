@@ -396,6 +396,10 @@ led_strip.initialize = function (callback, scrollPosition) {
             },
         });
 
+        const ledStripSelectFunction = $('#ledStripFunctionSelect');
+        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+        ledStripSelectFunction.sortSelect(i18n.getMessage("ledStripFunctionNoneOption"));
+
         // UI: select LED function from drop-down
         $('.functionSelect').on('change', function() {
             clearModeColorSelection();
@@ -404,6 +408,10 @@ led_strip.initialize = function (callback, scrollPosition) {
             setOptionalGroupsVisibility();
             updateBulkCmd();
         });
+
+        const ledStripModeColorsModeSelectFunction = $('#ledStripModeColorsModeSelect');
+        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+        ledStripModeColorsModeSelectFunction.sortSelect(i18n.getMessage("ledStripModeColorsModeOrientation"));
 
         // UI: select mode from drop-down
         $('.modeSelect').on('change', function() {
