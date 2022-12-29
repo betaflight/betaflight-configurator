@@ -1,7 +1,7 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
 
-const MD5 = require('md5.js');
+import { MD5 } from 'crypto-es/lib/md5.js';
 
 const receiver = {
     rateChartHeight: 117,
@@ -32,10 +32,8 @@ receiver.initialize = function (callback) {
 
         if (text) {
             const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
-            const md5stream = new MD5();
-            md5stream.end(bindingPhraseFull);
-            const buffer = md5stream.read().subarray(0, 6);
-            uidBytes = Uint8Array.from(buffer);
+            const hash = MD5(bindingPhraseFull).toString();
+            uidBytes = Uint8Array.from(Buffer.from(hash, 'hex')).subarray(0, 6);
         }
 
         return uidBytes;
