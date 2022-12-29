@@ -6,7 +6,6 @@ const led_strip = {
         directions: ['n', 'e', 's', 'w', 'u', 'd'],
     };
 
-
 led_strip.initialize = function (callback, scrollPosition) {
     let selectedColorIndex = null;
     let selectedModeColor = null;
@@ -33,7 +32,6 @@ led_strip.initialize = function (callback, scrollPosition) {
     function load_led_mode_colors() {
         MSP.send_message(MSPCodes.MSP_LED_STRIP_MODECOLOR, false, false, load_html);
     }
-
 
     function load_html() {
         $('#content').load("./tabs/led_strip.html", process_html);
@@ -186,7 +184,6 @@ led_strip.initialize = function (callback, scrollPosition) {
             });
 
             updateBulkCmd();
-
         });
 
         // Color sliders
@@ -216,7 +213,6 @@ led_strip.initialize = function (callback, scrollPosition) {
                         $('.ui-selected').addClass(`color-${colorIndex}`);
                 }
             }
-
 
             setColorSliders(selectedColorIndex);
 
@@ -396,9 +392,8 @@ led_strip.initialize = function (callback, scrollPosition) {
             },
         });
 
-        const ledStripSelectFunction = $('#ledStripFunctionSelect');
         // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
-        ledStripSelectFunction.sortSelect(i18n.getMessage("ledStripFunctionNoneOption"));
+        $('#ledStripFunctionSelect').sortSelect(i18n.getMessage("ledStripFunctionNoneOption"));
 
         // UI: select LED function from drop-down
         $('.functionSelect').on('change', function() {
@@ -409,9 +404,8 @@ led_strip.initialize = function (callback, scrollPosition) {
             updateBulkCmd();
         });
 
-        const ledStripModeColorsModeSelectFunction = $('#ledStripModeColorsModeSelect');
         // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
-        ledStripModeColorsModeSelectFunction.sortSelect(i18n.getMessage("ledStripModeColorsModeOrientation"));
+        $('#ledStripModeColorsModeSelect').sortSelect(i18n.getMessage("ledStripModeColorsModeOrientation"));
 
         // UI: select mode from drop-down
         $('.modeSelect').on('change', function() {
@@ -433,8 +427,7 @@ led_strip.initialize = function (callback, scrollPosition) {
             $('.mode_colors').each(function() { setModeBackgroundColor($(this)); });
         });
 
-        function toggleSwitch(that, letter)
-        {
+        function toggleSwitch(that, letter) {
             if ($(that).is(':checked')) {
                 $('.ui-selected').find('.wire').each(function() {
                     if ($(this).text() != "") {
@@ -536,8 +529,6 @@ led_strip.initialize = function (callback, scrollPosition) {
             }
         });
 
-
-
         $('.mainGrid').disableSelection();
 
         $('.gPoint').each(function(){
@@ -571,7 +562,6 @@ led_strip.initialize = function (callback, scrollPosition) {
             }
 
             $(this).addClass(`color-${led.color}`);
-
         });
 
         $('a.save').on('click', function () {
@@ -590,7 +580,6 @@ led_strip.initialize = function (callback, scrollPosition) {
                     GUI.log(i18n.getMessage('ledStripEepromSaved'));
                 });
             }
-
         });
 
         colorDefineSliders.hide();
@@ -609,12 +598,6 @@ led_strip.initialize = function (callback, scrollPosition) {
         GUI.content_ready(callback);
     }
 
-
-
-
-
-
-
     function findLed(x, y) {
         for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
             const led = FC.LED_STRIP[ledIndex];
@@ -624,7 +607,6 @@ led_strip.initialize = function (callback, scrollPosition) {
         }
         return undefined;
     }
-
 
     function updateBulkCmd() {
         const ledStripLength = FC.LED_STRIP.length;
@@ -951,7 +933,6 @@ led_strip.initialize = function (callback, scrollPosition) {
             }
         }
 
-
         // refresh color buttons
         $('.colors').children().each(function() { setBackgroundColor($(this)); });
         $('.overlay-color').each(function() { setBackgroundColor($(this)); });
@@ -1013,7 +994,6 @@ led_strip.initialize = function (callback, scrollPosition) {
         // only fire events when all values are set
         if (change)
             sliders.trigger('input');
-
     }
 
     function HsvToColor(input) {
