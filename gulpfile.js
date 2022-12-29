@@ -434,6 +434,19 @@ function dist_rollup() {
                 // `[name]` will be replaced with it creating directories
                 // accordingly inside of `dist`
                 entryFileNames: '[name].js',
+                // anything what's not an entry will have the same name
+                // no hashing since we are not web app and don't care
+                // about cache busting
+                chunkFileNames: '[name].js',
+                // we want to see code in the same way as it
+                // is in the source files while debugging
+                sourcemap: true,
+                // put any 3rd party module in vendor.js
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        return 'vendor';
+                    }
+                },
                 dir: DIST_DIR,
             }),
         );
