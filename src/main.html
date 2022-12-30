@@ -208,12 +208,14 @@
         </div>
         <div class="header-wrapper">
             <div id="quad-status_wrapper">
-                <div class="battery-icon">
-                    <div class="quad-status-contents">
-                        <div class="battery-status"></div>
-                    </div>
-                </div>
-                <battery-legend
+                <battery-icon
+                    :voltage="FC.ANALOG.voltage"
+                    :vbatmincellvoltage="FC.BATTERY_CONFIG.vbatmincellvoltage"
+                    :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
+                    :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
+                >
+                </battery-icon>
+                <battery-legend 
                     :voltage="FC.ANALOG.voltage"
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
                 ></battery-legend>
