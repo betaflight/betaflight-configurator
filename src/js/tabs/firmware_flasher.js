@@ -814,6 +814,9 @@ firmware_flasher.initialize = function (callback) {
                 self.releaseLoader.requestBuild(request, (info) => {
                     console.info("Build requested:", info);
 
+                    // Complete the summary object to be used later
+                    summary.file = info.file;
+
                     if (!summary.cloudBuild) {
                         // it is a previous release, so simply load the hex
                         self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
@@ -1008,9 +1011,8 @@ firmware_flasher.initialize = function (callback) {
             }
         }
 
-        $('span.progressLabel a.save_firmware').click(function () {
-            const summary = $('select[name="firmware_version"] option:selected').data('summary');
-            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: summary.file, accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
+        $('span.progressLabel').on('click', 'a.save_firmware', function () {
+            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: self.summary.file, accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
                 if (checkChromeRuntimeError()) {
                     return;
                 }
