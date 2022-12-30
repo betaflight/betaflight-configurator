@@ -54,6 +54,15 @@ export default {
       );
     },
     classes() {
+      if (this.batteryState) {
+        return {
+          "state-ok": this.batteryState === 0,
+          "state-warning": this.batteryState === 1,
+          "state-empty": this.batteryState === 2,
+          // TODO: BATTERY_NOT_PRESENT
+          // TODO: BATTERY_INIT
+        };
+      }
       const isWarning = this.voltage < this.warn;
       return {
         "state-empty": this.isEmpty,
