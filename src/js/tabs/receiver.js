@@ -1,7 +1,8 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { get as getConfig, set as setConfig } from '../ConfigStorage';
 
-import { MD5 } from 'crypto-es/lib/md5.js';
+import CryptoES from 'crypto-es';
 
 const receiver = {
     rateChartHeight: 117,
@@ -15,16 +16,16 @@ receiver.initialize = function (callback) {
     GUI.active_tab = 'receiver';
 
     function lookup_elrs_passphrase(uidString) {
-        const passphraseMap = ConfigStorage.get('passphrase_map').passphrase_map || {};
+        const passphraseMap = getConfig('passphrase_map').passphrase_map || {};
 
         return passphraseMap[uidString] ?? 0;
     }
 
     function save_elrs_passphrase(uidString, passphrase) {
-        const passphraseMap = ConfigStorage.get('passphrase_map').passphrase_map ?? {};
+        const passphraseMap = getConfig('passphrase_map').passphrase_map ?? {};
 
         passphraseMap[uidString] = passphrase;
-        ConfigStorage.set({'passphrase_map': passphraseMap});
+        setConfig({'passphrase_map': passphraseMap});
       }
 
     function elrs_passphrase_to_bytes(text) {
@@ -32,7 +33,7 @@ receiver.initialize = function (callback) {
 
         if (text) {
             const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
-            const hash = MD5(bindingPhraseFull).toString();
+            const hash = CryptoES.MD5(bindingPhraseFull).toString();
             uidBytes = Uint8Array.from(Buffer.from(hash, 'hex')).subarray(0, 6);
         }
 
@@ -659,7 +660,7 @@ receiver.initialize = function (callback) {
             plotUpdateRate = parseInt($(this).val(), 10);
 
             // save update rate
-            ConfigStorage.set({'rx_refresh_rate': plotUpdateRate});
+            setConfig({'rx_refresh_rate': plotUpdateRate});
 
             function get_rc_refresh_data() {
                 MSP.send_message(MSPCodes.MSP_RC, false, false, update_ui);
@@ -769,7 +770,7 @@ receiver.initialize = function (callback) {
             GUI.interval_add('receiver_pull', get_rc_refresh_data, plotUpdateRate, true);
         });
 
-        const result = ConfigStorage.get('rx_refresh_rate');
+        const result = getConfig('rx_refresh_rate');
         if (result.rxRefreshRate) {
             rxRefreshRate.val(result.rxRefreshRate).change();
         } else {

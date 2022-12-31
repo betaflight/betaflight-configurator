@@ -1,6 +1,7 @@
 import '../components/init.js';
 import { i18n } from './localization.js';
 import GUI from './gui.js';
+import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 
 $(document).ready(function () {
 
@@ -191,7 +192,7 @@ function startProcess() {
         const tabNameWithoutPrefix = tabName.substring(4);
         if (tabNameWithoutPrefix !== "cli") {
             // Don't store 'cli' otherwise you can never connect to another tab.
-            ConfigStorage.set(
+            setConfig(
                 {lastTab: tabName},
             );
         }
@@ -487,14 +488,14 @@ function startProcess() {
             $("#log").removeClass('active');
             $("#tab-content-container").removeClass('logopen');
             $("#scrollicon").removeClass('active');
-            ConfigStorage.set({'logopen': false});
+            setConfig({'logopen': false});
 
             state = false;
         } else {
             $("#log").addClass('active');
             $("#tab-content-container").addClass('logopen');
             $("#scrollicon").addClass('active');
-            ConfigStorage.set({'logopen': true});
+            setConfig({'logopen': true});
 
             state = true;
         }
@@ -502,12 +503,12 @@ function startProcess() {
         $(this).data('state', state);
     });
 
-    let result = ConfigStorage.get('logopen');
+    let result = getConfig('logopen');
     if (result.logopen) {
         $("#showlog").trigger('click');
     }
 
-    result = ConfigStorage.get('permanentExpertMode');
+    result = getConfig('permanentExpertMode');
     const expertModeCheckbox = 'input[name="expertModeCheckbox"]';
     if (result.permanentExpertMode) {
         $(expertModeCheckbox).prop('checked', true);
@@ -527,10 +528,10 @@ function startProcess() {
 
     $(expertModeCheckbox).trigger("change");
 
-    result = ConfigStorage.get('cliAutoComplete');
+    result = getConfig('cliAutoComplete');
     CliAutoComplete.setEnabled(typeof result.cliAutoComplete === "undefined" || result.cliAutoComplete); // On by default
 
-    result = ConfigStorage.get('darkTheme');
+    result = getConfig('darkTheme');
     if (result.darkTheme === undefined || typeof result.darkTheme !== "number") {
         // sets dark theme to auto if not manually changed
         setDarkTheme(2);
@@ -568,7 +569,7 @@ function checkForConfiguratorUpdates() {
 }
 
 function notifyOutdatedVersion(releaseData) {
-    const result = ConfigStorage.get('checkForConfiguratorUnstableVersions');
+    const result = getConfig('checkForConfiguratorUnstableVersions');
     let showUnstableReleases = false;
     if (result.checkForConfiguratorUnstableVersions) {
         showUnstableReleases = true;

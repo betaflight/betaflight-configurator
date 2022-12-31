@@ -1,5 +1,6 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
+import { get as getConfig, set as setConfig } from '../ConfigStorage';
 
 const auxiliary = {};
 
@@ -529,11 +530,11 @@ auxiliary.initialize = function (callback) {
         }
 
         let hideUnusedModes = false;
-        const result = ConfigStorage.get('hideUnusedModes');
+        const result = getConfig('hideUnusedModes');
         $("input#switch-toggle-unused")
             .change(function() {
                 hideUnusedModes = $(this).prop("checked");
-                ConfigStorage.set({ hideUnusedModes: hideUnusedModes });
+                setConfig({ hideUnusedModes: hideUnusedModes });
                 update_ui();
             })
             .prop("checked", !!result.hideUnusedModes)

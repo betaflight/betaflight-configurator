@@ -1,4 +1,5 @@
 import GUI from '../gui';
+import { i18n } from '../localization';
 
 const help = {};
 help.initialize = function (callback) {

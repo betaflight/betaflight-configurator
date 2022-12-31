@@ -1,5 +1,6 @@
 import { millitime } from '../utils/common.js';
 import GUI from '../gui';
+import { get as getConfig, set as setConfig } from '../ConfigStorage';
 
 const logging = {};
 logging.initialize = function (callback) {
@@ -100,7 +101,7 @@ logging.initialize = function (callback) {
             }
         });
 
-        const result = ConfigStorage.get('logging_file_entry');
+        const result = getConfig('logging_file_entry');
         if (result.logging_file_entry) {
             chrome.fileSystem.restoreEntry(result.logging_file_entry, function (entry) {
                 if (checkChromeRuntimeError()) {
@@ -263,7 +264,7 @@ logging.initialize = function (callback) {
                         fileEntry = fileEntryWritable;
 
                         // save entry for next use
-                        ConfigStorage.set({'logging_file_entry': chrome.fileSystem.retainEntry(fileEntry)});
+                        setConfig({'logging_file_entry': chrome.fileSystem.retainEntry(fileEntry)});
 
                         // reset sample counter in UI
                         $('.samples').text(0);

@@ -1,4 +1,5 @@
 import GUI from '../../js/gui';
+import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
 
 import { favoritePresets } from './FavoritePresets';
 
@@ -174,11 +175,11 @@ presets.enableSaveCancelButtons = function (isEnabled) {
 
 presets.onButtonHideBackupWarningClick = function() {
     this._domWarningBackup.toggle(false);
-    ConfigStorage.set({ 'showPresetsWarningBackup': false });
+    setConfig({ 'showPresetsWarningBackup': false });
 };
 
 presets.setupBackupWarning = function() {
-    const obj = ConfigStorage.get('showPresetsWarningBackup');
+    const obj = getConfig('showPresetsWarningBackup');
     if (obj.showPresetsWarningBackup === undefined) {
         obj.showPresetsWarningBackup = true;
     }
