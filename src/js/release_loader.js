@@ -1,6 +1,8 @@
-'use strict';
+import GUI from "./gui";
+import { i18n } from "./localization";
+import { get as getStorage, set as setStorage } from "./SessionStorage";
 
-class ReleaseLoader {
+export default class ReleaseLoader {
 
     constructor (url) {
         this._url = url;
@@ -12,7 +14,7 @@ class ReleaseLoader {
         const dataTag = `${url}_Data`;
         const cacheLastUpdateTag = `${url}_LastUpdate`;
 
-        const result = SessionStorage.get([cacheLastUpdateTag, dataTag]);
+        const result = getStorage([cacheLastUpdateTag, dataTag]);
         const dataTimestamp = $.now();
         const cachedData = result[dataTag];
         const cachedLastUpdate = result[cacheLastUpdateTag];
@@ -33,7 +35,7 @@ class ReleaseLoader {
                 const object = {};
                 object[dataTag] = info;
                 object[cacheLastUpdateTag] = $.now();
-                SessionStorage.set(object);
+                setStorage(object);
                 onSuccess(info);
             }).fail(xhr => {
                 GUI.log(i18n.getMessage('buildServerLoadFailed', [url, `HTTP ${xhr.status}`]));
