@@ -1030,10 +1030,10 @@
         "message": "Failsafe aktivieren"
     },
     "featureFAILSAFETip": {
-        "message": "<strong> Hinweis: </strong> Wenn Failsave Stufe 2 deaktiviert ist wird die Rückfall Einstellungen <strong> AUTO </strong> übernommen statt den User Einstellungen für alle Kanäle (Roll, Pitch, Yaw, Gas)"
+        "message": "<strong> Hinweis: </strong> Wenn Failsafe Stufe 2 deaktiviert ist, wird für alle Kanäle (Roll, Pitch, Yaw und Gas) anstelle der Anwendereinstellungen die Rückfall-Einstellung <strong>Auto</strong> übernommen."
     },
     "featureFAILSAFEOldTip": {
-        "message": "Failsave Einstellungen im Fallen eines Empfangsverlust zuweisen"
+        "message": "Failsafe-Einstellungen im Falle eines Signalverlusts anwenden"
     },
     "configurationFeatureEnabled": {
         "message": "Aktiviert"
@@ -1192,7 +1192,7 @@
         "message": "Bitte wählen ein für Deinen ESC geeignetes Motorausgabeprotokoll. $t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Achtung:</strong> Wenn Du ein nicht von Deinem ESCs unterstütztes Motorprotokoll auswählst, kann es dazu führen, dass <strong>deine Motoren sich sofort drehen, sobald eine Batterie angeschlossen wird</strong>. Aus diesem Grund <strong>Achte immer darauf, das keine Props montiert sind, wenn du den Copter konfigurierst."
+        "message": "<strong>Achtung:</strong> Auswahl eines nicht vom ESC unterstützen Ansteuerungsprotokolls kann dazu führen, dass <strong>die Motoren sich sofort drehen, sobald ein Akku angeschlossen wird.</strong> Aus diesem Grund: <strong>nach Änderung des Ansteuerungsprotokolls immer die Propeller entfernen, bevor erstmals wieder ein Akku angeschlossen wird.</strong>"
     },
     "configurationDshotBeeper": {
         "message": "Dshot Beacon Konfiguration"
@@ -1925,7 +1925,7 @@
         "message": "<strong>PID Tuning Slider Modus</strong><br><br>PID Tuning Slider Modus kann sein:<br><br>&bull; AUS - keine Slider, Werte manuell eingeben<br>&bull; RP - Schieberegler steuert Rollen und Neigung, Yaw Werte manuell eingeben<br>&bull; RPY - Schieberegler steuert alle PID Achsen<br><br><span class=\"message-negative\"><b>Warnung:</b></span>Wenn Du vom RP zum RPY Modus gehst, werden die Yaw Einstellungen mit Default-Firmware Werten überschrieben."
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Überprüfen immer, ob Failsafe richtig funktioniert!</a></strong></b> Die Einstellungen befinden sich im Failsafe-Reiter und erfordern den Expertenmodus.<br> &#8226; <b>Verwenden die neueste Tx-Firmware!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktivieren den Hardware-ADC-Filter</a></strong> im Sender, wenn Du OpenTx oder EdgeTx verwendest.<br>Einfaches Setup: Konfigurieren die 'Empfänger'-Einstellungen richtig. Achte auf das korrekte Kanal-Mapping. Überprüfen, ob die Roll/Pitch und die andere Balkengrafiken korrekt verschoben wurden. Passen die Endpunkt- oder Bereichswerte des Senders auf ~1000 bis ~2000 (Kalibration) an und setzen den Mittelpunkt auf 1500. Weitere Informationen findest Du in der <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">Dokumentation</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Überprüfe stets, ob Failsafe richtig funktioniert!</a></strong></b> Die Einstellungen befinden sich im Failsafe-Reiter (sichtbar im Expertenmodus).<br> &#8226; <b>Verwende die neueste Tx-Firmware!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiviere den Hardware-ADC-Filter</a></strong> im Sender, wenn Du OpenTx oder EdgeTx verwendest.<br>Grundlegendes Setup: Konfiguriere die 'Empfänger'-Einstellungen korrekt. Achte auf das korrekte Kanal-Mapping. Überprüfe, ob die Roll-/Pitch- und die weiteren Balkengrafiken korrekte Ausschläge anzeigen. Passe die Endpunkt- oder Bereichswerte des Senders auf ~1000 bis ~2000 (Kalibrierung) an und setze den Mittelpunkt auf 1500. Weitere Informationen findest Du in der <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">Dokumentation</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas Mittelwert"
@@ -2176,18 +2176,6 @@
     },
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
-    },
-    "adjustmentsFunction22": {
-        "message": "D Setpoint"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Pitch & Roll F Faktor"
-    },
-    "adjustmentsFunction23": {
-        "message": "D Setpoint Transition"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Feedforward Übergang"
     },
     "adjustmentsFunction24": {
         "message": "\"Horizon\" Stärkenanpassung"
@@ -2927,9 +2915,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Wähle deinen FC aus oder lass ihn automatisch erkannt werden, um online verfügbare Firmware-Versionen zu sehen. Wähle dann die richtige Firmware für deinen FC."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Ab Betaflight 4.1 unterstützt Betaflight <strong>Unified Targets</strong> ein. Das Konzept von Unified Targets bedeutet, dass die gleiche Firmware-Datei für alle Boards mit der gleichen MCU (F4, F7) verwendet werden kann. Damit die verschiedenen Boards mit derselben Firmware arbeiten können, wird neben der Firmware eine spezifische Konfigurationsdatei geladen, wenn ein Unified Target geflasht wird.<br>Diese Version des Betaflight-Konfigurators unterstützt das Flashen von Unified Targets mit den jeweiligen board-spezifischen Konfigurationen in einem Schritt. Die verschiedenen Firmware-Typen, die für jedes Board verfügbar sind, werden wie folgt angezeigt:<br><br><strong>&lt;board name&gt;</strong> oder<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>Kein Unified Target oder Pre-4.1 Versionen der Firmware für Unified Targets.<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4-Zeichen-Hersteller-Id)<br>Unified Target.<br><br><strong>Bitte das Unified Target verwenden falls verfügbar.</strong> Wenn es Probleme mit einem Unified Target gibt, öffne bitte ein <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Ticket</a> und verwende vorübergehend das Legacy-Target, bis das Problem gelöst ist."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wähle die Firmware-Version für deinen FC."

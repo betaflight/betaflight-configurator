@@ -2193,18 +2193,6 @@
     "adjustmentsFunction21": {
         "message": "Taxa RC do Yaw"
     },
-    "adjustmentsFunction22": {
-        "message": "Peso do ponto D"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "F do Pitch & Roll"
-    },
-    "adjustmentsFunction23": {
-        "message": "Transição do ponto D"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Transição do Feedforward"
-    },
     "adjustmentsFunction24": {
         "message": "Potência do modo Horizonte"
     },
@@ -2958,9 +2946,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecione a sua placa ou use o Auto-detectar para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Começando com a versão 4.1 o Betaflight está introduzindo suporte a <strong>Destinos Unificados</strong>. O conceito de Destinos Unificados significa que o mesmo arquivo .hex pode ser utilizado em todas as placas com o mesmo MCU (F4, F7). Para que as diferentes placas funcionem com o mesmo firmware, um arquivo de configuração específico para a placa é enviado junto do firmware quando um Destino Unificado é atualizado.<br>Esta versão do Configurador Betaflight suporta atualizar Destinos Unificados com as configurações específicas da placa em uma única ação. Os diferentes tipos de firmware disponíveis para cada placa são exibidos na lista suspensa da seguinte forma:<br /><br /><strong>&lt;Nome da placa&gt;</strong> ou <br><strong>&lt;Nome da placa&gt; (Legado)</strong>:<br>são respectivamente Destinos que ainda não foram Unificados e versões anteriores a 4.1 de Destinos Unificados<br /><br /><strong>&lt;Nome da placa&gt; (&lt;(ID de 4 caracteres do fabricante)&gt;)</strong>:<br>são Destinos Unificados.<br /><br /><strong>Por favor, use o Destino Unificado sempre que disponível.</strong> Se encontrar problemas com um Destino Unificado, por favor abra uma <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue</a> e use o Destino Não-Unificado até que o problema seja resolvido."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecione a versão do firmware para sua placa."

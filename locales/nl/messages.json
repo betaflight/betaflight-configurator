@@ -1946,18 +1946,6 @@
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
     },
-    "adjustmentsFunction22": {
-        "message": "D Setpoint"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Pitch & Roll F aanpassing"
-    },
-    "adjustmentsFunction23": {
-        "message": "D Setpoint Transition"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Feedforward Transition"
-    },
     "adjustmentsFunction24": {
         "message": "Horizon Sterkte Aanpassing"
     },

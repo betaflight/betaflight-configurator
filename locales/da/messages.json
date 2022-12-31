@@ -2242,15 +2242,9 @@
         "message": "RC hastighed for sideror"
     },
     "adjustmentsFunction22": {
-        "message": "D Setpoint"
-    },
-    "adjustmentsFunction22_2": {
         "message": "Højderor og krængror F justering"
     },
     "adjustmentsFunction23": {
-        "message": "D Setpoint-overgang"
-    },
-    "adjustmentsFunction23_2": {
         "message": "Feedforward-overgang"
     },
     "adjustmentsFunction24": {
@@ -2948,7 +2942,7 @@
         "message": "Release og build information"
     },
     "firmwareFlasherReleaseManufacturer": {
-        "message": "Producent ID"
+        "message": "Producent ID:"
     },
     "firmwareFlasherReleaseVersion": {
         "message": "Endelig version:"
@@ -3027,9 +3021,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Vælg eller detekter automatisk FC type, for at se mulige firmware versioner - Vælg den rette firmware version som passer til din FC."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Fra Betaflight 4.1 introducerer Betaflight understøttelse af <strong>FC fælles type:</strong>. Begrebet FC fælles type betyder, at den samme firmware .hex fil kan bruges til alle FC med samme MCU (F4, F7). For at få de forskellige FC til at arbejde med den samme firmware, er en specifik konfigurationsfil indsat sammen med firmwaren når et FC fælles type image brændes.<br>Denne version af Betaflight-konfiguratoren understøtter brænding af FC fælles type med de respektive FC specifikke konfigurationer i ét trin. De forskellige firmware-typer, der er tilgængelige for hver FC, vises i drop-down på følgende måde:<br /><br /><strong>&lt;FC navn&gt;</strong> eller<br><strong>&lt;FC navn&gt; (Legacy)</strong>:<br>ikke FC fælles type, et før 4. versioner af firmwaren til FC fælles type.<br /><br /><strong>&lt;FC navn&gt; (&lt;leverandør id&gt;)</strong>:<br>(4 tegn producent id)<br>FC fælles type.<br /><br /><strong>Brug venligst FC fælles type, hvis det er muligt.</strong> Hvis du støder på problemer med at bruge FCC fælles type, åbn et <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problem</a> og brug det et ikke-FC fælles type image, indtil problemet er blevet løst."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Vælg firmware version."
@@ -3216,7 +3207,7 @@
         "message": "Fortsæt"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "Auto-detektering"
+        "message": "Find FC type"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
         "message": "Auto-detektering virker kun, når FC ikke er i DFU-tilstand, og når MSP-kommunikation fungerer. Nogle gange er du nødt til at prøve igen et par gange eller endda genforbinde USB. Prøv at forbinde som normalt først, da du kunne have glemt at anvende brugerdefinerede standardindstillinger. Genstart venligst efter brænding af image - tilslut din USB."
@@ -3413,7 +3404,7 @@
         "description": "One of the wiring modes in Led Strip"
     },
     "ledStripWiringClearControl": {
-        "message": "Slet valgte",
+        "message": "Slet valgte forbindelser",
         "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripWiringClearAllControl": {
@@ -5370,7 +5361,7 @@
         "message": "Omtrentlig samlet antal flyvninger"
     },
     "osdTextElementUpDownReference": {
-        "message": "Symbol U / D for højderor op 90 grader eller ned -90 grader",
+        "message": "Symbol U / D for højderor: op 90 grader eller ned -90 grader",
         "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
     },
     "osdDescUpDownReference": {
@@ -6724,8 +6715,5 @@
     },
     "classicBuild": {
         "message": "Klassisk"
-    },
-    "classicBuildModeDescription": {
-        "message": "Denne tilstand alle parametre herunder (untagen hvis du er i ekspert tilstand). Overordnet set er det samme indstilling, som er for et natligt byg, og kan anvendes for bekvemmelighed."
     }
 }

@@ -1850,18 +1850,6 @@
     "adjustmentsFunction21": {
         "message": "遙控Yaw Rate"
     },
-    "adjustmentsFunction22": {
-        "message": "D 設定點"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Pitch & Roll F 調整"
-    },
-    "adjustmentsFunction23": {
-        "message": "D 設定點轉換閾值"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "前餽過渡閾值"
-    },
     "adjustmentsFunction24": {
         "message": "半自穩模式強度調整"
     },

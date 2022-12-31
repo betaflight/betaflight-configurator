@@ -1871,18 +1871,6 @@
     "adjustmentsFunction21": {
         "message": "RC Yaw balioa"
     },
-    "adjustmentsFunction22": {
-        "message": "D Setpoint"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Pitch eta Roll F Egokitzea"
-    },
-    "adjustmentsFunction23": {
-        "message": "D trantsizioaren ezarpena"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Feedforward Trantsizioa"
-    },
     "adjustmentsFunction24": {
         "message": "Horizonteko indarra egokitzea"
     },

@@ -1985,18 +1985,6 @@
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
     },
-    "adjustmentsFunction22": {
-        "message": "D Setpoint"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Тангаж и Крен F настройка"
-    },
-    "adjustmentsFunction23": {
-        "message": "D Setpoint переход"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Feedforward переход"
-    },
     "adjustmentsFunction24": {
         "message": "Регулировка Strength (в реж. Horizon)"
     },
@@ -2720,9 +2708,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Выберите тип сборки, чтобы увидеть доступные платы полетных контроллеров."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Начиная с Betaflight 4.1, Betaflight представляет поддержку <strong>Unified Targets (Унифицированных целей)</strong>. Концепция Unified Targets означает, что один и тот же файл прошивки .hex можно использовать для всех плат, использующих один и тот же тип MCU (F4, F7). Чтобы различные платы работали с одной и той же микропрограммой, при прошивке Unified Target вместе с микропрограммой развертывается определенный файл конфигурации.<br>Эта версия конфигуратора Betaflight поддерживает перепрограммирование Unified Targets с помощью соответствующих конфигураций платы в один шаг. Различные типы микропрограмм, которые доступны для каждой платы, показаны в раскрывающемся списке следующим образом:<br /><br /><strong>&lt;board name&gt;</strong> или<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>неунифицированная цель или версии встроенного ПО для Unified Targets до 4.1<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4-символьный идентификатор производителя)<br>Unified Target.<br><br><strong>Пожалуйста, используйте Unified Target, где это возможно.</strong> Если у вас возникли проблемы с использованием Unified Target, создайте <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_ blank\" rel=\"noopener noreferrer\">проблему</a>, а затем используйте неунифицированную цель, пока проблема не будет решена."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Выберите версию прошивки для Вашей платы."
