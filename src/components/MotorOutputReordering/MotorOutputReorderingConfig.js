@@ -1,6 +1,4 @@
-'use strict';
-
-class MotorOutputReorderConfig
+export default class MotorOutputReorderConfig
 {
     constructor (screenSize)
     {
