@@ -2242,15 +2242,9 @@
         "message": "RCレート ヨー"
     },
     "adjustmentsFunction22": {
-        "message": "D値 セットポイント"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "ピッチ・ロール F値 調整"
+        "message": "ピッチ・ロール F 調整"
     },
     "adjustmentsFunction23": {
-        "message": "D値 セットポイント 遷移"
-    },
-    "adjustmentsFunction23_2": {
         "message": "フィードフォワード遷移"
     },
     "adjustmentsFunction24": {
@@ -3029,7 +3023,7 @@
         "message": "FCボードを任意選択もしくは自動検出すると、オンラインでファームウェアの確認ができます - 適切なファームウェアを選択して下さい。"
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight 4.1以降、Betaflightは <strong>Unified Targets</strong> のサポートを導入しています。Unified Targetsという概念は、同じファームウェア[.hexファイル]が同じMCU (F4, F7) を搭載するすべてのFCボードに適用できることを意味します。異なるFCボードを同じファームウェアで動作させるために、Unified Targetsがファームフラッシュされると、ファームウェアとともに特定の設定ファイルが展開されます。<br>このバージョンのBetaflight Configuratorは、1回のステップでそれぞれのFCボード固有の設定に合わせたUnified Targets書き込みをサポートします。各FCボードで使用可能な様々なファームウェアタイプが、次のようにドロップダウンにて表示されます:<br /><br /><strong>&lt;board name&gt;</strong> or <br><strong>&lt;board name&gt; (レガシー) </strong>:<br>non-unified target, or pre-4.1 versions of the firmware for Unified Targets.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (4文字の製造元ID) <br>Unified Target.<br /><br /><strong>利用可能であればUnified Targetsを使用してください。</strong>もしUnified Targetsを使用して問題が発生した場合には、<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>を開いてから問題が解決するまでnon-unified targetを使用してください。"
+        "message": "Betaflight Configuratorは、各FCボード固有の設定を持つ統一ターゲットのファームウェアフラッシュをワンステップでサポートします。<br><br>統一ターゲットのコンセプトは、同じMCUを使用するすべてのFCボードで同じファームウェアの.hexファイルを使用できることを意味しています。<br><br>Betaflight 4.4で導入された<strong>クラウドビルド</strong><br><br><strong>クラウドビルド</strong>では、ビルドに存在するハードウェアオプションを定義する必要があります。<br><br>異なるFCボードを同じファームウェアで動作させるために、統一ターゲットファームウェアをフラッシュする際、それと同時に特定の設定ファイルが展開されます。<br><br>ローカルビルドでは、統一ターゲット設定ファイルをロードしたり、ファームウェアの.hexファイルをロードする前にFCボードを選択することができます。<br><br>ファームウェアを使用していて問題が発生した場合は、Discordへの参加、または<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue</a>の新規投稿をご検討ください。"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "FCボードのファームウェアバージョンを選択してください。"
@@ -6695,11 +6689,23 @@
     "firmwareFlasherBuildTelemetryProtocols": {
         "message": "テレメトリープロトコル"
     },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "モータープロトコル"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "設定ファイル名:"
     },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "このビルドに含まれる送信プロトコルを選択します。これはドロップダウン操作となりますが、1つの項目しか選択できませんのでご注意ください。"
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "このビルドに含まれるテレメトリープロトコルを選択します。これはドロップダウン操作となりますが、1つの項目しか選択できませんのでご注意ください。またCRSFなど、選択した送信プロトコルに関係なく有効となるテレメトリープロトコルもあります。"
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "このビルドに含まれる一般的なオプションを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。AKK VTXのような修正項目はこちらに含まれます。"
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "このビルドに含まれるモーター (ESC) プロトコルを選択します。これはドロップダウン操作となりますが、1つの項目しか選択できませんのでご注意ください。"
     },
     "firmwareFlasherBranchDescription": {
         "message": "特に開発者にとっては便利な機能で、#の後にPR番号 [例: #1234] を入力することで、マージ済みのPRを選択したり、コミットshaを指定したり「まだマージされていない」PRを指定したりできます。 (これは『pull/1234/head』ブランチの省略です)"
@@ -6714,6 +6720,6 @@
         "message": "クラシックモード"
     },
     "classicBuildModeDescription": {
-        "message": "このモードでは、(Expertモード時のコミットは除き) ここにあるすべてのパラメータが無視されます。これは基本的に古典的なナイトリービルド同様なことを実現するもので、利便性のために提供されています。"
+        "message": "このモードでは、ここにあるすべてのパラメータが無視されます。これは基本的に古典的なナイトリービルドと同様なことを実現するもので、利便性のために提供されています。"
     }
 }

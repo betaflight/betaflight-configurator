@@ -1878,18 +1878,6 @@
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
     },
-    "adjustmentsFunction22": {
-        "message": "D Zadana wartość"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Regulacja Pitch & Roll F"
-    },
-    "adjustmentsFunction23": {
-        "message": "D Przejście do wartości zadanej"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Przejście do poprzedniej wersji"
-    },
     "adjustmentsFunction24": {
         "message": "Horizon-Regulacja siły"
     },

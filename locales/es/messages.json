@@ -2242,15 +2242,9 @@
         "message": "Corrección de RC en Yaw"
     },
     "adjustmentsFunction22": {
-        "message": "Punto de Ajuste de D"
-    },
-    "adjustmentsFunction22_2": {
         "message": "Corrección de F en Pitch y Roll"
     },
     "adjustmentsFunction23": {
-        "message": "Punto de Ajuste de Transición de D"
-    },
-    "adjustmentsFunction23_2": {
         "message": "Transición de Prealimentación"
     },
     "adjustmentsFunction24": {
@@ -3027,9 +3021,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecciona o auto-detecta tu placa para ver las versiones de firmware disponibles - Elige el firmware adecuado para tu placa."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Empezando en Betaflight 4.1, se ha incluido soporte para <strong>Placas Unificadas</strong>. El concepto de Placas Unificadas implica que el mismo archivo .hex de firmware puede utilizarse en todas las placas que usen la misma MCU (F4, F7). Para conseguir que diferentes placas funcionen con el mismo firmware, se proporciona un archivo de configuración específico cuando se instala una Placa Unificada.<br />Esta versión de Betaflight Configurator soporta la instalación de Placas Unificadas junto a la respectiva configuración específica de la placa en un sólo paso. Los diferentes tipos de firmware que están disponibles para cada placa se muestran en el desplegado como sigue:<br /><br /><strong>&lt;nombre de placa&gt;</strong> o <br><strong>&lt;nombre de placa&gt; (Obsoleto)</strong>:<br />Placa NO Unificada, o versión pre-4.1 del firmware para Placas Unificadas.<br /><br /><strong>&lt;nombre de placa&gt; (&lt;id de fabricante&gt;)</strong>:<br>(id de fabricante de 4 caracteres)<br>Placa Unificada.<br /><br /><strong>Por favor, utiliza Placas Unificadas siempre que sea posible.</strong>Si encuentras problemas usando la Placa Unificada, por favor abre una <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">incidencia</a> y utiliza la la placa no unificada hasta que la incidencia sea resuelta."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Elige la versión de firmware para tu placa."
@@ -6726,6 +6717,6 @@
         "message": "Modo clásico"
     },
     "classicBuildModeDescription": {
-        "message": "Este modo ignora todos los parámetros de aquí (excepto el del commit cuando está en modo experto). Básicamente consigue lo mismo que las compilaciones clásicas, y se proporciona por comodidad."
+        "message": "Este modo ignora todos los parámetros de aquí. Básicamente consigue lo mismo que las compilaciones clásicas, y se proporciona por comodidad."
     }
 }

@@ -2211,18 +2211,6 @@
     "adjustmentsFunction21": {
         "message": "Valor Yaw RC"
     },
-    "adjustmentsFunction22": {
-        "message": "Punto D"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Axuste Pitch & Roll F"
-    },
-    "adjustmentsFunction23": {
-        "message": "Transición do punto D"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Transición anticipativo"
-    },
     "adjustmentsFunction24": {
         "message": "Axuste da forza do horizonte"
     },
@@ -2997,9 +2985,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecciona ou detecta automaticamente a súa placa para ver os lanzamentos de firmware en liña dispoñibles - Seleccione o firmware correcto axeitado para a súa placa."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Comezando con Betaflight 4.1, Betaflight introduce soporte para<strong>Placas unificadas</strong>. O concepto de obxectivos unificados significa que se pode usar o mesmo ficheiro .hex de firmware para todas as placas que utilizan o mesmo MCU (F4, F7). Para que as diferentes placas funcionen co mesmo firmware, despregase un ficheiro de configuración específico xunto co firmware cando se flaxea unha placa unificada.<br>Esta versión do configurador Betaflight admite o flashing de placas unificadas coas respectivas configuracións específicas da placa nun paso. Os diferentes tipos de firmware dispoñibles para cada placa móstranse no menú despregable do seguinte xeito:<br /><br /><strong>&lt;board name&gt;</strong> ou<br><strong>&lt;board name&gt; (Legacy) </strong>:<br> destino non unificado ou versións anteriores ao firmware do firmware para placas unificadas.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (identificador do fabricante de 4 caracteres)<br>Placas unificadas.<br /><br /><strong>Utilice placas unificadas cando estea dispoñible.</strong> Se atopa problemas ao usar un placa unificada, abra un <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problema</a> e despois usa placa non unificada ata que se resolva o problema."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Elixa a versión de firmware para a súa controladora."

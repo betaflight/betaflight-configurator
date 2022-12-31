@@ -2242,15 +2242,9 @@
         "message": "Rate RC Yaw"
     },
     "adjustmentsFunction22": {
-        "message": "Setpoint D"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Regolazione F di Pitch e Roll"
+        "message": "Regolazione Pitch e Roll F"
     },
     "adjustmentsFunction23": {
-        "message": "Transizione Setpoint D"
-    },
-    "adjustmentsFunction23_2": {
         "message": "Transizione Feedforward"
     },
     "adjustmentsFunction24": {
@@ -3027,9 +3021,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Seleziona o rileva automaticamente la tua scheda per vedere i relativi firmware disponibili online - Seleziona il firmware appropriato per la tua scheda."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "A partire da Betaflight 4.1, Betaflight sta introducendo il supporto per i <strong>Target Unificati</strong>. Il concetto dei Target Unificati è che lo stesso file .hex del firmware può essere usato per tutte le schede con lo stesso MCU (F4, F7). Per far sì che schede differenti funzionino con lo stesso firmware, verrà usato durante il flash un file di configurazione specifico insieme al firmware.<br>Questa versione del configuratore di Betaflight supporta il flashing in un solo passaggio dei Target Unificati con i rispettivi file di configurazione delle schede. I tipi differenti di firmware disponibili per ogni scheda sono mostrati nel menu a tendina come mostrato:<br /><br /><strong>&lt;nome scheda&gt;</strong> o<br><strong>&lt;nome scheda&gt; (Legacy)</strong>:<br>target non unificato o versione pre-4.1 del firmware per Target Unificati.<br /><br /><strong>&lt;nome scheda&gt; (&lt;id costruttore&gt;)</strong>:<br>(id costruttore di 4 caratteri)<br>Target Unificato.<br /><br /><strong>Per favore usa i Target Unificati quando disponibili.</strong> Se riscontri problemi usando i Target Unificati apri una <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> e usa il target non unificato fin quando il problema non verrà risolto."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Seleziona la versione del firmware per la tua scheda."
@@ -6724,8 +6715,5 @@
     },
     "classicBuild": {
         "message": "Modalità Classica"
-    },
-    "classicBuildModeDescription": {
-        "message": "Questa modalità ignora tutti i parametri (eccetto per i commit se in modalità esperto). Questo essenzialmente ottiene lo stesso risultato delle classiche nightly build ed è fornito per comodità."
     }
 }

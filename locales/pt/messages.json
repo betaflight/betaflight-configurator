@@ -2242,16 +2242,10 @@
         "message": "Yaw do RC Rate"
     },
     "adjustmentsFunction22": {
-        "message": "Setpoint do D"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Ajustamento F do Pitch & Roll"
+        "message": "Ajuste Pitch & Roll F"
     },
     "adjustmentsFunction23": {
-        "message": "Transição Setpoint do D"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Transição do Feedforward"
+        "message": "Transição Feedforward"
     },
     "adjustmentsFunction24": {
         "message": "Ajustamento Potência do modo Horizonte"
@@ -3029,7 +3023,7 @@
         "message": "Selecione ou detete automaticamente a sua placa para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Começando no Betaflight 4.1, o Betaflight está a introduzir suporte para <strong>Unified Targets</strong>. O conceito de Unified Targets significa que o mesmo ficheiro .hex pode ser usado para todas as controladoras que usem o mesmo MCU (F4, F7). Para permitir que as diferentes controladoras funcionem com o mesmo firmware, um ficheiro de configuração específico é implementado junto do firmware quando um Unified Target é flashado.<br>Esta versão do configurador Betaflight suporta o flash de Unified Targets com as respectivas configurações específicas da respetiva controladora num só passo. Os diferentes tipos de firmware que estão disponíveis para cada controladora são mostrados no menu suspenso da seguinte forma:<br /><br /><strong>&lt;board name&gt;</strong> ou<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>non-unified target, ou pré-4.1 versões do firmware para Unified Targets.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 caracteres id)<br>Unified Target.<br /><br /><strong>Por favor, use Unified Targets quando disponível.</strong> Se encontrar problemas ao usar um Unified Target, por favor, abra um <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problema</a> e depois use o non-unified target até que o problema seja resolvido."
+        "message": "Betaflight configurator suporta o flash de Targets Unificados com as respetivas configurações específicas de placas num único passo.<br><br>O conceito de Targets Unificados significa que o mesmo ficheiro .hex de firmware pode ser usado para todas as placas que usem a mesma MCU.<br><br>Betaflight 4.4 introduz <strong>Compilação na Nuvem.</strong><br><br>Com <strong>Compilação na Nuvem</strong> precisamos de definir opções de hardware presentes na sua build.<br><br>Para fazer com que diferentes placas funcionem com o mesmo firmware, um ficheiro de configuração específica é executado em conjunto com o firmware quando o Target Unificado é flashado.<br><br>Com Compilação Local pode carregar um ficheiro de configuração de target unificado ou escolher uma placa antes de carregar o ficheiro .hex de firmware.<br><br>Se encontrar problemas a usar o firmware, por favor considere juntar-se ao Discord ou abrir um <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problema</a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecione a versão do firmware para a sua placa."
@@ -6726,6 +6720,6 @@
         "message": "Modo Clássico"
     },
     "classicBuildModeDescription": {
-        "message": "Este modo ignora todos os parâmetros aqui (exceto para o commit quando no modo especialista). Basicamente, isto consegue o mesmo que as classic nightlies, e é fornecido por conveniência."
+        "message": "Este modo ignora todos os parâmetros aqui. Isto essencialmente consegue o mesmo que as nightlies clássicas, e é fornecido por conveniência."
     }
 }

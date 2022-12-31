@@ -2250,15 +2250,9 @@
         "message": "RC Rate Yaw"
     },
     "adjustmentsFunction22": {
-        "message": "D Setpoint"
-    },
-    "adjustmentsFunction22_2": {
         "message": "Ajustaments Pitch & Roll F"
     },
     "adjustmentsFunction23": {
-        "message": "Transitició D Setpoint"
-    },
-    "adjustmentsFunction23_2": {
         "message": "Transició de canvis"
     },
     "adjustmentsFunction24": {
@@ -3037,7 +3031,7 @@
         "message": "Selecciona la teva placa per veure les versions de firmware online disponibles - Selecciona el firmware correcte que s'adeqüi a la teva placa."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "A partir de Betaflight 4.1, Betaflight està donant suport a <strong>Plataformes unificades</strong>. El concepte plataforma unificada significa que el mateix fitxer .hex del programari es pot utilitzar per a totes les plaques amb la mateixa MCU (F4, F7). Perquè els diferents controladores funcionin amb el mateix programari, es desplega un fitxer de configuració específic al costat del programari quan apareix un objecte unificat.<br> Aquesta versió del configurador Betaflight soporta l'actualització d'objectes unificats amb les configuracions específiques de la placa en un sol pas. Els diferents tipus de programari disponibles per a cada placa es mostren a la llista desplegable de la següent manera:<br /><br /><strong>&lt;board name&gt;</strong> o<br><strong>&lt;board name&gt; (Sistema llegat)</strong>:<br>objecte no unificat, o versions pre-4.1 de programari pero objectes unificats.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 caràcters del ID del fabricant)<br>Objectes Unificat.<br /><br /><strong>Si us plau, utilitzeu Objectes unificats si es posible.</strong> Si teniu problemes amb l’ús d’un objecte unificat, obriu un <a href=\"https://github.com/betaflight/betaflight/issues\"target=\"_ blank\"rel=\"noopener noreferrer\">Problema</a> i després utilitzeu el objecte no unificat fins que s'hagi resolt el problema."
+        "message": "El configurador de Betaflight admet la carga de programari nificat amb les configuracions específiques de la placa respectiva en un sol pas.<br><br>El concepte d'objectius unificats significa que es pot utilitzar el mateix fitxer .hex de microprogramari per a totes les plaques que utilitzen la mateixa MCU.<br> <br>Betaflight 4.4 presenta <strong>Cloud Build</strong><br><br>Amb <strong>Cloud Build</strong> hem de definir les opcions de maquinari presents a la vostra compilació.<br><br>Per fer les diferents plaques funcionen amb el mateix microprogramari, un fitxer de configuració específic es desplega al costat del microprogramari quan es mostra un Unified Target.<br><br>Amb Local build podeu carregar un fitxer de configuració de destinació unificat o triar un tauler abans de carregar un microprogramari. .hex.<br><br>Si trobeu problemes amb el microprogramari, considereu unir-vos a Discord o obrir un <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problema</a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecciona la versió per la teva controladora."
@@ -6734,6 +6728,6 @@
         "message": "Mode clàssic"
     },
     "classicBuildModeDescription": {
-        "message": "Aquest mode ignora tots els paràmetres aquí (excepte el commit quan està en mode expert). Això bàsicament aconsegueix el mateix que les clàssiques versions nocturnes (nightlies), i es proporciona per comoditat."
+        "message": "Aquest mode ignora tots els paràmetres aquí. Això bàsicament aconsegueix el mateix que les clàssiques versions intermitjas, i es proporciona per comoditat."
     }
 }

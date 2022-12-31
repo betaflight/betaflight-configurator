@@ -2239,16 +2239,10 @@
         "message": "Rate du Yaw"
     },
     "adjustmentsFunction22": {
-        "message": "Point de consigne du D"
-    },
-    "adjustmentsFunction22_2": {
-        "message": "Ajustement du F Pitch & Roll"
+        "message": "Ajustement du Pitch & Roll F"
     },
     "adjustmentsFunction23": {
-        "message": "Transition du point de consigne du D"
-    },
-    "adjustmentsFunction23_2": {
-        "message": "Feedforward Transition"
+        "message": "Transition du Feedforward"
     },
     "adjustmentsFunction24": {
         "message": "Ajustement de la force du mode Horizon"
@@ -3024,9 +3018,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Sélectionnez ou détectez automatiquement votre carte pour voir les versions de firmwares disponibles en ligne - Sélectionnez le firmware approprié à votre carte."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Depuis Betaflight 4.1, le support pour les <strong>Cibles unifiées</strong> a été ajouté.\nLe concept de Cible unifiée signifique qu'un même fichier .hex de firmware peut être utilisé pour toutes les cartes utilisant le même MCU (F4, F7). Pour rendre les différentes cartes fonctionnelles avec un même firmware, un fichier de configuration spécifique et déployé en même temps que le firmware quand une Cible unifiée est flashée.<br>Cette version du configurateur Betaflight permet de flasher des cibles unifiées ainsi que la configuration spécifique à la carte en une seule étape. Les différents types de firmware qui sont disponibles pour chaque carte sont affichés dans le menu déroulant comme suit:<br /><br /><strong>&lt;nom de carte&gt;</strong> ou<br><strong>&lt;nom de carte&gt; (Legacy)</strong>:<br>cibles non unifiées, ou versions pre-4.1 du firmware pour les cibles unifiées.<br /><br /><strong>&lt;nom de carte&gt; (&lt;id constructeur&gt;)</strong>:<br>(code 4 caractères du constructeur)<br>Cible Unifiée.<br /><br /><strong>Veuillez utiliser une cible unifiée si disponible.</strong> Si vous rencontrez un problème lors de l'usage d'une cible unifiée, veuillez ouvrir une <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">anomalie</a> puis utilisez une cible non-unifiée jusqu'à ce que le problème soit résolu."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Sélectionnez la version du firmware pour votre carte."
@@ -6723,6 +6714,6 @@
         "message": "Mode Classique"
     },
     "classicBuildModeDescription": {
-        "message": "Ce mode ignore tous les paramètres (sauf pour le commit en mode expert). Ceci réalise essentiellement le même chose que les nocturnes classiques (nightlies) et est prévu pour plus de commodité."
+        "message": "Ce mode ignore tous les paramètres d'ici. Ceci mène au même résultat que les nightlies classiques, fournit par commodité."
     }
 }

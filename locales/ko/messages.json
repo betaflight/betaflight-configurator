@@ -2242,15 +2242,9 @@
         "message": "RC 레이트 요"
     },
     "adjustmentsFunction22": {
-        "message": "D 설정점"
-    },
-    "adjustmentsFunction22_2": {
         "message": "피치 & 롤 F 조정"
     },
     "adjustmentsFunction23": {
-        "message": "D 설정점 전환"
-    },
-    "adjustmentsFunction23_2": {
         "message": "피드포워드 전환"
     },
     "adjustmentsFunction24": {
@@ -3027,9 +3021,6 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "보드를 선택하거나 자동-감지로 사용 가능한 온라인 펌웨어 릴리즈를 확인하십시오 - 보드에 적합한 올바른 펌웨어를 선택하십시오."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "베타플라이트 4.1을 시작으로 베타플라이트가 <strong>통합 타겟</strong>을 지원합니다. 통합 타겟의 개념은 동일한 MCU(F4, F7)를 사용하는 모든 보드에 동일한 펌웨어 .hex 파일을 사용할 수 있다는 것을 의미합니다. 서로 다른 보드가 동일한 펌웨어에서 작동하도록 하기 위해, 통합 타겟이 플래시될 때 펌웨어와 함께 특정 구성 파일이 배치됩니다.<br>이 버전의 베타프라이트 컨피규레이터는 각각의 보드별 특정 구성을 갖는 통합 타겟의 플래시를 지원합니다. 각 보드에 사용할 수 있는 다양한 펌웨어 유형은 다음과 같이 드롭다운에 나타납니다:<br /><br /><strong>&lt;보드 이름&gt;</strong> 또는 <br><strong>&lt;보드 이름&gt; (레거시)</strong>:<br>비통합 타겟 또는 통합 타겟에 대한 펌웨어 4.1 이전 버전.<br /><br /><strong>&lt;보드 이름&gt; (&lt;제조업체 ID&gt;)</strong>:<br>(4글자 제조업체 ID)<br>통합 타겟.<br /><br /><strong>가능한 경우 통합 타겟을 사용하십시오.</strong> 통합 타겟을 사용하여 문제가 발생할 경우, <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈</a>를 열고 문제가 해결될 때까지 비통합 타겟을 사용하십시오."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "당신의 보드에 대한 펌웨어 버전을 선택하십시오."
@@ -6726,6 +6717,6 @@
         "message": "클래식 모드"
     },
     "classicBuildModeDescription": {
-        "message": "이 모드는 여기에서 모든 매개변수를 무시합니다(전문가 모드일 때 커밋을 제외하고). 이것은 기본적으로 고전적인 집합체와 동일한 것을 달성하며, 편의를 위해 제공됩니다."
+        "message": "이 모드는 여기의 모든 매개 변수를 무시합니다. 이것은 기본적으로 고전적인 집합체와 동일한 것을 달성하며, 편의를 위해 제공됩니다."
     }
 }
