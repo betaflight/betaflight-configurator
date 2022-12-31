@@ -60,11 +60,18 @@ firmware_flasher.initialize = function (callback) {
             } else {
                 $('div.release_info #manufacturerInfo').hide();
             }
+
             $('div.release_info .target').text(summary.target);
             $('div.release_info .name').text(summary.release).prop('href', summary.releaseUrl);
             $('div.release_info .date').text(summary.date);
             $('div.release_info #targetMCU').text(summary.mcu);
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
+
+            // Wiki link to "BOARD---" + target
+            let targetWiki = $('#targetWikiInfoUrl');
+            let targetWikiNode = `Board---${summary.target}`;
+            targetWiki.html(targetWikiNode);
+            targetWiki.attr("href", i18n.getMessage('firmwareFlasherTargetWikiUrl') + targetWikiNode);
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
