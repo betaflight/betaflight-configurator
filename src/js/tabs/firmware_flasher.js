@@ -522,12 +522,14 @@ firmware_flasher.initialize = function (callback) {
                             FC.CONFIG.apiVersion = '0.0.0';
                         }
                         console.log(FC.CONFIG.apiVersion);
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                            MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish);
-                        } else {
-                            console.log('Firmware version not supported for reading board information');
-                            onClose();
-                        }
+                        MSP.send_message(MSPCodes.MSP_UID, false, false, () => {
+                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
+                                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish);
+                            } else {
+                                console.log('Firmware version not supported for reading board information');
+                                onClose();
+                            }
+                        });
                     });
                 }
 
@@ -780,6 +782,9 @@ firmware_flasher.initialize = function (callback) {
                     release: summary.release,
                     options: [],
                     classicBuild: false,
+                    client: {
+                        version: CONFIGURATOR.version,
+                    },
                 };
 
                 request.classicBuild = !summary.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
@@ -811,53 +816,54 @@ firmware_flasher.initialize = function (callback) {
                     }
                 }
 
-                self.releaseLoader.requestBuild(request, (info) => {
-                    console.info("Build requested:", info);
+                console.info("Build request:", request);
+                self.releaseLoader.requestBuild(request, (response) => {
+                    console.info("Build response:", response);
 
                     // Complete the summary object to be used later
-                    summary.file = info.file;
+                    summary.file = response.file;
 
                     if (!summary.cloudBuild) {
                         // it is a previous release, so simply load the hex
-                        self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
+                        self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
                         return;
                     }
 
-                    updateStatus('Pending', info.key, 0, false);
+                    updateStatus('Pending', response.key, 0, false);
                     let retries = 1;
-                    self.releaseLoader.requestBuildStatus(info.key, (status) => {
+                    self.releaseLoader.requestBuildStatus(response.key, (status) => {
                         if (status.status !== "queued") {
                             // will be cached already, no need to wait.
                             if (status.status === 'success') {
-                                updateStatus('SuccessCached', info.key, 100, true);
+                                updateStatus('SuccessCached', response.key, 100, true);
                                 $('.buildProgress').val(100);
-                                self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
+                                self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
                             } else {
-                                updateStatus('Failed', info.key, 0, true);
+                                updateStatus('Failed', response.key, 0, true);
                                 onLoadFailed();
                             }
                             return;
                         }
 
                         const timer = setInterval(() => {
-                            self.releaseLoader.requestBuildStatus(info.key, (status) => {
+                            self.releaseLoader.requestBuildStatus(response.key, (status) => {
                                 if (status.status !== 'queued' || retries > 10) {
                                     clearInterval(timer);
                                     if (status.status === 'success') {
-                                        updateStatus('Success', info.key, 100, true);
-                                        self.releaseLoader.loadTargetHex(info.url, (hex) => onLoadSuccess(hex, info.file), onLoadFailed);
+                                        updateStatus('Success', response.key, 100, true);
+                                        self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
                                     } else {
                                         if (retries > 10) {
-                                            updateStatus('TimedOut', info.key, 0, true);
+                                            updateStatus('TimedOut', response.key, 0, true);
                                         } else {
-                                            updateStatus('Failed', info.key, 0, true);
+                                            updateStatus('Failed', response.key, 0, true);
                                         }
                                         onLoadFailed();
                                     }
                                     return;
                                 }
 
-                                updateStatus('Processing', info.key, retries * 10, false);
+                                updateStatus('Processing', response.key, retries * 10, false);
                                 retries = retries + 1;
                             });
                         }, 4000);

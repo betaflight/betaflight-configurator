@@ -89,6 +89,7 @@ class ReleaseLoader {
             data: JSON.stringify(request),
             contentType: "application/json",
             dataType: "json",
+
             success: function(data) {
                 onSuccess(data);
             },

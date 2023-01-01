@@ -404,7 +404,7 @@ function checkReportProblems() {
 
 function processUid() {
     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
-        const uniqueDeviceIdentifier = FC.CONFIG.uid[0].toString(16) + FC.CONFIG.uid[1].toString(16) + FC.CONFIG.uid[2].toString(16);
+        const uniqueDeviceIdentifier = FC.CONFIG.uniqueDeviceIdentifier;
 
         connectionTimestamp = Date.now();
         GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
