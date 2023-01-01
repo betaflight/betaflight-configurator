@@ -313,10 +313,10 @@ class GuiControl {
 
         this.switchery();
 
-        if (CONFIGURATOR.connectionValid) {
-            // Build link to in-use CF version documentation
-            const documentationButton = $('div#content #button-documentation');
-            documentationButton.html("Wiki");
+        const documentationButton = $('div#content #button-documentation');
+        documentationButton.html("Wiki");
+
+        if (GUI.active_tab !== 'firmware_flasher') { // hack till we have a nice solution for individual wiki URLs for each page
             documentationButton.attr("href", "https://github.com/betaflight/betaflight/wiki");
         }
 
