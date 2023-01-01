@@ -522,12 +522,14 @@ firmware_flasher.initialize = function (callback) {
                             FC.CONFIG.apiVersion = '0.0.0';
                         }
                         console.log(FC.CONFIG.apiVersion);
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                            MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish);
-                        } else {
-                            console.log('Firmware version not supported for reading board information');
-                            onClose();
-                        }
+                        MSP.send_message(MSPCodes.MSP_UID, false, false, () => {
+                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
+                                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish);
+                            } else {
+                                console.log('Firmware version not supported for reading board information');
+                                onClose();
+                            }
+                        });
                     });
                 }
 
@@ -780,6 +782,9 @@ firmware_flasher.initialize = function (callback) {
                     release: summary.release,
                     options: [],
                     classicBuild: false,
+                    client: {
+                        version: CONFIGURATOR.version,
+                    },
                 };
 
                 request.classicBuild = !summary.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
@@ -811,8 +816,9 @@ firmware_flasher.initialize = function (callback) {
                     }
                 }
 
+                console.info("Build request:", request);
                 self.releaseLoader.requestBuild(request, (info) => {
-                    console.info("Build requested:", info);
+                    console.info("Build response:", info);
 
                     // Complete the summary object to be used later
                     summary.file = info.file;

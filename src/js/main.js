@@ -58,6 +58,13 @@ function appReady() {
     i18n.init(function() {
         startProcess();
 
+        // pass the configurator version as a custom header for every AJAX request.
+        $.ajaxSetup({
+            headers: {
+                'X-CFG-VER': `${CONFIGURATOR.version}`,
+            },
+        });
+
         initializeSerialBackend();
 
         $('.connect_b a.connect').removeClass('disabled');
