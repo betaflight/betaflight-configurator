@@ -20,8 +20,7 @@ cordova/bundle.keystore
 .DS_store
 
 # artefacts for Visual Studio Code
-.vscode/*
-!.vscode/extensions.json
+/.vscode/
 
 # NetBeans
 nbproject/
@@ -33,4 +32,3 @@ nbproject/
 .project
 .settings/
 test-results-junit/
-/src/package.json

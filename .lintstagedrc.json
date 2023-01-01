@@ -1,0 +1,7 @@
+{
+    "**/*.{js,vue}": [
+        "prettier --write --ignore-unknown",
+        "eslint --ext .js,.vue --fix src gulpfile.js gulp-appdmg.js"
+    ],
+    "**/*.{less,css}": ["prettier --write --ignore-unknown"]
+}
