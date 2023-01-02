@@ -1653,7 +1653,6 @@
         "message": "Boost iTerm and increase P during fast throttle changes.<br><br>8.0 means about 8x iTerm boost",
         "description": "Anti Gravity Gain Parameter Help Icon"
     },
-
     "pidTuningAntiGravityThres": {
         "message": "Threshold",
         "description": "Anti Gravity Threshold Parameter"
@@ -2062,7 +2061,6 @@
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
-
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
@@ -2176,14 +2174,12 @@
     "receiverModelPreview": {
         "message": "Preview"
     },
-
     "receiverMspWarningText": {
         "message": "These sticks allow Betaflight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br /><br />This feature does not guarantee reliable control of your craft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Enable controls"
     },
-
     "auxiliaryHelp": {
         "message": "Configure modes here using a combination of ranges and/or links to other modes (links supported on BF 4.0 and later). Use <strong>ranges</strong> to define the switches on your transmitter and corresponding mode assignments. A receiver channel that gives a reading between a range min/max will activate the mode. Use a <strong>link</strong> to activate a mode when another mode is activated. <strong>Exceptions:</strong> ARM cannot be linked to or from another mode, modes cannot be linked to other modes that are configured with a link (chained links). Multiple ranges/links can be used to activate any mode. If there is more than one range/link defined for a mode, each of them can be set to <strong>AND</strong> or <strong>OR</strong>. A mode will be activated when:<br />- ALL <strong>AND</strong> ranges/links are active; OR<br />- at least one <strong>OR</strong> range/link is active.<br /><br />Remember to save your settings using the Save button."
     },
@@ -2371,7 +2367,6 @@
     "adjustmentsEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
-
     "transponderNotSupported": {
         "message": "Your flight controller's firmware does not support transponder functionality."
     },
@@ -2438,7 +2433,6 @@
     "transponderEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
-
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requires firmware &gt;= 1.10.0. and target support."
     },
@@ -2568,7 +2562,6 @@
     "gnssHealthyUnhealthy": {
         "message": "unhealthy"
     },
-
     "motorsVoltage": {
         "message": "Voltage:"
     },
@@ -2587,7 +2580,6 @@
     "motorsmAhDrawnValue": {
         "message": "$1 mAh"
     },
-
     "motorsText":{
         "message": "Motors"
     },
@@ -2615,7 +2607,6 @@
     "motorNumber8":{
         "message": "Motor - 8"
     },
-
     "servosText":{
         "message": "Servos"
     },
@@ -2643,7 +2634,6 @@
     "servoNumber8":{
         "message": "Servo - 8"
     },
-
     "motorsResetMaximumButton":{
         "message": "Reset"
     },
@@ -2690,7 +2680,6 @@
     "motorsDialogSettingsChangedOk": {
         "message": "OK"
     },
-
     "motorOutputReorderDialogClose": {
         "message": "Cancel"
     },
@@ -2805,7 +2794,6 @@
     "escDshotDirectionDialog-StopWizard": {
         "message": "Stop motors"
     },
-
     "sensorsInfo": {
         "message": "Keep in mind that using fast update periods and rendering multiple graphs at the same time is resource heavy and will burn your battery quicker if you use a laptop.<br />We recommend to only render graphs for sensors you are interested in while using reasonable update periods."
     },
@@ -2854,7 +2842,6 @@
     "sensorsDebugTitle": {
         "message": "Debug"
     },
-
     "cliInfo": {
         "message": "<strong>Note:</strong> Leaving CLI tab or pressing Disconnect will <strong>automatically</strong> send \"<strong>exit</strong>\" to the board.  With the latest firmware this will make the controller <strong>restart</strong> and unsaved changes will be <strong>lost</strong>.<p><strong><span class=\"message-negative\">Warning:</span></strong> Some commands in CLI can result in arbitrary signals being sent on the motor output pins. This can cause motors to spin up if a battery is connected. Therefore it is highly recommended to make sure that <strong>no battery is connected before entering commands in CLI</strong>."
     },
@@ -2894,7 +2881,6 @@
     "cliConfirmSnippetBtn": {
         "message": "Execute"
     },
-
     "loggingNote": {
         "message": "Data will be logged in this tab <span class=\"message-negative\">only</span>, leaving the tab will <span class=\"message-negative\">cancel</span> logging and application will return to its normal <strong>\"configurator\"</strong> state.<br /> You are free to select the global update period, data will be written into the log file every <strong>1</strong> second for performance reasons."
     },
@@ -2928,7 +2914,6 @@
     "loggingAutomaticallyRetained": {
         "message": "Automatically loaded previous log file: <strong>$1</strong>"
     },
-
     "blackboxNotSupported": {
         "message": "Your flight controller's firmware does not support Blackbox logging."
     },
@@ -2953,14 +2938,12 @@
     "blackboxLoggingSerial": {
         "message": "Serial Port"
     },
-
     "serialLoggingSupportedNote": {
         "message": "You can log to an external logging device (such as an OpenLager) by using a serial port. Configure the port on the Ports tab."
     },
     "sdcardNote": {
         "message": "Flight logs can be recorded to your flight controller's onboard SD card slot."
     },
-
     "dataflashUsedSpace": {
         "message": "Used space"
     },
@@ -3027,7 +3010,6 @@
     "dataflashFileWriteFailed": {
         "message": "Failed to write to the file you selected, are the permissions on that folder okay?"
     },
-
     "sdcardStatusNoCard": {
         "message": "No card inserted"
     },
@@ -3070,14 +3052,8 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherTargetWiki": {
-        "message": "Target Betaflight Wiki:"
-    },
-    "firmwareFlasherTargetWikiUrl": {
-        "message": "https://github.com/betaflight/betaflight/wiki/"
-    },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Get more information about target at betaflight wiki"
+        "message": "Get more information about target at Betaflight wiki (wiki url found in unified target configuration)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3115,7 +3091,6 @@
     "firmwareFlasherTargetWarning": {
         "message": "<span class=\"message-negative\">IMPORTANT</span>: Ensure you flash a file appropriate for your target.  Flashing a binary for the wrong target can cause <span class=\"message-negative\">bad</span> things to happen."
     },
-
     "firmwareFlasherPath": {
         "message": "Path:"
     },
@@ -3351,7 +3326,6 @@
     "firmwareFlasherPreviousDevice": {
         "message": "Detected: <strong>$1</strong> - previous device still flashing, please replug to try again"
     },
-
     "ledStripHelp": {
         "message": "The flight controller can control colors and effects of individual LEDs on a strip.<br />Configure LEDs on the grid, configure wiring order then attach LEDs on your aircraft according to grid positions. LEDs without wire ordering number will not be saved.<br />Double-click on a color to edit the HSV values."
     },
@@ -3663,7 +3637,6 @@
     "controlAxisAux16": {
         "message": "AUX 16"
     },
-
     "pidTuningBasic": {
         "message": "Basic/Acro"
     },
@@ -4424,7 +4397,6 @@
     "failsafeSwitchOptionKill": {
         "message": "Kill"
     },
-
     "powerButtonSave": {
         "message": "Save"
     },

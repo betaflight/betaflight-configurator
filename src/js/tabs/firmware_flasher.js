@@ -69,9 +69,8 @@ firmware_flasher.initialize = function (callback) {
 
             // Wiki link to "BOARD---" + target
             let targetWiki = $('#targetWikiInfoUrl');
-            let targetWikiNode = `Board---${summary.target}`;
-            targetWiki.html(targetWikiNode);
-            targetWiki.attr("href", i18n.getMessage('firmwareFlasherTargetWikiUrl') + targetWikiNode);
+            targetWiki.html(`[Wiki: Board---${summary.target}]`);
+            targetWiki.attr("href", summary.wiki);
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
