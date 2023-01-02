@@ -67,10 +67,16 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info #targetMCU').text(summary.mcu);
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
-            // Wiki link to "BOARD---" + target
+            // Wiki link to "BOARD " + target or just Wiki
             let targetWiki = $('#targetWikiInfoUrl');
-            targetWiki.html(`[Wiki: Board---${summary.target}]`);
-            targetWiki.attr("href", summary.wiki);
+            targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki: Board ${summary.target}]`);
+            if (summary.wiki === undefined) {
+                targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
+                targetWiki.attr("href", i18n.getMessage('firmwareFlasherTargetWikiUrl'));
+            } else {
+                targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki: Board ${summary.target}]`);
+                targetWiki.attr("href", summary.wiki);
+            }
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();

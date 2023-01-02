@@ -3052,6 +3052,9 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
+    "firmwareFlasherTargetWikiUrl": {
+        "message": "https://github.com/betaflight/betaflight/wiki/"
+    },
     "firmwareFlasherTargetWikiUrlInfo": {
         "message": "Get more information about target at Betaflight wiki (wiki url found in unified target configuration)"
     },
