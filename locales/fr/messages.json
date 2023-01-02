@@ -3019,6 +3019,9 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Sélectionnez ou détectez automatiquement votre carte pour voir les versions de firmwares disponibles en ligne - Sélectionnez le firmware approprié à votre carte."
     },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Le configurateur Betaflight supporte le flash de cibles unifiées avec les configurations spécifiques de la carte en une seule étape.<br><br>Le concept de cibles unifiées signifie que le même firmware . ex file peut être utilisé pour toutes les cartes en utilisant le même MCU.<br><br>Betaflight 4.4 introduit <strong>Cloud Build</strong><br><br>Avec <strong>Cloud Build</strong> nous devons définir les options matérielles présentes sur votre build.<br><br>Pour que les différentes cartes fonctionnent avec le même firmware, un fichier de configuration spécifique est déployé à côté du microprogramme lorsqu'une cible unifiée est flashée.<br><br>Avec la compilation locale vous pouvez charger un fichier de configuration cible unifié ou choisir une carte avant de charger un fichier .hex firmware.<br><br>Si vous rencontrez des problèmes en utilisant le firmware, veuillez envisager de rejoindre Discord ou ouvrez une <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">anomalie</a>."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Sélectionnez la version du firmware pour votre carte."
     },
