@@ -3022,6 +3022,9 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecciona o auto-detecta tu placa para ver las versiones de firmware disponibles - Elige el firmware adecuado para tu placa."
     },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Betaflight Configurator soporta la instalación de Placas Unificadas con sus respectivas configuraciones de placa en un sólo paso.<br><br>El concepto de Placas Unificadas significa que el mismo archivo .hex puede ser usado por todas las placas con la misma MCU.<br><br>Betaflight 4.4 introduce <strong>Compilación en la Nube</strong>.<br><br>Con <strong>Compilación en la Nube</strong> necesitamos indicar las opciones de hardware presentes en tu aeronave.<br><br>Para hacer que diferentes placas funcionen con el mismo hardware, un archivo de configuración específico se despliegue junto al firmware cuando una Placa Unificada se instala.<br><br>Con archivos de firmware en local puedes cargar un archivo de configuración de placa o elegir la placa antes de cargar de cargar el archivo .hex del firmware.<br><br>Si encuentras un problema instalando el firmware, por favor unete a nuestro <a href=\"https://discord.gg/n4E6ak4u3c\" target=\"_blank\" rel=\"noopener noreferrer\">Discord</a> o abre una <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">incidencia</a>."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Elige la versión de firmware para tu placa."
     },
