@@ -2713,13 +2713,13 @@
     "firmwareFlasherFlashTrigger": {
         "message": "Wykryto: <strong>$1</strong> -Wgrywanie po wykryciu połączenia"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego</strong>. Ciągle trwają prace nad tą wersją, a którakolwiek z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie działa;</li><li>oprogramowanie ma problemy ze sterowaniem lotu;</li><li>występują problemy z bezpieczeństwem oprogramowania, na przykład podczas lotu</li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieodpowiedzialny, lub doprowadzi do uszkodzenia(maszyny lub czyjegoś zdrowia)</li></ul></strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji</strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami</strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Przeczytałem powyższe i <strong>Biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Wgraj"
     },
     "firmwareFlasherPreviousDevice": {

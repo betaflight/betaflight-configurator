@@ -2559,13 +2559,13 @@
     "firmwareFlasherFlashTrigger": {
         "message": "檢測到飛控：<strong>$1</strong> - 正在觸發自動燒錄"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "您將要刷入一個<strong>開發版本固件</strong>。這些固件仍在開發中，並且可能會造成下列問題：<strong><ul><li>固件完全不工作；</li><li>固件無法飛行；</li><li>固件存在安全性問題</li><li>固件可能會造成飛控變磚，甚至損壞；</li></ul></strong>如果您繼續刷入此固件，<strong>您將對上述所有風險承擔全部責任</strong>。此外，您需要明白，您必須在嘗試解鎖起飛之前<strong>卸下螺旋槳並進行必要的測試</strong>。"
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "我已閱讀上述聲明並且<strong>我自願承擔刷入不穩定版本固件的一切後果<strong>"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "刷寫"
     },
     "firmwareFlasherPreviousDevice": {

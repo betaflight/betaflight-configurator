@@ -2622,13 +2622,13 @@
     "firmwareFlasherFlashTrigger": {
         "message": "<strong>$1</strong> Detektatuta - Konektatzean instalatu exekutatzen ari da"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "<strong>Firmwaren garapen bertsioa</strong> instalatu egingo duzu. Konpilazio hauek martxan dagoen lanak dira eta kasu hauetan edozer gerta daiteke:<strong><ul><li> Firmwareak ez du osorik funtzionatzen;</li><li>ezin da hegan egin firmware onekin;</li><li> firmwarearekin segurtasun arazoak daude, hegan joan daiteke</li><li>firmwareak hegaldi kontrolatzaileak ez erantzutea edo kalte egin dezake</li></ul></strong>Firmwarea instalatzen jarraitzen baduzu, <strong>erantzukizun osoa hartzen ari zara aurreko egoeretarako batean gerta daitekeen arriskuaz</strong>. Aitortzen duzu<strong> helize gabe aulkian probak egiteko</strong> beharrezkoa dela."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Aurrekoa irakurri dut eta <strong>erantzukizun osoa hartzen dut<strong> firmware ezegonkorra instalatzeko"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {

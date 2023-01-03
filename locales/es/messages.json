@@ -3218,13 +3218,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consultar información de la placa para preseleccionar el firmware correcto"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Estás a punto de instalar una <strong>versión en desarrollo del firmware</strong>. Estas versiones son un trabajo en curso, y puede que suceda cualquiera de estas situaciones:<strong><ul><li>el firmware no funcione en absoluto;</li><li>el firmware no sea volable;</li><li>haya problemas de seguridad con el firmware, por ejemplo que se vaya volando;</li><li>el firmware puede causar que la controladora no responda, o quede dañada;</li></ul></strong>Si decides instalar este firmware, <strong>estás asumiendo toda la responsabilidad por el riesgo de que cualquiera de las situaciones anteriores suceda</strong>. Además reconoces que es necesario realizar <strong>pruebas completas de banco sin hélices</strong> antes de cualquier intento de volar este firmware."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "He leído lo anterior y <strong>asumo toda la responsabilidad<strong> de instalar firmware inestable"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Instalar"
     },
     "firmwareFlasherPreviousDevice": {

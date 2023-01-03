@@ -3112,13 +3112,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "查询飞控板信息以辅助选择正确固件"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "您将要刷入一个<strong>开发版本固件</strong>。这些固件仍在开发中，并且可能会造成下列问题：<strong><ul><li>固件完全不工作；</li><li>固件无法飞行；</li><li>固件存在安全性问题</li><li>固件可能会造成飞控变砖，甚至损坏；</li></ul></strong>如果您继续刷入此固件，<strong>您将对上述所有风险承担全部责任</strong>。此外，您需要明白，您必须在尝试解锁起飞之前<strong>卸下螺旋桨并进行必要的测试</strong>。"
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "我已阅读上述声明并且<strong>我自愿承担刷入不稳定版本固件的一切后果<strong>"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "刷写"
     },
     "firmwareFlasherPreviousDevice": {

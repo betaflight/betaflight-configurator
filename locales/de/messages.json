@@ -3106,13 +3106,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Geräteinformationen abfragen um korrekte Firmware automatisch auszuwählen"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Du versuchst eine <strong>-Entwicklungsversion der Firmware</strong>zu flashen. Diese Builds sind in Arbeit und folgende Fehler können auftreten:<strong><ul><li> die Firmware funktioniert überhaupt nicht;</li><li>die Firmware ist nicht fliegbar;</li><li>Es gibt Sicherheitsprobleme mit der Firmware, zum Beispiel Kontrollverlust im Flug oder Run-a-ways</li><li>die Firmware kann dazu führen, dass der Flight-Controller nicht reagiert, oder beschädigt wird </li></ul></strong>Wenn Du mit dem Flashen dieser Firmware fortfahren <strong>übernehmst Du die volle Verantwortung für das Risiko, dass eines der oben genannten Probleme</strong>auftritt. Darüber hinaus nehmst Du zur Kenntnis, dass es unbedingt notwendig ist, <strong>gründliche Bench-Tests ohne Propeller</strong> durchzuführen, bevor Du mit dieser Firmware fliegst."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Ich habe Obenstehendes gelesen und <strong>ich übernehme die volle Verantwortung<strong> für das Flashen der instabilen Firmware"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "flashen"
     },
     "firmwareFlasherPreviousDevice": {
