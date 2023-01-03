@@ -3215,13 +3215,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Recupera le informazioni della scheda per scegliere il firmware giusto"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Stai per flashare una <strong>build di sviluppo del firmware</strong>. Queste build sono work in progress e potrebbero verificarsi i seguenti casi:<strong><ul><li>il firmware non è funzionante;</li><li>il firmware non è in grado di far volare il modello;</li><li>ci sono problemi di sicurezza con il firmware, per esempio flyaway</li><li>il firmware può far diventare il controllore del volo non rispondente o danneggiarlo</li></ul></strong>Se prosegui con il flash di questo firmware, <strong>ti assumi la piena responsabilità dei rischi di cui sopra</strong>. Inoltre riconosci che è necessario eseguire <strong>test approfonditi sul banco di lavoro con le eliche rimosse</strong> prima di qualsiasi tentativo di volare con questo firmware."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Ho letto sopra e <strong>mi assumo tutta la responsabilità<strong> di flashare un firmware instabile"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {

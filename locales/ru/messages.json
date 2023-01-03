@@ -2871,13 +2871,13 @@
     "firmwareFlasherDetectBoardButton": {
         "message": "Автоопределение"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Вы собираетесь прошить <strong>сборку прошивки для разработчиков</strong>. Эти сборки находятся в разработке, и может случиться так:<strong><ul><li>микропрограмма не работает вообще;</li><li>микропрограмма не пригодна для полётов;</li><li>Есть проблемы с безопасностью микропрограммы, например flyaways</li><li>микропрограмма может \"подвесить\" контроллер, либо испортить его вовсе</li></ul></strong>Если вы всё таки решили использоватьданную прошивку, вы согласны с тем что <strong>вы берете на себя полную ответственность за любй из вышеперечисленных рисков</strong>. Кроме того, Вы понимаете, что перед любыми попытками взлететь с этой прошивкой необходимо выполнить <strong>тщательные стендовые проверки с установленными пропеллерами</strong>."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Я прочитал вышеуказанное и <strong>я беру на себя полную ответственность<strong> за прошивку нестабильной версии прошивки"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Флеш"
     },
     "firmwareFlasherPreviousDevice": {

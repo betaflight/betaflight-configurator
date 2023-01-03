@@ -3226,13 +3226,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Seleccioneu l'informació de la placa per preseleccionar el firmware adequat"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Estàs a punt de fer una <strong> actualització en desenvolupament del firmware </strong>. Aquestes compilacions són una treball en curs i es pot donar qualsevol dels casos següents:<strong><ul><li>El firmware no funciona en absolut;</li><li>amb el firmware no es pot volar;</li><li>hi ha problemes de seguretat amb el firmware, per exemple flyaways</li><li>el firmware pot fer que el controlador de vol no respongui o es danyi</li></ul></strong>Si continueu amb el flaix d’aquest firmware, <strong>assumiu tota la responsabilitat del risc que passi de qualsevol dels casos anteriors</strong>. A més, reconeix que és necessari dur a terme <strong>proves completes de banc amb els accessoris desactivats</strong> abans de qualsevol intent de volar aquest firmware."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "He llegit l'anterior i <strong> assumeixo tota la responsabilitat<strong> per actuatltzar el firmware inestable"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {

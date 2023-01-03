@@ -952,9 +952,9 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function showAcknowledgementDialog(acknowledgementCallback) {
-            const dialog = $('#dialogUnstableFirmwareAcknoledgement')[0];
-            const flashButtonElement = $('#dialogUnstableFirmwareAcknoledgement-flashbtn');
-            const acknowledgeCheckboxElement = $('input[name="dialogUnstableFirmwareAcknoledgement-acknowledge"]');
+            const dialog = $('#dialogUnstableFirmwareAcknowledgement')[0];
+            const flashButtonElement = $('#dialogUnstableFirmwareAcknowledgement-flashbtn');
+            const acknowledgeCheckboxElement = $('input[name="dialogUnstableFirmwareAcknowledgement-acknowledge"]');
 
             acknowledgeCheckboxElement.change(function () {
                 if ($(this).is(':checked')) {
@@ -976,7 +976,7 @@ firmware_flasher.initialize = function (callback) {
                 }
             });
 
-            $('#dialogUnstableFirmwareAcknoledgement-cancelbtn').click(function() {
+            $('#dialogUnstableFirmwareAcknowledgement-cancelbtn').click(function() {
                 dialog.close();
             });
 

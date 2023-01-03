@@ -3215,13 +3215,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Demander les informations de la carte pour présélectionner le bon firmware"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Vous êtes sur le point de flasher une version de <strong>développement du firmware</strong>. Ces versions ne sont pas terminées, et peuvent produire les effets suivants :<strong><ul><li>le firmware ne fonctionne pas du tout ;</li><li>l'engin ne vole pas ;</li><li>il y a des problèmes de sécurité avec le firmware, par exemple des flyaways (l'engin s'envole et ne revient plus)</li><li>le firmware peut planter le contrôleur de vol, ou l'endommager</li></ul></strong>Si vous flashez ce firmware, <strong>vous assumez l'entière responsabilité que l'un de ces événements se produise</strong>. En outre, vous avez bien compris qu'il est nécessaire d'effectuer des <strong>tests de banc approfondis avec les hélices retirées des moteurs</strong> avant toute tentative de voler avec ce firmware."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "J'ai lu ce qui précède et <strong>j'assume l'entière responsabilité<strong> pour le flash du firmware instable"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {

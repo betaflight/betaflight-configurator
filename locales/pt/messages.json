@@ -3218,13 +3218,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consultar informações da controladora para pré-selecionar o firmware certo"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Está prestes a instalar uma compilação de desenvolvimento <strong>do firmware</strong>. Estas compilações são um trabalho em curso, e qualquer uma das opções a seguir pode ser o caso:<strong><ul><li>o firmware não funciona de forma alguma;</li><li>o firmware não é voável;</li><li>há problemas de segurança com o firmware, por exemplo, flyaways</li><li>o firmware pode fazer com que o controlador de voo fique sem resposta, ou se danifique</li></ul></strong>Se prosseguir com a instalação deste firmware, <strong> está a assumir a responsabilidade total pelo risco de qualquer uma das opções acima acontecerem</strong>. Além disso, reconhece que é necessário executar <strong>testes de bancada completos sem hélices</strong> antes de qualquer tentativa de voar este firmware."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Li o acima indicado e <strong>assumo total responsabilidade<strong> por instalar firmware instável"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {

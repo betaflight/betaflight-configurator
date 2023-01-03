@@ -3176,13 +3176,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consulte a información da placa para preseleccionar firmware adecuado"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Está a piques de flashear un <strong>versión en desenvolvemento de firmware</strong>. Estas versións son unha obra en curso e pode ter un dos seguintes casos:<strong><ul><li>o firmware non funciona en absoluto;</li><li>o firmware non é voable;</li><li>hai problemas de seguridade co firmware, por exemplo flyaways</li><li>o firmware pode provocar que o controlador de voo non responda ou sexa danado</li></ul></strong> Se continúa coa instalación deste firmware, <strong>está a asumir a responsabilidade total do risco de que suceda algo do anterior</strong>. Ademais, recoñece que é necesario realizar <strong> probas completas de banco sen aspas</strong> antes de intentar voar este firmware."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Lin o anterior e <strong>asumo toda a responsabilidade<strong> por flashear con firmware inestable"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {

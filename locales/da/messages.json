@@ -3218,13 +3218,13 @@
     "firmwareFlasherDetectBoardQuery": {
         "message": "Spørg FC for information om valg af rette firmware image"
     },
-    "unstableFirmwareAcknoledgementDialog": {
+    "unstableFirmwareAcknowledgementDialog": {
         "message": "Du er ved at brænde et <strong>udvikling firmwaren image</strong>. Da udviklingen er undervejs, er der risiko for at et af følgende kan ske:<strong><ul><li>firmwaren fungerer slet ikke</li><li>firmwaren kan ikke bruges til flyvning</li><li>der er sikkerhedsproblemer med firmwaren for eksempel at fartøjet flyver væk</li><li>firmwaren kan bevirke, at FC ikke reagerer eller bliver beskadiget</li></ul></strong>Hvis du fortsætter med at brænde dette firmware image, <strong>påtager du dig det fulde ansvar i risikoen for, at noget af ovenstående sker</strong>. Desuden anerkender du, at det er nødvendigt at udføre <strong>grundige test UDEN propeller</strong> , før du forsøger at flyve med denne firmware."
     },
-    "unstableFirmwareAcknoledgementAcknowledge": {
+    "unstableFirmwareAcknowledgement": {
         "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar<strong> for at brænde et ikke fejlfri firmware image"
     },
-    "unstableFirmwareAcknoledgementFlash": {
+    "unstableFirmwareAcknowledgementFlash": {
         "message": "Brænd"
     },
     "firmwareFlasherPreviousDevice": {
