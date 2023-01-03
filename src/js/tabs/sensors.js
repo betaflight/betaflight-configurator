@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { get as getConfig, set as setConfig } from '../ConfigStorage';
 
 const sensors = {};
 sensors.initialize = function (callback) {
@@ -239,7 +240,7 @@ sensors.initialize = function (callback) {
 
             $('.tab-sensors .rate select:first').change();
 
-            ConfigStorage.set({'graphs_enabled': _checkboxes});
+            setConfig({'graphs_enabled': _checkboxes});
         });
 
         // Always start with default/empty sensor data array, clean slate all
@@ -317,7 +318,7 @@ sensors.initialize = function (callback) {
             const fastest = d3.min([rates.gyro, rates.accel, rates.mag]);
 
             // store current/latest refresh rates in the storage
-            ConfigStorage.set({'sensor_settings': {'rates': rates, 'scales': scales}});
+            setConfig({'sensor_settings': {'rates': rates, 'scales': scales}});
 
             // re-initialize domains with new scales
             gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-scales.gyro, scales.gyro]);
@@ -424,7 +425,7 @@ sensors.initialize = function (callback) {
             }
         });
 
-        const result = ConfigStorage.get('sensor_settings');
+        const result = getConfig('sensor_settings');
         // set refresh speeds according to configuration saved in storage
         if (result.sensor_settings) {
             $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
@@ -448,7 +449,7 @@ sensors.initialize = function (callback) {
             $('.tab-sensors .rate select:first').change();
         }
 
-        const resultGraphs = ConfigStorage.get('graphs_enabled');
+        const resultGraphs = getConfig('graphs_enabled');
         if (resultGraphs.graphs_enabled) {
             const _checkboxes = $('.tab-sensors .info .checkboxes input');
             for (let i = 0; i < resultGraphs.graphs_enabled.length; i++) {

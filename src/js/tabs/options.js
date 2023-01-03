@@ -1,5 +1,6 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
+import { get as getConfig, set as setConfig } from '../ConfigStorage';
 
 const options = {};
 options.initialize = function (callback) {
@@ -32,19 +33,19 @@ options.cleanup = function (callback) {
 };
 
 options.initShowWarnings = function () {
-    const result = ConfigStorage.get('showPresetsWarningBackup');
+    const result = getConfig('showPresetsWarningBackup');
     if (result.showPresetsWarningBackup) {
         $('div.presetsWarningBackup input').prop('checked', true);
     }
 
     $('div.presetsWarningBackup input').change(function () {
         const checked = $(this).is(':checked');
-        ConfigStorage.set({'showPresetsWarningBackup': checked});
+        setConfig({'showPresetsWarningBackup': checked});
     }).change();
 };
 
 options.initPermanentExpertMode = function () {
-    const result = ConfigStorage.get('permanentExpertMode');
+    const result = getConfig('permanentExpertMode');
     if (result.permanentExpertMode) {
         $('div.permanentExpertMode input').prop('checked', true);
     }
@@ -52,22 +53,22 @@ options.initPermanentExpertMode = function () {
     $('div.permanentExpertMode input').change(function () {
         const checked = $(this).is(':checked');
 
-        ConfigStorage.set({'permanentExpertMode': checked});
+        setConfig({'permanentExpertMode': checked});
 
         $('input[name="expertModeCheckbox"]').prop('checked', checked).change();
     }).change();
 };
 
 options.initRememberLastTab = function () {
-    const result = ConfigStorage.get('rememberLastTab');
+    const result = getConfig('rememberLastTab');
     $('div.rememberLastTab input')
         .prop('checked', !!result.rememberLastTab)
-        .change(function() { ConfigStorage.set({rememberLastTab: $(this).is(':checked')}); })
+        .change(function() { setConfig({rememberLastTab: $(this).is(':checked')}); })
         .change();
 };
 
 options.initCheckForConfiguratorUnstableVersions = function () {
-    const result = ConfigStorage.get('checkForConfiguratorUnstableVersions');
+    const result = getConfig('checkForConfiguratorUnstableVersions');
     if (result.checkForConfiguratorUnstableVersions) {
         $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
     }
@@ -75,7 +76,7 @@ options.initCheckForConfiguratorUnstableVersions = function () {
     $('div.checkForConfiguratorUnstableVersions input').change(function () {
         const checked = $(this).is(':checked');
 
-        ConfigStorage.set({'checkForConfiguratorUnstableVersions': checked});
+        setConfig({'checkForConfiguratorUnstableVersions': checked});
 
         checkForConfiguratorUpdates();
     });
@@ -87,47 +88,47 @@ options.initCliAutoComplete = function () {
         .change(function () {
             const checked = $(this).is(':checked');
 
-            ConfigStorage.set({'cliAutoComplete': checked});
+            setConfig({'cliAutoComplete': checked});
             CliAutoComplete.setEnabled(checked);
         }).change();
 };
 
 options.initAutoConnectConnectionTimeout = function () {
-    const result = ConfigStorage.get('connectionTimeout');
+    const result = getConfig('connectionTimeout');
     if (result.connectionTimeout) {
         $('#connectionTimeoutSelect').val(result.connectionTimeout);
     }
     $('#connectionTimeoutSelect').on('change', function () {
         const value = parseInt($(this).val());
-        ConfigStorage.set({'connectionTimeout': value});
+        setConfig({'connectionTimeout': value});
     });
 };
 
 options.initShowAllSerialDevices = function() {
     const showAllSerialDevicesElement = $('div.showAllSerialDevices input');
-    const result = ConfigStorage.get('showAllSerialDevices');
+    const result = getConfig('showAllSerialDevices');
     showAllSerialDevicesElement
         .prop('checked', !!result.showAllSerialDevices)
         .on('change', () => {
-            ConfigStorage.set({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') });
+            setConfig({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') });
             PortHandler.reinitialize();
         });
 };
 
 options.initShowVirtualMode = function() {
     const showVirtualModeElement = $('div.showVirtualMode input');
-    const result = ConfigStorage.get('showVirtualMode');
+    const result = getConfig('showVirtualMode');
     showVirtualModeElement
         .prop('checked', !!result.showVirtualMode)
         .on('change', () => {
-            ConfigStorage.set({ showVirtualMode: showVirtualModeElement.is(':checked') });
+            setConfig({ showVirtualMode: showVirtualModeElement.is(':checked') });
             PortHandler.reinitialize();
         });
 };
 
 options.initCordovaForceComputerUI = function () {
     if (GUI.isCordova() && cordovaUI.canChangeUI) {
-        const result = ConfigStorage.get('cordovaForceComputerUI');
+        const result = getConfig('cordovaForceComputerUI');
         if (result.cordovaForceComputerUI) {
             $('div.cordovaForceComputerUI input').prop('checked', true);
         }
@@ -135,7 +136,7 @@ options.initCordovaForceComputerUI = function () {
         $('div.cordovaForceComputerUI input').change(function () {
             const checked = $(this).is(':checked');
 
-            ConfigStorage.set({'cordovaForceComputerUI': checked});
+            setConfig({'cordovaForceComputerUI': checked});
 
             if (typeof cordovaUI.set === 'function') {
                 cordovaUI.set();
@@ -152,7 +153,7 @@ options.initDarkTheme = function () {
         .change(function () {
             const value = parseInt($(this).val());
 
-            ConfigStorage.set({'darkTheme': value});
+            setConfig({'darkTheme': value});
             setDarkTheme(value);
         }).change();
 };

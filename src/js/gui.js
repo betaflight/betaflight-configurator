@@ -1,3 +1,5 @@
+import { get as getConfig } from './ConfigStorage';
+
 window.TABS = {}; // filled by individual tab js file
 
 const GUI_MODES = {
@@ -358,7 +360,7 @@ class GuiControl {
         }
     }
     selectDefaultTabWhenConnected() {
-        const result = ConfigStorage.get(['rememberLastTab', 'lastTab']);
+        const result = getConfig(['rememberLastTab', 'lastTab']);
         const tab = result.rememberLastTab && result.lastTab ? result.lastTab : 'tab_setup';
 
         $(`#tabs ul.mode-connected .${tab} a`).trigger('click');

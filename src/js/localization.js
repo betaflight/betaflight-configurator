@@ -1,6 +1,7 @@
 import i18next from 'i18next';
 import i18nextXHRBackend from 'i18next-xhr-backend';
 import GUI from './gui.js';
+import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 
 const i18n = {};
 /*
@@ -80,9 +81,7 @@ i18n.parseInputFile = function(data) {
 };
 
 i18n.changeLanguage = function(languageSelected) {
-    if (typeof ConfigStorage !== 'undefined') {
-        ConfigStorage.set({'userLanguageSelect': languageSelected});
-    }
+    setConfig({'userLanguageSelect': languageSelected});
     i18next.changeLanguage(getValidLocale(languageSelected));
     i18n.selectedLanguage = languageSelected;
     GUI.log(i18n.getMessage('language_changed'));
@@ -192,13 +191,11 @@ i18n.localizePage = function(forceReTranslate) {
  */
 function getStoredUserLocale(cb) {
     let userLanguage = 'DEFAULT';
-    if (typeof ConfigStorage !== 'undefined') {
-        const result = ConfigStorage.get('userLanguageSelect');
-        if (result.userLanguageSelect) {
-            userLanguage = result.userLanguageSelect;
-        }
-        i18n.selectedLanguage = userLanguage;
+    const result = getConfig('userLanguageSelect');
+    if (result.userLanguageSelect) {
+        userLanguage = result.userLanguageSelect;
     }
+    i18n.selectedLanguage = userLanguage;
     userLanguage = getValidLocale(userLanguage);
     cb(userLanguage);
 }

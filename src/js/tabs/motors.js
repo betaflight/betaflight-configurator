@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { get as getConfig, set as setConfig } from '../ConfigStorage';
 
 const motors = {
     previousDshotBidir: null,
@@ -450,7 +451,7 @@ motors.initialize = async function (callback) {
 
         $('.tab-motors .sensor select').change(function(){
             TABS.motors.sensor = $('.tab-motors select[name="sensor_choice"]').val();
-            ConfigStorage.set({'motors_tab_sensor_settings': {'sensor': TABS.motors.sensor}});
+            setConfig({'motors_tab_sensor_settings': {'sensor': TABS.motors.sensor}});
 
             switch(TABS.motors.sensor){
             case "gyro":
@@ -476,7 +477,7 @@ motors.initialize = async function (callback) {
 
             switch(TABS.motors.sensor) {
             case "gyro":
-                ConfigStorage.set({'motors_tab_gyro_settings': {'rate': rate, 'scale': scale}});
+                setConfig({'motors_tab_gyro_settings': {'rate': rate, 'scale': scale}});
                 TABS.motors.sensorGyroRate = rate;
                 TABS.motors.sensorGyroScale = scale;
 
@@ -487,7 +488,7 @@ motors.initialize = async function (callback) {
                 }, rate, true);
                 break;
             case "accel":
-                ConfigStorage.set({'motors_tab_accel_settings': {'rate': rate, 'scale': scale}});
+                setConfig({'motors_tab_accel_settings': {'rate': rate, 'scale': scale}});
                 TABS.motors.sensorAccelRate = rate;
                 TABS.motors.sensorAccelScale = scale;
                 accelHelpers = initGraphHelpers('#graph', samplesAccel, [-scale, scale]);
@@ -560,7 +561,7 @@ motors.initialize = async function (callback) {
         });
 
         // set refresh speeds according to configuration saved in storage
-        const result = ConfigStorage.get(['motors_tab_sensor_settings', 'motors_tab_gyro_settings', 'motors_tab_accel_settings']);
+        const result = getConfig(['motors_tab_sensor_settings', 'motors_tab_gyro_settings', 'motors_tab_accel_settings']);
         if (result.motors_tab_sensor_settings) {
             $('.tab-motors select[name="sensor_choice"]').val(result.motors_tab_sensor_settings.sensor);
         }

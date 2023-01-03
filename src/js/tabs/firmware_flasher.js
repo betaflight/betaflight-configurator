@@ -1,5 +1,6 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
+import { get as getConfig, set as setConfig } from '../ConfigStorage';
 
 const firmware_flasher = {
     targets: null,
@@ -218,11 +219,11 @@ firmware_flasher.initialize = function (callback) {
             buildBuildTypeOptionsList();
             buildType_e.val(0).trigger('change');
 
-            ConfigStorage.set({'selected_expert_mode': expertModeChecked});
+            setConfig({'selected_expert_mode': expertModeChecked});
         }
 
         const expertMode_e = $('.tab-firmware_flasher input.expert_mode');
-        const expertMode = ConfigStorage.get('selected_expert_mode');
+        const expertMode = getConfig('selected_expert_mode');
         expertMode_e.prop('checked', expertMode.selected_expert_mode ?? false);
         $('input.show_development_releases').change(showOrHideBuildTypes).change();
         expertMode_e.change(showOrHideExpertMode).change();
@@ -248,7 +249,7 @@ firmware_flasher.initialize = function (callback) {
                 }
             }
 
-            ConfigStorage.set({'selected_build_type': build_type});
+            setConfig({'selected_build_type': build_type});
         });
 
         function selectFirmware(release) {
@@ -592,7 +593,7 @@ firmware_flasher.initialize = function (callback) {
             detectBoardElement.toggleClass('disabled', isButtonDisabled);
         }
 
-        let result = ConfigStorage.get('erase_chip');
+        let result = getConfig('erase_chip');
         if (result.erase_chip) {
             $('input.erase_chip').prop('checked', true);
         } else {
@@ -600,21 +601,21 @@ firmware_flasher.initialize = function (callback) {
         }
 
         $('input.erase_chip').change(function () {
-            ConfigStorage.set({'erase_chip': $(this).is(':checked')});
+            setConfig({'erase_chip': $(this).is(':checked')});
         }).change();
 
-        result = ConfigStorage.get('show_development_releases');
+        result = getConfig('show_development_releases');
         $('input.show_development_releases')
         .prop('checked', result.show_development_releases)
         .change(function () {
-            ConfigStorage.set({'show_development_releases': $(this).is(':checked')});
+            setConfig({'show_development_releases': $(this).is(':checked')});
         }).change();
 
-        result = ConfigStorage.get('selected_build_type');
+        result = getConfig('selected_build_type');
         // ensure default build type is selected
         buildType_e.val(result.selected_build_type || 0).trigger('change');
 
-        result = ConfigStorage.get('no_reboot_sequence');
+        result = getConfig('no_reboot_sequence');
         if (result.no_reboot_sequence) {
             $('input.updating').prop('checked', true);
             $('.flash_on_connect_wrapper').show();
@@ -633,12 +634,12 @@ firmware_flasher.initialize = function (callback) {
                 $('.flash_on_connect_wrapper').hide();
             }
 
-            ConfigStorage.set({'no_reboot_sequence': status});
+            setConfig({'no_reboot_sequence': status});
         });
 
         $('input.updating').change();
 
-        result = ConfigStorage.get('flash_manual_baud');
+        result = getConfig('flash_manual_baud');
         if (result.flash_manual_baud) {
             $('input.flash_manual_baud').prop('checked', true);
         } else {
@@ -655,18 +656,18 @@ firmware_flasher.initialize = function (callback) {
         // bind UI hook so the status is saved on change
         $('input.flash_manual_baud').change(function() {
             const status = $(this).is(':checked');
-            ConfigStorage.set({'flash_manual_baud': status});
+            setConfig({'flash_manual_baud': status});
         });
 
         $('input.flash_manual_baud').change();
 
-        result = ConfigStorage.get('flash_manual_baud_rate');
+        result = getConfig('flash_manual_baud_rate');
         $('#flash_manual_baud_rate').val(result.flash_manual_baud_rate);
 
         // bind UI hook so the status is saved on change
         $('#flash_manual_baud_rate').change(function() {
             const baud = parseInt($('#flash_manual_baud_rate').val());
-            ConfigStorage.set({'flash_manual_baud_rate': baud});
+            setConfig({'flash_manual_baud_rate': baud});
         });
 
         $('input.flash_manual_baud_rate').change();
