@@ -3,10 +3,12 @@ import { i18n } from '../localization';
 import GUI from '../gui';
 
 const configuration = {
-    // intended
+    analyticsChanges: {},
 };
 
 configuration.initialize = function (callback) {
+    const self = this;
+
     if (GUI.active_tab != 'configuration') {
         GUI.active_tab = 'configuration';
         GUI.configuration_loaded = true;
@@ -48,6 +50,8 @@ configuration.initialize = function (callback) {
     load_serial_config();
 
     function process_html() {
+        self.analyticsChanges = {};
+
         const features_e = $('.tab-configuration .features');
 
         FC.FEATURE_CONFIG.features.generateElements(features_e);
@@ -126,15 +130,39 @@ configuration.initialize = function (callback) {
         orientation_mag_e.val(FC.SENSOR_ALIGNMENT.align_mag);
 
         orientation_gyro_e.change(function () {
-            FC.SENSOR_ALIGNMENT.align_gyro = parseInt($(this).val());
+            let value = parseInt($(this).val());
+
+            let newValue = undefined;
+            if (value !== FC.SENSOR_ALIGNMENT.align_gyro) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['GyroAlignment'] = newValue;
+
+            FC.SENSOR_ALIGNMENT.align_gyro = value;
         });
 
         orientation_acc_e.change(function () {
-            FC.SENSOR_ALIGNMENT.align_acc = parseInt($(this).val());
+            let value = parseInt($(this).val());
+
+            let newValue = undefined;
+            if (value !== FC.SENSOR_ALIGNMENT.align_acc) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['AccAlignment'] = newValue;
+
+            FC.SENSOR_ALIGNMENT.align_acc = value;
         });
 
         orientation_mag_e.change(function () {
-            FC.SENSOR_ALIGNMENT.align_mag = parseInt($(this).val());
+            let value = parseInt($(this).val());
+
+            let newValue = undefined;
+            if (value !== FC.SENSOR_ALIGNMENT.align_mag) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['MagAlignment'] = newValue;
+
+            FC.SENSOR_ALIGNMENT.align_mag = value;
         });
 
         // Multi gyro config
@@ -178,11 +206,27 @@ configuration.initialize = function (callback) {
         $('.gyro_alignment_inputs_notfound').toggle(!detected_gyro_1 && !detected_gyro_2);
 
         orientation_gyro_1_align_e.change(function () {
-            FC.SENSOR_ALIGNMENT.gyro_1_align = parseInt($(this).val());
+            let value = parseInt($(this).val());
+
+            let newValue = undefined;
+            if (value !== FC.SENSOR_ALIGNMENT.gyro_1_align) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['Gyro1Alignment'] = newValue;
+
+            FC.SENSOR_ALIGNMENT.gyro_1_align = value;
         });
 
         orientation_gyro_2_align_e.change(function () {
-            FC.SENSOR_ALIGNMENT.gyro_2_align = parseInt($(this).val());
+            let value = parseInt($(this).val());
+
+            let newValue = undefined;
+            if (value !== FC.SENSOR_ALIGNMENT.gyro_2_align) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['Gyro2Alignment'] = newValue;
+
+            FC.SENSOR_ALIGNMENT.gyro_2_align = value;
         });
 
         // Gyro and PID update
@@ -446,9 +490,19 @@ configuration.initialize = function (callback) {
 
             const value = parseInt(pidSelectElement.val());
 
+            if (value !== FC.PID_ADVANCED_CONFIG.pid_process_denom) {
+                const newFrequency = pidSelectElement.find('option:selected').text();
+                self.analyticsChanges['PIDLoopSettings'] = `denominator: ${value} | frequency: ${newFrequency}`;
+            } else {
+                self.analyticsChanges['PIDLoopSettings'] = undefined;
+            }
+
             FC.PID_ADVANCED_CONFIG.pid_process_denom = value;
 
             FC.RX_CONFIG.fpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
+
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'configuration');
+            self.analyticsChanges = {};
 
             // fill some data
             FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;

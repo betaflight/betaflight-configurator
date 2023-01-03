@@ -6,6 +6,7 @@ import CryptoES from 'crypto-es';
 
 const receiver = {
     rateChartHeight: 117,
+    analyticsChanges: {},
     needReboot: false,
     elrsPassphraseEnabled: false,
 };
@@ -75,6 +76,8 @@ receiver.initialize = function (callback) {
     MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, get_rc_data);
 
     function process_html() {
+        self.analyticsChanges = {};
+
         const featuresElement = $('.tab-receiver .features');
 
         FC.FEATURE_CONFIG.features.generateElements(featuresElement);
@@ -240,9 +243,12 @@ receiver.initialize = function (callback) {
         serialRxSelectElement.change(function () {
             const serialRxValue = parseInt($(this).val());
 
+            let newValue;
             if (serialRxValue !== FC.RX_CONFIG.serialrx_provider) {
+                newValue = $(this).find('option:selected').text();
                 updateSaveButton(true);
             }
+            tab.analyticsChanges['SerialRx'] = newValue;
 
             FC.RX_CONFIG.serialrx_provider = serialRxValue;
         });
@@ -296,9 +302,12 @@ receiver.initialize = function (callback) {
         spiRxElement.change(function () {
             const value = parseInt($(this).val());
 
+            let newValue = undefined;
             if (value !== FC.RX_CONFIG.rxSpiProtocol) {
+                newValue = $(this).find('option:selected').text();
                 updateSaveButton(true);
             }
+            tab.analyticsChanges['SPIRXProtocol'] = newValue;
 
             FC.RX_CONFIG.rxSpiProtocol = value;
         });
@@ -483,6 +492,9 @@ receiver.initialize = function (callback) {
                     });
                 }
             }
+
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges, 'receiver');
+            tab.analyticsChanges = {};
 
             MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_rssi_config);
         }

@@ -3,10 +3,17 @@ import GUI from '../gui';
 
 const power = {
     supported: false,
+    analyticsChanges: {},
 };
 
 power.initialize = function (callback) {
-    GUI.active_tab = 'power';
+    const self = this;
+
+    if (GUI.active_tab != 'power') {
+        GUI.active_tab = 'power';
+        // Disabled on merge into betaflight-configurator
+        //googleAnalytics.sendAppView('Power');
+    }
 
     if (GUI.calibrationManager) {
         GUI.calibrationManager.destroy();
@@ -105,6 +112,14 @@ power.initialize = function (callback) {
             $(`input[name="vbatresdivmultiplier-${index}"]`).val(voltageDataSource[index].vbatresdivmultiplier);
         }
 
+        $('input[name="vbatscale-0"]').change(function () {
+            const value = parseInt($(this).val());
+
+            if (value !== voltageDataSource[0].vbatscale) {
+                self.analyticsChanges['PowerVBatUpdated'] = value;
+            }
+        });
+
         // amperage meters
         if (FC.BATTERY_CONFIG.currentMeterSource == 0) {
             $('.boxAmperageConfiguration').hide();
@@ -154,6 +169,26 @@ power.initialize = function (callback) {
             $(`input[name="amperagescale-${index}"]`).val(currentDataSource[index].scale);
             $(`input[name="amperageoffset-${index}"]`).val(currentDataSource[index].offset);
         }
+
+        $('input[name="amperagescale-0"]').change(function () {
+            if (FC.BATTERY_CONFIG.currentMeterSource === 1) {
+                let value = parseInt($(this).val());
+
+                if (value !== currentDataSource[0].scale) {
+                    self.analyticsChanges['PowerAmperageUpdated'] = value;
+                }
+            }
+        });
+
+        $('input[name="amperagescale-1"]').change(function () {
+            if (FC.BATTERY_CONFIG.currentMeterSource === 2) {
+                let value = parseInt($(this).val());
+
+                if (value !== currentDataSource[1].scale) {
+                    self.analyticsChanges['PowerAmperageUpdated'] = value;
+                }
+            }
+        });
 
         if(FC.BATTERY_CONFIG.voltageMeterSource == 1 || FC.BATTERY_CONFIG.currentMeterSource == 1 || FC.BATTERY_CONFIG.currentMeterSource == 2) {
             $('.calibration').show();
@@ -399,6 +434,14 @@ power.initialize = function (callback) {
                 $('output[name="amperagenewscale"').val(amperagenewscale);
 
                 $('a.applycalibration').click(function() {
+                    if (vbatscalechanged) {
+                        self.analyticsChanges['PowerVBatUpdated'] = 'Calibrated';
+                    }
+
+                    if (amperagescalechanged) {
+                        self.analyticsChanges['PowerAmperageUpdated'] = 'Calibrated';
+                    }
+
                     calibrationconfirmed = true;
                     GUI.calibrationManagerConfirmation.close();
                     updateDisplay(FC.VOLTAGE_METER_CONFIGS, FC.CURRENT_METER_CONFIGS);
@@ -429,6 +472,8 @@ power.initialize = function (callback) {
             FC.BATTERY_CONFIG.vbatmaxcellvoltage = parseFloat($('input[name="maxcellvoltage"]').val());
             FC.BATTERY_CONFIG.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
             FC.BATTERY_CONFIG.capacity = parseInt($('input[name="capacity"]').val());
+
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'power');
 
             save_power_config();
         });
@@ -463,6 +508,7 @@ power.initialize = function (callback) {
     }
 
     function process_html() {
+        self.analyticsChanges = {};
         // translate to user-selected language
         i18n.localizePage();
 
