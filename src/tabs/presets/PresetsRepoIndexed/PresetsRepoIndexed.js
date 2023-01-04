@@ -1,6 +1,6 @@
-'use strict';
+import PresetParser from "./PresetParser";
 
-class PresetsRepoIndexed {
+export default class PresetsRepoIndexed {
     constructor(urlRaw, urlViewOnline) {
         this._urlRaw = urlRaw;
         this._urlViewOnline = urlViewOnline;

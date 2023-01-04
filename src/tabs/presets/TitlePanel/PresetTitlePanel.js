@@ -1,6 +1,6 @@
-'use strict';
+import { i18n } from "../../../js/localization";
 
-class PresetTitlePanel
+export default class PresetTitlePanel
 {
     constructor(parentDiv, preset, clickable, onLoadedCallback, favoritePresets)
     {

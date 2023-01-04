@@ -1,6 +1,9 @@
-'use strict';
+import { i18n } from "../../../js/localization";
+import { get as getConfig, set as setConfig } from "../../../js/ConfigStorage";
+import PresetSource from "./PresetSource";
+import SourcePanel from "./SourcePanel";
 
-class PresetsSourcesDialog {
+export default class PresetsSourcesDialog {
     constructor(domDialog) {
         this._domDialog = domDialog;
         this._sourceSelectedPromiseResolve = null;
@@ -47,7 +50,7 @@ class PresetsSourcesDialog {
         const officialSource = this._createOfficialSource();
         const officialSourceSecondary = this._createSecondaryOfficialSource();
 
-        const obj = ConfigStorage.get('PresetSources');
+        const obj = getConfig('PresetSources');
         let sources = obj.PresetSources;
 
         if (sources && sources.length > 0) {
@@ -64,7 +67,7 @@ class PresetsSourcesDialog {
     }
 
     _readActiveSourceIndexFromStorage(sourcesCount) {
-        const obj = ConfigStorage.get('PresetSourcesActiveIndex');
+        const obj = getConfig('PresetSourcesActiveIndex');
         const index = Number(obj.PresetSourcesActiveIndex);
         let result = 0;
 
@@ -147,8 +150,8 @@ class PresetsSourcesDialog {
     }
 
     _saveSources() {
-        ConfigStorage.set({'PresetSources': this._sources});
-        ConfigStorage.set({'PresetSourcesActiveIndex': this._activeSourceIndex});
+        setConfig({'PresetSources': this._sources});
+        setConfig({'PresetSourcesActiveIndex': this._activeSourceIndex});
     }
 
     _updateSourcesFromPanels() {

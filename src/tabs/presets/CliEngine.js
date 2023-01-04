@@ -1,6 +1,7 @@
-'use strict';
+import GUI from "../../js/gui";
+import { i18n } from "../../js/localization";
 
-class CliEngine
+export default class CliEngine
 {
     constructor(currentTab) {
         this._currentTab = currentTab;

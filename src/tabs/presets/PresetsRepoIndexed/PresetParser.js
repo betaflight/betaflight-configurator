@@ -1,6 +1,5 @@
-'use strict';
 
-class PresetParser {
+export default class PresetParser {
     constructor(settings) {
         this._settings = settings;
     }

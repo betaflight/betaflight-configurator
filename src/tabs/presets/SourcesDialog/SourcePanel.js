@@ -1,6 +1,8 @@
-'use strict';
+import { i18n } from "../../../js/localization";
+import GUI from "../../../js/gui";
+import PresetSource from "./PresetSource";
 
-class SourcePanel {
+export default class SourcePanel {
     constructor(parentDiv, presetSource) {
         this._parentDiv = parentDiv;
         this._presetSource = presetSource;
@@ -130,7 +132,7 @@ class SourcePanel {
     }
 
     _checkIfGithub() {
-        const isGithubUrl =  PresetSource.isUrlGithubRepo(this._domEditUrl.val());
+        const isGithubUrl = PresetSource.isUrlGithubRepo(this._domEditUrl.val());
         this._domDivGithubBranch.toggle(isGithubUrl);
     }
 
@@ -197,4 +199,3 @@ class SourcePanel {
 }
 
 SourcePanel.s_panelCounter = 0;
-
