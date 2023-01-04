@@ -94,7 +94,7 @@ jobs:
         if: ${{ !inputs.debug_build && matrix.name != 'Android' }}
 
       - run: yarn gulp debug-release ${{ matrix.releaseArgs }}
-        if: ${{ inputs.debug_build }}
+        if: ${{ inputs.debug_build || matrix.name == 'Android' }}
 
       - name: Publish build artifacts
         uses: actions/upload-artifact@v3
