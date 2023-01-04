@@ -69,12 +69,10 @@ firmware_flasher.initialize = function (callback) {
 
             // Wiki link to "BOARD " + target or just Wiki
             let targetWiki = $('#targetWikiInfoUrl');
-            targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki: Board ${summary.target}]`);
+            targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
             if (summary.wiki === undefined) {
-                targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
-                targetWiki.attr("href", i18n.getMessage('firmwareFlasherTargetWikiUrl'));
+                targetWiki.attr("href", "https://github.com/betaflight/betaflight/wiki/");
             } else {
-                targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki: Board ${summary.target}]`);
                 targetWiki.attr("href", summary.wiki);
             }
 
