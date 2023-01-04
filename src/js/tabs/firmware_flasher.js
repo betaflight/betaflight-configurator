@@ -67,7 +67,7 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info #targetMCU').text(summary.mcu);
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
-            // Wiki link to "BOARD " + target or just Wiki
+            // Wiki link to url found in unified target configuration or if not defined to general wiki url
             let targetWiki = $('#targetWikiInfoUrl');
             targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
             if (summary.wiki === undefined) {
