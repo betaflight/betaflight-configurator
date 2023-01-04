@@ -1,6 +1,6 @@
-'use strict';
+import MotorOutputReorderConfig from './MotorOutputReorderingConfig';
 
-class MotorOutputReorderCanvas
+export default class MotorOutputReorderCanvas
 {
     constructor(canvas, droneConfiguration, motorClickCallback, spinMotorCallback)
     {

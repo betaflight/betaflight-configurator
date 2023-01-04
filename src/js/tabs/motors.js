@@ -1,6 +1,8 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
+import MotorOutputReorderConfig from "../../components/MotorOutputReordering/MotorOutputReorderingConfig";
+import MotorOutputReorderComponent from "../../components/MotorOutputReordering/MotorOutputReorderingComponent";
 
 const motors = {
     previousDshotBidir: null,
