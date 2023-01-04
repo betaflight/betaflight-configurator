@@ -1,6 +1,4 @@
-'use strict';
-
-const VtxDeviceTypes = {
+export const VtxDeviceTypes = {
     VTXDEV_UNSUPPORTED: 0, // reserved for MSP
     VTXDEV_RTC6705: 1,
     // 2 reserved
@@ -78,3 +76,5 @@ class VtxDeviceStatus
         return this.constructor.staticDeviceStatusType;
     }
 }
+
+export default VtxDeviceStatus;

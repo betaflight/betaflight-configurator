@@ -1,4 +1,6 @@
-'use strict';
+import VtxDeviceStatus, { VtxDeviceTypes } from "./VtxDeviceStatus";
+import vtxDeviceStatusFactory from "./VtxDeviceStatusFactory";
+import { i18n } from "../../localization";
 
 class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
     constructor(dataView)
@@ -47,3 +49,5 @@ class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
 }
 
 vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusSmartAudio);
+
+export default VtxDeviceStatusSmartAudio;

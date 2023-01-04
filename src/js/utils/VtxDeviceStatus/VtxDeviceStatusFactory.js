@@ -1,5 +1,3 @@
-'use strict';
-
 const vtxDeviceStatusFactory = {
     _vtxDeviceStatusClasses: [],
 
@@ -38,3 +36,5 @@ const vtxDeviceStatusFactory = {
         return result;
     },
 };
+
+export default vtxDeviceStatusFactory;
