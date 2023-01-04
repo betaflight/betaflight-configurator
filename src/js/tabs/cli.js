@@ -1,6 +1,7 @@
 import { i18n } from "../localization";
 import Clipboard from "../Clipboard";
 import GUI from '../gui';
+import BuildApi from '../build_api';
 
 const cli = {
     lineDelayMs: 15,

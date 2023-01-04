@@ -2,7 +2,7 @@ import GUI from "./gui";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 
-class BuildApi {
+export default class BuildApi {
 
     constructor () {
         this._url = 'https://build.betaflight.com';
