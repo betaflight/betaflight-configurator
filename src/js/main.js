@@ -2,6 +2,7 @@ import '../components/init.js';
 import { i18n } from './localization.js';
 import GUI from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
+import ReleaseChecker from './release_checker.js';
 
 $(document).ready(function () {
 

@@ -1,4 +1,6 @@
-'use strict';
+import GUI from "./gui";
+import { i18n } from "./localization";
+import { get as getStorage, set as setStorage } from "./SessionStorage";
 
 const ReleaseChecker = function (releaseName, releaseUrl) {
     const self = this;
@@ -11,7 +13,7 @@ const ReleaseChecker = function (releaseName, releaseUrl) {
 
 ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
     const self = this;
-    const result = SessionStorage.get([self._releaseLastUpdateTag, self._releaseDataTag]);
+    const result = getStorage([self._releaseLastUpdateTag, self._releaseDataTag]);
     const releaseDataTimestamp = $.now();
     const cacheReleaseData = result[self._releaseDataTag];
     const cachedReleaseLastUpdate = result[self._releaseLastUpdateTag];
@@ -23,7 +25,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
             const data = {};
             data[self._releaseDataTag] = releaseData;
             data[self._releaseLastUpdateTag] = releaseDataTimestamp;
-            SessionStorage.set(data);
+            setStorage(data);
 
             self._processReleaseData(releaseData, processFunction);
         }).fail(function (data) {
@@ -54,3 +56,5 @@ ReleaseChecker.prototype._processReleaseData = function (releaseData, processFun
         processFunction();
     }
 };
+
+export default ReleaseChecker;

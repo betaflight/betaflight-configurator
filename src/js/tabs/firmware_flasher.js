@@ -1,6 +1,8 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
+import { get as getStorage, set as setStorage } from '../SessionStorage';
+import ReleaseLoader from '../release_loader';
 
 const firmware_flasher = {
     targets: null,
@@ -142,7 +144,7 @@ firmware_flasher.initialize = function (callback) {
 
             TABS.firmware_flasher.targets = targets;
 
-            result = SessionStorage.get('selected_board');
+            result = getStorage('selected_board');
             if (result.selected_board) {
                 const selected = targets.find(t => t.target === result.selected_board);
                 $('select[name="board"]').val(selected ? result.selected_board : 0).trigger('change');
@@ -373,7 +375,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 if (target !== '0') {
-                    SessionStorage.set({'selected_board': target});
+                    setStorage({'selected_board': target});
                 }
 
                 self.selectedBoard = target;
@@ -940,10 +942,10 @@ firmware_flasher.initialize = function (callback) {
             function setAcknowledgementTimestamp() {
                 const storageObj = {};
                 storageObj[storageTag] = Date.now();
-                SessionStorage.set(storageObj);
+                setStorage(storageObj);
             }
 
-            result = SessionStorage.get(storageTag);
+            result = getStorage(storageTag);
             if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
 
                 showAcknowledgementDialog(setAcknowledgementTimestamp);
@@ -1153,7 +1155,7 @@ firmware_flasher.showDialogVerifyBoard = function (selected, verified, onAbort, 
     if (!dialogVerifyBoard.hasAttribute('open')) {
         dialogVerifyBoard.showModal();
         $('#dialog-verify-board-abort-confirmbtn').click(function() {
-            SessionStorage.set({'selected_board': FC.CONFIG.boardName});
+            setStorage({'selected_board': FC.CONFIG.boardName});
             dialogVerifyBoard.close();
             onAbort();
         });
