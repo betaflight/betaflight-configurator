@@ -1,4 +1,4 @@
-'use strict';
+import { bit_check, bit_set, bit_clear } from "./serial_backend";
 
 const Features = function (config) {
     const self = this;
@@ -198,3 +198,5 @@ Features.prototype.updateData = function (featureElement) {
         }
     }
 };
+
+export default Features;

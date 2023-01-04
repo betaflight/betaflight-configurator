@@ -1,5 +1,8 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { reinitializeConnection } from "../serial_backend";
+import { mspHelper } from "../msp/MSPHelper";
+
 
 const failsafe = {};
 

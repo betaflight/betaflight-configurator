@@ -2,6 +2,9 @@ import { i18n } from "../localization";
 import { colorTables, getColorForPercentage } from '../utils/css.js';
 import GUI from '../gui';
 import { tracking } from "../Analytics";
+import { have_sensor } from "../serial_backend";
+import { mspHelper } from "../msp/MSPHelper";
+import FC from "../fc";
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,

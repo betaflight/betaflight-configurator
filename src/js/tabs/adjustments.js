@@ -1,5 +1,6 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
+import { mspHelper } from '../msp/MSPHelper';
 
 const adjustments = {};
 

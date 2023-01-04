@@ -1,4 +1,6 @@
-'use strict';
+import Features from "./Features";
+import Beepers from "./Beepers";
+import FC from "./fc";
 
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware
@@ -215,3 +217,5 @@ const VirtualFC = {
         };
     },
 };
+
+export default VirtualFC;

@@ -1,4 +1,5 @@
-'use strict';
+import MspHelper from "./MSPHelper";
+import { read_serial } from "../serial_backend";
 
 const MSPConnectorImpl = function () {
     this.baud = undefined;
@@ -74,3 +75,5 @@ MSPConnectorImpl.prototype.disconnect = function(onDisconnectCallback) {
 
     MSP.disconnect_cleanup();
 };
+
+export default MSPConnectorImpl;

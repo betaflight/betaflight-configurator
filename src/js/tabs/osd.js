@@ -1,6 +1,9 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
 import { tracking } from "../Analytics";
+import { bit_check } from "../serial_backend";
+import VirtualFC from "../VirtualFC";
+import FC from "../fc";
 
 const FONT = {};
 const SYM = {};

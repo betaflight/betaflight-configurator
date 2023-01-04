@@ -4,6 +4,11 @@ import GUI from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 import ReleaseChecker from './release_checker.js';
 import { tracking, createAnalytics } from './Analytics.js';
+import { initializeSerialBackend } from './serial_backend.js';
+// Currently fc is everywhere, so we need to import it here
+// till all is in modules
+import './fc.js';
+import './msp/MSPHelper.js';
 
 $(document).ready(function () {
 

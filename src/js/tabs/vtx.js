@@ -2,6 +2,8 @@ import { i18n } from "../localization";
 import Clipboard from "../Clipboard";
 import GUI from '../gui';
 import { tracking } from "../Analytics";
+import { mspHelper } from "../msp/MSPHelper";
+import FC from '../fc';
 
 const vtx = {
     supported: false,
