@@ -1,6 +1,4 @@
-'use strict';
-
-class PickedPreset
+export default class PickedPreset
 {
     constructor(preset, presetCli)
     {

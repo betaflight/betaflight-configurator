@@ -1,6 +1,6 @@
-'use strict';
+import PresetsRepoIndexed from "./PresetsRepoIndexed";
 
-class PresetsGithubRepo extends PresetsRepoIndexed {
+export default class PresetsGithubRepo extends PresetsRepoIndexed {
     constructor(urlRepo, branch) {
         let correctUrlRepo = urlRepo.trim();
 

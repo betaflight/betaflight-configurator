@@ -1,6 +1,9 @@
-'use strict';
+import GUI from "../../../js/gui";
+import { i18n } from "../../../js/localization";
+import PickedPreset from "../PickedPreset";
+import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
 
-class PresetsDetailedDialog {
+export default class PresetsDetailedDialog {
     constructor(domDialog, pickedPresetList, onPresetPickedCallback, favoritePresets) {
         this._domDialog = domDialog;
         this._pickedPresetList = pickedPresetList;

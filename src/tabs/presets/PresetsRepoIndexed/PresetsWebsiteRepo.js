@@ -1,6 +1,6 @@
-'use strict';
+import PresetsRepoIndexed from "./PresetsRepoIndexed";
 
-class PresetsWebsiteRepo extends PresetsRepoIndexed {
+export default class PresetsWebsiteRepo extends PresetsRepoIndexed {
     constructor(url) {
         let correctUrl = url.trim();
 

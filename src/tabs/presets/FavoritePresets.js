@@ -1,3 +1,4 @@
+import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 
 const s_maxFavoritePresetsCount = 50;
 const s_favoritePresetsListConfigStorageName = "FavoritePresetsList";
@@ -25,7 +26,7 @@ class FavoritePresetsData {
 
     loadFromStorage() {
         this._favoritePresetsList = [];
-        const obj = ConfigStorage.get(s_favoritePresetsListConfigStorageName);
+        const obj = getConfig(s_favoritePresetsListConfigStorageName);
 
         if (obj[s_favoritePresetsListConfigStorageName]) {
             this._favoritePresetsList = obj[s_favoritePresetsListConfigStorageName];
@@ -35,7 +36,7 @@ class FavoritePresetsData {
     saveToStorage() {
         const obj = {};
         obj[s_favoritePresetsListConfigStorageName] = this._favoritePresetsList;
-        ConfigStorage.set(obj);
+        setConfig(obj);
     }
 
     add(presetPath) {

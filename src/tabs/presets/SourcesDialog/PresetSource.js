@@ -1,6 +1,4 @@
-'use strict';
-
-class PresetSource {
+export default class PresetSource {
     constructor(name, url, gitHubBranch = "") {
         this.name = name;
         this.url = url;

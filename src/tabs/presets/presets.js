@@ -1,7 +1,16 @@
 import GUI from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
+import { i18n } from '../../js/localization';
 
 import { favoritePresets } from './FavoritePresets';
+import CliEngine from './CliEngine';
+import PickedPreset from './PickedPreset';
+import PresetsDetailedDialog from './DetailedDialog/PresetsDetailedDialog';
+import PresetsGithubRepo from './PresetsRepoIndexed/PresetsGithubRepo';
+import PresetsWebsiteRepo from './PresetsRepoIndexed/PresetsWebsiteRepo';
+import PresetTitlePanel from './TitlePanel/PresetTitlePanel';
+import PresetsSourcesDialog from './SourcesDialog/SourcesDialog';
+import PresetSource from './SourcesDialog/PresetSource';
 
 const presets = {
     presetsRepo: null,
