@@ -2,7 +2,7 @@ import { i18n } from '../localization';
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { get as getStorage, set as setStorage } from '../SessionStorage';
-import BuildApi from '../build_api';
+import BuildApi from '../BuildApi';
 
 const firmware_flasher = {
     targets: null,
