@@ -6,7 +6,7 @@ import ReleaseLoader from '../release_loader';
 
 const firmware_flasher = {
     targets: null,
-    releaseLoader: new ReleaseLoader('https://build.betaflight.com'),
+    releaseLoader: new BuildApi(),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
     boardNeedsVerification: false,

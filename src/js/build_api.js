@@ -2,10 +2,10 @@ import GUI from "./gui";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 
-export default class ReleaseLoader {
+class BuildApi {
 
-    constructor (url) {
-        this._url = url;
+    constructor () {
+        this._url = 'https://build.betaflight.com';
         this._cacheExpirationPeriod = 3600 * 1000;
     }
 
@@ -29,8 +29,6 @@ export default class ReleaseLoader {
 
         if (!cachedData || !cachedLastUpdate || dataTimestamp - cachedLastUpdate > this._cacheExpirationPeriod) {
             $.get(url, function (info) {
-                GUI.log(i18n.getMessage('buildServerLoaded', [url]));
-
                 // cache loaded info
                 const object = {};
                 object[dataTag] = info;
@@ -38,7 +36,7 @@ export default class ReleaseLoader {
                 setStorage(object);
                 onSuccess(info);
             }).fail(xhr => {
-                GUI.log(i18n.getMessage('buildServerLoadFailed', [url, `HTTP ${xhr.status}`]));
+                GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
                 if (onFailure !== undefined) {
                     onFailure();
                 } else {
@@ -75,7 +73,41 @@ export default class ReleaseLoader {
             GUI.log(i18n.getMessage('buildServerLoaded', [path]));
             onSuccess(data);
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerLoadFailed', [path, `HTTP ${xhr.status}`]));
+            GUI.log(i18n.getMessage('buildServerFailure', [path, `HTTP ${xhr.status}`]));
+            if (onFailure !== undefined) {
+                onFailure();
+            }
+        });
+    }
+
+    getSupportCommands(onSuccess, onFailure) {
+
+        const url = `${this._url}/api/support/commands`;
+        $.get(url, function (data) {
+            onSuccess(data);
+        }).fail(xhr => {
+            GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+            if (onFailure !== undefined) {
+                onFailure();
+            }
+        });
+    }
+
+    submitSupportData(data, onSuccess, onFailure) {
+
+        const url = `${this._url}/api/support`;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: data,
+            contentType: "text/plain",
+            dataType: "text",
+
+            success: function(response) {
+                onSuccess(response);
+            },
+        }).fail(xhr => {
+            GUI.log(i18n.getMessage('buildServerFailure', [`HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -92,11 +124,11 @@ export default class ReleaseLoader {
             contentType: "application/json",
             dataType: "json",
 
-            success: function(data) {
-                onSuccess(data);
+            success: function(response) {
+                onSuccess(response);
             },
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerLoadFailed', [url, `HTTP ${xhr.status}`]));
+            GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -107,10 +139,10 @@ export default class ReleaseLoader {
 
         const url = `${this._url}/api/builds/${key}/status`;
         $.get(url, function (data) {
-            GUI.log(i18n.getMessage('buildServerLoaded', [url]));
+            GUI.log(i18n.getMessage('buildServerSuccess', [url]));
             onSuccess(data);
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerLoadFailed', [url, `HTTP ${xhr.status}`]));
+            GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }

@@ -77,6 +77,9 @@
     "cancel": {
         "message": "Cancel"
     },
+    "submit": {
+        "message": "Submit"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
     },
@@ -533,14 +536,23 @@
         "message" : "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
-        "message" : "Loaded builds information for $1 from build server."
+    "buildServerSuccess": {
+        "message" : "Success: $1"
     },
-    "buildServerLoadFailed": {
-        "message" : "<b>Build server query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
+    "buildServerFailure": {
+        "message" : "<b>Build server failure: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message" : "Using cached builds information for $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Support data submitted *** <br>Id: $1<br><br><br># copy ID and provide to the betaflight team."
+    },
+    "supportWarningDialogTitle": {
+        "message": "Confirm Data Submission"
+    },
+    "supportWarningDialogText": {
+        "message": "Please confirm data submission to the Betaflight team.<br><br>This process will run some commands and submit the output to the build server.<br><br>You will then be provided a unique identifier for your data submission.<br><br>Please ensure you provide this unique identifier to the Betaflight team when using Discord or opening an issues on Github."
     },
     "releaseCheckLoaded": {
         "message" : "Loaded release information for $1 from GitHub."
@@ -2884,6 +2896,9 @@
     },
     "cliLoadFromFileBtn": {
         "message": "Load from file"
+    },
+    "cliSupportRequestBtn": {
+        "message": "Submit Support Data"
     },
     "cliConfirmSnippetDialogTitle": {
         "message": "Loaded file <strong>{{fileName}}</strong>. Review the loaded commands"
