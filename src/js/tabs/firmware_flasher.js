@@ -2,11 +2,11 @@ import { i18n } from '../localization';
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { get as getStorage, set as setStorage } from '../SessionStorage';
-import ReleaseLoader from '../release_loader';
+import BuildApi from '../BuildApi';
 
 const firmware_flasher = {
     targets: null,
-    releaseLoader: new ReleaseLoader('https://build.betaflight.com'),
+    releaseLoader: new BuildApi(),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
     boardNeedsVerification: false,

@@ -1,6 +1,7 @@
 import { i18n } from "../localization";
 import Clipboard from "../Clipboard";
 import GUI from '../gui';
+import BuildApi from '../BuildApi';
 
 const cli = {
     lineDelayMs: 15,
@@ -13,6 +14,7 @@ const cli = {
         copyButton: null,
         windowWrapper: null,
     },
+    lastArrival: 0,
 };
 
 function removePromptHash(promptText) {
@@ -89,11 +91,16 @@ cli.initialize = function (callback) {
 
     const enterKeyCode = 13;
 
+    function clearHistory() {
+        self.outputHistory = "";
+        self.GUI.windowWrapper.empty();
+    }
+
     function executeCommands(outString) {
         self.history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-        Promise.reduce(outputArray, function(delay, line, index) {
+        return Promise.reduce(outputArray, function(delay, line, index) {
             return new Promise(function (resolve) {
                 GUI.timeout_add('CLI_send_slowly', function () {
                     let processingDelay = self.lineDelayMs;
@@ -181,8 +188,7 @@ cli.initialize = function (callback) {
         });
 
         $('.tab-cli .clear').click(function() {
-            self.outputHistory = "";
-            self.GUI.windowWrapper.empty();
+            clearHistory();
         });
 
         if (Clipboard.available) {
@@ -245,6 +251,38 @@ cli.initialize = function (callback) {
                     reader.readAsText(file);
                 });
             });
+        });
+
+        $('.tab-cli .support').click(function() {
+
+            function submitSupportData() {
+                clearHistory();
+                const api = new BuildApi();
+                api.getSupportCommands((commands) => {
+                    executeCommands(commands.join('\n')).then(() => {
+                        const delay = setInterval(() => {
+                            const time = new Date().getTime();
+                            if (self.lastArrival < time - 250) {
+                                clearInterval(delay);
+                                const text = self.outputHistory;
+                                api.submitSupportData(text, (key) => {
+                                    writeToOutput(i18n.getMessage('buildServerSupportRequestSubmission', [key]));
+                                });
+                            }
+                        }, 250);
+                    });
+                });
+            }
+
+            const dialogSettings = {
+                title: i18n.getMessage("supportWarningDialogTitle"),
+                text: i18n.getMessage("supportWarningDialogText"),
+                buttonYesText: i18n.getMessage("submit"),
+                buttonNoText: i18n.getMessage("cancel"),
+                buttonYesCallback: submitSupportData,
+            };
+
+            GUI.showYesNoDialog(dialogSettings);
         });
 
         // Tab key detection must be on keydown,
@@ -463,6 +501,8 @@ cli.read = function (readInfo) {
         }
 
     }
+
+    this.lastArrival = new Date().getTime();
 
     if (!CONFIGURATOR.cliValid && validateText.indexOf('CLI') !== -1) {
         GUI.log(i18n.getMessage('cliEnter'));
