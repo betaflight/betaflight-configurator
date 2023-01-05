@@ -249,6 +249,9 @@ failsafe.initialize = function (callback) {
                 break;
         }
 
+        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+        $('#failsafeSwitchSelect').sortSelect();
+
         // `failsafe_kill_switch` has been renamed to `failsafe_switch_mode`.
         // It is backwards compatible with `failsafe_kill_switch`
         $('select[name="failsafe_switch_mode"]').val(FC.FAILSAFE_CONFIG.failsafe_switch_mode);
@@ -265,7 +268,12 @@ failsafe.initialize = function (callback) {
         $('input[name="gps_rescue_throttle_max"]').val(FC.GPS_RESCUE.throttleMax);
         $('input[name="gps_rescue_throttle_hover"]').val(FC.GPS_RESCUE.throttleHover);
         $('input[name="gps_rescue_min_sats"]').val(FC.GPS_RESCUE.minSats);
+        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+        $('#failsafeGpsRescueItemSanitySelect').sortSelect();
         $('select[name="gps_rescue_sanity_checks"]').val(FC.GPS_RESCUE.sanityChecks);
+
+        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+        $('#failsafeGpsRescueItemAltitudeSelect').sortSelect();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             $('input[name="gps_rescue_ascend_rate"]').val((FC.GPS_RESCUE.ascendRate / 100).toFixed(2));

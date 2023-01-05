@@ -47,7 +47,7 @@
                     <div class="spacer_box">
                         <div class="number">
                             <label>
-                                <select class="switchMode" name="failsafe_switch_mode">
+                                <select id="failsafeSwitchSelect" class="switchMode" name="failsafe_switch_mode">
                                     <option value="0" i18n="failsafeSwitchOptionStage1"></option>
                                     <option value="2" i18n="failsafeSwitchOptionStage2"></option>
                                     <option value="1" i18n="failsafeSwitchOptionKill"></option>
@@ -181,7 +181,7 @@
                                 </div>
                                 <div class="number">
                                     <label>
-                                        <select class="switchMode" name="gps_rescue_altitude_mode">
+                                        <select id="failsafeGpsRescueItemAltitudeSelect" class="switchMode" name="gps_rescue_altitude_mode">
                                             <option value="0" i18n="failsafeGpsRescueItemAltitudeModeMaxAlt"></option>
                                             <option value="1" i18n="failsafeGpsRescueItemAltitudeModeFixedAlt"></option>
                                             <option value="2" i18n="failsafeGpsRescueItemAltitudeModeCurrentAlt"></option>
@@ -191,7 +191,7 @@
                                 </div>
                                 <div class="number">
                                     <label>
-                                        <select class="switchMode" name="gps_rescue_sanity_checks">
+                                        <select id="failsafeGpsRescueItemSanitySelect" class="switchMode" name="gps_rescue_sanity_checks">
                                             <option value="0" i18n="failsafeGpsRescueItemSanityChecksOff"></option>
                                             <option value="1" i18n="failsafeGpsRescueItemSanityChecksOn"></option>
                                             <option value="2" i18n="failsafeGpsRescueItemSanityChecksFSOnly"></option>
