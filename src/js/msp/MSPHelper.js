@@ -650,7 +650,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.uid[0] = data.readU32();
                 FC.CONFIG.uid[1] = data.readU32();
                 FC.CONFIG.uid[2] = data.readU32();
-                FC.CONFIG.deviceIdentifier = FC.CONFIG.uid[0].toString(16) + FC.CONFIG.uid[1].toString(16) + FC.CONFIG.uid[2].toString(16);
+                FC.CONFIG.uniqueDeviceIdentifier = FC.CONFIG.uid[0].toString(16) + FC.CONFIG.uid[1].toString(16) + FC.CONFIG.uid[2].toString(16);
                 break;
             case MSPCodes.MSP_ACC_TRIM:
                 FC.CONFIG.accelerometerTrims[0] = data.read16(); // pitch
