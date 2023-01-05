@@ -1,4 +1,5 @@
-'use strict';
+import EscDshotCommandQueue from './EscDshotCommandQueue.js';
+import DshotCommand from '../../js/utils/DshotCommand.js';
 
 class EscDshotDirectionMotorDriver
 {
@@ -153,3 +154,5 @@ class EscDshotDirectionMotorDriver
     }
 
 }
+
+export default EscDshotDirectionMotorDriver;

@@ -3,6 +3,7 @@ import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import MotorOutputReorderConfig from "../../components/MotorOutputReordering/MotorOutputReorderingConfig";
 import MotorOutputReorderComponent from "../../components/MotorOutputReordering/MotorOutputReorderingComponent";
+import EscDshotDirectionComponent from "../../components/EscDshotDirection/EscDshotDirectionComponent";
 
 const motors = {
     previousDshotBidir: null,

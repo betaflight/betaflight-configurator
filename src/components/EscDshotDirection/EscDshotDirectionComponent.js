@@ -1,4 +1,8 @@
-'use strict';
+import { i18n } from "../../js/localization.js";
+import GUI from "../../js/gui.js";
+import semver from "semver";
+import EscDshotDirectionMotorDriver from "./EscDshotDirectionMotorDriver.js";
+import DshotCommand from "../../js/utils/DshotCommand.js";
 
 class EscDshotDirectionComponent
 {
@@ -398,3 +402,5 @@ class EscDshotDirectionComponent
     }
 
 }
+
+export default EscDshotDirectionComponent;

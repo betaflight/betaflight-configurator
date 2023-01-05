@@ -1,5 +1,3 @@
-'use strict';
-
 class EscDshotCommandQueue
 {
     constructor (intervalMs)
@@ -65,3 +63,5 @@ class EscDshotCommandQueue
         }
     }
 }
+
+export default EscDshotCommandQueue;
