@@ -1,7 +1,3 @@
-'use strict';
-
-const ConfigInserter = function () {
-};
 
 const CUSTOM_DEFAULTS_POINTER_ADDRESS = 0x08002800;
 const BLOCK_SIZE = 16384;
@@ -87,21 +83,24 @@ function generateData(firmware, input, startAddress) {
 
 const CONFIG_LABEL = `Custom defaults inserted in`;
 
-ConfigInserter.prototype.insertConfig = function (firmware, config) {
-    console.time(CONFIG_LABEL);
+export default class ConfigInserter {
 
-    const input = `# Betaflight\n${config}\0`;
-    const customDefaultsArea = getCustomDefaultsArea(firmware);
+    insertConfig(firmware, config) {
+        console.time(CONFIG_LABEL);
 
-    if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress === 0) {
-        return false;
-    } else if (input.length >= customDefaultsArea.endAddress - customDefaultsArea.startAddress) {
-        throw new Error(`Custom defaults area too small (${customDefaultsArea.endAddress - customDefaultsArea.startAddress} bytes), ${input.length + 1} bytes needed.`);
+        const input = `# Betaflight\n${config}\0`;
+        const customDefaultsArea = getCustomDefaultsArea(firmware);
+
+        if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress === 0) {
+            return false;
+        } else if (input.length >= customDefaultsArea.endAddress - customDefaultsArea.startAddress) {
+            throw new Error(`Custom defaults area too small (${customDefaultsArea.endAddress - customDefaultsArea.startAddress} bytes), ${input.length + 1} bytes needed.`);
+        }
+
+        generateData(firmware, input, customDefaultsArea.startAddress);
+
+        console.timeEnd(CONFIG_LABEL);
+
+        return true;
     }
-
-    generateData(firmware, input, customDefaultsArea.startAddress);
-
-    console.timeEnd(CONFIG_LABEL);
-
-    return true;
-};
+}

@@ -3,6 +3,7 @@ import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { get as getStorage, set as setStorage } from '../SessionStorage';
 import BuildApi from '../BuildApi';
+import ConfigInserter from "../ConfigInserter.js";
 
 const firmware_flasher = {
     targets: null,
