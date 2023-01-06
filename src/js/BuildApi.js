@@ -70,7 +70,7 @@ export default class BuildApi {
 
         const url = `${this._url}${path}`;
         $.get(url, function (data) {
-            GUI.log(i18n.getMessage('buildServerLoaded', [path]));
+            GUI.log(i18n.getMessage('buildServerSuccess', [path]));
             onSuccess(data);
         }).fail(xhr => {
             GUI.log(i18n.getMessage('buildServerFailure', [path, `HTTP ${xhr.status}`]));

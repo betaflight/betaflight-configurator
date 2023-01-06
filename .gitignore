@@ -32,3 +32,4 @@ nbproject/
 .project
 .settings/
 test-results-junit/
+/src/package.json
