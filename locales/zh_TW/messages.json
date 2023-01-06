@@ -406,10 +406,10 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>加速度計已啟用，但未進行校準</strong>。<br>如果您計劃使用加速度計，請遵循 \"$t(tabSetup.message)\" 頁面中的 \"$t(initialSetupButtonCalibrateAccel.message)\" 操作指南。如果開啟了任何需要調用加速度計的功能 (例如自穩模式, GPS 救援, …)，在加速度計完成校準之间將無法解鎖。<br>如果您並不計劃使用加速度計，建議您在 \"$t(tabConfiguration.message)\" 頁面中通過 \"$t(configurationSystem.message)\" 禁用加速度計。"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "已從生成服務器加載 $1 的生成訊息。"
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>從生成服務器獲取 $1 發佈版本失敗，使用已緩存的訊息。失敗原因：<code>$2</code></b>"
     },
     "buildServerUsingCached": {

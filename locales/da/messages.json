@@ -451,10 +451,10 @@
         "message": "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "Indlæst release information for $1 fra cloud server."
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>GitHub-forespørgsel for $1-udgivelse mislykkedes, benytter cache-information. Årsag: <code>$2</code></b>"
     },
     "buildServerUsingCached": {

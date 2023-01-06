@@ -459,10 +459,10 @@
         "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "Versions carregades per $1 des del servidor de versions."
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b> La consulta del servidor de creació de llançaments de $1 ha fallat mitjançant la informació de la memòria cau. Motiu: <code>$2</code> </b>"
     },
     "buildServerUsingCached": {

@@ -412,10 +412,10 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu</strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "Bertsioaren informazioa $1 -rentzat bertsio zerbidoreetatik kargatuta."
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>$1 bertsioen zerbitzariaren kontsultak huts egin du, cachean oinarritutako informazioa erabiliz. Arrazoia: <code>$2</code></b>"
     },
     "buildServerUsingCached": {

@@ -448,10 +448,10 @@
         "message": "配置程序: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "已从生成服务器加载 $1 的生成信息。"
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>从生成服务器获取 $1 发布版本失败，使用已缓存的信息。 失败原因：<code>$2</code></b>"
     },
     "buildServerUsingCached": {

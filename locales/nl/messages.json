@@ -447,10 +447,10 @@
         "message": "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "Build informatie geladen voor $1 van build server."
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>Serverquery voor $1 releases mislukt, overgegaan op cache informatie. Reden: <code>$2</code></b>"
     },
     "buildServerUsingCached": {
