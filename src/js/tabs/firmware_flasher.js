@@ -90,7 +90,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function setBoardConfig(config, filename) {
-            self.config = config;
+            self.config = config.join('\n');
             self.isConfigLocal = filename !== undefined;
             self.configFilename = filename !== undefined ? filename : null;
         }
@@ -271,18 +271,18 @@ firmware_flasher.initialize = function (callback) {
 
             const target = $('select[name="board"] option:selected').val();
 
-            function onTargetDetail(summary) {
-                self.summary = summary;
+            function onTargetDetail(response) {
+                self.targetDetail = response;
 
-                if (summary.cloudBuild === true) {
+                if (response.cloudBuild === true) {
                     $('div.build_configuration').slideDown();
 
                     const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
                     if (expertMode) {
                         $('div.expertOptions').show();
 
-                        if (summary.releaseType === 'Unstable') {
-                            self.releaseLoader.loadCommits(summary.release, (commits) => {
+                        if (response.releaseType === 'Unstable') {
+                            self.releaseLoader.loadCommits(response.release, (commits) => {
                                 const select_e = $('select[name="commits"]');
                                 select_e.empty();
                                 commits.forEach((commit) => {
@@ -299,8 +299,8 @@ firmware_flasher.initialize = function (callback) {
                     }
                 }
 
-                if (summary.configuration && !self.isConfigLocal) {
-                    setBoardConfig(summary.configuration.join('\n'));
+                if (response.configuration && !self.isConfigLocal) {
+                    setBoardConfig(response.configuration);
                 }
 
                 $("a.load_remote_file").removeClass('disabled');
@@ -424,7 +424,7 @@ firmware_flasher.initialize = function (callback) {
         function cleanUnifiedConfigFile(input) {
             let output = [];
             let inComment = false;
-            for (let i=0; i < input.length; i++) {
+            for (let i = 0; i < input.length; i++) {
                 if (input.charAt(i) === "\n" || input.charAt(i) === "\r") {
                     inComment = false;
                 }
@@ -445,7 +445,7 @@ firmware_flasher.initialize = function (callback) {
                     output.push(input.charAt(i));
                 }
             }
-            return output.join('');
+            return output.join('').split('\n');
         }
 
         const portPickerElement = $('div#port-picker #port');
@@ -779,10 +779,23 @@ firmware_flasher.initialize = function (callback) {
                 $('.buildProgress').val(val);
             }
 
-            function requestCloudBuild(summary) {
+            function processBuildStatus(response, statusResponse, retries) {
+                if (statusResponse.status === 'success') {
+                    updateStatus(retries <= 0 ? 'SuccessCached' : "Success", response.key, 100, true);
+                    if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
+                        setBoardConfig(statusResponse.configuration);
+                    }
+                    self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
+                } else {
+                    updateStatus(retries > 10 ? 'TimedOut' : "Failed", response.key, 0, true);
+                    onLoadFailed();
+                }
+            }
+
+            function requestCloudBuild(targetDetail) {
                 let request = {
-                    target: summary.target,
-                    release: summary.release,
+                    target: targetDetail.target,
+                    release: targetDetail.release,
                     options: [],
                     classicBuild: false,
                     client: {
@@ -790,7 +803,7 @@ firmware_flasher.initialize = function (callback) {
                     },
                 };
 
-                request.classicBuild = !summary.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
+                request.classicBuild = !targetDetail.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
                 if (!request.classicBuild) {
                     $('select[name="radioProtocols"] option:selected').each(function () {
                         request.options.push($(this).val());
@@ -809,7 +822,7 @@ firmware_flasher.initialize = function (callback) {
                     });
 
                     if ($('input[name="expertModeCheckbox"]').is(':checked')) {
-                        if (summary.releaseType === "Unstable") {
+                        if (targetDetail.releaseType === "Unstable") {
                             request.commit = $('select[name="commits"] option:selected').val();
                         }
 
@@ -824,9 +837,9 @@ firmware_flasher.initialize = function (callback) {
                     console.info("Build response:", response);
 
                     // Complete the summary object to be used later
-                    summary.file = response.file;
+                    self.targetDetail.file = response.file;
 
-                    if (!summary.cloudBuild) {
+                    if (!targetDetail.cloudBuild) {
                         // it is a previous release, so simply load the hex
                         self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
                         return;
@@ -834,35 +847,18 @@ firmware_flasher.initialize = function (callback) {
 
                     updateStatus('Pending', response.key, 0, false);
                     let retries = 1;
-                    self.releaseLoader.requestBuildStatus(response.key, (status) => {
-                        if (status.status !== "queued") {
+                    self.releaseLoader.requestBuildStatus(response.key, (statusResponse) => {
+                        if (statusResponse.status !== "queued") {
                             // will be cached already, no need to wait.
-                            if (status.status === 'success') {
-                                updateStatus('SuccessCached', response.key, 100, true);
-                                $('.buildProgress').val(100);
-                                self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
-                            } else {
-                                updateStatus('Failed', response.key, 0, true);
-                                onLoadFailed();
-                            }
+                            processBuildStatus(response, statusResponse, 0);
                             return;
                         }
 
                         const timer = setInterval(() => {
-                            self.releaseLoader.requestBuildStatus(response.key, (status) => {
-                                if (status.status !== 'queued' || retries > 10) {
+                            self.releaseLoader.requestBuildStatus(response.key, (statusResponse) => {
+                                if (statusResponse.status !== 'queued' || retries > 10) {
                                     clearInterval(timer);
-                                    if (status.status === 'success') {
-                                        updateStatus('Success', response.key, 100, true);
-                                        self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
-                                    } else {
-                                        if (retries > 10) {
-                                            updateStatus('TimedOut', response.key, 0, true);
-                                        } else {
-                                            updateStatus('Failed', response.key, 0, true);
-                                        }
-                                        onLoadFailed();
-                                    }
+                                    processBuildStatus(response, statusResponse, retries);
                                     return;
                                 }
 
@@ -874,13 +870,13 @@ firmware_flasher.initialize = function (callback) {
                 }, onLoadFailed);
             }
 
-            if (self.summary) { // undefined while list is loading or while running offline
+            if (self.targetDetail) { // undefined while list is loading or while running offline
                 $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonDownloading'));
                 $("a.load_remote_file").addClass('disabled');
 
-                showReleaseNotes(self.summary);
+                showReleaseNotes(self.targetDetail);
 
-                requestCloudBuild(self.summary);
+                requestCloudBuild(self.targetDetail);
             } else {
                 $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');
                 i18n.localizePage();
@@ -1021,7 +1017,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         $('span.progressLabel').on('click', 'a.save_firmware', function () {
-            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: self.summary.file, accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
+            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: self.targetDetail.file, accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
                 if (checkChromeRuntimeError()) {
                     return;
                 }
