@@ -7,6 +7,7 @@
     <link type="text/css" rel="stylesheet" href="./js/libraries/jquery.nouislider.min.css"/>
     <link type="text/css" rel="stylesheet" href="./js/libraries/jquery.nouislider.pips.min.css"/>
     <link type="text/css" rel="stylesheet" href="./js/libraries/flightindicators.css"/>
+    <link type="text/css" rel="stylesheet" href="./css/theme.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/main.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/static_tab.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/landing.css" media="all"/>
@@ -184,12 +185,15 @@
         </div>
         <div class="header-wrapper">
             <div id="quad-status_wrapper">
-                <div class="battery-icon">
-                    <div class="quad-status-contents">
-                        <div class="battery-status"></div>
-                    </div>
-                </div>
-                <battery-legend
+                <battery-icon
+                    :voltage="FC.ANALOG.voltage"
+                    :vbatmincellvoltage="FC.BATTERY_CONFIG.vbatmincellvoltage"
+                    :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
+                    :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
+                    :batteryState="FC.BATTERY_STATE?.batteryState"
+                >
+                </battery-icon>
+                <battery-legend 
                     :voltage="FC.ANALOG.voltage"
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
                 ></battery-legend>

@@ -50,7 +50,7 @@ export const decorators = [
     template: `
     <div style="margin: 1rem;">
       <link rel="stylesheet" href="/css/opensans_webfontkit/fonts.css" />
-      <link rel="stylesheet" href="/css/main.css" />
+      <link rel="stylesheet" href="/css/theme.css" />
       <story />
     </div>
 `,

@@ -659,10 +659,6 @@ async function getStatus() {
 async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
-    $(".quad-status-contents").css({
-       display: 'inline-block',
-    });
-
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
         await getStatus();

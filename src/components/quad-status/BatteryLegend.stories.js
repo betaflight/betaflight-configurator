@@ -1,8 +1,8 @@
-import BatteryLegend from './BatteryLegend.vue';
+import BatteryLegend from "./BatteryLegend.vue";
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Battery Legend',
+  title: "Battery Legend",
   component: BatteryLegend,
 };
 
