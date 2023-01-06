@@ -419,10 +419,10 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "Załadowano informacje o kompilacji $1 z serwera."
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>Zapytanie do GitHub'a dla wersji $1 nie udało się. Zostaną użyte zapamiętane wcześniej informacje. Powód: <code>$2</code></b>"
     },
     "buildServerUsingCached": {

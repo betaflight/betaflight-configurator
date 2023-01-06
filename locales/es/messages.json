@@ -451,10 +451,10 @@
         "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "Cargada información de compilaciones para $1 desde el servidor."
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>No se pudo hacer la petición al servidor de compilaciones para la versión $1, usando información en caché. Razón: <code>$2</code></b>"
     },
     "buildServerUsingCached": {

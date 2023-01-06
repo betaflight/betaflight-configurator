@@ -451,10 +451,10 @@
         "message": "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "ビルドサーバの $1 より開発情報をロードしました。"
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>サーバからの $1 リリース情報の読み込みに失敗した為、キャッシュ情報を使用します。理由：<code>$2</code></b>"
     },
     "buildServerUsingCached": {

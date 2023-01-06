@@ -451,10 +451,10 @@
         "message": "컨피규레이터: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "buildServerLoaded": {
+    "BuildServerSuccess": {
         "message": "빌드 서버로부터 $1에 대한 빌드 정보가 로드되었습니다."
     },
-    "buildServerLoadFailed": {
+    "BuildServerFailure": {
         "message": "<b>$1 릴리즈에 대한 빌드 서버 쿼리 실패, 캐시된 정보를 사용합니다. 이유: <code>$2</code></b>"
     },
     "buildServerUsingCached": {
