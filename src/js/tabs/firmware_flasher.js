@@ -113,6 +113,7 @@ firmware_flasher.initialize = function (callback) {
                 self.parsed_hex = data;
 
                 if (self.parsed_hex) {
+                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, self.parsed_hex.bytes_total);
                     showLoadedHex(key);
                 } else {
                     self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
@@ -245,6 +246,8 @@ firmware_flasher.initialize = function (callback) {
         i18n.localizePage();
 
         buildType_e.change(function() {
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, $('option:selected', this).text());
+
             $("a.load_remote_file").addClass('disabled');
             const build_type = $(this).val();
 
@@ -463,9 +466,13 @@ firmware_flasher.initialize = function (callback) {
         function flashFirmware(firmware) {
             const options = {};
 
+            let eraseAll = false;
             if ($('input.erase_chip').is(':checked')) {
                 options.erase_chip = true;
+
+                eraseAll = true;
             }
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_ERASE_ALL, eraseAll.toString());
 
             if (!$('option:selected', portPickerElement).data().isDFU) {
                 if (String(portPickerElement.val()) !== '0') {
@@ -482,12 +489,16 @@ firmware_flasher.initialize = function (callback) {
                         baud = parseInt($('#flash_manual_baud_rate').val());
                     }
 
+                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'Flashing', self.fileName || null);
+
                     STM32.connect(port, baud, firmware, options);
                 } else {
                     console.log('Please select valid serial port');
                     GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             } else {
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'Flashing', self.fileName || null);
+
                 STM32DFU.connect(usbDevices, firmware, options);
             }
         }
@@ -690,6 +701,9 @@ firmware_flasher.initialize = function (callback) {
             self.enableFlashing(false);
             self.developmentFirmwareLoaded = false;
 
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, undefined);
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'file');
+
             chrome.fileSystem.chooseEntry({
                 type: 'openFile',
                 accepts: [
@@ -711,6 +725,7 @@ firmware_flasher.initialize = function (callback) {
                     console.log('Loading file from:', path);
 
                     fileEntry.file(function (file) {
+                        analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, file.name);
                         const reader = new FileReader();
 
                         reader.onloadend = function(e) {
@@ -724,6 +739,7 @@ firmware_flasher.initialize = function (callback) {
                                         self.parsed_hex = data;
 
                                         if (self.parsed_hex) {
+                                            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, self.parsed_hex.bytes_total);
                                             self.localFirmwareLoaded = true;
 
                                             showLoadedHex(file.name);
@@ -769,6 +785,8 @@ firmware_flasher.initialize = function (callback) {
             self.enableFlashing(false);
             self.localFirmwareLoaded = false;
             self.developmentFirmwareLoaded = buildTypesToShow[$('select[name="build_type"]').val()].tag === 'firmwareFlasherOptionLabelBuildTypeDevelopment';
+
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'http');
 
             if ($('select[name="firmware_version"]').val() === "0") {
                 GUI.log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
@@ -856,7 +874,10 @@ firmware_flasher.initialize = function (callback) {
                         return;
                     }
 
+                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, response.file);
+
                     updateStatus('Pending', response.key, 0, false);
+
                     let retries = 1;
                     self.releaseLoader.requestBuildStatus(response.key, (statusResponse) => {
                         if (statusResponse.status !== "queued") {
@@ -900,6 +921,7 @@ firmware_flasher.initialize = function (callback) {
             if (!exitDfuElement.hasClass('disabled')) {
                 exitDfuElement.addClass("disabled");
                 if (!GUI.connect_lock) { // button disabled while flashing is in progress
+                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
                     try {
                         console.log('Closing DFU');
                         STM32DFU.connect(usbDevices, self.parsed_hex, { exitDfu: true });
@@ -1053,7 +1075,11 @@ firmware_flasher.initialize = function (callback) {
                                         // onwriteend will be fired again when truncation is finished
                                         truncated = true;
                                         writer.truncate(blob.size);
+
+                                        return;
                                     }
+
+                                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'SaveFirmware', path);
                                 };
 
                                 writer.write(blob);
@@ -1130,6 +1156,8 @@ firmware_flasher.cleanup = function (callback) {
     // Update Firmware button at top
     $('div#flashbutton a.flash_state').removeClass('active');
     $('div#flashbutton a.flash').removeClass('active');
+
+    analytics.resetFirmwareData();
 
     if (callback) callback();
 };

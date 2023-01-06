@@ -8,7 +8,9 @@ const setup = {
 setup.initialize = function (callback) {
     const self = this;
 
-    GUI.active_tab = 'setup';
+    if (GUI.active_tab != 'setup') {
+        GUI.active_tab = 'setup';
+    }
 
     function load_status() {
         MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_mixer_config);

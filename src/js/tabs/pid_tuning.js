@@ -17,6 +17,7 @@ const pid_tuning = {
     SETPOINT_WEIGHT_RANGE_HIGH: 20,
     SETPOINT_WEIGHT_RANGE_LEGACY: 2.54,
     activeSubtab: 'pid',
+    analyticsChanges: {},
 
     CONFIGURATOR_PIDS: [],
     CONFIGURATOR_ADVANCED_TUNING: {},
@@ -1111,7 +1112,15 @@ pid_tuning.initialize = function (callback) {
         FC.FILTER_CONFIG.yaw_lowpass_hz = parseInt($('.pid_filter input[name="yawLowpassFrequency"]').val());
 
         if (vbatpidcompensationIsUsed) {
-            FC.ADVANCED_TUNING.vbatPidCompensation = $('input[id="vbatpidcompensation"]').is(':checked') ? 1 : 0;
+            const element = $('input[id="vbatpidcompensation"]');
+            const value = element.is(':checked') ? 1 : 0;
+            let analyticsValue = undefined;
+            if (value !== FC.ADVANCED_TUNING.vbatPidCompensation) {
+                analyticsValue = element.is(':checked');
+            }
+            self.analyticsChanges['VbatPidCompensation'] = analyticsValue;
+
+            FC.ADVANCED_TUNING.vbatPidCompensation = value;
         }
 
         FC.ADVANCED_TUNING.deltaMethod = $('#pid-tuning .delta select').val();
@@ -1206,7 +1215,15 @@ pid_tuning.initialize = function (callback) {
             FC.ADVANCED_TUNING.motorOutputLimit = parseInt($('.tab-pid_tuning input[name="motorLimit"]').val());
             FC.ADVANCED_TUNING.autoProfileCellCount = parseInt($('.tab-pid_tuning select[name="cellCount"]').val());
             FC.ADVANCED_TUNING.idleMinRpm = parseInt($('input[name="idleMinRpm-number"]').val());
-            FC.RC_TUNING.rates_type = $('select[id="ratesType"]').val();
+
+            const selectedRatesType = $('select[id="ratesType"]').val(); // send analytics for rates type
+            let selectedRatesTypeName = undefined;
+            if (selectedRatesType !== FC.RC_TUNING.rates_type) {
+                selectedRatesTypeName = $('select[id="ratesType"]').find('option:selected').text();
+            }
+            self.analyticsChanges['RatesType'] = selectedRatesTypeName;
+
+            FC.RC_TUNING.rates_type = selectedRatesType;
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -1993,6 +2010,7 @@ pid_tuning.initialize = function (callback) {
                 }
 
                 self.calculateNewPids();
+                self.analyticsChanges['PidTuningSliders'] = "On";
             });
 
             // reset to middle with double click
@@ -2084,9 +2102,11 @@ pid_tuning.initialize = function (callback) {
                 if (slider.is('#sliderGyroFilterMultiplier')) {
                     TuningSliders.sliderGyroFilterMultiplier = sliderValue;
                     self.calculateNewGyroFilters();
+                    self.analyticsChanges['GyroFilterTuningSlider'] = "On";
                 } else if (slider.is('#sliderDTermFilterMultiplier')) {
                     TuningSliders.sliderDTermFilterMultiplier = sliderValue;
                     self.calculateNewDTermFilters();
+                    self.analyticsChanges['DTermFilterTuningSlider'] = "On";
                 }
             });
 
@@ -2114,6 +2134,13 @@ pid_tuning.initialize = function (callback) {
                     }
                 } else {
                     TuningSliders.updateFilterSlidersDisplay();
+                }
+
+                if (TuningSliders.GyroSliderUnavailable) {
+                    self.analyticsChanges['GyroFilterTuningSlider'] = "Off";
+                }
+                if (TuningSliders.DTermSliderUnavailable) {
+                    self.analyticsChanges['DTermFilterTuningSlider'] = "Off";
                 }
             });
 
@@ -2161,6 +2188,8 @@ pid_tuning.initialize = function (callback) {
                     if ($('input[id="useIntegratedYaw"]').is(':checked')) {
                         $('input[id="useIntegratedYaw"]').prop('checked', true).click();
                     }
+
+                    self.analyticsChanges['PidTuningSliders'] = "On";
                 });
 
                 // enable Filter sliders button (legacy sliders)
@@ -2171,18 +2200,23 @@ pid_tuning.initialize = function (callback) {
                         $('input[id="gyroLowpassEnabled"]').prop('checked', true).click();
                         $('input[id="gyroLowpass2Enabled"]').prop('checked', false).click();
                         TuningSliders.resetGyroFilterSlider();
+
+                        self.analyticsChanges['GyroFilterTuningSlider'] = "On";
                     }
                     if (TuningSliders.DTermSliderUnavailable) {
                         $('input[id="dtermLowpassDynEnabled"]').prop('checked', false).click();
                         $('input[id="dtermLowpassEnabled"]').prop('checked', true).click();
                         $('input[id="dtermLowpass2Enabled"]').prop('checked', false).click();
                         TuningSliders.resetDTermFilterSlider();
+
+                        self.analyticsChanges['DTermFilterTuningSlider'] = "On";
                     }
                 });
 
                 // update on pid table inputs
                 $('#pid_main input').on('input', function() {
                     TuningSliders.updatePidSlidersDisplay();
+                    self.analyticsChanges['PidTuningSliders'] = "Off";
                 });
             }
 
@@ -2228,6 +2262,9 @@ pid_tuning.initialize = function (callback) {
 
                 self.refresh();
             });
+
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'pid_tuning');
+            self.analyticsChanges = {};
         });
 
         // Setup model for rates preview
@@ -2243,6 +2280,8 @@ pid_tuning.initialize = function (callback) {
         GUI.interval_add('status_pull', function status_pull() {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, self.checkUpdateProfile(true));
         }, 500, true);
+
+        self.analyticsChanges = {};
 
         GUI.content_ready(callback);
         TABS.pid_tuning.isHtmlProcessing = false;

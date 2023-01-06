@@ -3,10 +3,12 @@ import { i18n } from "../localization";
 import GUI from '../gui';
 
 const ports = {
-    // intentional
+    analyticsChanges: {},
 };
 
 ports.initialize = function (callback) {
+    const self = this;
+
     let board_definition = {};
 
     const functionRules = [
@@ -118,6 +120,8 @@ ports.initialize = function (callback) {
     }
 
     function update_ui() {
+        self.analyticsChanges = {};
+
         $(".tab-ports").addClass("supported");
 
         const VCP_PORT_IDENTIFIER = 20;
@@ -258,6 +262,19 @@ ports.initialize = function (callback) {
                                 lastMspSelected = functionName;
                             }
                         }
+
+                        if (column === 'telemetry') {
+                            const initialValue = functionName;
+                            selectElement.on('change', function () {
+                                const telemetryValue = $(this).val();
+
+                                let newValue;
+                                if (telemetryValue !== initialValue) {
+                                    newValue = $(this).find('option:selected').text();
+                                }
+                                self.analyticsChanges['Telemetry'] = newValue;
+                            });
+                        }
                     }
                 }
             }
@@ -303,10 +320,14 @@ ports.initialize = function (callback) {
             });
 
             if (lastVtxControlSelected !== vtxControlSelected) {
+                self.analyticsChanges['VtxControl'] = vtxControlSelected;
+
                 lastVtxControlSelected = vtxControlSelected;
             }
 
             if (lastMspSelected !== mspControlSelected) {
+                self.analyticsChanges['MspControl'] = mspControlSelected;
+
                 lastMspSelected = mspControlSelected;
             }
 
@@ -335,6 +356,9 @@ ports.initialize = function (callback) {
     }
 
    function on_save_handler() {
+        analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
+        self.analyticsChanges = {};
+
         // update configuration based on current ui state
         FC.SERIAL_CONFIG.ports = [];
 

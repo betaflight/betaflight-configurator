@@ -9,6 +9,7 @@ const motors = {
     previousDshotBidir: null,
     previousFilterDynQ: null,
     previousFilterDynCount: null,
+    analyticsChanges: {},
     configHasChanged: false,
     configChanges: {},
     feature3DEnabled: false,
@@ -236,6 +237,7 @@ motors.initialize = async function (callback) {
 
         self.feature3DEnabled = FC.FEATURE_CONFIG.features.isEnabled('3D');
         const motorsEnableTestModeElement = $('#motorsEnableTestMode');
+        self.analyticsChanges = {};
 
         motorsEnableTestModeElement.prop('checked', false).trigger('change');
 
@@ -357,8 +359,15 @@ motors.initialize = async function (callback) {
         reverseMotorSwitchElement.prop('checked', FC.MIXER_CONFIG.reverseMotorDir !== 0).change();
 
         mixerListElement.change(function () {
-            FC.MIXER_CONFIG.mixer = parseInt($(this).val());
+            const mixerValue = parseInt($(this).val());
 
+            let newValue;
+            if (mixerValue !== FC.MIXER_CONFIG.mixer) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['Mixer'] = newValue;
+
+            FC.MIXER_CONFIG.mixer = mixerValue;
             refreshMixerPreview();
         });
 
@@ -679,7 +688,10 @@ motors.initialize = async function (callback) {
             self.previousFilterDynCount = FC.FILTER_CONFIG.dyn_notch_count;
 
             dshotBidirElement.on("change", function () {
-                FC.MOTOR_CONFIG.use_dshot_telemetry = dshotBidirElement.is(':checked');
+                const value = dshotBidirElement.is(':checked');
+                const newValue = (value !== FC.MOTOR_CONFIG.use_dshot_telemetry) ? 'On' : 'Off';
+                self.analyticsChanges['BidirectionalDshot'] = newValue;
+                FC.MOTOR_CONFIG.use_dshot_telemetry = value;
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
@@ -773,7 +785,17 @@ motors.initialize = async function (callback) {
 
         escProtocolElement.val(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
 
-        escProtocolElement.on("change", () => updateVisibility()).trigger("change");
+        escProtocolElement.on("change", function () {
+            const escProtocolValue = parseInt($(this).val()) - 1;
+
+            let newValue = undefined;
+            if (escProtocolValue !== FC.PID_ADVANCED_CONFIG.fast_pwm_protocol) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['EscProtocol'] = newValue;
+
+            updateVisibility();
+        }).trigger("change");
 
         //trigger change dshotBidir and ESC_SENSOR to show/hide Motor Poles tab
         dshotBidirElement.change(updateVisibility).trigger("change");
@@ -1120,6 +1142,8 @@ motors.initialize = async function (callback) {
             }
             await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
 
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
+            self.analyticsChanges = {};
             self.configHasChanged = false;
 
             reboot();

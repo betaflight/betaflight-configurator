@@ -14,6 +14,7 @@ options.initialize = function (callback) {
         TABS.options.initPermanentExpertMode();
         TABS.options.initRememberLastTab();
         TABS.options.initCheckForConfiguratorUnstableVersions();
+        TABS.options.initAnalyticsOptOut();
         TABS.options.initCliAutoComplete();
         TABS.options.initShowAllSerialDevices();
         TABS.options.initShowVirtualMode();
@@ -80,6 +81,31 @@ options.initCheckForConfiguratorUnstableVersions = function () {
 
         checkForConfiguratorUpdates();
     });
+};
+
+options.initAnalyticsOptOut = function () {
+    const result = ConfigStorage.get('analyticsOptOut');
+    if (result.analyticsOptOut) {
+        $('div.analyticsOptOut input').prop('checked', true);
+    }
+
+    $('div.analyticsOptOut input').change(function () {
+        const checked = $(this).is(':checked');
+
+        ConfigStorage.set({'analyticsOptOut': checked});
+
+        checkSetupAnalytics(function (analyticsService) {
+            if (checked) {
+                analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'OptOut');
+            }
+
+            analyticsService.setOptOut(checked);
+
+            if (!checked) {
+                analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'OptIn');
+            }
+        });
+    }).change();
 };
 
 options.initCliAutoComplete = function () {
