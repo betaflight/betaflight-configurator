@@ -246,7 +246,7 @@ ports.initialize = function (callback) {
                             selectElement.append(`<option value="">${disabledText}</option>`);
                         }
                         selectElement.append(`<option value="${functionName}">${functionRule.displayName}</option>`);
-                        // sort telemetry, sensors, peripherals select elements
+                        // sort telemetry, sensors, peripherals select elements. disabledText on top
                         selectElement.sortSelect(disabledText);
 
                         if (serialPort.functions.indexOf(functionName) >= 0) {
