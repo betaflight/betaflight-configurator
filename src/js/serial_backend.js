@@ -404,10 +404,10 @@ function checkReportProblems() {
 
 function processUid() {
     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
-        const uniqueDeviceIdentifier = FC.CONFIG.uniqueDeviceIdentifier;
+        const deviceIdentifier = FC.CONFIG.deviceIdentifier;
 
         connectionTimestamp = Date.now();
-        GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
+        GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [deviceIdentifier]));
 
         processCraftName();
     });
