@@ -157,15 +157,15 @@ function finishClose(finishedCallback) {
 
     const wasConnected = CONFIGURATOR.connectionValid;
 
-    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Disconnected');
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Disconnected');
     if (connectionTimestamp) {
         const connectedTime = Date.now() - connectionTimestamp;
-        analytics.sendTiming(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected', connectedTime);
+        tracking.sendTiming(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected', connectedTime);
     }
     // close reset to custom defaults dialog
     $('#dialogResetToCustomDefaults')[0].close();
 
-    analytics.resetFlightControllerData();
+    tracking.resetFlightControllerData();
 
     serial.disconnect(onClosed);
 
@@ -249,17 +249,17 @@ function onOpen(openInfo) {
         console.log(`Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
-            analytics.setFlightControllerData(analytics.DATA.API_VERSION, FC.CONFIG.apiVersion);
+            tracking.setFlightControllerData(tracking.DATA.API_VERSION, FC.CONFIG.apiVersion);
 
             GUI.log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
 
             if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
 
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
-                    analytics.setFlightControllerData(analytics.DATA.FIRMWARE_TYPE, FC.CONFIG.flightControllerIdentifier);
+                    tracking.setFlightControllerData(tracking.DATA.FIRMWARE_TYPE, FC.CONFIG.flightControllerIdentifier);
                     if (FC.CONFIG.flightControllerIdentifier === 'BTFL') {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
-                            analytics.setFlightControllerData(analytics.DATA.FIRMWARE_VERSION, FC.CONFIG.flightControllerVersion);
+                            tracking.setFlightControllerData(tracking.DATA.FIRMWARE_VERSION, FC.CONFIG.flightControllerVersion);
 
                             GUI.log(i18n.getMessage('fcInfoReceived', [FC.CONFIG.flightControllerIdentifier, FC.CONFIG.flightControllerVersion]));
 
@@ -271,7 +271,7 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareType', FC.CONFIG.flightControllerIdentifier);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareType', FC.CONFIG.flightControllerIdentifier);
 
                         const dialog = $('.dialogConnectWarning')[0];
 
@@ -287,7 +287,7 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
-                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareVersion', FC.CONFIG.apiVersion);
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareVersion', FC.CONFIG.apiVersion);
 
                 const dialog = $('.dialogConnectWarning')[0];
 
@@ -303,7 +303,7 @@ function onOpen(openInfo) {
             }
         });
     } else {
-        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
+        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
 
         console.log('Failed to open serial port');
         GUI.log(i18n.getMessage('serialPortOpenFail'));
@@ -341,11 +341,11 @@ function abortConnect() {
 }
 
 function processBoardInfo() {
-    analytics.setFlightControllerData(analytics.DATA.BOARD_TYPE, FC.CONFIG.boardIdentifier);
-    analytics.setFlightControllerData(analytics.DATA.TARGET_NAME, FC.CONFIG.targetName);
-    analytics.setFlightControllerData(analytics.DATA.BOARD_NAME, FC.CONFIG.boardName);
-    analytics.setFlightControllerData(analytics.DATA.MANUFACTURER_ID, FC.CONFIG.manufacturerId);
-    analytics.setFlightControllerData(analytics.DATA.MCU_TYPE, FC.getMcuType());
+    tracking.setFlightControllerData(tracking.DATA.BOARD_TYPE, FC.CONFIG.boardIdentifier);
+    tracking.setFlightControllerData(tracking.DATA.TARGET_NAME, FC.CONFIG.targetName);
+    tracking.setFlightControllerData(tracking.DATA.BOARD_NAME, FC.CONFIG.boardName);
+    tracking.setFlightControllerData(tracking.DATA.MANUFACTURER_ID, FC.CONFIG.manufacturerId);
+    tracking.setFlightControllerData(tracking.DATA.MCU_TYPE, FC.getMcuType());
 
     GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
 
@@ -353,7 +353,7 @@ function processBoardInfo() {
         const dialog = $('#dialogResetToCustomDefaults')[0];
 
         $('#dialogResetToCustomDefaults-acceptbtn').click(function() {
-            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'AcceptResetToCustomDefaults');
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'AcceptResetToCustomDefaults');
 
             const buffer = [];
             buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
@@ -367,7 +367,7 @@ function processBoardInfo() {
         });
 
         $('#dialogResetToCustomDefaults-cancelbtn').click(function() {
-            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CancelResetToCustomDefaults');
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CancelResetToCustomDefaults');
 
             dialog.close();
 
@@ -392,7 +392,7 @@ function checkReportProblems() {
         if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
             problemItemTemplate.clone().html(i18n.getMessage(`reportProblemsDialog${problemName}`)).appendTo(problemDialogList);
 
-            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, problemName);
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, problemName);
 
             return true;
         }
@@ -411,7 +411,7 @@ function checkReportProblems() {
                 [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.getDisplayVersion(), FC.CONFIG.flightControllerVersion])).appendTo(problemDialogList);
             needsProblemReportingDialog = true;
 
-            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT,
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT,
                 `${problemName};${CONFIGURATOR.API_VERSION_MAX_SUPPORTED};${FC.CONFIG.apiVersion}`);
         }
 
@@ -440,8 +440,8 @@ function processUid() {
     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
         const deviceIdentifier = FC.CONFIG.deviceIdentifier;
 
-        analytics.setFlightControllerData(analytics.DATA.MCU_ID, objectHash.sha1(deviceIdentifier));
-        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
+        tracking.setFlightControllerData(tracking.DATA.MCU_ID, objectHash.sha1(deviceIdentifier));
+        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
         connectionTimestamp = Date.now();
         GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [deviceIdentifier]));
 

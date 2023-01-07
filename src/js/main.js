@@ -3,7 +3,7 @@ import { i18n } from './localization.js';
 import GUI from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 import ReleaseChecker from './release_checker.js';
-import Analytics from './Analytics.js';
+import { tracking, createAnalytics } from './Analytics.js';
 
 $(document).ready(function () {
 
@@ -77,17 +77,17 @@ function appReady() {
 }
 
 function checkSetupAnalytics(callback) {
-    if (!analytics) {
+    if (!tracking) {
         setTimeout(function () {
             const result = ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
-            if (!analytics) {
+            if (!tracking) {
                 setupAnalytics(result);
             }
 
-            callback(analytics);
+            callback(tracking);
         });
     } else if (callback) {
-        callback(analytics);
+        callback(tracking);
     }
 }
 
@@ -111,18 +111,18 @@ function setupAnalytics(result) {
 
     const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    window.analytics = new Analytics(googleAnalytics, 'UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system,
-        checkForDebugVersions, optOut, debugMode, getBuildType());
+    createAnalytics(googleAnalytics, 'UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system, checkForDebugVersions, optOut, debugMode, getBuildType());
+    window.tracking = tracking;
 
     function logException(exception) {
-        analytics.sendException(exception.stack);
+        tracking.sendException(exception.stack);
     }
 
     if (typeof process === "object") {
         process.on('uncaughtException', logException);
     }
 
-    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
 
     $('.connect_b a.connect').removeClass('disabled');
     $('.firmware_b a.flash').removeClass('disabled');
@@ -188,7 +188,7 @@ function closeHandler() {
         this.hide();
     }
 
-    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
 
     closeSerial();
 

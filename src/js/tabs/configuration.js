@@ -1,6 +1,7 @@
 import semver from 'semver';
 import { i18n } from '../localization';
 import GUI from '../gui';
+import { tracking } from "../Analytics";
 
 const configuration = {
     analyticsChanges: {},
@@ -501,7 +502,7 @@ configuration.initialize = function (callback) {
 
             FC.RX_CONFIG.fpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
 
-            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'configuration');
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'configuration');
             self.analyticsChanges = {};
 
             // fill some data

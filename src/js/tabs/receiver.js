@@ -1,7 +1,7 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
-
+import { tracking } from "../Analytics";
 import CryptoES from 'crypto-es';
 
 const receiver = {
@@ -493,7 +493,7 @@ receiver.initialize = function (callback) {
                 }
             }
 
-            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges, 'receiver');
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges, 'receiver');
             tab.analyticsChanges = {};
 
             MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_rssi_config);

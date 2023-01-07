@@ -1,6 +1,7 @@
 import { i18n } from "../localization";
 import Clipboard from "../Clipboard";
 import GUI from '../gui';
+import { tracking } from "../Analytics";
 
 const vtx = {
     supported: false,
@@ -646,7 +647,7 @@ vtx.initialize = function (callback) {
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
-                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
                         console.log('Write VTX table lua file end');
                         GUI.log(i18n.getMessage('vtxSavedLuaFileOk'));
                     };
@@ -697,7 +698,7 @@ vtx.initialize = function (callback) {
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
-                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
                         console.log(vtxConfig);
                         console.log('Write VTX file end');
                         GUI.log(i18n.getMessage('vtxSavedFileOk'));
@@ -834,7 +835,7 @@ vtx.initialize = function (callback) {
         // Start MSP saving
         save_vtx_config();
 
-        analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'vtx');
+        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'vtx');
 
         function save_vtx_config() {
             MSP.send_message(MSPCodes.MSP_SET_VTX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VTX_CONFIG), false, save_vtx_powerlevels);

@@ -1,5 +1,12 @@
 
-export default class Analytics {
+let tracking = null;
+export { tracking };
+
+export function createAnalytics(ga, trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType) {
+    tracking = new Analytics(ga, trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType);
+}
+
+class Analytics {
 
     constructor (ga, trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType) {
         this._trackingId = trackingId;

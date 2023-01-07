@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { tracking } from "../Analytics";
 
 const FONT = {};
 const SYM = {};
@@ -3259,7 +3260,7 @@ osd.initialize = function(callback) {
                 }
             });
 
-            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'osd');
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'osd');
             self.analyticsChanges = {};
         });
 

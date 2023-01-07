@@ -4,6 +4,7 @@ import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import MotorOutputReorderConfig from "../../components/MotorOutputReordering/MotorOutputReorderingConfig";
 import MotorOutputReorderComponent from "../../components/MotorOutputReordering/MotorOutputReorderingComponent";
 import EscDshotDirectionComponent from "../../components/EscDshotDirection/EscDshotDirectionComponent";
+import { tracking } from "../Analytics";
 
 const motors = {
     previousDshotBidir: null,
@@ -1142,7 +1143,7 @@ motors.initialize = async function (callback) {
             }
             await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
 
-            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};
             self.configHasChanged = false;
 

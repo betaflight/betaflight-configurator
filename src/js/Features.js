@@ -46,7 +46,7 @@ const Features = function (config) {
 Features.prototype.getMask = function () {
     const self = this;
 
-    analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self._analyticsChanges);
+    tracking.sendChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self._analyticsChanges);
     self._analyticsChanges = {};
 
     return self._featureMask;

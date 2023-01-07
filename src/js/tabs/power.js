@@ -1,5 +1,6 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
+import { tracking } from "../Analytics";
 
 const power = {
     supported: false,
@@ -11,8 +12,6 @@ power.initialize = function (callback) {
 
     if (GUI.active_tab != 'power') {
         GUI.active_tab = 'power';
-        // Disabled on merge into betaflight-configurator
-        //googleAnalytics.sendAppView('Power');
     }
 
     if (GUI.calibrationManager) {
@@ -473,7 +472,7 @@ power.initialize = function (callback) {
             FC.BATTERY_CONFIG.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
             FC.BATTERY_CONFIG.capacity = parseInt($('input[name="capacity"]').val());
 
-            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'power');
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'power');
 
             save_power_config();
         });

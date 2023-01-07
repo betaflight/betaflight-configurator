@@ -1,6 +1,7 @@
 import { i18n } from "../localization";
 import { colorTables, getColorForPercentage } from '../utils/css.js';
 import GUI from '../gui';
+import { tracking } from "../Analytics";
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,
@@ -2263,7 +2264,7 @@ pid_tuning.initialize = function (callback) {
                 self.refresh();
             });
 
-            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'pid_tuning');
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'pid_tuning');
             self.analyticsChanges = {};
         });
 
