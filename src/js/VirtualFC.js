@@ -6,6 +6,7 @@ const VirtualFC = {
         const virtualFC = FC;
 
         virtualFC.resetState();
+        virtualFC.CONFIG.deviceIdentifier = 0;
 
         virtualFC.CONFIG.flightControllerVersion = "4.2.4";
         virtualFC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
