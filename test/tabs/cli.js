@@ -6,7 +6,7 @@ class MockAnalytics {
     }
 }
 
-let analytics;
+let tracking;
 
 
 describe('TABS.cli', () => {
@@ -33,7 +33,7 @@ describe('TABS.cli', () => {
         CliAutoComplete.setEnabled(false); // not testing the client-side autocomplete
 
         before(() => {
-            analytics = new MockAnalytics();
+            tracking = new MockAnalytics();
 
             $('body').append(cliTab);
 
