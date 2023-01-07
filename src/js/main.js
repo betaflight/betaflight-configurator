@@ -78,14 +78,9 @@ function appReady() {
 
 function checkSetupAnalytics(callback) {
     if (!tracking) {
-        setTimeout(function () {
-            const result = ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
-            if (!tracking) {
-                setupAnalytics(result);
-            }
-
-            callback(tracking);
-        });
+        const result = getConfig(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
+        setupAnalytics(result);
+        callback(tracking);
     } else if (callback) {
         callback(tracking);
     }
@@ -103,7 +98,7 @@ function setupAnalytics(result) {
         const uid = new ShortUniqueId();
         userId = uid.randomUUID(13);
 
-        ConfigStorage.set({ 'userId': userId });
+        setConfig({ 'userId': userId });
     }
 
     const optOut = !!result.analyticsOptOut;
@@ -111,7 +106,19 @@ function setupAnalytics(result) {
 
     const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    createAnalytics(googleAnalytics, 'UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system, checkForDebugVersions, optOut, debugMode, getBuildType());
+    const settings = {
+        trackingId: 'UA-123002063-1',
+        userId: userId,
+        appName:  CONFIGURATOR.productName,
+        appVersion: CONFIGURATOR.version,
+        gitRevision: CONFIGURATOR.gitRevision,
+        os: GUI.operating_system,
+        checkForDebugVersions: checkForDebugVersions,
+        optOut: optOut,
+        debugMode: debugMode,
+        buildType: getBuildType(),
+    };
+    createAnalytics(googleAnalytics, settings);
     window.tracking = tracking;
 
     function logException(exception) {
@@ -800,7 +807,7 @@ function showErrorDialog(message) {
 // TODO: all of these are used as globals in other parts.
 // once moved to modules extract to own module.
 window.googleAnalytics = analytics;
-window.analytics = null;
+window.tracking = null;
 window.showErrorDialog = showErrorDialog;
 window.generateFilename = generateFilename;
 window.updateTabList = updateTabList;

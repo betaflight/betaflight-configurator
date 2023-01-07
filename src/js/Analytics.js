@@ -2,23 +2,24 @@
 let tracking = null;
 export { tracking };
 
-export function createAnalytics(ga, trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType) {
-    tracking = new Analytics(ga, trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType);
+export function createAnalytics(ga, settings) {
+    tracking = new Analytics(ga, settings);
 }
 
 class Analytics {
 
-    constructor (ga, trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType) {
-        this._trackingId = trackingId;
+    constructor (ga, settings) {
+        // trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType
+        this._trackingId = settings.trackingId;
 
-        this.setOptOut(optOut);
+        this.setOptOut(settings.optOut);
 
         this._googleAnalytics = ga;
 
         this._googleAnalytics.initialize(this._trackingId, {
             storage: 'none',
-            clientId: userId,
-            debug: !!debugMode,
+            clientId: settings.userId,
+            debug: !!settings.debugMode,
         });
 
         // Make it work for the Chrome App:
@@ -28,8 +29,8 @@ class Analytics {
         // Make it work for NW.js:
         this._googleAnalytics.set('checkProtocolTask', null);
 
-        this._googleAnalytics.set('appName', appName);
-        this._googleAnalytics.set('appVersion', debugMode ? `${appVersion}-debug` : appVersion);
+        this._googleAnalytics.set('appName', settings.appName);
+        this._googleAnalytics.set('appVersion', settings.debugMode ? `${settings.appVersion}-debug` : settings.appVersion);
 
         this.EVENT_CATEGORIES = {
             APPLICATION: 'Application',
@@ -83,10 +84,10 @@ class Analytics {
             LOG_SIZE: 2,
         };
 
-        this.setDimension(this.DIMENSIONS.CONFIGURATOR_OS, os);
-        this.setDimension(this.DIMENSIONS.CONFIGURATOR_CHANGESET_ID, gitRevision);
-        this.setDimension(this.DIMENSIONS.CONFIGURATOR_USE_DEBUG_VERSIONS, checkForDebugVersions);
-        this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
+        this.setDimension(this.DIMENSIONS.CONFIGURATOR_OS, settings.os);
+        this.setDimension(this.DIMENSIONS.CONFIGURATOR_CHANGESET_ID, settings.gitRevision);
+        this.setDimension(this.DIMENSIONS.CONFIGURATOR_USE_DEBUG_VERSIONS, settings.checkForDebugVersions);
+        this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, settings.buildType);
 
         this.resetFlightControllerData();
         this.resetFirmwareData();
