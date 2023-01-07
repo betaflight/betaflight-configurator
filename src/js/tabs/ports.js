@@ -243,13 +243,15 @@ ports.initialize = function (callback) {
                         const selectElementSelector = `select[name=${selectElementName}]`;
                         selectElement = functionsElement.find(selectElementSelector);
 
+                        const disabledText = i18n.getMessage('portsTelemetryDisabled');
                         if (selectElement.length === 0) {
                             functionsElement.prepend(`<span class="function"><select name="${selectElementName}" /></span>`);
                             selectElement = functionsElement.find(selectElementSelector);
-                            const disabledText = i18n.getMessage('portsTelemetryDisabled');
                             selectElement.append(`<option value="">${disabledText}</option>`);
                         }
                         selectElement.append(`<option value="${functionName}">${functionRule.displayName}</option>`);
+                        // sort telemetry, sensors, peripherals select elements. disabledText on top
+                        selectElement.sortSelect(disabledText);
 
                         if (serialPort.functions.indexOf(functionName) >= 0) {
                             selectElement.val(functionName);
