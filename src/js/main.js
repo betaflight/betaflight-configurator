@@ -80,8 +80,9 @@ function checkSetupAnalytics(callback) {
     if (!tracking) {
         const result = getConfig(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
         setupAnalytics(result);
-        callback(tracking);
-    } else if (callback) {
+    }
+
+    if (callback) {
         callback(tracking);
     }
 }
