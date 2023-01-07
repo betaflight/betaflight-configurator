@@ -3,6 +3,7 @@ import { i18n } from './localization.js';
 import GUI from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 import ReleaseChecker from './release_checker.js';
+import Analytics from './Analytics.js';
 
 $(document).ready(function () {
 
@@ -110,7 +111,7 @@ function setupAnalytics(result) {
 
     const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    window.analytics = new Analytics('UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system,
+    window.analytics = new Analytics(googleAnalytics, 'UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system,
         checkForDebugVersions, optOut, debugMode, getBuildType());
 
     function logException(exception) {
