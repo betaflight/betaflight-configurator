@@ -4060,9 +4060,6 @@
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Set this to the highest incoming noise frequency that is needed to be controlled by the dynamic notch."
     },
-    "pidTuningGyroLowpassType": {
-        "message": "Gyro Lowpass 1 Filter Type"
-    },
     "pidTuningDynamicNotchCountHelp": {
         "message": "Sets the number of dynamic notches per axis. With RPM filter enabled a value of 1 or 2 is recommended. Without RPM filter a value of 4 or 5 is recommended. Lower numbers will reduce filter delay, however it may increase motor temperature."
     },
