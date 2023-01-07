@@ -3,6 +3,7 @@ import { i18n } from './localization.js';
 import GUI from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 import ReleaseChecker from './release_checker.js';
+import { tracking, createAnalytics } from './Analytics.js';
 
 $(document).ready(function () {
 
@@ -76,17 +77,13 @@ function appReady() {
 }
 
 function checkSetupAnalytics(callback) {
-    if (!analytics) {
-        setTimeout(function () {
-            const result = ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
-            if (!analytics) {
-                setupAnalytics(result);
-            }
+    if (!tracking) {
+        const result = getConfig(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
+        setupAnalytics(result);
+    }
 
-            callback(analytics);
-        });
-    } else if (callback) {
-        callback(analytics);
+    if (callback) {
+        callback(tracking);
     }
 }
 
@@ -102,7 +99,7 @@ function setupAnalytics(result) {
         const uid = new ShortUniqueId();
         userId = uid.randomUUID(13);
 
-        ConfigStorage.set({ 'userId': userId });
+        setConfig({ 'userId': userId });
     }
 
     const optOut = !!result.analyticsOptOut;
@@ -110,18 +107,30 @@ function setupAnalytics(result) {
 
     const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    window.analytics = new Analytics('UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system,
-        checkForDebugVersions, optOut, debugMode, getBuildType());
+    const settings = {
+        trackingId: 'UA-123002063-1',
+        userId: userId,
+        appName:  CONFIGURATOR.productName,
+        appVersion: CONFIGURATOR.version,
+        gitRevision: CONFIGURATOR.gitRevision,
+        os: GUI.operating_system,
+        checkForDebugVersions: checkForDebugVersions,
+        optOut: optOut,
+        debugMode: debugMode,
+        buildType: getBuildType(),
+    };
+    createAnalytics(googleAnalytics, settings);
+    window.tracking = tracking;
 
     function logException(exception) {
-        analytics.sendException(exception.stack);
+        tracking.sendException(exception.stack);
     }
 
     if (typeof process === "object") {
         process.on('uncaughtException', logException);
     }
 
-    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
 
     $('.connect_b a.connect').removeClass('disabled');
     $('.firmware_b a.flash').removeClass('disabled');
@@ -187,7 +196,7 @@ function closeHandler() {
         this.hide();
     }
 
-    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
 
     closeSerial();
 
@@ -799,7 +808,7 @@ function showErrorDialog(message) {
 // TODO: all of these are used as globals in other parts.
 // once moved to modules extract to own module.
 window.googleAnalytics = analytics;
-window.analytics = null;
+window.tracking = null;
 window.showErrorDialog = showErrorDialog;
 window.generateFilename = generateFilename;
 window.updateTabList = updateTabList;

@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { tracking } from "../Analytics";
 
 let sdcardTimer;
 
@@ -137,7 +138,7 @@ onboard_logging.initialize = function (callback) {
                     .toggleClass("msc-supported", true);
 
                 $('a.onboardLoggingRebootMsc').click(function () {
-                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
 
                     const buffer = [];
                     if (GUI.operating_system === "Linux") {
@@ -434,9 +435,9 @@ onboard_logging.initialize = function (callback) {
 
         if (dataflashPresent && FC.SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
             loggingStatus = 'Dataflash';
-            analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, FC.DATAFLASH.usedSize);
+            tracking.setFlightControllerData(tracking.DATA.LOG_SIZE, FC.DATAFLASH.usedSize);
         }
-        analytics.setFlightControllerData(analytics.DATA.LOGGING_STATUS, loggingStatus);
+        tracking.setFlightControllerData(tracking.DATA.LOGGING_STATUS, loggingStatus);
 
         if (FC.SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status
@@ -469,7 +470,7 @@ onboard_logging.initialize = function (callback) {
     }
 
     function mark_saving_dialog_done(startTime, totalBytes, totalBytesCompressed) {
-        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SaveDataflash');
+        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SaveDataflash');
 
         const totalTime = (new Date().getTime() - startTime) / 1000;
         console.log(`Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${
@@ -631,8 +632,8 @@ onboard_logging.initialize = function (callback) {
 };
 
 onboard_logging.cleanup = function (callback) {
-    analytics.setFlightControllerData(analytics.DATA.LOGGING_STATUS, undefined);
-    analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, undefined);
+    tracking.setFlightControllerData(tracking.DATA.LOGGING_STATUS, undefined);
+    tracking.setFlightControllerData(tracking.DATA.LOG_SIZE, undefined);
 
     if (sdcardTimer) {
         clearTimeout(sdcardTimer);

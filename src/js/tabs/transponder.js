@@ -110,8 +110,6 @@ transponder.initialize = function(callback) {
     /////////////////////////////////////////////
 
     GUI.active_tab = 'transponder';
-    // Disabled on merge into betaflight-configurator
-    //googleAnalytics.sendAppView('Transponder');
 
     // transponder supported added in MSP API Version 1.16.0
     if (FC.CONFIG) {

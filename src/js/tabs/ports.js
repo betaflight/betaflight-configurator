@@ -1,6 +1,7 @@
 import semver from 'semver';
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { tracking } from "../Analytics";
 
 const ports = {
     analyticsChanges: {},
@@ -358,7 +359,7 @@ ports.initialize = function (callback) {
     }
 
    function on_save_handler() {
-        analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
+        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
         self.analyticsChanges = {};
 
         // update configuration based on current ui state

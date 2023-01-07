@@ -8,8 +8,6 @@ setup_osd.initialize = function (callback) {
 
     if (GUI.active_tab != 'setup_osd') {
         GUI.active_tab = 'setup_osd';
-        // Disabled on merge into betaflight-configurator
-        //googleAnalytics.sendAppView('Setup OSD');
     }
 
     function load_status() {
