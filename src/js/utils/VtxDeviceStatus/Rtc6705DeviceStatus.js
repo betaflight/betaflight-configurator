@@ -1,4 +1,5 @@
-'use strict';
+import VtxDeviceStatus, { VtxDeviceTypes } from './VtxDeviceStatus';
+import vtxDeviceStatusFactory from './VtxDeviceStatusFactory';
 
 class VtxDeviceStatusRtc6705 extends VtxDeviceStatus {
     constructor(dataView)
@@ -17,3 +18,5 @@ class VtxDeviceStatusRtc6705 extends VtxDeviceStatus {
 }
 
 vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusRtc6705);
+
+export default VtxDeviceStatusRtc6705;

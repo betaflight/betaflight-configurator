@@ -4,6 +4,7 @@ import { i18n } from "../localization";
 import GUI from "../gui";
 import FC from "../fc";
 import semver from 'semver';
+import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
