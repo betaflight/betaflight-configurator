@@ -1,8 +1,12 @@
-'use strict';
+// NOTE: this is a circular dependency, needs investigating
+import { bit_check, sensor_status, bit_set, update_dataflash_global } from "../serial_backend";
+import { i18n } from "../localization";
+import GUI from "../gui";
+import FC from "../fc";
+import semver from 'semver';
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
-const ledFunctionLetters     = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l']; // in LSB bit order
 const ledBaseFunctionLetters = ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
 let ledOverlayLetters        = ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
 
@@ -2641,3 +2645,11 @@ MSP.SDCARD_STATE_FATAL       = 1;
 MSP.SDCARD_STATE_CARD_INIT   = 2;
 MSP.SDCARD_STATE_FS_INIT     = 3;
 MSP.SDCARD_STATE_READY       = 4;
+
+let mspHelper;
+// This is temporary, till things are moved
+// to modules and every usage of this can create own
+// instance or re-use existing where needed.
+window.mspHelper = mspHelper = new MspHelper();
+export { mspHelper };
+export default MspHelper;

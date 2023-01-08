@@ -1,4 +1,4 @@
-'use strict';
+import { bit_check, bit_clear, bit_set } from './serial_backend';
 
 class Beepers {
     constructor(config, supportedConditions) {
@@ -105,3 +105,5 @@ class Beepers {
         }
     }
 }
+
+export default Beepers;

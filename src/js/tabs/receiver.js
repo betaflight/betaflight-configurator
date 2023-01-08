@@ -2,6 +2,10 @@ import { i18n } from "../localization";
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { tracking } from "../Analytics";
+import { bit_check, reinitializeConnection } from "../serial_backend";
+import { mspHelper } from "../msp/MSPHelper";
+import FC from "../fc";
+
 import CryptoES from 'crypto-es';
 
 const receiver = {

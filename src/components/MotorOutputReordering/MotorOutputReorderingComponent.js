@@ -1,5 +1,6 @@
 import MotorOutputReorderConfig from "./MotorOutputReorderingConfig";
 import MotorOutputReorderCanvas from "./MotorOutputReorderingCanvas";
+import { mspHelper } from "../../js/msp/MSPHelper";
 
 export default class MotorOutputReorderComponent
 {

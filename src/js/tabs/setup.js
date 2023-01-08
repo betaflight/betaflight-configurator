@@ -1,5 +1,9 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
+import { configuration_backup, configuration_restore } from '../backup_restore';
+import { have_sensor } from '../serial_backend';
+import { mspHelper } from '../msp/MSPHelper';
+import FC from '../fc';
 
 const setup = {
     yaw_fix: 0.0,

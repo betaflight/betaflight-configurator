@@ -1,4 +1,4 @@
-'use strict';
+import { bit_check } from "./serial_backend";
 
 const INITIAL_CONFIG = {
     apiVersion:                       "0.0.0",
@@ -901,3 +901,7 @@ const FC = {
         QUICKRATES: 4,
     },
 };
+
+// temp binding to global scope
+window.FC = FC;
+export default FC;

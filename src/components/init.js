@@ -11,6 +11,7 @@ import BatteryLegend from "./quad-status/BatteryLegend.vue";
 import BetaflightLogo from "./betaflight-logo/BetaflightLogo.vue";
 import StatusBar from "./status-bar/StatusBar.vue";
 import BatteryIcon from "./quad-status/BatteryIcon.vue";
+import FC from '../js/fc.js';
 
 // Most of the global objects can go here at first.
 // It's a bit of overkill for simple components,

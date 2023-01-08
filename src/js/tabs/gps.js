@@ -1,5 +1,7 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import { have_sensor } from "../serial_backend";
+import FC from '../fc';
 
 const gps = {};
 gps.initialize = function (callback) {

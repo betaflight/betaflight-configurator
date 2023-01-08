@@ -3,6 +3,7 @@ import Clipboard from "../Clipboard";
 import GUI from '../gui';
 import BuildApi from '../BuildApi';
 import { tracking } from '../Analytics';
+import { reinitializeConnection } from "../serial_backend";
 
 const cli = {
     lineDelayMs: 15,

@@ -1,10 +1,17 @@
-'use strict';
+import GUI from "./gui";
+import { i18n } from "./localization";
+// NOTE: this is a circular dependency, needs investigating
+import MspHelper from "./msp/MSPHelper";
+import Features from "./Features";
+import VirtualFC from "./VirtualFC";
+import Beepers from "./Beepers";
+import FC from "./fc";
 
 let mspHelper;
 let connectionTimestamp;
 let clicks = false;
 
-function initializeSerialBackend() {
+export function initializeSerialBackend() {
     GUI.updateManualPortVisibility = function() {
         const selected_port = $('div#port-picker #port option:selected');
         if (selected_port.data().isManual) {
@@ -587,7 +594,7 @@ function onClosed(result) {
     CONFIGURATOR.cliEngineActive = false;
 }
 
-function read_serial(info) {
+export function read_serial(info) {
     if (CONFIGURATOR.cliActive) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
@@ -599,7 +606,7 @@ function read_serial(info) {
     }
 }
 
-function sensor_status(sensors_detected) {
+export function sensor_status(sensors_detected) {
     // initialize variable (if it wasn't)
     if (!sensor_status.previous_sensors_detected) {
         sensor_status.previous_sensors_detected = -1; // Otherwise first iteration will not be run if sensors_detected == 0
@@ -665,7 +672,7 @@ function sensor_status(sensors_detected) {
     }
 }
 
-function have_sensor(sensors_detected, sensor_code) {
+export function have_sensor(sensors_detected, sensor_code) {
     switch(sensor_code) {
         case 'acc':
             return bit_check(sensors_detected, 0);
@@ -746,23 +753,19 @@ async function update_live_status() {
     }
 }
 
-function specificByte(num, pos) {
-    return 0x000000FF & (num >> (8 * pos));
-}
-
-function bit_check(num, bit) {
+export function bit_check(num, bit) {
     return ((num >> bit) % 2 != 0);
 }
 
-function bit_set(num, bit) {
+export function bit_set(num, bit) {
     return num | 1 << bit;
 }
 
-function bit_clear(num, bit) {
+export function bit_clear(num, bit) {
     return num & ~(1 << bit);
 }
 
-function update_dataflash_global() {
+export function update_dataflash_global() {
     function formatFilesize(bytes) {
         if (bytes < 1024) {
             return `${bytes}B`;
@@ -805,7 +808,7 @@ function update_dataflash_global() {
      }
 }
 
-function reinitializeConnection(callback) {
+export function reinitializeConnection(callback) {
 
     // Close connection gracefully if it still exists.
     const previousTimeStamp = connectionTimestamp;

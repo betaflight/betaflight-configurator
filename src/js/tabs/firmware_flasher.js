@@ -5,6 +5,9 @@ import { get as getStorage, set as setStorage } from '../SessionStorage';
 import BuildApi from '../BuildApi';
 import ConfigInserter from "../ConfigInserter.js";
 import { tracking } from "../Analytics";
+import MspHelper from '../msp/MSPHelper';
+import STM32 from '../protocols/stm32';
+import FC from '../fc';
 
 const firmware_flasher = {
     targets: null,

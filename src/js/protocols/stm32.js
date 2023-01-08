@@ -5,7 +5,8 @@
 
     popular choices - 921600, 460800, 256000, 230400, 153600, 128000, 115200, 57600, 38400, 28800, 19200
 */
-'use strict';
+import MSPConnectorImpl from "../msp/MSPConnector";
+import { bit_check } from "../serial_backend";
 
 const STM32_protocol = function () {
     this.baud = null;
@@ -881,3 +882,4 @@ STM32_protocol.prototype.cleanup = function () {
 
 // initialize object
 const STM32 = new STM32_protocol();
+export default STM32;

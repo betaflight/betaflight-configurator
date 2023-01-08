@@ -1,6 +1,9 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
 import { tracking } from "../Analytics";
+import { reinitializeConnection } from "../serial_backend";
+import { mspHelper } from "../msp/MSPHelper";
+import FC from "../fc";
 
 let sdcardTimer;
 

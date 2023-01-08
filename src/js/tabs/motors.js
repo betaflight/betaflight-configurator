@@ -5,6 +5,9 @@ import MotorOutputReorderConfig from "../../components/MotorOutputReordering/Mot
 import MotorOutputReorderComponent from "../../components/MotorOutputReordering/MotorOutputReorderingComponent";
 import EscDshotDirectionComponent from "../../components/EscDshotDirection/EscDshotDirectionComponent";
 import { tracking } from "../Analytics";
+import { bit_check, reinitializeConnection } from "../serial_backend";
+import { mspHelper } from "../msp/MSPHelper";
+import FC from "../fc";
 
 const motors = {
     previousDshotBidir: null,
