@@ -410,7 +410,7 @@ const MSP = {
     },
 };
 
-MSP.SDCARD_STATE_NOT_PRESENT = 0; //TODO, move these to better place
+MSP.SDCARD_STATE_NOT_PRESENT = 0;
 MSP.SDCARD_STATE_FATAL       = 1;
 MSP.SDCARD_STATE_CARD_INIT   = 2;
 MSP.SDCARD_STATE_FS_INIT     = 3;

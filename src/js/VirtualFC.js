@@ -1,4 +1,5 @@
 import Features from "./Features";
+import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
 import CONFIGURATOR from "./data_storage";

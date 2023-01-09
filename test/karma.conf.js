@@ -14,15 +14,15 @@ module.exports = function(config) {
             './node_modules/jquery-textcomplete/dist/jquery.textcomplete.min.js',
             './node_modules/bluebird/js/browser/bluebird.min.js',
             './node_modules/jbox/dist/jBox.min.js',
-            './src/js/msp.js',
-            './src/js/serial.js',
-            './src/js/data_storage.js',
+            { pattern: './src/js/msp.js',  type: 'module' },
+            { pattern: './src/js/serial.js', type: 'module' },
+            { pattern: './src/js/data_storage.js', type: 'module' },
             { pattern: './src/js/localization.js', type: 'module', watched: false },
             { pattern: './src/js/gui.js', type: 'module', watched: false },
-            './src/js/CliAutoComplete.js',
+            { pattern: './src/js/CliAutoComplete.js', type: 'module' },
             { pattern: './src/js/tabs/cli.js', type: 'module', watched: false },
-            './src/js/phones_ui.js',
-            './test/**/*.js',
+            { pattern: './src/js/phones_ui.js', type: 'module' },
+            { pattern: './test/**/*.js', type: 'module' },
         ],
         browsers: ['ChromeHeadlessNoSandbox'],
         customLaunchers: {
@@ -40,9 +40,7 @@ module.exports = function(config) {
         },
         singleRun: true,
         preprocessors: {
-             './src/js/localization.js': ['rollup'],
-             './src/js/tabs/cli.js': ['rollup'],
-             './src/js/gui.js': ['rollup'],
+             './src/js/**/*.js': ['rollup'],
         },
         rollupPreprocessor: {
             plugins: [

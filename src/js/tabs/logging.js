@@ -6,6 +6,7 @@ import FC from '../fc.js';
 import MSP from '../msp.js';
 import MSPCodes from '../msp/MSPCodes.js';
 import CONFIGURATOR from '../data_storage.js';
+import { gui_log } from '../gui_log.js';
 
 const logging = {};
 logging.initialize = function (callback) {
@@ -89,7 +90,7 @@ logging.initialize = function (callback) {
                             $(this).text(i18n.getMessage('loggingStop'));
                             $(this).data("clicks", clicks !== true);
                         } else {
-                            GUI.log(i18n.getMessage('loggingErrorOneProperty'));
+                            gui_log(i18n.getMessage('loggingErrorOneProperty'));
                         }
                     } else {
                         GUI.interval_kill_all();
@@ -99,10 +100,10 @@ logging.initialize = function (callback) {
                         $(this).data("clicks", !clicks);
                     }
                 } else {
-                    GUI.log(i18n.getMessage('loggingErrorLogFile'));
+                    gui_log(i18n.getMessage('loggingErrorLogFile'));
                 }
             } else {
-                GUI.log(i18n.getMessage('loggingErrorNotConnected'));
+                gui_log(i18n.getMessage('loggingErrorNotConnected'));
             }
         });
 
@@ -300,7 +301,7 @@ logging.initialize = function (callback) {
 
             if (retaining) {
                 chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
-                    GUI.log(i18n.getMessage('loggingAutomaticallyRetained', [path]));
+                    gui_log(i18n.getMessage('loggingAutomaticallyRetained', [path]));
                 });
             }
 

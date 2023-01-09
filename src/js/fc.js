@@ -1,4 +1,4 @@
-import { bit_check } from "./serial_backend";
+import { bit_check } from "./bit";
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
 
 const INITIAL_CONFIG = {
@@ -162,7 +162,6 @@ const FC = {
     VTX_DEVICE_STATUS: null,
 
     resetState () {
-        console.log('resetting state');
         // Using `Object.assign` instead of reassigning to
         // trigger the updates on the Vue side
         Object.assign(this.CONFIG, INITIAL_CONFIG);
@@ -904,6 +903,4 @@ const FC = {
     },
 };
 
-// temp binding to global scope
-window.FC = FC;
 export default FC;

@@ -6,7 +6,8 @@ import MotorOutputReorderComponent from "../../components/MotorOutputReordering/
 import EscDshotDirectionComponent from "../../components/EscDshotDirection/EscDshotDirectionComponent";
 import DshotCommand from "../../js/utils/DshotCommand.js";
 import { tracking } from "../Analytics";
-import { bit_check, reinitializeConnection } from "../serial_backend";
+import { reinitializeConnection } from "../serial_backend";
+import { bit_check } from "../bit";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
@@ -14,6 +15,7 @@ import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
+import { gui_log } from "../gui_log";
 
 const motors = {
     previousDshotBidir: null,
@@ -68,8 +70,7 @@ motors.initialize = async function (callback) {
     const self = this;
 
     self.armed = false;
-    // self.escProtocolIsDshot = false;
-    self.escProtocolIsDshot = true ;
+    self.escProtocolIsDshot = false;
     self.configHasChanged = false;
     self.configChanges = {};
 
@@ -237,8 +238,7 @@ motors.initialize = async function (callback) {
             && (FC.MOTOR_OUTPUT_ORDER) && (FC.MOTOR_OUTPUT_ORDER.length > 0);
         domMotorOutputReorderDialogOpen.toggle(isMotorReorderingAvailable);
 
-        // self.escProtocolIsDshot = EscProtocols.IsProtocolDshot(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
-        self.escProtocolIsDshot = true;
+        self.escProtocolIsDshot = EscProtocols.IsProtocolDshot(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
     }
 
     function process_html() {
@@ -1180,7 +1180,7 @@ motors.initialize = async function (callback) {
     }
 
     function reboot() {
-        GUI.log(i18n.getMessage('configurationEepromSaved'));
+        gui_log(i18n.getMessage('configurationEepromSaved'));
         MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
     }
 

@@ -8,6 +8,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
+import { gui_log } from '../gui_log';
 
 const configuration = {
     analyticsChanges: {},
@@ -553,7 +554,7 @@ configuration.initialize = function (callback) {
             }
 
             function reboot() {
-                GUI.log(i18n.getMessage('configurationEepromSaved'));
+                gui_log(i18n.getMessage('configurationEepromSaved'));
 
                 GUI.tab_switch_cleanup(function() {
                     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);

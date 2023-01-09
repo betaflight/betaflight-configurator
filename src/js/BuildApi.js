@@ -1,4 +1,4 @@
-import GUI from "./gui";
+import { gui_log } from './gui_log';
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 
@@ -21,7 +21,7 @@ export default class BuildApi {
 
         const cachedCallback = () => {
             if (cachedData) {
-                GUI.log(i18n.getMessage('buildServerUsingCached', [url]));
+                gui_log(i18n.getMessage('buildServerUsingCached', [url]));
             }
 
             onSuccess(cachedData);
@@ -36,7 +36,7 @@ export default class BuildApi {
                 setStorage(object);
                 onSuccess(info);
             }).fail(xhr => {
-                GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+                gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
                 if (onFailure !== undefined) {
                     onFailure();
                 } else {
@@ -70,10 +70,10 @@ export default class BuildApi {
 
         const url = `${this._url}${path}`;
         $.get(url, function (data) {
-            GUI.log(i18n.getMessage('buildServerSuccess', [path]));
+            gui_log(i18n.getMessage('buildServerSuccess', [path]));
             onSuccess(data);
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerFailure', [path, `HTTP ${xhr.status}`]));
+            gui_log(i18n.getMessage('buildServerFailure', [path, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -86,7 +86,7 @@ export default class BuildApi {
         $.get(url, function (data) {
             onSuccess(data);
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+            gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -107,7 +107,7 @@ export default class BuildApi {
                 onSuccess(response);
             },
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerFailure', [`HTTP ${xhr.status}`]));
+            gui_log(i18n.getMessage('buildServerFailure', [`HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -128,7 +128,7 @@ export default class BuildApi {
                 onSuccess(response);
             },
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+            gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -139,10 +139,10 @@ export default class BuildApi {
 
         const url = `${this._url}/api/builds/${key}/status`;
         $.get(url, function (data) {
-            GUI.log(i18n.getMessage('buildServerSuccess', [url]));
+            gui_log(i18n.getMessage('buildServerSuccess', [url]));
             onSuccess(data);
         }).fail(xhr => {
-            GUI.log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+            gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }

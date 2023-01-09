@@ -5,6 +5,7 @@ import { reinitializeConnection } from "../../js/serial_backend";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import FC from "../../js/fc";
+import { gui_log } from "../../js/gui_log";
 
 export default class MotorOutputReorderComponent
 {
@@ -97,7 +98,7 @@ export default class MotorOutputReorderComponent
 
         function reboot()
         {
-            GUI.log(i18n.getMessage('configurationEepromSaved'));
+            gui_log(i18n.getMessage('configurationEepromSaved'));
             GUI.tab_switch_cleanup(() => MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(TABS.motors)));
         }
 

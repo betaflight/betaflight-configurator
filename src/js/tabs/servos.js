@@ -4,6 +4,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
+import { gui_log } from "../gui_log";
 
 const servos = {};
 servos.initialize = function (callback) {
@@ -139,7 +140,7 @@ servos.initialize = function (callback) {
             function save_to_eeprom() {
                 if (save_configuration_to_eeprom) {
                     MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                        GUI.log(i18n.getMessage('servosEepromSave'));
+                        gui_log(i18n.getMessage('servosEepromSave'));
                     });
                 }
             }

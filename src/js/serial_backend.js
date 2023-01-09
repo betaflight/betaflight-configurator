@@ -14,6 +14,10 @@ import CONFIGURATOR, { API_VERSION_1_45 } from "./data_storage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
 import UI_PHONES from "./phones_ui";
+import { bit_check } from './bit.js';
+import { sensor_status, have_sensor } from "./sensor_helpers";
+import { update_dataflash_global } from "./update_dataflash_global";
+import { gui_log } from "./gui_log";
 
 let mspHelper;
 let connectionTimestamp;
@@ -219,7 +223,7 @@ function setConnectionTimeout() {
     // disconnect after 10 seconds with error if we don't get IDENT data
     GUI.timeout_add('connecting', function () {
         if (!CONFIGURATOR.connectionValid) {
-            GUI.log(i18n.getMessage('noConfigurationReceived'));
+            gui_log(i18n.getMessage('noConfigurationReceived'));
 
             $('div.connect_controls a.connect').click(); // disconnect
         }
@@ -235,7 +239,7 @@ function onOpen(openInfo) {
 
         // reset connecting_to
         GUI.connecting_to = false;
-        GUI.log(i18n.getMessage('serialPortOpened', serial.connectionType === 'serial' ? [serial.connectionId] : [openInfo.socketId]));
+        gui_log(i18n.getMessage('serialPortOpened', serial.connectionType === 'serial' ? [serial.connectionId] : [openInfo.socketId]));
 
         // save selected port with chrome.storage if the port differs
         let result = ConfigStorage.get('last_used_port');
@@ -266,7 +270,7 @@ function onOpen(openInfo) {
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             tracking.setFlightControllerData(tracking.DATA.API_VERSION, FC.CONFIG.apiVersion);
 
-            GUI.log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
+            gui_log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
 
             if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
 
@@ -276,11 +280,11 @@ function onOpen(openInfo) {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
                             tracking.setFlightControllerData(tracking.DATA.FIRMWARE_VERSION, FC.CONFIG.flightControllerVersion);
 
-                            GUI.log(i18n.getMessage('fcInfoReceived', [FC.CONFIG.flightControllerIdentifier, FC.CONFIG.flightControllerVersion]));
+                            gui_log(i18n.getMessage('fcInfoReceived', [FC.CONFIG.flightControllerIdentifier, FC.CONFIG.flightControllerVersion]));
 
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
 
-                                GUI.log(i18n.getMessage('buildInfoReceived', [FC.CONFIG.buildInfo]));
+                                gui_log(i18n.getMessage('buildInfoReceived', [FC.CONFIG.buildInfo]));
 
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
@@ -321,7 +325,7 @@ function onOpen(openInfo) {
         tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
 
         console.log('Failed to open serial port');
-        GUI.log(i18n.getMessage('serialPortOpenFail'));
+        gui_log(i18n.getMessage('serialPortOpenFail'));
 
         abortConnect();
     }
@@ -362,7 +366,7 @@ function processBoardInfo() {
     tracking.setFlightControllerData(tracking.DATA.MANUFACTURER_ID, FC.CONFIG.manufacturerId);
     tracking.setFlightControllerData(tracking.DATA.MCU_TYPE, FC.getMcuType());
 
-    GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
+    gui_log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
 
     if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
         const dialog = $('#dialogResetToCustomDefaults')[0];
@@ -458,7 +462,7 @@ function processUid() {
         tracking.setFlightControllerData(tracking.DATA.MCU_ID, objectHash.sha1(deviceIdentifier));
         tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
         connectionTimestamp = Date.now();
-        GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [deviceIdentifier]));
+        gui_log(i18n.getMessage('uniqueDeviceIdReceived', [deviceIdentifier]));
 
         processCraftName();
     });
@@ -471,7 +475,7 @@ async function processCraftName() {
         await MSP.promise(MSPCodes.MSP_NAME);
     }
 
-    GUI.log(i18n.getMessage('craftNameReceived', semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? [FC.CONFIG.craftName] : [FC.CONFIG.name]));
+    gui_log(i18n.getMessage('craftNameReceived', semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? [FC.CONFIG.craftName] : [FC.CONFIG.name]));
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME));
@@ -572,9 +576,9 @@ function onConnect() {
 
 function onClosed(result) {
     if (result) { // All went as expected
-        GUI.log(i18n.getMessage('serialPortClosedOk'));
+        gui_log(i18n.getMessage('serialPortClosedOk'));
     } else { // Something went wrong
-        GUI.log(i18n.getMessage('serialPortClosedFail'));
+        gui_log(i18n.getMessage('serialPortClosedFail'));
     }
 
     $('#tabs ul.mode-connected').hide();
@@ -612,90 +616,6 @@ export function read_serial(info) {
     } else {
         MSP.read(info);
     }
-}
-
-export function sensor_status(sensors_detected) {
-    // initialize variable (if it wasn't)
-    if (!sensor_status.previous_sensors_detected) {
-        sensor_status.previous_sensors_detected = -1; // Otherwise first iteration will not be run if sensors_detected == 0
-    }
-
-    // update UI (if necessary)
-    if (sensor_status.previous_sensors_detected == sensors_detected) {
-        return;
-    }
-
-    // set current value
-    sensor_status.previous_sensors_detected = sensors_detected;
-
-    const eSensorStatus = $('div#sensor-status');
-
-    if (have_sensor(sensors_detected, 'acc')) {
-        $('.accel', eSensorStatus).addClass('on');
-        $('.accicon', eSensorStatus).addClass('active');
-
-    } else {
-        $('.accel', eSensorStatus).removeClass('on');
-        $('.accicon', eSensorStatus).removeClass('active');
-    }
-
-    if ((FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) && have_sensor(sensors_detected, 'gyro')) {
-        $('.gyro', eSensorStatus).addClass('on');
-        $('.gyroicon', eSensorStatus).addClass('active');
-    } else {
-        $('.gyro', eSensorStatus).removeClass('on');
-        $('.gyroicon', eSensorStatus).removeClass('active');
-    }
-
-    if (have_sensor(sensors_detected, 'baro')) {
-        $('.baro', eSensorStatus).addClass('on');
-        $('.baroicon', eSensorStatus).addClass('active');
-    } else {
-        $('.baro', eSensorStatus).removeClass('on');
-        $('.baroicon', eSensorStatus).removeClass('active');
-    }
-
-    if (have_sensor(sensors_detected, 'mag')) {
-        $('.mag', eSensorStatus).addClass('on');
-        $('.magicon', eSensorStatus).addClass('active');
-    } else {
-        $('.mag', eSensorStatus).removeClass('on');
-        $('.magicon', eSensorStatus).removeClass('active');
-    }
-
-    if (have_sensor(sensors_detected, 'gps')) {
-        $('.gps', eSensorStatus).addClass('on');
-    $('.gpsicon', eSensorStatus).addClass('active');
-    } else {
-        $('.gps', eSensorStatus).removeClass('on');
-        $('.gpsicon', eSensorStatus).removeClass('active');
-    }
-
-    if (have_sensor(sensors_detected, 'sonar')) {
-        $('.sonar', eSensorStatus).addClass('on');
-        $('.sonaricon', eSensorStatus).addClass('active');
-    } else {
-        $('.sonar', eSensorStatus).removeClass('on');
-        $('.sonaricon', eSensorStatus).removeClass('active');
-    }
-}
-
-export function have_sensor(sensors_detected, sensor_code) {
-    switch(sensor_code) {
-        case 'acc':
-            return bit_check(sensors_detected, 0);
-        case 'baro':
-            return bit_check(sensors_detected, 1);
-        case 'mag':
-            return bit_check(sensors_detected, 2);
-        case 'gps':
-            return bit_check(sensors_detected, 3);
-        case 'sonar':
-            return bit_check(sensors_detected, 4);
-        case 'gyro':
-            return bit_check(sensors_detected, 5);
-    }
-    return false;
 }
 
 function startLiveDataRefreshTimer() {
@@ -761,61 +681,6 @@ async function update_live_status() {
     }
 }
 
-export function bit_check(num, bit) {
-    return ((num >> bit) % 2 != 0);
-}
-
-export function bit_set(num, bit) {
-    return num | 1 << bit;
-}
-
-export function bit_clear(num, bit) {
-    return num & ~(1 << bit);
-}
-
-export function update_dataflash_global() {
-    function formatFilesize(bytes) {
-        if (bytes < 1024) {
-            return `${bytes}B`;
-        }
-        const kilobytes = bytes / 1024;
-
-        if (kilobytes < 1024) {
-            return `${Math.round(kilobytes)}kB`;
-        }
-
-        const megabytes = kilobytes / 1024;
-
-        return `${megabytes.toFixed(1)}MB`;
-    }
-
-    const supportsDataflash = FC.DATAFLASH.totalSize > 0;
-
-    if (supportsDataflash){
-        $(".noflash_global").css({
-           display: 'none',
-        });
-
-        $(".dataflash-contents_global").css({
-           display: 'block',
-        });
-
-        $(".dataflash-free_global").css({
-           width: `${100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100}%`,
-           display: 'block',
-        });
-        $(".dataflash-free_global div").text(`Dataflash: free ${formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`);
-     } else {
-        $(".noflash_global").css({
-           display: 'block',
-        });
-
-        $(".dataflash-contents_global").css({
-           display: 'none',
-        });
-     }
-}
-
 export function reinitializeConnection(callback) {
 
     // Close connection gracefully if it still exists.
@@ -829,7 +694,7 @@ export function reinitializeConnection(callback) {
         }
     }
 
-    GUI.log(i18n.getMessage('deviceRebooting'));
+    gui_log(i18n.getMessage('deviceRebooting'));
 
     let attempts = 0;
     const reconnect = setInterval(waitforSerial, 100);
@@ -839,7 +704,7 @@ export function reinitializeConnection(callback) {
             console.log(`Serial connection available after ${attempts / 10} seconds`);
             clearInterval(reconnect);
             getStatus();
-            GUI.log(i18n.getMessage('deviceReady'));
+            gui_log(i18n.getMessage('deviceReady'));
             if (callback === typeof('function')) {
                 callback();
             }
@@ -848,7 +713,7 @@ export function reinitializeConnection(callback) {
             if (attempts > 100) {
                 clearInterval(reconnect);
                 console.log(`failed to get serial connection, gave up after 10 seconds`);
-                GUI.log(i18n.getMessage('serialPortOpenFail'));
+                gui_log(i18n.getMessage('serialPortOpenFail'));
             }
         }
     }

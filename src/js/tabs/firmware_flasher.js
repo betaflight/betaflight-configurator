@@ -10,10 +10,11 @@ import STM32 from '../protocols/stm32';
 import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
-import PortHandler from '../port_handler';
+import PortHandler, { usbDevices } from '../port_handler';
 import CONFIGURATOR, { API_VERSION_1_39 } from '../data_storage';
 import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
+import { gui_log } from '../gui_log';
 
 const firmware_flasher = {
     targets: null,
@@ -459,7 +460,7 @@ firmware_flasher.initialize = function (callback) {
 
                 if (!inComment && input.charCodeAt(i) > 255) {
                     self.flashingMessage(i18n.getMessage('firmwareFlasherConfigCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
-                    GUI.log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
+                    gui_log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
                     return null;
                 }
 
@@ -504,7 +505,7 @@ firmware_flasher.initialize = function (callback) {
                     STM32.connect(port, baud, firmware, options);
                 } else {
                     console.log('Please select valid serial port');
-                    GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
+                    gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             } else {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', self.fileName || null);
@@ -542,10 +543,10 @@ firmware_flasher.initialize = function (callback) {
                         if (board !== target) {
                             boardSelect.val(board).trigger('change');
                         }
-                        GUI.log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
+                        gui_log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
                             { boardName: board }));
                     } else {
-                        GUI.log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
+                        gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
                     }
                     onClose();
                 }
@@ -575,7 +576,7 @@ firmware_flasher.initialize = function (callback) {
                         MSP.listen(mspHelper.process_data.bind(mspHelper));
                         getBoard();
                     } else {
-                        GUI.log(i18n.getMessage('serialPortOpenFail'));
+                        gui_log(i18n.getMessage('serialPortOpenFail'));
                     }
                 }
 
@@ -588,7 +589,7 @@ firmware_flasher.initialize = function (callback) {
                         baud = parseInt($('#flash_manual_baud_rate').val());
                     }
 
-                    GUI.log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
+                    gui_log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
 
                     const isLoaded = self.targets ? Object.keys(self.targets).length > 0 : false;
 
@@ -603,7 +604,7 @@ firmware_flasher.initialize = function (callback) {
                         console.log('Releases not loaded yet');
                     }
                 } else {
-                    GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
+                    gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             }
         }
@@ -799,7 +800,7 @@ firmware_flasher.initialize = function (callback) {
             tracking.setFirmwareData(tracking.DATA.FIRMWARE_SOURCE, 'http');
 
             if ($('select[name="firmware_version"]').val() === "0") {
-                GUI.log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
+                gui_log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
                 return;
             }
 
@@ -1098,7 +1099,7 @@ firmware_flasher.initialize = function (callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log(i18n.getMessage('firmwareFlasherWritePermissions'));
+                            gui_log(i18n.getMessage('firmwareFlasherWritePermissions'));
                         }
                     });
                 });
@@ -1114,7 +1115,7 @@ firmware_flasher.initialize = function (callback) {
                         const port = resultPort[0];
 
                         if (!GUI.connect_lock) {
-                            GUI.log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
+                            gui_log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
                             console.log(`Detected: ${port} - triggering flash on connect`);
 
                             // Trigger regular Flashing sequence
@@ -1122,7 +1123,7 @@ firmware_flasher.initialize = function (callback) {
                                 $('a.flash_firmware').click();
                             }, 100); // timeout so bus have time to initialize after being detected by the system
                         } else {
-                            GUI.log(i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
+                            gui_log(i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
                         }
 
                         // Since current port_detected request was consumed, create new one

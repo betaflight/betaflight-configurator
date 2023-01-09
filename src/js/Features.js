@@ -1,4 +1,4 @@
-import { bit_check, bit_set, bit_clear } from "./serial_backend";
+import { bit_check, bit_set, bit_clear } from "./bit";
 import { API_VERSION_1_44 } from './data_storage';
 
 const Features = function (config) {

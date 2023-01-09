@@ -1,7 +1,7 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
-import { have_sensor } from "../serial_backend";
+import { have_sensor } from "../sensor_helpers";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";

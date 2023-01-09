@@ -7,6 +7,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import { gui_log } from "../gui_log";
 
 let sdcardTimer;
 
@@ -58,7 +59,7 @@ onboard_logging.initialize = function (callback) {
     }
 
     function reboot() {
-        GUI.log(i18n.getMessage('configurationEepromSaved'));
+        gui_log(i18n.getMessage('configurationEepromSaved'));
 
         GUI.tab_switch_cleanup(function() {
             MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
@@ -577,7 +578,7 @@ onboard_logging.initialize = function (callback) {
                 accepts: [{description: `${suffix.toUpperCase()} files`, extensions: [suffix]}]}, function(fileEntry) {
             if (checkChromeRuntimeError()) {
                 if (chrome.runtime.lastError.message !== "User cancelled") {
-                    GUI.log(i18n.getMessage('dataflashFileWriteFailed'));
+                    gui_log(i18n.getMessage('dataflashFileWriteFailed'));
                 }
                 return;
             }
@@ -589,7 +590,7 @@ onboard_logging.initialize = function (callback) {
 
             fileEntry.createWriter(function (fileWriter) {
                 fileWriter.onerror = function (e) {
-                    GUI.log(`<strong><span class="message-negative">${i18n.getMessage('error', { errorMessage: e.target.error.message })}</span class="message-negative></strong>`);
+                    gui_log(`<strong><span class="message-negative">${i18n.getMessage('error', { errorMessage: e.target.error.message })}</span class="message-negative></strong>`);
 
                     console.error(e);
 
@@ -601,7 +602,7 @@ onboard_logging.initialize = function (callback) {
             }, function (e) {
                 // File is not readable or does not exist!
                 console.error(e);
-                GUI.log(i18n.getMessage('dataflashFileWriteFailed'));
+                gui_log(i18n.getMessage('dataflashFileWriteFailed'));
             });
         });
     }

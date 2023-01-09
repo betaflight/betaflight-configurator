@@ -1,3 +1,4 @@
+import CliAutoComplete from "../../src/js/CliAutoComplete";
 class MockAnalytics {
     EVENT_CATEGORIES = {};
 
@@ -53,7 +54,7 @@ describe('TABS.cli', () => {
             TABS.cli.cliBuffer = 'se';
 
             TABS.cli.read({
-                data: toArrayBuffer('\r\033[Kserialpassthrough\tservo\r\n# ser'),
+                data: toArrayBuffer('\r\x1B[Kserialpassthrough\tservo\r\n# ser'),
             });
 
             // Ambigous auto-complete from firmware is preceded with an \r carriage return
@@ -87,7 +88,7 @@ describe('TABS.cli', () => {
 
         it("escape characters are skipped", () => {
             TABS.cli.read({
-                data: toArrayBuffer('\033[K'),
+                data: toArrayBuffer('\x1B[K'),
             });
 
             expect(cliOutput.html()).to.equal('');

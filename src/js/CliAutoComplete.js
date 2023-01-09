@@ -1,5 +1,6 @@
 import GUI from './gui';
 import CONFIGURATOR from './data_storage';
+import FC from './fc';
 
 /**
  * Encapsulates the AutoComplete logic
@@ -577,4 +578,6 @@ CliAutoComplete._initTextcomplete = function() {
     ]);
 };
 
+// NOTE: temp for karma tests to pass
+window.CliAutoComplete = CliAutoComplete;
 export default CliAutoComplete;

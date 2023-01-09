@@ -2,7 +2,7 @@ import { i18n } from "../localization";
 import { colorTables, getColorForPercentage } from '../utils/css.js';
 import GUI from '../gui';
 import { tracking } from "../Analytics";
-import { have_sensor } from "../serial_backend";
+import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
@@ -11,6 +11,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import { gui_log } from "../gui_log";
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,
@@ -1460,7 +1461,7 @@ pid_tuning.initialize = function (callback) {
                 self.refresh(function () {
                     self.updating = false;
 
-                    GUI.log(i18n.getMessage('pidTuningPidProfileReset'));
+                    gui_log(i18n.getMessage('pidTuningPidProfileReset'));
                 });
             });
         });
@@ -1476,7 +1477,7 @@ pid_tuning.initialize = function (callback) {
                     $('.tab-pid_tuning select[name="profile"]').prop('disabled', 'false');
                     FC.CONFIG.profile = self.currentProfile;
 
-                    GUI.log(i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
+                    gui_log(i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
                 });
             });
         });
@@ -1493,7 +1494,7 @@ pid_tuning.initialize = function (callback) {
                     FC.CONFIG.rateProfile = self.currentRateProfile;
                     self.currentRates = self.rateCurve.getCurrentRates();
 
-                    GUI.log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
+                    gui_log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
                 });
             });
         });
@@ -1807,7 +1808,7 @@ pid_tuning.initialize = function (callback) {
 
         $('a.refresh').click(function () {
             self.refresh(function () {
-                GUI.log(i18n.getMessage('pidTuningDataRefreshed'));
+                gui_log(i18n.getMessage('pidTuningDataRefreshed'));
             });
         });
 
@@ -2269,7 +2270,7 @@ pid_tuning.initialize = function (callback) {
 
                 self.setDirty(false);
 
-                GUI.log(i18n.getMessage('pidTuningEepromSaved'));
+                gui_log(i18n.getMessage('pidTuningEepromSaved'));
 
                 self.refresh();
             });
@@ -2435,12 +2436,12 @@ pid_tuning.checkUpdateProfile = function (updateRateProfile) {
                 self.refresh(function () {
                     self.updating = false;
                     if (changedProfile) {
-                        GUI.log(i18n.getMessage('pidTuningReceivedProfile', [FC.CONFIG.profile + 1]));
+                        gui_log(i18n.getMessage('pidTuningReceivedProfile', [FC.CONFIG.profile + 1]));
                         FC.CONFIG.profile = self.currentProfile;
                     }
 
                     if (changedRateProfile) {
-                        GUI.log(i18n.getMessage('pidTuningReceivedRateProfile', [FC.CONFIG.rateProfile + 1]));
+                        gui_log(i18n.getMessage('pidTuningReceivedRateProfile', [FC.CONFIG.rateProfile + 1]));
                         FC.CONFIG.rateProfile = self.currentRateProfile;
                     }
                 });

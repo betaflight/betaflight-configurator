@@ -1,4 +1,6 @@
-import { sensor_status, update_dataflash_global, reinitializeConnection } from "./serial_backend";
+import { reinitializeConnection } from "./serial_backend";
+import { update_dataflash_global } from "./update_dataflash_global";
+import { sensor_status } from "./sensor_helpers.js";
 import GUI from "./gui";
 import Features from "./Features";
 import { i18n } from "./localization";
@@ -8,6 +10,7 @@ import { mspHelper } from "./msp/MSPHelper";
 import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import CONFIGURATOR, { API_VERSION_1_41, API_VERSION_1_45 } from "./data_storage";
+import { gui_log } from './gui_log';
 
 // code below is highly experimental, although it runs fine on latest firmware
 // the data inside nested objects needs to be verified if deep copy works properly
@@ -308,7 +311,7 @@ export function configuration_restore(callback) {
                     // validate
                     if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.BACKUP_FILE_VERSION_MIN_SUPPORTED)) {
                         if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
-                            GUI.log(i18n.getMessage('backupFileUnmigratable'));
+                            gui_log(i18n.getMessage('backupFileUnmigratable'));
                             return;
                         }
                         if (configuration.FEATURE_CONFIG.features._featureMask) {
@@ -321,7 +324,7 @@ export function configuration_restore(callback) {
 
                         configuration_upload(configuration, callback);
                     } else {
-                        GUI.log(i18n.getMessage('backupFileIncompatible'));
+                        gui_log(i18n.getMessage('backupFileIncompatible'));
                     }
                 }
             };
@@ -341,7 +344,7 @@ export function configuration_restore(callback) {
     function migrate(configuration) {
         let appliedMigrationsCount = 0;
         let migratedVersion = configuration.generatedBy;
-        GUI.log(i18n.getMessage('configMigrationFrom', [migratedVersion]));
+        gui_log(i18n.getMessage('configMigrationFrom', [migratedVersion]));
 
         if (!compareVersions(migratedVersion, '0.59.1')) {
 
@@ -350,7 +353,7 @@ export function configuration_restore(callback) {
             configuration.MISC.rssi_aux_channel = undefined;
 
             migratedVersion = '0.59.1';
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -362,7 +365,7 @@ export function configuration_restore(callback) {
             }
 
             migratedVersion = '0.60.1';
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -377,7 +380,7 @@ export function configuration_restore(callback) {
             }
 
             migratedVersion = '0.61.0';
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -407,7 +410,7 @@ export function configuration_restore(callback) {
             }
 
             migratedVersion = '0.63.0';
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -463,7 +466,7 @@ export function configuration_restore(callback) {
                 ports: ports,
             };
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -483,7 +486,7 @@ export function configuration_restore(callback) {
                 };
             }
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -523,7 +526,7 @@ export function configuration_restore(callback) {
 
             migratedVersion = '0.66.0';
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -541,7 +544,7 @@ export function configuration_restore(callback) {
                 configuration.profiles[profileIndex].PID.controller = newPidControllerIndex;
             }
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -558,7 +561,7 @@ export function configuration_restore(callback) {
                 };
             }
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -625,7 +628,7 @@ export function configuration_restore(callback) {
                 }
             }
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -636,7 +639,7 @@ export function configuration_restore(callback) {
             }
             migratedVersion = '1.2.0';
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -652,12 +655,12 @@ export function configuration_restore(callback) {
 
             migratedVersion = '1.3.1';
 
-            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
         if (appliedMigrationsCount > 0) {
-            GUI.log(i18n.getMessage('configMigrationSuccessful', [appliedMigrationsCount]));
+            gui_log(i18n.getMessage('configMigrationSuccessful', [appliedMigrationsCount]));
         }
         return true;
     }
@@ -882,7 +885,7 @@ export function configuration_restore(callback) {
             }
 
             function reboot() {
-                GUI.log(i18n.getMessage('eeprom_saved_ok'));
+                gui_log(i18n.getMessage('eeprom_saved_ok'));
 
                 GUI.tab_switch_cleanup(function() {
                     MSP.Promise(MSPCodes.MSP_SET_REBOOT)
