@@ -74,6 +74,9 @@
     "cancel": {
         "message": "Canceŀlar"
     },
+    "submit": {
+        "message": "Envia"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connectar: Habilitat - El configurador provarà de connectar-se automàticament quan el nou port sigui detectat"
     },
@@ -459,14 +462,23 @@
         "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "Versions carregades per $1 des del servidor de versions."
+    "buildServerSuccess": {
+        "message": "Èxit: $1"
     },
-    "BuildServerFailure": {
-        "message": "<b> La consulta del servidor de creació de llançaments de $1 ha fallat mitjançant la informació de la memòria cau. Motiu: <code>$2</code> </b>"
+    "buildServerFailure": {
+        "message": "<b>Error de compilació del servidor: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "Fent servir 'informació des de memòria cau de versions $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Dada de suport enviat *** <br>Id: $1<br><br><br># copia ID i informa al equip de betaflight."
+    },
+    "supportWarningDialogTitle": {
+        "message": "Confirma l'enviament de dades"
+    },
+    "supportWarningDialogText": {
+        "message": "Si us plau, confirmeu l'enviament de dades a l'equip de Betaflight.<br><br>Aquest procés executarà algunes ordres i enviarà la sortida al servidor de compilació.<br><br>A continuació, se us proporcionarà un identificador únic per enviar les vostres dades.<br><br>Assegureu-vos de proporcionar aquest identificador únic a l'equip de Betaflight quan feu servir Discord o obriu un problema a Github."
     },
     "releaseCheckLoaded": {
         "message": "Informació de versió per $1 carregada des de GitHub."
@@ -603,6 +615,9 @@
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Servidor de Discord</a>.<br />Comparteix la teva experiència de vol, parla sobre Betaflight, ajudar a altres persones o obtenir ajuda per a tu mateix de la comunitat."
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight Configurator recopila estadístiques d'ús anònimes. Per exemple, aquestes dades inclouen (però no es limiten a) el nombre de llançaments, la regió geogràfica dels usuaris, els tipus de controladors de vol, les versions del microprogramari, l'ús d'elements i pestanyes de la IU, etc. El resum d'aquestes dades es comparteix <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>. La recollida es fa per entendre millor com s'utilitza Betaflight Configurator, per entendre les tendències de la comunitat i per a possibles millores de la interfície d'usuari. Els usuaris poden desactivar la recollida de dades a la pestanya Opcions."
     },
     "defaultChangelogHead": {
         "message": "Configurador - Llista de canvis"
@@ -2787,6 +2802,9 @@
     "cliLoadFromFileBtn": {
         "message": "Carrega des del fitxer"
     },
+    "cliSupportRequestBtn": {
+        "message": "Envieu dades de suport"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "S'ha carregat el fitxer <strong>{{fileName}}</strong>. Reviseu les ordres carregades"
     },
@@ -2966,6 +2984,9 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Model:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Obteniu més informació sobre la controladora de vol a la wiki de Betaflight (l'url de la wiki es troba a la configuració de la FC unificada)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3227,7 +3248,7 @@
         "message": "Seleccioneu l'informació de la placa per preseleccionar el firmware adequat"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "Estàs a punt de fer una <strong> actualització en desenvolupament del firmware </strong>. Aquestes compilacions són una treball en curs i es pot donar qualsevol dels casos següents:<strong><ul><li>El firmware no funciona en absolut;</li><li>amb el firmware no es pot volar;</li><li>hi ha problemes de seguretat amb el firmware, per exemple flyaways</li><li>el firmware pot fer que el controlador de vol no respongui o es danyi</li></ul></strong>Si continueu amb el flaix d’aquest firmware, <strong>assumiu tota la responsabilitat del risc que passi de qualsevol dels casos anteriors</strong>. A més, reconeix que és necessari dur a terme <strong>proves completes de banc amb els accessoris desactivats</strong> abans de qualsevol intent de volar aquest firmware."
+        "message": "Esteu a punt de mostrar una <strong>build de desenvolupament del microprogramari</strong>. Aquestes compilacions són un treball en curs, i qualsevol dels següents casos pot ser:<strong><ul><li>el microprogramari no funciona en absolut;</li><li>el microprogramari no es pot volar;</li><li>hi ha problemes de seguretat amb el microprogramari, per exemple, les fugues volants</li><li>el microprogramari pot fer que el controlador de vol no respongui o es faci malbé</li></ul></strong>Si continueu amb el parpelleig d'aquest microprogramari, <strong>assumeu tota la responsabilitat del risc que passi qualsevol dels anteriors</strong>. A més, reconeixeu que cal dur a terme <strong>proves de banc exhaustives amb els accessoris apagats</strong> abans d'intentar fer volar aquest programari."
     },
     "unstableFirmwareAcknowledgement": {
         "message": "He llegit l'anterior i <strong> assumeixo tota la responsabilitat<strong> per actuatltzar el firmware inestable"

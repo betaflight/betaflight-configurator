@@ -419,12 +419,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
     },
-    "BuildServerSuccess": {
-        "message": "Załadowano informacje o kompilacji $1 z serwera."
-    },
-    "BuildServerFailure": {
-        "message": "<b>Zapytanie do GitHub'a dla wersji $1 nie udało się. Zostaną użyte zapamiętane wcześniej informacje. Powód: <code>$2</code></b>"
-    },
     "buildServerUsingCached": {
         "message": "Użycie informacji o kompilacji z bufora dla $1."
     },
@@ -2712,15 +2706,6 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Wykryto: <strong>$1</strong> -Wgrywanie po wykryciu połączenia"
-    },
-    "unstableFirmwareAcknowledgementDialog": {
-        "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego</strong>. Ciągle trwają prace nad tą wersją, a którakolwiek z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie działa;</li><li>oprogramowanie ma problemy ze sterowaniem lotu;</li><li>występują problemy z bezpieczeństwem oprogramowania, na przykład podczas lotu</li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieodpowiedzialny, lub doprowadzi do uszkodzenia(maszyny lub czyjegoś zdrowia)</li></ul></strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji</strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami</strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Przeczytałem powyższe i <strong>Biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
-    },
-    "unstableFirmwareAcknowledgementFlash": {
-        "message": "Wgraj"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Wykryto: <strong>$1</strong> - urządzenie nie odpowiada, podłącz się ponownie, aby spróbować ponownie"

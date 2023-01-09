@@ -74,6 +74,9 @@
     "cancel": {
         "message": "Annulla"
     },
+    "submit": {
+        "message": "Invia"
+    },
     "autoConnectEnabled": {
         "message": "Connessione automatica: Abilitata - Il configuratore proverà a connettersi automaticamente quando sarà rilevata una nuova porta"
     },
@@ -451,14 +454,23 @@
         "message": "Configuratore: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "Informazioni della build per $1 caricate dal server."
+    "buildServerSuccess": {
+        "message": "Successo: $1"
     },
-    "BuildServerFailure": {
-        "message": "<b>La richiesta delle versioni per $1 non è riuscita, stai utilizzando informazioni memorizzate nella cache. Motivo: <code>$2</code></b>"
+    "buildServerFailure": {
+        "message": "<b>Errore server di compilazione: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "Uso le informazioni memorizzate nella cache per $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Dati per il supporto inviati *** <br>Id: $1<br><br><br># copia l'ID e forniscilo al team betaflight."
+    },
+    "supportWarningDialogTitle": {
+        "message": "Conferma Invio Dati"
+    },
+    "supportWarningDialogText": {
+        "message": "Per favore conferma l'invio dei dati al team Betaflight.<br><br>Questo processo eseguirà alcuni comandi e invierà l'output al server di compilazione.<br><br>Ti sarà fornito un identificatore univoco dell'invio dei tuoi dati.<br><br>Assicurati di fornire questo identificatore univoco al team Betaflight quando usi Discord o quando apri un issue su Github."
     },
     "releaseCheckLoaded": {
         "message": "Caricate le informazioni della release per $1 da GitHub."
@@ -595,6 +607,9 @@
     },
     "defaultDiscordText": {
         "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Server Discord</a> di Betaflight.<br />Condividi la tua esperienza di volo, parla di Betaflight, aiuta altre persone o ottieni aiuto dalla community."
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight Configurator raccoglie statistiche anonime sull'utilizzo. Ad esempio, questi dati includono (ma non si limitano a) il numero di lanci, la regione geografica degli utenti, tipi di controllori di volo, versioni del firmware, utilizzo di elementi e schede dell'interfaccia utente, ecc. Il riassunto di questi dati è condiviso <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>. La raccolta viene fatta per capire meglio come viene utilizzato Betaflight Configurator, per comprendere le tendenze della comunità e per possibili miglioramenti dell'interfaccia utente. Gli utenti possono disabilitare la raccolta dati nella scheda Opzioni."
     },
     "defaultChangelogHead": {
         "message": "Configuratore - Registro Modifiche"
@@ -2779,6 +2794,9 @@
     "cliLoadFromFileBtn": {
         "message": "Carica da file"
     },
+    "cliSupportRequestBtn": {
+        "message": "Invia Dati Di Assistenza"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "File <strong>{{fileName}}</strong> caricato. Controlla i comandi caricati"
     },
@@ -2959,6 +2977,9 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Destinazione:"
     },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Se vuoi più informazioni sul target, vedi il wiki Betaflight (url del wiki si trova nella configurazione unificata)"
+    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
@@ -3021,6 +3042,9 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Seleziona o rileva automaticamente la tua scheda per vedere i relativi firmware disponibili online - Seleziona il firmware appropriato per la tua scheda."
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Il configuratore Betaflight supporta il flash di obiettivi unificati (Unified Targets) con le rispettive configurazioni specifiche della scheda in una fase.<br><br>Il concetto di Unified Targets significa che lo stesso firmware . hex file può essere utilizzato per tutte le schede che utilizzano la stessa MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build</strong><br><br>Con <strong>Cloud Build</strong> dobbiamo definire le opzioni hardware da includere nella build.<br><br>Per far funzionare schede diverse con lo stesso firmware, un file di configurazione specifico viene distribuito insieme al firmware quando viene flashato un obiettivo unificato.<br><br>Con le Local build puoi caricare un file di configurazione unificato o scegliere una scheda prima di caricare un file .hex del firmware.<br><br>Se riscontri problemi utilizzando il firmware, considera di partecipare su Discord o aprire una <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">segnalazione</a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Seleziona la versione del firmware per la tua scheda."
@@ -3216,10 +3240,10 @@
         "message": "Recupera le informazioni della scheda per scegliere il firmware giusto"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "Stai per flashare una <strong>build di sviluppo del firmware</strong>. Queste build sono work in progress e potrebbero verificarsi i seguenti casi:<strong><ul><li>il firmware non è funzionante;</li><li>il firmware non è in grado di far volare il modello;</li><li>ci sono problemi di sicurezza con il firmware, per esempio flyaway</li><li>il firmware può far diventare il controllore del volo non rispondente o danneggiarlo</li></ul></strong>Se prosegui con il flash di questo firmware, <strong>ti assumi la piena responsabilità dei rischi di cui sopra</strong>. Inoltre riconosci che è necessario eseguire <strong>test approfonditi sul banco di lavoro con le eliche rimosse</strong> prima di qualsiasi tentativo di volare con questo firmware."
+        "message": "Stai per flashare una <strong>build di sviluppo del firmware</strong>. Queste build sono un progresso del lavoro e potrebbero verificarsi i seguenti casi:<strong><ul><li>il firmware non funziona proprio;</li><li>il firmware non consente il volo del modello;</li><li>ci sono problemi di sicurezza con il firmware, ad esempio flyaway</li><li>il firmware può rendere il controllore di volo non rispondente o danneggiarlo</li></ul></strong>Se prosegui con il flash di questo firmware, <strong>ti assumi la piena responsabilità dei rischi di cui sopra</strong>. Inoltre riconosci che è necessario eseguire <strong>test accurati sul banco di lavoro senza eliche</strong> prima di qualsiasi tentativo di volo con questo firmware."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "Ho letto sopra e <strong>mi assumo tutta la responsabilità<strong> di flashare un firmware instabile"
+        "message": "Ho letto quanto sopra e <strong>mi assumo tutta la responsabilità<strong> di flashare un firmware instabile"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
@@ -6715,5 +6739,8 @@
     },
     "classicBuild": {
         "message": "Modalità Classica"
+    },
+    "classicBuildModeDescription": {
+        "message": "Questa modalità ignora tutti i parametri. Si avrà lo stesso risultato delle classiche build nightly, ed è fornita per comodità."
     }
 }

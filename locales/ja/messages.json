@@ -74,6 +74,9 @@
     "cancel": {
         "message": "キャンセル"
     },
+    "submit": {
+        "message": "送信"
+    },
     "autoConnectEnabled": {
         "message": "自動接続: 有効 - Configuratorは自動的に新しいポートが検出されたときに接続を試みます。"
     },
@@ -451,14 +454,23 @@
         "message": "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "ビルドサーバの $1 より開発情報をロードしました。"
+    "buildServerSuccess": {
+        "message": "成功: $1"
     },
-    "BuildServerFailure": {
-        "message": "<b>サーバからの $1 リリース情報の読み込みに失敗した為、キャッシュ情報を使用します。理由：<code>$2</code></b>"
+    "buildServerFailure": {
+        "message": "<b>ビルドサーバ不具合: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "$1 開発情報のキャッシュを参照します。"
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** サポートデータを送信しました *** <br>Id: $1<br><br><br># IDをコピーしてBetaflight開発チームに情報提供してください。"
+    },
+    "supportWarningDialogTitle": {
+        "message": "データ送信の確認"
+    },
+    "supportWarningDialogText": {
+        "message": "Betaflight開発チームへのデータ送信を確認してください。<br><br>この手順ではいくつかのコマンドを実行し、その出力をビルドサーバへ送信します。<br><br>その後、データを提出するための一意の識別子が提供されます。<br><br>Discordを使用するときやGitHubでのIssue投稿に、この一意の識別子をBetaflight開発チームに提供するようお願い致します。"
     },
     "releaseCheckLoaded": {
         "message": "GitHubの $1 よりリリース情報をロードしました。"
@@ -595,6 +607,9 @@
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />貴方の飛行体験を共有したり、Betaflightについて話したり、他の人を救済しコミュニティから自分自身助けを得たりすることができます。"
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight Configuratorは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
     },
     "defaultChangelogHead": {
         "message": "Configurator - 変更履歴"
@@ -2779,6 +2794,9 @@
     "cliLoadFromFileBtn": {
         "message": "ファイルからロード"
     },
+    "cliSupportRequestBtn": {
+        "message": "サポートデータを送信"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "ファイル <strong>{{fileName}}</strong> をロードしました。ロードされたコマンドをレビューします。"
     },
@@ -2958,6 +2976,9 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "ターゲット:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Betaflight Wikiにてターゲットに関するより多くの情報を取得します (WikiのURLは 統一ターゲット設定内にあります)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3222,7 +3243,7 @@
         "message": "<strong>開発ビルド版ファームウェア</strong>をフラッシュしようとしています。これらのビルドは開発作業中のものであり、次のいずれかが当てはまる場合があります:<strong><ul><li>ファームウェアがまったく機能しない場合;</li><li>ファームウェアが飛行不能な場合;</li><li>フライアウェイなど、ファームウェアに安全性の問題がある場合;</li><li>ファームウェアが原因で、フライトコントローラが応答しなくなったり、破損したりする可能性がある場合</li></ul></strong>このファームウェアのフラッシュを続行する場合は、<strong>上記のいずれかのリスクに対して自己責任を負うこととなります。</strong>さらにこのファームウェアを飛ばす前に、<strong>プロペラを外し徹底的なベンチテストを実行する</strong>必要があることを周知してください。"
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "上記を確認し、<strong>自己責任において<strong>未検証ファームウェアをフラッシュします"
+        "message": "上記を確認し、<strong>自己責任において</strong>未検証ファームウェアをフラッシュします"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "フラッシュ"
