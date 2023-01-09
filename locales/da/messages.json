@@ -74,6 +74,9 @@
     "cancel": {
         "message": "Fortryd"
     },
+    "submit": {
+        "message": "Indsend"
+    },
     "autoConnectEnabled": {
         "message": "Autotilslut: Aktiveret - Opsæt automatiske tilslutningsforsøg, når ny port registreres"
     },
@@ -451,14 +454,23 @@
         "message": "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "Indlæst release information for $1 fra cloud server."
+    "buildServerSuccess": {
+        "message": "Succes: $1"
     },
-    "BuildServerFailure": {
-        "message": "<b>GitHub-forespørgsel for $1-udgivelse mislykkedes, benytter cache-information. Årsag: <code>$2</code></b>"
+    "buildServerFailure": {
+        "message": "Fejl ved dannelse af release: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "Benytter cache release information for $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Logoplysninger sendt *** <br>Id: $1<br><br><br># medsend kopi af ID ved henvendelser til Betaflight team."
+    },
+    "supportWarningDialogTitle": {
+        "message": "Bekræft indsendelse af log oplysninger"
+    },
+    "supportWarningDialogText": {
+        "message": "Bekræft venligst indsendelse af logoplysninger til Betaflight-teamet.<br><br>Denne proces vil køre nogle kommandoer og indsende data til release server.<br><br>Du vil derefter få en entydig identifikator på din indsendelse af data.<br><br>Angiv denne entydige identifikator til Betaflight-teamet, når du bruger Discord eller åbner problemer på Github."
     },
     "releaseCheckLoaded": {
         "message": "Indlæst udgivelsesinformation for $1 fra GitHub."
@@ -595,6 +607,9 @@
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Del din flyve oplevelse, skriv om Betaflight, hjælp andre eller få hjælp til dig selv fra Betaflight fællesskabet."
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight Configurator indsamler anonym brugsstatistik. For eksempel omfatter disse data (men er ikke begrænset til) antallet af release udgivelser, geografiske region af brugerne, FC type, firmwareversioner, brug af UI-elementer og faner osv. Resuméet af disse data er delt <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">her</a>. Indsamlingen skal anvendes til bedre at forstå, hvordan Betaflight Configurator bliver brugt, for at forstå fællesskabstendenser og for mulige UI forbedringer. Brugere kan fravælge dataindsamling i fanen Indstillinger."
     },
     "defaultChangelogHead": {
         "message": "Konfigurator - Ændringslog"
@@ -2179,7 +2194,7 @@
         "message": "Ingen ændringer"
     },
     "adjustmentsFunction1": {
-        "message": "RC Rate justering"
+        "message": "RC rate justering"
     },
     "adjustmentsFunction2": {
         "message": "RC Expo justering"
@@ -2239,7 +2254,7 @@
         "message": "Krængror D justering"
     },
     "adjustmentsFunction21": {
-        "message": "RC hastighed for sideror"
+        "message": "RC sideror hastighed justering"
     },
     "adjustmentsFunction22": {
         "message": "Højderor og krængror F justering"
@@ -2779,6 +2794,9 @@
     "cliLoadFromFileBtn": {
         "message": "Indlæs fra fil"
     },
+    "cliSupportRequestBtn": {
+        "message": "Indsend logoplysninger til Support"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "Indlæst fil <strong>{{fileName}}</strong>. Se indlæste kommandoer nedenfor. Bemærk at FC genstartes efter, at der er trykket på Udfør"
     },
@@ -2958,6 +2976,9 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "FC type:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Se mere information om FC type på Betaflight Wiki (Wiki url findes i FC fælles type / unified target konfiguration) "
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3219,13 +3240,13 @@
         "message": "Spørg FC for information om valg af rette firmware image"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "Du er ved at brænde et <strong>udvikling firmwaren image</strong>. Da udviklingen er undervejs, er der risiko for at et af følgende kan ske:<strong><ul><li>firmwaren fungerer slet ikke</li><li>firmwaren kan ikke bruges til flyvning</li><li>der er sikkerhedsproblemer med firmwaren for eksempel at fartøjet flyver væk</li><li>firmwaren kan bevirke, at FC ikke reagerer eller bliver beskadiget</li></ul></strong>Hvis du fortsætter med at brænde dette firmware image, <strong>påtager du dig det fulde ansvar i risikoen for, at noget af ovenstående sker</strong>. Desuden anerkender du, at det er nødvendigt at udføre <strong>grundige test UDEN propeller</strong> , før du forsøger at flyve med denne firmware."
+        "message": "Du er ved at installere en <strong>firmware udviklings release</strong>. Da udviklingen er undervejs, er der risiko for at du kan opleve:<strong><ul><li>firmwaren fungerer slet ikke</li><li>firmwaren kan ikke bruges til flyvning</li><li>der er sikkerhedsproblemer med firmwaren for eksempel at fartøjet flyver væk</li><li>firmwaren kan bevirke, at FC ikke reagerer eller bliver beskadiget</li></ul></strong>Hvis du fortsætter med releasen, <strong>påtager du dig det fulde ansvar i risikoen for, at noget af ovenstående sker</strong>. Desuden anerkender du, at det er nødvendigt at udføre <strong>grundige test UDEN propeller</strong> , før du forsøger at flyve med denne firmware."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar<strong> for at brænde et ikke fejlfri firmware image"
+        "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar<strong> for at anvende en udviklings firmware release"
     },
     "unstableFirmwareAcknowledgementFlash": {
-        "message": "Brænd"
+        "message": "Installer firmware"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detekteret: <strong>$1</strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
@@ -4263,13 +4284,13 @@
         "message": "Overvågning af GPS fejlsikring "
     },
     "failsafeGpsRescueItemSanityChecksOff": {
-        "message": "Slået fra"
+        "message": "Ingen overvågning"
     },
     "failsafeGpsRescueItemSanityChecksOn": {
         "message": "Slået til (og ved fejlsikring)"
     },
     "failsafeGpsRescueItemSanityChecksFSOnly": {
-        "message": "Kun ved fejlsikring aktiveret"
+        "message": "Kun med fejlsikring aktiveret"
     },
     "failsafeKillSwitchItem": {
         "message": "Fejlsikring SLUK kontakt (opsæt fejlsikring på fanen Kanal tilstande)"
@@ -6474,7 +6495,7 @@
         "description": "Text indicating everything is selected in the drop down/multiple select"
     },
     "tabPresets": {
-        "message": "Predefinerede opsætninger",
+        "message": "Predefineret opsætning",
         "description": "Presets tab title"
     },
     "presetsReload": {
@@ -6550,7 +6571,7 @@
         "description": "UI filter name - official/community/experimental"
     },
     "presetsLoadError": {
-        "message": "Fejl ved hent af predefinerede opsætninger fra internettet",
+        "message": "Fejl ved hent af predefineret opsætning fra internettet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
     "presetsButtonSave": {
@@ -6610,11 +6631,11 @@
         "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
-        "message": "Predefinerede opsætninger...",
+        "message": "Predefineret opsætning...",
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogTitle": {
-        "message": "Predefinerede opsætninger",
+        "message": "Predefineret opsætning",
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogAddNew": {
@@ -6642,15 +6663,15 @@
         "description": "Presets tab, sources dialog, button to delete selected source"
     },
     "presetsWarningNotOfficialSource": {
-        "message": "<span class=\"message-negative\">ADVARSEL!</span> En tredjeparts kilde for predefinerede opsætninger er valgt.",
+        "message": "<span class=\"message-negative\">ADVARSEL!</span> En tredjeparts kilde for predefineret opsætning er valgt.",
         "description": "Warning message that shows up when a third party preset source is selected"
     },
     "presetsWarningBackup": {
-        "message": "Kontroller, at du sikkerhedskopierer din nuværende konfiguration ('$t(presetsBackupSave.message)' knap eller via CLI, hvis knappen er deaktiveret) <strong>før</strong> du vælger og anvender predefinerede opsætninger. Uden sikkerhedskopi er der ingen måde til at vende tilbage til din tidligere konfiguration efter indlæsning af predefinerede opsætninger.",
+        "message": "Kontroller, at du sikkerhedskopierer din nuværende konfiguration ('$t(presetsBackupSave.message)' knap eller via CLI, hvis knappen er deaktiveret) <strong>før</strong> du vælger og anvender predefineret opsætning. Uden sikkerhedskopi er der ingen måde til at vende tilbage til din tidligere konfiguration efter indlæsning af predefineret opsætning.",
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">ADVARSEL!</span> Brug af tredjepart kilde til predefinerede opsætninger kan være risikabelt.<br/>Sørg for at du tilføjer og kun anvender sikre kilder. Ondsindede eller dårlige kilder kan ødelægge eller potentielt skade dint fartøj.",
+        "message": "<span class=\"message-negative\">ADVARSEL!</span> Brug af tredjepart kilde til predefineret opsætning kan være risikabelt.<br/>Sørg for at du tilføjer og kun anvender sikre kilder. Ondsindede eller dårlige kilder kan ødelægge eller potentielt skade dint fartøj.",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
@@ -6658,11 +6679,11 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
-        "message": "Ingen predefinerede opsætninger med dine søgeparametere",
+        "message": "Ingen predefineret opsætning med dine søgeparametere",
         "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
-        "message": "Nået den øverste grænse for antallet af viste predefinerede forudstillinger",
+        "message": "Nået den øverste grænse for antal visninger af predefineret opsætning",
         "description": "Message that apprears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
@@ -6670,11 +6691,11 @@
         "description": "Placeholder for the options list dropdown"
     },
     "presetsVersionMismatch": {
-        "message": "Uoverensstemmelse mellem release version of predefinerede opsætninger.<br/>Krævet version: {{versionRequired}}<br/>Predefinerede opsætninger passer til version: {{versionSource}}<br/>Brug af denne predefinerede opsætning kan være farlig.<br/>Vil du fortsætte?",
+        "message": "Uoverensstemmelse mellem release version of predefineret opsætning.<br/>Krævet version: {{versionRequired}}<br/>Predefineret opsætning passer til version: {{versionSource}}<br/>Brug af denne predefineret opsætning kan være farlig.<br/>Vil du fortsætte?",
         "description": "Placeholder for the options list dropdown"
     },
     "presetsReviewOptionsWarning": {
-        "message": "Gennemse venligst listen over indstillinger før du vælger denne predefinerede opsætning.",
+        "message": "Gennemse venligst listen over indstillinger før du vælger denne predefineret opsætning.",
         "description": "Dialog text to prompt user to review options for the preset"
     },
     "firmwareFlasherBuildConfigurationHead": {

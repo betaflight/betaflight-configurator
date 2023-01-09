@@ -74,6 +74,9 @@
     "cancel": {
         "message": "Cancelar"
     },
+    "submit": {
+        "message": "Submeter"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Conectar: Ativado - O Configurador tenta se conectar automaticamente quando uma nova porta é detectada"
     },
@@ -451,14 +454,23 @@
         "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "Informação da versão do $1 carregadas do servidor de compilação."
+    "buildServerSuccess": {
+        "message": "Sucesso: $1"
     },
-    "BuildServerFailure": {
-        "message": "<b>Requisição ao servidor de compilação para versões do $1 falhou, usando informações em cache. Motivo: <code>$2</code></b>"
+    "buildServerFailure": {
+        "message": "<b>Falha no servidor de compilação: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "Usando informações de compilação em cache para $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Dados de suporte enviados *** <br>Id: $1<br><br><br># copie o ID e forneça-o à equipa do betaflight."
+    },
+    "supportWarningDialogTitle": {
+        "message": "Confirmar envio de dados"
+    },
+    "supportWarningDialogText": {
+        "message": "Por favor, confirme a submissão dos dados à equipa do Betaflight<br><br>Este processo executará alguns comandos e enviará o output para o servidor de compilação.<br><br>Receberá então um identificador exclusivo para a sua submissão de dados.<br><br>Por favor, certifique-se de fornecer este identificador único à equipa do Betaflight quando usar o Discord ou abrir uma questão no Github."
     },
     "releaseCheckLoaded": {
         "message": "Informações da versão do $1 carregadas do GitHub."
@@ -595,6 +607,9 @@
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Partilhe a sua experiência de voo, fale sobre Betaflight, ajude outras pessoas ou obtenha ajuda da comunidade."
+    },
+    "statisticsDisclaimer": {
+        "message": "O Betaflight Configurator recolhe dados anónimos de uso estatístico. Por exemplo, estes dados incluem (mas não estão limitados a) o número de lançamentos, região geográfica dos utilizadores, tipos de controladores de voo, versões de firmware, uso de elementos UI e abas de interface, etc. O resumo destes dados é partilhado <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>. A recolha é feita para entender melhor como o Betaflight Configurator está a ser utilizado, para entender as tendências da comunidade e para possíveis melhorias de UI. Os utilizadores podem optar por não fornecer os dados recolhidos na aba Opções."
     },
     "defaultChangelogHead": {
         "message": "Configurador - Novidades"
@@ -2779,6 +2794,9 @@
     "cliLoadFromFileBtn": {
         "message": "Carregar do ficheiro"
     },
+    "cliSupportRequestBtn": {
+        "message": "Enviar Dados de Suporte"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "O ficheiro <strong>{{fileName}}</strong> foi carregado. Reveja os comandos"
     },
@@ -2958,6 +2976,9 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Destino:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Obtenha mais informações sobre target na wiki do Betaflight (url da wiki encontrada na configuração de target unificado)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3219,7 +3240,7 @@
         "message": "Consultar informações da controladora para pré-selecionar o firmware certo"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "Está prestes a instalar uma compilação de desenvolvimento <strong>do firmware</strong>. Estas compilações são um trabalho em curso, e qualquer uma das opções a seguir pode ser o caso:<strong><ul><li>o firmware não funciona de forma alguma;</li><li>o firmware não é voável;</li><li>há problemas de segurança com o firmware, por exemplo, flyaways</li><li>o firmware pode fazer com que o controlador de voo fique sem resposta, ou se danifique</li></ul></strong>Se prosseguir com a instalação deste firmware, <strong> está a assumir a responsabilidade total pelo risco de qualquer uma das opções acima acontecerem</strong>. Além disso, reconhece que é necessário executar <strong>testes de bancada completos sem hélices</strong> antes de qualquer tentativa de voar este firmware."
+        "message": "Está prestes a instalar uma <strong>compilação de desenvolvimento do firmware</strong>. Estas compilações são um trabalho em curso, e qualquer uma das opções a seguir podem ser o caso:<strong><ul><li>o firmware não funciona de forma alguma;</li><li>o firmware não é voável;</li><li>há problemas de segurança com o firmware, por exemplo, flyaways</li><li>o firmware pode fazer com que a controladora de voo fique sem resposta, ou se danifique</li></ul></strong>Se prosseguir com a instalação deste firmware, <strong> está a assumir a responsabilidade total pelo risco de qualquer uma das opções acima acontecerem</strong>. Além disso, reconhece que é necessário executar <strong>testes de bancada rigorosos sem hélices</strong> antes de qualquer tentativa de voar com este firmware."
     },
     "unstableFirmwareAcknowledgement": {
         "message": "Li o acima indicado e <strong>assumo total responsabilidade<strong> por instalar firmware instável"

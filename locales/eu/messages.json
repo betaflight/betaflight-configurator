@@ -412,12 +412,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu</strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
     },
-    "BuildServerSuccess": {
-        "message": "Bertsioaren informazioa $1 -rentzat bertsio zerbidoreetatik kargatuta."
-    },
-    "BuildServerFailure": {
-        "message": "<b>$1 bertsioen zerbitzariaren kontsultak huts egin du, cachean oinarritutako informazioa erabiliz. Arrazoia: <code>$2</code></b>"
-    },
     "buildServerUsingCached": {
         "message": "$1 -rako aurrememorian dauden konpilazioen informazioa erabiltzen."
     },
@@ -2621,15 +2615,6 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "<strong>$1</strong> Detektatuta - Konektatzean instalatu exekutatzen ari da"
-    },
-    "unstableFirmwareAcknowledgementDialog": {
-        "message": "<strong>Firmwaren garapen bertsioa</strong> instalatu egingo duzu. Konpilazio hauek martxan dagoen lanak dira eta kasu hauetan edozer gerta daiteke:<strong><ul><li> Firmwareak ez du osorik funtzionatzen;</li><li>ezin da hegan egin firmware onekin;</li><li> firmwarearekin segurtasun arazoak daude, hegan joan daiteke</li><li>firmwareak hegaldi kontrolatzaileak ez erantzutea edo kalte egin dezake</li></ul></strong>Firmwarea instalatzen jarraitzen baduzu, <strong>erantzukizun osoa hartzen ari zara aurreko egoeretarako batean gerta daitekeen arriskuaz</strong>. Aitortzen duzu<strong> helize gabe aulkian probak egiteko</strong> beharrezkoa dela."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Aurrekoa irakurri dut eta <strong>erantzukizun osoa hartzen dut<strong> firmware ezegonkorra instalatzeko"
-    },
-    "unstableFirmwareAcknowledgementFlash": {
-        "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "<strong>$1</strong> - aurreko gailua instalazioan dago. Mesedez berriro konektatu berriro saiatzeko"

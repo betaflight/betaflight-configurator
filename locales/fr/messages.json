@@ -74,6 +74,9 @@
     "cancel": {
         "message": "Annuler"
     },
+    "submit": {
+        "message": "Envoyer"
+    },
     "autoConnectEnabled": {
         "message": "Connexion automatique: Activée - Le configurateur se connecte automatiquement quand un nouveau port est détecté."
     },
@@ -451,14 +454,23 @@
         "message": "Configurateur: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "Informations sur la version de $1 chargées depuis le serveur."
+    "buildServerSuccess": {
+        "message": "Réussi: $1"
     },
-    "BuildServerFailure": {
-        "message": "<b>Requête auprès du serveur pour les releases $1 échouée, utilise les informations en cache. Raison: <code>$2</code></b>"
+    "buildServerFailure": {
+        "message": "<b>Échec de construction du serveur : $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "Utilise les informations en cache pour $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Données de support soumises *** <br>ID : $1<br><br><br># Copier l'ID et le fournir à l'équipe de betaflight."
+    },
+    "supportWarningDialogTitle": {
+        "message": "Confirmer l'envoi de données"
+    },
+    "supportWarningDialogText": {
+        "message": "Veuillez confirmer l'envoi de données à l'équipe de Betaflight.<br><br>Ce processus exécutera certaines commandes et soumettra le résultat au serveur de construction.<br><br>Vous recevrez alors un identifiant unique pour votre soumission de données.<br><br>Veuillez vous assurer de fournir cet identifiant unique à l'équipe Betaflight lors de l'utilisation de Discord ou de l'ouverture d'un problème sur Github."
     },
     "releaseCheckLoaded": {
         "message": "Information release GitHub chargée pour $1."
@@ -479,7 +491,7 @@
         "message": "Veuillez <span class=\"message-negative\">attendre</span> la fin de l'opération en cours."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "Veuillez <strong>mettre à jour</strong> le microprogramme pour accéder à la rubrique $1 tab."
+        "message": "Veuillez <strong>mettre à jour</strong> le firmware pour accéder à la rubrique $1 tab."
     },
     "firmwareVersion": {
         "message": "Version de Firmware: <strong>$1</strong>"
@@ -509,7 +521,7 @@
         "message": "Carte: <strong>$1</strong>, version: <strong>$2</strong>"
     },
     "buildInfoReceived": {
-        "message": "Date du microprogramme: <strong>$1</strong>"
+        "message": "Date du firmware: <strong>$1</strong>"
     },
     "fcInfoReceived": {
         "message": "Infos contrôleur de vol: <strong>$1</strong>, version <strong>$2</strong>"
@@ -595,6 +607,9 @@
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serveur Discord</a>.<br />Partagez votre expérience de vol, parlez de Betaflight, aidez d'autres personnes ou obtenez de l'aide de la part de la communauté."
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight Configurator collecte des statistiques d'utilisation anonymes. Par exemple, ces données incluent (mais ne se limitent pas à) le nombre de lancements, la région géographique des utilisateurs, types de contrôleurs de vol, versions du firmware, utilisation des éléments et des onglets de l'interface, etc. Le résumé de ces données est partagé <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>. La collecte est faite afin de mieux comprendre comment Betaflight Configurator est utilisé, pour comprendre les tendances de la communauté, et pour les éventuelles améliorations de l'interface utilisateur. Les utilisateurs peuvent se retirer de la collecte de données dans l'onglet Options."
     },
     "defaultChangelogHead": {
         "message": "Configurateur - Changelog"
@@ -1096,7 +1111,7 @@
         "message": "Fonctionnalités ESC/Moteur"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Note:</strong> lors d'une contradiction entre les fonctionnalités actives. Le microprogramme désactive les fonctionnalités en conflit/<br /><strong>Note:</strong> configurer les ports série <span class=\"message-negative\">avant</span> d'activer des fonctionnalités qui les utilisent."
+        "message": "<strong>Note:</strong> lors d'une contradiction entre les fonctionnalités actives. Le firmware désactive les fonctionnalités en conflit/<br /><strong>Note:</strong> configurer les ports série <span class=\"message-negative\">avant</span> d'activer des fonctionnalités qui les utilisent."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; L'UART pour le récepteur doit être réglé sur « Rx série » (dans l'onglet <i>Ports</i> )<br>&#8226; Sélectionnez le format de données correct à partir du menu déroulant, ci-dessous:"
@@ -2272,7 +2287,7 @@
         "message": "EEPROM <span class=\"message-positive\">enregistrée</span>"
     },
     "transponderNotSupported": {
-        "message": "Le microprogramme de votre contrôleur de vol de supporte pas la fonction transpondeur."
+        "message": "Le firmware de votre contrôleur de vol ne supporte pas la fonction transpondeur."
     },
     "transponderInformation": {
         "message": "Le transpondeur permet aux organisateurs de courses de mesurer vos temps par tour. Il est monté sur la machine. Lorsqu'elle franchit la porte munie d'un chronomètre, le récepteur enregistre votre numéro et établit votre temps par tour. Si le transpondeur est Infra Rouge, vous devez vous assurer que le faisceau est orienté dans la bonne direction et qu'il n'est pas obstrué par le châssis, les sangles de batteries, des fils, les hélices etc..."
@@ -2776,6 +2791,9 @@
     "cliLoadFromFileBtn": {
         "message": "Charger à partir du fichier"
     },
+    "cliSupportRequestBtn": {
+        "message": "Soumettre les données d’assistance"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "Fichier chargé <strong>{{fileName}}</strong>. Vérifier les commandes chargées"
     },
@@ -2819,10 +2837,10 @@
         "message": "Log précédent automatiquement chargé: <strong>$1</strong>"
     },
     "blackboxNotSupported": {
-        "message": "Le microprogramme de votre contrôleur de vol ne prend pas en charge la Blackbox."
+        "message": "Le firmware de votre contrôleur de vol ne prend pas en charge la Blackbox."
     },
     "blackboxMaybeSupported": {
-        "message": "Le microprogramme de votre contrôleur de vol est trop vieux pour supporter cet onglet, ou la fonction Blackbox n'est pas activée dans l'onglet configuration."
+        "message": "Le firmware de votre contrôleur de vol est trop vieux pour supporter cet onglet, ou la fonction Blackbox n'est pas activée dans l'onglet configuration."
     },
     "blackboxConfiguration": {
         "message": "Configuration de la Blackbox"
@@ -2955,6 +2973,9 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Cible:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Obtenir plus d'informations sur la cible sur Betaflight wiki (url wiki trouvée dans la configuration de la cible unifiée)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"

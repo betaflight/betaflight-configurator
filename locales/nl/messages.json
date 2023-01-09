@@ -447,12 +447,6 @@
         "message": "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "Build informatie geladen voor $1 van build server."
-    },
-    "BuildServerFailure": {
-        "message": "<b>Serverquery voor $1 releases mislukt, overgegaan op cache informatie. Reden: <code>$2</code></b>"
-    },
     "buildServerUsingCached": {
         "message": "Maakt gebruik van gecachte versie informatie voor $1."
     },
@@ -2819,15 +2813,6 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Vraag bordinformatie op om de juiste firmware vooraf te selecteren"
-    },
-    "unstableFirmwareAcknowledgementDialog": {
-        "message": "U staat op het punt een <strong>ontwikkelaarsversie van de firmware</strong> te flashen. Aan deze builds wordt nog gewerkt waardoor de volgende situaties kunnen optreden:<strong><ul><li>de firmware werkt helemaal niet;</li><li>de firmware is niet vliegbaar;</li><li>er zijn veiligheidsproblemen met de firmware, bijvoorbeeld flyaways;</li><li>de firmware kan ervoor zorgen dat de vluchtcontroller niet meer reageert of beschadigd raakt.</li></ul></strong>Als u toch deze firmware gaat flashen <strong>neemt u de volledige verantwoordelijkheid voor het risico van een van de bovenstaande gebeurtenissen</strong>. Verder erkent u dat het nodig is om <strong>grondige bench tests uit te voeren met de propellors verwijderd</strong> alvorens er getracht wordt met behulp van deze firmware te vliegen."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Ik heb het bovenstaande gelezen en <strong>Ik neem de volledige verantwoordelijkheid op mij<strong> voor het flashen van instabiele firmware"
-    },
-    "unstableFirmwareAcknowledgementFlash": {
-        "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Gedetecteerd: <strong>$1</strong> - vorig apparaat is nog aan het flashen, gelieve opnieuw te koppelen en het opnieuw te proberen"

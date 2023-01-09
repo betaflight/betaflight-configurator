@@ -448,12 +448,6 @@
         "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
-    "BuildServerSuccess": {
-        "message": "Informação da versão do $1 carregadas do servidor de compilação."
-    },
-    "BuildServerFailure": {
-        "message": "<b>Requisição ao servidor de compilação para versões do $1 falhou, usando informações em cache. Motivo: <code>$2</code></b>"
-    },
     "buildServerUsingCached": {
         "message": "Utilizando informações de compilação em cache para $1."
     },
@@ -3136,15 +3130,6 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Procurar informações na placa conectada para selecionar o firmware correto"
-    },
-    "unstableFirmwareAcknowledgementDialog": {
-        "message": "Você está prestes a instalar uma <strong>versão do firmware em desenvolvimento</strong>. Estas versões estão sendo modificadas constantemente e qualquer um dos seguintes casos podem acontecer:<strong><ul><li>O firmware não funciona de forma alguma.</li><li>Não é possível voar.</li><li>Comportamento inseguro da aeronave, como perda de controle.</li><li>O firmware pode fazer com que o controlador de voo pare de responder ou seja danificado.</li></ul></strong>Se você prosseguir com a instalação deste firmware, <strong>você está assumindo a responsabilidade total pelo risco de qualquer um dos casos acima acontecer</strong>. Além disso, você reconhece que é necessário realizar <strong>todos os testes de bancada com as hélices removidas</strong> antes de qualquer tentativa de voar este firmware."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Eu li o texto acima e <strong>assumo total responsabilidade<strong> por instalar um firmware instável"
-    },
-    "unstableFirmwareAcknowledgementFlash": {
-        "message": "Atualizar"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detectado: <strong>$1</strong> - o dispositivo anterior ainda está sendo atualizado, reconecte para tentar novamente"
