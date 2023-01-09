@@ -3,6 +3,8 @@ import GUI from '../gui';
 import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from '../msp/MSPHelper';
 import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
 
 const transponder = {
     available: false,

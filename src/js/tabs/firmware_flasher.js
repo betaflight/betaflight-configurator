@@ -8,6 +8,12 @@ import { tracking } from "../Analytics";
 import MspHelper from '../msp/MSPHelper';
 import STM32 from '../protocols/stm32';
 import FC from '../fc';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import PortHandler from '../port_handler';
+import CONFIGURATOR, { API_VERSION_1_39 } from '../data_storage';
+import serial from '../serial';
+import STM32DFU from '../protocols/stm32usbdfu';
 
 const firmware_flasher = {
     targets: null,

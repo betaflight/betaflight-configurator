@@ -4,6 +4,11 @@ import { tracking } from "../Analytics";
 import { bit_check } from "../serial_backend";
 import VirtualFC from "../VirtualFC";
 import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import PortHandler from "../port_handler";
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import LogoManager from "../LogoManager";
 
 const FONT = {};
 const SYM = {};

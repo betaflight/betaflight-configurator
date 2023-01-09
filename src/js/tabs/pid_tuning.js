@@ -5,6 +5,12 @@ import { tracking } from "../Analytics";
 import { have_sensor } from "../serial_backend";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
+import MSP from "../msp";
+import TuningSliders from "../TuningSliders";
+import Model from "../model";
+import RateCurve from "../RateCurve";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,

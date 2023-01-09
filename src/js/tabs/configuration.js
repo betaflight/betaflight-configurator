@@ -4,6 +4,10 @@ import GUI from '../gui';
 import { tracking } from "../Analytics";
 import { reinitializeConnection } from '../serial_backend';
 import { mspHelper } from '../msp/MSPHelper';
+import FC from '../fc';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
 
 const configuration = {
     analyticsChanges: {},

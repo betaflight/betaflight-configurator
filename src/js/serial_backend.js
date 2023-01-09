@@ -6,6 +6,14 @@ import Features from "./Features";
 import VirtualFC from "./VirtualFC";
 import Beepers from "./Beepers";
 import FC from "./fc";
+import MSP from "./msp";
+import MSPCodes from "./msp/MSPCodes";
+import PortUsage from "./port_usage";
+import PortHandler from "./port_handler";
+import CONFIGURATOR, { API_VERSION_1_45 } from "./data_storage";
+import serial from "./serial";
+import MdnsDiscovery from "./mdns_discovery";
+import UI_PHONES from "./phones_ui";
 
 let mspHelper;
 let connectionTimestamp;

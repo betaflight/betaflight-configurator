@@ -1,14 +1,21 @@
 import '../components/init.js';
+// Currently fc is everywhere, so we need to import it here
+// till all is in modules
+import './fc.js';
+// same, msp seems to be everywhere used from global scope
+import './msp/MSPHelper.js';
 import { i18n } from './localization.js';
 import GUI from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 import ReleaseChecker from './release_checker.js';
 import { tracking, createAnalytics } from './Analytics.js';
 import { initializeSerialBackend } from './serial_backend.js';
-// Currently fc is everywhere, so we need to import it here
-// till all is in modules
-import './fc.js';
-import './msp/MSPHelper.js';
+import FC from './fc.js';
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_45 } from './data_storage.js';
+import serial from './serial.js';
+import CliAutoComplete from './CliAutoComplete.js';
+import DarkTheme from './DarkTheme.js';
+import UI_PHONES from './phones_ui.js';
 
 $(document).ready(function () {
 

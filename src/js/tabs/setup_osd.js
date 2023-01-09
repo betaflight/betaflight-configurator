@@ -1,5 +1,7 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
 
 const setup_osd = {
 };

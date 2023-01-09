@@ -4,6 +4,10 @@ import GUI from '../gui';
 import BuildApi from '../BuildApi';
 import { tracking } from '../Analytics';
 import { reinitializeConnection } from "../serial_backend";
+import CONFIGURATOR from "../data_storage";
+import serial from "../serial";
+import CliAutoComplete from "../CliAutoComplete";
+import UI_PHONES from "../phones_ui";
 
 const cli = {
     lineDelayMs: 15,

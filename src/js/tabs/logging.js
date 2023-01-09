@@ -3,6 +3,9 @@ import GUI from '../gui';
 import { i18n } from '../localization';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import FC from '../fc.js';
+import MSP from '../msp.js';
+import MSPCodes from '../msp/MSPCodes.js';
+import CONFIGURATOR from '../data_storage.js';
 
 const logging = {};
 logging.initialize = function (callback) {

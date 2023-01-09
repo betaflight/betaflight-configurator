@@ -1,5 +1,3 @@
-'use strict';
-
 //MSPCodes needs to be re-integrated inside MSP object
 const MSPCodes = {
     MSP_API_VERSION:                1,
@@ -205,3 +203,5 @@ const MSPCodes = {
     PID_PROFILE_NAME:               3,
     RATE_PROFILE_NAME:              4,
 };
+
+export default MSPCodes;

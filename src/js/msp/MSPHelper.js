@@ -5,6 +5,12 @@ import GUI from "../gui";
 import FC from "../fc";
 import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
+import MSP from "../msp";
+import MSPCodes from "./MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from '../data_storage';
+import EscProtocols from "../utils/EscProtocols";
+import huffmanDecodeBuf from "../huffman";
+import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
@@ -2641,11 +2647,6 @@ MspHelper.prototype.sendSerialConfig = function(callback) {
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 
-MSP.SDCARD_STATE_NOT_PRESENT = 0; //TODO, move these to better place
-MSP.SDCARD_STATE_FATAL       = 1;
-MSP.SDCARD_STATE_CARD_INIT   = 2;
-MSP.SDCARD_STATE_FS_INIT     = 3;
-MSP.SDCARD_STATE_READY       = 4;
 
 let mspHelper;
 // This is temporary, till things are moved

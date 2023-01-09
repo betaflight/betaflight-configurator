@@ -1,6 +1,5 @@
-'use strict';
-
-(function () {
+import GUI from "./gui";
+import { i18n } from "./localization";
 
 /**
  * Takes an ImageData object and returns an MCM symbol as an array of strings.
@@ -288,6 +287,4 @@ LogoManager.drawPreview = function () {
     }
 };
 
-window.LogoManager = LogoManager;
-
-})();
+export default LogoManager;

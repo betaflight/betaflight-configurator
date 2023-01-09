@@ -1,4 +1,7 @@
-'use strict';
+import GUI from "./gui";
+import { i18n } from "./localization";
+import FC from "./fc";
+import CONFIGURATOR from "./data_storage";
 
 const serial = {
     connected:      false,
@@ -461,3 +464,5 @@ const serial = {
         }
     },
 };
+
+export default serial;

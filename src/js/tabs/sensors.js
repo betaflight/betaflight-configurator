@@ -3,6 +3,9 @@ import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { have_sensor } from "../serial_backend";
 import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import serial from "../serial";
 
 const sensors = {};
 sensors.initialize = function (callback) {

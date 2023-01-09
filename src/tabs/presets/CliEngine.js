@@ -1,5 +1,7 @@
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
+import CONFIGURATOR from "../../js/data_storage";
+import serial from "../../js/serial";
 
 export default class CliEngine
 {

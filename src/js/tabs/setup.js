@@ -4,6 +4,10 @@ import { configuration_backup, configuration_restore } from '../backup_restore';
 import { have_sensor } from '../serial_backend';
 import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
+import MSP from '../msp';
+import Model from '../model';
+import MSPCodes from '../msp/MSPCodes';
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43 } from '../data_storage';
 
 const setup = {
     yaw_fix: 0.0,

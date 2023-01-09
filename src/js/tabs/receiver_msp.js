@@ -1,4 +1,5 @@
-"use strict";
+import windowWatcherUtil from "../utils/window_watchers";
+import { i18n } from "../localization";
 
 const css_dark = [
     '/css/dark-theme.css',
@@ -42,8 +43,9 @@ let gimbalElems;
 let sliderElems;
 let enableTX = false;
 
+// NOTE: import should be enough right?
 // This is a hack to get the i18n var of the parent, but the localizePage not works
-const i18n = opener.i18n;
+// const i18n = opener.i18n;
 
 const watchers = {
     darkTheme: (val) => {

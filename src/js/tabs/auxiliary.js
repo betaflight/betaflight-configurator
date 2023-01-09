@@ -3,6 +3,10 @@ import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { bit_check } from '../serial_backend';
 import { mspHelper } from '../msp/MSPHelper';
+import FC from '../FC';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import adjustBoxNameIfPeripheralWithModeID from '../peripherals';
 
 const auxiliary = {};
 

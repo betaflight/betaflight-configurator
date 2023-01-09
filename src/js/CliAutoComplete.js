@@ -1,4 +1,5 @@
-'use strict';
+import GUI from './gui';
+import CONFIGURATOR from './data_storage';
 
 /**
  * Encapsulates the AutoComplete logic
@@ -575,3 +576,5 @@ CliAutoComplete._initTextcomplete = function() {
         }),
     ]);
 };
+
+export default CliAutoComplete;

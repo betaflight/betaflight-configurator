@@ -1,5 +1,12 @@
 import MspHelper from "./MSPHelper";
 import { read_serial } from "../serial_backend";
+import { i18n } from "../localization";
+import GUI from "../gui";
+import MSP from "../msp";
+import FC from "../fc";
+import MSPCodes from "./MSPCodes";
+import CONFIGURATOR from "../data_storage";
+import serial from "../serial";
 
 const MSPConnectorImpl = function () {
     this.baud = undefined;

@@ -10,7 +10,8 @@
     that being said, it seems that certain level of CLRSTATUS is required before running another type of operation for
     example switching from DNLOAD to UPLOAD, etc, clearning the state so device is in dfuIDLE is highly recommended.
 */
-'use strict';
+import GUI from "../gui";
+import { i18n } from "../localization";
 
 // Task for the brave ones. There are quite a few shadow variables which clash when
 // const or let are used. So need to run thorough tests when chaning `var`
@@ -1124,3 +1125,5 @@ STM32DFU_protocol.prototype.cleanup = function () {
 
 // initialize object
 const STM32DFU = new STM32DFU_protocol();
+
+export default STM32DFU;

@@ -5,6 +5,9 @@ import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
 import { mspHelper } from "./msp/MSPHelper";
+import MSP from "./msp";
+import MSPCodes from "./msp/MSPCodes";
+import CONFIGURATOR, { API_VERSION_1_41, API_VERSION_1_45 } from "./data_storage";
 
 // code below is highly experimental, although it runs fine on latest firmware
 // the data inside nested objects needs to be verified if deep copy works properly

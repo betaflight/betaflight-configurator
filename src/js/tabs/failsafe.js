@@ -2,7 +2,11 @@ import { i18n } from "../localization";
 import GUI from '../gui';
 import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from "../msp/MSPHelper";
-
+import MSP from "../msp";
+import FC from "../fc";
+import MSPCodes from "../msp/MSPCodes";
+import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
+import { API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 
 const failsafe = {};
 

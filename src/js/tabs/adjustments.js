@@ -1,6 +1,10 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
 import { mspHelper } from '../msp/MSPHelper';
+import MSP from '../msp';
+import FC from '../fc';
+import MSPCodes from '../msp/MSPCodes';
+import { API_VERSION_1_42 } from '../data_storage';
 
 const adjustments = {};
 

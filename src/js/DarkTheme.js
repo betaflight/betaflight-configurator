@@ -1,4 +1,5 @@
-'use strict';
+import GUI from "./gui";
+import windowWatcherUtil from "./utils/window_watchers";
 
 const css_dark = [
     './css/dark-theme.css',
@@ -63,3 +64,5 @@ DarkTheme.applyDark = function () {
 DarkTheme.applyNormal = function () {
     css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
 };
+
+export default DarkTheme;

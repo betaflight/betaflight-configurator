@@ -9,6 +9,11 @@ import { tracking } from "../Analytics";
 import { bit_check, reinitializeConnection } from "../serial_backend";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
+import MSP from "../msp";
+import { mixerList } from "../model";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
+import EscProtocols from "../utils/EscProtocols";
 
 const motors = {
     previousDshotBidir: null,
@@ -63,7 +68,8 @@ motors.initialize = async function (callback) {
     const self = this;
 
     self.armed = false;
-    self.escProtocolIsDshot = false;
+    // self.escProtocolIsDshot = false;
+    self.escProtocolIsDshot = true ;
     self.configHasChanged = false;
     self.configChanges = {};
 
@@ -231,7 +237,8 @@ motors.initialize = async function (callback) {
             && (FC.MOTOR_OUTPUT_ORDER) && (FC.MOTOR_OUTPUT_ORDER.length > 0);
         domMotorOutputReorderDialogOpen.toggle(isMotorReorderingAvailable);
 
-        self.escProtocolIsDshot = EscProtocols.IsProtocolDshot(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
+        // self.escProtocolIsDshot = EscProtocols.IsProtocolDshot(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
+        self.escProtocolIsDshot = true;
     }
 
     function process_html() {

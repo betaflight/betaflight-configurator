@@ -1,4 +1,5 @@
 import { get as getConfig } from './ConfigStorage';
+import MSP from './msp';
 
 window.TABS = {}; // filled by individual tab js file
 
