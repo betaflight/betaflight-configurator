@@ -351,8 +351,7 @@
 		}
 		.osd-preview {
 			flex: 2 0 auto;
-			width: 740px;
-			max-width: max(min(950px,calc((100vh - 470px) * 1.25)), 636px);
+			max-width: 740px;
 		}
 		.osd-profile {
 			flex: 1 1 auto;
@@ -512,51 +511,20 @@ button {
 	.tab-osd {
 		.osd-preview {
 			order: 1;
-			min-width: 950px;
+			min-width: 100%;
 		}
 		.osd-feature {
 			order: 2;
-			min-width: 450px;
 		}
 		.osd-profile {
 			order: 3;
-			min-width: 450px;
-		}
-	}
-}
-@media all and (max-width: 1200px) {
-	.tab-osd {
-		.osd-preview {
-			order: 1;
-			min-width: 740px;
-		}
-		.osd-feature {
-			order: 2;
-			min-width: 400px;
-		}
-		.osd-profile {
-			order: 3;
-			min-width: 400px;
-		}
-	}
-}
-@media only screen and (max-width: 1055px) {
-	.tab-osd {
-		.content_wrapper {
-			height: calc(100% - 30px);
-		}
-	}
-}
-@media only screen and (max-device-width: 1055px) {
-	.tab-osd {
-		.content_wrapper {
-			height: calc(100% - 30px);
 		}
 	}
 }
 @media all and (max-width: 575px) {
 	.tab-osd {
 		.osd-preview {
+			min-width: 100%;
 			order: 1;
 		}
 		.osd-feature {
@@ -566,11 +534,6 @@ button {
 		.osd-profile {
 			order: 3;
 			max-width: 100%;
-		}
-		.preview.requires-osd-feature {
-			width: 100%;
-			max-width: 363px;
-			margin-left: 0;
 		}
 	}
 	#fontmanagercontent {
@@ -588,12 +551,5 @@ button {
 		right: 0;
 		top: 0;
 		margin-bottom: 15px;
-	}
-}
-@media all and (max-width: 575px) and (min-width: 390px) {
-	.tab-osd {
-		.preview.requires-osd-feature {
-			margin-left: calc((100% - 363px) / 2);
-		}
 	}
 }
