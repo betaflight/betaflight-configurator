@@ -835,8 +835,8 @@ firmware_flasher.initialize = function (callback) {
                     },
                 };
 
-                const coreBuild = !targetDetail.cloudBuild || $('input[name="coreBuildModeCheckbox"]').is(':checked');
-                if (coreBuild) {
+                const coreBuild = (targetDetail.cloudBuild !== true) || $('input[name="coreBuildModeCheckbox"]').is(':checked');
+                if (coreBuild === true) {
                     request.options.push("CORE_BUILD");
                 } else {
                     request.options.push("CLOUD_BUILD");
