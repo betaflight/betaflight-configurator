@@ -6734,10 +6734,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Définitions personnalisées"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "Mode Classique"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "Ce mode ignore tous les paramètres d'ici. Ceci mène au même résultat que les nightlies classiques, fournit par commodité."
     }
 }

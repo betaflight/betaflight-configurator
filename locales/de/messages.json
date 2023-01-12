@@ -6622,10 +6622,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Benutzer-Definitionen"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "Classic-Modus"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "Dieser Modus ignoriert alle hier aufgeführten Parameter. Dies erreicht im Grunde das gleiche wie die Nightlies und dient der Bequemlichkeit."
     }
 }

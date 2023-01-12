@@ -6745,10 +6745,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Definicions personalitzades"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "Mode clàssic"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "Aquest mode ignora tots els paràmetres aquí. Això bàsicament aconsegueix el mateix que les clàssiques versions intermitjas, i es proporciona per comoditat."
     }
 }

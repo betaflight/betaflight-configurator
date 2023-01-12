@@ -6631,7 +6631,7 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Definicións personalizadas"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "Modo clásico"
     }
 }

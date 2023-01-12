@@ -674,12 +674,12 @@ firmware_flasher.initialize = function (callback) {
             $('input.flash_manual_baud').prop('checked', false);
         }
 
-        $('input.classicbuild_mode').change(function () {
+        $('input.corebuild_mode').change(function () {
             const status = $(this).is(':checked');
 
-            $('.hide-in-classic-build-mode').toggle(!status);
+            $('.hide-in-core-build-mode').toggle(!status);
         });
-        $('input.classicbuild_mode').change();
+        $('input.corebuild_mode').change();
 
         // bind UI hook so the status is saved on change
         $('input.flash_manual_baud').change(function() {
@@ -830,14 +830,16 @@ firmware_flasher.initialize = function (callback) {
                     target: targetDetail.target,
                     release: targetDetail.release,
                     options: [],
-                    classicBuild: false,
                     client: {
                         version: CONFIGURATOR.version,
                     },
                 };
 
-                request.classicBuild = !targetDetail.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
-                if (!request.classicBuild) {
+                const coreBuild = !targetDetail.cloudBuild || $('input[name="coreBuildModeCheckbox"]').is(':checked');
+                if (coreBuild) {
+                    request.options.push("CORE_BUILD");
+                } else {
+                    request.options.push("CLOUD_BUILD");
                     $('select[name="radioProtocols"] option:selected').each(function () {
                         request.options.push($(this).val());
                     });

@@ -6737,10 +6737,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "'Defines' personalizadas"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "Modo Clássico"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "Este modo ignora todos os parâmetros aqui. Isto essencialmente consegue o mesmo que as nightlies clássicas, e é fornecido por conveniência."
     }
 }

@@ -6737,10 +6737,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "カスタム定義"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "クラシックモード"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "このモードでは、ここにあるすべてのパラメータが無視されます。これは基本的に古典的なナイトリービルドと同様なことを実現するもので、利便性のために提供されています。"
     }
 }

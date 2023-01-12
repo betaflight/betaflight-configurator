@@ -6737,10 +6737,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "사용자 정의"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "클래식 모드"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "이 모드는 여기의 모든 매개 변수를 무시합니다. 이것은 기본적으로 고전적인 집합체와 동일한 것을 달성하며, 편의를 위해 제공됩니다."
     }
 }
