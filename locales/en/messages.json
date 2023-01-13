@@ -6852,6 +6852,6 @@
         "message": "Core (formally 'classic')"
     },
     "coreBuildModeDescription": {
-        "message": "This mode loads the core hardware drivers (and some limited features). This produces a build that is the same as the builds released in the nightlies. It is provided here to assist in the detection of hardware on a flight controller, and is provided for that convenience only. There is no guarantee that all the features will be available (only hardware), for example GPS and LED_STRIP are not available on smaller flash sized targets like F722 and F411 using this mode."
+        "message": "This mode loads the core hardware drivers (and some limited features). This produces a build that is the same as the builds released in the nightlies. It is provided here to assist in the detection of hardware on a flight controller, and is provided for that convenience only. Not all features will be available (only hardware) using this mode."
     }
 }
