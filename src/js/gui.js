@@ -318,10 +318,10 @@ class GuiControl {
         const documentationButton = $('div#content #button-documentation');
         documentationButton.html("Wiki");
 
-        let url = `https://betaflight.com/docs/configurator/${GUI.active_tab.toLowerCase()}-tab`;
-        const req = new Request(url);
+        const tRex = GUI.active_tab.replaceAll('_', '-').toLowerCase();
+        const url = `https://betaflight.com/docs/configurator/${tRex}-tab`;
 
-        fetch(req).then(res => documentationButton.attr("href", res.ok ? url : `https://betaflight.com/docs/wiki`));
+        fetch(url).then(res => documentationButton.attr("href", res.ok ? url : `https://betaflight.com/docs/wiki`));
 
         // loading tooltip
         jQuery(function () {
