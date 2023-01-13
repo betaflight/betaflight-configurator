@@ -318,9 +318,10 @@ class GuiControl {
         const documentationButton = $('div#content #button-documentation');
         documentationButton.html("Wiki");
 
-        if (GUI.active_tab !== 'firmware_flasher') { // hack till we have a nice solution for individual wiki URLs for each page
-            documentationButton.attr("href", "https://github.com/betaflight/betaflight/wiki");
-        }
+        let url = `https://betaflight.com/docs/configurator/${GUI.active_tab.toLowerCase()}-tab`;
+        const req = new Request(url);
+
+        fetch(req).then(res => documentationButton.attr("href", res.ok ? url : `https://betaflight.com/docs/wiki`));
 
         // loading tooltip
         jQuery(function () {
