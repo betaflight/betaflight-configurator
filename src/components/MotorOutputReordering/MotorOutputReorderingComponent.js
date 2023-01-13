@@ -1,6 +1,7 @@
 import MotorOutputReorderConfig from "./MotorOutputReorderingConfig";
 import MotorOutputReorderCanvas from "./MotorOutputReorderingCanvas";
 import { mspHelper } from "../../js/msp/MSPHelper";
+import { reinitializeConnection } from "../../js/serial_backend";
 
 export default class MotorOutputReorderComponent
 {
