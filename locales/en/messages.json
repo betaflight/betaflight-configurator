@@ -6849,9 +6849,9 @@
         "message": "Custom Defines"
     },
     "coreBuild": {
-        "message": "Core (formally 'classic')"
+        "message": "Core Only"
     },
     "coreBuildModeDescription": {
-        "message": "This mode loads the core hardware drivers (and some limited features). This produces a build that is the same as the builds released in the nightlies. It is provided here to assist in the detection of hardware on a flight controller, and is provided for that convenience only. Not all features will be available (only hardware) using this mode."
+        "message": "This mode loads the core hardware drivers (and some limited features). It is provided here to assist in the detection of hardware on a flight controller, and is provided for that convenience only. Not all features will be available (only hardware) using this mode."
     }
 }
