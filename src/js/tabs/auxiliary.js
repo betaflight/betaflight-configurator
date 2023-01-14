@@ -1,8 +1,13 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
-import { bit_check } from '../serial_backend';
+import { bit_check } from '../bit';
 import { mspHelper } from '../msp/MSPHelper';
+import FC from '../fc';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import adjustBoxNameIfPeripheralWithModeID from '../peripherals';
+import { gui_log } from '../gui_log';
 
 const auxiliary = {};
 
@@ -392,7 +397,7 @@ auxiliary.initialize = function (callback) {
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    GUI.log(i18n.getMessage('auxiliaryEepromSaved'));
+                    gui_log(i18n.getMessage('auxiliaryEepromSaved'));
                 });
             }
         });
@@ -561,7 +566,6 @@ auxiliary.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.auxiliary = auxiliary;
 export {
     auxiliary,
 };

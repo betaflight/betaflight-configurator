@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import i18nextXHRBackend from 'i18next-xhr-backend';
-import GUI from './gui.js';
+import { gui_log } from './gui_log.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 
 const i18n = {};
@@ -84,7 +84,7 @@ i18n.changeLanguage = function(languageSelected) {
     setConfig({'userLanguageSelect': languageSelected});
     i18next.changeLanguage(getValidLocale(languageSelected));
     i18n.selectedLanguage = languageSelected;
-    GUI.log(i18n.getMessage('language_changed'));
+    gui_log(i18n.getMessage('language_changed'));
 };
 
 i18n.getMessage = function(messageID, parameters) {

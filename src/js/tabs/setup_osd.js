@@ -1,5 +1,8 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import { gui_log } from "../gui_log";
 
 const setup_osd = {
 };
@@ -35,7 +38,7 @@ setup_osd.initialize = function (callback) {
 
         $('a.resetSettings').click(function () {
             MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
-                GUI.log(i18n.getMessage('initialSetupSettingsRestored'));
+                gui_log(i18n.getMessage('initialSetupSettingsRestored'));
 
                 GUI.tab_switch_cleanup(function () {
                     TABS.setup_osd.initialize();

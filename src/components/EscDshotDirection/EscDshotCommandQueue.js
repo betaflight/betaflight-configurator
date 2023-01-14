@@ -1,3 +1,5 @@
+import MSP from '../../js/msp.js';
+
 class EscDshotCommandQueue
 {
     constructor (intervalMs)

@@ -1,9 +1,15 @@
 import { i18n } from "../localization";
 import GUI from '../gui';
 import { tracking } from "../Analytics";
-import { bit_check } from "../serial_backend";
+import { bit_check } from "../bit";
 import VirtualFC from "../VirtualFC";
 import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import PortHandler from "../port_handler";
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import LogoManager from "../LogoManager";
+import { gui_log } from "../gui_log";
 
 const FONT = {};
 const SYM = {};
@@ -250,7 +256,7 @@ FONT.upload = function($progress) {
         .then(function() {
 
             console.log(`Uploaded all ${FONT.data.characters.length} characters`);
-            GUI.log(i18n.getMessage('osdSetupUploadingFontEnd', {length: FONT.data.characters.length}));
+            gui_log(i18n.getMessage('osdSetupUploadingFontEnd', {length: FONT.data.characters.length}));
 
             OSD.GUI.fontManager.close();
 
@@ -3245,7 +3251,7 @@ osd.initialize = function(callback) {
 
         $('a.save').click(function() {
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-            GUI.log(i18n.getMessage('osdSettingsSaved'));
+            gui_log(i18n.getMessage('osdSettingsSaved'));
             const oldText = $(this).html();
             $(this).html(i18n.getMessage('osdButtonSaved'));
             setTimeout(() => {
@@ -3365,7 +3371,7 @@ osd.initialize = function(callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log(i18n.getMessage('osdWritePermissions'));
+                            gui_log(i18n.getMessage('osdWritePermissions'));
                         }
                     });
                 });

@@ -1,10 +1,17 @@
-// NOTE: this is a circular dependency, needs investigating
-import { bit_check, sensor_status, bit_set, update_dataflash_global } from "../serial_backend";
+import { update_dataflash_global } from "../update_dataflash_global";
+import { sensor_status } from "../sensor_helpers";
+import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
-import GUI from "../gui";
+import { gui_log } from "../gui_log";
 import FC from "../fc";
 import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
+import MSP from "../msp";
+import MSPCodes from "./MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from '../data_storage';
+import EscProtocols from "../utils/EscProtocols";
+import huffmanDecodeBuf from "../huffman";
+import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
@@ -2610,14 +2617,14 @@ MspHelper.prototype.setArmingEnabled = function(doEnable, disableRunawayTakeoffP
 
         MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
             if (doEnable) {
-                GUI.log(i18n.getMessage('armingEnabled'));
+                gui_log(i18n.getMessage('armingEnabled'));
                 if (disableRunawayTakeoffPrevention) {
-                    GUI.log(i18n.getMessage('runawayTakeoffPreventionDisabled'));
+                    gui_log(i18n.getMessage('runawayTakeoffPreventionDisabled'));
                 } else {
-                    GUI.log(i18n.getMessage('runawayTakeoffPreventionEnabled'));
+                    gui_log(i18n.getMessage('runawayTakeoffPreventionEnabled'));
                 }
             } else {
-                GUI.log(i18n.getMessage('armingDisabled'));
+                gui_log(i18n.getMessage('armingDisabled'));
             }
 
             if (onCompleteCallback) {
@@ -2641,11 +2648,6 @@ MspHelper.prototype.sendSerialConfig = function(callback) {
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 
-MSP.SDCARD_STATE_NOT_PRESENT = 0; //TODO, move these to better place
-MSP.SDCARD_STATE_FATAL       = 1;
-MSP.SDCARD_STATE_CARD_INIT   = 2;
-MSP.SDCARD_STATE_FS_INIT     = 3;
-MSP.SDCARD_STATE_READY       = 4;
 
 let mspHelper;
 // This is temporary, till things are moved

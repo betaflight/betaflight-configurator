@@ -1,4 +1,6 @@
-'use strict';
+import GUI from "./gui.js";
+import CONFIGURATOR from "./data_storage.js";
+import serial from "./serial.js";
 
 const MSP = {
     symbols: {
@@ -407,3 +409,12 @@ const MSP = {
         this.callbacks_cleanup();
     },
 };
+
+MSP.SDCARD_STATE_NOT_PRESENT = 0;
+MSP.SDCARD_STATE_FATAL       = 1;
+MSP.SDCARD_STATE_CARD_INIT   = 2;
+MSP.SDCARD_STATE_FS_INIT     = 3;
+MSP.SDCARD_STATE_READY       = 4;
+
+window.MSP = MSP;
+export default MSP;

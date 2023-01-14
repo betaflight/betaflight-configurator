@@ -1,14 +1,19 @@
 import '../components/init.js';
+import { gui_log } from './gui_log.js';
+// same, msp seems to be everywhere used from global scope
+import './msp/MSPHelper.js';
 import { i18n } from './localization.js';
 import GUI from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 import ReleaseChecker from './release_checker.js';
 import { tracking, createAnalytics } from './Analytics.js';
 import { initializeSerialBackend } from './serial_backend.js';
-// Currently fc is everywhere, so we need to import it here
-// till all is in modules
-import './fc.js';
-import './msp/MSPHelper.js';
+import FC from './fc.js';
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_45 } from './data_storage.js';
+import serial from './serial.js';
+import CliAutoComplete from './CliAutoComplete.js';
+import DarkTheme from './DarkTheme.js';
+import UI_PHONES from './phones_ui.js';
 
 $(document).ready(function () {
 
@@ -215,8 +220,8 @@ function startProcess() {
     // translate to user-selected language
     i18n.localizePage();
 
-    GUI.log(i18n.getMessage('infoVersionOs', { operatingSystem: GUI.operating_system }));
-    GUI.log(i18n.getMessage('infoVersionConfigurator', { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
+    gui_log(i18n.getMessage('infoVersionOs', { operatingSystem: GUI.operating_system }));
+    gui_log(i18n.getMessage('infoVersionConfigurator', { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
     if (GUI.isNWJS()) {
         const nwWindow = GUI.nwGui.Window.get();
@@ -291,12 +296,12 @@ function startProcess() {
             const tabName = $(self).text();
 
             if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
-                GUI.log(i18n.getMessage('tabSwitchConnectionRequired'));
+                gui_log(i18n.getMessage('tabSwitchConnectionRequired'));
                 return;
             }
 
             if (GUI.connect_lock) { // tab switching disabled while operation is in progress
-                GUI.log(i18n.getMessage('tabSwitchWaitForOperation'));
+                gui_log(i18n.getMessage('tabSwitchWaitForOperation'));
                 return;
             }
 
@@ -308,7 +313,7 @@ function startProcess() {
                 }
                 $('div.open_firmware_flasher a.flash').click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
-                GUI.log(i18n.getMessage('tabSwitchUpgradeRequired', [tabName]));
+                gui_log(i18n.getMessage('tabSwitchUpgradeRequired', [tabName]));
                 return;
             }
 
@@ -690,7 +695,7 @@ function notifyOutdatedVersion(releaseData) {
 
     if (semver.lt(CONFIGURATOR.version, CONFIGURATOR.latestVersion)) {
         const message = i18n.getMessage('configuratorUpdateNotice', [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl]);
-        GUI.log(message);
+        gui_log(message);
 
         const dialog = $('.dialogConfiguratorUpdate')[0];
 

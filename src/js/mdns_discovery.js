@@ -1,4 +1,5 @@
-'use strict';
+import GUI from './gui';
+import PortHandler from './port_handler';
 
 const MDNS_INTERVAL = 10000;
 const TCP_CHECK_INTERVAL = 5000;
@@ -132,3 +133,5 @@ MdnsDiscovery.tcpCheck = function() {
         }
     }
 };
+
+export default MdnsDiscovery;

@@ -1,6 +1,5 @@
-'use strict';
-
-(function () {
+import { gui_log } from "./gui_log";
+import { i18n } from "./localization";
 
 /**
  * Takes an ImageData object and returns an MCM symbol as an array of strings.
@@ -132,7 +131,7 @@ LogoManager.init = function (font, logoStartIndex) {
                 const constraint = this.constraints.imageSize;
                 if (img.width !== constraint.expectedWidth
                     || img.height !== constraint.expectedHeight) {
-                    GUI.log(i18n.getMessage("osdSetupCustomLogoImageSizeError", {
+                    gui_log(i18n.getMessage("osdSetupCustomLogoImageSizeError", {
                         width: img.width,
                         height: img.height,
                     }));
@@ -158,7 +157,7 @@ LogoManager.init = function (font, logoStartIndex) {
                         const rgbPixel = ctx.getImageData(x, y, 1, 1).data.slice(0, 3),
                             colorKey = rgbPixel.join("-");
                         if (!this.constants.MCM_COLORMAP[colorKey]) {
-                            GUI.log(i18n.getMessage("osdSetupCustomLogoColorMapError", {
+                            gui_log(i18n.getMessage("osdSetupCustomLogoColorMapError", {
                                 valueR: rgbPixel[0],
                                 valueG: rgbPixel[1],
                                 valueB: rgbPixel[2],
@@ -288,6 +287,4 @@ LogoManager.drawPreview = function () {
     }
 };
 
-window.LogoManager = LogoManager;
-
-})();
+export default LogoManager;

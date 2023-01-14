@@ -1,7 +1,7 @@
-'use strict';
+import FC from "./fc";
 
 // generate mixer
-const mixerList = [
+export const mixerList = [
     { name: 'Tricopter',        pos: 3,  model: 'tricopter',  image: 'tri',          motors: 3, servos: true },
     { name: 'Quad +',           pos: 2,  model: 'quad_x',     image: 'quad_p',       motors: 4, servos: false },
     { name: 'Quad X',           pos: 0,  model: 'quad_x',     image: 'quad_x',       motors: 4, servos: false },
@@ -151,3 +151,5 @@ Model.prototype.dispose = function () {
         this.renderer.dispose();
     }
 };
+
+export default Model;

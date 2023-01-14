@@ -1,4 +1,4 @@
-import { bit_check, bit_clear, bit_set } from './serial_backend';
+import { bit_check, bit_clear, bit_set } from './bit';
 
 class Beepers {
     constructor(config, supportedConditions) {

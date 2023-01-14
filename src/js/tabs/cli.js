@@ -4,6 +4,11 @@ import GUI from '../gui';
 import BuildApi from '../BuildApi';
 import { tracking } from '../Analytics';
 import { reinitializeConnection } from "../serial_backend";
+import CONFIGURATOR from "../data_storage";
+import serial from "../serial";
+import CliAutoComplete from "../CliAutoComplete";
+import UI_PHONES from "../phones_ui";
+import { gui_log } from "../gui_log";
 
 const cli = {
     lineDelayMs: 15,
@@ -503,7 +508,7 @@ cli.read = function (readInfo) {
         if (this.cliBuffer === 'Rebooting') {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
-            GUI.log(i18n.getMessage('cliReboot'));
+            gui_log(i18n.getMessage('cliReboot'));
             reinitializeConnection();
         }
 
@@ -512,7 +517,7 @@ cli.read = function (readInfo) {
     this.lastArrival = new Date().getTime();
 
     if (!CONFIGURATOR.cliValid && validateText.indexOf('CLI') !== -1) {
-        GUI.log(i18n.getMessage('cliEnter'));
+        gui_log(i18n.getMessage('cliEnter'));
         CONFIGURATOR.cliValid = true;
         // begin output history with the prompt (last line of welcome message)
         // this is to match the content of the history with what the user sees on this tab

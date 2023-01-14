@@ -1,8 +1,14 @@
-'use strict';
+import GUI from "./gui";
+import FC from "./fc";
+import { i18n } from "./localization";
+import { generateVirtualApiVersions } from './utils/common';
+import { get as getConfig } from "./ConfigStorage";
+import serial from "./serial";
+import MdnsDiscovery from "./mdns_discovery";
 
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
-const usbDevices = { filters: [
+export const usbDevices = { filters: [
     {'vendorId': 1155, 'productId': 57105}, // STM Device in DFU Mode || Digital Radio in USB mode
     {'vendorId': 10473, 'productId': 393},  // GD32 DFU Bootloader
 ] };
@@ -36,8 +42,8 @@ PortHandler.reinitialize = function () {
     if (this.usbCheckLoop) {
         clearTimeout(this.usbCheckLoop);
     }
-    this.showVirtualMode = ConfigStorage.get('showVirtualMode').showVirtualMode;
-    this.showAllSerialDevices = ConfigStorage.get('showAllSerialDevices').showAllSerialDevices;
+    this.showVirtualMode = getConfig('showVirtualMode').showVirtualMode;
+    this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
 
     this.check();   // start listening, check after TIMEOUT_CHECK ms
 };
@@ -420,3 +426,7 @@ PortHandler.flush_callbacks = function () {
 
     return killed;
 };
+
+// temp workaround till everything is in modules
+window.PortHandler = PortHandler;
+export default PortHandler;

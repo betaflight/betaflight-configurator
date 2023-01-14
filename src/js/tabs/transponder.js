@@ -3,6 +3,9 @@ import GUI from '../gui';
 import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from '../msp/MSPHelper';
 import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import { gui_log } from "../gui_log";
 
 const transponder = {
     available: false,
@@ -300,7 +303,7 @@ transponder.initialize = function(callback) {
 
                 function save_to_eeprom() {
                     MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
-                        GUI.log(i18n.getMessage('transponderEepromSaved'));
+                        gui_log(i18n.getMessage('transponderEepromSaved'));
                         if ( $(_this).hasClass('reboot') ) {
                             GUI.tab_switch_cleanup(function() {
                                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
@@ -312,7 +315,7 @@ transponder.initialize = function(callback) {
                 if (FC.TRANSPONDER.provider !== "0" && FC.TRANSPONDER.data.length !== FC.TRANSPONDER.providers.find(function(provider) {
                         return provider.id == FC.TRANSPONDER.provider;
                     }).dataLength ) {
-                    GUI.log(i18n.getMessage('transponderDataInvalid'));
+                    gui_log(i18n.getMessage('transponderDataInvalid'));
                 } else {
                     save_transponder_data();
                 }

@@ -1,4 +1,4 @@
-'use strict';
+import GUI from "./gui";
 
 const UI_PHONES = {
     background: '#background',
@@ -85,3 +85,5 @@ const UI_PHONES = {
         $(this.headerbar).removeClass('expand2 expand');
     },
 };
+
+export default UI_PHONES;

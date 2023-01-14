@@ -1,5 +1,13 @@
 import MspHelper from "./MSPHelper";
 import { read_serial } from "../serial_backend";
+import { i18n } from "../localization";
+import GUI from "../gui";
+import MSP from "../msp";
+import FC from "../fc";
+import MSPCodes from "./MSPCodes";
+import CONFIGURATOR from "../data_storage";
+import serial from "../serial";
+import { gui_log } from "../gui_log";
 
 const MSPConnectorImpl = function () {
     this.baud = undefined;
@@ -37,7 +45,7 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
             // disconnect after 10 seconds with error if we don't get IDENT data
             GUI.timeout_add('msp_connector', function () {
                 if (!CONFIGURATOR.connectionValid) {
-                    GUI.log(i18n.getMessage('noConfigurationReceived'));
+                    gui_log(i18n.getMessage('noConfigurationReceived'));
 
                     disconnectAndCleanup();
                 }
@@ -57,7 +65,7 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
                 self.onConnectCallback();
             });
         } else {
-            GUI.log(i18n.getMessage('serialPortOpenFail'));
+            gui_log(i18n.getMessage('serialPortOpenFail'));
             self.onFailureCallback();
         }
     });

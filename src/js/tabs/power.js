@@ -3,6 +3,9 @@ import GUI from '../gui';
 import { tracking } from "../Analytics";
 import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import { gui_log } from '../gui_log';
 
 const power = {
     supported: false,
@@ -500,7 +503,7 @@ power.initialize = function (callback) {
         }
 
         function save_completed() {
-            GUI.log(i18n.getMessage('configurationEepromSaved'));
+            gui_log(i18n.getMessage('configurationEepromSaved'));
 
             TABS.power.initialize();
         }

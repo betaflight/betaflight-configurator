@@ -1,4 +1,7 @@
-'use strict';
+import MSP from "./msp";
+import FC from "./fc";
+import MSPCodes from "./msp/MSPCodes";
+import { API_VERSION_1_44 } from './data_storage';
 
 const TuningSliders = {
     // Legacy Sliders
@@ -824,3 +827,5 @@ TuningSliders.resetDTermFilterSlider = function() {
     this.calculateNewDTermFilters();
     this.updateFilterSlidersDisplay();
 };
+
+export default TuningSliders;

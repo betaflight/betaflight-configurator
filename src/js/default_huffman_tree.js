@@ -1,6 +1,6 @@
-'use strict';
+import { HUFFMAN_EOF } from "./huffman";
 
-const defaultHuffmanTree = [
+export const defaultHuffmanTree = [
     { value: 0x00, codeLen: 2, code: 0x0003 },  //  11
     { value: 0x01, codeLen: 3, code: 0x0005 },  //  101
     { value: 0x02, codeLen: 4, code: 0x0009 },  //  1001
@@ -260,7 +260,7 @@ const defaultHuffmanTree = [
     { value: HUFFMAN_EOF, codeLen: 12, code: 0x0000 },  //  000000000000
 ];
 
-const defaultHuffmanLenIndex = function() {
+export const defaultHuffmanLenIndex = function() {
     const result = Array(defaultHuffmanTree.length).fill(-1);
 
     for (let i = 0; i < defaultHuffmanTree.length; ++i) {

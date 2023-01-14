@@ -1,6 +1,9 @@
 import { i18n } from '../localization';
 import GUI from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
+import PortHandler from '../port_handler';
+import CliAutoComplete from '../CliAutoComplete';
+import DarkTheme from '../DarkTheme';
 
 const options = {};
 options.initialize = function (callback) {

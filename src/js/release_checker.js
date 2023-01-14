@@ -1,4 +1,4 @@
-import GUI from "./gui";
+import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 
@@ -20,7 +20,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
 
     if (!cacheReleaseData || !cachedReleaseLastUpdate || releaseDataTimestamp - cachedReleaseLastUpdate > 3600 * 1000) {
         $.get(self._releaseUrl, function (releaseData) {
-            GUI.log(i18n.getMessage('releaseCheckLoaded',[self._releaseName]));
+            gui_log(i18n.getMessage('releaseCheckLoaded',[self._releaseName]));
 
             const data = {};
             data[self._releaseDataTag] = releaseData;
@@ -33,13 +33,13 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
             if (data['responseJSON']) {
                 message = data['responseJSON'].message;
             }
-            GUI.log(i18n.getMessage('releaseCheckFailed',[self._releaseName,message]));
+            gui_log(i18n.getMessage('releaseCheckFailed',[self._releaseName,message]));
 
             self._processReleaseData(cacheReleaseData, processFunction);
         });
     } else {
         if (cacheReleaseData) {
-            GUI.log(i18n.getMessage('releaseCheckCached',[self._releaseName]));
+            gui_log(i18n.getMessage('releaseCheckCached',[self._releaseName]));
         }
 
         self._processReleaseData(cacheReleaseData, processFunction);
@@ -51,7 +51,7 @@ ReleaseChecker.prototype._processReleaseData = function (releaseData, processFun
     if (releaseData) {
         processFunction(releaseData);
     } else {
-        GUI.log(i18n.getMessage('releaseCheckNoInfo',[self._releaseName]));
+        gui_log(i18n.getMessage('releaseCheckNoInfo',[self._releaseName]));
 
         processFunction();
     }

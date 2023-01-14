@@ -1,6 +1,4 @@
-'use strict';
-
-const HUFFMAN_EOF = -1;
+export const HUFFMAN_EOF = -1;
 
 function huffmanDecodeBuf(inBuf, inBufCharacterCount, huffmanTree, huffmanLenIndex) {
     let code = 0;
@@ -57,3 +55,5 @@ function huffmanDecodeBuf(inBuf, inBufCharacterCount, huffmanTree, huffmanLenInd
 
     return new Uint8Array(outBuf);
 }
+
+export default huffmanDecodeBuf;

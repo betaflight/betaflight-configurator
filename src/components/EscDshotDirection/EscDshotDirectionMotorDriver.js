@@ -1,5 +1,6 @@
 import EscDshotCommandQueue from './EscDshotCommandQueue.js';
 import DshotCommand from '../../js/utils/DshotCommand.js';
+import MSPCodes from '../../js/msp/MSPCodes.js';
 
 class EscDshotDirectionMotorDriver
 {
