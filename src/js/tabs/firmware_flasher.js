@@ -76,13 +76,9 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
             // Wiki link to url found in unified target configuration or if not defined to general wiki url
-            let targetWiki = $('#targetWikiInfoUrl');
+            const targetWiki = $('#targetWikiInfoUrl');
             targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
-            if (summary.wiki === undefined) {
-                targetWiki.attr("href", "https://github.com/betaflight/betaflight/wiki/");
-            } else {
-                targetWiki.attr("href", summary.wiki);
-            }
+            targetWiki.attr("href", summary.wiki === undefined ? "https://betaflight.com/docs/wiki/" : summary.wiki);
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
