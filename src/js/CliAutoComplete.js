@@ -578,6 +578,5 @@ CliAutoComplete._initTextcomplete = function() {
     ]);
 };
 
-// NOTE: temp for karma tests to pass
 window.CliAutoComplete = CliAutoComplete;
 export default CliAutoComplete;

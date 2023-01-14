@@ -1,7 +1,9 @@
 import { get as getConfig } from './ConfigStorage';
 import MSP from './msp';
 
-window.TABS = {}; // filled by individual tab js file
+const TABS = {};
+
+window.TABS = TABS; // filled by individual tab js file
 
 const GUI_MODES = {
     NWJS: "NW.js",
@@ -523,7 +525,7 @@ function GUI_checkOperatingSystem() {
 
 const GUI = new GuiControl();
 
+export { TABS };
 // initialize object into GUI variable
 window.GUI = GUI;
-
 export default GUI;
