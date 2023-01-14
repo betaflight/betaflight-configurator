@@ -6848,10 +6848,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Custom Defines"
     },
-    "classicBuild": {
-        "message": "Classic Mode"
+    "coreBuild": {
+        "message": "Core Only"
     },
-    "classicBuildModeDescription": {
-        "message": "This mode ignores all the parameters here. This essentially achieves the same as the classic nightlies, and is provided for convenience."
+    "coreBuildModeDescription": {
+        "message": "This option builds a firmware that contains the hardware drivers (and some limited features). It is available to assist in the detection of the hardware on a flight controller, and is provided for that convenience only. Not all features will be available (only hardware) using this option."
     }
 }

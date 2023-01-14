@@ -6737,10 +6737,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Defines personalizados"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "Modo clásico"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "Este modo ignora todos los parámetros de aquí. Básicamente consigue lo mismo que las compilaciones clásicas, y se proporciona por comodidad."
     }
 }

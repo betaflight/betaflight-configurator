@@ -6737,10 +6737,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Brugertilpasset Defines"
     },
-    "classicBuild": {
+    "coreBuild": {
         "message": "Klassisk"
     },
-    "classicBuildModeDescription": {
+    "coreBuildModeDescription": {
         "message": "Denne tilstand ignorer alle parametre herunder. Overordnet set er det samme indstilling, som gælder for et natligt byg, og kan anvendes for bekvemmelighed."
     }
 }
