@@ -1,7 +1,7 @@
-import GUI from "./gui";
+import GUI, { TABS } from "./gui";
 import FC from "./fc";
 import { i18n } from "./localization";
-import { generateVirtualApiVersions } from './utils/common';
+import { generateVirtualApiVersions, getTextWidth } from './utils/common';
 import { get as getConfig } from "./ConfigStorage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";

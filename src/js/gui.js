@@ -1,9 +1,10 @@
 import { get as getConfig } from './ConfigStorage';
 import MSP from './msp';
+import Switchery from 'switchery-latest';
+import jBox from 'jbox';
+import { checkChromeRuntimeError } from './utils/common';
 
 const TABS = {};
-
-window.TABS = TABS; // filled by individual tab js file
 
 const GUI_MODES = {
     NWJS: "NW.js",
@@ -483,7 +484,7 @@ class GuiControl {
     readTextFileDialog(extension) {
         const accepts = [{ description: `${extension.toUpperCase()} files`, extensions: [extension] }];
 
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             chrome.fileSystem.chooseEntry({ type: 'openFile', accepts: accepts }, function (entry) {
                 checkChromeRuntimeError();
 
@@ -527,6 +528,4 @@ function GUI_checkOperatingSystem() {
 const GUI = new GuiControl();
 
 export { TABS };
-// initialize object into GUI variable
-window.GUI = GUI;
 export default GUI;

@@ -1,5 +1,5 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { get as getStorage, set as setStorage } from '../SessionStorage';
 import BuildApi from '../BuildApi';
@@ -15,6 +15,8 @@ import CONFIGURATOR, { API_VERSION_1_39 } from '../data_storage';
 import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
+import semver from 'semver';
+import { checkChromeRuntimeError } from '../utils/common';
 
 const firmware_flasher = {
     targets: null,

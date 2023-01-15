@@ -1,6 +1,6 @@
 import semver from 'semver';
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { reinitializeConnection } from '../serial_backend';
 import { mspHelper } from '../msp/MSPHelper';
@@ -505,5 +505,5 @@ ports.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.ports = ports;
+TABS.ports = ports;
 export { ports };

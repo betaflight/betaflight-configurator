@@ -3,6 +3,9 @@ import { i18n } from "./localization";
 import FC from "./fc";
 import CONFIGURATOR from "./data_storage";
 import { gui_log } from "./gui_log";
+import inflection from "inflection";
+import PortHandler from "./port_handler";
+import { checkChromeRuntimeError } from "./utils/common";
 
 const serial = {
     connected:      false,

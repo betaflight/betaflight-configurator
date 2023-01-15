@@ -116,7 +116,7 @@ export default class PresetParser {
                 this._processParserProperty(preset, line, propertyName);
                 break;
             default:
-                this.console.err(`Parcing preset: unknown property type '${this._settings.presetsFileMetadata[property].type}' for the property '${propertyName}'`);
+                this.console.err(`Parcing preset: unknown property type '${this._settings.presetsFileMetadata[propertyName].type}' for the property '${propertyName}'`);
         }
     }
 

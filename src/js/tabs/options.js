@@ -1,9 +1,11 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import PortHandler from '../port_handler';
 import CliAutoComplete from '../CliAutoComplete';
-import DarkTheme from '../DarkTheme';
+import DarkTheme, { setDarkTheme } from '../DarkTheme';
+import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdates';
+import { checkSetupAnalytics } from '../Analytics';
 
 const options = {};
 options.initialize = function (callback) {
@@ -87,7 +89,7 @@ options.initCheckForConfiguratorUnstableVersions = function () {
 };
 
 options.initAnalyticsOptOut = function () {
-    const result = ConfigStorage.get('analyticsOptOut');
+    const result = getConfig('analyticsOptOut');
     if (result.analyticsOptOut) {
         $('div.analyticsOptOut input').prop('checked', true);
     }
@@ -95,7 +97,7 @@ options.initAnalyticsOptOut = function () {
     $('div.analyticsOptOut input').change(function () {
         const checked = $(this).is(':checked');
 
-        ConfigStorage.set({'analyticsOptOut': checked});
+        setConfig({'analyticsOptOut': checked});
 
         checkSetupAnalytics(function (analyticsService) {
             if (checked) {
@@ -188,5 +190,5 @@ options.initDarkTheme = function () {
 };
 
 // TODO: remove when modules are in place
-window.TABS.options = options;
+TABS.options = options;
 export { options };

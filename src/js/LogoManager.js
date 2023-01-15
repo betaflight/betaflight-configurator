@@ -1,5 +1,6 @@
 import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
+import { checkChromeRuntimeError } from "./utils/common";
 
 /**
  * Takes an ImageData object and returns an MCM symbol as an array of strings.

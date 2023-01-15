@@ -10,9 +10,10 @@
     that being said, it seems that certain level of CLRSTATUS is required before running another type of operation for
     example switching from DNLOAD to UPLOAD, etc, clearning the state so device is in dfuIDLE is highly recommended.
 */
-import GUI from "../gui";
+import GUI, { TABS } from "../gui";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
+import { checkChromeRuntimeError } from "../utils/common";
 
 // Task for the brave ones. There are quite a few shadow variables which clash when
 // const or let are used. So need to run thorough tests when chaning `var`
@@ -730,6 +731,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 // the following should fail if read protection is active
                 self.controlTransfer('in', self.request.UPLOAD, 2, 0, self.chipInfo.option_bytes.total_size, 0, function (ob_data, errcode) {
                 if (errcode) {
+                    // TODO: this was undefined, guessing with how it usually works it should be 1
+                    const errcode1 = 1;
                     console.log(`USB transfer error while reading option bytes: ${errcode1}`);
                     self.cleanup();
                     return;

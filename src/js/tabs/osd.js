@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { bit_check } from "../bit";
 import VirtualFC from "../VirtualFC";
@@ -10,6 +10,10 @@ import PortHandler from "../port_handler";
 import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
+import semver from "semver";
+import jBox from "jbox";
+import inflection from "inflection";
+import { checkChromeRuntimeError } from "../utils/common";
 
 const FONT = {};
 const SYM = {};
@@ -3346,6 +3350,8 @@ osd.initialize = function(callback) {
                     // check if file is writable
                     chrome.fileSystem.isWritableEntry(fileEntry, function(isWritable) {
                         if (isWritable) {
+                            // TODO: is this coming from firmware_flasher? seems a bit random
+                            // eslint-disable-next-line no-undef
                             const blob = new Blob([intel_hex], { type: 'text/plain' });
 
                             fileEntry.createWriter(function(writer) {
@@ -3410,8 +3416,8 @@ osd.cleanup = function(callback) {
     }
 };
 
-window.TABS.osd = osd;
-window.OSD = OSD;
+TABS.osd = osd;
 export {
     osd,
+    OSD,
 };

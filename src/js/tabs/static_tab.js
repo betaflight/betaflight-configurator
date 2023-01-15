@@ -1,5 +1,5 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 
 const staticTab = {};
 staticTab.initialize = function (staticTabName, callback) {
@@ -21,5 +21,5 @@ staticTab.initialize = function (staticTabName, callback) {
 // Just noting that other tabs have cleanup functions.
 
 // TODO: remove when modules are in place
-window.TABS.staticTab = staticTab;
+TABS.staticTab = staticTab;
 export { staticTab };

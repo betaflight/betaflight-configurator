@@ -11,6 +11,10 @@ import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import CONFIGURATOR, { API_VERSION_1_41, API_VERSION_1_45 } from "./data_storage";
 import { gui_log } from './gui_log';
+import { generateFilename } from "./utils/generate_filename";
+import semver from "semver";
+import { tracking } from "./Analytics";
+import { checkChromeRuntimeError } from "./utils/common";
 
 // code below is highly experimental, although it runs fine on latest firmware
 // the data inside nested objects needs to be verified if deep copy works properly
@@ -509,7 +513,7 @@ export function configuration_restore(callback) {
                 }
 
                 for (let i = 0; i < configuration.profiles[profileIndex].ServoConfig.length; i++) {
-                    const servoConfig = profiles[profileIndex].ServoConfig;
+                    const servoConfig = configuration.profiles[profileIndex].ServoConfig;
 
                     servoConfig[i].angleAtMin = 45;
                     servoConfig[i].angleAtMax = 45;

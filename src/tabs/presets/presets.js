@@ -1,5 +1,6 @@
-import GUI from '../../js/gui';
+import GUI, { TABS } from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
+import { generateFilename } from '../../js/utils/generate_filename';
 import { i18n } from '../../js/localization';
 import FC from '../../js/fc';
 import CONFIGURATOR from '../../js/data_storage';
@@ -657,7 +658,7 @@ presets.resetInitialValues = function() {
     this._domProgressDialog.close();
 };
 
-window.TABS.presets = presets;
+TABS.presets = presets;
 export {
     presets,
 };
