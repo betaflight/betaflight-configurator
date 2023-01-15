@@ -24,7 +24,18 @@ const RateCurve = function (useLegacyCurve) {
         return result;
     };
 
-    this.drawRateCurve = function (rate, rcRate, rcExpo, superExpoActive, deadband, limit, maxAngularVel, context, width, height) {
+    this.drawRateCurve = function (
+        rate,
+        rcRate,
+        rcExpo,
+        superExpoActive,
+        deadband,
+        limit,
+        maxAngularVel,
+        context,
+        width,
+        height,
+    ) {
         const canvasHeightScale = height / (2 * maxAngularVel);
 
         const stepWidth = context.lineWidth;
@@ -34,10 +45,18 @@ const RateCurve = function (useLegacyCurve) {
 
         context.beginPath();
         let rcData = minRc;
-        context.moveTo(-500, -canvasHeightScale * this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit));
+        context.moveTo(
+            -500,
+            -canvasHeightScale *
+                this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit),
+        );
         rcData = rcData + stepWidth;
         while (rcData <= maxRc) {
-            context.lineTo(rcData - midRc, -canvasHeightScale * this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit));
+            context.lineTo(
+                rcData - midRc,
+                -canvasHeightScale *
+                    this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit),
+            );
 
             rcData = rcData + stepWidth;
         }
@@ -49,33 +68,57 @@ const RateCurve = function (useLegacyCurve) {
     this.drawLegacyRateCurve = function (rate, rcRate, rcExpo, context, width, height) {
         // math magic by englishman
         let rateY = height * rcRate;
-        rateY = rateY + (1 / (1 - ((rateY / height) * rate)));
+        rateY = rateY + 1 / (1 - (rateY / height) * rate);
 
         // draw
         context.beginPath();
         context.moveTo(0, height);
-        context.quadraticCurveTo(width * 11 / 20, height - ((rateY / 2) * (1 - rcExpo)), width, height - rateY);
+        context.quadraticCurveTo((width * 11) / 20, height - (rateY / 2) * (1 - rcExpo), width, height - rateY);
         context.stroke();
     };
 
-    this.drawStickPosition = function (rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit, maxAngularVel, context, stickColor) {
-
+    this.drawStickPosition = function (
+        rcData,
+        rate,
+        rcRate,
+        rcExpo,
+        superExpoActive,
+        deadband,
+        limit,
+        maxAngularVel,
+        context,
+        stickColor,
+    ) {
         const DEFAULT_SIZE = 60; // canvas units, relative size of the stick indicator (larger value is smaller indicator)
-        const rateScaling  = (context.canvas.height / 2) / maxAngularVel;
+        const rateScaling = context.canvas.height / 2 / maxAngularVel;
 
-        const currentValue = this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit);
+        const currentValue = this.rcCommandRawToDegreesPerSecond(
+            rcData,
+            rate,
+            rcRate,
+            rcExpo,
+            superExpoActive,
+            deadband,
+            limit,
+        );
 
-        if(rcData!=undefined) {
+        if (rcData != undefined) {
             context.save();
-            context.fillStyle = stickColor || '#000000';
+            context.fillStyle = stickColor || "#000000";
 
-            context.translate(context.canvas.width/2, context.canvas.height/2);
+            context.translate(context.canvas.width / 2, context.canvas.height / 2);
             context.beginPath();
-            context.arc(rcData-1500, -rateScaling * currentValue, context.canvas.height / DEFAULT_SIZE, 0, 2 * Math.PI);
+            context.arc(
+                rcData - 1500,
+                -rateScaling * currentValue,
+                context.canvas.height / DEFAULT_SIZE,
+                0,
+                2 * Math.PI,
+            );
             context.fill();
             context.restore();
         }
-        return (Math.abs(currentValue)<0.5)?0:currentValue.toFixed(0); // The calculated value in deg/s is returned from the function call for further processing.
+        return Math.abs(currentValue) < 0.5 ? 0 : currentValue.toFixed(0); // The calculated value in deg/s is returned from the function call for further processing.
     };
 
     this.getBetaflightRates = function (rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo, superExpoActive, limit) {
@@ -92,7 +135,7 @@ const RateCurve = function (useLegacyCurve) {
         rcRateConstant = 200;
 
         if (rcExpo > 0) {
-            rcCommandf =  rcCommandf * Math.pow(rcCommandfAbs, expoPower) * rcExpo + rcCommandf * (1-rcExpo);
+            rcCommandf = rcCommandf * Math.pow(rcCommandfAbs, expoPower) * rcExpo + rcCommandf * (1 - rcExpo);
         }
 
         if (superExpoActive) {
@@ -100,7 +143,7 @@ const RateCurve = function (useLegacyCurve) {
             angularVel = rcRateConstant * rcRate * rcCommandf; // 200 should be variable checked on version (older versions it's 205,9)
             angularVel = angularVel * rcFactor;
         } else {
-            angularVel = (((rate * 100) + 27) * rcCommandf / 16) / 4.1; // Only applies to old versions ?
+            angularVel = ((rate * 100 + 27) * rcCommandf) / 16 / 4.1; // Only applies to old versions ?
         }
 
         angularVel = this.constrain(angularVel, -1 * limit, limit); // Rate limit from profile
@@ -109,24 +152,24 @@ const RateCurve = function (useLegacyCurve) {
     };
 
     this.getRaceflightRates = function (rcCommandf, rate, rcRate, rcExpo) {
-        let angularVel = ((1 + 0.01 * rcExpo * (rcCommandf * rcCommandf - 1.0)) * rcCommandf);
-        angularVel = (angularVel * (rcRate + (Math.abs(angularVel) * rcRate * rate * 0.01)));
+        let angularVel = (1 + 0.01 * rcExpo * (rcCommandf * rcCommandf - 1.0)) * rcCommandf;
+        angularVel = angularVel * (rcRate + Math.abs(angularVel) * rcRate * rate * 0.01);
         return angularVel;
     };
 
     this.getKISSRates = function (rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo) {
         const kissRpy = 1 - rcCommandfAbs * rate;
         const kissTempCurve = rcCommandf * rcCommandf;
-        rcCommandf = ((rcCommandf * kissTempCurve) * rcExpo + rcCommandf * (1 - rcExpo)) * (rcRate / 10);
-        return ((2000.0 * (1.0 / kissRpy)) * rcCommandf);
+        rcCommandf = (rcCommandf * kissTempCurve * rcExpo + rcCommandf * (1 - rcExpo)) * (rcRate / 10);
+        return 2000.0 * (1.0 / kissRpy) * rcCommandf;
     };
 
     this.getActualRates = function (rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo) {
         let angularVel;
-        const expof = rcCommandfAbs * ((Math.pow(rcCommandf, 5) * rcExpo) + (rcCommandf * (1 - rcExpo)));
+        const expof = rcCommandfAbs * (Math.pow(rcCommandf, 5) * rcExpo + rcCommandf * (1 - rcExpo));
 
-        angularVel = Math.max(0, rate-rcRate);
-        angularVel = (rcCommandf * rcRate) + (angularVel * expof);
+        angularVel = Math.max(0, rate - rcRate);
+        angularVel = rcCommandf * rcRate + angularVel * expof;
 
         return angularVel;
     };
@@ -136,33 +179,32 @@ const RateCurve = function (useLegacyCurve) {
         rate = Math.max(rate, rcRate);
 
         let angularVel;
-        const superExpoConfig = (((rate / rcRate) - 1) / (rate / rcRate));
+        const superExpoConfig = (rate / rcRate - 1) / (rate / rcRate);
         const curve = Math.pow(rcCommandfAbs, 3) * rcExpo + rcCommandfAbs * (1 - rcExpo);
 
-        angularVel = 1.0 / (1.0 - (curve * superExpoConfig));
+        angularVel = 1.0 / (1.0 - curve * superExpoConfig);
         angularVel = rcCommandf * rcRate * angularVel;
 
         return angularVel;
     };
 
     this.getCurrentRates = function () {
-
         const currentRates = {
-            roll_rate:          FC.RC_TUNING.roll_rate,
-            pitch_rate:         FC.RC_TUNING.pitch_rate,
-            yaw_rate:           FC.RC_TUNING.yaw_rate,
-            rc_rate:            FC.RC_TUNING.RC_RATE,
-            rc_rate_yaw:        FC.RC_TUNING.rcYawRate,
-            rc_expo:            FC.RC_TUNING.RC_EXPO,
-            rc_yaw_expo:        FC.RC_TUNING.RC_YAW_EXPO,
-            rc_rate_pitch:      FC.RC_TUNING.rcPitchRate,
-            rc_pitch_expo:      FC.RC_TUNING.RC_PITCH_EXPO,
-            superexpo:          FC.FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
-            deadband:           FC.RC_DEADBAND_CONFIG.deadband,
-            yawDeadband:        FC.RC_DEADBAND_CONFIG.yaw_deadband,
-            roll_rate_limit:    FC.RC_TUNING.roll_rate_limit,
-            pitch_rate_limit:   FC.RC_TUNING.pitch_rate_limit,
-            yaw_rate_limit:     FC.RC_TUNING.yaw_rate_limit,
+            roll_rate: FC.RC_TUNING.roll_rate,
+            pitch_rate: FC.RC_TUNING.pitch_rate,
+            yaw_rate: FC.RC_TUNING.yaw_rate,
+            rc_rate: FC.RC_TUNING.RC_RATE,
+            rc_rate_yaw: FC.RC_TUNING.rcYawRate,
+            rc_expo: FC.RC_TUNING.RC_EXPO,
+            rc_yaw_expo: FC.RC_TUNING.RC_YAW_EXPO,
+            rc_rate_pitch: FC.RC_TUNING.rcPitchRate,
+            rc_pitch_expo: FC.RC_TUNING.RC_PITCH_EXPO,
+            superexpo: FC.FEATURE_CONFIG.features.isEnabled("SUPEREXPO_RATES"),
+            deadband: FC.RC_DEADBAND_CONFIG.deadband,
+            yawDeadband: FC.RC_DEADBAND_CONFIG.yaw_deadband,
+            roll_rate_limit: FC.RC_TUNING.roll_rate_limit,
+            pitch_rate_limit: FC.RC_TUNING.pitch_rate_limit,
+            yaw_rate_limit: FC.RC_TUNING.yaw_rate_limit,
         };
 
         currentRates.superexpo = true;
@@ -196,8 +238,7 @@ const RateCurve = function (useLegacyCurve) {
                     currentRates.yaw_rate *= 1000;
 
                     break;
-                default:           // add future rates types here
-
+                default: // add future rates types here
                     break;
             }
         }
@@ -206,7 +247,15 @@ const RateCurve = function (useLegacyCurve) {
     };
 };
 
-RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit) {
+RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (
+    rcData,
+    rate,
+    rcRate,
+    rcExpo,
+    superExpoActive,
+    deadband,
+    limit,
+) {
     let angleRate;
 
     if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
@@ -221,28 +270,36 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 
         switch (FC.RC_TUNING.rates_type) {
             case FC.RATES_TYPE.RACEFLIGHT:
-                angleRate=this.getRaceflightRates(rcCommandf, rate, rcRate, rcExpo);
+                angleRate = this.getRaceflightRates(rcCommandf, rate, rcRate, rcExpo);
 
                 break;
 
             case FC.RATES_TYPE.KISS:
-                angleRate=this.getKISSRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
+                angleRate = this.getKISSRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                 break;
 
             case FC.RATES_TYPE.ACTUAL:
-                angleRate=this.getActualRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
+                angleRate = this.getActualRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                 break;
 
             case FC.RATES_TYPE.QUICKRATES:
-                angleRate=this.getQuickRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
+                angleRate = this.getQuickRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
 
                 break;
 
             // add future rates types here
             default: // BetaFlight
-                angleRate=this.getBetaflightRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo, superExpoActive, limit);
+                angleRate = this.getBetaflightRates(
+                    rcCommandf,
+                    rcCommandfAbs,
+                    rate,
+                    rcRate,
+                    rcExpo,
+                    superExpoActive,
+                    limit,
+                );
 
                 break;
         }
@@ -254,14 +311,22 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 RateCurve.prototype.getMaxAngularVel = function (rate, rcRate, rcExpo, superExpoActive, deadband, limit) {
     let maxAngularVel;
     if (!this.useLegacyCurve) {
-        maxAngularVel = this.rcCommandRawToDegreesPerSecond(maxRc, rate, rcRate, rcExpo, superExpoActive, deadband, limit);
+        maxAngularVel = this.rcCommandRawToDegreesPerSecond(
+            maxRc,
+            rate,
+            rcRate,
+            rcExpo,
+            superExpoActive,
+            deadband,
+            limit,
+        );
     }
 
     return maxAngularVel;
 };
 
 RateCurve.prototype.setMaxAngularVel = function (value) {
-    this.maxAngularVel = Math.ceil(value/200) * 200;
+    this.maxAngularVel = Math.ceil(value / 200) * 200;
 
     return this.maxAngularVel;
 };
@@ -274,7 +339,18 @@ RateCurve.prototype.draw = function (rate, rcRate, rcExpo, superExpoActive, dead
         if (this.useLegacyCurve) {
             this.drawLegacyRateCurve(rate, rcRate, rcExpo, context, width, height);
         } else {
-            this.drawRateCurve(rate, rcRate, rcExpo, superExpoActive, deadband, limit, maxAngularVel, context, width, height);
+            this.drawRateCurve(
+                rate,
+                rcRate,
+                rcExpo,
+                superExpoActive,
+                deadband,
+                limit,
+                maxAngularVel,
+                context,
+                width,
+                height,
+            );
         }
     }
 };

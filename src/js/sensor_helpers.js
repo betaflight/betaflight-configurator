@@ -1,19 +1,19 @@
-import FC from './fc';
-import { bit_check } from './bit';
+import FC from "./fc";
+import { bit_check } from "./bit";
 
 export function have_sensor(sensors_detected, sensor_code) {
-    switch(sensor_code) {
-        case 'acc':
+    switch (sensor_code) {
+        case "acc":
             return bit_check(sensors_detected, 0);
-        case 'baro':
+        case "baro":
             return bit_check(sensors_detected, 1);
-        case 'mag':
+        case "mag":
             return bit_check(sensors_detected, 2);
-        case 'gps':
+        case "gps":
             return bit_check(sensors_detected, 3);
-        case 'sonar':
+        case "sonar":
             return bit_check(sensors_detected, 4);
-        case 'gyro':
+        case "gyro":
             return bit_check(sensors_detected, 5);
     }
     return false;
@@ -43,10 +43,7 @@ export function sensor_status(sensors_detected) {
         $(".accicon", eSensorStatus).removeClass("active");
     }
 
-    if (
-        (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) &&
-        have_sensor(sensors_detected, "gyro")
-    ) {
+    if ((FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) && have_sensor(sensors_detected, "gyro")) {
         $(".gyro", eSensorStatus).addClass("on");
         $(".gyroicon", eSensorStatus).addClass("active");
     } else {

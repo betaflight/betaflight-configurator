@@ -1,5 +1,5 @@
-import { get as getConfig } from './ConfigStorage';
-import MSP from './msp';
+import { get as getConfig } from "./ConfigStorage";
+import MSP from "./msp";
 
 const TABS = {};
 
@@ -25,36 +25,36 @@ class GuiControl {
         this.buttonDisabledClass = "disabled";
 
         this.defaultAllowedTabsWhenDisconnected = [
-            'landing',
-            'changelog',
-            'firmware_flasher',
-            'privacy_policy',
-            'options',
-            'help',
+            "landing",
+            "changelog",
+            "firmware_flasher",
+            "privacy_policy",
+            "options",
+            "help",
         ];
         this.defaultAllowedFCTabsWhenConnected = [
-            'setup',
-            'failsafe',
-            'transponder',
-            'osd',
-            'power',
-            'adjustments',
-            'auxiliary',
-            'presets',
-            'cli',
-            'configuration',
-            'gps',
-            'led_strip',
-            'logging',
-            'onboard_logging',
-            'modes',
-            'motors',
-            'pid_tuning',
-            'ports',
-            'receiver',
-            'sensors',
-            'servos',
-            'vtx',
+            "setup",
+            "failsafe",
+            "transponder",
+            "osd",
+            "power",
+            "adjustments",
+            "auxiliary",
+            "presets",
+            "cli",
+            "configuration",
+            "gps",
+            "led_strip",
+            "logging",
+            "onboard_logging",
+            "modes",
+            "motors",
+            "pid_tuning",
+            "ports",
+            "receiver",
+            "sensors",
+            "servos",
+            "vtx",
         ];
 
         this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
@@ -65,10 +65,10 @@ class GuiControl {
         // Check the method of execution
         this.nwGui = null;
         try {
-            this.nwGui = require('nw.gui');
+            this.nwGui = require("nw.gui");
             this.Mode = GUI_MODES.NWJS;
         } catch (ex) {
-            if (typeof cordovaApp !== 'undefined') {
+            if (typeof cordovaApp !== "undefined") {
                 this.Mode = GUI_MODES.Cordova;
             } else {
                 this.Mode = GUI_MODES.Other;
@@ -81,7 +81,7 @@ class GuiControl {
     // interval = time interval in miliseconds
     // first = true/false if code should be ran initially before next timer interval hits
     interval_add(name, code, interval, first) {
-        const data = { 'name': name, 'timer': null, 'code': code, 'interval': interval, 'fired': 0, 'paused': false };
+        const data = { name: name, timer: null, code: code, interval: interval, fired: 0, paused: false };
 
         if (first === true) {
             code(); // execute code
@@ -105,13 +105,18 @@ class GuiControl {
     // first = true/false if code should be ran initially before next timer interval hits
     // condition = function reference with true/false result, a condition to be checked before every interval code execution
     interval_add_condition(name, code, interval, first, condition) {
-        this.interval_add(name, () => {
-            if (condition()) {
-                code();
-            } else {
-                this.interval_remove(name);
-            }
-        }, interval, first);
+        this.interval_add(
+            name,
+            () => {
+                if (condition()) {
+                    code();
+                } else {
+                    this.interval_remove(name);
+                }
+            },
+            interval,
+            first,
+        );
     }
     // name = string
     interval_remove(name) {
@@ -142,7 +147,6 @@ class GuiControl {
     }
     // name = string
     interval_resume(name) {
-
         function executeCode(obj) {
             obj.code(); // execute code
             obj.fired++; // increment counter
@@ -168,9 +172,11 @@ class GuiControl {
         const self = this;
         let timersKilled = 0;
 
-        for (let i = (this.interval_array.length - 1); i >= 0; i--) { // reverse iteration
+        for (let i = this.interval_array.length - 1; i >= 0; i--) {
+            // reverse iteration
             let keep = false;
-            if (keepArray) { // only run through the array if it exists
+            if (keepArray) {
+                // only run through the array if it exists
                 keepArray.forEach(function (name) {
                     if (self.interval_array[i].name === name) {
                         keep = true;
@@ -195,15 +201,14 @@ class GuiControl {
     timeout_add(name, code, timeout) {
         const self = this;
         const data = {
-            'name': name,
-            'timer': null,
-            'timeout': timeout,
+            name: name,
+            timer: null,
+            timeout: timeout,
         };
 
         // start timer with "cleaning" callback
         data.timer = setTimeout(function () {
             code(); // execute code
-
 
             // remove object from array
             const index = self.timeout_array.indexOf(data);
@@ -260,23 +265,22 @@ class GuiControl {
         }
     }
     switchery() {
+        const COLOR_ACCENT = "var(--accent)";
+        const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
 
-        const COLOR_ACCENT = 'var(--accent)';
-        const COLOR_SWITCHERY_SECOND = 'var(--switcherysecond)';
-
-        $('.togglesmall').each(function (index, elem) {
+        $(".togglesmall").each(function (index, elem) {
             const switchery = new Switchery(elem, {
-                size: 'small',
+                size: "small",
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
             });
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
-            $(elem).removeClass('togglesmall');
+            $(elem).removeClass("togglesmall");
         });
 
-        $('.toggle').each(function (index, elem) {
+        $(".toggle").each(function (index, elem) {
             const switchery = new Switchery(elem, {
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
@@ -284,63 +288,61 @@ class GuiControl {
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
-            $(elem).removeClass('toggle');
+            $(elem).removeClass("toggle");
         });
 
-        $('.togglemedium').each(function (index, elem) {
+        $(".togglemedium").each(function (index, elem) {
             const switchery = new Switchery(elem, {
-                className: 'switcherymid',
+                className: "switcherymid",
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
             });
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
-            $(elem).removeClass('togglemedium');
+            $(elem).removeClass("togglemedium");
         });
     }
     content_ready(callback) {
-
         this.switchery();
 
-        const documentationButton = $('div#content #button-documentation');
+        const documentationButton = $("div#content #button-documentation");
         documentationButton.html("Wiki");
 
-        const tRex = GUI.active_tab.replaceAll('_', '-').toLowerCase();
+        const tRex = GUI.active_tab.replaceAll("_", "-").toLowerCase();
         const url = `https://betaflight.com/docs/configurator/${tRex}-tab`;
 
-        fetch(url).then(res => documentationButton.attr("href", res.ok ? url : `https://betaflight.com/docs/wiki`));
+        fetch(url).then((res) => documentationButton.attr("href", res.ok ? url : `https://betaflight.com/docs/wiki`));
 
         // loading tooltip
         jQuery(function () {
-
-            new jBox('Tooltip', {
-                attach: '.cf_tip',
-                trigger: 'mouseenter',
+            new jBox("Tooltip", {
+                attach: ".cf_tip",
+                trigger: "mouseenter",
                 closeOnMouseleave: true,
-                closeOnClick: 'body',
+                closeOnClick: "body",
                 delayOpen: 100,
                 delayClose: 100,
                 position: {
-                    x: 'right',
-                    y: 'center',
+                    x: "right",
+                    y: "center",
                 },
-                outside: 'x',
+                outside: "x",
             });
 
-            new jBox('Tooltip', {
-                theme: 'Widetip',
-                attach: '.cf_tip_wide',
-                trigger: 'mouseenter',
+            new jBox("Tooltip", {
+                theme: "Widetip",
+                attach: ".cf_tip_wide",
+                trigger: "mouseenter",
                 closeOnMouseleave: true,
-                closeOnClick: 'body',
+                closeOnClick: "body",
                 delayOpen: 100,
                 delayClose: 100,
                 position: {
-                    x: 'right',
-                    y: 'center',
+                    x: "right",
+                    y: "center",
                 },
-                outside: 'x',
+                outside: "x",
             });
         });
 
@@ -349,10 +351,10 @@ class GuiControl {
         }
     }
     selectDefaultTabWhenConnected() {
-        const result = getConfig(['rememberLastTab', 'lastTab']);
-        const tab = result.rememberLastTab && result.lastTab ? result.lastTab : 'tab_setup';
+        const result = getConfig(["rememberLastTab", "lastTab"]);
+        const tab = result.rememberLastTab && result.lastTab ? result.lastTab : "tab_setup";
 
-        $(`#tabs ul.mode-connected .${tab} a`).trigger('click');
+        $(`#tabs ul.mode-connected .${tab} a`).trigger("click");
     }
     isNWJS() {
         return this.Mode === GUI_MODES.NWJS;
@@ -415,7 +417,7 @@ class GuiControl {
     showInformationDialog(informationDialogSettings) {
         // informationDialogSettings:
         // title, text, buttonConfirmText
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const dialog = $(".dialogInformation");
             const title = dialog.find(".dialogInformationTitle");
             const content = dialog.find(".dialogInformationContent");
@@ -441,11 +443,11 @@ class GuiControl {
 
             chrome.fileSystem.chooseEntry(
                 {
-                    type: 'saveFile',
+                    type: "saveFile",
                     suggestedName: suggestedFileName,
                     accepts: accepts,
                 },
-                entry => this._saveToTextFileDialogFileSelected(entry, textToSave, resolve, reject),
+                (entry) => this._saveToTextFileDialogFileSelected(entry, textToSave, resolve, reject),
             );
         });
     }
@@ -453,42 +455,44 @@ class GuiControl {
         checkChromeRuntimeError();
 
         if (!entry) {
-            console.log('No file selected for saving');
+            console.log("No file selected for saving");
             resolve(false);
             return;
         }
 
-        entry.createWriter(writer => {
-            writer.onerror = () => {
-                reject();
-                console.error('Failed to write file');
-            };
+        entry.createWriter(
+            (writer) => {
+                writer.onerror = () => {
+                    reject();
+                    console.error("Failed to write file");
+                };
 
-            writer.onwriteend = () => {
-                if (textToSave.length > 0 && writer.length === 0) {
-                    writer.write(new Blob([textToSave], { type: 'text/plain' }));
-                } else {
-                    resolve(true);
-                    console.log('File write complete');
-                }
-            };
+                writer.onwriteend = () => {
+                    if (textToSave.length > 0 && writer.length === 0) {
+                        writer.write(new Blob([textToSave], { type: "text/plain" }));
+                    } else {
+                        resolve(true);
+                        console.log("File write complete");
+                    }
+                };
 
-            writer.truncate(0);
-        },
+                writer.truncate(0);
+            },
             () => {
                 reject();
-                console.error('Failed to get file writer');
-            });
+                console.error("Failed to get file writer");
+            },
+        );
     }
     readTextFileDialog(extension) {
         const accepts = [{ description: `${extension.toUpperCase()} files`, extensions: [extension] }];
 
-        return new Promise(resolve => {
-            chrome.fileSystem.chooseEntry({ type: 'openFile', accepts: accepts }, function (entry) {
+        return new Promise((resolve) => {
+            chrome.fileSystem.chooseEntry({ type: "openFile", accepts: accepts }, function (entry) {
                 checkChromeRuntimeError();
 
                 if (!entry) {
-                    console.log('No file selected for loading');
+                    console.log("No file selected for loading");
                     resolve(false);
                     return;
                 }
@@ -514,14 +518,14 @@ class GuiControl {
             .replace(/'/g, "&#039;");
     }
     addLinksTargetBlank(element) {
-        element.find('a').each(function () {
-            $(this).attr('target', '_blank');
+        element.find("a").each(function () {
+            $(this).attr("target", "_blank");
         });
     }
 }
 
 function GUI_checkOperatingSystem() {
-    return navigator?.userAgentData?.platform || 'Android';
+    return navigator?.userAgentData?.platform || "Android";
 }
 
 const GUI = new GuiControl();

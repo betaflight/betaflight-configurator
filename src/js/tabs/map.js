@@ -1,51 +1,45 @@
 const DEFAULT_ZOOM = 16,
-      DEFAULT_LON = 0,
-      DEFAULT_LAT = 0,
-      ICON_IMAGE = '/images/icons/cf_icon_position.png',
-      ICON_IMAGE_NOFIX = '/images/icons/cf_icon_position_nofix.png';
+    DEFAULT_LON = 0,
+    DEFAULT_LAT = 0,
+    ICON_IMAGE = "/images/icons/cf_icon_position.png",
+    ICON_IMAGE_NOFIX = "/images/icons/cf_icon_position_nofix.png";
 
-let iconGeometry,
-    map,
-    mapView,
-    iconStyle,
-    iconStyleNoFix,
-    iconFeature;
+let iconGeometry, map, mapView, iconStyle, iconStyleNoFix, iconFeature;
 
 window.onload = initializeMap;
 
 function initializeMap() {
-
     const lonLat = ol.proj.fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
 
     mapView = new ol.View({
-                        center: lonLat,
-                        zoom: DEFAULT_ZOOM,
-                      });
+        center: lonLat,
+        zoom: DEFAULT_ZOOM,
+    });
 
     map = new ol.Map({
-        target: 'map-canvas',
+        target: "map-canvas",
         layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM(),
-          }),
+            new ol.layer.Tile({
+                source: new ol.source.OSM(),
+            }),
         ],
         view: mapView,
         controls: [],
-      });
+    });
 
-    const icon = new ol.style.Icon(({
+    const icon = new ol.style.Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE,
-    }));
+    });
 
-    const iconNoFix = new ol.style.Icon(({
+    const iconNoFix = new ol.style.Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_NOFIX,
-    }));
+    });
 
     iconStyle = new ol.style.Style({
         image: icon,
@@ -72,35 +66,32 @@ function initializeMap() {
 
     map.addLayer(currentPositionLayer);
 
-    window.addEventListener('message', processMapEvents);
+    window.addEventListener("message", processMapEvents);
 }
 
 function processMapEvents(e) {
-
     try {
-        switch(e.data.action) {
+        switch (e.data.action) {
+            case "zoom_in":
+                mapView.setZoom(mapView.getZoom() + 1);
+                break;
 
-        case 'zoom_in':
-            mapView.setZoom(mapView.getZoom() + 1);
-            break;
+            case "zoom_out":
+                mapView.setZoom(mapView.getZoom() - 1);
+                break;
 
-        case 'zoom_out':
-            mapView.setZoom(mapView.getZoom() - 1);
-            break;
+            case "center":
+                iconFeature.setStyle(iconStyle);
+                const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
+                mapView.setCenter(center);
+                iconGeometry.setCoordinates(center);
+                break;
 
-        case 'center':
-            iconFeature.setStyle(iconStyle);
-            const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
-            mapView.setCenter(center);
-            iconGeometry.setCoordinates(center);
-            break;
-
-        case 'nofix':
-            iconFeature.setStyle(iconStyleNoFix);
-            break;
+            case "nofix":
+                iconFeature.setStyle(iconStyleNoFix);
+                break;
         }
-
-  } catch (err) {
-      console.log(`Map error ${err}`);
-  }
+    } catch (err) {
+        console.log(`Map error ${err}`);
+    }
 }

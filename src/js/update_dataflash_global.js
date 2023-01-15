@@ -18,27 +18,29 @@ export function update_dataflash_global() {
 
     const supportsDataflash = FC.DATAFLASH.totalSize > 0;
 
-    if (supportsDataflash){
+    if (supportsDataflash) {
         $(".noflash_global").css({
-           display: 'none',
+            display: "none",
         });
 
         $(".dataflash-contents_global").css({
-           display: 'block',
+            display: "block",
         });
 
         $(".dataflash-free_global").css({
-           width: `${100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100}%`,
-           display: 'block',
+            width: `${100 - ((FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize) * 100}%`,
+            display: "block",
         });
-        $(".dataflash-free_global div").text(`Dataflash: free ${formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`);
-     } else {
+        $(".dataflash-free_global div").text(
+            `Dataflash: free ${formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`,
+        );
+    } else {
         $(".noflash_global").css({
-           display: 'block',
+            display: "block",
         });
 
         $(".dataflash-contents_global").css({
-           display: 'none',
+            display: "none",
         });
-     }
+    }
 }

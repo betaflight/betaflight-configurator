@@ -1,14 +1,5 @@
 import { Promise } from "bluebird";
-import {
-    describe,
-    it,
-    expect,
-    beforeAll,
-    afterAll,
-    afterEach,
-    beforeEach,
-    vi,
-} from "vitest";
+import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach, vi } from "vitest";
 import CliAutoComplete from "../../src/js/CliAutoComplete";
 import { cli } from "../../src/js/tabs/cli";
 import "jquery-textcomplete";
@@ -87,9 +78,7 @@ describe("cli", () => {
         it("ambiguous auto-complete results", () => {
             cli.cliBuffer = "se";
             cli.read({
-                data: toArrayBuffer(
-                    "\r\x1B[Kserialpassthrough\tservo\r\n# ser"
-                ),
+                data: toArrayBuffer("\r\x1B[Kserialpassthrough\tservo\r\n# ser"),
             });
             // Ambigous auto-complete from firmware is preceded with an \r carriage return
             // which only renders a line break on Mac
@@ -221,9 +210,7 @@ describe("cli", () => {
                 triggerTabKey(cliPrompt);
 
                 expect(cli.send).toHaveBeenCalledOnce();
-                expect(cli.send).toHaveBeenCalledWith(
-                    `${backspaceCode.repeat(3)}\t`
-                );
+                expect(cli.send).toHaveBeenCalledWith(`${backspaceCode.repeat(3)}\t`);
                 done();
             });
         });
@@ -265,9 +252,7 @@ describe("cli", () => {
                 triggerEnterKey(cliPrompt);
 
                 expect(cli.send).toHaveBeenCalledOnce();
-                expect(cli.send).toHaveBeenCalledWith(
-                    `${backspaceCode.repeat(3)}\n`
-                );
+                expect(cli.send).toHaveBeenCalledWith(`${backspaceCode.repeat(3)}\n`);
                 done();
             });
         });
@@ -293,9 +278,7 @@ describe("cli", () => {
                 cli.cleanup();
 
                 expect(cli.send).toHaveBeenCalledOnce();
-                expect(cli.send).toHaveBeenCalledWith(
-                    `${backspaceCode.repeat(commandInBuffer.length)}exit\r`,
-                );
+                expect(cli.send).toHaveBeenCalledWith(`${backspaceCode.repeat(commandInBuffer.length)}exit\r`);
                 done();
             });
         });

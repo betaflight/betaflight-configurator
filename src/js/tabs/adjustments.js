@@ -1,18 +1,18 @@
-import { i18n } from '../localization';
-import GUI from '../gui';
-import { mspHelper } from '../msp/MSPHelper';
-import MSP from '../msp';
-import FC from '../fc';
-import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_42 } from '../data_storage';
-import { gui_log } from '../gui_log';
+import { i18n } from "../localization";
+import GUI from "../gui";
+import { mspHelper } from "../msp/MSPHelper";
+import MSP from "../msp";
+import FC from "../fc";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_42 } from "../data_storage";
+import { gui_log } from "../gui_log";
 
 const adjustments = {};
 
 adjustments.initialize = function (callback) {
     const self = this;
     GUI.active_tab_ref = this;
-    GUI.active_tab = 'adjustments';
+    GUI.active_tab = "adjustments";
 
     function get_adjustment_ranges() {
         MSP.send_message(MSPCodes.MSP_ADJUSTMENT_RANGES, false, false, get_box_ids);
@@ -27,25 +27,24 @@ adjustments.initialize = function (callback) {
     }
 
     function load_html() {
-        $('#content').load("./tabs/adjustments.html", process_html);
+        $("#content").load("./tabs/adjustments.html", process_html);
     }
 
     MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, get_adjustment_ranges);
 
     function addAdjustment(adjustmentIndex, adjustmentRange, auxChannelCount) {
-
-        const template = $('#tab-adjustments-templates .adjustments .adjustment');
+        const template = $("#tab-adjustments-templates .adjustments .adjustment");
         const newAdjustment = template.clone();
 
-        $(newAdjustment).attr('id', `adjustment-${adjustmentIndex}`);
-        $(newAdjustment).data('index', adjustmentIndex);
+        $(newAdjustment).attr("id", `adjustment-${adjustmentIndex}`);
+        $(newAdjustment).data("index", adjustmentIndex);
 
         //
         // update selected slot
         //
 
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            const adjustmentList = $(newAdjustment).find('.adjustmentSlot .slot');
+            const adjustmentList = $(newAdjustment).find(".adjustmentSlot .slot");
             adjustmentList.val(adjustmentRange.slotIndex);
         }
 
@@ -53,8 +52,8 @@ adjustments.initialize = function (callback) {
         // populate source channel select box
         //
 
-        const channelList = $(newAdjustment).find('.channelInfo .channel');
-        const channelOptionTemplate = $(channelList).find('option');
+        const channelList = $(newAdjustment).find(".channelInfo .channel");
+        const channelOptionTemplate = $(channelList).find("option");
         channelOptionTemplate.remove();
         for (let channelIndex = 0; channelIndex < auxChannelCount; channelIndex++) {
             const channelOption = channelOptionTemplate.clone();
@@ -68,7 +67,7 @@ adjustments.initialize = function (callback) {
         // update selected function
         //
 
-        const functionList = $(newAdjustment).find('.functionSelection .function');
+        const functionList = $(newAdjustment).find(".functionSelection .function");
         // update list of selected functions
 
         functionList.val(adjustmentRange.adjustmentFunction);
@@ -77,8 +76,8 @@ adjustments.initialize = function (callback) {
         // populate function channel select box
         //
 
-        const switchList = $(newAdjustment).find('.functionSwitchChannel .channel');
-        const switchOptionTemplate = $(switchList).find('option');
+        const switchList = $(newAdjustment).find(".functionSwitchChannel .channel");
+        const switchOptionTemplate = $(switchList).find("option");
         switchOptionTemplate.remove();
         let switchOption;
         for (let switchIndex = 0; switchIndex < auxChannelCount; switchIndex++) {
@@ -94,96 +93,101 @@ adjustments.initialize = function (callback) {
         //
 
         const channel_range = {
-                'min': [  900 ],
-                'max': [ 2100 ],
-            };
+            min: [900],
+            max: [2100],
+        };
 
         let rangeValues = [1300, 1700];
         if (adjustmentRange.range != undefined) {
             rangeValues = [adjustmentRange.range.start, adjustmentRange.range.end];
         }
 
-        let rangeElement = $(newAdjustment).find('.range');
+        let rangeElement = $(newAdjustment).find(".range");
 
-        $(rangeElement).find('.channel-slider').noUiSlider({
-            start: rangeValues,
-            behaviour: 'snap-drag',
-            margin: 25,
-            step: 25,
-            connect: true,
-            range: channel_range,
-            format: wNumb({
-                decimals: 0,
-            }),
-        });
+        $(rangeElement)
+            .find(".channel-slider")
+            .noUiSlider({
+                start: rangeValues,
+                behaviour: "snap-drag",
+                margin: 25,
+                step: 25,
+                connect: true,
+                range: channel_range,
+                format: wNumb({
+                    decimals: 0,
+                }),
+            });
 
-        $(newAdjustment).find('.channel-slider').Link('lower').to($(newAdjustment).find('.lowerLimitValue'));
-        $(newAdjustment).find('.channel-slider').Link('upper').to($(newAdjustment).find('.upperLimitValue'));
+        $(newAdjustment).find(".channel-slider").Link("lower").to($(newAdjustment).find(".lowerLimitValue"));
+        $(newAdjustment).find(".channel-slider").Link("upper").to($(newAdjustment).find(".upperLimitValue"));
 
-        $(rangeElement).find(".pips-channel-range").noUiSlider_pips({
-            mode: 'values',
-            values: [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100],
-            density: 4,
-            stepped: true,
-        });
+        $(rangeElement)
+            .find(".pips-channel-range")
+            .noUiSlider_pips({
+                mode: "values",
+                values: [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100],
+                density: 4,
+                stepped: true,
+            });
 
         //
         // add the enable/disable behavior
         //
 
-        const enableElement = $(newAdjustment).find('.enable');
-        $(enableElement).data('adjustmentElement', newAdjustment);
-        $(enableElement).change(function() {
-            const adjustmentElement = $(this).data('adjustmentElement');
+        const enableElement = $(newAdjustment).find(".enable");
+        $(enableElement).data("adjustmentElement", newAdjustment);
+        $(enableElement).change(function () {
+            const adjustmentElement = $(this).data("adjustmentElement");
             if ($(this).prop("checked")) {
-                $(adjustmentElement).find(':input').prop("disabled", false);
-                $(adjustmentElement).find('.channel-slider').removeAttr("disabled");
-                rangeElement = $(adjustmentElement).find('.range .channel-slider');
+                $(adjustmentElement).find(":input").prop("disabled", false);
+                $(adjustmentElement).find(".channel-slider").removeAttr("disabled");
+                rangeElement = $(adjustmentElement).find(".range .channel-slider");
                 const range = $(rangeElement).val();
                 if (range[0] == range[1]) {
                     const defaultRangeValues = [1300, 1700];
                     $(rangeElement).val(defaultRangeValues);
                 }
             } else {
-                $(adjustmentElement).find(':input').prop("disabled", true);
-                $(adjustmentElement).find('.channel-slider').attr("disabled", "disabled");
+                $(adjustmentElement).find(":input").prop("disabled", true);
+                $(adjustmentElement).find(".channel-slider").attr("disabled", "disabled");
             }
 
             // keep this element enabled
             $(this).prop("disabled", false);
         });
 
-        const isEnabled = (adjustmentRange?.range?.start !== adjustmentRange?.range?.end);
+        const isEnabled = adjustmentRange?.range?.start !== adjustmentRange?.range?.end;
         $(enableElement).prop("checked", isEnabled).change();
 
         return newAdjustment;
     }
 
     function process_html() {
-
         self.adjust_template();
 
         let auxChannelCount = FC.RC.active_channels - 4;
 
-        const modeTableBodyElement = $('.tab-adjustments .adjustments tbody');
+        const modeTableBodyElement = $(".tab-adjustments .adjustments tbody");
         for (let adjustmentIndex = 0; adjustmentIndex < FC.ADJUSTMENT_RANGES.length; adjustmentIndex++) {
-            const newAdjustment = addAdjustment(adjustmentIndex, FC.ADJUSTMENT_RANGES[adjustmentIndex], auxChannelCount);
+            const newAdjustment = addAdjustment(
+                adjustmentIndex,
+                FC.ADJUSTMENT_RANGES[adjustmentIndex],
+                auxChannelCount,
+            );
             modeTableBodyElement.append(newAdjustment);
         }
 
-
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('.tab-adjustments .adjustmentSlotsHelp').hide();
-            $('.tab-adjustments .adjustmentSlotHeader').hide();
-            $('.tab-adjustments .adjustmentSlot').hide();
+            $(".tab-adjustments .adjustmentSlotsHelp").hide();
+            $(".tab-adjustments .adjustmentSlotHeader").hide();
+            $(".tab-adjustments .adjustmentSlot").hide();
         }
 
         // translate to user-selected language
         i18n.localizePage();
 
         // UI Hooks
-        $('a.save').click(function () {
-
+        $("a.save").click(function () {
             // update internal data structures based on current UI elements
             const requiredAdjustmentRangeCount = FC.ADJUSTMENT_RANGES.length;
 
@@ -200,25 +204,25 @@ adjustments.initialize = function (callback) {
                 auxSwitchChannelIndex: 0,
             };
 
-            $('.tab-adjustments .adjustments .adjustment').each(function () {
+            $(".tab-adjustments .adjustments .adjustment").each(function () {
                 const adjustmentElement = $(this);
 
-                if ($(adjustmentElement).find('.enable').prop("checked")) {
-                    const rangeValues = $(this).find('.range .channel-slider').val();
+                if ($(adjustmentElement).find(".enable").prop("checked")) {
+                    const rangeValues = $(this).find(".range .channel-slider").val();
                     let slotIndex = 0;
                     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                        slotIndex = parseInt($(this).find('.adjustmentSlot .slot').val());
+                        slotIndex = parseInt($(this).find(".adjustmentSlot .slot").val());
                     }
 
                     const adjustmentRange = {
                         slotIndex: slotIndex,
-                        auxChannelIndex: parseInt($(this).find('.channelInfo .channel').val()),
+                        auxChannelIndex: parseInt($(this).find(".channelInfo .channel").val()),
                         range: {
                             start: rangeValues[0],
                             end: rangeValues[1],
                         },
-                        adjustmentFunction: parseInt($(this).find('.functionSelection .function').val()),
-                        auxSwitchChannelIndex: parseInt($(this).find('.functionSwitchChannel .channel').val()),
+                        adjustmentFunction: parseInt($(this).find(".functionSelection .function").val()),
+                        auxSwitchChannelIndex: parseInt($(this).find(".functionSwitchChannel .channel").val()),
                     };
                     FC.ADJUSTMENT_RANGES.push(adjustmentRange);
                 } else {
@@ -226,7 +230,11 @@ adjustments.initialize = function (callback) {
                 }
             });
 
-            for (let adjustmentRangeIndex = FC.ADJUSTMENT_RANGES.length; adjustmentRangeIndex < requiredAdjustmentRangeCount; adjustmentRangeIndex++) {
+            for (
+                let adjustmentRangeIndex = FC.ADJUSTMENT_RANGES.length;
+                adjustmentRangeIndex < requiredAdjustmentRangeCount;
+                adjustmentRangeIndex++
+            ) {
                 FC.ADJUSTMENT_RANGES.push(defaultAdjustmentRange);
             }
 
@@ -237,10 +245,9 @@ adjustments.initialize = function (callback) {
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    gui_log(i18n.getMessage('adjustmentsEepromSaved'));
+                    gui_log(i18n.getMessage("adjustmentsEepromSaved"));
                 });
             }
-
         });
 
         function update_marker(auxChannelIndex, channelPosition) {
@@ -249,15 +256,15 @@ adjustments.initialize = function (callback) {
             } else if (channelPosition > 2100) {
                 channelPosition = 2100;
             }
-            const percentage = (channelPosition - 900) / (2100-900) * 100;
+            const percentage = ((channelPosition - 900) / (2100 - 900)) * 100;
 
-            $('.adjustments .adjustment').each( function () {
-                const auxChannelCandidateIndex = $(this).find('.channel').val();
+            $(".adjustments .adjustment").each(function () {
+                const auxChannelCandidateIndex = $(this).find(".channel").val();
                 if (auxChannelCandidateIndex != auxChannelIndex) {
                     return;
                 }
 
-                $(this).find('.range .marker').css('left', `${percentage}%`);
+                $(this).find(".range .marker").css("left", `${percentage}%`);
             });
         }
 
@@ -278,12 +285,17 @@ adjustments.initialize = function (callback) {
         update_ui();
 
         // enable data pulling
-        GUI.interval_add('aux_data_pull', get_rc_data, 50);
+        GUI.interval_add("aux_data_pull", get_rc_data, 50);
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function () {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
+        GUI.interval_add(
+            "status_pull",
+            function () {
+                MSP.send_message(MSPCodes.MSP_STATUS);
+            },
+            250,
+            true,
+        );
 
         GUI.content_ready(callback);
     }
@@ -294,7 +306,7 @@ adjustments.cleanup = function (callback) {
 };
 
 adjustments.adjust_template = function () {
-    const selectFunction = $('#functionSelectionSelect');
+    const selectFunction = $("#functionSelectionSelect");
     const elementsNumber = 31; // 'LED Profile Select' are the last adjustmentsFunction
 
     for (let i = 0; i < elementsNumber; i++) {
@@ -306,6 +318,4 @@ adjustments.adjust_template = function () {
 };
 
 window.TABS.adjustments = adjustments;
-export {
-    adjustments,
-};
+export { adjustments };

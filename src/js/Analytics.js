@@ -1,4 +1,3 @@
-
 let tracking = null;
 export { tracking };
 
@@ -7,8 +6,7 @@ export function createAnalytics(ga, settings) {
 }
 
 class Analytics {
-
-    constructor (ga, settings) {
+    constructor(ga, settings) {
         // trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType
         this._trackingId = settings.trackingId;
 
@@ -17,44 +15,47 @@ class Analytics {
         this._googleAnalytics = ga;
 
         this._googleAnalytics.initialize(this._trackingId, {
-            storage: 'none',
+            storage: "none",
             clientId: settings.userId,
             debug: !!settings.debugMode,
         });
 
         // Make it work for the Chrome App:
-        this._googleAnalytics.set('forceSSL', true);
-        this._googleAnalytics.set('transport', 'xhr');
+        this._googleAnalytics.set("forceSSL", true);
+        this._googleAnalytics.set("transport", "xhr");
 
         // Make it work for NW.js:
-        this._googleAnalytics.set('checkProtocolTask', null);
+        this._googleAnalytics.set("checkProtocolTask", null);
 
-        this._googleAnalytics.set('appName', settings.appName);
-        this._googleAnalytics.set('appVersion', settings.debugMode ? `${settings.appVersion}-debug` : settings.appVersion);
+        this._googleAnalytics.set("appName", settings.appName);
+        this._googleAnalytics.set(
+            "appVersion",
+            settings.debugMode ? `${settings.appVersion}-debug` : settings.appVersion,
+        );
 
         this.EVENT_CATEGORIES = {
-            APPLICATION: 'Application',
-            FLIGHT_CONTROLLER: 'FlightController',
-            FLASHING: 'Flashing',
+            APPLICATION: "Application",
+            FLIGHT_CONTROLLER: "FlightController",
+            FLASHING: "Flashing",
         };
 
         this.DATA = {
-            BOARD_TYPE: 'boardType',
-            API_VERSION: 'apiVersion',
-            FIRMWARE_TYPE: 'firmwareType',
-            FIRMWARE_VERSION: 'firmwareVersion',
-            FIRMWARE_NAME: 'firmwareName',
-            FIRMWARE_SOURCE: 'firmwareSource',
-            FIRMWARE_CHANNEL: 'firmwareChannel',
-            FIRMWARE_ERASE_ALL: 'firmwareEraseAll',
-            FIRMWARE_SIZE: 'firmwareSize',
-            MCU_ID: 'mcuId',
-            LOGGING_STATUS: 'loggingStatus',
-            LOG_SIZE: 'logSize',
-            TARGET_NAME: 'targetName',
-            BOARD_NAME: 'boardName',
-            MANUFACTURER_ID: 'manufacturerId',
-            MCU_TYPE: 'mcuType',
+            BOARD_TYPE: "boardType",
+            API_VERSION: "apiVersion",
+            FIRMWARE_TYPE: "firmwareType",
+            FIRMWARE_VERSION: "firmwareVersion",
+            FIRMWARE_NAME: "firmwareName",
+            FIRMWARE_SOURCE: "firmwareSource",
+            FIRMWARE_CHANNEL: "firmwareChannel",
+            FIRMWARE_ERASE_ALL: "firmwareEraseAll",
+            FIRMWARE_SIZE: "firmwareSize",
+            MCU_ID: "mcuId",
+            LOGGING_STATUS: "loggingStatus",
+            LOG_SIZE: "logSize",
+            TARGET_NAME: "targetName",
+            BOARD_NAME: "boardName",
+            MANUFACTURER_ID: "manufacturerId",
+            MCU_TYPE: "mcuType",
         };
 
         this.DIMENSIONS = {
@@ -119,7 +120,7 @@ class Analytics {
     }
 
     sendSaveAndChangeEvents(category, changeList, tabName) {
-        this.sendEvent(category, 'Save', {
+        this.sendEvent(category, "Save", {
             eventLabel: tabName,
             eventValue: Object.keys(changeList).length,
         });

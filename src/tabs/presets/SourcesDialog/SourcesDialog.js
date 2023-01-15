@@ -13,9 +13,8 @@ export default class PresetsSourcesDialog {
     }
 
     load() {
-        return new Promise(resolve => {
-            this._domDialog.load("./tabs/presets/SourcesDialog/SourcesDialog.html",
-            () => {
+        return new Promise((resolve) => {
+            this._domDialog.load("./tabs/presets/SourcesDialog/SourcesDialog.html", () => {
                 this._setupDialog();
                 this._initializeSources();
                 resolve();
@@ -25,7 +24,7 @@ export default class PresetsSourcesDialog {
 
     show() {
         this._domDialog[0].showModal();
-        return new Promise(resolve => this._sourceSelectedPromiseResolve = resolve);
+        return new Promise((resolve) => (this._sourceSelectedPromiseResolve = resolve));
     }
 
     getActivePresetSource() {
@@ -50,7 +49,7 @@ export default class PresetsSourcesDialog {
         const officialSource = this._createOfficialSource();
         const officialSourceSecondary = this._createSecondaryOfficialSource();
 
-        const obj = getConfig('PresetSources');
+        const obj = getConfig("PresetSources");
         let sources = obj.PresetSources;
 
         if (sources && sources.length > 0) {
@@ -67,7 +66,7 @@ export default class PresetsSourcesDialog {
     }
 
     _readActiveSourceIndexFromStorage(sourcesCount) {
-        const obj = getConfig('PresetSourcesActiveIndex');
+        const obj = getConfig("PresetSourcesActiveIndex");
         const index = Number(obj.PresetSourcesActiveIndex);
         let result = 0;
 
@@ -79,13 +78,21 @@ export default class PresetsSourcesDialog {
     }
 
     _createOfficialSource() {
-        const officialSource = new PresetSource("Betaflight Official Presets", "https://api.betaflight.com/firmware-presets/", "");
+        const officialSource = new PresetSource(
+            "Betaflight Official Presets",
+            "https://api.betaflight.com/firmware-presets/",
+            "",
+        );
         officialSource.official = true;
         return officialSource;
     }
 
     _createSecondaryOfficialSource() {
-        const officialSource = new PresetSource("Betaflight Presets - GitHub BACKUP", "https://github.com/betaflight/firmware-presets", "backup");
+        const officialSource = new PresetSource(
+            "Betaflight Presets - GitHub BACKUP",
+            "https://github.com/betaflight/firmware-presets",
+            "backup",
+        );
         officialSource.official = false;
         return officialSource;
     }
@@ -107,16 +114,16 @@ export default class PresetsSourcesDialog {
 
     _scrollDown() {
         this._domDivSourcesPanel.stop();
-        this._domDivSourcesPanel.animate({scrollTop: `${this._domDivSourcesPanel.prop('scrollHeight')}px`});
+        this._domDivSourcesPanel.animate({ scrollTop: `${this._domDivSourcesPanel.prop("scrollHeight")}px` });
     }
 
     _addNewSourcePanel(presetSource, isActive = false, isSelected = true) {
         const sourcePanel = new SourcePanel(this._domDivSourcesPanel, presetSource);
         this._sourcesPanels.push(sourcePanel);
         return sourcePanel.load().then(() => {
-            sourcePanel.setOnSelectedCallback(selectedPanel => this._onSourcePanelSelected(selectedPanel));
-            sourcePanel.setOnDeleteCallback(selectedPanel => this._onSourcePanelDeleted(selectedPanel));
-            sourcePanel.setOnActivateCallback(selectedPanel => this._onSourcePanelActivated(selectedPanel));
+            sourcePanel.setOnSelectedCallback((selectedPanel) => this._onSourcePanelSelected(selectedPanel));
+            sourcePanel.setOnDeleteCallback((selectedPanel) => this._onSourcePanelDeleted(selectedPanel));
+            sourcePanel.setOnActivateCallback((selectedPanel) => this._onSourcePanelActivated(selectedPanel));
             sourcePanel.setOnSaveCallback(() => this._onSourcePanelSaved());
             sourcePanel.setActive(isActive);
             if (isSelected) {
@@ -141,7 +148,7 @@ export default class PresetsSourcesDialog {
     _readPanels() {
         this._sources = [];
         this._activeSourceIndex = 0;
-        for(let i = 0; i < this._sourcesPanels.length; i++) {
+        for (let i = 0; i < this._sourcesPanels.length; i++) {
             this._sources.push(this._sourcesPanels[i].presetSource);
             if (this._sourcesPanels[i].active) {
                 this._activeSourceIndex = i;
@@ -150,8 +157,8 @@ export default class PresetsSourcesDialog {
     }
 
     _saveSources() {
-        setConfig({'PresetSources': this._sources});
-        setConfig({'PresetSourcesActiveIndex': this._activeSourceIndex});
+        setConfig({ PresetSources: this._sources });
+        setConfig({ PresetSourcesActiveIndex: this._activeSourceIndex });
     }
 
     _updateSourcesFromPanels() {
@@ -174,7 +181,7 @@ export default class PresetsSourcesDialog {
     }
 
     _onSourcePanelDeleted(selectedPanel) {
-        this._sourcesPanels = this._sourcesPanels.filter(panel => panel !== selectedPanel);
+        this._sourcesPanels = this._sourcesPanels.filter((panel) => panel !== selectedPanel);
         if (selectedPanel.active) {
             this._sourcesPanels[0].setActive(true);
         }

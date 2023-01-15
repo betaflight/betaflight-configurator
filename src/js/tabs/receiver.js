@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
-import { get as getConfig, set as setConfig } from '../ConfigStorage';
+import GUI from "../gui";
+import { get as getConfig, set as setConfig } from "../ConfigStorage";
 import { tracking } from "../Analytics";
 import { reinitializeConnection } from "../serial_backend";
 import { bit_check } from "../bit";
@@ -15,7 +15,7 @@ import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 
-import CryptoES from 'crypto-es';
+import CryptoES from "crypto-es";
 
 const receiver = {
     rateChartHeight: 117,
@@ -27,28 +27,28 @@ const receiver = {
 receiver.initialize = function (callback) {
     const tab = this;
 
-    GUI.active_tab = 'receiver';
+    GUI.active_tab = "receiver";
 
     function lookup_elrs_passphrase(uidString) {
-        const passphraseMap = getConfig('passphrase_map').passphrase_map || {};
+        const passphraseMap = getConfig("passphrase_map").passphrase_map || {};
 
         return passphraseMap[uidString] ?? 0;
     }
 
     function save_elrs_passphrase(uidString, passphrase) {
-        const passphraseMap = getConfig('passphrase_map').passphrase_map ?? {};
+        const passphraseMap = getConfig("passphrase_map").passphrase_map ?? {};
 
         passphraseMap[uidString] = passphrase;
-        setConfig({'passphrase_map': passphraseMap});
-      }
+        setConfig({ passphrase_map: passphraseMap });
+    }
 
     function elrs_passphrase_to_bytes(text) {
-        let uidBytes = [0,0,0,0,0,0];
+        let uidBytes = [0, 0, 0, 0, 0, 0];
 
         if (text) {
             const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
             const hash = CryptoES.MD5(bindingPhraseFull).toString();
-            uidBytes = Uint8Array.from(Buffer.from(hash, 'hex')).subarray(0, 6);
+            uidBytes = Uint8Array.from(Buffer.from(hash, "hex")).subarray(0, 6);
         }
 
         return uidBytes;
@@ -83,7 +83,7 @@ receiver.initialize = function (callback) {
     }
 
     function load_html() {
-        $('#content').load("./tabs/receiver.html", process_html);
+        $("#content").load("./tabs/receiver.html", process_html);
     }
 
     MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, get_rc_data);
@@ -91,7 +91,7 @@ receiver.initialize = function (callback) {
     function process_html() {
         self.analyticsChanges = {};
 
-        const featuresElement = $('.tab-receiver .features');
+        const featuresElement = $(".tab-receiver .features");
 
         FC.FEATURE_CONFIG.features.generateElements(featuresElement);
 
@@ -109,22 +109,24 @@ receiver.initialize = function (callback) {
         $('select[name="rcInterpolation-select"]').val(FC.RX_CONFIG.rcInterpolation);
         $('input[name="rcInterpolationInterval-number"]').val(FC.RX_CONFIG.rcInterpolationInterval);
 
-        $('select[name="rcInterpolation-select"]').change(function () {
-            tab.updateRcInterpolationParameters();
-        }).change();
+        $('select[name="rcInterpolation-select"]')
+            .change(function () {
+                tab.updateRcInterpolationParameters();
+            })
+            .change();
 
         // generate bars
         const bar_names = [
-            i18n.getMessage('controlAxisRoll'),
-            i18n.getMessage('controlAxisPitch'),
-            i18n.getMessage('controlAxisYaw'),
-            i18n.getMessage('controlAxisThrottle'),
+            i18n.getMessage("controlAxisRoll"),
+            i18n.getMessage("controlAxisPitch"),
+            i18n.getMessage("controlAxisYaw"),
+            i18n.getMessage("controlAxisThrottle"),
         ];
 
-        const barContainer = $('.tab-receiver .bars');
+        const barContainer = $(".tab-receiver .bars");
         let auxIndex = 1;
 
-        const numBars = (FC.RC.active_channels > 0) ? FC.RC.active_channels : 8;
+        const numBars = FC.RC.active_channels > 0 ? FC.RC.active_channels : 8;
 
         for (let i = 0; i < numBars; i++) {
             let name;
@@ -140,7 +142,7 @@ receiver.initialize = function (callback) {
                     <li class="meter">\
                         <div class="meter-bar">\
                             <div class="label"></div>\
-                            <div class="fill${FC.RC.active_channels === 0 ? 'disabled' : ''}">\
+                            <div class="fill${FC.RC.active_channels === 0 ? "disabled" : ""}">\
                                 <div class="label"></div>\
                             </div>\
                         </div>\
@@ -151,35 +153,35 @@ receiver.initialize = function (callback) {
 
         // we could probably use min and max throttle for the range, will see
         const meterScale = {
-            'min': 800,
-            'max': 2200,
+            min: 800,
+            max: 2200,
         };
 
         const meterFillArray = [];
-        $('.meter .fill', barContainer).each(function () {
+        $(".meter .fill", barContainer).each(function () {
             meterFillArray.push($(this));
         });
 
         const meterLabelArray = [];
-        $('.meter', barContainer).each(function () {
-            meterLabelArray.push($('.label' , this));
+        $(".meter", barContainer).each(function () {
+            meterLabelArray.push($(".label", this));
         });
 
         // correct inner label margin on window resize (i don't know how we could do this in css)
         tab.resize = function () {
-            const containerWidth = $('.meter:first', barContainer).width(),
-                labelWidth = $('.meter .label:first', barContainer).width(),
-                margin = (containerWidth / 2) - (labelWidth / 2);
+            const containerWidth = $(".meter:first", barContainer).width(),
+                labelWidth = $(".meter .label:first", barContainer).width(),
+                margin = containerWidth / 2 - labelWidth / 2;
 
             for (let i = 0; i < meterLabelArray.length; i++) {
-                meterLabelArray[i].css('margin-left', margin);
+                meterLabelArray[i].css("margin-left", margin);
             }
         };
 
-        $(window).on('resize', tab.resize).resize(); // trigger so labels get correctly aligned on creation
+        $(window).on("resize", tab.resize).resize(); // trigger so labels get correctly aligned on creation
 
         // handle rcmap & rssi aux channel
-        let rcMapLetters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
+        let rcMapLetters = ["A", "E", "R", "T", "1", "2", "3", "4"];
 
         let strBuffer = [];
         for (let i = 0; i < FC.RC_MAP.length; i++) {
@@ -187,7 +189,7 @@ receiver.initialize = function (callback) {
         }
 
         // reconstruct
-        const str = strBuffer.join('');
+        const str = strBuffer.join("");
 
         // set current value
         $('input[name="rcmap"]').val(str);
@@ -195,7 +197,7 @@ receiver.initialize = function (callback) {
         // validation / filter
         const lastValid = str;
 
-        $('input[name="rcmap"]').on('input', function () {
+        $('input[name="rcmap"]').on("input", function () {
             let val = $(this).val();
 
             // limit length to max 8
@@ -207,7 +209,7 @@ receiver.initialize = function (callback) {
 
         $('input[name="rcmap"]').focusout(function () {
             const val = $(this).val();
-            strBuffer = val.split('');
+            strBuffer = val.split("");
             const duplicityBuffer = [];
 
             if (val.length !== 8) {
@@ -242,13 +244,13 @@ receiver.initialize = function (callback) {
         rssi_channel_e.append(`<option value="0">${i18n.getMessage("receiverRssiChannelDisabledOption")}</option>`);
         //1-4 reserved for Roll Pitch Yaw & Throttle, starting at 5
         for (let i = 5; i < FC.RC.active_channels + 1; i++) {
-            const messageKey = `controlAxisAux${i-4}`;
+            const messageKey = `controlAxisAux${i - 4}`;
             rssi_channel_e.append(`<option value="${i}">${i18n.getMessage(messageKey)}</option>`);
         }
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);
 
-        const serialRxSelectElement = $('select.serialRX');
+        const serialRxSelectElement = $("select.serialRX");
         FC.getSerialRxTypes().forEach((serialRxType, index) => {
             serialRxSelectElement.append(`<option value="${index}">${serialRxType}</option>`);
         });
@@ -258,10 +260,10 @@ receiver.initialize = function (callback) {
 
             let newValue;
             if (serialRxValue !== FC.RX_CONFIG.serialrx_provider) {
-                newValue = $(this).find('option:selected').text();
+                newValue = $(this).find("option:selected").text();
                 updateSaveButton(true);
             }
-            tab.analyticsChanges['SerialRx'] = newValue;
+            tab.analyticsChanges["SerialRx"] = newValue;
 
             FC.RX_CONFIG.serialrx_provider = serialRxValue;
         });
@@ -275,39 +277,33 @@ receiver.initialize = function (callback) {
         }
 
         const spiRxTypes = [
-            'NRF24_V202_250K',
-            'NRF24_V202_1M',
-            'NRF24_SYMA_X',
-            'NRF24_SYMA_X5C',
-            'NRF24_CX10',
-            'CX10A',
-            'NRF24_H8_3D',
-            'NRF24_INAV',
-            'FRSKY_D',
-            'FRSKY_X',
-            'A7105_FLYSKY',
-            'A7105_FLYSKY_2A',
-            'NRF24_KN',
-            'SFHSS',
-            'SPEKTRUM',
-            'FRSKY_X_LBT',
+            "NRF24_V202_250K",
+            "NRF24_V202_1M",
+            "NRF24_SYMA_X",
+            "NRF24_SYMA_X5C",
+            "NRF24_CX10",
+            "CX10A",
+            "NRF24_H8_3D",
+            "NRF24_INAV",
+            "FRSKY_D",
+            "FRSKY_X",
+            "A7105_FLYSKY",
+            "A7105_FLYSKY_2A",
+            "NRF24_KN",
+            "SFHSS",
+            "SPEKTRUM",
+            "FRSKY_X_LBT",
         ];
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            spiRxTypes.push(
-                'REDPINE',
-            );
+            spiRxTypes.push("REDPINE");
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            spiRxTypes.push(
-                'FRSKY_X_V2',
-                'FRSKY_X_LBT_V2',
-                'EXPRESSLRS',
-            );
+            spiRxTypes.push("FRSKY_X_V2", "FRSKY_X_LBT_V2", "EXPRESSLRS");
         }
 
-        const spiRxElement = $('select.spiRx');
+        const spiRxElement = $("select.spiRx");
         for (let i = 0; i < spiRxTypes.length; i++) {
             spiRxElement.append(`<option value="${i}">${spiRxTypes[i]}</option>`);
         }
@@ -317,10 +313,10 @@ receiver.initialize = function (callback) {
 
             let newValue = undefined;
             if (value !== FC.RX_CONFIG.rxSpiProtocol) {
-                newValue = $(this).find('option:selected').text();
+                newValue = $(this).find("option:selected").text();
                 updateSaveButton(true);
             }
-            tab.analyticsChanges['SPIRXProtocol'] = newValue;
+            tab.analyticsChanges["SPIRXProtocol"] = newValue;
 
             FC.RX_CONFIG.rxSpiProtocol = value;
         });
@@ -333,21 +329,25 @@ receiver.initialize = function (callback) {
             spiRxElement.sortSelect().select2();
         }
 
-        if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') && FC.RX_CONFIG.rxSpiProtocol == 19 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (
+            FC.FEATURE_CONFIG.features.isEnabled("RX_SPI") &&
+            FC.RX_CONFIG.rxSpiProtocol == 19 &&
+            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ) {
             tab.elrsPassphraseEnabled = true;
 
-            const elrsUid = $('span.elrsUid');
-            const elrsUidString = FC.RX_CONFIG.elrsUid.join(',');
+            const elrsUid = $("span.elrsUid");
+            const elrsUidString = FC.RX_CONFIG.elrsUid.join(",");
 
             elrsUid.text(elrsUidString);
 
-            const elrsPassphrase = $('input.elrsPassphrase');
+            const elrsPassphrase = $("input.elrsPassphrase");
 
             const passphraseString = lookup_elrs_passphrase(elrsUidString);
             if (passphraseString) {
                 elrsPassphrase.val(passphraseString);
             }
-            elrsPassphrase.on('keyup', function() {
+            elrsPassphrase.on("keyup", function () {
                 const passphrase = elrsPassphrase.val();
                 if (passphrase) {
                     elrsUid.text(elrs_passphrase_to_bytes(passphrase));
@@ -362,86 +362,87 @@ receiver.initialize = function (callback) {
 
         // UI Hooks
 
-        function updateSaveButton(reboot=false) {
+        function updateSaveButton(reboot = false) {
             if (reboot) {
                 tab.needReboot = true;
             }
             if (tab.needReboot) {
-                $('.update_btn').hide();
-                $('.save_btn').show();
+                $(".update_btn").hide();
+                $(".save_btn").show();
             } else {
-                $('.update_btn').show();
-                $('.save_btn').hide();
+                $(".update_btn").show();
+                $(".save_btn").hide();
             }
         }
 
-        $('input.feature', featuresElement).change(function () {
+        $("input.feature", featuresElement).change(function () {
             const element = $(this);
 
             FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
 
-            if (element.attr('name') === "RSSI_ADC" || element.attr('name') === "TELEMETRY") {
+            if (element.attr("name") === "RSSI_ADC" || element.attr("name") === "TELEMETRY") {
                 updateSaveButton(true);
             }
         });
 
         function checkShowSerialRxBox() {
-            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SERIAL')) {
-                $('div.serialRXBox').show();
+            if (FC.FEATURE_CONFIG.features.isEnabled("RX_SERIAL")) {
+                $("div.serialRXBox").show();
             } else {
-                $('div.serialRXBox').hide();
+                $("div.serialRXBox").hide();
             }
         }
 
         function checkShowSpiRxBox() {
-            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI')) {
-                $('div.spiRxBox').show();
+            if (FC.FEATURE_CONFIG.features.isEnabled("RX_SPI")) {
+                $("div.spiRxBox").show();
             } else {
-                $('div.spiRxBox').hide();
+                $("div.spiRxBox").hide();
             }
         }
 
         function checkShowElrsPassphrase() {
-            $('#elrsContainer').toggle(tab.elrsPassphraseEnabled);
-            $('input.elrsUid').toggle(tab.elrsPassphraseEnabled);
+            $("#elrsContainer").toggle(tab.elrsPassphraseEnabled);
+            $("input.elrsUid").toggle(tab.elrsPassphraseEnabled);
         }
 
-        $(featuresElement).filter('select').change(function () {
-            const element = $(this);
-            FC.FEATURE_CONFIG.features.updateData(element);
-            updateTabList(FC.FEATURE_CONFIG.features);
-            if (element.attr('name') === 'rxMode') {
-                checkShowSerialRxBox();
-                checkShowSpiRxBox();
-                checkShowElrsPassphrase();
-                updateSaveButton(true);
-            }
-        });
+        $(featuresElement)
+            .filter("select")
+            .change(function () {
+                const element = $(this);
+                FC.FEATURE_CONFIG.features.updateData(element);
+                updateTabList(FC.FEATURE_CONFIG.features);
+                if (element.attr("name") === "rxMode") {
+                    checkShowSerialRxBox();
+                    checkShowSpiRxBox();
+                    checkShowElrsPassphrase();
+                    updateSaveButton(true);
+                }
+            });
 
         checkShowSerialRxBox();
         checkShowSpiRxBox();
         checkShowElrsPassphrase();
         updateSaveButton();
 
-        $('a.refresh').click(function () {
+        $("a.refresh").click(function () {
             tab.refresh(function () {
-                gui_log(i18n.getMessage('receiverDataRefreshed'));
+                gui_log(i18n.getMessage("receiverDataRefreshed"));
             });
         });
 
-        function saveConfiguration(boot=false) {
-
+        function saveConfiguration(boot = false) {
             FC.RX_CONFIG.stick_max = parseInt($('.sticks input[name="stick_max"]').val());
             FC.RX_CONFIG.stick_center = parseInt($('.sticks input[name="stick_center"]').val());
             FC.RX_CONFIG.stick_min = parseInt($('.sticks input[name="stick_min"]').val());
             FC.RC_DEADBAND_CONFIG.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
             FC.RC_DEADBAND_CONFIG.deadband = parseInt($('.deadband input[name="deadband"]').val());
-            FC.RC_DEADBAND_CONFIG.deadband3d_throttle = ($('.deadband input[name="3ddeadbandthrottle"]').val());
+            FC.RC_DEADBAND_CONFIG.deadband3d_throttle = $('.deadband input[name="3ddeadbandthrottle"]').val();
 
             // catch rc map
-            rcMapLetters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
-            strBuffer = $('input[name="rcmap"]').val().split('');
+            rcMapLetters = ["A", "E", "R", "T", "1", "2", "3", "4"];
+            strBuffer = $('input[name="rcmap"]').val().split("");
 
             for (let i = 0; i < FC.RC_MAP.length; i++) {
                 FC.RC_MAP[i] = strBuffer.indexOf(rcMapLetters[i]);
@@ -454,8 +455,12 @@ receiver.initialize = function (callback) {
             FC.RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
 
             FC.RX_CONFIG.rcSmoothingSetpointCutoff = parseInt($('input[name="rcSmoothingSetpointHz-number"]').val());
-            FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt($('input[name="rcSmoothingFeedforwardCutoff-number"]').val());
-            FC.RX_CONFIG.rcSmoothingDerivativeType = parseInt($('select[name="rcSmoothingFeedforwardType-select"]').val());
+            FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt(
+                $('input[name="rcSmoothingFeedforwardCutoff-number"]').val(),
+            );
+            FC.RX_CONFIG.rcSmoothingDerivativeType = parseInt(
+                $('select[name="rcSmoothingFeedforwardType-select"]').val(),
+            );
             FC.RX_CONFIG.rcInterpolationChannels = parseInt($('select[name="rcSmoothingChannels-select"]').val());
             FC.RX_CONFIG.rcSmoothingInputType = parseInt($('select[name="rcSmoothingSetpointType-select"]').val());
 
@@ -464,12 +469,14 @@ receiver.initialize = function (callback) {
             }
 
             if (tab.elrsPassphraseEnabled) {
-                const elrsUidChars = $('span.elrsUid')[0].innerText.split(',').map(uidChar => parseInt(uidChar, 10));
+                const elrsUidChars = $("span.elrsUid")[0]
+                    .innerText.split(",")
+                    .map((uidChar) => parseInt(uidChar, 10));
                 if (elrsUidChars.length === 6) {
                     FC.RX_CONFIG.elrsUid = elrsUidChars;
 
-                    const elrsUid =  $('span.elrsUid')[0].innerText;
-                    const elrsPassphrase = $('input.elrsPassphrase').val();
+                    const elrsUid = $("span.elrsUid")[0].innerText;
+                    const elrsPassphrase = $("input.elrsPassphrase").val();
                     save_elrs_passphrase(elrsUid, elrsPassphrase);
                 } else {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
@@ -477,20 +484,40 @@ receiver.initialize = function (callback) {
             }
 
             function save_rssi_config() {
-                MSP.send_message(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG), false, save_rc_configs);
+                MSP.send_message(
+                    MSPCodes.MSP_SET_RSSI_CONFIG,
+                    mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG),
+                    false,
+                    save_rc_configs,
+                );
             }
 
             function save_rc_configs() {
-                MSP.send_message(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND), false, save_rx_config);
+                MSP.send_message(
+                    MSPCodes.MSP_SET_RC_DEADBAND,
+                    mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND),
+                    false,
+                    save_rx_config,
+                );
             }
 
             function save_rx_config() {
-                const nextCallback = (boot) ? save_feature_config : save_to_eeprom;
-                MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, nextCallback);
+                const nextCallback = boot ? save_feature_config : save_to_eeprom;
+                MSP.send_message(
+                    MSPCodes.MSP_SET_RX_CONFIG,
+                    mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG),
+                    false,
+                    nextCallback,
+                );
             }
 
             function save_feature_config() {
-                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, save_to_eeprom);
+                MSP.send_message(
+                    MSPCodes.MSP_SET_FEATURE_CONFIG,
+                    mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                    false,
+                    save_to_eeprom,
+                );
             }
 
             function save_to_eeprom() {
@@ -498,75 +525,92 @@ receiver.initialize = function (callback) {
             }
 
             function reboot() {
-                gui_log(i18n.getMessage('configurationEepromSaved'));
+                gui_log(i18n.getMessage("configurationEepromSaved"));
                 if (boot) {
-                    GUI.tab_switch_cleanup(function() {
+                    GUI.tab_switch_cleanup(function () {
                         MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
                     });
                 }
             }
 
-            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges, 'receiver');
+            tracking.sendSaveAndChangeEvents(
+                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+                tab.analyticsChanges,
+                "receiver",
+            );
             tab.analyticsChanges = {};
 
-            MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_rssi_config);
+            MSP.send_message(
+                MSPCodes.MSP_SET_RX_MAP,
+                mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP),
+                false,
+                save_rssi_config,
+            );
         }
 
-        $('a.update').click(function () {
+        $("a.update").click(function () {
             saveConfiguration(false);
         });
 
-        $('a.save').click(function () {
+        $("a.save").click(function () {
             saveConfiguration(true);
             tab.needReboot = false;
         });
 
-        $("a.sticks").click(function() {
+        $("a.sticks").click(function () {
             const windowWidth = 370;
             const windowHeight = 510;
 
-            chrome.app.window.create("/tabs/receiver_msp.html", {
-                id: "receiver_msp",
-                innerBounds: {
-                    minWidth: windowWidth, minHeight: windowHeight,
-                    width: windowWidth, height: windowHeight,
-                    maxWidth: windowWidth, maxHeight: windowHeight,
+            chrome.app.window.create(
+                "/tabs/receiver_msp.html",
+                {
+                    id: "receiver_msp",
+                    innerBounds: {
+                        minWidth: windowWidth,
+                        minHeight: windowHeight,
+                        width: windowWidth,
+                        height: windowHeight,
+                        maxWidth: windowWidth,
+                        maxHeight: windowHeight,
+                    },
+                    alwaysOnTop: true,
                 },
-                alwaysOnTop: true,
-            }, function(createdWindow) {
-                // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
-                createdWindow.contentWindow.setRawRx = function(channels) {
-                    if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {
-                        mspHelper.setRawRx(channels);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                };
+                function (createdWindow) {
+                    // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
+                    createdWindow.contentWindow.setRawRx = function (channels) {
+                        if (CONFIGURATOR.connectionValid && GUI.active_tab !== "cli") {
+                            mspHelper.setRawRx(channels);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    };
 
-                DarkTheme.isDarkThemeEnabled(function(isEnabled) {
-                    windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
-                });
-
-            });
+                    DarkTheme.isDarkThemeEnabled(function (isEnabled) {
+                        windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
+                    });
+                },
+            );
         });
 
         let showBindButton = false;
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             showBindButton = bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
 
-            $("a.bind").click(function() {
+            $("a.bind").click(function () {
                 MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
 
-                gui_log(i18n.getMessage('receiverButtonBindMessage'));
+                gui_log(i18n.getMessage("receiverButtonBindMessage"));
             });
         }
         $(".bind_btn").toggle(showBindButton);
 
         // RC Smoothing
-        const smoothingOnOff = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType;
+        const smoothingOnOff = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)
+            ? FC.RX_CONFIG.rcSmoothingMode
+            : FC.RX_CONFIG.rcSmoothingType;
 
-        $('.tab-receiver .rcSmoothing').show();
+        $(".tab-receiver .rcSmoothing").show();
 
         const rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
         rc_smoothing_protocol_e.change(function () {
@@ -583,43 +627,49 @@ receiver.initialize = function (callback) {
         const rcSmoothingFeedforwardNumberElement = $('input[name="rcSmoothingFeedforwardCutoff-number"]');
         rcSmoothingNumberElement.val(FC.RX_CONFIG.rcSmoothingSetpointCutoff);
         rcSmoothingFeedforwardNumberElement.val(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);
-        $('.tab-receiver .rcSmoothing-setpoint-cutoff').show();
+        $(".tab-receiver .rcSmoothing-setpoint-cutoff").show();
         $('select[name="rcSmoothing-setpoint-manual-select"]').val("1");
         if (FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
+            $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
             $('select[name="rcSmoothing-setpoint-manual-select"]').val("0");
         }
-        $('select[name="rcSmoothing-setpoint-manual-select"]').change(function () {
-            if ($(this).val() === "0") {
-                rcSmoothingNumberElement.val(0);
-                $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            }
-            if ($(this).val() === "1") {
-                rcSmoothingNumberElement.val(FC.RX_CONFIG.rcSmoothingSetpointCutoff);
-                $('.tab-receiver .rcSmoothing-setpoint-cutoff').show();
-            }
-        }).change();
+        $('select[name="rcSmoothing-setpoint-manual-select"]')
+            .change(function () {
+                if ($(this).val() === "0") {
+                    rcSmoothingNumberElement.val(0);
+                    $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
+                }
+                if ($(this).val() === "1") {
+                    rcSmoothingNumberElement.val(FC.RX_CONFIG.rcSmoothingSetpointCutoff);
+                    $(".tab-receiver .rcSmoothing-setpoint-cutoff").show();
+                }
+            })
+            .change();
 
-        $('.tab-receiver .rcSmoothing-feedforward-cutoff').show();
+        $(".tab-receiver .rcSmoothing-feedforward-cutoff").show();
         $('select[name="rcSmoothing-feedforward-select"]').val("1");
         if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0) {
             $('select[name="rcSmoothing-feedforward-select"]').val("0");
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
+            $(".tab-receiver .rcSmoothing-feedforward-cutoff").hide();
         }
-        $('select[name="rcSmoothing-feedforward-select"]').change(function () {
-            if ($(this).val() === "0") {
-                $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-                rcSmoothingFeedforwardNumberElement.val(0);
-            }
-            if ($(this).val() === "1") {
-                $('.tab-receiver .rcSmoothing-feedforward-cutoff').show();
-                rcSmoothingFeedforwardNumberElement.val(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);
-            }
-        }).change();
+        $('select[name="rcSmoothing-feedforward-select"]')
+            .change(function () {
+                if ($(this).val() === "0") {
+                    $(".tab-receiver .rcSmoothing-feedforward-cutoff").hide();
+                    rcSmoothingFeedforwardNumberElement.val(0);
+                }
+                if ($(this).val() === "1") {
+                    $(".tab-receiver .rcSmoothing-feedforward-cutoff").show();
+                    rcSmoothingFeedforwardNumberElement.val(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);
+                }
+            })
+            .change();
 
         const rcSmoothingFeedforwardType = $('select[name="rcSmoothingFeedforwardType-select"]');
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            rcSmoothingFeedforwardType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`));
+            rcSmoothingFeedforwardType.append(
+                $(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`),
+            );
         }
 
         rcSmoothingFeedforwardType.val(FC.RX_CONFIG.rcSmoothingDerivativeType);
@@ -629,11 +679,16 @@ receiver.initialize = function (callback) {
         rcSmoothingSetpointType.val(FC.RX_CONFIG.rcSmoothingInputType);
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
-                if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
-                    $('.tab-receiver .rcSmoothing-auto-factor').show();
+            $(
+                'select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]',
+            ).change(function () {
+                if (
+                    $('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" ||
+                    $('select[name="rcSmoothing-feedforward-select"]').val() === "0"
+                ) {
+                    $(".tab-receiver .rcSmoothing-auto-factor").show();
                 } else {
-                    $('.tab-receiver .rcSmoothing-auto-factor').hide();
+                    $(".tab-receiver .rcSmoothing-auto-factor").hide();
                 }
             });
             $('select[name="rcSmoothing-setpoint-manual-select"]').change();
@@ -641,17 +696,20 @@ receiver.initialize = function (callback) {
             const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
             rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
         } else {
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
+            $(".tab-receiver .rcSmoothing-auto-factor").hide();
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
+            $(".receiverRcSmoothingAutoFactorHelp").attr(
+                "title",
+                i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"),
+            );
         }
 
         updateInterpolationView();
 
         // Only show the MSP control sticks if the MSP Rx feature is enabled
-        $(".sticks_btn").toggle(FC.FEATURE_CONFIG.features.isEnabled('RX_MSP'));
+        $(".sticks_btn").toggle(FC.FEATURE_CONFIG.features.isEnabled("RX_MSP"));
 
         const labelsChannelData = {
             ch1: [],
@@ -660,15 +718,15 @@ receiver.initialize = function (callback) {
             ch4: [],
         };
 
-        $(`.plot_control .ch1, .plot_control .ch2, .plot_control .ch3, .plot_control .ch4`).each(function (){
+        $(`.plot_control .ch1, .plot_control .ch2, .plot_control .ch3, .plot_control .ch4`).each(function () {
             const element = $(this);
-            if (element.hasClass('ch1')){
+            if (element.hasClass("ch1")) {
                 labelsChannelData.ch1.push(element);
-            } else if (element.hasClass('ch2')){
+            } else if (element.hasClass("ch2")) {
                 labelsChannelData.ch2.push(element);
-            } else if (element.hasClass('ch3')){
+            } else if (element.hasClass("ch3")) {
                 labelsChannelData.ch3.push(element);
-            } else if (element.hasClass('ch4')){
+            } else if (element.hasClass("ch4")) {
                 labelsChannelData.ch4.push(element);
             }
         });
@@ -676,7 +734,7 @@ receiver.initialize = function (callback) {
         let plotUpdateRate;
         const rxRefreshRate = $('select[name="rx_refresh_rate"]');
 
-        $('a.reset_rate').click(function () {
+        $("a.reset_rate").click(function () {
             plotUpdateRate = 50;
             rxRefreshRate.val(plotUpdateRate).change();
         });
@@ -685,7 +743,7 @@ receiver.initialize = function (callback) {
             plotUpdateRate = parseInt($(this).val(), 10);
 
             // save update rate
-            setConfig({'rx_refresh_rate': plotUpdateRate});
+            setConfig({ rx_refresh_rate: plotUpdateRate });
 
             function get_rc_refresh_data() {
                 MSP.send_message(MSPCodes.MSP_RC, false, false, update_ui);
@@ -699,8 +757,8 @@ receiver.initialize = function (callback) {
 
             let samples = 0;
             const svg = d3.select("svg");
-            const RX_plot_e = $('#RX_plot');
-            const margin = {top: 20, right: 0, bottom: 10, left: 40};
+            const RX_plot_e = $("#RX_plot");
+            const margin = { top: 20, right: 0, bottom: 10, left: 40 };
             let width, height, widthScale, heightScale;
 
             function update_receiver_plot_size() {
@@ -712,12 +770,16 @@ receiver.initialize = function (callback) {
             }
 
             function update_ui() {
-
                 if (FC.RC.active_channels > 0) {
-
                     // update bars with latest data
                     for (let i = 0; i < FC.RC.active_channels; i++) {
-                        meterFillArray[i].css('width', `${((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min) * 100).clamp(0, 100)}%`);
+                        meterFillArray[i].css(
+                            "width",
+                            `${(((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min)) * 100).clamp(
+                                0,
+                                100,
+                            )}%`,
+                        );
                         meterLabelArray[i].text(FC.RC.channels[i]);
                     }
 
@@ -737,43 +799,43 @@ receiver.initialize = function (callback) {
                             rxPlotData[i].shift();
                         }
                     }
-
                 }
 
                 // update required parts of the plot
-                widthScale = d3.scale.linear().
-                    domain([(samples - 299), samples]);
+                widthScale = d3.scale.linear().domain([samples - 299, samples]);
 
-                heightScale = d3.scale.linear().
-                    domain([800, 2200]);
+                heightScale = d3.scale.linear().domain([800, 2200]);
 
                 update_receiver_plot_size();
 
-                const xGrid = d3.svg.axis().
-                    scale(widthScale).
-                    orient("bottom").
-                    tickSize(-height, 0, 0).
-                    tickFormat("");
+                const xGrid = d3.svg.axis().scale(widthScale).orient("bottom").tickSize(-height, 0, 0).tickFormat("");
 
-                const yGrid = d3.svg.axis().
-                    scale(heightScale).
-                    orient("left").
-                    tickSize(-width, 0, 0).
-                    tickFormat("");
+                const yGrid = d3.svg.axis().scale(heightScale).orient("left").tickSize(-width, 0, 0).tickFormat("");
 
-                const xAxis = d3.svg.axis().
-                    scale(widthScale).
-                    orient("bottom").
-                    tickFormat(function (d) {return d;});
+                const xAxis = d3.svg
+                    .axis()
+                    .scale(widthScale)
+                    .orient("bottom")
+                    .tickFormat(function (d) {
+                        return d;
+                    });
 
-                const yAxis = d3.svg.axis().
-                    scale(heightScale).
-                    orient("left").
-                    tickFormat(function (d) {return d;});
+                const yAxis = d3.svg
+                    .axis()
+                    .scale(heightScale)
+                    .orient("left")
+                    .tickFormat(function (d) {
+                        return d;
+                    });
 
-                const line = d3.svg.line().
-                    x(function (d) {return widthScale(d[0]);}).
-                    y(function (d) {return heightScale(d[1]);});
+                const line = d3.svg
+                    .line()
+                    .x(function (d) {
+                        return widthScale(d[0]);
+                    })
+                    .y(function (d) {
+                        return heightScale(d[1]);
+                    });
 
                 svg.select(".x.grid").call(xGrid);
                 svg.select(".y.grid").call(yGrid);
@@ -781,21 +843,23 @@ receiver.initialize = function (callback) {
                 svg.select(".y.axis").call(yAxis);
 
                 const data = svg.select("g.data");
-                const lines = data.selectAll("path").data(rxPlotData, function (d, i) {return i;});
+                const lines = data.selectAll("path").data(rxPlotData, function (d, i) {
+                    return i;
+                });
                 lines.enter().append("path").attr("class", "line");
-                lines.attr('d', line);
+                lines.attr("d", line);
 
                 samples++;
             }
 
             // timer initialization
-            GUI.interval_remove('receiver_pull');
+            GUI.interval_remove("receiver_pull");
 
             // enable RC data pulling
-            GUI.interval_add('receiver_pull', get_rc_refresh_data, plotUpdateRate, true);
+            GUI.interval_add("receiver_pull", get_rc_refresh_data, plotUpdateRate, true);
         });
 
-        const result = getConfig('rx_refresh_rate');
+        const result = getConfig("rx_refresh_rate");
         if (result.rxRefreshRate) {
             rxRefreshRate.val(result.rxRefreshRate).change();
         } else {
@@ -807,12 +871,17 @@ receiver.initialize = function (callback) {
         tab.renderModel();
 
         // TODO: Combine two polls together
-        GUI.interval_add('receiver_pull_for_model_preview', tab.getReceiverData, 33, false);
+        GUI.interval_add("receiver_pull_for_model_preview", tab.getReceiverData, 33, false);
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
+        GUI.interval_add(
+            "status_pull",
+            function status_pull() {
+                MSP.send_message(MSPCodes.MSP_STATUS);
+            },
+            250,
+            true,
+        );
 
         GUI.content_ready(callback);
     }
@@ -824,37 +893,68 @@ receiver.getReceiverData = function () {
 
 receiver.initModelPreview = function () {
     this.keepRendering = true;
-    this.model = new Model($('.model_preview'), $('.model_preview canvas'));
+    this.model = new Model($(".model_preview"), $(".model_preview canvas"));
 
     this.rateCurve = new RateCurve(false);
     this.currentRates = this.rateCurve.getCurrentRates();
 
-    $(window).on('resize', $.bind(this.model.resize, this.model));
+    $(window).on("resize", $.bind(this.model.resize, this.model));
 };
 
 receiver.renderModel = function () {
-    if (this.keepRendering) { requestAnimationFrame(this.renderModel.bind(this)); }
+    if (this.keepRendering) {
+        requestAnimationFrame(this.renderModel.bind(this));
+    }
 
-    if (!this.clock) { this.clock = new THREE.Clock(); }
+    if (!this.clock) {
+        this.clock = new THREE.Clock();
+    }
 
     if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
         const delta = this.clock.getDelta();
 
-        const roll = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[0], this.currentRates.roll_rate, this.currentRates.rc_rate, this.currentRates.rc_expo,
-            this.currentRates.superexpo, this.currentRates.deadband, this.currentRates.roll_rate_limit);
-        const pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[1], this.currentRates.pitch_rate, this.currentRates.rc_rate_pitch,
-            this.currentRates.rc_pitch_expo, this.currentRates.superexpo, this.currentRates.deadband, this.currentRates.pitch_rate_limit);
-        const yaw = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[2], this.currentRates.yaw_rate, this.currentRates.rc_rate_yaw,
-            this.currentRates.rc_yaw_expo, this.currentRates.superexpo, this.currentRates.yawDeadband, this.currentRates.yaw_rate_limit);
+        const roll =
+            delta *
+            this.rateCurve.rcCommandRawToDegreesPerSecond(
+                FC.RC.channels[0],
+                this.currentRates.roll_rate,
+                this.currentRates.rc_rate,
+                this.currentRates.rc_expo,
+                this.currentRates.superexpo,
+                this.currentRates.deadband,
+                this.currentRates.roll_rate_limit,
+            );
+        const pitch =
+            delta *
+            this.rateCurve.rcCommandRawToDegreesPerSecond(
+                FC.RC.channels[1],
+                this.currentRates.pitch_rate,
+                this.currentRates.rc_rate_pitch,
+                this.currentRates.rc_pitch_expo,
+                this.currentRates.superexpo,
+                this.currentRates.deadband,
+                this.currentRates.pitch_rate_limit,
+            );
+        const yaw =
+            delta *
+            this.rateCurve.rcCommandRawToDegreesPerSecond(
+                FC.RC.channels[2],
+                this.currentRates.yaw_rate,
+                this.currentRates.rc_rate_yaw,
+                this.currentRates.rc_yaw_expo,
+                this.currentRates.superexpo,
+                this.currentRates.yawDeadband,
+                this.currentRates.yaw_rate_limit,
+            );
 
         this.model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
 };
 
 receiver.cleanup = function (callback) {
-    $(window).off('resize', this.resize);
+    $(window).off("resize", this.resize);
     if (this.model) {
-        $(window).off('resize', $.proxy(this.model.resize, this.model));
+        $(window).off("resize", $.proxy(this.model.resize, this.model));
         this.model.dispose();
     }
 
@@ -876,69 +976,68 @@ receiver.refresh = function (callback) {
 };
 
 receiver.updateRcInterpolationParameters = function () {
-    if ($('select[name="rcInterpolation-select"]').val() === '3') {
-        $('.tab-receiver .rc-interpolation-manual').show();
+    if ($('select[name="rcInterpolation-select"]').val() === "3") {
+        $(".tab-receiver .rc-interpolation-manual").show();
     } else {
-        $('.tab-receiver .rc-interpolation-manual').hide();
+        $(".tab-receiver .rc-interpolation-manual").hide();
     }
 };
 
 function updateInterpolationView() {
-    const smoothingOnOff = ((semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) ?
-        FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType);
+    const smoothingOnOff = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)
+        ? FC.RX_CONFIG.rcSmoothingMode
+        : FC.RX_CONFIG.rcSmoothingType;
 
-    $('.tab-receiver .rcInterpolation').hide();
-    $('.tab-receiver .rcSmoothing-feedforward-cutoff').show();
-    $('.tab-receiver .rcSmoothing-setpoint-cutoff').show();
-    $('.tab-receiver .rcSmoothing-feedforward-type').show();
-    $('.tab-receiver .rcSmoothing-setpoint-type').show();
-    $('.tab-receiver .rcSmoothing-feedforward-manual').show();
-    $('.tab-receiver .rcSmoothing-setpoint-manual').show();
+    $(".tab-receiver .rcInterpolation").hide();
+    $(".tab-receiver .rcSmoothing-feedforward-cutoff").show();
+    $(".tab-receiver .rcSmoothing-setpoint-cutoff").show();
+    $(".tab-receiver .rcSmoothing-feedforward-type").show();
+    $(".tab-receiver .rcSmoothing-setpoint-type").show();
+    $(".tab-receiver .rcSmoothing-feedforward-manual").show();
+    $(".tab-receiver .rcSmoothing-setpoint-manual").show();
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
         if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
-            $('.tab-receiver .rcSmoothing-auto-factor').show();
+            $(".tab-receiver .rcSmoothing-auto-factor").show();
         }
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-        $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-        $('.tab-receiver .rc-smoothing-channels').hide();
+        $(".tab-receiver .rcSmoothing-feedforward-type").hide();
+        $(".tab-receiver .rcSmoothing-setpoint-type").hide();
+        $(".tab-receiver .rc-smoothing-channels").hide();
         $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
-        $('.tab-receiver .rcSmoothingType').hide();
-        $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
-        $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
+        $(".tab-receiver .rcSmoothingType").hide();
+        $(".tab-receiver .rcSmoothingOff").text(i18n.getMessage("off"));
+        $(".tab-receiver .rcSmoothingOn").text(i18n.getMessage("on"));
     } else {
-        $('.tab-receiver .rcSmoothingMode').hide();
+        $(".tab-receiver .rcSmoothingMode").hide();
     }
 
     if (smoothingOnOff === 0) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
+            $(".tab-receiver .rcSmoothing-feedforward-cutoff").hide();
+            $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
+            $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
+            $(".tab-receiver .rcSmoothing-setpoint-manual").hide();
+            $(".tab-receiver .rcSmoothing-auto-factor").hide();
         } else {
-            $('.tab-receiver .rcInterpolation').show();
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
+            $(".tab-receiver .rcInterpolation").show();
+            $(".tab-receiver .rcSmoothing-feedforward-cutoff").hide();
+            $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
+            $(".tab-receiver .rcSmoothing-feedforward-type").hide();
+            $(".tab-receiver .rcSmoothing-setpoint-type").hide();
+            $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
+            $(".tab-receiver .rcSmoothing-setpoint-manual").hide();
+            $(".tab-receiver .rcSmoothing-auto-factor").hide();
         }
     }
     if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0) {
-        $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
+        $(".tab-receiver .rcSmoothing-feedforward-cutoff").hide();
     }
     if (FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
-        $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
+        $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
     }
 }
 
 window.TABS.receiver = receiver;
-export {
-    receiver,
-};
+export { receiver };

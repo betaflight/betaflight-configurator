@@ -5,20 +5,20 @@
 
 const windowWatcherUtil = {};
 
-windowWatcherUtil.invokeWatcher = function(bindingKey, bindingVal, watchersObject) {
+windowWatcherUtil.invokeWatcher = function (bindingKey, bindingVal, watchersObject) {
     if (watchersObject[bindingKey]) {
         watchersObject[bindingKey](bindingVal);
     }
 };
 
-windowWatcherUtil.iterateOverBindings = function(bindings, watchersObject) {
+windowWatcherUtil.iterateOverBindings = function (bindings, watchersObject) {
     let entries = Object.entries(bindings);
     for (const [key, val] of entries) {
         this.invokeWatcher(key, val, watchersObject);
     }
 };
 
-windowWatcherUtil.bindWatchers = function(windowObject, watchersObject) {
+windowWatcherUtil.bindWatchers = function (windowObject, watchersObject) {
     if (!windowObject.bindings) {
         windowObject.bindings = {};
     } else {
@@ -34,10 +34,10 @@ windowWatcherUtil.bindWatchers = function(windowObject, watchersObject) {
 };
 
 // 'Windows' here could be array or single window reference
-windowWatcherUtil.passValue = function(windows, key, val) {
-    let applyBinding = function(win, key, val) {
+windowWatcherUtil.passValue = function (windows, key, val) {
+    let applyBinding = function (win, key, val) {
         if (!win) {
-           return;
+            return;
         }
 
         if (win.contentWindow.bindings) {

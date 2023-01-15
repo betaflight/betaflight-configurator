@@ -1,9 +1,7 @@
 import GUI from "./gui";
 import windowWatcherUtil from "./utils/window_watchers";
 
-const css_dark = [
-    './css/dark-theme.css',
-];
+const css_dark = ["./css/dark-theme.css"];
 
 const DarkTheme = {
     configEnabled: undefined,
@@ -14,14 +12,17 @@ DarkTheme.isDarkThemeEnabled = function (callback) {
         callback(true);
     } else if (this.configEnabled === 2) {
         if (GUI.isCordova()) {
-            cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
-                callback(success.value);
-            }, function(error) {
-                console.log(`cordova-plugin-theme-detection: ${error}`);
-                callback(false);
-            });
+            cordova.plugins.ThemeDetection.isDarkModeEnabled(
+                function (success) {
+                    callback(success.value);
+                },
+                function (error) {
+                    console.log(`cordova-plugin-theme-detection: ${error}`);
+                    callback(false);
+                },
+            );
         } else {
-            const isEnabled = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isEnabled = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
             callback(isEnabled);
         }
     } else {
@@ -29,9 +30,9 @@ DarkTheme.isDarkThemeEnabled = function (callback) {
     }
 };
 
-DarkTheme.apply = function() {
+DarkTheme.apply = function () {
     const self = this;
-    this.isDarkThemeEnabled(function(isEnabled) {
+    this.isDarkThemeEnabled(function (isEnabled) {
         if (isEnabled) {
             self.applyDark();
         } else {
@@ -39,12 +40,12 @@ DarkTheme.apply = function() {
         }
 
         if (chrome.app.window !== undefined) {
-            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), 'darkTheme', isEnabled);
+            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), "darkTheme", isEnabled);
         }
     });
 };
 
-DarkTheme.autoSet = function() {
+DarkTheme.autoSet = function () {
     if (this.configEnabled === 2) {
         this.apply();
     }
@@ -58,11 +59,11 @@ DarkTheme.setConfig = function (result) {
 };
 
 DarkTheme.applyDark = function () {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', false));
+    css_dark.forEach((el) => $(`link[href="${el}"]`).prop("disabled", false));
 };
 
 DarkTheme.applyNormal = function () {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
+    css_dark.forEach((el) => $(`link[href="${el}"]`).prop("disabled", true));
 };
 
 export default DarkTheme;

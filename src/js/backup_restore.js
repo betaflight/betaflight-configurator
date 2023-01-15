@@ -10,7 +10,7 @@ import { mspHelper } from "./msp/MSPHelper";
 import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import CONFIGURATOR, { API_VERSION_1_41, API_VERSION_1_45 } from "./data_storage";
-import { gui_log } from './gui_log';
+import { gui_log } from "./gui_log";
 
 // code below is highly experimental, although it runs fine on latest firmware
 // the data inside nested objects needs to be verified if deep copy works properly
@@ -24,9 +24,9 @@ export function configuration_backup(callback) {
     }
 
     const configuration = {
-        'generatedBy': version,
-        'apiVersion': FC.CONFIG.apiVersion,
-        'profiles': [],
+        generatedBy: version,
+        apiVersion: FC.CONFIG.apiVersion,
+        profiles: [],
     };
 
     const profileSpecificData = [
@@ -67,22 +67,31 @@ export function configuration_backup(callback) {
                         fetch_specific_data_item();
                     } else {
                         configuration.profiles.push({
-                            'PID': jQuery.extend(true, {}, FC.PID),
-                            'PIDs': jQuery.extend(true, [], FC.PIDS),
-                            'RC': jQuery.extend(true, {}, FC.RC_TUNING),
-                            'AccTrim': jQuery.extend(true, [], FC.CONFIG.accelerometerTrims),
-                            'ServoConfig': jQuery.extend(true, [], FC.SERVO_CONFIG),
-                            'ServoRules': jQuery.extend(true, [], FC.SERVO_RULES),
-                            'ModeRanges': jQuery.extend(true, [], FC.MODE_RANGES),
-                            'AdjustmentRanges': jQuery.extend(true, [], FC.ADJUSTMENT_RANGES),
+                            PID: jQuery.extend(true, {}, FC.PID),
+                            PIDs: jQuery.extend(true, [], FC.PIDS),
+                            RC: jQuery.extend(true, {}, FC.RC_TUNING),
+                            AccTrim: jQuery.extend(true, [], FC.CONFIG.accelerometerTrims),
+                            ServoConfig: jQuery.extend(true, [], FC.SERVO_CONFIG),
+                            ServoRules: jQuery.extend(true, [], FC.SERVO_RULES),
+                            ModeRanges: jQuery.extend(true, [], FC.MODE_RANGES),
+                            AdjustmentRanges: jQuery.extend(true, [], FC.ADJUSTMENT_RANGES),
                         });
 
-                        configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, FC.RC_DEADBAND_CONFIG);
+                        configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(
+                            true,
+                            {},
+                            FC.RC_DEADBAND_CONFIG,
+                        );
 
                         codeKey = 0;
                         fetchingProfile++;
 
-                        MSP.send_message(MSPCodes.MSP_SELECT_SETTING, [fetchingProfile], false, fetch_specific_data_item);
+                        MSP.send_message(
+                            MSPCodes.MSP_SELECT_SETTING,
+                            [fetchingProfile],
+                            false,
+                            fetch_specific_data_item,
+                        );
                     }
                 });
             } else {
@@ -169,109 +178,125 @@ export function configuration_backup(callback) {
         }
 
         MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG)
-        .then(() => MSP.promise(MSPCodes.MSP_SENSOR_CONFIG))
-        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME))
-                : MSP.promise(MSPCodes.MSP_NAME))
-        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME)) : Promise.resolve(true))
-        .then(() => MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_MIXER_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_BEEPER_CONFIG))
-        .then(() => fetch_unique_data_item());
+            .then(() => MSP.promise(MSPCodes.MSP_SENSOR_CONFIG))
+            .then(() =>
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME))
+                    : MSP.promise(MSPCodes.MSP_NAME),
+            )
+            .then(() =>
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME))
+                    : Promise.resolve(true),
+            )
+            .then(() => MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_MIXER_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_BEEPER_CONFIG))
+            .then(() => fetch_unique_data_item());
     }
 
     function save() {
         let chosenFileEntry = null;
 
-        const prefix = 'backup';
-        const suffix = 'json';
+        const prefix = "backup";
+        const suffix = "json";
 
         const filename = generateFilename(prefix, suffix);
 
-        const accepts = [{
-            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
-        }];
+        const accepts = [
+            {
+                description: `${suffix.toUpperCase()} files`,
+                extensions: [suffix],
+            },
+        ];
 
         // create or load the file
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function (fileEntry) {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
+        chrome.fileSystem.chooseEntry(
+            { type: "saveFile", suggestedName: filename, accepts: accepts },
+            function (fileEntry) {
+                if (checkChromeRuntimeError()) {
+                    return;
+                }
 
-            if (!fileEntry) {
-                console.log('No file selected, backup aborted.');
-                return;
-            }
+                if (!fileEntry) {
+                    console.log("No file selected, backup aborted.");
+                    return;
+                }
 
-            chosenFileEntry = fileEntry;
+                chosenFileEntry = fileEntry;
 
-            // echo/console log path specified
-            chrome.fileSystem.getDisplayPath(chosenFileEntry, function (path) {
-                console.log(`Backup file path: ${path}`);
-            });
-
-            // change file entry from read only to read/write
-            chrome.fileSystem.getWritableEntry(chosenFileEntry, function (fileEntryWritable) {
-                // check if file is writable
-                chrome.fileSystem.isWritableEntry(fileEntryWritable, function (isWritable) {
-                    if (isWritable) {
-                        chosenFileEntry = fileEntryWritable;
-
-                        // crunch the config object
-                        const serializedConfigObject = JSON.stringify(configuration, null, '\t');
-                        const blob = new Blob([serializedConfigObject], {type: 'text/plain'}); // first parameter for Blob needs to be an array
-
-                        chosenFileEntry.createWriter(function (writer) {
-                            writer.onerror = function (e) {
-                                console.error(e);
-                            };
-
-                            let truncated = false;
-                            writer.onwriteend = function () {
-                                if (!truncated) {
-                                    // onwriteend will be fired again when truncation is finished
-                                    truncated = true;
-                                    writer.truncate(blob.size);
-
-                                    return;
-                                }
-
-                                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Backup');
-                                console.log('Write SUCCESSFUL');
-                                if (callback) callback();
-                            };
-
-                            writer.write(blob);
-                        }, function (e) {
-                            console.error(e);
-                        });
-                    } else {
-                        // Something went wrong or file is set to read only and cannot be changed
-                        console.log('File appears to be read only, sorry.');
-                    }
+                // echo/console log path specified
+                chrome.fileSystem.getDisplayPath(chosenFileEntry, function (path) {
+                    console.log(`Backup file path: ${path}`);
                 });
-            });
-        });
-    }
 
+                // change file entry from read only to read/write
+                chrome.fileSystem.getWritableEntry(chosenFileEntry, function (fileEntryWritable) {
+                    // check if file is writable
+                    chrome.fileSystem.isWritableEntry(fileEntryWritable, function (isWritable) {
+                        if (isWritable) {
+                            chosenFileEntry = fileEntryWritable;
+
+                            // crunch the config object
+                            const serializedConfigObject = JSON.stringify(configuration, null, "\t");
+                            const blob = new Blob([serializedConfigObject], { type: "text/plain" }); // first parameter for Blob needs to be an array
+
+                            chosenFileEntry.createWriter(
+                                function (writer) {
+                                    writer.onerror = function (e) {
+                                        console.error(e);
+                                    };
+
+                                    let truncated = false;
+                                    writer.onwriteend = function () {
+                                        if (!truncated) {
+                                            // onwriteend will be fired again when truncation is finished
+                                            truncated = true;
+                                            writer.truncate(blob.size);
+
+                                            return;
+                                        }
+
+                                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Backup");
+                                        console.log("Write SUCCESSFUL");
+                                        if (callback) callback();
+                                    };
+
+                                    writer.write(blob);
+                                },
+                                function (e) {
+                                    console.error(e);
+                                },
+                            );
+                        } else {
+                            // Something went wrong or file is set to read only and cannot be changed
+                            console.log("File appears to be read only, sorry.");
+                        }
+                    });
+                });
+            },
+        );
+    }
 }
 
 export function configuration_restore(callback) {
     let chosenFileEntry = null;
 
-    const accepts = [{
-        description: 'JSON files', extensions: ['json'],
-    }];
+    const accepts = [
+        {
+            description: "JSON files",
+            extensions: ["json"],
+        },
+    ];
 
     // load up the file
-    chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function (fileEntry) {
+    chrome.fileSystem.chooseEntry({ type: "openFile", accepts: accepts }, function (fileEntry) {
         if (checkChromeRuntimeError()) {
             return;
         }
 
         if (!fileEntry) {
-            console.log('No file selected, restore aborted.');
+            console.log("No file selected, restore aborted.");
             return;
         }
 
@@ -287,9 +312,10 @@ export function configuration_restore(callback) {
             const reader = new FileReader();
 
             reader.onprogress = function (e) {
-                if (e.total > 1048576) { // 1 MB
+                if (e.total > 1048576) {
+                    // 1 MB
                     // dont allow reading files bigger then 1 MB
-                    console.log('File limit (1 MB) exceeded, aborting');
+                    console.log("File limit (1 MB) exceeded, aborting");
                     reader.abort();
                 }
             };
@@ -297,9 +323,10 @@ export function configuration_restore(callback) {
             reader.onloadend = function (e) {
                 if ((e.total != 0 && e.total == e.loaded) || GUI.isCordova()) {
                     // Cordova: Ignore verification : seem to have a bug with progressEvent returned
-                    console.log('Read SUCCESSFUL');
+                    console.log("Read SUCCESSFUL");
                     let configuration;
-                    try { // check if string provided is a valid JSON
+                    try {
+                        // check if string provided is a valid JSON
                         configuration = JSON.parse(e.target.result);
                     } catch (err) {
                         // data provided != valid json object
@@ -309,9 +336,12 @@ export function configuration_restore(callback) {
                     }
 
                     // validate
-                    if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.BACKUP_FILE_VERSION_MIN_SUPPORTED)) {
+                    if (
+                        typeof configuration.generatedBy !== "undefined" &&
+                        compareVersions(configuration.generatedBy, CONFIGURATOR.BACKUP_FILE_VERSION_MIN_SUPPORTED)
+                    ) {
                         if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
-                            gui_log(i18n.getMessage('backupFileUnmigratable'));
+                            gui_log(i18n.getMessage("backupFileUnmigratable"));
                             return;
                         }
                         if (configuration.FEATURE_CONFIG.features._featureMask) {
@@ -320,11 +350,11 @@ export function configuration_restore(callback) {
                             configuration.FEATURE_CONFIG.features = features;
                         }
 
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Restore');
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Restore");
 
                         configuration_upload(configuration, callback);
                     } else {
-                        gui_log(i18n.getMessage('backupFileIncompatible'));
+                        gui_log(i18n.getMessage("backupFileIncompatible"));
                     }
                 }
             };
@@ -340,37 +370,33 @@ export function configuration_restore(callback) {
         return semver.gte(generated, required);
     }
 
-
     function migrate(configuration) {
         let appliedMigrationsCount = 0;
         let migratedVersion = configuration.generatedBy;
-        gui_log(i18n.getMessage('configMigrationFrom', [migratedVersion]));
+        gui_log(i18n.getMessage("configMigrationFrom", [migratedVersion]));
 
-        if (!compareVersions(migratedVersion, '0.59.1')) {
-
+        if (!compareVersions(migratedVersion, "0.59.1")) {
             // variable was renamed
             configuration.RSSI_CONFIG.channel = configuration.MISC.rssi_aux_channel;
             configuration.MISC.rssi_aux_channel = undefined;
 
-            migratedVersion = '0.59.1';
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            migratedVersion = "0.59.1";
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (!compareVersions(migratedVersion, '0.60.1')) {
-
+        if (!compareVersions(migratedVersion, "0.60.1")) {
             // LED_STRIP support was added.
             if (!configuration.LED_STRIP) {
                 configuration.LED_STRIP = [];
             }
 
-            migratedVersion = '0.60.1';
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            migratedVersion = "0.60.1";
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (!compareVersions(migratedVersion, '0.61.0')) {
-
+        if (!compareVersions(migratedVersion, "0.61.0")) {
             // Changing PID controller via UI was added.
             if (!configuration.PIDs && configuration.PID) {
                 configuration.PIDs = configuration.PID;
@@ -379,15 +405,14 @@ export function configuration_restore(callback) {
                 };
             }
 
-            migratedVersion = '0.61.0';
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            migratedVersion = "0.61.0";
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (!compareVersions(migratedVersion, '0.63.0')) {
-
+        if (!compareVersions(migratedVersion, "0.63.0")) {
             // LED Strip was saved as object instead of array.
-            if (typeof(configuration.LED_STRIP) == 'object') {
+            if (typeof configuration.LED_STRIP == "object") {
                 const fixedLedStrip = [];
 
                 let index = 0;
@@ -409,8 +434,8 @@ export function configuration_restore(callback) {
                 RC.pitch_rate = RC.roll_pitch_rate;
             }
 
-            migratedVersion = '0.63.0';
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            migratedVersion = "0.63.0";
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -424,7 +449,7 @@ export function configuration_restore(callback) {
                 return false;
             }
         }
-        if (compareVersions(migratedVersion, '0.63.0') && !compareVersions(configuration.apiVersion, '1.7.0')) {
+        if (compareVersions(migratedVersion, "0.63.0") && !compareVersions(configuration.apiVersion, "1.7.0")) {
             // Serial configuation redesigned, 0.63.0 saves old and new configurations.
             const ports = [];
             for (const port of configuration.SERIAL_CONFIG.ports) {
@@ -435,28 +460,28 @@ export function configuration_restore(callback) {
                     functions: [],
                     msp_baudrate: String(configuration.SERIAL_CONFIG.mspBaudRate),
                     gps_baudrate: String(configuration.SERIAL_CONFIG.gpsBaudRate),
-                    telemetry_baudrate: 'AUTO',
-                    blackbox_baudrate: '115200',
+                    telemetry_baudrate: "AUTO",
+                    blackbox_baudrate: "115200",
                 };
 
-                switch(oldPort.scenario) {
+                switch (oldPort.scenario) {
                     case 1: // MSP, CLI, TELEMETRY, SMARTPORT TELEMETRY, GPS-PASSTHROUGH
                     case 5: // MSP, CLI, GPS-PASSTHROUGH
                     case 8: // MSP ONLY
-                        newPort.functions.push('MSP');
+                        newPort.functions.push("MSP");
                         break;
                     case 2: // GPS
-                        newPort.functions.push('GPS');
+                        newPort.functions.push("GPS");
                         break;
                     case 3: // RX_SERIAL
-                        newPort.functions.push('RX_SERIAL');
+                        newPort.functions.push("RX_SERIAL");
                         break;
                     case 10: // BLACKBOX ONLY
-                        newPort.functions.push('BLACKBOX');
+                        newPort.functions.push("BLACKBOX");
                         break;
                     case 11: // MSP, CLI, BLACKBOX, GPS-PASSTHROUGH
-                        newPort.functions.push('MSP');
-                        newPort.functions.push('BLACKBOX');
+                        newPort.functions.push("MSP");
+                        newPort.functions.push("BLACKBOX");
                         break;
                 }
 
@@ -466,11 +491,11 @@ export function configuration_restore(callback) {
                 ports: ports,
             };
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (compareVersions(migratedVersion, '0.63.0') && !compareVersions(configuration.apiVersion, '1.8.0')) {
+        if (compareVersions(migratedVersion, "0.63.0") && !compareVersions(configuration.apiVersion, "1.8.0")) {
             // api 1.8 exposes looptime and arming config
 
             if (configuration.FC_CONFIG == undefined) {
@@ -481,16 +506,16 @@ export function configuration_restore(callback) {
 
             if (configuration.ARMING_CONFIG == undefined) {
                 configuration.ARMING_CONFIG = {
-                    auto_disarm_delay:      5,
-                    disarm_kill_switch:     1,
+                    auto_disarm_delay: 5,
+                    disarm_kill_switch: 1,
                 };
             }
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (compareVersions(migratedVersion, '0.63.0')) {
+        if (compareVersions(migratedVersion, "0.63.0")) {
             // backups created with 0.63.0 for firmwares with api < 1.8 were saved with incorrect looptime
             if (configuration.FC_CONFIG.loopTime == 0) {
                 //reset it to the default
@@ -498,10 +523,10 @@ export function configuration_restore(callback) {
             }
         }
 
-        if (semver.lt(migratedVersion, '0.66.0')) {
+        if (semver.lt(migratedVersion, "0.66.0")) {
             // api 1.12 updated servo configuration protocol and added servo mixer rules
             for (let profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
-                if (semver.eq(configuration.apiVersion, '1.10.0')) {
+                if (semver.eq(configuration.apiVersion, "1.10.0")) {
                     // drop two unused servo configurations
                     while (configuration.profiles[profileIndex].ServoConfig.length > 8) {
                         configuration.profiles[profileIndex].ServoConfig.pop();
@@ -524,13 +549,13 @@ export function configuration_restore(callback) {
                 configuration.profiles[profileIndex].ServoRules = [];
             }
 
-            migratedVersion = '0.66.0';
+            migratedVersion = "0.66.0";
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (semver.lt(configuration.apiVersion, '1.14.0') && semver.gte(FC.CONFIG.apiVersion, "1.14.0")) {
+        if (semver.lt(configuration.apiVersion, "1.14.0") && semver.gte(FC.CONFIG.apiVersion, "1.14.0")) {
             // api 1.14 removed old pid controllers
             for (let profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
                 let newPidControllerIndex = configuration.profiles[profileIndex].PID.controller;
@@ -544,107 +569,104 @@ export function configuration_restore(callback) {
                 configuration.profiles[profileIndex].PID.controller = newPidControllerIndex;
             }
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-
-        if (compareVersions(migratedVersion, '0.66.0') && !compareVersions(configuration.apiVersion, '1.14.0')) {
+        if (compareVersions(migratedVersion, "0.66.0") && !compareVersions(configuration.apiVersion, "1.14.0")) {
             // api 1.14 exposes 3D configuration
 
             if (configuration.MOTOR_3D_CONFIG == undefined) {
                 configuration.MOTOR_3D_CONFIG = {
-                    deadband3d_low:         1406,
-                    deadband3d_high:        1514,
-                    neutral:                1460,
-                    deadband3d_throttle:    50,
+                    deadband3d_low: 1406,
+                    deadband3d_high: 1514,
+                    neutral: 1460,
+                    deadband3d_throttle: 50,
                 };
             }
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-
-        if (compareVersions(migratedVersion, '0.66.0') && !compareVersions(configuration.apiVersion, '1.15.0')) {
+        if (compareVersions(migratedVersion, "0.66.0") && !compareVersions(configuration.apiVersion, "1.15.0")) {
             // api 1.15 exposes RCdeadband and sensor alignment
 
             for (let profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
-                 if (configuration.profiles[profileIndex].RCdeadband == undefined) {
+                if (configuration.profiles[profileIndex].RCdeadband == undefined) {
                     configuration.profiles[profileIndex].RCdeadband = {
-                    deadband:                0,
-                    yaw_deadband:            0,
-                    alt_hold_deadband:       40,
+                        deadband: 0,
+                        yaw_deadband: 0,
+                        alt_hold_deadband: 40,
                     };
                 }
             }
             if (configuration.SENSOR_ALIGNMENT == undefined) {
-                    configuration.SENSOR_ALIGNMENT = {
-                    align_gyro:              0,
-                    align_acc:               0,
-                    align_mag:               0,
-                    };
+                configuration.SENSOR_ALIGNMENT = {
+                    align_gyro: 0,
+                    align_acc: 0,
+                    align_mag: 0,
+                };
             }
 
             // api 1.15 exposes RX_CONFIG, FAILSAFE_CONFIG and RXFAIL_CONFIG configuration
 
             if (configuration.RX_CONFIG == undefined) {
                 configuration.RX_CONFIG = {
-                    serialrx_provider:      0,
-                    spektrum_sat_bind:      0,
-                    stick_center:           1500,
-                    stick_min:              1100,
-                    stick_max:              1900,
-                    rx_min_usec:            885,
-                    rx_max_usec:            2115,
+                    serialrx_provider: 0,
+                    spektrum_sat_bind: 0,
+                    stick_center: 1500,
+                    stick_min: 1100,
+                    stick_max: 1900,
+                    rx_min_usec: 885,
+                    rx_max_usec: 2115,
                 };
             }
 
             if (configuration.FAILSAFE_CONFIG == undefined) {
                 configuration.FAILSAFE_CONFIG = {
-                    failsafe_delay:                 10,
-                    failsafe_off_delay:             200,
-                    failsafe_throttle:              1000,
-                    failsafe_switch_mode:           0,
-                    failsafe_throttle_low_delay:    100,
-                    failsafe_procedure:             0,
+                    failsafe_delay: 10,
+                    failsafe_off_delay: 200,
+                    failsafe_throttle: 1000,
+                    failsafe_switch_mode: 0,
+                    failsafe_throttle_low_delay: 100,
+                    failsafe_procedure: 0,
                 };
             }
 
             if (configuration.RXFAIL_CONFIG == undefined) {
                 configuration.RXFAIL_CONFIG = [
-                    {mode: 0, value: 1500},
-                    {mode: 0, value: 1500},
-                    {mode: 0, value: 1500},
-                    {mode: 0, value: 875},
+                    { mode: 0, value: 1500 },
+                    { mode: 0, value: 1500 },
+                    { mode: 0, value: 1500 },
+                    { mode: 0, value: 875 },
                 ];
 
                 for (let i = 0; i < 14; i++) {
                     const rxfailChannel = {
-                        mode:  1,
+                        mode: 1,
                         value: 1500,
                     };
                     configuration.RXFAIL_CONFIG.push(rxfailChannel);
                 }
             }
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (compareVersions(migratedVersion, '1.2.0')) {
+        if (compareVersions(migratedVersion, "1.2.0")) {
             // old version of the configurator incorrectly had a 'disabled' option for GPS SBAS mode.
             if (FC.GPS_CONFIG.ublox_sbas < 0) {
                 FC.GPS_CONFIG.ublox_sbas = 0;
             }
-            migratedVersion = '1.2.0';
+            migratedVersion = "1.2.0";
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
-        if (compareVersions(migratedVersion, '1.3.1')) {
-
+        if (compareVersions(migratedVersion, "1.3.1")) {
             // LED_COLORS & LED_MODE_COLORS support was added.
             if (!configuration.LED_COLORS) {
                 configuration.LED_COLORS = [];
@@ -653,14 +675,14 @@ export function configuration_restore(callback) {
                 configuration.LED_MODE_COLORS = [];
             }
 
-            migratedVersion = '1.3.1';
+            migratedVersion = "1.3.1";
 
-            gui_log(i18n.getMessage('configMigratedTo', [migratedVersion]));
+            gui_log(i18n.getMessage("configMigratedTo", [migratedVersion]));
             appliedMigrationsCount++;
         }
 
         if (appliedMigrationsCount > 0) {
-            gui_log(i18n.getMessage('configMigrationSuccessful', [appliedMigrationsCount]));
+            gui_log(i18n.getMessage("configMigrationSuccessful", [appliedMigrationsCount]));
         }
         return true;
     }
@@ -711,28 +733,43 @@ export function configuration_restore(callback) {
                 }
 
                 function upload_using_specific_commands() {
-                    MSP.send_message(profileSpecificData[codeKey], mspHelper.crunch(profileSpecificData[codeKey]), false, function () {
-                        codeKey++;
+                    MSP.send_message(
+                        profileSpecificData[codeKey],
+                        mspHelper.crunch(profileSpecificData[codeKey]),
+                        false,
+                        function () {
+                            codeKey++;
 
-                        if (codeKey < profileSpecificData.length) {
-                            upload_using_specific_commands();
-                        } else {
-                            codeKey = 0;
-                            savingProfile++;
-
-                            if (savingProfile < numProfiles) {
-                                load_objects(savingProfile);
-
-                                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                                    MSP.send_message(MSPCodes.MSP_SELECT_SETTING, [savingProfile], false, upload_using_specific_commands);
-                                });
+                            if (codeKey < profileSpecificData.length) {
+                                upload_using_specific_commands();
                             } else {
-                                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                                    MSP.send_message(MSPCodes.MSP_SELECT_SETTING, [activeProfile], false, upload_unique_data);
-                                });
+                                codeKey = 0;
+                                savingProfile++;
+
+                                if (savingProfile < numProfiles) {
+                                    load_objects(savingProfile);
+
+                                    MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
+                                        MSP.send_message(
+                                            MSPCodes.MSP_SELECT_SETTING,
+                                            [savingProfile],
+                                            false,
+                                            upload_using_specific_commands,
+                                        );
+                                    });
+                                } else {
+                                    MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
+                                        MSP.send_message(
+                                            MSPCodes.MSP_SELECT_SETTING,
+                                            [activeProfile],
+                                            false,
+                                            upload_unique_data,
+                                        );
+                                    });
+                                }
                             }
-                        }
-                    });
+                        },
+                    );
                 }
 
                 function upload_servo_configuration() {
@@ -746,9 +783,9 @@ export function configuration_restore(callback) {
 
                             for (let modeIndex = 0; modeIndex < FC.MODE_RANGES.length; modeIndex++) {
                                 const defaultModeRangeExtra = {
-                                    modeId:     FC.MODE_RANGES[modeIndex].modeId,
-                                    modeLogic:  0,
-                                    linkedTo:   0,
+                                    modeId: FC.MODE_RANGES[modeIndex].modeId,
+                                    modeLogic: 0,
+                                    linkedTo: 0,
                                 };
                                 FC.MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
                             }
@@ -771,10 +808,7 @@ export function configuration_restore(callback) {
             function upload_unique_data() {
                 let codeKey = 0;
 
-                const uniqueData = [
-                    MSPCodes.MSP_SET_RX_MAP,
-                    MSPCodes.MSP_SET_CF_SERIAL_CONFIG,
-                ];
+                const uniqueData = [MSPCodes.MSP_SET_RX_MAP, MSPCodes.MSP_SET_CF_SERIAL_CONFIG];
 
                 function update_unique_data_list() {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
@@ -835,8 +869,10 @@ export function configuration_restore(callback) {
                     FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
                     FC.BEEPER_CONFIG.beepers.setDisabledMask(configuration.BEEPER_CONFIG.beepers._beeperDisabledMask);
                     FC.BEEPER_CONFIG.dshotBeaconTone = configuration.BEEPER_CONFIG.dshotBeaconTone;
-                    FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, [ "RX_LOST", "RX_SET" ]);
-                    FC.BEEPER_CONFIG.dshotBeaconConditions.setDisabledMask(configuration.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask);
+                    FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+                    FC.BEEPER_CONFIG.dshotBeaconConditions.setDisabledMask(
+                        configuration.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask,
+                    );
                 }
 
                 function send_unique_data_item() {
@@ -847,9 +883,19 @@ export function configuration_restore(callback) {
                         };
 
                         if (Array.isArray(uniqueData[codeKey])) {
-                            MSP.send_message(uniqueData[codeKey][0], mspHelper.crunch(...uniqueData[codeKey]), false, callback);
+                            MSP.send_message(
+                                uniqueData[codeKey][0],
+                                mspHelper.crunch(...uniqueData[codeKey]),
+                                false,
+                                callback,
+                            );
                         } else {
-                            MSP.send_message(uniqueData[codeKey], mspHelper.crunch(uniqueData[codeKey]), false, callback);
+                            MSP.send_message(
+                                uniqueData[codeKey],
+                                mspHelper.crunch(uniqueData[codeKey]),
+                                false,
+                                callback,
+                            );
                         }
                     } else {
                         send_led_strip_config();
@@ -885,12 +931,12 @@ export function configuration_restore(callback) {
             }
 
             function reboot() {
-                gui_log(i18n.getMessage('eeprom_saved_ok'));
+                gui_log(i18n.getMessage("eeprom_saved_ok"));
 
-                GUI.tab_switch_cleanup(function() {
+                GUI.tab_switch_cleanup(function () {
                     MSP.Promise(MSPCodes.MSP_SET_REBOOT)
-                    .then(() => reinitializeConnection())
-                    .then(() => _callback());
+                        .then(() => reinitializeConnection())
+                        .then(() => _callback());
                 });
             }
         }

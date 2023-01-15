@@ -1,7 +1,7 @@
-import i18next from 'i18next';
-import i18nextXHRBackend from 'i18next-xhr-backend';
-import { gui_log } from './gui_log.js';
-import { get as getConfig, set as setConfig } from './ConfigStorage.js';
+import i18next from "i18next";
+import i18nextXHRBackend from "i18next-xhr-backend";
+import { gui_log } from "./gui_log.js";
+import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
 
 const i18n = {};
 /*
@@ -9,67 +9,82 @@ const i18n = {};
  */
 window.i18n = i18n;
 
-
-const languagesAvailables = ['ca', 'da', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'it', 'ja', 'ko', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'zh_CN', 'zh_TW'];
+const languagesAvailables = [
+    "ca",
+    "da",
+    "de",
+    "en",
+    "es",
+    "eu",
+    "fr",
+    "gl",
+    "it",
+    "ja",
+    "ko",
+    "nl",
+    "pt",
+    "pt_BR",
+    "pl",
+    "ru",
+    "zh_CN",
+    "zh_TW",
+];
 
 const languageFallback = {
-                            'pt': ['pt_BR', 'en'],
-                            'pt_BR': ['pt', 'en'],
-                            'default': ['en'],
+    pt: ["pt_BR", "en"],
+    pt_BR: ["pt", "en"],
+    default: ["en"],
 };
 
 /**
  * Functions that depend on the i18n framework
  */
-i18n.init = function(cb) {
-    getStoredUserLocale(function(userLanguage) {
-
-        i18next
-            .use(i18nextXHRBackend)
-            .init({
+i18n.init = function (cb) {
+    getStoredUserLocale(function (userLanguage) {
+        i18next.use(i18nextXHRBackend).init(
+            {
                 lng: userLanguage,
                 getAsync: false,
                 debug: true,
-                ns: ['messages'],
-                defaultNS:['messages'],
+                ns: ["messages"],
+                defaultNS: ["messages"],
                 fallbackLng: languageFallback,
                 backend: {
-                    loadPath: './locales/{{lng}}/{{ns}}.json',
+                    loadPath: "./locales/{{lng}}/{{ns}}.json",
                     parse: i18n.parseInputFile,
                 },
             },
-            function(err) {
+            function (err) {
                 if (err !== undefined) {
                     console.error(`Error loading i18n: ${err}`);
                 } else {
-                    console.log('i18n system loaded');
+                    console.log("i18n system loaded");
                     const detectedLanguage = i18n.getMessage(`language_${getValidLocale("DEFAULT")}`);
-                    i18n.addResources({"detectedLanguage": detectedLanguage });
-                    i18next.on('languageChanged', function () {
+                    i18n.addResources({ detectedLanguage: detectedLanguage });
+                    i18next.on("languageChanged", function () {
                         i18n.localizePage(true);
                     });
                 }
                 if (cb !== undefined) {
                     cb();
                 }
-            });
+            },
+        );
     });
-
 };
 
 /**
  * We have different interpolate methods in the input messages file,
  * we unify all of them here to the i18next style and simplify it
  */
-i18n.parseInputFile = function(data) {
-
+i18n.parseInputFile = function (data) {
     // Remove the $n interpolate of Chrome $1, $2, ... -> {{1}}, {{2}}, ...
     const REGEXP_CHROME = /\$([1-9])/g;
-    const dataChrome = data.replace(REGEXP_CHROME, '{{$1}}');
+    const dataChrome = data.replace(REGEXP_CHROME, "{{$1}}");
 
     // Remove the .message of the nesting $t(xxxxx.message) -> $t(xxxxx)
     const REGEXP_NESTING = /\$t\(([^\)]*).message\)/g;
-    const dataNesting = dataChrome.replace(REGEXP_NESTING, '$t($1)');
+    const dataNesting = dataChrome.replace(REGEXP_NESTING, "$t($1)");
 
     // Move the .message of the json object to root xxxxx.message -> xxxxx
     const jsonData = JSON.parse(dataNesting);
@@ -80,25 +95,23 @@ i18n.parseInputFile = function(data) {
     return jsonData;
 };
 
-i18n.changeLanguage = function(languageSelected) {
-    setConfig({'userLanguageSelect': languageSelected});
+i18n.changeLanguage = function (languageSelected) {
+    setConfig({ userLanguageSelect: languageSelected });
     i18next.changeLanguage(getValidLocale(languageSelected));
     i18n.selectedLanguage = languageSelected;
-    gui_log(i18n.getMessage('language_changed'));
+    gui_log(i18n.getMessage("language_changed"));
 };
 
-i18n.getMessage = function(messageID, parameters) {
-
+i18n.getMessage = function (messageID, parameters) {
     let parametersObject;
 
     // Option 1, no parameters or Object as parameters (i18Next type parameters)
-    if ((parameters === undefined) || ((parameters.constructor !== Array) && (parameters instanceof Object))) {
+    if (parameters === undefined || (parameters.constructor !== Array && parameters instanceof Object)) {
         parametersObject = parameters;
 
-    // Option 2: parameters as $1, $2, etc.
-    // (deprecated, from the old Chrome i18n
+        // Option 2: parameters as $1, $2, etc.
+        // (deprecated, from the old Chrome i18n
     } else {
-
         // Convert the input to an array
         let parametersArray = parameters;
         if (parametersArray.constructor !== Array) {
@@ -106,7 +119,7 @@ i18n.getMessage = function(messageID, parameters) {
         }
 
         parametersObject = {};
-        parametersArray.forEach(function(parameter, index) {
+        parametersArray.forEach(function (parameter, index) {
             parametersObject[index + 1] = parameter;
         });
     }
@@ -114,15 +127,15 @@ i18n.getMessage = function(messageID, parameters) {
     return i18next.t(messageID, parametersObject);
 };
 
-i18n.getLanguagesAvailables = function() {
+i18n.getLanguagesAvailables = function () {
     return languagesAvailables;
 };
 
-i18n.getCurrentLocale = function() {
+i18n.getCurrentLocale = function () {
     return i18next.language;
 };
 
-i18n.existsMessage = function(key) {
+i18n.existsMessage = function (key) {
     return i18next.exists(key);
 };
 
@@ -130,56 +143,54 @@ i18n.existsMessage = function(key) {
  * Helper functions, don't depend of the i18n framework
  */
 
-i18n.localizePage = function(forceReTranslate) {
-
+i18n.localizePage = function (forceReTranslate) {
     let localized = 0;
 
-    const translate = function(messageID) {
+    const translate = function (messageID) {
         localized++;
         return i18n.getMessage(messageID);
     };
 
     if (forceReTranslate) {
-        $('[i18n]').each(function() {
+        $("[i18n]").each(function () {
             const element = $(this);
-            element.html(translate(element.attr('i18n')));
+            element.html(translate(element.attr("i18n")));
         });
-        $('[i18n_title]').each(function() {
+        $("[i18n_title]").each(function () {
             const element = $(this);
-            element.attr('title', translate(element.attr('i18n_title')));
+            element.attr("title", translate(element.attr("i18n_title")));
         });
-        $('[i18n_value]').each(function() {
+        $("[i18n_value]").each(function () {
             const element = $(this);
-            element.val(translate(element.attr('i18n_value')));
+            element.val(translate(element.attr("i18n_value")));
         });
-        $('[i18n_placeholder]').each(function() {
+        $("[i18n_placeholder]").each(function () {
             const element = $(this);
-            element.attr('placeholder', translate(element.attr('i18n_placeholder')));
+            element.attr("placeholder", translate(element.attr("i18n_placeholder")));
         });
     } else {
-
-        $('[i18n]:not(.i18n-replaced)').each(function() {
+        $("[i18n]:not(.i18n-replaced)").each(function () {
             const element = $(this);
-            element.html(translate(element.attr('i18n')));
-            element.addClass('i18n-replaced');
+            element.html(translate(element.attr("i18n")));
+            element.addClass("i18n-replaced");
         });
 
-        $('[i18n_title]:not(.i18n_title-replaced)').each(function() {
+        $("[i18n_title]:not(.i18n_title-replaced)").each(function () {
             const element = $(this);
-            element.attr('title', translate(element.attr('i18n_title')));
-            element.addClass('i18n_title-replaced');
+            element.attr("title", translate(element.attr("i18n_title")));
+            element.addClass("i18n_title-replaced");
         });
 
-        $('[i18n_value]:not(.i18n_value-replaced)').each(function() {
+        $("[i18n_value]:not(.i18n_value-replaced)").each(function () {
             const element = $(this);
-            element.val(translate(element.attr('i18n_value')));
-            element.addClass('i18n_value-replaced');
+            element.val(translate(element.attr("i18n_value")));
+            element.addClass("i18n_value-replaced");
         });
 
-        $('[i18n_placeholder]:not(.i18n_placeholder-replaced)').each(function() {
+        $("[i18n_placeholder]:not(.i18n_placeholder-replaced)").each(function () {
             const element = $(this);
-            element.attr('placeholder', translate(element.attr('i18n_placeholder')));
-            element.addClass('i18n_placeholder-replaced');
+            element.attr("placeholder", translate(element.attr("i18n_placeholder")));
+            element.addClass("i18n_placeholder-replaced");
         });
     }
     return localized;
@@ -190,8 +201,8 @@ i18n.localizePage = function(forceReTranslate) {
  * returns the current locale to the callback
  */
 function getStoredUserLocale(cb) {
-    let userLanguage = 'DEFAULT';
-    const result = getConfig('userLanguageSelect');
+    let userLanguage = "DEFAULT";
+    const result = getConfig("userLanguageSelect");
     if (result.userLanguageSelect) {
         userLanguage = result.userLanguageSelect;
     }
@@ -201,28 +212,27 @@ function getStoredUserLocale(cb) {
 }
 
 function getValidLocale(userLocale) {
-
     let validUserLocale = userLocale;
-    if (validUserLocale === 'DEFAULT') {
+    if (validUserLocale === "DEFAULT") {
         validUserLocale = window.navigator.userLanguage || window.navigator.language;
         console.log(`Detected locale ${validUserLocale}`);
 
         // The i18next can fallback automatically to the dialect, but needs to be used with hyphen and
         // we use underscore because the eventPage.js uses Chrome localization that needs underscore.
         // If at some moment we get rid of the Chrome localization we can remove all of this
-        validUserLocale = validUserLocale.replace('-','_');
+        validUserLocale = validUserLocale.replace("-", "_");
         // Locale not found
         if (languagesAvailables.indexOf(validUserLocale) === -1) {
             // Is a composite locale?
-            const underscorePosition = validUserLocale.indexOf('_');
+            const underscorePosition = validUserLocale.indexOf("_");
             if (underscorePosition !== -1) {
                 validUserLocale = validUserLocale.substring(0, underscorePosition);
                 // Locale dialect fallback not found
                 if (languagesAvailables.indexOf(validUserLocale) === -1) {
-                    validUserLocale = 'en'; // Fallback language
+                    validUserLocale = "en"; // Fallback language
                 }
             } else {
-                validUserLocale = 'en';
+                validUserLocale = "en";
             }
         }
     }
@@ -230,9 +240,9 @@ function getValidLocale(userLocale) {
     return validUserLocale;
 }
 
-i18n.addResources = function(bundle) {
-    const takeFirst = obj => obj.hasOwnProperty("length") && 0 < obj.length ? obj[0] : obj;
-    const lang = takeFirst(i18next.options.fallbackLng['default']);
+i18n.addResources = function (bundle) {
+    const takeFirst = (obj) => (obj.hasOwnProperty("length") && 0 < obj.length ? obj[0] : obj);
+    const lang = takeFirst(i18next.options.fallbackLng["default"]);
     const ns = takeFirst(i18next.options.defaultNS);
     i18next.addResourceBundle(lang, ns, bundle, true, true);
 };

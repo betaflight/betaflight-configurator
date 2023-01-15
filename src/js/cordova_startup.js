@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 const cordovaUI = {
     uiZoom: 1,
     canChangeUI: true,
-    init: async function() {
+    init: async function () {
         const self = this;
         const screenWidth = $(window).width();
         const screenHeight = $(window).height();
@@ -11,50 +11,52 @@ const cordovaUI = {
         let orientation;
         if (screenWidth > screenHeight) {
             length = screenWidth;
-            orientation = 'landscape';
+            orientation = "landscape";
         } else {
             length = screenHeight;
-            orientation = 'portrait';
+            orientation = "portrait";
         }
         if (length < 1024) {
-            self.uiZoom = length/1024;
+            self.uiZoom = length / 1024;
         }
         if (screenWidth > 575 && screenHeight > 575) {
             self.canChangeUI = false;
         }
-        const result = ConfigStorage.get('cordovaForceComputerUI');
+        const result = ConfigStorage.get("cordovaForceComputerUI");
         if (result.cordovaForceComputerUI === undefined) {
-            if ((orientation === 'landscape' && screenHeight <= 575)
-                || (orientation === 'portrait' && screenWidth <= 575)) {
-                ConfigStorage.set({'cordovaForceComputerUI': false});
+            if (
+                (orientation === "landscape" && screenHeight <= 575) ||
+                (orientation === "portrait" && screenWidth <= 575)
+            ) {
+                ConfigStorage.set({ cordovaForceComputerUI: false });
             } else {
-                ConfigStorage.set({'cordovaForceComputerUI': true});
+                ConfigStorage.set({ cordovaForceComputerUI: true });
             }
         }
         self.set();
     },
-    set: function() {
+    set: function () {
         const self = this;
-        const result = ConfigStorage.get('cordovaForceComputerUI');
+        const result = ConfigStorage.get("cordovaForceComputerUI");
         if (result.cordovaForceComputerUI) {
-            window.screen.orientation.lock('landscape');
-            $('body').css('zoom', self.uiZoom);
+            window.screen.orientation.lock("landscape");
+            $("body").css("zoom", self.uiZoom);
         } else {
-            window.screen.orientation.lock('portrait');
-            $('body').css('zoom', 1);
+            window.screen.orientation.lock("portrait");
+            $("body").css("zoom", 1);
         }
     },
 };
 
 const cordovaApp = {
-    initialize: function() {
+    initialize: function () {
         this.bindEvents();
     },
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
+    bindEvents: function () {
+        document.addEventListener("deviceready", this.onDeviceReady, false);
     },
-    onDeviceReady: function() {
-        $('.open_firmware_flasher, .tab_firmware_flasher').hide();
+    onDeviceReady: function () {
+        $(".open_firmware_flasher, .tab_firmware_flasher").hide();
         cordovaUI.init();
         navigator.splashscreen.hide();
         cordovaChromeapi.init();

@@ -14,8 +14,6 @@ export function gui_log(message) {
     const time = `${hours}:${minutes}:${seconds}`;
 
     const formattedDate = `${year}-${month}-${date} @${time}`;
-    $("div.wrapper", commandLog).append(
-        `<p>${formattedDate} -- ${message}</p>`,
-    );
+    $("div.wrapper", commandLog).append(`<p>${formattedDate} -- ${message}</p>`);
     commandLog.scrollTop($("div.wrapper", commandLog).height());
 }

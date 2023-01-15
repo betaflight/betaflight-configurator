@@ -1,33 +1,32 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI from "../gui";
 import { have_sensor } from "../sensor_helpers";
-import FC from '../fc';
+import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 
 const gps = {};
 gps.initialize = function (callback) {
-
-    if (GUI.active_tab !== 'gps') {
-        GUI.active_tab = 'gps';
+    if (GUI.active_tab !== "gps") {
+        GUI.active_tab = "gps";
     }
 
     function load_html() {
-        $('#content').load("./tabs/gps.html", process_html);
+        $("#content").load("./tabs/gps.html", process_html);
     }
 
     MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_html);
 
-    function set_online(){
-        $('#connect').hide();
-        $('#waiting').show();
-        $('#loadmap').hide();
+    function set_online() {
+        $("#connect").hide();
+        $("#waiting").show();
+        $("#loadmap").hide();
     }
 
-    function set_offline(){
-        $('#connect').show();
-        $('#waiting').hide();
-        $('#loadmap').hide();
+    function set_offline() {
+        $("#connect").show();
+        $("#waiting").hide();
+        $("#loadmap").hide();
     }
 
     function process_html() {
@@ -53,31 +52,50 @@ gps.initialize = function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
-            const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
-            const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
-                'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
-            const usedArray = ['gnssUsedUnused', 'gnssUsedUsed'];
-            const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
+            const gnssArray = ["GPS", "SBAS", "Galileo", "BeiDou", "IMES", "QZSS", "Glonass"];
+            const qualityArray = [
+                "gnssQualityNoSignal",
+                "gnssQualitySearching",
+                "gnssQualityAcquired",
+                "gnssQualityUnusable",
+                "gnssQualityLocked",
+                "gnssQualityFullyLocked",
+                "gnssQualityFullyLocked",
+                "gnssQualityFullyLocked",
+            ];
+            const usedArray = ["gnssUsedUnused", "gnssUsedUsed"];
+            const healthyArray = [
+                "gnssHealthyUnknown",
+                "gnssHealthyHealthy",
+                "gnssHealthyUnhealthy",
+                "gnssHealthyUnknown",
+            ];
             let alt = FC.GPS_DATA.alt;
 
-            $('.GPS_info td.fix').html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
-            $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.lat a').prop('href', url).text(`${lat.toFixed(4)} deg`);
-            $('.GPS_info td.lon a').prop('href', url).text(`${lon.toFixed(4)} deg`);
-            $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
-            $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
-            $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
+            $(".GPS_info td.fix").html(
+                FC.GPS_DATA.fix ? i18n.getMessage("gpsFixTrue") : i18n.getMessage("gpsFixFalse"),
+            );
+            $(".GPS_info td.alt").text(`${alt} m`);
+            $(".GPS_info td.lat a")
+                .prop("href", url)
+                .text(`${lat.toFixed(4)} deg`);
+            $(".GPS_info td.lon a")
+                .prop("href", url)
+                .text(`${lon.toFixed(4)} deg`);
+            $(".GPS_info td.speed").text(`${FC.GPS_DATA.speed} cm/s`);
+            $(".GPS_info td.sats").text(FC.GPS_DATA.numSat);
+            $(".GPS_info td.distToHome").text(`${FC.GPS_DATA.distanceToHome} m`);
 
             // Update GPS Signal Strengths
-            const eSsTable = $('div.GPS_signal_strength table');
+            const eSsTable = $("div.GPS_signal_strength table");
 
-            eSsTable.html('');
+            eSsTable.html("");
             eSsTable.append(`
                 <tr class="titles">
-                    <td style="width: 12%;" i18n="gpsSignalGnssId">${i18n.getMessage('gpsSignalGnssId')}</td>
-                    <td style="width: 10%;" i18n="gpsSignalSatId">${i18n.getMessage('gpsSignalSatId')}</td>
-                    <td style="width: 25%;" i18n="gpsSignalStr">${i18n.getMessage('gpsSignalStr')}</td>
-                    <td style="width: 53%;" i18n="gpsSignalStatusQly">${i18n.getMessage('gpsSignalStatusQly')}</td>
+                    <td style="width: 12%;" i18n="gpsSignalGnssId">${i18n.getMessage("gpsSignalGnssId")}</td>
+                    <td style="width: 10%;" i18n="gpsSignalSatId">${i18n.getMessage("gpsSignalSatId")}</td>
+                    <td style="width: 25%;" i18n="gpsSignalStr">${i18n.getMessage("gpsSignalStr")}</td>
+                    <td style="width: 53%;" i18n="gpsSignalStatusQly">${i18n.getMessage("gpsSignalStatusQly")}</td>
                 </tr>
             `);
             if (FC.GPS_DATA.chn.length <= 16) {
@@ -110,15 +128,15 @@ gps.initialize = function (callback) {
                 let channels = Math.min(maxUIChannels, FC.GPS_DATA.chn.length) || 32;
 
                 for (let i = 0; i < channels; i++) {
-                    let rowContent = '';
+                    let rowContent = "";
                     if (FC.GPS_DATA.chn[i] <= 6) {
                         rowContent += `<td>${gnssArray[FC.GPS_DATA.chn[i]]}</td>`;
                     } else {
-                        rowContent += '<td>-</td>';
+                        rowContent += "<td>-</td>";
                     }
 
                     if (FC.GPS_DATA.chn[i] >= 7) {
-                        rowContent += '<td>-</td>';
+                        rowContent += "<td>-</td>";
                         rowContent += `<td><progress value="${0}" max="99"></progress></td>`;
                         rowContent += `<td> </td>`;
                     } else {
@@ -134,91 +152,99 @@ gps.initialize = function (callback) {
             }
 
             const message = {
-                action: 'center',
+                action: "center",
                 lat: lat,
                 lon: lon,
             };
 
-            frame = document.getElementById('map');
+            frame = document.getElementById("map");
             if (navigator.onLine) {
-                $('#connect').hide();
+                $("#connect").hide();
 
                 if (FC.GPS_DATA.fix) {
-                   gpsWasFixed = true;
-                   frame.contentWindow.postMessage(message, '*');
-                   $('#loadmap').show();
-                   $('#waiting').hide();
+                    gpsWasFixed = true;
+                    frame.contentWindow.postMessage(message, "*");
+                    $("#loadmap").show();
+                    $("#waiting").hide();
                 } else if (!gpsWasFixed) {
-                   $('#loadmap').hide();
-                   $('#waiting').show();
+                    $("#loadmap").hide();
+                    $("#waiting").show();
                 } else {
-                    message.action = 'nofix';
-                    frame.contentWindow.postMessage(message, '*');
+                    message.action = "nofix";
+                    frame.contentWindow.postMessage(message, "*");
                 }
-            }else{
+            } else {
                 gpsWasFixed = false;
-                $('#connect').show();
-                $('#waiting').hide();
-                $('#loadmap').hide();
+                $("#connect").show();
+                $("#waiting").hide();
+                $("#loadmap").hide();
             }
         }
 
-        let frame = document.getElementById('map');
+        let frame = document.getElementById("map");
 
         // enable data pulling
-        GUI.interval_add('gps_pull', function gps_update() {
-            // avoid usage of the GPS commands until a GPS sensor is detected for targets that are compiled without GPS support.
-            if (!have_sensor(FC.CONFIG.activeSensors, 'gps')) {
-                //return;
-            }
+        GUI.interval_add(
+            "gps_pull",
+            function gps_update() {
+                // avoid usage of the GPS commands until a GPS sensor is detected for targets that are compiled without GPS support.
+                if (!have_sensor(FC.CONFIG.activeSensors, "gps")) {
+                    //return;
+                }
 
-            get_raw_gps_data();
-        }, 75, true);
+                get_raw_gps_data();
+            },
+            75,
+            true,
+        );
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
-
+        GUI.interval_add(
+            "status_pull",
+            function status_pull() {
+                MSP.send_message(MSPCodes.MSP_STATUS);
+            },
+            250,
+            true,
+        );
 
         //check for internet connection on load
         if (navigator.onLine) {
-            console.log('Online');
+            console.log("Online");
             set_online();
         } else {
-            console.log('Offline');
+            console.log("Offline");
             set_offline();
         }
 
-        $("#check").on('click',function(){
+        $("#check").on("click", function () {
             if (navigator.onLine) {
-                console.log('Online');
+                console.log("Online");
                 set_online();
             } else {
-                console.log('Offline');
+                console.log("Offline");
                 set_offline();
             }
         });
 
-        $('#zoom_in').click(function() {
-            console.log('zoom in');
+        $("#zoom_in").click(function () {
+            console.log("zoom in");
             const message = {
-                action: 'zoom_in',
+                action: "zoom_in",
             };
-            frame.contentWindow.postMessage(message, '*');
+            frame.contentWindow.postMessage(message, "*");
         });
 
-        $('#zoom_out').click(function() {
-            console.log('zoom out');
+        $("#zoom_out").click(function () {
+            console.log("zoom out");
             const message = {
-                action: 'zoom_out',
+                action: "zoom_out",
             };
-            frame.contentWindow.postMessage(message, '*');
+            frame.contentWindow.postMessage(message, "*");
         });
 
         GUI.content_ready(callback);
     }
-
 };
 
 gps.cleanup = function (callback) {
@@ -226,6 +252,4 @@ gps.cleanup = function (callback) {
 };
 
 window.TABS.gps = gps;
-export {
-    gps,
-};
+export { gps };

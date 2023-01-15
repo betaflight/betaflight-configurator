@@ -1,19 +1,19 @@
-import GUI from '../../js/gui';
-import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
-import { i18n } from '../../js/localization';
-import FC from '../../js/fc';
-import CONFIGURATOR from '../../js/data_storage';
-import UI_PHONES from '../../js/phones_ui';
+import GUI from "../../js/gui";
+import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
+import { i18n } from "../../js/localization";
+import FC from "../../js/fc";
+import CONFIGURATOR from "../../js/data_storage";
+import UI_PHONES from "../../js/phones_ui";
 
-import { favoritePresets } from './FavoritePresets';
-import CliEngine from './CliEngine';
-import PickedPreset from './PickedPreset';
-import PresetsDetailedDialog from './DetailedDialog/PresetsDetailedDialog';
-import PresetsGithubRepo from './PresetsRepoIndexed/PresetsGithubRepo';
-import PresetsWebsiteRepo from './PresetsRepoIndexed/PresetsWebsiteRepo';
-import PresetTitlePanel from './TitlePanel/PresetTitlePanel';
-import PresetsSourcesDialog from './SourcesDialog/SourcesDialog';
-import PresetSource from './SourcesDialog/PresetSource';
+import { favoritePresets } from "./FavoritePresets";
+import CliEngine from "./CliEngine";
+import PickedPreset from "./PickedPreset";
+import PresetsDetailedDialog from "./DetailedDialog/PresetsDetailedDialog";
+import PresetsGithubRepo from "./PresetsRepoIndexed/PresetsGithubRepo";
+import PresetsWebsiteRepo from "./PresetsRepoIndexed/PresetsWebsiteRepo";
+import PresetTitlePanel from "./TitlePanel/PresetTitlePanel";
+import PresetsSourcesDialog from "./SourcesDialog/SourcesDialog";
+import PresetSource from "./SourcesDialog/PresetSource";
 
 const presets = {
     presetsRepo: null,
@@ -26,28 +26,28 @@ presets.initialize = function (callback) {
     const self = this;
 
     self.cliEngine = new CliEngine(self);
-    self.cliEngine.setProgressCallback(value => this.onApplyProgressChange(value));
+    self.cliEngine.setProgressCallback((value) => this.onApplyProgressChange(value));
     self._presetPanels = [];
 
-    $('#content').load("./tabs/presets/presets.html", () => self.onHtmlLoad(callback));
+    $("#content").load("./tabs/presets/presets.html", () => self.onHtmlLoad(callback));
 
-    if (GUI.active_tab !== 'presets') {
-        GUI.active_tab = 'presets';
+    if (GUI.active_tab !== "presets") {
+        GUI.active_tab = "presets";
     }
 };
 
-presets.readDom = function() {
-    this._divGlobalLoading = $('#presets_global_loading');
-    this._divGlobalLoadingError = $('#presets_global_loading_error');
-    this._divCli = $('#presets_cli');
-    this._divMainContent = $('#presets_main_content');
-    this._selectCategory = $('#presets_filter_category');
-    this._selectKeyword = $('#presets_filter_keyword');
-    this._selectAuthor = $('#presets_filter_author');
-    this._selectFirmwareVersion = $('#presets_filter_firmware_version');
-    this._selectStatus = $('#presets_filter_status');
-    this._inputTextFilter = $('#presets_filter_text');
-    this._divPresetList = $('#presets_list');
+presets.readDom = function () {
+    this._divGlobalLoading = $("#presets_global_loading");
+    this._divGlobalLoadingError = $("#presets_global_loading_error");
+    this._divCli = $("#presets_cli");
+    this._divMainContent = $("#presets_main_content");
+    this._selectCategory = $("#presets_filter_category");
+    this._selectKeyword = $("#presets_filter_keyword");
+    this._selectAuthor = $("#presets_filter_author");
+    this._selectFirmwareVersion = $("#presets_filter_firmware_version");
+    this._selectStatus = $("#presets_filter_status");
+    this._inputTextFilter = $("#presets_filter_text");
+    this._divPresetList = $("#presets_list");
 
     this._domButtonSave = $("#presets_save_button");
     this._domButtonCancel = $("#presets_cancel_button");
@@ -71,26 +71,26 @@ presets.readDom = function() {
     this._domListTooManyFound = $("#presets_list_too_many_found");
 };
 
-presets.getPickedPresetsCli = function() {
+presets.getPickedPresetsCli = function () {
     let result = [];
-    this.pickedPresetList.forEach(pickedPreset => {
+    this.pickedPresetList.forEach((pickedPreset) => {
         result.push(...pickedPreset.presetCli);
     });
-    result = result.filter(command => command.trim() !== "");
+    result = result.filter((command) => command.trim() !== "");
     return result;
 };
 
-presets.onApplyProgressChange = function(value) {
+presets.onApplyProgressChange = function (value) {
     this._domProgressDialogProgressBar.val(value);
 };
 
-presets.applyCommandsList = function(strings) {
-    strings.forEach(cliCommand => {
+presets.applyCommandsList = function (strings) {
+    strings.forEach((cliCommand) => {
         this.cliEngine.sendLine(cliCommand);
     });
 };
 
-presets.onSaveClick = function() {
+presets.onSaveClick = function () {
     this._domProgressDialogProgressBar.val(0);
     this._domProgressDialog.showModal();
     const currentCliErrorsCount = this.cliEngine.errorsCount;
@@ -114,26 +114,29 @@ presets.onSaveClick = function() {
     });
 };
 
-presets.markPickedPresetsAsFavorites = function() {
-    for(const pickedPreset of this.pickedPresetList) {
+presets.markPickedPresetsAsFavorites = function () {
+    for (const pickedPreset of this.pickedPresetList) {
         favoritePresets.add(pickedPreset.preset);
     }
 
     favoritePresets.saveToStorage();
 };
 
-presets.disconnectCliMakeSure = function() {
-    GUI.timeout_add('disconnect', function () {
-        $('div.connect_controls a.connect').trigger( "click" );
-    }, 500);
+presets.disconnectCliMakeSure = function () {
+    GUI.timeout_add(
+        "disconnect",
+        function () {
+            $("div.connect_controls a.connect").trigger("click");
+        },
+        500,
+    );
 };
 
-presets.setupMenuButtons = function() {
+presets.setupMenuButtons = function () {
     this._domButtonSave.on("click", () => this.onSaveClick());
 
-
     this._domButtonCancel.on("click", () => {
-        for(const pickedPreset of this.pickedPresetList) {
+        for (const pickedPreset of this.pickedPresetList) {
             pickedPreset.preset.isPicked = false;
         }
 
@@ -142,7 +145,7 @@ presets.setupMenuButtons = function() {
         this.enableSaveCancelButtons(false);
     });
 
-    this._domButtonCliExit.on("click", () =>{
+    this._domButtonCliExit.on("click", () => {
         this._domDialogCliErrorsSavePressed = false;
         this._domDialogCliErrors[0].close();
     });
@@ -160,7 +163,7 @@ presets.setupMenuButtons = function() {
     });
 
     this._domDialogCliErrors.on("close", () => {
-        if(!this._domDialogCliErrorsSavePressed) {
+        if (!this._domDialogCliErrorsSavePressed) {
             this._domDialogCliErrorsSavePressed = true;
             this.cliEngine.sendLine(CliEngine.s_commandExit);
             this.disconnectCliMakeSure();
@@ -177,7 +180,6 @@ presets.setupMenuButtons = function() {
     this._domReloadButton.on("click", () => this.reload());
 
     this.enableSaveCancelButtons(false);
-
 };
 
 presets.enableSaveCancelButtons = function (isEnabled) {
@@ -185,13 +187,13 @@ presets.enableSaveCancelButtons = function (isEnabled) {
     this._domButtonCancel.toggleClass(GUI.buttonDisabledClass, !isEnabled);
 };
 
-presets.onButtonHideBackupWarningClick = function() {
+presets.onButtonHideBackupWarningClick = function () {
     this._domWarningBackup.toggle(false);
-    setConfig({ 'showPresetsWarningBackup': false });
+    setConfig({ showPresetsWarningBackup: false });
 };
 
-presets.setupBackupWarning = function() {
-    const obj = getConfig('showPresetsWarningBackup');
+presets.setupBackupWarning = function () {
+    const obj = getConfig("showPresetsWarningBackup");
     if (obj.showPresetsWarningBackup === undefined) {
         obj.showPresetsWarningBackup = true;
     }
@@ -200,14 +202,17 @@ presets.setupBackupWarning = function() {
     this._domWarningBackup.toggle(warningVisible);
 };
 
-presets.onPresetSourcesShowClick = function() {
+presets.onPresetSourcesShowClick = function () {
     this.presetsSourcesDialog.show().then(() => {
         this.reload();
     });
 };
 
-presets.onSaveConfigClick = function() {
-    const waitingDialog = GUI.showWaitDialog({title: i18n.getMessage("presetsLoadingDumpAll"), buttonCancelCallback: null});
+presets.onSaveConfigClick = function () {
+    const waitingDialog = GUI.showWaitDialog({
+        title: i18n.getMessage("presetsLoadingDumpAll"),
+        buttonCancelCallback: null,
+    });
 
     const saveFailedDialogSettings = {
         title: i18n.getMessage("warningTitle"),
@@ -216,31 +221,31 @@ presets.onSaveConfigClick = function() {
     };
 
     this.activateCli()
-    .then(() => this.readDumpAll())
-    .then(cliStrings => {
-        const prefix = 'cli_backup';
-        const suffix = 'txt';
-        const text = cliStrings.join("\n");
-        const filename = generateFilename(prefix, suffix);
-        return GUI.saveToTextFileDialog(text, filename, suffix);
-    })
-    .then(() => {
-        waitingDialog.close();
-        this.cliEngine.sendLine(CliEngine.s_commandExit);
-    })
-    .catch(() => {
-        waitingDialog.close();
-        return GUI.showInformationDialog(saveFailedDialogSettings);
-    })
-    .then(() => this.cliEngine.sendLine(CliEngine.s_commandExit));
+        .then(() => this.readDumpAll())
+        .then((cliStrings) => {
+            const prefix = "cli_backup";
+            const suffix = "txt";
+            const text = cliStrings.join("\n");
+            const filename = generateFilename(prefix, suffix);
+            return GUI.saveToTextFileDialog(text, filename, suffix);
+        })
+        .then(() => {
+            waitingDialog.close();
+            this.cliEngine.sendLine(CliEngine.s_commandExit);
+        })
+        .catch(() => {
+            waitingDialog.close();
+            return GUI.showInformationDialog(saveFailedDialogSettings);
+        })
+        .then(() => this.cliEngine.sendLine(CliEngine.s_commandExit));
 };
 
-presets.readDumpAll = function() {
+presets.readDumpAll = function () {
     let lastCliStringReceived = performance.now();
     const diffAll = [CliEngine.s_commandDefaultsNoSave, ""];
     const readingDumpIntervalName = "PRESETS_READING_DUMP_INTERVAL";
 
-    this.cliEngine.subscribeOnRowCame(str => {
+    this.cliEngine.subscribeOnRowCame((str) => {
         lastCliStringReceived = performance.now();
 
         if (CliEngine.s_commandDiffAll !== str && CliEngine.s_commandSave !== str) {
@@ -250,71 +255,85 @@ presets.readDumpAll = function() {
 
     this.cliEngine.sendLine(CliEngine.s_commandDiffAll);
 
-    return new Promise(resolve => {
-        GUI.interval_add(readingDumpIntervalName, () => {
-            const currentTime = performance.now();
-            if (currentTime - lastCliStringReceived > 500) {
-                this.cliEngine.unsubscribeOnRowCame();
-                GUI.interval_remove(readingDumpIntervalName);
-                resolve(diffAll);
-            }
-        }, 500, false);
+    return new Promise((resolve) => {
+        GUI.interval_add(
+            readingDumpIntervalName,
+            () => {
+                const currentTime = performance.now();
+                if (currentTime - lastCliStringReceived > 500) {
+                    this.cliEngine.unsubscribeOnRowCame();
+                    GUI.interval_remove(readingDumpIntervalName);
+                    resolve(diffAll);
+                }
+            },
+            500,
+            false,
+        );
     });
 };
 
-presets.onLoadConfigClick = function() {
-    GUI.readTextFileDialog("txt")
-    .then(text => {
+presets.onLoadConfigClick = function () {
+    GUI.readTextFileDialog("txt").then((text) => {
         if (text) {
             const cliStrings = text.split("\n");
-            const pickedPreset = new PickedPreset({title: "user configuration"}, cliStrings);
+            const pickedPreset = new PickedPreset({ title: "user configuration" }, cliStrings);
             this.pickedPresetList.push(pickedPreset);
             this.onSaveClick();
         }
     });
 };
 
-presets.onHtmlLoad = function(callback) {
+presets.onHtmlLoad = function (callback) {
     i18n.localizePage();
     TABS.presets.adaptPhones();
     this.readDom();
     this.setupMenuButtons();
     this.setupBackupWarning();
-    this._inputTextFilter.attr("placeholder", "example: \"karate race\", or \"5'' freestyle\"");
+    this._inputTextFilter.attr("placeholder", 'example: "karate race", or "5\'\' freestyle"');
 
-    this.presetsDetailedDialog = new PresetsDetailedDialog($("#presets_detailed_dialog"), this.pickedPresetList, () => this.onPresetPickedCallback(), favoritePresets);
+    this.presetsDetailedDialog = new PresetsDetailedDialog(
+        $("#presets_detailed_dialog"),
+        this.pickedPresetList,
+        () => this.onPresetPickedCallback(),
+        favoritePresets,
+    );
     this.presetsSourcesDialog = new PresetsSourcesDialog($("#presets_sources_dialog"));
 
-    this.presetsDetailedDialog.load()
-    .then(() => this.presetsSourcesDialog.load())
-    .then(() => {
-        this.tryLoadPresets();
-        GUI.content_ready(callback);
-    });
+    this.presetsDetailedDialog
+        .load()
+        .then(() => this.presetsSourcesDialog.load())
+        .then(() => {
+            this.tryLoadPresets();
+            GUI.content_ready(callback);
+        });
 };
 
-presets.onPresetPickedCallback = function() {
+presets.onPresetPickedCallback = function () {
     this.enableSaveCancelButtons(true);
 };
 
-presets.activateCli = function() {
-    return new Promise(resolve => {
+presets.activateCli = function () {
+    return new Promise((resolve) => {
         CONFIGURATOR.cliEngineActive = true;
-        this.cliEngine.setUi($('#presets_cli_window'), $('#presets_cli_window_wrapper'), $('#presets_cli_command'));
+        this.cliEngine.setUi($("#presets_cli_window"), $("#presets_cli_window_wrapper"), $("#presets_cli_command"));
         this.cliEngine.enterCliMode();
 
-        GUI.timeout_add('presets_enter_cli_mode_done', () => {
-            resolve();
-        }, 500);
+        GUI.timeout_add(
+            "presets_enter_cli_mode_done",
+            () => {
+                resolve();
+            },
+            500,
+        );
     });
 };
 
-presets.reload = function() {
+presets.reload = function () {
     this.resetInitialValues();
     this.tryLoadPresets();
 };
 
-presets.tryLoadPresets = function() {
+presets.tryLoadPresets = function () {
     const presetSource = this.presetsSourcesDialog.getActivePresetSource();
 
     if (PresetSource.isUrlGithubRepo(presetSource.url)) {
@@ -328,39 +347,45 @@ presets.tryLoadPresets = function() {
     this._divGlobalLoading.toggle(true);
     this._domWarningNotOfficialSource.toggle(!this.presetsSourcesDialog.isOfficialActive);
 
-    this.presetsRepo.loadIndex()
-    .then(() => this.checkPresetSourceVersion())
-    .then(() => {
-        favoritePresets.addLastPickDate(this.presetsRepo.index.presets);
-        this.prepareFilterFields();
-        this._divGlobalLoading.toggle(false);
-        this._divMainContent.toggle(true);
-    }).catch(err => {
-        this._divGlobalLoading.toggle(false);
-        this._divGlobalLoadingError.toggle(true);
-        console.error(err);
-    });
+    this.presetsRepo
+        .loadIndex()
+        .then(() => this.checkPresetSourceVersion())
+        .then(() => {
+            favoritePresets.addLastPickDate(this.presetsRepo.index.presets);
+            this.prepareFilterFields();
+            this._divGlobalLoading.toggle(false);
+            this._divMainContent.toggle(true);
+        })
+        .catch((err) => {
+            this._divGlobalLoading.toggle(false);
+            this._divGlobalLoadingError.toggle(true);
+            console.error(err);
+        });
 };
 
-presets.multipleSelectComponentScrollFix = function() {
+presets.multipleSelectComponentScrollFix = function () {
     /*
         A hack for multiple select that fixes scrolling problem
         when the number of items 199+. More details here:
         https://github.com/wenzhixin/multiple-select/issues/552
     */
-   return new Promise((resolve) => {
-    GUI.timeout_add('hack_fix_multipleselect_scroll', () => {
-        this._selectCategory.multipleSelect('refresh');
-        this._selectKeyword.multipleSelect('refresh');
-        this._selectAuthor.multipleSelect('refresh');
-        this._selectFirmwareVersion.multipleSelect('refresh');
-        this._selectStatus.multipleSelect('refresh');
-        resolve();
-    }, 100);
-   });
+    return new Promise((resolve) => {
+        GUI.timeout_add(
+            "hack_fix_multipleselect_scroll",
+            () => {
+                this._selectCategory.multipleSelect("refresh");
+                this._selectKeyword.multipleSelect("refresh");
+                this._selectAuthor.multipleSelect("refresh");
+                this._selectFirmwareVersion.multipleSelect("refresh");
+                this._selectStatus.multipleSelect("refresh");
+                resolve();
+            },
+            100,
+        );
+    });
 };
 
-presets.checkPresetSourceVersion = function() {
+presets.checkPresetSourceVersion = function () {
     const self = this;
 
     return new Promise((resolve, reject) => {
@@ -372,7 +397,10 @@ presets.checkPresetSourceVersion = function() {
 
             const dialogSettings = {
                 title: i18n.getMessage("presetsWarningDialogTitle"),
-                text: i18n.getMessage("presetsVersionMismatch", {"versionRequired": versionRequired, "versionSource":versionSource}),
+                text: i18n.getMessage("presetsVersionMismatch", {
+                    versionRequired: versionRequired,
+                    versionSource: versionSource,
+                }),
                 buttonYesText: i18n.getMessage("yes"),
                 buttonNoText: i18n.getMessage("no"),
                 buttonYesCallback: () => resolve(),
@@ -384,7 +412,7 @@ presets.checkPresetSourceVersion = function() {
     });
 };
 
-presets.prepareFilterFields = function() {
+presets.prepareFilterFields = function () {
     this._freezeSearch = true;
     this.prepareFilterSelectField(this._selectCategory, this.presetsRepo.index.uniqueValues.category, 3);
     this.prepareFilterSelectField(this._selectKeyword, this.presetsRepo.index.uniqueValues.keywords, 3);
@@ -393,43 +421,52 @@ presets.prepareFilterFields = function() {
     this.prepareFilterSelectField(this._selectStatus, this.presetsRepo.index.settings.PresetStatusEnum, 2);
     this.multipleSelectComponentScrollFix().then(() => {
         this.preselectFilterFields();
-        this._inputTextFilter.on('input', () => this.updateSearchResults());
+        this._inputTextFilter.on("input", () => this.updateSearchResults());
         this._freezeSearch = false;
         this.updateSearchResults();
     });
 };
 
-presets.preselectFilterFields = function() {
+presets.preselectFilterFields = function () {
     const currentVersion = FC.CONFIG.flightControllerVersion;
     const selectedVersions = [];
 
-    for(const bfVersion of this.presetsRepo.index.uniqueValues.firmware_version) {
+    for (const bfVersion of this.presetsRepo.index.uniqueValues.firmware_version) {
         if (currentVersion.startsWith(bfVersion)) {
             selectedVersions.push(bfVersion);
         }
     }
 
-    this._selectFirmwareVersion.multipleSelect('setSelects', selectedVersions);
+    this._selectFirmwareVersion.multipleSelect("setSelects", selectedVersions);
 };
 
-presets.prepareFilterSelectField = function(domSelectElement, selectOptions, minimumCountSelected) {
+presets.prepareFilterSelectField = function (domSelectElement, selectOptions, minimumCountSelected) {
     domSelectElement.multipleSelect("destroy");
     domSelectElement.multipleSelect({
         data: selectOptions,
         showClear: true,
-        minimumCountSelected : minimumCountSelected,
+        minimumCountSelected: minimumCountSelected,
         placeholder: i18n.getMessage("dropDownFilterDisabled"),
-        onClick: () => { this.updateSearchResults(); },
-        onCheckAll: () => { this.updateSearchResults(); },
-        onUncheckAll: () => { this.updateSearchResults(); },
-        formatSelectAll() { return i18n.getMessage("dropDownSelectAll"); },
-        formatAllSelected() { return i18n.getMessage("dropDownAll"); },
+        onClick: () => {
+            this.updateSearchResults();
+        },
+        onCheckAll: () => {
+            this.updateSearchResults();
+        },
+        onUncheckAll: () => {
+            this.updateSearchResults();
+        },
+        formatSelectAll() {
+            return i18n.getMessage("dropDownSelectAll");
+        },
+        formatAllSelected() {
+            return i18n.getMessage("dropDownAll");
+        },
     });
 };
 
-presets.updateSearchResults = function() {
-    if (!this._freezeSearch)
-    {
+presets.updateSearchResults = function () {
+    if (!this._freezeSearch) {
         const searchParams = {
             categories: this._selectCategory.multipleSelect("getSelects", "text"),
             keywords: this._selectKeyword.multipleSelect("getSelects", "text"),
@@ -440,13 +477,13 @@ presets.updateSearchResults = function() {
         };
 
         this.updateSelectStyle();
-        searchParams.authors = searchParams.authors.map(str => str.toLowerCase());
+        searchParams.authors = searchParams.authors.map((str) => str.toLowerCase());
         const fitPresets = this.getFitPresets(searchParams);
         this.displayPresets(fitPresets);
     }
 };
 
-presets.updateSelectStyle = function() {
+presets.updateSelectStyle = function () {
     this.updateSingleSelectStyle(this._selectCategory);
     this.updateSingleSelectStyle(this._selectKeyword);
     this.updateSingleSelectStyle(this._selectAuthor);
@@ -454,14 +491,14 @@ presets.updateSelectStyle = function() {
     this.updateSingleSelectStyle(this._selectStatus);
 };
 
-presets.updateSingleSelectStyle = function(select) {
+presets.updateSingleSelectStyle = function (select) {
     const selectedOptions = select.multipleSelect("getSelects", "text");
-    const isSomethingSelected = (0 !== selectedOptions.length);
+    const isSomethingSelected = 0 !== selectedOptions.length;
     select.parent().find($(".ms-choice")).toggleClass("presets_filter_select_nonempty", isSomethingSelected);
 };
 
-presets.displayPresets = function(fitPresets) {
-    this._presetPanels.forEach(presetPanel => {
+presets.displayPresets = function (fitPresets) {
+    this._presetPanels.forEach((presetPanel) => {
         presetPanel.remove();
     });
     this._presetPanels = [];
@@ -472,7 +509,7 @@ presets.displayPresets = function(fitPresets) {
 
     this._domListNoFound.toggle(fitPresets.length === 0);
 
-    fitPresets.forEach(preset => {
+    fitPresets.forEach((preset) => {
         const presetPanel = new PresetTitlePanel(this._divPresetList, preset, true, undefined, favoritePresets);
         presetPanel.load();
         this._presetPanels.push(presetPanel);
@@ -482,37 +519,37 @@ presets.displayPresets = function(fitPresets) {
     this._domListTooManyFound.appendTo(this._divPresetList);
 };
 
-presets.getFitPresets = function(searchParams) {
+presets.getFitPresets = function (searchParams) {
     const result = [];
 
-    for(const preset of this.presetsRepo.index.presets) {
-        if(this.isPresetFitSearch(preset, searchParams)) {
+    for (const preset of this.presetsRepo.index.presets) {
+        if (this.isPresetFitSearch(preset, searchParams)) {
             result.push(preset);
         }
     }
 
-    result.sort((a, b) => this.presetSearchPriorityComparer(a,b));
+    result.sort((a, b) => this.presetSearchPriorityComparer(a, b));
 
     return result;
 };
 
-presets.presetSearchPriorityComparer = function(presetA, presetB) {
+presets.presetSearchPriorityComparer = function (presetA, presetB) {
     if (presetA.lastPickDate && presetB.lastPickDate) {
         return presetB.lastPickDate - presetA.lastPickDate;
     }
 
     if (presetA.lastPickDate || presetB.lastPickDate) {
-        return (presetA.lastPickDate) ? -1 : 1;
+        return presetA.lastPickDate ? -1 : 1;
     }
 
-    return (presetA.priority > presetB.priority) ? -1 : 1;
+    return presetA.priority > presetB.priority ? -1 : 1;
 };
 
-presets.isPresetFitSearchStatuses = function(preset, searchParams) {
+presets.isPresetFitSearchStatuses = function (preset, searchParams) {
     return 0 === searchParams.status.length || searchParams.status.includes(preset.status);
 };
 
-presets.isPresetFitSearchCategories = function(preset, searchParams) {
+presets.isPresetFitSearchCategories = function (preset, searchParams) {
     if (0 !== searchParams.categories.length) {
         if (undefined === preset.category) {
             return false;
@@ -526,13 +563,13 @@ presets.isPresetFitSearchCategories = function(preset, searchParams) {
     return true;
 };
 
-presets.isPresetFitSearchKeywords = function(preset, searchParams) {
+presets.isPresetFitSearchKeywords = function (preset, searchParams) {
     if (0 !== searchParams.keywords.length) {
         if (!Array.isArray(preset.keywords)) {
             return false;
         }
 
-        const keywordsIntersection = searchParams.keywords.filter(value => preset.keywords.includes(value));
+        const keywordsIntersection = searchParams.keywords.filter((value) => preset.keywords.includes(value));
         if (0 === keywordsIntersection.length) {
             return false;
         }
@@ -541,7 +578,7 @@ presets.isPresetFitSearchKeywords = function(preset, searchParams) {
     return true;
 };
 
-presets.isPresetFitSearchAuthors = function(preset, searchParams) {
+presets.isPresetFitSearchAuthors = function (preset, searchParams) {
     if (0 !== searchParams.authors.length) {
         if (undefined === preset.author) {
             return false;
@@ -555,13 +592,15 @@ presets.isPresetFitSearchAuthors = function(preset, searchParams) {
     return true;
 };
 
-presets.isPresetFitSearchFirmwareVersions = function(preset, searchParams) {
+presets.isPresetFitSearchFirmwareVersions = function (preset, searchParams) {
     if (0 !== searchParams.firmwareVersions.length) {
         if (!Array.isArray(preset.firmware_version)) {
             return false;
         }
 
-        const firmwareVersionsIntersection = searchParams.firmwareVersions.filter(value => preset.firmware_version.includes(value));
+        const firmwareVersionsIntersection = searchParams.firmwareVersions.filter((value) =>
+            preset.firmware_version.includes(value),
+        );
         if (0 === firmwareVersionsIntersection.length) {
             return false;
         }
@@ -570,13 +609,15 @@ presets.isPresetFitSearchFirmwareVersions = function(preset, searchParams) {
     return true;
 };
 
-
-presets.isPresetFitSearchString = function(preset, searchParams) {
+presets.isPresetFitSearchString = function (preset, searchParams) {
     if (searchParams.searchString) {
         const allKeywords = preset.keywords.join(" ");
         const allVersions = preset.firmware_version.join(" ");
-        const totalLine = [preset.description, allKeywords, preset.title, preset.author, allVersions, preset.category].join("\n").toLowerCase().replace("''", "\"");
-        const allWords = searchParams.searchString.toLowerCase().replace("''", "\"").split(" ");
+        const totalLine = [preset.description, allKeywords, preset.title, preset.author, allVersions, preset.category]
+            .join("\n")
+            .toLowerCase()
+            .replace("''", '"');
+        const allWords = searchParams.searchString.toLowerCase().replace("''", '"').split(" ");
 
         for (const word of allWords) {
             if (!totalLine.includes(word)) {
@@ -588,8 +629,7 @@ presets.isPresetFitSearchString = function(preset, searchParams) {
     return true;
 };
 
-
-presets.isPresetFitSearch = function(preset, searchParams) {
+presets.isPresetFitSearch = function (preset, searchParams) {
     if (preset.hidden) {
         return false;
     }
@@ -621,17 +661,17 @@ presets.isPresetFitSearch = function(preset, searchParams) {
     return true;
 };
 
-presets.adaptPhones = function() {
+presets.adaptPhones = function () {
     if (GUI.isCordova()) {
         UI_PHONES.initToolbar();
     }
 };
 
-presets.read = function(readInfo) {
+presets.read = function (readInfo) {
     TABS.presets.cliEngine.readSerial(readInfo);
 };
 
-presets.cleanup = function(callback) {
+presets.cleanup = function (callback) {
     this.resetInitialValues();
 
     if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliEngineActive && CONFIGURATOR.cliEngineValid)) {
@@ -649,7 +689,7 @@ presets.cleanup = function(callback) {
     });
 };
 
-presets.resetInitialValues = function() {
+presets.resetInitialValues = function () {
     CONFIGURATOR.cliEngineActive = false;
     CONFIGURATOR.cliEngineValid = false;
     TABS.presets.presetsRepo = null;
@@ -658,6 +698,4 @@ presets.resetInitialValues = function() {
 };
 
 window.TABS.presets = presets;
-export {
-    presets,
-};
+export { presets };

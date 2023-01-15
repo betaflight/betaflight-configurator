@@ -19,11 +19,11 @@ const VirtualFC = {
         virtualFC.FEATURE_CONFIG.features.setMask(0);
 
         virtualFC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
-        virtualFC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, [ "RX_LOST", "RX_SET" ]);
+        virtualFC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
 
         virtualFC.MIXER_CONFIG.mixer = 3;
 
-        virtualFC.MOTOR_DATA = Array.from({length: 8});
+        virtualFC.MOTOR_DATA = Array.from({ length: 8 });
         virtualFC.MOTOR_3D_CONFIG = {
             deadband3d_low: 1406,
             deadband3d_high: 1514,
@@ -39,7 +39,7 @@ const VirtualFC = {
             use_esc_sensor: false,
         };
 
-        virtualFC.SERVO_CONFIG = Array.from({length: 8});
+        virtualFC.SERVO_CONFIG = Array.from({ length: 8 });
 
         for (let i = 0; i < virtualFC.SERVO_CONFIG.length; i++) {
             virtualFC.SERVO_CONFIG[i] = {
@@ -52,7 +52,7 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.ADJUSTMENT_RANGES = Array.from({length: 16});
+        virtualFC.ADJUSTMENT_RANGES = Array.from({ length: 16 });
 
         for (let i = 0; i < virtualFC.ADJUSTMENT_RANGES.length; i++) {
             virtualFC.ADJUSTMENT_RANGES[i] = {
@@ -67,7 +67,7 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.SERIAL_CONFIG.ports = Array.from({length: 6});
+        virtualFC.SERIAL_CONFIG.ports = Array.from({ length: 6 });
 
         virtualFC.SERIAL_CONFIG.ports[0] = {
             identifier: 20,
@@ -81,7 +81,7 @@ const VirtualFC = {
 
         for (let i = 1; i < virtualFC.SERIAL_CONFIG.ports.length; i++) {
             virtualFC.SERIAL_CONFIG.ports[i] = {
-                identifier: i-1,
+                identifier: i - 1,
                 auxChannelIndex: 0,
                 functions: [],
                 msp_baudrate: 115200,
@@ -91,7 +91,7 @@ const VirtualFC = {
             };
         }
 
-        virtualFC.LED_STRIP = Array.from({length: 256});
+        virtualFC.LED_STRIP = Array.from({ length: 256 });
 
         for (let i = 0; i < virtualFC.LED_STRIP.length; i++) {
             virtualFC.LED_STRIP[i] = {
@@ -111,7 +111,7 @@ const VirtualFC = {
             amperage: 3,
         };
 
-        virtualFC.CONFIG.sampleRateHz  = 12000;
+        virtualFC.CONFIG.sampleRateHz = 12000;
         virtualFC.PID_ADVANCED_CONFIG.pid_process_denom = 2;
 
         virtualFC.BLACKBOX.supported = true;
@@ -156,7 +156,7 @@ const VirtualFC = {
         };
 
         virtualFC.RC = {
-            channels: Array.from({length: 16}),
+            channels: Array.from({ length: 16 }),
             active_channels: 16,
         };
         for (let i = 0; i < virtualFC.RC.channels.length; i++) {
@@ -164,11 +164,52 @@ const VirtualFC = {
         }
 
         // from https://github.com/betaflight/betaflight/blob/master/docs/Modes.md
-        virtualFC.AUX_CONFIG = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","CAMSTAB","PASSTHRU","BEEPERON","LEDLOW","CALIB",
-        "OSD","TELEMETRY","SERVO1","SERVO2","SERVO3","BLACKBOX","FAILSAFE","AIRMODE","3D","FPV ANGLE MIX","BLACKBOX ERASE","CAMERA CONTROL 1",
-        "CAMERA CONTROL 2","CAMERA CONTROL 3","FLIP OVER AFTER CRASH","BOXPREARM","BEEP GPS SATELLITE COUNT","VTX PIT MODE","USER1","USER2",
-        "USER3","USER4","PID AUDIO","PARALYZE","GPS RESCUE","ACRO TRAINER","DISABLE VTX CONTROL","LAUNCH CONTROL"];
-        FC.AUX_CONFIG_IDS = [0,1,2,4,5,6,7,8,12,13,15,17,19,20,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49];
+        virtualFC.AUX_CONFIG = [
+            "ARM",
+            "ANGLE",
+            "HORIZON",
+            "ANTI GRAVITY",
+            "MAG",
+            "HEADFREE",
+            "HEADADJ",
+            "CAMSTAB",
+            "PASSTHRU",
+            "BEEPERON",
+            "LEDLOW",
+            "CALIB",
+            "OSD",
+            "TELEMETRY",
+            "SERVO1",
+            "SERVO2",
+            "SERVO3",
+            "BLACKBOX",
+            "FAILSAFE",
+            "AIRMODE",
+            "3D",
+            "FPV ANGLE MIX",
+            "BLACKBOX ERASE",
+            "CAMERA CONTROL 1",
+            "CAMERA CONTROL 2",
+            "CAMERA CONTROL 3",
+            "FLIP OVER AFTER CRASH",
+            "BOXPREARM",
+            "BEEP GPS SATELLITE COUNT",
+            "VTX PIT MODE",
+            "USER1",
+            "USER2",
+            "USER3",
+            "USER4",
+            "PID AUDIO",
+            "PARALYZE",
+            "GPS RESCUE",
+            "ACRO TRAINER",
+            "DISABLE VTX CONTROL",
+            "LAUNCH CONTROL",
+        ];
+        FC.AUX_CONFIG_IDS = [
+            0, 1, 2, 4, 5, 6, 7, 8, 12, 13, 15, 17, 19, 20, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
+            39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+        ];
 
         for (let i = 0; i < 16; i++) {
             virtualFC.RXFAIL_CONFIG[i] = {
@@ -180,14 +221,14 @@ const VirtualFC = {
         // 11 1111 (pass bitchecks)
         virtualFC.CONFIG.activeSensors = 63;
     },
-    setupVirtualOSD(){
+    setupVirtualOSD() {
         const virtualOSD = OSD;
 
         virtualOSD.data.video_system = 1;
         virtualOSD.data.unit_mode = 1;
 
         virtualOSD.virtualMode = {
-            itemPositions: Array.from({length: 77}),
+            itemPositions: Array.from({ length: 77 }),
             statisticsState: [],
             warningFlags: 0,
             timerData: [],
@@ -212,10 +253,10 @@ const VirtualFC = {
         };
 
         virtualOSD.data.alarms = {
-            rssi: { display_name: i18n.getMessage('osdTimerAlarmOptionRssi'), value: 0 },
-            cap: { display_name: i18n.getMessage('osdTimerAlarmOptionCapacity'), value: 0 },
-            alt: { display_name: i18n.getMessage('osdTimerAlarmOptionAltitude'), value: 0 },
-            time: { display_name: 'Minutes', value: 0 },
+            rssi: { display_name: i18n.getMessage("osdTimerAlarmOptionRssi"), value: 0 },
+            cap: { display_name: i18n.getMessage("osdTimerAlarmOptionCapacity"), value: 0 },
+            alt: { display_name: i18n.getMessage("osdTimerAlarmOptionAltitude"), value: 0 },
+            time: { display_name: "Minutes", value: 0 },
         };
     },
 };

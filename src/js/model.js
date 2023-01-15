@@ -2,32 +2,32 @@ import FC from "./fc";
 
 // generate mixer
 export const mixerList = [
-    { name: 'Tricopter',        pos: 3,  model: 'tricopter',  image: 'tri',          motors: 3, servos: true },
-    { name: 'Quad +',           pos: 2,  model: 'quad_x',     image: 'quad_p',       motors: 4, servos: false },
-    { name: 'Quad X',           pos: 0,  model: 'quad_x',     image: 'quad_x',       motors: 4, servos: false },
-    { name: 'Bicopter',         pos: 16, model: 'custom',     image: 'bicopter',     motors: 2, servos: true },
-    { name: 'Gimbal',           pos: 4,  model: 'custom',     image: 'custom',       motors: 0, servos: true },
-    { name: 'Y6',               pos: 20, model: 'y6',         image: 'y6',           motors: 6, servos: false },
-    { name: 'Hex +',            pos: 5,  model: 'hex_plus',   image: 'hex_p',        motors: 6, servos: false },
-    { name: 'Flying Wing',      pos: 10, model: 'custom',     image: 'flying_wing',  motors: 1, servos: true },
-    { name: 'Y4',               pos: 19, model: 'y4',         image: 'y4',           motors: 4, servos: false },
-    { name: 'Hex X',            pos: 6,  model: 'hex_x',      image: 'hex_x',        motors: 6, servos: false },
-    { name: 'Octo X8',          pos: 21, model: 'custom',     image: 'octo_x8',      motors: 8, servos: false },
-    { name: 'Octo Flat +',      pos: 8,  model: 'custom',     image: 'octo_flat_p',  motors: 8, servos: false },
-    { name: 'Octo Flat X',      pos: 9,  model: 'custom',     image: 'octo_flat_x',  motors: 8, servos: false },
-    { name: 'Airplane',         pos: 11, model: 'custom',     image: 'airplane',     motors: 1, servos: true },
-    { name: 'Heli 120',         pos: 12, model: 'custom',     image: 'custom',       motors: 1, servos: true },
-    { name: 'Heli 90',          pos: 13, model: 'custom',     image: 'custom',       motors: 0, servos: true },
-    { name: 'V-tail Quad',      pos: 17, model: 'quad_vtail', image: 'vtail_quad',   motors: 4, servos: false },
-    { name: 'Hex H',            pos: 7,  model: 'custom',     image: 'custom',       motors: 6, servos: false },
-    { name: 'PPM to SERVO',     pos: 22, model: 'custom',     image: 'custom',       motors: 0, servos: true },
-    { name: 'Dualcopter',       pos: 15, model: 'custom',     image: 'custom',       motors: 2, servos: true },
-    { name: 'Singlecopter',     pos: 14, model: 'custom',     image: 'custom',       motors: 1, servos: true },
-    { name: 'A-tail Quad',      pos: 18, model: 'quad_atail', image: 'atail_quad',   motors: 4, servos: false },
-    { name: 'Custom',           pos: 23, model: 'custom',     image: 'custom',       motors: 0, servos: false },
-    { name: 'Custom Airplane',  pos: 24, model: 'custom',     image: 'custom',       motors: 2, servos: true },
-    { name: 'Custom Tricopter', pos: 25, model: 'custom',     image: 'custom',       motors: 3, servos: true },
-    { name: 'Quad X 1234',      pos: 1,  model: 'quad_x',     image: 'quad_x_1234',  motors: 4, servos: false },
+    { name: "Tricopter", pos: 3, model: "tricopter", image: "tri", motors: 3, servos: true },
+    { name: "Quad +", pos: 2, model: "quad_x", image: "quad_p", motors: 4, servos: false },
+    { name: "Quad X", pos: 0, model: "quad_x", image: "quad_x", motors: 4, servos: false },
+    { name: "Bicopter", pos: 16, model: "custom", image: "bicopter", motors: 2, servos: true },
+    { name: "Gimbal", pos: 4, model: "custom", image: "custom", motors: 0, servos: true },
+    { name: "Y6", pos: 20, model: "y6", image: "y6", motors: 6, servos: false },
+    { name: "Hex +", pos: 5, model: "hex_plus", image: "hex_p", motors: 6, servos: false },
+    { name: "Flying Wing", pos: 10, model: "custom", image: "flying_wing", motors: 1, servos: true },
+    { name: "Y4", pos: 19, model: "y4", image: "y4", motors: 4, servos: false },
+    { name: "Hex X", pos: 6, model: "hex_x", image: "hex_x", motors: 6, servos: false },
+    { name: "Octo X8", pos: 21, model: "custom", image: "octo_x8", motors: 8, servos: false },
+    { name: "Octo Flat +", pos: 8, model: "custom", image: "octo_flat_p", motors: 8, servos: false },
+    { name: "Octo Flat X", pos: 9, model: "custom", image: "octo_flat_x", motors: 8, servos: false },
+    { name: "Airplane", pos: 11, model: "custom", image: "airplane", motors: 1, servos: true },
+    { name: "Heli 120", pos: 12, model: "custom", image: "custom", motors: 1, servos: true },
+    { name: "Heli 90", pos: 13, model: "custom", image: "custom", motors: 0, servos: true },
+    { name: "V-tail Quad", pos: 17, model: "quad_vtail", image: "vtail_quad", motors: 4, servos: false },
+    { name: "Hex H", pos: 7, model: "custom", image: "custom", motors: 6, servos: false },
+    { name: "PPM to SERVO", pos: 22, model: "custom", image: "custom", motors: 0, servos: true },
+    { name: "Dualcopter", pos: 15, model: "custom", image: "custom", motors: 2, servos: true },
+    { name: "Singlecopter", pos: 14, model: "custom", image: "custom", motors: 1, servos: true },
+    { name: "A-tail Quad", pos: 18, model: "quad_atail", image: "atail_quad", motors: 4, servos: false },
+    { name: "Custom", pos: 23, model: "custom", image: "custom", motors: 0, servos: false },
+    { name: "Custom Airplane", pos: 24, model: "custom", image: "custom", motors: 2, servos: true },
+    { name: "Custom Tricopter", pos: 25, model: "custom", image: "custom", motors: 3, servos: true },
+    { name: "Quad X 1234", pos: 1, model: "quad_x", image: "quad_x_1234", motors: 4, servos: false },
 ];
 
 // 3D model
@@ -47,10 +47,12 @@ const Model = function (wrapper, canvas) {
     this.renderer.setSize(this.wrapper.width() * 2, this.wrapper.height() * 2);
 
     // load the model including materials
-    let model_file = useWebGLRenderer ? mixerList[FC.MIXER_CONFIG.mixer - 1].model : 'fallback';
+    let model_file = useWebGLRenderer ? mixerList[FC.MIXER_CONFIG.mixer - 1].model : "fallback";
 
     // Temporary workaround for 'custom' model until akfreak's custom model is merged.
-    if (model_file == 'custom') { model_file = 'fallback'; }
+    if (model_file == "custom") {
+        model_file = "fallback";
+    }
 
     // setup scene
     this.scene = new THREE.Scene();
@@ -76,21 +78,23 @@ const Model = function (wrapper, canvas) {
     this.scene.add(this.modelWrapper);
 
     // Load model file, add to scene and render it
-    this.loadJSON(model_file, (function (model) {
-        this.model = model;
+    this.loadJSON(
+        model_file,
+        function (model) {
+            this.model = model;
 
-        this.modelWrapper.add(model);
-        this.scene.add(this.modelWrapper);
+            this.modelWrapper.add(model);
+            this.scene.add(this.modelWrapper);
 
-        this.render();
-    }).bind(this));
+            this.render();
+        }.bind(this),
+    );
 };
 
 Model.prototype.loadJSON = function (model_file, callback) {
     const loader = new THREE.JSONLoader();
 
     loader.load(`./resources/models/${model_file}.json`, function (geometry, materials) {
-
         const model = new THREE.Mesh(geometry, materials);
 
         model.scale.set(15, 15, 15);
@@ -103,13 +107,18 @@ Model.prototype.canUseWebGLRenderer = function () {
     // webgl capability detector
     // it would seem the webgl "enabling" through advanced settings will be ignored in the future
     // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
-    const detector_canvas = document.createElement('canvas');
+    const detector_canvas = document.createElement("canvas");
 
-    return window.WebGLRenderingContext && (detector_canvas.getContext('webgl') || detector_canvas.getContext('experimental-webgl'));
+    return (
+        window.WebGLRenderingContext &&
+        (detector_canvas.getContext("webgl") || detector_canvas.getContext("experimental-webgl"))
+    );
 };
 
 Model.prototype.rotateTo = function (x, y, z) {
-    if (!this.model) { return; }
+    if (!this.model) {
+        return;
+    }
 
     this.model.rotation.x = x;
     this.modelWrapper.rotation.y = y;
@@ -119,7 +128,9 @@ Model.prototype.rotateTo = function (x, y, z) {
 };
 
 Model.prototype.rotateBy = function (x, y, z) {
-    if (!this.model) { return; }
+    if (!this.model) {
+        return;
+    }
 
     this.model.rotateX(x);
     this.model.rotateY(y);
@@ -129,7 +140,9 @@ Model.prototype.rotateBy = function (x, y, z) {
 };
 
 Model.prototype.render = function () {
-    if (!this.model) { return; }
+    if (!this.model) {
+        return;
+    }
 
     // draw
     this.renderer.render(this.scene, this.camera);

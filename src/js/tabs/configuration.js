@@ -1,14 +1,14 @@
-import semver from 'semver';
-import { i18n } from '../localization';
-import GUI from '../gui';
+import semver from "semver";
+import { i18n } from "../localization";
+import GUI from "../gui";
 import { tracking } from "../Analytics";
-import { reinitializeConnection } from '../serial_backend';
-import { mspHelper } from '../msp/MSPHelper';
-import FC from '../fc';
-import MSP from '../msp';
-import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
-import { gui_log } from '../gui_log';
+import { reinitializeConnection } from "../serial_backend";
+import { mspHelper } from "../msp/MSPHelper";
+import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from "../data_storage";
+import { gui_log } from "../gui_log";
 
 const configuration = {
     analyticsChanges: {},
@@ -17,8 +17,8 @@ const configuration = {
 configuration.initialize = function (callback) {
     const self = this;
 
-    if (GUI.active_tab != 'configuration') {
-        GUI.active_tab = 'configuration';
+    if (GUI.active_tab != "configuration") {
+        GUI.active_tab = "configuration";
         GUI.configuration_loaded = true;
     }
 
@@ -27,32 +27,38 @@ configuration.initialize = function (callback) {
     }
 
     function load_config() {
-        Promise
-        .resolve(true)
-        .then(() => MSP.promise(MSPCodes.MSP_FEATURE_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_BEEPER_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_GPS_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_ACC_TRIM))
-        .then(() => MSP.promise(MSPCodes.MSP_ARMING_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_RC_DEADBAND))
-        .then(() => MSP.promise(MSPCodes.MSP_SENSOR_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT))
-        .then(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
-            ? MSP.promise(MSPCodes.MSP_NAME)
-            : Promise.resolve(true))
-        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME))
-            : Promise.resolve(true))
-        .then(() => MSP.promise(MSPCodes.MSP_RX_CONFIG))
-        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-            ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME)) : Promise.resolve(true))
-        .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
-        .then(() => load_html());
+        Promise.resolve(true)
+            .then(() => MSP.promise(MSPCodes.MSP_FEATURE_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_BEEPER_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_GPS_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_ACC_TRIM))
+            .then(() => MSP.promise(MSPCodes.MSP_ARMING_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_RC_DEADBAND))
+            .then(() => MSP.promise(MSPCodes.MSP_SENSOR_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT))
+            .then(() =>
+                semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    ? MSP.promise(MSPCodes.MSP_NAME)
+                    : Promise.resolve(true),
+            )
+            .then(() =>
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME))
+                    : Promise.resolve(true),
+            )
+            .then(() => MSP.promise(MSPCodes.MSP_RX_CONFIG))
+            .then(() =>
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME))
+                    : Promise.resolve(true),
+            )
+            .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
+            .then(() => load_html());
     }
 
     function load_html() {
-        $('#content').load("./tabs/configuration.html", process_html);
+        $("#content").load("./tabs/configuration.html", process_html);
     }
 
     load_serial_config();
@@ -60,39 +66,39 @@ configuration.initialize = function (callback) {
     function process_html() {
         self.analyticsChanges = {};
 
-        const features_e = $('.tab-configuration .features');
+        const features_e = $(".tab-configuration .features");
 
         FC.FEATURE_CONFIG.features.generateElements(features_e);
 
         // Dshot Beeper
-        const dshotBeeper_e = $('.tab-configuration .dshotbeeper');
-        const dshotBeeperBeaconTone = $('select.dshotBeeperBeaconTone');
-        const dshotBeaconCondition_e = $('tbody.dshotBeaconConditions');
-        const dshotBeaconSwitch_e = $('tr.dshotBeaconSwitch');
+        const dshotBeeper_e = $(".tab-configuration .dshotbeeper");
+        const dshotBeeperBeaconTone = $("select.dshotBeeperBeaconTone");
+        const dshotBeaconCondition_e = $("tbody.dshotBeaconConditions");
+        const dshotBeaconSwitch_e = $("tr.dshotBeaconSwitch");
 
         for (let i = 1; i <= 5; i++) {
-            dshotBeeperBeaconTone.append(`<option value="${(i)}">${(i)}</option>`);
+            dshotBeeperBeaconTone.append(`<option value="${i}">${i}</option>`);
         }
         dshotBeeper_e.show();
 
-        dshotBeeperBeaconTone.change(function() {
+        dshotBeeperBeaconTone.change(function () {
             FC.BEEPER_CONFIG.dshotBeaconTone = dshotBeeperBeaconTone.val();
         });
 
         dshotBeeperBeaconTone.val(FC.BEEPER_CONFIG.dshotBeaconTone);
 
-        const template = $('.beepers .beeper-template');
+        const template = $(".beepers .beeper-template");
         dshotBeaconSwitch_e.hide();
         FC.BEEPER_CONFIG.dshotBeaconConditions.generateElements(template, dshotBeaconCondition_e);
 
-        $('input.condition', dshotBeaconCondition_e).change(function () {
+        $("input.condition", dshotBeaconCondition_e).change(function () {
             const element = $(this);
             FC.BEEPER_CONFIG.dshotBeaconConditions.updateData(element);
         });
 
         // Analog Beeper
-        const destination = $('.beepers .beeper-configuration');
-        const beeper_e = $('.tab-configuration .beepers');
+        const destination = $(".beepers .beeper-configuration");
+        const beeper_e = $(".tab-configuration .beepers");
 
         FC.BEEPER_CONFIG.beepers.generateElements(template, destination);
 
@@ -100,37 +106,37 @@ configuration.initialize = function (callback) {
         i18n.localizePage();
 
         const alignments = [
-            'CW 0°',
-            'CW 90°',
-            'CW 180°',
-            'CW 270°',
-            'CW 0° flip',
-            'CW 90° flip',
-            'CW 180° flip',
-            'CW 270° flip',
+            "CW 0°",
+            "CW 90°",
+            "CW 180°",
+            "CW 270°",
+            "CW 0° flip",
+            "CW 90° flip",
+            "CW 180° flip",
+            "CW 270° flip",
         ];
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            alignments.push('Custom');
+            alignments.push("Custom");
         }
 
-        const gyro_align_content_e = $('.tab-configuration .gyro_align_content');
-        const legacy_gyro_alignment_e = $('.tab-configuration .legacy_gyro_alignment');
-        const legacy_accel_alignment_e = $('.tab-configuration .legacy_accel_alignment');
+        const gyro_align_content_e = $(".tab-configuration .gyro_align_content");
+        const legacy_gyro_alignment_e = $(".tab-configuration .legacy_gyro_alignment");
+        const legacy_accel_alignment_e = $(".tab-configuration .legacy_accel_alignment");
 
-        const orientation_gyro_e = $('select.gyroalign');
-        const orientation_acc_e = $('select.accalign');
-        const orientation_mag_e = $('select.magalign');
+        const orientation_gyro_e = $("select.gyroalign");
+        const orientation_acc_e = $("select.accalign");
+        const orientation_mag_e = $("select.magalign");
 
-        const orientation_gyro_to_use_e = $('select.gyro_to_use');
-        const orientation_gyro_1_align_e = $('select.gyro_1_align');
-        const orientation_gyro_2_align_e = $('select.gyro_2_align');
+        const orientation_gyro_to_use_e = $("select.gyro_to_use");
+        const orientation_gyro_1_align_e = $("select.gyro_1_align");
+        const orientation_gyro_2_align_e = $("select.gyro_2_align");
 
         gyro_align_content_e.hide(); // default value
         for (let i = 0; i < alignments.length; i++) {
-            orientation_gyro_e.append(`<option value="${(i+1)}">${alignments[i]}</option>`);
-            orientation_acc_e.append(`<option value="${(i+1)}">${alignments[i]}</option>`);
-            orientation_mag_e.append(`<option value="${(i+1)}">${alignments[i]}</option>`);
+            orientation_gyro_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
+            orientation_acc_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
+            orientation_mag_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
         }
 
         orientation_gyro_e.val(FC.SENSOR_ALIGNMENT.align_gyro);
@@ -142,9 +148,9 @@ configuration.initialize = function (callback) {
 
             let newValue = undefined;
             if (value !== FC.SENSOR_ALIGNMENT.align_gyro) {
-                newValue = $(this).find('option:selected').text();
+                newValue = $(this).find("option:selected").text();
             }
-            self.analyticsChanges['GyroAlignment'] = newValue;
+            self.analyticsChanges["GyroAlignment"] = newValue;
 
             FC.SENSOR_ALIGNMENT.align_gyro = value;
         });
@@ -154,9 +160,9 @@ configuration.initialize = function (callback) {
 
             let newValue = undefined;
             if (value !== FC.SENSOR_ALIGNMENT.align_acc) {
-                newValue = $(this).find('option:selected').text();
+                newValue = $(this).find("option:selected").text();
             }
-            self.analyticsChanges['AccAlignment'] = newValue;
+            self.analyticsChanges["AccAlignment"] = newValue;
 
             FC.SENSOR_ALIGNMENT.align_acc = value;
         });
@@ -166,9 +172,9 @@ configuration.initialize = function (callback) {
 
             let newValue = undefined;
             if (value !== FC.SENSOR_ALIGNMENT.align_mag) {
-                newValue = $(this).find('option:selected').text();
+                newValue = $(this).find("option:selected").text();
             }
-            self.analyticsChanges['MagAlignment'] = newValue;
+            self.analyticsChanges["MagAlignment"] = newValue;
 
             FC.SENSOR_ALIGNMENT.align_mag = value;
         });
@@ -180,47 +186,54 @@ configuration.initialize = function (callback) {
         legacy_accel_alignment_e.hide();
 
         const GYRO_DETECTION_FLAGS = {
-                DETECTED_GYRO_1:      (1 << 0),
-                DETECTED_GYRO_2:      (1 << 1),
-                DETECTED_DUAL_GYROS:  (1 << 7),
+            DETECTED_GYRO_1: 1 << 0,
+            DETECTED_GYRO_2: 1 << 1,
+            DETECTED_DUAL_GYROS: 1 << 7,
         };
 
         const detected_gyro_1 = (FC.SENSOR_ALIGNMENT.gyro_detection_flags & GYRO_DETECTION_FLAGS.DETECTED_GYRO_1) != 0;
         const detected_gyro_2 = (FC.SENSOR_ALIGNMENT.gyro_detection_flags & GYRO_DETECTION_FLAGS.DETECTED_GYRO_2) != 0;
-        const detected_dual_gyros = (FC.SENSOR_ALIGNMENT.gyro_detection_flags & GYRO_DETECTION_FLAGS.DETECTED_DUAL_GYROS) != 0;
+        const detected_dual_gyros =
+            (FC.SENSOR_ALIGNMENT.gyro_detection_flags & GYRO_DETECTION_FLAGS.DETECTED_DUAL_GYROS) != 0;
 
         if (detected_gyro_1) {
-            orientation_gyro_to_use_e.append(`<option value="0">${i18n.getMessage('configurationSensorGyroToUseFirst')}</option>`);
+            orientation_gyro_to_use_e.append(
+                `<option value="0">${i18n.getMessage("configurationSensorGyroToUseFirst")}</option>`,
+            );
         }
         if (detected_gyro_2) {
-            orientation_gyro_to_use_e.append(`<option value="1">${i18n.getMessage('configurationSensorGyroToUseSecond')}</option>`);
+            orientation_gyro_to_use_e.append(
+                `<option value="1">${i18n.getMessage("configurationSensorGyroToUseSecond")}</option>`,
+            );
         }
         if (detected_dual_gyros) {
-            orientation_gyro_to_use_e.append(`<option value="2">${i18n.getMessage('configurationSensorGyroToUseBoth')}</option>`);
+            orientation_gyro_to_use_e.append(
+                `<option value="2">${i18n.getMessage("configurationSensorGyroToUseBoth")}</option>`,
+            );
         }
 
         for (let i = 0; i < alignments.length; i++) {
-            orientation_gyro_1_align_e.append(`<option value="${(i+1)}">${alignments[i]}</option>`);
-            orientation_gyro_2_align_e.append(`<option value="${(i+1)}">${alignments[i]}</option>`);
+            orientation_gyro_1_align_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
+            orientation_gyro_2_align_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
         }
 
         orientation_gyro_to_use_e.val(FC.SENSOR_ALIGNMENT.gyro_to_use);
         orientation_gyro_1_align_e.val(FC.SENSOR_ALIGNMENT.gyro_1_align);
         orientation_gyro_2_align_e.val(FC.SENSOR_ALIGNMENT.gyro_2_align);
 
-        $('.gyro_alignment_inputs_first').toggle(detected_gyro_1);
-        $('.gyro_alignment_inputs_second').toggle(detected_gyro_2);
-        $('.gyro_alignment_inputs_selection').toggle(detected_gyro_1 || detected_gyro_2);
-        $('.gyro_alignment_inputs_notfound').toggle(!detected_gyro_1 && !detected_gyro_2);
+        $(".gyro_alignment_inputs_first").toggle(detected_gyro_1);
+        $(".gyro_alignment_inputs_second").toggle(detected_gyro_2);
+        $(".gyro_alignment_inputs_selection").toggle(detected_gyro_1 || detected_gyro_2);
+        $(".gyro_alignment_inputs_notfound").toggle(!detected_gyro_1 && !detected_gyro_2);
 
         orientation_gyro_1_align_e.change(function () {
             let value = parseInt($(this).val());
 
             let newValue = undefined;
             if (value !== FC.SENSOR_ALIGNMENT.gyro_1_align) {
-                newValue = $(this).find('option:selected').text();
+                newValue = $(this).find("option:selected").text();
             }
-            self.analyticsChanges['Gyro1Alignment'] = newValue;
+            self.analyticsChanges["Gyro1Alignment"] = newValue;
 
             FC.SENSOR_ALIGNMENT.gyro_1_align = value;
         });
@@ -230,30 +243,31 @@ configuration.initialize = function (callback) {
 
             let newValue = undefined;
             if (value !== FC.SENSOR_ALIGNMENT.gyro_2_align) {
-                newValue = $(this).find('option:selected').text();
+                newValue = $(this).find("option:selected").text();
             }
-            self.analyticsChanges['Gyro2Alignment'] = newValue;
+            self.analyticsChanges["Gyro2Alignment"] = newValue;
 
             FC.SENSOR_ALIGNMENT.gyro_2_align = value;
         });
 
         // Gyro and PID update
-        const gyroTextElement = $('input.gyroFrequency');
-        const gyroSelectElement = $('select.gyroSyncDenom');
-        const pidSelectElement = $('select.pidProcessDenom');
+        const gyroTextElement = $("input.gyroFrequency");
+        const gyroSelectElement = $("select.gyroSyncDenom");
+        const pidSelectElement = $("select.pidProcessDenom");
 
         function addDenomOption(element, denom, baseFreq) {
             let denomDescription;
             if (baseFreq === 0) {
-                denomDescription = i18n.getMessage('configurationSpeedPidNoGyro', {'value' : denom});
+                denomDescription = i18n.getMessage("configurationSpeedPidNoGyro", { value: denom });
             } else {
-                denomDescription = i18n.getMessage('configurationKHzUnitLabel', { 'value' : (baseFreq / denom).toFixed(2)});
+                denomDescription = i18n.getMessage("configurationKHzUnitLabel", {
+                    value: (baseFreq / denom).toFixed(2),
+                });
             }
             element.append(`<option value="${denom}">${denomDescription}</option>`);
         }
 
         const updateGyroDenom = function (gyroBaseFreq) {
-
             gyroTextElement.hide();
 
             const originalGyroDenom = gyroSelectElement.val();
@@ -269,21 +283,23 @@ configuration.initialize = function (callback) {
             gyroSelectElement.val(originalGyroDenom);
 
             gyroSelectElement.change();
-         };
+        };
 
-         const updateGyroDenomReadOnly = function (gyroFrequency) {
-             gyroSelectElement.hide();
+        const updateGyroDenomReadOnly = function (gyroFrequency) {
+            gyroSelectElement.hide();
 
-             let gyroContent;
-             if (gyroFrequency === 0) {
-                gyroContent = i18n.getMessage('configurationSpeedGyroNoGyro');
-             } else {
-                gyroContent = i18n.getMessage('configurationKHzUnitLabel', { 'value' : (gyroFrequency / 1000).toFixed(2)});
-             }
-             gyroTextElement.val(gyroContent);
-         };
+            let gyroContent;
+            if (gyroFrequency === 0) {
+                gyroContent = i18n.getMessage("configurationSpeedGyroNoGyro");
+            } else {
+                gyroContent = i18n.getMessage("configurationKHzUnitLabel", {
+                    value: (gyroFrequency / 1000).toFixed(2),
+                });
+            }
+            gyroTextElement.val(gyroContent);
+        };
 
-        $('div.gyroUse32kHz').hide();
+        $("div.gyroUse32kHz").hide();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             updateGyroDenomReadOnly(FC.CONFIG.sampleRateHz);
@@ -293,35 +309,37 @@ configuration.initialize = function (callback) {
 
         gyroSelectElement.val(FC.PID_ADVANCED_CONFIG.gyro_sync_denom);
 
-        $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeHelp'));
+        $(".systemconfigNote").html(i18n.getMessage("configurationLoopTimeHelp"));
 
-        gyroSelectElement.change(function () {
-            const originalPidDenom = parseInt(pidSelectElement.val());
+        gyroSelectElement
+            .change(function () {
+                const originalPidDenom = parseInt(pidSelectElement.val());
 
-            let pidBaseFreq;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
-            } else {
-                pidBaseFreq = 8;
-                pidBaseFreq /= parseInt($(this).val());
-            }
+                let pidBaseFreq;
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                    pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
+                } else {
+                    pidBaseFreq = 8;
+                    pidBaseFreq /= parseInt($(this).val());
+                }
 
-            pidSelectElement.empty();
+                pidSelectElement.empty();
 
-            const MAX_DENOM = 8;
+                const MAX_DENOM = 8;
 
-            for (let denom = 1; denom <= MAX_DENOM; denom++) {
-                addDenomOption(pidSelectElement, denom, pidBaseFreq);
-            }
+                for (let denom = 1; denom <= MAX_DENOM; denom++) {
+                    addDenomOption(pidSelectElement, denom, pidBaseFreq);
+                }
 
-            pidSelectElement.val(originalPidDenom);
-        }).change();
+                pidSelectElement.val(originalPidDenom);
+            })
+            .change();
 
         pidSelectElement.val(FC.PID_ADVANCED_CONFIG.pid_process_denom);
 
-        $('input[id="accHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIG.acc_hardware !== 1);
-        $('input[id="baroHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIG.baro_hardware !== 1);
-        $('input[id="magHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIG.mag_hardware !== 1);
+        $('input[id="accHardwareSwitch"]').prop("checked", FC.SENSOR_CONFIG.acc_hardware !== 1);
+        $('input[id="baroHardwareSwitch"]').prop("checked", FC.SENSOR_CONFIG.baro_hardware !== 1);
+        $('input[id="magHardwareSwitch"]').prop("checked", FC.SENSOR_CONFIG.mag_hardware !== 1);
 
         // Only show these sections for supported FW
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
@@ -329,100 +347,104 @@ configuration.initialize = function (callback) {
             $('input[name="pilotName"]').val(FC.CONFIG.pilotName);
         } else {
             $('input[name="craftName"]').val(FC.CONFIG.name);
-            $('.pilotName').hide();
+            $(".pilotName").hide();
         }
 
         $('input[name="fpvCamAngleDegrees"]').val(FC.RX_CONFIG.fpvCamAngleDegrees);
         $('input[name="fpvCamAngleDegrees"]').attr("max", 90);
 
         // generate GPS
-        const gpsProtocols = [
-            'NMEA',
-            'UBLOX',
-            'MSP',
-        ];
+        const gpsProtocols = ["NMEA", "UBLOX", "MSP"];
 
-        const gpsBaudRates = [
-            '115200',
-            '57600',
-            '38400',
-            '19200',
-            '9600',
-        ];
+        const gpsBaudRates = ["115200", "57600", "38400", "19200", "9600"];
 
         const gpsSbas = [
-            i18n.getMessage('gpsSbasAutoDetect'),
-            i18n.getMessage('gpsSbasEuropeanEGNOS'),
-            i18n.getMessage('gpsSbasNorthAmericanWAAS'),
-            i18n.getMessage('gpsSbasJapaneseMSAS'),
-            i18n.getMessage('gpsSbasIndianGAGAN'),
+            i18n.getMessage("gpsSbasAutoDetect"),
+            i18n.getMessage("gpsSbasEuropeanEGNOS"),
+            i18n.getMessage("gpsSbasNorthAmericanWAAS"),
+            i18n.getMessage("gpsSbasJapaneseMSAS"),
+            i18n.getMessage("gpsSbasIndianGAGAN"),
         ];
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            gpsSbas.push(i18n.getMessage('gpsSbasNone'));
+            gpsSbas.push(i18n.getMessage("gpsSbasNone"));
         }
 
-        const gpsProtocolElement = $('select.gps_protocol');
+        const gpsProtocolElement = $("select.gps_protocol");
         const gpsAutoBaudElement = $('input[name="gps_auto_baud"]');
-        const gpsAutoBaudGroup = $('.gps_auto_baud');
+        const gpsAutoBaudGroup = $(".gps_auto_baud");
         const gpsAutoConfigElement = $('input[name="gps_auto_config"]');
-        const gpsAutoConfigGroup = $('.gps_auto_config');
+        const gpsAutoConfigGroup = $(".gps_auto_config");
         const gpsUbloxGalileoElement = $('input[name="gps_ublox_galileo"]');
-        const gpsUbloxGalileoGroup = $('.gps_ublox_galileo');
-        const gpsUbloxSbasElement = $('select.gps_ubx_sbas');
-        const gpsUbloxSbasGroup = $('.gps_ubx_sbas');
+        const gpsUbloxGalileoGroup = $(".gps_ublox_galileo");
+        const gpsUbloxSbasElement = $("select.gps_ubx_sbas");
+        const gpsUbloxSbasGroup = $(".gps_ubx_sbas");
         const gpsHomeOnceElement = $('input[name="gps_home_once"]');
-        const gpsBaudrateElement = $('select.gps_baudrate');
-
+        const gpsBaudrateElement = $("select.gps_baudrate");
 
         for (let protocolIndex = 0; protocolIndex < gpsProtocols.length; protocolIndex++) {
             gpsProtocolElement.append(`<option value="${protocolIndex}">${gpsProtocols[protocolIndex]}</option>`);
         }
 
-        gpsProtocolElement.change(function () {
-            FC.GPS_CONFIG.provider = parseInt($(this).val());
+        gpsProtocolElement
+            .change(function () {
+                FC.GPS_CONFIG.provider = parseInt($(this).val());
 
-            // Call this to enable or disable auto config elements depending on the protocol
-            gpsAutoConfigElement.change();
+                // Call this to enable or disable auto config elements depending on the protocol
+                gpsAutoConfigElement.change();
+            })
+            .val(FC.GPS_CONFIG.provider)
+            .change();
 
-        }).val(FC.GPS_CONFIG.provider).change();
+        gpsAutoBaudElement.prop("checked", FC.GPS_CONFIG.auto_baud === 1);
 
-        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        gpsAutoConfigElement
+            .change(function () {
+                const checked = $(this).is(":checked");
 
-        gpsAutoConfigElement.change(function () {
-            const checked = $(this).is(":checked");
+                const ubloxSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf("UBLOX");
 
-            const ubloxSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
+                const enableGalileoVisible =
+                    checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43);
+                gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
 
-            const enableGalileoVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43);
-            gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
-
-            const enableSbasVisible = checked && ubloxSelected;
-            gpsUbloxSbasGroup.toggle(enableSbasVisible);
-
-        }).prop('checked', FC.GPS_CONFIG.auto_config === 1).change();
+                const enableSbasVisible = checked && ubloxSelected;
+                gpsUbloxSbasGroup.toggle(enableSbasVisible);
+            })
+            .prop("checked", FC.GPS_CONFIG.auto_config === 1)
+            .change();
 
         gpsAutoBaudGroup.show();
         gpsAutoConfigGroup.show();
 
-        gpsUbloxGalileoElement.change(function() {
-            FC.GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
-        }).prop('checked', FC.GPS_CONFIG.ublox_use_galileo > 0).change();
+        gpsUbloxGalileoElement
+            .change(function () {
+                FC.GPS_CONFIG.ublox_use_galileo = $(this).is(":checked") ? 1 : 0;
+            })
+            .prop("checked", FC.GPS_CONFIG.ublox_use_galileo > 0)
+            .change();
 
         for (let sbasIndex = 0; sbasIndex < gpsSbas.length; sbasIndex++) {
             gpsUbloxSbasElement.append(`<option value="${sbasIndex}">${gpsSbas[sbasIndex]}</option>`);
         }
 
-        gpsUbloxSbasElement.change(function () {
-            FC.GPS_CONFIG.ublox_sbas = parseInt($(this).val());
-        }).val(FC.GPS_CONFIG.ublox_sbas);
+        gpsUbloxSbasElement
+            .change(function () {
+                FC.GPS_CONFIG.ublox_sbas = parseInt($(this).val());
+            })
+            .val(FC.GPS_CONFIG.ublox_sbas);
 
-        $('.gps_home_once').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43));
-        gpsHomeOnceElement.change(function() {
-            FC.GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
-        }).prop('checked', FC.GPS_CONFIG.home_point_once > 0).change();
+        $(".gps_home_once").toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43));
+        gpsHomeOnceElement
+            .change(function () {
+                FC.GPS_CONFIG.home_point_once = $(this).is(":checked") ? 1 : 0;
+            })
+            .prop("checked", FC.GPS_CONFIG.home_point_once > 0)
+            .change();
 
         for (let baudRateIndex = 0; baudRateIndex < gpsBaudRates.length; baudRateIndex++) {
-            gpsBaudrateElement.append(`<option value="${gpsBaudRates[baudRateIndex]}">${gpsBaudRates[baudRateIndex]}</option>`);
+            gpsBaudrateElement.append(
+                `<option value="${gpsBaudRates[baudRateIndex]}">${gpsBaudRates[baudRateIndex]}</option>`,
+            );
         }
 
         gpsBaudrateElement.prop("disabled", true);
@@ -437,50 +459,54 @@ configuration.initialize = function (callback) {
         $('input[name="roll"]').val(FC.CONFIG.accelerometerTrims[1]);
         $('input[name="pitch"]').val(FC.CONFIG.accelerometerTrims[0]);
 
-        $('._smallAngle').show();
+        $("._smallAngle").show();
         $('input[id="configurationSmallAngle"]').val(FC.ARMING_CONFIG.small_angle);
 
         // UI hooks
 
         function checkUpdateGpsControls() {
-            if (FC.FEATURE_CONFIG.features.isEnabled('GPS')) {
-                $('.gpsSettings').show();
+            if (FC.FEATURE_CONFIG.features.isEnabled("GPS")) {
+                $(".gpsSettings").show();
             } else {
-                $('.gpsSettings').hide();
+                $(".gpsSettings").hide();
             }
         }
 
-        $('input.feature', features_e).change(function () {
+        $("input.feature", features_e).change(function () {
             const element = $(this);
 
             FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
 
-            if (element.attr('name') === 'GPS') {
+            if (element.attr("name") === "GPS") {
                 checkUpdateGpsControls();
             }
         });
 
-        $('input[id="accHardwareSwitch"]').change(function() {
-            const checked = $(this).is(':checked');
-            $('.accelNeeded').toggle(checked);
-        }).change();
+        $('input[id="accHardwareSwitch"]')
+            .change(function () {
+                const checked = $(this).is(":checked");
+                $(".accelNeeded").toggle(checked);
+            })
+            .change();
 
-        $(features_e).filter('select').change(function () {
-            const element = $(this);
+        $(features_e)
+            .filter("select")
+            .change(function () {
+                const element = $(this);
 
-            FC.FEATURE_CONFIG.features.updateData(element);
-            updateTabList(FC.FEATURE_CONFIG.features);
-        });
+                FC.FEATURE_CONFIG.features.updateData(element);
+                updateTabList(FC.FEATURE_CONFIG.features);
+            });
 
-        $('input.condition', beeper_e).change(function () {
+        $("input.condition", beeper_e).change(function () {
             const element = $(this);
             FC.BEEPER_CONFIG.beepers.updateData(element);
         });
 
         checkUpdateGpsControls();
 
-        $('a.save').on('click', function() {
+        $("a.save").on("click", function () {
             // gather data that doesn't have automatic change event bound
             FC.BOARD_ALIGNMENT_CONFIG.roll = parseInt($('input[name="board_align_roll"]').val());
             FC.BOARD_ALIGNMENT_CONFIG.pitch = parseInt($('input[name="board_align_pitch"]').val());
@@ -499,26 +525,30 @@ configuration.initialize = function (callback) {
             const value = parseInt(pidSelectElement.val());
 
             if (value !== FC.PID_ADVANCED_CONFIG.pid_process_denom) {
-                const newFrequency = pidSelectElement.find('option:selected').text();
-                self.analyticsChanges['PIDLoopSettings'] = `denominator: ${value} | frequency: ${newFrequency}`;
+                const newFrequency = pidSelectElement.find("option:selected").text();
+                self.analyticsChanges["PIDLoopSettings"] = `denominator: ${value} | frequency: ${newFrequency}`;
             } else {
-                self.analyticsChanges['PIDLoopSettings'] = undefined;
+                self.analyticsChanges["PIDLoopSettings"] = undefined;
             }
 
             FC.PID_ADVANCED_CONFIG.pid_process_denom = value;
 
             FC.RX_CONFIG.fpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
 
-            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'configuration');
+            tracking.sendSaveAndChangeEvents(
+                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+                self.analyticsChanges,
+                "configuration",
+            );
             self.analyticsChanges = {};
 
             // fill some data
-            FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
-            FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
+            FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(":checked") ? 1 : 0;
+            FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(":checked") ? 1 : 0;
 
-            FC.SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
-            FC.SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
-            FC.SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
+            FC.SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(":checked") ? 0 : 1;
+            FC.SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(":checked") ? 0 : 1;
+            FC.SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(":checked") ? 0 : 1;
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 FC.CONFIG.craftName = $('input[name="craftName"]').val().trim();
                 FC.CONFIG.pilotName = $('input[name="pilotName"]').val().trim();
@@ -531,32 +561,67 @@ configuration.initialize = function (callback) {
             }
 
             function save_config() {
-                Promise
-                .resolve(true)
-                .then(() => MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG)))
-                .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                    ? MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME))
-                    : MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME)))
-                .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ?
-                    MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME)) : Promise.resolve(true))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
-                .then(() => reboot());
+                Promise.resolve(true)
+                    .then(() =>
+                        MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG)),
+                    )
+                    .then(() =>
+                        MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG)),
+                    )
+                    .then(() =>
+                        MSP.promise(
+                            MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
+                            mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
+                        ),
+                    )
+                    .then(() => MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG)))
+                    .then(() =>
+                        MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND)),
+                    )
+                    .then(() =>
+                        MSP.promise(
+                            MSPCodes.MSP_SET_SENSOR_ALIGNMENT,
+                            mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT),
+                        ),
+                    )
+                    .then(() =>
+                        MSP.promise(
+                            MSPCodes.MSP_SET_ADVANCED_CONFIG,
+                            mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
+                        ),
+                    )
+                    .then(() => MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM)))
+                    .then(() =>
+                        MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)),
+                    )
+                    .then(() =>
+                        MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG)),
+                    )
+                    .then(() =>
+                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                            ? MSP.promise(
+                                MSPCodes.MSP2_SET_TEXT,
+                                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
+                            )
+                            : MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME)),
+                    )
+                    .then(() =>
+                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                            ? MSP.promise(
+                                MSPCodes.MSP2_SET_TEXT,
+                                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
+                            )
+                            : Promise.resolve(true),
+                    )
+                    .then(() => MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)))
+                    .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
+                    .then(() => reboot());
             }
 
             function reboot() {
-                gui_log(i18n.getMessage('configurationEepromSaved'));
+                gui_log(i18n.getMessage("configurationEepromSaved"));
 
-                GUI.tab_switch_cleanup(function() {
+                GUI.tab_switch_cleanup(function () {
                     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
                 });
             }
@@ -565,9 +630,14 @@ configuration.initialize = function (callback) {
         });
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
+        GUI.interval_add(
+            "status_pull",
+            function () {
+                MSP.send_message(MSPCodes.MSP_STATUS);
+            },
+            250,
+            true,
+        );
         GUI.content_ready(callback);
     }
 };

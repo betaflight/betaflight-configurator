@@ -1,16 +1,14 @@
-import { gui_log } from './gui_log';
+import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
 
 export default class BuildApi {
-
-    constructor () {
-        this._url = 'https://build.betaflight.com';
+    constructor() {
+        this._url = "https://build.betaflight.com";
         this._cacheExpirationPeriod = 3600 * 1000;
     }
 
     load(url, onSuccess, onFailure) {
-
         const dataTag = `${url}_Data`;
         const cacheLastUpdateTag = `${url}_LastUpdate`;
 
@@ -21,7 +19,7 @@ export default class BuildApi {
 
         const cachedCallback = () => {
             if (cachedData) {
-                gui_log(i18n.getMessage('buildServerUsingCached', [url]));
+                gui_log(i18n.getMessage("buildServerUsingCached", [url]));
             }
 
             onSuccess(cachedData);
@@ -35,8 +33,8 @@ export default class BuildApi {
                 object[cacheLastUpdateTag] = $.now();
                 setStorage(object);
                 onSuccess(info);
-            }).fail(xhr => {
-                gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+            }).fail((xhr) => {
+                gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
                 if (onFailure !== undefined) {
                     onFailure();
                 } else {
@@ -49,31 +47,27 @@ export default class BuildApi {
     }
 
     loadTargets(callback) {
-
         const url = `${this._url}/api/targets`;
         this.load(url, callback);
     }
 
     loadTargetReleases(target, callback) {
-
         const url = `${this._url}/api/targets/${target}`;
         this.load(url, callback);
     }
 
     loadTarget(target, release, onSuccess, onFailure) {
-
         const url = `${this._url}/api/builds/${release}/${target}`;
         this.load(url, onSuccess, onFailure);
     }
 
     loadTargetHex(path, onSuccess, onFailure) {
-
         const url = `${this._url}${path}`;
         $.get(url, function (data) {
-            gui_log(i18n.getMessage('buildServerSuccess', [path]));
+            gui_log(i18n.getMessage("buildServerSuccess", [path]));
             onSuccess(data);
-        }).fail(xhr => {
-            gui_log(i18n.getMessage('buildServerFailure', [path, `HTTP ${xhr.status}`]));
+        }).fail((xhr) => {
+            gui_log(i18n.getMessage("buildServerFailure", [path, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -81,12 +75,11 @@ export default class BuildApi {
     }
 
     getSupportCommands(onSuccess, onFailure) {
-
         const url = `${this._url}/api/support/commands`;
         $.get(url, function (data) {
             onSuccess(data);
-        }).fail(xhr => {
-            gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+        }).fail((xhr) => {
+            gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -94,7 +87,6 @@ export default class BuildApi {
     }
 
     submitSupportData(data, onSuccess, onFailure) {
-
         const url = `${this._url}/api/support`;
         $.ajax({
             url: url,
@@ -103,11 +95,11 @@ export default class BuildApi {
             contentType: "text/plain",
             dataType: "text",
 
-            success: function(response) {
+            success: function (response) {
                 onSuccess(response);
             },
-        }).fail(xhr => {
-            gui_log(i18n.getMessage('buildServerFailure', [`HTTP ${xhr.status}`]));
+        }).fail((xhr) => {
+            gui_log(i18n.getMessage("buildServerFailure", [`HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -115,7 +107,6 @@ export default class BuildApi {
     }
 
     requestBuild(request, onSuccess, onFailure) {
-
         const url = `${this._url}/api/builds`;
         $.ajax({
             url: url,
@@ -124,11 +115,11 @@ export default class BuildApi {
             contentType: "application/json",
             dataType: "json",
 
-            success: function(response) {
+            success: function (response) {
                 onSuccess(response);
             },
-        }).fail(xhr => {
-            gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+        }).fail((xhr) => {
+            gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -136,13 +127,12 @@ export default class BuildApi {
     }
 
     requestBuildStatus(key, onSuccess, onFailure) {
-
         const url = `${this._url}/api/builds/${key}/status`;
         $.get(url, function (data) {
-            gui_log(i18n.getMessage('buildServerSuccess', [url]));
+            gui_log(i18n.getMessage("buildServerSuccess", [url]));
             onSuccess(data);
-        }).fail(xhr => {
-            gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
+        }).fail((xhr) => {
+            gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -150,13 +140,11 @@ export default class BuildApi {
     }
 
     loadOptions(onSuccess, onFailure) {
-
         const url = `${this._url}/api/options`;
         this.load(url, onSuccess, onFailure);
     }
 
     loadCommits(release, onSuccess, onFailure) {
-
         const url = `${this._url}/api/releases/${release}/commits`;
         this.load(url, onSuccess, onFailure);
     }

@@ -20,9 +20,8 @@ export default class SourcePanel {
         this._domWrapperDiv = $(`#${this._domId}`);
         this._domWrapperDiv.toggle(false);
 
-        return new Promise(resolve => {
-            this._domWrapperDiv.load("./tabs/presets/SourcesDialog/SourcePanel.html",
-            () => {
+        return new Promise((resolve) => {
+            this._domWrapperDiv.load("./tabs/presets/SourcesDialog/SourcePanel.html", () => {
                 this._setupHtml();
                 resolve();
             });
@@ -68,7 +67,7 @@ export default class SourcePanel {
     }
 
     _setUiOfficial() {
-        if (this.presetSource.official){
+        if (this.presetSource.official) {
             this._domButtonSave.toggle(false);
             this._domButtonReset.toggle(false);
             this._domButtonDelete.toggle(false);
