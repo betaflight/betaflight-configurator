@@ -2605,6 +2605,8 @@ osd.initialize = function(callback) {
         // must invoke before i18n.localizePage() since it adds translation keys for expected logo size
         LogoManager.init(FONT, SYM.LOGO);
 
+        $('div.btn.orientation').toggle(GUI.isCordova());
+
         // translate to user-selected language
         i18n.localizePage();
 
@@ -3273,6 +3275,8 @@ osd.initialize = function(callback) {
             self.analyticsChanges = {};
         });
 
+        $('a.orientation').on('click', () => screen.orientation.lock(screen.orientation.type.startsWith("portrait") ? "landscape" : "portrait"));
+
         // font preview window
         const fontPreviewElement = $('.font-preview');
 
@@ -3399,6 +3403,10 @@ osd.cleanup = function(callback) {
 
     if (OSD.GUI.fontManager) {
         OSD.GUI.fontManager.destroy();
+    }
+
+    if (GUI.isCordova()) {
+        window.screen.orientation.lock("portrait");
     }
 
     // unbind "global" events
