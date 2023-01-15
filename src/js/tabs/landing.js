@@ -1,4 +1,4 @@
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { i18n } from '../localization';
 
 const landing = {};
@@ -55,7 +55,7 @@ landing.cleanup = function (callback) {
 };
 
 // TODO: remove after all is using modules
-window.TABS.landing = landing;
+TABS.landing = landing;
 export {
     landing,
 };

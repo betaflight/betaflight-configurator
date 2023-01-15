@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import MotorOutputReorderConfig from "../../components/MotorOutputReordering/MotorOutputReorderingConfig";
 import MotorOutputReorderComponent from "../../components/MotorOutputReordering/MotorOutputReorderingComponent";
@@ -16,6 +16,9 @@ import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import { gui_log } from "../gui_log";
+import { updateTabList } from "../utils/updateTabList";
+import { isInt, getMixerImageSrc } from "../utils/common";
+import semver from 'semver';
 
 const motors = {
     previousDshotBidir: null,
@@ -1303,7 +1306,7 @@ motors.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.motors = motors;
+TABS.motors = motors;
 export {
     motors,
 };

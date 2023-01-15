@@ -1,4 +1,4 @@
-import GUI from "./gui";
+import GUI, { TABS } from "./gui";
 import { i18n } from "./localization";
 // NOTE: this is a circular dependency, needs investigating
 import MspHelper from "./msp/MSPHelper";
@@ -18,6 +18,10 @@ import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
 import { update_dataflash_global } from "./update_dataflash_global";
 import { gui_log } from "./gui_log";
+import { updateTabList } from "./utils/updateTabList";
+import { get as getConfig, set as setConfig } from "./ConfigStorage";
+import { tracking } from "./Analytics";
+import semver from 'semver';
 
 let mspHelper;
 let connectionTimestamp;
@@ -45,10 +49,10 @@ export function initializeSerialBackend() {
     GUI.updateManualPortVisibility();
 
     $('#port-override').change(function () {
-        ConfigStorage.set({'portOverride': $('#port-override').val()});
+        setConfig({'portOverride': $('#port-override').val()});
     });
 
-    const data = ConfigStorage.get('portOverride');
+    const data = getConfig('portOverride');
     if (data.portOverride) {
         $('#port-override').val(data.portOverride);
     }
@@ -129,7 +133,7 @@ export function initializeSerialBackend() {
     });
 
     // auto-connect
-    const result = ConfigStorage.get('auto_connect');
+    const result = getConfig('auto_connect');
     if (result.auto_connect === undefined || result.auto_connect) {
         // default or enabled by user
         GUI.auto_connect = true;
@@ -161,7 +165,7 @@ export function initializeSerialBackend() {
             if (!GUI.connected_to && !GUI.connecting_to) $('select#baud').prop('disabled', false);
         }
 
-        ConfigStorage.set({'auto_connect': GUI.auto_connect});
+        setConfig({'auto_connect': GUI.auto_connect});
     });
 
     MdnsDiscovery.initialize();
@@ -242,19 +246,19 @@ function onOpen(openInfo) {
         gui_log(i18n.getMessage('serialPortOpened', serial.connectionType === 'serial' ? [serial.connectionId] : [openInfo.socketId]));
 
         // save selected port with chrome.storage if the port differs
-        let result = ConfigStorage.get('last_used_port');
+        let result = getConfig('last_used_port');
         if (result.last_used_port) {
             if (result.last_used_port !== GUI.connected_to) {
                 // last used port doesn't match the one found in local db, we will store the new one
-                ConfigStorage.set({'last_used_port': GUI.connected_to});
+                setConfig({'last_used_port': GUI.connected_to});
             }
         } else {
             // variable isn't stored yet, saving
-            ConfigStorage.set({'last_used_port': GUI.connected_to});
+            setConfig({'last_used_port': GUI.connected_to});
         }
 
         // reset expert mode
-        result = ConfigStorage.get('permanentExpertMode');
+        result = getConfig('permanentExpertMode');
         if (result.permanentExpertMode) {
             $('input[name="expertModeCheckbox"]').prop('checked', result.permanentExpertMode).trigger('change');
         }

@@ -1,9 +1,74 @@
+import ShortUniqueId from 'short-unique-id';
+import googleAnalytics from 'universal-ga';
+import { set as setConfig, get as getConfig } from './ConfigStorage';
+import GUI from './gui';
+import CONFIGURATOR from './data_storage';
 
 let tracking = null;
 export { tracking };
 
 export function createAnalytics(ga, settings) {
     tracking = new Analytics(ga, settings);
+}
+
+function getBuildType() {
+    return GUI.Mode;
+}
+
+function setupAnalytics(result) {
+    let userId;
+    if (result.userId) {
+        userId = result.userId;
+    } else {
+        const uid = new ShortUniqueId();
+        userId = uid.randomUUID(13);
+
+        setConfig({ 'userId': userId });
+    }
+
+    const optOut = !!result.analyticsOptOut;
+    const checkForDebugVersions = !!result.checkForConfiguratorUnstableVersions;
+
+    const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
+
+    const settings = {
+        trackingId: 'UA-123002063-1',
+        userId: userId,
+        appName:  CONFIGURATOR.productName,
+        appVersion: CONFIGURATOR.version,
+        gitRevision: CONFIGURATOR.gitRevision,
+        os: GUI.operating_system,
+        checkForDebugVersions: checkForDebugVersions,
+        optOut: optOut,
+        debugMode: debugMode,
+        buildType: getBuildType(),
+    };
+    createAnalytics(googleAnalytics, settings);
+    window.tracking = tracking;
+
+    function logException(exception) {
+        tracking.sendException(exception.stack);
+    }
+
+    if (typeof process === "object") {
+        process.on('uncaughtException', logException);
+    }
+
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
+
+    $('.connect_b a.connect').removeClass('disabled');
+    $('.firmware_b a.flash').removeClass('disabled');
+}
+
+export function checkSetupAnalytics(callback) {
+    if (!tracking) {
+        const result = getConfig(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
+        setupAnalytics(result);
+    }
+
+    if (callback) {
+        callback(tracking);
+    }
 }
 
 class Analytics {

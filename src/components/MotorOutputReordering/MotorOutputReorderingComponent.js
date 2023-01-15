@@ -6,6 +6,8 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import FC from "../../js/fc";
 import { gui_log } from "../../js/gui_log";
+import { i18n } from "../../js/localization";
+import GUI, { TABS } from "../../js/gui";
 
 export default class MotorOutputReorderComponent
 {

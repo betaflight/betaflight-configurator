@@ -1,19 +1,22 @@
+import 'jbox';
 import '../components/init.js';
 import { gui_log } from './gui_log.js';
 // same, msp seems to be everywhere used from global scope
 import './msp/MSPHelper.js';
 import { i18n } from './localization.js';
-import GUI from './gui.js';
+import GUI, { TABS } from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
-import ReleaseChecker from './release_checker.js';
-import { tracking, createAnalytics } from './Analytics.js';
+import { tracking, checkSetupAnalytics } from './Analytics.js';
 import { initializeSerialBackend } from './serial_backend.js';
 import FC from './fc.js';
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_45 } from './data_storage.js';
+import CONFIGURATOR from './data_storage.js';
 import serial from './serial.js';
 import CliAutoComplete from './CliAutoComplete.js';
-import DarkTheme from './DarkTheme.js';
+import DarkTheme, { setDarkTheme } from './DarkTheme.js';
 import UI_PHONES from './phones_ui.js';
+import { isExpertModeEnabled } from './utils/isExportModeEnabled.js';
+import { updateTabList } from './utils/updateTabList.js';
+import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates.js';
 
 $(document).ready(function () {
 
@@ -84,66 +87,6 @@ function appReady() {
 
         initializeSerialBackend();
     });
-}
-
-function checkSetupAnalytics(callback) {
-    if (!tracking) {
-        const result = getConfig(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
-        setupAnalytics(result);
-    }
-
-    if (callback) {
-        callback(tracking);
-    }
-}
-
-function getBuildType() {
-    return GUI.Mode;
-}
-
-function setupAnalytics(result) {
-    let userId;
-    if (result.userId) {
-        userId = result.userId;
-    } else {
-        const uid = new ShortUniqueId();
-        userId = uid.randomUUID(13);
-
-        setConfig({ 'userId': userId });
-    }
-
-    const optOut = !!result.analyticsOptOut;
-    const checkForDebugVersions = !!result.checkForConfiguratorUnstableVersions;
-
-    const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
-
-    const settings = {
-        trackingId: 'UA-123002063-1',
-        userId: userId,
-        appName:  CONFIGURATOR.productName,
-        appVersion: CONFIGURATOR.version,
-        gitRevision: CONFIGURATOR.gitRevision,
-        os: GUI.operating_system,
-        checkForDebugVersions: checkForDebugVersions,
-        optOut: optOut,
-        debugMode: debugMode,
-        buildType: getBuildType(),
-    };
-    createAnalytics(googleAnalytics, settings);
-    window.tracking = tracking;
-
-    function logException(exception) {
-        tracking.sendException(exception.stack);
-    }
-
-    if (typeof process === "object") {
-        process.on('uncaughtException', logException);
-    }
-
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
-
-    $('.connect_b a.connect').removeClass('disabled');
-    $('.firmware_b a.flash').removeClass('disabled');
 }
 
 function closeSerial() {
@@ -646,184 +589,5 @@ function startProcess() {
     }
 }
 
-function setDarkTheme(enabled) {
-    DarkTheme.setConfig(enabled);
-
-    checkSetupAnalytics(function (analyticsService) {
-        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', enabled);
-    });
-}
-
-
-function checkForConfiguratorUpdates() {
-    const releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');
-
-    releaseChecker.loadReleaseData(notifyOutdatedVersion);
-}
-
-function notifyOutdatedVersion(releaseData) {
-    const result = getConfig('checkForConfiguratorUnstableVersions');
-    let showUnstableReleases = false;
-    if (result.checkForConfiguratorUnstableVersions) {
-        showUnstableReleases = true;
-    }
-
-    if (releaseData === undefined) {
-        console.log('No releaseData');
-        return false;
-    }
-
-    const versions = releaseData.filter(function (version) {
-        const semVerVersion = semver.parse(version.tag_name);
-        if (semVerVersion && (showUnstableReleases || semVerVersion.prerelease.length === 0)) {
-            return version;
-        } else {
-            return null;
-        }
-        }).sort(function (v1, v2) {
-        try {
-            return semver.compare(v2.tag_name, v1.tag_name);
-        } catch (e) {
-            return false;
-        }
-    });
-
-    if (versions.length > 0) {
-        CONFIGURATOR.latestVersion = versions[0].tag_name;
-        CONFIGURATOR.latestVersionReleaseUrl = versions[0].html_url;
-    }
-
-    if (semver.lt(CONFIGURATOR.version, CONFIGURATOR.latestVersion)) {
-        const message = i18n.getMessage('configuratorUpdateNotice', [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl]);
-        gui_log(message);
-
-        const dialog = $('.dialogConfiguratorUpdate')[0];
-
-        $('.dialogConfiguratorUpdate-content').html(message);
-
-        $('.dialogConfiguratorUpdate-closebtn').click(function() {
-            dialog.close();
-        });
-
-        $('.dialogConfiguratorUpdate-websitebtn').click(function() {
-            dialog.close();
-
-            window.open(CONFIGURATOR.latestVersionReleaseUrl, '_blank');
-        });
-
-        dialog.showModal();
-    }
-}
-
-function isExpertModeEnabled() {
-    return $('input[name="expertModeCheckbox"]').is(':checked');
-}
-
-function updateTabList(features) {
-
-    if (isExpertModeEnabled()) {
-        $('#tabs ul.mode-connected li.tab_failsafe').show();
-        $('#tabs ul.mode-connected li.tab_adjustments').show();
-        $('#tabs ul.mode-connected li.tab_servos').show();
-        $('#tabs ul.mode-connected li.tab_sensors').show();
-        $('#tabs ul.mode-connected li.tab_logging').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_failsafe').hide();
-        $('#tabs ul.mode-connected li.tab_adjustments').hide();
-        $('#tabs ul.mode-connected li.tab_servos').hide();
-        $('#tabs ul.mode-connected li.tab_sensors').hide();
-        $('#tabs ul.mode-connected li.tab_logging').hide();
-    }
-
-    if (features.isEnabled('GPS') && isExpertModeEnabled()) {
-        $('#tabs ul.mode-connected li.tab_gps').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_gps').hide();
-    }
-
-    if (features.isEnabled('LED_STRIP')) {
-        $('#tabs ul.mode-connected li.tab_led_strip').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_led_strip').hide();
-    }
-
-    if (features.isEnabled('TRANSPONDER')) {
-        $('#tabs ul.mode-connected li.tab_transponder').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_transponder').hide();
-    }
-
-    if (features.isEnabled('OSD')) {
-        $('#tabs ul.mode-connected li.tab_osd').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_osd').hide();
-    }
-
-    $('#tabs ul.mode-connected li.tab_power').show();
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        $('#tabs ul.mode-connected li.tab_vtx').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_vtx').hide();
-    }
-
-}
-
-function zeroPad(value, width) {
-
-    let valuePadded = String(value);
-
-    while (valuePadded.length < width) {
-        valuePadded = `0${value}`;
-    }
-
-    return valuePadded;
-}
-
-function generateFilename(prefix, suffix) {
-    const date = new Date();
-    let filename = prefix;
-
-    if (FC.CONFIG) {
-        if (FC.CONFIG.flightControllerIdentifier) {
-            filename = `${FC.CONFIG.flightControllerIdentifier}_${filename}`;
-        }
-        const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-            ? FC.CONFIG.craftName
-            : FC.CONFIG.name;
-        if (craftName.trim() !== '') {
-            filename = `${filename}_${craftName.trim().replace(' ', '_')}`;
-        }
-    }
-
-    const yyyymmdd = `${date.getFullYear()}${zeroPad(date.getMonth() + 1, 2)}${zeroPad(date.getDate(), 2)}`;
-    const hhmmss = `${zeroPad(date.getHours(), 2)}${zeroPad(date.getMinutes(), 2)}${zeroPad(date.getSeconds(), 2)}`;
-    filename = `${filename}_${yyyymmdd}_${hhmmss}`;
-
-    return `${filename}.${suffix}`;
-}
-
-function showErrorDialog(message) {
-   const dialog = $('.dialogError')[0];
-
-    $('.dialogError-content').html(message);
-
-    $('.dialogError-closebtn').click(function() {
-        dialog.close();
-    });
-
-    dialog.showModal();
-}
-
-// TODO: all of these are used as globals in other parts.
-// once moved to modules extract to own module.
-window.googleAnalytics = analytics;
-window.tracking = null;
-window.showErrorDialog = showErrorDialog;
-window.generateFilename = generateFilename;
-window.updateTabList = updateTabList;
 window.isExpertModeEnabled = isExpertModeEnabled;
-window.checkForConfiguratorUpdates = checkForConfiguratorUpdates;
-window.setDarkTheme = setDarkTheme;
 window.appReady = appReady;
-window.checkSetupAnalytics = checkSetupAnalytics;

@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { have_sensor } from "../sensor_helpers";
 import FC from '../fc';
 import MSP from "../msp";
@@ -225,7 +225,7 @@ gps.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.gps = gps;
+TABS.gps = gps;
 export {
     gps,
 };

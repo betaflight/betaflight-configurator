@@ -1,5 +1,7 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import semver from 'semver';
+import { isExpertModeEnabled } from '../utils/isExportModeEnabled';
+import GUI, { TABS } from '../gui';
 import { configuration_backup, configuration_restore } from '../backup_restore';
 import { have_sensor } from '../sensor_helpers';
 import { mspHelper } from '../msp/MSPHelper';
@@ -347,6 +349,6 @@ setup.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.setup = setup;
+TABS.setup = setup;
 
 export { setup };

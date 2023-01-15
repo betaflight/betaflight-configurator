@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
@@ -1055,7 +1055,7 @@ led_strip.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.led_strip = led_strip;
+TABS.led_strip = led_strip;
 export {
     led_strip,
 };

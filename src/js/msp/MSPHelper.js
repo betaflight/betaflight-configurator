@@ -12,6 +12,10 @@ import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
+import { updateTabList } from "../utils/updateTabList";
+import { showErrorDialog } from "../utils/showErrorDialog";
+import { TABS } from "../gui";
+import { OSD } from "../tabs/osd";
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order

@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import { gui_log } from "../gui_log";
@@ -69,7 +69,7 @@ setup_osd.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.setup_osd = setup_osd;
+TABS.setup_osd = setup_osd;
 export {
     setup_osd,
 };

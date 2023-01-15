@@ -3,6 +3,8 @@ import { i18n } from "../../../js/localization";
 import PickedPreset from "../PickedPreset";
 import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
 import FC from "../../../js/fc";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 export default class PresetsDetailedDialog {
     constructor(domDialog, pickedPresetList, onPresetPickedCallback, favoritePresets) {

@@ -6,7 +6,7 @@
     popular choices - 921600, 460800, 256000, 230400, 153600, 128000, 115200, 57600, 38400, 28800, 19200
 */
 import MSPConnectorImpl from "../msp/MSPConnector";
-import GUI from "../gui";
+import GUI, { TABS } from "../gui";
 import { i18n } from "../localization";
 import MSP from "../msp";
 import FC from "../fc";
@@ -18,6 +18,7 @@ import PortHandler, { usbDevices } from "../port_handler";
 import { API_VERSION_1_42 } from "../data_storage";
 import serial from "../serial";
 import STM32DFU from "./stm32usbdfu";
+import semver from "semver";
 
 const STM32_protocol = function () {
     this.baud = null;

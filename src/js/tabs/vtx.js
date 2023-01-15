@@ -1,6 +1,9 @@
 import { i18n } from "../localization";
+import djv from "djv";
+import { generateFilename } from "../utils/generate_filename";
 import Clipboard from "../Clipboard";
-import GUI from '../gui';
+import semver from "semver";
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from '../fc';
@@ -10,6 +13,7 @@ import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_44 } from '../data_storage';
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
+import { checkChromeRuntimeError } from "../utils/common";
 
 const vtx = {
     supported: false,
@@ -928,7 +932,7 @@ vtx.initialize = function (callback) {
             FC.VTX_CONFIG.vtx_frequency = 0;
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 if (FC.VTX_CONFIG.vtx_band > 0 || FC.VTX_CONFIG.vtx_channel > 0) {
-                    FC.VTX_CONFIG.vtx_frequency = (band - 1) * 8 + (channel - 1);
+                    FC.VTX_CONFIG.vtx_frequency = (FC.VTX_CONFIG.vtx_band- 1) * 8 + (FC.VTX_CONFIG.vtx_channel- 1);
                 }
             }
         }
@@ -1041,7 +1045,7 @@ vtx.cleanup = function (callback) {
     }
 };
 
-window.TABS.vtx = vtx;
+TABS.vtx = vtx;
 export {
     vtx,
 };

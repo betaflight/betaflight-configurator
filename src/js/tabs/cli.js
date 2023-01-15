@@ -1,6 +1,7 @@
 import { i18n } from "../localization";
 import Clipboard from "../Clipboard";
-import GUI from '../gui';
+import { generateFilename } from "../utils/generate_filename";
+import GUI, { TABS } from '../gui';
 import BuildApi from '../BuildApi';
 import { tracking } from '../Analytics';
 import { reinitializeConnection } from "../serial_backend";
@@ -9,6 +10,8 @@ import serial from "../serial";
 import CliAutoComplete from "../CliAutoComplete";
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
+import jBox from "jbox";
+import { checkChromeRuntimeError } from "../utils/common";
 
 const cli = {
     lineDelayMs: 15,
@@ -584,7 +587,7 @@ cli.cleanup = function (callback) {
     $(CliAutoComplete).off();
 };
 
-window.TABS.cli = cli;
+TABS.cli = cli;
 export {
     cli,
 };

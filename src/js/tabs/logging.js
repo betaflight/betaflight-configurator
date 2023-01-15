@@ -1,5 +1,6 @@
-import { millitime } from '../utils/common.js';
-import GUI from '../gui';
+import { millitime, bytesToSize, checkChromeRuntimeError } from '../utils/common.js';
+import GUI, { TABS } from '../gui';
+import { generateFilename } from '../utils/generate_filename.js';
 import { i18n } from '../localization';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import FC from '../fc.js';
@@ -331,7 +332,7 @@ logging.cleanup = function (callback) {
 };
 
 // TODO: only for transition to modules, drop this eventually
-window.TABS.logging = logging;
+TABS.logging = logging;
 
 export {
     logging,

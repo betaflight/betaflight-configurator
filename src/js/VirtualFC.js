@@ -3,6 +3,7 @@ import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
 import CONFIGURATOR from "./data_storage";
+import { OSD } from "./tabs/osd";
 
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware

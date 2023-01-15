@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { tracking } from "../Analytics";
 import { reinitializeConnection } from "../serial_backend";
@@ -14,6 +14,9 @@ import windowWatcherUtil from "../utils/window_watchers";
 import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
+import { degToRad } from "../utils/common";
+import semver from 'semver';
+import { updateTabList } from "../utils/updateTabList";
 
 import CryptoES from 'crypto-es';
 
@@ -938,7 +941,7 @@ function updateInterpolationView() {
     }
 }
 
-window.TABS.receiver = receiver;
+TABS.receiver = receiver;
 export {
     receiver,
 };

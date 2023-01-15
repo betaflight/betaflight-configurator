@@ -1,4 +1,4 @@
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { i18n } from '../localization';
 
 const help = {};
@@ -19,7 +19,6 @@ help.cleanup = function (callback) {
     if (callback) callback();
 };
 
-// TODO: remove when modules are in place
-window.TABS.help = help;
+TABS.help = help;
 
 export { help };

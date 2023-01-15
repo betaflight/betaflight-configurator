@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from '../msp/MSPHelper';
 import FC from "../fc";
@@ -330,7 +330,7 @@ transponder.cleanup = function(callback) {
     if ( callback ) callback();
 };
 
-window.TABS.transponder = transponder;
+TABS.transponder = transponder;
 export {
     transponder,
 };

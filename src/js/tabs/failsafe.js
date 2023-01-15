@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from "../msp/MSPHelper";
 import MSP from "../msp";
@@ -8,6 +8,7 @@ import MSPCodes from "../msp/MSPCodes";
 import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
 import { API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 import { gui_log } from "../gui_log";
+import semver from 'semver';
 
 const failsafe = {};
 
@@ -397,7 +398,7 @@ failsafe.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.failsafe = failsafe;
+TABS.failsafe = failsafe;
 export {
     failsafe,
 };

@@ -1,6 +1,8 @@
 import GUI from './gui';
 import CONFIGURATOR from './data_storage';
 import FC from './fc';
+import semver from 'semver';
+import { tracking } from './Analytics';
 
 /**
  * Encapsulates the AutoComplete logic

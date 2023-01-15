@@ -2,6 +2,7 @@ import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import CONFIGURATOR from "../../js/data_storage";
 import serial from "../../js/serial";
+import { reinitializeConnection } from "../../js/serial_backend";
 import { gui_log } from "../../js/gui_log";
 
 export default class CliEngine

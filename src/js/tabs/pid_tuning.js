@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import { colorTables, getColorForPercentage } from '../utils/css.js';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from "../msp/MSPHelper";
@@ -12,6 +12,8 @@ import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 import { gui_log } from "../gui_log";
+import { degToRad, isInt } from "../utils/common";
+import semver from "semver";
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,
@@ -2983,7 +2985,7 @@ pid_tuning.expertModeChanged = function(expertModeEnabled) {
     TuningSliders.setExpertMode(expertModeEnabled);
 };
 
-window.TABS.pid_tuning = pid_tuning;
+TABS.pid_tuning = pid_tuning;
 export {
     pid_tuning,
 };

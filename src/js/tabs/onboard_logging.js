@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from "../msp/MSPHelper";
@@ -8,6 +8,10 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 import { gui_log } from "../gui_log";
+import { generateFilename } from "../utils/generate_filename";
+import semver from 'semver';
+import { showErrorDialog } from "../utils/showErrorDialog";
+import { checkChromeRuntimeError } from "../utils/common";
 
 let sdcardTimer;
 
@@ -659,7 +663,7 @@ onboard_logging.mscRebootFailedCallback = function () {
     showErrorDialog(i18n.getMessage('operationNotSupported'));
 };
 
-window.TABS.onboard_logging = onboard_logging;
+TABS.onboard_logging = onboard_logging;
 export {
     onboard_logging,
 };

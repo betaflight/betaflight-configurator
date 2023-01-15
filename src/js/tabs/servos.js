@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
@@ -245,7 +245,7 @@ servos.cleanup = function (callback) {
     }
 };
 
-window.TABS.servos = servos;
+TABS.servos = servos;
 export {
     servos,
 };

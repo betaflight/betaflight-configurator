@@ -111,12 +111,3 @@ $.fn.sortSelect = function(text = "") {
 
     return this.empty().append(op);
 };
-
-// TODO: these are temp binding while transition to module happens
-window.degToRad = degToRad;
-window.bytesToSize = bytesToSize;
-window.isInt = isInt;
-window.checkChromeRuntimeError = checkChromeRuntimeError;
-window.generateVirtualApiVersions = generateVirtualApiVersions;
-window.getMixerImageSrc = getMixerImageSrc;
-window.getTextWidth = getTextWidth;
