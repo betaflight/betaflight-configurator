@@ -3231,7 +3231,7 @@ osd.initialize = function(callback) {
 
                     // Generate tooltips for OSD elements
                     $('.osd_tip').each(function() {
-                        OSD.data.tooltips.push($(this).jBox('Tooltip', {
+                        const myModal = new jBox('Tooltip', {
                             delayOpen: 100,
                             delayClose: 100,
                             position: {
@@ -3239,7 +3239,11 @@ osd.initialize = function(callback) {
                                 y: 'center',
                             },
                             outside: 'x',
-                        }));
+                        });
+
+                        myModal.attach($(this));
+
+                        OSD.data.tooltips.push(myModal);
                     });
                 });
         }
