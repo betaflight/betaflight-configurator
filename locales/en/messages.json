@@ -4839,9 +4839,6 @@
         "message": "Uploaded all {{length}} characters to the OSD"
     },
 
-    "osdToggleOrientation": {
-        "message": "Orientation"
-    },
     "osdSetupSave": {
         "message": "Save"
     },
