@@ -6738,9 +6738,9 @@
         "message": "'Defines' personalizadas"
     },
     "coreBuild": {
-        "message": "Modo Clássico"
+        "message": "Versão Base"
     },
     "coreBuildModeDescription": {
-        "message": "Este modo ignora todos os parâmetros aqui. Isto essencialmente consegue o mesmo que as nightlies clássicas, e é fornecido por conveniência."
+        "message": "Esta opção cria um firmware que contém os drivers de hardware (e algumas funcionalidades limitadas). Está disponível para ajudar na deteção do hardware de uma controladora de voo, e é fornecida apenas por essa conveniência. Nem todas as funcionalidades estarão disponíveis (apenas hardware) usando esta opção."
     }
 }
