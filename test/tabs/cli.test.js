@@ -1,4 +1,3 @@
-import { Promise } from "bluebird";
 import {
     describe,
     it,
@@ -88,7 +87,7 @@ describe("cli", () => {
             cli.cliBuffer = "se";
             cli.read({
                 data: toArrayBuffer(
-                    "\r\x1B[Kserialpassthrough\tservo\r\n# ser"
+                    "\r\x1B[Kserialpassthrough\tservo\r\n# ser",
                 ),
             });
             // Ambigous auto-complete from firmware is preceded with an \r carriage return
@@ -152,9 +151,6 @@ describe("cli", () => {
                     ...mod,
                     send: () => {},
                 };
-            });
-            vi.spyOn(Promise, "reduce").mockImplementation((items, cb) => {
-                items.forEach((line, idx) => cb(0, line, idx));
             });
 
             vi.spyOn(Promise, "Promise").mockResolvedValue(0);
@@ -222,7 +218,7 @@ describe("cli", () => {
 
                 expect(cli.send).toHaveBeenCalledOnce();
                 expect(cli.send).toHaveBeenCalledWith(
-                    `${backspaceCode.repeat(3)}\t`
+                    `${backspaceCode.repeat(3)}\t`,
                 );
                 done();
             });
@@ -266,7 +262,7 @@ describe("cli", () => {
 
                 expect(cli.send).toHaveBeenCalledOnce();
                 expect(cli.send).toHaveBeenCalledWith(
-                    `${backspaceCode.repeat(3)}\n`
+                    `${backspaceCode.repeat(3)}\n`,
                 );
                 done();
             });

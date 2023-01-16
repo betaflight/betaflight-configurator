@@ -88,31 +88,34 @@ export default class CliEngine
         this._reportSendCommandsProgress(0);
         const totalCommandsCount = strings.length;
 
-        return Promise.reduce(strings, (delay, line, index) => {
-            return new Promise((resolve) => {
-                GUI.timeout_add('CLI_send_slowly', () => {
-                    let processingDelay = this.lineDelayMs;
-                    line = line.trim();
+        return strings.reduce(strings, (p, line, index) =>
+                p.then((delay) =>
+                    new Promise((resolve) => {
+                        GUI.timeout_add('CLI_send_slowly', () => {
+                            let processingDelay = this.lineDelayMs;
+                            line = line.trim();
 
-                    if (line.toLowerCase().startsWith('profile')) {
-                        processingDelay = this.profileSwitchDelayMs;
-                    }
+                            if (line.toLowerCase().startsWith('profile')) {
+                                processingDelay = this.profileSwitchDelayMs;
+                            }
 
-                    const isLastCommand = totalCommandsCount === index + 1;
+                            const isLastCommand = totalCommandsCount === index + 1;
 
-                    if (isLastCommand && this.cliBuffer) {
-                        line = this.getCliCommand(line, this.cliBuffer);
-                    }
+                            if (isLastCommand && this.cliBuffer) {
+                                line = this.getCliCommand(line, this.cliBuffer);
+                            }
 
-                    this.sendLine(line, ()=>{ /* empty on-send callback */ }, () => {
-                        resolve(processingDelay);
-                        this._reportSendCommandsProgress(100.0 * index / totalCommandsCount);
-                    });
-                }, delay);
+                            this.sendLine(line, () => { /* empty on-send callback */ }, () => {
+                                resolve(processingDelay);
+                                this._reportSendCommandsProgress(100.0 * index / totalCommandsCount);
+                            });
+                        }, delay);
+                    }),
+                ),
+                Promise.resolve(0),
+            ).then(() => {
+                this._reportSendCommandsProgress(100);
             });
-        }, 0).then(() => {
-            this._reportSendCommandsProgress(100);
-        });
     }
 
     removePromptHash(promptText) {

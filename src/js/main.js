@@ -1,5 +1,4 @@
 import 'jbox';
-import 'bluebird';
 import * as THREE from 'three';
 import '../components/init.js';
 import { gui_log } from './gui_log.js';
