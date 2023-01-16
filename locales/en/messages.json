@@ -4737,6 +4737,10 @@
         "message": "Font {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Zoom",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
+    },
     "osdSetupVideoFormatTitle": {
         "message": "Video Format"
     },
