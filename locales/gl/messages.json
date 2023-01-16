@@ -6630,8 +6630,5 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Definicións personalizadas"
-    },
-    "coreBuild": {
-        "message": "Modo clásico"
     }
 }

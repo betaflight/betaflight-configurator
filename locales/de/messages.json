@@ -3563,7 +3563,7 @@
         "message": "Yaw \"Sprung\" Schutz"
     },
     "pidTuningYawJumpPreventionHelp": {
-        "message": "Verhindert das Springen am Ende von Yaw Manövern. Je Höher der Wert desto höher ist die Dämpfung"
+        "message": "Verhindert das Springen am Ende von Yaw Manövern. Je höher der Wert desto stärker ist die Dämpfung"
     },
     "pidTuningRcExpoPower": {
         "message": "RC Expo Stärke"
@@ -6623,9 +6623,9 @@
         "message": "Benutzer-Definitionen"
     },
     "coreBuild": {
-        "message": "Classic-Modus"
+        "message": "Nur Core"
     },
     "coreBuildModeDescription": {
-        "message": "Dieser Modus ignoriert alle hier aufgeführten Parameter. Dies erreicht im Grunde das gleiche wie die Nightlies und dient der Bequemlichkeit."
+        "message": "Diese Option erzeugt eine Firmware, die Hardware-Treiber (und einige eingeschränkte Funktionen) enthält. Dies ermöglicht, die Hardware auf einem Flugregler zu erkennen und sollte nur für diesen Zweck verwendet werden. Nicht alle Funktionen werden mit dieser Option verfügbar sein (nur Hardware)."
     }
 }
