@@ -1,4 +1,5 @@
 import { i18n } from "../localization";
+import * as THREE from "three";
 import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { tracking } from "../Analytics";

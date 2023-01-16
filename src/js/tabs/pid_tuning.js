@@ -1,4 +1,5 @@
 import { i18n } from "../localization";
+import * as THREE from "three";
 import { colorTables, getColorForPercentage } from '../utils/css.js';
 import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
