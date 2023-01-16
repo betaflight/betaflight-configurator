@@ -4027,6 +4027,9 @@
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Notice:</strong> The dynamic notch filter is disabled. In order to configure and use it, please enable the 'DYNAMIC_FILTER' feature in the '$t(configurationFeatures.message)' section of the '$t(tabConfiguration.message)' tab. Also make sure the PID looprate is at least 2kHz."
     },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "The dynamic notch filter is disabled. In order to use it, please make sure the PID loop frequency is set to at least 2Khz in the '$t(tabConfiguration.message)' tab."
+    },
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Range"
     },
