@@ -67,14 +67,8 @@ pid_tuning.initialize = function (callback) {
             mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME)) : true)
         .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? MSP.promise(MSPCodes.MSP2_GET_TEXT,
             mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME)) : true)
-        .then(() => {
-            let promise;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                promise = MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
-            }
-
-            return promise;
-        })
+        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING) : true)
+        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG) : true)
         .then(() => MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html));
 
     function load_html() {
@@ -2704,20 +2698,11 @@ pid_tuning.updateFilterWarning = function() {
     const dtermLowpass1Enabled = !dtermLowpassFilterMode;
     const warningE = $('#pid-tuning .filterWarning');
     const warningDynamicNotchE = $('#pid-tuning .dynamicNotchWarning');
-    if (!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled)) {
-        warningE.show();
-    } else {
-        warningE.hide();
-    }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        if (FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
-            warningDynamicNotchE.hide();
-        } else {
-            warningDynamicNotchE.show();
-        }
-    } else {
-        warningDynamicNotchE.hide();
-    }
+    const warningDynamicNotchNyquistE = $('#pid-tuning .dynamicNotchNyquistWarningNote');
+
+    warningE.toggle(!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled));
+    warningDynamicNotchNyquistE.toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && (FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom < 2000));
+    warningDynamicNotchE.toggle(FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER') && (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)));
 };
 
 pid_tuning.updatePIDColors = function(clear = false) {
