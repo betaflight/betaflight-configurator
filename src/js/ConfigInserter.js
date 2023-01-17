@@ -44,6 +44,15 @@ function getCustomDefaultsArea(firmware) {
     result.startAddress = readUint32(firmware, index);
     result.endAddress = readUint32(firmware, index);
 
+    // verify that addresses are valid
+    if (seek(firmware, result.startAddress).byteIndex === undefined) {
+        return;
+    }
+
+    if (seek(firmware, result.endAddress).byteIndex === undefined) {
+        return;
+    }
+
     return result;
 }
 
@@ -91,7 +100,7 @@ export default class ConfigInserter {
         const input = `# Betaflight\n${config}\0`;
         const customDefaultsArea = getCustomDefaultsArea(firmware);
 
-        if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress === 0) {
+        if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress <= 0) {
             return false;
         } else if (input.length >= customDefaultsArea.endAddress - customDefaultsArea.startAddress) {
             throw new Error(`Custom defaults area too small (${customDefaultsArea.endAddress - customDefaultsArea.startAddress} bytes), ${input.length + 1} bytes needed.`);
