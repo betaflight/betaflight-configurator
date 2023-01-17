@@ -24,7 +24,7 @@ const receiver = {
     rateChartHeight: 117,
     analyticsChanges: {},
     needReboot: false,
-    elrsPassphraseEnabled: false,
+    elrsBindingPhraseEnabled: false,
 };
 
 receiver.initialize = function (callback) {
@@ -32,20 +32,20 @@ receiver.initialize = function (callback) {
 
     GUI.active_tab = 'receiver';
 
-    function lookup_elrs_passphrase(uidString) {
-        const passphraseMap = getConfig('passphrase_map').passphrase_map || {};
+    function lookup_elrs_binding_phrase(uidString) {
+        const bindingPhraseMap = getConfig('binding_phrase_map').binding_phrase_map || {};
 
-        return passphraseMap[uidString] ?? 0;
+        return bindingPhraseMap[uidString] ?? 0;
     }
 
-    function save_elrs_passphrase(uidString, passphrase) {
-        const passphraseMap = getConfig('passphrase_map').passphrase_map ?? {};
+    function save_elrs_binding_phrase(uidString, bindingPhrase) {
+        const bindingPhraseMap = getConfig('binding_phrase_map').binding_phrase_map ?? {};
 
-        passphraseMap[uidString] = passphrase;
-        setConfig({'passphrase_map': passphraseMap});
+        bindingPhraseMap[uidString] = bindingPhrase;
+        setConfig({'binding_phrase_map': bindingPhraseMap});
       }
 
-    function elrs_passphrase_to_bytes(text) {
+    function elrs_binding_phrase_to_bytes(text) {
         let uidBytes = [0,0,0,0,0,0];
 
         if (text) {
@@ -337,30 +337,30 @@ receiver.initialize = function (callback) {
         }
 
         if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') && FC.RX_CONFIG.rxSpiProtocol == 19 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            tab.elrsPassphraseEnabled = true;
+            tab.elrsBindingPhraseEnabled = true;
 
             const elrsUid = $('span.elrsUid');
             const elrsUidString = FC.RX_CONFIG.elrsUid.join(',');
 
             elrsUid.text(elrsUidString);
 
-            const elrsPassphrase = $('input.elrsPassphrase');
+            const elrsBindingPhrase = $('input.elrsBindingPhrase');
 
-            const passphraseString = lookup_elrs_passphrase(elrsUidString);
-            if (passphraseString) {
-                elrsPassphrase.val(passphraseString);
+            const bindingPhraseString = lookup_elrs_binding_phrase(elrsUidString);
+            if (bindingPhraseString) {
+                elrsBindingPhrase.val(bindingPhraseString);
             }
-            elrsPassphrase.on('keyup', function() {
-                const passphrase = elrsPassphrase.val();
-                if (passphrase) {
-                    elrsUid.text(elrs_passphrase_to_bytes(passphrase));
+            elrsBindingPhrase.on('keyup', function() {
+                const bindingPhrase = elrsBindingPhrase.val();
+                if (bindingPhrase) {
+                    elrsUid.text(elrs_binding_phrase_to_bytes(bindingPhrase));
                 } else {
                     elrsUid.text("0.0.0.0.0.0");
                 }
                 updateSaveButton(true);
             });
         } else {
-            tab.elrsPassphraseEnabled = false;
+            tab.elrsBindingPhraseEnabled = false;
         }
 
         // UI Hooks
@@ -405,9 +405,9 @@ receiver.initialize = function (callback) {
             }
         }
 
-        function checkShowElrsPassphrase() {
-            $('#elrsContainer').toggle(tab.elrsPassphraseEnabled);
-            $('input.elrsUid').toggle(tab.elrsPassphraseEnabled);
+        function checkShowElrsBindingPhrase() {
+            $('#elrsContainer').toggle(tab.elrsBindingPhraseEnabled);
+            $('input.elrsUid').toggle(tab.elrsBindingPhraseEnabled);
         }
 
         $(featuresElement).filter('select').change(function () {
@@ -417,14 +417,14 @@ receiver.initialize = function (callback) {
             if (element.attr('name') === 'rxMode') {
                 checkShowSerialRxBox();
                 checkShowSpiRxBox();
-                checkShowElrsPassphrase();
+                checkShowElrsBindingPhrase();
                 updateSaveButton(true);
             }
         });
 
         checkShowSerialRxBox();
         checkShowSpiRxBox();
-        checkShowElrsPassphrase();
+        checkShowElrsBindingPhrase();
         updateSaveButton();
 
         $('a.refresh').click(function () {
@@ -466,14 +466,14 @@ receiver.initialize = function (callback) {
                 FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
             }
 
-            if (tab.elrsPassphraseEnabled) {
+            if (tab.elrsBindingPhraseEnabled) {
                 const elrsUidChars = $('span.elrsUid')[0].innerText.split(',').map(uidChar => parseInt(uidChar, 10));
                 if (elrsUidChars.length === 6) {
                     FC.RX_CONFIG.elrsUid = elrsUidChars;
 
                     const elrsUid =  $('span.elrsUid')[0].innerText;
-                    const elrsPassphrase = $('input.elrsPassphrase').val();
-                    save_elrs_passphrase(elrsUid, elrsPassphrase);
+                    const elrsBindingPhrase = $('input.elrsBindingPhrase').val();
+                    save_elrs_binding_phrase(elrsUid, elrsBindingPhrase);
                 } else {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
                 }
