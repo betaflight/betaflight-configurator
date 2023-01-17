@@ -2175,7 +2175,7 @@
         "message": "Bind request sent to the flight controller."
     },
     "receiverButtonPassphrase": {
-        "message": "Passphrase"
+        "message": "Binding phrase"
     },
     "receiverButtonSticks": {
         "message": "Control sticks"
