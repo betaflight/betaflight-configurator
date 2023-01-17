@@ -71,7 +71,6 @@
     "multicast-dns": "^7.2.5",
     "multiple-select": "^1.5.2",
     "nw-vue-devtools-prebuilt": "^0.0.10",
-    "object-hash": "^3.0.0",
     "select2": "^4.0.13",
     "semver-min": "^0.7.2",
     "short-unique-id": "^4.4.4",
