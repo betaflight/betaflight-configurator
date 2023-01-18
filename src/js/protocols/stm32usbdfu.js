@@ -346,10 +346,18 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
             // H750 SPRacing H7 EXST: "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka" - Early BL firmware with incorrect string, treat as above.
 
             // H750 Partitions: Flash, Config, Firmware, 1x BB Management block + x BB Replacement blocks)
+            // AT32 F437 "@Internal Flash   /0x08000000/08*04Ka,1000*04Kg"
             if (str === "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka") {
                 str = "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka";
             }
-
+            //AT32F43xxM "@Internal Flash /0x08000000/1008*004Kg"
+            if (str === "@Option byte   /0x1FFFC000/01*4096 g"){
+                str = "@Option bytes   /0x1FFFC000/01*4096 g";
+            }
+            //AT32F43xxG "@Internal Flash /0x08000000/1008*004Kg"
+            if (str === "@Option byte   /0x1FFFC000/01*512 g"){
+                str = "@Option bytes   /0x1FFFC000/01*512 g";
+            }
             // split main into [location, start_addr, sectors]
 
             var tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
