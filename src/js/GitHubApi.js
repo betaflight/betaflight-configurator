@@ -1,5 +1,4 @@
-'use strict';
-
+// NOTE: this files seems to be unused anywhere
 const GitHubApi = function ()
 {
     const self = this;
@@ -25,3 +24,5 @@ GitHubApi.prototype.getFileLastCommitInfo = function (project, branch, filename,
         callback(result);
     });
 };
+
+export default GitHubApi;

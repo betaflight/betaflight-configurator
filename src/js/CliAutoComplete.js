@@ -1,4 +1,8 @@
-'use strict';
+import GUI from './gui';
+import CONFIGURATOR from './data_storage';
+import FC from './fc';
+import semver from 'semver';
+import { tracking } from './Analytics';
 
 /**
  * Encapsulates the AutoComplete logic
@@ -575,3 +579,6 @@ CliAutoComplete._initTextcomplete = function() {
         }),
     ]);
 };
+
+window.CliAutoComplete = CliAutoComplete;
+export default CliAutoComplete;

@@ -1,4 +1,5 @@
-'use strict';
+import semver from 'semver';
+import { API_VERSION_1_42, API_VERSION_1_43 } from '../data_storage';
 
 class EscProtocols
 {
@@ -71,3 +72,5 @@ class EscProtocols
 
 
 }
+
+export default EscProtocols;

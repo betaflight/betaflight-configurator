@@ -1,4 +1,6 @@
-'use strict';
+import FC from "./fc";
+import { API_VERSION_1_43 } from "./data_storage";
+import semver from "semver";
 
 const minRc = 1000;
 const midRc = 1500;
@@ -277,3 +279,5 @@ RateCurve.prototype.draw = function (rate, rcRate, rcExpo, superExpoActive, dead
         }
     }
 };
+
+export default RateCurve;

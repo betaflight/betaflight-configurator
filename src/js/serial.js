@@ -1,4 +1,11 @@
-'use strict';
+import GUI from "./gui";
+import { i18n } from "./localization";
+import FC from "./fc";
+import CONFIGURATOR from "./data_storage";
+import { gui_log } from "./gui_log";
+import inflection from "inflection";
+import PortHandler from "./port_handler";
+import { checkChromeRuntimeError } from "./utils/common";
 
 const serial = {
     connected:      false,
@@ -65,7 +72,7 @@ const serial = {
                                                 self.failed = 0;
                                             } else {
                                                 console.log(`${self.connectionType}: connection did not recover from last onReceiveError, disconnecting`);
-                                                GUI.log(i18n.getMessage('serialUnrecoverable'));
+                                                gui_log(i18n.getMessage('serialUnrecoverable'));
                                                 self.errorHandler(getInfo.error, 'receive');
                                             }
                                         } else {
@@ -86,7 +93,7 @@ const serial = {
                                             if (_info.paused) {
                                                 // assume unrecoverable, disconnect
                                                 console.log(`${self.connectionType}: connection did not recover from ${self.error} condition, disconnecting`);
-                                                GUI.log(i18n.getMessage('serialUnrecoverable'));
+                                                gui_log(i18n.getMessage('serialUnrecoverable'));
                                                 self.errorHandler(_info.error, 'receive');
                                             }
                                             else {
@@ -105,7 +112,7 @@ const serial = {
 
                         case 'frame_error':
                         case 'parity_error':
-                            GUI.log(i18n.getMessage(`serialError${inflection.camelize(info.error)}`));
+                            gui_log(i18n.getMessage(`serialError${inflection.camelize(info.error)}`));
                             self.errorHandler(info.error, 'receive');
                             break;
                         case 'break': // This seems to be the error that is thrown under NW.js in Windows when the device reboots after typing 'exit' in CLI
@@ -462,3 +469,5 @@ const serial = {
         }
     },
 };
+
+export default serial;

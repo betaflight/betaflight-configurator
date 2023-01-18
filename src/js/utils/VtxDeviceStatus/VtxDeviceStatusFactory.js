@@ -1,3 +1,5 @@
+import VtxDeviceStatus from './VtxDeviceStatus';
+
 const vtxDeviceStatusFactory = {
     _vtxDeviceStatusClasses: [],
 

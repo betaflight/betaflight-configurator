@@ -1,4 +1,4 @@
-'use strict';
+import serial from "./serial";
 
 const PortUsage = {
     previous_received:  0,
@@ -36,3 +36,7 @@ const PortUsage = {
         this.port_usage_up = 0;
     },
 };
+
+// drop these after all is in modules
+window.PortUsage = PortUsage;
+export default PortUsage;

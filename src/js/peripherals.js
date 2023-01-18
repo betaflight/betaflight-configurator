@@ -1,4 +1,5 @@
-'use strict';
+import { i18n } from "./localization";
+import FC from "./fc";
 
 // return true if user has choose a special peripheral
 function isPeripheralSelected(peripheralName) {
@@ -30,3 +31,5 @@ function adjustBoxNameIfPeripheralWithModeID(modeId, defaultName) {
     return defaultName;
 
 }
+
+export default adjustBoxNameIfPeripheralWithModeID;

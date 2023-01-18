@@ -1,8 +1,12 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import { gui_log } from '../gui_log';
+import jBox from 'jbox';
 
 const power = {
     supported: false,
@@ -500,7 +504,7 @@ power.initialize = function (callback) {
         }
 
         function save_completed() {
-            GUI.log(i18n.getMessage('configurationEepromSaved'));
+            gui_log(i18n.getMessage('configurationEepromSaved'));
 
             TABS.power.initialize();
         }
@@ -530,5 +534,5 @@ power.cleanup = function (callback) {
     }
 };
 
-window.TABS.power = power;
+TABS.power = power;
 export { power };

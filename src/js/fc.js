@@ -1,4 +1,6 @@
-import { bit_check } from "./serial_backend";
+import { bit_check } from "./bit";
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
+import semver from "semver";
 
 const INITIAL_CONFIG = {
     apiVersion:                       "0.0.0",
@@ -902,6 +904,4 @@ const FC = {
     },
 };
 
-// temp binding to global scope
-window.FC = FC;
 export default FC;

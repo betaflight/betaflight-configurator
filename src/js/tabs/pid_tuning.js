@@ -1,10 +1,19 @@
 import { i18n } from "../localization";
 import { colorTables, getColorForPercentage } from '../utils/css.js';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
-import { have_sensor } from "../serial_backend";
+import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
+import MSP from "../msp";
+import TuningSliders from "../TuningSliders";
+import Model from "../model";
+import RateCurve from "../RateCurve";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import { gui_log } from "../gui_log";
+import { degToRad, isInt } from "../utils/common";
+import semver from "semver";
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,
@@ -58,14 +67,8 @@ pid_tuning.initialize = function (callback) {
             mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME)) : true)
         .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? MSP.promise(MSPCodes.MSP2_GET_TEXT,
             mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME)) : true)
-        .then(() => {
-            let promise;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                promise = MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
-            }
-
-            return promise;
-        })
+        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING) : true)
+        .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG) : true)
         .then(() => MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html));
 
     function load_html() {
@@ -1454,7 +1457,7 @@ pid_tuning.initialize = function (callback) {
                 self.refresh(function () {
                     self.updating = false;
 
-                    GUI.log(i18n.getMessage('pidTuningPidProfileReset'));
+                    gui_log(i18n.getMessage('pidTuningPidProfileReset'));
                 });
             });
         });
@@ -1470,7 +1473,7 @@ pid_tuning.initialize = function (callback) {
                     $('.tab-pid_tuning select[name="profile"]').prop('disabled', 'false');
                     FC.CONFIG.profile = self.currentProfile;
 
-                    GUI.log(i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
+                    gui_log(i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
                 });
             });
         });
@@ -1487,7 +1490,7 @@ pid_tuning.initialize = function (callback) {
                     FC.CONFIG.rateProfile = self.currentRateProfile;
                     self.currentRates = self.rateCurve.getCurrentRates();
 
-                    GUI.log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
+                    gui_log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
                 });
             });
         });
@@ -1801,7 +1804,7 @@ pid_tuning.initialize = function (callback) {
 
         $('a.refresh').click(function () {
             self.refresh(function () {
-                GUI.log(i18n.getMessage('pidTuningDataRefreshed'));
+                gui_log(i18n.getMessage('pidTuningDataRefreshed'));
             });
         });
 
@@ -2263,7 +2266,7 @@ pid_tuning.initialize = function (callback) {
 
                 self.setDirty(false);
 
-                GUI.log(i18n.getMessage('pidTuningEepromSaved'));
+                gui_log(i18n.getMessage('pidTuningEepromSaved'));
 
                 self.refresh();
             });
@@ -2429,12 +2432,12 @@ pid_tuning.checkUpdateProfile = function (updateRateProfile) {
                 self.refresh(function () {
                     self.updating = false;
                     if (changedProfile) {
-                        GUI.log(i18n.getMessage('pidTuningReceivedProfile', [FC.CONFIG.profile + 1]));
+                        gui_log(i18n.getMessage('pidTuningReceivedProfile', [FC.CONFIG.profile + 1]));
                         FC.CONFIG.profile = self.currentProfile;
                     }
 
                     if (changedRateProfile) {
-                        GUI.log(i18n.getMessage('pidTuningReceivedRateProfile', [FC.CONFIG.rateProfile + 1]));
+                        gui_log(i18n.getMessage('pidTuningReceivedRateProfile', [FC.CONFIG.rateProfile + 1]));
                         FC.CONFIG.rateProfile = self.currentRateProfile;
                     }
                 });
@@ -2695,20 +2698,11 @@ pid_tuning.updateFilterWarning = function() {
     const dtermLowpass1Enabled = !dtermLowpassFilterMode;
     const warningE = $('#pid-tuning .filterWarning');
     const warningDynamicNotchE = $('#pid-tuning .dynamicNotchWarning');
-    if (!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled)) {
-        warningE.show();
-    } else {
-        warningE.hide();
-    }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        if (FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
-            warningDynamicNotchE.hide();
-        } else {
-            warningDynamicNotchE.show();
-        }
-    } else {
-        warningDynamicNotchE.hide();
-    }
+    const warningDynamicNotchNyquistE = $('#pid-tuning .dynamicNotchNyquistWarningNote');
+
+    warningE.toggle(!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled));
+    warningDynamicNotchNyquistE.toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && (FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom < 2000));
+    warningDynamicNotchE.toggle(FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER') && (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)));
 };
 
 pid_tuning.updatePIDColors = function(clear = false) {
@@ -2976,7 +2970,7 @@ pid_tuning.expertModeChanged = function(expertModeEnabled) {
     TuningSliders.setExpertMode(expertModeEnabled);
 };
 
-window.TABS.pid_tuning = pid_tuning;
+TABS.pid_tuning = pid_tuning;
 export {
     pid_tuning,
 };

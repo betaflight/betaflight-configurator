@@ -1,5 +1,9 @@
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
+import CONFIGURATOR from "../../js/data_storage";
+import serial from "../../js/serial";
+import { reinitializeConnection } from "../../js/serial_backend";
+import { gui_log } from "../../js/gui_log";
 
 export default class CliEngine
 {
@@ -208,13 +212,13 @@ export default class CliEngine
             if (this.cliBuffer === 'Rebooting' && CliEngine.s_backspaceCode !== charCode) {
                 CONFIGURATOR.cliEngineActive = false;
                 CONFIGURATOR.cliEngineValid = false;
-                GUI.log(i18n.getMessage('cliReboot'));
+                gui_log(i18n.getMessage('cliReboot'));
                 reinitializeConnection(this._currentTab);
             }
         }
 
         if (!CONFIGURATOR.cliEngineValid && validateText.indexOf('CLI') !== -1) {
-            GUI.log(i18n.getMessage('cliEnter'));
+            gui_log(i18n.getMessage('cliEnter'));
             CONFIGURATOR.cliEngineValid = true;
         }
     }

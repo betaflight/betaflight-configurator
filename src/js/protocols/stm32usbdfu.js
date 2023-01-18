@@ -10,7 +10,10 @@
     that being said, it seems that certain level of CLRSTATUS is required before running another type of operation for
     example switching from DNLOAD to UPLOAD, etc, clearning the state so device is in dfuIDLE is highly recommended.
 */
-'use strict';
+import GUI, { TABS } from "../gui";
+import { i18n } from "../localization";
+import { gui_log } from "../gui_log";
+import { checkChromeRuntimeError } from "../utils/common";
 
 // Task for the brave ones. There are quite a few shadow variables which clash when
 // const or let are used. So need to run thorough tests when chaning `var`
@@ -100,7 +103,7 @@ STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) 
             self.openDevice(result[0]);
         } else {
             console.log('USB DFU not found');
-            GUI.log(i18n.getMessage('stm32UsbDfuNotFound'));
+            gui_log(i18n.getMessage('stm32UsbDfuNotFound'));
         }
     });
 };
@@ -111,16 +114,16 @@ STM32DFU_protocol.prototype.openDevice = function (device) {
     chrome.usb.openDevice(device, function (handle) {
         if (checkChromeRuntimeError()) {
             console.log('Failed to open USB device!');
-            GUI.log(i18n.getMessage('usbDeviceOpenFail'));
+            gui_log(i18n.getMessage('usbDeviceOpenFail'));
             if (GUI.operating_system === 'Linux') {
-                GUI.log(i18n.getMessage('usbDeviceUdevNotice'));
+                gui_log(i18n.getMessage('usbDeviceUdevNotice'));
             }
             return;
         }
 
         self.handle = handle;
 
-        GUI.log(i18n.getMessage('usbDeviceOpened', handle.handle.toString()));
+        gui_log(i18n.getMessage('usbDeviceOpened', handle.handle.toString()));
         console.log(`Device opened with Handle ID: ${handle.handle}`);
         self.claimInterface(0);
     });
@@ -132,9 +135,9 @@ STM32DFU_protocol.prototype.closeDevice = function () {
     chrome.usb.closeDevice(self.handle, function closed() {
         if (checkChromeRuntimeError()) {
             console.log('Failed to close USB device!');
-            GUI.log(i18n.getMessage('usbDeviceCloseFail'));
+            gui_log(i18n.getMessage('usbDeviceCloseFail'));
         } else {
-            GUI.log(i18n.getMessage('usbDeviceClosed'));
+            gui_log(i18n.getMessage('usbDeviceClosed'));
             console.log(`Device closed with Handle ID: ${self.handle.handle}`);
         }
 
@@ -634,7 +637,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     }
 
                     if (typeof nextAction !== "undefined") {
-                        GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
+                        gui_log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
 
                         // verify all addresses in the hex are writable.
 
@@ -648,7 +651,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         }
 
                         if (unusableBlocks.length > 0) {
-                            GUI.log(i18n.getMessage('dfu_hex_address_errors'));
+                            gui_log(i18n.getMessage('dfu_hex_address_errors'));
                             TABS.firmware_flasher.flashingMessage(i18n.getMessage('dfu_hex_address_errors'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
                             self.leave();
                         } else {
@@ -673,7 +676,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
             var unprotect = function() {
                 console.log('Initiate read unprotect');
                 let messageReadProtected = i18n.getMessage('stm32ReadProtected');
-                GUI.log(messageReadProtected);
+                gui_log(messageReadProtected);
                 TABS.firmware_flasher.flashingMessage(messageReadProtected, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION);
 
                 self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x92], function () { // 0x92 initiates read unprotect
@@ -695,10 +698,10 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                                 self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data, error) { // should stall/disconnect
                                     if (error) { // we encounter an error, but this is expected. should be a stall.
                                         console.log('Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.');
-                                        GUI.log(i18n.getMessage('stm32UnprotectSuccessful'));
+                                        gui_log(i18n.getMessage('stm32UnprotectSuccessful'));
 
                                         let messageUnprotectUnplug = i18n.getMessage('stm32UnprotectUnplug');
-                                        GUI.log(messageUnprotectUnplug);
+                                        gui_log(messageUnprotectUnplug);
 
                                         TABS.firmware_flasher.flashingMessage(messageUnprotectUnplug, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION)
                                                              .flashProgress(0);
@@ -706,7 +709,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                                     } else { // unprotecting the flight controller did not work. It did not reboot.
                                         console.log('Failed to execute unprotect memory command');
 
-                                        GUI.log(i18n.getMessage('stm32UnprotectFailed'));
+                                        gui_log(i18n.getMessage('stm32UnprotectFailed'));
                                         TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32UnprotectFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
                                         console.log(data);
                                         self.cleanup();
@@ -716,7 +719,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         } else {
                                 console.log('Failed to initiate unprotect memory command');
                                 let messageUnprotectInitFailed = i18n.getMessage('stm32UnprotectInitFailed');
-                                GUI.log(messageUnprotectInitFailed);
+                                gui_log(messageUnprotectInitFailed);
                                 TABS.firmware_flasher.flashingMessage(messageUnprotectInitFailed, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
                                 self.cleanup();
                         }
@@ -728,6 +731,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 // the following should fail if read protection is active
                 self.controlTransfer('in', self.request.UPLOAD, 2, 0, self.chipInfo.option_bytes.total_size, 0, function (ob_data, errcode) {
                 if (errcode) {
+                    // TODO: this was undefined, guessing with how it usually works it should be 1
+                    const errcode1 = 1;
                     console.log(`USB transfer error while reading option bytes: ${errcode1}`);
                     self.cleanup();
                     return;
@@ -736,7 +741,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     if (data[4] === self.state.dfuUPLOAD_IDLE && ob_data.length === self.chipInfo.option_bytes.total_size) {
                         console.log('Option bytes read successfully');
                         console.log('Chip does not appear read protected');
-                        GUI.log(i18n.getMessage('stm32NotReadProtected'));
+                        gui_log(i18n.getMessage('stm32NotReadProtected'));
                         // it is pretty safe to continue to erase flash
                         self.clearStatus(function() {
                             self.upload_procedure(2);
@@ -785,14 +790,14 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 // if address load fails with this specific error though, it is very likely bc of read protection
                 if (loadAddressResponse[4] === self.state.dfuERROR && loadAddressResponse[0] === self.status.errVENDOR) {
                     // read protected
-                    GUI.log(i18n.getMessage('stm32AddressLoadFailed'));
+                    gui_log(i18n.getMessage('stm32AddressLoadFailed'));
                     self.clearStatus(unprotect);
                     return;
                 } else if (loadAddressResponse[4] === self.state.dfuDNLOAD_IDLE) {
                     console.log('Address load for option bytes sector succeeded.');
                     self.clearStatus(tryReadOB);
                 } else {
-                    GUI.log(i18n.getMessage('stm32AddressLoadUnknown'));
+                    gui_log(i18n.getMessage('stm32AddressLoadUnknown'));
                     self.cleanup();
                 }
             };
@@ -852,7 +857,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
                     if (page === erase_pages.length) {
                         console.log("Erase: complete");
-                        GUI.log(i18n.getMessage('dfu_erased_kilobytes', (total_erased / 1024).toString()));
+                        gui_log(i18n.getMessage('dfu_erased_kilobytes', (total_erased / 1024).toString()));
                         self.upload_procedure(4);
                     } else {
                         erase_page();
@@ -1124,3 +1129,5 @@ STM32DFU_protocol.prototype.cleanup = function () {
 
 // initialize object
 const STM32DFU = new STM32DFU_protocol();
+
+export default STM32DFU;

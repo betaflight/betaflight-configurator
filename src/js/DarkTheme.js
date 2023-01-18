@@ -1,4 +1,6 @@
-'use strict';
+import GUI from "./gui";
+import windowWatcherUtil from "./utils/window_watchers";
+import { checkSetupAnalytics } from "./Analytics";
 
 const css_dark = [
     './css/dark-theme.css',
@@ -63,3 +65,14 @@ DarkTheme.applyDark = function () {
 DarkTheme.applyNormal = function () {
     css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
 };
+
+
+export function setDarkTheme(enabled) {
+    DarkTheme.setConfig(enabled);
+
+    checkSetupAnalytics(function (analyticsService) {
+        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', enabled);
+    });
+}
+
+export default DarkTheme;

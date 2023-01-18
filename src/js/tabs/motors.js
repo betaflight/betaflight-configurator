@@ -1,14 +1,24 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import MotorOutputReorderConfig from "../../components/MotorOutputReordering/MotorOutputReorderingConfig";
 import MotorOutputReorderComponent from "../../components/MotorOutputReordering/MotorOutputReorderingComponent";
 import EscDshotDirectionComponent from "../../components/EscDshotDirection/EscDshotDirectionComponent";
 import DshotCommand from "../../js/utils/DshotCommand.js";
 import { tracking } from "../Analytics";
-import { bit_check, reinitializeConnection } from "../serial_backend";
+import { reinitializeConnection } from "../serial_backend";
+import { bit_check } from "../bit";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
+import MSP from "../msp";
+import { mixerList } from "../model";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
+import EscProtocols from "../utils/EscProtocols";
+import { gui_log } from "../gui_log";
+import { updateTabList } from "../utils/updateTabList";
+import { isInt, getMixerImageSrc } from "../utils/common";
+import semver from 'semver';
 
 const motors = {
     previousDshotBidir: null,
@@ -1173,7 +1183,7 @@ motors.initialize = async function (callback) {
     }
 
     function reboot() {
-        GUI.log(i18n.getMessage('configurationEepromSaved'));
+        gui_log(i18n.getMessage('configurationEepromSaved'));
         MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
     }
 
@@ -1296,7 +1306,7 @@ motors.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.motors = motors;
+TABS.motors = motors;
 export {
     motors,
 };

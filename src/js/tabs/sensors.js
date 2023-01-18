@@ -1,8 +1,11 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
-import { have_sensor } from "../serial_backend";
+import { have_sensor } from "../sensor_helpers";
 import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import serial from "../serial";
 
 const sensors = {};
 sensors.initialize = function (callback) {
@@ -476,7 +479,7 @@ sensors.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.sensors = sensors;
+TABS.sensors = sensors;
 export {
     sensors,
 };

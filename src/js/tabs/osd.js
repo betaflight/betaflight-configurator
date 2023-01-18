@@ -1,9 +1,19 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
-import { bit_check } from "../serial_backend";
+import { bit_check } from "../bit";
 import VirtualFC from "../VirtualFC";
 import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import PortHandler from "../port_handler";
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import LogoManager from "../LogoManager";
+import { gui_log } from "../gui_log";
+import semver from "semver";
+import jBox from "jbox";
+import inflection from "inflection";
+import { checkChromeRuntimeError } from "../utils/common";
 
 const FONT = {};
 const SYM = {};
@@ -250,7 +260,7 @@ FONT.upload = function($progress) {
         .then(function() {
 
             console.log(`Uploaded all ${FONT.data.characters.length} characters`);
-            GUI.log(i18n.getMessage('osdSetupUploadingFontEnd', {length: FONT.data.characters.length}));
+            gui_log(i18n.getMessage('osdSetupUploadingFontEnd', {length: FONT.data.characters.length}));
 
             OSD.GUI.fontManager.close();
 
@@ -2599,6 +2609,8 @@ osd.initialize = function(callback) {
         // must invoke before i18n.localizePage() since it adds translation keys for expected logo size
         LogoManager.init(FONT, SYM.LOGO);
 
+        $('div.btn.orientation').toggle(GUI.isCordova());
+
         // translate to user-selected language
         i18n.localizePage();
 
@@ -3221,7 +3233,7 @@ osd.initialize = function(callback) {
 
                     // Generate tooltips for OSD elements
                     $('.osd_tip').each(function() {
-                        OSD.data.tooltips.push($(this).jBox('Tooltip', {
+                        const myModal = new jBox('Tooltip', {
                             delayOpen: 100,
                             delayClose: 100,
                             position: {
@@ -3229,7 +3241,11 @@ osd.initialize = function(callback) {
                                 y: 'center',
                             },
                             outside: 'x',
-                        }));
+                        });
+
+                        myModal.attach($(this));
+
+                        OSD.data.tooltips.push(myModal);
                     });
                 });
         }
@@ -3245,7 +3261,7 @@ osd.initialize = function(callback) {
 
         $('a.save').click(function() {
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-            GUI.log(i18n.getMessage('osdSettingsSaved'));
+            gui_log(i18n.getMessage('osdSettingsSaved'));
             const oldText = $(this).html();
             $(this).html(i18n.getMessage('osdButtonSaved'));
             setTimeout(() => {
@@ -3266,6 +3282,8 @@ osd.initialize = function(callback) {
             tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'osd');
             self.analyticsChanges = {};
         });
+
+        $('a.orientation').on('click', () => screen.orientation.lock(screen.orientation.type.startsWith("portrait") ? "landscape" : "portrait"));
 
         // font preview window
         const fontPreviewElement = $('.font-preview');
@@ -3340,6 +3358,8 @@ osd.initialize = function(callback) {
                     // check if file is writable
                     chrome.fileSystem.isWritableEntry(fileEntry, function(isWritable) {
                         if (isWritable) {
+                            // TODO: is this coming from firmware_flasher? seems a bit random
+                            // eslint-disable-next-line no-undef
                             const blob = new Blob([intel_hex], { type: 'text/plain' });
 
                             fileEntry.createWriter(function(writer) {
@@ -3365,7 +3385,7 @@ osd.initialize = function(callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log(i18n.getMessage('osdWritePermissions'));
+                            gui_log(i18n.getMessage('osdWritePermissions'));
                         }
                     });
                 });
@@ -3395,6 +3415,10 @@ osd.cleanup = function(callback) {
         OSD.GUI.fontManager.destroy();
     }
 
+    if (GUI.isCordova()) {
+        window.screen.orientation.lock("portrait");
+    }
+
     // unbind "global" events
     $(document).unbind('keypress');
     $(document).off('click', 'span.progressLabel a');
@@ -3404,8 +3428,8 @@ osd.cleanup = function(callback) {
     }
 };
 
-window.TABS.osd = osd;
-window.OSD = OSD;
+TABS.osd = osd;
 export {
     osd,
+    OSD,
 };

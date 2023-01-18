@@ -1,10 +1,19 @@
 import { i18n } from "../localization";
+import djv from "djv";
+import { generateFilename } from "../utils/generate_filename";
 import Clipboard from "../Clipboard";
-import GUI from '../gui';
+import semver from "semver";
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from '../fc';
 import { VtxDeviceTypes } from '../utils/VtxDeviceStatus/VtxDeviceStatus';
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_42, API_VERSION_1_44 } from '../data_storage';
+import UI_PHONES from "../phones_ui";
+import { gui_log } from "../gui_log";
+import { checkChromeRuntimeError } from "../utils/common";
 
 const vtx = {
     supported: false,
@@ -639,7 +648,7 @@ vtx.initialize = function (callback) {
 
                 writer.onerror = function(){
                     console.error('Failed to write VTX table lua file');
-                    GUI.log(i18n.getMessage('vtxSavedLuaFileKo'));
+                    gui_log(i18n.getMessage('vtxSavedLuaFileKo'));
                 };
 
                 writer.onwriteend = function() {
@@ -652,7 +661,7 @@ vtx.initialize = function (callback) {
                     writer.onwriteend = function() {
                         tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
                         console.log('Write VTX table lua file end');
-                        GUI.log(i18n.getMessage('vtxSavedLuaFileOk'));
+                        gui_log(i18n.getMessage('vtxSavedLuaFileOk'));
                     };
 
                     writer.write(data);
@@ -662,7 +671,7 @@ vtx.initialize = function (callback) {
 
             }, function (){
                 console.error('Failed to get VTX table lua file writer');
-                GUI.log(i18n.getMessage('vtxSavedLuaFileKo'));
+                gui_log(i18n.getMessage('vtxSavedLuaFileKo'));
             });
         });
     }
@@ -690,7 +699,7 @@ vtx.initialize = function (callback) {
 
                 writer.onerror = function(){
                     console.error('Failed to write VTX file');
-                    GUI.log(i18n.getMessage('vtxSavedFileKo'));
+                    gui_log(i18n.getMessage('vtxSavedFileKo'));
                 };
 
                 writer.onwriteend = function() {
@@ -704,7 +713,7 @@ vtx.initialize = function (callback) {
                         tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
                         console.log(vtxConfig);
                         console.log('Write VTX file end');
-                        GUI.log(i18n.getMessage('vtxSavedFileOk'));
+                        gui_log(i18n.getMessage('vtxSavedFileOk'));
                     };
 
                     writer.write(data);
@@ -714,7 +723,7 @@ vtx.initialize = function (callback) {
 
             }, function (){
                 console.error('Failed to get VTX file writer');
-                GUI.log(i18n.getMessage('vtxSavedFileKo'));
+                gui_log(i18n.getMessage('vtxSavedFileKo'));
             });
         });
     }
@@ -756,20 +765,20 @@ vtx.initialize = function (callback) {
                                 self.analyticsChanges['VtxTableLoadFromFile'] = file.name;
 
                                 console.log('Load VTX file end');
-                                GUI.log(i18n.getMessage('vtxLoadFileOk'));
+                                gui_log(i18n.getMessage('vtxLoadFileOk'));
                             },
                             function() {
 
                                 // JSON is NOT valid
                                 console.error('VTX Config from file failed validation against schema');
-                                GUI.log(i18n.getMessage('vtxLoadFileKo'));
+                                gui_log(i18n.getMessage('vtxLoadFileKo'));
 
                             },
                         );
 
                     } catch (err) {
                         console.error('Failed loading VTX file config');
-                        GUI.log(i18n.getMessage('vtxLoadFileKo'));
+                        gui_log(i18n.getMessage('vtxLoadFileKo'));
                     }
                 };
 
@@ -777,7 +786,7 @@ vtx.initialize = function (callback) {
 
             }, function() {
                 console.error('Failed to get VTX file reader');
-                GUI.log(i18n.getMessage('vtxLoadFileKo'));
+                gui_log(i18n.getMessage('vtxLoadFileKo'));
             });
         });
     }
@@ -806,25 +815,25 @@ vtx.initialize = function (callback) {
                             self.analyticsChanges['VtxTableLoadFromClipboard'] = text.length;
 
                             console.log('Load VTX clipboard end');
-                            GUI.log(i18n.getMessage('vtxLoadClipboardOk'));
+                            gui_log(i18n.getMessage('vtxLoadClipboardOk'));
                         },
                         function() {
 
                             // JSON is NOT valid
-                            GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
+                            gui_log(i18n.getMessage('vtxLoadClipboardKo'));
                             console.error('VTX Config from clipboard failed validation against schema');
                         },
                     );
 
                 }, function(err) {
-                    GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
+                    gui_log(i18n.getMessage('vtxLoadClipboardKo'));
                     console.error('Failed to read clipboard contents: ', err);
                 },
             );
 
         } catch (err) {
             console.error(`Failed loading VTX file config: ${err}`);
-            GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
+            gui_log(i18n.getMessage('vtxLoadClipboardKo'));
         }
 
     }
@@ -887,7 +896,7 @@ vtx.initialize = function (callback) {
         }
 
         function save_completed() {
-            GUI.log(i18n.getMessage('configurationEepromSaved'));
+            gui_log(i18n.getMessage('configurationEepromSaved'));
 
             TABS.vtx.vtxTableSavePending = false;
 
@@ -923,7 +932,7 @@ vtx.initialize = function (callback) {
             FC.VTX_CONFIG.vtx_frequency = 0;
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 if (FC.VTX_CONFIG.vtx_band > 0 || FC.VTX_CONFIG.vtx_channel > 0) {
-                    FC.VTX_CONFIG.vtx_frequency = (band - 1) * 8 + (channel - 1);
+                    FC.VTX_CONFIG.vtx_frequency = (FC.VTX_CONFIG.vtx_band- 1) * 8 + (FC.VTX_CONFIG.vtx_channel- 1);
                 }
             }
         }
@@ -1036,7 +1045,7 @@ vtx.cleanup = function (callback) {
     }
 };
 
-window.TABS.vtx = vtx;
+TABS.vtx = vtx;
 export {
     vtx,
 };

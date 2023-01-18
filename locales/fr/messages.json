@@ -3912,7 +3912,7 @@
         "message": "Fréquence centrale [Hz]"
     },
     "pidTuningCutoffFrequency": {
-        "message": "Fréquence centrale [Hz]"
+        "message": "Fréquence de coupure [Hz]"
     },
     "pidTuningNotchFilterHelp": {
         "message": "Un filtre selectif (Notch) est un filtre symétrique, étroit et à coupe nette, des paramètres de centre et de coupe.<br /><br />La valeur centrale est la fréquence centrale du filtre. La valeur de coupure est la fréquence basse -3dB.<br /><br />Par exemple, une coupure (Notch Cutoff) de 160 avec une fréquence centrale (Notch Center) de 260 renvoie un large selection avec une plage de -3dB de 160-360Hz et une atténuation la plus forte autour de 260 hz.",
@@ -6734,10 +6734,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Définitions personnalisées"
     },
-    "classicBuild": {
-        "message": "Mode Classique"
+    "coreBuild": {
+        "message": "Fondammentaux seulement"
     },
-    "classicBuildModeDescription": {
-        "message": "Ce mode ignore tous les paramètres d'ici. Ceci mène au même résultat que les nightlies classiques, fournit par commodité."
+    "coreBuildModeDescription": {
+        "message": "Cette option construit un microprogramme qui contient les pilotes de matériel (et quelques fonctionnalités limitées). Il est disponible pour aider à détecter le matériel sur un contrôleur de vol, et est fourni pour cette commodité seulement. Toutes les fonctionnalités ne seront pas disponibles (uniquement du matériel) en utilisant cette option."
     }
 }

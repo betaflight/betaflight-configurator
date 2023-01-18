@@ -1,5 +1,3 @@
-'use strict';
-
 /*
   This utility is intended to communicate between chrome windows.
   One window could watch passed values from another window and react to them.
@@ -57,3 +55,5 @@ windowWatcherUtil.passValue = function(windows, key, val) {
         applyBinding(windows, key, val);
     }
 };
+
+export default windowWatcherUtil;

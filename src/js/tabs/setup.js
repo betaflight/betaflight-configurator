@@ -1,9 +1,16 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import semver from 'semver';
+import { isExpertModeEnabled } from '../utils/isExportModeEnabled';
+import GUI, { TABS } from '../gui';
 import { configuration_backup, configuration_restore } from '../backup_restore';
-import { have_sensor } from '../serial_backend';
+import { have_sensor } from '../sensor_helpers';
 import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
+import MSP from '../msp';
+import Model from '../model';
+import MSPCodes from '../msp/MSPCodes';
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43 } from '../data_storage';
+import { gui_log } from '../gui_log';
 
 const setup = {
     yaw_fix: 0.0,
@@ -34,13 +41,13 @@ setup.initialize = function (callback) {
         const backupButton = $('#content .backup');
         const restoreButton = $('#content .restore');
 
-        backupButton.on('click', () => configuration_backup(() => GUI.log(i18n.getMessage('initialSetupBackupSuccess'))));
+        backupButton.on('click', () => configuration_backup(() => gui_log(i18n.getMessage('initialSetupBackupSuccess'))));
 
         restoreButton.on('click', () => configuration_restore(() => {
             // get latest settings
             TABS.setup.initialize();
 
-            GUI.log(i18n.getMessage('initialSetupRestoreSuccess'));
+            gui_log(i18n.getMessage('initialSetupRestoreSuccess'));
         }));
 
         if (CONFIGURATOR.virtualMode) {
@@ -109,7 +116,7 @@ setup.initialize = function (callback) {
                 // until this operation finishes, sending more commands through data_poll() will result in serial buffer overflow
                 GUI.interval_pause('setup_data_pull');
                 MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
-                    GUI.log(i18n.getMessage('initialSetupAccelCalibStarted'));
+                    gui_log(i18n.getMessage('initialSetupAccelCalibStarted'));
                     $('#accel_calib_running').show();
                     $('#accel_calib_rest').hide();
                 });
@@ -117,7 +124,7 @@ setup.initialize = function (callback) {
                 GUI.timeout_add('button_reset', function () {
                     GUI.interval_resume('setup_data_pull');
 
-                    GUI.log(i18n.getMessage('initialSetupAccelCalibEnded'));
+                    gui_log(i18n.getMessage('initialSetupAccelCalibEnded'));
                     _self.removeClass('calibrating');
                     $('#accel_calib_running').hide();
                     $('#accel_calib_rest').show();
@@ -132,13 +139,13 @@ setup.initialize = function (callback) {
                 _self.addClass('calibrating');
 
                 MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
-                    GUI.log(i18n.getMessage('initialSetupMagCalibStarted'));
+                    gui_log(i18n.getMessage('initialSetupMagCalibStarted'));
                     $('#mag_calib_running').show();
                     $('#mag_calib_rest').hide();
                 });
 
                 GUI.timeout_add('button_reset', function () {
-                    GUI.log(i18n.getMessage('initialSetupMagCalibEnded'));
+                    gui_log(i18n.getMessage('initialSetupMagCalibEnded'));
                     _self.removeClass('calibrating');
                     $('#mag_calib_running').hide();
                     $('#mag_calib_rest').show();
@@ -159,7 +166,7 @@ setup.initialize = function (callback) {
         $('.dialogConfirmReset-confirmbtn').click(function() {
             dialogConfirmReset.close();
             MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
-                GUI.log(i18n.getMessage('initialSetupSettingsRestored'));
+                gui_log(i18n.getMessage('initialSetupSettingsRestored'));
 
                 GUI.tab_switch_cleanup(function () {
                     TABS.setup.initialize();
@@ -342,6 +349,6 @@ setup.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.setup = setup;
+TABS.setup = setup;
 
 export { setup };

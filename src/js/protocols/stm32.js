@@ -6,7 +6,19 @@
     popular choices - 921600, 460800, 256000, 230400, 153600, 128000, 115200, 57600, 38400, 28800, 19200
 */
 import MSPConnectorImpl from "../msp/MSPConnector";
-import { bit_check } from "../serial_backend";
+import GUI, { TABS } from "../gui";
+import { i18n } from "../localization";
+import MSP from "../msp";
+import FC from "../fc";
+import { bit_check } from "../bit";
+import { gui_log } from "../gui_log";
+import MSPCodes from "../msp/MSPCodes";
+import PortUsage from "../port_usage";
+import PortHandler, { usbDevices } from "../port_handler";
+import { API_VERSION_1_42 } from "../data_storage";
+import serial from "../serial";
+import STM32DFU from "./stm32usbdfu";
+import semver from "semver";
 
 const STM32_protocol = function () {
     this.baud = null;
@@ -85,7 +97,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
                 self.initialize();
             } else {
-                GUI.log(i18n.getMessage('serialPortOpenFail'));
+                gui_log(i18n.getMessage('serialPortOpenFail'));
             }
         });
     } else {
@@ -106,7 +118,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                             self.initialize();
                         } else {
                             GUI.connect_lock = false;
-                            GUI.log(i18n.getMessage('serialPortOpenFail'));
+                            gui_log(i18n.getMessage('serialPortOpenFail'));
                         }
                     });
                 }
@@ -127,7 +139,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                         if (failedAttempts > 100) {
                             clearInterval(dfuWaitInterval);
                             console.log(`failed to get DFU connection, gave up after 10 seconds`);
-                            GUI.log(i18n.getMessage('serialPortOpenFail'));
+                            gui_log(i18n.getMessage('serialPortOpenFail'));
                             GUI.connect_lock = false;
                         }
                     }
@@ -144,7 +156,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
             serial.connect(self.port, {bitrate: self.options.reboot_baud}, function (openInfo) {
                 if (!openInfo) {
                     GUI.connect_lock = false;
-                    GUI.log(i18n.getMessage('serialPortOpenFail'));
+                    gui_log(i18n.getMessage('serialPortOpenFail'));
                     return;
                 }
 
@@ -164,7 +176,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
         const onConnectHandler = function () {
 
-            GUI.log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
+            gui_log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
 
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 self.msp_connector.disconnect(function (disconnectionResult) {
@@ -178,11 +190,11 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, () => {
                     if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
                         // Board has flash bootloader
-                        GUI.log(i18n.getMessage('deviceRebooting_flashBootloader'));
+                        gui_log(i18n.getMessage('deviceRebooting_flashBootloader'));
                         console.log('flash bootloader detected');
                         rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
                     } else {
-                        GUI.log(i18n.getMessage('deviceRebooting_romBootloader'));
+                        gui_log(i18n.getMessage('deviceRebooting_romBootloader'));
                         console.log('no flash bootloader detected');
                         rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
                     }

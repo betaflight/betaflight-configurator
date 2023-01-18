@@ -4737,6 +4737,9 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploadet alle {{length}} tegn til OSD"
     },
+    "osdToggleOrientation": {
+        "message": "Retning"
+    },
     "osdSetupSave": {
         "message": "Gem"
     },
@@ -6737,10 +6740,10 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Brugertilpasset Defines"
     },
-    "classicBuild": {
-        "message": "Klassisk"
+    "coreBuild": {
+        "message": "Alene kerne "
     },
-    "classicBuildModeDescription": {
-        "message": "Denne tilstand ignorer alle parametre herunder. Overordnet set er det samme indstilling, som gælder for et natligt byg, og kan anvendes for bekvemmelighed."
+    "coreBuildModeDescription": {
+        "message": "Dette tilvalg danner en relase som indeholder hardware drivere (og nogle begrænsede funktioner). Den er tilgængelig til at hjælpe med at detektere hardware på en FC og er til rådighed for bekvemmelighed. Ikke alle funktioner vil være tilgængelige (kun hardware) ved hjælp af denne indstilling."
     }
 }

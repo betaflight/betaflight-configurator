@@ -20,5 +20,25 @@ module.exports = {
         "no-var": "error",
         "prefer-template": "error",
         "template-curly-spacing": "error",
+        "no-undef": "error",
+        'no-duplicate-imports': 'error',
+    },
+    globals: {
+        d3: true,
+        THREE: true,
+        cordova: true,
+        cordovaUI: true,
+        ol: true,
+        wNumb: true,
+        ConfigStorage: true,
+        objectHash: true,
+        // start cordova bindings, remove after cordova is removed/replace/modularized
+        cordova_serial: true,
+        fileChooser: true,
+        i18n: true,
+        appReady: true,
+        cordovaChromeapi: true,
+        appAvailability: true,
+        // end cordova bindings
     },
 };

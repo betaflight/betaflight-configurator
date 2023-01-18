@@ -1,5 +1,5 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { get as getStorage, set as setStorage } from '../SessionStorage';
 import BuildApi from '../BuildApi';
@@ -8,6 +8,15 @@ import { tracking } from "../Analytics";
 import MspHelper from '../msp/MSPHelper';
 import STM32 from '../protocols/stm32';
 import FC from '../fc';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import PortHandler, { usbDevices } from '../port_handler';
+import CONFIGURATOR, { API_VERSION_1_39 } from '../data_storage';
+import serial from '../serial';
+import STM32DFU from '../protocols/stm32usbdfu';
+import { gui_log } from '../gui_log';
+import semver from 'semver';
+import { checkChromeRuntimeError } from '../utils/common';
 
 const firmware_flasher = {
     targets: null,
@@ -76,13 +85,9 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
             // Wiki link to url found in unified target configuration or if not defined to general wiki url
-            let targetWiki = $('#targetWikiInfoUrl');
+            const targetWiki = $('#targetWikiInfoUrl');
             targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
-            if (summary.wiki === undefined) {
-                targetWiki.attr("href", "https://github.com/betaflight/betaflight/wiki/");
-            } else {
-                targetWiki.attr("href", summary.wiki);
-            }
+            targetWiki.attr("href", summary.wiki === undefined ? "https://betaflight.com/docs/wiki/" : summary.wiki);
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
@@ -453,7 +458,7 @@ firmware_flasher.initialize = function (callback) {
 
                 if (!inComment && input.charCodeAt(i) > 255) {
                     self.flashingMessage(i18n.getMessage('firmwareFlasherConfigCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
-                    GUI.log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
+                    gui_log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
                     return null;
                 }
 
@@ -498,7 +503,7 @@ firmware_flasher.initialize = function (callback) {
                     STM32.connect(port, baud, firmware, options);
                 } else {
                     console.log('Please select valid serial port');
-                    GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
+                    gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             } else {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', self.fileName || null);
@@ -536,10 +541,10 @@ firmware_flasher.initialize = function (callback) {
                         if (board !== target) {
                             boardSelect.val(board).trigger('change');
                         }
-                        GUI.log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
+                        gui_log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
                             { boardName: board }));
                     } else {
-                        GUI.log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
+                        gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
                     }
                     onClose();
                 }
@@ -569,7 +574,7 @@ firmware_flasher.initialize = function (callback) {
                         MSP.listen(mspHelper.process_data.bind(mspHelper));
                         getBoard();
                     } else {
-                        GUI.log(i18n.getMessage('serialPortOpenFail'));
+                        gui_log(i18n.getMessage('serialPortOpenFail'));
                     }
                 }
 
@@ -582,7 +587,7 @@ firmware_flasher.initialize = function (callback) {
                         baud = parseInt($('#flash_manual_baud_rate').val());
                     }
 
-                    GUI.log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
+                    gui_log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
 
                     const isLoaded = self.targets ? Object.keys(self.targets).length > 0 : false;
 
@@ -597,7 +602,7 @@ firmware_flasher.initialize = function (callback) {
                         console.log('Releases not loaded yet');
                     }
                 } else {
-                    GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
+                    gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             }
         }
@@ -674,12 +679,12 @@ firmware_flasher.initialize = function (callback) {
             $('input.flash_manual_baud').prop('checked', false);
         }
 
-        $('input.classicbuild_mode').change(function () {
+        $('input.corebuild_mode').change(function () {
             const status = $(this).is(':checked');
 
-            $('.hide-in-classic-build-mode').toggle(!status);
+            $('.hide-in-core-build-mode').toggle(!status);
         });
-        $('input.classicbuild_mode').change();
+        $('input.corebuild_mode').change();
 
         // bind UI hook so the status is saved on change
         $('input.flash_manual_baud').change(function() {
@@ -793,7 +798,7 @@ firmware_flasher.initialize = function (callback) {
             tracking.setFirmwareData(tracking.DATA.FIRMWARE_SOURCE, 'http');
 
             if ($('select[name="firmware_version"]').val() === "0") {
-                GUI.log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
+                gui_log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
                 return;
             }
 
@@ -830,14 +835,16 @@ firmware_flasher.initialize = function (callback) {
                     target: targetDetail.target,
                     release: targetDetail.release,
                     options: [],
-                    classicBuild: false,
                     client: {
                         version: CONFIGURATOR.version,
                     },
                 };
 
-                request.classicBuild = !targetDetail.cloudBuild || $('input[name="classicBuildModeCheckbox"]').is(':checked');
-                if (!request.classicBuild) {
+                const coreBuild = (targetDetail.cloudBuild !== true) || $('input[name="coreBuildModeCheckbox"]').is(':checked');
+                if (coreBuild === true) {
+                    request.options.push("CORE_BUILD");
+                } else {
+                    request.options.push("CLOUD_BUILD");
                     $('select[name="radioProtocols"] option:selected').each(function () {
                         request.options.push($(this).val());
                     });
@@ -1092,7 +1099,7 @@ firmware_flasher.initialize = function (callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log(i18n.getMessage('firmwareFlasherWritePermissions'));
+                            gui_log(i18n.getMessage('firmwareFlasherWritePermissions'));
                         }
                     });
                 });
@@ -1108,7 +1115,7 @@ firmware_flasher.initialize = function (callback) {
                         const port = resultPort[0];
 
                         if (!GUI.connect_lock) {
-                            GUI.log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
+                            gui_log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
                             console.log(`Detected: ${port} - triggering flash on connect`);
 
                             // Trigger regular Flashing sequence
@@ -1116,7 +1123,7 @@ firmware_flasher.initialize = function (callback) {
                                 $('a.flash_firmware').click();
                             }, 100); // timeout so bus have time to initialize after being detected by the system
                         } else {
-                            GUI.log(i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
+                            gui_log(i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
                         }
 
                         // Since current port_detected request was consumed, create new one

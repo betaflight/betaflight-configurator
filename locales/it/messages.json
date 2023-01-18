@@ -6736,11 +6736,5 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Define Personalizzati"
-    },
-    "classicBuild": {
-        "message": "Modalità Classica"
-    },
-    "classicBuildModeDescription": {
-        "message": "Questa modalità ignora tutti i parametri. Si avrà lo stesso risultato delle classiche build nightly, ed è fornita per comodità."
     }
 }

@@ -1,4 +1,6 @@
 import semver from "semver";
+import { mixerList } from "../model";
+import CONFIGURATOR from "../data_storage";
 
 export function millitime() {
     return new Date().getTime();
@@ -109,12 +111,3 @@ $.fn.sortSelect = function(text = "") {
 
     return this.empty().append(op);
 };
-
-// TODO: these are temp binding while transition to module happens
-window.degToRad = degToRad;
-window.bytesToSize = bytesToSize;
-window.isInt = isInt;
-window.checkChromeRuntimeError = checkChromeRuntimeError;
-window.generateVirtualApiVersions = generateVirtualApiVersions;
-window.getMixerImageSrc = getMixerImageSrc;
-window.getTextWidth = getTextWidth;

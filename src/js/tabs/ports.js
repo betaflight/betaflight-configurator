@@ -1,10 +1,15 @@
 import semver from 'semver';
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { reinitializeConnection } from '../serial_backend';
 import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
+import MSP from '../msp';
+import MSPCodes from '../msp/MSPCodes';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
+import BOARD from '../boards';
+import { gui_log } from '../gui_log';
 
 const ports = {
     analyticsChanges: {},
@@ -487,7 +492,7 @@ ports.initialize = function (callback) {
         }
 
         function on_saved_handler() {
-            GUI.log(i18n.getMessage('configurationEepromSaved'));
+            gui_log(i18n.getMessage('configurationEepromSaved'));
 
             GUI.tab_switch_cleanup(function() {
                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
@@ -500,5 +505,5 @@ ports.cleanup = function (callback) {
     if (callback) callback();
 };
 
-window.TABS.ports = ports;
+TABS.ports = ports;
 export { ports };

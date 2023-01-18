@@ -1,10 +1,22 @@
 import { i18n } from "../localization";
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { tracking } from "../Analytics";
-import { bit_check, reinitializeConnection } from "../serial_backend";
+import { reinitializeConnection } from "../serial_backend";
+import { bit_check } from "../bit";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
+import MSP from "../msp";
+import Model from "../model";
+import RateCurve from "../RateCurve";
+import MSPCodes from "../msp/MSPCodes";
+import windowWatcherUtil from "../utils/window_watchers";
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import DarkTheme from "../DarkTheme";
+import { gui_log } from "../gui_log";
+import { degToRad } from "../utils/common";
+import semver from 'semver';
+import { updateTabList } from "../utils/updateTabList";
 
 import CryptoES from 'crypto-es';
 
@@ -417,7 +429,7 @@ receiver.initialize = function (callback) {
 
         $('a.refresh').click(function () {
             tab.refresh(function () {
-                GUI.log(i18n.getMessage('receiverDataRefreshed'));
+                gui_log(i18n.getMessage('receiverDataRefreshed'));
             });
         });
 
@@ -489,7 +501,7 @@ receiver.initialize = function (callback) {
             }
 
             function reboot() {
-                GUI.log(i18n.getMessage('configurationEepromSaved'));
+                gui_log(i18n.getMessage('configurationEepromSaved'));
                 if (boot) {
                     GUI.tab_switch_cleanup(function() {
                         MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
@@ -549,7 +561,7 @@ receiver.initialize = function (callback) {
             $("a.bind").click(function() {
                 MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
 
-                GUI.log(i18n.getMessage('receiverButtonBindMessage'));
+                gui_log(i18n.getMessage('receiverButtonBindMessage'));
             });
         }
         $(".bind_btn").toggle(showBindButton);
@@ -929,7 +941,7 @@ function updateInterpolationView() {
     }
 }
 
-window.TABS.receiver = receiver;
+TABS.receiver = receiver;
 export {
     receiver,
 };

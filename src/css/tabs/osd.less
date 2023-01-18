@@ -226,10 +226,27 @@
 		}
 
 		&:active {
+
+			&:before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 40%;
+				border-top: 0.3em dashed var(--gimbalCrosshair);
+				width: 20%;
+				transform: translateY(-50%);
+				pointer-events: none;
+			}
+
+			&:after:extend(.tab-osd .preview:active:before) {
+				transform: translateY(-50%) rotate(90deg);
+			}
+
 			.char {
 				border: 1px dashed rgba(55, 55, 55, 0.5) ;
 			}
 		}
+
 	}
 	.char.mouseover {
 		background: rgba(255,255,255,0.4);
@@ -351,7 +368,7 @@
 		}
 		.osd-preview {
 			flex: 2 0 auto;
-			max-width: 740px;
+			max-width: 1480px;
 		}
 		.osd-profile {
 			flex: 1 1 auto;
@@ -524,7 +541,7 @@ button {
 @media all and (max-width: 575px) {
 	.tab-osd {
 		.osd-preview {
-			min-width: 100%;
+			width: fit-content;
 			order: 1;
 		}
 		.osd-feature {

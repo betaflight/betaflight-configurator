@@ -1,6 +1,12 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import GUI, { TABS } from '../gui';
 import { mspHelper } from '../msp/MSPHelper';
+import MSP from '../msp';
+import FC from '../fc';
+import MSPCodes from '../msp/MSPCodes';
+import { API_VERSION_1_42 } from '../data_storage';
+import { gui_log } from '../gui_log';
+import semver from 'semver';
 
 const adjustments = {};
 
@@ -232,7 +238,7 @@ adjustments.initialize = function (callback) {
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    GUI.log(i18n.getMessage('adjustmentsEepromSaved'));
+                    gui_log(i18n.getMessage('adjustmentsEepromSaved'));
                 });
             }
 
@@ -300,7 +306,7 @@ adjustments.adjust_template = function () {
     selectFunction.sortSelect(i18n.getMessage("adjustmentsFunction0"));
 };
 
-window.TABS.adjustments = adjustments;
+TABS.adjustments = adjustments;
 export {
     adjustments,
 };

@@ -1,3 +1,4 @@
+import vtxDeviceStatusFactory from './VtxDeviceStatusFactory';
 import VtxDeviceStatus, { VtxDeviceTypes } from './VtxDeviceStatus';
 
 class VtxDeviceStatusMsp extends VtxDeviceStatus {
