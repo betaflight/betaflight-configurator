@@ -350,11 +350,11 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
             if (str === "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka") {
                 str = "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka";
             }
-            //AT32F43xxM "@Internal Flash /0x08000000/1008*004Kg"
+            //AT32F43xxM
             if (str === "@Option byte   /0x1FFFC000/01*4096 g"){
                 str = "@Option bytes   /0x1FFFC000/01*4096 g";
             }
-            //AT32F43xxG "@Internal Flash /0x08000000/1008*004Kg"
+            //AT32F43xxG
             if (str === "@Option byte   /0x1FFFC000/01*512 g"){
                 str = "@Option bytes   /0x1FFFC000/01*512 g";
             }
