@@ -32,20 +32,20 @@ receiver.initialize = function (callback) {
 
     GUI.active_tab = 'receiver';
 
-    function lookup_elrs_binding_phrase(uidString) {
+    function lookupElrsBindingPhrase(uidString) {
         const bindingPhraseMap = getConfig('binding_phrase_map').binding_phrase_map || {};
 
         return bindingPhraseMap[uidString] ?? 0;
     }
 
-    function save_elrs_binding_phrase(uidString, bindingPhrase) {
+    function saveElrsBindingPhrase(uidString, bindingPhrase) {
         const bindingPhraseMap = getConfig('binding_phrase_map').binding_phrase_map ?? {};
 
         bindingPhraseMap[uidString] = bindingPhrase;
         setConfig({'binding_phrase_map': bindingPhraseMap});
       }
 
-    function elrs_binding_phrase_to_bytes(text) {
+    function elrsBindingPhraseToBytes(text) {
         let uidBytes = [0,0,0,0,0,0];
 
         if (text) {
@@ -346,14 +346,14 @@ receiver.initialize = function (callback) {
 
             const elrsBindingPhrase = $('input.elrsBindingPhrase');
 
-            const bindingPhraseString = lookup_elrs_binding_phrase(elrsUidString);
+            const bindingPhraseString = lookupElrsBindingPhrase(elrsUidString);
             if (bindingPhraseString) {
                 elrsBindingPhrase.val(bindingPhraseString);
             }
             elrsBindingPhrase.on('keyup', function() {
                 const bindingPhrase = elrsBindingPhrase.val();
                 if (bindingPhrase) {
-                    elrsUid.text(elrs_binding_phrase_to_bytes(bindingPhrase));
+                    elrsUid.text(elrsBindingPhraseToBytes(bindingPhrase));
                 } else {
                     elrsUid.text("0.0.0.0.0.0");
                 }
@@ -473,7 +473,7 @@ receiver.initialize = function (callback) {
 
                     const elrsUid =  $('span.elrsUid')[0].innerText;
                     const elrsBindingPhrase = $('input.elrsBindingPhrase').val();
-                    save_elrs_binding_phrase(elrsUid, elrsBindingPhrase);
+                    saveElrsBindingPhrase(elrsUid, elrsBindingPhrase);
                 } else {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
                 }
