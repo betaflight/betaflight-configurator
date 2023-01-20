@@ -267,7 +267,7 @@ FONT.upload = async function ($progress) {
         )
         .then(function () {
             console.log(
-                `Uploaded all ${FONT.data.characters.length} characters`
+                `Uploaded all ${FONT.data.characters.length} characters`,
             );
             gui_log(
                 i18n.getMessage("osdSetupUploadingFontEnd", {
