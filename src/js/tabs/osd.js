@@ -2609,8 +2609,6 @@ osd.initialize = function(callback) {
         // must invoke before i18n.localizePage() since it adds translation keys for expected logo size
         LogoManager.init(FONT, SYM.LOGO);
 
-        $('div.btn.orientation').toggle(GUI.isCordova());
-
         // translate to user-selected language
         i18n.localizePage();
 
@@ -2985,6 +2983,14 @@ osd.initialize = function(callback) {
                     // Hide custom if not used
                     $('.osdfont-selector option[value=-1]').toggle(osdFontSelectorElement.val() === -1);
 
+                    // Zoom option for the preview only for mobile devices
+                    if (GUI.isCordova()) {
+                        $('.osd-preview-zoom-group').css({display: 'inherit'});
+                        $('#osd-preview-zoom-selector').on('change', function() {
+                            $('.tab-osd .osd-preview').toggleClass('osd-preview-zoom', this.checked);
+                        });
+                    }
+
                     // display fields on/off and position
                     const $displayFields = $('#element-fields').empty();
                     let enabledCount = 0;
@@ -3283,8 +3289,6 @@ osd.initialize = function(callback) {
             self.analyticsChanges = {};
         });
 
-        $('a.orientation').on('click', () => screen.orientation.lock(screen.orientation.type.startsWith("portrait") ? "landscape" : "portrait"));
-
         // font preview window
         const fontPreviewElement = $('.font-preview');
 
@@ -3413,10 +3417,6 @@ osd.cleanup = function(callback) {
 
     if (OSD.GUI.fontManager) {
         OSD.GUI.fontManager.destroy();
-    }
-
-    if (GUI.isCordova()) {
-        window.screen.orientation.lock("portrait");
     }
 
     // unbind "global" events

@@ -46,6 +46,10 @@
                                    <select class="osdfont-selector">
                                        <!-- Populated at runtime -->
                                    </select>
+                                   <span class="osd-preview-zoom-group">
+                                       <input type="checkbox" id="osd-preview-zoom-selector" class="osd-preview-zoom-selector"/>
+                                       <label for="osd-preview-zoom-selector" i18n="osdSetupPreviewCheckZoom" />
+                                   </span>
                                </span>
                                 </div>
                             </div>
@@ -197,9 +201,6 @@
 
                 <div class="supported hide">
                     <div class="content_toolbar" style="left:0;">
-                        <div class="btn orientation">
-                            <a class="orientation" href="#" i18n="osdToggleOrientation"></a>
-                        </div>
                         <div class="btn">
                             <a class="requires-max7456-font-device-detected fonts" id="fontmanager" href="#" i18n="osdSetupFontManager"></a>
                         </div>

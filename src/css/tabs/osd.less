@@ -248,6 +248,17 @@
 		}
 
 	}
+	.osd-preview-zoom {
+		width: max-content !important;
+		padding-right: 1em;
+	}
+	.osd-preview-zoom-group {
+		display: none;
+	}
+	.osd-preview-zoom-selector {
+		margin-left: 5px;
+		vertical-align: text-bottom;
+	}
 	.char.mouseover {
 		background: rgba(255,255,255,0.4);
 	}
@@ -541,8 +552,9 @@ button {
 @media all and (max-width: 575px) {
 	.tab-osd {
 		.osd-preview {
-			width: fit-content;
+			min-width: 100%;
 			order: 1;
+			width: fit-content;
 		}
 		.osd-feature {
 			order: 2;
