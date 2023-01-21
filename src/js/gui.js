@@ -305,12 +305,9 @@ class GuiControl {
         this.switchery();
 
         const documentationButton = $('div#content #button-documentation');
-        documentationButton.html("Wiki");
-
         const tRex = GUI.active_tab.replaceAll('_', '-').toLowerCase();
-        const url = `https://betaflight.com/docs/configurator/${tRex}-tab`;
 
-        fetch(url).then(res => documentationButton.attr("href", res.ok ? url : `https://betaflight.com/docs/wiki`));
+        documentationButton.html("Wiki").attr("href", `https://betaflight.com/docs/configurator/${tRex}-tab`);
 
         // loading tooltip
         jQuery(function () {
