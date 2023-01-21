@@ -359,6 +359,7 @@ const FC = {
             motor_count:                0,
             motor_poles:                0,
             use_dshot_telemetry:        false,
+            use_dshot_edt:              false,
             use_esc_sensor:             false,
         };
 
