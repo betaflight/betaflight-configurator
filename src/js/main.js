@@ -17,6 +17,7 @@ import UI_PHONES from './phones_ui.js';
 import { isExpertModeEnabled } from './utils/isExportModeEnabled.js';
 import { updateTabList } from './utils/updateTabList.js';
 import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates.js';
+import * as THREE from 'three';
 
 $(document).ready(function () {
 

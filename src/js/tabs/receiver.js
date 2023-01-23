@@ -17,6 +17,7 @@ import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
 import semver from 'semver';
 import { updateTabList } from "../utils/updateTabList";
+import * as THREE from 'three';
 
 import CryptoES from 'crypto-es';
 
