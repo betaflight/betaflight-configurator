@@ -383,7 +383,7 @@ firmware_flasher.initialize = function (callback) {
         $('select[name="radioProtocols"]').select2();
         $('select[name="telemetryProtocols"]').select2();
         $('select[name="motorProtocols"]').select2();
-        $('select[name="options"]').select2();
+        $('select[name="options"]').select2({ closeOnSelect: false });
         $('select[name="commits"]').select2({ tags: true });
 
         $('select[name="board"]').change(function() {
