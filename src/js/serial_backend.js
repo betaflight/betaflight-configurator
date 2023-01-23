@@ -22,6 +22,7 @@ import { updateTabList } from "./utils/updateTabList";
 import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from 'semver';
+import CryptoES from "crypto-es";
 
 let mspHelper;
 let connectionTimestamp;
@@ -463,7 +464,7 @@ function processUid() {
     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
         const deviceIdentifier = FC.CONFIG.deviceIdentifier;
 
-        tracking.setFlightControllerData(tracking.DATA.MCU_ID, objectHash.sha1(deviceIdentifier));
+        tracking.setFlightControllerData(tracking.DATA.MCU_ID, CryptoES.SHA1(deviceIdentifier));
         tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
         connectionTimestamp = Date.now();
         gui_log(i18n.getMessage('uniqueDeviceIdReceived', [deviceIdentifier]));
