@@ -8,7 +8,6 @@ const Features = function (config) {
 
     const features = [
         {bit: 0, group: 'rxMode', mode: 'select', name: 'RX_PPM'},
-        {bit: 1, group: 'batteryVoltage', name: 'VBAT'},
         {bit: 2, group: 'other', name: 'INFLIGHT_ACC_CAL'},
         {bit: 3, group: 'rxMode', mode: 'select', name: 'RX_SERIAL'},
         {bit: 4, group: 'escMotorStop', name: 'MOTOR_STOP'},
@@ -17,7 +16,6 @@ const Features = function (config) {
         {bit: 7, group: 'gps', name: 'GPS', haveTip: true},
         {bit: 9, group: 'other', name: 'SONAR'},
         {bit: 10, group: 'telemetry', name: 'TELEMETRY'},
-        {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'},
         {bit: 12, group: '3D', name: '3D'},
         {bit: 13, group: 'rxMode', mode: 'select', name: 'RX_PARALLEL_PWM'},
         {bit: 14, group: 'rxMode', mode: 'select', name: 'RX_MSP'},
@@ -25,7 +23,6 @@ const Features = function (config) {
         {bit: 16, group: 'other', name: 'LED_STRIP'},
         {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true},
         {bit: 18, group: 'other', name: 'OSD'},
-        {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true},
         {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING'},
         {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true},
         {bit: 22, group: 'other', name: 'AIRMODE'},

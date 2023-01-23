@@ -1040,9 +1040,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (single wire)"
     },
-    "featureVBAT": {
-        "message": "Battery voltage monitoring"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "In-flight level calibration"
     },
@@ -1076,9 +1073,6 @@
     "featureTELEMETRY": {
         "message": "Telemetry output"
     },
-    "featureCURRENT_METER": {
-        "message": "Battery current monitoring"
-    },
     "feature3D": {
         "message": "3D mode (for use with reversible ESCs)"
     },
@@ -1100,23 +1094,8 @@
     "featureDISPLAYTip": {
         "message": "If this feature is enabled, and no display device is connected (or the display device is not powered up), there will be a delay of approx. 10 seconds on every reboot of the flight controller."
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT ESC support"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Disconnect flight battery and remove props before enabling."
-    },
-    "featureBLACKBOX": {
-        "message": "Blackbox flight data recorder"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Configure via the BlackBox tab after enabling."
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (e.g. built-in Rx)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
+    "featureOSD": {
+        "message": "On Screen Display"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Forward aux channels to servo outputs"
@@ -1130,17 +1109,11 @@
     "featureAIRMODE": {
         "message": "Permanently enable Airmode"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "SPI Rx (e.g. built-in Rx)"
     },
-    "featureSDCARD": {
-        "message": "SDCard support (for logging)"
-    },
-    "featureOSD": {
-        "message": "On Screen Display"
-    },
-    "featureVTX": {
-        "message": "Video Transmitter"
+    "featureESC_SENSOR": {
+        "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Permanently enable"
@@ -1150,18 +1123,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamic gyro notch filtering"
-    },
-    "featureFAILSAFE": {
-        "message": "Enable Failsafe Stage 2"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Enable Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Note:</strong> When Stage 2 is DISABLED, the fallback setting <strong>Auto</strong> is used instead of the user settings for all flightchannels (Roll, Pitch, Yaw and Throttle)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Apply Failsafe settings on RX signal loss"
     },
     "configurationFeatureEnabled": {
         "message": "Enabled"
