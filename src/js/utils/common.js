@@ -1,6 +1,7 @@
 import semver from "semver";
 import { mixerList } from "../model";
 import CONFIGURATOR from "../data_storage";
+import $ from "jquery";
 
 export function millitime() {
     return new Date().getTime();

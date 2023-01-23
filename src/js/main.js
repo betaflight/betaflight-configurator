@@ -1,9 +1,11 @@
+import $ from 'jquery';
 import 'jbox';
-import $ from './jQuery';
+// TODO: this is needed for some of the tabs, might make more sense to import things there.
 import './jQueryPlugins';
 import * as THREE from 'three';
 import '../components/init.js';
 import { gui_log } from './gui_log.js';
+import * as d3 from 'd3';
 // same, msp seems to be everywhere used from global scope
 import './msp/MSPHelper.js';
 import { i18n } from './localization.js';

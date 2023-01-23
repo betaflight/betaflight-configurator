@@ -392,6 +392,7 @@ function dist_rollup() {
     const alias = require('@rollup/plugin-alias');
     const vue = require('rollup-plugin-vue');
     const rollupReplace = require('@rollup/plugin-replace');
+    const inject = require('@rollup/plugin-inject');
 
     return rollup
         .rollup({
@@ -402,10 +403,14 @@ function dist_rollup() {
                 // it with `import/export` file doesn't have to be here.
                 // I will be picked up by rollup and bundled accordingly.
                 'js/main_cordova': 'src/js/main_cordova.js',
-                'js/utils/common': 'src/js/utils/common.js',
+                // 'js/utils/common': 'src/js/utils/common.js',
                 'js/main': 'src/js/main.js',
             },
             plugins: [
+                inject({
+                    $: 'jquery',
+                    jQuery: 'jquery',
+                }),
                 alias({
                     entries: {
                         vue: require.resolve('vue/dist/vue.esm.js'),
