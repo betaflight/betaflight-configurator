@@ -1,4 +1,5 @@
 import FC from "./fc";
+import * as THREE from 'three';
 
 // generate mixer
 export const mixerList = [

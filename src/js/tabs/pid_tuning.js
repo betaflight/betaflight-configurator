@@ -14,6 +14,7 @@ import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 
 import { gui_log } from "../gui_log";
 import { degToRad, isInt } from "../utils/common";
 import semver from "semver";
+import * as THREE from "three";
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,

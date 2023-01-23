@@ -25,7 +25,6 @@ module.exports = {
     },
     globals: {
         d3: true,
-        THREE: true,
         cordova: true,
         cordovaUI: true,
         ol: true,
