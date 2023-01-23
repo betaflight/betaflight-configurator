@@ -24,7 +24,6 @@ module.exports = {
         'no-duplicate-imports': 'error',
     },
     globals: {
-        d3: true,
         cordova: true,
         cordovaUI: true,
         ol: true,

@@ -18,6 +18,7 @@ import { degToRad } from "../utils/common";
 import semver from 'semver';
 import { updateTabList } from "../utils/updateTabList";
 import * as THREE from 'three';
+import * as d3 from "d3";
 
 import CryptoES from 'crypto-es';
 
@@ -716,12 +717,17 @@ receiver.initialize = function (callback) {
             }
 
             function update_ui() {
-
                 if (FC.RC.active_channels > 0) {
-
                     // update bars with latest data
                     for (let i = 0; i < FC.RC.active_channels; i++) {
-                        meterFillArray[i].css('width', `${((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min) * 100).clamp(0, 100)}%`);
+                        meterFillArray[i].css(
+                            "width",
+                            `${(
+                                ((FC.RC.channels[i] - meterScale.min) /
+                                    (meterScale.max - meterScale.min)) *
+                                100
+                            ).clamp(0, 100)}%`,
+                        );
                         meterLabelArray[i].text(FC.RC.channels[i]);
                     }
 
@@ -741,43 +747,49 @@ receiver.initialize = function (callback) {
                             rxPlotData[i].shift();
                         }
                     }
-
                 }
 
                 // update required parts of the plot
-                widthScale = d3.scale.linear().
-                    domain([(samples - 299), samples]);
+                widthScale = d3.scaleLinear().domain([samples - 299, samples]);
 
-                heightScale = d3.scale.linear().
-                    domain([800, 2200]);
+                heightScale = d3.scaleLinear().domain([800, 2200]);
 
                 update_receiver_plot_size();
 
-                const xGrid = d3.svg.axis().
-                    scale(widthScale).
-                    orient("bottom").
-                    tickSize(-height, 0, 0).
-                    tickFormat("");
+                const xGrid = d3
+                    .axisBottom()
+                    .scale(widthScale)
+                    .tickSize(-height)
+                    .tickFormat("");
 
-                const yGrid = d3.svg.axis().
-                    scale(heightScale).
-                    orient("left").
-                    tickSize(-width, 0, 0).
-                    tickFormat("");
+                const yGrid = d3
+                    .axisLeft()
+                    .scale(heightScale)
+                    .tickSize(-width)
+                    .tickFormat("");
 
-                const xAxis = d3.svg.axis().
-                    scale(widthScale).
-                    orient("bottom").
-                    tickFormat(function (d) {return d;});
+                const xAxis = d3
+                    .axisBottom()
+                    .scale(widthScale)
+                    .tickFormat(function (d) {
+                        return d;
+                    });
 
-                const yAxis = d3.svg.axis().
-                    scale(heightScale).
-                    orient("left").
-                    tickFormat(function (d) {return d;});
+                const yAxis = d3
+                    .axisLeft()
+                    .scale(heightScale)
+                    .tickFormat(function (d) {
+                        return d;
+                    });
 
-                const line = d3.svg.line().
-                    x(function (d) {return widthScale(d[0]);}).
-                    y(function (d) {return heightScale(d[1]);});
+                const line = d3
+                    .line()
+                    .x(function (d) {
+                        return widthScale(d[0]);
+                    })
+                    .y(function (d) {
+                        return heightScale(d[1]);
+                    });
 
                 svg.select(".x.grid").call(xGrid);
                 svg.select(".y.grid").call(yGrid);
@@ -785,9 +797,13 @@ receiver.initialize = function (callback) {
                 svg.select(".y.axis").call(yAxis);
 
                 const data = svg.select("g.data");
-                const lines = data.selectAll("path").data(rxPlotData, function (d, i) {return i;});
+                const lines = data
+                    .selectAll("path")
+                    .data(rxPlotData, function (d, i) {
+                        return i;
+                    });
                 lines.enter().append("path").attr("class", "line");
-                lines.attr('d', line);
+                lines.attr("d", line);
 
                 samples++;
             }
