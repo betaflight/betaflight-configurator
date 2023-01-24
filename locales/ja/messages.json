@@ -951,9 +951,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (単線)"
     },
-    "featureVBAT": {
-        "message": "バッテリー電圧監視"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "フライト中の水平キャリブレーション"
     },
@@ -987,9 +984,6 @@
     "featureTELEMETRY": {
         "message": "テレメトリー出力"
     },
-    "featureCURRENT_METER": {
-        "message": "バッテリー電流モニタリング"
-    },
     "feature3D": {
         "message": "3Dモード (ESC逆回転を利用)"
     },
@@ -1011,23 +1005,8 @@
     "featureDISPLAYTip": {
         "message": "この機能が有効、かつディスプレイが接続されていない (またはディスプレイの電源が入っていない) 場合、フライトコントローラの再起動毎に約10秒の遅延が発生します。"
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT ESCサポート"
-    },
-    "featureONESHOT125Tip": {
-        "message": "この機能を有効にする前に、必ずバッテリーとプロペラを外してください。"
-    },
-    "featureBLACKBOX": {
-        "message": "ブラックボックス フライトデータレコーダー"
-    },
-    "featureBLACKBOXTip": {
-        "message": "有効後 [ブラックボックス] タブで設定をしてください。"
-    },
-    "featureRX_SPI": {
-        "message": "SPI受信機 (例: オンボード受信機)"
-    },
-    "featureESC_SENSOR": {
-        "message": "KISS/BLHeli_32 ESCテレメトリーを<b>別配線で使用</b>"
+    "featureOSD": {
+        "message": "オンスクリーンディスプレイ (OSD)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "AUXチャンネルをサーボ出力に転送"
@@ -1041,17 +1020,11 @@
     "featureAIRMODE": {
         "message": "エアモードの常時有効化"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "SPI受信機 (例: オンボード受信機)"
     },
-    "featureSDCARD": {
-        "message": "SDカード対応 (ログ用)"
-    },
-    "featureOSD": {
-        "message": "オンスクリーンディスプレイ (OSD)"
-    },
-    "featureVTX": {
-        "message": "VTX設定"
+    "featureESC_SENSOR": {
+        "message": "KISS/BLHeli_32 ESCテレメトリーを<b>別配線で使用</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "恒久的に有効"
@@ -1061,18 +1034,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "動的ジャイロノッチフィルター"
-    },
-    "featureFAILSAFE": {
-        "message": "フェイルセーフ ステージ2を有効"
-    },
-    "featureFAILSAFEOld": {
-        "message": "フェイルセーフを有効"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>注: </strong>ステージ2を無効にすると、すべてのフライトチャンネル (ロール、ピッチ、ヨー、スロットル) のユーザ設定ではなく、フォールバック設定の<strong>自動</strong>が適用されます。"
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "受信信号損失時にフェイルセーフの設定を適用"
     },
     "configurationFeatureEnabled": {
         "message": "有効"
@@ -2080,9 +2041,6 @@
     },
     "receiverButtonBindMessage": {
         "message": "フライトコントローラにバインド要求を送信します。"
-    },
-    "receiverButtonPassphrase": {
-        "message": "パスワード"
     },
     "receiverButtonSticks": {
         "message": "コントロールスティック"
@@ -3933,6 +3891,9 @@
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>注:</strong> 動的ノッチフィルターは無効です。設定および使用するには『$t(tabConfiguration.message)』タブの『$t(configurationFeatures.message)』にある『動的フィルター』の機能を有効にしてください。またPIDループのレートが2kHz以上であることを確認してください。"
     },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "動的ノッチフィルターは無効になっています。使用するには【$t(tabConfiguration.message)】タブでPIDループ周波数が少なくとも2KHzに設定されていることを確認してください。"
+    },
     "pidTuningDynamicNotchRange": {
         "message": "動的ノッチフィルター範囲"
     },
@@ -4635,6 +4596,10 @@
     "osdSetupPreviewSelectFontElement": {
         "message": "フォント {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupPreviewCheckZoom": {
+        "message": "ズーム",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
     },
     "osdSetupVideoFormatTitle": {
         "message": "映像形式"

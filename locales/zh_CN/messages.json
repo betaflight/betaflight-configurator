@@ -906,9 +906,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (单线)"
     },
-    "featureVBAT": {
-        "message": "电池电压检测"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "实时水平校准"
     },
@@ -942,9 +939,6 @@
     "featureTELEMETRY": {
         "message": "遥测输出"
     },
-    "featureCURRENT_METER": {
-        "message": "检测电池电流"
-    },
     "feature3D": {
         "message": "3D 模式（配合支持反向转动的电调使用）"
     },
@@ -966,23 +960,8 @@
     "featureDISPLAYTip": {
         "message": "当启用该功能后，如果没有连接屏幕（或没有通电），则飞控的每次启动都会有10秒钟左右的延迟。"
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT 电调支持"
-    },
-    "featureONESHOT125Tip": {
-        "message": "开启前请务必拔掉电池，卸下螺旋桨。"
-    },
-    "featureBLACKBOX": {
-        "message": "黑盒日志记录器"
-    },
-    "featureBLACKBOXTip": {
-        "message": "打开后，请在黑盒日志页面完成设置。"
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (例如内置 RX)"
-    },
-    "featureESC_SENSOR": {
-        "message": "使用<b>专线</b>回传 KISS/BLHeli_32 电调遥测数据"
+    "featureOSD": {
+        "message": "OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "转发 Aux 通道信号到舵机输出"
@@ -996,17 +975,11 @@
     "featureAIRMODE": {
         "message": "永久启用 Airmode"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "SPI Rx (例如内置 RX)"
     },
-    "featureSDCARD": {
-        "message": "SD卡支持（记录用）"
-    },
-    "featureOSD": {
-        "message": "OSD"
-    },
-    "featureVTX": {
-        "message": "图传"
+    "featureESC_SENSOR": {
+        "message": "使用<b>专线</b>回传 KISS/BLHeli_32 电调遥测数据"
     },
     "featureANTI_GRAVITY": {
         "message": "永久启用"
@@ -1016,18 +989,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "动态陷波滤波"
-    },
-    "featureFAILSAFE": {
-        "message": "启用二阶失控保护"
-    },
-    "featureFAILSAFEOld": {
-        "message": "启用失控保护"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>注意:</strong> 当禁用二阶失控保护时, 飞控将在所有通道（横滚、俯仰、偏航、油门）都忽略用户预设值，转而使用 <strong>自动</strong> 失控保护设置。"
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "当接收机信号丢失启用失控保护"
     },
     "configurationFeatureEnabled": {
         "message": "已启用"

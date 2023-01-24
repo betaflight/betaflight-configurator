@@ -74,6 +74,9 @@
     "cancel": {
         "message": "Cancelar"
     },
+    "submit": {
+        "message": "Enviar"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Conectar: Ativado - O Configurador tenta se conectar automaticamente assim que uma nova porta é detectada"
     },
@@ -82,6 +85,9 @@
     },
     "expertMode": {
         "message": "Modo avançado"
+    },
+    "expertModeDescription": {
+        "message": "Mostrar versões em desenvolvimento que podem estar instáveis"
     },
     "permanentExpertMode": {
         "message": "Sempre usar o modo avançado"
@@ -448,8 +454,23 @@
         "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
+    "buildServerSuccess": {
+        "message": "Sucesso: $1"
+    },
+    "buildServerFailure": {
+        "message": "<b>Falha no servidor de compilação: $1 <code>$2</code></b>"
+    },
     "buildServerUsingCached": {
         "message": "Utilizando informações de compilação em cache para $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Dados de suporte enviados *** <br>Id: $1<br><br><br># copie o ID e envie para a equipe do betaflight."
+    },
+    "supportWarningDialogTitle": {
+        "message": "Confirmar envio de dados"
+    },
+    "supportWarningDialogText": {
+        "message": "Por favor, confirme a submissão dos dados à equipe do Betaflight<br><br>Este processo executará alguns comandos e enviará a saída para o servidor de compilação.<br><br>Você receberá um ID exclusivo para a seus de dados.<br><br>Por favor, envie este ID à equipe do Betaflight através do Discord ou como uma issue no Github."
     },
     "releaseCheckLoaded": {
         "message": "Informações da versão do $1 carregadas do GitHub."
@@ -587,6 +608,9 @@
     "defaultDiscordText": {
         "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord do Betaflight</a>.<br />Compartilhe sua experiência de voo, fale sobre Betaflight, ajude outras pessoas ou obtenha ajuda da comunidade."
     },
+    "statisticsDisclaimer": {
+        "message": "O Configurador Betaflight coleta estatísticas de uso anônimas. Por exemplo, estes dados incluem (mas não estão limitados a) a quantidade de aberturas, região geográfica dos usuários, tipos de controladores de voo, versões de firmware, uso de elementos e guias de interface do usuário, etc. O resumo destes dados é aberto e compartilhado <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>. A coleta é feita para entender melhor como o Configurador Betaflight está sendo usado, para entender as tendências da comunidade e para possíveis melhorias na interface. Os usuários podem optar por não enviar os dados coletados na aba Opções."
+    },
     "defaultChangelogHead": {
         "message": "Configurador - Novidades"
     },
@@ -672,11 +696,29 @@
     "initialSetupResetText": {
         "message": "Restaura as configurações para o <strong>padrão</strong>"
     },
+    "initialSetupButtonBackup": {
+        "message": "Backup JSON"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Restaurar JSON"
+    },
     "initialSetupButtonRebootBootloader": {
         "message": "Ativar Boot Loader / DFU"
     },
+    "initialSetupBackupRestoreHeader": {
+        "message": "Restauração e Backup Experimentais"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "<strong>Faça o backup</strong> de sua configuração em caso de acidente, as configurações feitas através do <strong>CLI</strong> <span class=\"message-negative\">não</span> estão incluídas, use o comando 'diff all' na CLI para isso."
+    },
     "initialSetupRebootBootloaderText": {
         "message": "Reiniciar no modo <strong>boot loader / DFU</strong>."
+    },
+    "initialSetupBackupSuccess": {
+        "message": "Backup salvo <span class=\"message-positive\">com sucesso</span>"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "Configuração restaurada <span class=\"message-positive\">com sucesso</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Redefinir eixo Z, offset: 0 graus"
@@ -909,9 +951,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (fio único)"
     },
-    "featureVBAT": {
-        "message": "Monitoramento da voltagem da bateria"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibração do nível em voo"
     },
@@ -945,9 +984,6 @@
     "featureTELEMETRY": {
         "message": "Saída de telemetria"
     },
-    "featureCURRENT_METER": {
-        "message": "Monitoramento da corrente da bateria"
-    },
     "feature3D": {
         "message": "Modo 3D (para uso com ESCs reversíveis)"
     },
@@ -969,23 +1005,8 @@
     "featureDISPLAYTip": {
         "message": "Se esta funcionalidade está ativa, e nenhum dispositivo de imagem está conectado (ou o dispositivo de imagem não está ligado), haverá um atraso de 10 segundos sempre que reiniciar o controlador de voo."
     },
-    "featureONESHOT125": {
-        "message": "Suporte a ESC com ONESHOT"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Desligue a bateria e remova as hélices antes de ativar."
-    },
-    "featureBLACKBOX": {
-        "message": "Blackbox - Gravador de dados de voo"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Configure através da aba 'Blackbox' após ativar."
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (Rx embutido)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Utilizar telemetria do ESC KISS/BLHeli_32 em uma <b>conexão separada</b>"
+    "featureOSD": {
+        "message": "Informações na Tela (OSD)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Enviar canais AUX para saídas do servo"
@@ -999,17 +1020,11 @@
     "featureAIRMODE": {
         "message": "Ativar permanentemente o Airmode"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Taxas Super Expo"
+    "featureRX_SPI": {
+        "message": "SPI Rx (Rx embutido)"
     },
-    "featureSDCARD": {
-        "message": "Suporte de cartão SD (para log)"
-    },
-    "featureOSD": {
-        "message": "Informações na Tela (OSD)"
-    },
-    "featureVTX": {
-        "message": "Transmissor de vídeo"
+    "featureESC_SENSOR": {
+        "message": "Utilizar telemetria do ESC KISS/BLHeli_32 em uma <b>conexão separada</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Sempre ativo"
@@ -1019,18 +1034,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtro Notch dinâmico do giroscópio"
-    },
-    "featureFAILSAFE": {
-        "message": "Ativar estágio 2 do Failsafe"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Ativar Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Nota:</strong> quando o estágio 2 estiver DESATIVADO, a opção <strong>Automático</strong> é usada em vez das configurações do usuário para todos os canais de voo (Roll, Pitch, Yaw e Acelerador)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Aplicar configurações do Failsafe na perda do sinal RX"
     },
     "configurationFeatureEnabled": {
         "message": "Ativado"
@@ -1489,6 +1492,18 @@
     "pidTuningSubTabFilter": {
         "message": "Configurar Filtro"
     },
+    "pidProfileName": {
+        "message": "Nome do perfil PID"
+    },
+    "pidProfileNameHelp": {
+        "message": "O nome do perfil PID pode descrever as condições deste perfil: bateria mais leve/mais pesada, com/sem câmera de ação, maior elevação, etc."
+    },
+    "rateProfileName": {
+        "message": "Nome do perfil de taxas"
+    },
+    "rateProfileNameHelp": {
+        "message": "O nome do perfil de taxas pode descrever qual o tipo de voo desejado: cinemático, corrida, freestyle, etc."
+    },
     "pidTuningShowAllPids": {
         "message": "Exibir todos PIDs"
     },
@@ -1815,11 +1830,23 @@
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
+    "pidTuningTPAMode": {
+        "message": "Modo TPA"
+    },
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Taxa de TPA"
+    },
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
+    },
+    "pidTuningTPAPD": {
+        "message": "PD"
+    },
+    "pidTuningTPAD": {
+        "message": "D"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Pré-visualização da curva do acelerador"
@@ -2186,6 +2213,12 @@
     },
     "adjustmentsFunction21": {
         "message": "Taxa RC do Yaw"
+    },
+    "adjustmentsFunction22": {
+        "message": "Ajuste F Pitch & Roll"
+    },
+    "adjustmentsFunction23": {
+        "message": "Transição do Feedforward"
     },
     "adjustmentsFunction24": {
         "message": "Potência do modo Horizonte"
@@ -2719,6 +2752,9 @@
     "cliLoadFromFileBtn": {
         "message": "Carregar do arquivo"
     },
+    "cliSupportRequestBtn": {
+        "message": "Enviar Dados de Suporte"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "O arquivo <strong>{{fileName}}</strong> foi carregado. Revise os comandos"
     },
@@ -2878,6 +2914,9 @@
     "firmwareFlasherBranch": {
         "message": "Selecionar commit"
     },
+    "firmwareFlasherReleaseSummaryHead": {
+        "message": "Informações de build e release"
+    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID do Fabricante:"
     },
@@ -2896,6 +2935,9 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Destino:"
     },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Obtenha mais informações sobre o destino na wiki do Betaflight (a URL da wiki pode ser encontrada na configuração do destino unificado)"
+    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
@@ -2907,6 +2949,24 @@
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
+    },
+    "firmwareFlasherCloudBuildPending": {
+        "message": "pendente"
+    },
+    "firmwareFlasherCloudBuildProcessing": {
+        "message": "processando"
+    },
+    "firmwareFlasherCloudBuildSuccessCached": {
+        "message": "sucesso (cache)"
+    },
+    "firmwareFlasherCloudBuildSuccess": {
+        "message": "sucesso"
+    },
+    "firmwareFlasherCloudBuildTimedOut": {
+        "message": "tempo esgotado (tente novamente)"
+    },
+    "firmwareFlasherCloudBuildFailed": {
+        "message": "falhou (por favor, verifique o log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Baixar manualmente."
@@ -2940,6 +3000,9 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecione a sua placa ou use o Auto-detectar para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "O Configurador Betaflight tem suporte para instalar destinos unificados com as respectivas configurações da placa em um único passo.<br><br>O conceito de destinos unificados significa que o mesmo arquivo de firmware pode ser utilizados em todas as placas com o mesmo MCU.<br><br>O Betaflight 4.4 introduziou a <strong>compilação em nuvem</strong><br><br>Com a <strong>compilação em nuvem</strong> é necessário definir as opções de hardware presentes em sua aeronave.<br><br>Para fazer diferentes placas funcionarem com o mesmo firmware, um arquivo de configuração específico é enviado juntamente com o firmware quando ele é instalado.<br><br>Com a compilação local, é possivel definir um arquivo de configuração de destino unificado ou escolher uma placa antes de carregar o arquivo .hex do firmware.<br><br>Se encontrar problemas com o firmware, por favor considere entrar em nosso servidor do Discord ou abrir uma <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue no GitHub</a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecione a versão do firmware para sua placa."
@@ -2976,6 +3039,9 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Mostrar versões candidatas"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Exibir versões candidatas em conjunto com versões estáveis"
@@ -3130,6 +3196,15 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Procurar informações na placa conectada para selecionar o firmware correto"
+    },
+    "unstableFirmwareAcknowledgementDialog": {
+        "message": "Você está prestes a instalar uma <strong>versão em desenvolvimento</strong> do firmware. Estas compilações são um trabalho em andamento e qualquer uma das consequências a seguir podem acontecer:<strong><ul><li>o firmware não funciona de forma alguma.</li><li>é impossivel voar.</li><li>há problemas de segurança como a perda de controle durante o voo.</li><li>o controlador de voo pode ficar sem resposta ou danificado.</li></ul></strong>Se decidir prosseguir com a instalação deste firmware, <strong>você está assumindo total responsabilidade pelos riscos de qualquer uma das consequências acima</strong>. Além disso, você reconhece que é necessário executar os <strong>testes de bancada completos, sem as hélices</strong>, antes de qualquer tentativa de voar com esta versão."
+    },
+    "unstableFirmwareAcknowledgement": {
+        "message": "Eu li o texto acima e <strong>assumo total responsabilidade<strong> por instalar um firmware instável"
+    },
+    "unstableFirmwareAcknowledgementFlash": {
+        "message": "Atualizar"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detectado: <strong>$1</strong> - o dispositivo anterior ainda está sendo atualizado, reconecte para tentar novamente"
@@ -3675,6 +3750,10 @@
         "message": "Amortecedor:<br /><i><small>Ganho D</small></i>",
         "description": "D Gain (Damping) tuning slider label"
     },
+    "pidTuningDGainSliderHelp": {
+        "message": "Um valor no Termo D mais alto vai suavizar a resposta do stick e pode fazer os motores esquentar, mas deve ajudar a controlar a oscilação do Termo P e ajuda a controlar as oscilações causadas por turbulência nas hélices.<br /><br />Um valor D mais baixo oferece uma resposta mais rápida dos sticks, mas a aeronave não vai conseguir lidar muito bem com a turbulência e vento nas hélices.",
+        "description": "D gain balance tuning slider helpicon message"
+    },
     "pidTuningPIGainSlider": {
         "message": "Rastreio:<br /><i><small>Ganhos P & I</small></i>",
         "description": "P and I Gain (Stability) tuning slider label"
@@ -3694,6 +3773,10 @@
     "pidTuningIGainSlider": {
         "message": "Deriva - Oscilação:<br /><i><small>Ganho I</small></i>",
         "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Aumenta ou reduz I. I alto pode melhorar o controle em curvas espirais, órbitas ou comandos com potência/acelerador em 0%. Muito I, quando não combinado com P suficiente, pode causar oscilações ou movimentos indesejados após flips e rolls ou quando a potência/acelerador for cortado para 0%.<br /><br />Normalmente você deseja que o slider 'Deriva - Oscilações' seja alto o suficiente para manter o controle do quadricóptero em espirais, órbitas, etc... mas não tão alto a ponto de se ver oscilações quando a potência/acelerador for cortado para 0%.<br /><br /><strong>Nota:</strong><br />Se você notar movimentos indesejados a qualquer momento, tenha certeza que o \"I-term Relax\" esteja ativado, tente diminuir o valor do iterm_relax_cutoff.",
+        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Amortecedor Dinâmico:<br /><i><small>D Max</small></i>",
@@ -3807,6 +3890,9 @@
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Aviso:</strong> O Filtro Notch (Rejeita Faixa) dinâmico está desabilitado. Para configurar e usar, por favor habilite a função 'DYNAMIC_FILTER' na seção '$t(configurationFeatures.message)' da aba '$t(tabConfiguration.message)' do configurador. Também tenho certeza de que o loop do PID está configurado em no mínimo 2kHz."
+    },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "O filtro notch dinâmico está desativado. Para usá-lo, por favor, certifique-se de que a frequência do loop PID está definida em pelo menos 2Khz na aba '$t(tabConfiguration.message)."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Filtro Notch dinâmico - Alcance"
@@ -4526,6 +4612,10 @@
         "message": "NTSC",
         "description": "Option for the video format in the OSD"
     },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Unidades"
     },
@@ -4752,6 +4842,83 @@
     "osdTextElementAuxValue": {
         "message": "Valor Aux",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Voltagem dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Voltagem renderizada pelos óculos"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "Voltagem VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "Voltagem VTX renderizada pelos óculos"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "VTX taxa de transmissão",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Taxa de transmissão de video renderizada pelos óculos"
+    },
+    "osdTextElementSysDelay": {
+        "message": "Atraso do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Atraso de video renderizado pelos óculos"
+    },
+    "osdTextElementSysDistance": {
+        "message": "Distância do VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Distância da transmissão de video renderizada pelos óculos"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Qualidade do link dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Qualidade da conexão de vídeo renderizada pelos óculos"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Status do DVR do óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Status do DVR do óculos renderizado pelos óculos"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "Status do VTX DVR",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "Status VTX DVR renderizado pelos óculos"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Alertas do sistema dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Alertas do sistema de vídeo renderizados pelos óculos"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "Temperatura VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "Temperatura VTX renderizada pelos óculos"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Velocidade da ventoinha dos óculos",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Velocidade do ventilador renderizada pelos óculos"
     },
     "osdTextElementCraftName": {
         "message": "Nome da aeronave",
@@ -5199,6 +5366,13 @@
     "osdDescElementReadyMode": {
         "message": "Quando ativo, será exibido o texto READY até começar a voar"
     },
+    "osdTextElementRSNRValue": {
+        "message": "Valor RSNR",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "Valor RSNR"
+    },
     "osdTextElementUnknown": {
         "message": "$1 desconhecido",
         "description": "One of the elements of the OSD"
@@ -5395,6 +5569,13 @@
     "osdDescStatMinRssiDbm": {
         "message": "Valor dBm mínimo do RSSI"
     },
+    "osdTextStatMinRSNR": {
+        "message": "Valor mínimo de RSNR",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Valor mínimo de RSNR"
+    },
     "osdTextStatUnknown": {
         "message": "$1 desconhecido",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5587,6 +5768,13 @@
     },
     "osdWarningOverCap": {
         "message": "Alerta quando a quantidade de mAh consumido da bateria excede o limite configurado"
+    },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Alerta quando o valor RSNR está abaixo da configuração do alarme"
     },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"
@@ -5844,6 +6032,14 @@
         "message": "<span class=\"message-negative\">Erro</span> ao salvar o arquivo de configuração do VTX",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileOk": {
+        "message": "Arquivo de configuração lua do VTX foi <span class=\"message-positive\">salvo</span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
+    "vtxSavedLuaFileKo": {
+        "message": "<span class=\"message-negative\">Erro</span> ao salvar o arquivo de configuração lua do VTX",
+        "description": "Message in the GUI log when the lua VTX Config file saving has failed"
+    },
     "vtxLoadFileOk": {
         "message": "Arquivo de configuração do VTX <span class=\"message-positive\">carregado</span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
@@ -6093,6 +6289,9 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Confirmar"
+    },
+    "dialogConfirmResetNote": {
+        "message": "AVISO: Tem certeza de que deseja redefinir <strong>TODAS as configurações</strong> para o padrão? Isto <strong>não é</strong> uma \"restauração de fábrica\". Pode causar problemas inesperados e pode ser necessário reinstalar o seu firmware para se conectar novamente."
     },
     "dialogConfirmResetConfirm": {
         "message": "Restaurar"
@@ -6440,6 +6639,10 @@
         "message": "A predefinição escolhida requer versão de firmware $1<br/> A versão atual do firmware é $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
+    "presetsNoPresetsFound": {
+        "message": "Não foram encontradas predefinições para os parâmetros da pesquisa",
+        "description": "Message that apprears on presets tab if no presets were found"
+    },
     "presetsTooManyPresetsFound": {
         "message": "Você chegou no limite de quantidade de predefinições que podem ser exibidas",
         "description": "Message that apprears on presets tab if too many presets found"
@@ -6462,16 +6665,43 @@
     "firmwareFlasherBuildOptions": {
         "message": "Outras Opções"
     },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Protocolo de Rádio"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Protocolo de telemetria"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Protocolo do Motor"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Arquivo de Configuração:"
     },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Selecione o protocolo radio que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas apenas uma opção pode ser selecionada."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Selecione o protocolo de telemetria que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas somente uma opção pode ser selecionada. Existem também alguns protocolos de telemetria que serão ativados independente da sua seleção, baseada no protocolo de rádio selecionado, por exemplo: CRSF."
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Selecione as opções genéricas que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Também estão inclusos aqui algumas opções de correção, como por exemplo: AKK VTX."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Selecione o protocolo motor (ESC) que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas apenas uma opção pode ser selecionada."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Especialmente útil para desenvolvedores, você pode selecionar um PR que foi mesclado com o SHA do commit, ou um PR que ainda vai ser mesclado digitando um # seguido do número do PR, por exemplo, #1234 (isso é um atalho para 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para desenvolvedores, você pode adicionar qualquer define que precisar, separados por um `espaço`, mas sem o prefixo `USE_`, ele será adicionado automaticamente para você."
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Defines personalizados"
+    },
+    "coreBuild": {
+        "message": "Apenas o núcleo"
+    },
+    "coreBuildModeDescription": {
+        "message": "Esta opção cria um firmware que contém os drivers de hardware e alguns recursos limitados. Esta opção serve para ajudar na detecção de hardware de um controlador de voo e é disponível apenas por conveniência. Usando esta opção, apenas recursos de hardware estarão disponíveis."
     }
 }

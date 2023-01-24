@@ -951,9 +951,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (enkelt ledning)"
     },
-    "featureVBAT": {
-        "message": "Batteri spændings monitering"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Nivellieringskalibrering under flyvning"
     },
@@ -987,9 +984,6 @@
     "featureTELEMETRY": {
         "message": "Telemetri protokol"
     },
-    "featureCURRENT_METER": {
-        "message": "Batterstrømmonitering"
-    },
     "feature3D": {
         "message": "3D-tilstand (til brug med vendbare ESC'er)"
     },
@@ -1011,23 +1005,8 @@
     "featureDISPLAYTip": {
         "message": "Er denne funktion aktiveret, og er ingen visningsenhed tilsluttet (eller er visningsenheden ikke tændt), vil der være en forsinkelse på ca. 10 sek. ved genstart af FC."
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT ESC-understøttelse"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Frakobl flybatteri og fjern propeller inden aktivering."
-    },
-    "featureBLACKBOX": {
-        "message": "Blackbox-flydataoptager"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Efter aktivering, opsæt via fanen BlackBox."
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (f.eks. indbygget Rx)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Brug KISS/BLHeli_32 ESC telemetri <b>over en separat ledning</b>"
+    "featureOSD": {
+        "message": "On Screen-visning"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Videresend aux-kanaler til servoudgange"
@@ -1041,17 +1020,11 @@
     "featureAIRMODE": {
         "message": "Aktiver Airmode permanent"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "SPI Rx (f.eks. indbygget Rx)"
     },
-    "featureSDCARD": {
-        "message": "SD-kortunderstøttelse (til logging)"
-    },
-    "featureOSD": {
-        "message": "On Screen-visning"
-    },
-    "featureVTX": {
-        "message": "Videosender"
+    "featureESC_SENSOR": {
+        "message": "Brug KISS/BLHeli_32 ESC telemetri <b>over en separat ledning</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Altid aktiveret"
@@ -1061,18 +1034,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamisk gyro notch filtrering"
-    },
-    "featureFAILSAFE": {
-        "message": "Aktivér Fejlsikring Fase 2"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Aktiver Fejlsikring"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Bemærk:</strong> Når Trin 2 er DEAKTIVERET, benyttes fejlsikringsindstillingen <strong>Auto</strong> for alle flykanalerne (krængror, højderor, sideror og gas) i stedet for brugerindstillingerne."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Anvend Fejlsikringsindstillinger ved RX-signaltab"
     },
     "configurationFeatureEnabled": {
         "message": "Aktiveret"
@@ -2081,8 +2042,8 @@
     "receiverButtonBindMessage": {
         "message": "Forbind anmodning sendt til FC."
     },
-    "receiverButtonPassphrase": {
-        "message": "Adgangskode"
+    "receiverButtonBindingPhrase": {
+        "message": "Forbind fase"
     },
     "receiverButtonSticks": {
         "message": "Styrpinde"
@@ -3933,6 +3894,9 @@
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Bemærk:</strong> Det dynamiske notch filter er slået fra. For at konfigurere og bruge det, skal du aktivere funktionen 'DYNAMIC_FILTER' i afsnittet '$t(configurationFeatures.message)' i fanen '$t(tabConfiguration.message). Sørg også for, at PID loop rate er mindst 2 kHz."
     },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "Det dynamiske notch filter er slået fra. For at konfigurere og bruge det, skal du sikre at PID loop frekvens er sat til mindst 2 kHz på fanen '$t(tabConfiguration.message)'."
+    },
     "pidTuningDynamicNotchRange": {
         "message": "Dynamisk Notch filter område"
     },
@@ -4636,6 +4600,10 @@
         "message": "Font {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Zoom",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
+    },
     "osdSetupVideoFormatTitle": {
         "message": "Videoformat"
     },
@@ -4736,9 +4704,6 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Uploadet alle {{length}} tegn til OSD"
-    },
-    "osdToggleOrientation": {
-        "message": "Retning"
     },
     "osdSetupSave": {
         "message": "Gem"

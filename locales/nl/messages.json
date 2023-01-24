@@ -893,9 +893,6 @@
     "featureNone": {
         "message": "&lt;Selecteer er Een&gt;"
     },
-    "featureVBAT": {
-        "message": "Accuspanning monitoren"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "In-flight level kalibratie"
     },
@@ -926,9 +923,6 @@
     "featureTELEMETRY": {
         "message": "Telemetrie uitvoer"
     },
-    "featureCURRENT_METER": {
-        "message": "Accuspanning monitor"
-    },
     "feature3D": {
         "message": "3D-modus (alleen te gebruiken met omkeerbare ESC's)"
     },
@@ -944,20 +938,8 @@
     "featureDISPLAYTip": {
         "message": "Als deze functie is ingeschakeld en geen weergaveapparaat is aangesloten (of het weergaveapparaat staat niet aan), zal er een vertraging van ca. 10 seconden zijn bij elke reboot van de vluchtcontroller."
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT ESC ondersteuning"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Verwijder de batterij en de propellers voor dat je dit aanzet."
-    },
-    "featureBLACKBOX": {
-        "message": "Blackbox vluchtgegevensrecorder"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Configureer via het tabblad BlackBox nadat u dit heeft ingeschakeld."
-    },
-    "featureESC_SENSOR": {
-        "message": "Gebruik KISS/BLHeli_32 ESC telemetrie <b>via een aparte draad</b>"
+    "featureOSD": {
+        "message": "Weergave op het scherm"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Stuur aux kanalen door naar servo outputs"
@@ -971,35 +953,14 @@
     "featureAIRMODE": {
         "message": "Airmode permanent inschakelen"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Verhoudingen"
-    },
-    "featureSDCARD": {
-        "message": "SDCard ondersteuning (voor loggen)"
-    },
-    "featureOSD": {
-        "message": "Weergave op het scherm"
-    },
-    "featureVTX": {
-        "message": "Video Zender"
+    "featureESC_SENSOR": {
+        "message": "Gebruik KISS/BLHeli_32 ESC telemetrie <b>via een aparte draad</b>"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Als dit is uitgeschakeld, kan de 'ANTI GRAVITY' modus worden gebruikt om Anti Gravity met een schakelaar in te schakelen."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamic gyro notch filtering"
-    },
-    "featureFAILSAFE": {
-        "message": "Schakel Failsafe Fase 2 in"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Failsafe inschakelen"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Opmerking:</strong> als fase 2 is uitgeschakeld, wordt de terugval instelling <strong>Auto</strong> gebruikt in plaats van de gebruikersinstellingen op alle kanalen (Roll, Pitch en Yaw Throttle)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Failsafe instellingen toepassen bij RX signaalverlies"
     },
     "configurationFeatureEnabled": {
         "message": "Ingeschakeld"

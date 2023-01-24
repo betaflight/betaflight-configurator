@@ -675,6 +675,12 @@
     "initialSetupResetText": {
         "message": "Reiniciar axustes a valores por <strong>defecto</strong>"
     },
+    "initialSetupButtonBackup": {
+        "message": "Copia de seguridade JSON"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Restaurar JSON"
+    },
     "initialSetupButtonRebootBootloader": {
         "message": "Activar o cargador de arranque / DFU"
     },
@@ -912,9 +918,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (cable único)"
     },
-    "featureVBAT": {
-        "message": "Monitorización do voltaxe da batería"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibración do nivel en voo"
     },
@@ -948,9 +951,6 @@
     "featureTELEMETRY": {
         "message": "Saída de telemetría"
     },
-    "featureCURRENT_METER": {
-        "message": "Monitorización do sensor de corrente"
-    },
     "feature3D": {
         "message": "Modo 3D (para utilizar con ESCs reversibles)"
     },
@@ -972,23 +972,8 @@
     "featureDISPLAYTip": {
         "message": "Se esta característica está activada, e non hai un monitor conectado (ou o monitor non está acendido), haberá un tempo de espera de 10 segundos aprox. cada vez que se reinicie a controladora."
     },
-    "featureONESHOT125": {
-        "message": "Soporte para ESCs ONESHOT"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Desconecte a batería e quite as hélices antes de activalo."
-    },
-    "featureBLACKBOX": {
-        "message": "Gravador de datos de voo blackbox"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Configurar a través do menú BlackBox despois de activar."
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (ex. Rx integrado)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Use KISS/BLHeli_32 telemetría ESC <b>nun fío separado</b>"
+    "featureOSD": {
+        "message": "On Screen Display"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Enviar os canles aux ás saídas de servos."
@@ -1002,17 +987,11 @@
     "featureAIRMODE": {
         "message": "Activar permanentemente Airmode"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "SPI Rx (ex. Rx integrado)"
     },
-    "featureSDCARD": {
-        "message": "Soporte SDCard (para a Caixa Negra)"
-    },
-    "featureOSD": {
-        "message": "On Screen Display"
-    },
-    "featureVTX": {
-        "message": "Transmisor de video"
+    "featureESC_SENSOR": {
+        "message": "Use KISS/BLHeli_32 telemetría ESC <b>nun fío separado</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Activar permanentemente"
@@ -1022,18 +1001,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtrado notch dinámico do xiro"
-    },
-    "featureFAILSAFE": {
-        "message": "Activar Failsafe Etapa 2"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Activar Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Nota:</strong> Cando a etapa 2 está DESACTIVADA, a configuración de rerpaldo<strong>Automática</strong> será empregada en lugar da configuración do usuario para todos os canles (Roll, Pitch, Yaw and Throttle)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Utilizar configuracións de Failsafe en caso de pérdida de sinal no receptor"
     },
     "configurationFeatureEnabled": {
         "message": "Activado"
@@ -1491,6 +1458,12 @@
     },
     "pidTuningSubTabFilter": {
         "message": "Opcións de filtros"
+    },
+    "pidProfileName": {
+        "message": "Nome do perfil PID"
+    },
+    "rateProfileName": {
+        "message": "Nome do perfil Rate"
     },
     "pidTuningShowAllPids": {
         "message": "Mostrar tódolos PID's"
@@ -2029,9 +2002,6 @@
     },
     "receiverButtonBindMessage": {
         "message": "Solicitude de enlace enviada ao controlador de voo."
-    },
-    "receiverButtonPassphrase": {
-        "message": "Frase de contrasinal"
     },
     "receiverButtonSticks": {
         "message": "Sticks de control"
@@ -3169,6 +3139,9 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consulte a información da placa para preseleccionar firmware adecuado"
+    },
+    "unstableFirmwareAcknowledgementFlash": {
+        "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detectado: <strong>$1</strong> - dispositivo anterior todavía en instalación, por favor volva conectalo para volver intentalo"
@@ -6619,6 +6592,15 @@
     "firmwareFlasherBuildOptions": {
         "message": "Outras opcións"
     },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Protocolo da emisora"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Protocolos de Telemetría"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Protocolo de Motor"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Nome do arquivo de configuración:"
     },
@@ -6630,5 +6612,8 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Definicións personalizadas"
+    },
+    "coreBuild": {
+        "message": "Só núcleo"
     }
 }

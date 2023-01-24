@@ -865,9 +865,6 @@
     "featureNone": {
         "message": "&lt;Wybierz jeden&gt;"
     },
-    "featureVBAT": {
-        "message": "Monitorowanie napięcia baterii"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Kalibracja akcelerometru w czasie lotu"
     },
@@ -898,9 +895,6 @@
     "featureTELEMETRY": {
         "message": "Wyjście telemetrii"
     },
-    "featureCURRENT_METER": {
-        "message": "Monitorowanie prądu baterii"
-    },
     "feature3D": {
         "message": "Tryb 3D (do użytku tylko z ESC z odwracaniem kierunku)"
     },
@@ -916,20 +910,8 @@
     "featureDISPLAYTip": {
         "message": "Jeżeli ta funkcja jest uruchomiona i nie jest podłączony wyświetlacz (lub nie jest zasilony), każde uruchomienie lub restart FC będzie dłuższe o około 10 sekund."
     },
-    "featureONESHOT125": {
-        "message": "Wsparcie ONESHOT ESC"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Odłącz baterię i zdejmij śmigła zanim uruchomisz."
-    },
-    "featureBLACKBOX": {
-        "message": "Czarna skrzynka"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Po uruchomieniu skonfiguruj w zakładce Czarna skrzynka."
-    },
-    "featureESC_SENSOR": {
-        "message": "Użyj telemetrii KISS/BLHeli_32 ESC <b> na osobnym przewodzie</b>"
+    "featureOSD": {
+        "message": "OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Prześlij wartość kanału AUX do wyjść serwomechanizmów"
@@ -943,35 +925,14 @@
     "featureAIRMODE": {
         "message": "Uruchom Airmode na stałe."
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
-    },
-    "featureSDCARD": {
-        "message": "Wsparcie karty SD (dla logowania)"
-    },
-    "featureOSD": {
-        "message": "OSD"
-    },
-    "featureVTX": {
-        "message": "Nadajnik wideo"
+    "featureESC_SENSOR": {
+        "message": "Użyj telemetrii KISS/BLHeli_32 ESC <b> na osobnym przewodzie</b>"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Jeśli ta opcja jest wyłączona, tryb anty-grawitacja może być włączany za pomocą przełącznika."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamiczny filtr Notch dla żyroskopu"
-    },
-    "featureFAILSAFE": {
-        "message": "Uruchom poziom 2 Failsafe"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Uruchom Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Uwaga:</strong> Kiedy etap 2 jest WYŁĄCZONY, dla wszystkich kanałów lotu (Roll, Pitch, Yaw i Throttle) stosowane jest zastępcze ustawienie <strong>Auto</strong>."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Użyj ustawień Failsafe gdy zaniknie sygnał RC"
     },
     "configurationFeatureEnabled": {
         "message": "Włączone"

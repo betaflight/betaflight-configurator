@@ -951,9 +951,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (단일선)"
     },
-    "featureVBAT": {
-        "message": "배터리 전압 모니터링"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "비행중 레벨 교정"
     },
@@ -987,9 +984,6 @@
     "featureTELEMETRY": {
         "message": "텔레메트리 출력"
     },
-    "featureCURRENT_METER": {
-        "message": "배터리 전류 모니터링"
-    },
     "feature3D": {
         "message": "3D 모드 (역회전가능 ESC의 사용을 위한)"
     },
@@ -1011,23 +1005,8 @@
     "featureDISPLAYTip": {
         "message": "이 기능이 활성화되어 있고 디스플레이 장치가 연결되어 있지 않으면(또는 디스플레이 장치의 전원이 켜져 있지 않으면), 비행 컨트롤러를 재부팅 할 때마다 약 10초의 지연이 발생합니다."
     },
-    "featureONESHOT125": {
-        "message": "원샷 ESC 지원"
-    },
-    "featureONESHOT125Tip": {
-        "message": "활성화 하기 전에 배터리를 분리하고, 프로펠러를 제거하십시오."
-    },
-    "featureBLACKBOX": {
-        "message": "블랙박스 - 비행 데이터 기록"
-    },
-    "featureBLACKBOXTip": {
-        "message": "활성화 한 후 블랙박스 탭을 통해 환경설정하십시오."
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (예. 빌드인 Rx)"
-    },
-    "featureESC_SENSOR": {
-        "message": "<b>별도의 선에</b> KISS/BLHeli_32 ESC 텔레메트리 사용"
+    "featureOSD": {
+        "message": "OSD(온 스크린 디스플레이)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "AUX 채널을 서보 출력으로 사용"
@@ -1041,17 +1020,11 @@
     "featureAIRMODE": {
         "message": "에어모드 영구 사용"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "슈퍼 Expo 레이트"
+    "featureRX_SPI": {
+        "message": "SPI Rx (예. 빌드인 Rx)"
     },
-    "featureSDCARD": {
-        "message": "SD카드 지원 (로그기록을 위한)"
-    },
-    "featureOSD": {
-        "message": "OSD(온 스크린 디스플레이)"
-    },
-    "featureVTX": {
-        "message": "비디오 트랜스미터"
+    "featureESC_SENSOR": {
+        "message": "<b>별도의 선에</b> KISS/BLHeli_32 ESC 텔레메트리 사용"
     },
     "featureANTI_GRAVITY": {
         "message": "영구적으로 사용"
@@ -1061,18 +1034,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "다이나믹 자이로 노치 필터링"
-    },
-    "featureFAILSAFE": {
-        "message": "페일세이프 단계 2 활성"
-    },
-    "featureFAILSAFEOld": {
-        "message": "페일세이프 활성"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>참고:</strong> 단계 2가 비활성화되어 있으면, 폴백 설정 <strong>자동</strong>이 사용자가 설정한 모든 비행채널 (롤, 피치, 요 및 스로틀)을 대신하여 사용됩니다."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "RX 신호 손실에 페일세이프 설정을 적용하십시오."
     },
     "configurationFeatureEnabled": {
         "message": "활성화됨"
@@ -2081,8 +2042,8 @@
     "receiverButtonBindMessage": {
         "message": "비행 컨트롤러에 바인드 요청을 보냅니다."
     },
-    "receiverButtonPassphrase": {
-        "message": "암호문구"
+    "receiverButtonBindingPhrase": {
+        "message": "바인딩 구문"
     },
     "receiverButtonSticks": {
         "message": "제어 스틱"
@@ -3933,6 +3894,9 @@
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>알림:</strong> 다이나믹 노치 필터가 비활성화되어 있습니다. 그것을 구성하고 사용하려면 '$t(tabConfiguration.message)' 탭의 '$t(configurationFeatures.message)' 세션에서 '다이나믹_필터' 기능을 활성화하세요. 또한 PID 루프레이트가 최소한 2kHz인걸 확인하세요."
     },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "다이나믹 노치 필터 사용이 불가합니다. 사용하려면 '$t(tabConfiguration.message)' 탭에서 PID 루프 주파수를 최소한 2Khz로 설정하세요."
+    },
     "pidTuningDynamicNotchRange": {
         "message": "다이나믹 노치 필터 범위"
     },
@@ -4636,6 +4600,10 @@
         "message": "폰트 {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupPreviewCheckZoom": {
+        "message": "줌",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
+    },
     "osdSetupVideoFormatTitle": {
         "message": "비디오 형식"
     },
@@ -4736,9 +4704,6 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "OSD에 모든 {{length}} 특성이 업로드됨"
-    },
-    "osdToggleOrientation": {
-        "message": "방향"
     },
     "osdSetupSave": {
         "message": "저장"

@@ -840,9 +840,6 @@
     "featureNone": {
         "message": "&lt;請選擇&gt;"
     },
-    "featureVBAT": {
-        "message": "電池電壓檢測"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "實時水平校準"
     },
@@ -873,9 +870,6 @@
     "featureTELEMETRY": {
         "message": "遙測輸出"
     },
-    "featureCURRENT_METER": {
-        "message": "檢測電池電流"
-    },
     "feature3D": {
         "message": "3D 模式 （配合支援反向轉動的電調使用）"
     },
@@ -891,20 +885,8 @@
     "featureDISPLAYTip": {
         "message": "當啟用該功能後，如果沒有連接熒幕（或沒有通電），則飛控的每次啟動都會有10秒鐘左右的延遲。"
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT 電調支援"
-    },
-    "featureONESHOT125Tip": {
-        "message": "開啟前請務必拔掉電池，卸下螺旋槳。"
-    },
-    "featureBLACKBOX": {
-        "message": "黑盒記錄器"
-    },
-    "featureBLACKBOXTip": {
-        "message": "打開後，請在黑盒日誌頁面完成設置。"
-    },
-    "featureESC_SENSOR": {
-        "message": "使用<b>專線</b>回傳 KISS/BLHeli_32 電調遙測數據"
+    "featureOSD": {
+        "message": "OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "轉發 Aux 通道訊號到舵機輸出"
@@ -918,35 +900,14 @@
     "featureAIRMODE": {
         "message": "永久啟用 Airmode"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
-    },
-    "featureSDCARD": {
-        "message": "SD卡支援（記錄用）"
-    },
-    "featureOSD": {
-        "message": "OSD"
-    },
-    "featureVTX": {
-        "message": "圖傳"
+    "featureESC_SENSOR": {
+        "message": "使用<b>專線</b>回傳 KISS/BLHeli_32 電調遙測數據"
     },
     "featureANTI_GRAVITYTip": {
         "message": "如果禁用，那麼“反重力”模式可以由開關來啟用。"
     },
     "featureDYNAMIC_FILTER": {
         "message": "動態陷波濾波"
-    },
-    "featureFAILSAFE": {
-        "message": "啟用二階失控保護"
-    },
-    "featureFAILSAFEOld": {
-        "message": "啟用失控保護"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>注意:</strong> 當禁用二階失控保護時, 飛控將在所有通道（橫滾、俯仰、偏航、油門）都忽略用戶預設值，轉而使用 <strong>自動</strong> 失控保護設置"
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "當接收機訊號丟失啟用失控保護"
     },
     "configurationFeatureEnabled": {
         "message": "已啟用"

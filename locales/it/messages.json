@@ -951,9 +951,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (singolo filo)"
     },
-    "featureVBAT": {
-        "message": "Monitoraggio tensione batteria"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibrazione livello in volo"
     },
@@ -987,9 +984,6 @@
     "featureTELEMETRY": {
         "message": "Uscita telemetria"
     },
-    "featureCURRENT_METER": {
-        "message": "Monitoraggio corrente batteria"
-    },
     "feature3D": {
         "message": "Modalità 3D (da utilizzare con ESCs reversibili)"
     },
@@ -1011,23 +1005,8 @@
     "featureDISPLAYTip": {
         "message": "Se questa funzionalità è attivata e non è connesso nessun display (o il dispositivo non è acceso), ci sarà un ritardo di circa 10 secondi ad ogni riavvio del controllore di volo."
     },
-    "featureONESHOT125": {
-        "message": "Supporto ESC ONESHOT"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Scollegare la batteria e rimuovere le eliche prima di abilitare."
-    },
-    "featureBLACKBOX": {
-        "message": "Registratore dati di volo Blackbox"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Configura tramite la schermata BlackBox dopo l'abilitazione."
-    },
-    "featureRX_SPI": {
-        "message": "Rx SPI (es. Rx integrato)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Usa la telemetria KISS/BLHeli_32 ESC <b>su un filo separato</b>"
+    "featureOSD": {
+        "message": "OSD (On Screen Display)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Inoltra i canali aux alle uscite dei servi"
@@ -1041,17 +1020,11 @@
     "featureAIRMODE": {
         "message": "Abilita Airmode permanente"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "Rx SPI (es. Rx integrato)"
     },
-    "featureSDCARD": {
-        "message": "Supporto scheda SD (per la registrazione)"
-    },
-    "featureOSD": {
-        "message": "OSD (On Screen Display)"
-    },
-    "featureVTX": {
-        "message": "Video Trasmettitore"
+    "featureESC_SENSOR": {
+        "message": "Usa la telemetria KISS/BLHeli_32 ESC <b>su un filo separato</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Abilita permanentemente"
@@ -1061,18 +1034,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtro notch dinamico giroscopio"
-    },
-    "featureFAILSAFE": {
-        "message": "Abilita Failsafe Stadio 2"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Abilita Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong> Nota: </strong> Quando lo Stadio 2 è DISABILITATO l'impostazione di fallback <strong>Auto</strong> viene utilizzata al posto delle impostazioni utente per tutti i canali di volo (Roll, Pitch, Yaw e Throttle)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Applica i settaggi di Failsafe quando la ricevente perde il segnale"
     },
     "configurationFeatureEnabled": {
         "message": "Abilitato"
@@ -2081,8 +2042,8 @@
     "receiverButtonBindMessage": {
         "message": "Richiesta di collegamento inviata al controllore di volo."
     },
-    "receiverButtonPassphrase": {
-        "message": "Password"
+    "receiverButtonBindingPhrase": {
+        "message": "Frase per associare"
     },
     "receiverButtonSticks": {
         "message": "Stick di comando"
@@ -3933,6 +3894,9 @@
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Avviso:</strong> Il filtro dinamico notch è disabilitato. Per configurarlo e usarlo si prega di abilitare la funzione 'DYNAMIC_FILTER' nella sezione '$t(configurationFeatures.message)' della scheda '$t(tabConfiguration.message)'. Assicurati anche che il looprate PID sia almeno a 2kHz."
     },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "Il filtro notch dinamico è disabilitato. Sevuoi usarlo, assicurati che la frequenza del PID Loop sia impostata ad almeno 2Khz nella scheda '$t(tabConfiguration.message)'."
+    },
     "pidTuningDynamicNotchRange": {
         "message": "Range Filtro Notch dinamico"
     },
@@ -4635,6 +4599,10 @@
     "osdSetupPreviewSelectFontElement": {
         "message": "Font {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Ingrandisci",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
     },
     "osdSetupVideoFormatTitle": {
         "message": "Formato video"
@@ -5455,11 +5423,11 @@
         "message": "Capacità della batteria utilizzata"
     },
     "osdTextStatUsedWh": {
-        "message": "Wh batteria utilizzati",
+        "message": "Batteria Wh utilizzati",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatUsedWh": {
-        "message": "Capacità della batteria utilizzata in Wh"
+        "message": "Batteria capacità utilizzo in Wh"
     },
     "osdTextStatMaxAltitude": {
         "message": "Altitudine massima",
@@ -6736,5 +6704,11 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Define Personalizzati"
+    },
+    "coreBuild": {
+        "message": "Solo Core"
+    },
+    "coreBuildModeDescription": {
+        "message": "Questa opzione crea un firmware che contiene i driver hardware (e alcune funzioni limitate). È disponibile per assistere il rilevamento dell'hardware su un controllore di volo, ed è fornito solo per quella comodità. Non tutte le funzionalità saranno disponibili (solo hardware) utilizzando questa opzione."
     }
 }
