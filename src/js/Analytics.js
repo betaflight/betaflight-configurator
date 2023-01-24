@@ -40,7 +40,7 @@ function setupAnalytics(result) {
         os: GUI.operating_system,
         checkForDebugVersions: checkForDebugVersions,
         optOut: optOut,
-        debugMode: debugMode,
+        // debugMode: debugMode,         // enable when debugging GA
         buildType: getBuildType(),
     };
     createAnalytics(googleAnalytics, settings);

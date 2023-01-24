@@ -94,6 +94,9 @@ function MspHelper() {
     };
 }
 
+function getMSPCodeName(code) {
+    return Object.keys(MSPCodes).find(key => MSPCodes[key] === code);
+}
 
 MspHelper.readPidSliderSettings = function(data) {
     FC.TUNING_SLIDERS.slider_pids_mode = data.readU8();
@@ -1581,9 +1584,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             default:
-                console.log(`Unknown code detected: ${code}`);
+                console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
         } else {
-            console.log(`FC reports unsupported message error: ${code}`);
+            console.log(`FC reports unsupported message error: ${code} (${getMSPCodeName(code)})`);
 
             if (code === MSPCodes.MSP_SET_REBOOT) {
                 TABS.onboard_logging.mscRebootFailedCallback();
@@ -1591,7 +1594,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
         }
 
     } else {
-        console.warn(`code: ${code} - crc failed`);
+        console.warn(`code: ${code} (${getMSPCodeName(code)}) - crc failed`);
     }
     // trigger callbacks, cleanup/remove callback after trigger
     for (let i = dataHandler.callbacks.length - 1; i >= 0; i--) { // iterating in reverse because we use .splice which modifies array length
