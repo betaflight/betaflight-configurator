@@ -412,6 +412,9 @@ receiver.initialize = function (callback) {
             $('input.elrsUid').toggle(tab.elrsBindingPhraseEnabled);
         }
 
+        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+        $('#rxModeSelect').sortSelect(i18n.getMessage("featureNone"));
+
         $(featuresElement).filter('select').change(function () {
             const element = $(this);
             FC.FEATURE_CONFIG.features.updateData(element);
