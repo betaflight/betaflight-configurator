@@ -6,6 +6,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import serial from "../serial";
+import * as d3 from 'd3';
 
 const sensors = {};
 sensors.initialize = function (callback) {
@@ -69,48 +70,45 @@ sensors.initialize = function (callback) {
     function initGraphHelpers(selector, sampleNumber, heightDomain) {
         const helpers = {selector: selector, targetElement: $(selector), dynamicHeightDomain: !heightDomain};
 
-        helpers.widthScale = d3.scale.linear()
+        helpers.widthScale = d3.scaleLinear()
             .clamp(true)
             .domain([(sampleNumber - 299), sampleNumber]);
 
-        helpers.heightScale = d3.scale.linear()
+        helpers.heightScale = d3.scaleLinear()
             .clamp(true)
             .domain(heightDomain || [1, -1]);
 
-        helpers.xGrid = d3.svg.axis();
-        helpers.yGrid = d3.svg.axis();
+        helpers.xGrid = d3.axisBottom();
+        helpers.yGrid = d3.axisLeft();
 
         updateGraphHelperSize(helpers);
 
         helpers.xGrid
             .scale(helpers.widthScale)
-            .orient("bottom")
             .ticks(5)
             .tickFormat("");
 
         helpers.yGrid
             .scale(helpers.heightScale)
-            .orient("left")
             .ticks(5)
             .tickFormat("");
 
-        helpers.xAxis = d3.svg.axis()
+        helpers.xAxis = d3.axisBottom()
             .scale(helpers.widthScale)
             .ticks(5)
-            .orient("bottom")
             .tickFormat(function (d) {return d;});
 
-        helpers.yAxis = d3.svg.axis()
+        helpers.yAxis = d3.axisLeft()
             .scale(helpers.heightScale)
             .ticks(5)
-            .orient("left")
             .tickFormat(function (d) {return d;});
 
-        helpers.line = d3.svg.line()
+        helpers.line = d3.line()
             .x(function (d) {return helpers.widthScale(d[0]);})
             .y(function (d) {return helpers.heightScale(d[1]);});
 
         return helpers;
+
     }
 
     function drawGraph(graphHelpers, data, sampleNumber) {
