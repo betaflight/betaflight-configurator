@@ -858,9 +858,6 @@
     "featureNone": {
         "message": "&lt;Bat aukeratu&gt;"
     },
-    "featureVBAT": {
-        "message": "Bateria tentsioaren jarraipena"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Hegaldi-mailaren kalibrazioa"
     },
@@ -891,9 +888,6 @@
     "featureTELEMETRY": {
         "message": "Telemetria irteera"
     },
-    "featureCURRENT_METER": {
-        "message": "Bateria tentsioaren jarraipena"
-    },
     "feature3D": {
         "message": "3D modua (ESC aldakorrekin erabiltzeko)"
     },
@@ -909,20 +903,8 @@
     "featureDISPLAYTip": {
         "message": "Funtzio hau gaituta badago eta bistaratzeko gailurik ez dago konektatuta (edo bistaratzeko gailua ez dago piztuta), gutxi gorabehera 10 segunduko atzerapena egongo da hegaldi kontroladorearen berrabiarazi bakoitzean."
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT ESC-Euskarri"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Gaitu aurretik, deskonektatu hegaldiaren bateria eta helizeak kendu."
-    },
-    "featureBLACKBOX": {
-        "message": "Kutxa beltzeko hegaldi datu gordailua"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Gaitu ondoren, kutxa beltzaren atala konfiguratu."
-    },
-    "featureESC_SENSOR": {
-        "message": "KISS/BLHeli_32 ESC telemetria <b>beste kable baten gainean</b> erabili"
+    "featureOSD": {
+        "message": "Informazioa Paintailan"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Birbidali aux kanalak serbo irteeretara"
@@ -936,35 +918,14 @@
     "featureAIRMODE": {
         "message": "Airmode etengabe gaitu"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo tasak"
-    },
-    "featureSDCARD": {
-        "message": "SDTxartela-euskarri (erregistratzeko)"
-    },
-    "featureOSD": {
-        "message": "Informazioa Paintailan"
-    },
-    "featureVTX": {
-        "message": "Bideo igorlea"
+    "featureESC_SENSOR": {
+        "message": "KISS/BLHeli_32 ESC telemetria <b>beste kable baten gainean</b> erabili"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Desgaituta badago, 'ANTI GRAVITY' modua erabil dezakezu Anti Gravity-ak etengailu batekin aktibatzeko."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Giro iragazketa dinamikoa"
-    },
-    "featureFAILSAFE": {
-        "message": "Gaitu Segurtasun modua 2garren etapa"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Segurtasun modua gaitu"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Oharra:</strong> 2. fasea desgaituta dagoenean, <strong>Auto</strong> sintonizazio ezarpena erabiliko da erabiltzailearen ezarpenen ordez kanal guztietan (Roll, Pitch, Yaw eta Throttle)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Segurtasun ezarpenak aplikatu RX seinalea galtzean"
     },
     "configurationFeatureEnabled": {
         "message": "Gaituta"

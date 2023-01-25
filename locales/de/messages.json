@@ -951,9 +951,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (über einzelnes Kabel)"
     },
-    "featureVBAT": {
-        "message": "Batteriespannungs Monitoring"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "In-Flug Kalibrierung"
     },
@@ -987,9 +984,6 @@
     "featureTELEMETRY": {
         "message": "Telemetrieübertragung"
     },
-    "featureCURRENT_METER": {
-        "message": "Batterie Strom Überwachung"
-    },
     "feature3D": {
         "message": "3D Modus (für die Benutzung mit umkehrbaren ESC)"
     },
@@ -1011,23 +1005,8 @@
     "featureDISPLAYTip": {
         "message": "Wem die Funktion aktiviert ist, und kein Bildschirm Gerät angeschlossen ist (oder das Gerät keinen Strom hat) gibt es ca. 10 Sekunden Verzögerung bei jedem Reboot des Flugcontrollers"
     },
-    "featureONESHOT125": {
-        "message": "ONESHOT ESC Unterstützug"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Batterie sowie Propeller vor Aktivierung entfernen"
-    },
-    "featureBLACKBOX": {
-        "message": "Blackbox Flug Datenschreiber"
-    },
-    "featureBLACKBOXTip": {
-        "message": "nach dem Einschalten im  Blackbox Tab konfigurierbar"
-    },
-    "featureRX_SPI": {
-        "message": "SPI Empfänger (z.B. eingebauter Empfänger)"
-    },
-    "featureESC_SENSOR": {
-        "message": "KISS/BLHeli_32 ESC Telemetrie <b>über eine separate Leitung</b> verwenden"
+    "featureOSD": {
+        "message": "On Screen Display"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "AUX Kanäle als Servo Ausgang weiterleiten"
@@ -1041,17 +1020,11 @@
     "featureAIRMODE": {
         "message": "Airmode permanent einschalten"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "SPI Empfänger (z.B. eingebauter Empfänger)"
     },
-    "featureSDCARD": {
-        "message": "SD-Karten-Unterstützung (für Logs)"
-    },
-    "featureOSD": {
-        "message": "On Screen Display"
-    },
-    "featureVTX": {
-        "message": "Video Sender"
+    "featureESC_SENSOR": {
+        "message": "KISS/BLHeli_32 ESC Telemetrie <b>über eine separate Leitung</b> verwenden"
     },
     "featureANTI_GRAVITY": {
         "message": "Dauerhaft aktivieren"
@@ -1061,18 +1034,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamischer Gyro Notch Filter"
-    },
-    "featureFAILSAFE": {
-        "message": "Failsafe Stufe 2 aktivieren"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Failsafe aktivieren"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong> Hinweis: </strong> Wenn Failsafe Stufe 2 deaktiviert ist, wird für alle Kanäle (Roll, Pitch, Yaw und Gas) anstelle der Anwendereinstellungen die Rückfall-Einstellung <strong>Auto</strong> übernommen."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Failsafe-Einstellungen im Falle eines Signalverlusts anwenden"
     },
     "configurationFeatureEnabled": {
         "message": "Aktiviert"
@@ -2077,9 +2038,6 @@
     },
     "receiverButtonBindMessage": {
         "message": "Kopplungsanfrage an den Flugcontroller gesendet."
-    },
-    "receiverButtonPassphrase": {
-        "message": "Schlüsselsatz"
     },
     "receiverButtonSticks": {
         "message": "Kontroll Sticks"
@@ -3926,6 +3884,9 @@
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Hinweis:</strong> Der dynamische Kerb(Notch)-Filter ist deaktiviert. Um ihn zu konfigurieren und zu nutzen, aktiviere bitte die Funktion 'DYNAMIC_FILTER' im '$t(configurationFeatures.message)' Abschnitt des '$t(tabConfiguration.message)' Reiters."
+    },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "Der dynamische Kerbfilter (notch filter) ist deaktiviert. Zur Aktivierung stelle die PID-Loopfrequenz auf mindestens 2KHz im '$t(tabConfiguration.message)' Tab."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Filterbereich des Dynamischen Notch-Filters"

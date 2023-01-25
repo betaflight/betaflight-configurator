@@ -951,9 +951,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (fil unique)"
     },
-    "featureVBAT": {
-        "message": "Surveillance de la tension batterie"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibrage du niveau en vol"
     },
@@ -987,9 +984,6 @@
     "featureTELEMETRY": {
         "message": "Sortie télémétrie"
     },
-    "featureCURRENT_METER": {
-        "message": "Surveillance de l'intensité de la batterie"
-    },
     "feature3D": {
         "message": "Mode 3D (nécessite des ESC compatibles)"
     },
@@ -1011,23 +1005,8 @@
     "featureDISPLAYTip": {
         "message": "Si actif alors qu'aucun écran n'est connecté (ou alimenté), le contrôleur de vol attendra pendant une dizaine de secondes à chaque démarrage."
     },
-    "featureONESHOT125": {
-        "message": "ESC ONESHOT"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Débrancher la batterie et retirer les hélices avant d'activer."
-    },
-    "featureBLACKBOX": {
-        "message": "BlackBox"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Aller à l'onglet Blackbox après activation."
-    },
-    "featureRX_SPI": {
-        "message": "Rx SPI (par exemple, Rx intégrée)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Utiliser la télémétrie ESC KISS/BLHeli_32 <b>sur un fil séparé</b>"
+    "featureOSD": {
+        "message": "Affichage des infos sur l'écran (OSD)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Faire passer les voies aux en sorties de type servo"
@@ -1041,17 +1020,11 @@
     "featureAIRMODE": {
         "message": "Airmode permanent"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "Rx SPI (par exemple, Rx intégrée)"
     },
-    "featureSDCARD": {
-        "message": "Carte SD BBL"
-    },
-    "featureOSD": {
-        "message": "Affichage des infos sur l'écran (OSD)"
-    },
-    "featureVTX": {
-        "message": "Émetteur vidéo"
+    "featureESC_SENSOR": {
+        "message": "Utiliser la télémétrie ESC KISS/BLHeli_32 <b>sur un fil séparé</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Activer de manière permanente"
@@ -1060,19 +1033,7 @@
         "message": "Si cette option est désactivée, le mode 'ANTI GRAVITY' peut être utilisé pour activer l'Anti gravité avec un interrupteur."
     },
     "featureDYNAMIC_FILTER": {
-        "message": "Filtre dynamique Notch gyro"
-    },
-    "featureFAILSAFE": {
-        "message": "Activer le Failsafe niveau 2"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Activer le Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Note:</strong> Quand le Stage 2 est DESACTIVE, la commande <strong>Auto</strong> est envoyée sur les voies Roll, Pitch, Yaw et Throttle à la place des paramètres enregistrés."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Appliquer les paramètres FailSafe lors de la perte de signal RX."
+        "message": "Filtre coupe bande dynamique du gyro"
     },
     "configurationFeatureEnabled": {
         "message": "Activé"
@@ -1409,10 +1370,10 @@
         "message": "Sauvegarder et Redémarrer"
     },
     "dialogDynFiltersChangeTitle": {
-        "message": "Changement des valeurs de selection Dynamique"
+        "message": "Changement des valeurs de filtrage dynamique"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>AVERTISSEMENT : Ce changement activera/désactivera le filtrage RPM, augmenter/diminuer le délai/l'efficacité du filtre.</b></span><br><br>Réinitialiser les filtres selectifs dynamiques aux valeurs recommandées ?"
+        "message": "<span class=\"message-negative\"><b>AVERTISSEMENT : Ce changement activera/désactivera le filtrage RPM, augmenter/diminuer le délai/l'efficacité du filtre.</b></span><br><br>Réinitialiser les filtres coupe bande dynamiques aux valeurs recommandées ?"
     },
     "portsIdentifier": {
         "message": "Identifiant"
@@ -2078,8 +2039,8 @@
     "receiverButtonBindMessage": {
         "message": "Demande d'appairage envoyée au contrôleur de vol."
     },
-    "receiverButtonPassphrase": {
-        "message": "Phrase secrète"
+    "receiverButtonBindingPhrase": {
+        "message": "Phrase de Bind"
     },
     "receiverButtonSticks": {
         "message": "Contrôle des manches"
@@ -3851,7 +3812,7 @@
         "message": "Gyro passe-bas 1"
     },
     "pidTuningGyroLowpassHelp": {
-        "message": "Le premier des deux filtres Gyro passe-bas.<br /><br />L'utilisation du passe-bas gyro 1 en mode dynamique était importante avec le code précédent de filtre selectif (notch) dynamique. Le filtre Gyro passe-bas 1 peut généralement être complètement désactivé dans le firmware 4.3 lorsque le filtrage RPM est utilisé, sauf si le gyro n'a pas de filtrage matériel interne.<br /><br />En mode dynamique, le filtrage sera plus fort à faible puissance, avec moins de filtrage et moins de délai à mesure que l'accélérateur augmente. La transition de la coupure basse à la coupure haute se produira plus tôt, au fure et à mesure que les gaz augmentent, avec des valeurs d'expos plus élevées.<br /><br />En mode statique, la fréquence de coupure est fixée.<br /><br />Le type de filtre par défaut est PT1. Un filtrage d'ordre supérieur est rarement requis.",
+        "message": "Le premier des deux filtres Gyro passe-bas.<br /><br />L'utilisation du passe-bas gyro 1 en mode dynamique était importante avec le code précédent de filtre coupe bande (notch) dynamique. Le filtre Gyro passe-bas 1 peut généralement être complètement désactivé dans le firmware 4.3 lorsque le filtrage RPM est utilisé, sauf si le gyro n'a pas de filtrage matériel interne.<br /><br />En mode dynamique, le filtrage sera plus fort à faible puissance, avec moins de filtrage et moins de délai à mesure que l'accélérateur augmente. La transition de la coupure basse à la coupure haute se produira plus tôt, au fure et à mesure que les gaz augmentent, avec des valeurs d'expos plus élevées.<br /><br />En mode statique, la fréquence de coupure est fixée.<br /><br />Le type de filtre par défaut est PT1. Un filtrage d'ordre supérieur est rarement requis.",
         "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
@@ -3894,19 +3855,19 @@
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
-        "message": "Filtres gyro sélectifs"
+        "message": "Filtres gyro coupe bande"
     },
     "pidTuningGyroNotchFilter": {
-        "message": "Filtre sélectif Gyro 1"
+        "message": "Filtre coupe bande Gyro 1"
     },
     "pidTuningGyroNotchFilterHelp": {
         "message": "Applique un filtre selectif statique (à fréquence constante) de la fréquence centrale spécifiée au Gyro . <br /><br />Peut être utile pour les résonances isolées, fréquences constantes qui affectent à la fois P et D. <br /><br />Pour être utile, la fréquence de résonance doit être constante sur la plage de vitesse.<br /><br />La largeur de  la selection (Notch) est définie par la fréquence de coupure. La coupure devrait généralement être réglée entre 10 % et 40 % en dessous de la fréquence centrale. Utilisez la plage de filtre la plus serrée qui contrôle la résonance. Évitez de régler les filtres selectifs inférieurs à 100hz, sauf dans des circonstances particulières.<br /><br />Les filtres selectifs statiques sont rarement requis en 4.3."
     },
     "pidTuningGyroNotchFilter2": {
-        "message": "Filtre sélectif Gyro 2"
+        "message": "Filtre coupe bande Gyro 2"
     },
     "pidTuningGyroNotchFilter2Help": {
-        "message": "Applique un second filtre selectif statique (à fréquence constante) au Gyro.<br /><br />Ceci est rarement requis, et ne devrait être utilisé qu'en dernier recours pour combattre une deuxième résonance fixe qui ne peut pas être contrôlée par d'autres moyens."
+        "message": "Applique un second filtre coupe bande statique (à fréquence constante) au Gyro.<br /><br />Ceci est rarement requis, et ne devrait être utilisé qu'en dernier recours pour combattre une deuxième résonance fixe qui ne peut pas être contrôlée par d'autres moyens."
     },
     "pidTuningCenterFrequency": {
         "message": "Fréquence centrale [Hz]"
@@ -3919,22 +3880,25 @@
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
-        "message": "Filtre sélectif Dynamique"
+        "message": "Filtre coupe bande dynamique"
     },
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Le Filtre sélectif (Notch) Dynamique poursuit les pics de bruit des moteurs et place un filtre sélectif à ces fréquences, indépendamment sur chaque axe."
     },
     "pidTuningMultiDynamicNotchFilterHelp": {
-        "message": "Le Filtre Notch Dynamique poursuit le bruit du gyro et place un à cinq filtres avec leur centre à ces fréquences sur chaque axe."
+        "message": "Le Filtre coupe bande dynamique poursuit le bruit du gyro et place un à cinq filtres avec leur centre à ces fréquences sur chaque axe."
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Remarque :</strong> Le filtre selectif est désactivé. Pour le configurer et l'utiliser, veuillez activer la fonction 'DYNAMIC_FILTER' dans la section '$t(configurationFeatures.message)' de l'onglet '$t(tabConfiguration.message)'. Assurez-vous également que la vitesse de boucle PID est d'au moins 2kHz."
+        "message": "<strong>Remarque :</strong> Le filtre coupe bande dynamique est désactivé. Pour le configurer et l'utiliser, veuillez activer la fonction 'DYNAMIC_FILTER' dans la section '$t(configurationFeatures.message)' de l'onglet '$t(tabConfiguration.message)'. Assurez-vous également que la vitesse de boucle PID est d'au moins 2kHz."
+    },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "Le filtre coupe bande (notch) dynamique est désactivé. Pour l'utiliser, assurez-vous que la fréquence de boucle PID est définie à au moins 2kHz dans l'onglet '$t(tabConfiguration.message)'."
     },
     "pidTuningDynamicNotchRange": {
-        "message": "Étendue du filtre sélectif Dynamique"
+        "message": "Étendue du filtre coupe bande dynamique"
     },
     "pidTuningDynamicNotchWidthPercent": {
-        "message": "Largeur du Notch Dynamique en pourcent"
+        "message": "Largeur de la coupure dynamique en pourcent"
     },
     "pidTuningDynamicNotchQ": {
         "message": "Facteur Q"
@@ -3946,32 +3910,32 @@
         "message": "Fréquence Max [Hz]"
     },
     "pidTuningDynamicNotchCount": {
-        "message": "Nombre de \"Notch\"s"
+        "message": "Nombre de coupures"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "Le Notch (filtre sélectif) Dynamique peut fonctionner sur trois plages de fréquences : BAS(80-330hz) pour des quads à vitesse de rotation faible comme les 6 pouces et +, MEDIUM(140-550hz) pour un quad normal de 5 pouces, HIGH(230-800hz) pour des vitesses de rotation élevées comme les 2,5-3 pouces. AUTO choisit la plage selon les valeurs de coupure du filtre Dynamique Gyro passe-bas 1."
+        "message": "Le Notch (filtre coupe bande) dynamique peut fonctionner sur trois plages de fréquences : BAS(80-330hz) pour des quads à vitesse de rotation faible comme les 6 pouces et +, MEDIUM(140-550hz) pour un quad normal de 5 pouces, HIGH(230-800hz) pour des vitesses de rotation élevées comme les 2,5-3 pouces. AUTO choisit la plage selon les valeurs de coupure du filtre Dynamique Gyro passe-bas 1."
     },
     "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Définit l'écart entre deux filtres Notch Dynamiques. 0 désactive le second filtre Notch Dynamique et réduit la latence liée au filtrage, mais peut engendrer des températures moteurs plus élevées."
+        "message": "Définit l'écart entre deux filtres coupe bande (notch) dynamiques. 0 désactive le second filtre coupe bande dynamique et réduit la latence liée au filtrage, mais peut engendrer des températures moteurs plus élevées."
     },
     "pidTuningDynamicNotchQHelp": {
-        "message": "Q ajuste la largeur de plage du filtre sélectif Dynamique. Une valeur élevée rétrécie la plage et le rend plus précis, une valeur élevée élargit la plage. Une valeur vraiment basse augmente significativement la latence liée au filtrage."
+        "message": "Q ajuste la largeur de plage du filtre coupe bande Dynamique. Une valeur élevée rétrécie la plage et le rend plus précis, une valeur élevée élargit la plage. Une valeur vraiment basse augmente significativement la latence liée au filtrage."
     },
     "pidTuningDynamicNotchMinHzHelp": {
-        "message": "Régler ceci sur la fréquence de bruit entrante la plus basse qui soit nécessaire pour être contrôlée par le Notch Dynamique."
+        "message": "Régler ceci sur la fréquence de bruit entrante la plus basse qui doit contrôlée par le coupe bande dynamique."
     },
     "pidTuningDynamicNotchMaxHzHelp": {
-        "message": "Régler ceci sur la fréquence de bruit entrante la plus élevée qui soit nécessaire pour être contrôlée par Notch Dynamique."
+        "message": "Régler ceci sur la fréquence de bruit entrante la plus élevée qui doit être contrôlée par le coupe bande dynamique."
     },
     "pidTuningDynamicNotchCountHelp": {
-        "message": "Définit le nombre de notch dynamiques par axe. Si le filtre RPM est activé, une valeur de 1 ou 2 est recommandée. Sans filtre RPM, une valeur de 4 ou 5 est recommandée. Des nombres plus petits réduiront les latences, mais peuvent augmenter la température des moteur."
+        "message": "Définit le nombre de coupures dynamiques par axe. Si le filtre RPM est activé, une valeur de 1 ou 2 est recommandée. Sans filtre RPM, une valeur de 4 ou 5 est recommandée. Des nombres plus petits réduiront les latences, mais peuvent augmenter la température des moteur."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Filtre Gyro RPM",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "Le filtrage RPM est une banque de filtres notch s'appliquant au gyro, qui utilisent les données de télémétrie RPM pour retirer le bruit des moteurs avec une précision chirurgicale.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span> : Les ESC doivent être compatibles avec le protocole DShot Bidirectionnel et la valeur de $t(configurationMotorPoles.message) dans l'onglet $t(tabMotorTesting.message) doit être correcte pour que ce filtre fonctionne.</b>",
+        "message": "Le filtrage RPM est une banque de filtres coupe bande s'appliquant au gyro, qui utilisent les données de télémétrie RPM pour retirer le bruit des moteurs avec une précision chirurgicale.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span> : Les ESC doivent être compatibles avec le protocole DShot Bidirectionnel et la valeur de $t(configurationMotorPoles.message) dans l'onglet $t(tabMotorTesting.message) doit être correcte pour que ce filtre fonctionne.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -4032,10 +3996,10 @@
         "message": "Type de filtre dynamique"
     },
     "pidTuningDTermNotchFiltersGroup": {
-        "message": "Filtre sélectif D Term"
+        "message": "Filtre coupe bande du terme D"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": "Applique un filtre statique (à fréquence constante) aux données D-Term, à la fréquence centrale spécifiée.<br /><br />La largeur se la selection est réglée par la fréquence de coupure.  <br /><br />Peut être utile pour les  fréquences de résonances constante isolées et amplifiées par D.<br /><br />Gardez la coupure aussi près du centre que possible. Évitez de régler les filtres selectifs en dessous de 100hz sauf sur les machines à petit RPM."
+        "message": "Applique un filtre statique (à fréquence constante) aux données D-Term, à la fréquence centrale spécifiée.<br /><br />La largeur de la selection est réglée par la fréquence de coupure.  <br /><br />Peut être utile pour les  fréquences de résonances constante isolées et amplifiées par D.<br /><br />Gardez la coupure aussi près du centre que possible. Évitez de régler les filtres coupe bande en dessous de 100hz sauf sur les machines à petit RPM."
     },
     "pidTuningYawLowpassFiltersGroup": {
         "message": "Filtres passe-bas Yaw"
@@ -4632,6 +4596,10 @@
     "osdSetupPreviewSelectFontElement": {
         "message": "Police {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Zoom",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
     },
     "osdSetupVideoFormatTitle": {
         "message": "Format vidéo"

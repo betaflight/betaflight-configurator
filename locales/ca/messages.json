@@ -959,9 +959,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (un sol cable)"
     },
-    "featureVBAT": {
-        "message": "Seguiment del voltatge de bateria"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibració de nivell en vol"
     },
@@ -995,9 +992,6 @@
     "featureTELEMETRY": {
         "message": "Sortida de telemetria"
     },
-    "featureCURRENT_METER": {
-        "message": "Anàlisi de bateria actual"
-    },
     "feature3D": {
         "message": "3D mode (per usar amb ESCs reversibles)"
     },
@@ -1019,23 +1013,8 @@
     "featureDISPLAYTip": {
         "message": "Si aquesta funció està habilitada i no hi ha cap dispositiu de visualització (o el dispositiu de visualització no està encès), hi haurà un retard d'aproximadament 10 segons en cada reinici de la controladora."
     },
-    "featureONESHOT125": {
-        "message": "Suport d'ESC ONESHOT"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Desconnecteu bateria i retireu hèlix abans d'activar"
-    },
-    "featureBLACKBOX": {
-        "message": "Blackbox gravador de dades de vol"
-    },
-    "featureBLACKBOXTip": {
-        "message": "Configura via pestanya BlackBox després d'activar"
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (p. ex., Rx integrat)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Utilitzeu la telemetria KISS / BLHeli_32 ESC <b>sobre un fil separat</b>"
+    "featureOSD": {
+        "message": "Instruccions a pantalla (OSD)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Enviar canals auxiliars a sortides servo"
@@ -1049,17 +1028,11 @@
     "featureAIRMODE": {
         "message": "Activa Airmode permanentment"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Super Expo Rates"
+    "featureRX_SPI": {
+        "message": "SPI Rx (p. ex., Rx integrat)"
     },
-    "featureSDCARD": {
-        "message": "Suporta SDCard (per logging)"
-    },
-    "featureOSD": {
-        "message": "Instruccions a pantalla (OSD)"
-    },
-    "featureVTX": {
-        "message": "Transmissor de vídeo"
+    "featureESC_SENSOR": {
+        "message": "Utilitzeu la telemetria KISS / BLHeli_32 ESC <b>sobre un fil separat</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Permanenment actiu"
@@ -1069,18 +1042,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtratge Notch dinamic de giro"
-    },
-    "featureFAILSAFE": {
-        "message": "Activa Failsafe Stage 2"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Activa Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Avís:</strong> Quan l'Stage 2 està DESHABILITAT, la configuració <strong>Auto</strong> s'utilitza en comptes de la configuració d'usuari per tots dels canals de vol (Roll, Pitch, Yaw and Throttle)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Aplicar paràmetres de Failsafe quan perd senyal RX"
     },
     "configurationFeatureEnabled": {
         "message": "Activat"
@@ -2089,8 +2050,8 @@
     "receiverButtonBindMessage": {
         "message": "Sol·licitud d’enllaç enviada al controlador de vol."
     },
-    "receiverButtonPassphrase": {
-        "message": "Contrasenya"
+    "receiverButtonBindingPhrase": {
+        "message": "Frase vinculant"
     },
     "receiverButtonSticks": {
         "message": "Sticks de control"
@@ -3941,6 +3902,9 @@
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong> Avís:</strong> El filtre Notch dinàmic està desactivat. Per configurar-lo i utilitzar-lo, activa la funció 'FILTRE DINÀMIC' a la secció '$t(configurationFeatures.message)' de la pestanya '$t(tabConfiguration.message)'. Assegureu-vos també que el bucle PID sigui com a mínim de 2 kHz."
     },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "El filtre de notch dinàmic està desactivat. Per utilitzar-lo, assegureu-vos que la freqüència del bucle PID estigui configurada com a mínim a 2Khz a la pestanya \"$t(tabConfiguration.message)\"."
+    },
     "pidTuningDynamicNotchRange": {
         "message": "Rang del filtre dinàmic de banda eliminada (Notch)"
     },
@@ -4643,6 +4607,10 @@
     "osdSetupPreviewSelectFontElement": {
         "message": "Font {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Apropar",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
     },
     "osdSetupVideoFormatTitle": {
         "message": "Format de video"

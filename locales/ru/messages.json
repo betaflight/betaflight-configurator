@@ -897,9 +897,6 @@
     "featureRX_PPM": {
         "message": "PPM/CPPM (один провод)"
     },
-    "featureVBAT": {
-        "message": "Контроль напряжения батареи"
-    },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Калибровка в полете"
     },
@@ -933,9 +930,6 @@
     "featureTELEMETRY": {
         "message": "Выход телеметрии"
     },
-    "featureCURRENT_METER": {
-        "message": "Контроль тока батареи"
-    },
     "feature3D": {
         "message": "3D режим (используется с реверсивными ESC)"
     },
@@ -957,23 +951,8 @@
     "featureDISPLAYTip": {
         "message": "Если эта настройка включена и не обнаружено подключение дисплея (или выключено питание дисплея), будет задержка  примерно 10 секунд при каждой перезагрузке полетного контроллера."
     },
-    "featureONESHOT125": {
-        "message": "Поддержка регуляторов ONESHOT"
-    },
-    "featureONESHOT125Tip": {
-        "message": "Отключите  батарею и снимите пропеллеры перед  включением. "
-    },
-    "featureBLACKBOX": {
-        "message": "Черный Ящик, запись полётных данных."
-    },
-    "featureBLACKBOXTip": {
-        "message": "После включения настройте во вкладке Черный Ящик."
-    },
-    "featureRX_SPI": {
-        "message": "SPI Rx (например, встроенный Rx)"
-    },
-    "featureESC_SENSOR": {
-        "message": "Используйте KISS/BLHeli_32 ESC телеметрию <b>через отдельный провод</b>"
+    "featureOSD": {
+        "message": "On Screen Display (отображение данных поверх изображения камеры)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Перенос aux каналов на серво выходы"
@@ -987,17 +966,11 @@
     "featureAIRMODE": {
         "message": "Включить Airmode по умолчанию"
     },
-    "featureSUPEREXPO_RATES": {
-        "message": "Супер Экспо Rates"
+    "featureRX_SPI": {
+        "message": "SPI Rx (например, встроенный Rx)"
     },
-    "featureSDCARD": {
-        "message": "Поддержка SD карты (для записи)"
-    },
-    "featureOSD": {
-        "message": "On Screen Display (отображение данных поверх изображения камеры)"
-    },
-    "featureVTX": {
-        "message": "Видеопередатчик"
+    "featureESC_SENSOR": {
+        "message": "Используйте KISS/BLHeli_32 ESC телеметрию <b>через отдельный провод</b>"
     },
     "featureANTI_GRAVITY": {
         "message": "Постоянно включен"
@@ -1007,18 +980,6 @@
     },
     "featureDYNAMIC_FILTER": {
         "message": "Адаптивная полосно-заграждающая фильтрация"
-    },
-    "featureFAILSAFE": {
-        "message": "Включить Failsafe этап 2"
-    },
-    "featureFAILSAFEOld": {
-        "message": "Включить Failsafe"
-    },
-    "featureFAILSAFETip": {
-        "message": "<strong>Примечание:</strong> Когда Этап 2 ВЫКЛЮЧЕН, резервные настройки<strong>Auto</strong> используется вместо пользовательских настроек для всех каналов (Roll, Pitch, Yaw и Throttle)."
-    },
-    "featureFAILSAFEOldTip": {
-        "message": "Применить настройки Failsafe при потере сигнала с приёмника"
     },
     "configurationFeatureEnabled": {
         "message": "Включено"
