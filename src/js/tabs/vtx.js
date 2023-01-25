@@ -512,6 +512,8 @@ vtx.initialize = function (callback) {
                     selectBand.append(new Option(i18n.getMessage('vtxBand_X', {bandName: i}), i));
                 }
             }
+            // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+            selectBand.sortSelect(i18n.getMessage("vtxBand_0"));
         }
 
         function populateChannelSelect() {
