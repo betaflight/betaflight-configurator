@@ -1,4 +1,3 @@
-import "bluebird";
 import { JSDOM } from "jsdom";
 import $ from "jquery";
 import { vi } from "vitest";

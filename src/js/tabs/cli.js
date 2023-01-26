@@ -111,24 +111,27 @@ cli.initialize = function (callback) {
         self.history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-        return Promise.reduce(outputArray, function(delay, line, index) {
-            return new Promise(function (resolve) {
-                GUI.timeout_add('CLI_send_slowly', function () {
-                    let processingDelay = self.lineDelayMs;
-                    line = line.trim();
-                    if (line.toLowerCase().startsWith('profile')) {
-                        processingDelay = self.profileSwitchDelayMs;
-                    }
-                    const isLastCommand = outputArray.length === index + 1;
-                    if (isLastCommand && self.cliBuffer) {
-                        line = getCliCommand(line, self.cliBuffer);
-                    }
-                    self.sendLine(line, function () {
-                        resolve(processingDelay);
-                    });
-                }, delay);
-            });
-        }, 0);
+        return outputArray.reduce((p, line, index) =>
+            p.then((delay) =>
+                new Promise((resolve) => {
+                    GUI.timeout_add('CLI_send_slowly', function () {
+                        let processingDelay = self.lineDelayMs;
+                        line = line.trim();
+                        if (line.toLowerCase().startsWith('profile')) {
+                            processingDelay = self.profileSwitchDelayMs;
+                        }
+                        const isLastCommand = outputArray.length === index + 1;
+                        if (isLastCommand && self.cliBuffer) {
+                            line = getCliCommand(line, self.cliBuffer);
+                        }
+                        self.sendLine(line, function () {
+                            resolve(processingDelay);
+                        });
+                    }, delay);
+                }),
+            ),
+            Promise.resolve(0),
+        );
     }
 
     $('#content').load("./tabs/cli.html", function () {
