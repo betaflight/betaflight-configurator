@@ -1,6 +1,7 @@
 import semver from "semver";
 import { mixerList } from "../model";
 import CONFIGURATOR from "../data_storage";
+import { gui_log } from "../gui_log";
 
 export function millitime() {
     return new Date().getTime();
@@ -39,7 +40,7 @@ export function isInt(n) {
 export function checkChromeRuntimeError() {
     if (chrome.runtime.lastError) {
         console.error(`Chrome API Error: ${chrome.runtime.lastError.message}.\n Traced ${new Error().stack}`);
-
+        gui_log(`Chrome API Error: ${chrome.runtime.lastError.message}.`);
         return true;
     }
     return false;
