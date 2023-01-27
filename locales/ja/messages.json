@@ -2042,6 +2042,9 @@
     "receiverButtonBindMessage": {
         "message": "フライトコントローラにバインド要求を送信します。"
     },
+    "receiverButtonBindingPhrase": {
+        "message": "バインドフレーズ"
+    },
     "receiverButtonSticks": {
         "message": "コントロールスティック"
     },
