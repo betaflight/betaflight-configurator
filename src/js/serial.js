@@ -47,7 +47,8 @@ const serial = {
         self.connectionType = 'serial';
 
         chrome.serial.connect(path, options, function (connectionInfo) {
-            if (connectionInfo && !self.openCanceled && !checkChromeRuntimeError()) {
+            self.failed = checkChromeRuntimeError();
+            if (connectionInfo && !self.openCanceled && !self.failed) {
                 self.connected = true;
                 self.connectionId = connectionInfo.connectionId;
                 self.bitrate = connectionInfo.bitrate;
@@ -65,6 +66,7 @@ const serial = {
                             if (!self.failed++) {
                                 chrome.serial.setPaused(self.connectionId, false, function () {
                                     self.getInfo(function (getInfo) {
+                                        checkChromeRuntimeError();
                                         if (getInfo) {
                                             if (!getInfo.paused) {
                                                 console.log(`${self.connectionType}: connection recovered from last onReceiveError`);
@@ -74,8 +76,6 @@ const serial = {
                                                 gui_log(i18n.getMessage('serialUnrecoverable'));
                                                 self.errorHandler(getInfo.error, 'receive');
                                             }
-                                        } else {
-                                            checkChromeRuntimeError();
                                         }
                                     });
                                 });
@@ -87,13 +87,14 @@ const serial = {
                             self.error = info.error;
                             setTimeout(function() {
                                 chrome.serial.setPaused(info.connectionId, false, function() {
-                                    self.getInfo(function (_info) {
-                                        if (_info) {
-                                            if (_info.paused) {
+                                    checkChromeRuntimeError();
+                                    self.getInfo(function (getInfo) {
+                                        if (getInfo) {
+                                            if (getInfo.paused) {
                                                 // assume unrecoverable, disconnect
                                                 console.log(`${self.connectionType}: connection did not recover from ${self.error} condition, disconnecting`);
                                                 gui_log(i18n.getMessage('serialUnrecoverable'));
-                                                self.errorHandler(_info.error, 'receive');
+                                                self.errorHandler(getInfo.error, 'receive');
                                             }
                                             else {
                                                 console.log(`${self.connectionType}: connection recovered from ${self.error} condition`);
