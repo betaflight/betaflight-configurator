@@ -28,6 +28,7 @@ const serial = {
         {'vendorId': 4292, 'productId': 60000}, // CP210x
         {'vendorId': 4292, 'productId': 60001}, // CP210x
         {'vendorId': 4292, 'productId': 60002}, // CP210x
+        {'vendorId': 0x2e3c, 'productId': 0x5740}, // AT32 VCP
     ],
 
     connect: function (path, options, callback) {
