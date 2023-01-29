@@ -14,6 +14,7 @@ export const mixerList = [
     { name: 'Y4',               pos: 19, model: 'y4',         image: 'y4',           motors: 4, servos: false },
     { name: 'Hex X',            pos: 6,  model: 'hex_x',      image: 'hex_x',        motors: 6, servos: false },
     { name: 'Octo X8',          pos: 21, model: 'custom',     image: 'octo_x8',      motors: 8, servos: false },
+    { name: 'Octo X8 +',        pos: 26, model: 'custom',     image: 'custom',       motors: 8, servos: false },
     { name: 'Octo Flat +',      pos: 8,  model: 'custom',     image: 'octo_flat_p',  motors: 8, servos: false },
     { name: 'Octo Flat X',      pos: 9,  model: 'custom',     image: 'octo_flat_x',  motors: 8, servos: false },
     { name: 'Airplane',         pos: 11, model: 'custom',     image: 'airplane',     motors: 1, servos: true },
