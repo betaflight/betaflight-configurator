@@ -2774,6 +2774,8 @@ osd.initialize = function(callback) {
                             const timerSourceOptionText = i18n.getMessage(`osdTimerSourceOption${inflection.camelize(e.toLowerCase())}`);
                             src.append(`<option value="${i}">${timerSourceOptionText}</option>`);
                         });
+                        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+                        src.sortSelect();
                         src[0].selectedIndex = tim.src;
                         src.blur(function() {
                             const idx = $(this)[0].id.split("_")[1];
@@ -2795,6 +2797,8 @@ osd.initialize = function(callback) {
                             const timerPrecisionOptionText = i18n.getMessage(`osdTimerPrecisionOption${inflection.camelize(e.toLowerCase())}`);
                             precision.append(`<option value="${i}">${timerPrecisionOptionText}</option>`);
                         });
+                        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+                        precision.sortSelect();
                         precision[0].selectedIndex = tim.precision;
                         precision.blur(function() {
                             const idx = $(this)[0].id.split("_")[1];
@@ -3067,6 +3071,9 @@ osd.initialize = function(callback) {
                                              .val(variantIndex)
                                              .html(i18n.getMessage(variantText)));
                             }
+
+                            // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+                            selectVariant.sortSelect();
 
                             selectVariant.val(field.variant);
 
