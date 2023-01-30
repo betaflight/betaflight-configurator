@@ -234,7 +234,7 @@
         "message": "Porte"
     },
     "tabPidTuning": {
-        "message": "Messa a punto PID"
+        "message": "Regolazione PID"
     },
     "tabReceiver": {
         "message": "Ricevente"
@@ -1318,7 +1318,7 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Nota:</strong> Assicurati che il FC sia in grado di operare a queste velocità! controlla la stabilità della CPU e del tempo di ciclo. La modifica potrebbe richiedere una nuova messa a punto dei PID. SUGGERIMENTO: disabilita l'accelerometro e gli altri sensori per avere maggiori prestazioni."
+        "message": "<strong>Nota:</strong> Assicurati che il FC sia in grado di operare a queste velocità! controlla la stabilità della CPU e del tempo di ciclo. La modifica potrebbe richiedere una regolazione dei PID. SUGGERIMENTO: disabilita l'accelerometro e gli altri sensori per avere maggiori prestazioni."
     },
     "configurationGPS": {
         "message": "GPS"

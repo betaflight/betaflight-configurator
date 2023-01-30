@@ -1544,7 +1544,7 @@
         "message": "안티 그라비티는 스로틀이 빠르게 변화하는 동안과 직후에 I (4.3은 P도) 를 증가시켜 스로틀 펌프 중 자세 안정성을 높입니다.<br><br>높은 게인 값은 낮은 권위의 기계 또는 무게 중심이 틀어진 기계에서 안정성을 향상시킬 수 있습니다."
     },
     "pidTuningDMin": {
-        "message": "<b>D</b>침식",
+        "message": "<b>D</b>미분",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {

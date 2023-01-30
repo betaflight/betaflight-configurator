@@ -2039,6 +2039,9 @@
     "receiverButtonBindMessage": {
         "message": "Kopplungsanfrage an den Flugcontroller gesendet."
     },
+    "receiverButtonBindingPhrase": {
+        "message": "Schlüsselbegriff (binding phrase)"
+    },
     "receiverButtonSticks": {
         "message": "Kontroll Sticks"
     },
