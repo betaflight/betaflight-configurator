@@ -4999,19 +4999,19 @@
         "message": "koordinat for GPS breddegrad"
     },
     "osdTextElementGPSVariant7Decimals": {
-        "message": "Med 7 decimaler",
+        "message": "Decimal (DD) med 7 decimaler",
         "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementGPSVariant4Decimals": {
-        "message": "Med 4 decimaler",
+        "message": "Decimal (DD) med 4 decimaler",
         "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementGPSVariantDegMinSec": {
-        "message": "Brug grader, minutter og sekunder",
+        "message": "Grader, minutter og sekunder (DMS)",
         "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementGPSVariantOpenLocation": {
-        "message": "Anvender Open Location Code",
+        "message": "Open Location Code (OLC)",
         "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
@@ -5104,7 +5104,7 @@
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementMainBattUsageVariantValueUsage": {
-        "message": "Resterende i procent",
+        "message": "Forbrugt i procent",
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
@@ -5606,19 +5606,19 @@
         "message": "Vælg den faktor, som styrer tidstagningens varighed/hændelse"
     },
     "osdTimerSourceOptionOnTime": {
-        "message": "Forbrugt tid",
+        "message": "Fra fartøj blev tændt",
         "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
     },
     "osdTimerSourceOptionTotalArmedTime": {
-        "message": "Tidspunkt for fartøj blev tændt",
+        "message": "Aktiveringer fra fartøj blev tændt",
         "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
-        "message": "Sidste tidspunkt for aktivering",
+        "message": "Sidste aktivering",
         "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
-        "message": "Til/aktiveret tid",
+        "message": "Sidste aktivering / deaktivering",
         "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
@@ -5628,15 +5628,15 @@
         "message": "Vælg præcision til præsentation af tidstagning"
     },
     "osdTimerPrecisionOptionSecond": {
-        "message": "Sekund",
+        "message": "Sekunder",
         "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerPrecisionOptionHundredth": {
-        "message": "Hundreddele",
+        "message": "Sekunder / 100",
         "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerPrecisionOptionTenth": {
-        "message": "Tiende",
+        "message": "Sekunder / 10",
         "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerAlarm": {
@@ -6706,9 +6706,9 @@
         "message": "Brugertilpasset Defines"
     },
     "coreBuild": {
-        "message": "Alene kerne "
+        "message": "Kun grund komponenter"
     },
     "coreBuildModeDescription": {
-        "message": "Dette tilvalg danner en relase som indeholder hardware drivere (og nogle begrænsede funktioner). Den er tilgængelig til at hjælpe med at detektere hardware på en FC og er til rådighed for bekvemmelighed. Ikke alle funktioner vil være tilgængelige (kun hardware) ved hjælp af denne indstilling."
+        "message": "Dette tilvalg danner en relase som indeholder hardware drivere (og nogle begrænsede funktioner). Den kan anvendes til at detektere hardware på FC og er til rådighed for bekvemmelighed. Ikke alle funktioner vil være tilgængelige (kun hardware) hvis du vælger denne indstilling."
     }
 }
