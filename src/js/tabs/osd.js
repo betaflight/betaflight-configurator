@@ -14,6 +14,7 @@ import semver from "semver";
 import jBox from "jbox";
 import inflection from "inflection";
 import { checkChromeRuntimeError } from "../utils/common";
+import debounce from "lodash.debounce";
 
 const FONT = {};
 const SYM = {};
@@ -3085,7 +3086,7 @@ osd.initialize = function(callback) {
                                 $(`<input type="number" class="${field.index} position"></input>`)
                                     .data('field', field)
                                     .val(field.position)
-                                    .change($.debounce(250, function() {
+                                    .change(debounce(function() {
                                         const fieldChanged = $(this).data('field');
                                         const position = parseInt($(this).val());
                                         fieldChanged.position = position;
@@ -3093,7 +3094,7 @@ osd.initialize = function(callback) {
                                             .then(function() {
                                                 updateOsdView();
                                             });
-                                    })),
+                                    }, 250)),
                             );
                         }
 
