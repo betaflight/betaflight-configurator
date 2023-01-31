@@ -164,7 +164,7 @@ const VirtualFC = {
             virtualFC.RC.channels[i] = 1500;
         }
 
-        // from https://github.com/betaflight/betaflight/blob/master/docs/Modes.md
+        // from https://betaflight.com/docs/development/Modes
         virtualFC.AUX_CONFIG = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","CAMSTAB","PASSTHRU","BEEPERON","LEDLOW","CALIB",
         "OSD","TELEMETRY","SERVO1","SERVO2","SERVO3","BLACKBOX","FAILSAFE","AIRMODE","3D","FPV ANGLE MIX","BLACKBOX ERASE","CAMERA CONTROL 1",
         "CAMERA CONTROL 2","CAMERA CONTROL 3","FLIP OVER AFTER CRASH","BOXPREARM","BEEP GPS SATELLITE COUNT","VTX PIT MODE","USER1","USER2",
