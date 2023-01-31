@@ -277,6 +277,15 @@ receiver.initialize = function (callback) {
         // Convert to select2 and order alphabetic
         if (!GUI.isCordova()) {
             serialRxSelectElement.sortSelect().select2();
+
+            $(document).on('select2:open', 'select.serialRX', () => {
+                let allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+                $(this).one('mouseup keyup',()=>{
+                    setTimeout(()=>{
+                        allFound[allFound.length - 1].focus();
+                    },0);
+                });
+            });
         }
 
         const spiRxTypes = [
@@ -336,6 +345,15 @@ receiver.initialize = function (callback) {
         if (!GUI.isCordova()) {
             // Convert to select2 and order alphabetic
             spiRxElement.sortSelect().select2();
+
+            $(document).on('select2:open', 'select.spiRx', () => {
+                let allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+                $(this).one('mouseup keyup',()=>{
+                    setTimeout(()=>{
+                        allFound[allFound.length - 1].focus();
+                    },0);
+                });
+            });
         }
 
         if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') && FC.RX_CONFIG.rxSpiProtocol == 19 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {

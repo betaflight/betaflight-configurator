@@ -443,6 +443,23 @@ firmware_flasher.initialize = function (callback) {
                 }
             }
         });
+        // when any of the select2 elements is opened, force a focus on that element's search box
+        const select2Elements = [
+            'select[name="board"]',
+            'select[name="radioProtocols"]',
+            'select[name="telemetryProtocols"]',
+            'select[name="motorProtocols"]',
+            'select[name="options"]',
+            'select[name="commits"]',
+        ];
+        $(document).on('select2:open', select2Elements.join(','), () => {
+            let allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+            $(this).one('mouseup keyup', () => {
+                setTimeout(() => {
+                    allFound[allFound.length - 1].focus();
+                }, 0);
+            });
+        });
 
         function cleanUnifiedConfigFile(input) {
             let output = [];
