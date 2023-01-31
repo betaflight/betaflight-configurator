@@ -459,8 +459,6 @@ ports.initialize = function (callback) {
 
         if (enableTelemetry) {
             featureConfig.enable('TELEMETRY');
-        } else {
-            featureConfig.disable('TELEMETRY');
         }
 
         if (enableBlackbox) {
