@@ -279,7 +279,7 @@ receiver.initialize = function (callback) {
             serialRxSelectElement.sortSelect().select2();
 
             $(document).on('select2:open', 'select.serialRX', () => {
-                let allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+                const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
                 $(this).one('mouseup keyup',()=>{
                     setTimeout(()=>{
                         allFound[allFound.length - 1].focus();
@@ -347,7 +347,7 @@ receiver.initialize = function (callback) {
             spiRxElement.sortSelect().select2();
 
             $(document).on('select2:open', 'select.spiRx', () => {
-                let allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+                const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
                 $(this).one('mouseup keyup',()=>{
                     setTimeout(()=>{
                         allFound[allFound.length - 1].focus();

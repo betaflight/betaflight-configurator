@@ -453,7 +453,7 @@ firmware_flasher.initialize = function (callback) {
             'select[name="commits"]',
         ];
         $(document).on('select2:open', select2Elements.join(','), () => {
-            let allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+            const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
             $(this).one('mouseup keyup', () => {
                 setTimeout(() => {
                     allFound[allFound.length - 1].focus();
