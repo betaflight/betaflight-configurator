@@ -8,17 +8,6 @@
             <div class="spacer" style="margin-bottom: 10px;">
                 <div class="margin-bottom">
                 <table class="cf_table" style="margin-top: 10px;">
-                    <tr class="option">
-                        <td>
-                            <label>
-                                <input class="show_development_releases toggle" type="checkbox" />
-                                <span i18n="firmwareFlasherShowDevelopmentReleases"></span>
-                            </label>
-                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherShowDevelopmentReleasesDescription"></div>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
                     <tr class="expert_mode option">
                         <td>
                             <label>
@@ -26,6 +15,17 @@
                                 <span i18n="expertMode"></span>
                             </label>
                             <div class="helpicon cf_tip_wide" i18n_title="expertModeDescription"></div>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr class="option">
+                        <td>
+                            <label>
+                                <input class="show_development_releases toggle" type="checkbox" />
+                                <span i18n="firmwareFlasherShowDevelopmentReleases"></span>
+                            </label>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherShowDevelopmentReleasesDescription"></div>
                         </td>
                         <td>
                         </td>
@@ -64,7 +64,7 @@
                         <td>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="expertOptions option">
                         <td>
                             <label>
                                 <input class="updating toggle" type="checkbox" />
@@ -75,7 +75,7 @@
                         <td>
                         </td>
                     </tr>
-                    <tr class="option flash_on_connect_wrapper">
+                    <tr class="expertOptions option flash_on_connect_wrapper">
                         <td>
                             <label>
                                 <input class="flash_on_connect toggle" type="checkbox" />
@@ -86,7 +86,7 @@
                         <td>
                         </td>
                     </tr>
-                    <tr class="option">
+                    <tr class="expertOptions option">
                         <td>
                             <label>
                                 <input class="erase_chip toggle" type="checkbox" />
@@ -97,7 +97,7 @@
                         <td>
                         </td>
                     </tr>
-                    <tr class="option manual_baud_rate noboarder">
+                    <tr class="expertOptions option manual_baud_rate noboarder">
                         <td>
                             <label>
                                 <input class="flash_manual_baud toggle" type="checkbox" />
