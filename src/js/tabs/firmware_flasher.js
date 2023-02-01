@@ -302,8 +302,6 @@ firmware_flasher.initialize = function (callback) {
 
                     const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
                     if (expertMode) {
-                        $('div.expertOptions').show();
-
                         if (response.releaseType === 'Unstable') {
                             self.releaseLoader.loadCommits(response.release, (commits) => {
                                 const select_e = $('select[name="commits"]');
@@ -312,14 +310,10 @@ firmware_flasher.initialize = function (callback) {
                                     select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
                                 });
                             });
-
-                            $('div.commitSelection').show();
-                        } else {
-                            $('div.commitSelection').hide();
                         }
-                    } else {
-                        $('div.expertOptions').hide();
                     }
+
+                    $('div.commitSelection').toggle(expertMode && response.releaseType === "Unstable");
                 }
 
                 if (response.configuration && !self.isConfigLocal) {
@@ -861,14 +855,14 @@ firmware_flasher.initialize = function (callback) {
                         request.options.push($(this).val());
                     });
 
+                    $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
+                        request.options.push(v);
+                    });
+
                     if ($('input[name="expertModeCheckbox"]').is(':checked')) {
                         if (targetDetail.releaseType === "Unstable") {
                             request.commit = $('select[name="commits"] option:selected').val();
                         }
-
-                        $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
-                            request.options.push(v);
-                        });
                     }
                 }
 
