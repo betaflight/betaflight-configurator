@@ -259,10 +259,8 @@ function onOpen(openInfo) {
         }
 
         // reset expert mode
-        result = getConfig('permanentExpertMode');
-        if (result.permanentExpertMode) {
-            $('input[name="expertModeCheckbox"]').prop('checked', result.permanentExpertMode).trigger('change');
-        }
+        result = getConfig('expertMode')?.expertMode ?? false;
+        $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
         serial.onReceive.addListener(read_serial);
         setConnectionTimeout();

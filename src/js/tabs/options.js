@@ -16,7 +16,6 @@ options.initialize = function (callback) {
     $('#content').load("./tabs/options.html", function () {
         i18n.localizePage();
 
-        TABS.options.initPermanentExpertMode();
         TABS.options.initRememberLastTab();
         TABS.options.initCheckForConfiguratorUnstableVersions();
         TABS.options.initAnalyticsOptOut();
@@ -47,21 +46,6 @@ options.initShowWarnings = function () {
     $('div.presetsWarningBackup input').change(function () {
         const checked = $(this).is(':checked');
         setConfig({'showPresetsWarningBackup': checked});
-    }).change();
-};
-
-options.initPermanentExpertMode = function () {
-    const result = getConfig('permanentExpertMode');
-    if (result.permanentExpertMode) {
-        $('div.permanentExpertMode input').prop('checked', true);
-    }
-
-    $('div.permanentExpertMode input').change(function () {
-        const checked = $(this).is(':checked');
-
-        setConfig({'permanentExpertMode': checked});
-
-        $('input[name="expertModeCheckbox"]').prop('checked', checked).change();
     }).change();
 };
 
