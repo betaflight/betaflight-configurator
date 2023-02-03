@@ -254,10 +254,18 @@ FONT.msp = {
 };
 
 FONT.upload = function($progress) {
-    return Promise.mapSeries(FONT.data.characters, function(data, i) {
-        $progress.val((i / FONT.data.characters.length) * 100);
-        return MSP.promise(MSPCodes.MSP_OSD_CHAR_WRITE, FONT.msp.encode(i));
-    })
+    return FONT.data.characters
+        .reduce(
+            (p, x, i) =>
+                p.then(() => {
+                    $progress.val((i / FONT.data.characters.length) * 100);
+                    return MSP.promise(
+                        MSPCodes.MSP_OSD_CHAR_WRITE,
+                        FONT.msp.encode(i),
+                    );
+                }),
+            Promise.resolve(),
+        )
         .then(function() {
 
             console.log(`Uploaded all ${FONT.data.characters.length} characters`);

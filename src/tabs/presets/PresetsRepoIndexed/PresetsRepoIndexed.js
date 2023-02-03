@@ -66,7 +66,7 @@ export default class PresetsRepoIndexed {
             return this._executeIncludeOnce(strings)
             .then(resultStrings => this._executeIncludeNested(resultStrings));
         } else {
-            return new Promise.resolve(strings);
+            return Promise.resolve(strings);
         }
     }
 
