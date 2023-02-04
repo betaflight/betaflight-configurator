@@ -320,6 +320,8 @@ onboard_logging.initialize = function (callback) {
                 {text: "ATTITUDE"},
                 {text: "VTX_MSP"},
                 {text: "GPS_DOP"},
+                {text: "FAILSAFE"},
+                {text: "GYRO_CALIBRATION"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
