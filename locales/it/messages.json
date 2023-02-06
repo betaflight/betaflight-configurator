@@ -87,10 +87,7 @@
         "message": "Abilita modalità esperto"
     },
     "expertModeDescription": {
-        "message": "Mostra le build di sviluppo che sono potenzialmente instabili"
-    },
-    "permanentExpertMode": {
-        "message": "Modalità esperto sempre abilitata"
+        "message": "Abilita Modalità Esperto"
     },
     "warningSettings": {
         "message": "Mostra avvisi"
@@ -643,7 +640,7 @@
         "message": "La documentazione Betaflight è disponibile come note di rilascio e wiki.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "Betaflight wiki è una grande risorsa in cui trovare informazioni, lo trovi <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>."
+        "message": "Betaflight wiki è una grande risorsa di informazioni, lo trovi <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>."
     },
     "defaultDocumentation2": {
         "message": "Le informazioni relative alla release per il firmware possono essere lette sulla pagina GitHub delle nuove versioni, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>."
@@ -664,7 +661,7 @@
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">Thread nel forum RC Groups </a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Video di Betaflight 4.3 di Joshua Bardwell</a>"
@@ -673,7 +670,7 @@
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Sviluppatori di Betaflight su slack</a>"
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight devs su Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibra Accelerometro"
@@ -1962,7 +1959,7 @@
         "message": "<strong>Modalità slider per tuning PID</strong><br><br>La modalità slider per tuning PID può essere:<br><br>&bull; OFF - no slider, inserisci manualmente i valori<br>&bull; RP - i cursori controllano solo Roll e Pitch, inserisci manualmente i valori Yaw<br>&bull; RPY - i cursori controllano tutti i valori PID<br><br><span class=\"message-negative\"><b>Attenzione:</b></span>Passando dalla modalità RP a RPY sovrascriverà le impostazioni di Yaw con quelle del firmware."
     },
     "receiverHelp": {
-        "message": "&#8226;<b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il Failsafe funzioni correttamente!</a></strong></b> Le impostazioni sono nella scheda del Failsafe, abilita la modalità esperto.<br> &#8226; <b>Usa l'ultimo firmware della TX!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita i filtri ADC hardware</a></strong> nella trasmittente se usi OpenTx o EdgeTx.<br>Impostazione di base: Configura le impostazioni della ricevente correttamente. Scegli la mappa canali corretta per la tua radio. Controlla che Roll, Pitch e gli altri grafici si muovano correttamente. Regola i limiti dei canali e i valori del range nella tua trasmittente da ~1000 a ~2000, e imposta il punto medio su ~1500. Per maggiori informazioni leggi la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione</a></strong>."
+        "message": "&#8226;<b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il Failsafe funzioni correttamente!</a></strong></b> Le impostazioni sono nella scheda del Failsafe, abilita la modalità esperto.<br> &#8226; <b>Usa l'ultimo firmware della TX!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita i filtri hardware ADC</a></strong> nella trasmittente se usi OpenTx o EdgeTx.<br>Impostazione di base: Configura le impostazioni della ricevente correttamente. Scegli la mappa canali corretta per la tua radio. Controlla che Roll, Pitch ed altre barre grafiche si muovano correttamente. Regola i limiti dei canali e i valori del range nella tua trasmittente da ~1000 a ~2000, e imposta il punto medio su ~1500. Per maggiori informazioni leggi la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas Medio"
@@ -2588,7 +2585,7 @@
         "message": "<strong>Avviso di sicurezza</strong><br /><strong class=\"message-negative\">Rimuovi tutte le eliche per evitare danni!</strong><br />I motori <strong>gireranno!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Avviso</strong><br />I motori gireranno uno ad uno e sarai in grado di selezionare quale motore sta girando. La batteria deve essere collegata e deve essere selezionato il protocollo ESC corretto. Questa utility può solo riorganizzare i motori attualmente attivi. Rimappature più complesse richiedono il comando CLI Resource. Fai riferimento a questa <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
+        "message": "<strong>Avviso</strong><br />I motori gireranno uno alla volta e potrai selezionare quale motore sta girando. Collegare la batteria selezionare il protocollo ESC corretto. Questa utility può solo riorganizzare i motori attualmente attivi. Rimappature più complesse richiedono il comando CLI Resource. Fai riferimento a questa <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Salva"
@@ -2660,7 +2657,7 @@
         "message": "Funziona solo con ESC DSHOT.<br />Verifica che il tuo ESC (Electric Speed Controller) supporti il protocollo DSHOT e cambialo nella scheda $t(tabMotorTesting.message)."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Il numero di motori è 0.<br />Verifica il Mixer attuale nella scheda $t(tabMotorTesting.message) oppure impostane uno personalizzato via CLI. Fai riferimento a questa <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
+        "message": "Il numero di motori è 0.<br />Verifica il Mixer corrente nella scheda $t(tabMotorTesting.message) oppure impostane uno personalizzato via CLI. Fai riferimento a questa <a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Aggiorna il firmware.<br /> Assicurati di utilizzare l'ultimo firmware: Betaflight 4.3 o successivo."
@@ -4020,7 +4017,7 @@
         "message": "Compensazione calo Vbat"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Dà prestazioni costanti di gas e PID su tutto il range di tensione utilizzabile della batteria aumentando l'output di motori al calo della tensione della batteria.<br /><br />Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br /><br />Visita <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki</a> per ulteriori informazioni."
+        "message": "Dà prestazioni costanti del gas e del PID nell'intervallo di tensione della batteria utilizzabile aumentando la potenza del motore al diminuire della tensione della batteria.<br /><br />Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br /><br />Visita <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki</a> per ulteriori informazioni."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4101,7 +4098,7 @@
         "message": "Valore idle dinamico [*100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "L'Idle Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori.<br /><br /> Migliora il controllo dei PID, la stabilità con gas zero, il tempo in volo invertito e il freno dei motori.<br /><br />Gli rpm dell'Idle Dinamico dovrebbero essere impostati a circa 3000-3500rpm. In 4.2 imposta un valore basso, es 1%. Non c'è bisogno di cambiare il valore dell'Idle Dshot in 4.3.<br /><br />Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">questa pagina wiki</a> per maggiori informazioni."
+        "message": "L'Idle Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori.<br /><br /> Migliora il controllo dei PID, la stabilità con zero gas, il tempo in volo invertito e il freno dei motori.<br /><br />Gli rpm dell'Idle Dinamico dovrebbero essere impostati a circa 3000-3500rpm. In 4.2 imposta un valore Dshot basso, es 1%. Non c'è bisogno di cambiare il valore dell'Idle Dshot in 4.3.<br /><br />Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">questa pagina wiki</a> per maggiori informazioni."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "L'Idle Dinamico è OFF perché la telemetria Dshot è OFF"
@@ -4116,7 +4113,7 @@
         "message": "Yaw integrato"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATTENZIONE</span>: se attivi questa opzione, dovrai modificare il PID dello YAW di conseguenza. Più informazioni <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>"
+        "message": "<span class=\"message-negative\">ATTENZIONE</span>: se attivi questa opzione, dovrai anche modificare anche il PID dello YAW. Più informazioni <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "L'Integrated Yaw integra i valori di P, I e D del yaw, consentendo di impostare P, I e D del yaw un po' come quelle di pitch e roll.<br><br>È richiesta poca I perché la P integrata agisce come una I e la D integrata agisce come una P.<br><br>NOTA: L'integrated Yaw richiede l'uso dell'Absolute Control poiché non è necessaria nessuna I con l'integrated Yaw."
@@ -5820,7 +5817,7 @@
         "message": "Salvato"
     },
     "vtxHelp": {
-        "message": "Qui è possibile configurare i valori della Trasmittente Video (VTX). È possibile visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX utilizza i seguenti passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca sul pulsante '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Fare clic su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller del volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione in lua da usare con gli script lua di Betaflight (maggiori informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
+        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX utilizza i seguenti passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller del volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (maggiori informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
