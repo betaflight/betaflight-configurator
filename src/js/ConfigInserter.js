@@ -1,8 +1,8 @@
 
 const CUSTOM_DEFAULTS_POINTER_ADDRESSES = [
-	0x08002800, // most STM32 internal-flash-based targets.
-	0x901fdfc0, // Memory-mapped EXST targets with a flash vma address of 0x90100000. (e.g. SPRacingH7RF, H7EF)
-	0x2407dfc0, // Ram-copy EXST targets (e.g. SPRacingH7EXTREME, H7NANO, H7ZERO, H7CINE, H7NP)
+    0x08002800, // most STM32 internal-flash-based targets.
+    0x901fdfc0, // Memory-mapped EXST targets with a flash vma address of 0x90100000. (e.g. SPRacingH7RF, H7EF)
+    0x2407dfc0, // Ram-copy EXST targets (e.g. SPRacingH7EXTREME, H7NANO, H7ZERO, H7CINE, H7NP)
 ];
 
 const BLOCK_SIZE = 16384;
@@ -25,16 +25,23 @@ function seek(firmware, address) {
 }
 
 function readUint32(firmware, index) {
-    let result = 0;
+
+    let bytes = [];
+
     for (let position = 0; position < 4; position++) {
-        result += firmware.data[index.lineIndex].data[index.byteIndex++] << (8 * position);
+        let byte = firmware.data[index.lineIndex].data[index.byteIndex++];
+        bytes.push(byte);
+
         if (index.byteIndex >= firmware.data[index.lineIndex].bytes) {
             index.lineIndex++;
             index.byteIndex = 0;
         }
     }
 
-    return result;
+    let buffer = Buffer.from(bytes);
+    let address = buffer.readUInt32LE(0);
+
+    return address;
 }
 
 function getCustomDefaultsArea(firmware, address) {
@@ -53,12 +60,13 @@ function getCustomDefaultsArea(firmware, address) {
 		return;
 	}
 
+	console.log(`Custom defaults: 0x${result.startAddress.toString(16)}-0x${result.endAddress.toString(16)}`);
+
     return result;
 }
 
 function findCustomDefaultsArea(firmware) {
-	for (let index = 0; index < CUSTOM_DEFAULTS_POINTER_ADDRESSES.length; index++) {
-		let address = CUSTOM_DEFAULTS_POINTER_ADDRESSES[index];
+	for (let address of CUSTOM_DEFAULTS_POINTER_ADDRESSES) {
 		let result = getCustomDefaultsArea(firmware, address);
 		if (result) {
 			return result;
