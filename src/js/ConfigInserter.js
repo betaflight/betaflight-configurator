@@ -1,5 +1,10 @@
 
-const CUSTOM_DEFAULTS_POINTER_ADDRESS = 0x08002800;
+const CUSTOM_DEFAULTS_POINTER_ADDRESSES = [
+	0x08002800, // most STM32 internal-flash-based targets.
+	0x901fdfc0, // Memory-mapped EXST targets with a flash vma address of 0x90100000. (e.g. SPRacingH7RF, H7EF)
+	0x2407dfc0, // Ram-copy EXST targets (e.g. SPRacingH7EXTREME, H7NANO, H7ZERO, H7CINE, H7NP)
+];
+
 const BLOCK_SIZE = 16384;
 
 function seek(firmware, address) {
@@ -32,10 +37,10 @@ function readUint32(firmware, index) {
     return result;
 }
 
-function getCustomDefaultsArea(firmware) {
+function getCustomDefaultsArea(firmware, address) {
     const result = {};
 
-    const index = seek(firmware, CUSTOM_DEFAULTS_POINTER_ADDRESS);
+    const index = seek(firmware, address);
 
     if (index.byteIndex === undefined) {
         return;
@@ -44,7 +49,21 @@ function getCustomDefaultsArea(firmware) {
     result.startAddress = readUint32(firmware, index);
     result.endAddress = readUint32(firmware, index);
 
+	if (result.endAddress <= result.startAddress) {
+		return;
+	}
+
     return result;
+}
+
+function findCustomDefaultsArea(firmware) {
+	for (let index = 0; index < CUSTOM_DEFAULTS_POINTER_ADDRESSES.length; index++) {
+		let address = CUSTOM_DEFAULTS_POINTER_ADDRESSES[index];
+		let result = getCustomDefaultsArea(firmware, address);
+		if (result) {
+			return result;
+		}
+	}
 }
 
 function generateData(firmware, input, startAddress) {
@@ -89,9 +108,9 @@ export default class ConfigInserter {
         console.time(CONFIG_LABEL);
 
         const input = `# Betaflight\n${config}\0`;
-        const customDefaultsArea = getCustomDefaultsArea(firmware);
+        const customDefaultsArea = findCustomDefaultsArea(firmware);
 
-        if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress === 0) {
+        if (!customDefaultsArea) {
             return false;
         } else if (input.length >= customDefaultsArea.endAddress - customDefaultsArea.startAddress) {
             throw new Error(`Custom defaults area too small (${customDefaultsArea.endAddress - customDefaultsArea.startAddress} bytes), ${input.length + 1} bytes needed.`);
