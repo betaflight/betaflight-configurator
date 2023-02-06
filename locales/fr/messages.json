@@ -87,10 +87,7 @@
         "message": "Mode Expert"
     },
     "expertModeDescription": {
-        "message": "Afficher les versions de développement potentiellement instables"
-    },
-    "permanentExpertMode": {
-        "message": "Activer le mode expert de façon permanente"
+        "message": "Activer les options du Mode Expert"
     },
     "warningSettings": {
         "message": "Afficher les avertissements"
@@ -273,7 +270,7 @@
         "message": "Capteurs"
     },
     "tabCLI": {
-        "message": "CLI"
+        "message": "Ligne de commande (CLI)"
     },
     "tabLogging": {
         "message": "Journal de bord"
@@ -417,13 +414,13 @@
         "message": "Aucune donnée reçue depuis <span class=\"message-negative\">10 secondes</span>, <span class=\"message-negative\">échec</span> de communication."
     },
     "firmwareVersionNotSupported": {
-        "message": "Cette version du Firmware <span class=\"message-negative\">n'est pas supportée</span>. Veuillez le mettre à jour vers une version compatible avec l'API <strong>$1</strong> ou ultérieure. Utiliser le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde / restauration par CLI sont décrites dans l'aide.<br /> Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à mettre à jour."
+        "message": "Cette version du micrologiciel <span class=\"message-negative\">n'est pas supportée</span>. Veuillez le mettre à jour vers une version compatible avec l'API <strong>$1</strong> ou ultérieure. Utiliser le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde / restauration par CLI sont décrites dans l'aide.<br /> Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à mettre à jour."
     },
     "firmwareTypeNotSupported": {
         "message": "Les firmwares autres que Betaflight <span class=\"message-negative\">ne sont pas supportés</span>, à part en mode CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "Le firmware de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde/restauration par le CLI sont décrites dans l'aide.<br />Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
+        "message": "Le micrologiciel de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde/restauration par le CLI sont décrites dans l'aide.<br />Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Des valeurs de réglage par défaut sont disponibles pour cette carte. Avec des valeurs par défaut propres à cette carte, celle-ci devrait fonctionner correctement.<br/>Souhaitez vous appliquer les réglages par défaut propres à cette carte ?"
@@ -530,7 +527,7 @@
         "message": "Cible"
     },
     "versionLabelFirmware": {
-        "message": "Firmware"
+        "message": "Micrologiciel"
     },
     "versionLabelConfigurator": {
         "message": "Configurateur"
@@ -600,7 +597,7 @@
         "message": "Participation"
     },
     "defaultContributingText": {
-        "message": "Si vous souhaitez contribuer à améliorer Betaflight, vous pouvez aider de nombreuses manières. incluant:<br /><ul><li>en utilisant vos connaissances de Betaflight pour créer ou mettre à jour du contenu sur <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">notre Wiki</a>, ou en répondant aux questions d'autres utilisateurs dans les forums en ligne ;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">contribuant du code</a> au firmware et au Configurateur - nouvelles fonctionnalités, corrections, améliorations, améliorations ;</li><li>tester <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nouvelles fonctionnalités et corrections</a> et fournir des commentaires;</li><li>aider les autres utilisateurs à résoudre les problèmes qu'ils signalent dans <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">notre outil de suivi de problèmes</a>, et participer aux discussions sur les demandes de fonctionnalités ;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">En traduisant</a> Betaflight Configurator dans une nouvelle langue, ou contribuant à maintenir les traductions existantes.</li></ul>"
+        "message": "Si vous souhaitez contribuer à améliorer Betaflight, vous pouvez aider de nombreuses manières. incluant:<br /><ul><li>en utilisant vos connaissances de Betaflight pour créer ou mettre à jour du contenu sur <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">notre Wiki</a>, ou en répondant aux questions d'autres utilisateurs dans les forums en ligne ;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">contribuant du code</a> au micrologiciel et au Configurateur - nouvelles fonctionnalités, corrections, améliorations, améliorations ;</li><li>tester <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nouvelles fonctionnalités et corrections</a> et fournir des commentaires;</li><li>aider les autres utilisateurs à résoudre les problèmes qu'ils signalent dans <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">notre outil de suivi de problèmes</a>, et participer aux discussions sur les demandes de fonctionnalités ;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">En traduisant</a> Betaflight Configurator dans une nouvelle langue, ou contribuant à maintenir les traductions existantes.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Nous avons également un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Groupe Facebook</a>.<br />\nVenez échanger à propos de Betaflight, posez des questions sur la configuration ou simplement passez du temps avec d'autres pilotes."
@@ -609,7 +606,7 @@
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serveur Discord</a>.<br />Partagez votre expérience de vol, parlez de Betaflight, aidez d'autres personnes ou obtenez de l'aide de la part de la communauté."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configurator collecte des statistiques d'utilisation anonymes. Par exemple, ces données incluent (mais ne se limitent pas à) le nombre de lancements, la région géographique des utilisateurs, types de contrôleurs de vol, versions du firmware, utilisation des éléments et des onglets de l'interface, etc. Le résumé de ces données est partagé <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>. La collecte est faite afin de mieux comprendre comment Betaflight Configurator est utilisé, pour comprendre les tendances de la communauté, et pour les éventuelles améliorations de l'interface utilisateur. Les utilisateurs peuvent se retirer de la collecte de données dans l'onglet Options."
+        "message": "Betaflight Configurator collecte des statistiques d'utilisation anonymes. Par exemple, ces données incluent (mais ne se limitent pas à) le nombre de lancements, la région géographique des utilisateurs, types de contrôleurs de vol, versions du micrologiciel, utilisation des éléments et des onglets de l'interface, etc. Le résumé de ces données est partagé <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>. La collecte est faite afin de mieux comprendre comment Betaflight Configurator est utilisé, pour comprendre les tendances de la communauté, et pour les éventuelles améliorations de l'interface utilisateur. Les utilisateurs peuvent se retirer de la collecte de données dans l'onglet Options."
     },
     "defaultChangelogHead": {
         "message": "Configurateur - Changelog"
@@ -643,7 +640,7 @@
         "message": "La documentation Betaflight est disponible en manuel et en wiki.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "Le Wiki de Betaflight est une bonne source d'information, celle-ci est disponible <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>."
+        "message": "Le wiki de Betaflight est une excellente ressource d'information, il peut être trouvé <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>."
     },
     "defaultDocumentation2": {
         "message": "Les notes de version du firmware peuvent être lues sur la page des versions GitHub, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>."
@@ -664,7 +661,7 @@
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">Discussions sur RC Groups</a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki Betaflight</a>"
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki de Betaflight</a>"
     },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Vidéos de Joshua Bardwell sur Betaflight 4.3</a>"
@@ -673,7 +670,7 @@
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Développeurs de Betaflight sur Slack</a>"
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Développeurs Betaflight sur Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrer l'accéléromètre"
@@ -1072,7 +1069,7 @@
         "message": "Fonctionnalités ESC/Moteur"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Note:</strong> lors d'une contradiction entre les fonctionnalités actives. Le firmware désactive les fonctionnalités en conflit/<br /><strong>Note:</strong> configurer les ports série <span class=\"message-negative\">avant</span> d'activer des fonctionnalités qui les utilisent."
+        "message": "<strong>Note:</strong> lors d'une contradiction entre les fonctionnalités actives. Le micrologiciel désactive les fonctionnalités en conflit/<br /><strong>Note:</strong> configurer les ports série <span class=\"message-negative\">avant</span> d'activer des fonctionnalités qui les utilisent."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; L'UART pour le récepteur doit être réglé sur « Rx série » (dans l'onglet <i>Ports</i> )<br>&#8226; Sélectionnez le format de données correct à partir du menu déroulant, ci-dessous:"
@@ -1225,10 +1222,10 @@
         "message": "Bips SOS si machine armée et perte de signal (auto atterrissage / auto désarmement)"
     },
     "beeperDISARMING": {
-        "message": "Bip au désarmement par le contrôleur de vol"
+        "message": "Bip lors du désarmement du contrôleur de vol"
     },
     "beeperARMING": {
-        "message": "Bip à l'armement par le contrôleur de vol"
+        "message": "Bip lors de l'armement du contrôleur de vol"
     },
     "beeperARMING_GPS_FIX": {
         "message": "Bip une mélodie lors de l'armement de la carte avec acquisition GPS"
@@ -1394,7 +1391,7 @@
         "message": "Périphériques"
     },
     "portsHelp": {
-        "message": "<strong>Note:</strong> toutes les options ne sont pas valides. Si le contrôleur détecte une erreur les ports série seront réinitialisés aux valeurs par défaut."
+        "message": "<strong>Note:</strong> toutes les combinaisons ne sont pas valides. Si le micrologiciel du contrôleur de vol détecte une erreur, les ports série seront réinitialisés aux valeurs par défaut."
     },
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">ATTENTION :</span> La table VTX n'a pas été correctement configurée et sans elle le contrôle VTX ne sera pas possible. Veuillez configurer la table VTX dans l'onglet $t(tabVtx.message)."
@@ -1962,7 +1959,7 @@
         "message": "<strong>Mode curseur de réglage de Pid</strong><br><br>Le mode curseur de réglade de pid peut être :<br><br>&bull; Désactivé - pas de curseurs, entrer les valeurs manuellement<br>&bull; RP - les curseurs contrôlent Roll et Pitch uniquement, entrer les valeurs de Yaw manuellement<br>&bull; RPY - les curseurs contrôlent toutes les valeurs de PID<br><br><span class=\"message-negative\"><b>Avertissement:</b></span>Passer du mode RP au mode RPY écrasera les paramètres de Yaw avec les paramètres du firmware."
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Vérifiez toujours que votre Failsafe fonctionne correctement!</a></strong></b> Les réglages sont dans l'onglet Failsafe, qui nécessite le mode Expert.<br> &#8226; <b>Utilisez le dernier firmware de votre Tx!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Désactivez le filtrage ADC matériel</a></strong> sur votre transmetteur si vous utilisez OpenTx ou EdgeTx.<br>Réglage de base: Configurez vos paramètres du 'récepteur' correctement. Choisissez un 'Ordre des voies' correct pour votre radio. Vérifiez que le Roll, Pitch et autres graphiques se déplacent correctement. Ajuster le endpoint des voies ou la valeur de l'intervalle du transmetteur de ~1000 à ~2000, et le point central à 1500. Pour plus d'information, lisez la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Vérifiez toujours que votre Failsafe fonctionne correctement !</a></strong></b> Les paramètres sont dans l’onglet Failsafe qui nécessite le Mode Expert.<br> &#8226; <b>Utilisez le dernier firmware de votre radiocommande (Tx) !</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Désactivez le filtre ADC matériel</a></strong> dans l'émetteur si vous utilisez OpenTx ou EdgeTx.<br>Configuration de base : Configurez correctement les paramètres du récepteur. Choisissez la bonne ‘carte des chaînes’ pour votre radio. Vérifiez que le rouleau, le Pitch et les autres graphiques à barres se déplacent correctement. Ajustez la valeur du point de terminaison ou de l'intervalle dans l'émetteur à ~1000 à ~2000, et réglez le point milieu à 1500. Pour plus d'informations, lisez la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Centre Gaz"
@@ -2585,7 +2582,7 @@
         "message": "<strong>Avis de sécurité</strong><br /><strong class=\"message-negative\">Retirez toutes les hélices pour éviter les blessures !</strong><br />Les moteurs vont <strong>tourner !</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Information</strong><br />Les moteurs vont tourner un par un et vous pourrez choisir quel moteur tourne. La batterie doit être branchée, le bon protocole ESC doit être sélectionné. Cet utilitaire ne peut réorganiser que les moteurs actuellement actifs. Un remapping plus complexe nécessite la commande CLI Resource. Référez-vous à cette <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">page du Wiki</a>."
+        "message": "<strong>Avis d'information</strong><br />Les moteurs vont tourner un par un et vous pourrez choisir quel moteur tourne. La batterie doit être branchée, un protocole ESC valide doit être sélectionné. Cet utilitaire ne peut réorganiser que les moteurs actuellement actifs. Un mappage plus complexe nécessite la commande<a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\"> CLI \"resource\". Référez-vous à cette <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">page du Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Enregistrer"
@@ -2657,10 +2654,10 @@
         "message": "Ne fonctionne qu'avec des ESC DSHOT.<br />Vérifiez que votre ESC (contrôleur de vitesse électrique) prend en charge le protocole DSHOT et changez le dans l'onglet $t(tabMotorTesting.message)."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Le nombre de moteurs est 0.<br />Vérifiez le Mixer actuel dans l'onglet $t(tabMotorTesting.message) ou configurez-en un personnalisé avec le CLI. Référez-vous à cette <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\"> page du Wiki</a>."
+        "message": "Le nombre de moteurs est égal à 0.<br />Vérifiez le mixeur actuel sur l'onglet $t(tabMotorTesting.message) ou configurez un mixeur personnalisé via la ligne de commande (CLI). Reportez-vous à cette <a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">page du Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
-        "message": "Mettre à jour le firmware.<br /> Soyez sûrs d'utiliser le dernier firmware : Betaflight 4.3 ou supérieur."
+        "message": "Mettre à jour le micrologiciel.<br /> Soyez sûrs d'utiliser le dernier micrologiciel : Betaflight 4.3 ou supérieur."
     },
     "escDshotDirectionDialog-WizardActionHint": {
         "message": "Cliquez sur le numéro de chaque moteur changer le sens de rotation"
@@ -2801,7 +2798,7 @@
         "message": "Le firmware de votre contrôleur de vol ne prend pas en charge la Blackbox."
     },
     "blackboxMaybeSupported": {
-        "message": "Le firmware de votre contrôleur de vol est trop vieux pour supporter cet onglet, ou la fonction Blackbox n'est pas activée dans l'onglet configuration."
+        "message": "Le micrologiciel de votre contrôleur de vol est trop vieux pour supporter cet onglet, ou la fonction Blackbox n'est pas activée dans l'onglet configuration."
     },
     "blackboxConfiguration": {
         "message": "Configuration de la Blackbox"
@@ -3005,7 +3002,7 @@
         "message": "Le configurateur Betaflight supporte le flash de cibles unifiées avec les configurations spécifiques de la carte en une seule étape.<br><br>Le concept de cibles unifiées signifie que le même firmware . ex file peut être utilisé pour toutes les cartes en utilisant le même MCU.<br><br>Betaflight 4.4 introduit <strong>Cloud Build</strong><br><br>Avec <strong>Cloud Build</strong> nous devons définir les options matérielles présentes sur votre build.<br><br>Pour que les différentes cartes fonctionnent avec le même firmware, un fichier de configuration spécifique est déployé à côté du microprogramme lorsqu'une cible unifiée est flashée.<br><br>Avec la compilation locale vous pouvez charger un fichier de configuration cible unifié ou choisir une carte avant de charger un fichier .hex firmware.<br><br>Si vous rencontrez des problèmes en utilisant le firmware, veuillez envisager de rejoindre Discord ou ouvrez une <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">anomalie</a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": "Sélectionnez la version du firmware pour votre carte."
+        "message": "Sélectionnez la version du micrologiciel pour votre carte."
     },
     "firmwareFlasherNoRebootDescription": {
         "message": "Activer si votre contrôleur de vol est en boot mode (Si vous l'avez branché en faisant contact entre les pins bootloader ou en maintenant le bouton BOOT, connu aussi en tant que DFU mode)"
@@ -3086,7 +3083,7 @@
         "message": "Téléchargement..."
     },
     "firmwareFlasherExitDfu": {
-        "message": "Exit DFU Mode"
+        "message": "Sortir du mode DFU"
     },
     "firmwareFlasherFlashFirmware": {
         "message": "Flasher le Firmware"
@@ -3116,7 +3113,7 @@
         "message": "<strong>Récupération / Communication coupée</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Si vous avez perdu la communication avec votre carte suivez ces étapes: <ul><li>Débranchez</li><li> Activez 'Séquence sans redémarrage', activez 'Effacement complet de la puce '.</li><li>shuntez les bornes BOOT ou maintenez le bouton BOOT.</li><li>Re branchez (La LED d'activité ne doit PAS s'allumer).</li><li>Installez les drivers STM32 drivers et Zadig si besoin: (voir la partie <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">Flash USB</a> du manuel Betaflight).</li><li>Fermez le configurateur, redémarrez le Configurateur.</li><li>Relâchez le bouton BOOT.</li><li>Flashez avec le bon firmware (en utilisant le baudrate préconisé pour votre carte).</li><li>Déconnectez.</li><li>Supprimez le shunt sur le BOOT.</li><li>Re branchez (La LED d'activité devrait clignoter).</li><li>Connectez normalement.</li></ul>"
+        "message": "Si vous avez perdu la communication avec votre carte suivez ces étapes: <ul><li>Débranchez</li><li> Activez 'Séquence sans redémarrage', activez 'Effacement complet de la puce '.</li><li>Shuntez les bornes BOOT ou maintenez le bouton BOOT.</li><li>Re branchez (la LED d'activité ne clignotera PAS si cela est fait correctement).</li><li>Installez les drivers STM32 drivers et Zadig si besoin (voir la partie <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash USB</a> du manuel Betaflight).</li><li>Fermez le configurateur, redémarrez le Configurateur.</li><li>Relâchez le bouton BOOT si votre carte en a une.</li><li>Flashez avec le bon firmware (en utilisant le baudrate préconisé pour votre carte).</li><li>Déconnectez.</li><li>Supprimez le shunt sur le BOOT.</li><li>Re branchez (La LED d'activité devrait clignoter).</li><li>Connectez normalement.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Quitter le firmware flasheur"
@@ -3145,7 +3142,7 @@
         "message": "<span class=\"message-positive\">Firmware chargé, prêt pour le flashage</span>"
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
-        "message": "Erreur de chargement du Firmware"
+        "message": "Erreur de chargement du micrologiciel distant"
     },
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Échec de chargement de la configuration distante pour {{remote_file}}"
@@ -4017,7 +4014,7 @@
         "message": "Compensation de l'affaiblissement du vbat"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Fournit des performances constantes de gaz et de PID sur la plage de tension de la batterie utilisable en augmentant les gains des moteurs à mesure que la tension de la batterie chute.<br /><br />Le montant de la compensation peut être varié entre 0 et 100%. La compensation totale (100%) est recommandée.<br /><br />Visitez <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">cette entrée wiki</a> pour plus d'informations."
+        "message": "Donne des performances constantes de gaz et de PID sur la plage de tension de la batterie utilisable en augmentant la sortie du moteur à mesure que la tension de la batterie chute.<br /><br />La quantité de compensation peut varier entre 0 et 100%. La compensation totale (100%) est recommandée.<br /><br />Visitez <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">cette page du wiki</a> pour plus d'informations."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4095,10 +4092,10 @@
         "message": "Accroît transitoirement les gaz lors des poussées d'accélérateur rapides, offrant une réponse plus immédiate de l'accélérateur."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Valeur Idle dynamique [* 100 RPM]"
+        "message": "Valeur du ralenti dynamique [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Le ralenti dynamique améliore le contrôle à basse vitesse et réduit le risque de désynchronisation du moteur. <br /><br /> Il améliore l'autorité PID, la stabilité à l'accélérateur à 0, le temps suspendu inversé et le freinage du moteur.<br /><br />Le minimum de rpm du ralenti dynamique devrait être fixé à environ 3000 - 3500 rpm. Pour 4.2, réglez la valeur de DShot au ralenti basse, par exemple 1%. Il n'est pas nécessaire d'ajuster la valeur du DShot Idle en 4.3. <br /><br />Visitez <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">cette entrée du wiki</a> pour plus d'informations."
+        "message": "Le ralenti dynamique améliore le contrôle à basse vitesse et réduit le risque de désynchronisation du moteur. <br /><br /> Améliore le pouvoir des PID, la stabilité gaz coupés, le temps lors du vol inversé et le freinage des moteurs.<br /><br />La vitesse de rotation minimum du ralenti dynamique devrait être fixé à environ 3000 - 3500 rpm. Pour la version 4.2, réglez la valeur de DShot au ralenti bas, par exemple 1%. Il n'est pas nécessaire d'ajuster la valeur de DShot Idle sur la version 4.3. <br /><br />Visitez <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">cette entrée du wiki</a> pour plus d'informations."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Le ralenti dynamique est DÉSACTIVÉ parce que la télémétrie Dshot est DÉSACTIVÉE"
@@ -4113,7 +4110,7 @@
         "message": "Yaw intégré"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATTENTION</span>: si vous activez cette fonctionnalité, vous devez ajuster le PID YAW en conséquence. Plus d’infos <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>"
+        "message": "<span class=\"message-negative\">ATTENTION</span>: si vous activez cette fonctionnalité, vous devez ajuster le PID YAW en conséquence. Plus d'infos <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw intégré intègre les valeurs P, I et D, du yaw, permettant à P, I et D d'être altérés de la même manière que le pitch et le roll.<br><br>Très pe ude I est requis, car le P intégré agit comme I, et D intégré agit comme P.<br><br>REMARQUE : Le Yaw intégré nécessite l'utilisation du contrôle absolu, car I n'est pas nécessaire avec Yaw intégré."
@@ -5817,7 +5814,7 @@
         "message": "Enregistré"
     },
     "vtxHelp": {
-        "message": "Cet onglet permet de configurer les valeurs de votre émetteur vidéo (VTX). Vous pouvez consulter et modifier les valeurs d'émission, y compris la table VTX, si le contrôleur de vol et le VTX le permettent.<br>Pour configurer le VTX, suivre les étapes suivantes:<br>1. Aller <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">sur cette page</a>;<br>2. Trouver le fichier de configuration de votre VTX dans votre pays et le télécharger;<br>3. Cliquer sur '$t(vtxButtonLoadFile.message)' dessous, choisir le fichier de configuration téléchargé précédemment et le charger;<br>4. Vérifier que tout est correct;<br>5. Cliquer sur '$t(vtxButtonSave.message)' pour enregistrer les réglages VTX dans le contrôleur de vol.<br>6. Facultatif : cliquer sur '$t(vtxButtonSaveLua.message)' pour sauvegarder un fichier de configuration lua que vous pourrez utiliser avec les scripts lua de betaflight (En savoir plus <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">ici</a>.)",
+        "message": "Ici, vous pouvez configurer les valeurs de votre Transmetteur Vidéo (VTX). Vous pouvez voir et modifier les valeurs de transmission, y compris les tables VTX, si le contrôleur de vol et le VTX le supportent.<br>Pour configurer votre VTX utilisez les étapes suivantes :<br>1. Allez sur <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">cette</a> page ;<br>2. Trouvez le fichier de configuration VTX approprié pour votre pays et votre modèle VTX et téléchargez-le ;<br>3. Cliquez sur '$t(vtxButtonLoadFile.message)' ci-dessous, sélectionnez le fichier de configuration VTX, chargez-le ;<br>4. Vérifiez que les paramètres sont corrects ;<br>5. Cliquez sur '$t(vtxButtonSave.message)' pour stocker les paramètres VTX sur le contrôleur de vol.<br>6. Vous pouvez éventuellement cliquer sur '$t(vtxButtonSaveLua.message)' pour enregistrer un fichier de configuration de lua que vous pouvez utiliser avec les scripts de betaflight lua (Voir plus <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">ici</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6125,7 +6122,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "Envoie les données ESC à la FC via la télémétrie DShot. Nécessaire pour le filtrage RPM et idle dynamique. <br> <br>Note : Nécessite un ESC compatible avec le firmware approprié, par exemple JESC, Jazzmac, BLHeli-32.",
+        "message": "Envoie les données ESC à la FC via la télémétrie DShot. Nécessaire pour le filtrage RPM et idle dynamique. <br> <br>Note : Nécessite un ESC compatible avec le micrologiciel approprié, par exemple JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
@@ -6313,7 +6310,7 @@
         "message": "Changement du mode de la caméra"
     },
     "flashTab": {
-        "message": "Mise à jour du firmware"
+        "message": "Mise à jour du micrologiciel"
     },
     "cliAutoComplete": {
         "message": "CLI avancé avec saisie semi-automatique"
@@ -6640,7 +6637,7 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
-        "message": "Le préréglage sélectionné nécessite la version $1du firmware<br/> La version actuelle du firmware est $2",
+        "message": "Le préréglage sélectionné nécessite la version $1du micrologiciel<br/> La version actuelle est $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {

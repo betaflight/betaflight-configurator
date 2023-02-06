@@ -87,10 +87,7 @@
         "message": "전문가 모드 활성"
     },
     "expertModeDescription": {
-        "message": "잠재적으로 불안정한 개발 빌드 보기"
-    },
-    "permanentExpertMode": {
-        "message": "전문가 모드 영구 활성"
+        "message": "전문가 모드 활성화 옵션"
     },
     "warningSettings": {
         "message": "경고 보기"
@@ -643,7 +640,7 @@
         "message": "베타플라이트 문서는 릴리즈 노트와 위키에 적용됩니다.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "베타플라이트 위키는 정보를 얻을 수 있는 훌륭한 자료입니다, 그것은 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 찾으실 수 있습니다."
+        "message": "베타플라이트 위키는 정보를 얻을 수 있는 훌륭한 자료입니다, 그것은 <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a> 찾으실 수 있습니다."
     },
     "defaultDocumentation2": {
         "message": "펌웨어에 대한 릴리즈 노트는 <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub 릴리즈 페이지</a>에서 구독하실 수 있습니다."
@@ -664,7 +661,7 @@
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC 그룹 쓰레드</a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 위키</a>"
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 위키</a>"
     },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell 베타플라이트 4.3 동영상</a><br /><a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">JJangPapa 베타플라이트 동영상(한글판)</a>"
@@ -673,7 +670,7 @@
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 개발 슬랙</a>"
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">디스코드 베타플라이트 개발</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "가속도계 교정"
@@ -1962,7 +1959,7 @@
         "message": "<strong>PID 튜닝 슬라이더 모드</strong><br><br>PID 튜닝 슬라이더 모드는 다음과 같습니다:<br><br>&bull; 끄기 - 슬라이더 없음, 값을 수동으로 입력<br>&bull; RP - 슬라이더는 롤과 피치만 제어하며, 요 값은 수동으로 입력<br>&bull; RPY - 슬라이더가 모든 PID 값을 제어<br><br><span class=\"message-negative\"><b>경고:</b></span>RP에서 RPY 모드로 전환하면, Yaw 설정을 펌웨어 설정으로 덮어씁니다."
     },
     "receiverHelp": {
-        "message": "&#8226;<b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Failsafe가 제대로 작동하는지 항상 확인하십시오!</a></strong></b> 설정이 페일세이프 탭에 있으므로 전문가 모드가 필요합니다.<br> &#8226; <b>최신 Tx 펌웨어를 사용하세요!</b><br> &#8226; OpenTx 또는 EdgeTx를 사용하는 경우 조종기에서 <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">하드웨어 ADC 필터를 비활성화 하세요.</a></strong><br>기본 설정: '수신기' 설정을 올바르게 구성하십시오. 라디오에 적합한 '채널 맵'을 선택하십시오. 롤, 피치 및 기타 막대 그래프가 올바르게 이동하는지 점검합니다. 조종기의 채널 끝점 또는 범위 값을 ~1000 에서 ~2000으로 조정하고, 중간점을 1500으로 설정합니다. 자세한 내용은 <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">설명서</a></strong>를 참조하십시오."
+        "message": "&#8226;<b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Failsafe가 제대로 작동하는지 항상 확인하십시오!</a></strong></b> 설정이 페일세이프 탭에 있으므로 전문가 모드가 필요합니다.<br> &#8226; <b>최신 Tx 펌웨어를 사용하세요!</b><br> &#8226; OpenTx 또는 EdgeTx를 사용하는 경우 조종기에서 <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">하드웨어 ADC 필터를 비활성화 하세요.</a></strong><br>기본 설정: '수신기' 설정을 올바르게 구성하십시오. 라디오에 적합한 '채널 맵'을 선택하십시오. 롤, 피치 및 기타 막대 그래프가 올바르게 이동하는지 점검합니다. 조종기의 채널 끝점 또는 범위 값을 ~1000 에서 ~2000으로 조정하고, 중간점을 1500으로 설정합니다. 자세한 내용은 <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">설명서</a></strong>를 참조하십시오."
     },
     "receiverThrottleMid": {
         "message": "스로틀 중간값"
@@ -2588,7 +2585,7 @@
         "message": "<strong>안전 공지</strong><br /><strong class=\"message-negative\">부상을 피하기 위해 모든 프로펠러를 제거하세요!</strong><br />모터가 <strong>회전합니다!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 페이지</a>를 참고하세요."
+        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 페이지</a>를 참고하세요."
     },
     "motorsRemapDialogSave": {
         "message": "저장"
@@ -2660,7 +2657,7 @@
         "message": "기능은 DSHOT ESC에서만 작동합니다.<br /> ESC(전기 속도 제어기)가 DSHOT 프로토콜을 지원하는지 확인하고 $t(tabMotorTesting.message) 탭에서 변경하세요."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "모터의 수가 0입니다.<br />$t(tabMotorTesting.message) 탭에서 현재의 믹서를 확인하거나 CLI를 통해 사용자 지정 믹서를 설정하세요. 이 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
+        "message": "모터의 수가 0입니다.<br />$t(tabMotorTesting.message) 탭에서 현재의 믹서를 확인하거나 CLI를 통해 사용자 지정 믹서를 설정하세요. 이 <a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "펌웨어를 업데이트하세요.<br />최신 펌웨어를 사용하고 있는지 확인합니다: 베타플라이트 4.3 이상."
@@ -3119,7 +3116,7 @@
         "message": "<strong>통신 복구 / 손실</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오: <ul><li>전원을 끄십시오.</li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.</li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.</li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)</li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱</a> 섹션을 보십시오.)</li><li>컨피규레이터를 닫고, 컨피규레이터를 다시 시작하십시오.</li><li>FC에 BOOT 버튼이 있으면 해제하십시오.</li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).</li><li>전원을 끄십시오.</li><li>BOOT 점퍼를 제거하십시오.</li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).</li><li>정상적으로 연결하십시오.</li></ul>"
+        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오: <ul><li>전원을 끄십시오.</li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.</li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.</li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)</li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱</a> 섹션을 보십시오.)</li><li>컨피규레이터를 닫고, 컨피규레이터를 다시 시작하십시오.</li><li>FC에 BOOT 버튼이 있으면 해제하십시오.</li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).</li><li>전원을 끄십시오.</li><li>BOOT 점퍼를 제거하십시오.</li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).</li><li>정상적으로 연결하십시오.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "펌웨어 플래시 도구 나가기"
@@ -4020,7 +4017,7 @@
         "message": "Vbat 처짐 보상"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br /><br />보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br /><br />더 많은 정보는 <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
+        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br /><br />보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br /><br />더 많은 정보는 <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4101,7 +4098,7 @@
         "message": "다이나믹 아이들 값 [× 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. 4.2의 경우, D샷 아이들 값을 낮게(예: 1%) 설정하세요.  4.3에서는 D샷 아이들 값을 조정할 필요가 없습니다. <br /><br />자세한 내용은 <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">이 Wiki 항목</a>을 방문하십시오."
+        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. 4.2의 경우, D샷 아이들 값을 낮게(예: 1%) 설정하세요.  4.3에서는 D샷 아이들 값을 조정할 필요가 없습니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 Wiki 항목</a>을 방문하십시오."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "D샷 텔레메트리가 꺼져있어서 다이나믹 아이들이 꺼집니다."
@@ -4116,7 +4113,7 @@
         "message": "통합 요(Yaw)"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">주의</span>:이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 확인하세요."
+        "message": "<span class=\"message-negative\">주의</span>:이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 확인하세요."
     },
     "pidTuningIntegratedYawHelp": {
         "message": "통합된 요는 요 P, I, D 값을 통합하여 요 P, I, D가 피치와 롤을 튜닝하는 것처럼 튜닝됩니다.<br><br>적분 P는 I처럼 작용하고, 적분 D는 P처럼 작용하기 때문에 I는 거의 필요하지 않습니다.<br><br>참고: 통합 요의 경우 I가 필요하지 않으므로, 통합 요의 경우 절대 제어를 사용해야 합니다."
@@ -5820,7 +5817,7 @@
         "message": "저장됨"
     },
     "vtxHelp": {
-        "message": "여기에서 영상 송신기(VTX)에 대한 값을 구성할 수 있습니다. 비행 컨트롤러와 VTX가 지원하는 경우 VTX 테이블을 포함한 전송 값을 보고 변경할 수 있습니다.<br>VTX를 설정하려면 다음의 단계를 사용하십시오:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">이 페이지</a>로 가십시오;<br>2. 당신의 국가와 VTX 모델에 적합한 VTX 구성 파일을 찾아 다운로드하십시오;<br>3. 아래에서 '$t(vtxButtonLoadFile.message)'를 클릭하고 VTX 구성 파일을 선택하고 로드하십시오;<br>4. 설정이 올바른지 확인하십시오;<br>5. VTX 설정을 비행 컨트롤러에 저장하려면 '$t(vtxButtonSave.message)'를 클릭하십시오.<br>6. 옵션으로 베타플라이트 루아 스크립트로 사용 가능한 루아 환경설정 파일로 저장하려면 '$t(vtxButtonSaveLua.message)'을 클릭하세요. (더 자세한 정보는 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">여기</a>를 보세요.)",
+        "message": "여기에서 영상 송신기(VTX)에 대한 값을 구성할 수 있습니다. 비행 컨트롤러와 VTX가 지원하는 경우 VTX 테이블을 포함한 전송 값을 보고 변경할 수 있습니다.<br>VTX를 설정하려면 다음의 단계를 사용하십시오:<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">이 페이지</a>로 가십시오;<br>2. 당신의 국가와 VTX 모델에 적합한 VTX 구성 파일을 찾아 다운로드하십시오;<br>3. 아래에서 '$t(vtxButtonLoadFile.message)'를 클릭하고 VTX 구성 파일을 선택하고 로드하십시오;<br>4. 설정이 올바른지 확인하십시오;<br>5. VTX 설정을 비행 컨트롤러에 저장하려면 '$t(vtxButtonSave.message)'를 클릭하십시오.<br>6. 옵션으로 베타플라이트 루아 스크립트로 사용 가능한 루아 환경설정 파일로 저장하려면 '$t(vtxButtonSaveLua.message)'을 클릭하세요. (더 자세한 정보는 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">여기</a>를 보세요.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {

@@ -84,13 +84,10 @@
         "message": "Autotilslut er slået fra - Du skal selv vælge den korrekte serielle port og klikke på knappen \"Tilslut\""
     },
     "expertMode": {
-        "message": "Aktiver eksperttilstand"
+        "message": "Aktiver ekspert tilstand"
     },
     "expertModeDescription": {
-        "message": "Vis udviklings releases som muligvis ikke er fejlfri"
-    },
-    "permanentExpertMode": {
-        "message": "Aktivér Eksperttilstand permanent"
+        "message": "Vis valg for ekspert tilstand"
     },
     "warningSettings": {
         "message": "Vis advarsler"
@@ -643,7 +640,7 @@
         "message": "Betaflight dokumentation er tilgængelig i release notes og wiki.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "Betaflight wiki er en god informationskilde og kan findes <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">hér</a>."
+        "message": "Betaflight wiki er en god informationskilde og kan findes <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">her</a>."
     },
     "defaultDocumentation2": {
         "message": "Releasenotes til firmware kan læses på GitHub under Releases <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">hér</a>."
@@ -664,7 +661,7 @@
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC-gruppe debatter</a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight videoer</a>"
@@ -673,7 +670,7 @@
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight udvikling på slack</a>"
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Kalibrering af Accelerometer"
@@ -1962,7 +1959,7 @@
         "message": "<strong>Pid Tuning Slider tilstand</strong><br><br>Pidtuning slider mode kan være:<br><br>&bull; FRA - ingen skydere, indtast værdier manuelt<br>&bull; RP - skydere kontrol Roll og Pitch kun, indtast sideror værdier manuelt<br>&bull; RPY - skydere styrer alle PID værdier<br><br><span class=\"message-negative\"><b>Advarsel:</b></span>At gå fra RP til RPY tilstand vil overskrive sideror indstillinger med firmware indstillinger."
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Kontrollér altid, at din Fejlsikring fungerer korrekt!</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configuration er i Eksperttilstand.<br> &#8226; <b>Brug den seneste Tx firmware!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktivér hardware-ADC-filteret</a></strong> i senderen, hvis du bruger OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentationen</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\\\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Kontrollér altid, at din Fejlsikring fungerer korrekt!</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configuration er i Eksperttilstand.<br> &#8226; <b>Brug den seneste Tx firmware!</b><br> &#8226; <strong><a href=\\\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Deaktiver hardware-ADC-filteret</a></strong> i senderen, hvis du bruger OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\\\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">dokumentationen</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas MID"
@@ -2587,9 +2584,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Sikkerheds meddelelse</strong><br /><strong class=\"message-negative\">Fjern alle propeller for at forhindre skader !</strong><br />Motorerne vil <strong>rotere !</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Bemærk</strong><br />Motorer vil rotere en efter en, og du vil være i stand til at vælge hvilken motor der skal rotere. Batteriet skal tilsluttes, den korrekte ESC-protokol skal vælges. Dette værktøj kan kun omarrangere motorer som er opdaget af FC . Mere komplekse ommapping kræver CLI Resource kommandoen. Se denne <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Gem"
     },
@@ -2658,9 +2652,6 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funktionen fungerer kun med DSHOT ESC'er.<br />Kontroller, at din ESC understøtter Dshot protokol og sæt protokol på fanen $t(tabMotorTesting.message)."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Antallet af motorer er 0.<br />Kontroller den aktuelle Mix på fanen $t(tabMotorTesting.message), eller brug et tilpasset Mix via CLI. Se denne <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Opdater firmwaren.<br /> Sørg for at du bruger den seneste firmware: Betaflight 4.3 eller nyere."
@@ -2828,7 +2819,7 @@
         "message": "Du kan logge til en ekstern logningsenhed (såsom OpenLager) ved at bruge en seriel port. Indstil seriel port på fanen Porte."
     },
     "sdcardNote": {
-        "message": "Flyvelog kan optages vha. din indbyggede flash i FC eller dit SD kort."
+        "message": "Flyvelog kan optages og gemmes på indsat SD kort eller i FC flash."
     },
     "dataflashUsedSpace": {
         "message": "Anvendt plads"
@@ -2843,7 +2834,7 @@
         "message": "Ledig plads til logfiler"
     },
     "dataflashNote": {
-        "message": "Flyvelog kan optages vha. din indbyggede flash i FC eller dit SD kort."
+        "message": "Flyvelog kan optages og gemmes på indsat SD kort eller i FC flash."
     },
     "dataflashNotPresentNote": {
         "message": "Din FC har ingen tilgængelig kompatibel dataflash chip."
@@ -3119,7 +3110,7 @@
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller BOOT kontakt sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt (se <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB blinkende</a> sektion i Betaflight manual).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper på FC BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud sats, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Fjern BOOT jumper.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul>"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller BOOT kontakt sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\\\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\\\"target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Betaflight installation</a> sektion i Betaflight manual (engelsk).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper på FC BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud sats, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Fjern BOOT jumper.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -3702,7 +3693,7 @@
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<strong>Bemærk:</strong> Skyder(e) er deaktiveret fordi de aktuelle værdier er uden for området for justering af grundtilstanden. Skift til eksperttilstand for at foretage ændringer",
+        "message": "<strong>Bemærk:</strong> Skyder(e) er deaktiveret fordi de aktuelle værdier er uden for området for justering af grundtilstanden. Skift til ekspert tilstand for at foretage ændringer",
         "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
@@ -4019,9 +4010,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag Compensation"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Giver konsekvent gas og PID ydeevne over det brugbare batteri spændingsområde ved at øge motorens output som batteri spænding falder.<br /><br />Kompensationen kan variere mellem 0 og 100%. Fuld kompensation (100%) anbefales.<br /><br />Besøg <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post</a> for mere info."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4100,9 +4088,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Dynamisk tomgang [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamisk tomgang forbedrer styringen ved lav omdr/min og reducerer risikoen for desynkronisering af motor. <br /><br />Det forbedrer PID myndighed, nul gashåndtag stabilitet, omvendt hænge tid og motorbremsning.<br /><br />Dynamic Idle min rpm skal sættes til omkring 3000 - 3500 rpm. For 4.2, indstille Dshot inaktiv værdi lav, fx 1%. Der er ingen grund til at justere Dshot tomgang værdi i 4.3. <br /><br />Besøg <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post</a> for mere info."
-    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamisk tomgang er slået fra, fordi Dshot Telemetry er slået FRA"
     },
@@ -4114,9 +4099,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Integreret sideror"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">FORSIKRING</span>: Hvis du aktiverer denne funktion, skal du justere sideror PID i overensstemmelse hermed (Yaw PID). Mere info <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">her</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integreret sideror integrerer sideror P, I og D værdier, der tillader at sideror P, I og D kan tunes lidt, som hvis du tuner højderor og krængror.<br><br>Meget lidt I er påkrævet, fordi den integrerede P fungerer som I, og integreret D fungerer som P.<br><br>BEMÆRK: Integreret sideror kræver brug af Absolut kontrol, da der ikke er brug for I med Integreret sideror."
@@ -4730,7 +4712,7 @@
         "message": "Nulstil indstillinger"
     },
     "osdTextElementMainBattVoltage": {
-        "message": "Batteri spænding: realtid",
+        "message": "Batteri spænding i realtid",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattVoltage": {
@@ -4769,7 +4751,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementVtxChannel": {
-        "message": "Aktuel VTX kanal og effekt"
+        "message": "Aktuel VTX effekt eller VTX bånd:kanal:spænding:pit"
     },
     "osdTextElementVTXchannelVariantPower": {
         "message": "VTX effekt",
@@ -4829,14 +4811,14 @@
         "message": "Aktuel batteri strømforbrug"
     },
     "osdTextElementMahDrawn": {
-        "message": "Batteri nuværende forbrug i mAh",
+        "message": "Batteri samlet forbrug i mAh",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMahDrawn": {
         "message": "Den samlede anvendte batterikapacitet"
     },
     "osdTextElementWhDrawn": {
-        "message": "Batteri strøm forbrug i Wh",
+        "message": "Batteri samlet forbrug i Wh",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementWhDrawn": {
@@ -5089,7 +5071,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattUsage": {
-        "message": "Grafisk gengivelse af batteriets kapacitetsforbrug"
+        "message": "Grafisk eller procent visning af batteriets kapacitet"
     },
     "osdTextElementMainBattUsageVariantGraphrRemain": {
         "message": "Resterende grafisk",
@@ -5409,7 +5391,7 @@
         "message": "Mindste registrerede RSSI"
     },
     "osdTextStatMaxCurrent": {
-        "message": "Batteri nuværende forbrug",
+        "message": "Batteri maksimalt målt forbrug",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxCurrent": {
@@ -5423,11 +5405,11 @@
         "message": "Anvendt batteri kapacitet"
     },
     "osdTextStatUsedWh": {
-        "message": "Batteri anvendt kapacitet i Wh",
+        "message": "Batteri anvendt forbrug i Wh",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatUsedWh": {
-        "message": "Batteri kapacitet anvendt (Wh)"
+        "message": "Batteri kapacitet anvendt i Wh"
     },
     "osdTextStatMaxAltitude": {
         "message": "Højeste højde",
@@ -5820,7 +5802,7 @@
         "message": "Gemt"
     },
     "vtxHelp": {
-        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">denne</a> side;<br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den;<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs den;<br>4. Kontroller, at indstillingerne er korrekte;<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">her</a>.)",
+        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">denne</a> side;<br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den;<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs den;<br>4. Kontroller, at indstillingerne er korrekte;<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" href=\\\"https://github.com/betaflight/betaflight-tx-lua-scripts/\\\">her</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6280,7 +6262,7 @@
         "message": "Sletning i gang, vent venligst..."
     },
     "onboardLoggingOnboardSDCard": {
-        "message": "Indbygget SD kort eller FC flash"
+        "message": "SD kort eller FC flash"
     },
     "onboardLoggingMsc": {
         "message": "Masselager tilstand"

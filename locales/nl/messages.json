@@ -77,9 +77,6 @@
     "expertMode": {
         "message": "Schakel expert modus in"
     },
-    "permanentExpertMode": {
-        "message": "Expert modus permanent inschakelen"
-    },
     "rememberLastTab": {
         "message": "Heropen waar je laatst mee bezig was bij verbinding"
     },
@@ -608,9 +605,6 @@
     "defaultDocumentation": {
         "message": "Betaflight documentatie is beschikbaar in de release notes en de wiki.<br /><br />"
     },
-    "defaultDocumentation1": {
-        "message": "De Betaflight wiki is een goede bron voor informatie, deze kan <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">hier worden gevonden</a>."
-    },
     "defaultDocumentation2": {
         "message": "De release opmerkingen voor het besturingssysteem kunnen gelezen worden op de pagina van GitHub, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a>."
     },
@@ -629,14 +623,8 @@
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups discussie</a>"
     },
-    "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
-    },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight devs op slack</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Kalibreer Versnellingsmeter"
@@ -2226,9 +2214,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Veiligheidswaarschuwing</strong><br /><strong class=\"message-negative\">Verwijder alle propellers om letsel te voorkomen!</strong><br />De motoren zullen gaan <strong>draaien!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Informatiemelding</strong><br />Motoren zullen een voor een gaan draaien en u kunt selecteren welke motor er draait. De batterij moet aangesloten zijn, het juiste ESC-protocol moet geselecteerd zijn. Dit hulpprogramma kan momenteel alleen actieve motoren opnieuw rangschikken. Voor complexere toewijzingen dien je gebruik te maken van het commando Resource in de CLI. Raadpleeg hiervoor deze <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-pagina</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Opslaan"
     },
@@ -2297,9 +2282,6 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Deze functie werkt alleen met DSHOT ESC's.<br />Controleer of uw ESC (elektrische snelheidsregelaar) het DSHOT-protocol ondersteunt en wijzig het zo nodig op het tabblad $t(tabMotorTesting.message)."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Het aantal motoren is 0.<br />Controleer de huidige mixer op het tabblad $t(tabMotorTesting.message) of stel een aangepaste mixer in via de CLI. Raadpleeg deze <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-pagina</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Update de firmware.<br />Zorg ervoor dat u de nieuwste firmware gebruikt: Betaflight 4.3 of nieuwer."
@@ -2705,9 +2687,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Herstellen / Communicatie verloren</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Als je de communicatie met je board bent verloren, volg dan deze stappen om de communicatie te herstellen: <ul><li>Uitschakelen</li><li> Schakel 'Geen herstartsequentie' in, schakel 'Volledige chip wissen' in.</li><li>Sluit de BOOT-pinnen kort of houd de BOOT-knop ingedrukt.</li><li>Inschakelen (activiteits-LED knippert NIET indien correct gedaan).</li><li>Installeer alle STM32-stuurprogramma's en Zadig indien nodig (zie <a href = \"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> sectie van de Betaflight-handleiding).</li><li>Sluit de configurator, herstart de Configurator.</li><li>Laat de BOOT-knop los.</li><li>Flash met de juiste firmware (gebruik handmatige baudrate indien dit gespecificeerd in de handleiding van je FC).</li><li>Uitschakelen.</li><li>BOOT-jumper verwijderen.</li><li> Inschakelen (activiteits-LED moet knipperen).</li><li>Maak normaal verbinding.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasher verlaten"
@@ -3346,9 +3325,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Geïntegreerde Yaw"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">WAARSCHUWING</span>: als je deze functie inschakelt, moet je de YAW PID instellingen aanpassen. Meer informatie <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
     },
     "configHelp2": {
         "message": "Willekeurige rotatie van het bord in graden. Hiermee maak je het mogelijk de vluchtcontroller gedraaid, ondersteboven of in een andere dan gebruikelijke positie te monteren. Gebruik bij externe sensoren de sensoruitlijningen (Gyro, Acc, Mag) om de sensorpositie onafhankelijk van de oriëntatie van het bord te definiëren. "
@@ -4882,10 +4858,6 @@
     },
     "osdButtonSaved": {
         "message": "Opgeslagen"
-    },
-    "vtxHelp": {
-        "message": "Hier kun u de waarden voor uw video zender (VTX) configureren. U kunt de transmissiewaarden en de VTX-tabellen bekijken maar ook wijzigen als de vluchtcontroller en de VTX dit ondersteunen.<br>Om uw VTX in te stellen volgt u de volgende stappen:<br>1. Ga naar <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">deze</a> pagina;<br>2. Zoek het juiste VTX-configuratiebestand op voor uw land en uw VTX model en download deze;<br>3. Klik hieronder op '$t(vtxButtonLoadFile.message)', selecteer het VTX configuratiebestand wat u gedownload heeft en laad deze in;<br>4. Controleer of de instellingen correct zijn;<br>5. Klik op ''$t(vtxButtonSave.message)' om de instellingen op te slaan op uw vluchtcontroller.<br>6. Klik optioneel op '$t(vtxButtonSaveLua.message)' om een lua configuratiebestand op te slaan dat u kunt gebruiken met de betaflight lua scripts (Lees meer hierover op <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">deze link</a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Waarschuwing:</span> Uw VTX is niet geconfigureerd of wordt niet ondersteund. U kunt de VTX-waarden daardoor hier niet wijzigen. Dit is alleen mogelijk als uw vluchtcontroller is aangesloten op uw VTX met behulp van een protocol zoals Tramp of SmartAudio. En deze correct is geconfigureerd in het tabblad $t(tabPorts.message).",

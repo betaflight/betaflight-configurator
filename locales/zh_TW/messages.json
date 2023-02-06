@@ -70,9 +70,6 @@
     "expertMode": {
         "message": "啟用專家模式"
     },
-    "permanentExpertMode": {
-        "message": "默認啟用專家模式"
-    },
     "rememberLastTab": {
         "message": "連接後重新打開最後使用的選項頁"
     },
@@ -555,9 +552,6 @@
     "defaultDocumentation": {
         "message": "Betaflight 的文檔和發佈說明可以在 wiki 裡面找到。<br /><br />"
     },
-    "defaultDocumentation1": {
-        "message": "學習 Betaflight 最好的資源是使用 Betaflight wiki，而不是聽信各種“老師”，它在<a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">這裡</a>。"
-    },
     "defaultDocumentation2": {
         "message": "最新的固件發佈訊息可以在<a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">這裡</a>找到。"
     },
@@ -576,14 +570,8 @@
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread</a>"
     },
-    "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
-    },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight 開發者 Slack</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "校準加速度計"
@@ -3073,9 +3061,6 @@
     "pidTuningIntegratedYaw": {
         "message": "整合式偏航"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">注意</span>: 如果你啟用此功能，則必須相應地調整偏航PID。更多訊息在<a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">此處</a>"
-    },
     "configHelp2": {
         "message": "任意角度（直立，反轉，旋轉等）安裝飛控板。當使用外部傳感器時，請使用傳感器校正設置(陀螺，加速度計，磁場計)來決定獨立於飛控板的傳感器位置。"
     },
@@ -4534,10 +4519,6 @@
     },
     "osdButtonSaved": {
         "message": "已儲存"
-    },
-    "vtxHelp": {
-        "message": "這裡可以定義圖傳用到的值。如果你的圖傳支援，你可以查看和修改發送功率和圖傳表。 <br>按以下步驟設置你的圖傳：<br>1. 打開<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX- tables\">這個</a>頁面；<br>2. 找到並下載適合你的圖傳型號和所在地區的圖傳配置文件；<br>3. 點擊下方'$t(vtxButtonLoadFile.message)'，選擇並加載圖傳配置文件；<br>4. 確認設置正確；<br>5. 點擊'$t(vtxButtonSave.message)'保存圖傳設置到飛控。 <br>6. （可選）點擊'$t(vtxButtonSaveLua.message)'保存 Lua 配置文件供 Betaflight Lua 腳本使用。 （在<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">這裡</a>查看更多。）",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">注意:</span>您的圖傳未配置或不支援。所以您不能在此修改圖傳值。只有當圖傳使用Tramp或SmartAudio等協議，連接到飛行控制器，並在$t(tabPorts.message)頁面中正確配置後，才可以使用。",

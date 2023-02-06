@@ -73,9 +73,6 @@
     "expertMode": {
         "message": "Adituen modua"
     },
-    "permanentExpertMode": {
-        "message": "Aditu modua etengabe gaitu"
-    },
     "rememberLastTab": {
         "message": "Gogoratu azken fitxa konektatuan"
     },
@@ -573,9 +570,6 @@
     "defaultDocumentation": {
         "message": "Betafligth-eko dokumentazioa, bertsio oharretan eta Wiki-an eskuragarri dago.<br /><br />"
     },
-    "defaultDocumentation1": {
-        "message": "Betafligth Wika-a ikaragarrizko informazio iturria da. <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\"> Hemen </a>aurkitu dezakezu."
-    },
     "defaultDocumentation2": {
         "message": "Firmwarearentzako oharrak GitHub-en bertsioen orrian irakur daitezke <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a>."
     },
@@ -594,14 +588,8 @@
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups haria</a>"
     },
-    "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki-a</a>"
-    },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Github</a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight garatzaileak Slack-en</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Azelerometroa kalibratu"
@@ -3142,9 +3130,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integratua"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ABISUA</span>: Ezaugarri hau gaitzen baduzu, YAW PID horren arabera egokitu behar duzu. Informazio gehiago <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a>"
-    },
     "configHelp2": {
         "message": "Hegaldi kontroladorea edozein angeluan biratu(zutik, atzeraka, biraketa...). Kanpoko sentsoreak erabiltzen dituzunean, sentsoreen lerrokatzea erabili sentsoreen posizioak definitzeko, hegaldi kontroladorearen orientazioa edozein dela ere. "
     },
@@ -4614,10 +4599,6 @@
     },
     "osdButtonSaved": {
         "message": "Gordeta"
-    },
-    "vtxHelp": {
-        "message": "Hemen zure Bideo Argailuaren (VTX) balioak konfigura ditzakezu. Transmisioaren balioak ikusi eta alda ditzakezu, VTX taulak barne, hegaldi-kontroladoreak eta VTX onartzen badituzte.<br>Urrats hauek egin zure VTX konfiguratzeko:<br>1. Ireki <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\"> </a>orria;<br>2. Bilatu zure herrialderako VTX konfigurazio fitxategi egokia eta deskargatu;<br>3. Egin klik '$t(vtxButtonLoadFile.message)' botoian, hautatu VTX konfigurazio fitxategia, kargatu,<br>4. Egiaztatu ezarpenak zuzenak direla;<br>5. Sakatu '$t(vtxButtonSave.message)' VTX balioak hegaldi kontroladorean gordetzeko.<br>6. Aukeran klik '$t(vtxButtonSaveLua.message)' lua konfigurazio-fitxategia betaflight lua gidoiak batera erabili ahal izango dituzu (Ikusi gehiago <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hemen</a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Abisua:</span> Zure VTX ez dago konfiguratuta edo ez da onartzen. Horretaz, ezin dituzu VTX balioak hemendik aldatu. Hau bakarrik izango litzateke hegaldi-kontroladorea VTX-rekin konektatuta badago, hala nola Tramp edo SmartAudio bezalako protokolo motaren bat erabiliz eta $t(tabPorts.message) fitxan behar bezala konfiguratuta badago.",
