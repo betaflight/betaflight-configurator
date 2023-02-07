@@ -48,7 +48,7 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
@@ -58,6 +58,7 @@
     "d3": "^7.8.2",
     "djv": "^2.1.4",
     "dompurify": "^2.4.0",
+    "electron": "23.0.0",
     "i18next": "^19.0.0",
     "i18next-xhr-backend": "^3.2.2",
     "inflection": "^1.13.4",
