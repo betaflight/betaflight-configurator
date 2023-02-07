@@ -304,7 +304,7 @@ firmware_flasher.initialize = function (callback) {
                 if (response.cloudBuild === true) {
                     $('div.build_configuration').slideDown();
 
-                    const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
+                    const expertMode = expertMode_e.is(':checked');
                     if (expertMode) {
                         if (response.releaseType === 'Unstable') {
                             self.releaseLoader.loadCommits(response.release, (commits) => {
@@ -496,7 +496,7 @@ firmware_flasher.initialize = function (callback) {
             const options = {};
 
             let eraseAll = false;
-            if ($('input.erase_chip').is(':checked') || $('.tab-firmware_flasher input.expert_mode').not(':checked')) {
+            if ($('input.erase_chip').is(':checked') || expertMode_e.not(':checked')) {
                 options.erase_chip = true;
 
                 eraseAll = true;
@@ -703,6 +703,7 @@ firmware_flasher.initialize = function (callback) {
             const status = $(this).is(':checked');
 
             $('.hide-in-core-build-mode').toggle(!status);
+            $('div.expertOptions').toggle(!status && expertMode_e.is(':checked'));
         });
         $('input.corebuild_mode').change();
 
