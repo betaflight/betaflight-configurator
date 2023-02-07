@@ -88,7 +88,7 @@ export default class CliEngine
         this._reportSendCommandsProgress(0);
         const totalCommandsCount = strings.length;
 
-        return strings.reduce(strings, (p, line, index) =>
+        return strings.reduce((p, line, index) =>
             p.then((delay) =>
                 new Promise((resolve) => {
                     GUI.timeout_add('CLI_send_slowly', () => {
