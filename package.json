@@ -72,6 +72,7 @@
     "marked": "^4.1.1",
     "multicast-dns": "^7.2.5",
     "multiple-select": "^1.5.2",
+    "node-gyp": "9.3.1",
     "nw-vue-devtools-prebuilt": "^0.0.10",
     "select2": "^4.0.13",
     "semver-min": "^0.7.2",
