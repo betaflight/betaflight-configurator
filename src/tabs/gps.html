@@ -1,13 +1,83 @@
-<div class="tab-gps">
+<div class="tab-gps toolbar_fixed_bottom">
     <div class="content_wrapper">
         <div class="tab_title" i18n="tabGPS">GPS</div>
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="" target="_blank" rel="noopener noreferrer"></a>
         </div>
 
-
         <div class="grid-row">
             <div class="grid-col col5">
+
+                <div class="gui_box grey gps">
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="configurationGPS"></div>
+                    </div>
+                    <div class="spacer_box">
+                        <div class="gps_config">
+                            <div style="float:left; width:100%;">
+                                <div class="select line">
+                                    <select class="gps_protocol">
+                                        <!-- list generated here -->
+                                    </select>
+                                    <span i18n="configurationGPSProtocol"></span>
+                                </div>
+                                <div class="select line">
+                                    <select class="gps_baudrate">
+                                        <!-- list generated here -->
+                                    </select>
+                                    <span i18n="configurationGPSBaudrate"></span>
+                                </div>
+                                <div class="select gps_auto_baud">
+                                    <div>
+                                        <input type="checkbox" name="gps_auto_baud" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationGPSAutoBaud"></span>
+                                </div>
+                                <div class="select gps_auto_config">
+                                    <div>
+                                        <input type="checkbox" name="gps_auto_config" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationGPSAutoConfig"></span>
+                                </div>
+                                <div class="select gps_ublox_galileo">
+                                    <div>
+                                        <input type="checkbox" name="gps_ublox_galileo" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationGPSGalileo"></span>
+                                    <div class="helpicon cf_tip" i18n_title="configurationGPSGalileoHelp"></div>
+                                </div>
+                                <div class="select gps_home_once">
+                                    <div>
+                                        <input type="checkbox" name="gps_home_once" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationGPSHomeOnce"></span>
+                                    <div class="helpicon cf_tip" i18n_title="configurationGPSHomeOnceHelp"></div>
+                                </div>
+                                <div class="select line gps_ubx_sbas">
+                                    <select class="gps_ubx_sbas">
+                                        <!-- list generated here -->
+                                    </select>
+                                    <span i18n="configurationGPSubxSbas"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gui_box grey">
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="gpsSignalStrHead"></div>
+                    </div>
+                    <div class="spacer_box GPS_signal_strength">
+                        <table class="cf_table">
+                            <!-- Contents generated in gps.js -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-col col7">
+
                 <div class="gui_box grey">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="gpsHead"></div>
@@ -46,18 +116,6 @@
                     </div>
                 </div>
 
-                <div class="gui_box grey">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" i18n="gpsSignalStrHead"></div>
-                    </div>
-                    <div class="spacer_box GPS_signal_strength">
-                        <table class="cf_table">
-                            <!-- Contents generated in gps.js -->
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="grid-col col7">
                 <div class="gui_box grey gps_map">
                     <div class="gui_box_titlebar" style="margin-bottom: 0px;">
                         <div class="spacer_box_title" i18n="gpsMapHead"></div>
@@ -65,9 +123,8 @@
                     <div id="connect" i18n="gpsMapMessage1">
                         <div class="default_btn" style="width:50px; margin-left:auto; margin-right:auto; float:none;"><a id="check">retry</a></div>
                     </div>
-                    <div id="waiting" >
-                        <div class="info" i18n="gpsMapMessage2">
-                        </div>
+                    <div id="waiting">
+                        <div class="info" i18n="gpsMapMessage2"></div>
                     </div>
                     <div id="loadmap">
                         <webview id="map" class="map" src="tabs/map.html" partition="persist:map"></webview>
@@ -76,9 +133,14 @@
                             <a href="#" id="zoom_out">–</a>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
 
+        <div class="content_toolbar">
+            <div class="btn save_btn">
+                <a class="save" href="#" i18n="configurationButtonSave"></a>
+            </div>
+        </div>
     </div>
-</div>
 </div>

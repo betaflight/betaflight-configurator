@@ -1410,7 +1410,7 @@
         "message": "<strong>Note:</strong> Make sure your FC is able to operate at these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance."
     },
     "configurationGPS": {
-        "message": "GPS"
+        "message": "GPS Configuration"
     },
     "configurationGPSProtocol": {
         "message": "Protocol"
@@ -1442,9 +1442,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "When enabled, only the first arm after the battery is connected will be used as home point. If not enabled, every time the quad is armed, the home point will be updated.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Note:</strong> Remember to configure a Serial Port (via Ports tab) when using GPS feature."
     },
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
