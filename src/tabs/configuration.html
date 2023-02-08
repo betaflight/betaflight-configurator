@@ -135,7 +135,7 @@
                                         <th i18n="configurationFeatureName"></th>
                                     </tr>
                                 </thead>
-                                <tbody class="features other" id="noline">
+                                <tbody class="features gps other" id="noline">
                                     <!-- table generated here -->
                                 </tbody>
                             </table>
@@ -143,82 +143,6 @@
                     </div>
                 </div>
                 <!-- END OTHER FUTURES-->
-
-                <!-- GPS -->
-                <div class="gps">
-                    <div class="gui_box grey gps">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title" i18n="configurationGPS"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <table class="featuresMultiple">
-                                <thead>
-                                    <tr>
-                                        <th i18n="configurationFeatureEnabled"></th>
-                                        <th i18n="configurationFeatureDescription"></th>
-                                        <th i18n="configurationFeatureName"></th>
-                                    </tr>
-                                </thead>
-                                <tbody class="features gps">
-                                    <!-- table generated here -->
-                                </tbody>
-                            </table>
-                            <div class="gpsSettings">
-                                <div style="float:left; width:100%;">
-                                    <div class="note">
-                                        <p i18n="configurationGPSHelp"></p>
-                                    </div>
-
-                                    <div class="select line">
-                                        <select class="gps_protocol">
-                                            <!-- list generated here -->
-                                        </select>
-                                        <span i18n="configurationGPSProtocol"></span>
-                                    </div>
-                                    <div class="select line">
-                                        <select class="gps_baudrate">
-                                            <!-- list generated here -->
-                                        </select>
-                                        <span i18n="configurationGPSBaudrate"></span>
-                                    </div>
-                                    <div class="select gps_auto_baud">
-                                        <div>
-                                            <input type="checkbox" name="gps_auto_baud" class="toggle" />
-                                        </div>
-                                        <span class="freelabel" i18n="configurationGPSAutoBaud"></span>
-                                    </div>
-                                    <div class="select gps_auto_config">
-                                        <div>
-                                            <input type="checkbox" name="gps_auto_config" class="toggle" />
-                                        </div>
-                                        <span class="freelabel" i18n="configurationGPSAutoConfig"></span>
-                                    </div>
-                                    <div class="select gps_ublox_galileo">
-                                        <div>
-                                            <input type="checkbox" name="gps_ublox_galileo" class="toggle" />
-                                        </div>
-                                        <span class="freelabel" i18n="configurationGPSGalileo"></span>
-                                        <div class="helpicon cf_tip" i18n_title="configurationGPSGalileoHelp"></div>
-                                    </div>
-                                    <div class="select gps_home_once">
-                                        <div>
-                                            <input type="checkbox" name="gps_home_once" class="toggle" />
-                                        </div>
-                                        <span class="freelabel" i18n="configurationGPSHomeOnce"></span>
-                                        <div class="helpicon cf_tip" i18n_title="configurationGPSHomeOnceHelp"></div>
-                                    </div>
-                                    <div class="select line gps_ubx_sbas">
-                                        <select class="gps_ubx_sbas">
-                                            <!-- list generated here -->
-                                        </select>
-                                        <span i18n="configurationGPSubxSbas"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- END GPS-->
             </div> <!-- END grid-col col6 -->
 
             <div class="grid-col col6">
@@ -416,10 +340,12 @@
                 </div>
             </div>
         </div>
+
         <div class="content_toolbar">
             <div class="btn save_btn">
                 <a class="save" href="#" i18n="configurationButtonSave"></a>
             </div>
         </div>
+
     </div>
 </div>

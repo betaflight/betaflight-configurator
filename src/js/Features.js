@@ -37,7 +37,7 @@ const Features = function (config) {
         );
     }
 
-    self._features = features;
+    self._features = features.sort((a, b) => a.name.localeCompare(b.name, window.navigator.language, { ignorePunctuation: true }));
     self._featureMask = 0;
 
     self._analyticsChanges = {};

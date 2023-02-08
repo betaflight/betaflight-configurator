@@ -33,7 +33,6 @@ configuration.initialize = function (callback) {
         .then(() => MSP.promise(MSPCodes.MSP_FEATURE_CONFIG))
         .then(() => MSP.promise(MSPCodes.MSP_BEEPER_CONFIG))
         .then(() => MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG))
-        .then(() => MSP.promise(MSPCodes.MSP_GPS_CONFIG))
         .then(() => MSP.promise(MSPCodes.MSP_ACC_TRIM))
         .then(() => MSP.promise(MSPCodes.MSP_ARMING_CONFIG))
         .then(() => MSP.promise(MSPCodes.MSP_RC_DEADBAND))
@@ -336,99 +335,6 @@ configuration.initialize = function (callback) {
         $('input[name="fpvCamAngleDegrees"]').val(FC.RX_CONFIG.fpvCamAngleDegrees);
         $('input[name="fpvCamAngleDegrees"]').attr("max", 90);
 
-        // generate GPS
-        const gpsProtocols = [
-            'NMEA',
-            'UBLOX',
-            'MSP',
-        ];
-
-        const gpsBaudRates = [
-            '115200',
-            '57600',
-            '38400',
-            '19200',
-            '9600',
-        ];
-
-        const gpsSbas = [
-            i18n.getMessage('gpsSbasAutoDetect'),
-            i18n.getMessage('gpsSbasEuropeanEGNOS'),
-            i18n.getMessage('gpsSbasNorthAmericanWAAS'),
-            i18n.getMessage('gpsSbasJapaneseMSAS'),
-            i18n.getMessage('gpsSbasIndianGAGAN'),
-        ];
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            gpsSbas.push(i18n.getMessage('gpsSbasNone'));
-        }
-
-        const gpsProtocolElement = $('select.gps_protocol');
-        const gpsAutoBaudElement = $('input[name="gps_auto_baud"]');
-        const gpsAutoBaudGroup = $('.gps_auto_baud');
-        const gpsAutoConfigElement = $('input[name="gps_auto_config"]');
-        const gpsAutoConfigGroup = $('.gps_auto_config');
-        const gpsUbloxGalileoElement = $('input[name="gps_ublox_galileo"]');
-        const gpsUbloxGalileoGroup = $('.gps_ublox_galileo');
-        const gpsUbloxSbasElement = $('select.gps_ubx_sbas');
-        const gpsUbloxSbasGroup = $('.gps_ubx_sbas');
-        const gpsHomeOnceElement = $('input[name="gps_home_once"]');
-        const gpsBaudrateElement = $('select.gps_baudrate');
-
-
-        for (let protocolIndex = 0; protocolIndex < gpsProtocols.length; protocolIndex++) {
-            gpsProtocolElement.append(`<option value="${protocolIndex}">${gpsProtocols[protocolIndex]}</option>`);
-        }
-
-        gpsProtocolElement.change(function () {
-            FC.GPS_CONFIG.provider = parseInt($(this).val());
-
-            // Call this to enable or disable auto config elements depending on the protocol
-            gpsAutoConfigElement.change();
-
-        }).val(FC.GPS_CONFIG.provider).change();
-
-        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
-
-        gpsAutoConfigElement.change(function () {
-            const checked = $(this).is(":checked");
-
-            const ubloxSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
-
-            const enableGalileoVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43);
-            gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
-
-            const enableSbasVisible = checked && ubloxSelected;
-            gpsUbloxSbasGroup.toggle(enableSbasVisible);
-
-        }).prop('checked', FC.GPS_CONFIG.auto_config === 1).change();
-
-        gpsAutoBaudGroup.show();
-        gpsAutoConfigGroup.show();
-
-        gpsUbloxGalileoElement.change(function() {
-            FC.GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
-        }).prop('checked', FC.GPS_CONFIG.ublox_use_galileo > 0).change();
-
-        for (let sbasIndex = 0; sbasIndex < gpsSbas.length; sbasIndex++) {
-            gpsUbloxSbasElement.append(`<option value="${sbasIndex}">${gpsSbas[sbasIndex]}</option>`);
-        }
-
-        gpsUbloxSbasElement.change(function () {
-            FC.GPS_CONFIG.ublox_sbas = parseInt($(this).val());
-        }).val(FC.GPS_CONFIG.ublox_sbas);
-
-        $('.gps_home_once').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43));
-        gpsHomeOnceElement.change(function() {
-            FC.GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
-        }).prop('checked', FC.GPS_CONFIG.home_point_once > 0).change();
-
-        for (let baudRateIndex = 0; baudRateIndex < gpsBaudRates.length; baudRateIndex++) {
-            gpsBaudrateElement.append(`<option value="${gpsBaudRates[baudRateIndex]}">${gpsBaudRates[baudRateIndex]}</option>`);
-        }
-
-        gpsBaudrateElement.prop("disabled", true);
-        gpsBaudrateElement.parent().hide();
-
         // fill board alignment
         $('input[name="board_align_roll"]').val(FC.BOARD_ALIGNMENT_CONFIG.roll);
         $('input[name="board_align_pitch"]').val(FC.BOARD_ALIGNMENT_CONFIG.pitch);
@@ -514,12 +420,10 @@ configuration.initialize = function (callback) {
             self.analyticsChanges = {};
 
             // fill some data
-            FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
-            FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
-
             FC.SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
             FC.SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
             FC.SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 FC.CONFIG.craftName = $('input[name="craftName"]').val().trim();
                 FC.CONFIG.pilotName = $('input[name="pilotName"]').val().trim();
@@ -537,7 +441,6 @@ configuration.initialize = function (callback) {
                 .then(() => MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG)))
                 .then(() => MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG)))
                 .then(() => MSP.promise(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG)))
                 .then(() => MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND)))
                 .then(() => MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT)))
                 .then(() => MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG)))

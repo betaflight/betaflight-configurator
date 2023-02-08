@@ -40,6 +40,80 @@
 	.gps_map {
 		height: 460px;
 	}
+	.gps_config {
+		font-size: 11px;
+		.line {
+			clear: left;
+		}
+		select {
+			float: left;
+			width: 100px;
+			height: 20px;
+			margin: 0 10px 5px 0;
+			border: 1px solid var(--subtleAccent);
+		}
+		.select {
+			>div {
+				&:first-child {
+					float: left;
+					height: 20px;
+					margin-right: 15px;
+					margin-left: 3px;
+				}
+			}
+		}
+		span {
+			line-height: 20px;
+		}
+		.gui_box {
+			float: left;
+			margin-bottom: 10px;
+		}
+		td {
+			&:nth-child(2) {
+				width: 38px;
+			}
+		}
+	}
+	dl.features {
+		dt {
+			float: left;
+			width: 10px;
+			height: 18px;
+			line-height: 18px;
+			input {
+				margin-top: 2px;
+			}
+		}
+		dd {
+			margin: 0 0 0 20px;
+			height: 18px;
+			line-height: 18px;
+		}
+	}
+	.freelabel {
+		margin-left: 10px;
+		position: relative;
+	}
+	.spacer_box {
+		padding-bottom: 10px;
+		float: left;
+		width: calc(100% - 20px);
+	}
+	.select {
+		margin-bottom: 5px;
+		clear: left;
+		padding-bottom: 5px;
+		border-bottom: 1px solid var(--subtleAccent);
+		width: 100%;
+		float: left;
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+
 	#connect {
 		display: none;
 		text-align: center;
