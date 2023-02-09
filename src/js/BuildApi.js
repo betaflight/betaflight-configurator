@@ -149,6 +149,18 @@ export default class BuildApi {
         });
     }
 
+    requestBuildOptions(key, onSuccess, onFailure) {
+
+        const url = `${this._url}/api/builds/${key}/json`;
+        $.get(url, function (data) {
+            onSuccess(data);
+        }).fail(xhr => {
+            if (onFailure !== undefined) {
+                onFailure();
+            }
+        });
+    }
+
     loadOptions(onSuccess, onFailure) {
 
         const url = `${this._url}/api/options`;

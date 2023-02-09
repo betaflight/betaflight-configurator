@@ -202,6 +202,7 @@ const MSPCodes = {
     CRAFT_NAME:                     2,
     PID_PROFILE_NAME:               3,
     RATE_PROFILE_NAME:              4,
+    BUILD_KEY:                      5,
 };
 
 export default MSPCodes;

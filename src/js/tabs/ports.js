@@ -28,24 +28,15 @@ ports.initialize = function (callback) {
         { name: 'TELEMETRY_SMARTPORT',  groups: ['telemetry'], maxPorts: 1 },
         { name: 'RX_SERIAL',            groups: ['rx'], maxPorts: 1 },
         { name: 'BLACKBOX',             groups: ['peripherals'], sharableWith: ['msp'], notSharableWith: ['telemetry'], maxPorts: 1 },
+        { name: 'TELEMETRY_LTM',        groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1 },
+        { name: 'TELEMETRY_MAVLINK',    groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1 },
+        { name: 'IRC_TRAMP',            groups: ['peripherals'], maxPorts: 1 },
+        { name: 'ESC_SENSOR',           groups: ['sensors'], maxPorts: 1 },
+        { name: 'TBS_SMARTAUDIO',       groups: ['peripherals'], maxPorts: 1 },
+        { name: 'TELEMETRY_IBUS',       groups: ['telemetry'], maxPorts: 1 },
+        { name: 'RUNCAM_DEVICE_CONTROL', groups: ['peripherals'], maxPorts: 1 },
+        { name: 'LIDAR_TF',             groups: ['peripherals'], maxPorts: 1 },
     ];
-
-    const ltmFunctionRule = {name: 'TELEMETRY_LTM', groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1};
-    functionRules.push(ltmFunctionRule);
-
-    const mavlinkFunctionRule = {name: 'TELEMETRY_MAVLINK', groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1};
-    functionRules.push(mavlinkFunctionRule);
-
-    functionRules.push({ name: 'IRC_TRAMP', groups: ['peripherals'], maxPorts: 1 });
-
-    functionRules.push({ name: 'ESC_SENSOR', groups: ['sensors'], maxPorts: 1 });
-    functionRules.push({ name: 'TBS_SMARTAUDIO', groups: ['peripherals'], maxPorts: 1 });
-
-    functionRules.push({ name: 'TELEMETRY_IBUS', groups: ['telemetry'], maxPorts: 1 });
-
-    functionRules.push({ name: 'RUNCAM_DEVICE_CONTROL', groups: ['peripherals'], maxPorts: 1 });
-
-    functionRules.push({ name: 'LIDAR_TF', groups: ['peripherals'], maxPorts: 1 });
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
         functionRules.push({ name: 'FRSKY_OSD', groups: ['peripherals'], maxPorts: 1 });
@@ -424,6 +415,7 @@ ports.initialize = function (callback) {
         let enableBlackbox = false;
         let enableEsc = false;
         let enableGps = false;
+        let enableVtx = false;
 
         for (const port of FC.SERIAL_CONFIG.ports) {
             const func = port.functions;
@@ -446,6 +438,10 @@ ports.initialize = function (callback) {
 
             if (func.includes('GPS')) {
                 enableGps = true;
+            }
+
+            if (func.includes('IRC_TRAMP') || func.includes('TBS_SMARTAUDIO')) {
+                enableVtx = true;
             }
         }
 
@@ -477,6 +473,12 @@ ports.initialize = function (callback) {
             featureConfig.enable('GPS');
         } else {
             featureConfig.disable('GPS');
+        }
+
+        if (enableVtx) {
+            featureConfig.enable('VTX');
+        } else {
+            featureConfig.disable('VTX');
         }
 
         mspHelper.sendSerialConfig(save_features);

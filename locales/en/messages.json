@@ -549,6 +549,9 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Support data submitted *** <br>Id: $1<br><br><br># copy ID and provide to the betaflight team."
     },
+    "buildKey": {
+        "message": "Build Key: <strong>$1</strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Confirm Data Submission"
     },
