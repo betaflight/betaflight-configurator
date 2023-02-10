@@ -21,6 +21,7 @@ const PortHandler = new function () {
     this.dfu_available = false;
     this.port_available = false;
     this.showAllSerialDevices = false;
+    this.useMdnsBrowser = false;
     this.showVirtualMode = false;
 };
 
@@ -40,11 +41,14 @@ PortHandler.initialize = function () {
 
 PortHandler.reinitialize = function () {
     this.initialPorts = false;
+
     if (this.usbCheckLoop) {
         clearTimeout(this.usbCheckLoop);
     }
+
     this.showVirtualMode = getConfig('showVirtualMode').showVirtualMode;
     this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
+    this.useMdnsBrowser = getConfig('useMdnsBrowser').useMdnsBrowser;
 
     this.check();   // start listening, check after TIMEOUT_CHECK ms
 };
@@ -69,18 +73,23 @@ PortHandler.check_serial_devices = function () {
     const self = this;
 
     serial.getDevices(function(cp) {
+        let currentPorts = [];
 
-        let currentPorts = [
-            ...cp,
-            ...(MdnsDiscovery.mdnsBrowser.services?.filter(s => s.txt.vendor === 'elrs' && s.txt.type === 'rx' && s.ready === true)
-                .map(s => s.addresses.map(a => ({
-                    path: `tcp://${a}`,
-                    displayName: `${s.txt.target} - ${s.txt.version}`,
-                    fqdn: s.fqdn,
-                    vendorId: 0,
-                    productId: 0,
-                }))).flat() ?? []),
-        ].filter(Boolean);
+        if (self.useMdnsBrowser) {
+            currentPorts = [
+                ...cp,
+                ...(MdnsDiscovery.mdnsBrowser.services?.filter(s => s.txt?.vendor === 'elrs' && s.txt?.type === 'rx' && s.ready === true)
+                    .map(s => s.addresses.map(a => ({
+                        path: `tcp://${a}`,
+                        displayName: `${s.txt?.target} - ${s.txt?.version}`,
+                        fqdn: s.fqdn,
+                        vendorId: 0,
+                        productId: 0,
+                    }))).flat() ?? []),
+            ].filter(Boolean);
+        } else {
+            currentPorts = cp;
+        }
 
         // auto-select port (only during initialization)
         if (!self.initialPorts) {
