@@ -2398,16 +2398,16 @@
         "message": "suche"
     },
     "gnssQualityAcquired": {
-        "message": "erworben"
+        "message": "gesehen"
     },
     "gnssQualityUnusable": {
         "message": "unbrauchbar"
     },
     "gnssQualityLocked": {
-        "message": "gesperrt"
+        "message": "Signal empfangen"
     },
     "gnssQualityFullyLocked": {
-        "message": "komplett gesperrt"
+        "message": "Signal OK"
     },
     "gnssUsedUnused": {
         "message": "nicht verwendet"
