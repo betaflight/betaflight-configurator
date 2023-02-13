@@ -572,9 +572,6 @@
     "defaultContributingHead": {
         "message": "参与开发"
     },
-    "defaultContributingText": {
-        "message": "如果你想帮助 Betaflight 变得更好，你可以：<br /><ul><li>用您的 Betaflight 知识来为 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">我们的wiki</a> 创建或更新内容，或者是在论坛里回答其他用户的问题；</li><li>为固件和配置程序 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">贡献代码</a> - 增加新功能，解决漏洞，改善代码；</li><li>测试 <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新功能和修改</a> 并提供测试反馈；</li><li>帮助在 <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">问题追踪器</a> 上报告问题的用户解决问题，并参与功能请求的讨论；</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">为 Betaflight 配置程序添加新语言的翻译</a>，或者帮助维护既有的翻译。</li></ul>"
-    },
     "defaultFacebookText": {
         "message": "我们还有一个 <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小组</a>。<br />加入我们来一起讨论 Betaflight，询问配置问题，或者只是和小伙伴们闲聊。"
     },
@@ -1263,9 +1260,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>注意：</strong>确保你的飞控有能力运行在这些频率上！检查CPU循环时间是否稳定。改变频率可能需要重新调校PID。提示：关闭加速度计和其他传感器可以节省运算资源以获得更高性能。"
     },
-    "configurationGPS": {
-        "message": "GPS"
-    },
     "configurationGPSProtocol": {
         "message": "协议"
     },
@@ -1296,9 +1290,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "启用后，当接通电池后第一次解锁的地点将被视为返航点。如果未开启，返航点将随每次解锁而更新。",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>注意:</strong>使用 GPS 之前需要先在串口页面设置一个串口。"
     },
     "configurationSerialRX": {
         "message": "串行数字接收机协议"

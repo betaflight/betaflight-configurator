@@ -596,9 +596,6 @@
     "defaultContributingHead": {
         "message": "Participation"
     },
-    "defaultContributingText": {
-        "message": "Si vous souhaitez contribuer à améliorer Betaflight, vous pouvez aider de nombreuses manières. incluant:<br /><ul><li>en utilisant vos connaissances de Betaflight pour créer ou mettre à jour du contenu sur <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">notre Wiki</a>, ou en répondant aux questions d'autres utilisateurs dans les forums en ligne ;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">contribuant du code</a> au micrologiciel et au Configurateur - nouvelles fonctionnalités, corrections, améliorations, améliorations ;</li><li>tester <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nouvelles fonctionnalités et corrections</a> et fournir des commentaires;</li><li>aider les autres utilisateurs à résoudre les problèmes qu'ils signalent dans <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">notre outil de suivi de problèmes</a>, et participer aux discussions sur les demandes de fonctionnalités ;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">En traduisant</a> Betaflight Configurator dans une nouvelle langue, ou contribuant à maintenir les traductions existantes.</li></ul>"
-    },
     "defaultFacebookText": {
         "message": "Nous avons également un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Groupe Facebook</a>.<br />\nVenez échanger à propos de Betaflight, posez des questions sur la configuration ou simplement passez du temps avec d'autres pilotes."
     },
@@ -1318,7 +1315,7 @@
         "message": "<strong>Note:</strong> Assurez vous que votre FC peut fonctionner à ces vitesses ! Vérifiez le CPU. Cela peut demander de re-tuner ses PID. TIP: Désactivez l'accéléromètre  et les autres capteurs pour gagner en performance."
     },
     "configurationGPS": {
-        "message": "GPS"
+        "message": "Configuration du GPS"
     },
     "configurationGPSProtocol": {
         "message": "Protocole"
@@ -1350,9 +1347,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Si activé, le lieu du premier armement après branchement de la batterie sera défini comme point de départ. Si non activé, l'endroit de chaque armement sera défini comme point de départ.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Note:</strong> Noubliez pas de configurer un Port Série (via l'onglet Ports) lorsque vous utilisez la fonction GPS."
     },
     "configurationSerialRX": {
         "message": "Type de récepteur série"
@@ -1957,9 +1951,6 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Mode curseur de réglage de Pid</strong><br><br>Le mode curseur de réglade de pid peut être :<br><br>&bull; Désactivé - pas de curseurs, entrer les valeurs manuellement<br>&bull; RP - les curseurs contrôlent Roll et Pitch uniquement, entrer les valeurs de Yaw manuellement<br>&bull; RPY - les curseurs contrôlent toutes les valeurs de PID<br><br><span class=\"message-negative\"><b>Avertissement:</b></span>Passer du mode RP au mode RPY écrasera les paramètres de Yaw avec les paramètres du firmware."
-    },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Vérifiez toujours que votre Failsafe fonctionne correctement !</a></strong></b> Les paramètres sont dans l’onglet Failsafe qui nécessite le Mode Expert.<br> &#8226; <b>Utilisez le dernier firmware de votre radiocommande (Tx) !</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Désactivez le filtre ADC matériel</a></strong> dans l'émetteur si vous utilisez OpenTx ou EdgeTx.<br>Configuration de base : Configurez correctement les paramètres du récepteur. Choisissez la bonne ‘carte des chaînes’ pour votre radio. Vérifiez que le rouleau, le Pitch et les autres graphiques à barres se déplacent correctement. Ajustez la valeur du point de terminaison ou de l'intervalle dans l'émetteur à ~1000 à ~2000, et réglez le point milieu à 1500. Pour plus d'informations, lisez la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Centre Gaz"

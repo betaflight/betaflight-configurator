@@ -89,6 +89,9 @@
     "expertMode": {
         "message": "Expertenmodus einschalten"
     },
+    "expertModeDescription": {
+        "message": "Expertenmodus-Optionen aktivieren"
+    },
     "warningSettings": {
         "message": "Warnungen anzeigen"
     },
@@ -135,7 +138,7 @@
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
-        "message": "Gyro"
+        "message": "Gyroskop"
     },
     "sensorStatusGyroShort": {
         "message": "Gyro",
@@ -597,13 +600,16 @@
         "message": "Mitmachen"
     },
     "defaultContributingText": {
-        "message": "Wenn du helfen möchtest, Betaflight noch besser zu machen, kannst du in vielerlei Hinsicht helfen, beispielsweise:<br /><ul>\n<li>nutze dein Wissen über Betaflight, um Inhalte auf <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">unserem Wiki</a> zu erstellen, zu aktualisieren oder Fragen anderer Benutzer in Online-Foren zu beantworten;</li>\n<li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">steuere Code</a> zur Firmware und dem Konfigurator bei - neue Funktionen, Korrekturen, Verbesserungen;</li><li>Testen von <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">neuen Funktionen und Korrekturen</a> oder Feedback abgeben;</li><li>Hilf anderen Benutzern beim Lösen der Probleme, die sie in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">unserem Problem-Tracker melden</a>, oder nimm an Diskussionen zu Funktionsanfragen teil;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Übersetze </a> den Betaflight Konfigurator in eine neue Sprache oder helfe, die vorhandenen Übersetzungen zu aktualisieren.</li></ul>"
+        "message": "Wenn du beitragen möchtest, Betaflight noch besser zu machen, kannst du in vielerlei Hinsicht helfen:<br /><ul><li>Nutze dein Wissen über Betaflight, um Inhalte auf <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">unserem Wiki</a> zu erstellen, zu aktualisieren oder Fragen anderer Benutzer in Online-Foren zu beantworten;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">Trage Code</a> zur Firmware und zum Konfigurator bei - zu neuen Features, Korrekturen, Verbesserungen;</li><li>Testen von <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">neuen Funktionen und Korrekturen</a> und geben Feedback ab;</li><li>Hilfe für andere Benutzer bei der Lösung von Probleme, die sie in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">unserem Issue-Tracker</a> melden, und Teilnahme an Diskussionen auf Funktionsanfragen;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Übersetze</a> den Betaflight Konfigurator in eine andere Sprachen oder hilf dabei, die vorhandenen Übersetzungen zu pflegen.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Wir haben auch eine <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Gruppe</a>.<br />Trete bei, um über Betaflight zu sprechen,  Konfigurationsfragen zu stellen oder einfach nur um mit anderen Piloten abzuhängen."
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Teile deine Flugerfahrung, diskutiere über Betaflight, hilf Anderen oder erhalte Hilfe von der Community."
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight Konfigurator sammelt anonyme Nutzungsdaten. Diese Daten umfassen zum Beispiel (aber nicht beschränkt) die Anzahl der Starts, die geographische Region der Nutzer, Typen von Flugsteuerungen, Firmware-Versionen, Verwendung von UI-Elementen und Tabs etc. Die Zusammenfassung dieser Daten ist hier <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">einsehbar.</a>. Die Erfassung wird durchgeführt, um besser zu verstehen, wie Betaflight Configurator verwendet wird, um Community-Trends zu verstehen und für mögliche UI-Verbesserungen. Benutzer können die Datenerfassung über die Registerkarte Optionen abstellen (Opt-out)."
     },
     "defaultChangelogHead": {
         "message": "Konfigurator - Changelog"
@@ -636,6 +642,9 @@
     "defaultDocumentation": {
         "message": "Dokumentation zu Betaflight gibt es in den Release Notes und im Wiki.<br /><br />"
     },
+    "defaultDocumentation1": {
+        "message": "Das Betaflight-Wiki ist eine großartige Quelle für Informationen. Es kann <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a> aufgerufen werden."
+    },
     "defaultDocumentation2": {
         "message": "Änderungen und Aktualisierungen für die Firmware findest du auf der <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub Release-Seite</a>."
     },
@@ -654,11 +663,17 @@
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups Forumseite</a>"
     },
+    "defaultSupport2": {
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight-Wiki</a>"
+    },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwells Videos zu Betaflight 4.3 </a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight-Entwickler auf Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Beschleunigungssensor kalibieren"
@@ -1306,7 +1321,7 @@
         "message": "<strong>Hinweis:</strong> Stelle sicher, dass dein FC mit dieser Geschwindigkeit arbeiten kann. Prüfe die CPU-Auslastung und die Zykluszeit-Stabilität. Änderungen führen möglicherweise dazu, dass die PIDs neu eingestellt werden müssen. Tipp: Deaktiviere Beschleuningungsmesser und unbenutzte Sensoren für eine bessere FC-Leistung."
     },
     "configurationGPS": {
-        "message": "GPS"
+        "message": "GPS-Konfiguration"
     },
     "configurationGPSProtocol": {
         "message": "Protokoll"
@@ -1338,9 +1353,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Wenn aktiviert, wird nur beim ersten \"Armen\", nachdem der Akku angeschlossen wurde, der Startpunkt gesetzt. Wenn nicht aktiviert, wird jedes Mal, wenn der Quad \"gearmt\" wird, der Startpunkt aktualisiert.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Hinweis::</strong> Nicht vergessen den seriellen Anschluss zu konfigurieren (Anschlüsse Tab), wenn GPS benutzt wird."
     },
     "configurationSerialRX": {
         "message": "Serieller Empfänger"
@@ -1452,6 +1464,9 @@
     },
     "portsFunction_FRSKY_OSD": {
         "message": "OSD (FrSky Protokoll)"
+    },
+    "portsFunction_VTX_MSP": {
+        "message": "VTX (MSP + Anzeigeport)"
     },
     "pidTuningProfileOption": {
         "message": "Profil $1"
@@ -1942,6 +1957,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>PID Tuning Slider Modus</strong><br><br>PID Tuning Slider Modus kann sein:<br><br>&bull; AUS - keine Slider, Werte manuell eingeben<br>&bull; RP - Schieberegler steuert Rollen und Neigung, Yaw Werte manuell eingeben<br>&bull; RPY - Schieberegler steuert alle PID Achsen<br><br><span class=\"message-negative\"><b>Warnung:</b></span>Wenn Du vom RP zum RPY Modus gehst, werden die Yaw Einstellungen mit Default-Firmware Werten überschrieben."
+    },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Überprüfe immer, daß Failsafe richtig funktioniert!</a></strong></b> Die Einstellungen dazu befinden sich im Failsafe-Reiter und benötigen aktivierten Expertenmodus.<br> &#8226; <b>Verwende die neueste Tx-Firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiviere den Hardware-ADC-Filter</a></strong> im Sender, wenn Du OpenTx oder EdgeTx verwendest.<br>Grundlegende Einstellungen: Konfiguriere die Empfänger-Einstellungen richtig. Wähle die richtige „Kanalzuordnung“ für Deinen Sender. Prüfe, dass die Roll-, Pitch- und sonstigen Senderbefehle in den Balkengrafiken die korrekten Ausschläge erzeugen. Passe die Endpunkt- oder Bereichswerte des Senders auf ~1000 bis ~2000 an und setze den Mittelwert auf 1500. Weitere Informationen findest du in der <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">Dokumentation</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas Mittelwert"
@@ -2566,6 +2584,9 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Sicherheitshinweis</strong><br /><strong class=\"message-negative\">Entfernen alle Propeller um Verletzungen zu verhindern!</strong><br />Die Motoren werden sich <strong>drehen!</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Informationshinweis</strong><br />Die Motoren laufen einzeln und du kannst wählen, welcher Motor läuft. Der Akku sollte angeschlossen und das richtige ESC-Protokoll sollte ausgewählt werden. Diese Funktion kann nur aktive Motoren neu anordnen. Eine komplexere Neuzuordnung erfordert den CLI-Befehl \"Resource\". Siehe hierzu die <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki Seite</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Speichern"
     },
@@ -2634,6 +2655,9 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Diese Funktion funktioniert nur mit DSHOT ESCs.<br />Stelle sicher, dass der ESC (electric speed controller) das DSHOT Protokoll unterstützt, wählen dieses Protokoll im $t(tabMotorTesting.message) Fenster aus."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Anzahl Motoren ist 0. <br />Prüfe den aktuellen Mixer auf der Registerkarte $t(tabMotorTesting.message) oder richte einen benutzerdefinierten Mixer über CLI ein. Siehe auch diese <a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-Seite</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Firmware aktualisieren.<br />Stelle sicher, dass du die neueste Firmware verwendest: Betaflight 4.3 oder neuer."
@@ -2911,6 +2935,9 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Ziel:"
     },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Erhalte weitere Informationen über das 'Target' im Betaflight-Wiki (Wiki-URL in der 'Unified Target'-Konfiguration)"
+    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
@@ -3087,6 +3114,9 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Wiederherstellung / abgebrochene Kommunikation</strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Bei Verlust der Kommunikation mit Ihrem Board, folge diesen Schritten, um die Kommunikation wiederherzustellen: <ul><li>Spannungsversorgung trennen.</li><li>Aktiviere 'Keine Neustart-Sequenz', aktiviere 'Full Chip Löschung'.</li><li>Kontaktiere die BOOT-Pins per Jumper oder halte den BOOT-Button gedrückt.</li><li>Spannungsversorgung herstellen (Aktivitäts-LED blinkt NICHT, wenn korrekt).</li><li>Installiere bei Bedarf alle STM32-Treiber und Zadig (siehe <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB-Flashen</a>-Abschnitt des Betaflight-Handbuchs).</li><li>Konfigurator schließen, Konfigurator neu starten.</li><li>BOOT-Button loslassen, wenn auf dem FC vorhanden.</li><li>Flashen mit korrekter Firmware (Verwendung der manuellen Baudrate wenn im FC-Handbuch angegeben).</li><li>Spannungsversorgung trennen</li><li>BOOT-Jumper entfernen.</li><li>Spannungsversorgung anschließen (Aktivitäts-LED sollte blinken).</li><li>Normal verbinden.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware-Flasher verlassen"
@@ -3669,7 +3699,7 @@
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<strong>Hinweis:</strong> Schieberegler sind deaktiviert, da sich die aktuellen Werte außerhalb des Bereichs der Grundeinstllungen befinden. Zum Expertenmodus wechseln",
+        "message": "<strong>Hinweis:</strong> Schieberegler sind deaktiviert, da sich die aktuellen Werte außerhalb des Bereichs der Grundeinstellungen befinden. Wechsle zum Expertenmodus.",
         "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
@@ -3986,6 +4016,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Kompensation des Spannungseinbruches am Akku"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Erzeugt eine konstante Gas-und PID-Performance über den benutzbaren Batteriespannungsbereich durch Erhöhung der Motor-Leistungsvorgabe bei sinkender Batteriespannung. <br /><br />Die Höhe der Kompensation kann zwischen 0 und 100% variiert werden. Vollständige Kompensation (100%) wird empfohlen.<br /><br />Mehr Infos: <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">diesen Wiki-Eintrag</a> für weitere Informationen."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4064,6 +4097,9 @@
     "pidTuningIdleMinRpm": {
         "message": "Dynamischer Leerlaufwert [*100 U/min]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamischer Leerlauf (Dynamic Idle) verbessert die Kontrolle bei niedrigen Drehzahlen und reduziert das Risiko von Motor-Desyncs. <br /><br /> Es verbessert PID-Autorität, Null-Gas-Stabilität, die Hangtime bei invertiertem Copter und die Motorbremse.<br /><br />Die Minimaldrehzahl sollte etwa 3000 - 3500 U/min betragen. Für Betaflight 4.2 den DShot Leerlaufwert niedrig setzen, z.B. 1%. Es nicht notwendig, den DShot Idle Wert in Betaflight 4.3 anzupassen. <br /><br />Siehe <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">diesen Wiki-Eintrag</a> für weitere Informationen."
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamischer Leerlauf(Idle) ist AUS da DShot Telemetrie AUS ist"
     },
@@ -4076,6 +4112,9 @@
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
     },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">ACHTUNG</span>: Bei Aktivierung dieser Funktion müssen die YAW PID-Werte entsprechend angepasst werden. Mehr Info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
+    },
     "pidTuningIntegratedYawHelp": {
         "message": "Der 'Integrierter Yaw' Wert integriert die Werte P, I und D und erlaubt Yaw den P, I, D etwas zu verändernt ähnlich wie wenn Du Pitch und Roll tunest.<br><br>I-Werte sind sehr wenig erforderlich, weil das integrierte P wie I wirkt und integrierte D-Werte wirken wie P.<br><br>HINWEIS: Integrierter Yaw erfordert die Verwendung von Absoluter Kontrolle, da I mit dem integrierten Yaw nicht benötigt wird."
     },
@@ -4083,10 +4122,10 @@
         "message": "Abweichender Winkel (Grad) in dem das Board anders eingebaut wurde als vorgesehen (über Kopf, gedreht, usw.) Falls externe Sensoren (Gyro, Acc, Mag) verwendet werden, bitte diese ebenfalls neu anlernen."
     },
     "failsafeFeaturesHelpOld": {
-        "message": "Die Failsave Einstellungen haben sich geändert. Benutze Betaflight <strong>V1.12.0+</strong>um auf die verbesserten Einstellungen zuzugreifen."
+        "message": "Die Failsafe-Einstellungen haben sich geändert. Benutze Betaflight <strong>V1.12.0+</strong>, um auf die verbesserten Einstellungen zuzugreifen."
     },
     "failsafePaneTitleOld": {
-        "message": "Empfänger Failsave"
+        "message": "Empfänger Failsafe"
     },
     "failsafeFeaturesHelpNew": {
         "message": "Es gibt ein zweistufiges Failsafe-System. <strong>Stufe 1</strong> tritt dann ein, wenn die Impulslänge eines Kanals ungültig ist, der Empfänger einen Failsafe übermittelt oder kein Signal vom Empfänger anliegt. Die Kanal-Rückfalleinstellungen werden dann <span class=\"message-negative\">für alle</span> Kanäle gesetzt und ein kurzes Zeitfenster geöffnet, um eine erneute Verbindung zu ermöglichen. <strong>Stufe 2</strong> tritt ein, wenn die Fehlerbedingung länger besteht als die eingestellte 'Signalverlustdauer für die Aktivierung der Stufe 2', während der Copter <span class=\"message-negative\">gearmt</span> ist. Alle Känale behalten die in Stufe 1 definierten Werte, mit Ausnahme der in Stufe 2 gesetzten Werte.<br /><strong>Hinweis:</strong> Bei der Aktivierung von Stufe 1 werden die Kanal-Rückfalleinstellungen auch auf AUX-Kanäle angewendet, die ungültige Impulsewerte haben."
@@ -4123,6 +4162,9 @@
     },
     "failsafeDelayHelp": {
         "message": "Stage 1 Wartezeit für Signalwiederherstellung"
+    },
+    "failsafeThrottleLowItem": {
+        "message": "Failsafe Gas niedrig Verzögerung [seconds]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Einfaches disarmen des Fluggerätes, falls das Gas über diese Zeit niedrig war. Dies wird anstatt der Failsafe Prozedur durchgeführt."
@@ -4555,6 +4597,10 @@
         "message": "Schriftart {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Zoom",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
+    },
     "osdSetupVideoFormatTitle": {
         "message": "Videoformat"
     },
@@ -4801,25 +4847,82 @@
         "message": "Aux-Kanal-Wert",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Spannung der Brille",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Durch die Brille ausgegeben: Spannung der Brille"
+    },
     "osdTextElementSysVtxVoltage": {
         "message": "VTX-Spannung",
         "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "Durch die Brille ausgegeben: VTX-Spannung"
     },
     "osdTextElementSysBitrate": {
         "message": "VTX-Bitrate",
         "description": "One of the system elements of the OSD"
     },
+    "osdDescElementSysBitrate": {
+        "message": "Durch die Brille ausgegeben: Video-Bitrate"
+    },
     "osdTextElementSysDelay": {
         "message": "VTX-Verzögerung",
         "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Durch die Brille ausgegeben: Video-Verzögerung"
     },
     "osdTextElementSysDistance": {
         "message": "VTX-Distanz",
         "description": "One of the system elements of the OSD"
     },
+    "osdDescElementSysDistance": {
+        "message": "Durch die Brille ausgegeben: Distanz der Videoübertragung"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Brille-Linkqualität",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Durch die Brille ausgegeben: Video-Linkqualität"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Status des Brillen-DVR",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Durch die Brille ausgegeben: Status des Brillen-DVR"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "Status des VTX-DVR",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "Durch die Brille ausgegeben: Status des VTX-DVR"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Brille-Systemwarnungen",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Durch die Brille ausgegeben: Videosystem-Warnungen"
+    },
     "osdTextElementSysVtxTemp": {
         "message": "VTX-Temperatur",
         "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "Durch die Brille ausgegeben: VTX-Temperatur"
+    },
+    "osdTextElementSysFanSpeed": {
+        "message": "Geschwindigkeit des Brillenlüfters",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysFanSpeed": {
+        "message": "Durch die Brille ausgegeben: Geschwindigkeit des Brillenlüfters"
     },
     "osdTextElementCraftName": {
         "message": "Modellname",
@@ -5173,6 +5276,9 @@
         "message": "Anzeigename",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementDisplayName": {
+        "message": "Kann auch über die CLI-Variable \"display_name\" gesetzt werden."
+    },
     "osdTextElementPilotName": {
         "message": "Pilotenname",
         "description": "One of the elements of the OSD"
@@ -5257,6 +5363,20 @@
     "osdDescTxUplinkPower": {
         "message": "Zeigt den Wert der Tx-Leistung (mW oder W). Nützlich, wenn <i>Dynamische Leistung</i> für bei unterstützten Fernsteuerungen aktiviert ist"
     },
+    "osdTextElementReadyMode": {
+        "message": "Ready Modus",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "Wenn aktiviert, wird READY bis zum Fliegen angezeigt"
+    },
+    "osdTextElementRSNRValue": {
+        "message": "RSNR-Wert",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "RSNR-Wert"
+    },
     "osdTextElementUnknown": {
         "message": "Unbekannt $1",
         "description": "One of the elements of the OSD"
@@ -5302,6 +5422,9 @@
     "osdTextStatUsedWh": {
         "message": "Akkunutzung in Wh",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUsedWh": {
+        "message": "Genutzte Akkukapazität in Wh"
     },
     "osdTextStatMaxAltitude": {
         "message": "Maximale Höhe",
@@ -5449,6 +5572,13 @@
     },
     "osdDescStatMinRssiDbm": {
         "message": "Minimaler RSSI dBm Wert"
+    },
+    "osdTextStatMinRSNR": {
+        "message": "Minimaler RSNR-Wert",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Minimaler RSNR-Wert"
     },
     "osdTextStatUnknown": {
         "message": "Unbekannt $1",
@@ -5643,6 +5773,13 @@
     "osdWarningOverCap": {
         "message": "Warnt, wenn die verbrauchten mAh das konfigurierte Kapazitätslimit überschreitet"
     },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Warnung, wenn der RSNR-Wert unter den eingestellten Alarmwert fällt"
+    },
     "osdWarningTextUnknown": {
         "message": "Unbekannt $1"
     },
@@ -5678,6 +5815,10 @@
     },
     "osdButtonSaved": {
         "message": "Gespeichert"
+    },
+    "vtxHelp": {
+        "message": "Hier können die Werte des Video Transmitter (VTX) konfiguriert werden. Es können die Übertragungswerte, einschließlich der VTX-Tabelle, angezeigt und geändert werden, wenn der Flugcontroller und der VTX dies unterstützen.<br>Um den VTX einzurichten, folge diesen Schritten:<br>1. Gehe zu<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">dieser</a> Seite;<br>2. Finde die passende VTX-Konfigurationsdatei für das Land in dem der Copter betrieben wird und lade sie herunter;<br>3. Klicke unten auf '$t(vtxButtonLoadFile.message)', wähle die VTX-Konfigurationsdatei und lade sie;<br>4. Überprüfe, ob die Einstellungen korrekt sind;<br>5. Klicke auf '$t(vtxButtonSave.message)' um die VTX-Einstellungen auf dem Flugcontroller zu speichern.<br>6. Optional: klicke '$t(vtxButtonSaveLua.message)' um eine Lua-Konfigurationsdatei zu speichern, welche mit den Betaflight Lua-Scripten benutzt werden kann. (Mehr dazu <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hier</a>.)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Achtung:</span> Dein VTX ist nicht konfiguriert oder nicht unterstützt. Dadurch kannst du die VTX-Werte von hier aus nicht ändern. Dies ist nur möglich, wenn der Flugcontroller mit einem Protokoll wie Tramp oder SmartAudio verbunden ist und in der Registerkarte $t(tabPorts.message) korrekt konfiguriert ist.",
@@ -5729,6 +5870,10 @@
     },
     "vtxType_4": {
         "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {
@@ -5891,6 +6036,10 @@
         "message": "<span class=\"message-negative\">Fehler</span> beim Speichern der VTX Konfigurationdatei",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileOk": {
+        "message": "lua VTX-Konfigurationsdatei <span class=\"message-positive\">gespeichert</span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
     "vtxSavedLuaFileKo": {
         "message": "<span class=\"message-negative\">Fehler</span> beim Speichern der lua VTX-Konfigurationsdatei",
         "description": "Message in the GUI log when the lua VTX Config file saving has failed"
@@ -5934,6 +6083,10 @@
     "vtxButtonSave": {
         "message": "Speichern",
         "description": "Save button in the VTX tab"
+    },
+    "vtxButtonSaving": {
+        "message": "Speichern",
+        "description": "Show state of the Save button in the VTX tab"
     },
     "vtxButtonSaved": {
         "message": "Gespeichert",
@@ -6524,6 +6677,9 @@
     },
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Motor-Protokoll"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Konfigurationsdatei:"
     },
     "firmwareFlasherRadioProtocolDescription": {
         "message": "Wähle das zu verwendende Funkprotokoll. Beachte, dass nur ein Element ausgewählt werden kann."

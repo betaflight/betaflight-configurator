@@ -593,9 +593,6 @@
     "defaultContributingHead": {
         "message": "Contribuir"
     },
-    "defaultContributingText": {
-        "message": "Se deseja ajudar o Betaflight a ser ainda melhor, você pode ajudar de diversas formas:<br /><ul><li>Use seu conhecimento sobre o Betaflight para criar ou atualizar o conteúdo do <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nosso Wiki</a>, ou respondendo as dúvidas de outros usuários nos fóruns online.</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Contribua com o código</a> do firmware e do configurador - Novas funções, correções e melhorias.</li><li>Testando <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">novas funções e correções</a> e reportando de volta aos desenvolvedores.</li><li>Ajudando a resolver os problemas que outros usuários relatam em nosso <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue Tracker</a> e participando em discussões de novas funcionalidades.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Traduzindo</a> o Betaflight Configurator para um novo idioma ou ajudando a manter as traduções atuais.</li></ul>"
-    },
     "defaultFacebookText": {
         "message": "Nós também temos um <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">grupo no Facebook</a>.<br /> Participe dele para ter um lugar para falar sobre o Betaflight, fazer perguntas sobre configurações ou encontrar outros pilotos."
     },
@@ -1305,9 +1302,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Nota:</strong> Tenha a certeza de que o controlador é capaz de operar na velocidade selecionada! Verifique a estabilidade do CPU e o tempo de ciclo. Alterar este valor pode requerer uma nova afinação do PID. DICA: Desative o acelerômetro e outros sensores para ganhar mais performance."
     },
-    "configurationGPS": {
-        "message": "GPS"
-    },
     "configurationGPSProtocol": {
         "message": "Protocolo"
     },
@@ -1338,9 +1332,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Quando habilitado, a base será definida somente na primeira vez que armar após a bateria ser conectada. Se não estiver habilitado, toda vez que a aeronave for armada, a base será redefinida.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Nota:</strong> Lembre-se de configurar uma porta serial (via aba de Portas) ao utilizar a funcionalidade de GPS."
     },
     "configurationSerialRX": {
         "message": "Fornecedor do receptor Serial"

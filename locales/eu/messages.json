@@ -533,9 +533,6 @@
     "defaultContributingHead": {
         "message": "Hartu parte"
     },
-    "defaultContributingText": {
-        "message": "Betaflight hobetzen lagundu nahi baduzu, modu askotan lagundu dezakezu, besteak beste:<br /><ul><li> Betaflight buruzko zure ezagutza erabiliz github-en edukia sortzeko edo eguneratzeko <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">gure wiki-an</a>, edo beste erabiltzaile batzuen galderei web foroetan erantzuten;</li><li>Firmware eta konfiguratzaile <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">kodearekin laguntzen</a> -ezaugarri berriekin, konponketak, hobekuntzak;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">Funtzio eta konponbide berriak</a> probatzen eta berrikuspena eskainiz;</li><li>Beste erabiltzaileei <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> arazoak konpontzen laguntzen.</a> eta funtzio eskaerei buruzko eztabaidetan parte hartu;</li><li>Betaflight Konfiguratzailearen hizkuntza berri batera <a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">itzultzen</a> edo dagoeneko itzulpenak mantentzen laguntzen.</li></ul>"
-    },
     "defaultFacebookText": {
         "message": "<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Talde</a> bat badaukagu.<br />Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
     },
@@ -1182,9 +1179,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Oharra:</strong> Ziurtatu zure FC abiadura horietan funtzionatzeko gai dela! Egiaztatu CPU eta Ziklo denboraren egonkortasuna. Aldatzean, beharrezkoa izango da PID berrezartzea. OHARRA: Errendimendu gehiago lortzeko, desgaitu azelerometroa eta bestelako sentsoreak."
     },
-    "configurationGPS": {
-        "message": "GPSa"
-    },
     "configurationGPSProtocol": {
         "message": "Protokoloa"
     },
@@ -1211,9 +1205,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Gaituta dagoenean, bateria konektatu ondorengo lehenengo besoa bakarrik erabiliko da etxeko puntu gisarako. Gaituta ez bada, aireontxia armatuta dagoen bakoitzean, etxeko puntua eguneratuko da.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Oharra:</strong> Gogoratu Serial ataka bat konfiguratu (ataka fitxen bidez) GPS funtzioaerabiltzen duzunean."
     },
     "configurationSerialRX": {
         "message": "Serie hartzailea hornitzailea"

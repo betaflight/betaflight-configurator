@@ -568,9 +568,6 @@
     "defaultContributingHead": {
         "message": "Bijdragen"
     },
-    "defaultContributingText": {
-        "message": "Als u wilt helpen met Betaflight nog beter te maken, kunt u op vele manieren helpen. Bijvoorbeeld:<br /><ul><li>Gebruikt uw kennis van Betaflight om onze wiki aan te vullen <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki</a>, of beantwoord vragen van andere gebruikers op onze forums;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Draag bij aan de code</a> van zowel de firmware als de Configurator;</li><li>Test <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nieuwe functies en oplossingen</a> en geef feedback;</li><li>Help andere gebruikers met hun problemen op te lossen die gemeld worden in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">onze issuetracker</a>. Neem deel aan discussies over functieverzoeken;</li><li>Help mee met het <a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">vertalen</a> van de Betaflight Configurator, of helpt bij het onderhouden van de bestaande vertalingen.</li></ul>"
-    },
     "defaultFacebookText": {
         "message": "We hebben ook een <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Groep</a>.<br />Sluit je aan bij ons om een plek te krijgen waar je over Betaflight kunt praten, stel vragen over configuratie of hang rond met je mede piloten."
     },
@@ -1217,9 +1214,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Let op:</strong> zorg ervoor dat uw FC met deze snelheden kan werken! Controleer CPU- en cyclustijdstabiliteit. Als u dit wilt wijzigen moet u mogelijk opnieuw PID re-tuning doen. TIP: Schakel de versnellingsmeter en andere sensoren uit om meer prestaties te behalen."
     },
-    "configurationGPS": {
-        "message": "GPS"
-    },
     "configurationGPSProtocol": {
         "message": "Protocol"
     },
@@ -1246,9 +1240,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Wanneer ingeschakeld wordt je startpunt (Home point) bepaald bij de eerste keer \"Armen\" na het inpluggen van je batterij. Als dit niet is ingeschakeld wordt je startpunt bij elke keer dat je \"Armt\" opnieuw bepaald.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Opmerking:</strong> Vergeet niet om een Serial Port (via het tabblad poorten) te configureren wanneer je de GPS functie gebruikt."
     },
     "configurationSerialRX": {
         "message": "Seriële Ontvanger Provider"

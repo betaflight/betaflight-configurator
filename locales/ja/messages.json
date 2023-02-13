@@ -86,6 +86,9 @@
     "expertMode": {
         "message": "Expertモード 有効"
     },
+    "expertModeDescription": {
+        "message": "Expertモードオプションを有効にする"
+    },
     "warningSettings": {
         "message": "警告を表示"
     },
@@ -588,13 +591,13 @@
         "message": "ハードウェア"
     },
     "defaultWelcomeText": {
-        "message": "このアプリケーションは、Betaflightを実行可能なハードウェアすべてをサポートします。対応ハードウェア一覧は [ファームフラッシャー] タブをご確認ください。<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewerをダウンロード</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scriptsをダウンロード</a><br /><br />ファームウェアのソースコードのダウンロード先は<a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><br />CP210X USBシリアルチップを使用するレガシーハードウェアの場合:<br />最新の<b>CP210xドライバ</b>のダウンロード先は<a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br />最新のWindows用<b>Zadig</b>USBドライバインストーラのダウンロード先は<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><b>ImpulseRC Driver Fixer</b>のダウンロード先は<a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">こちら</a>"
+        "message": "このアプリケーションは、Betaflightを実行可能なハードウェアすべてをサポートします。対応ハードウェア一覧は [ファームフラッシャー] タブをご確認ください。<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewerをダウンロード</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scriptsをダウンロード</a><br /><br />ファームウェアのソースコードのダウンロード先は<a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><br />CP210X USBシリアルチップを使用するレガシーハードウェアの場合:<br />最新の<b>CP210Xドライバ</b>のダウンロード先は<a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br />最新のWindows用<b>Zadig</b>USBドライバインストーラのダウンロード先は<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a><br /><b>ImpulseRC Driver Fixer</b>のダウンロード先は<a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">こちら</a>"
     },
     "defaultContributingHead": {
         "message": "開発への協力・貢献"
     },
     "defaultContributingText": {
-        "message": "Betaflightを今後より良く改善したい場合は、以下を含むさまざまな方法で支援できます:<br /><ul><li>あなたが持つBetaflightナレッジを用いて<a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki</a>コンテンツの作成または更新、オンラインフォーラムで他のユーザの質問に回答する;</li><li>新機能や修正、改善されたファームウェアとConfiguratorへの<a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">コード提供</a>;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能と修正</a>、テスト、フィードバックの提供;</li><li><a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue tracker</a>で他ユーザから報告された問題を解決支援し、新機能リクエストに関する議論に協力;</li>\n<li>またBetaflight Configuratorを未対応な言語に<a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻訳</a>、または既存翻訳の維持を行いましょう。</li></ul>"
+        "message": "Betaflightを今後より良く改善したい場合は、以下を含むさまざまな方法で支援できます:<br /><ul><li>Betaflightに関する知識を活かして<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki</a>コンテンツの作成または更新、オンラインフォーラムで他ユーザの質問への回答;</li><li>新機能や修正、改善されたファームウェアとConfiguratorへの<a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">コード提供</a>;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能と修正</a>、テスト、フィードバックの提供;</li><li><a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue tracker</a>で他ユーザから報告された問題を解決支援し、新機能リクエストに関する議論に協力;</li><li>Betaflight Configuratorの新しい言語への<a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻訳</a>、または既存翻訳の維持支援.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "私たちは<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebookグループ</a>も運営しています。<br />私たちと一緒にBetaflightについて語り合い、設定に関する質問をしたり、パイロット同士で交流してみましょう。"
@@ -636,6 +639,9 @@
     "defaultDocumentation": {
         "message": "Betaflightドキュメントは、リリースノートおよびWikiにてご利用いただけます。<br /><br />"
     },
+    "defaultDocumentation1": {
+        "message": "Betaflight Wiki はすばらしい情報リソースを<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>で検索・確認することができます。"
+    },
     "defaultDocumentation2": {
         "message": "ファームウェア リリースノートは、GitHub リリースページの<a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>でご確認いただけます。"
     },
@@ -654,11 +660,17 @@
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups スレッド</a>"
     },
+    "defaultSupport2": {
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
+    },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight 4.3 動画集</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight devs on Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "水平 キャリブレーション"
@@ -1306,7 +1318,7 @@
         "message": "<strong>注:</strong> FCがこの速度で動作するか確認してください！CPUとサイクル時間の安定度を確認してください。この変更はPIDの再調整を必要とするかもしれません。TIP: パフォーマンスを上げるためには加速度センサーや他センサーを無効にします。"
     },
     "configurationGPS": {
-        "message": "GPS"
+        "message": "GPS 設定"
     },
     "configurationGPSProtocol": {
         "message": "プロトコル"
@@ -1338,9 +1350,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "有効にすると、バッテリーが接続された後の初回アーム時のみ、ホームポイントとして設定されます。有効でない場合、機体がアームするたびに、ホームポイントが更新されます。",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>注:</strong> GPSを使う場合、シリアルポート ([ポート] タブ) の設定を忘れずに行ってください。"
     },
     "configurationSerialRX": {
         "message": "シリアル受信プロトコル"
@@ -1945,6 +1954,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>PIDチューニング スライダーモード</strong><br><br>PIDチューニング スライダーモードは以下のように使用します: <br><br>&bull; OFF - スライダーを使用せず手動で値を入力<br>&bull; RP - スライダーはロールとピッチのみをコントロールし、ヨーの値は手動で入力<br>&bull; RPY - スライダーにてすべてのPID値をコントロール<br><br><span class=\"message-negative\"><b>警告:</b></span>RPモードからRPYモードに切り替えると、ヨーの設定がファームウェアのデフォルト値に上書きされます。"
+    },
+    "receiverHelp": {
+        "message": "&#8226; <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">フェイルセーフが正しく動作していることを常に確認してください！</a></strong></b>設定は『フェイルセーフ』タブにあり、Expertモードの有効が必要です。<br>&#8226; <b>最新の送信ファームウェアを使用してください！</b><br> &#8226; OpenTXまたはEdgeTXを使用している場合は、送信機の<strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">ハードウェア ADCフィルタを無効</a></strong>にします。<br>基本セットアップ:『受信機』設定を正しく行ってください。送信機の正しい『チャンネルマップ』を選択します。ロール、ピッチ、その他のスライダーグラフが正しく動作することを確認します。送信機のチャンネル始点・終点または範囲の値を1000以下、2000以上に調整し、中心点を1500に設定します。詳しくは<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">ドキュメント</a></strong>をご覧ください。"
     },
     "receiverThrottleMid": {
         "message": "スロットルMID"
@@ -2569,6 +2581,9 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>注意事項</strong><br /><strong class=\"message-negative\">怪我を防止するために、すべてのプロペラを取り外してください！</strong><br />モーターが<strong>回転します！</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくはこちらの<a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
+    },
     "motorsRemapDialogSave": {
         "message": "保存"
     },
@@ -2637,6 +2652,9 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "この機能はDSHOT対応ESCのみで動作します。<br />お使いのESC (electric speed controller) がDSHOTプロトコルに対応していることを確認し $t(tabMotorTesting.message) タブで変更してください。"
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "モーター数は0です。<br />現在のミキサー設定を $t(tabMotorTesting.message) タブで確認するか、CLIを使ってカスタムミキサーとして設定してください。詳しくはこちらの<a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "ファームウェアを更新します。<br /> 最新ファームウェア (Betaflight 4.3以降) を使用していることを確認してください。"
@@ -3093,6 +3111,9 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>リカバリー / 通信ロスト</strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。</li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。</li><li>BOOTピンをジャンパさせるか、またはBOOTボタンを長押ししてください。</li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません) </li><li>すべてのSTM32ドライバと、必要あればZadigをインストールします。(Betaflightマニュアルの [<a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a>] 章を参照) </li><li>Betaflight Configuratorを一度閉じ、Configuratorを再起動します。</li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。</li><li>正常なファームウェアをフラッシュしてください。(FCのボードのマニュアルに指定されている場合は、手動で伝送速度を調整してください) </li><li>電源をオフにします。</li>\n<li>BOOTピンのジャンパを取り外します。</li><li>電源をオンにします。(アクティビティLEDが点滅するはずです) </li><li>再度、通常通り接続してください。</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "ファームフラッシャーより退避"
@@ -3992,6 +4013,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat サグ値補正"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲にて一貫したスロットルとPIDパフォーマンスを提供します。<br /><br />補正量は0～100%の間で変更でき、完全な補正 (100%) を推奨します。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4070,6 +4094,9 @@
     "pidTuningIdleMinRpm": {
         "message": "動的アイドル値 [* 100 RPM]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。BF4.2の場合、DShotのアイドル値を1%など低めに設定します。BF4.3ではDShotアイドル値を調整する必要はありません。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dshotテレメトリー がオフのため動的アイドルはオフとなります"
     },
@@ -4081,6 +4108,9 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "統合ヨー制御"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">注意</span>: この機能を有効にした場合は、それに応じてヨーのPIDを調整する必要があります。詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "統合ヨー制御は、ヨーP、I、Dの値を統合し、ピッチとロールを調整するのと同じようにヨーのP、I、D値を調整することができます。<br><br>統合されたP値はI値のように、統合されたD値はP値のように作用するため、I値はほとんど必要がなくなります。<br><br>備考: 統合ヨー制御ではI値が必要ないため、アブソリュート コントロールを使用する必要があります。"
@@ -5782,6 +5812,10 @@
     },
     "osdButtonSaved": {
         "message": "保存しました"
+    },
+    "vtxHelp": {
+        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">こちらのページ</a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">こちら</a>を参照)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">注目:</span> VTXが設定されていないかサポートされていません。フライトコントローラはTrampやSmartAudio等のプロトコルを使用してVTXと接続しており、必要に応じて、$t(tabPorts.message)タブで設定を修正する必要があります。",
