@@ -1318,7 +1318,7 @@
         "message": "<strong>Uwaga:</strong> Upewnij się że twój kontroler lotu może działać z wybraną prędkością! Sprawdź CPU i stabilność czasu cyklu. Zmiana tego parametru może wymagać ponownego ustawienia PID. Porada: Wyłącz akcelerometr i inne czujniki aby zyskać na wydajności."
     },
     "configurationGPS": {
-        "message": "GPS"
+        "message": "Konfiguracja GPS"
     },
     "configurationGPSProtocol": {
         "message": "Protokół"
@@ -1350,9 +1350,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Po włączeniu tej opcji pierwsze uzbrojenie drona po podłączeniu bateri będzie używane na stałe jako punkt początkowy. Jeśli opcja ta nie zostanie aktywowana to za każdym razem, gdy dron zostanie uzbrojony, punkt początkowy zostanie zaktualizowany.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Uwaga:</strong> Pamiętaj, aby skonfigurować port szeregowy (poprzez zakładkę portów) podczas korzystania z funkcji GPS."
     },
     "configurationSerialRX": {
         "message": "Rodzaj sygnału odbiornika"
@@ -1959,7 +1956,7 @@
         "message": "<strong>Tryb suwaka Pid Tuning</strong><br><br>Tryb suwaka Pid Tuning może być:<br><br>&bull; WYŁĄCZONE - bez suwaków, wprowadź wartości ręcznie<br>&bull; RP – suwaki kontrolują tylko Roll i Pitch, wprowadź wartości Yaw ręcznie<br>&bull; RPY – suwaki kontrolują wszystkie wartości PID<br><br><span class=\"message-negative\"><b>Ostrzeżenie:</b></span>Przejście z trybu RP do trybu RPY spowoduje nadpisanie ustawień odchylenia z ustawieniami oprogramowania układowego."
     },
     "receiverHelp": {
-        "message": "&#8226; <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdzaj, czy Twój Failsafe działa prawidłowo! </a></strong></b> Ustawienia znajdują się na karcie Failsafe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego oprogramowania układowego Tx!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz sprzętowy filtr ADC< /a></strong> w nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz odpowiednią „Mapę kanałów” dla swojego radia. Sprawdź, czy wykresy słupkowe Roll, Pitch i inne poruszają się prawidłowo. Ustaw punkt końcowy kanału lub wartości zakresu w nadajniku na ~1000 do ~2000, a punkt środkowy na 1500. Aby uzyskać więcej informacji, przeczytaj <strong><a href=\"https://github.com/betaflight/betaflight/ blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentacja</a></strong>."
+        "message": "&#8226; <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdzaj, czy Twój Failsafe działa prawidłowo! </a></strong></b> Ustawienia znajdują się w zakładce Failsafe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego oprogramowania układowego Tx!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz sprzętowy filtr ADC< /a></strong> w nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz odpowiednią „Mapę kanałów” dla swojego radia. Sprawdź czy zakres drążków w osi  Roll, Pitch oraz Yaw  jest prawidłowy. Ustaw zakresy kanałów  w nadajniku na ~1000 do ~2000, a punkt środkowy na 1500. Aby uzyskać więcej informacji, przeczytaj <strong><a href=\"https://github.com/betaflight/betaflight/ blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentacja</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Przepustnica MID"
@@ -3053,10 +3050,10 @@
         "message": "Wydania stabilne"
     },
     "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Wydania stabilne oraz wersje testowe"
+        "message": "Wydania testowe"
     },
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Deweloperska"
+        "message": "Wydania deweloperskie"
     },
     "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
         "message": "3.3 AKK & RDQ VTX Patch"

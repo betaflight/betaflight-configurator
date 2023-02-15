@@ -597,7 +597,7 @@
         "message": "Bidrag"
     },
     "defaultContributingText": {
-        "message": "Hvis du gerne vil hjælpe med at gøre Betaflight endnu bedre, kan du hjælpe på mange måder, herunder:<br /><ul><li>ved at bruge din viden om Betaflight til at oprette eller opdatere indhold på <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">vores Wiki</a>, eller ved at besvare andre brugeres spørgsmål i onlinefora</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">bidrage med kode</a> til firmware og Configurator - nye funktioner, rettelser, forbedringer,</li><li>test af <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nye funktioner og rettelser</a> og give feedback;</li><li>hjælper andre brugere med at løse de problemer, de rapporterer i <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">vores issue tracker</a>, deltagelse i diskussioner om ønsker til rettelser og forbedringer</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">oversætte</a> Betaflight Configurator til et nyt sprog eller hjælpe med at vedligeholde eksisterende oversættelser.</li></ul>"
+        "message": "Hvis du gerne vil hjælpe med at gøre Betaflight endnu bedre, kan du hjælpe på mange måder, herunder:<br /><ul><li>ved at bruge din viden om Betaflight til at oprette eller opdatere indhold på <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">vores Wiki</a>, eller ved at besvare andre brugeres spørgsmål i onlinefora</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">bidrage med kode</a> til firmware og Configurator - nye funktioner, rettelser, forbedringer,</li><li>test af <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nye funktioner og rettelser</a> og give feedback;</li><li>hjælper andre brugere med at løse de problemer, de rapporterer i <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">vores issue tracker</a>, deltagelse i diskussioner om ønsker til rettelser og forbedringer</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">oversætte</a> Betaflight Configurator til et nyt sprog eller hjælpe med at vedligeholde eksisterende oversættelser.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Vi har også en <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook-gruppe</a>.<br />Meld dig ind i gruppen vedrørende Betaflight, for at stille spørgsmål om opsætning eller blot hænge ud med andre piloter."
@@ -766,7 +766,7 @@
         "message": "Magnetometer"
     },
     "initialSetupInfoHead": {
-        "message": "Info"
+        "message": "System info"
     },
     "initialSetupBattery": {
         "message": "Batteri spænding:"
@@ -1318,13 +1318,13 @@
         "message": "<strong>Benærk:</strong> Tjek, at din FC er i stand til at fungere ved disse frekvenser! Tjek CPU- og klokfrekvensstabilitet. Ændring af dette kan kræve PID-genindstilling. TIP: Deaktivér accelerometer og evt. andre sensorer for højere CPU ydeevne."
     },
     "configurationGPS": {
-        "message": "GPS"
+        "message": "GPS konfiguration"
     },
     "configurationGPSProtocol": {
         "message": "Protokol"
     },
     "configurationGPSBaudrate": {
-        "message": "Baud-hastighed"
+        "message": "Baud hastighed"
     },
     "configurationGPSubxSbas": {
         "message": "Type af jordbaserede referencestationer"
@@ -1350,9 +1350,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Når valgt, vil kun den første aktivering efter batteriet er tilsluttet blive brugt som startpunkt. Hvis det ikke er aktiveret, opdateres hjempunkt, hver gang fartøj aktiveres.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Bemærk:</strong> Husk først at konfiguere sensor-input (via fanen Porte) for at bruge GPS-funktion."
     },
     "configurationSerialRX": {
         "message": "Leverandør protokol til seriel modtagelse"
@@ -1472,7 +1469,7 @@
         "message": "PID profil $1"
     },
     "pidTuningRateProfileOption": {
-        "message": "Rate profil $1"
+        "message": "Hastighed profil $1"
     },
     "portsFunction_LIDAR_TF": {
         "message": "Benewake LIDAR"
@@ -1484,7 +1481,7 @@
         "message": "PID profiler"
     },
     "pidTuningSubTabRates": {
-        "message": "Rate profiler"
+        "message": "Hastighed profiler"
     },
     "pidTuningSubTabFilter": {
         "message": "Filter indstillinger"
@@ -1496,10 +1493,10 @@
         "message": "Beskrivelse af PID profil, som kan angive hvad profilen er beregnet til, fx let/tungere batteri, actionkamera/intet actionkamera, højere højde osv."
     },
     "rateProfileName": {
-        "message": "Rate profil beskrivelse"
+        "message": "Hastighed profil beskrivelse"
     },
     "rateProfileNameHelp": {
-        "message": "Beskrivelse af Rate profil, som kan angive hvad profilen er beregnet til, fx Filme, Ræs, etc"
+        "message": "Beskrivelse af hastighed profil, som kan angive hvad profilen er beregnet til, fx Filme, Ræs, etc"
     },
     "pidTuningShowAllPids": {
         "message": "Vis alle PID profiler"
@@ -1757,7 +1754,7 @@
         "message": "Feedforward boost tilføjer ekstra skub i respons på pind acceleration eller deceleration.<br><br>Dette minimerer gyro strøj, der er forårsaget af motor acceleration forsinkelse, og reducerer overskridelsen, når pindene decelererer ved at trække tilbage hårdt på motorerne.<br><br>Standard boost virker for de fleste opsætninger. Race piloter kan foretrække at øge det en lille smule. Boost kan finjusteres med omhyggelig log analyse."
     },
     "pidTuningFeedforwardMaxRateLimit": {
-        "message": "Maksimal grænse for Rate"
+        "message": "Maksimal grænse for hastighed"
     },
     "pidTuningFeedforwardMaxRateLimitHelp": {
         "message": "Sænker hastighed fremad, efterhånden som pindene bevæger sig mod maksimal position, for at minimere overskydning ved starten af en flip- eller krænging.<br><br>Gør intet i slutningen af et flip eller krænging. \nLavere værdier får dæmpning til at begynde tidligere.<br><br>Normalt kræver denne værdi ikke ændring. Den højeste værdi, der er i overensstemmelse med acceptabel overskridelse ved starten af krængning eller flips, er bedst."
@@ -1804,19 +1801,19 @@
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
-        "message": "<span class=\"message-negative\"><b>Advarsel:</b></span> meget høje rater kan resultere i desynk fra hurtige decelerationer."
+        "message": "<span class=\"message-negative\"><b>Advarsel:</b></span> meget høje hastigheder kan resultere i desynk ved hurtige deaccelerationer."
     },
     "pidTuningRcRate": {
-        "message": "RC rate"
+        "message": "RC hastighed"
     },
     "pidTuningMaxVel": {
         "message": "Maks hastighed [grad/s]"
     },
     "pidTuningRate": {
-        "message": "Rate"
+        "message": "Hastighed"
     },
     "pidTuningSuperRate": {
-        "message": "Super Rate"
+        "message": "Super hastighed"
     },
     "pidTuningRatesPreview": {
         "message": "Forhåndsvisning bevægelse"
@@ -1897,13 +1894,13 @@
         "message": "Kopier PID profil"
     },
     "pidTuningCopyRateProfile": {
-        "message": "Kopier Rate profil"
+        "message": "Kopier hastigheds profil"
     },
     "dialogCopyProfileText": {
         "message": "Kopiér værdier fra aktuel profil til"
     },
     "dialogCopyRateProfileText": {
-        "message": "Kopiér værdier fra aktuel rate-profil til"
+        "message": "Kopier aktuel hastigheds profil til"
     },
     "dialogCopyProfileTitle": {
         "message": "Kopier profil"
@@ -1927,13 +1924,13 @@
         "message": "Opsat PID profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "Opsat Rate profil: <strong class=\"message-positive\">$1</strong>"
+        "message": "Opsat hastigheds profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedProfile": {
         "message": "Indlæst PID profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": "Indlæst Rate profil: <strong class=\"message-positive\">$1</strong>"
+        "message": "Indlæst hastigheds profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
         "message": "PID-data <strong>opfrisket</strong>"
@@ -1959,7 +1956,7 @@
         "message": "<strong>Pid Tuning Slider tilstand</strong><br><br>Pidtuning slider mode kan være:<br><br>&bull; FRA - ingen skydere, indtast værdier manuelt<br>&bull; RP - skydere kontrol Roll og Pitch kun, indtast sideror værdier manuelt<br>&bull; RPY - skydere styrer alle PID værdier<br><br><span class=\"message-negative\"><b>Advarsel:</b></span>At gå fra RP til RPY tilstand vil overskrive sideror indstillinger med firmware indstillinger."
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\\\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Kontrollér altid, at din Fejlsikring fungerer korrekt!</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configuration er i Eksperttilstand.<br> &#8226; <b>Brug den seneste Tx firmware!</b><br> &#8226; <strong><a href=\\\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Deaktiver hardware-ADC-filteret</a></strong> i senderen, hvis du bruger OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\\\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">dokumentationen</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt!</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configuration er i Eksperttilstand.<br> &#8226; <b>Brug den seneste Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiver hardware-ADC-filteret</a></strong> i senderen, hvis du bruger OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\"https://betaflight.com/docs/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentationen</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas MID"
@@ -2019,7 +2016,7 @@
         "message": "Deaktiveret"
     },
     "receiverRefreshRateTitle": {
-        "message": "Grafopfriskningrate"
+        "message": "Graf opfriskning frekvens"
     },
     "receiverResetRefreshRate": {
         "message": "Nulstil"
@@ -2185,7 +2182,7 @@
         "message": "Sideror D justering"
     },
     "adjustmentsFunction12": {
-        "message": "Profilvalg Rate"
+        "message": "Profilvalg hastighed"
     },
     "adjustmentsFunction13": {
         "message": "Højderor hastighed"
@@ -2338,7 +2335,7 @@
         "message": "Vinkel ved maks"
     },
     "servosDirectionAndRate": {
-        "message": "Retning og rate"
+        "message": "Retning og hastighed"
     },
     "servosLiveMode": {
         "message": "Aktivér Live-tilstand"
@@ -2584,6 +2581,9 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Sikkerheds meddelelse</strong><br /><strong class=\"message-negative\">Fjern alle propeller for at forhindre skader !</strong><br />Motorerne vil <strong>rotere !</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Bemærk</strong><br />Motorer vil rotere en efter en, og du vil være i stand til at vælge hvilken motor der skal rotere. Batteriet skal tilsluttes, den korrekte ESC-protokol skal vælges. Dette værktøj kan kun omarrangere motorer som er opdaget af FC . Mere komplekse ommapping kan ske med CLI 'resource' kommando. Se denne <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Gem"
     },
@@ -2652,6 +2652,9 @@
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funktionen fungerer kun med DSHOT ESC'er.<br />Kontroller, at din ESC understøtter Dshot protokol og sæt protokol på fanen $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Antallet af motorer er 0.<br />Kontroller den aktuelle Mix på fanen $t(tabMotorTesting.message), eller brug et tilpasset mix via CLI. Se denne <a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Opdater firmwaren.<br /> Sørg for at du bruger den seneste firmware: Betaflight 4.3 eller nyere."
@@ -3032,7 +3035,7 @@
         "message": "Manuel valg af baud rate for FC, som ikke understøtter standard hastighed eller forbinder via bluetooth.<br /><span class=\"message-negative\">Bemærk:</span> Ikke brugt hvis forbundet via USB DFU"
     },
     "firmwareFlasherBaudRate": {
-        "message": "Baudhastighed"
+        "message": "Baud hastighed"
     },
     "firmwareFlasherShowDevelopmentReleases": {
         "message": "Vis udviklings releases"
@@ -4010,6 +4013,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag Compensation"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Giver stabil gas og PID ydeevne i hele batteris spændingsområde ved at øge motoren output som kompensation for fald i batteri spænding.<br /><br />Kompensationen kan variere mellem 0 og 100%. Fuld kompensation (100%) anbefales.<br /><br />Besøg <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post</a> for mere info."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4088,6 +4094,9 @@
     "pidTuningIdleMinRpm": {
         "message": "Dynamisk tomgang [* 100 RPM]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamisk tomgang forbedrer styringen ved lav omdr/min og reducerer risikoen for desynkronisering af motor. <br /><br /> Det forbedrer PID værdi, stabilitet ved nul gas, omvendt hænge tid og motorbremsning.<br /><br />Dynamic tomgang min rpm skal sættes til omkring 3000 - 3500 rpm. For 4.2, indstil DShot tomgangs værdi lavt, fx 1%. Der er ingen grund til at justere DShot tomgangs værdi i 4.3. <br /><br />Besøg <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post</a> for mere info."
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamisk tomgang er slået fra, fordi Dshot Telemetry er slået FRA"
     },
@@ -4099,6 +4108,9 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Integreret sideror"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">ADVARSEL</span>: Hvis du aktiverer denne funktion, skal du justere sideror PID i overensstemmelse hermed (Yaw PID). Mere info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">her</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integreret sideror integrerer sideror P, I og D værdier, der tillader at sideror P, I og D kan tunes lidt, som hvis du tuner højderor og krængror.<br><br>Meget lidt I er påkrævet, fordi den integrerede P fungerer som I, og integreret D fungerer som P.<br><br>BEMÆRK: Integreret sideror kræver brug af Absolut kontrol, da der ikke er brug for I med Integreret sideror."
@@ -4203,10 +4215,10 @@
         "message": "Gas værdi ved svævning"
     },
     "failsafeGpsRescueItemAscendRate": {
-        "message": "Jordhastighed (meter/sekund)"
+        "message": "Stignings hastighed (meter/sekund)"
     },
     "failsafeGpsRescueItemDescendRate": {
-        "message": "Stignings hastighed (meter/sekund)"
+        "message": "Nedstignings hastighed (meter/sekund)"
     },
     "failsafeGpsRescueItemMinSats": {
         "message": "Mindste antal satellitter"
@@ -5032,7 +5044,7 @@
         "message": "Effektforbrug "
     },
     "osdTextElementPIDRateProfile": {
-        "message": "Profil: PID og Rate",
+        "message": "Profil: PID og hastighed",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRateProfile": {
@@ -5279,11 +5291,11 @@
         "message": "RPM frekvens rapporteret af ESC telemetri"
     },
     "osdTextElementRateProfileName": {
-        "message": "Profil: Rate profilnavn",
+        "message": "Profil: Hastighed profilnavn",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRateProfileName": {
-        "message": "Viser det aktuelle rate profilnavn"
+        "message": "Viser det aktuelle hastigheds profilnavn"
     },
     "osdTextElementPidProfileName": {
         "message": "Profil: PID profilnavn",
@@ -6183,19 +6195,19 @@
         "message": "PID profil"
     },
     "pidTuningProfileTip": {
-        "message": "Op til 3 forskellige PID profiler kan gemmes på FC. PID profilerne omfatter PID, D forstærkning og vinkel-/horisont indstillinger. \nDu kan skifte PID profil under flyvning, ved fx at oprette en 3 positionskontakt for 'Profilvalg Rate' på fanen 'Kanal justeringer'."
+        "message": "Op til 3 forskellige PID profiler kan gemmes på FC. PID profilerne omfatter PID, D forstærkning og vinkel-/horisont indstillinger. \nDu kan skifte PID profil under flyvning, ved fx at oprette en 3 positionskontakt for 'Profilvalg PID' på fanen 'Kanal justeringer'."
     },
     "pidTuningRateProfile": {
-        "message": "Rate profil"
+        "message": "Hastighed profil"
     },
     "pidTuningRateProfileTip": {
-        "message": "Op til 3 forskellige Rate profiler kan gemmes i FC. Rateprofilerne inkluderer indstillingerne for 'RC Rate', 'Rate', 'Expo', 'Gas' og 'TPA'. \nDu kan skifte Rate profil under flyvning, ved fx at oprette en 3 positionskontakt for 'Profilvalg Rate' på fanen 'Kanal justeringer'."
+        "message": "Op til 3 forskellige hastighed profiler kan gemmes i FC. Hastighed profilerne inkluderer indstillingerne for 'RC Rate', 'Rate', 'Expo', 'Gas' og 'TPA'. \nDu kan skifte hastighed profil under flyvning, ved fx at oprette en 3 positionskontakt for 'Profilvalg hastighed' på fanen 'Kanal justeringer'."
     },
     "pidTuningRateSetup": {
         "message": "Begynder/Acro"
     },
     "pidTuningRateSetupHelp": {
-        "message": "Juster disse værdier for at indstille din Rate. Brug RC Rate til at øge den maksimale hastighed generelt, brug Super Rate til at have højere satser i slutningen af pind bevægelse, brug Expo til at få den pind midter position til at føles glat.",
+        "message": "Juster disse værdier for at indstille din hastighed. Brug RC Rate til at øge den maksimale hastighed generelt, brug Super Rate til at have højere værdier i slutningen af pind bevægelse, brug Expo til at få pind midter position til at føles glat.",
         "description": "Rate table helpicon message"
     },
     "pidTuningDelta": {
@@ -6244,7 +6256,7 @@
         "message": "Blackbox logger til ..."
     },
     "onboardLoggingRateOfLogging": {
-        "message": "Blackbox loggnings hastighed"
+        "message": "Blackbox lognings hastighed"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox logger med debug for ..."
@@ -6307,10 +6319,10 @@
         "message": "Brug mørkt tema for Configuration"
     },
     "pidTuningRatesType": {
-        "message": "Rate type"
+        "message": "Hastighed type"
     },
     "pidTuningRatesTypeTip": {
-        "message": "Ændring af Rate type vil ændre kurven og den måde, du kan indstille den"
+        "message": "Ændring af hastighed type vil ændre kurven og den måde, du kan indstille den"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Hastighed"
@@ -6325,13 +6337,13 @@
         "message": "RC kurve"
     },
     "pidTuningRateQuickRates": {
-        "message": "Maksimal sats"
+        "message": "Maksimal hastighed"
     },
     "pidTuningRcRateActual": {
         "message": "Centrer følsomhed"
     },
     "dialogRatesTypeTitle": {
-        "message": "Ændring af Rate type"
+        "message": "Ændring af hastigheds type"
     },
     "dialogRatesTypeNote": {
         "message": "<span class=\"message-negative\"><b>ADVARSEL: Du ændrer Rate typen.</b></span> Hvis du ændrer Rate, vil værder blive sat til en standardkurve."

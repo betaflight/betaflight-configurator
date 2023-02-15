@@ -103,7 +103,7 @@
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
     "showAllSerialDevices": {
-        "message": "Mostra tots els dispositius en sèrie (per a fabricants o desenvolupament)",
+        "message": "Mostra tots els dispositius sèrie (per a fabricants o desenvolupament)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
     "showVirtualMode": {
@@ -605,7 +605,7 @@
         "message": "Contribuir"
     },
     "defaultContributingText": {
-        "message": "Si voleu ajudar a millorar encara més Betaflight, podeu ajudar-nos de moltes maneres, incloent:<br /><ul><li>utilitzar els vostres coneixements sobre Betaflight per crear o actualitzar contingut a <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_ blank\" rel=\"noopener noreferrer\"> el nostre Wiki</a>, o responent a les preguntes d'altres usuaris als fòrums en línia;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_ blank\" rel=\"noopener noreferrer\"> codi que contribueix</a> al firmware i Configurator - novetats, solucions, millores;</li><li>proves <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\"> noves funcions i solucions</a> i proporciona comentaris;</li><li>ajudant a altres usuaris a resoldre els problemes que exposen a <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_ blank\" rel=\"noopener noreferrer\"> el nostre tracker de asumptes</a>, i participant en discussions sobre peticions de funcions;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_ blank\" rel=\"noopener noreferrer\"> traduïnt</a> el Configurador de Betaflight a un nou idioma o ajudant a mantenir les traduccions existents.</li></ul>"
+        "message": "Si voleu ajudar a millorar encara més Betaflight, podeu ajudar-nos de moltes maneres, incloent:<br /><ul><li>utilitzar els vostres coneixements sobre Betaflight per crear o actualitzar contingut a <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\"> el nostre Wiki</a>, o responent a les preguntes d'altres usuaris als fòrums en línia;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\"> codi que contribueix</a> al firmware i Configurator - novetats, solucions, millores;</li><li>proves <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\"> noves funcions i solucions</a> i proporciona comentaris;</li><li>ajudant a altres usuaris a resoldre els problemes que exposen a <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_ blank\" rel=\"noopener noreferrer\"> el nostre tracker de asumptes</a>, i participant en discussions sobre peticions de funcions;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_ blank\" rel=\"noopener noreferrer\"> traduïnt</a> el Configurador de Betaflight a un nou idioma o ajudant a mantenir les traduccions existents.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "També tenim un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Grup de Facebook</a>. <br />Uneix-te a nosaltres per obtenir un lloc on parlar de Betaflight, fer preguntes de configuració o simplement passar una estona amb altres pilots."
@@ -1326,7 +1326,7 @@
         "message": "<strong>Nota:</strong> Assegureu-vos que la vostra controladora pot funcionar a aquestes velocitats. Comproveu l'estabilitat de la CPU i del cicle de temps. Si canvieu això, podreu requerir nous ajustos dels PID. CONSELL: Desactiveu l’acceleròmetre i altres sensors per obtenir més rendiment."
     },
     "configurationGPS": {
-        "message": "GPS"
+        "message": "Configuració GPS"
     },
     "configurationGPSProtocol": {
         "message": "Protocol"
@@ -1358,9 +1358,6 @@
     "configurationGPSHomeOnceHelp": {
         "message": "Quan estigui habilitat, només s’utilitzarà com a punt inicial el primer armat després de la bateria connectada. Si no està habilitat, cada vegada que el quad sigui armat s’actualitzarà el punt d’inici.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHelp": {
-        "message": "<strong>Nota:</strong> Recorda configurar el Port Sèrie (pestanya Ports) per a fer servir la funció GPS."
     },
     "configurationSerialRX": {
         "message": "Proveïdor del receptor sèrie"
@@ -1967,7 +1964,7 @@
         "message": "<strong>Mode de control lliscant de sintonització de PID</strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><span class=\"message-negative\">Important: <b></b></span>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
     },
     "receiverHelp": {
-        "message": "&#8226; <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comproveu sempre que el vostre Failsafe funcioni correctament! </a></strong></b> La configuració es troba a la pestanya Failsafe, que requereix el mode expert.<br> &#8226; <b>Utilitzeu el darrer microprogramari Tx!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactiva el filtre ADC de maquinari< /a></strong> al transmissor si feu servir OpenTx o EdgeTx.<br>Configuració bàsica: configureu correctament la configuració del \"Receptor\". Trieu el \"Mapa de canals\" correcte per a la vostra ràdio. Comproveu que els gràfics de balanceig, to i altres barres es mouen correctament. Ajusteu el punt final del canal o els valors d'interval al transmissor entre ~1000 i ~2000 i configureu el punt mitjà en 1500. Per obtenir més informació, llegiu la <strong><a href=\"https://github.com/betaflight/betaflight/ blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentació</a></strong>."
+        "message": "&#8226; <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comproveu sempre que el vostre Failsafe funcioni correctament!</a></strong></b> La configuració es troba a la pestanya Failsafe, que requereix el mode expert.<br> &#8226; <b>Utilitzeu el darrer microprogramari Tx!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactiva el filtre ADC de maquinari< /a></strong> al transmissor si feu servir OpenTx o EdgeTx.<br>Configuració bàsica: configureu correctament la configuració del \"Receptor\". Trieu el \"Mapa de canals\" correcte per a la vostra ràdio. Comproveu que els gràfics de balanceig, to i altres barres es mouen correctament. Ajusteu el punt final del canal o els valors d'interval al transmissor entre ~1000 i ~2000 i configureu el punt mitjà en 1500. Per obtenir més informació, llegiu la <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentació</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
