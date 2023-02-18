@@ -160,4 +160,9 @@ export default class BuildApi {
         const url = `${this._url}/api/releases/${release}/commits`;
         this.load(url, onSuccess, onFailure);
     }
+
+    loadConfiguratorRelease(type, onSuccess, onFailure) {
+        const url = `${this._url}/api/configurator/releases/${type}`;
+        this.load(url, onSuccess, onFailure);
+    }
 }
