@@ -273,17 +273,19 @@ cli.initialize = function (callback) {
 
         $('.tab-cli .support').click(function() {
 
-            function submitSupportData() {
+            function submitSupportData(data) {
                 clearHistory();
                 const api = new BuildApi();
-                api.getSupportCommands((commands) => {
+
+                api.getSupportCommands(commands => {
+                    commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
                     executeCommands(commands.join('\n')).then(() => {
                         const delay = setInterval(() => {
                             const time = new Date().getTime();
                             if (self.lastArrival < time - 250) {
                                 clearInterval(delay);
                                 const text = self.outputHistory;
-                                api.submitSupportData(text, (key) => {
+                                api.submitSupportData(text, key => {
                                     writeToOutput(i18n.getMessage('buildServerSupportRequestSubmission', [key]));
                                 });
                             }
@@ -292,15 +294,7 @@ cli.initialize = function (callback) {
                 });
             }
 
-            const dialogSettings = {
-                title: i18n.getMessage("supportWarningDialogTitle"),
-                text: i18n.getMessage("supportWarningDialogText"),
-                buttonYesText: i18n.getMessage("submit"),
-                buttonNoText: i18n.getMessage("cancel"),
-                buttonYesCallback: submitSupportData,
-            };
-
-            GUI.showYesNoDialog(dialogSettings);
+            self.supportWarningDialog(submitSupportData);
         });
 
         // Tab key detection must be on keydown,
@@ -559,6 +553,25 @@ cli.send = function (line, callback) {
     }
 
     serial.send(bufferOut, callback);
+};
+
+cli.supportWarningDialog = function (onAccept) {
+    const supportWarningDialog = $('.supportWarningDialog')[0];
+    const supportWarningDialogTextArea = $('.tab-cli textarea[name="supportWarningDialogInput"]');
+
+    if (!supportWarningDialog.hasAttribute('open')) {
+        supportWarningDialog.showModal();
+
+        $('.cancel').on('click', function() {
+            supportWarningDialog.close();
+        });
+
+        $('.submit').on('click', function() {
+            supportWarningDialog.close();
+            onAccept(supportWarningDialogTextArea.val());
+            supportWarningDialogTextArea.val('');
+        });
+    }
 };
 
 cli.cleanup = function (callback) {
