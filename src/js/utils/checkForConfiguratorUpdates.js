@@ -13,8 +13,8 @@ function notifyOutdatedVersion(data) {
 
     if (data.isCurrent === false && data.updatedVersion !== undefined) {
 
-        CONFIGURATOR.latestVersion = data.UpdatedVersion.Version;
-        CONFIGURATOR.latestVersionReleaseUrl = data.UpdatedVersion.Url;
+        CONFIGURATOR.latestVersion = data.updatedVersion.version;
+        CONFIGURATOR.latestVersionReleaseUrl = data.updatedVersion.url;
 
         const message = i18n.getMessage('configuratorUpdateNotice', [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl]);
         gui_log(message);
