@@ -20,6 +20,12 @@ import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates
 import * as THREE from 'three';
 import * as d3 from 'd3';
 
+if (typeof String.prototype.replaceAll === "undefined") {
+    String.prototype.replaceAll = function(match, replace) {
+        return this.replace(new RegExp(match, 'g'), () => replace);
+    };
+}
+
 $(document).ready(function () {
 
     useGlobalNodeFunctions();
