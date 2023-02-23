@@ -180,8 +180,20 @@ const VirtualFC = {
 
         // 11 1111 (pass bitchecks)
         virtualFC.CONFIG.activeSensors = 63;
+
+        virtualFC.GPS_CONFIG = {
+            provider: 1,
+            ublox_sbas: 1,
+            auto_config: 1,
+            auto_baud: 0,
+            home_point_once: 1,
+            ublox_use_galileo: 1,
+        };
+
+        virtualFC.GPS_DATA = SampleGpsData;
     },
-    setupVirtualOSD(){
+
+    setupVirtualOSD() {
         const virtualOSD = OSD;
 
         virtualOSD.data.video_system = 1;
@@ -219,6 +231,24 @@ const VirtualFC = {
             time: { display_name: 'Minutes', value: 0 },
         };
     },
+};
+
+const SampleGpsData = {
+    "fix": 2,
+    "numSat": 10,
+    "lat": 474919409,
+    "lon": 190539766,
+    "alt": 0,
+    "speed": 0,
+    "ground_course": 1337,
+    "distanceToHome": 0,
+    "ditectionToHome": 0,
+    "update": 0,
+    "chn": [0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 6, 6, 6, 6, 6, 6, 6, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255],
+    "svid": [1, 2, 10, 15, 18, 23, 26, 123, 136, 1, 15, 2, 3, 4, 9, 10, 16, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "quality": [3, 95, 95, 95, 95, 95, 95, 23, 23, 1, 31, 20, 31, 23, 20, 17, 31, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "cno": [27, 37, 43, 37, 34, 47, 44, 42, 39, 0, 40, 24, 40, 35, 26, 0, 35, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "directionToHome": 0,
 };
 
 export default VirtualFC;

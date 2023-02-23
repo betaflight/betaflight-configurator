@@ -271,7 +271,9 @@ gps.initialize = async function (callback) {
 
                 if (FC.GPS_DATA.fix) {
                    gpsWasFixed = true;
-                   frame.contentWindow.postMessage(message, '*');
+                    if (!!frame.contentWindow) {
+                        frame.contentWindow.postMessage(message, '*');
+                    }
                    $('#loadmap').show();
                    $('#waiting').hide();
                 } else if (!gpsWasFixed) {
@@ -279,7 +281,9 @@ gps.initialize = async function (callback) {
                    $('#waiting').show();
                 } else {
                     message.action = 'nofix';
-                    frame.contentWindow.postMessage(message, '*');
+                    if (!!frame.contentWindow) {
+                        frame.contentWindow.postMessage(message, '*');
+                    }
                 }
             } else {
                 gpsWasFixed = false;
