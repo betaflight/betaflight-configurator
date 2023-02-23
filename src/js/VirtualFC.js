@@ -156,6 +156,8 @@ const VirtualFC = {
             mag_hardware: 1,
         };
 
+        virtualFC.SENSOR_DATA = { ...FC.SENSOR_DATA };
+
         virtualFC.RC = {
             channels: Array.from({length: 16}),
             active_channels: 16,

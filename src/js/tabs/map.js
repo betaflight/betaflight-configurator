@@ -76,31 +76,30 @@ function initializeMap() {
 }
 
 function processMapEvents(e) {
-
     try {
-        switch(e.data.action) {
+        switch (e.data.action) {
+            case 'zoom_in':
+                mapView.setZoom(mapView.getZoom() + 1);
+                break;
 
-        case 'zoom_in':
-            mapView.setZoom(mapView.getZoom() + 1);
-            break;
+            case 'zoom_out':
+                mapView.setZoom(mapView.getZoom() - 1);
+                break;
 
-        case 'zoom_out':
-            mapView.setZoom(mapView.getZoom() - 1);
-            break;
+            case 'center':
+                iconFeature.setStyle(iconStyle);
+                const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
+                mapView.setCenter(center);
+                const heading = e.data.heading === undefined ? 0 : e.data.heading;
+                mapView.setRotation(heading);
+                iconGeometry.setCoordinates(center);
+                break;
 
-        case 'center':
-            iconFeature.setStyle(iconStyle);
-            const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
-            mapView.setCenter(center);
-            iconGeometry.setCoordinates(center);
-            break;
-
-        case 'nofix':
-            iconFeature.setStyle(iconStyleNoFix);
-            break;
+            case 'nofix':
+                iconFeature.setStyle(iconStyleNoFix);
+                break;
         }
-
-  } catch (err) {
-      console.log(`Map error ${err}`);
-  }
+    } catch (err) {
+        console.error('Map error', err);
+    }
 }
