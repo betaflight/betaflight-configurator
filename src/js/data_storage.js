@@ -35,6 +35,10 @@ const CONFIGURATOR = {
             return `${this.version}`;
         }
     },
+
+    isDevVersion: function() {
+        return this.version.includes('debug');
+    },
 };
 
 export default CONFIGURATOR;

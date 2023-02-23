@@ -183,6 +183,10 @@ function startProcess() {
             GUI.nwGui.Shell.openExternal(url);
         });
         nwWindow.on('close', closeHandler);
+        const config = getConfig('showDevToolsOnStartup');
+        if (CONFIGURATOR.isDevVersion() && !!config.showDevToolsOnStartup) {
+            nwWindow.showDevTools();
+        }
     } else if (GUI.isCordova()) {
         window.addEventListener('beforeunload', closeHandler);
         document.addEventListener('backbutton', function(e) {
