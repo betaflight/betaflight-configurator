@@ -106,6 +106,10 @@
         "message": "모든 시리얼 기기 보기 (제조사 또는 개발용)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
+    "useMdnsBrowser": {
+        "message": "네트워크에서 mDNS 브라우저 기기 디스커버리를 사용하세오 (실험적인)",
+        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
     "showVirtualMode": {
         "message": "가상 연결 모드 활성화",
         "description": "Text for the option to enable or disable the virtual FC"

@@ -106,6 +106,10 @@
         "message": "Mostra tots els dispositius sèrie (per a fabricants o desenvolupament)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
+    "useMdnsBrowser": {
+        "message": "Utilitzeu el descobriment de dispositius del navegador mDNS a la xarxa (experimental)",
+        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
     "showVirtualMode": {
         "message": "Activa el mode de connexió virtual",
         "description": "Text for the option to enable or disable the virtual FC"

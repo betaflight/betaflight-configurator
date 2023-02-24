@@ -106,6 +106,10 @@
         "message": "すべてのシリアルデバイスを表示 (ベンダーまたはデベロッパー向け)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
+    "useMdnsBrowser": {
+        "message": "mDNSブラウザを使用したネットワーク上でのデバイス検出 (試験運用)",
+        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
     "showVirtualMode": {
         "message": "バーチャル接続モード 有効",
         "description": "Text for the option to enable or disable the virtual FC"
@@ -703,7 +707,7 @@
         "message": "ブートローダー / DFU を有効化"
     },
     "initialSetupBackupRestoreHeader": {
-        "message": "試験的なバックアップとリストア"
+        "message": "バックアップとリストア (試験運用)"
     },
     "initialSetupBackupRestoreText": {
         "message": "不測の事態に備え必ず設定の<strong>バックアップ</strong>を行って下さい。<strong>CLI</strong>設定は<span class=\"message-negative\">自動バックアップされません</span>。- CLIコマンドの [diff all] をご利用下さい。"
@@ -6485,7 +6489,7 @@
         "description": "Hint text in the presets detailed dialog indication preset is not official but community"
     },
     "presetsExperimental": {
-        "message": "試験版",
+        "message": "試験運用",
         "description": "Hint text in the presets detailed dialog indication preset is not official but experimental"
     },
     "presetsApply": {
