@@ -192,7 +192,7 @@ const VirtualFC = {
             ublox_use_galileo: 1,
         };
 
-        virtualFC.GPS_DATA = SampleGpsData;
+        virtualFC.GPS_DATA = sampleGpsData;
     },
 
     setupVirtualOSD() {
@@ -235,7 +235,7 @@ const VirtualFC = {
     },
 };
 
-const SampleGpsData = {
+const sampleGpsData = {
     "fix": 2,
     "numSat": 10,
     "lat": 474919409,
@@ -244,13 +244,12 @@ const SampleGpsData = {
     "speed": 0,
     "ground_course": 1337,
     "distanceToHome": 0,
-    "ditectionToHome": 0,
+    "directionToHome": 0,
     "update": 0,
     "chn": [0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 6, 6, 6, 6, 6, 6, 6, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255],
     "svid": [1, 2, 10, 15, 18, 23, 26, 123, 136, 1, 15, 2, 3, 4, 9, 10, 16, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     "quality": [3, 95, 95, 95, 95, 95, 95, 23, 23, 1, 31, 20, 31, 23, 20, 17, 31, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     "cno": [27, 37, 43, 37, 34, 47, 44, 42, 39, 0, 40, 24, 40, 35, 26, 0, 35, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    "directionToHome": 0,
 };
 
 export default VirtualFC;

@@ -300,7 +300,7 @@ const FC = {
             speed:                      0,
             ground_course:              0,
             distanceToHome:             0,
-            ditectionToHome:            0,
+            directionToHome:            0,
             update:                     0,
 
             chn:                        [],

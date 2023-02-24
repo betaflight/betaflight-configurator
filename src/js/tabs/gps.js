@@ -184,9 +184,7 @@ gps.initialize = async function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
-            const heading = hasMag
-                ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0])
-                : undefined;
+            const heading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
             const headingDeg = heading === undefined ? 0 : heading * 180 / Math.PI;
             const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
             const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
