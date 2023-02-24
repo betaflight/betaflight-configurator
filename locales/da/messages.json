@@ -106,6 +106,10 @@
         "message": "Vis alle serielle enheder (for producenter eller ved udvikling)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
+    "useMdnsBrowser": {
+        "message": "Brug mDNS Browser Device opdagelse på netværk (eksperimentel)",
+        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
     "showVirtualMode": {
         "message": "Aktiver virtuel forbindelse",
         "description": "Text for the option to enable or disable the virtual FC"
@@ -393,7 +397,7 @@
         "message": "Adresseindlæsning til valg bytes-sektor mislykkedes med ukendt fejl. Afbryder."
     },
     "stm32NotReadProtected": {
-        "message": "Læsebeskyttelse inaktiv"
+        "message": "Skrivebeskyttelse slået fra"
     },
     "stm32ReadProtected": {
         "message": "Board synes læsbeskyttet. Afbeskytter. Afbryd ikke/fjern ikke stikket!"
@@ -555,7 +559,7 @@
         "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C-fejl:",
+        "message": "I2C fejl:",
         "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
@@ -2729,7 +2733,7 @@
         "message": "Vent venligst mens der opbygges autoudfyld cache..."
     },
     "cliEnter": {
-        "message": "CLI tilstand opdaget"
+        "message": "CLI tilstand !"
     },
     "cliReboot": {
         "message": "CLI genstart registreret"
@@ -3113,7 +3117,7 @@
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller BOOT kontakt sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\\\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\\\"target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Betaflight installation</a> sektion i Betaflight manual (engelsk).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper på FC BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud sats, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Fjern BOOT jumper.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\\\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\\\"target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Betaflight installation</a> sektion i Betaflight manual (engelsk).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper på FC BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud sats, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Hvis der er en BOOT jumper, fjern den.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"

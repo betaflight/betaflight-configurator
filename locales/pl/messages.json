@@ -106,6 +106,10 @@
         "message": "Pokaż wszystkie urządzenia szeregowe (dla producentów lub deweloperów)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
+    "useMdnsBrowser": {
+        "message": "Użyj wykrywania urządzeń w przeglądarce mDNS w sieci (eksperymentalne)",
+        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
     "showVirtualMode": {
         "message": "Włącz tryb połączenia wirtualnego",
         "description": "Text for the option to enable or disable the virtual FC"
@@ -597,7 +601,7 @@
         "message": "Współtworzenie"
     },
     "defaultContributingText": {
-        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> i dostarczanie informacji zwrotnych</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">naszym systemie śledzenia problemów</a>oraz uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
+        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> i dostarczanie informacji zwrotnych</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">naszym systemie śledzenia problemów</a> oraz uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku</a>.<br />Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
