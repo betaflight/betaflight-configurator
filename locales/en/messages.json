@@ -555,6 +555,9 @@
     "supportWarningDialogText": {
         "message": "Please confirm data submission to the Betaflight team.<br><br>This process will run some commands and submit the output to the build server.<br><br>You will then be provided a unique identifier for your data submission.<br><br>Please ensure you provide this unique identifier to the Betaflight team when using Discord or opening an issues on Github."
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Describe the problem"
+    },
     "releaseCheckLoaded": {
         "message" : "Loaded release information for $1 from GitHub."
     },
