@@ -1,4 +1,3 @@
-import vtxDeviceStatusFactory from './VtxDeviceStatusFactory';
 import VtxDeviceStatus, { VtxDeviceTypes } from './VtxDeviceStatus';
 
 class VtxDeviceStatusMsp extends VtxDeviceStatus {
@@ -16,7 +15,5 @@ class VtxDeviceStatusMsp extends VtxDeviceStatus {
         return VtxDeviceTypes.VTXDEV_MSP;
     }
 }
-
-vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusMsp);
 
 export default VtxDeviceStatusMsp;

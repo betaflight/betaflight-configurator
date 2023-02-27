@@ -1,5 +1,4 @@
 import VtxDeviceStatus, { VtxDeviceTypes } from "./VtxDeviceStatus";
-import vtxDeviceStatusFactory from "./VtxDeviceStatusFactory";
 import { i18n } from "../../localization";
 
 class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
@@ -47,7 +46,5 @@ class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
         return VtxDeviceTypes.VTXDEV_SMARTAUDIO;
     }
 }
-
-vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusSmartAudio);
 
 export default VtxDeviceStatusSmartAudio;
