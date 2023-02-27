@@ -6,6 +6,7 @@ export const API_VERSION_1_42 = '1.42.0';
 export const API_VERSION_1_43 = '1.43.0';
 export const API_VERSION_1_44 = '1.44.0';
 export const API_VERSION_1_45 = '1.45.0';
+export const API_VERSION_1_46 = '1.46.0';
 
 const CONFIGURATOR = {
     // all versions are specified and compared using semantic versioning http://semver.org/
