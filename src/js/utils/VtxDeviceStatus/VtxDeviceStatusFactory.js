@@ -1,4 +1,8 @@
 import VtxDeviceStatus from './VtxDeviceStatus';
+import VtxDeviceStatusSmartAudio from './SmartAudioDeviceStatus';
+import VtxDeviceStatusTramp from './TrampDeviceStatus';
+import VtxDeviceStatusMsp from './VtxMspDeviceStatus';
+import VtxDeviceStatusRtc6705 from './Rtc6705DeviceStatus';
 
 const vtxDeviceStatusFactory = {
     _vtxDeviceStatusClasses: [],
@@ -38,5 +42,10 @@ const vtxDeviceStatusFactory = {
         return result;
     },
 };
+
+vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusSmartAudio);
+vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusTramp);
+vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusMsp);
+vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusRtc6705);
 
 export default vtxDeviceStatusFactory;
