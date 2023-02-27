@@ -473,6 +473,9 @@
     "supportWarningDialogText": {
         "message": "Por favor, confirme a submissão dos dados à equipa do Betaflight<br><br>Este processo executará alguns comandos e enviará o output para o servidor de compilação.<br><br>Receberá então um identificador exclusivo para a sua submissão de dados.<br><br>Por favor, certifique-se de fornecer este identificador único à equipa do Betaflight quando usar o Discord ou abrir uma questão no Github."
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Descreva o problema"
+    },
     "releaseCheckLoaded": {
         "message": "Informações da versão do $1 carregadas do GitHub."
     },

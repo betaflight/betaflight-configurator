@@ -473,6 +473,9 @@
     "supportWarningDialogText": {
         "message": "베타플라이트 팀에 데이터 제출을 확인하십시오.<br><br>이 프로세스는 일부 명령을 실행하고 출력을 빌드 서버에 제출합니다.<br><br>그러면 데이터 제출에 대한 고유 식별자가 제공됩니다.<br><br> 디스코드를 사용하거나 Github에서 문제를 열 때 베타플라이트 팀에 이 고유 식별자를 제공하십시오."
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "문제를 서술하세요"
+    },
     "releaseCheckLoaded": {
         "message": "GitHub로부터 $1에 대한 릴리즈 정보를 로드했습니다."
     },

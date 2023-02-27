@@ -476,6 +476,9 @@
     "supportWarningDialogText": {
         "message": "Bitte bestätigen Sie die Datenübermittlung an das Betaflight-Team.<br><br>Dieser Prozess führt einige Befehle aus und sendet die Ausgabe an den Build-Server.<br><br>Du erhältst dann eine eindeutige Identifikator (ID) für Ihre Datenübermittlung.<br><br>Bitte stelle sicher, dass du diese eindeutige ID dem Betaflight-Team zur Verfügung stellst, wenn du Discord benutzt oder ein Problem auf Github öffnest."
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Problembeschreibung "
+    },
     "releaseCheckLoaded": {
         "message": "Lade Github Information für Version $1."
     },

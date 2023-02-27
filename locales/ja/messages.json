@@ -473,6 +473,9 @@
     "supportWarningDialogText": {
         "message": "Betaflight開発チームへのデータ送信を確認してください。<br><br>この手順ではいくつかのコマンドを実行し、その出力をビルドサーバへ送信します。<br><br>その後、データを提出するための一意の識別子が提供されます。<br><br>Discordを使用するときやGitHubでのIssue投稿に、この一意の識別子をBetaflight開発チームに提供するようお願い致します。"
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "問題についての説明"
+    },
     "releaseCheckLoaded": {
         "message": "GitHubの $1 よりリリース情報をロードしました。"
     },

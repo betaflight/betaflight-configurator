@@ -481,6 +481,9 @@
     "supportWarningDialogText": {
         "message": "Si us plau, confirmeu l'enviament de dades a l'equip de Betaflight.<br><br>Aquest procés executarà algunes ordres i enviarà la sortida al servidor de compilació.<br><br>A continuació, se us proporcionarà un identificador únic per enviar les vostres dades.<br><br>Assegureu-vos de proporcionar aquest identificador únic a l'equip de Betaflight quan feu servir Discord o obriu un problema a Github."
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Descriviu el problema"
+    },
     "releaseCheckLoaded": {
         "message": "Informació de versió per $1 carregada des de GitHub."
     },

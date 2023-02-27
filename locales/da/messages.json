@@ -473,6 +473,9 @@
     "supportWarningDialogText": {
         "message": "Bekræft venligst indsendelse af logoplysninger til Betaflight-teamet.<br><br>Denne proces vil køre nogle kommandoer og indsende data til release server.<br><br>Du vil derefter få en entydig identifikator på din indsendelse af data.<br><br>Angiv denne entydige identifikator til Betaflight-teamet, når du bruger Discord eller åbner problemer på Github."
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Beskriv problem"
+    },
     "releaseCheckLoaded": {
         "message": "Indlæst udgivelsesinformation for $1 fra GitHub."
     },
@@ -2973,7 +2976,7 @@
         "message": "Download manuelt."
     },
     "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">VIGTIGT</span>: Sørg for at brænde med et image som passer til din FC. Brænder du et forkert image til din FC kan du risikere at <span class=\"message-negative\">dårlige</span> ting sker."
+        "message": "<span class=\"message-negative\">VIGTIGT</span>: Sørg for at bruge et image som passer til din FC. Brænder du et forkert image til din FC, kan du risikere at <span class=\"message-negative\">dårlige</span> ting sker."
     },
     "firmwareFlasherPath": {
         "message": "Sti:"
@@ -3033,7 +3036,7 @@
         "message": "Port"
     },
     "firmwareFlasherManualBaud": {
-        "message": "Manuel baud-rate"
+        "message": "Manuel baud hastighed"
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "Manuel valg af baud rate for FC, som ikke understøtter standard hastighed eller forbinder via bluetooth.<br /><span class=\"message-negative\">Bemærk:</span> Ikke brugt hvis forbundet via USB DFU"
@@ -3111,13 +3114,13 @@
         "message": "Besked:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Prøv venligst <span class=\"message-negative\">ikke</span> at brænde <strong>ikke-Betaflight</strong> hardware med denne firmware brænder.<br />Du må <span class=\"message-negative\">ikke</span> <strong>frakoble</strong> FC eller <strong>slukke</strong> din pc under brænding.<br /><br /><strong>Bemærk: </strong>STM32 bootloader er gemt i ROM, som ikke kan ændres.<br /><strong>Bemærk: </strong><span class=\"message-negative\">Auto-Connect</span> er altid deaktiveret, mens du er inde i firmware brænder.<br /><strong>Bemærk: </strong>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger/nedgraderinger vil slette/ændre din konfiguration.<br /><strong>Bemærk:</strong> Hvis du har problemer efter brænding <strong>prøv først at frakoble alle kabler fra din FC</strong> prøv genstart, genindstaller/opgrader drivere.<br /><strong>Bemærk:</strong> Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere"
+        "message": "Undlad venligst <span class=\"message-negative\">ikke</span> at brænde <strong>ikke-Betaflight</strong> hardware med denne firmware brænder.<br />Du må <span class=\"message-negative\">ikke</span> <strong>frakoble</strong> FC eller <strong>slukke</strong> din pc under brænding.<br /><br /><strong>Bemærk: </strong>STM32 bootloader er gemt i ROM, som ikke kan ændres.<br /><strong>Bemærk: </strong><span class=\"message-negative\">Auto-Connect</span> er altid deaktiveret, mens du er inde i firmware brænder.<br /><strong>Bemærk: </strong>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger/nedgraderinger vil slette/ændre din konfiguration.<br /><strong>Bemærk:</strong> Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC</strong>, prøv genstart, prøv at genindstaller/opgrader drivere.<br /><strong>Bemærk:</strong> Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\\\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\\\"target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Betaflight installation</a> sektion i Betaflight manual (engelsk).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper på FC BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud sats, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Hvis der er en BOOT jumper, fjern den.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\\\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\\\"target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Betaflight installation</a> sektion i Betaflight manual (engelsk).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Hvis der er en BOOT jumper, fjern den.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
