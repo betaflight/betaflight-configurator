@@ -473,6 +473,9 @@
     "supportWarningDialogText": {
         "message": "Per favore conferma l'invio dei dati al team Betaflight.<br><br>Questo processo eseguirà alcuni comandi e invierà l'output al server di compilazione.<br><br>Ti sarà fornito un identificatore univoco dell'invio dei tuoi dati.<br><br>Assicurati di fornire questo identificatore univoco al team Betaflight quando usi Discord o quando apri un issue su Github."
     },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Descrivi il problema"
+    },
     "releaseCheckLoaded": {
         "message": "Caricate le informazioni della release per $1 da GitHub."
     },
