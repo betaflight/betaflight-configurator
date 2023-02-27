@@ -115,25 +115,41 @@ onboard_logging.initialize = function (callback) {
             const deviceSelect = $(".blackboxDevice select");
             const loggingRatesSelect = $(".blackboxRate select");
             const debugModeSelect = $(".blackboxDebugMode select");
+            const debugFieldsSelect = $(".blackboxDebugFields select");
 
             if (FC.BLACKBOX.supported) {
-                $(".tab-onboard_logging a.save-settings").click(function() {
+                $(".tab-onboard_logging a.save-settings").on('click', async function() {
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                        let fieldsMask = 0;
+
+                        $(".blackboxDebugFields select option:not(:selected)").each(function() {
+                            fieldsMask |= (1 << $(this).val());
+                        });
+
+                        FC.BLACKBOX.blackboxDisabledMask = fieldsMask;
+                    }
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                         FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
                         FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     }
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
+
+                    await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
+
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                         FC.PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
-                        MSP.send_message(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG), false, save_to_eeprom);
+
+                        await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
                     }
-                    MSP.send_message(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG), false, save_to_eeprom);
+
+                    save_to_eeprom();
                 });
             }
 
             populateLoggingRates(loggingRatesSelect);
             populateDevices(deviceSelect);
             populateDebugModes(debugModeSelect);
+            populateDebugFields(debugFieldsSelect);
 
             deviceSelect.change(function() {
                 if ($(this).val() === "0") {
@@ -351,6 +367,39 @@ onboard_logging.initialize = function (callback) {
 
         } else {
             $('.blackboxDebugMode').hide();
+        }
+    }
+
+    function populateDebugFields(debugFieldsSelect) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            $('.blackboxDebugFields').show();
+
+            const debugFields = [
+                { text: "PID Data" },
+                { text: "RC Commands Data" },
+                { text: "Setpoint Data" },
+                { text: "Battery Data" },
+                { text: "Magnetometer Data" },
+                { text: "Altitude Data" },
+                { text: "RSSI Data" },
+                { text: "Gyro Data" },
+                { text: "Accelerometer Data" },
+                { text: "Debug Log Data" },
+                { text: "Motor Data" },
+                { text: "GPS Data" },
+            ];
+
+            let fieldsMask = FC.BLACKBOX.blackboxDisabledMask;
+
+            for (let i = 0; i < debugFields.length; i++) {
+                const enabled = (fieldsMask & (1 << i)) === 0;
+                debugFieldsSelect.append(new Option(debugFields[i].text, i, false, enabled));
+            }
+
+            debugFieldsSelect.sortSelect().multipleSelect();
+
+        } else {
+            $('.blackboxDebugFields').hide();
         }
     }
 

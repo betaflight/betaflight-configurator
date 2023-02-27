@@ -6376,6 +6376,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox logging rate"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Blackbox debug fields"
+    },
     "onboardLoggingDebugMode": {
         "message": "Blackbox debug mode"
     },
