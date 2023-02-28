@@ -1259,8 +1259,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         };
 
                         FC.LED_STRIP.push(led);
-                        }
                     }
+                }
                 break;
             case MSPCodes.MSP_SET_LED_STRIP_CONFIG:
                 console.log('Led strip config saved');
