@@ -1,5 +1,4 @@
 import VtxDeviceStatus, { VtxDeviceTypes } from './VtxDeviceStatus';
-import vtxDeviceStatusFactory from './VtxDeviceStatusFactory';
 
 class VtxDeviceStatusRtc6705 extends VtxDeviceStatus {
     constructor(dataView)
@@ -16,7 +15,5 @@ class VtxDeviceStatusRtc6705 extends VtxDeviceStatus {
         return VtxDeviceTypes.VTXDEV_RTC6705;
     }
 }
-
-vtxDeviceStatusFactory.registerVtxDeviceStatusClass(VtxDeviceStatusRtc6705);
 
 export default VtxDeviceStatusRtc6705;
