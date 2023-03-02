@@ -1,5 +1,5 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_44 } from './data_storage';
+import { API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
 
@@ -11,21 +11,22 @@ const Features = function (config) {
         {bit: 2, group: 'other', name: 'INFLIGHT_ACC_CAL'},
         {bit: 3, group: 'rxMode', mode: 'select', name: 'RX_SERIAL'},
         {bit: 4, group: 'escMotorStop', name: 'MOTOR_STOP'},
-        {bit: 5, group: 'other', name: 'SERVO_TILT', haveTip: true},
+        {bit: 5, group: 'other', name: 'SERVO_TILT', haveTip: true, dependsOn: 'SERVOS'},
         {bit: 6, group: 'other', name: 'SOFTSERIAL', haveTip: true},
-        {bit: 7, group: 'gps', name: 'GPS', haveTip: true},
-        {bit: 9, group: 'other', name: 'SONAR'},
-        {bit: 10, group: 'telemetry', name: 'TELEMETRY'},
+        {bit: 7, group: 'other', name: 'GPS', haveTip: true, dependsOn: 'GPS'},
+        {bit: 9, group: 'other', name: 'SONAR', dependsOn: 'RANGEFINDER'},
+        {bit: 10, group: 'telemetry', name: 'TELEMETRY', dependsOn: 'TELEMETRY'},
         {bit: 12, group: '3D', name: '3D'},
         {bit: 13, group: 'rxMode', mode: 'select', name: 'RX_PARALLEL_PWM'},
         {bit: 14, group: 'rxMode', mode: 'select', name: 'RX_MSP'},
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
-        {bit: 16, group: 'other', name: 'LED_STRIP'},
-        {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true},
-        {bit: 18, group: 'other', name: 'OSD'},
-        {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING'},
-        {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true},
+        {bit: 16, group: 'other', name: 'LED_STRIP', dependsOn: 'LED_STRIP'},
+        {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true, dependsOn: 'DASHBOARD'},
+        {bit: 18, group: 'other', name: 'OSD', dependsOn: 'OSD'},
+        {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING', dependsOn: 'SERVOS'},
+        {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true, dependsOn: 'TRANSPONDER'},
         {bit: 22, group: 'other', name: 'AIRMODE'},
+        {bit: 24, group: 'vtx', name: 'VTX', dependsOn: 'VTX'},
         {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
         {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
         {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
@@ -37,7 +38,19 @@ const Features = function (config) {
         );
     }
 
-    self._features = features.sort((a, b) => a.name.localeCompare(b.name, window.navigator.language, { ignorePunctuation: true }));
+    self._features = features;
+
+    if (semver.gte(config.apiVersion, API_VERSION_1_45) && config.buildKey.length === 32) {
+        self._features = [];
+
+        for (const feature of features) {
+            if (config.buildOptions.some(opt => opt.includes(feature.dependsOn)) || feature.dependsOn === undefined) {
+                self._features.push(feature);
+            }
+        }
+    }
+
+    self._features.sort((a, b) => a.name.localeCompare(b.name, window.navigator.language, { ignorePunctuation: true }));
     self._featureMask = 0;
 
     self._analyticsChanges = {};

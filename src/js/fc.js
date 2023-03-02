@@ -8,6 +8,8 @@ const INITIAL_CONFIG = {
     flightControllerVersion:          '',
     version:                          0,
     buildInfo:                        '',
+    buildKey:                         '',
+    buildOptions:                     [],
     multiType:                        0,
     msp_version:                      0, // not specified using semantic versioning
     capability:                       0,

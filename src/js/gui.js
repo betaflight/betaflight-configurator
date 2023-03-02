@@ -33,19 +33,16 @@ class GuiControl {
             'options',
             'help',
         ];
-        this.defaultAllowedFCTabsWhenConnected = [
+
+        this.defaultAllowedTabsCloudBuild = [
             'setup',
             'failsafe',
-            'transponder',
-            'osd',
             'power',
             'adjustments',
             'auxiliary',
             'presets',
             'cli',
             'configuration',
-            'gps',
-            'led_strip',
             'logging',
             'onboard_logging',
             'modes',
@@ -54,9 +51,18 @@ class GuiControl {
             'ports',
             'receiver',
             'sensors',
+        ];
+
+        this.defaultCloudBuildTabOptions = [
+            'gps',
+            'led_strip',
+            'osd',
             'servos',
+            'transponder',
             'vtx',
         ];
+
+        this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabsCloudBuild, ...this.defaultCloudBuildTabOptions];
 
         this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 

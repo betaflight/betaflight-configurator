@@ -23,6 +23,7 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from 'semver';
 import CryptoES from "crypto-es";
+import BuildApi from "./BuildApi";
 
 let mspHelper;
 let connectionTimestamp;
@@ -458,17 +459,39 @@ function checkReportProblems() {
     });
 }
 
-function processUid() {
-    MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
-        const deviceIdentifier = FC.CONFIG.deviceIdentifier;
+async function processBuildConfiguration() {
+    const buildApi = new BuildApi();
 
-        tracking.setFlightControllerData(tracking.DATA.MCU_ID, CryptoES.SHA1(deviceIdentifier));
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
-        connectionTimestamp = Date.now();
-        gui_log(i18n.getMessage('uniqueDeviceIdReceived', [deviceIdentifier]));
-
+    function onLoadCloudBuild(options) {
+        FC.CONFIG.buildOptions = options.Request.Options;
         processCraftName();
-    });
+    }
+
+    await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
+
+    if (FC.CONFIG.buildKey.length === 32 && navigator.onLine) {
+        gui_log(i18n.getMessage('buildKey', FC.CONFIG.buildKey));
+        buildApi.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, processCraftName);
+    } else {
+        processCraftName();
+    }
+}
+
+async function processUid() {
+    await MSP.promise(MSPCodes.MSP_UID);
+
+    tracking.setFlightControllerData(tracking.DATA.MCU_ID, CryptoES.SHA1(FC.CONFIG.deviceIdentifier));
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
+
+    connectionTimestamp = Date.now();
+
+    gui_log(i18n.getMessage('uniqueDeviceIdReceived', FC.CONFIG.deviceIdentifier));
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        processBuildConfiguration();
+    } else {
+        processCraftName();
+    }
 }
 
 async function processCraftName() {
@@ -494,7 +517,19 @@ function setRtc() {
 
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
-    GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildKey.length === 32) {
+
+        GUI.allowedTabs = GUI.defaultAllowedTabsCloudBuild;
+
+        for (const tab of GUI.defaultCloudBuildTabOptions) {
+            if (FC.CONFIG.buildOptions.some(opt => opt.toLowerCase().includes(tab))) {
+                GUI.allowedTabs.push(tab);
+            }
+        }
+
+    } else {
+        GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
+    }
 
     if (GUI.isCordova()) {
         UI_PHONES.reset();

@@ -851,6 +851,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     case MSPCodes.RATE_PROFILE_NAME:
                         FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = self.getText(data);
                         break;
+                    case MSPCodes.BUILD_KEY:
+                        FC.CONFIG.buildKey = self.getText(data);
+                        break;
                     default:
                         console.log('Unsupport text type');
                         break;
