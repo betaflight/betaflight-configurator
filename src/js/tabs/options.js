@@ -6,6 +6,7 @@ import CliAutoComplete from '../CliAutoComplete';
 import DarkTheme, { setDarkTheme } from '../DarkTheme';
 import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdates';
 import { checkSetupAnalytics } from '../Analytics';
+import CONFIGURATOR from '../data_storage';
 
 const options = {};
 options.initialize = function (callback) {
@@ -25,6 +26,7 @@ options.initialize = function (callback) {
         TABS.options.initShowVirtualMode();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
+        TABS.options.initShowDevToolsOnStartup();
 
         TABS.options.initShowWarnings();
 
@@ -183,6 +185,18 @@ options.initDarkTheme = function () {
             setConfig({'darkTheme': value});
             setDarkTheme(value);
         }).change();
+};
+
+options.initShowDevToolsOnStartup = function () {
+    if (!(CONFIGURATOR.isDevVersion() && GUI.isNWJS())) {
+        $('div.showDevToolsOnStartup').hide();
+        return;
+    }
+    const result = getConfig('showDevToolsOnStartup');
+    $('div.showDevToolsOnStartup input')
+        .prop('checked', !!result.showDevToolsOnStartup)
+        .change(function () { setConfig({ showDevToolsOnStartup: $(this).is(':checked') }); })
+        .change();
 };
 
 // TODO: remove when modules are in place
