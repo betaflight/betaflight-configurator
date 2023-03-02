@@ -856,9 +856,6 @@ firmware_flasher.initialize = function (callback) {
                     target: targetDetail.target,
                     release: targetDetail.release,
                     options: [],
-                    client: {
-                        version: CONFIGURATOR.version,
-                    },
                 };
 
                 const coreBuild = (targetDetail.cloudBuild !== true) || $('input[name="coreBuildModeCheckbox"]').is(':checked');
