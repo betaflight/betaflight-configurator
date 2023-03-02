@@ -399,6 +399,7 @@ const FC = {
             blackboxRateDenom:          1,
             blackboxPDenom:             0,
             blackboxSampleRate:         0,
+            blackboxDisabledMask:       0,
         };
 
         this.TRANSPONDER = {

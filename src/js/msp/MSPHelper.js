@@ -1294,6 +1294,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     FC.BLACKBOX.blackboxSampleRate = data.readU8();
                 }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    FC.BLACKBOX.blackboxDisabledMask = data.readU32();
+                }
                 break;
             case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
                 console.log("Blackbox config saved");
@@ -2069,6 +2072,10 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                 buffer.push8(FC.BLACKBOX.blackboxSampleRate);
             }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                buffer.push32(FC.BLACKBOX.blackboxDisabledMask);
+            }
+
             break;
 
         case MSPCodes.MSP_COPY_PROFILE:
