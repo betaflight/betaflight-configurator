@@ -2482,6 +2482,9 @@
     "gpsLon": {
         "message": "Longitude:"
     },
+    "gpsHeading": {
+        "message": "Heading:"
+    },
     "gpsSpeed": {
         "message": "Speed:"
     },
@@ -4878,7 +4881,7 @@
     },
     "osdTextElementVTXchannelVariantPower": {
         "message": "VTX power",
-        "description": "One of the variants of the VTX channel element of the OSD"        
+        "description": "One of the variants of the VTX channel element of the OSD"
     },
     "osdTextElementVTXchannelVariantFull": {
         "message": "Band:Channel:Pwr:Pit",

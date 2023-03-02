@@ -21,6 +21,8 @@ gps.initialize = async function (callback) {
     await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
     await MSP.promise(MSPCodes.MSP_STATUS);
 
+    const hasMag = have_sensor(FC.CONFIG.activeSensors, 'mag');
+
     load_html();
 
     function load_html() {
@@ -52,7 +54,11 @@ gps.initialize = async function (callback) {
         }
 
         function get_gpsvinfo_data() {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, update_ui);
+            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, hasMag ? get_imu_data : update_ui);
+        }
+
+        function get_imu_data() {
+            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_ui);
         }
 
         // To not flicker the divs while the fix is unstable
@@ -178,6 +184,8 @@ gps.initialize = async function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const heading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
+            const headingDeg = heading === undefined ? 0 : heading * 180 / Math.PI;
             const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
             const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
                 'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
@@ -189,6 +197,7 @@ gps.initialize = async function (callback) {
             $('.GPS_info td.alt').text(`${alt} m`);
             $('.GPS_info td.lat a').prop('href', url).text(`${lat.toFixed(4)} deg`);
             $('.GPS_info td.lon a').prop('href', url).text(`${lon.toFixed(4)} deg`);
+            $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} deg`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -263,6 +272,7 @@ gps.initialize = async function (callback) {
                 action: 'center',
                 lat: lat,
                 lon: lon,
+                heading: heading,
             };
 
             frame = document.getElementById('map');
@@ -271,7 +281,9 @@ gps.initialize = async function (callback) {
 
                 if (FC.GPS_DATA.fix) {
                    gpsWasFixed = true;
-                   frame.contentWindow.postMessage(message, '*');
+                    if (!!frame.contentWindow) {
+                        frame.contentWindow.postMessage(message, '*');
+                    }
                    $('#loadmap').show();
                    $('#waiting').hide();
                 } else if (!gpsWasFixed) {
@@ -279,7 +291,9 @@ gps.initialize = async function (callback) {
                    $('#waiting').show();
                 } else {
                     message.action = 'nofix';
-                    frame.contentWindow.postMessage(message, '*');
+                    if (!!frame.contentWindow) {
+                        frame.contentWindow.postMessage(message, '*');
+                    }
                 }
             } else {
                 gpsWasFixed = false;
@@ -291,11 +305,6 @@ gps.initialize = async function (callback) {
 
         // enable data pulling
         GUI.interval_add('gps_pull', function gps_update() {
-            // avoid usage of the GPS commands until a GPS sensor is detected for targets that are compiled without GPS support.
-            if (!have_sensor(FC.CONFIG.activeSensors, 'gps')) {
-                //return;
-            }
-
             get_raw_gps_data();
         }, 75, true);
 
