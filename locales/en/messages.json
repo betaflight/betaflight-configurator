@@ -865,7 +865,7 @@
         "message": "Magnetometer"
     },
     "initialSetupInfoHead": {
-        "message": "Info"
+        "message": "System info"
     },
     "initialSetupBattery": {
         "message": "Battery voltage:"
@@ -1013,6 +1013,12 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP api:"
+    },
+    "initialSetupInfoBuildinfo": {
+        "message": "Firmware build date:"
     },
     "initialSetupButtonSave": {
         "message": "Save"

@@ -197,7 +197,10 @@ setup.initialize = function (callback) {
             gpsLon_e = $('.gpsLon'),
             roll_e = $('dd.roll'),
             pitch_e = $('dd.pitch'),
-            heading_e = $('dd.heading');
+            heading_e = $('dd.heading'),
+            // new
+            msp_api_e = $('.api-version'),
+            build_info_e = $('.build-info');
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
@@ -279,13 +282,6 @@ setup.initialize = function (callback) {
 
             });
 
-            MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
-                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
-                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
-                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
-                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
-            });
-
             if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
                 MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, function () {
                     gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
@@ -294,6 +290,17 @@ setup.initialize = function (callback) {
                     gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);
                 });
             }
+
+            MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
+                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
+                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
+                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
+                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
+            });
+
+            // New
+            msp_api_e.text([FC.CONFIG.apiVersion]);
+            build_info_e.text([FC.CONFIG.buildInfo]);
         }
 
         function get_fast_data() {
