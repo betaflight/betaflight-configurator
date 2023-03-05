@@ -1015,7 +1015,7 @@
         "message": "Instruments"
     },
     "initialSetupInfoAPIversion": {
-        "message": "MSP api:"
+        "message": "MSP API:"
     },
     "initialSetupInfoBuildinfo": {
         "message": "Firmware build date:"
