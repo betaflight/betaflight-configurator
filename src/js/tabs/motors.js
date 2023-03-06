@@ -257,11 +257,6 @@ motors.initialize = async function (callback) {
 
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42) || !(FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
             $(".motor_testing .telemetry").hide();
-        } else {
-            // Hide telemetry from unused motors (to hide the tooltip in an empty blank space)
-            for (let i = FC.MOTOR_CONFIG.motor_count; i < FC.MOTOR_DATA.length; i++) {
-                $(`.motor_testing .telemetry .motor-${i}`).hide();
-            }
         }
 
         function setContentButtons(motorsTesting=false) {
@@ -1062,6 +1057,11 @@ motors.initialize = async function (callback) {
             const previousArmState = self.armed;
             const blockHeight = $('div.m-block:first').height();
             const motorValues = getMotorOutputs();
+            const MAX_VALUE_SIZE = 6,
+                AVG_RPM_ROUNDING = 100;
+            let sumRpm = 0,
+                isAllMotorValueEqual = motorValues.every((value, _index, arr) => value === arr[0]),
+                hasTelemetryError = false;
 
             for (let i = 0; i < motorValues.length; i++) {
                 const motorValue = motorValues[i];
@@ -1079,8 +1079,7 @@ motors.initialize = async function (callback) {
 
                 if (i < FC.MOTOR_CONFIG.motor_count && (FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
 
-                    const MAX_INVALID_PERCENT = 100,
-                          MAX_VALUE_SIZE = 6;
+                    const MAX_INVALID_PERCENT = 100;
 
                     let rpmMotorValue = FC.MOTOR_TELEMETRY_DATA.rpm[i];
 
@@ -1088,14 +1087,17 @@ motors.initialize = async function (callback) {
                     if (rpmMotorValue > 999999) {
                         rpmMotorValue = `${(rpmMotorValue / 1000000).toFixed(5 - (rpmMotorValue / 1000000).toFixed(0).toString().length)}M`;
                     }
-
+                    if (isAllMotorValueEqual) {
+                        sumRpm += Math.round(rpmMotorValue * AVG_RPM_ROUNDING) / AVG_RPM_ROUNDING;
+                    }
                     rpmMotorValue = rpmMotorValue.toString().padStart(MAX_VALUE_SIZE);
                     let telemetryText = i18n.getMessage('motorsRPM', {motorsRpmValue: rpmMotorValue});
 
                     if (FC.MOTOR_CONFIG.use_dshot_telemetry) {
 
                         let invalidPercent = FC.MOTOR_TELEMETRY_DATA.invalidPercent[i];
-                        let classError = (invalidPercent > MAX_INVALID_PERCENT) ? "warning" : "";
+                        hasTelemetryError = invalidPercent > MAX_INVALID_PERCENT;
+                        let classError = hasTelemetryError ? "warning" : "";
                         invalidPercent = (invalidPercent / 100).toFixed(2).toString().padStart(MAX_VALUE_SIZE);
 
                         telemetryText += `<br><span class="${classError}">`;
@@ -1114,6 +1116,15 @@ motors.initialize = async function (callback) {
 
                     $(`.motor_testing .telemetry .motor-${i}`).html(telemetryText);
                 }
+            }
+
+            if (FC.MOTOR_CONFIG.use_dshot_telemetry && !hasTelemetryError && isAllMotorValueEqual) {
+                const avgRpm = (Math.round(sumRpm / motorValues.length * AVG_RPM_ROUNDING) / AVG_RPM_ROUNDING).toFixed(0),
+                    avgRpmMotorValue = avgRpm.toString().padStart(MAX_VALUE_SIZE),
+                    message = i18n.getMessage('motorsRPM', { motorsRpmValue: avgRpmMotorValue });
+                $(`.motor_testing .telemetry .motor-master`).html(message);
+            } else {
+                $(`.motor_testing .telemetry .motor-master`).html("");
             }
 
             //keep the following here so at least we get a visual cue of our motor setup
