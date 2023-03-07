@@ -1017,8 +1017,14 @@
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
     },
+    "initialSetupInfoBuild": {
+        "message": "Build info"
+    },
     "initialSetupInfoBuildinfo": {
         "message": "Firmware build date:"
+    },
+    "initialSetupInfoBuildDefines": {
+        "message": "Build Defines:"
     },
     "initialSetupButtonSave": {
         "message": "Save"

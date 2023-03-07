@@ -301,6 +301,13 @@ setup.initialize = function (callback) {
             // New
             msp_api_e.text([FC.CONFIG.apiVersion]);
             build_info_e.text([FC.CONFIG.buildInfo]);
+
+            MSP.send_message(MSPCodes.MSP2_GET_TEXT, false, false, function () {
+                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
+                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
+                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
+                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
+            });
         }
 
         function get_fast_data() {
