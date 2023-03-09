@@ -10,7 +10,7 @@ import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
-import CONFIGURATOR, { API_VERSION_1_45 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
 import UI_PHONES from "./phones_ui";
@@ -187,8 +187,11 @@ function finishClose(finishedCallback) {
         const connectedTime = Date.now() - connectionTimestamp;
         tracking.sendTiming(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected', connectedTime);
     }
-    // close reset to custom defaults dialog
-    $('#dialogResetToCustomDefaults')[0].close();
+
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        // close reset to custom defaults dialog
+        $('#dialogResetToCustomDefaults')[0].close();
+    }
 
     tracking.resetFlightControllerData();
 
@@ -201,6 +204,7 @@ function finishClose(finishedCallback) {
 
     GUI.connected_to = false;
     GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
+
     // close problems dialog
     $('#dialogReportProblems-closebtn').click();
 
@@ -363,15 +367,7 @@ function abortConnect() {
     clicks = false;
 }
 
-function processBoardInfo() {
-    tracking.setFlightControllerData(tracking.DATA.BOARD_TYPE, FC.CONFIG.boardIdentifier);
-    tracking.setFlightControllerData(tracking.DATA.TARGET_NAME, FC.CONFIG.targetName);
-    tracking.setFlightControllerData(tracking.DATA.BOARD_NAME, FC.CONFIG.boardName);
-    tracking.setFlightControllerData(tracking.DATA.MANUFACTURER_ID, FC.CONFIG.manufacturerId);
-    tracking.setFlightControllerData(tracking.DATA.MCU_TYPE, FC.getMcuType());
-
-    gui_log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
-
+function processCustomDefaults() {
     if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
         const dialog = $('#dialogResetToCustomDefaults')[0];
 
@@ -404,6 +400,22 @@ function processBoardInfo() {
         GUI.timeout_remove('connecting'); // kill connecting timer
     } else {
         checkReportProblems();
+    }
+}
+
+function processBoardInfo() {
+    tracking.setFlightControllerData(tracking.DATA.BOARD_TYPE, FC.CONFIG.boardIdentifier);
+    tracking.setFlightControllerData(tracking.DATA.TARGET_NAME, FC.CONFIG.targetName);
+    tracking.setFlightControllerData(tracking.DATA.BOARD_NAME, FC.CONFIG.boardName);
+    tracking.setFlightControllerData(tracking.DATA.MANUFACTURER_ID, FC.CONFIG.manufacturerId);
+    tracking.setFlightControllerData(tracking.DATA.MCU_TYPE, FC.getMcuType());
+
+    gui_log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        checkReportProblems();
+    } else {
+        processCustomDefaults();
     }
 }
 
