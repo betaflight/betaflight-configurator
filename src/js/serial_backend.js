@@ -213,7 +213,7 @@ function finishClose(finishedCallback) {
     $('div.connect_controls div.connect_state').text(i18n.getMessage('connect'));
 
     // reset active sensor indicators
-    sensor_status(0);
+    sensor_status(0, 0);
 
     if (wasConnected) {
         // detach listeners and remove element data
@@ -348,7 +348,7 @@ function onOpenVirtual() {
     processBoardInfo();
 
     update_dataflash_global();
-    sensor_status(FC.CONFIG.activeSensors);
+    sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
     updateTabList(FC.FEATURE_CONFIG.features);
 }
 
@@ -667,7 +667,7 @@ async function getStatus() {
 
 async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
-    const sensorState = $('#sensor-status');
+    // const sensorState = $('#sensor-status');
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
@@ -715,20 +715,7 @@ async function update_live_status() {
             }
         }
 
-        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
-            $(".gps", sensorState).addClass("on");
-            if (FC.GPS_DATA.fix) {
-                $(".gpsicon", sensorState).removeClass("active");
-                $(".gpsicon", sensorState).addClass("active_fix");
-            } else {
-                $(".gpsicon", sensorState).removeClass("active_fix");
-                $(".gpsicon", sensorState).addClass("active");
-            }
-        } else {
-            $(".gps", sensorState).removeClass("on");
-            $(".gpsicon", sensorState).removeClass("active");
-            $(".gpsicon", sensorState).removeClass("active_fix");
-        }
+        sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
 
         $(".linkicon").toggleClass('active', active);
 
