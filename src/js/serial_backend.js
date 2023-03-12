@@ -667,10 +667,14 @@ async function getStatus() {
 
 async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
+    const sensorState = $('#sensor-status');
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
         await getStatus();
+        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
+            await MSP.promise(MSPCodes.MSP_RAW_GPS);
+        }
         await MSP.promise(MSPCodes.MSP_ANALOG);
 
         const active = ((Date.now() - FC.ANALOG.last_received_timestamp) < 300);
@@ -709,6 +713,21 @@ async function update_live_status() {
                     $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
                 }
             }
+        }
+
+        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
+            $(".gps", sensorState).addClass("on");
+            if (FC.GPS_DATA.fix) {
+                $(".gpsicon", sensorState).removeClass("active");
+                $(".gpsicon", sensorState).addClass("active_fix");
+            } else {
+                $(".gpsicon", sensorState).removeClass("active_fix");
+                $(".gpsicon", sensorState).addClass("active");
+            }
+        } else {
+            $(".gps", sensorState).removeClass("on");
+            $(".gpsicon", sensorState).removeClass("active");
+            $(".gpsicon", sensorState).removeClass("active_fix");
         }
 
         $(".linkicon").toggleClass('active', active);
