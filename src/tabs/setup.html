@@ -4,7 +4,6 @@
         <div class="tab_title" i18n="tabSetup">Setup</div>
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="" target="_blank"></a>
-            x1
         </div>
         <div class="grid-row">
             <div class="grid-col col3">
@@ -22,7 +21,6 @@
             <div class="grid-col col9">
                 <div class="cell_setup">
                     <span i18n="initialSetupCalibrateAccelText"></span>
-                    x3
                 </div>
             </div>
         </div>
@@ -35,7 +33,6 @@
                     <div id="mag_calib_running">
                         <div class="data-loading-setup">
                             <p i18n="initialSetupButtonCalibratingText"></p>
-                            x4
                         </div>
                     </div>
                 </div>
@@ -43,7 +40,6 @@
             <div class="grid-col col9">
                 <div class="cell_setup">
                     <span i18n="initialSetupCalibrateMagText"></span>
-                    x5
                 </div>
             </div>
         </div>
@@ -51,13 +47,11 @@
             <div class="grid-col col3">
                 <div class="default_btn">
                     <a class="resetSettings" href="#" i18n="initialSetupButtonReset"></a>
-                    x6
                 </div>
             </div>
             <div class="grid-col col9">
                 <div class="cell_setup">
                     <span i18n="initialSetupResetText"></span>
-                    x7
                 </div>
             </div>
         </div>
@@ -65,19 +59,15 @@
             <div class="grid-col col3">
                 <div class="default_btn initialSetupRebootBootloader">
                     <a class="rebootBootloader" href="#" i18n="initialSetupButtonRebootBootloader"></a>
-                    x8
                 </div>
             </div>
             <div class="grid-col col9">
                 <div class="cell_setup initialSetupRebootBootloader">
                     <span i18n="initialSetupRebootBootloaderText"></span>
-                    x9
                 </div>
             </div>
         </div>
-        x10
         <div class="modelwrapper"></div>
-        x11
         <div class="grid-row">
             <div class="grid-col col9 model-and-info">
                 <div id="interactive_block">
@@ -120,7 +110,6 @@
                         </div>    
                     </div>
                 </div>
-                x15
                 <div class="gui_box grey">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="initialSetupGPSHead"></div>
@@ -148,7 +137,6 @@
                         </table>
                     </div>
                 </div>
-                x14
                 <div class="gui_box grey">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="initialSetupInfoHead"></div>
@@ -176,10 +164,6 @@
                                 <td i18n="initialSetupRSSI"></td>
                                 <td class="rssi">0 %</td>
                             </tr>
-                            <tr>
-                                <td id="api-version" i18n="initialSetupInfoAPIversion"></td>
-                                <td class="api-version"></td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -192,12 +176,16 @@
                         <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
                             <tbody>
                                 <tr>
+                                    <td id="api-version" i18n="initialSetupInfoAPIversion"></td>
+                                    <td class="api-version"></td>
+                                </tr>
+                                    <tr>
                                     <td id="build-info" i18n="initialSetupInfoBuildinfo"></td>
                                     <td class="build-info"></td>
                                 </tr>
                                 <tr>
-                                    <td id="build-defines" i18n="initialSetupInfoBuildDefines" class="cf_tip"></td>
-                                    <td class="build-defines"></td>
+                                    <td id="build-options" i18n="initialSetupInfoBuildOptions" class="cf_tip"></td>
+                                    <td class="build-options"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -205,9 +193,7 @@
                 </div>
             </div>
         </div>
-        x12
     </div>
-    x13
 
     <dialog class="dialogConfirmReset">
         <h3 i18n="dialogConfirmResetTitle"></h3>

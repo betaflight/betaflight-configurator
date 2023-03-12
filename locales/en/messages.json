@@ -1018,13 +1018,16 @@
         "message": "MSP API:"
     },
     "initialSetupInfoBuild": {
-        "message": "Build info"
+        "message": "Firmware info"
     },
     "initialSetupInfoBuildinfo": {
-        "message": "Firmware build date:"
+        "message": "Build date:"
     },
-    "initialSetupInfoBuildDefines": {
-        "message": "Build Defines:"
+    "initialSetupInfoBuildOptions": {
+        "message": "Build Options:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Self Build - no Defines"
     },
     "initialSetupButtonSave": {
         "message": "Save"
