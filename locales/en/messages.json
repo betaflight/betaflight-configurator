@@ -1027,7 +1027,7 @@
         "message": "Build Options:"
     },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Self Build - no Defines"
+        "message": "Local Build - no Defines"
     },
     "initialSetupButtonSave": {
         "message": "Save"
