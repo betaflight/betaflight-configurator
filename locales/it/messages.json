@@ -467,6 +467,9 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Dati per il supporto inviati *** <br>Id: $1<br><br><br># copia l'ID e forniscilo al team betaflight."
     },
+    "buildKey": {
+        "message": "Chiave Build: <strong>$1</strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Conferma Invio Dati"
     },
@@ -1963,7 +1966,7 @@
         "message": "<strong>Modalità slider per tuning PID</strong><br><br>La modalità slider per tuning PID può essere:<br><br>&bull; OFF - no slider, inserisci manualmente i valori<br>&bull; RP - i cursori controllano solo Roll e Pitch, inserisci manualmente i valori Yaw<br>&bull; RPY - i cursori controllano tutti i valori PID<br><br><span class=\"message-negative\"><b>Attenzione:</b></span>Passando dalla modalità RP a RPY sovrascriverà le impostazioni di Yaw con quelle del firmware."
     },
     "receiverHelp": {
-        "message": "&#8226;<b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Controllare sempre che il Failsafe funzioni correttamente!</a></strong></b> Le impostazioni le trovi nella scheda Failsafe, abilitando la modalità esperto.<br> &#8226; <b>Usa l'ultimo firmware sulla TX!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita i filtri hardware ADC</a></strong> sulla trasmittente se usi OpenTx o EdgeTx.<br>Impostazione di base: Configura la ricevente correttamente. Scegli la mappa canali corretta per la tua radio. Controlla che Roll, Pitch ed altre barre grafiche si muovano correttamente. Regola i limiti dei canali e i valori del range nella tua trasmittente da ~1000 a ~2000, e imposta il punto medio su ~1500. Per maggiori informazioni leggi la <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Controllare sempre che il Failsafe funzioni correttamente!</a></strong></b> Le impostazioni le trovi nella scheda Failsafe, abilitando la modalità esperto.<br> &#8226; <b>Usa l'ultimo firmware sulla TX!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita i filtri hardware ADC</a></strong> sulla trasmittente se usi OpenTx o EdgeTx.<br>Impostazione di base: Configura la ricevente correttamente. Scegli la mappa canali corretta per la tua radio. Controlla che Roll, Pitch ed altre barre grafiche si muovano correttamente. Regola i limiti dei canali e i valori del range nella tua trasmittente da ~1000 a ~2000, e imposta il punto medio su ~1500. Per maggiori informazioni leggi la  <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas Medio"
@@ -2388,6 +2391,9 @@
     },
     "gpsLon": {
         "message": "Longitudine:"
+    },
+    "gpsHeading": {
+        "message": "Direzione:"
     },
     "gpsSpeed": {
         "message": "Velocità:"
@@ -5298,7 +5304,7 @@
         "message": "Frequenza RPM trasmessa dalla telemetria degli ESC"
     },
     "osdTextElementRateProfileName": {
-        "message": "Profilo: nome profilo di rate",
+        "message": "Profilo: Nome profilo di rate",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRateProfileName": {
@@ -5821,7 +5827,7 @@
         "message": "Salvato"
     },
     "vtxHelp": {
-        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX utilizza i seguenti passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller del volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (maggiori informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
+        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX utilizza i seguenti passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller del volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (più informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6264,6 +6270,9 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Frequenza di registrazione della BlackBox"
+    },
+    "onboardLoggingDebugFields": {
+        "message": "Campi di debug Blackbox"
     },
     "onboardLoggingDebugMode": {
         "message": "Modalità debug Blackbox"
@@ -6711,5 +6720,9 @@
     },
     "coreBuildModeDescription": {
         "message": "Questa opzione crea un firmware che contiene i driver hardware (e alcune funzioni limitate). È disponibile per assistere il rilevamento dell'hardware su un controllore di volo, ed è fornito solo per quella comodità. Non tutte le funzionalità saranno disponibili (solo hardware) utilizzando questa opzione."
+    },
+    "showDevToolsOnStartup": {
+        "message": "Apri automaticamente DevTools in modalità sviluppo",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }

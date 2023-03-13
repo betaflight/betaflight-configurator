@@ -470,6 +470,9 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Supportdaten übermittelt *** <br>ID: $1<br><br><br># ID kopieren und dem Betaflight-Team bereitstellen."
     },
+    "buildKey": {
+        "message": "Build Key: <strong>$1</strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Datenübermittlung bestätigen"
     },
@@ -2391,6 +2394,9 @@
     },
     "gpsLon": {
         "message": "Länge:"
+    },
+    "gpsHeading": {
+        "message": "Richtung:"
     },
     "gpsSpeed": {
         "message": "Geschwindigkeit"
@@ -6268,6 +6274,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox Log-Geschwindigkeit"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Blackbox Debug-Felder"
+    },
     "onboardLoggingDebugMode": {
         "message": "Blackbox Debug Modus"
     },
@@ -6714,5 +6723,9 @@
     },
     "coreBuildModeDescription": {
         "message": "Diese Option erzeugt eine Firmware, die Hardware-Treiber (und einige eingeschränkte Funktionen) enthält. Dies ermöglicht, die Hardware auf einem Flugregler zu erkennen und sollte nur für diesen Zweck verwendet werden. Nicht alle Funktionen werden mit dieser Option verfügbar sein (nur Hardware)."
+    },
+    "showDevToolsOnStartup": {
+        "message": "Im Entwicklungsmodus automatisch DevTools öffnen",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }

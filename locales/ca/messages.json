@@ -475,6 +475,9 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Dada de suport enviat *** <br>Id: $1<br><br><br># copia ID i informa al equip de betaflight."
     },
+    "buildKey": {
+        "message": "Clau de la compilació: <strong>$1</strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Confirma l'enviament de dades"
     },
@@ -2396,6 +2399,9 @@
     },
     "gpsLon": {
         "message": "Longitud:"
+    },
+    "gpsHeading": {
+        "message": "Encapçalament:"
     },
     "gpsSpeed": {
         "message": "Velocitat:"
@@ -6273,6 +6279,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Velocitat d'enregistrament de Blackbox"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Camps de depuració de Blackbox"
+    },
     "onboardLoggingDebugMode": {
         "message": "Mode de depuració de Blackbox"
     },
@@ -6719,5 +6728,9 @@
     },
     "coreBuildModeDescription": {
         "message": "Aquesta opció crea un microprogramari que conté els controladors de maquinari (i algunes funcions limitades). Està disponible per ajudar en la detecció del maquinari en un controlador de vol i només es proporciona per a aquesta comoditat. No totes les funcions estaran disponibles (només el maquinari) amb aquesta opció."
+    },
+    "showDevToolsOnStartup": {
+        "message": "Obriu automàticament DevTools en mode de desenvolupament",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }

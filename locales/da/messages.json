@@ -467,6 +467,9 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Logoplysninger sendt *** <br>Id: $1<br><br><br># medsend kopi af ID ved henvendelser til Betaflight team."
     },
+    "buildKey": {
+        "message": "Build nøgle: <strong>$1</strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Bekræft indsendelse af log oplysninger"
     },
@@ -2389,6 +2392,9 @@
     "gpsLon": {
         "message": "Længdegrad:"
     },
+    "gpsHeading": {
+        "message": "Kurs:"
+    },
     "gpsSpeed": {
         "message": "Hastighed:"
     },
@@ -3114,7 +3120,7 @@
         "message": "Besked:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Undlad venligst <span class=\"message-negative\">ikke</span> at brænde <strong>ikke-Betaflight</strong> hardware med denne firmware brænder.<br />Du må <span class=\"message-negative\">ikke</span> <strong>frakoble</strong> FC eller <strong>slukke</strong> din pc under brænding.<br /><br /><strong>Bemærk: </strong>STM32 bootloader er gemt i ROM, som ikke kan ændres.<br /><strong>Bemærk: </strong><span class=\"message-negative\">Auto-Connect</span> er altid deaktiveret, mens du er inde i firmware brænder.<br /><strong>Bemærk: </strong>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger/nedgraderinger vil slette/ændre din konfiguration.<br /><strong>Bemærk:</strong> Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC</strong>, prøv genstart, prøv at genindstaller/opgrader drivere.<br /><strong>Bemærk:</strong> Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere"
+        "message": "Du bør <span class=\"message-negative\">ikke</span> brænde <strong>ikke-Betaflight / ikke-complient Betaflight</strong> hardware med denne firmware brænder.<br />Du må <span class=\"message-negative\">ikke</span> <strong>frakoble</strong> FC eller <strong>slukke</strong> din pc under brænding.<br /><br /><strong>Bemærk: </strong>STM32 bootloader er gemt i ROM, som ikke kan ændres.<br /><strong>Bemærk: </strong><span class=\"message-negative\">Auto-Connect</span> er altid deaktiveret, mens du er inde i firmware brænder.<br /><strong>Bemærk: </strong>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger/nedgraderinger vil slette/ændre din konfiguration.<br /><strong>Bemærk:</strong> Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC</strong>, prøv genstart, prøv at genindstaller/opgrader drivere.<br /><strong>Bemærk:</strong> Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
@@ -5607,11 +5613,11 @@
         "message": "Vælg den faktor, som styrer tidstagningens varighed/hændelse"
     },
     "osdTimerSourceOptionOnTime": {
-        "message": "Fra fartøj blev tændt",
+        "message": "Start ved støm til fartøj",
         "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
     },
     "osdTimerSourceOptionTotalArmedTime": {
-        "message": "Aktiveringer fra fartøj blev tændt",
+        "message": "Start ved fartøj aktivering",
         "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
@@ -6265,6 +6271,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox lognings hastighed"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Blackbox debug felter"
+    },
     "onboardLoggingDebugMode": {
         "message": "Blackbox logger med debug for ..."
     },
@@ -6711,5 +6720,9 @@
     },
     "coreBuildModeDescription": {
         "message": "Dette tilvalg danner en relase som indeholder hardware drivere (og nogle begrænsede funktioner). Den kan anvendes til at detektere hardware på FC og er til rådighed for bekvemmelighed. Ikke alle funktioner vil være tilgængelige (kun hardware) hvis du vælger denne indstilling."
+    },
+    "showDevToolsOnStartup": {
+        "message": "Åbn automatisk DevTools i udviklingstilstand",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }
