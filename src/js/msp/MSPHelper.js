@@ -1936,7 +1936,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push16(FC.FILTER_CONFIG.gyro_notch2_hz)
                 .push16(FC.FILTER_CONFIG.gyro_notch2_cutoff)
                 .push8(FC.FILTER_CONFIG.dterm_lowpass_type)
-                .push8(0) // FC.FILTER_CONFIG.gyro_hardware_lpf not used
+                .push8(FC.FILTER_CONFIG.gyro_hardware_lpf)
                 .push8(0) // gyro_32khz_hardware_lpf not used
                 .push16(FC.FILTER_CONFIG.gyro_lowpass_hz)
                 .push16(FC.FILTER_CONFIG.gyro_lowpass2_hz)
