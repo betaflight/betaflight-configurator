@@ -76,7 +76,7 @@ export function sensor_status(sensors_detected, gps_fix_state) {
 
     if (have_sensor(sensors_detected, "gps")) {
         $(".gps", eSensorStatus).addClass("on");
-        if (gps_fix_state) {
+        if (gps_fix_state > 0) {
             $(".gpsicon", eSensorStatus).removeClass("active");
             $(".gpsicon", eSensorStatus).addClass("active_fix");
         } else {

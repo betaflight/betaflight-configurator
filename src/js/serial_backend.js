@@ -348,7 +348,7 @@ function onOpenVirtual() {
     processBoardInfo();
 
     update_dataflash_global();
-    sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
+    sensor_status(FC.CONFIG.activeSensors, 0);
     updateTabList(FC.FEATURE_CONFIG.features);
 }
 
