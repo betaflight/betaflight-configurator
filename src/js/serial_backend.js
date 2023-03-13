@@ -217,7 +217,7 @@ function finishClose(finishedCallback) {
     $('div.connect_controls div.connect_state').text(i18n.getMessage('connect'));
 
     // reset active sensor indicators
-    sensor_status(0);
+    sensor_status();
 
     if (wasConnected) {
         // detach listeners and remove element data
@@ -683,6 +683,9 @@ async function update_live_status() {
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
         await getStatus();
+        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
+            await MSP.promise(MSPCodes.MSP_RAW_GPS);
+        }
         await MSP.promise(MSPCodes.MSP_ANALOG);
 
         const active = ((Date.now() - FC.ANALOG.last_received_timestamp) < 300);
@@ -722,6 +725,8 @@ async function update_live_status() {
                 }
             }
         }
+
+        sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
 
         $(".linkicon").toggleClass('active', active);
 

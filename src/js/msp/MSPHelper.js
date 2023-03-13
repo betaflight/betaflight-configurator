@@ -191,7 +191,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.mode = data.readU32();
                 FC.CONFIG.profile = data.readU8();
 
-                sensor_status(FC.CONFIG.activeSensors);
+                sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
                 break;
             case MSPCodes.MSP_STATUS_EX:
                 FC.CONFIG.cycleTime = data.readU16();
@@ -213,7 +213,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.armingDisableCount = data.readU8(); // Flag count
                 FC.CONFIG.armingDisableFlags = data.readU32();
 
-                sensor_status(FC.CONFIG.activeSensors);
+                sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
                 break;
 
             case MSPCodes.MSP_RAW_IMU:
