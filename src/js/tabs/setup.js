@@ -277,8 +277,8 @@ setup.initialize = function (callback) {
 
                 if(FC.CONFIG.buildOptions.length > 0) {
                     build_opt_e.text = "";
-                    for (let i = 0; i < FC.CONFIG.buildOptions.length; i++) {
-                        build_opt_e.append(FC.CONFIG.buildOptions[i], ' ');
+                    for (const buildOption of FC.CONFIG.buildOptions) {
+                        build_opt_e.append(buildOption, ' ');
                     }
                 } else {
                     build_opt_e.text(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
