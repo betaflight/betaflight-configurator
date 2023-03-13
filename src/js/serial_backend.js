@@ -213,7 +213,7 @@ function finishClose(finishedCallback) {
     $('div.connect_controls div.connect_state').text(i18n.getMessage('connect'));
 
     // reset active sensor indicators
-    sensor_status(0, 0);
+    sensor_status();
 
     if (wasConnected) {
         // detach listeners and remove element data
@@ -348,7 +348,7 @@ function onOpenVirtual() {
     processBoardInfo();
 
     update_dataflash_global();
-    sensor_status(FC.CONFIG.activeSensors, 0);
+    sensor_status(FC.CONFIG.activeSensors);
     updateTabList(FC.FEATURE_CONFIG.features);
 }
 
@@ -667,7 +667,6 @@ async function getStatus() {
 
 async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
-    // const sensorState = $('#sensor-status');
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_BOXNAMES);

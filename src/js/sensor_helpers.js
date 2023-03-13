@@ -19,7 +19,7 @@ export function have_sensor(sensors_detected, sensor_code) {
     return false;
 }
 
-export function sensor_status(sensors_detected, gps_fix_state) {
+export function sensor_status(sensors_detected = 0, gps_fix_state = 0) {
     // initialize variable (if it wasn't)
     if (!sensor_status.previous_sensors_detected) {
         sensor_status.previous_sensors_detected = -1; // Otherwise first iteration will not be run if sensors_detected == 0
@@ -76,7 +76,7 @@ export function sensor_status(sensors_detected, gps_fix_state) {
 
     if (have_sensor(sensors_detected, "gps")) {
         $(".gps", eSensorStatus).addClass("on");
-        if (gps_fix_state > 0) {
+        if (gps_fix_state) {
             $(".gpsicon", eSensorStatus).removeClass("active");
             $(".gpsicon", eSensorStatus).addClass("active_fix");
         } else {
