@@ -198,9 +198,12 @@ setup.initialize = function (callback) {
             roll_e = $('dd.roll'),
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading'),
+            // Sensor info
+            sensor_e = $('.sensor-hw'),
             // Firmware info
             msp_api_e = $('.api-version'),
             build_info_e = $('.build-info'),
+            build_key_e = $('.build-key'),
             build_opt_e = $('.build-options');
 
         // DISARM FLAGS
@@ -273,6 +276,7 @@ setup.initialize = function (callback) {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
                 // Firmware info
                 msp_api_e.text([FC.CONFIG.apiVersion]);
+                build_key_e.text([FC.CONFIG.buildKey]);
                 build_info_e.text([FC.CONFIG.buildInfo]);
 
                 if(FC.CONFIG.buildOptions.length > 0) {
@@ -286,7 +290,73 @@ setup.initialize = function (callback) {
             });
         };
 
+        const showSensorInfo = function() {
+            let accElements = [
+                'DEFAULT',
+                'NONE',
+                'ADXL345',
+                'MPU6050',
+                'MMA8452',
+                'BMA280',
+                'LSM303DLHC',
+                'MPU6000',
+                'MPU6500',
+                'MPU9250',
+                'ICM20601',
+                'ICM20602',
+                'ICM20608G',
+                'ICM20649',
+                'ICM20689',
+                'ICM42605',
+                'ICM42688P',
+                'BMI160',
+                'BMI270',
+                'LSM6DSO',
+                'VIRTUAL',
+            ];
+
+            let baroElements = [
+                'DEFAULT',
+                'NONE',
+                'BMP085',
+                'MS5611',
+                'BMP280',
+                'LPS',
+                'QMP6988',
+                'BMP388',
+                'DPS310',
+                '2SMPB_02B',
+                'VIRTUAL',
+            ];
+
+            let magElements = [
+                'DEFAULT',
+                'NONE',
+                'HMC5883',
+                'AK8975',
+                'AK8963',
+                'QMC5883',
+                'LIS3MDL',
+                'MPU925X_AK8963',
+            ];
+
+            MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
+                // Sensor info
+                sensor_e.text('');
+                if(have_sensor(FC.CONFIG.activeSensors, "acc") && FC.SENSOR_CONFIG.acc_hardware > 1) {
+                    sensor_e.append(i18n.getMessage('sensorStatusAccelShort'), ': ', accElements[[FC.SENSOR_CONFIG.acc_hardware]], ', ');
+                }
+                if(have_sensor(FC.CONFIG.activeSensors, "baro") && FC.SENSOR_CONFIG.baro_hardware > 1) {
+                    sensor_e.append(i18n.getMessage('sensorStatusBaroShort'), ': ', baroElements[[FC.SENSOR_CONFIG.baro_hardware]], ', ');
+                }
+                if(have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
+                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]]);
+                }
+            });
+        };
+
         prepareDisarmFlags();
+        showSensorInfo();
         showFirmwareInfo();
 
         function get_slow_data() {

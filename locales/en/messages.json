@@ -888,6 +888,9 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupSensorHardware": {
+        "message": "Sensors:"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 %"
     },
@@ -1022,6 +1025,9 @@
     },
     "initialSetupInfoBuildinfo": {
         "message": "Build date:"
+    },
+    "initialSetupInfoBuildkey": {
+        "message": "Build key:"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Build Options:"
