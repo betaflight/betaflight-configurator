@@ -1023,11 +1023,17 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
-    "initialSetupInfoBuildinfo": {
+    "initialSetupInfoBuildDate": {
         "message": "Build date:"
     },
-    "initialSetupInfoBuildkey": {
-        "message": "Build key:"
+    "initialSetupInfoBuildInfo": {
+        "message": "Build info:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Build config"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Build log"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Build Options:"

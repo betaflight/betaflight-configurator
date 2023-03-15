@@ -202,8 +202,8 @@ setup.initialize = function (callback) {
             sensor_e = $('.sensor-hw'),
             // Firmware info
             msp_api_e = $('.api-version'),
+            build_date_e = $('.build-date'),
             build_info_e = $('.build-info'),
-            build_key_e = $('.build-key'),
             build_opt_e = $('.build-options');
 
         // DISARM FLAGS
@@ -272,24 +272,6 @@ setup.initialize = function (callback) {
             }
         };
 
-        const showFirmwareInfo = function() {
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
-                // Firmware info
-                msp_api_e.text([FC.CONFIG.apiVersion]);
-                build_key_e.text([FC.CONFIG.buildKey]);
-                build_info_e.text([FC.CONFIG.buildInfo]);
-
-                if(FC.CONFIG.buildOptions.length > 0) {
-                    build_opt_e.text = "";
-                    for (const buildOption of FC.CONFIG.buildOptions) {
-                        build_opt_e.append(buildOption, ' ');
-                    }
-                } else {
-                    build_opt_e.text(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
-                }
-            });
-        };
-
         const showSensorInfo = function() {
             let accElements = [
                 'DEFAULT',
@@ -351,6 +333,31 @@ setup.initialize = function (callback) {
                 }
                 if(have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
                     sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]]);
+                }
+            });
+        };
+
+        const showFirmwareInfo = function() {
+            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
+                // Firmware info
+                msp_api_e.text([FC.CONFIG.apiVersion]);
+                build_date_e.text([FC.CONFIG.buildInfo]);
+                if(FC.CONFIG.buildInfo.length > 0) {
+                    const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+                    const buildConfig = `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${FC.CONFIG.buildKey}">
+                                         <a href="${buildRoot}/json" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></span>`;
+                    const buildLog =    `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${FC.CONFIG.buildKey}">
+                                         <a href="${buildRoot}/log" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></span>`;
+                    build_info_e.html(`${buildConfig} &nbsp ${buildLog}`);
+                }
+
+                if(FC.CONFIG.buildOptions.length > 0) {
+                    build_opt_e.text = "";
+                    for (const buildOption of FC.CONFIG.buildOptions) {
+                        build_opt_e.append(buildOption, ' ');
+                    }
+                } else {
+                    build_opt_e.text(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
                 }
             });
         };
