@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -20,7 +20,7 @@ import { OSD } from "../tabs/osd";
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
 const ledBaseFunctionLetters = ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
-let ledOverlayLetters        = ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
+let ledOverlayLetters        = ['t', 'y', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
 
 function MspHelper() {
     const self = this;
@@ -1167,50 +1167,102 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_LED_STRIP_CONFIG:
                 FC.LED_STRIP = [];
 
+                let ledCount = (data.byteLength - 2) / 4;
+
+                // The 32 bit config of each LED contains these in LSB:
+                // +--------------------+--------------------+------------------+------------------+----------------------+-----------+-----------+
+                // | Parameters - 3 bit | Directions - 6 bit | Color ID - 4 bit | Overlays - 7 bit | Function ID - 4 bit  | X - 4 bit | Y - 4 bit |
+                // +--------------------+--------------------+------------------+------------------+----------------------+-----------+-----------+
                 // According to betaflight/src/main/msp/msp.c
                 // API 1.41 - add indicator for advanced profile support and the current profile selection
                 // 0 = basic ledstrip available
                 // 1 = advanced ledstrip available
                 // Following byte is the current LED profile
-                let ledCount = (data.byteLength - 2) / 4;
 
-                for (let i = 0; i < ledCount; i++) {
+                //Before API_VERSION_1_46 Parameters were 4 bit and Overlays 6 bit
 
-                    const mask = data.readU32();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
 
-                    const functionId = (mask >> 8) & 0xF;
-                    const functions = [];
-                    for (let baseFunctionLetterIndex = 0; baseFunctionLetterIndex < ledBaseFunctionLetters.length; baseFunctionLetterIndex++) {
-                        if (functionId == baseFunctionLetterIndex) {
-                            functions.push(ledBaseFunctionLetters[baseFunctionLetterIndex]);
-                            break;
+                    for (let i = 0; i < ledCount; i++) {
+
+                        const mask = data.readU32();
+
+                        const functionId = (mask >> 8) & 0xF;
+                        const functions = [];
+                        for (let baseFunctionLetterIndex = 0; baseFunctionLetterIndex < ledBaseFunctionLetters.length; baseFunctionLetterIndex++) {
+                            if (functionId == baseFunctionLetterIndex) {
+                                functions.push(ledBaseFunctionLetters[baseFunctionLetterIndex]);
+                                break;
+                            }
                         }
-                    }
 
-                    const overlayMask = (mask >> 12) & 0x3F;
-                    for (let overlayLetterIndex = 0; overlayLetterIndex < ledOverlayLetters.length; overlayLetterIndex++) {
-                        if (bit_check(overlayMask, overlayLetterIndex)) {
-                            functions.push(ledOverlayLetters[overlayLetterIndex]);
+                        const overlayMask = (mask >> 12) & 0x7F;
+                        for (let overlayLetterIndex = 0; overlayLetterIndex < ledOverlayLetters.length; overlayLetterIndex++) {
+                            if (bit_check(overlayMask, overlayLetterIndex)) {
+                                functions.push(ledOverlayLetters[overlayLetterIndex]);
+                            }
                         }
-                    }
 
-                    const directionMask = (mask >> 22) & 0x3F;
-                    const directions = [];
-                    for (let directionLetterIndex = 0; directionLetterIndex < ledDirectionLetters.length; directionLetterIndex++) {
-                        if (bit_check(directionMask, directionLetterIndex)) {
-                            directions.push(ledDirectionLetters[directionLetterIndex]);
+                        const directionMask = (mask >> 23) & 0x3F;
+                        const directions = [];
+                        for (let directionLetterIndex = 0; directionLetterIndex < ledDirectionLetters.length; directionLetterIndex++) {
+                            if (bit_check(directionMask, directionLetterIndex)) {
+                                directions.push(ledDirectionLetters[directionLetterIndex]);
+                            }
                         }
-                    }
-                    const led = {
-                        y: (mask) & 0xF,
-                        x: (mask >> 4) & 0xF,
-                        functions: functions,
-                        color: (mask >> 18) & 0xF,
-                        directions: directions,
-                        parameters: (mask >> 28) & 0xF,
-                    };
+                        const led = {
+                            y: (mask) & 0xF,
+                            x: (mask >> 4) & 0xF,
+                            functions: functions,
+                            color: (mask >> 19) & 0xF,
+                            directions: directions,
+                            parameters: (mask >>> 29) & 0x7,
+                        };
 
-                    FC.LED_STRIP.push(led);
+                        FC.LED_STRIP.push(led);
+                    }
+                }
+                else {
+                    ledOverlayLetters = ledOverlayLetters.filter(x => x !== 'y');
+
+                    for (let i = 0; i < ledCount; i++) {
+
+                        const mask = data.readU32();
+
+                        const functionId = (mask >> 8) & 0xF;
+                        const functions = [];
+                        for (let baseFunctionLetterIndex = 0; baseFunctionLetterIndex < ledBaseFunctionLetters.length; baseFunctionLetterIndex++) {
+                            if (functionId == baseFunctionLetterIndex) {
+                                functions.push(ledBaseFunctionLetters[baseFunctionLetterIndex]);
+                                break;
+                            }
+                        }
+
+                        const overlayMask = (mask >> 12) & 0x3F;
+                        for (let overlayLetterIndex = 0; overlayLetterIndex < ledOverlayLetters.length; overlayLetterIndex++) {
+                            if (bit_check(overlayMask, overlayLetterIndex)) {
+                                functions.push(ledOverlayLetters[overlayLetterIndex]);
+                            }
+                        }
+
+                        const directionMask = (mask >> 22) & 0x3F;
+                        const directions = [];
+                        for (let directionLetterIndex = 0; directionLetterIndex < ledDirectionLetters.length; directionLetterIndex++) {
+                            if (bit_check(directionMask, directionLetterIndex)) {
+                                directions.push(ledDirectionLetters[directionLetterIndex]);
+                            }
+                        }
+                        const led = {
+                            y: (mask) & 0xF,
+                            x: (mask >> 4) & 0xF,
+                            functions: functions,
+                            color: (mask >> 18) & 0xF,
+                            directions: directions,
+                            parameters: (mask >> 28) & 0xF,
+                        };
+
+                        FC.LED_STRIP.push(led);
+                    }
                 }
                 break;
             case MSPCodes.MSP_SET_LED_STRIP_CONFIG:
@@ -2491,25 +2543,49 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
             }
         }
 
-        for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
-            const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
-            if (bitIndex >= 0) {
-                mask |= bit_set(mask, bitIndex + 12);
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+
+            for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
+                const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
+                if (bitIndex >= 0) {
+                    mask |= bit_set(mask, bitIndex + 12);
+                }
             }
-        }
 
-        mask |= (led.color << 18);
+            mask |= (led.color << 19);
 
-        for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
-            const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
-            if (bitIndex >= 0) {
-                mask |= bit_set(mask, bitIndex + 22);
+            for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
+                const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
+                if (bitIndex >= 0) {
+                    mask |= bit_set(mask, bitIndex + 23);
+                }
             }
+
+            mask |= (0 << 29); // parameters
+
+            buffer.push32(mask);
         }
+        else {
+            for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
+                const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
+                if (bitIndex >= 0) {
+                    mask |= bit_set(mask, bitIndex + 12);
+                }
+            }
 
-        mask |= (0 << 28); // parameters
+            mask |= (led.color << 18);
 
-        buffer.push32(mask);
+            for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
+                const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
+                if (bitIndex >= 0) {
+                    mask |= bit_set(mask, bitIndex + 22);
+                }
+            }
+
+            mask |= (0 << 28); // parameters
+
+            buffer.push32(mask);
+        }
 
         // prepare for next iteration
         ledIndex++;

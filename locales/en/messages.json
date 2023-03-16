@@ -3527,17 +3527,16 @@
         "message": "LEDs without wire ordering number will not be saved.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Larson scanner"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Blink"
+    "ledStripLarsonOverlay": {
+        "message": "Larson scanner",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink always"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Blink on landing"
+    "ledStripRainbowOverlay": {
+        "message": "Rainbow",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"
