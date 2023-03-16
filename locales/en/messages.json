@@ -865,7 +865,7 @@
         "message": "Magnetometer"
     },
     "initialSetupInfoHead": {
-        "message": "Info"
+        "message": "System info"
     },
     "initialSetupBattery": {
         "message": "Battery voltage:"
@@ -887,6 +887,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Sensors:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -1013,6 +1016,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Firmware info"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Build date:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Build info:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Build config"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Build log"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Build Options:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Local Build - no Defines"
     },
     "initialSetupButtonSave": {
         "message": "Save"

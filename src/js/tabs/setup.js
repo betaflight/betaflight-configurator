@@ -197,7 +197,14 @@ setup.initialize = function (callback) {
             gpsLon_e = $('.gpsLon'),
             roll_e = $('dd.roll'),
             pitch_e = $('dd.pitch'),
-            heading_e = $('dd.heading');
+            heading_e = $('dd.heading'),
+            // Sensor info
+            sensor_e = $('.sensor-hw'),
+            // Firmware info
+            msp_api_e = $('.api-version'),
+            build_date_e = $('.build-date'),
+            build_info_e = $('.build-info'),
+            build_opt_e = $('.build-options');
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
@@ -265,7 +272,99 @@ setup.initialize = function (callback) {
             }
         };
 
+        const showSensorInfo = function() {
+            let accElements = [
+                'DEFAULT',
+                'NONE',
+                'ADXL345',
+                'MPU6050',
+                'MMA8452',
+                'BMA280',
+                'LSM303DLHC',
+                'MPU6000',
+                'MPU6500',
+                'MPU9250',
+                'ICM20601',
+                'ICM20602',
+                'ICM20608G',
+                'ICM20649',
+                'ICM20689',
+                'ICM42605',
+                'ICM42688P',
+                'BMI160',
+                'BMI270',
+                'LSM6DSO',
+                'VIRTUAL',
+            ];
+
+            let baroElements = [
+                'DEFAULT',
+                'NONE',
+                'BMP085',
+                'MS5611',
+                'BMP280',
+                'LPS',
+                'QMP6988',
+                'BMP388',
+                'DPS310',
+                '2SMPB_02B',
+                'VIRTUAL',
+            ];
+
+            let magElements = [
+                'DEFAULT',
+                'NONE',
+                'HMC5883',
+                'AK8975',
+                'AK8963',
+                'QMC5883',
+                'LIS3MDL',
+                'MPU925X_AK8963',
+            ];
+
+            MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
+                // Sensor info
+                sensor_e.text('');
+                if(have_sensor(FC.CONFIG.activeSensors, "acc") && FC.SENSOR_CONFIG.acc_hardware > 1) {
+                    sensor_e.append(i18n.getMessage('sensorStatusAccelShort'), ': ', accElements[[FC.SENSOR_CONFIG.acc_hardware]], ', ');
+                }
+                if(have_sensor(FC.CONFIG.activeSensors, "baro") && FC.SENSOR_CONFIG.baro_hardware > 1) {
+                    sensor_e.append(i18n.getMessage('sensorStatusBaroShort'), ': ', baroElements[[FC.SENSOR_CONFIG.baro_hardware]], ', ');
+                }
+                if(have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
+                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]]);
+                }
+            });
+        };
+
+        const showFirmwareInfo = function() {
+            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
+                // Firmware info
+                msp_api_e.text([FC.CONFIG.apiVersion]);
+                build_date_e.text([FC.CONFIG.buildInfo]);
+                if(FC.CONFIG.buildInfo.length > 0) {
+                    const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+                    const buildConfig = `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${FC.CONFIG.buildKey}">
+                                         <a href="${buildRoot}/json" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></span>`;
+                    const buildLog =    `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${FC.CONFIG.buildKey}">
+                                         <a href="${buildRoot}/log" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></span>`;
+                    build_info_e.html(`${buildConfig} &nbsp ${buildLog}`);
+                }
+
+                if(FC.CONFIG.buildOptions.length > 0) {
+                    build_opt_e.text = "";
+                    for (const buildOption of FC.CONFIG.buildOptions) {
+                        build_opt_e.append(buildOption, ' ');
+                    }
+                } else {
+                    build_opt_e.text(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
+                }
+            });
+        };
+
         prepareDisarmFlags();
+        showSensorInfo();
+        showFirmwareInfo();
 
         function get_slow_data() {
 
@@ -279,13 +378,7 @@ setup.initialize = function (callback) {
 
             });
 
-            MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
-                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
-                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
-                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
-                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
-            });
-
+            // GPS info
             if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
                 MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, function () {
                     gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
@@ -294,6 +387,14 @@ setup.initialize = function (callback) {
                     gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);
                 });
             }
+
+            // System info
+            MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
+                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
+                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
+                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
+                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
+            });
         }
 
         function get_fast_data() {
