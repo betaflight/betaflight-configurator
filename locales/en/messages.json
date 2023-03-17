@@ -6409,7 +6409,7 @@
         "message": "Blackbox logging rate"
     },
     "onboardLoggingDebugFields": {
-        "message": "Blackbox debug fields"
+        "message": "Data included"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox debug mode"

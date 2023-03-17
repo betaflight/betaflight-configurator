@@ -349,21 +349,7 @@ onboard_logging.initialize = function (callback) {
             }
 
             debugModeSelect.val(FC.PID_ADVANCED_CONFIG.debugMode);
-
-            // Convert to select2 and order alphabetic
-            debugModeSelect.select2({
-                sorter(data) {
-                    return data.sort(function(a, b) {
-                        if (a.text === "NONE" || b.text === i18n.getMessage('onboardLoggingDebugModeUnknown')) {
-                            return -1;
-                        } else if (b.text ==="NONE" || a.text === i18n.getMessage('onboardLoggingDebugModeUnknown')) {
-                            return 1;
-                        } else {
-                            return a.text.localeCompare(b.text);
-                        }
-                    });
-                },
-            });
+            debugModeSelect.sortSelect("NONE");
 
         } else {
             $('.blackboxDebugMode').hide();
@@ -375,18 +361,18 @@ onboard_logging.initialize = function (callback) {
             $('.blackboxDebugFields').show();
 
             const debugFields = [
-                { text: "PID Data" },
-                { text: "RC Commands Data" },
-                { text: "Setpoint Data" },
-                { text: "Battery Data" },
-                { text: "Magnetometer Data" },
-                { text: "Altitude Data" },
-                { text: "RSSI Data" },
-                { text: "Gyro Data" },
-                { text: "Accelerometer Data" },
-                { text: "Debug Log Data" },
-                { text: "Motor Data" },
-                { text: "GPS Data" },
+                { text: "PID" },
+                { text: "RC Commands" },
+                { text: "Setpoint" },
+                { text: "Battery" },
+                { text: "Magnetometer" },
+                { text: "Altitude" },
+                { text: "RSSI" },
+                { text: "Gyro" },
+                { text: "Accelerometer" },
+                { text: "Debug Log" },
+                { text: "Motor" },
+                { text: "GPS" },
             ];
 
             let fieldsMask = FC.BLACKBOX.blackboxDisabledMask;
