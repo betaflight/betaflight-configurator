@@ -280,7 +280,7 @@
         "message": "テザーロギング"
     },
     "tabOnboardLogging": {
-        "message": "ブラックボックス"
+        "message": "Blackbox"
     },
     "tabAdjustments": {
         "message": "調整"
@@ -466,6 +466,9 @@
     },
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** サポートデータを送信しました *** <br>Id: $1<br><br><br># IDをコピーしてBetaflight開発チームに情報提供してください。"
+    },
+    "buildKey": {
+        "message": "Build Key: <strong>$1</strong>"
     },
     "supportWarningDialogTitle": {
         "message": "データ送信の確認"
@@ -1271,7 +1274,7 @@
         "message": "フライトコントローラがUSBから給電されたときのビープ音 (機体作成時に発報させない場合はオフ)"
     },
     "beeperBLACKBOX_ERASE": {
-        "message": "ブラックボックスログ消去が完了したときのビープ音"
+        "message": "Blackboxログの消去が完了したときのビープ音"
     },
     "beeperCRASH_FLIP": {
         "message": "クラッシュフリップモードを有効にしたときのビープ音"
@@ -1455,7 +1458,7 @@
         "message": "シリアル受信"
     },
     "portsFunction_BLACKBOX": {
-        "message": "ブラックボックスログ"
+        "message": "Blackboxログ"
     },
     "portsFunction_TBS_SMARTAUDIO": {
         "message": "VTX (TBS SmartAudio)"
@@ -2014,7 +2017,7 @@
         "message": "初期値"
     },
     "receiverChannelMapTitle": {
-        "message": "ボックスをクリックする事で、独自のチャンネルマップを定義できます"
+        "message": "枠内をクリックする事で、独自のチャンネルマップを定義できます"
     },
     "receiverRssiChannel": {
         "message": "RSSI チャンネル"
@@ -2388,6 +2391,9 @@
     },
     "gpsLon": {
         "message": "経度:"
+    },
+    "gpsHeading": {
+        "message": "ヘッディング:"
     },
     "gpsSpeed": {
         "message": "速度:"
@@ -2802,13 +2808,13 @@
         "message": "自動的に以前のログファイルをロードしました: <strong>$1</strong>"
     },
     "blackboxNotSupported": {
-        "message": "このフライトコントローラのファームウェアは、ブラックボックスによるログをサポートしていません。"
+        "message": "このフライトコントローラのファームウェアはBlackboxによるログをサポートしていません。"
     },
     "blackboxMaybeSupported": {
-        "message": "このフライトコントローラのファームウェアは古すぎるか、あるいは [設定] タブでブラックボックス機能が無効になっているため、このタブは使えません。"
+        "message": "このフライトコントローラのファームウェアは古すぎるか、あるいは [設定] タブでBlackbox機能が無効になっているため、このタブは使えません。"
     },
     "blackboxConfiguration": {
-        "message": "ブラックボックス設定"
+        "message": "Blackbox設定"
     },
     "blackboxButtonSave": {
         "message": "保存して再起動"
@@ -2871,7 +2877,7 @@
         "message": "データ消去を確認します"
     },
     "dataflashConfirmEraseNote": {
-        "message": "メモリに保存されているログを含むすべてのデータを消去します。消去には20秒程度必要です。実行しますか？"
+        "message": "メモリに保存されているBlackboxログを含むすべてのデータを消去します。消去には20秒程度必要です。実行しますか？"
     },
     "dataflashSavingTitle": {
         "message": "ファイルに保存しています"
@@ -5130,11 +5136,11 @@
         "message": "ホームポジションまでの距離 (設定に基づいたフィートまたはメートル表示)"
     },
     "osdTextElementNumericalHeading": {
-        "message": "ヘディング角度値",
+        "message": "ヘッディング角度値",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementNumericalHeading": {
-        "message": "ヘッディング角度値"
+        "message": "現在のヘッディング角度の読み取り値"
     },
     "osdTextElementNumericalVario": {
         "message": "垂直スピード値",
@@ -5235,11 +5241,11 @@
         "message": "モーター毎の出力グラフを表示"
     },
     "osdTextElementLogStatus": {
-        "message": "ブラックボックス ログステータス",
+        "message": "Blackboxログの状態",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLogStatus": {
-        "message": "ブラックボックス番号と警告"
+        "message": "Blackbox番号と警告"
     },
     "osdTextElementFlipArrow": {
         "message": "Flip after crash 向き",
@@ -5442,7 +5448,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackbox": {
-        "message": "ブラックボックス合計使用率"
+        "message": "Blackbox 合計使用率"
     },
     "osdTextStatEndBattery": {
         "message": "バッテリー終止電圧",
@@ -5477,7 +5483,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackboxLogNumber": {
-        "message": "飛行後のブラックボックスログ番号"
+        "message": "飛行後のBlackboxログ番号"
     },
     "osdTextStatTimer1": {
         "message": "タイマー1",
@@ -6260,10 +6266,13 @@
         "message": "FPVカメラアングル [degrees]"
     },
     "onboardLoggingBlackbox": {
-        "message": "ブラックボックス ログデバイス"
+        "message": "Blackboxログデバイス"
     },
     "onboardLoggingRateOfLogging": {
-        "message": "ブラックボックス ログレート"
+        "message": "Blackboxログレート"
+    },
+    "onboardLoggingDebugFields": {
+        "message": "Blackboxデバッグフィールド"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackboxデバッグモード"
@@ -6711,5 +6720,9 @@
     },
     "coreBuildModeDescription": {
         "message": "このオプションは、ハードウェアドライバ (およびいくつかの制限された機能) を含むファームウェアをビルドします。これはフライトコントローラ上のハードウェア検出を支援するために利用可能で、その利便性のためにのみ提供されます。このオプションを使用しても、すべての機能 (ハードウェアのみ) が利用できるわけではありません。"
+    },
+    "showDevToolsOnStartup": {
+        "message": "開発者向けツールを自動的に開く",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }

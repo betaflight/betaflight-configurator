@@ -467,6 +467,9 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Dados de suporte enviados *** <br>Id: $1<br><br><br># copie o ID e forneça-o à equipa do betaflight."
     },
+    "buildKey": {
+        "message": "Chave de Compilação: <strong>$1</strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Confirmar envio de dados"
     },
@@ -2388,6 +2391,9 @@
     },
     "gpsLon": {
         "message": "Longitude:"
+    },
+    "gpsHeading": {
+        "message": "Direção:"
     },
     "gpsSpeed": {
         "message": "Velocidade:"
@@ -6265,6 +6271,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Frequência de log do Blackbox"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Campos de debug do Blackbox"
+    },
     "onboardLoggingDebugMode": {
         "message": "Modo de debug do Blackbox"
     },
@@ -6711,5 +6720,9 @@
     },
     "coreBuildModeDescription": {
         "message": "Esta opção cria um firmware que contém os drivers de hardware (e algumas funcionalidades limitadas). Está disponível para ajudar na deteção do hardware de uma controladora de voo, e é fornecida apenas por essa conveniência. Nem todas as funcionalidades estarão disponíveis (apenas hardware) usando esta opção."
+    },
+    "showDevToolsOnStartup": {
+        "message": "Abrir automaticamente o DevTools no modo de desenvolvimento",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }
