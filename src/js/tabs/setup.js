@@ -344,18 +344,22 @@ setup.initialize = function (callback) {
                 build_date_e.text([FC.CONFIG.buildInfo]);
                 if(FC.CONFIG.buildInfo.length > 0) {
                     const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
-                    const buildConfig = `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${FC.CONFIG.buildKey}">
+                    const buildConfig = `<span class="buildInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
                                          <a href="${buildRoot}/json" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></span>`;
-                    const buildLog =    `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${FC.CONFIG.buildKey}">
+                    const buildLog =    `<span class="buildInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
                                          <a href="${buildRoot}/log" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></span>`;
-                    build_info_e.html(`${buildConfig} &nbsp ${buildLog}`);
+                    const buildKey =    `<span user-select: text; draggable="true" font-size: 0.25em; title="${i18n.getMessage('initialSetupInfoBuildInfoKey')}">${FC.CONFIG.buildKey}</span>`;
+                    build_info_e.html(`${buildKey} &nbsp ${buildConfig} &nbsp ${buildLog}`);
                 }
-
                 if(FC.CONFIG.buildOptions.length > 0) {
+                    let buildOptions = "";
                     build_opt_e.text = "";
                     for (const buildOption of FC.CONFIG.buildOptions) {
-                        build_opt_e.append(buildOption, ' ');
+                        buildOptions = `${buildOptions} &nbsp ${buildOption}`;
                     }
+                    build_opt_e.html(`<span class="buildInfoClassOptions" 
+                                      title="${i18n.getMessage('initialSetupInfoBuildOptions')}${buildOptions}">
+                                      <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></span>`);
                 } else {
                     build_opt_e.text(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
                 }
