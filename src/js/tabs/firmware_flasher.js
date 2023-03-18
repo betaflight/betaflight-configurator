@@ -191,8 +191,6 @@ firmware_flasher.initialize = function (callback) {
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
         }
 
-        self.releaseLoader.loadOptions(buildOptions);
-
         let buildTypesToShow;
         const buildType_e = $('select[name="build_type"]');
         function buildBuildTypeOptionsList() {
@@ -330,6 +328,8 @@ firmware_flasher.initialize = function (callback) {
             }
 
             self.releaseLoader.loadTarget(target, release, onTargetDetail);
+
+            self.releaseLoader.loadOptions(release, buildOptions);
         }
 
         function populateReleases(versions_element, target) {
