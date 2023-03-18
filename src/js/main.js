@@ -80,7 +80,6 @@ function appReady() {
     cleanupLocalStorage();
 
     i18n.init(function() {
-        startProcess();
 
         // pass the configurator version as a custom header for every AJAX request.
         $.ajaxSetup({
@@ -88,6 +87,8 @@ function appReady() {
                 'X-CFG-VER': `${CONFIGURATOR.version}`,
             },
         });
+
+        startProcess();
 
         checkSetupAnalytics(function (analyticsService) {
             analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
