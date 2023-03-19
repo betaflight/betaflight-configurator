@@ -338,6 +338,9 @@ onboard_logging.initialize = function (callback) {
                 {text: "GPS_DOP"},
                 {text: "FAILSAFE"},
                 {text: "GYRO_CALIBRATION"},
+                {text: "ANGLE_MODE"},
+                {text: "ANGLE_TARGET"},
+                {text: "CURRENT_ANGLE"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
