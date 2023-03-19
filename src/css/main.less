@@ -1498,7 +1498,6 @@ dialog {
 	color: var(--pushedButton-fontColor);
 	border-radius: 3px;
 }
-
 .danger-button {
 	-webkit-user-drag: none;
 	margin-top: 8px;
@@ -1526,7 +1525,6 @@ dialog {
 	color: #fff;
 	border-radius: 3px;
 }
-
 .small {
 	width: auto;
 	position: relative;
@@ -1731,12 +1729,33 @@ dialog {
 	color: #fff;
 	font-size: 10px;
 }
-.buildInfoClass {
-	background-color: #ffcc3f;
+.buildInfoBtn {
 	padding: 2px 5px;
 	border-radius: 3px;
-	color: #272727;
-	font-size: 10px;
+	font-size: 10px;	
+	position: relative;
+	a {
+		background-color: var(--accent);
+		border: 3px solid #dba718;
+		color: #000;
+		&:hover {
+			background-color: var(--hoverButton-background);
+			color: #000;
+			text-shadow: 0 1px rgba(255, 255, 255, 0.25);
+			transition: all ease 0.2s;
+			text-decoration: none;
+		}
+		&:active {
+			background-color: var(--hoverButton-background);
+			transition: all ease 0.0s;
+			box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
+		}
+	}
+	a.disabled {
+		background-color: #f1f1f1;
+		border: 3px solid var(--subtleAccent);
+		color: #ccc;
+	}
 }
 .buildInfoClassOptions {
 	background-color: grey;

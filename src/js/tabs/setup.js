@@ -344,12 +344,12 @@ setup.initialize = function (callback) {
                 build_date_e.text([FC.CONFIG.buildInfo]);
                 if(FC.CONFIG.buildInfo.length > 0) {
                     const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
-                    const buildConfig = `<span class="buildInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
-                                         <a href="${buildRoot}/json" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></span>`;
-                    const buildLog =    `<span class="buildInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
-                                         <a href="${buildRoot}/log" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></span>`;
+                    const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
+                                         <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
+                    const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
+                                         <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></strong></span>`;
                     const buildKey =    `<span user-select: text; draggable="true" font-size: 0.25em; title="${i18n.getMessage('initialSetupInfoBuildInfoKey')}">${FC.CONFIG.buildKey}</span>`;
-                    build_info_e.html(`${buildKey} &nbsp ${buildConfig} &nbsp ${buildLog}`);
+                    build_info_e.html(`${buildKey} &nbsp ${buildConfig}${buildLog}`);
                 }
                 if(FC.CONFIG.buildOptions.length > 0) {
                     let buildOptions = "";
