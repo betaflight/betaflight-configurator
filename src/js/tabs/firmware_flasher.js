@@ -608,7 +608,7 @@ firmware_flasher.initialize = function (callback) {
                         function onLoadCloudBuild(options) {
                             if (FC.CONFIG.buildKey.length === 32) {
                                 FC.CONFIG.buildOptions = options.Request.Options;
-                                self.releaseLoader.loadOptions(presetBuildOptions);
+                                self.releaseLoader.loadOptions(options.Request.Release, presetBuildOptions);
                             }
                             getBoardInfo();
                         }
