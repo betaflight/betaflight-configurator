@@ -329,7 +329,11 @@ firmware_flasher.initialize = function (callback) {
 
             self.releaseLoader.loadTarget(target, release, onTargetDetail);
 
-            self.releaseLoader.loadOptions(release, buildOptions);
+            if (FC.CONFIG.buildKey.length === 32) {
+                self.releaseLoader.loadOptionsByBuildKey(release, FC.CONFIG.buildKey, buildOptions);
+            } else {
+                self.releaseLoader.loadOptions(release, buildOptions);
+            }
         }
 
         function populateReleases(versions_element, target) {
@@ -571,44 +575,12 @@ firmware_flasher.initialize = function (callback) {
                     MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish);
                 }
 
-                function presetBuildOptions(data) {
-                    const newOptions = [];
-
-                    newOptions.generalOptions = [];
-                    newOptions.motorProtocols = [];
-                    newOptions.radioProtocols = [];
-                    newOptions.telemetryProtocols = [];
-
-                    for (const option of data.generalOptions) {
-                        option.default = FC.CONFIG.buildOptions.some(opt => opt.includes(option.value));
-                        newOptions.generalOptions.push(option);
-                    }
-
-                    for (const option of data.motorProtocols) {
-                        option.default = FC.CONFIG.buildOptions.some(opt => opt.includes(option.value));
-                        newOptions.motorProtocols.push(option);
-                    }
-
-                    for (const option of data.radioProtocols) {
-                        option.default = FC.CONFIG.buildOptions.some(opt => opt.includes(option.value));
-                        newOptions.radioProtocols.push(option);
-                    }
-
-                    for (const option of data.telemetryProtocols) {
-                        option.default = FC.CONFIG.buildOptions.some(opt => opt.includes(option.value));
-                        newOptions.telemetryProtocols.push(option);
-                    }
-
-                    buildOptions(newOptions);
-                }
-
                 function getBuildInfo() {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine) {
 
                         function onLoadCloudBuild(options) {
                             if (FC.CONFIG.buildKey.length === 32) {
                                 FC.CONFIG.buildOptions = options.Request.Options;
-                                self.releaseLoader.loadOptions(options.Request.Release, presetBuildOptions);
                             }
                             getBoardInfo();
                         }

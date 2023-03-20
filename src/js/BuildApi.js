@@ -156,6 +156,11 @@ export default class BuildApi {
         this.load(url, onSuccess, onFailure);
     }
 
+    loadOptionsByBuildKey(release, key, onSuccess, onFailure) {
+        const url = `${this._url}/api/options/${release}/${key}`;
+        this.load(url, onSuccess, onFailure);
+    }
+
     loadCommits(release, onSuccess, onFailure) {
         const url = `${this._url}/api/releases/${release}/commits`;
         this.load(url, onSuccess, onFailure);
