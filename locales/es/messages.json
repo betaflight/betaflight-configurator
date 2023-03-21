@@ -776,7 +776,7 @@
         "message": "Magnetómetro"
     },
     "initialSetupInfoHead": {
-        "message": "Info"
+        "message": "Información del sistema"
     },
     "initialSetupBattery": {
         "message": "Voltaje batería:"
@@ -798,6 +798,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Sensores:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -924,6 +927,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Información del firmware"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Fecha de compilación:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Información de compilación:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Configuración de compilación"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Registro de compilación"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Opciones de compilación:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Compilación local - sin Defines"
     },
     "initialSetupButtonSave": {
         "message": "Guardar"
@@ -3407,17 +3434,16 @@
         "message": "No se guardarán los LEDs sin número de orden en el cableado.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Escáner Larson"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Parpadear"
+    "ledStripLarsonOverlay": {
+        "message": "Escáner Larson",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Parpadear siempre"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Parpadear al aterrizar"
+    "ledStripRainbowOverlay": {
+        "message": "Arcoiris",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Superposición"
@@ -6272,7 +6298,7 @@
         "message": "Frecuencia de muestreo"
     },
     "onboardLoggingDebugFields": {
-        "message": "Campos de depuración de la Caja Negra"
+        "message": "Datos incluidos"
     },
     "onboardLoggingDebugMode": {
         "message": "Modo de depuración de la Caja Negra"

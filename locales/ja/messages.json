@@ -776,7 +776,7 @@
         "message": "コンパス"
     },
     "initialSetupInfoHead": {
-        "message": "情報"
+        "message": "システム情報"
     },
     "initialSetupBattery": {
         "message": "バッテリー電圧:"
@@ -798,6 +798,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "センサー:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -924,6 +927,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "計器"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "ファームウェア情報"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "ビルド日時:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "ビルド情報:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "ビルド設定"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "ビルドログ"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "ビルドオプション:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "ローカルビルド - 定義なし"
     },
     "initialSetupButtonSave": {
         "message": "保存"
@@ -3407,17 +3434,16 @@
         "message": "ワイヤーオーダー番号のないLEDは保存されません。",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "ラーソンスキャナー"
-    },
-    "ledStripBlinkTitle": {
-        "message": "点滅"
+    "ledStripLarsonOverlay": {
+        "message": "ラーソンスキャナー",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "常時点滅"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "着陸時点滅"
+    "ledStripRainbowOverlay": {
+        "message": "レインボー",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "オーバーレイ"
@@ -6272,7 +6298,7 @@
         "message": "Blackboxログレート"
     },
     "onboardLoggingDebugFields": {
-        "message": "Blackboxデバッグフィールド"
+        "message": "データ含"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackboxデバッグモード"

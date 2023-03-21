@@ -778,9 +778,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
-    "initialSetupInfoHead": {
-        "message": "Info"
-    },
     "initialSetupBattery": {
         "message": "Akku Spannung"
     },
@@ -3410,17 +3407,8 @@
         "message": "LEDs ohne Verkabelungs-Index werden nicht gespeichert.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Larson Scanner"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Blinken"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Immer Blinken"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Blinken beim Landen"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"
@@ -6273,9 +6261,6 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox Log-Geschwindigkeit"
-    },
-    "onboardLoggingDebugFields": {
-        "message": "Blackbox Debug-Felder"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox Debug Modus"

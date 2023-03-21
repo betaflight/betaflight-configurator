@@ -776,7 +776,7 @@
         "message": "Magnetometro"
     },
     "initialSetupInfoHead": {
-        "message": "Info"
+        "message": "Informazioni di sistema"
     },
     "initialSetupBattery": {
         "message": "Tensione Batteria:"
@@ -798,6 +798,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Sensori:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -924,6 +927,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Strumentazione"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Informazioni firmware"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Data build:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Informazioni sulla build:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Configurazione Build"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Log Build"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Opzioni Build:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Build locale - Nessuna definizione"
     },
     "initialSetupButtonSave": {
         "message": "Salva"
@@ -3407,17 +3434,16 @@
         "message": "LED senza numero di ordinamento non verranno salvati.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Scanner Larson"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Lampeggia"
+    "ledStripLarsonOverlay": {
+        "message": "Scanner Larson",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Lampeggia sempre"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Lampeggia all'atterraggio"
+    "ledStripRainbowOverlay": {
+        "message": "Arcobaleno",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Sovrapposizione"
@@ -6270,9 +6296,6 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Frequenza di registrazione della BlackBox"
-    },
-    "onboardLoggingDebugFields": {
-        "message": "Campi di debug Blackbox"
     },
     "onboardLoggingDebugMode": {
         "message": "Modalità debug Blackbox"

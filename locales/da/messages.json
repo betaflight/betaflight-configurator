@@ -799,6 +799,9 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupSensorHardware": {
+        "message": "Sensorer:"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 %"
     },
@@ -924,6 +927,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instrumenter"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Firmware info"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Build dato:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Build  info:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Build config"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Build log"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Build valg:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Lokal build - ingen valg"
     },
     "initialSetupButtonSave": {
         "message": "Gem"
@@ -2378,10 +2405,10 @@
         "message": "3D-fiksering:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"text\">Sand</span>"
+        "message": "<span class=\"fixtrue\">Sand</span>"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"text\">Falsk</span>"
+        "message": "<span class=\"fixfalse\">Falsk</span>"
     },
     "gpsAltitude": {
         "message": "Højde:"
@@ -3407,17 +3434,16 @@
         "message": "LED'er uden ledningsnummer gemmes ikke.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Larson scanner"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Blink"
+    "ledStripLarsonOverlay": {
+        "message": "Larson scanner",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink altid"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Blink ved landing"
+    "ledStripRainbowOverlay": {
+        "message": "Regnbue",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlag"
@@ -5843,7 +5869,7 @@
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Værdierne i VTX-tabellen er blevet indlæst, men endnu ikke gemt i FC. Du skal bekræfte og ændre værdierne for at sikre, at de er gyldige og lovlige i dit land, og tryk derefter på $t(vtxButtonSave.message) knappen for at gemme dem i FC.",
+        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Værdierne i VTX tabellen er blevet indlæst, men endnu ikke gemt i FC. Du skal bekræfte og ændre værdierne for at sikre, at de er lovlige i dit land, og tryk derefter på $t(vtxButtonSave.message) knappen for at gemme dem i FC.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -5999,7 +6025,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "Denne tabel repræsenterer de forskellige værdier af effekt, der kan bruges til VTX. De er opdelt i to: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> hvert effektniveau kræver en værdi, der er defineret af hardwareproducenten. Spørg din producent om den korrekte værdi eller konsulter Betaflight wiki of VTX Tabeller for at få fat i nogle prøver. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> kan du her sætte den etiket, du ønsker for hver effektniveauværdi. Det kan være tal (25, 200, 600, 1. ), bogstaver (OFF, MIN, MAX) eller en blanding af dem. <br /><br />Du skal kun konfigurere <b></b> de strømniveauer, der er lovlige på dit land.",
+        "message": "Denne tabel repræsenterer de forskellige værdier af effekt, der kan bruges til VTX. De er opdelt i to: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> hvert effektniveau kræver en værdi, der er defineret af hardwareproducenten. Spørg din producent om den korrekte værdi eller konsulter Betaflight wiki for VTX tabeller for at se nogle eksempler. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> kan du her sætte den etiket, du ønsker for hver effektniveauværdi. Det kan være tal (25, 200, 600, 1. ), bogstaver (OFF, MIN, MAX) eller en blanding af dem. <br /><br />Du skal kun konfigurere <b></b> de strømniveauer, som er lovlige i dit land.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -6035,7 +6061,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "Denne tabel repræsenterer alle de frekvenser, der kan bruges til din VTX. Du kan have flere bånd og for hvert bånd skal du konfigurere:<br><b>- $t(vtxTableBandTitleName.message):</b> Navn, som du ønsker at tildele til dette bånd, ligesom BOSCAM_A, FATSHARK eller RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Alias som refererer til båndet.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Dette angiver, om det er et fabrik defineret bånd. Hvis aktiveret sender Betaflight til VTX et bånd og kanalnummer. VTX vil derefter bruge sin indbyggede frekvenstabel og de frekvenser, der er konfigureret her, og kun vise værdien i fx. OSD. Hvis den ikke er aktiveret, sender Betaflight den konfigurede frekvens til VTX.<br><b>- Frekvenser:</b> Frekvenser for dette band.<br />Husk at ikke alle frekvenser er lovlige i dit land. Du skal sætte en værdi på <b>nul</b> til hvert frekvensindeks, som du ikke har tilladelse til at anvende i dit land, for at deaktivere.",
+        "message": "Denne tabel repræsenterer alle de frekvenser, der kan bruges til din VTX. Du kan have flere bånd og for hvert bånd skal du konfigurere:<br><b>- $t(vtxTableBandTitleName.message):</b> Navn, som du ønsker at tildele til dette bånd, ligesom BOSCAM_A, FATSHARK eller RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Alias som refererer til båndet.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Dette angiver, om det er et fabrik defineret bånd. Hvis aktiveret sender Betaflight til VTX et bånd og kanalnummer. VTX vil derefter bruge sin indbyggede frekvenstabel og de frekvenser, der er konfigureret her, og kun vise værdien i fx. OSD. Hvis den ikke er aktiveret, sender Betaflight den konfigurede frekvens til VTX.<br><b>- Frekvenser:</b> Frekvenser for dette band.<br />Husk at ikke alle frekvenser er lovlige i dit land. Du skal deaktivere dem ved at sætte værdi til <b>nul</b> for hver frekvensindeks, som ikke er lovlige i dit land.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -6272,7 +6298,7 @@
         "message": "Blackbox lognings hastighed"
     },
     "onboardLoggingDebugFields": {
-        "message": "Blackbox debug felter"
+        "message": "Data medtages"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox logger med debug for ..."
@@ -6719,7 +6745,7 @@
         "message": "Kun grund komponenter"
     },
     "coreBuildModeDescription": {
-        "message": "Dette tilvalg danner en relase som indeholder hardware drivere (og nogle begrænsede funktioner). Den kan anvendes til at detektere hardware på FC og er til rådighed for bekvemmelighed. Ikke alle funktioner vil være tilgængelige (kun hardware) hvis du vælger denne indstilling."
+        "message": "Sætter du dette valg, dannes en relase som indeholder hardware drivere (og nogle begrænsede funktioner). Den kan anvendes til at detektere hardware på FC og er til rådighed for bekvemmelighed. Ikke alle funktioner vil være tilgængelige (kun hardware) hvis du vælger denne indstilling."
     },
     "showDevToolsOnStartup": {
         "message": "Åbn automatisk DevTools i udviklingstilstand",
