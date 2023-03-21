@@ -784,7 +784,7 @@
         "message": "Magnetòmetre"
     },
     "initialSetupInfoHead": {
-        "message": "Info"
+        "message": "Informació del sistema"
     },
     "initialSetupBattery": {
         "message": "Voltatge de bateria:"
@@ -806,6 +806,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Sensors:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -932,6 +935,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Informació del programari"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Data de compilació:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Informació de la compilació:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Configuració de la compilació"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Log de la compilació"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Opcions de compilació:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Compilació local - Sense definició"
     },
     "initialSetupButtonSave": {
         "message": "Desa"
@@ -3415,17 +3442,16 @@
         "message": "Els LEDs sense nombre d'ordenació no es desaran.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Larson scanner"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Parpadeja"
+    "ledStripLarsonOverlay": {
+        "message": "Escàner Larson",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Pampallugues sempre"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Pampallugues en aterrar"
+    "ledStripRainbowOverlay": {
+        "message": "Arc de Sant Martí",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"
@@ -6280,7 +6306,7 @@
         "message": "Velocitat d'enregistrament de Blackbox"
     },
     "onboardLoggingDebugFields": {
-        "message": "Camps de depuració de Blackbox"
+        "message": "Dades incloses"
     },
     "onboardLoggingDebugMode": {
         "message": "Mode de depuració de Blackbox"

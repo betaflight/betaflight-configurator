@@ -698,9 +698,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
-    "initialSetupInfoHead": {
-        "message": "Info"
-    },
     "initialSetupBattery": {
         "message": "Accuspanning:"
     },
@@ -2936,17 +2933,8 @@
         "message": "LED's zonder volgorde nummer worden niet opgeslagen.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Larson scanner"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Knipperen"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Altijd knipperen"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Knipperen bij landen"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"

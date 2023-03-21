@@ -720,9 +720,6 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
-    "initialSetupInfoHead": {
-        "message": "Info"
-    },
     "initialSetupBattery": {
         "message": "Voltaxe da batería:"
     },
@@ -3301,17 +3298,8 @@
         "message": "Os LED sen número de orde de arame non se gardarán.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Escáner de Larson"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Parpadeo"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Parpadeo continuo"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Parpadeo ao aterrar"
     },
     "ledStripOverlayTitle": {
         "message": "Superposición"

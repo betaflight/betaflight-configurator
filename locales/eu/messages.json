@@ -663,9 +663,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometroa"
     },
-    "initialSetupInfoHead": {
-        "message": "Informazioa"
-    },
     "initialSetupBattery": {
         "message": "Bateriaren tentsioa:"
     },
@@ -2747,17 +2744,8 @@
         "message": "Ez dira kablean zenbakirik gabeko LEDak gordeko.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Larson eskanerra"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Kliskatu"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Beti kliskatu"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Lurreratzean kliskatu"
     },
     "ledStripOverlayTitle": {
         "message": "Gainjarri"

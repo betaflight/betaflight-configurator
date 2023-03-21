@@ -750,9 +750,6 @@
     "initialSetupMagHead": {
         "message": "Magnetômetro"
     },
-    "initialSetupInfoHead": {
-        "message": "Informações"
-    },
     "initialSetupBattery": {
         "message": "Voltagem da bateria:"
     },
@@ -3361,17 +3358,8 @@
         "message": "LEDs configurados em posições sem número não serão salvos.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Scanner Larson"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Piscar"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Sempre Piscar"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Piscar ao pousar"
     },
     "ledStripOverlayTitle": {
         "message": "Sobreposição"

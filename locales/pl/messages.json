@@ -769,9 +769,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometr"
     },
-    "initialSetupInfoHead": {
-        "message": "Info"
-    },
     "initialSetupBattery": {
         "message": "Napięcie baterii:"
     },
@@ -3398,17 +3395,12 @@
         "message": "Diody LED bez numeru porządkowego nie zostaną zapisane.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Skaner Larsona"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Miganie"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Migaj zawsze"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Miganie przy lądowaniu"
+    "ledStripRainbowOverlay": {
+        "message": "Tęczowy",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Nakładka"
@@ -6261,6 +6253,9 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Częstotliwość rejestrowania"
+    },
+    "onboardLoggingDebugFields": {
+        "message": "Dane zawarte"
     },
     "onboardLoggingDebugMode": {
         "message": "Typ rejestrowanego parametru lotu"

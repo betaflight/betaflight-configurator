@@ -776,7 +776,7 @@
         "message": "자력계"
     },
     "initialSetupInfoHead": {
-        "message": "정보"
+        "message": "시스템 정보"
     },
     "initialSetupBattery": {
         "message": "배터리 전압:"
@@ -798,6 +798,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "센서:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -924,6 +927,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "계기"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "펌웨어 정보"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "빌드 날짜:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "빌드 정보:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "빌드 환경설정"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "빌드 로그"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "빌드 옵션:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "로컬 빌드 - 정의값 없음"
     },
     "initialSetupButtonSave": {
         "message": "저장"
@@ -3407,17 +3434,16 @@
         "message": "배선 순서 번호가 없는 LED는 저장되지 않습니다.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "라슨 스캐너"
-    },
-    "ledStripBlinkTitle": {
-        "message": "깜빡이기"
+    "ledStripLarsonOverlay": {
+        "message": "라슨 스캐너",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "항상 깜빡이기"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "착륙시 깜빡이기"
+    "ledStripRainbowOverlay": {
+        "message": "무지개",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "오버레이"
@@ -6272,7 +6298,7 @@
         "message": "블랙박스 로그기록 속도"
     },
     "onboardLoggingDebugFields": {
-        "message": "블랙박스 디버그 필드"
+        "message": "데이터 포함"
     },
     "onboardLoggingDebugMode": {
         "message": "블랙박스 디버그 모드"

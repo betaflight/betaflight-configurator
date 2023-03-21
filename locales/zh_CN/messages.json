@@ -708,9 +708,6 @@
     "initialSetupMagHead": {
         "message": "磁力计"
     },
-    "initialSetupInfoHead": {
-        "message": "信息"
-    },
     "initialSetupBattery": {
         "message": "电池电压："
     },
@@ -3225,17 +3222,8 @@
         "message": "没有布线序号的 LED 不会被保存。",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "左右扫描"
-    },
-    "ledStripBlinkTitle": {
-        "message": "闪烁"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "持续闪烁"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "着陆时闪烁"
     },
     "ledStripOverlayTitle": {
         "message": "叠加功能"

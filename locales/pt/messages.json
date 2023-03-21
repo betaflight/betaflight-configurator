@@ -776,7 +776,7 @@
         "message": "Magnetómetro"
     },
     "initialSetupInfoHead": {
-        "message": "Info"
+        "message": "Info. do Sistema"
     },
     "initialSetupBattery": {
         "message": "Voltagem da bateria:"
@@ -798,6 +798,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Sensores:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -924,6 +927,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Info. de Firmware"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Data da Compilação:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Info. da Compilação:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Config. da Compilação"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Log da Compilação"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Opções de Compilação:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Compilação Local - sem Defines"
     },
     "initialSetupButtonSave": {
         "message": "Gravar"
@@ -3407,17 +3434,16 @@
         "message": "LEDs configurados em posições sem número não serão gravados.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Scanner Larson"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Piscar"
+    "ledStripLarsonOverlay": {
+        "message": "Scanner Larson",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Piscar sempre"
     },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Piscar ao aterrar"
+    "ledStripRainbowOverlay": {
+        "message": "Arco-íris",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Sobreposição"
@@ -6272,7 +6298,7 @@
         "message": "Frequência de log do Blackbox"
     },
     "onboardLoggingDebugFields": {
-        "message": "Campos de debug do Blackbox"
+        "message": "Dados incluídos"
     },
     "onboardLoggingDebugMode": {
         "message": "Modo de debug do Blackbox"

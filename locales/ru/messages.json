@@ -699,9 +699,6 @@
     "initialSetupMagHead": {
         "message": "Магнитометр"
     },
-    "initialSetupInfoHead": {
-        "message": "Показания"
-    },
     "initialSetupBattery": {
         "message": "Напряжение батареи:"
     },
@@ -2987,17 +2984,8 @@
         "message": "LEDs без обозначения номера цепи не будут сохранены.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Ларсон сканер"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Мигать"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Мигания всегда"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Мигать при посадке"
     },
     "ledStripOverlayTitle": {
         "message": "Оверлей"

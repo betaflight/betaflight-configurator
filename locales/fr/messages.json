@@ -762,9 +762,6 @@
     "initialSetupMagHead": {
         "message": "Magnetomètre"
     },
-    "initialSetupInfoHead": {
-        "message": "Info"
-    },
     "initialSetupBattery": {
         "message": "Tension de la batterie:"
     },
@@ -3385,17 +3382,8 @@
         "message": "Les LEDs sans numéro ne seront pas sauvegardées.",
         "description": "Message in the wiring modes in Led Strip"
     },
-    "ledStripVtxFunction": {
-        "message": "Scanner Larson"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Clignotement"
-    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "clignote en permanence"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Clignoter lors du décollage"
     },
     "ledStripOverlayTitle": {
         "message": "Priorité"
