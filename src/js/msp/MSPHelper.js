@@ -1170,9 +1170,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 let ledCount = (data.byteLength - 2) / 4;
 
                 // The 32 bit config of each LED contains these in LSB:
-                // +--------------------+--------------------+------------------+------------------+----------------------+-----------+-----------+
-                // | Parameters - 3 bit | Directions - 6 bit | Color ID - 4 bit | Overlays - 7 bit | Function ID - 4 bit  | X - 4 bit | Y - 4 bit |
-                // +--------------------+--------------------+------------------+------------------+----------------------+-----------+-----------+
+                // +----------------------------------------------------------------------------------------------------------+
+                // | Directions - 6 bit | Color ID - 4 bit | Overlays - 10 bit | Function ID - 4 bit  | X - 4 bit | Y - 4 bit |
+                // +----------------------------------------------------------------------------------------------------------+
                 // According to betaflight/src/main/msp/msp.c
                 // API 1.41 - add indicator for advanced profile support and the current profile selection
                 // 0 = basic ledstrip available
@@ -1196,14 +1196,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             }
                         }
 
-                        const overlayMask = (mask >> 12) & 0x7F;
+                        const overlayMask = (mask >> 12) & 0x3FF;
                         for (let overlayLetterIndex = 0; overlayLetterIndex < ledOverlayLetters.length; overlayLetterIndex++) {
                             if (bit_check(overlayMask, overlayLetterIndex)) {
                                 functions.push(ledOverlayLetters[overlayLetterIndex]);
                             }
                         }
 
-                        const directionMask = (mask >> 23) & 0x3F;
+                        const directionMask = (mask >> 26) & 0x3F;
                         const directions = [];
                         for (let directionLetterIndex = 0; directionLetterIndex < ledDirectionLetters.length; directionLetterIndex++) {
                             if (bit_check(directionMask, directionLetterIndex)) {
@@ -1214,9 +1214,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             y: (mask) & 0xF,
                             x: (mask >> 4) & 0xF,
                             functions: functions,
-                            color: (mask >> 19) & 0xF,
+                            color: (mask >> 22) & 0xF,
                             directions: directions,
-                            parameters: (mask >>> 29) & 0x7,
                         };
 
                         FC.LED_STRIP.push(led);
@@ -2552,16 +2551,14 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
                 }
             }
 
-            mask |= (led.color << 19);
+            mask |= (led.color << 22);
 
             for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
                 const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
                 if (bitIndex >= 0) {
-                    mask |= bit_set(mask, bitIndex + 23);
+                    mask |= bit_set(mask, bitIndex + 26);
                 }
             }
-
-            mask |= (0 << 29); // parameters
 
             buffer.push32(mask);
         }
