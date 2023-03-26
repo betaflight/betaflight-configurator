@@ -2903,6 +2903,9 @@
     "loggingLogSize": {
         "message": "Log Size:"
     },
+    "loggingLogName": {
+        "message": "Log Name:"
+    },
     "loggingButtonLogFile": {
         "message": "Select Log File"
     },
