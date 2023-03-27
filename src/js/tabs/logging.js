@@ -308,6 +308,11 @@ logging.initialize = function (callback) {
 
             // update log size in UI on fileWriter creation
             $('.size').text(bytesToSize(fileWriter.length));
+            // update log name in UI
+            chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
+               $('.name').text(path);
+            });
+
         }, function (e) {
             // File is not readable or does not exist!
             console.error(e);
