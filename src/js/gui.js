@@ -219,7 +219,7 @@ class GuiControl {
             }
         }, timeout);
 
-        this.timeout_array.push(data); // push to primary timeout array
+        self.timeout_array.push(data); // push to primary timeout array
 
         return data;
     }

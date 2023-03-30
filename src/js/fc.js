@@ -55,7 +55,7 @@ const INITIAL_ANALOG = {
     mAhdrawn:                   0,
     rssi:                       0,
     amperage:                   0,
-    last_received_timestamp:    Date.now(), // FIXME this code lies, it's never been received at this point
+    last_received_timestamp:    0,
 };
 
 const INITIAL_BATTERY_CONFIG = {
@@ -74,7 +74,7 @@ const FC = {
     ADJUSTMENT_RANGES: null,
     ADVANCED_TUNING: null,
     ADVANCED_TUNING_ACTIVE: null,
-    ANALOG: {...INITIAL_CONFIG},
+    ANALOG: {...INITIAL_ANALOG},
     ARMING_CONFIG: null,
     AUX_CONFIG: null,
     AUX_CONFIG_IDS: null,
@@ -170,7 +170,7 @@ const FC = {
         // Using `Object.assign` instead of reassigning to
         // trigger the updates on the Vue side
         Object.assign(this.CONFIG, INITIAL_CONFIG);
-        Object.assign(this.ANALOG, INITIAL_CONFIG);
+        Object.assign(this.ANALOG, INITIAL_ANALOG);
         Object.assign(this.BATTERY_CONFIG, INITIAL_BATTERY_CONFIG);
 
         this.BF_CONFIG = {
