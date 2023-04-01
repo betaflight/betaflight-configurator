@@ -81,7 +81,13 @@ If you prefer to have the application in English or any other language, you can 
 
 1. Install node.js (refer to [.nvmrc](./.nvmrc) for required version)
 2. Install yarn: `npm install yarn -g`
-3. (For Android platform only) Install Java JDK 8, Gradle and Android Studio (Android SDK at least level 19)
+3. (For Android platform only) Install Java JDK 8, Gradle and Android Studio (Android SDK at least level 19). On Windows you have to extract Gradle binaries to C:\Gradle and set up some environmental variables.
+
+| Variable Name | Value |
+|---|---|
+| ANDROID_HOME | %LOCALAPPDATA%\Android\sdk |
+| ANDROID_SDK_ROOT | %LOCALAPPDATA%\Android\sdk |
+| Path | %ANDROID_HOME%\tools<br>%ANDROID_HOME%\platform-tools<br>C:\Gradle\bin |
 4. Change to project folder and run `yarn install`.
 5. Run `yarn start`.
 
