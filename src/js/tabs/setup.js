@@ -348,8 +348,7 @@ setup.initialize = function (callback) {
                                          <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
                     const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
                                          <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></strong></span>`;
-                    const buildKey =    `<span user-select: text; draggable="true" font-size: 0.25em; title="${i18n.getMessage('initialSetupInfoBuildInfoKey')}">${FC.CONFIG.buildKey}</span>`;
-                    build_info_e.html(`${buildKey} &nbsp ${buildConfig}${buildLog}`);
+                    build_info_e.html(`${buildConfig} &nbsp &nbsp ${buildLog}`);
                 }
                 if(FC.CONFIG.buildOptions.length > 0) {
                     let buildOptions = "";
