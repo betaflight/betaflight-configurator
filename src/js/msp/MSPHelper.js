@@ -214,7 +214,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.armingDisableFlags = data.readU32();
 
                 // Read config state flags - bits to indicate the state of the configuration, reboot required, etc.
-                FC.CONFIG.ConfigStateFlag = data.readU8();
+                FC.CONFIG.configStateFlag = data.readU8();
 
                 // Read CPU temp, from API version 1.46
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {

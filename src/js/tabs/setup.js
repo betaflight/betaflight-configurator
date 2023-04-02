@@ -9,7 +9,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import Model from '../model';
 import MSPCodes from '../msp/MSPCodes';
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43 } from '../data_storage';
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
 
 const setup = {
@@ -190,6 +190,7 @@ setup.initialize = function (callback) {
             bat_mah_drawn_e = $('.bat-mah-drawn'),
             bat_mah_drawing_e = $('.bat-mah-drawing'),
             rssi_e = $('.rssi'),
+            cputemp_e = $('.cpu-temp'),
             arming_disable_flags_e = $('.arming-disable-flags'),
             gpsFix_e = $('.gpsFix'),
             gpsSats_e = $('.gpsSats'),
@@ -394,6 +395,9 @@ setup.initialize = function (callback) {
                 bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
                 bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
                 rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
+                }
             });
         }
 
