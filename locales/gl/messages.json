@@ -77,6 +77,9 @@
     "cancel": {
         "message": "Cancelar"
     },
+    "submit": {
+        "message": "Enviar"
+    },
     "autoConnectEnabled": {
         "message": "Conexión automática: Activada - O configurador intentase conectarse automaticamente cando un porto novo é detectado"
     },
@@ -85,6 +88,9 @@
     },
     "expertMode": {
         "message": "Activar Modo Experto"
+    },
+    "expertModeDescription": {
+        "message": "Activar opcións do Modo Experto"
     },
     "warningSettings": {
         "message": "Amosar alertas"
@@ -102,6 +108,10 @@
     "showAllSerialDevices": {
         "message": "Amosar tódolos dispositivos serie (para fabricantes ou desenvolvemento)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "useMdnsBrowser": {
+        "message": "Empregar descubrimento na rede de dispositivos mDNS (experimental)",
+        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showVirtualMode": {
         "message": "Activar o modo de conexión virtual",
@@ -448,8 +458,29 @@
         "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
+    "buildServerSuccess": {
+        "message": "Éxito: $1"
+    },
+    "buildServerFailure": {
+        "message": "<b>Fallo de compilación do servidor: $1 <code>$2</code></b>"
+    },
     "buildServerUsingCached": {
         "message": "Usando información construida na caché para $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Datos de apoio enviados *** <br>Id: $1<br><br><br># copie o ID para proporcionarllo ó equipo de betaflight."
+    },
+    "buildKey": {
+        "message": "Chave de compilación: <strong>$1</strong>"
+    },
+    "supportWarningDialogTitle": {
+        "message": "Confirme o envío de datos"
+    },
+    "supportWarningDialogText": {
+        "message": "Por favor, confirme o envío de datos ao equipo de Betaflight.<br><br>Este proceso executará algúns comandos e enviará a saída ao servidor de compilación.<br><br>A continuación, proporcionaráselle un identificador único para o envío de datos.<br><br>Asegúrese de proporcionar este identificador único ao equipo de Betaflight cando empregue Discord ou abra un problema en Github."
+    },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Describir o problema"
     },
     "releaseCheckLoaded": {
         "message": "Cargada información de versión para $1 dende GitHub."
@@ -615,6 +646,9 @@
     "defaultDocumentation": {
         "message": "A documentación de Betaflight está dispoñible nas notas da versión e na wiki.<br /><br />"
     },
+    "defaultDocumentation1": {
+        "message": "A wiki de Betaflight é un gran recurso de información, pódese atopar <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>."
+    },
     "defaultDocumentation2": {
         "message": "As notas de lanzamento para o firmware pódense ler na páxina de lanzamentos de GitHub, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>."
     },
@@ -633,11 +667,17 @@
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">Fio RC Groups</a>"
     },
+    "defaultSupport2": {
+        "message": "<a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki de Betaflight</a>"
+    },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Videos 4.3 Joshua Bardallas Betaflight</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Desenvolvedores de Betaflight en Discord</a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrar Acelerómetro"
@@ -669,8 +709,17 @@
     "initialSetupButtonRebootBootloader": {
         "message": "Activar o cargador de arranque / DFU"
     },
+    "initialSetupBackupRestoreHeader": {
+        "message": "Copia de seguridade e restauración experimental"
+    },
     "initialSetupRebootBootloaderText": {
         "message": "Reinicia en modo<strong>cargador de arranque / DFU </strong>."
+    },
+    "initialSetupBackupSuccess": {
+        "message": "Backup gardado <span class=\"message-positive\">exitosamente</span>"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "Configuración restaurada <span class=\"message-positive\">correctamente</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Reiniciar eixo Z, offset: 0 º"
@@ -720,6 +769,9 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
+    "initialSetupInfoHead": {
+        "message": "Información do sistema"
+    },
     "initialSetupBattery": {
         "message": "Voltaxe da batería:"
     },
@@ -740,6 +792,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Sensores:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -866,6 +921,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Información do firmware"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Data de compilación:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Información da compilación:"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Configuración da compilación"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Rexistro da compilación"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Opcións da compilación:"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Compilación local - sen definicións"
     },
     "initialSetupButtonSave": {
         "message": "Gardar"
@@ -1269,6 +1348,9 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Nota:</strong> Asegúrese de que a súa FC poida funcionar a estas velocidades. Comprobe a estabilidade da CPU e do ciclo. Cambiar isto pode requirir a reordenación de PID. SUXERENCIA: desactivar o acelerómetro e outros sensores para obter máis rendemento."
     },
+    "configurationGPS": {
+        "message": "Configuración do GPS"
+    },
     "configurationGPSProtocol": {
         "message": "Protocolo"
     },
@@ -1438,8 +1520,14 @@
     "pidProfileName": {
         "message": "Nome do perfil PID"
     },
+    "pidProfileNameHelp": {
+        "message": "Nome do perfil PID que pode describir as condicións coas que se axustou este perfil: batería máis lixeira/pesada, cámara de acción/sen cámara de acción, elevación máis alta, etc."
+    },
     "rateProfileName": {
         "message": "Nome do perfil Rate"
+    },
+    "rateProfileNameHelp": {
+        "message": "Valora o nome do perfil que pode describir para que tipo de voo serve este perfil: cine, carreira, estilo libre, etc."
     },
     "pidTuningShowAllPids": {
         "message": "Mostrar tódolos PID's"
@@ -1976,6 +2064,9 @@
     "receiverButtonBindMessage": {
         "message": "Solicitude de enlace enviada ao controlador de voo."
     },
+    "receiverButtonBindingPhrase": {
+        "message": "Frase vinculante"
+    },
     "receiverButtonSticks": {
         "message": "Sticks de control"
     },
@@ -2148,6 +2239,12 @@
     "adjustmentsFunction21": {
         "message": "Valor Yaw RC"
     },
+    "adjustmentsFunction22": {
+        "message": "Axuste Pitch & Roll F"
+    },
+    "adjustmentsFunction23": {
+        "message": "Transición de Feedforward"
+    },
     "adjustmentsFunction24": {
         "message": "Axuste da forza do horizonte"
     },
@@ -2312,6 +2409,9 @@
     },
     "gpsLon": {
         "message": "Lonxitude:"
+    },
+    "gpsHeading": {
+        "message": "Cabeceira:"
     },
     "gpsSpeed": {
         "message": "Velocidade:"
@@ -2581,6 +2681,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Esta función só funciona con DSHOT ESC.<br />Verifique que o ESC (controlador de velocidade eléctrico) admita o protocolo DSHOT e cámbieo na pestana $t(tabMotorTesting.message)."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "O número de motores é 0.<br />Verifique o mesturador actual na pestana $t(tabMotorTesting.message) ou configure un personalizado a través da CLI. Refírese a isto <a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualice o firmware.<br /> Asegúrese de que está a usar o firmware máis recente: Betaflight 4.3 ou máis recente."
     },
@@ -2673,6 +2776,9 @@
     },
     "cliLoadFromFileBtn": {
         "message": "Lectura dende arquivo"
+    },
+    "cliSupportRequestBtn": {
+        "message": "Enviar datos de soporte"
     },
     "cliConfirmSnippetDialogTitle": {
         "message": "Arquivo cargado <strong>{{fileName}}</strong>. Revise os comandos cargados"
@@ -2854,6 +2960,9 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Placa:"
     },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Obtén máis información sobre a controladora na wiki de Betaflight (url wiki atopado na configuración de destino unificado)"
+    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
@@ -2952,6 +3061,9 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Velocidade de Transmisión"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Mostrar versións candidatas"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Mostrar versións candidatas ademais de versións estables"
@@ -3103,6 +3215,9 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consulte a información da placa para preseleccionar firmware adecuado"
+    },
+    "unstableFirmwareAcknowledgement": {
+        "message": "Lin o anterior e <strong>asumo a total responsabilidade<strong> de instalar un firmware inestable"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
@@ -3298,8 +3413,16 @@
         "message": "Os LED sen número de orde de arame non se gardarán.",
         "description": "Message in the wiring modes in Led Strip"
     },
+    "ledStripLarsonOverlay": {
+        "message": "Escáner Larson",
+        "description": "Larson effect switch label on LED Strip tab"
+    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Parpadeo continuo"
+    },
+    "ledStripRainbowOverlay": {
+        "message": "Arco da vella",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Superposición"
@@ -3779,6 +3902,9 @@
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Aviso: </strong> O filtro de Notch Dinamico está desactivado. Para configuralo e usalo, active a función 'DYNAMIC_FILTER' na sección '$t(configurationFeatures.message)' da pestana '$t(tabConfiguration.message)'. Asegúrese tamén de que o bucle PID sexa polo menos 2 kHz."
     },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "O filtro de muesca dinámica está desactivado. Para usalo, asegúrese de que a frecuencia do bucle PID estea configurada como mínimo en 2Khz na pestana '$t(tabConfiguration.message)'."
+    },
     "pidTuningDynamicNotchRange": {
         "message": "Rango de filtro dinámico Notch"
     },
@@ -3990,6 +4116,9 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">PRECAUCIÓN</span>: se habilita esta función, deberá axustar o PID de guiñada en consecuencia. Máis información <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw integrado integra os valores de Yaw P, I e D, permitindo que estes se axusten do mesmo modo que pich e roll<br><br>Necesítase moi pouca I, porque o P integrado actua como I e a D integrada como P.<br><br>Nota: Yaw integrado require uso do control absoluto, xa que non é necesario I con Yaw integrado."
@@ -4472,6 +4601,10 @@
     "osdSetupPreviewSelectFontElement": {
         "message": "Fonte {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Zoom",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
     },
     "osdSetupVideoFormatTitle": {
         "message": "Formato de vídeo"
@@ -6129,6 +6262,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Tasa de rexistro da caixa negra"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Datos incluídos"
+    },
     "onboardLoggingDebugMode": {
         "message": "Modo de depuración Caixa negra"
     },
@@ -6546,8 +6682,14 @@
     "firmwareFlasherConfigurationFile": {
         "message": "Nome do arquivo de configuración:"
     },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Seleccione o protocolo de radio que desexa incluír nesta compilación. Teña en conta que este é un menú despregable, pero quizais só se seleccione un elemento."
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Seleccione as opcións xenéricas que desexa incluír nesta compilación. Teña en conta que este é un menú despregable e é posible que se seleccionen varios elementos. Elementos como correccións, p. ex. AKK VTX, están incluídos aquí."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Seleccione o protocolo de motor (ESC) que desexa incluír nesta compilación. Teña en conta que este é un menú despregable, pero quizais só se seleccione un elemento."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para os desenvolvedores, vostede pode engadir as definicións que precise, separadas por un \"espazo\", pero sen o prefixo \"USE_\", engadirase automaticamente para vostede."
@@ -6557,5 +6699,9 @@
     },
     "coreBuild": {
         "message": "Só núcleo"
+    },
+    "showDevToolsOnStartup": {
+        "message": "Abre automaticamente DevTools no modo de desenvolvemento",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }

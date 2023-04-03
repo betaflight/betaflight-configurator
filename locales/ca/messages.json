@@ -2818,6 +2818,9 @@
     "loggingLogSize": {
         "message": "Mida del registre:"
     },
+    "loggingLogName": {
+        "message": "Nom de registre:"
+    },
     "loggingButtonLogFile": {
         "message": "Escull l'arxiu de log"
     },

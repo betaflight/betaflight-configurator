@@ -2810,6 +2810,9 @@
     "loggingLogSize": {
         "message": "로그 크기:"
     },
+    "loggingLogName": {
+        "message": "로그 이름"
+    },
     "loggingButtonLogFile": {
         "message": "로그 파일 선택"
     },

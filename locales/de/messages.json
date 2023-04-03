@@ -778,6 +778,9 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
+    "initialSetupInfoHead": {
+        "message": "Systeminfo"
+    },
     "initialSetupBattery": {
         "message": "Akku Spannung"
     },
@@ -798,6 +801,9 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Sensoren:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -924,6 +930,30 @@
     },
     "initialSetupInstrumentsHead": {
         "message": "Instrumente"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Firmware-Info"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Erstellungsdatum (build date):"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Erstellungsinfo (build info):"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Erstellungskonfiguration (build config)"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Erstellungslog (build log)"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Erstellungsoptionen (build options):"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Lokaler Build - keine Definitionen"
     },
     "initialSetupButtonSave": {
         "message": "Speichern"
@@ -2783,6 +2813,9 @@
     "loggingLogSize": {
         "message": "Log Größe:"
     },
+    "loggingLogName": {
+        "message": "Log-Name:"
+    },
     "loggingButtonLogFile": {
         "message": "Wähle Log Datei"
     },
@@ -3407,8 +3440,16 @@
         "message": "LEDs ohne Verkabelungs-Index werden nicht gespeichert.",
         "description": "Message in the wiring modes in Led Strip"
     },
+    "ledStripLarsonOverlay": {
+        "message": "Larson Scanner",
+        "description": "Larson effect switch label on LED Strip tab"
+    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Immer Blinken"
+    },
+    "ledStripRainbowOverlay": {
+        "message": "Regenbogen",
+        "description": "Rainbow effect switch label on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"
@@ -6261,6 +6302,9 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox Log-Geschwindigkeit"
+    },
+    "onboardLoggingDebugFields": {
+        "message": "Enthaltene Daten"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox Debug Modus"

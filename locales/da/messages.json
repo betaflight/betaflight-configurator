@@ -2810,6 +2810,9 @@
     "loggingLogSize": {
         "message": "Logstørrelse:"
     },
+    "loggingLogName": {
+        "message": "Log navn:"
+    },
     "loggingButtonLogFile": {
         "message": "Vælg logfil"
     },
@@ -4672,7 +4675,7 @@
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
-        "message": "Tidstagning"
+        "message": "Tidtagning"
     },
     "osdSetupAlarmsTitle": {
         "message": "Alarmer"
@@ -5141,7 +5144,7 @@
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
-        "message": "Tidstagning: aktiveret tid",
+        "message": "Tidtagning: aktiveret tid",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementArmedTime": {
@@ -5204,7 +5207,7 @@
         "message": "RPM rapporteret af ESC telemetri"
     },
     "osdTextElementRemaningTimeEstimate": {
-        "message": "Tidstagning: estimeret resterende flyvetid",
+        "message": "Tidtagning: estimeret resterende flyvetid",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRemaningTimeEstimate": {
@@ -5225,18 +5228,18 @@
         "message": "Aktuelt aktivt justeringsområde indstilling og værdi"
     },
     "osdTextElementTimer1": {
-        "message": "Tidstagning 1",
+        "message": "Tidtagning 1",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer1": {
-        "message": "Viser værdien af tidstagning 1"
+        "message": "Viser værdien af tidtagning 1"
     },
     "osdTextElementTimer2": {
-        "message": "Tidstagning 2",
+        "message": "Tidtagning 2",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer2": {
-        "message": "Viser værdien af tidstagning 2"
+        "message": "Viser værdien af tidtagning 2"
     },
     "osdTextElementCoreTemperature": {
         "message": "CPU temperatur",
@@ -5512,18 +5515,18 @@
         "message": "Lognummer for denne flyrejse Blackbox-log"
     },
     "osdTextStatTimer1": {
-        "message": "Tidstagning 1",
+        "message": "Tidtagning 1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer1": {
-        "message": "Værdi af tidstagning 1 på afkoblingstidspunkt"
+        "message": "Værdi af tidtagning 1 på afkoblingstidspunkt"
     },
     "osdTextStatTimer2": {
-        "message": "Tidstagning 2",
+        "message": "Tidtagning 2",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer2": {
-        "message": "Værdi af tidstagning 2 på afkoblingstidspunkt"
+        "message": "Værdi af tidtagning 2 på afkoblingstidspunkt"
     },
     "osdTextStatRtcDateTime": {
         "message": "RTC dato og tidspunkt",
@@ -5636,7 +5639,7 @@
         "message": "Kilde:"
     },
     "osdTimerSourceTooltip": {
-        "message": "Vælg den faktor, som styrer tidstagningens varighed/hændelse"
+        "message": "Vælg den faktor, som styrer tidtagningens varighed/hændelse"
     },
     "osdTimerSourceOptionOnTime": {
         "message": "Start ved støm til fartøj",
@@ -5658,7 +5661,7 @@
         "message": "Præcision:"
     },
     "osdTimerPrecisionTooltip": {
-        "message": "Vælg præcision til præsentation af tidstagning"
+        "message": "Vælg præcision til præsentation af tidtagning"
     },
     "osdTimerPrecisionOptionSecond": {
         "message": "Sekunder",
@@ -5832,7 +5835,7 @@
         "message": "Sætter enhed, som bruges til numeriske udlæsninger."
     },
     "osdSectionHelpTimers": {
-        "message": "Konfigurer visninger styret med tidstagning"
+        "message": "Konfigurer visninger styret med tidtagning"
     },
     "osdSectionHelpAlarms": {
         "message": "Indstil grænser for alarmtilstande til OSD elementer."
@@ -6298,7 +6301,7 @@
         "message": "Blackbox lognings hastighed"
     },
     "onboardLoggingDebugFields": {
-        "message": "Data medtages"
+        "message": "Data som logges"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox logger med debug for ..."

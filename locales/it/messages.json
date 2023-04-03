@@ -2810,6 +2810,9 @@
     "loggingLogSize": {
         "message": "Dimensione registro:"
     },
+    "loggingLogName": {
+        "message": "Nome Log:"
+    },
     "loggingButtonLogFile": {
         "message": "Seleziona file di registro"
     },
@@ -6296,6 +6299,9 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Frequenza di registrazione della BlackBox"
+    },
+    "onboardLoggingDebugFields": {
+        "message": "Dati inclusi"
     },
     "onboardLoggingDebugMode": {
         "message": "Modalità debug Blackbox"

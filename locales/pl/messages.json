@@ -2771,6 +2771,9 @@
     "loggingLogSize": {
         "message": "Rozmiar dziennika:"
     },
+    "loggingLogName": {
+        "message": "Nazwa zdarzenia:"
+    },
     "loggingButtonLogFile": {
         "message": "Wybierz zapis dziennika"
     },
