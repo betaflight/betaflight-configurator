@@ -218,7 +218,7 @@ setup.initialize = function (callback) {
                 'BAD_RX_RECOVERY',
                 'BOXFAILSAFE',
                 'RUNAWAY_TAKEOFF',
-                'CRASH_DETECTED',
+                // 'CRASH_DETECTED', only from API 1.42
                 'THROTTLE',
                 'ANGLE',
                 'BOOT_GRACE_TIME',
@@ -233,12 +233,25 @@ setup.initialize = function (callback) {
                 'GPS',
                 'RESC',
                 'RPMFILTER',
-                'REBOOT_REQUIRED',
-                'DSHOT_BITBANG',
-                'ACC_CALIBRATION',
-                'MOTOR_PROTOCOL',
-                'ARM_SWITCH',           // Needs to be the last element, since it's always activated if one of the others is active when arming
+                // 'REBOOT_REQUIRED', only from API 1.42
+                // 'DSHOT_BITBANG',   only from API 1.42
+                // 'ACC_CALIBRATION', only from API 1.43
+                // 'MOTOR_PROTOCOL',  only from API 1.43
+                // 'ARM_SWITCH',           // Needs to be the last element, since it's always activated if one of the others is active when arming
             ];
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH_DETECTED');
+                disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQUIRED',
+                                                                'DSHOT_BITBANG']);
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                disarmFlagElements = disarmFlagElements.concat(['ACC_CALIBRATION', 'MOTOR_PROTOCOL']);
+            }
+
+            // Always the latest element
+            disarmFlagElements = disarmFlagElements.concat(['ARM_SWITCH']);
 
             // Arming allowed flag
             arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"></span>');
