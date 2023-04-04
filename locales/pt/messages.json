@@ -2810,6 +2810,9 @@
     "loggingLogSize": {
         "message": "Tamanho do Log:"
     },
+    "loggingLogName": {
+        "message": "Nome do Log:"
+    },
     "loggingButtonLogFile": {
         "message": "Selecionar ficheiro de Log"
     },
