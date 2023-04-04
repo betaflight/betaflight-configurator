@@ -777,13 +777,6 @@ led_strip.initialize = function (callback, scrollPosition) {
         const activeFunction = $('select.functionSelect').val();
         $('select.functionSelect').addClass(activeFunction);
 
-        // >= 20
-        // Show GPS (Func)
-        // Hide RSSI (O/L), Blink (Func)
-        // Show Battery, RSSI (Func), Larson (O/L), Blink (O/L), Landing (O/L)
-        $(".extra_functions20").show();
-        $(".mode_colors").show();
-
         // set color modifiers (check-boxes) visibility
         $('.overlays').toggle(areOverlaysActive(activeFunction));
 
@@ -795,12 +788,12 @@ led_strip.initialize = function (callback, scrollPosition) {
 
         $('.vtxOverlay').toggle(isVtxActive(activeFunction));
 
-        $('.mode_colors').hide();
-
         // set mode colors visibility
-
         if (activeFunction === "function-f") {
             $('.mode_colors').show();
+        }
+        else {
+            $('.mode_colors').hide();
         }
 
         // set special colors visibility

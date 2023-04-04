@@ -229,11 +229,21 @@
 			color: var(--defaultText);
 		}
 	}
+	.header {
+		color: #c4c4c4;
+		font-size: 13px;
+		font-weight: 600;
+	}
 	.overlays {
 		display: inline-block;
+		margin-top: 5px;
 	}
 	.modifiers {
 		display: inline-block;
+		margin-top: 5px;
+		.rainbowOverlay {
+			margin-top: 1px;
+		}
 		.auxSelect {
 			border: 1px solid var(--subtleAccent);
 			border-radius: 3px;
@@ -499,9 +509,6 @@
 		z-index: 100;
 		border: 1px dotted white;
 	}
-    .modifiers .switchery, .overlays .switchery {
-        margin-top: 2px !important;
-    }
 }
 .gridWire {
 	.wire {
