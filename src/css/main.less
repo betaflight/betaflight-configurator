@@ -628,7 +628,7 @@ input[type="number"] {
 	transition: none;
 	background-image: url(../images/icons/cf_icon_link_grey.svg);
 }
-.armedicon.active {
+.armedicon.active {user-select
 	background-image: url(../images/icons/cf_icon_armed_active.svg);
 }
 .failsafeicon.active {
@@ -1498,7 +1498,6 @@ dialog {
 	color: var(--pushedButton-fontColor);
 	border-radius: 3px;
 }
-
 .danger-button {
 	-webkit-user-drag: none;
 	margin-top: 8px;
@@ -1526,7 +1525,6 @@ dialog {
 	color: #fff;
 	border-radius: 3px;
 }
-
 .small {
 	width: auto;
 	position: relative;
@@ -1731,11 +1729,53 @@ dialog {
 	color: #fff;
 	font-size: 10px;
 }
-.buildKeyInfoClass {
-	background-color: #ffcc3f;
-	padding: 2px 5px;
-	border-radius: 3px;
-	color: #272727;
+.buildInfoBtn {
+	position: relative;
+	margin-bottom: 0px;
+	margin-top: 3px;
+	margin: 4px;
+	float: right;
+	a {
+		padding: 2px 5px 2px 5px;
+		text-align: center;
+		background-color: var(--accent);
+		border-radius: 4px;
+		border: 1px solid #dba718;
+		color: #000;
+		font-weight: 600;
+		font-size: 10px;
+		line-height: 11px;
+		display: block;
+		transition: all ease 0.2s;
+		text-decoration: none;
+		cursor: pointer;
+		&:hover {
+			background-color: var(--hoverButton-background);
+			color: #000;
+			text-shadow: 0 1px rgba(255, 255, 255, 0.25);
+			transition: all ease 0.2s;
+			text-decoration: none;
+		}
+		&:active {
+			background-color: var(--hoverButton-background);
+			transition: all ease 0.0s;
+			box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
+		}
+	}
+	a.disabled {
+		background-color: #f1f1f1;
+		border: 1px solid var(--subtleAccent);
+		color: #ccc;
+	}
+}
+.buildInfoClassOptions {
+	margin-bottom: 0px;
+	margin-top: 3px;
+	float: right;
+	background-color: grey;
+	padding: 2px 5px 2px 5px;
+	border-radius: 4px;
+	color: #fff;
 	font-size: 10px;
 }
 .cf_tooltiptext {

@@ -338,28 +338,34 @@ setup.initialize = function (callback) {
         };
 
         const showFirmwareInfo = function() {
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
-                // Firmware info
-                msp_api_e.text([FC.CONFIG.apiVersion]);
-                build_date_e.text([FC.CONFIG.buildInfo]);
-                if(FC.CONFIG.buildInfo.length > 0) {
-                    const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
-                    const buildConfig = `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${FC.CONFIG.buildKey}">
-                                         <a href="${buildRoot}/json" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></span>`;
-                    const buildLog =    `<span class="buildKeyInfoClass" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${FC.CONFIG.buildKey}">
-                                         <a href="${buildRoot}/log" target="_blank">${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></span>`;
-                    build_info_e.html(`${buildConfig} &nbsp ${buildLog}`);
-                }
+            // Firmware info
+            msp_api_e.text([FC.CONFIG.apiVersion]);
+            build_date_e.text([FC.CONFIG.buildInfo]);
 
-                if(FC.CONFIG.buildOptions.length > 0) {
-                    build_opt_e.text = "";
-                    for (const buildOption of FC.CONFIG.buildOptions) {
-                        build_opt_e.append(buildOption, ' ');
-                    }
-                } else {
-                    build_opt_e.text(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
+            if (FC.CONFIG.buildKey.length > 1) {
+                const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+                const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
+                                     <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
+                const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
+                                     <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></strong></span>`;
+                build_info_e.html(`${buildConfig} &nbsp &nbsp ${buildLog}`);
+                $('.build-info a').removeClass('disabled');
+            } else {
+                $('.build-info a').addClass('disabled');
+            }
+
+            if (FC.CONFIG.buildOptions.length > 0) {
+                let buildOptions = "";
+                build_opt_e.text = "";
+                for (const buildOption of FC.CONFIG.buildOptions) {
+                    buildOptions = `${buildOptions} &nbsp ${buildOption}`;
                 }
-            });
+                build_opt_e.html(`<span class="buildInfoClassOptions" 
+                                  title="${i18n.getMessage('initialSetupInfoBuildOptions')}${buildOptions}">
+                                  <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></span>`);
+            } else {
+                build_opt_e.html(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
+            }
         };
 
         prepareDisarmFlags();

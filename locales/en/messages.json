@@ -867,6 +867,10 @@
     "initialSetupInfoHead": {
         "message": "System info"
     },
+    "initialSetupInfoHeadHelp": {
+        "message": "Shows FC flags for disarming, Battery information, RSSI level and Sensors hardware",
+        "description": "Message that pops up to describe the System info section"
+    },
     "initialSetupBattery": {
         "message": "Battery voltage:"
     },
@@ -1014,8 +1018,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Shows GPS info, if proper activated in Ports tab, Configuration Tab and GPS tab",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Shows Heading, Pitch and Roll in instruments",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -1023,23 +1035,33 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Shows information regarding the build of firmware. The Build Config and Bulid Log links to the cloud information found by the Build key",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Build date:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Build info:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Build key"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "Build config"
+        "message": "Config"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "Build log"
+        "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Build Options:"
     },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Defines used"
+    },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Local Build - no Defines"
+        "message": "Local Build - no Defines used"
     },
     "initialSetupButtonSave": {
         "message": "Save"
