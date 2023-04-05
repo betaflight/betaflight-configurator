@@ -281,11 +281,6 @@ adjustments.initialize = function (callback) {
         // enable data pulling
         GUI.interval_add('aux_data_pull', get_rc_data, 50);
 
-        // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function () {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
-
         GUI.content_ready(callback);
     }
 };

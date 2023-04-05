@@ -19,7 +19,6 @@ gps.initialize = async function (callback) {
 
     await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
     await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
-    await MSP.promise(MSPCodes.MSP_STATUS);
 
     const hasMag = have_sensor(FC.CONFIG.activeSensors, 'mag');
 
@@ -307,12 +306,6 @@ gps.initialize = async function (callback) {
         GUI.interval_add('gps_pull', function gps_update() {
             get_raw_gps_data();
         }, 75, true);
-
-        // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
-
 
         //check for internet connection on load
         if (navigator.onLine) {

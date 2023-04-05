@@ -604,12 +604,10 @@ function onConnect() {
 
         MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
         MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
-
-        getStatus();
-
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
+            console.log('Board type is 0 or 2, requesting MSP2_COMMON_MOTOR_MIXER');
             startLiveDataRefreshTimer();
         }
     }
@@ -668,18 +666,13 @@ export function read_serial(info) {
     }
 }
 
-async function getStatus() {
-    return MSP.promise(MSPCodes.MSP_STATUS_EX);
-}
-
 async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
     if (!GUI.cliActive) {
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-        await getStatus();
-
         await MSP.promise(MSPCodes.MSP_ANALOG);
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
         const active = (performance.now() - FC.ANALOG.last_received_timestamp) < 300;
 
@@ -731,7 +724,7 @@ async function update_live_status() {
 
 function startLiveDataRefreshTimer() {
     // live data refresh
-    setInterval(update_live_status, 500);
+    setInterval(update_live_status, 250);
 }
 
 export function reinitializeConnection(callback) {
@@ -756,8 +749,8 @@ export function reinitializeConnection(callback) {
         if (connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) {
             console.log(`Serial connection available after ${attempts / 10} seconds`);
             clearInterval(reconnect);
-            getStatus();
             gui_log(i18n.getMessage('deviceReady'));
+
             if (callback === typeof('function')) {
                 callback();
             }
