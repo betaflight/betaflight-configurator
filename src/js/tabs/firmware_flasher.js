@@ -494,7 +494,7 @@ firmware_flasher.initialize = function (callback) {
             const options = {};
 
             let eraseAll = false;
-            if ($('input.erase_chip').is(':checked') || expertMode_e.not(':checked')) {
+            if ($('input.erase_chip').is(':checked') || expertMode_e.is(':not(:checked)')) {
                 options.erase_chip = true;
 
                 eraseAll = true;
