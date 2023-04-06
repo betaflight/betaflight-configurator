@@ -822,6 +822,18 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reset Z axis, offset: $1 deg"
     },
+    "initialSetupHeading": {
+        "message": "Heading:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:",
+        "description": "Pitch shown on Setup tab"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:",
+        "description": "Roll shown on Setup tab"
+    },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
     },
