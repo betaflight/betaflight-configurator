@@ -28,6 +28,7 @@ import BuildApi from "./BuildApi";
 let mspHelper;
 let connectionTimestamp;
 let clicks = false;
+let liveDataRefreshTimerId = false;
 
 export function initializeSerialBackend() {
     GUI.updateManualPortVisibility = function() {
@@ -645,6 +646,8 @@ function onClosed(result) {
     const battery = $('#quad-status_wrapper');
     battery.hide();
 
+    clearLiveDataRefreshTimer();
+
     MSP.clearListeners();
 
     CONFIGURATOR.connectionValid = false;
@@ -669,7 +672,8 @@ export function read_serial(info) {
 async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
-    if (!GUI.cliActive) {
+    if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
+        console.log('Updating live status', liveDataRefreshTimerId);
         await MSP.promise(MSPCodes.MSP_ANALOG);
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
         await MSP.promise(MSPCodes.MSP_STATUS_EX);
@@ -722,9 +726,17 @@ async function update_live_status() {
     }
 }
 
+function clearLiveDataRefreshTimer() {
+    if (liveDataRefreshTimerId) {
+        clearInterval(liveDataRefreshTimerId);
+        liveDataRefreshTimerId = false;
+    }
+}
+
 function startLiveDataRefreshTimer() {
     // live data refresh
-    setInterval(update_live_status, 250);
+    clearLiveDataRefreshTimer();
+    liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
 
 export function reinitializeConnection(callback) {
