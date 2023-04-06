@@ -901,6 +901,9 @@
     "initialSetupBatteryAValue": {
         "message": "$1 A"
     },
+    "initialSetupCpuTemp": {
+        "message": "CPU Temperature:"
+    },
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
