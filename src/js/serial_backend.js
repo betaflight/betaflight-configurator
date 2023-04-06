@@ -608,7 +608,6 @@ function onConnect() {
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
-            console.log('Board type is 0 or 2, requesting MSP2_COMMON_MOTOR_MIXER');
             startLiveDataRefreshTimer();
         }
     }
@@ -673,7 +672,6 @@ async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
-        console.log('Updating live status', liveDataRefreshTimerId);
         await MSP.promise(MSPCodes.MSP_ANALOG);
         await MSP.promise(MSPCodes.MSP_BOXNAMES);
         await MSP.promise(MSPCodes.MSP_STATUS_EX);
