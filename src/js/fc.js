@@ -538,6 +538,7 @@ const FC = {
             acc_hardware:               0,
             baro_hardware:              0,
             mag_hardware:               0,
+            sonar_hardware:             0,
         };
 
         this.RX_CONFIG = {

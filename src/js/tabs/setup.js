@@ -323,6 +323,13 @@ setup.initialize = function (callback) {
                 'MPU925X_AK8963',
             ];
 
+            let sonarElements = [
+                'NONE',
+                'HCSR04',
+                'TFMINI',
+                'TF02',
+            ];
+
             MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
                 // Sensor info
                 sensor_e.text('');
@@ -333,7 +340,10 @@ setup.initialize = function (callback) {
                     sensor_e.append(i18n.getMessage('sensorStatusBaroShort'), ': ', baroElements[[FC.SENSOR_CONFIG.baro_hardware]], ', ');
                 }
                 if(have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
-                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]]);
+                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]], ', ');
+                }
+                if(have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG.sonar_hardware > 1) {
+                    sensor_e.append(i18n.getMessage('sensorStatusSonarShort'), ': ', sonarElements[[FC.SENSOR_CONFIG.sonar_hardware]]);
                 }
             });
         };
