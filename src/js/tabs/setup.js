@@ -342,7 +342,7 @@ setup.initialize = function (callback) {
                 if(have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
                     sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]], ', ');
                 }
-                if(have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG.sonar_hardware > 1) {
+                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG.sonar_hardware > 1) {
                     sensor_e.append(i18n.getMessage('sensorStatusSonarShort'), ': ', sonarElements[[FC.SENSOR_CONFIG.sonar_hardware]]);
                 }
             });
