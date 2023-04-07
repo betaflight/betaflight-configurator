@@ -310,10 +310,6 @@ firmware_flasher.initialize = function (callback) {
                                     select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
                                 });
                             });
-
-                            $('div.commitSelection').show();
-                        } else {
-                            $('div.commitSelection').hide();
                         }
                     }
 
@@ -901,9 +897,7 @@ firmware_flasher.initialize = function (callback) {
                     });
 
                     if ($('input[name="expertModeCheckbox"]').is(':checked')) {
-                        if (targetDetail.releaseType === "Unstable") {
-                            request.commit = $('select[name="commits"] option:selected').val();
-                        }
+                        request.commit = $('select[name="commits"] option:selected').val();
 
                         $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
                             request.options.push(v);
