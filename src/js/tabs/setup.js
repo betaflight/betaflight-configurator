@@ -332,17 +332,30 @@ setup.initialize = function (callback) {
 
             MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
                 // Sensor info
+                let appendComma = false;
                 sensor_e.text('');
                 if (have_sensor(FC.CONFIG.activeSensors, "acc") && FC.SENSOR_CONFIG.acc_hardware > 1) {
-                    sensor_e.append(i18n.getMessage('sensorStatusAccelShort'), ': ', accElements[[FC.SENSOR_CONFIG.acc_hardware]], ', ');
+                    sensor_e.append(i18n.getMessage('sensorStatusAccelShort'), ': ', accElements[[FC.SENSOR_CONFIG.acc_hardware]]);
+                    appendComma = true;
                 }
                 if (have_sensor(FC.CONFIG.activeSensors, "baro") && FC.SENSOR_CONFIG.baro_hardware > 1) {
-                    sensor_e.append(i18n.getMessage('sensorStatusBaroShort'), ': ', baroElements[[FC.SENSOR_CONFIG.baro_hardware]], ', ');
+                    if (appendComma) {
+                        sensor_e.append(', ');    
+                    }
+                    sensor_e.append(i18n.getMessage('sensorStatusBaroShort'), ': ', baroElements[[FC.SENSOR_CONFIG.baro_hardware]]);
+                    appendComma = true;
                 }
                 if (have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
-                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]], ', ');
+                    if (appendComma) {
+                        sensor_e.append(', ');    
+                    }
+                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]]);
+                    appendComma = true;
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG.sonar_hardware > 1) {
+                    if (appendComma) {
+                        sensor_e.append(', ');    
+                    }
                     sensor_e.append(i18n.getMessage('sensorStatusSonarShort'), ': ', sonarElements[[FC.SENSOR_CONFIG.sonar_hardware]]);
                 }
 });
