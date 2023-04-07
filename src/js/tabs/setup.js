@@ -209,6 +209,7 @@ setup.initialize = function (callback) {
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
+        // align with betaflight runtime_config.h armingDisableFlags_e
         const prepareDisarmFlags = function() {
 
             let disarmFlagElements = [
@@ -217,6 +218,8 @@ setup.initialize = function (callback) {
                 'RX_FAILSAFE',
                 'BAD_RX_RECOVERY',
                 'BOXFAILSAFE',
+                'RUNAWAY_TAKEOFF',
+                // 'CRASH_DETECTED', only from API 1.42
                 'THROTTLE',
                 'ANGLE',
                 'BOOT_GRACE_TIME',
@@ -225,27 +228,27 @@ setup.initialize = function (callback) {
                 'CALIBRATING',
                 'CLI',
                 'CMS_MENU',
-                'OSD_MENU',
                 'BST',
                 'MSP',
+                'PARALYZE',
+                'GPS',
+                'RESC',
+                'RPMFILTER',
+                // 'REBOOT_REQUIRED', only from API 1.42
+                // 'DSHOT_BITBANG',   only from API 1.42
+                // 'ACC_CALIBRATION', only from API 1.43
+                // 'MOTOR_PROTOCOL',  only from API 1.43
+                // 'ARM_SWITCH',           // Needs to be the last element, since it's always activated if one of the others is active when arming
             ];
 
-            disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
-
-            disarmFlagElements = disarmFlagElements.concat(['PARALYZE', 'GPS']);
-
-            disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
-            disarmFlagElements = disarmFlagElements.concat(['RESC']);
-            disarmFlagElements = disarmFlagElements.concat(['RPMFILTER']);
-
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
-                disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD',
-                                                                'DSHOT_BBANG']);
+                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH_DETECTED');
+                disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQUIRED',
+                                                                'DSHOT_BITBANG']);
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                disarmFlagElements = disarmFlagElements.concat(['NO_ACC_CAL', 'MOTOR_PROTO']);
+                disarmFlagElements = disarmFlagElements.concat(['ACC_CALIBRATION', 'MOTOR_PROTOCOL']);
             }
 
             // Always the latest element
