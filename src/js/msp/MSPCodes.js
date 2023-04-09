@@ -35,7 +35,7 @@ const MSPCodes = {
     MSP_SET_CF_SERIAL_CONFIG:       55,
     MSP_VOLTAGE_METER_CONFIG:       56,
     MSP_SET_VOLTAGE_METER_CONFIG:   57,
-    MSP_SONAR:                      58,
+    MSP_SONAR_ALTITUDE:             58, // renamed in MSP 1.46 from MSP_SONAR to same as in firmware
     MSP_PID_CONTROLLER:             59,
     MSP_SET_PID_CONTROLLER:         60,
     MSP_ARMING_CONFIG:              61,
