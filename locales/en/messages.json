@@ -1142,13 +1142,13 @@
         "message": "Sonar"
     },
     "featureSONARTip": {
-        "message": "Enable Sonar Ragefinder to measure distance to ground in cm"
+        "message": "Enable Sonar rangefinder to measure distance to ground in cm"
     },
     "featureTELEMETRY": {
         "message": "Telemetry output"
     },
     "featureTELEMETRYTip": {
-        "message": "Enable Telemetry output to send to transmitter"
+        "message": "Enable telemetry output to send to transmitter"
     },
     "feature3D": {
         "message": "3D mode (for use with reversible ESCs)"
