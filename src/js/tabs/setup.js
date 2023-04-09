@@ -401,36 +401,31 @@ setup.initialize = function (callback) {
 
         function get_slow_data() {
 
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, function() {
+            // Status info is acquired in the background using update_live_status() in serial_backend.js
 
-                $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags == 0);
+            $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags === 0);
 
-                for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
-                    $(`#initialSetupArmingDisableFlags${i}`).css('display',(FC.CONFIG.armingDisableFlags & (1 << i)) == 0 ? 'none':'inline-block');
-                }
-
-            });
-
-            // GPS info
-            if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
-                MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, function () {
-                    gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
-                    gpsSats_e.text(FC.GPS_DATA.numSat);
-                    gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} deg`);
-                    gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);
-                });
+            for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
+                $(`#initialSetupArmingDisableFlags${i}`).css('display',(FC.CONFIG.armingDisableFlags & (1 << i)) === 0 ? 'none':'inline-block');
             }
 
-            // System info
-            MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
-                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
-                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
-                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
-                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                    cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
-                }
-            });
+            // System info is acquired in the background using update_live_status() in serial_backend.js
+
+            bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
+            bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
+            bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
+            rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
+                cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
+            }
+
+            // GPS info is acquired in the background using update_live_status() in serial_backend.js
+
+            gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            gpsSats_e.text(FC.GPS_DATA.numSat);
+            gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} deg`);
+            gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);
         }
 
         function get_fast_data() {

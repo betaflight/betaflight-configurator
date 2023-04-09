@@ -319,7 +319,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.ANALOG.rssi = data.readU16(); // 0-1023
                 FC.ANALOG.amperage = data.read16() / 100; // A
                 FC.ANALOG.voltage = data.readU16() / 100;
-                FC.ANALOG.last_received_timestamp = Date.now();
+                FC.ANALOG.last_received_timestamp = performance.now();
                 break;
             case MSPCodes.MSP_VOLTAGE_METERS:
                 FC.VOLTAGE_METERS = [];

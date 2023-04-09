@@ -28,6 +28,7 @@ import BuildApi from "./BuildApi";
 let mspHelper;
 let connectionTimestamp;
 let clicks = false;
+let liveDataRefreshTimerId = false;
 
 export function initializeSerialBackend() {
     GUI.updateManualPortVisibility = function() {
@@ -119,7 +120,7 @@ export function initializeSerialBackend() {
                     mspHelper.setArmingEnabled(true, false, onFinishCallback);
                 }
             }
-       }
+        }
     });
 
     $('div.open_firmware_flasher a.flash').click(function () {
@@ -604,9 +605,6 @@ function onConnect() {
 
         MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
         MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
-
-        getStatus();
-
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
@@ -647,6 +645,8 @@ function onClosed(result) {
     const battery = $('#quad-status_wrapper');
     battery.hide();
 
+    clearLiveDataRefreshTimer();
+
     MSP.clearListeners();
 
     CONFIGURATOR.connectionValid = false;
@@ -668,27 +668,15 @@ export function read_serial(info) {
     }
 }
 
-function startLiveDataRefreshTimer() {
-    // live data refresh
-    GUI.timeout_add('data_refresh', update_live_status, 100);
-}
-
-async function getStatus() {
-    return MSP.promise(MSPCodes.MSP_STATUS_EX);
-}
-
 async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-        await getStatus();
-        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
-            await MSP.promise(MSPCodes.MSP_RAW_GPS);
-        }
         await MSP.promise(MSPCodes.MSP_ANALOG);
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
-        const active = ((Date.now() - FC.ANALOG.last_received_timestamp) < 300);
+        const active = (performance.now() - FC.ANALOG.last_received_timestamp) < 300;
 
         for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
             if (FC.AUX_CONFIG[i] === 'ARM') {
@@ -699,31 +687,33 @@ async function update_live_status() {
             }
         }
 
-        if (FC.ANALOG != undefined) {
-            let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
+        let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
 
-            if (FC.ANALOG.voltage == 0) {
-                    nbCells = 1;
+        if (FC.ANALOG.voltage === 0) {
+            nbCells = 1;
+        }
+
+        const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
+        const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
+        const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
+
+        const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
+
+        if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
+            $(".battery-status").addClass('state-empty').removeClass('state-ok').removeClass('state-warning');
+            $(".battery-status").css({ width: "100%" });
+        } else {
+            $(".battery-status").css({ width: `${((FC.ANALOG.voltage - min) / (max - min) * 100)}%` });
+
+            if (FC.ANALOG.voltage < warn) {
+                $(".battery-status").addClass('state-warning').removeClass('state-empty').removeClass('state-ok');
+            } else  {
+                $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
             }
+        }
 
-            const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
-            const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
-            const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
-
-            const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
-
-            if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
-                $(".battery-status").addClass('state-empty').removeClass('state-ok').removeClass('state-warning');
-                $(".battery-status").css({ width: "100%" });
-            } else {
-                $(".battery-status").css({ width: `${((FC.ANALOG.voltage - min) / (max - min) * 100)}%` });
-
-                if (FC.ANALOG.voltage < warn) {
-                    $(".battery-status").addClass('state-warning').removeClass('state-empty').removeClass('state-ok');
-                } else  {
-                    $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
-                }
-            }
+        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
+            await MSP.promise(MSPCodes.MSP_RAW_GPS);
         }
 
         sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
@@ -731,9 +721,20 @@ async function update_live_status() {
         $(".linkicon").toggleClass('active', active);
 
         statuswrapper.show();
-        GUI.timeout_remove('data_refresh');
-        startLiveDataRefreshTimer();
     }
+}
+
+function clearLiveDataRefreshTimer() {
+    if (liveDataRefreshTimerId) {
+        clearInterval(liveDataRefreshTimerId);
+        liveDataRefreshTimerId = false;
+    }
+}
+
+function startLiveDataRefreshTimer() {
+    // live data refresh
+    clearLiveDataRefreshTimer();
+    liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
 
 export function reinitializeConnection(callback) {
@@ -758,8 +759,8 @@ export function reinitializeConnection(callback) {
         if (connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) {
             console.log(`Serial connection available after ${attempts / 10} seconds`);
             clearInterval(reconnect);
-            getStatus();
             gui_log(i18n.getMessage('deviceReady'));
+
             if (callback === typeof('function')) {
                 callback();
             }

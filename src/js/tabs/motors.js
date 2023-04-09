@@ -83,7 +83,6 @@ motors.initialize = async function (callback) {
 
     GUI.active_tab = 'motors';
 
-    await MSP.promise(MSPCodes.MSP_STATUS);
     await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
     await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
     await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
@@ -1023,11 +1022,6 @@ motors.initialize = async function (callback) {
 
         // data pulling functions used inside interval timer
 
-        function getStatus() {
-            // status needed for arming flag
-            MSP.send_message(MSPCodes.MSP_STATUS, false, false, get_motor_data);
-        }
-
         function get_motor_data() {
             MSP.send_message(MSPCodes.MSP_MOTOR, false, false, get_motor_telemetry_data);
         }
@@ -1177,7 +1171,7 @@ motors.initialize = async function (callback) {
         $('a.stop').on('click', () => motorsEnableTestModeElement.prop('checked', false).trigger('change'));
 
         // enable Status and Motor data pulling
-        GUI.interval_add('motor_and_status_pull', getStatus, 50, true);
+        GUI.interval_add('motor_and_status_pull', get_motor_data, 50, true);
 
         setup_motor_output_reordering_dialog(SetupEscDshotDirectionDialogCallback, zeroThrottleValue);
 

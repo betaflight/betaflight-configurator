@@ -850,11 +850,6 @@ receiver.initialize = function (callback) {
         // TODO: Combine two polls together
         GUI.interval_add('receiver_pull_for_model_preview', tab.getReceiverData, 33, false);
 
-        // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
-
         GUI.content_ready(callback);
     }
 };

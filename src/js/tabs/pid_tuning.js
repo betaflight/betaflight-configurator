@@ -54,9 +54,7 @@ pid_tuning.initialize = function (callback) {
     const FILTER_DEFAULT = FC.getFilterDefaults();
     const PID_DEFAULT = FC.getPidDefaults();
 
-    // requesting MSP_STATUS manually because it contains FC.CONFIG.profile
-    MSP.promise(MSPCodes.MSP_STATUS)
-        .then(() => MSP.promise(MSPCodes.MSP_PID_CONTROLLER))
+    MSP.promise(MSPCodes.MSP_PID_CONTROLLER)
         .then(() => MSP.promise(MSPCodes.MSP_PIDNAMES))
         .then(() => MSP.promise(MSPCodes.MSP_PID))
         .then(() => MSP.promise(MSPCodes.MSP_PID_ADVANCED))
@@ -2286,8 +2284,8 @@ pid_tuning.initialize = function (callback) {
         GUI.interval_add('receiver_pull', self.getReceiverData, 250, true);
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, self.checkUpdateProfile(true));
+        GUI.interval_add('update_profile', function update_profile() {
+            self.checkUpdateProfile(true);
         }, 500, true);
 
         self.analyticsChanges = {};

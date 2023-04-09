@@ -385,11 +385,6 @@ failsafe.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
-
         GUI.content_ready(callback);
     }
 };
