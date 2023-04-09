@@ -12,7 +12,6 @@ import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
 import serial from "./serial";
-import MdnsDiscovery from "./mdns_discovery";
 import UI_PHONES from "./phones_ui";
 import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
@@ -171,7 +170,6 @@ export function initializeSerialBackend() {
         setConfig({'auto_connect': GUI.auto_connect});
     });
 
-    MdnsDiscovery.initialize();
     PortHandler.initialize();
     PortUsage.initialize();
 }

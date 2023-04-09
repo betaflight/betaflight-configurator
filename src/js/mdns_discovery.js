@@ -35,8 +35,7 @@ MdnsDiscovery.initialize = function() {
                         fqdn: `${service.name}._http._tcp.local.`,
                         ready: true,
                     });
-                }
-                else if (action === 'added' && service.name.includes("elrs_rx")) {
+                } else if (action === 'added' && service.name.includes("elrs_rx")) {
                     //restart zeroconf if service ip doesn't arrive in 1000ms
                     setTimeout(() => {
                         if (self.mdnsBrowser.services.length === 0 || self.mdnsBrowser.services.filter(s => s.fqdn === `${service.name}._http._tcp.local.`)[0].ready === false) {
@@ -47,7 +46,8 @@ MdnsDiscovery.initialize = function() {
                 }
             });
         }
-    reinit();
+
+        reinit();
     } else {
         const bonjour = require('bonjour')();
 
