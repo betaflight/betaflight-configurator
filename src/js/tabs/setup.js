@@ -427,7 +427,7 @@ setup.initialize = function (callback) {
             });
             // get Sonar altitude if sensor exist
             if (have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
-                MSP.send_message(MSPCodes.MSP_SONAR_ALTITUDE, false, false, function () {
+                MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
                     sonar_e.text(`${FC.SENSOR_DATA.sonar.toFixed(1)} cm`);
                 });
             }

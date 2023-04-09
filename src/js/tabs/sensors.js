@@ -352,7 +352,7 @@ sensors.initialize = function (callback) {
 
             if (checkboxes[4]) {
                 GUI.interval_add('sonar_pull', function sonar_data_pull() {
-                    MSP.send_message(MSPCodes.MSP_SONAR_ALTITUDE, false, false, update_sonar_graphs);
+                    MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
                 }, rates.sonar, true);
             }
 

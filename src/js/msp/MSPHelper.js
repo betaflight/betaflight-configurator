@@ -310,7 +310,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_ALTITUDE:
                 FC.SENSOR_DATA.altitude = parseFloat((data.read32() / 100.0).toFixed(2)); // correct scale factor
                 break;
-            case MSPCodes.MSP_SONAR_ALTITUDE:
+            case MSPCodes.MSP_SONAR:
                 FC.SENSOR_DATA.sonar = data.read32();
                 break;
             case MSPCodes.MSP_ANALOG:
