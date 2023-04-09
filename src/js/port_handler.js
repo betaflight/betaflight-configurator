@@ -50,6 +50,10 @@ PortHandler.reinitialize = function () {
     this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
     this.useMdnsBrowser = getConfig('useMdnsBrowser').useMdnsBrowser;
 
+    if (this.useMdnsBrowser) {
+        MdnsDiscovery.initialize();
+    }
+
     this.check();   // start listening, check after TIMEOUT_CHECK ms
 };
 
