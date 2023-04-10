@@ -733,6 +733,16 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "リセット Z 軸、オフセット: $1 度"
     },
+    "initialSetupHeading": {
+        "message": "ヘッディング:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "ピッチ:"
+    },
+    "initialSetupRoll": {
+        "message": "ロール:"
+    },
     "initialSetupMixerHead": {
         "message": "ミキサータイプ"
     },
@@ -766,17 +776,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "加速度センサー トリム"
     },
-    "initialSetupPitch": {
-        "message": "ピッチ:"
-    },
-    "initialSetupRoll": {
-        "message": "ロール:"
-    },
     "initialSetupMagHead": {
         "message": "コンパス"
     },
     "initialSetupInfoHead": {
         "message": "システム情報"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "ディスアーム時のFCフラグ、バッテリー情報、RSSIレベル、センサーのハードウェアを表示",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "バッテリー電圧:"
@@ -795,6 +803,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "CPU温度:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -925,8 +936,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "ポートタブ、設定タブ、GPSタブで有効になっている場合はGPS情報を表示",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "計器"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "ヘディング、ピッチ、ロールを計器で表示",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -934,20 +953,30 @@
     "initialSetupInfoBuild": {
         "message": "ファームウェア情報"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "ファームウェアのビルドに関する情報を表示します。ビルド設定とビルドログは、Build keyで見つかったクラウド情報へのリンクです。",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "ビルド日時:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "ビルド情報:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Build key"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "ビルド設定"
+        "message": "設定"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "ビルドログ"
+        "message": "ログ"
     },
     "initialSetupInfoBuildOptions": {
         "message": "ビルドオプション:"
+    },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "使用するものを定義"
     },
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "ローカルビルド - 定義なし"

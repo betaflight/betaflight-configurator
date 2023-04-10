@@ -708,6 +708,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Redefinir eixo Z, offset: $1 graus"
     },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
     },
@@ -740,12 +746,6 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Ajustes do acelerômetro"
-    },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetômetro"

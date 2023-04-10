@@ -78,7 +78,7 @@
         "message": "Indsend"
     },
     "autoConnectEnabled": {
-        "message": "Autotilslut: Aktiveret - Opsæt automatiske tilslutningsforsøg, når ny port registreres"
+        "message": "Autotilslut er aktiv - tilslutning forsøges automatisk, når ny port registreres"
     },
     "autoConnectDisabled": {
         "message": "Autotilslut er slået fra - Du skal selv vælge den korrekte serielle port og klikke på knappen \"Tilslut\""
@@ -468,7 +468,7 @@
         "message": "<br>*** Logoplysninger sendt *** <br>Id: $1<br><br><br># medsend kopi af ID ved henvendelser til Betaflight team."
     },
     "buildKey": {
-        "message": "Build nøgle: <strong>$1</strong>"
+        "message": "Build ID: <strong>$1</strong>"
     },
     "supportWarningDialogTitle": {
         "message": "Bekræft indsendelse af log oplysninger"
@@ -528,7 +528,7 @@
         "message": "Board: <strong>$1</strong>, version: <strong>$2</strong>"
     },
     "buildInfoReceived": {
-        "message": "Kørende firmware udgivet: <strong>$1</strong>"
+        "message": "Anvendt firmware release: <strong>$1</strong>"
     },
     "fcInfoReceived": {
         "message": "Flight controller (FC) info, identifikator: <strong>$1</strong>, version: <strong>$2</strong>"
@@ -733,6 +733,16 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Nulstil Z-akse, forskydn.: $1 gr"
     },
+    "initialSetupHeading": {
+        "message": "Kurs:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "Højderor:"
+    },
+    "initialSetupRoll": {
+        "message": "Krængror:"
+    },
     "initialSetupMixerHead": {
         "message": "Mixertype"
     },
@@ -766,17 +776,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "Accelerometer trim"
     },
-    "initialSetupPitch": {
-        "message": "Højderor:"
-    },
-    "initialSetupRoll": {
-        "message": "Krængror:"
-    },
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
     "initialSetupInfoHead": {
         "message": "System info"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Viser FC flag som betyder deaktivering. Også batteri information, RSSI niveau og Sensor hardware",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "Batteri spænding:"
@@ -795,6 +803,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "CPU temperatur:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -925,8 +936,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Viser GPS information, hvis indstillet i Porte, Opsætning og GPS fane",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumenter"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Viser kurs, stigning og krængning",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -934,23 +953,33 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Viser oplysninger om release. Release Konfiguration og release Log peger til links i skyen via Release ID",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
-        "message": "Build dato:"
+        "message": "Release dato:"
     },
     "initialSetupInfoBuildInfo": {
-        "message": "Build  info:"
+        "message": "Release info:"
+    },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Release ID"
     },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "Build config"
+        "message": "Konfiguration"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "Build log"
+        "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Build valg:"
+        "message": "Release valg:"
+    },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Defines for release"
     },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Lokal build - ingen valg"
+        "message": "Lokal release - ingen Defines anvendt"
     },
     "initialSetupButtonSave": {
         "message": "Gem"
@@ -1013,7 +1042,7 @@
         "message": "Her tilvælges GPS til navigation, men du skal først konfigurere en port til GPS i fanen Porte, før aktiveringen kan gemmes."
     },
     "featureSONAR": {
-        "message": "Sonar"
+        "message": "Sonar afstandsmåler"
     },
     "featureTELEMETRY": {
         "message": "Telemetri protokol"
@@ -1040,7 +1069,7 @@
         "message": "Er denne funktion aktiveret, og er ingen visningsenhed tilsluttet (eller er visningsenheden ikke tændt), vil der være en forsinkelse på ca. 10 sek. ved genstart af FC."
     },
     "featureOSD": {
-        "message": "On Screen-visning"
+        "message": "On Screen Display (OSD)"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Videresend aux-kanaler til servoudgange"
@@ -1094,7 +1123,7 @@
         "message": "Telemetri"
     },
     "configurationTelemetryHelp": {
-        "message": "Telemetri output sendes fra modtager"
+        "message": "Telemetri data transmitteres til sender"
     },
     "configurationRSSI": {
         "message": "RSSI (signalstyrke)"
@@ -1106,7 +1135,7 @@
         "message": "ESC-/Motorfunktioner"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Bemærk:</strong> Ikke alle kombinationer af funktioner fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de     uden videre.<br /><strong>Bemærk:</strong> Opsæt seriel porte <span class=\"message-negative\">inden</span> aktivering af funktioner, som skal benytter portene."
+        "message": "<strong>Bemærk:</strong> Ikke alle kombinationer af funktioner fungerer. Opdager FC firmwaren modstridende kombinationer, deaktiveres de uden videre.<br /><strong>Bemærk:</strong> Opsæt porte og andet <span class=\"message-negative\">inden</span> aktivering af funktioner , på fanen Porte."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; UART til modtageren skal indstilles til ‘Serial Rx’ (i fanen <i>Porte</i>)<br>&#8226; Vælg den korrekte leverandør protokol i rullemenu"
@@ -1352,7 +1381,7 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Benærk:</strong> Tjek, at din FC er i stand til at fungere ved disse frekvenser! Tjek CPU- og klokfrekvensstabilitet. Ændring af dette kan kræve PID-genindstilling. TIP: Deaktivér accelerometer og evt. andre sensorer for højere CPU ydeevne."
+        "message": "<strong>Bemærk:</strong> Tjek, at din FC er i stand til at fungere ved disse frekvenser! Tjek CPU- og klokfrekvensstabilitet. Ændring kan betyde PID-genindstilling. <br>TIP: Deaktivér accelerometer og evt. andre sensorer for højere CPU ydeevne."
     },
     "configurationGPS": {
         "message": "GPS konfiguration"
@@ -1419,7 +1448,7 @@
         "message": "Sensor input protokol"
     },
     "portsTelemetryOut": {
-        "message": "Telemetri output protokol"
+        "message": "Telemetri protokol"
     },
     "portsPeripherals": {
         "message": "Tilbehør"
@@ -1993,7 +2022,7 @@
         "message": "<strong>Pid Tuning Slider tilstand</strong><br><br>Pidtuning slider mode kan være:<br><br>&bull; FRA - ingen skydere, indtast værdier manuelt<br>&bull; RP - skydere kontrol Roll og Pitch kun, indtast sideror værdier manuelt<br>&bull; RPY - skydere styrer alle PID værdier<br><br><span class=\"message-negative\"><b>Advarsel:</b></span>At gå fra RP til RPY tilstand vil overskrive sideror indstillinger med firmware indstillinger."
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt!</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configuration er i Eksperttilstand.<br> &#8226; <b>Brug den seneste Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiver hardware-ADC-filteret</a></strong> i senderen, hvis du bruger OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\"https://betaflight.com/docs/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentationen</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configurator er i Eksperttilstand.<br> &#8226; <b>Brug den seneste firmware i din sender / transmitter  !</b>&nbsp<strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiver altid ADC filter</a></strong> i senderen, hvis du bruger fx OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\"https://betaflight.com/docs/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentationen</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas MID"
@@ -2568,15 +2597,15 @@
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
-        "message": "R: {{motorsRpmValue}}",
+        "message": "Rpm: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
     },
     "motorsRPMError": {
-        "message": "F: {{motorsErrorValue}}%",
+        "message": "Fejl: {{motorsErrorValue}}%",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
     },
     "motorsESCTemperature": {
-        "message": "T: {{motorsESCTempValue}}&deg;C",
+        "message": "Tmp: {{motorsESCTempValue}}&deg;C",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
     },
     "motorsMaster": {
@@ -2955,7 +2984,7 @@
         "message": "Vælg github commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Release og build information"
+        "message": "Release information"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "Producent ID:"
@@ -2982,7 +3011,7 @@
         "message": "MCU:"
     },
     "firmwareFlasherCloudBuildDetails": {
-        "message": "Build i skyen - detajler:"
+        "message": "Release i skyen - detajler:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "Vis log."
@@ -3150,7 +3179,7 @@
         "message": "Besked:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Du bør <span class=\"message-negative\">ikke</span> brænde <strong>ikke-Betaflight / ikke-complient Betaflight</strong> hardware med denne firmware brænder.<br />Du må <span class=\"message-negative\">ikke</span> <strong>frakoble</strong> FC eller <strong>slukke</strong> din pc under brænding.<br /><br /><strong>Bemærk: </strong>STM32 bootloader er gemt i ROM, som ikke kan ændres.<br /><strong>Bemærk: </strong><span class=\"message-negative\">Auto-Connect</span> er altid deaktiveret, mens du er inde i firmware brænder.<br /><strong>Bemærk: </strong>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger/nedgraderinger vil slette/ændre din konfiguration.<br /><strong>Bemærk:</strong> Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC</strong>, prøv genstart, prøv at genindstaller/opgrader drivere.<br /><strong>Bemærk:</strong> Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere"
+        "message": "Du bør <span class=\"message-negative\">ikke</span> brænde <strong>ikke-Betaflight / ikke-complient Betaflight</strong> hardware med denne firmware brænder.<br />Du må <span class=\"message-negative\">ikke</span> <strong>frakoble</strong> FC eller <strong>slukke</strong> din pc under brænding.<br /><br /><strong>Bemærk: </strong>STM32 bootloader er gemt i ROM, som ikke kan ændres.<br /><strong>Bemærk: </strong><span class=\"message-negative\">Autotilslut</span> er altid deaktiveret, mens du er inde i firmware brænder.<br /><strong>Bemærk: </strong>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger/nedgraderinger vil slette/ændre din konfiguration.<br /><strong>Bemærk:</strong> Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC</strong>, prøv genstart, prøv at genindstaller/opgrader drivere.<br /><strong>Bemærk:</strong> Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
@@ -3244,7 +3273,7 @@
         "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar<strong> for at anvende en udviklings firmware release"
     },
     "unstableFirmwareAcknowledgementFlash": {
-        "message": "Installer firmware"
+        "message": "Brænd firmware"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detekteret: <strong>$1</strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
@@ -4158,7 +4187,7 @@
         "message": "Integreret sideror integrerer sideror P, I og D værdier, der tillader at sideror P, I og D kan tunes lidt, som hvis du tuner højderor og krængror.<br><br>Meget lidt I er påkrævet, fordi den integrerede P fungerer som I, og integreret D fungerer som P.<br><br>BEMÆRK: Integreret sideror kræver brug af Absolut kontrol, da der ikke er brug for I med Integreret sideror."
     },
     "configHelp2": {
-        "message": "Voldgiftspanelrotation i grader, for at tillade montering det sidelæns / på hovedet / roteret osv. Når du kører eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorpositionen uafhængigt af brætretning. "
+        "message": "Relativ rotation i grader, for at tillade montering sidelæns / på hovedet / roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Fejlsikring konfiguration er ændret betydeligt. Brug Betaflight <strong>v1.12.0+</strong> for at aktivere det forbedrede konfigurationspanel."
@@ -4170,28 +4199,28 @@
         "message": "Fejlsikring har to faser. <strong><br>\nFase 1</strong> begynder, når en flykanal har en ugyldig pulslængde, modtageren rapporterer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter kanalreserveindstillingerne for <span class=\"message- negativ\">alle kanaler</span> anvendes, og der ventes et kort øjeblik for at muliggøre gendannelse. <strong><br>\nFase 2</strong> begynder, når fejltilstanden, mens fartøjet er <span class=\"message-negative\">aktiveret</span>, tager længere tid end den opsatte beskyttelsestid, og her forbliver alle kanaler på den anvendte kanalreserveindstilling, medmindre den tilsidesættes af den valgte procedure.<br /><strong>Bemærk:</strong> Inden Fase 1 begynder, anvendes kanalreserveindstillingerne også på individuelle AUX-kanaler, som har ugyldige impulser."
     },
     "failsafePulsrangeTitle": {
-        "message": "Gyldig Pulse Range-indstillinger"
+        "message": "Indstilling af gyldigt signal interval"
     },
     "failsafePulsrangeHelp": {
-        "message": "Pulser kortere end minimum eller længere end maksimum er ugyldige og vil udløse anvendelse af individuelle kanalreserveindstillinger for AUX-kanaler eller effektuering af trin 1 for flykanaler"
+        "message": "Forsvinder signal fra sender kortere end minimum eller længere end maksimum, udløses fejlsikring for kanaler efter indstilling nedenfor og aktivering af fejlsikring indstilling - trin 1 eller trin 2"
     },
     "failsafeRxMinUsecItem": {
-        "message": "Minimumslængde"
+        "message": "Mindste signal"
     },
     "failsafeRxMaxUsecItem": {
-        "message": "Maskimumslængde"
+        "message": "Største signal"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Kanal Fallback indstillinger"
+        "message": "Fejlsikring for kanaler"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "Disse indstillinger anvendes på ugyldige individuelle AUX-kanaler eller på alle kanaler, når disse overgår til Trin 1. <strong>Bemærk:</strong> Værdierne gemmes i trin på 25 mikrosek, så små ændringer forsvinder"
+        "message": "Disse indstillinger anvendes ved fejlsikring for individuelle kanaler eller på alle kanaler, når disse overgår til fejlsikring Trin 1. <strong>Bemærk:</strong> Værdierne gemmes i trin på 25 mikrosek, så små ændringer udjævnes"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto</strong> betyder krængror, højderor og sideror til centrum og gas lav. <strong>Hold</strong> betyder at den sidste gode modtagne værdi fastholdes"
+        "message": "<strong>Auto</strong> betyder krængror, højderor og sideror til centrum og gas lav. <br><strong>Hold</strong> betyder at den sidste gode modtagne værdi fastholdes"
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>Hold</strong> betyder at opretholde den sidste gode værdi modtaget. <strong>Sæt</strong> betyder, at værdien angivet her vil blive brugt"
+        "message": "<strong>Hold</strong> betyder at opretholde den sidste gode værdi modtaget. <br><strong>Sæt</strong> betyder, at værdien angivet her vil blive brugt"
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Trin 2 - Indstillinger"

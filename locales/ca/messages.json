@@ -741,6 +741,16 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Restableix l'eix Z, offset: $1 graus"
     },
+    "initialSetupHeading": {
+        "message": "Títol:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Tipus de Mixer"
     },
@@ -774,17 +784,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "Trim d'acceleròmetre"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMagHead": {
         "message": "Magnetòmetre"
     },
     "initialSetupInfoHead": {
         "message": "Informació del sistema"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Mostra les banderes FC per al desarmament, la informació de la bateria, el nivell RSSI i el maquinari dels sensors",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "Voltatge de bateria:"
@@ -803,6 +811,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "Temperatura CPU:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -933,8 +944,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Mostra la informació del GPS, si està activada correctament a la pestanya Ports, la pestanya Configuració i la pestanya GPS",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Mostra el sentit, el Pitch i el Roll en els instruments",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -942,23 +961,33 @@
     "initialSetupInfoBuild": {
         "message": "Informació del programari"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Mostra informació sobre la creació del microprogramari. La configuració de compilació i el registre de Bulid enllacen a la informació del núvol que troba la clau de compilació",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Data de compilació:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Informació de la compilació:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Clau de compilació"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "Configuració de la compilació"
+        "message": "Configuració"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "Log de la compilació"
+        "message": "Registre"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Opcions de compilació:"
     },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Defineix utilitzat"
+    },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilació local - Sense definició"
+        "message": "Compilació local - No es fa servir definició"
     },
     "initialSetupButtonSave": {
         "message": "Desa"

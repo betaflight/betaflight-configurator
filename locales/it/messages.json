@@ -733,6 +733,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reset asse Z, offset: $1 gradi"
     },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Tipo Mixer"
     },
@@ -766,17 +772,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "Trim Accelerometro"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMagHead": {
         "message": "Magnetometro"
     },
     "initialSetupInfoHead": {
         "message": "Informazioni di sistema"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Mostra le spunte FC per il disarmo, informazioni batteria, il livello RSSI e l'hardware dei sensori",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "Tensione Batteria:"
@@ -925,8 +929,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Mostra le informazioni GPS, se attivato correttamente nella scheda Porte, Configurazione e GPS",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Strumentazione"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Mostra Direzione, Pitch e Roll negli strumenti",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -934,23 +946,33 @@
     "initialSetupInfoBuild": {
         "message": "Informazioni firmware"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Mostra informazioni sulla build del firmware. La Build Config e Build Log sono collegate alle informazioni cloud trovate dalla chiave Build",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Data build:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Informazioni sulla build:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Chiave Build"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "Configurazione Build"
+        "message": "Configurazione"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "Log Build"
+        "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Opzioni Build:"
     },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Definizioni usate"
+    },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Build locale - Nessuna definizione"
+        "message": "Build locale - Nessuna definizione usata"
     },
     "initialSetupButtonSave": {
         "message": "Salva"

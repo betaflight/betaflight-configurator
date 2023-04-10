@@ -727,6 +727,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Resetuj oś Z, położenie: $1 stopni"
     },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Typ Modelu"
     },
@@ -759,12 +765,6 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Dostrajanie akcelerometru"
-    },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometr"

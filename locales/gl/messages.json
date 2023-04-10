@@ -609,11 +609,17 @@
     "defaultContributingHead": {
         "message": "Contribuir"
     },
+    "defaultContributingText": {
+        "message": "Se quere axudar a mellorar aínda máis Betaflight, pode axudar de moitas maneiras, entre elas:<br /><ul><li>empregando o seu coñecemento de Betaflight para crear ou actualizar contido en <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">na nosa Wiki</a>, ou respondendo ás preguntas doutros usuarios nos foros en liña;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuindo código</a> ao firmware e ao configurador - novas funcións, correccións, melloras;</li><li>probas <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">novas funcións e correccións</a> e proporcionar comentarios;</li><li>axudando a outros usuarios a resolven os problemas dos que informan no <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">no noso rastreador de problemas</a> e participar en discusións sobre solicitudes de funcións;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traducindo</a> Betaflight Configurator a un novo idioma ou axudando a manter as traducións existentes.</li></ul>"
+    },
     "defaultFacebookText": {
         "message": "Tamén temos un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Grupo de Facebook</a>.<br />Únase a nós para obter un lugar onde falar sobre Betaflight, facer preguntas sobre a configuración ou simplemente pasar un rato cos compañeiros pilotos."
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Server Discord</a>. <br /> Comparte a túa experiencia de voo, fala de BetaFlight, axudar a outras persoas ou obter axuda por si mesmo da comunidade."
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight Configurator recolle estatísticas de uso anónimas. Por exemplo, estes datos inclúen (pero non están limitados a) o número de lanzamentos, a rexión xeográfica dos usuarios, os tipos de controladores de voo, as versións de firmware, o uso de elementos e pestanas da IU, etc. O resumo destes datos compártese <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>. A recollida realízase para comprender mellor como se está a utilizar Betaflight Configurator, para comprender as tendencias da comunidade e para posibles melloras na IU. Os usuarios poden desactivar a recollida de datos na pestana Opcións."
     },
     "defaultChangelogHead": {
         "message": "Configurator - Novidades"
@@ -712,6 +718,9 @@
     "initialSetupBackupRestoreHeader": {
         "message": "Copia de seguridade e restauración experimental"
     },
+    "initialSetupBackupRestoreText": {
+        "message": "<strong>Fai unha copia de seguridade</strong> da súa configuración en caso de accidente, <strong>a configuración da</strong> CLI <span class=\"message-negative\">non</span> está incluída - use o comando \"diff all\" en CLI para iso."
+    },
     "initialSetupRebootBootloaderText": {
         "message": "Reinicia en modo<strong>cargador de arranque / DFU </strong>."
     },
@@ -726,6 +735,16 @@
     },
     "initialSetupButtonResetZaxisValue": {
         "message": "Reiniciar eixo Z, offset: $1 º"
+    },
+    "initialSetupHeading": {
+        "message": "Título:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
@@ -760,17 +779,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "Acelerómetro trims"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
     "initialSetupInfoHead": {
         "message": "Información do sistema"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Mostra avisos da FC para o desarmado, a información da batería, o nivel RSSI e o hardware dos sensores",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "Voltaxe da batería:"
@@ -789,6 +806,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "Temperatura CPU:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -919,8 +939,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Mostra a información do GPS, se está activado correctamente nas pestanas Portos, Configuración e GPS",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Mostra Rumbo, Pitch e Roll nos instrumentos",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -928,23 +956,33 @@
     "initialSetupInfoBuild": {
         "message": "Información do firmware"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Mostra información sobre a compilación do firmware. A configuración de compilación e o rexistro de Bulid enlazan coa información da nube atopada pola clave de compilación",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Data de compilación:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Información da compilación:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Chave de compilación"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "Configuración da compilación"
+        "message": "Configuración"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "Rexistro da compilación"
+        "message": "Rexistro"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Opcións da compilación:"
     },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Definicións empregadas"
+    },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilación local - sen definicións"
+        "message": "Compilación local - non se empregan definicións"
     },
     "initialSetupButtonSave": {
         "message": "Gardar"
@@ -1986,6 +2024,9 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modo control deslizante de sintonía de PID</strong><br><br>Control deslizante modo Pidtuning pode ser:<br><br>&bull; OFF - sen controis deslizantes, meter valores manualmente<br>&bull; RP - Controis deslizantes so para Roll e Pitch, meter valores manualmente para Yaw<br>&bull; RPY - Controis deslizantes para tódolos valores de PID<br><br><span class=\"message-negative\"><b>AVISO:</b></span> Pasar de RP a RPY sobreescribirase a configuración de Yaw con configuracións do firmware."
     },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comprobe sempre que o seu Failsafe funciona correctamente. </a></strong></b> A configuración está na pestana Failsafe, que require o modo experto.<br> &#8226; <b>Utilice o firmware Tx máis recente!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactivar o filtro ADC de hardware< /a></strong> no transmisor se utiliza OpenTx ou EdgeTx.<br>Configuración básica: configure a configuración do 'Receptor' correctamente. Escolla o \"Mapa de canles\" correcto para a súa radio. Comprobe que o Roll, Pitch e outros gráficos de barras se moven correctamente. Axuste o punto final da canle ou os valores do intervalo no transmisor entre ~1000 e ~2000 e establece o punto medio en 1500. Para obter máis información, lea o <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentación</a></strong>."
+    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -2612,6 +2653,9 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Aviso de seguridade</strong><br /><strong class=\"message-negative\"> Retire tódalas hélices para evitar lesións!</strong><br />Os motores<strong> xirarán</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Aviso informativo</strong><br />Os motores xirarán un por un e poderá seleccionar que motor está a xirar. A batería debe estar conectada, debe seleccionarse o protocolo ESC correcto. Esta utilidade só pode reorganizar os motores actualmente activos. A reasignación máis complexa require o comando CLI Resource. Consulte esta <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Gardar"
     },
@@ -2797,6 +2841,9 @@
     },
     "loggingLogSize": {
         "message": "Tamaño Log:"
+    },
+    "loggingLogName": {
+        "message": "Nome do rexistro:"
     },
     "loggingButtonLogFile": {
         "message": "Arquivo de Log seleccionado"
@@ -3026,6 +3073,9 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecciona ou detecta automaticamente a súa placa para ver os lanzamentos de firmware en liña dispoñibles - Seleccione o firmware correcto axeitado para a súa placa."
     },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "O configurador de Betaflight admite o flasheo de Unified Targets coas configuracións específicas da placa respectiva nun só paso.<br><br>O concepto de Unified Targets significa que se pode usar o mesmo ficheiro .hex de firmware para todas as placas que utilicen o mesmo MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build</strong><br><br>Con <strong>Cloud Build</strong> necesitamos definir as opcións de hardware presentes na súa compilación.<br><br>Para facer as diferentes placas funcionan co mesmo firmware, un ficheiro de configuración específico desprégase xunto co firmware cando se mostra un Unified Target.<br><br>Con Local build podes cargar un ficheiro de configuración de destino unificado ou escoller unha placa antes de cargar un firmware .hex.<br><br>Se atopas problemas ao usar o firmware, considera unirte a Discord ou abre un <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problema</a>."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Elixa a versión de firmware para a súa controladora."
     },
@@ -3137,6 +3187,9 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> Recuperación / comunicación perdida </strong>"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Se perdeu a comunicación coa súa placa, sigua estes pasos para restaurar a comunicación: <ul><li>Apagar</li><li>Active \"Sen secuencia de reinicio\", active \"Borrado completo do chip\".</li><li>Una os pines de ARRANQUE ou manteña premido o botón de ARRANQUE.</li><li>Encender (o LED de actividade NON parpadeará se se fai correctamente).</li><li>Instale todos os controladores STM32 e Zadig se é necesario (consulta <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Parpadeo USB</a> do manual de Betaflight).</li><li >Pecha o configurador, reinicia o configurador.</li><li>Solte o botón BOOT se o teu FC ten un.</li><li>Flash co firmware correcto (usando a velocidade de transmisión manual se se especifica no manual do teu FC).</li><li>Apagar.</li><li>Eliminar o puente de arranque.</li><li>Acender (o LED de actividade debería parpadear).</li><li>Conéctese normalmente.</li></ul>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Abandoando o Instalador o Firmware"
     },
@@ -3215,6 +3268,9 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consulte a información da placa para preseleccionar firmware adecuado"
+    },
+    "unstableFirmwareAcknowledgementDialog": {
+        "message": "Está a piques de flashear unha <strong>compilación de desenvolvemento do firmware</strong>. Estas compilacións son un traballo en curso, e pode ter calquera dos seguintes casos:<strong><ul><li>o firmware non funciona en absoluto;</li><li>o firmware non se pode voar;</li><li>Hai problemas de seguranza co firmware, por exemplo, fugas</li><li>o firmware pode facer que o controlador de voo non responda ou se dane</li></ul></strong>Se continúa con flashear este firmware, <strong>asume a total responsabilidade do risco de que ocorra calquera dos feitos anteriores</strong>. Ademais, recoñece que é necesario realizar <strong>probas de banco exhaustivas con accesorios desactivados</strong> antes de intentar facer voar este firmware."
     },
     "unstableFirmwareAcknowledgement": {
         "message": "Lin o anterior e <strong>asumo a total responsabilidade<strong> de instalar un firmware inestable"
@@ -3789,6 +3845,10 @@
         "message": "Drift - Wobble:<br /><i><small>I Gains</small></i>",
         "description": "I-term slider label"
     },
+    "pidTuningIGainSliderHelp": {
+        "message": "Aumente ou diminúa I. Un I Máis alto pode mellorar o seguimento en xiros en espiral, órbitas ou comandos de aceleración do 0%. Demasiada I, sobre todo se non hai suficiente P, pode causar tambaleos ou rebote despois de xirar ou rodar ou reducir o acelerador ao 0%. <br /><br />como pode ser para manter o seguimento do cuádruple en xiros en espiral, órbitas, etc... pero non tan alto que comece a ver tambaleos ao cortar o acelerador ao 0%.<br /><br /><strong>Nota: </strong><br />Se experimenta un rebote nalgún momento que é fácil de ver, asegúrese de que \"I-term Relax\" estea activado e tente reducir o valor de iterm_relax_cutoff.",
+        "description": "I-gain Gain tuning slider helpicon message"
+    },
     "pidTuningDMaxGainSlider": {
         "message": "Amortiguamento dinámico:<br /><i><small>D Max</small></i>",
         "description": "D Min slider label"
@@ -4027,6 +4087,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensación da caída de tensión"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Ofrece un acelerador e un rendemento PID consistentes no intervalo de tensión útil da batería aumentando a saída do motor a medida que cae a tensión da batería.<br /><br />A cantidade de compensación pode variar entre 0 e 100 %. Recoméndase unha compensación total (100 %).<br /><br />Visita o obxectivo de <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" =\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki</a> para obter máis información."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4104,6 +4167,9 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "Valor Dinámico Idle [* 100 RPM]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamic Idle mellora o control a baixas revolucións e reduce o risco de desincronización do motor. <br /><br /> Mellora a autoridade PID, a estabilidade do acelerador cero, o tempo de suspensión invertido e o freado do motor.<br /><br />As rpm mínimas de ralentí dinámico deben establecerse entre 3000 e 3500 rpm. Para 4.2, configure o valor de inactividade de DShot baixo, por exemplo, 1%. Non é necesario axustar o valor de DShot Idle en 4.3. <br /><br />Visita  <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki< /a> para máis información."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Ralentí Dinámico está DESACTIVADO porque a Telemetría Dshot está DESACTIVADA"
@@ -5821,6 +5887,10 @@
     "osdButtonSaved": {
         "message": "Gardado"
     },
+    "vtxHelp": {
+        "message": "Aquí pode configurar os valores para o seu transmisor de vídeo (VTX). Pode ver e cambiar os valores de transmisión, incluídas as táboas VTX, se o controlador de voo e o VTX o admiten.<br>Para configurar o seu VTX, faga os seguintes pasos:<br>1. Vaia a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">esta</a> páxina;<br>2. Busque o ficheiro de configuración VTX adecuado para o seu país e o seu modelo VTX e descárgueo;<br>3. Faga clic en \"$t(vtxButtonLoadFile.message)\" a continuación, seleccione o ficheiro de configuración VTX e cárgueo;<br>4. Verifique que a configuración é correcta;<br>5. Faga clic en \"$t(vtxButtonSave.message)\" para almacenar a configuración de VTX no controlador de voo.<br>6. Opcionalmente, faga clic en '$t(vtxButtonSaveLua.message)' para gardar un ficheiro de configuración lua que pode usar cos scripts lua de betaflight (Ver máis <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\">aquí</a>.)",
+        "description": "Introduction message in the VTX tab"
+    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atención:</span>O seu VTX non está configurado ou non é compatible. Polo tanto, non pode modificar os valores VTX desde aquí. Isto só será posible se o controlador de voo está unido ó VTX usando algún protocolo como Tramp ou SmartAudio e está configurado correctamente na pestana $t(tabPorts.message) se fose necesario.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6298,6 +6368,9 @@
     "dialogConfirmResetTitle": {
         "message": "Confirmar"
     },
+    "dialogConfirmResetNote": {
+        "message": "AVISO: Está seguro de que quere restablecer <strong>TODAS as opcións</strong> á configuración predeterminada? Isto <strong>non</strong> é un \"restablecemento de fábrica\". Pode causar problemas inesperados e pode ser necesario volver a actualizar o firmware para poder conectarse de novo."
+    },
     "dialogConfirmResetConfirm": {
         "message": "Resetear"
     },
@@ -6685,11 +6758,17 @@
     "firmwareFlasherRadioProtocolDescription": {
         "message": "Seleccione o protocolo de radio que desexa incluír nesta compilación. Teña en conta que este é un menú despregable, pero quizais só se seleccione un elemento."
     },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Seleccione o protocolo de telemetría que desexa incluír nesta compilación. Teña en conta que este é un menú despregable, pero quizais só se seleccione un elemento. Tamén hai algúns protocolos de telemetría que se activarán, independentemente da súa selección aquí en función do protocolo de radio seleccionado, p. ex. CRSF."
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Seleccione as opcións xenéricas que desexa incluír nesta compilación. Teña en conta que este é un menú despregable e é posible que se seleccionen varios elementos. Elementos como correccións, p. ex. AKK VTX, están incluídos aquí."
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Seleccione o protocolo de motor (ESC) que desexa incluír nesta compilación. Teña en conta que este é un menú despregable, pero quizais só se seleccione un elemento."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Especialmente útil para os desenvolvedores, pode seleccionar un PR combinado, especificar un commit sa ou especificar un PR \"aínda por combinar\" escribindo un # seguido do número de PR, por exemplo. #1234 (esta é a abreviatura da rama 'pull/1234/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Para os desenvolvedores, vostede pode engadir as definicións que precise, separadas por un \"espazo\", pero sen o prefixo \"USE_\", engadirase automaticamente para vostede."
@@ -6699,6 +6778,9 @@
     },
     "coreBuild": {
         "message": "Só núcleo"
+    },
+    "coreBuildModeDescription": {
+        "message": "Esta opción constrúe un firmware que contén os controladores de hardware (e algunhas funcións limitadas). Está dispoñible para axudar na detección do hardware nun controlador de voo e só se proporciona para esa comodidade. Non todas as funcións estarán dispoñibles (só hardware) usando esta opción."
     },
     "showDevToolsOnStartup": {
         "message": "Abre automaticamente DevTools no modo de desenvolvemento",

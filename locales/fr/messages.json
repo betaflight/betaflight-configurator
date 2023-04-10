@@ -720,6 +720,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Réinitialiser l'axe Z, écart: $1 deg"
     },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Type de mixer"
     },
@@ -752,12 +758,6 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Trim accéléromètre"
-    },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetomètre"
