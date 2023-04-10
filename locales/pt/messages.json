@@ -733,6 +733,16 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Repor eixo Z, offset: $1 graus"
     },
+    "initialSetupHeading": {
+        "message": "Direção:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
     },
@@ -766,17 +776,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "Ajustes do acelerómetro"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
     "initialSetupInfoHead": {
         "message": "Info. do Sistema"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Mostra bandeiras da FC para desarmar, informações da bateria, nível RSSI e hardware de sensores",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "Voltagem da bateria:"
@@ -925,8 +933,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Mostra info do GPS, se ativadas adequadamente nas abas Portas, Configuração e GPS",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Mostra Direção, Pitch e Roll nos instrumentos",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -934,23 +950,33 @@
     "initialSetupInfoBuild": {
         "message": "Info. de Firmware"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Mostra informações sobre a compilação de firmware. A Configuração de Compilação e o Log de Compilação ligam-se às informações encontradas na nuvem através da chave de Compilação",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Data da Compilação:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Info. da Compilação:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Chave de compilação"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "Config. da Compilação"
+        "message": "Config"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "Log da Compilação"
+        "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Opções de Compilação:"
     },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Defines usadas"
+    },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilação Local - sem Defines"
+        "message": "Construção Local - nenhuma define usada"
     },
     "initialSetupButtonSave": {
         "message": "Gravar"

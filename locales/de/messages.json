@@ -736,6 +736,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Z Achse zurücksetzen, Abweichung: $1 Grad"
     },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Mixer Typ"
     },
@@ -768,12 +774,6 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Beschleunigungssensor Anpassung"
-    },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -943,17 +943,8 @@
     "initialSetupInfoBuildInfo": {
         "message": "Erstellungsinfo (build info):"
     },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "Erstellungskonfiguration (build config)"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "Erstellungslog (build log)"
-    },
     "initialSetupInfoBuildOptions": {
         "message": "Erstellungsoptionen (build options):"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Lokaler Build - keine Definitionen"
     },
     "initialSetupButtonSave": {
         "message": "Speichern"

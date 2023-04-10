@@ -666,6 +666,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "重置 Z 轴，补偿: $1 度"
     },
+    "initialSetupPitch": {
+        "message": "俯仰:"
+    },
+    "initialSetupRoll": {
+        "message": "横滚:"
+    },
     "initialSetupMixerHead": {
         "message": "混控类型"
     },
@@ -698,12 +704,6 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "加速度计微调"
-    },
-    "initialSetupPitch": {
-        "message": "俯仰:"
-    },
-    "initialSetupRoll": {
-        "message": "横滚:"
     },
     "initialSetupMagHead": {
         "message": "磁力计"

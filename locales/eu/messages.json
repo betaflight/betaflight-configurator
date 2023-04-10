@@ -621,6 +621,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Berrezarri Z ardatza, desplazatua: $1 gradu"
     },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Nahaste-mota"
     },
@@ -653,12 +659,6 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Azelerometroaren trimak"
-    },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometroa"

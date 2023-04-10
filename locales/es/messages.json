@@ -733,6 +733,16 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reiniciar eje Z, desplazamiento: $1 grad"
     },
+    "initialSetupHeading": {
+        "message": "Rumbo:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
     },
@@ -766,17 +776,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "Trimados del acelerómetro"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
     "initialSetupInfoHead": {
         "message": "Información del sistema"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Muestra motivos de desarme del FC, información de batería, nivel RSSI y sensores de hardware",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "Voltaje batería:"
@@ -795,6 +803,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "Temperatura de la CPU:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -925,8 +936,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Muestra la información del GPS, si está correctamente activado en las pestañas de Puertos, Configuración y GPS",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Muestra instrumentos de rumbo, pitch y roll",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -934,23 +953,33 @@
     "initialSetupInfoBuild": {
         "message": "Información del firmware"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Muestra información sobre la compilación del firmware. Los enlaces del Registro de Configuración y de Compilación enlazan con la información en la nube encontrada para la clave de compilación",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Fecha de compilación:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Información de compilación:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Clave de compilación"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "Configuración de compilación"
+        "message": "Configuración"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "Registro de compilación"
+        "message": "Registro"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Opciones de compilación:"
     },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "DEFINES usados"
+    },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilación local - sin Defines"
+        "message": "Compilación local - sin DEFINES"
     },
     "initialSetupButtonSave": {
         "message": "Guardar"
@@ -2420,7 +2449,7 @@
         "message": "Longitud:"
     },
     "gpsHeading": {
-        "message": "Encabezado:"
+        "message": "Rumbo:"
     },
     "gpsSpeed": {
         "message": "Velocidad:"
@@ -2809,6 +2838,9 @@
     },
     "loggingLogSize": {
         "message": "Tamaño de Archivo:"
+    },
+    "loggingLogName": {
+        "message": "Nombre del registro:"
     },
     "loggingButtonLogFile": {
         "message": "Seleccionar Archivo de Registro"
@@ -3578,7 +3610,7 @@
         "message": "Barómetro y Sonar/Altitud"
     },
     "pidTuningMag": {
-        "message": "Magnetómetro/Dirección"
+        "message": "Magnetómetro/Rumbo"
     },
     "pidTuningGps": {
         "message": "Navegación GPS"
@@ -5166,7 +5198,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementNumericalHeading": {
-        "message": "Lectura numérica de la dirección actual en grados"
+        "message": "Lectura numérica del rumbo actual en grados"
     },
     "osdTextElementNumericalVario": {
         "message": "Variómetro numérico",
@@ -5180,7 +5212,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCompassBar": {
-        "message": "Barra gráfica con una brújula mostrando la dirección actual"
+        "message": "Barra gráfica con una brújula mostrando el rumbo actual"
     },
     "osdTextElementWarnings": {
         "message": "Avisos",

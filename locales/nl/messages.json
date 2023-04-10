@@ -656,6 +656,12 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Herstel Z axis, verschil $1 graden"
     },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
     },
@@ -688,12 +694,6 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Versnellingsmeter trims"
-    },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"

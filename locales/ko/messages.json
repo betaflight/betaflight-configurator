@@ -733,6 +733,16 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Z 축 초기화, 오프셋: $1 도"
     },
+    "initialSetupHeading": {
+        "message": "진행방향:",
+        "description": "Heading shown on Setup tab"
+    },
+    "initialSetupPitch": {
+        "message": "피치:"
+    },
+    "initialSetupRoll": {
+        "message": "롤:"
+    },
     "initialSetupMixerHead": {
         "message": "믹서 형식"
     },
@@ -766,17 +776,15 @@
     "initialSetupAccelTrimsHead": {
         "message": "가속도계 트림"
     },
-    "initialSetupPitch": {
-        "message": "피치:"
-    },
-    "initialSetupRoll": {
-        "message": "롤:"
-    },
     "initialSetupMagHead": {
         "message": "자력계"
     },
     "initialSetupInfoHead": {
         "message": "시스템 정보"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "디스아밍에 대한 FC 플래그, 배터리 정보, RSSI 레벨 및 센서 하드웨어 표시",
+        "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
         "message": "배터리 전압:"
@@ -795,6 +803,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "CPU 온도:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -925,8 +936,16 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "포트 탭, 환경설정 탭 및 GPS 탭에서 올바르게 활성화된 경우 GPS 정보를 표시합니다",
+        "description": "Message that pops up to describe the GPS section"
+    },
     "initialSetupInstrumentsHead": {
         "message": "계기"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "계측기의 기체방향, 피치 및 롤 표시",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -934,23 +953,33 @@
     "initialSetupInfoBuild": {
         "message": "펌웨어 정보"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "펌웨어 빌드에 대한 정보를 표시합니다. 빌드 구성 및 빌드 로그는 빌드 키로 찾은 클라우드 정보에 연결됩니다",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "빌드 날짜:"
     },
     "initialSetupInfoBuildInfo": {
         "message": "빌드 정보:"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "빌드 키"
+    },
     "initialSetupInfoBuildInfoConfig": {
-        "message": "빌드 환경설정"
+        "message": "설정"
     },
     "initialSetupInfoBuildInfoLog": {
-        "message": "빌드 로그"
+        "message": "로그"
     },
     "initialSetupInfoBuildOptions": {
         "message": "빌드 옵션:"
     },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "사용된 정의값"
+    },
     "initialSetupInfoBuildOptionsEmpty": {
-        "message": "로컬 빌드 - 정의값 없음"
+        "message": "로컬 빌드 - 사용된 정의값 없음"
     },
     "initialSetupButtonSave": {
         "message": "저장"
