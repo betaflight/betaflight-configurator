@@ -1,6 +1,7 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import serial from "./serial.js";
+import MSPCodes from "./msp/MSPCodes.js";
 
 const MSP = {
     symbols: {
@@ -47,7 +48,6 @@ const MSP = {
     message_checksum:           0,
     messageIsJumboFrame:        false,
     crcError:                   false,
-    sequence:                   0,
 
     callbacks:                  [],
     packet_error:               0,
@@ -62,6 +62,10 @@ const MSP = {
 
     JUMBO_FRAME_SIZE_LIMIT:     255,
 
+    // function to get name of code
+    getMSPCodeName: function(code) {
+        return Object.keys(MSPCodes).find(key => MSPCodes[key] === code);
+    },
     read: function (readInfo) {
         if (CONFIGURATOR.virtualMode) {
             return;
@@ -315,11 +319,22 @@ const MSP = {
 
         for (const instance of MSP.callbacks) {
             if (instance.code === code) {
-                // request already exists in queue, don't add it again
-                if (callback_msp) {
-                    callback_msp();
-                }
-                return false;
+                // request already exists in queue, remove existing instance from queue
+                // and add new instance to the end of the queue
+                // this is done to prevent the queue from getting clogged with the same request
+                // and to ensure that the callback is called in the order that the requests were made
+                // we allow existing request to timeout and be removed from the queue
+                setTimeout(function () {
+                    const index = MSP.callbacks.indexOf(instance);
+                    if (index > -1)  {
+                        if (instance.timer) {
+                            clearInterval(instance.timer);
+                        }
+                        MSP.callbacks.splice(index, 1);
+                    }
+                }, MSP.timeout);
+
+                console.log(`MSP.send_message: code: ${code} ${this.getMSPCodeName(code)} QUEUE: ${MSP.callbacks.length} updated in queue`);
             }
         }
 
@@ -328,15 +343,13 @@ const MSP = {
         const obj = {
             'code': code,
             'requestBuffer': bufferOut,
-            'callback': callback_msp ? callback_msp : false,
-            'timer': false,
+            'callback': callback_msp,
             'callbackOnError': doCallbackOnError,
             'start': performance.now(),
-            'sequence': MSP.sequence++,
         };
 
         obj.timer = setInterval(function () {
-            console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length} SEQUENCE: ${obj.sequence}`);
+            console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length}`);
             serial.send(bufferOut, function (_sendInfo) {
                 obj.stop = performance.now();
                 const executionTime = Math.round(obj.stop - obj.start);
