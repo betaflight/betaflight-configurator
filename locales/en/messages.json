@@ -1037,6 +1037,16 @@
         "message": "Shows GPS info, if proper activated in Ports tab, Configuration Tab and GPS tab",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Shows Sonar info, if proper activated in Configuration Tab",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Altitude"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
     },

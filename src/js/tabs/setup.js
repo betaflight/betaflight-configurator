@@ -199,6 +199,7 @@ setup.initialize = function (callback) {
             roll_e = $('dd.roll'),
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading'),
+            sonar_e = $('.sonarAltitude'),
             // Sensor info
             sensor_e = $('.sensor-hw'),
             // Firmware info
@@ -399,6 +400,11 @@ setup.initialize = function (callback) {
         showSensorInfo();
         showFirmwareInfo();
 
+        // Show Sonar info box if sensor exist
+        if (! have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
+            $('.sonarBox').hide();
+        }
+
         function get_slow_data() {
 
             // Status info is acquired in the background using update_live_status() in serial_backend.js
@@ -437,6 +443,12 @@ setup.initialize = function (callback) {
                 self.renderModel();
                 self.updateInstruments();
             });
+            // get Sonar altitude if sensor exist
+            if (have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
+                MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
+                    sonar_e.text(`${FC.SENSOR_DATA.sonar.toFixed(1)} cm`);
+                });
+            }
         }
 
         GUI.interval_add('setup_data_pull_fast', get_fast_data, 33, true); // 30 fps
