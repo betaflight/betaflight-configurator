@@ -1141,11 +1141,20 @@
     "featureSONAR": {
         "message": "Sonar"
     },
+    "featureSONARTip": {
+        "message": "Enable Sonar rangefinder to measure distance to ground in cm"
+    },
     "featureTELEMETRY": {
         "message": "Telemetry output"
     },
+    "featureTELEMETRYTip": {
+        "message": "Enable telemetry output to send to transmitter"
+    },
     "feature3D": {
         "message": "3D mode (for use with reversible ESCs)"
+    },
+    "feature3DTip": {
+        "message": "Enable 3D mode for use with reversible ESCs, configure at Motors tab"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (one wire per channel)"
@@ -1159,6 +1168,9 @@
     "featureLED_STRIP": {
         "message": "Multi-color RGB LED strip support"
     },
+    "featureLED_STRIPTip": {
+        "message": "Enable Multi-color RGB LED strip support, configure at LED Strip tab"
+    },
     "featureDISPLAY": {
         "message": "OLED Screen Display"
     },
@@ -1167,6 +1179,9 @@
     },
     "featureOSD": {
         "message": "On Screen Display"
+    },
+    "featureOSDTip": {
+        "message": "Enable OSD, configure at OSD tab"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Forward aux channels to servo outputs"
