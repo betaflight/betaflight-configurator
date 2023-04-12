@@ -404,7 +404,7 @@ presets.preselectFilterFields = function() {
     const currentVersion = FC.CONFIG.flightControllerVersion;
     const selectedVersions = [];
 
-    for (const bfVersion of this.presetsRepo.index.uniqueValues.firmware_version) {
+    for(const bfVersion of this.presetsRepo.index.uniqueValues.firmware_version) {
         if (currentVersion.startsWith(bfVersion)) {
             selectedVersions.push(bfVersion);
         }

@@ -1,7 +1,6 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import serial from "./serial.js";
-import MSPCodes from "./msp/MSPCodes.js";
 
 const MSP = {
     symbols: {
@@ -62,10 +61,6 @@ const MSP = {
 
     JUMBO_FRAME_SIZE_LIMIT:     255,
 
-    // function to get name of code
-    getMSPCodeName: function(code) {
-        return Object.keys(MSPCodes).find(key => MSPCodes[key] === code);
-    },
     read: function (readInfo) {
         if (CONFIGURATOR.virtualMode) {
             return;
@@ -317,24 +312,31 @@ const MSP = {
             return false;
         }
 
+        let requestExists = false;
+
         for (const instance of MSP.callbacks) {
             if (instance.code === code) {
-                // request already exists in queue, remove existing instance from queue
-                // and add new instance to the end of the queue
-                // this is done to prevent the queue from getting clogged with the same request
-                // and to ensure that the callback is called in the order that the requests were made
-                // we allow existing request to timeout and be removed from the queue
-                setTimeout(function () {
-                    const index = MSP.callbacks.indexOf(instance);
-                    if (index > -1)  {
-                        if (instance.timer) {
-                            clearInterval(instance.timer);
+                // For MSP V1 we replace requests of the same type in the queue
+                // For MSP V2 we allow multiple requests of the same type to be in the queue
+                // This is because MSP V2 allows for multiple requests of the same type to be sent
+                // in a single frame, and we don't want to skip any of them.
+                // This is a workaround for the fact that we don't have a way to identify
+                // which request a response belongs to.
+                // TODO: Implement a way to identify which request a response belongs to
+                //       so that we can skip duplicate requests in the queue.
+                if (code < 255) {
+                    setTimeout(function () {
+                        const index = MSP.callbacks.indexOf(instance);
+                        if (index > -1)  {
+                            if (instance.timer) {
+                                clearInterval(instance.timer);
+                            }
+                            MSP.callbacks.splice(index, 1);
                         }
-                        MSP.callbacks.splice(index, 1);
-                    }
-                }, MSP.timeout);
-
-                console.log(`MSP.send_message: code: ${code} ${this.getMSPCodeName(code)} QUEUE: ${MSP.callbacks.length} updated in queue`);
+                    }, MSP.timeout);
+                } else {
+                    requestExists = true;
+                }
             }
         }
 
@@ -348,29 +350,33 @@ const MSP = {
             'start': performance.now(),
         };
 
-        obj.timer = setInterval(function () {
-            console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length}`);
-            serial.send(bufferOut, function (_sendInfo) {
-                obj.stop = performance.now();
-                const executionTime = Math.round(obj.stop - obj.start);
-                MSP.timeout = Math.max(MSP.MIN_TIMEOUT, Math.min(executionTime, MSP.MAX_TIMEOUT));
-            });
+        if (!requestExists) {
+            obj.timer = setInterval(function () {
+                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length}`);
+                serial.send(bufferOut, function (_sendInfo) {
+                    obj.stop = performance.now();
+                    const executionTime = Math.round(obj.stop - obj.start);
+                    MSP.timeout = Math.max(MSP.MIN_TIMEOUT, Math.min(executionTime, MSP.MAX_TIMEOUT));
+                });
 
-        }, MSP.timeout);
+            }, MSP.timeout);
+        }
 
         MSP.callbacks.push(obj);
 
-        serial.send(bufferOut, function (sendInfo) {
-            if (sendInfo.bytesSent === bufferOut.length) {
-                if (callback_sent) {
-                    callback_sent();
-                }
+        // always send messages with data payload (even when there is a message already in the queue)
+        if (data || !requestExists) {
+            if (MSP.timeout > MSP.MIN_TIMEOUT) {
+                MSP.timeout--;
             }
-        });
 
-        // Decrement timeout if it is above the minimum
-        if (MSP.timeout > MSP.MIN_TIMEOUT) {
-            MSP.timeout--;
+            serial.send(bufferOut, function (sendInfo) {
+                if (sendInfo.bytesSent === bufferOut.byteLength) {
+                    if (callback_sent) {
+                        callback_sent();
+                    }
+                }
+            });
         }
 
         return true;
