@@ -1,6 +1,7 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import serial from "./serial.js";
+import MSPCodes from "./msp/MSPCodes.js";
 
 const MSP = {
     symbols: {
@@ -324,7 +325,7 @@ const MSP = {
                 // which request a response belongs to.
                 // TODO: Implement a way to identify which request a response belongs to
                 //       so that we can skip duplicate requests in the queue.
-                if (code < 255) {
+                if (code < 255 && code !== MSPCodes.MSP_MULTIPLE_MSP) {
                     setTimeout(function () {
                         const index = MSP.callbacks.indexOf(instance);
                         if (index > -1)  {
