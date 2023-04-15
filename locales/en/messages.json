@@ -6143,6 +6143,12 @@
         "message": "Device ready",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxReadyTrue": {
+        "message": "<span class=\"fixtrue\">Yes</span>"
+    },
+    "vtxReadyFalse": {
+        "message": "<span class=\"fixfalse\">No</span>"
+    },
     "vtxPower": {
         "message": "Power",
         "description": "Text of one of the fields of the VTX tab"

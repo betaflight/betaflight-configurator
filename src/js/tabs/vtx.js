@@ -40,12 +40,19 @@ vtx.isVtxDeviceStatusNotReady = function()
 
 vtx.updateVtxDeviceStatus = function()
 {
-    MSP.send_message(MSPCodes.MSP2_GET_VTX_DEVICE_STATUS, false, false, vtxDeviceStatusReceived);
-
     function vtxDeviceStatusReceived()
     {
         $("#vtx_type_description").text(TABS.vtx.getVtxTypeString());
     }
+
+    function vtxDeviceStatusReady()
+    {
+        // update device ready state
+        $("#vtx_device_ready_description").html(FC.VTX_CONFIG.vtx_device_ready ? i18n.getMessage("vtxReadyTrue") : i18n.getMessage("vtxReadyFalse"));
+    }
+
+    MSP.send_message(MSPCodes.MSP2_GET_VTX_DEVICE_STATUS, false, false, vtxDeviceStatusReceived);
+    MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxDeviceStatusReady);
 };
 
 vtx.getVtxTypeString = function()
@@ -101,7 +108,7 @@ vtx.initialize = function (callback) {
     function read_vtx_config(callback_after_msp) {
 
         vtx_config();
-
+        
         function vtx_config() {
             MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxConfigReceived);
         }
@@ -205,7 +212,6 @@ vtx.initialize = function (callback) {
         // Bands and channels
         FC.VTX_CONFIG.vtx_table_bands = vtxConfig.vtx_table.bands_list.length;
 
-
         let maxChannels = 0;
         TABS.vtx.VTXTABLE_BAND_LIST = [];
         for (let i = 1; i <= FC.VTX_CONFIG.vtx_table_bands; i++) {
@@ -290,14 +296,12 @@ vtx.initialize = function (callback) {
         $("#vtx_low_power_disarm").val(FC.VTX_CONFIG.vtx_low_power_disarm);
 
         // Values of the current values
-        const yesMessage =  i18n.getMessage("yes");
-        const noMessage =  i18n.getMessage("no");
+        $("#vtx_device_ready_description").html(FC.VTX_CONFIG.vtx_device_ready ? i18n.getMessage("vtxReadyTrue") : i18n.getMessage("vtxReadyFalse"));
 
-        $("#vtx_device_ready_description").text(FC.VTX_CONFIG.vtx_device_ready ? yesMessage : noMessage);
         $("#vtx_type_description").text(self.getVtxTypeString());
         $("#vtx_channel_description").text(FC.VTX_CONFIG.vtx_channel);
         $("#vtx_frequency_description").text(FC.VTX_CONFIG.vtx_frequency);
-        $("#vtx_pit_mode_description").text(FC.VTX_CONFIG.vtx_pit_mode ? yesMessage : noMessage);
+        $("#vtx_pit_mode_description").text(FC.VTX_CONFIG.vtx_pit_mode ? i18n.getMessage("Yes") : i18n.getMessage("No"));
         $("#vtx_pit_mode_frequency_description").text(FC.VTX_CONFIG.vtx_pit_mode_frequency);
         $("#vtx_low_power_disarm_description").text(i18n.getMessage(`vtxLowPowerDisarmOption_${FC.VTX_CONFIG.vtx_low_power_disarm}`));
 
