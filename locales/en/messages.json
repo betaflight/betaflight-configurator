@@ -2559,12 +2559,6 @@
     "gps3dFix": {
         "message": "3D Fix:"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">True</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">False</span>"
-    },
     "gpsAltitude": {
         "message": "Altitude:"
     },
@@ -6142,12 +6136,6 @@
     "vtxDeviceReady": {
         "message": "Device ready",
         "description": "Text of one of the fields of the VTX tab"
-    },
-    "vtxReadyTrue": {
-        "message": "<span class=\"fixtrue\">Yes</span>"
-    },
-    "vtxReadyFalse": {
-        "message": "<span class=\"fixfalse\">No</span>"
     },
     "vtxPower": {
         "message": "Power",

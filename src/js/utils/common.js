@@ -113,3 +113,11 @@ $.fn.sortSelect = function(text = "") {
 
     return this.empty().append(op);
 };
+
+/*
+ *  return Yes or No with Color from class fixtrue or fixfalse
+ */
+
+export function getColorYesNo(value) {
+    return (value ? `<span class="fixtrue">${i18n.getMessage("Yes")}</span>` : `<span class="fixfalse">${i18n.getMessage("No")}</span>`);
+}

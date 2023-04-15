@@ -11,6 +11,7 @@ import Model from '../model';
 import MSPCodes from '../msp/MSPCodes';
 import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
+import { getColorYesNo } from "../utils/common";
 
 const setup = {
     yaw_fix: 0.0,
@@ -428,7 +429,7 @@ setup.initialize = function (callback) {
 
             // GPS info is acquired in the background using update_live_status() in serial_backend.js
 
-            gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            gpsFix_e.html(getColorYesNo(FC.GPS_DATA.fix));
             gpsSats_e.text(FC.GPS_DATA.numSat);
             gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} deg`);
             gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);

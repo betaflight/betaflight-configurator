@@ -13,7 +13,7 @@ import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_44 } from '../data_storage';
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
-import { checkChromeRuntimeError } from "../utils/common";
+import { checkChromeRuntimeError, getColorYesNo } from "../utils/common";
 
 const vtx = {
     supported: false,
@@ -48,7 +48,7 @@ vtx.updateVtxDeviceStatus = function()
     function vtxDeviceStatusReady()
     {
         // update device ready state
-        $("#vtx_device_ready_description").html(FC.VTX_CONFIG.vtx_device_ready ? i18n.getMessage("vtxReadyTrue") : i18n.getMessage("vtxReadyFalse"));
+        $("#vtx_device_ready_description").html(getColorYesNo(FC.VTX_CONFIG.vtx_device_ready));
     }
 
     MSP.send_message(MSPCodes.MSP2_GET_VTX_DEVICE_STATUS, false, false, vtxDeviceStatusReceived);
@@ -296,7 +296,7 @@ vtx.initialize = function (callback) {
         $("#vtx_low_power_disarm").val(FC.VTX_CONFIG.vtx_low_power_disarm);
 
         // Values of the current values
-        $("#vtx_device_ready_description").html(FC.VTX_CONFIG.vtx_device_ready ? i18n.getMessage("vtxReadyTrue") : i18n.getMessage("vtxReadyFalse"));
+        $("#vtx_device_ready_description").html(getColorYesNo(FC.VTX_CONFIG.vtx_device_ready));
 
         $("#vtx_type_description").text(self.getVtxTypeString());
         $("#vtx_channel_description").text(FC.VTX_CONFIG.vtx_channel);
