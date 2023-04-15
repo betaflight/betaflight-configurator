@@ -108,7 +108,7 @@ vtx.initialize = function (callback) {
     function read_vtx_config(callback_after_msp) {
 
         vtx_config();
-        
+
         function vtx_config() {
             MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxConfigReceived);
         }
