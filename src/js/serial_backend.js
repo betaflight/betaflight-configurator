@@ -670,15 +670,9 @@ async function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
-        FC.MULTIPLE_MSP.msp_commands.push(
-            MSPCodes.MSP_ANALOG,
-            MSPCodes.MSP_BOXNAMES,
-            MSPCodes.MSP_STATUS_EX,
-        );
-        await MSP.promise(MSPCodes.MSP_MULTIPLE_MSP, mspHelper.crunch(MSPCodes.MSP_MULTIPLE_MSP));
-        // await MSP.promise(MSPCodes.MSP_ANALOG);
-        // await MSP.promise(MSPCodes.MSP_BOXNAMES);
-        // await MSP.promise(MSPCodes.MSP_STATUS_EX);
+        await MSP.promise(MSPCodes.MSP_ANALOG);
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
         const active = (performance.now() - FC.ANALOG.last_received_timestamp) < 300;
 

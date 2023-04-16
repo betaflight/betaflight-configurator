@@ -334,7 +334,7 @@ const MSP = {
                             }
                             MSP.callbacks.splice(index, 1);
                         }
-                    }, MSP.timeout);
+                    }, 10);
                 } else {
                     requestExists = true;
                 }
@@ -353,7 +353,7 @@ const MSP = {
 
         if (!requestExists) {
             obj.timer = setInterval(function () {
-                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length}`);
+                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length} (${MSP.callbacks.map(function (e) { return e.code; })})`);
                 serial.send(bufferOut, function (_sendInfo) {
                     obj.stop = performance.now();
                     const executionTime = Math.round(obj.stop - obj.start);
