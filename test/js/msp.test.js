@@ -10,8 +10,9 @@ describe("MSP", () => {
             }
         });
         it("handles non-empty messages correctly", () => {
-            let inputData = Uint8Array.from({length: 100 + randomUnit8() % 100}, () => randomUnit8());
-            let operationCode = randomUnit8();
+            let [operationCode, inputDataLengthPadding] = crypto.getRandomValues(new Uint8Array(2));
+
+            let inputData = crypto.getRandomValues(new Uint8Array(100 + inputDataLengthPadding % 100));
 
             let encodedMessage = new Uint8Array(MSP.encode_message_v1(operationCode, inputData));
 
@@ -43,12 +44,10 @@ describe("MSP", () => {
             }
         });
         it("handles non-empty messages correctly", () => {
-            let lengthLowByte = randomUnit8();
-            let lengthHighByte = randomUnit8();
+            let [lengthLowByte, lengthHighByte] = crypto.getRandomValues(new Uint8Array(2));
 
-            let inputData = Uint8Array.from({length: lengthLowByte + lengthHighByte * 256}, () => randomUnit8());
-            let operationCodeLowByte = randomUnit8();
-            let operationCodeHighByte = randomUnit8();
+            let inputData = crypto.getRandomValues(new Uint8Array(lengthLowByte + lengthHighByte * 256));
+            let [operationCodeLowByte, operationCodeHighByte] = crypto.getRandomValues(new Uint8Array(2));
 
             let encodedMessage = new Uint8Array(MSP.encode_message_v2(operationCodeLowByte + 256 * operationCodeHighByte, inputData));
 
@@ -67,11 +66,6 @@ describe("MSP", () => {
 
             // check that data got encoded as expected
             expect(encodedMessage.slice(8, -1)).toEqual(inputData);
-
         });
     });
 });
-
-function randomUnit8() {
-    return Math.floor(Math.random() * 256);
-}
