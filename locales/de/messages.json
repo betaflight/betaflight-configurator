@@ -736,6 +736,10 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Z Achse zurücksetzen, Abweichung: $1 Grad"
     },
+    "initialSetupHeading": {
+        "message": "Richtung:",
+        "description": "Heading shown on Setup tab"
+    },
     "initialSetupPitch": {
         "message": "Pitch:"
     },
@@ -781,6 +785,10 @@
     "initialSetupInfoHead": {
         "message": "Systeminfo"
     },
+    "initialSetupInfoHeadHelp": {
+        "message": "FC-Flags für Disarming, Akku-Information, RSSI-Level und Sensor-Hardware anzeigen",
+        "description": "Message that pops up to describe the System info section"
+    },
     "initialSetupBattery": {
         "message": "Akku Spannung"
     },
@@ -798,6 +806,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "CPU-Temperatur:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -928,8 +939,26 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "GPS-Informationen anzeigen, falls im Ports-Tab, im Konfiguration-Tab und im GPS-Tab aktiviert",
+        "description": "Message that pops up to describe the GPS section"
+    },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Sonar-Informationen anzeigen, wenn im Konfigurations-Tab aktiviert",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Höhe"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumente"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Richtung, Pitch und Rollen in Instrumenten anzeigen",
+        "description": "Message that pops up to describe the Instruments section"
     },
     "initialSetupInfoAPIversion": {
         "message": "MSP API:"
@@ -937,14 +966,33 @@
     "initialSetupInfoBuild": {
         "message": "Firmware-Info"
     },
+    "initialSetupInfoBuildHelp": {
+        "message": "Informationen zum Build der Firmware anzeigen. Die Build-Config und Build-Log verweisen zu den Cloud-Informationen des Build-Schlüssels",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Erstellungsdatum (build date):"
     },
     "initialSetupInfoBuildInfo": {
         "message": "Erstellungsinfo (build info):"
     },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Build Key"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Konfiguration"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Log"
+    },
     "initialSetupInfoBuildOptions": {
         "message": "Erstellungsoptionen (build options):"
+    },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Verwendete Definitionen"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Lokaler Build - keine Definitionen verwendet"
     },
     "initialSetupButtonSave": {
         "message": "Speichern"
@@ -1009,11 +1057,20 @@
     "featureSONAR": {
         "message": "Sonar"
     },
+    "featureSONARTip": {
+        "message": "Sonar-Abstandsensor zur Messung der Bodendistanz in cm aktivieren"
+    },
     "featureTELEMETRY": {
         "message": "Telemetrieübertragung"
     },
+    "featureTELEMETRYTip": {
+        "message": "Telemetrie-Ausgabe zum Senden an Sender aktivieren"
+    },
     "feature3D": {
         "message": "3D Modus (für die Benutzung mit umkehrbaren ESC)"
+    },
+    "feature3DTip": {
+        "message": "3D-Modus für die Verwendung mit umkehrbaren ESCs aktivieren; Konfiguration im Motor-Tab"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (ein Draht pro Kanal)"
@@ -1027,6 +1084,9 @@
     "featureLED_STRIP": {
         "message": "RGB LED Leisten Unterstützung"
     },
+    "featureLED_STRIPTip": {
+        "message": "Unterstützung für mehrfarbige RGB-LED-Streifen-aktivieren; Konfiguration im LED-Streifen-Tab"
+    },
     "featureDISPLAY": {
         "message": "OLED Bildschirm Anzeige"
     },
@@ -1035,6 +1095,9 @@
     },
     "featureOSD": {
         "message": "On Screen Display"
+    },
+    "featureOSDTip": {
+        "message": "OSD aktivieren; Konfiguration im OSD-Tab"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "AUX Kanäle als Servo Ausgang weiterleiten"

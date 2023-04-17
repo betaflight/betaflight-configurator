@@ -940,6 +940,16 @@
         "message": "Muestra la información del GPS, si está correctamente activado en las pestañas de Puertos, Configuración y GPS",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Muestra información del Sonar, si se activa correctamente en la pestaña de Configuración",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Altitud"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
     },
@@ -1044,11 +1054,20 @@
     "featureSONAR": {
         "message": "Sonar"
     },
+    "featureSONARTip": {
+        "message": "Activa el Sonar para medir distancia al suelo en cm"
+    },
     "featureTELEMETRY": {
         "message": "Salida de telemetría"
     },
+    "featureTELEMETRYTip": {
+        "message": "Activar la salida de telemetría para enviarla al transmisor"
+    },
     "feature3D": {
         "message": "Modo 3D (para usar con ESCs reversibles)"
+    },
+    "feature3DTip": {
+        "message": "Activar modo 3D para usar con ESC reversibles, configurar en pestaña Motores"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (un cable por canal)"
@@ -1062,6 +1081,9 @@
     "featureLED_STRIP": {
         "message": "Soporte tira LED RGB multi-color"
     },
+    "featureLED_STRIPTip": {
+        "message": "Activar soporte para tira de LEDs RGB, configurar en la pestaña Tiras LED"
+    },
     "featureDISPLAY": {
         "message": "Pantalla OLED"
     },
@@ -1070,6 +1092,9 @@
     },
     "featureOSD": {
         "message": "Visualización en Pantalla"
+    },
+    "featureOSDTip": {
+        "message": "Activar OSD, configurar en la pestaña OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Redirigir canales aux hacia salidas de servo"

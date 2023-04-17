@@ -940,6 +940,16 @@
         "message": "Viser GPS information, hvis indstillet i Porte, Opsætning og GPS fane",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Viser information fra Sonar, hvis den er indstillet rigtigt på fanen Opsætning ",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Højde"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumenter"
     },
@@ -1044,11 +1054,20 @@
     "featureSONAR": {
         "message": "Sonar afstandsmåler"
     },
+    "featureSONARTip": {
+        "message": "Aktiver Sonar afstandsbestemmer for at måle afstand til overfladen i cm"
+    },
     "featureTELEMETRY": {
         "message": "Telemetri protokol"
     },
+    "featureTELEMETRYTip": {
+        "message": "Aktiver for at sende telemetri data til radio sender"
+    },
     "feature3D": {
         "message": "3D-tilstand (til brug med vendbare ESC'er)"
+    },
+    "feature3DTip": {
+        "message": "Aktiver 3D tilstand til brug med reversible ESC, indstilles på fanen Motorer"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM RX-input (en ledning pr. kanal)"
@@ -1062,6 +1081,9 @@
     "featureLED_STRIP": {
         "message": "Flerfarvet RGB LED-strimmel understøttelse"
     },
+    "featureLED_STRIPTip": {
+        "message": "Aktiver flerfavet LED strimmel, indstil på fanen LED-strimmel"
+    },
     "featureDISPLAY": {
         "message": "OLED-skærmvisning"
     },
@@ -1070,6 +1092,9 @@
     },
     "featureOSD": {
         "message": "On Screen Display (OSD)"
+    },
+    "featureOSDTip": {
+        "message": "Aktiver OSD, indstil på fanen OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Videresend aux-kanaler til servoudgange"
@@ -2605,7 +2630,7 @@
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
     },
     "motorsESCTemperature": {
-        "message": "Tmp: {{motorsESCTempValue}}&deg;C",
+        "message": "Temp: {{motorsESCTempValue}}&deg;C",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
     },
     "motorsMaster": {
@@ -3727,7 +3752,7 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Skyderne til at justere fartøj flyveegenskaber (PID forstærkning)<br /><br />Dæmpning (D forstærkning): Modstår hurtig bevægelse, minimerer P svingning.<br /><br />Sporing (P og I forstærkning): Sporer fartøjets reaktionshastighed, hvis den er for høj, kan den forårsage trilling eller resonans.<br /><br />Pind svarhastighed (Feedforward): Øger fartøjets reaktionshastighed ved for hurtigere pind bevægelser.<br /><br />Drift - Wobble (I forstærkning, ekspert): Fin justering af I.<br /><br />Dynamisk D (D Max, ekspert): Indstiller den maksimale værdi, som D kan øges til ved hurtige bevægelser.<br /><br />Højderor dæmpning (højderor:krængror D ratio, ekspert): Øger dæmpning af højderor i forhold til krængror.<br /><br />Højderor sporing (højderor:krængror P, I og F ratio, ekspert): Øger stabiliserende værdier til højderor i forhold til krængror.<br /><br />Master Multiplier (alle forstærkninger, ekspert): Hæver eller sænker alle PID værdier, holder deres indbyrdes forhold konstant.",
+        "message": "Skyderne til at justere fartøj flyveegenskaber (PID forstærkning)<br /><br />Dæmpning (D forstærkning): Modstår hurtig bevægelse, minimerer P svingning.<br /><br />Sporing (P og I forstærkning): Sporer fartøjets reaktionshastighed, hvis den er for høj, kan den forårsage rullen eller resonans.<br /><br />Pind svarhastighed (Feedforward): Øger fartøjets reaktionshastighed ved for hurtigere pind bevægelser.<br /><br />Drift - Wobble (I forstærkning, for ekspert): Fin justering af I.<br /><br />Dynamisk D (D Max, for ekspert): Indstiller den maksimale værdi, som D kan øges til ved hurtige bevægelser.<br /><br />Højderor dæmpning (højderor:krængror D ratio, for ekspert): Øger dæmpning af højderor i forhold til krængror.<br /><br />Højderor sporing (højderor:krængror P, I og F ratio, for ekspert): Øger stabiliserende værdier til højderor i forhold til krængror.<br /><br />Generel (påvirker alle forstærkninger, for ekspert): Hæver eller sænker alle PID værdier, holder deres indbyrdes forhold konstant.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -3783,11 +3808,11 @@
         "description": "Tuning Slider High header"
     },
     "pidTuningMasterSlider": {
-        "message": "Master multiplikator:",
+        "message": "Generel multiplikator:",
         "description": "Master tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
-        "message": "Øger alle PID parametre ens. Undlad at ændre denne skyder medmindre du løber tør for justering på de andre skydere. Typisk er dette kun nødvendigt for langsomme fartøjer eller ved højt inerti (MoI) fartøjer som X-Class eller cinelifter fartøjer. For meget master forstærkning kan forårsage trilling svingninger eller varme motorer.",
+        "message": "Øger alle PID parametre ens. Undlad at ændre denne skyder medmindre du løber tør for justering på de andre skydere. Typisk er dette kun nødvendigt for langsomme fartøjer eller ved højt inerti (MoI) fartøjer som X-Class eller cinelifter fartøjer. For meget generel forstærkning kan forårsage rullende svingninger eller varme motorer.",
         "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSlider": {
@@ -4622,7 +4647,7 @@
         "message": "<span class=\"message-negative\"><b>ADVARSEL:</b></span> Der blev ikke fundet nogen OSD chip. Nogle FC kan ikke aktivere OSD chippen, medmindre de er tilsluttet batteri. Tilslut batteriet, før du tilslutter USB (Husk at fjerne propellerne!)."
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Bemærk:</strong> OSD forhåndsvisning viser muligvis ikke den skrifttype, der er installeret i FC. Layoutet af individuelle elementer kan se anderledes ud, når ældre versioner af firmwaren bruges - tjek venligst udseendet af din opsætning, fx med dine briller, før du flyver."
+        "message": "<strong>Bemærk:</strong> OSD forhåndsvisning viser muligvis ikke den skrifttype, der er installeret i FC. Layoutet af individuelle elementer kan se anderledes ud, afhænigt af din version af firmware, derfor tjek udseendet af din opsætning, fx med dine briller, før du flyver."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Din FC reagerer ikke på OSD kommandoer. Det betyder sandsynligvis, at den ikke har et integreret BetaFlight OSD."
@@ -6013,15 +6038,15 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "Når aktiveret, begynder VTX med en meget lav effekt for at lade fartøjet være på startbanen uden at forstyrre andre piloter. Normalt er rækkevidden af denne tilstand mindre end 5m.<br /><br />BEMÆRK: Nogle protokoller, som fx. SmartAudio, kan ikke aktivere Pit Mode via software efter power-up.",
+        "message": "Når aktiveret, begynder VTX med en meget lav effekt for at lade fartøjet være på startbanen uden at forstyrre andre piloter. Normalt er rækkevidden af denne tilstand mindre end 5m.<br /><br />BEMÆRK: Nogle protokoller, som fx. SmartAudio, kan ikke aktivere Pit tilstand via software efter power-up.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
-        "message": "Pit tilstand frekvens",
+        "message": "Kanal i Pit",
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeFrequencyHelp": {
-        "message": "Frekvens, som sættes ved Pit tilstand",
+        "message": "Kanal, som anvendes i Pit tilstand",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxLowPowerDisarm": {

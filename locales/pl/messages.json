@@ -467,11 +467,17 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Przesłano dane wsparcia *** <br>Id: $1<br><br><br># skopiuj identyfikator i prześlij zespołowi betaflight."
     },
+    "buildKey": {
+        "message": "Zbuduj klucz: <strong>$1</strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Potwierdź przesłanie danych"
     },
     "supportWarningDialogText": {
         "message": "Potwierdź przesłanie danych do zespołu Betaflight<br><br>Ten proces uruchomi kilka poleceń i prześle dane wyjściowe na serwer kompilacji.<br><br>Następnie otrzymasz unikalny identyfikator twojego zgłoszenia.<br><br>Upewnij się, że podasz ten unikalny identyfikator zespołowi Betaflight podczas używania Discorda lub otwierania nowego tematu na Githubie."
+    },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "Opisz problem"
     },
     "releaseCheckLoaded": {
         "message": "Załadowano informację o wersji $1 z GitHub'a."
@@ -727,6 +733,10 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Resetuj oś Z, położenie: $1 stopni"
     },
+    "initialSetupHeading": {
+        "message": "Kurs:",
+        "description": "Heading shown on Setup tab"
+    },
     "initialSetupPitch": {
         "message": "Pitch:"
     },
@@ -769,6 +779,13 @@
     "initialSetupMagHead": {
         "message": "Magnetometr"
     },
+    "initialSetupInfoHead": {
+        "message": "Informacje o systemie"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Pokazuje flagi FC do rozbrojenia oraz informacje takie jak rodzaj baterii, poziom RSSI oraz rodzaj podłączonych czujników",
+        "description": "Message that pops up to describe the System info section"
+    },
     "initialSetupBattery": {
         "message": "Napięcie baterii:"
     },
@@ -787,8 +804,14 @@
     "initialSetupBatteryAValue": {
         "message": "$1 A"
     },
+    "initialSetupCpuTemp": {
+        "message": "Temperatura procesora:"
+    },
     "initialSetupRSSI": {
         "message": "RSSI:"
+    },
+    "initialSetupSensorHardware": {
+        "message": "Czujniki:"
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
@@ -913,8 +936,60 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Pokazuje informacje GPS, jeśli poprawnie skonfigurowano  tę opcję w zakładce Porty, zakładce konfiguracji i zakładce GPS",
+        "description": "Message that pops up to describe the GPS section"
+    },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Pokazuje informacje na temat sonaru, jeśli poprawnie skonfigurowano ustawienia w zakładce Konfiguracji",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Wysokość"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumenty"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "Pokazuje kurs, Pitch i Roll na przyrządach",
+        "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Informacje o firmware"
+    },
+    "initialSetupInfoBuildHelp": {
+        "message": "Wyświetla informacje dotyczące kompilacji oprogramowania układowego. Konfiguracja kompilacji i dziennik kompilacji pokrywają się  z informacjami znalezionymi w chmurze przez klucz kompilacji",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "Data kompilacji:"
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "Informacje o kompilacji:"
+    },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "Budowa klucza"
+    },
+    "initialSetupInfoBuildInfoConfig": {
+        "message": "Konfiguruj"
+    },
+    "initialSetupInfoBuildInfoLog": {
+        "message": "Log"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Opcje budowy:"
+    },
+    "initialSetupInfoBuildOptionsList": {
+        "message": "Użyte definicje"
+    },
+    "initialSetupInfoBuildOptionsEmpty": {
+        "message": "Budowa lokalna — brak definicji"
     },
     "initialSetupButtonSave": {
         "message": "Zapisz"
@@ -979,11 +1054,20 @@
     "featureSONAR": {
         "message": "Sonar"
     },
+    "featureSONARTip": {
+        "message": "Włącz sonar do pomiaru odległości do podłoża"
+    },
     "featureTELEMETRY": {
         "message": "Wyjście telemetrii"
     },
+    "featureTELEMETRYTip": {
+        "message": "Włącz wyjście telemetryczne, aby wysyłać dane do nadajnika"
+    },
     "feature3D": {
         "message": "Tryb 3D (do użytku tylko z ESC pozwalającym odwracanie kierunku)"
+    },
+    "feature3DTip": {
+        "message": "Włącz tryb 3D do użytku z  ESC które pozwalają na zmianę kierunku obrotów silnika. Skonfiguruj tę opcję w zakładce Silniki"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (jeden przewód na kanał)"
@@ -997,6 +1081,9 @@
     "featureLED_STRIP": {
         "message": "Obsługa paska RGB LED"
     },
+    "featureLED_STRIPTip": {
+        "message": "Włącz obsługę pasków LED w wielu kolorach. Skonfiguruj tę opcję w zakładce  Paski LED/RGB"
+    },
     "featureDISPLAY": {
         "message": "Wyświetlacz OLED"
     },
@@ -1005,6 +1092,9 @@
     },
     "featureOSD": {
         "message": "OSD"
+    },
+    "featureOSDTip": {
+        "message": "Włącz OSD. Skonfiguruj tę opcję w zakładce OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Prześlij wartość kanału AUX do wyjść serwomechanizmów"
@@ -2383,6 +2473,9 @@
     "gpsLon": {
         "message": "Długość:"
     },
+    "gpsHeading": {
+        "message": "Kurs:"
+    },
     "gpsSpeed": {
         "message": "Prędkość:"
     },
@@ -3117,7 +3210,7 @@
         "message": "<strong>Odzyskiwanie / Utracono komunikacje</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odepnij zasilanie</li><li>Włącz „Brak sekwencji restartu”, włącz „Pełne kasowanie chipa”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT.</li><li>Podłącz zasilanie (dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (patrz <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji FC).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
+        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odepnij zasilanie</li><li>Włącz „Nie restartuj”, włącz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT.</li><li>Podłącz zasilanie (dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (patrz <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji FC).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
@@ -3397,6 +3490,10 @@
     "ledStripWiringMessage": {
         "message": "Diody LED bez numeru porządkowego nie zostaną zapisane.",
         "description": "Message in the wiring modes in Led Strip"
+    },
+    "ledStripLarsonOverlay": {
+        "message": "Skaner Larsona",
+        "description": "Larson effect switch label on LED Strip tab"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Migaj zawsze"
@@ -6706,5 +6803,9 @@
     },
     "coreBuildModeDescription": {
         "message": "Ta opcja tworzy oprogramowanie układowe zawierające sterowniki sprzętowe (i niektóre ograniczone funkcje). Jest dostępna, aby pomóc w wykryciu kontrolera lotu i jest udostępniona wyłącznie dla tej wygody. Może sie tak zdarzyć, że nie wszystkie funkcje będą dostępne (na wykrytym kontrolerze lotu) przy użyciu tej opcji."
+    },
+    "showDevToolsOnStartup": {
+        "message": "Automatycznie otwórz DevTools w trybie deweloperskim",
+        "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     }
 }
