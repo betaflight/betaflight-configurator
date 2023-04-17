@@ -804,6 +804,9 @@
     "initialSetupBatteryAValue": {
         "message": "$1 A"
     },
+    "initialSetupCpuTemp": {
+        "message": "Temperatura da CPU:"
+    },
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
@@ -937,6 +940,16 @@
         "message": "Mostra info do GPS, se ativadas adequadamente nas abas Portas, Configuração e GPS",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Mostra informações do Sonar, se adequadamente ativado na aba Configuração",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Altitude"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instrumentos"
     },
@@ -1041,11 +1054,20 @@
     "featureSONAR": {
         "message": "Sonar"
     },
+    "featureSONARTip": {
+        "message": "Ativar o rangefinder do Sonar para medir a distância ao solo em cm"
+    },
     "featureTELEMETRY": {
         "message": "Saída de telemetria"
     },
+    "featureTELEMETRYTip": {
+        "message": "Ativar a saída de telemetria a enviar ao transmissor"
+    },
     "feature3D": {
         "message": "Modo 3D (para uso com ESCs reversíveis)"
+    },
+    "feature3DTip": {
+        "message": "Ativar modo 3D a usar com ESCs reversíveis, configure na aba Motores"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (um fio por canal)"
@@ -1059,6 +1081,9 @@
     "featureLED_STRIP": {
         "message": "Suporte de fita de LEDs RGB multicor"
     },
+    "featureLED_STRIPTip": {
+        "message": "Ativar faixa de LED RGB multi-côr, configure na aba Faixa de LED"
+    },
     "featureDISPLAY": {
         "message": "Tela OLED"
     },
@@ -1067,6 +1092,9 @@
     },
     "featureOSD": {
         "message": "Informações na Tela (OSD)"
+    },
+    "featureOSDTip": {
+        "message": "Ativar OSD, configure na aba OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Enviar canais AUX para saídas do servo"

@@ -223,7 +223,7 @@
         "message": "Opzioni"
     },
     "tabSetup": {
-        "message": "Setup"
+        "message": "Impostazioni"
     },
     "tabSetupOSD": {
         "message": "Impostazioni OSD"
@@ -733,6 +733,10 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reset asse Z, offset: $1 gradi"
     },
+    "initialSetupHeading": {
+        "message": "Direzione:",
+        "description": "Heading shown on Setup tab"
+    },
     "initialSetupPitch": {
         "message": "Pitch:"
     },
@@ -799,6 +803,9 @@
     },
     "initialSetupBatteryAValue": {
         "message": "$1 A"
+    },
+    "initialSetupCpuTemp": {
+        "message": "Temperatura CPU:"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -933,6 +940,16 @@
         "message": "Mostra le informazioni GPS, se attivato correttamente nella scheda Porte, Configurazione e GPS",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Mostra le informazioni Sonar, se attivato nella scheda di configurazione",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Altitudine"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Strumentazione"
     },
@@ -1037,11 +1054,20 @@
     "featureSONAR": {
         "message": "Sonar"
     },
+    "featureSONARTip": {
+        "message": "Abilita il Sonar per misurare la distanza dal suolo in cm"
+    },
     "featureTELEMETRY": {
         "message": "Uscita telemetria"
     },
+    "featureTELEMETRYTip": {
+        "message": "Abilita la telemetria in uscita da inviare al trasmettitore"
+    },
     "feature3D": {
         "message": "Modalità 3D (da utilizzare con ESCs reversibili)"
+    },
+    "feature3DTip": {
+        "message": "Abilita la modalità 3D da usare con ESCs reversibili, configura la scheda Motors"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (un cavo per canale)"
@@ -1055,6 +1081,9 @@
     "featureLED_STRIP": {
         "message": "Supporto per LED RGB Multi-colore"
     },
+    "featureLED_STRIPTip": {
+        "message": "Abilita il supporto per striscia a LED RGB multicolore, configura la scheda Striscia LED"
+    },
     "featureDISPLAY": {
         "message": "Display schermo OLED"
     },
@@ -1063,6 +1092,9 @@
     },
     "featureOSD": {
         "message": "OSD (On Screen Display)"
+    },
+    "featureOSDTip": {
+        "message": "Abilita OSD, configura nella scheda OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Inoltra i canali aux alle uscite dei servi"
@@ -2701,7 +2733,7 @@
         "message": "Rilascia per fermare"
     },
     "escDshotDirectionDialog-Start": {
-        "message": "Individualmente"
+        "message": "Singolarmente"
     },
     "escDshotDirectionDialog-StartWizard": {
         "message": "Procedura guidata"
@@ -2722,7 +2754,7 @@
         "message": "Aggiorna il firmware.<br /> Assicurati di utilizzare l'ultimo firmware: Betaflight 4.3 o successivo."
     },
     "escDshotDirectionDialog-WizardActionHint": {
-        "message": "Fai click sui numeri dei motori individualmente per cambiare direzione di rotazione"
+        "message": "Fai click sul numero del singolo motore per cambiare direzione di rotazione"
     },
     "escDshotDirectionDialog-WizardActionHintSecondLine": {
         "message": "Verifica che tutti i motori stiano girando correttamente"
@@ -2830,7 +2862,7 @@
         "message": "Esempi salvati:"
     },
     "loggingLogSize": {
-        "message": "Dimensione registro:"
+        "message": "Dimensione Log:"
     },
     "loggingLogName": {
         "message": "Nome Log:"
@@ -3724,7 +3756,7 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">ATTENZIONE</span>: Le posizioni correnti degli slider possono causare flyaway, danni ai motori o funzionamento pericoloso. Procedi con cautela.",
+        "message": "<span class=\"message-negative\">ATTENZIONE</span>: Le attuali posizioni degli slider possono causare flyaway, danni ai motori o funzionamento pericoloso. Procedi con cautela.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -6672,7 +6704,7 @@
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogDefaultSourceName": {
-        "message": "Nuova Sorgente Preset Personalizzata",
+        "message": "Nuova Sorgente Preset Personalizzati",
         "description": "A default preset source (repo) name"
     },
     "presetsSourcesDialogSaveSource": {

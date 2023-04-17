@@ -940,6 +940,16 @@
         "message": "ポートタブ、設定タブ、GPSタブで有効になっている場合はGPS情報を表示",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "ソナー"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "【設定】タブで有効化している場合、ソナー情報を表示",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "高度"
+    },
     "initialSetupInstrumentsHead": {
         "message": "計器"
     },
@@ -1044,11 +1054,20 @@
     "featureSONAR": {
         "message": "ソナー 超音波距離センサー"
     },
+    "featureSONARTip": {
+        "message": "ソナー距離計を有効にし、地面までの距離をcm単位で計測"
+    },
     "featureTELEMETRY": {
         "message": "テレメトリー出力"
     },
+    "featureTELEMETRYTip": {
+        "message": "送信機へ送るテレメトリー出力を有効"
+    },
     "feature3D": {
         "message": "3Dモード (ESC逆回転を利用)"
+    },
+    "feature3DTip": {
+        "message": "リバーシブルESCで使用する3Dモードを有効にし【モーター】タブで設定"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (1chあたり1本)"
@@ -1062,6 +1081,9 @@
     "featureLED_STRIP": {
         "message": "マルチカラーLEDストリップ サポート"
     },
+    "featureLED_STRIPTip": {
+        "message": "マルチカラーRGB LEDストリップのサポートを有効にし【LEDストリップ】タブで設定"
+    },
     "featureDISPLAY": {
         "message": "LEDディスプレイ対応"
     },
@@ -1070,6 +1092,9 @@
     },
     "featureOSD": {
         "message": "オンスクリーンディスプレイ (OSD)"
+    },
+    "featureOSDTip": {
+        "message": "OSDを有効にし【OSD】タブで設定"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "AUXチャンネルをサーボ出力に転送"

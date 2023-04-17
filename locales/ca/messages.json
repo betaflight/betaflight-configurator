@@ -948,6 +948,16 @@
         "message": "Mostra la informació del GPS, si està activada correctament a la pestanya Ports, la pestanya Configuració i la pestanya GPS",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "Sònar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Mostra la informació del sonar, si està activat correctament a la pestanya Configuració",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Altitud"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
     },
@@ -1052,11 +1062,20 @@
     "featureSONAR": {
         "message": "Sónar"
     },
+    "featureSONARTip": {
+        "message": "Activa el telèmetre Sonar per mesurar la distància a terra en cm"
+    },
     "featureTELEMETRY": {
         "message": "Sortida de telemetria"
     },
+    "featureTELEMETRYTip": {
+        "message": "Habilita la sortida de telemetria per enviar-la al transmissor"
+    },
     "feature3D": {
         "message": "3D mode (per usar amb ESCs reversibles)"
+    },
+    "feature3DTip": {
+        "message": "Habiliteu el mode 3D per utilitzar-lo amb ESC reversibles, configureu-lo a la pestanya Motors"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (un cable per canal)"
@@ -1070,6 +1089,9 @@
     "featureLED_STRIP": {
         "message": "Suport per tira RGB LED multi-color"
     },
+    "featureLED_STRIPTip": {
+        "message": "Activeu el suport de tires LED RGB multicolors, configureu-lo a la pestanya Tira de LED"
+    },
     "featureDISPLAY": {
         "message": "Pantalla OLED"
     },
@@ -1078,6 +1100,9 @@
     },
     "featureOSD": {
         "message": "Instruccions a pantalla (OSD)"
+    },
+    "featureOSDTip": {
+        "message": "Habilita OSD, configura a la pestanya OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Enviar canals auxiliars a sortides servo"

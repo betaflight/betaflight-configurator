@@ -940,6 +940,16 @@
         "message": "포트 탭, 환경설정 탭 및 GPS 탭에서 올바르게 활성화된 경우 GPS 정보를 표시합니다",
         "description": "Message that pops up to describe the GPS section"
     },
+    "initialSetupSonarHead": {
+        "message": "초음파"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "환경설정 탭에서 올바르게 활성화된 경우 초음파센서 정보를 표시합니다",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "고도"
+    },
     "initialSetupInstrumentsHead": {
         "message": "계기"
     },
@@ -1044,11 +1054,20 @@
     "featureSONAR": {
         "message": "초음파센서"
     },
+    "featureSONARTip": {
+        "message": "초음파센서를 활성화해서 cm 단위로 지면까지의 거리를 측정할 수 있습니다"
+    },
     "featureTELEMETRY": {
         "message": "텔레메트리 출력"
     },
+    "featureTELEMETRYTip": {
+        "message": "텔레메트리를 활성화하여 결과를 조종기로 보낼 수 있습니다"
+    },
     "feature3D": {
         "message": "3D 모드 (역회전가능 ESC의 사용을 위한)"
+    },
+    "feature3DTip": {
+        "message": "가역 ESC를 사용하려면 3D 모드를 활성화하고 모터 탭에서 설정하세요"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (채널당 한 개의 선)"
@@ -1062,6 +1081,9 @@
     "featureLED_STRIP": {
         "message": "멀티-칼라 RGB LED 스트립 지원"
     },
+    "featureLED_STRIPTip": {
+        "message": "다중색상의 RGB LED 스트립 지원을 활성화하고 LED 스트립 탭에서 설정하세요"
+    },
     "featureDISPLAY": {
         "message": "OLED 화면 디스플레이"
     },
@@ -1070,6 +1092,9 @@
     },
     "featureOSD": {
         "message": "OSD(온 스크린 디스플레이)"
+    },
+    "featureOSDTip": {
+        "message": "OSD를 활성화하고 OSD 탭에서 설정하세요"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "AUX 채널을 서보 출력으로 사용"
