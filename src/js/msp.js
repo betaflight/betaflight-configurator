@@ -262,41 +262,26 @@ const MSP = {
         return crc;
     },
     encode_message_v1: function(code, data) {
-        let bufferOut;
+        const dataLength = data ? data.length : 0;
         // always reserve 6 bytes for protocol overhead !
-        if (data) {
-            const size = data.length + 6;
-            let checksum = 0;
+        const bufferSize = dataLength + 6;
+        let bufferOut = new ArrayBuffer(bufferSize);
+        let bufView = new Uint8Array(bufferOut);
 
-            bufferOut = new ArrayBuffer(size);
-            let bufView = new Uint8Array(bufferOut);
+        bufView[0] = 36; // $
+        bufView[1] = 77; // M
+        bufView[2] = 60; // <
+        bufView[3] = dataLength;
+        bufView[4] = code;
 
-            bufView[0] = 36; // $
-            bufView[1] = 77; // M
-            bufView[2] = 60; // <
-            bufView[3] = data.length;
-            bufView[4] = code;
+        let checksum = bufView[3] ^ bufView[4];
 
-            checksum = bufView[3] ^ bufView[4];
-
-            for (let i = 0; i < data.length; i++) {
-                bufView[i + 5] = data[i];
-
-                checksum ^= bufView[i + 5];
-            }
-
-            bufView[5 + data.length] = checksum;
-        } else {
-            bufferOut = new ArrayBuffer(6);
-            let bufView = new Uint8Array(bufferOut);
-
-            bufView[0] = 36; // $
-            bufView[1] = 77; // M
-            bufView[2] = 60; // <
-            bufView[3] = 0; // data length
-            bufView[4] = code; // code
-            bufView[5] = bufView[3] ^ bufView[4]; // checksum
+        for (let i = 0; i < dataLength; i++) {
+            bufView[i + 5] = data[i];
+            checksum ^= bufView[i + 5];
         }
+
+        bufView[5 + dataLength] = checksum;
         return bufferOut;
     },
     encode_message_v2: function (code, data) {
