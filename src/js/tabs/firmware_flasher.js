@@ -579,14 +579,16 @@ firmware_flasher.initialize = function (callback) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine) {
 
                         function onLoadCloudBuild(options) {
-                            if (FC.CONFIG.buildKey.length === 32) {
-                                FC.CONFIG.buildOptions = options.Request.Options;
-                            }
+                            FC.CONFIG.buildOptions = options.Request.Options;
                             getBoardInfo();
                         }
 
                         MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
-                            self.releaseLoader.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, getBoardInfo);
+                            if (FC.CONFIG.buildKey.length === 32) {
+                                self.releaseLoader.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, getBoardInfo);
+                            } else {
+                                getBoardInfo();
+                            }
                         });
                     } else {
                         getBoardInfo();
