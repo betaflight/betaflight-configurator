@@ -787,34 +787,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
 
                 FC.CONFIG.boardVersion = data.readU16();
-                FC.CONFIG.boardType = 0;
-
                 FC.CONFIG.boardType = data.readU8();
 
-                FC.CONFIG.targetCapabilities = 0;
-                FC.CONFIG.targetName = '';
-
                 FC.CONFIG.targetCapabilities = data.readU8();
-                let length = data.readU8();
-                for (let i = 0; i < length; i++) {
-                    FC.CONFIG.targetName += String.fromCharCode(data.readU8());
-                }
+                FC.CONFIG.targetName = this.getText(data);
 
-                FC.CONFIG.boardName = '';
-                FC.CONFIG.manufacturerId = '';
+                FC.CONFIG.boardName = this.getText(data);
+                FC.CONFIG.manufacturerId = this.getText(data);
                 FC.CONFIG.signature = [];
-
-                length = data.readU8();
-
-                for (let i = 0; i < length; i++) {
-                    FC.CONFIG.boardName += String.fromCharCode(data.readU8());
-                }
-
-                length = data.readU8();
-
-                for (let i = 0; i < length; i++) {
-                    FC.CONFIG.manufacturerId += String.fromCharCode(data.readU8());
-                }
 
                 for (let i = 0; i < self.SIGNATURE_LENGTH; i++) {
                     FC.CONFIG.signature.push(data.readU8());
