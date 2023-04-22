@@ -5447,7 +5447,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Arrow showing which side motors are up in turtle mode"
+        "message": "Arrow showing which side motors are up in turtle mode (accelerometer must be enabled)"
     },
     "osdTextElementLinkQuality": {
         "message": "Link quality",
