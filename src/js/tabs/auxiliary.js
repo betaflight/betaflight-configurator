@@ -53,10 +53,15 @@ auxiliary.initialize = function (callback) {
 
         let modeName = FC.AUX_CONFIG[modeIndex];
         // Adjust the name of the box if a peripheral is selected
-        modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
+        const modeNameAjusted = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
+        // remove blanks to use modeName as key in help index
+        modeName = modeName.replaceAll(' ', '');
 
         $(newMode).attr('id', `mode-${modeIndex}`);
-        $(newMode).find('.name').text(modeName);
+        $(newMode).find('.name').text(modeNameAjusted);
+
+        // add help to mode
+        $(newMode).find('.helpicon').attr('i18n_title', `auxiliaryHelpMode_${modeName}`);
 
         $(newMode).data('index', modeIndex);
         $(newMode).data('id', modeId);
