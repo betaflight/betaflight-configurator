@@ -1163,9 +1163,7 @@ motors.initialize = async function (callback) {
                 await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }
 
-            setTimeout(async function() {
-                await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-            }, 100); // give the FC time to react to new settings
+            await mspHelper.writeConfiguration();
 
             tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};

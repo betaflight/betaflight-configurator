@@ -53,9 +53,9 @@ const MSP = {
     packet_error:               0,
     unsupported:                0,
 
-    MIN_TIMEOUT:                250,
+    MIN_TIMEOUT:                200,
     MAX_TIMEOUT:                2000,
-    timeout:                    250,
+    timeout:                    200,
 
     last_received_timestamp:   null,
     listeners:                  [],

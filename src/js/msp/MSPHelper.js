@@ -2729,6 +2729,17 @@ MspHelper.prototype.sendSerialConfig = function(callback) {
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 
+MspHelper.prototype.writeConfiguration = async function(callback) {
+    setTimeout(async function() {
+        MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
+            gui_log(i18n.getMessage('configurationEepromSaved'));
+
+            if (callback) {
+                callback();
+            }
+        });
+    }, 100); // 100ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received
+};
 
 let mspHelper;
 // This is temporary, till things are moved
