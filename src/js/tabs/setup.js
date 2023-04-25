@@ -192,7 +192,7 @@ setup.initialize = function (callback) {
             rssi_e = $('.rssi'),
             cputemp_e = $('.cpu-temp'),
             arming_disable_flags_e = $('.arming-disable-flags'),
-            gpsFix_e = $('.gpsFix'),
+            gpsFix_e = $('.GPS_info span.fix'),
             gpsSats_e = $('.gpsSats'),
             gpsLat_e = $('.gpsLat'),
             gpsLon_e = $('.gpsLon'),
@@ -429,7 +429,7 @@ setup.initialize = function (callback) {
             // GPS info is acquired in the background using update_live_status() in serial_backend.js
 
             gpsFix_e.text((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
-            gpsFix_e.toggleClass("active", FC.GPS_DATA.fix !== 0);
+            gpsFix_e.toggleClass("active", FC.GPS_DATA.fix != 0);
 
             gpsSats_e.text(FC.GPS_DATA.numSat);
             gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} deg`);
