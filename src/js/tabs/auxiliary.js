@@ -403,7 +403,7 @@ auxiliary.initialize = function (callback) {
             mspHelper.sendModeRanges(save_to_eeprom);
 
             function save_to_eeprom() {
-                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
+                mspHelper.writeConfiguration(function () {
                     gui_log(i18n.getMessage('auxiliaryEepromSaved'));
                 });
             }

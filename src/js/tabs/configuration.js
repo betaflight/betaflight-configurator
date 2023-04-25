@@ -453,8 +453,7 @@ configuration.initialize = function (callback) {
                 .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ?
                     MSP.promise(MSPCodes.MSP2_SET_TEXT, mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME)) : Promise.resolve(true))
                 .then(() => MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)))
-                .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
-                .then(() => reboot());
+                .then(() => mspHelper.writeConfiguration(reboot));
             }
 
             function reboot() {

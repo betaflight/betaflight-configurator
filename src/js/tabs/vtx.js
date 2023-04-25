@@ -903,7 +903,7 @@ vtx.initialize = function (callback) {
         }
 
         function save_to_eeprom() {
-            MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, save_completed);
+            mspHelper.writeConfiguration(save_completed);
         }
 
         function save_completed() {
