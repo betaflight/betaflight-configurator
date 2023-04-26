@@ -428,7 +428,7 @@ setup.initialize = function (callback) {
 
             // GPS info is acquired in the background using update_live_status() in serial_backend.js
 
-            gpsFix_e.text((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            gpsFix_e.text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             gpsFix_e.toggleClass('ready', FC.GPS_DATA.fix != 0);
 
             gpsSats_e.text(FC.GPS_DATA.numSat);

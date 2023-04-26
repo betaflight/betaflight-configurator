@@ -50,7 +50,7 @@ vtx.updateVtxDeviceStatus = function()
         const vtxReady_e = $('.VTX_info span.colorToggle');
 
         // update device ready state
-        vtxReady_e.text((FC.VTX_CONFIG.vtx_device_ready) ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
+        vtxReady_e.text(FC.VTX_CONFIG.vtx_device_ready ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
         vtxReady_e.toggleClass('ready', FC.VTX_CONFIG.vtx_device_ready);
     }
 
@@ -300,7 +300,7 @@ vtx.initialize = function (callback) {
 
         // Values of the current values
         const vtxReady_e = $('.VTX_info span.colorToggle');
-        vtxReady_e.text((FC.VTX_CONFIG.vtx_device_ready) ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
+        vtxReady_e.text(FC.VTX_CONFIG.vtx_device_ready ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
         vtxReady_e.toggleClass('ready', FC.VTX_CONFIG.vtx_device_ready);
 
         $("#vtx_type_description").text(self.getVtxTypeString());
