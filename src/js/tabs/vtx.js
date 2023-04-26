@@ -47,11 +47,11 @@ vtx.updateVtxDeviceStatus = function()
 
     function vtxDeviceStatusReady()
     {
-        const vtxReady_e = $('.VTX_info span.vtx_device_ready');
+        const vtxReady_e = $('.VTX_info span.colorToggle');
 
         // update device ready state
         vtxReady_e.text((FC.VTX_CONFIG.vtx_device_ready) ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
-        vtxReady_e.toggleClass('active', FC.VTX_CONFIG.vtx_device_ready);
+        vtxReady_e.toggleClass('ready', FC.VTX_CONFIG.vtx_device_ready);
     }
 
     MSP.send_message(MSPCodes.MSP2_GET_VTX_DEVICE_STATUS, false, false, vtxDeviceStatusReceived);
@@ -299,9 +299,9 @@ vtx.initialize = function (callback) {
         $("#vtx_low_power_disarm").val(FC.VTX_CONFIG.vtx_low_power_disarm);
 
         // Values of the current values
-        const vtxReady_e = $('.VTX_info span.vtx_device_ready');
+        const vtxReady_e = $('.VTX_info span.colorToggle');
         vtxReady_e.text((FC.VTX_CONFIG.vtx_device_ready) ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
-        vtxReady_e.toggleClass("active", FC.VTX_CONFIG.vtx_device_ready);
+        vtxReady_e.toggleClass('ready', FC.VTX_CONFIG.vtx_device_ready);
 
         $("#vtx_type_description").text(self.getVtxTypeString());
         $("#vtx_channel_description").text(FC.VTX_CONFIG.vtx_channel);

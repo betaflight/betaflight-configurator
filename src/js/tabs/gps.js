@@ -192,8 +192,8 @@ gps.initialize = async function (callback) {
             const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
             let alt = FC.GPS_DATA.alt;
 
-            $('.GPS_info span.fix').text((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
-            $('.GPS_info span.fix').toggleClass('active', FC.GPS_DATA.fix != 0);
+            $('.GPS_info span.colorToggle').text((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
 
             $('.GPS_info td.alt').text(`${alt} m`);
             $('.GPS_info td.lat a').prop('href', url).text(`${lat.toFixed(4)} deg`);
