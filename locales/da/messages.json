@@ -1358,7 +1358,7 @@
         "message": "Bip ved fuldført Blackbox-sletning"
     },
     "beeperCRASH_FLIP": {
-        "message": "Bip, når crash flip-tistand er aktiv"
+        "message": "Bip, når \"Vend havereret drone\" er aktiv"
     },
     "beeperCAM_CONNECTION_OPEN": {
         "message": "Bip, når 5-tasts kamerakontrol tilgås"
@@ -2149,7 +2149,7 @@
         "message": "Aktivér kontroller"
     },
     "auxiliaryHelp": {
-        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og/eller kanalområder (kanal områder understøttes fra BF 4.0). Benyt <strong>kanal</strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med en udlæsning mellem et min/maks område, aktiverer tilstanden. Benyt et <strong>område</strong> for at aktivere en tilstand, når et andet område er aktiveret. <strong>Undtagelser:</strong> Aktiver(ARM) kan ikke linkes til eller fra en anden tilstand, tilstande kan ikke linkes til andre tilstande, som er opsat med et link (kædede links). Flere områder/links kan benyttes til at aktivere enhver tilstand. Er derdefineret mere end ét område/link for en tilstand, kan hver af dem opsættes til <strong>AND</strong> eller <strong>OR</strong>. En tilstand aktiveres, når: <br />- ALLE <strong>AND</strong> områder/links er aktive; ELLER<br /> - mindst ét <strong>OR</strong> område/link er aktivt.<br /> <br />Husk at gemme dine indstillinger med knappen Gem."
+        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og/eller kanalområder (kanal områder understøttes fra BF 4.0). Benyt <strong>Tilknyt kanal</strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med signal mellem et min/maks område, aktiverer tilstanden. Benyt et <strong>område</strong> for at aktivere en tilstand, når et andet område er aktiveret. <strong>Undtagelser:</strong> Aktiver(ARM) kan ikke tilknyttes til eller fra en anden tilstand, tilstande kan ikke tilknyttes til andre tilstande, som er opsat med en tilknytning (kædede tilknytninger). Flere områder/tilknytninger kan benyttes til at aktivere enhver tilstand.<br>Er der defineret mere end ét område/tilknytning for en tilstand, kan hver af dem opsættes til <strong>OG</strong> eller <strong>ELLER</strong>. En tilstand aktiveres, når: <br />- ALLE <strong>OG</strong> områder/tilknytninger er aktive; <br /> - ELLER mindst ét <strong>ELLER</strong> område/tilknytning er aktivt.<br /> <br />Husk at gemme dine indstillinger med knappen Gem."
     },
     "auxiliaryToggleUnused": {
         "message": "Skjul ubrugte kanal tilstande"
@@ -2459,10 +2459,10 @@
         "message": "3D-fiksering:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Sand</span>"
+        "message": "Sand"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Falsk</span>"
+        "message": "Falsk"
     },
     "gpsAltitude": {
         "message": "Højde:"
@@ -4028,7 +4028,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM filtrering er en gruppe af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br /><br /><b><span class=\"message-positive\">VIGTIGT</span>: ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.</b>",
+        "message": "RPM filtrering er en gruppe af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br /><br /><b><span class=\"message-positive\">VIGTIGT</span>: </b><br>ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -5335,7 +5335,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Pil, der viser, hvilke motorer der er oppe i skildpadde tilstand"
+        "message": "Retning med pil som viser de motorer som kan vende havereret drone (accelerometer skal være aktiveret)"
     },
     "osdTextElementLinkQuality": {
         "message": "Link kvalitet",
@@ -5783,11 +5783,11 @@
         "message": "Viser en visualisering af biperen (viser som 4 stjerner)"
     },
     "osdWarningTextCrashFlipMode": {
-        "message": "Crash flip tilstand",
+        "message": "Vend havereret drone tilstand",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCrashFlipMode": {
-        "message": "Advarer når flip over efter nedbrudstilstand er aktiveret"
+        "message": "Advarer når \"vend havereret drone\" er aktiveret"
     },
     "osdWarningTextEscFail": {
         "message": "ESC fejl",
@@ -6400,13 +6400,13 @@
         "message": "Fortryd"
     },
     "modeCameraWifi": {
-        "message": "KAMERA WI-FI KNAP"
+        "message": "KAMERA WI-FI"
     },
     "modeCameraPower": {
         "message": "KAMERA TÆND/SLUK"
     },
     "modeCameraChangeMode": {
-        "message": "KAMERA KONFIGURATION TILSTAND"
+        "message": "KAMERA KONFIGURATION"
     },
     "flashTab": {
         "message": "Brænd firmware"

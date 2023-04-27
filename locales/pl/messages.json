@@ -3207,7 +3207,7 @@
         "message": "Postępuj według wytycznych <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Oraz<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> płytki lub <strong> nie wyłączaj </strong> komputera podczas flashowania. <br /> <br /> <strong> Uwaga: </strong> bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> upewnij się, że masz kopię zapasową; niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie kable od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Odzyskiwanie / Utracono komunikacje</strong>"
+        "message": "<strong>Odzyskiwanie utraconej komunikacji</strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odepnij zasilanie</li><li>Włącz „Nie restartuj”, włącz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT.</li><li>Podłącz zasilanie (dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (patrz <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji FC).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
@@ -5335,7 +5335,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Strzałka pokazuje, które silniki mogą być użyte w trybie turtle"
+        "message": "Strzałka pokazująca, które silniki boczne są w trybie żółwia (akcelerometr musi być włączony)"
     },
     "osdTextElementLinkQuality": {
         "message": "Jakość połączenia",

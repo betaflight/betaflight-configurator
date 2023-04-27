@@ -5335,7 +5335,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Flecha que indica que lado tiene los motores arriba en modo tortuga"
+        "message": "Flecha que muestra qué motores están más levantados en modo tortuga (debe estar habilitado el acelerómetro)"
     },
     "osdTextElementLinkQuality": {
         "message": "RX: RSSI - calidad del enlace",
