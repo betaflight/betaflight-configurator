@@ -2560,10 +2560,10 @@
         "message": "3D Fix:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">True</span>"
+        "message": "True"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">False</span>"
+        "message": "False"
     },
     "gpsAltitude": {
         "message": "Altitude:"
@@ -6138,6 +6138,14 @@
     "vtxFrequencyHelp": {
         "message": "You can select here the frequency for your VTX if it is supported",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "True",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "False",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Device ready",
