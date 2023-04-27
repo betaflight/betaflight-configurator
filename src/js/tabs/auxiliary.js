@@ -9,6 +9,7 @@ import MSPCodes from '../msp/MSPCodes';
 import adjustBoxNameIfPeripheralWithModeID from '../peripherals';
 import { gui_log } from '../gui_log';
 import { getTextWidth } from '../utils/common';
+import inflection from "inflection";
 
 const auxiliary = {};
 
@@ -53,10 +54,15 @@ auxiliary.initialize = function (callback) {
 
         let modeName = FC.AUX_CONFIG[modeIndex];
         // Adjust the name of the box if a peripheral is selected
-        modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
+        const modeNameAjusted = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
+        // Camlize modeName
+        const modeNameCamel = inflection.camelize(modeName.replace(/\s+/g, ''));
 
         $(newMode).attr('id', `mode-${modeIndex}`);
-        $(newMode).find('.name').text(modeName);
+        $(newMode).find('.name').text(modeNameAjusted);
+
+        // add help to mode
+        $(newMode).find('.helpicon').attr('i18n_title', `auxiliaryHelpMode_${modeNameCamel}`);
 
         $(newMode).data('index', modeIndex);
         $(newMode).data('id', modeId);
