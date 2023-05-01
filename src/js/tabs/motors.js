@@ -1163,13 +1163,11 @@ motors.initialize = async function (callback) {
                 await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }
 
-            await mspHelper.writeConfiguration();
-
             tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};
             self.configHasChanged = false;
 
-            reboot();
+            mspHelper.writeConfiguration(reboot);
         });
 
         $('a.stop').on('click', () => motorsEnableTestModeElement.prop('checked', false).trigger('change'));

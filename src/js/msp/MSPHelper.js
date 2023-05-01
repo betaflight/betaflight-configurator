@@ -2729,11 +2729,11 @@ MspHelper.prototype.sendSerialConfig = function(callback) {
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 
-MspHelper.prototype.writeConfiguration = async function(callback) {
-    setTimeout(async function() {
+MspHelper.prototype.writeConfiguration = function(callback) {
+    setTimeout(function() {
         MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
             gui_log(i18n.getMessage('configurationEepromSaved'));
-
+            console.log('Configuration saved to EEPROM');
             if (callback) {
                 callback();
             }

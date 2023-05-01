@@ -1,7 +1,6 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import serial from "./serial.js";
-import MSPCodes from "./msp/MSPCodes.js";
 
 const MSP = {
     symbols: {
@@ -53,7 +52,7 @@ const MSP = {
     packet_error:               0,
     unsupported:                0,
 
-    MIN_TIMEOUT:                200,
+    MIN_TIMEOUT:                50,
     MAX_TIMEOUT:                2000,
     timeout:                    200,
 
@@ -313,31 +312,13 @@ const MSP = {
             return false;
         }
 
+        // Check if request already exists in the queue
         let requestExists = false;
-
         for (const instance of MSP.callbacks) {
             if (instance.code === code) {
-                // For MSP V1 we replace requests of the same type in the queue
-                // For MSP V2 we allow multiple requests of the same type to be in the queue
-                // This is because MSP V2 allows for multiple requests of the same type to be sent
-                // in a single frame, and we don't want to skip any of them.
-                // This is a workaround for the fact that we don't have a way to identify
-                // which request a response belongs to.
-                // TODO: Implement a way to identify which request a response belongs to
-                //       so that we can skip duplicate requests in the queue.
-                if (code < 255 && code !== MSPCodes.MSP_MULTIPLE_MSP) {
-                    setTimeout(function () {
-                        const index = MSP.callbacks.indexOf(instance);
-                        if (index > -1)  {
-                            if (instance.timer) {
-                                clearInterval(instance.timer);
-                            }
-                            MSP.callbacks.splice(index, 1);
-                        }
-                    }, 10);
-                } else {
-                    requestExists = true;
-                }
+                requestExists = true;
+
+                break;
             }
         }
 
@@ -352,14 +333,13 @@ const MSP = {
         };
 
         if (!requestExists) {
-            obj.timer = setInterval(function () {
+            obj.timer = setTimeout(function () {
                 console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length} (${MSP.callbacks.map(function (e) { return e.code; })})`);
                 serial.send(bufferOut, function (_sendInfo) {
                     obj.stop = performance.now();
                     const executionTime = Math.round(obj.stop - obj.start);
                     MSP.timeout = Math.max(MSP.MIN_TIMEOUT, Math.min(executionTime, MSP.MAX_TIMEOUT));
                 });
-
             }, MSP.timeout);
         }
 

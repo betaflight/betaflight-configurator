@@ -356,7 +356,7 @@ ports.initialize = function (callback) {
         GUI.content_ready(callback);
     }
 
-   function on_save_handler() {
+    function on_save_handler() {
         tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
         self.analyticsChanges = {};
 
@@ -486,11 +486,11 @@ ports.initialize = function (callback) {
             MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, save_to_eeprom);
         }
 
-        async function save_to_eeprom() {
-            await mspHelper.writeConfiguration();
-
-            GUI.tab_switch_cleanup(function() {
-                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
+        function save_to_eeprom() {
+            mspHelper.writeConfiguration(function() {
+                GUI.tab_switch_cleanup(function() {
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
+                });
             });
         }
     }
