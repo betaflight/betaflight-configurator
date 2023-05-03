@@ -2193,6 +2193,126 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Permet l'estabilització de motors i vol",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "En aquest mode d'anivellació automàtica, els canals de balanceig i cabeceig controlen l'angle entre l'eix rellevant i la vertical, aconseguint un vol anivellat només deixant els sticks centrats",
+        "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Aquest mode híbrid funciona exactament com el mode ANGLE amb els sticks centrats de gir i de pas (per tant, permeten el vol autonivellat), i gradualment es comporta cada cop més com el mode RATE predeterminat a mesura que els sticks s'allunyen de la posició central",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Bloqueig de direcció cap a la direcció del magnetòmetre",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "En aquest mode, el \"cap\" del multicopter sempre apunta a la mateixa direcció que quan es va activar la funció. Això vol dir que quan el multicopter gira al voltant de l'eix Z (guiada), els controls sempre respondran segons la mateixa direcció del \"cap\".<br>Amb aquest mode és més fàcil controlar el multicopter, fins i tot volar-lo amb el cap físic cap a tu ja que els controls sempre responen igual. Aquest és un mode amigable per als nous usuaris de multicopters i pot evitar perdre el control quan no coneixeu la direcció del cap",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Pasa el roll, yaw i el pitch directament des de rx als servos al mix del multicopter",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Introduïu el Failsafe 2 manualment",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Habilita el \"Rescat GPS\" per tornar el multicopter a la ubicació on es va armar per última vegada",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Ajust de cap: estableix un nou origen de yaw per al mode HEADFREE",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Habilita el bip: útil per localitzar un multicopter estavellat",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Desactiva la sortida del LED_STRIP",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Activa/desactiva la visualització en pantalla, OSD",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Activa la telemetria mitjançant l'interruptor",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "Activa el registre del BlackBox",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "En el mode de mesclador estàndard, quan es calculen el roll, el pitch i el yaw i saturen un motor, tots els motors es reduiran per igual. Quan un motor baixa per sota del mínim es talla. Diguem que teníeu l'accelerador just per sobre del mínim i vau intentar tirar un gir ràpid; com que dos motors no poden baixar, bàsicament obteniu la meitat de la potència (la meitat del vostre guany PID). Si les vostres entrades haurien demanat més d'una diferència del 100% entre els motors alts i baixos, els motors baixos es retallarien, trencant la simetria de l'equilibri del motor reduint de manera desigual el guany.",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Aplica la rotació de yaw en relació a una càmera FPV muntada en un angle preestablert",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "Utilitzeu-lo per canviar el control personalitzat de la càmera 1. Consulteu el manual del proveïdor",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "Utilitzeu-lo per canviar el control personalitzat de la càmera 2. Consulteu el manual del proveïdor",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "Utilitzeu-lo per canviar el control personalitzat de la càmera 3. Consulteu el manual del proveïdor",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Inverteix els motors per capgirar el multicopter cap per avall després d'un xoc (cal DShot)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Quan s'arma, espereu que aquest interruptor s'activi abans d'armar-lo",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Utilitza un nombre de bips per indicar el nombre de satèl·lits GPS trobats",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Canvia el VTX al mode PIT (potència de sortida baixa, si és compatible)",
+        "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Desactiva permanentment el multicopter accidentat fins que s'apaga",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Activa la limitació d'angle \"acro trainer\" en mode acro",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Desactiva el control de la configuració de VTX mitjançant l'OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "Sistema d'assistència a l'inici de cursa",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+        "message": "Desactiva/activa les ordres dels sticks",
+        "description": "Help text to STICK CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Desactiva/activa el beeper inclòs l'avís, l'estat i el mode BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Afegit a BF4.4, ara podeu mostrar \"READY\" a l'OSD mitjançant un interruptor. Aquesta és una millora de nínxol per a situacions de cursa on tots els canals de vídeo pilot es troben en una pantalla central. El pilot pot accionar un interruptor per indicar que està preparat per volar i la paraula READY apareix al seu OSD. Aleshores, el director de cursa pot saber si tots els pilots estan preparats mirant la pantalla central. En armar-se, el text READY desapareix",
+        "description": "Help text to READY mode"
+    },
     "adjustmentsHelp": {
         "message": "Configureu els interruptors d'ajust. Consulteu la secció \"Ajustaments de vol\" del manual per obtenir-ne més detalls. Els canvis que realitzen les funcions d'ajust no es guarden automàticament. Hi ha 4 ranures (slots). Cada interruptor utilitzat per fer ajustaments simultanis requereix l'ús exclusiu d'una ranura."
     },
@@ -2467,10 +2587,10 @@
         "message": "3D Fix:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">True</span>"
+        "message": "Cert"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">False</span>"
+        "message": "Fals"
     },
     "gpsAltitude": {
         "message": "Altitud:"
@@ -6028,6 +6148,14 @@
     "vtxFrequencyHelp": {
         "message": "Pots seleccionar la freqüència del teu VTX si es troba suportat",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Cert",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Fals",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Dispositiu preparat",

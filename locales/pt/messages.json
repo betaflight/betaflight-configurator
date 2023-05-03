@@ -2185,6 +2185,14 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Habilita os motores e a estabilização de voo",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "Neste modo auto-nivelado, os canais do roll e do pitch controlam o ângulo entre o eixo relevante e o vertical, alcançando vôo nivelado apenas deixando os sticks centrados",
+        "description": "Help text to ANGLE mode"
+    },
     "adjustmentsHelp": {
         "message": "Configure os switches de ajuste. Veja a secção 'in-flight adjustments' do manual para detalhes. As alterações que as funções de ajuste fazem não são gravadas automaticamente."
     },
@@ -2459,10 +2467,10 @@
         "message": "Fix 3D:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Verdadeiro</span>"
+        "message": "Verdadeiro"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Falso</span>"
+        "message": "Falso"
     },
     "gpsAltitude": {
         "message": "Altitude:"
@@ -6020,6 +6028,14 @@
     "vtxFrequencyHelp": {
         "message": "Pode selecionar aqui a frequência para o seu VTX, se fôr suportado.",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Verdadeiro",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Falso",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Dispositivo pronto",

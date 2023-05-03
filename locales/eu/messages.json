@@ -1952,12 +1952,6 @@
     "gps3dFix": {
         "message": "3D zuzenketa:"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Egia</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Gezurra</span>"
-    },
     "gpsAltitude": {
         "message": "Altuera:"
     },
