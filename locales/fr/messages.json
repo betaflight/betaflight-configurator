@@ -2355,12 +2355,6 @@
     "gps3dFix": {
         "message": "Accroche:"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Oui</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Non</span>"
-    },
     "gpsAltitude": {
         "message": "Altitude:"
     },

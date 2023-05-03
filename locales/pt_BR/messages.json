@@ -2340,12 +2340,6 @@
     "gps3dFix": {
         "message": "Posição 3D:"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Verdadeiro</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Falso</span>"
-    },
     "gpsAltitude": {
         "message": "Altitude:"
     },

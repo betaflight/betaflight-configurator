@@ -902,11 +902,11 @@
         "description": "Message that pops up to describe the PARALYZE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipGPS": {
-        "message": "GPS 구조 모드가 구성 되어 있지만 위성의 필요한 수가 고정되지 않았습니다",
+        "message": "GPS 레스큐 모드가 구성 되어 있지만 위성의 필요한 수가 고정되지 않았습니다",
         "description": "Message that pops up to describe the GPS arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRESC": {
-        "message": "'GPS 구조' 스위치가 작동중입니다",
+        "message": "'GPS 레스큐' 스위치가 작동중입니다",
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
@@ -2185,6 +2185,126 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
+    "auxiliaryHelpMode_ARM": {
+        "message": "모터 및 비행 안정화 활성화",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "이 자동 레벨 모드에서 롤 및 피치 채널은 관련 축과 수직 사이의 각도를 제어하여 스틱을 중앙에 두는 것만으로 수평 비행을 달성합니다",
+        "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "이 하이브리드 모드는 중앙 롤 및 피치 스틱이 있는 앵글 모드와 정확히 작동하며(따라서 자동 레벨 비행이 가능함), 스틱이 중앙 위치에서 멀어질수록 점차 기본 레이트 모드와 비슷하게 작동합니다",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "자기계 방향으로 향하는 헤딩 잠금",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "이 모드에서 멀티콥터의 \"헤드\"는 기능이 활성화되었을 때와 항상 같은 방향을 가리킵니다. 즉, 멀티콥터가 Z축(요)을 중심으로 회전할 때 컨트롤은 항상 동일한 \"헤드\" 방향에 따라 응답합니다.<br>이 모드를 사용하면 멀티콥터를 제어하는 것이 더 쉬워집니다. 컨트롤이 항상 동일하게 반응하기 때문에 물리적인 헤드를 사용하여 멀티콥터를 사용자 쪽으로 비행할 수 있습니다. 이 모드는 멀티콥터의 새로운 사용자에게 친숙한 모드이며 헤드 방향을 모를 때 컨트롤이 손실되는 것을 방지할 수 있습니다",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "비행기 믹스에서 롤, 요, 피치를 rx에서 서보로 직접 전달",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "페일세이프 단계 2를 수동으로 입력",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "'GPS 레스큐'를 활성화하면 기체가 마지막으로 아밍한 장소로 복귀합니다",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "헤딩 조정 - 헤드프리 모드에서 새 요 방향 설정",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "비프음 활성화 - 추락한 기체를 찾는 데 유용합니다",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "LED_스트립 출력 끄기",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "온-스크린-디스플레이 활성/비활성",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "스위치를 통한 텔레메트리 활성화",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "블랙박스 로깅 활성화",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "표준 믹서/모드에서 롤, 피치 및 요가 계산되고 모터가 포화되면 모든 모터가 동일하게 감소합니다. 모터가 최저치 이하로 떨어지면 모터 출력이 잘립니다. 스로틀이 최저치를 약간 상회하고 빠른 롤을 당기려고 했다고 가정해 보십시오. 두 개의 모터가 더 이상 내려갈 수 없기 때문에 기본적으로 전력의 절반(PID 이득의 절반)을 얻을 수 있습니다. 입력에 하이 모터와 로우 모터 간의 차이가 100% 이상 필요한 경우 로우 모터가 잘리고 이득이 불균일하게 감소하여 모터 밸런스의 대칭이 깨집니다",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "사전 설정된 각도로 장착된 FPV 카메라를 기준으로 요 회전 적용",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "사용자 정의 카메라 제어 1을 사용하세요. 공급자 매뉴얼을 확인하세요",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "사용자 정의 카메라 제어 2를 사용하세요. 공급자 매뉴얼을 확인하세요",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "사용자 정의 카메라 제어 3를 사용하세요. 공급자 매뉴얼을 확인하세요",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "충돌 후 모터를 반대로 돌려 뒤집기 (디샷 요구됨)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "아밍을 실행할 때, 실제 아밍하기 전에 이 스위치가 활성화될 때까지 기다립니다",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "비프음의 수를 사용하여 발견된 GPS위성 수를 지시합니다.",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "VTX를 피트모드로 전환합니다 (지원시 저전력 모드로 진입)",
+        "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "충돌한 기체의 전원을 껐다가 켤 때까지 영구적으로 비활성화합니다",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "'아크로 트레이너'를 활성화하면 아크로 모드에서 앵글을 제한합니다",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "OSD를 통한 VTX 제어 설정을 비활성화합니다",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "레이스 스타트 지원 시스템",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+        "message": "스틱 명령 비활성/활성화",
+        "description": "Help text to STICK CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "경고, 상태 및 비퍼 모드를 포함한 비퍼음 비활성화/활성화",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "BF4.4에 추가된 사항으로 이제 스위치를 사용하여 OSD에서 'READY'를 표시할 수 있습니다. 이것은 모든 파일럿 비디오 피드가 하나의 중앙 화면에 있는 레이싱 상황에 적합한 틈새 개선입니다. 조종자는 스위치를 깜박여 비행 준비가 되었음을 표시할 수 있으며, OSD에 READY라는 단어가 나타납니다. 그런 다음 경기 감독은 중앙 화면을 보고 모든 조종사가 준비되었는지 알 수 있습니다. 아밍할 때 READY 텍스트가 사라집니다",
+        "description": "Help text to READY mode"
+    },
     "adjustmentsHelp": {
         "message": "조정 스위치를 설정하세요. 자세한 내용은 매뉴얼의 '비행중 조정' 섹션을 참조하십시오. 조정 기능의 변경 사항은 자동으로 저장되지 않습니다."
     },
@@ -2459,10 +2579,10 @@
         "message": "3D 고정:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">참</span>"
+        "message": "참"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">거짓</span>"
+        "message": "거짓"
     },
     "gpsAltitude": {
         "message": "고도:"
@@ -4281,7 +4401,7 @@
         "message": "추락"
     },
     "failsafeProcedureItemSelect4": {
-        "message": "GPS 구조"
+        "message": "GPS 레스큐"
     },
     "failsafeGpsRescueItemAngle": {
         "message": "각도"
@@ -4320,7 +4440,7 @@
         "message": "최소위성수"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "고정없이 아밍 허용 - <span class=\"message-negative\">경고: GPS 구조 사용 불가</span>"
+        "message": "고정없이 아밍 허용 - <span class=\"message-negative\">경고: GPS 레스큐 사용 불가</span>"
     },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "고도 모드"
@@ -5825,18 +5945,18 @@
         "message": "론치 제어 모드가 활성화되면 경고합니다"
     },
     "osdWarningTextGpsRescueUnavailable": {
-        "message": "GPS 구조 사용불가",
+        "message": "GPS 레스큐 사용불가",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueUnavailable": {
-        "message": "GPS 구조가 사용할 수 없을 때 및 활성화할 수 없을 때 경고합니다"
+        "message": "GPS 레스큐가 사용할 수 없을 때 및 활성화할 수 없을 때 경고합니다"
     },
     "osdWarningTextGpsRescueDisabled": {
-        "message": "GPS 구조 비활성화됨",
+        "message": "GPS 레스큐 비활성화됨",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueDisabled": {
-        "message": "GPS 구조를 사용하지 않도록 설정하는 경우 경고합니다"
+        "message": "GPS 레스큐를 사용하지 않도록 설정하는 경우 경고합니다"
     },
     "osdWarningTextRSSI": {
         "message": "RSSI",
@@ -6020,6 +6140,14 @@
     "vtxFrequencyHelp": {
         "message": "여기서 지원될 경우 당신의 VTX에 대한 주파수를 선택할 수 있습니다.",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "참",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "거짓",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "디바이스 준비",

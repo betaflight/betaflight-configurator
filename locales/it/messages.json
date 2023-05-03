@@ -2185,6 +2185,126 @@
     "auxiliaryModeLogicAND": {
         "message": "E"
     },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Abilita la stabilizzazione motori e volo",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "In questa modalità di livellamento automatico i canali di roll e pitch controllano l'angolo tra i rilevanti assi e la verticale, ottenendo un volo livellato lasciando gli stick centrati",
+        "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Questa modalità ibrida funziona esattamente come la modalità ANGLE con gli stick roll e pitch centrati (abilitando così il volo livellato), poi gradualmente si comporta sempre di più come la modalità RATE appena gli stick si allontanano dalla posizione centrale",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Direzione fissata come da Magnetometro",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "In questa modalità, la \"testa\" del multirotore punta sempre alla stessa direzione di quando la funzione è stata attivata. Ciò significa che quando il multirotore ruota attorno all'asse Z (yaw), i comandi risponderanno sempre in base alla direzione della \"testa\".<br>Con questa modalità è più facile controllare il multirotore, anche volare con la testa fisica verso di voi poiché i comandi rispondono sempre lo stesso. Questa è una modalità per i nuovi utenti di multirotore e può evitare di perdere il controllo quando non si conosce la direzione della testa",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Passa roll, yaw, e pitch direttamente da rx ai servo in aereo mix",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Vai in failsafe fase 2 manualmente",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Abilita 'GPS Rescue' per ritornare alla posizione dove è stato armato l'ultima volta",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Correzione Direzione - Imposta una nuovo yaw per la modalità HEADFREE",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Abilita beep - utile per localizzare un aeromobile perso",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Disattiva uscita LED_STRIP",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Abilita/Disabilita On-Screen-Display",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Abilita telemetria tramite interruttore",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "Abilita log BlackBox",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "In un mixer / modalità standard, quando roll, pitch e yaw sono calcolati e saturano un motore, tutti i motori saranno ridotti allo stesso modo. Quando un motore va sotto il minimo, viene interrotto. Pensate di avere l'acceleratore appena sopra il minimo e cercate di fare un roll veloce - poiché due motori non possono andare più lenti, si ottiene in pratica metà della potenza (metà del PID gain). Se i vostri comandi avessero richiesto una differenza maggiore del 100% tra i motori veloci e lenti, i motori lenti verrebbero interrotti, rompendo la simmetria del bilanciamento dei motori riducendo in modo non uniforme il guadagno",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Applica la rotazione yaw rispetto a una telecamera FPV montata con un angolo prefissato",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 1. Controllare il manuale del fornitore",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 2. Controllare il manuale del fornitore",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 3. Controllare il manuale del fornitore",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Inverte i motori per ribaltare un modello dopo un crash (DShot richiesto)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Durante l'armamento, aspetta che questo interruttore sia attivato prima dell'effettivo armamento",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Usa un numero di beep per indicare il numero di satelliti GPS trovati",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Cambia la VTX in modalità pit (bassa potenza in uscita, se supportata)",
+        "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Disabilita un modello crashato fino ad un riavvio",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Abilita 'acro trainer' angle limitandolo in modalità acro",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Disabilita il controllo delle impostazioni VTX tramite l'OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "Sistema d'assistenza avvio Race",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+        "message": "Disabilita/abilita comando stick",
+        "description": "Help text to STICK CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Disabilita/abilita beeper inclusi gli avvisi, stato e modalità BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Aggiunto in BF4.4, puoi visualizzare 'READY' in OSD usando un interruttore. Questo è un miglioramento in situazioni di race in cui tutti i feed video pilota sono su uno schermo centrale. Il pilota può lanciare un interruttore per indicare che sono pronti a volare, e la parola READY appare sul loro OSD. Il direttore di gara può poi dire se tutti i piloti sono pronti guardando lo schermo centrale",
+        "description": "Help text to READY mode"
+    },
     "adjustmentsHelp": {
         "message": "Configura gli interruttori di regolazione. Vedi la sezione 'regolazioni in volo' del manuale per i dettagli. Le modifiche apportate dalle funzioni di regolazione non vengono salvate automaticamente. Ci sono 4 slot. Ogni interruttore utilizzato per apportare modifiche simultanee richiede l'uso esclusivo di uno slot."
     },
@@ -2459,10 +2579,10 @@
         "message": "Fix 3D:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Vero</span>"
+        "message": "Vero"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Falso</span>"
+        "message": "Falso"
     },
     "gpsAltitude": {
         "message": "Altitudine:"
@@ -6020,6 +6140,14 @@
     "vtxFrequencyHelp": {
         "message": "Puoi selezionare qui la frequenza per la tua VTX se è supportata",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Vero",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Falso",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Dispositivo pronto",

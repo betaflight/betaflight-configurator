@@ -2185,6 +2185,126 @@
     "auxiliaryModeLogicAND": {
         "message": "Y"
     },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Activa los motores y la estabilización de vuelo",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "En este modo de nivelación automática, los canales de roll y pitch controlan el ángulo entre el eje relevante y el vertical, consiguiendo un vuelo nivelado simplemente dejando los mandos centrados",
+        "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Este modo híbrido funciona exactamente como el modo ANGLE cuando las palancas de roll y pitch están centradas (habilitando así el vuelo con nivelado automático), y luego gradualmente se comporta cada vez más como el modo RATE/ACRO predeterminado a medida que los mandos se mueven lejos de la posición central",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "El rumbo se fija con la dirección del Magnetómetro",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "En este modo, la \"cabeza\" del multicoptero siempre apunta a la misma dirección que cuando se activó la función. Esto significa que cuando el multicoptero gira alrededor del eje Z (yaw), los controles siempre responderán de acuerdo con la misma dirección de \"cabeza\".<br>Con este modo es más fácil controlar el multicoptero, incluso volarlo con la cabeza apuntando físicamente hacia tí ya que los controles siempre responden igual. Este es un modo amigable para los nuevos usuarios de multicopteros y puede prevenir la pérdida del control cuando no se conoce la dirección principal",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Pasar roll y pitch directamente desde el rx a servos para mezclas de aviones",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Entra en modo de seguridad etapa 2 manualmente",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Activar 'GPS Rescate' para devolver la aeronave a la ubicación donde fue armada por última vez",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Ajuste de rumbo - Establece un nuevo origen de yaw para el modo HEADFREE",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Activar pitidos - útil para localizar una aeronave estrellada",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Apagar la salida de LED_STRIP",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Encender/Apagar la visualización en pantalla (OSD)",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Activar telemetría vía interruptor",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "Activar registro de Caja Negra",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "En el mezclador / modo estándar, cuando el roll, el pitch y el yaw se calculan y saturan un motor, todos los motores se reducen por igual. Cuando un motor va por debajo del mínimo se recorta. Si tenías tu acelerador justo por encima del mínimo y tratas de hacer un roll rápido - ya que dos motores no pueden bajar, obtienes esencialmente la mitad de la potencia (la mitad de la ganancia de tu PID). Si tus comandos hubieran pedido más de un 100% de diferencia entre los motores altos y bajos, los motores bajos se recortarían, rompiendo la simetría del balance del motor al reducir la ganancia desigualmente",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Aplicar rotación de yaw relativa a una cámara FPV montada en un ángulo predefinido",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "Utilizado para activar el CAMERA CONTROL 1 personalizado. Comprobar el manual del proveedor",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "Utilizado para activar el CAMERA CONTROL 2 personalizado. Comprobar el manual del proveedor",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "Utilizado para activar el CAMERA CONTROL 3 personalizado. Comprobar el manual del proveedor",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Invierte los motores para voltear una aeronave que está boca abajo después de un accidente (DShot requerido)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Al intentar armar, se necesita que este interruptor esté activado antes de armar. Se suele asignar a un interruptor temporal del mando",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Usa un número de pitidos para indicar cuantos satélites GPS se han encontrado",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Cambia el VTX a modo Pit (potencia de salida baja, si es compatible)",
+        "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Desactiva permanentemente una nave accidentada hasta que desenchufe y enchufe de nuevo",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Habilitar la limitación del ángulo 'entrenador acro' en modo acro",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Desactiva el control de ajustes del VTX a través del OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "Sistema de asistencia de inicio de carrera",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+        "message": "Desactivar/activar comandos con los mandos",
+        "description": "Help text to STICK CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Desactivar/activar pitidos incluyendo advertencias, estado y modo BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Añadido en BF4.4, ahora puedes mostrar 'READY' en el OSD usando un interruptor. Esta es una bonita mejora para situaciones de carrera en las que todos los videos de pilotos están en una pantalla central. El piloto puede usar un interruptor para indicar que están listos para volar, y la palabra READY aparece en su OSD. El director de carrera puede entonces saber si todos los pilotos están preparados mirando a la pantalla central. Al armar, el texto READY desaparece",
+        "description": "Help text to READY mode"
+    },
     "adjustmentsHelp": {
         "message": "Configura interruptores para correcciones. Mira el apartado 'in-flight adjustments' del manual para detalles. Las correcciones realizadas no se guardan automáticamente."
     },
@@ -2459,10 +2579,10 @@
         "message": "Posición 3D:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Verdadero</span>"
+        "message": "Verdadero"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Falso</span>"
+        "message": "False"
     },
     "gpsAltitude": {
         "message": "Altitud:"
@@ -6020,6 +6140,14 @@
     "vtxFrequencyHelp": {
         "message": "Aquí puedes seleccionar la frecuencia para tu VTX",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Verdadero",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "False",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Dispositivo listo",

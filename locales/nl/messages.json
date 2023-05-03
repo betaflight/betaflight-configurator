@@ -2027,12 +2027,6 @@
     "gps3dFix": {
         "message": "3D Fix:"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Waar</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Onwaar</span>"
-    },
     "gpsAltitude": {
         "message": "Hoogte:"
     },

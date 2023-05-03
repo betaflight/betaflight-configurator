@@ -2261,12 +2261,6 @@
     "gps3dFix": {
         "message": "3D 定位："
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">定位成功</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">定位失败</span>"
-    },
     "gpsAltitude": {
         "message": "高度："
     },

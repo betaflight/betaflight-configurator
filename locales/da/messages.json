@@ -689,10 +689,10 @@
         "message": "Anbring FC/drone på en <strong>plan og ret</strong> overflade, fortsæt kalibreringen, tjek at overfladen/FC/dronen ikke bevæges under kalibreringen"
     },
     "initialSetupButtonCalibrateMag": {
-        "message": "Kalibrering af Magnetometer (kompas)"
+        "message": "Kalibrering af Magnetometer / kompas"
     },
     "initialSetupCalibrateMagText": {
-        "message": "Bevæg indenfor 30 sek. multirotoren mindst <strong>360</strong> grader i alle dens rotationsakser"
+        "message": "Bevæg indenfor 30 sek. dronen <strong>360</strong> grader i alle dens rotationsakser"
     },
     "initialSetupButtonCalibratingText": {
         "message": "Kalibrerér..."
@@ -1211,7 +1211,7 @@
         "message": "ACCEL-justering"
     },
     "configurationSensorAlignmentMag": {
-        "message": "Magnetometer (kompas) justering"
+        "message": "Justering af Magnetometer / kompas"
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
@@ -2184,6 +2184,126 @@
     },
     "auxiliaryModeLogicAND": {
         "message": "OG"
+    },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Aktiver / deaktiver drone",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "I denne auto-nivelleret tilstand styrer krængror og højderor vinklen mellem den relevante akse og den lodrette akse, for at udjævne flyning ved blot at lade pindende være centreret",
+        "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning), når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Lås kurs i kompas retning",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "I denne tilstand pegerkursen for dronen altid i samme retning som da funktionen blev aktiveret. Det betyder, at når dronen roterer rundt om Z-aksen (sideror), vil kontrollerne altid reagere mod samme kurs.<br>Med denne tilstand er det nemmere at styre dronen, fx kan du flyve med kursen mod dig, da kontrollerne altid reagerer omgående. Dette er en venlig tilstand til nye brugere af droner og kan forhindre du mister kontrollen, hvis du ikke kender dronens kurs",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Gennemstiller krængeror, sideror og højderor fra radio sender direkte til servo",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Aktiver mauelt fejlsikring trin 2",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Aktiver 'GPS redning' for at returnere fartøjet til det sted, hvor det sidst var aktiveret (Home)",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Kurs korrektion - indstiller ny sideror værdi for HEADFREE tilstand",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Aktiver bippen - nyttigt til at lokalisere en nedstyrtet drone",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Sluk/tænf for LED lys",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Aktiver/deaktiver On-Screen-Display - OSD",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Aktiver telemetri via kontakt",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "Aktiver Blackbox logning",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "I standard mixer tilstand, når krængror, højderor og sideror beregnes og styrer en motor, vil alle motorer blive ændret ens. Når en motor går under minimum, bliver styring reduceret. Fx hvis du har din gas lige over minimum og forsøger en hurtig krængning - da to motorer ikke kan gå under minimum, vil du hovedsagelig kun få halvdelen af kraften (halvdelen af din PID værdi). Hvis dit input ville have bedt om mere end 100% forskel mellem de høje og lave motores hastighed ville de de langsomm motorer blive reduceret og symmetrien i motorens balance vil blive brudt",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Styrer sideror bevægelse i forhold til et FPV-kamera monteret i en forud indstillet vinkel",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 1. Se i leverandørs manual",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 2. Se i leverandørs manual",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Vender motor retning for at vende en styrtet drone (kun ved DShot protokol)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Ved aktivering, skal denne kontakt også aktiveres, før dronen reelt er klar til flyvning = helt aktiveret",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Fortæl med antal bip, hvormange GPS satellitter som er fundet",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
+        "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Deaktiver permanent en styrtet drone. For at aktivere skal strøm slukkes helt",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Aktiver ACRO træner vinkelbegrænsning i ACRO tilstand",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Deaktiver kontrol af VTX indstillinger via OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "Ræs assistance system",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+        "message": "Deaktiver/aktiver pind kommando",
+        "description": "Help text to STICK CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Deaktiver / aktiver bippen, heruder advarsler, status og anden bippen.",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Tilføjet i BF4.4, så du kan vise 'KLAR' i OSD ved hjælp af en kontakt. Dette er en forbedring til ræs, hvor alle piloters video vises på en central skærm. Piloten kan vippe en kontakt for at indikere, at han er klar til at flyve, og ordet READY vises på deres OSD. Løbsinstruktøren kan derefter se om alle piloter er klar, ved at se på den centrale skærm. Ved aktivering forsvinder READY teksten",
+        "description": "Help text to READY mode"
     },
     "adjustmentsHelp": {
         "message": "Opsætning af kanal justeringer. Se 'in-flight adjustments' delen af manualen for detaljer. Ændringer gemmes Ikke automatisk."
@@ -6020,6 +6140,14 @@
     "vtxFrequencyHelp": {
         "message": "Her kan du vælge frekvensen for din VTX, hvis den er understøttet",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Ja",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Nej",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Enheden er klar",
