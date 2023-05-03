@@ -946,9 +946,9 @@
         "message": "Runway Takeoff Prevention has been triggered",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Disarmed via crash detection",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Crash detection is active",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle channel is too high",
@@ -970,9 +970,9 @@
         "message": "System load is too high for safe flight",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sensor calibration is still ongoing",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "Accelerometer calibration is still ongoing",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI is active",
@@ -1010,19 +1010,19 @@
         "message": "RPM-based filtering is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "A configuration change requires a reboot",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
         "message": "Bitbanged DSHOT is not working properly and the motors can't be controlled. Likely caused by a timer conflict with other features enabled on the flight controller.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
         "message": "The accelerometer has not been calibrated and features are enabled that rely on it. Calibrate the accelerometer.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "There is no motor output protocol selected",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -2342,6 +2342,10 @@
         "message": "Enable BlackBox logging",
         "description": "Help text to BLACKBOX mode"
     },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Erase BlackBox log",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "In the standard mixer / mode, when the roll, pitch and yaw gets calculated and saturates a motor, all motors will be reduced equally. When a motor goes below minimum it gets clipped off. Say you had your throttle just above minimum and tried to pull a quick roll - since two motors can't go any lower, you essentially get half the power (half of your PID gain). If your inputs would have asked for more than a 100% difference between the high and low motors, the low motors would get clipped, breaking the symmetry of the motor balance by unevenly reducing the gain",
         "description": "Help text to AIRMODE mode"
@@ -2361,6 +2365,22 @@
     "auxiliaryHelpMode_CAMERACONTROL3": {
         "message": "Use to toggle customized CAMERA CONTROL 3. Check in vendor manual",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Use to toggle customized USER1. Check in vendor manual",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Use to toggle customized USER2. Check in vendor manual",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Use to toggle customized USER3. Check in vendor manual",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Use to toggle customized USER4. Check in vendor manual",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Reverse the motors to flip over an upside down craft after a crash (DShot required)",
@@ -2394,9 +2414,9 @@
         "message": "Race start assistance system",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
         "message": "Disable/enable stick command",
-        "description": "Help text to STICK CONTROL DISABLE mode"
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "Disable/enable beeper including warning, status and BEEPER mode",
