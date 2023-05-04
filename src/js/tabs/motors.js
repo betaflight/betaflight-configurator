@@ -252,7 +252,7 @@ motors.initialize = async function (callback) {
         const motorsEnableTestModeElement = $('#motorsEnableTestMode');
         self.analyticsChanges = {};
 
-        motorsEnableTestModeElement.prop('checked', false).trigger('change');
+        motorsEnableTestModeElement.prop('checked', self.armed);
 
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42) || !(FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
             $(".motor_testing .telemetry").hide();

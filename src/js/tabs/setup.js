@@ -24,7 +24,7 @@ setup.initialize = function (callback) {
     }
 
     function load_status() {
-        MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_mixer_config);
+        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, load_mixer_config);
     }
 
     function load_mixer_config() {
@@ -362,7 +362,7 @@ setup.initialize = function (callback) {
                     }
                     sensor_e.append(i18n.getMessage('sensorStatusSonarShort'), ': ', sonarElements[[FC.SENSOR_CONFIG.sonar_hardware]]);
                 }
-});
+            });
         };
 
         const showFirmwareInfo = function() {
@@ -401,7 +401,7 @@ setup.initialize = function (callback) {
         showFirmwareInfo();
 
         // Show Sonar info box if sensor exist
-        if (! have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
+        if (!have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
             $('.sonarBox').hide();
         }
 
