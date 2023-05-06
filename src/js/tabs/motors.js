@@ -1132,6 +1132,8 @@ motors.initialize = async function (callback) {
         }
 
         $('a.save').on('click', async function() {
+            GUI.interval_kill_all(['motor_and_status_pull','motors_power_data_pull_slow']);
+
             // gather data that doesn't have automatic change event bound
             FC.MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
             FC.MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
@@ -1156,16 +1158,16 @@ motors.initialize = async function (callback) {
             await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }
-            await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
 
             tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};
             self.configHasChanged = false;
 
-            reboot();
+            mspHelper.writeConfiguration(reboot);
         });
 
         $('a.stop').on('click', () => motorsEnableTestModeElement.prop('checked', false).trigger('change'));

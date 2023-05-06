@@ -352,8 +352,7 @@ gps.initialize = async function (callback) {
             async function saveConfiguration() {
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
                 await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
-                await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-                reboot();
+                await mspHelper.writeConfiguration(reboot);
             }
 
             function reboot() {

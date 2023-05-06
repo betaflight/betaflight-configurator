@@ -59,7 +59,7 @@ onboard_logging.initialize = function (callback) {
     }
 
     function save_to_eeprom() {
-        MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
+        mspHelper.writeConfiguration(reboot);
     }
 
     function reboot() {

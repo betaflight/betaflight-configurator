@@ -205,13 +205,13 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                     function reboot() {
                         const buffer = [];
                         buffer.push8(rebootMode);
-                        MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, () => {
-
-                            // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
-
-                            self.msp_connector.disconnect(disconnectionResult => onDisconnect(disconnectionResult));
-
-                        }, () => console.log('Reboot request received by device'));
+                        setTimeout(() => {
+                            MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, () => {
+                                // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
+                                self.msp_connector.disconnect(disconnectionResult => onDisconnect(disconnectionResult));
+                                console.log('Reboot request received by device');
+                            });
+                        }, 100);
                     }
 
                     function onAbort() {

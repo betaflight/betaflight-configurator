@@ -9,7 +9,6 @@ import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
 import BOARD from '../boards';
-import { gui_log } from '../gui_log';
 
 const ports = {
     analyticsChanges: {},
@@ -357,7 +356,7 @@ ports.initialize = function (callback) {
         GUI.content_ready(callback);
     }
 
-   function on_save_handler() {
+    function on_save_handler() {
         tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
         self.analyticsChanges = {};
 
@@ -488,14 +487,10 @@ ports.initialize = function (callback) {
         }
 
         function save_to_eeprom() {
-            MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, on_saved_handler);
-        }
-
-        function on_saved_handler() {
-            gui_log(i18n.getMessage('configurationEepromSaved'));
-
-            GUI.tab_switch_cleanup(function() {
-                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
+            mspHelper.writeConfiguration(function() {
+                GUI.tab_switch_cleanup(function() {
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
+                });
             });
         }
     }
