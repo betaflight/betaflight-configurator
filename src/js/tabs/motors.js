@@ -6,7 +6,6 @@ import MotorOutputReorderComponent from "../../components/MotorOutputReordering/
 import EscDshotDirectionComponent from "../../components/EscDshotDirection/EscDshotDirectionComponent";
 import DshotCommand from "../../js/utils/DshotCommand.js";
 import { tracking } from "../Analytics";
-import { reinitializeConnection } from "../serial_backend";
 import { bit_check } from "../bit";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
@@ -15,7 +14,6 @@ import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
-import { gui_log } from "../gui_log";
 import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
 import semver from 'semver';
@@ -1167,7 +1165,7 @@ motors.initialize = async function (callback) {
             self.analyticsChanges = {};
             self.configHasChanged = false;
 
-            mspHelper.writeConfiguration(reboot);
+            mspHelper.writeConfiguration(true);
         });
 
         $('a.stop').on('click', () => motorsEnableTestModeElement.prop('checked', false).trigger('change'));
@@ -1186,11 +1184,6 @@ motors.initialize = async function (callback) {
         }
 
         content_ready();
-    }
-
-    function reboot() {
-        gui_log(i18n.getMessage('configurationEepromSaved'));
-        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
     }
 
     function showDialogMixerReset(message) {

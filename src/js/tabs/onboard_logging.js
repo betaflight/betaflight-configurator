@@ -1,7 +1,6 @@
 import { i18n } from "../localization";
 import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
-import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
@@ -56,18 +55,6 @@ onboard_logging.initialize = function (callback) {
             return a;
 
         return gcd(b, a % b);
-    }
-
-    function save_to_eeprom() {
-        mspHelper.writeConfiguration(reboot);
-    }
-
-    function reboot() {
-        gui_log(i18n.getMessage('configurationEepromSaved'));
-
-        GUI.tab_switch_cleanup(function() {
-            MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
-        });
     }
 
     function load_html() {
@@ -142,7 +129,7 @@ onboard_logging.initialize = function (callback) {
                         await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
                     }
 
-                    save_to_eeprom();
+                    mspHelper.writeConfiguration(true);
                 });
             }
 

@@ -14,8 +14,9 @@ import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
 import { updateTabList } from "../utils/updateTabList";
 import { showErrorDialog } from "../utils/showErrorDialog";
-import { TABS } from "../gui";
+import GUI, { TABS } from "../gui";
 import { OSD } from "../tabs/osd";
+import { reinitializeConnection } from "../serial_backend";
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
@@ -2729,13 +2730,15 @@ MspHelper.prototype.sendSerialConfig = function(callback) {
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 
-MspHelper.prototype.writeConfiguration = function(callback) {
+MspHelper.prototype.writeConfiguration = function(reboot) {
     setTimeout(function() {
         MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
             gui_log(i18n.getMessage('configurationEepromSaved'));
             console.log('Configuration saved to EEPROM');
-            if (callback) {
-                callback();
+            if (reboot) {
+                GUI.tab_switch_cleanup(function() {
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
+                });
             }
         });
     }, 100); // 100ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received

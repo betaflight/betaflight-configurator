@@ -5,10 +5,8 @@ import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { gui_log } from '../gui_log';
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from '../msp/MSPHelper';
-import { reinitializeConnection } from '../serial_backend';
 import { updateTabList } from '../utils/updateTabList';
 
 const gps = {};
@@ -344,26 +342,14 @@ gps.initialize = async function (callback) {
             frame.contentWindow.postMessage(message, '*');
         });
 
-        $('a.save').on('click', function() {
+        $('a.save').on('click', async function() {
             // fill some data
             FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
             FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
 
-            async function saveConfiguration() {
-                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-                await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
-                await mspHelper.writeConfiguration(reboot);
-            }
-
-            function reboot() {
-                gui_log(i18n.getMessage('configurationEepromSaved'));
-
-                GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
-                });
-            }
-
-            saveConfiguration();
+            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+            mspHelper.writeConfiguration(true);
         });
 
         GUI.content_ready(callback);
