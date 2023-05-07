@@ -341,6 +341,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "ANGLE_MODE"},
                 {text: "ANGLE_TARGET"},
                 {text: "CURRENT_ANGLE"},
+                {text: "DSHOT_TELEMETRY_COUNTS"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
