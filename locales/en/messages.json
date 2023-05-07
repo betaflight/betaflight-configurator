@@ -950,6 +950,10 @@
         "message": "Crash detection is active",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "The craft is currently calibrating",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle channel is too high",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
