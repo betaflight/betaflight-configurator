@@ -852,10 +852,6 @@
         "message": "Versehentlicher Start erkannt und unterbunden",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Durch Absturzerkennung disarmt",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Gaskanal ist zu hoch",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -875,10 +871,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Systemauslastung zu hoch für einen sicheren Flug",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sensorkalibrierung noch nicht abgeschlossen",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Kommandozeile ist aktiv",
@@ -915,22 +907,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Die RPM-basierte Filterung ist aktiviert, aber ein oder mehrere ESCs liefern keine gültige DSHOT-Telemetrie. Prüfe, ob die ESCs kompatibel sind und die erforderliche Firmware installiert haben, um bidirektionale DSHOT-Telemetrie zu unterstützen.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Eine Konfigurationsänderung erfordert einen Neustart",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged DSHOT funktioniert nicht richtig und die Motoren können nicht gesteuert werden. Wahrscheinlich wird das durch einen Timer-Konflikt mit anderen Funktionen, die auf dem Flugcontroller aktiviert sind, verursacht.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Der Beschleunigungssensor wurde nicht kalibriert und Funktionen sind aktiviert, die davon abhängen. Kalibrieren Sie den Beschleunigungssensor.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Es ist kein Motorausgabeprotokoll ausgewählt",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Einer der anderen 'Disarm-Flags' ist aktiv während des Armings",

@@ -424,7 +424,7 @@
         "message": "Firmware diversi da Betaflight <span class=\"message-negative\">non sono supportati</span>, ad eccezione della modalità CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "La versione del firmware installata sul dispositivo necessita di un aggiornamento. Usa il CLI per effettuare un backup prima dell'aggiornamento. La procedura è disponibile nella documentazione. <br/>In alternativa puoi scaricare una versione precedente del configuratore."
+        "message": "La versione del firmware installato sul dispositivo necessita un aggiornamento. Usa il CLI per effettuare un backup prima dell'aggiornamento. La procedura è disponibile nella documentazione. <br/>In alternativa puoi scaricare una versione precedente del configuratore."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Ci sono impostazioni di fabbrica personalizzate disponibili per questa scheda. Di solito una scheda non funzionerà a dovere a meno che le impostazioni personalizzate non siano applicate.<br/> Vuoi applicare le impostazioni personalizzate di questa scheda?"
@@ -849,9 +849,9 @@
         "message": "La prevenzione del decollo fuori controllo è entrata in funzione",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Disarmato per rilevamento collisione",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Rilevamento crash attivo",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Canale gas troppo alto",
@@ -873,9 +873,9 @@
         "message": "Il carico del processore è troppo elevato per un volo in sicurezza",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Calibrazione sensori ancora in corso",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "Calibrazione accelerometro in corso",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI attivo",
@@ -913,20 +913,20 @@
         "message": "Il filtraggio basato su RPM è abilitato ma uno o più ESC non forniscono una telemetria DSHOT valida. Verificare che gli ESC siano in grado di installare il firmware richiesto per supportare la telemetria DSHOT bidirezionale.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un cambio configurazione richiede un riavvio",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Il DSHOT Bitbanged non funziona correttamente e i motori non possono essere controllati. Probabilmente è un conflitto del timer con altre funzioni attivate sul controllore di volo.",
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "Il DSHOT Bitbanged non è corretto e i motori non possono essere controllati. La probabile causa è un conflitto del timer con altre funzioni attive sul controllore di volo.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "L'accelerometro non è stato calibrato ma sono abilitate delle funzioni che dipendono da esso. Calibra l'accelerometro.",
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "L'accelerometro non è stato calibrato e delle funzioni che lo usano sono abilitate. Calibra l'accelerometro.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Non è stato selezionato un protocollo di output dei motori",
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
+        "message": "Nessun protocollo di output dei motori selezionato",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
@@ -2241,6 +2241,10 @@
         "message": "Abilita log BlackBox",
         "description": "Help text to BLACKBOX mode"
     },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Cancella il log BlackBox",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "In un mixer / modalità standard, quando roll, pitch e yaw sono calcolati e saturano un motore, tutti i motori saranno ridotti allo stesso modo. Quando un motore va sotto il minimo, viene interrotto. Pensate di avere l'acceleratore appena sopra il minimo e cercate di fare un roll veloce - poiché due motori non possono andare più lenti, si ottiene in pratica metà della potenza (metà del PID gain). Se i vostri comandi avessero richiesto una differenza maggiore del 100% tra i motori veloci e lenti, i motori lenti verrebbero interrotti, rompendo la simmetria del bilanciamento dei motori riducendo in modo non uniforme il guadagno",
         "description": "Help text to AIRMODE mode"
@@ -2250,16 +2254,32 @@
         "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
-        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 1. Controllare il manuale del fornitore",
+        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 1. Controlla il manuale del fornitore",
         "description": "Help text to customized CAMERA CONTROL 1 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL2": {
-        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 2. Controllare il manuale del fornitore",
+        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 2. Controlla il manuale del fornitore",
         "description": "Help text to customized CAMERA CONTROL 2 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL3": {
-        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 3. Controllare il manuale del fornitore",
+        "message": "Usa l'interruttore personalizzato CAMERA CONTROL 3. Controlla il manuale del fornitore",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Usa l'interruttore personalizzato USER1. Controlla il manuale del fornitore",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Usa l'interruttore personalizzato USER2. Controlla il manuale del fornitore",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Usa l'interruttore personalizzato USER3. Controlla il manuale del fornitore",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Usa l'interruttore personalizzato USER4. Controlla il manuale del fornitore",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Inverte i motori per ribaltare un modello dopo un crash (DShot richiesto)",
@@ -2293,9 +2313,9 @@
         "message": "Sistema d'assistenza avvio Race",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
-        "message": "Disabilita/abilita comando stick",
-        "description": "Help text to STICK CONTROL DISABLE mode"
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Disabilita/abilita comandi stick",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "Disabilita/abilita beeper inclusi gli avvisi, stato e modalità BEEPER",
@@ -6537,7 +6557,7 @@
         "message": "MODALITÀ CAMBIO CAMERA"
     },
     "flashTab": {
-        "message": "Aggiornamento Firmware"
+        "message": "Aggiorna Firmware"
     },
     "cliAutoComplete": {
         "message": "Autocompletamento avanzato della CLI"

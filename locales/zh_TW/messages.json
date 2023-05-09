@@ -702,10 +702,6 @@
         "message": "已觸發預防起飛失控",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "檢測到墜機事故",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "油門通道值過高",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -725,10 +721,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "系統負載過高, 無法安全飛行",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "傳感器校準仍在進行中",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI (命令列) 已激活",
@@ -765,22 +757,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "基於轉速的濾波器已開啟，但一個或多個電調未發送有效的 DSHOT 回傳數據。請確認電調支援 DSHOT 回傳功能並且已刷入支援雙向 DSHOT 回傳的固件。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "配置更改需要重啟",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged Dshot 無法正常工作，無法正常控制電機。可能是由於在飛控上啟用了其他功能造成了定時器衝突。",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "已啟用了使用加速度計的功能，但加速度計未校準。請校準加速度計。",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "尚未選擇電機輸出協議",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解鎖時有一個阻止解鎖的標誌處於活躍狀態",

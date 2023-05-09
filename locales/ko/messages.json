@@ -849,10 +849,6 @@
         "message": "폭주이륙방지가 실행되고 있습니다",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "충돌 감지를 통해 디스아밍됨",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "스로틀이 너무 높습니다",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -872,10 +868,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "시스템 부하가 안전한 비행을 하기에 너무 높습니다",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "센서 교정이 여전히 진행 중입니다",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI가 사용 중입니다",
@@ -912,22 +904,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM-기반 필터링이 활성화되었지만 하나 이상의 ESC가 유효한 DSHOT 텔레메트리를 공급하지 않습니다. ESC가 양방향 DSHOT 텔레메트리를 공급하기 위해 필요한 펌웨어가 적용가능한지와 설치되었는지를 확인하십시요.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "환경설정 변경은 재부팅을 필요로합니다.",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "비트뱅(Bitbang)된 DSHOT이 제대로 작동하지 않아 모터를 제어할 수 없습니다. 비행 컨트롤러에서 활성화된 다른 기능과의 타이머 충돌로 인해 발생할 수 있습니다.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "가속도계가 교정되지 않았으며 그에 의존하는 기능들이 활성화되어 있습니다. 가속도계를 교정하십시오.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "선택된 모터 출력 프로토콜이 없습니다",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
@@ -2292,10 +2268,6 @@
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "레이스 스타트 지원 시스템",
         "description": "Help text to LAUNCH CONTROL mode"
-    },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
-        "message": "스틱 명령 비활성/활성화",
-        "description": "Help text to STICK CONTROL DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "경고, 상태 및 비퍼 모드를 포함한 비퍼음 비활성화/활성화",

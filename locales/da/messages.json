@@ -849,9 +849,9 @@
         "message": "Runway Takeoff-beskyttelse er blevet udløst",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Deaktiveret via havaridetektering",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Nedstyrtet drone er aktiv",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Gas kanalværdi er for høj",
@@ -873,9 +873,9 @@
         "message": "Systembelastning for høj til sikker flyvning",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sensorkalibrering er stadig i gang",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "Accelerometerkalibrering er stadig i gang",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI er aktiv",
@@ -913,19 +913,19 @@
         "message": "RPM eller omdrejnings-baseret filtrering er aktiv, men èn eller flere esc'ere sender ikke gyldige DShot telemetri data. Tjek at esc'erne har den nødvendige firmware for at kunne køre to-vejs DShot telemetri.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Ændringer i opsætning kræver en genstart",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged / kommunikation med DSHOT fungerer ikke korrekt og motorerne kan ikke kontrolleres. Sandsynligvis forårsaget af en timer konflikt med andre funktioner aktiveret på FC.",
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "Motor protokol (DSHOT) melder fejl, fungerer ikke korrekt og motorere er ikke i kontrol. Sandsynligvis på grund af en timer konflikt med andre funktioner aktiveret i FC.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Accelerometeret er ikke kalibreret og der er ændret opsætninger som kræver kalibriering. Kalibrer accelerometret.",
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "Accelerometeret er ikke kalibreret og funktioner er ændret, der er afhængige af det. Kalibrer accelerometret.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "Der er ikke valgt en protokol til motor kontrol",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -1358,7 +1358,7 @@
         "message": "Bip ved fuldført Blackbox-sletning"
     },
     "beeperCRASH_FLIP": {
-        "message": "Bip, når \"Vend havereret drone\" er aktiv"
+        "message": "Bip, når \"Vend styrtet drone\" er aktiv"
     },
     "beeperCAM_CONNECTION_OPEN": {
         "message": "Bip, når 5-tasts kamerakontrol tilgås"
@@ -2222,11 +2222,11 @@
         "description": "Help text to HEAD ADJ mode"
     },
     "auxiliaryHelpMode_BEEPER": {
-        "message": "Aktiver bippen - nyttigt til at lokalisere en nedstyrtet drone",
+        "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",
         "description": "Help text to BEEPER mode"
     },
     "auxiliaryHelpMode_LEDLOW": {
-        "message": "Sluk/tænf for LED lys",
+        "message": "Tænd eller sluk for LED lys",
         "description": "Help text to LEDLOW mode"
     },
     "auxiliaryHelpMode_OSDDISABLE": {
@@ -2240,6 +2240,10 @@
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "Aktiver Blackbox logning",
         "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Slet BlackBox log",
+        "description": "Help text to BLACKBOX ERASE mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "I standard mixer tilstand, når krængror, højderor og sideror beregnes og styrer en motor, vil alle motorer blive ændret ens. Når en motor går under minimum, bliver styring reduceret. Fx hvis du har din gas lige over minimum og forsøger en hurtig krængning - da to motorer ikke kan gå under minimum, vil du hovedsagelig kun få halvdelen af kraften (halvdelen af din PID værdi). Hvis dit input ville have bedt om mere end 100% forskel mellem de høje og lave motores hastighed ville de de langsomm motorer blive reduceret og symmetrien i motorens balance vil blive brudt",
@@ -2260,6 +2264,22 @@
     "auxiliaryHelpMode_CAMERACONTROL3": {
         "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Brug til at skifte brugerdefineret USER1. Se i leverandør manual",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Brug til at skifte brugerdefineret USER2. Se i leverandør manual",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Brug til at skifte brugerdefineret USER3. Se i leverandør manual",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Brug til at skifte brugerdefineret USER4. Se i leverandør manual",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Vender motor retning for at vende en styrtet drone (kun ved DShot protokol)",
@@ -2293,9 +2313,9 @@
         "message": "Ræs assistance system",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
-        "message": "Deaktiver/aktiver pind kommando",
-        "description": "Help text to STICK CONTROL DISABLE mode"
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Deaktiver/aktiver pind kommandoer",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "Deaktiver / aktiver bippen, heruder advarsler, status og anden bippen.",
@@ -4479,7 +4499,7 @@
         "message": "Trin som startes ved, når aktivering sker fra AUX knap"
     },
     "failsafeSwitchModeHelp": {
-        "message": "Denne indstilling afgør, hvad der sker, når fejlsikring via AUX-knappen:<br/><strong>Trin 1</strong> aktiverer Trin 1 fejlsikring, der er nyttig til at simulere den nøjagtige fejlsikringsadfærd ved signaltab.<br/><strong>Trin 2</strong> overspringer Trin 1 og aktiverer omgående Trin 2-proceduren <br/><strong>SLUK</strong>, der straks afkobler (fartøjet havarerer)"
+        "message": "Denne indstilling afgør, hvad der sker, når fejlsikring via AUX-knappen:<br/><strong>Trin 1</strong> aktiverer Trin 1 fejlsikring, der er nyttig til at simulere den nøjagtige fejlsikringsadfærd ved signaltab.<br/><strong>Trin 2</strong> overspringer Trin 1 og aktiverer omgående Trin 2-proceduren <br/><strong>SLUK</strong>, der straks afkobler (dronen styrter ned)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Trin 1"
@@ -5903,11 +5923,11 @@
         "message": "Viser en visualisering af biperen (viser som 4 stjerner)"
     },
     "osdWarningTextCrashFlipMode": {
-        "message": "Vend havereret drone tilstand",
+        "message": "Vend styrtet drone tilstand",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCrashFlipMode": {
-        "message": "Advarer når \"vend havereret drone\" er aktiveret"
+        "message": "Advarer når \"vend styrtet drone\" er aktiveret"
     },
     "osdWarningTextEscFail": {
         "message": "ESC fejl",

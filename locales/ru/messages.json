@@ -756,10 +756,6 @@
         "message": "Взлет с полосы переключен",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Отключен из-за обнаружения аварии",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Канал газа слишком высок",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -779,10 +775,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Системная нагрузка слишком высока для полета",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Калибровка датчика все еще продолжается",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Интерфейс командной строки активен",
@@ -819,22 +811,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Фильтрация на основе RPM включена, но один или более регуляторов моторов не выдают верную DSHOT телеметрию. Проверьте, что регуляторы имеют поддержку двусторонней DSHOT телеметрии и установлена необходимая прошивка для её поддержки.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Изменения в конфигурации требуют перезагрузки",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged DSHOT не работает должным образом, и двигатели не могут управляться. Скорее всего, из-за конфликта таймера с другими функциями, включенными в контроллере полета.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Акселерометр не откалиброван, но функции, которые зависят от него, включены. Откалибруйте акселерометр.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Протокол управления двигателями не выбран",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Один из других флагов дизарм активен при арминге",

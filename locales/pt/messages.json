@@ -849,9 +849,9 @@
         "message": "A Prevenção Contra Descolagem Acidental foi acionada",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Desarmado por deteção de queda",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Deteção de colisão está ativa",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "O valor do canal do acelerador está muito alto",
@@ -873,9 +873,9 @@
         "message": "A carga da CPU está acima do limite permitido para um voo seguro",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "A calibração dos sensores ainda está em curso",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "Calibração do acelerómetro ainda em curso",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Linha de comandos (CLI) está ativa",
@@ -913,19 +913,19 @@
         "message": "Filtragem baseada em RPM está habilitada, mas um ou mais ESCs não estão a fornecer telemetria DSHOT. Verifique se os ESCs são capazes disso e se o firmware necessário está instalado para suportar telemetria DSHOT bidirecional.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Uma alteração de configuração necessita de uma reinicialização",
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
+        "message": "Uma alteração de configuração requer uma reinicialização",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "O DSHOT Bitbanged não está a funcionar corretamente e os motores não podem ser controlados. Provavelmente causado por um conflito do relógio com outras funcionalidades ativadas na controladora de voo.",
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "O DSHOT Bitbanged não está a funcionar corretamente e os motores não podem ser controlados. Provavelmente devido a um conflito do relógio com outras funcionalidades ativadas na controladora de voo.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
         "message": "O acelerómetro não foi calibrado e estão ligadas funcionalidades que dependem dele. Calibre o acelerómetro.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "Não há nenhum protocolo de saída de motor selecionado",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -2192,6 +2192,138 @@
     "auxiliaryHelpMode_ANGLE": {
         "message": "Neste modo auto-nivelado, os canais do roll e do pitch controlam o ângulo entre o eixo relevante e o vertical, alcançando vôo nivelado apenas deixando os sticks centrados",
         "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Este modo híbrido funciona exatamente como o modo ANGLE com sticks de roll e pitch centrados (assim permitindo voo autonivelado), depois comporta-se gradualmente cada vez mais como o modo RATE padrão, à medida que os sticks são afastados da posição central",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Bloqueio à direção do Magnetómetro",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Neste modo, a \"cabeça\" do multicóptero está sempre a apontar na mesma direção de quando a funcionalidade foi ativada. Isto significa que quando o multicóptero gira em torno do eixo Z (yaw), os controlos sempre responderão de acordo com a mesma direção da \"cabeça\".<br>Com este modo é mais fácil controlar o multicóptero, mesmo voando com a cabeça física na sua direção, já que os controlos respondem sempre igual. Este é um modo amigável para novos utilizadores de multicópteros e pode evitar perder o controlo quando não sabe a direção da cabeça",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Transmite roll, yaw, and pitch diretamente do rx para os servos em mistura de avião",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Iniciar etapa 2 do failsafe manualmente",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Ativar 'GPS Rescue' para retornar a nave ao local onde foi armada pela última vez",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Ajuste de Direção - Define uma nova origem yaw para o modo HEADFREE",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Ativar o beeper - útil para localizar uma aeronave caída",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Desligar saída LED_STRIP",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Ativar/Desativar On-Screen-Display",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Ativar telemetria via switch",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "Ativar registo BlackBox",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Apagar log do BlackBox",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "No modo / mistura padrão, quando o roll, pitch e yaw são calculados e saturam um motor, todos os motores serão reduzidos igualmente. Quando um motor vai abaixo do mínimo, ele é cortado. Se tiver o acelerador logo acima do mínimo e tentou puxar uma rolagem rápidafazer um roll rápido - uma vez que 2 motores não podem ir mais abaixo, essencialmente terá metada da potência (metade do ganho do PID). Se os seus inputs pedirem mais do que a diferença de 100% entre motores altos e baixos, os motores baixos serão cortados, quebrando a simetria do equilíbrio motor através da redução desigual o ganho",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Aplicar rotação de yaw em relação a uma câmera FPV montada com um ângulo predefinido",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "Use para alternar CAMERA CONTROL 1 personalizado. Verifique o manual do fornecedor",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "Use para alternar CAMERA CONTROL 2 personalizado. Verifique o manual do fornecedor",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "Use para alternar CAMERA CONTROL 3 personalizado. Verifique o manual do fornecedor",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Use para alternar o USER1 personalizado. Verifique o manual do fornecedor",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Use para alternar o USER2 personalizado. Verifique o manual do fornecedor",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Use para alternar o USER3 personalizado. Verifique o manual do fornecedor",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Use para alternar o USER4 personalizado. Verifique o manual do fornecedor",
+        "description": "Help text to customized USER4 mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Inverta os motores para sair de uma posição invertida após um acidente (Dshot necessário)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Quando armar, espere que este switch seja ativado antes de efetivamente armar",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Use o número de beeps para indicar o número de satélites GPS encontrados",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Mudar o VTX para modo pit (baixa emissão de energia, se suportado)",
+        "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Desativar permanentemente uma aeronave caída até que seja reiniciada",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Ativar limitação do ângulo 'acro trainer' em modo acro",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Desativar o controlo das configurações do VTX através do OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "Sistema de assistência de início de corrida",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Desativar/ativar comando do stick",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Desativar/ativar o beeper incluíndo aviso, estado e modo BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Adicionado no BF4.4, pode agora mostrar 'READY' no OSD usando um interruptor. Esta é uma melhoria de nicho para situações de corrida onde todos os feeds de vídeos dos pilotos estão num monitor central. O piloto pode ativar um switch para indicar que está pronto para voar, e a palavra READY aparece no seu OSD. O diretor de corrida pode então saber se todos os pilotos estão prontos ao olhar para a tela central. Quando arma, o texto READY desaparece",
+        "description": "Help text to READY mode"
     },
     "adjustmentsHelp": {
         "message": "Configure os switches de ajuste. Veja a secção 'in-flight adjustments' do manual para detalhes. As alterações que as funções de ajuste fazem não são gravadas automaticamente."

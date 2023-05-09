@@ -849,9 +849,9 @@
         "message": "La Protección de Despegue Incontrolado se ha activado",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Desarmado por detección de colisión",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Detección de colisión activado",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "El canal del acelerador está demasiado alto",
@@ -873,9 +873,9 @@
         "message": "La carga del sistema es demasiado alta para un vuelo seguro",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "La calibración de los sensores está todavía en marcha",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "La calibración del acelerómetro está todavía en proceso",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Está activo el CLI",
@@ -913,20 +913,20 @@
         "message": "El filtro basado en RPM está activado pero uno o más ESCs no están proporcionando telemetría DSHOT válida. Comprueba que los ESCs son compatibles y tienen el firmware necesario instalado para soportar telemetría bidireccional DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un cambio en la configuración requiere reiniciar",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
         "message": "Bitbanging DSHOT no está funcionando correctamente y los motores no pueden ser controlados. Probablemente causado por algún conflicto en un timer con otras funcionalidades activadas del controlador de vuelo.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
         "message": "El acelerómetro no ha sido calibrado y hay funcionalidades que lo necesitan. Calibra el acelerómetro.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "No hay ningún protocolo de salida del motor seleccionado",
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
+        "message": "No hay ningún protocolo de salida para los motores seleccionado",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
@@ -2241,6 +2241,10 @@
         "message": "Activar registro de Caja Negra",
         "description": "Help text to BLACKBOX mode"
     },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Borrar registro de Caja Negra",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "En el mezclador / modo estándar, cuando el roll, el pitch y el yaw se calculan y saturan un motor, todos los motores se reducen por igual. Cuando un motor va por debajo del mínimo se recorta. Si tenías tu acelerador justo por encima del mínimo y tratas de hacer un roll rápido - ya que dos motores no pueden bajar, obtienes esencialmente la mitad de la potencia (la mitad de la ganancia de tu PID). Si tus comandos hubieran pedido más de un 100% de diferencia entre los motores altos y bajos, los motores bajos se recortarían, rompiendo la simetría del balance del motor al reducir la ganancia desigualmente",
         "description": "Help text to AIRMODE mode"
@@ -2260,6 +2264,22 @@
     "auxiliaryHelpMode_CAMERACONTROL3": {
         "message": "Utilizado para activar el CAMERA CONTROL 3 personalizado. Comprobar el manual del proveedor",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Utilizado para activar el USER1 personalizado. Comprobar el manual del proveedor",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Utilizado para activar el USER2 personalizado. Comprobar el manual del proveedor",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Utilizado para activar el USER3 personalizado. Comprobar el manual del proveedor",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Utilizado para activar el USER4 personalizado. Comprobar el manual del proveedor",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Invierte los motores para voltear una aeronave que está boca abajo después de un accidente (DShot requerido)",
@@ -2293,9 +2313,9 @@
         "message": "Sistema de asistencia de inicio de carrera",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
         "message": "Desactivar/activar comandos con los mandos",
-        "description": "Help text to STICK CONTROL DISABLE mode"
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "Desactivar/activar pitidos incluyendo advertencias, estado y modo BEEPER",

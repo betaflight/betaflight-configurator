@@ -415,7 +415,7 @@
         "message": "Nie udało się uruchomić procedury odbezpieczania"
     },
     "noConfigurationReceived": {
-        "message": "Nie otrzymano konfiguracji przez <span class=\"message-negative\">10 sekund</span>, komunikacja <span class=\"message-negative\">zawiodła</span>."
+        "message": "Nie udało się połączyć przez <span class=\"message-negative\">10 sekund</span>, komunikacja <span class=\"message-negative\">zawiodła</span>"
     },
     "firmwareVersionNotSupported": {
         "message": "Ta wersja oprogramowania kontrolera <span class=\"message-negative\">nie jest wspierana</span>. Proszę uaktualnij oprogramowaniedo wersji, która wspiera API <strong>$1</strong>, lub wyższej. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
@@ -849,9 +849,9 @@
         "message": "Uaktywniono zabezpieczenie przed niekontrolowanym startem",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Rozbrojony przez wykrycie wypadku",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Wykrywanie awarii jest aktywne",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Kanał przepustnicy ma zbyt wysoką wartość",
@@ -873,9 +873,9 @@
         "message": "Obciążenie systemu jest zbyt wysokie, aby zapewnić bezpieczny lot",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Kalibracja czujnika nadal trwa",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "Trwa kalibracja akcelerometru",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Wiersz poleceń - aktywny",
@@ -913,19 +913,19 @@
         "message": "Filtrowanie w oparciu o RPM jest włączone ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowanie wspierające dwukierunkową telemetrię DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Zmiana w konfiguracji wymaga ponownego uruchomienia",
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
+        "message": "Zmiana konfiguracji wymaga ponownego uruchomienia",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Komunikacja DSHOT nie działa poprawnie i nie można kontrolować silników. Prawdopodobnie jest to spowodowane przez konflikt z innymi funkcjami włączonymi w kontrolerze lotu.",
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "Protokół DSHOT nie działa prawidłowo i nie można sterować silnikami. Prawdopodobnie jest to spowodowane konfliktem z innymi funkcjami włączonymi na kontrolerze lotu.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Akcelerometr nie został skalibrowany i są włączone funkcje, które na nim polegają. Skalibruj akcelerometr.",
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "Akcelerometr nie został skalibrowany, a są włączone funkcje, które na nim polegają. Skalibruj akcelerometr.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "Nie ma wybranego protokołu sterowania silnika",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -2241,6 +2241,10 @@
         "message": "Włącz rejestrator parametrów lotu BlackBox",
         "description": "Help text to BLACKBOX mode"
     },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Wyczyść dziennik BlackBox",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "W standardowym trybie miksera /, gdy przechylenie, nachylenie i odchylenie zostaną obliczone i nasycą silnik, wszystkie silniki zostaną jednakowo zredukowane. Kiedy silnik spada poniżej minimum, zostaje odcięty. Powiedzmy, że miałeś przepustnicę nieco powyżej minimum i próbowałeś szybko przechylić - ponieważ dwa silniki nie mogą zejść niżej, zasadniczo uzyskujesz połowę mocy (połowę wzmocnienia PID). Jeśli twoje dane wejściowe wymagałyby więcej niż 100% różnicy między wysokimi i niskimi silnikami, niskie silniki zostałyby obcięte, łamiąc symetrię równowagi silnika poprzez nierównomierne zmniejszenie wzmocnienia",
         "description": "Help text to AIRMODE mode"
@@ -2260,6 +2264,22 @@
     "auxiliaryHelpMode_CAMERACONTROL3": {
         "message": "Służy do niestandardowego przełączania STEROWANIA KAMERĄ 3. Sprawdź w instrukcji dostawcy",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Używaj, aby przełączyć na profil niestandardowy USER1. Sprawdź w instrukcji dostawcy",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Używaj, aby przełączyć na profil niestandardowy USER2. Sprawdź w instrukcji dostawcy",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Używaj, aby przełączyć na profil niestandardowy USER3. Sprawdź w instrukcji dostawcy",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Używaj, aby przełączyć na profil niestandardowy USER3. Sprawdź w instrukcji dostawcy",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Odwróć kierunek obrotu silników, aby przewrócić statek powietrzny do góry nogami po zderzeniu (wymagany DShot)",
@@ -2293,9 +2313,9 @@
         "message": "System wspomagania startu w wyścigu",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
-        "message": "Wyłącz/włącz polecenie drążka",
-        "description": "Help text to STICK CONTROL DISABLE mode"
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Wyłącz/włącz polecenia z drążka",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "Wyłącz/włącz sygnał dźwiękowy, w tym ostrzeżenie, stan i tryb BEEPER",
