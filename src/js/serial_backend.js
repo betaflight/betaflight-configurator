@@ -671,30 +671,11 @@ async function update_live_status() {
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_ANALOG);
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-        await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
-        const active = (performance.now() - FC.ANALOG.last_received_timestamp) < 300;
-
-        for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-            if (FC.AUX_CONFIG[i] === 'ARM') {
-                $(".armedicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
-            }
-            if (FC.AUX_CONFIG[i] === 'FAILSAFE') {
-                $(".failsafeicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
-            }
-        }
-
-        let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
-
-        if (FC.ANALOG.voltage === 0) {
-            nbCells = 1;
-        }
-
+        const nbCells = FC.ANALOG.voltage === 0 ? 1 : Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
         const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
         const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
         const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
-
         const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
 
         if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
@@ -710,13 +691,25 @@ async function update_live_status() {
             }
         }
 
-        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
-            await MSP.promise(MSPCodes.MSP_RAW_GPS);
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await MSP.promise(MSPCodes.MSP_STATUS_EX);
+
+        const active = (performance.now() - FC.ANALOG.last_received_timestamp) < 300;
+        $(".linkicon").toggleClass('active', active);
+
+        for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
+            if (FC.AUX_CONFIG[i] === 'ARM') {
+                $(".armedicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
+            }
+            if (FC.AUX_CONFIG[i] === 'FAILSAFE') {
+                $(".failsafeicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
+            }
         }
 
-        sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
-
-        $(".linkicon").toggleClass('active', active);
+        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
+            await MSP.promise(MSPCodes.MSP_RAW_GPS);
+            sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
+        }
 
         statuswrapper.show();
     }
