@@ -819,10 +819,6 @@
         "message": "La prévention au décollage intempestif a été activée",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Désarmé via la détection d'un crash",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Voie des gaz est trop élevée",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -842,10 +838,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "La charge CPU est trop élevée pour voler en sécurité",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "L'étalonnage des capteurs est toujours en cours",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Ligne de Commande active",
@@ -882,22 +874,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Le filtrage basé sur RPM est activé mais un ou plusieurs ESC ne fournissent pas de télémétrie DSHOT valide. Vérifiez que les ESC sont capables et ont le firmware requis installé pour supporter la télémétrie DSHOT bidirectionnelle.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Une modification de configuration nécessite un redémarrage",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Le DSHOT Bitbanged ne fonctionne pas correctement. Les moteurs ne peuvent pas être contrôlés, probablement à cause un conflit de timer avec d'autres fonctionnalités activées sur le contrôleur de vol.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "L'accéléromètre n'a pas été calibré, et certaines fonctionnalités actives en ont besoin. Calibrez l'accéléromètre.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Aucun protocole de sortie de moteur sélectionné",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un des autres drapeaux désarmés est actif lors de l'armement",

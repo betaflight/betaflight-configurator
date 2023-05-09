@@ -755,10 +755,6 @@
         "message": "Runway Takeoff preventie is geactiveerd",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Uitgeschakeld via crash detectie",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle kanaal is te hoog",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -778,10 +774,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Systeembelasting is te hoog voor een veilige vlucht",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sensor kalibratie is nog steeds bezig",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI is actief",
@@ -818,22 +810,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM-gebaseerde filtering is ingeschakeld, maar één of meerdere ESC's leveren geen geldige DSHOT telemetry aan. Controleer of de ESC's de vereiste firmware geïnstalleerd hebben om zo bidirectionele DSHOT telemetry te ondersteunen.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Een configuratie wijziging vereist een herstart",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged DSHOT werkt niet correct. De motoren kunnen niet worden gecontroleerd. Waarschijnlijk wordt dit veroorzaakt door een timer conflict van andere functies die zijn ingeschakeld op de vluchtcontroller.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "De versnellingsmeter is niet gekalibreerd. Er zijn functies ingeschakeld die hierop vertrouwen. Kalibreer de versnellingsmeter.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Er is geen motoruitgangsprotocol geselecteerd",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Een van de andere disarm flags is actief bij arming",

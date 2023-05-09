@@ -445,7 +445,7 @@
         "message": "<strong>モーター出力プロトコルが選択されていません。</strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>加速度センサーは有効になっていますがキャリブレーションされていません。</strong><br>加速度センサーを使用する場合は『$t(tabSetup.message)』タブの『$t(initialSetupButtonCalibrateAccel.message)』の指示に従ってください。加速度センサーを必要とする機能 (オートレベルモード、GPSレスキュー等) が有効になっている場合、加速度センサーのキャリブレーションが完了するまで機体のアームは有効になりません。<br>加速度センサーを使用しない場合は『$t(tabConfiguration.message)』タブの『$t(configurationSystem.message)』で無効にすることを推奨します。"
+        "message": "<strong>加速度センサーは有効になっていますが水平キャリブレーションされていません。</strong><br>加速度センサーを使用する場合は『$t(tabSetup.message)』タブの『$t(initialSetupButtonCalibrateAccel.message)』の指示に従ってください。加速度センサーを必要とする機能 (オートレベルモード、GPSレスキュー等) が有効になっている場合、加速度センサーの水平キャリブレーションが完了するまで機体のアームは有効になりません。<br>加速度センサーを使用しない場合は『$t(tabConfiguration.message)』タブの『$t(configurationSystem.message)』で無効にすることを推奨します。"
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}</strong>",
@@ -849,9 +849,9 @@
         "message": "暴走離陸防止機能が実行されました",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "クラッシュ検出によるディスアーム",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "クラッシュ検出が有効です",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "スロットルチャンネルが高すぎます",
@@ -873,9 +873,9 @@
         "message": "安全な飛行にはシステム負荷が高すぎます",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "センサーキャリブレーションがまだ実行中です",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "水平キャリブレーションがまだ実行中です",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI コマンドラインが有効です",
@@ -913,19 +913,19 @@
         "message": "RPMベースのフィルタリングは有効ですが、1つ以上のESCが有効なDSHOTテレメトリー情報を提供していません。ESCがDSHOT双方向テレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "設定を変更するには再起動が必要です",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
         "message": "Bitbanged DSHOTが正常に動作せず、モーターを制御できません。おそらくフライトコントローラで有効になっている他機能とタイマーとの競合が原因かと思われます。",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "加速度センサーはキャリブレーションされていませんが、依存する機能が有効になっています。加速度センサーをキャリブレーションしてください。",
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "水平キャリブレーションされていませんが、依存する機能が有効になっています。水平キャリブレーションを実行してください。",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "モーター出力プロトコルが選択されていません",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -2241,6 +2241,10 @@
         "message": "BlackBoxログを有効にします",
         "description": "Help text to BLACKBOX mode"
     },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "BlackBoxログを消去します",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "標準のミキサー / モードでは、ロール、ピッチ、ヨーが計算上モーターの強度が飽和状態となると、すべてのモーターが均等に回転が減少します。モーターが最小値を下回ると切り捨て状態となります。例えば、スロットルを最小値より少し上にしてクイックロールをしようとした場合、2つのモーターはそれ以上回転を下げることができないので、実質的に半分のパワー (PID強度の半分) を得ることになります。もし、入力が高回転モーターと低回転モーターの間に100％以上の差を求めたとしたら、低回転モーターは回転が切り捨てられ、強度を不均一に減少させることとなってしまいモーターバランスの対称性を破綻させてしまうでしょう。",
         "description": "Help text to AIRMODE mode"
@@ -2250,16 +2254,32 @@
         "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
-        "message": "カスタマイズ切り替えのためカメラコントロール1を使用します。メーカーのマニュアルをご確認ください。",
+        "message": "カスタマイズ切り替えのためCAMERA CONTROL 1を使用します。メーカーのマニュアルをご確認ください。",
         "description": "Help text to customized CAMERA CONTROL 1 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL2": {
-        "message": "カスタマイズ切り替えのためカメラコントロール2を使用します。メーカーのマニュアルをご確認ください。",
+        "message": "カスタマイズ切り替えのためCAMERA CONTROL 2を使用します。メーカーのマニュアルをご確認ください。",
         "description": "Help text to customized CAMERA CONTROL 2 mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL3": {
-        "message": "カスタマイズ切り替えのためカメラコントロール3を使用します。メーカーのマニュアルをご確認ください。",
+        "message": "カスタマイズ切り替えのためCAMERA CONTROL 3を使用します。メーカーのマニュアルをご確認ください。",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "カスタマイズ切り替えのためUSER1を使用します。メーカーのマニュアルをご確認ください。",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "カスタマイズ切り替えのためUSER2を使用します。メーカーのマニュアルをご確認ください。",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "カスタマイズ切り替えのためUSER3を使用します。メーカーのマニュアルをご確認ください。",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "カスタマイズ切り替えのためUSER4を使用します。メーカーのマニュアルをご確認ください。",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "モーターを逆回転させクラッシュ後に逆さまになった機体をひっくり返します (要DShot)",
@@ -2293,9 +2313,9 @@
         "message": "レーススタート アシスタントシステム",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
         "message": "スティックコマンドを無効 / 有効にします",
-        "description": "Help text to STICK CONTROL DISABLE mode"
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "警告、ステータス、BEEPERモードを含むビープ音を無効 / 有効にします",

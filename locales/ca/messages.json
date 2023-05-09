@@ -857,9 +857,9 @@
         "message": "La prevenció de l'enlairament s'ha desencadenat",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Desarmat per detecció de accident",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "La detecció de caiguda està activa",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "El canal accelerador està massa alt",
@@ -881,9 +881,9 @@
         "message": "La càrrega del sistema és massa elevada per a un vol segur",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "La calibració del sensor continua en marxa",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "La calibració de l'acceleròmetre encara està en curs",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI està actiu",
@@ -921,19 +921,19 @@
         "message": "El filtratge basat en RPM està habilitat, però un o més ESC no subministren telemetria vàlida DSHOT. Comproveu que els sistemes ESC siguin capaços i tinguin instal·lat el programari necessari per suportar la telemetria bidireccional DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un canvi de configuració requereix reiniciar",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
         "message": "El DSHOT bitbanged no funciona correctament i no es poden controlar els motors. Probablement causat per un conflicte de temporitzador amb altres funcions activades al controlador de vol.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
         "message": "L'acceleròmetre no s'ha calibrat i estan habilitades funcions que es basen en ell. Calibrar l’acceleròmetre.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "No s'ha seleccionat cap protocol de sortida del motor",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -2249,6 +2249,10 @@
         "message": "Activa el registre del BlackBox",
         "description": "Help text to BLACKBOX mode"
     },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Esborra el registre de BlackBox",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "En el mode de mesclador estàndard, quan es calculen el roll, el pitch i el yaw i saturen un motor, tots els motors es reduiran per igual. Quan un motor baixa per sota del mínim es talla. Diguem que teníeu l'accelerador just per sobre del mínim i vau intentar tirar un gir ràpid; com que dos motors no poden baixar, bàsicament obteniu la meitat de la potència (la meitat del vostre guany PID). Si les vostres entrades haurien demanat més d'una diferència del 100% entre els motors alts i baixos, els motors baixos es retallarien, trencant la simetria de l'equilibri del motor reduint de manera desigual el guany.",
         "description": "Help text to AIRMODE mode"
@@ -2268,6 +2272,22 @@
     "auxiliaryHelpMode_CAMERACONTROL3": {
         "message": "Utilitzeu-lo per canviar el control personalitzat de la càmera 3. Consulteu el manual del proveïdor",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Utilitzeu-lo per canviar el control personalitzat del Usuari 1. Consulteu el manual del proveïdor",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Utilitzeu-lo per canviar el control personalitzat del Usuari 2. Consulteu el manual del proveïdor",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Utilitzeu-lo per canviar el control personalitzat del Usuari 3. Consulteu el manual del proveïdor",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Utilitzeu-lo per canviar el control personalitzat del Usuari 4. Consulteu el manual del proveïdor",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Inverteix els motors per capgirar el multicopter cap per avall després d'un xoc (cal DShot)",
@@ -2301,9 +2321,9 @@
         "message": "Sistema d'assistència a l'inici de cursa",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCONTROLDISABLE": {
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
         "message": "Desactiva/activa les ordres dels sticks",
-        "description": "Help text to STICK CONTROL DISABLE mode"
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "Desactiva/activa el beeper inclòs l'avís, l'estat i el mode BEEPER",
