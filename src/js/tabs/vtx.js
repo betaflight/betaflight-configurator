@@ -903,12 +903,10 @@ vtx.initialize = function (callback) {
         }
 
         function save_to_eeprom() {
-            mspHelper.writeConfiguration(save_completed);
+            mspHelper.writeConfiguration(false, save_completed);
         }
 
         function save_completed() {
-            gui_log(i18n.getMessage('configurationEepromSaved'));
-
             TABS.vtx.vtxTableSavePending = false;
 
             const saveButton = $("#save_button");

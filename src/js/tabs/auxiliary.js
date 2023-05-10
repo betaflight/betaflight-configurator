@@ -7,7 +7,6 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import adjustBoxNameIfPeripheralWithModeID from '../peripherals';
-import { gui_log } from '../gui_log';
 import { getTextWidth } from '../utils/common';
 import inflection from "inflection";
 
@@ -403,9 +402,7 @@ auxiliary.initialize = function (callback) {
             mspHelper.sendModeRanges(save_to_eeprom);
 
             function save_to_eeprom() {
-                mspHelper.writeConfiguration(function () {
-                    gui_log(i18n.getMessage('auxiliaryEepromSaved'));
-                });
+                mspHelper.writeConfiguration(false);
             }
         });
 

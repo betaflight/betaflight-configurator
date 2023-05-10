@@ -2730,7 +2730,7 @@ MspHelper.prototype.sendSerialConfig = function(callback) {
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 
-MspHelper.prototype.writeConfiguration = function(reboot) {
+MspHelper.prototype.writeConfiguration = function(reboot, callback) {
     setTimeout(function() {
         MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
             gui_log(i18n.getMessage('configurationEepromSaved'));
@@ -2739,6 +2739,9 @@ MspHelper.prototype.writeConfiguration = function(reboot) {
                 GUI.tab_switch_cleanup(function() {
                     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
                 });
+            }
+            if (callback) {
+                callback();
             }
         });
     }, 100); // 100ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received

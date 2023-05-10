@@ -2278,9 +2278,6 @@
     "auxiliaryButtonSave": {
         "message": "Save"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
-    },
     "auxiliaryAutoChannelSelect": {
       "message": "AUTO"
     },
@@ -3578,9 +3575,6 @@
     "ledStripClearAllButton": {
         "message": "Clear ALL",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"
