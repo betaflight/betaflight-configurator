@@ -539,7 +539,11 @@ firmware_flasher.initialize = function (callback) {
                     MSP.clearListeners();
                 }
 
-                function onClose() {
+                function onClose(success) {
+                    if (!success) {
+                        gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFailed'));
+                    }
+
                     serial.disconnect(onFinishClose);
                     MSP.disconnect_cleanup();
                 }
@@ -564,11 +568,10 @@ firmware_flasher.initialize = function (callback) {
 
                         gui_log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
                             { boardName: board }));
+                        onClose(true);
                     } else {
-                        gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
+                        onClose(false);
                     }
-
-                    onClose();
                 }
 
                 function getBoardInfo() {
@@ -598,12 +601,11 @@ firmware_flasher.initialize = function (callback) {
                 function detectBoard() {
                     console.log(`Requesting board information`);
                     MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
-                        if (!FC.CONFIG.apiVersion || FC.CONFIG.apiVersion === 'null.null.0') {
-                            FC.CONFIG.apiVersion = '0.0.0';
-                        }
-
-                        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                            onClose(); // not supported
+                        if (!FC.CONFIG.apiVersion || FC.CONFIG.apiVersion.includes('null')) {
+                            gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
+                            onClose(false); // not supported
+                        } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
+                            onClose(false); // not supported
                         } else {
                             MSP.send_message(MSPCodes.MSP_UID, false, false, getBuildInfo);
                         }
