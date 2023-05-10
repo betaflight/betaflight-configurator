@@ -2278,9 +2278,6 @@
     "auxiliaryButtonSave": {
         "message": "Save"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
-    },
     "auxiliaryAutoChannelSelect": {
       "message": "AUTO"
     },
@@ -2642,9 +2639,6 @@
     },
     "transponderDataInvalid": {
         "message": "Transponder data is <span class=\"message-negative\">invalid</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requires firmware &gt;= 1.10.0. and target support."
@@ -3581,9 +3575,6 @@
     "ledStripClearAllButton": {
         "message": "Clear ALL",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"

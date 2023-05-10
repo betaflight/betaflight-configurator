@@ -6,7 +6,6 @@ import semver from 'semver';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_46 } from '../data_storage';
-import { gui_log } from "../gui_log";
 
 const led_strip = {
         wireMode: false,
@@ -567,9 +566,7 @@ led_strip.initialize = function (callback, scrollPosition) {
             }
 
             function save_to_eeprom() {
-                mspHelper.writeConfiguration(function() {
-                    gui_log(i18n.getMessage('ledStripEepromSaved'));
-                });
+                mspHelper.writeConfiguration(false);
             }
         });
 

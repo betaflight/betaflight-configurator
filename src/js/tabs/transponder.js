@@ -1,6 +1,5 @@
 import { i18n } from "../localization";
 import GUI, { TABS } from '../gui';
-import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from '../msp/MSPHelper';
 import FC from "../fc";
 import MSP from "../msp";
@@ -302,14 +301,7 @@ transponder.initialize = function(callback) {
                 }
 
                 function save_to_eeprom() {
-                    MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
-                        gui_log(i18n.getMessage('transponderEepromSaved'));
-                        if ( $(_this).hasClass('reboot') ) {
-                            GUI.tab_switch_cleanup(function() {
-                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
-                            });
-                        }
-                    });
+                    mspHelper.writeConfiguration($(_this).hasClass('reboot'));
                 }
 
                 if (FC.TRANSPONDER.provider !== "0" && FC.TRANSPONDER.data.length !== FC.TRANSPONDER.providers.find(function(provider) {
