@@ -239,6 +239,26 @@ function setConnectionTimeout() {
     }, 10000);
 }
 
+function abortConnection() {
+    GUI.timeout_remove('connecting'); // kill connecting timer
+
+    GUI.connected_to = false;
+    GUI.connecting_to = false;
+
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
+
+    gui_log(i18n.getMessage('serialPortOpenFail'));
+
+    $('div#connectbutton div.connect_state').text(i18n.getMessage('connect'));
+    $('div#connectbutton a.connect').removeClass('active');
+
+    // unlock port select & baud
+    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
+
+    // reset data
+    clicks = false;
+}
+
 function onOpen(openInfo) {
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
@@ -275,12 +295,16 @@ function onOpen(openInfo) {
         console.log(`Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
+            gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
+
+            if (FC.CONFIG.apiVersion.includes('null')) {
+                abortConnection();
+                return;
+            }
+
             tracking.setFlightControllerData(tracking.DATA.API_VERSION, FC.CONFIG.apiVersion);
 
-            gui_log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
-
             if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
-
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
                     tracking.setFlightControllerData(tracking.DATA.FIRMWARE_TYPE, FC.CONFIG.flightControllerIdentifier);
                     if (FC.CONFIG.flightControllerIdentifier === 'BTFL') {
@@ -329,12 +353,7 @@ function onOpen(openInfo) {
             }
         });
     } else {
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
-
-        console.log('Failed to open serial port');
-        gui_log(i18n.getMessage('serialPortOpenFail'));
-
-        abortConnect();
+        abortConnection();
     }
 }
 
@@ -353,17 +372,6 @@ function onOpenVirtual() {
     update_dataflash_global();
     sensor_status(FC.CONFIG.activeSensors);
     updateTabList(FC.FEATURE_CONFIG.features);
-}
-
-function abortConnect() {
-    $('div#connectbutton div.connect_state').text(i18n.getMessage('connect'));
-    $('div#connectbutton a.connect').removeClass('active');
-
-    // unlock port select & baud
-    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
-
-    // reset data
-    clicks = false;
 }
 
 function processCustomDefaults() {
