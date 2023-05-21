@@ -539,14 +539,14 @@ function startProcess() {
         $("#showlog").trigger('click');
     }
 
-    result = getConfig('permanentExpertMode');
-    const expertModeCheckbox = 'input[name="expertModeCheckbox"]';
-    if (result.permanentExpertMode) {
-        $(expertModeCheckbox).prop('checked', true);
-    }
+    result = getConfig('expertMode').expertMode ?? false;
 
-    $(expertModeCheckbox).on("change", () => {
-        const checked = $(expertModeCheckbox).is(':checked');
+    const expertModeCheckbox = $('input[name="expertModeCheckbox"]');
+    expertModeCheckbox.prop('checked', result).trigger('change');
+
+    expertModeCheckbox.on("change", () => {
+        const checked = expertModeCheckbox.is(':checked');
+
         checkSetupAnalytics(function (analyticsService) {
             analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
         });
@@ -558,9 +558,9 @@ function startProcess() {
         if (GUI.active_tab) {
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
         }
-    });
 
-    $(expertModeCheckbox).trigger("change");
+        setConfig({'expertMode': checked});
+    });
 
     result = getConfig('cliAutoComplete');
     CliAutoComplete.setEnabled(typeof result.cliAutoComplete === "undefined" || result.cliAutoComplete); // On by default

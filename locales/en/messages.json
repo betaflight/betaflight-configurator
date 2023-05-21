@@ -90,10 +90,7 @@
         "message": "Enable Expert Mode"
     },
     "expertModeDescription": {
-        "message": "Show development builds that are potentially unstable"
-    },
-    "permanentExpertMode": {
-        "message": "Permanently enable Expert Mode"
+        "message": "Enable Expert Mode options"
     },
     "warningSettings": {
         "message": "Show warnings"

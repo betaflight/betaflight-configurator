@@ -221,35 +221,39 @@ firmware_flasher.initialize = function (callback) {
 
             if (showExtraReleases) {
                 $('tr.build_type').show();
-                $('tr.expert_mode').show();
             } else {
                 $('tr.build_type').hide();
-                $('tr.expert_mode').hide();
                 buildType_e.val(0).trigger('change');
             }
         }
 
-        const globalExpertMode_e = $('input[name="expertModeCheckbox"]');
         function showOrHideExpertMode() {
             const expertModeChecked = $(this).is(':checked');
 
-            globalExpertMode_e.prop('checked', expertModeChecked).trigger('change');
             if (expertModeChecked) {
                 buildTypesToShow = buildTypes;
             } else {
                 buildTypesToShow = buildTypes.slice(0,2);
             }
+
             buildBuildTypeOptionsList();
             buildType_e.val(0).trigger('change');
 
-            setConfig({'selected_expert_mode': expertModeChecked});
+            setTimeout(() => {
+                $('tr.expertOptions').toggle(expertModeChecked);
+                $('div.expertOptions').toggle(expertModeChecked);
+            }, 0);
+
+            setConfig({'expertMode': expertModeChecked});
         }
 
         const expertMode_e = $('.tab-firmware_flasher input.expert_mode');
-        const expertMode = getConfig('selected_expert_mode');
-        expertMode_e.prop('checked', expertMode.selected_expert_mode ?? false);
+        const expertMode = getConfig('expertMode').expertMode;
+
+        expertMode_e.prop('checked', expertMode);
+        expertMode_e.on('change', showOrHideExpertMode).trigger('change');
+
         $('input.show_development_releases').change(showOrHideBuildTypes).change();
-        expertMode_e.change(showOrHideExpertMode).change();
 
         // translate to user-selected language
         i18n.localizePage();
@@ -302,8 +306,6 @@ firmware_flasher.initialize = function (callback) {
 
                     const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
                     if (expertMode) {
-                        $('div.expertOptions').show();
-
                         if (response.releaseType === 'Unstable') {
                             self.releaseLoader.loadCommits(response.release, (commits) => {
                                 const select_e = $('select[name="commits"]');
@@ -317,9 +319,9 @@ firmware_flasher.initialize = function (callback) {
                         } else {
                             $('div.commitSelection').hide();
                         }
-                    } else {
-                        $('div.expertOptions').hide();
                     }
+
+                    $('div.expertOptions').toggle(expertMode);
                 }
 
                 if (response.configuration && !self.isConfigLocal) {
@@ -472,11 +474,12 @@ firmware_flasher.initialize = function (callback) {
         }
 
         const portPickerElement = $('div#port-picker #port');
+
         function flashFirmware(firmware) {
             const options = {};
 
             let eraseAll = false;
-            if ($('input.erase_chip').is(':checked')) {
+            if ($('input.erase_chip').is(':checked') || $('.tab-firmware_flasher input.expert_mode').not(':checked')) {
                 options.erase_chip = true;
 
                 eraseAll = true;
