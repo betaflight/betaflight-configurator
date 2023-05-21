@@ -282,7 +282,7 @@ firmware_flasher.initialize = function (callback) {
         });
 
         function selectFirmware(release) {
-            $('div.build_configuration').slideUp();
+            $('div.build_configuration').hide();
             $('div.release_info').slideUp();
 
             if (!self.localFirmwareLoaded) {
@@ -302,7 +302,7 @@ firmware_flasher.initialize = function (callback) {
                 self.targetDetail = response;
 
                 if (response.cloudBuild === true) {
-                    $('div.build_configuration').slideDown();
+                    $('div.build_configuration').show();
 
                     const expertMode = $('.tab-firmware_flasher input.expert_mode').is(':checked');
                     if (expertMode) {
@@ -411,7 +411,7 @@ firmware_flasher.initialize = function (callback) {
 
                 $('div.git_info').slideUp();
                 $('div.release_info').slideUp();
-                $('div.build_configuration').slideUp();
+                $('div.build_configuration').hide();
 
                 if (!self.localFirmwareLoaded) {
                     self.enableFlashing(false);
@@ -731,7 +731,7 @@ firmware_flasher.initialize = function (callback) {
 
                 // hide github info (if it exists)
                 $('div.git_info').slideUp();
-                $('div.build_configuration').slideUp();
+                $('div.build_configuration').hide();
 
                 chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
                     console.log('Loading file from:', path);
