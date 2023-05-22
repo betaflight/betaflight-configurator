@@ -853,6 +853,10 @@
         "message": "Rilevamento crash attivo",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Il modello è in calibrazione",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Canale gas troppo alto",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2173,9 +2177,6 @@
     "auxiliaryButtonSave": {
         "message": "Salva"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2537,9 +2538,6 @@
     },
     "transponderDataInvalid": {
         "message": "I dati del transponder <span class=\"message-negative\">non sono validi</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "I servi richiedono il firmware &gt;= 1.10.0. ed il supporto del target."
@@ -3476,9 +3474,6 @@
     "ledStripClearAllButton": {
         "message": "Cancella tutto",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (usa la frequenza della VTX per assegnare il colore)"

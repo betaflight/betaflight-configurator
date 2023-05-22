@@ -849,6 +849,10 @@
         "message": "폭주이륙방지가 실행되고 있습니다",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "기체가 현재 캘리브레이션 중입니다",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "스로틀이 너무 높습니다",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2149,9 +2153,6 @@
     "auxiliaryButtonSave": {
         "message": "저장"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "자동"
     },
@@ -2489,9 +2490,6 @@
     },
     "transponderDataInvalid": {
         "message": "트랜스폰더 데이터가 <span class=\"message-negative\">유효하지 않음</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "서보는 펌웨어 &gt;= 1.10.0.와 타겟 지원이 필요합니다."
@@ -3428,9 +3426,6 @@
     "ledStripClearAllButton": {
         "message": "모두 지우기",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (VTX 주파수를 사용하여 색상 지정)"

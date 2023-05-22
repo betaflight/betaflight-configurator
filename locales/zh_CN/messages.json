@@ -1958,9 +1958,6 @@
     "auxiliaryButtonSave": {
         "message": "保存"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "自动"
     },
@@ -2176,9 +2173,6 @@
     },
     "transponderDataInvalid": {
         "message": "收发器数据<span class=\"message-negative\">无效</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "舵机功能支持要求固件版本大于1.10.0 且飞控支持"
@@ -3037,9 +3031,6 @@
     "ledStripClearAllButton": {
         "message": "全部清除",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
     },
     "ledStripVtxOverlay": {
         "message": "图传(颜色根据图传频率而变化)"

@@ -853,6 +853,10 @@
         "message": "Detección de colisión activado",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "La aeronave se está calibrando",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "El canal del acelerador está demasiado alto",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2173,9 +2177,6 @@
     "auxiliaryButtonSave": {
         "message": "Guardar"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2537,9 +2538,6 @@
     },
     "transponderDataInvalid": {
         "message": "Los datos del transpondedor <span class=\"message-negative\">no son válidos</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requieren firmware &gt;= 1.10.0 y que la placa lo soporte."
@@ -3476,9 +3474,6 @@
     "ledStripClearAllButton": {
         "message": "Bor. TODO",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (usa la frecuencia VTX para asignar color)"

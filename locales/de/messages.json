@@ -2152,9 +2152,6 @@
     "auxiliaryButtonSave": {
         "message": "Speichern"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2376,9 +2373,6 @@
     },
     "transponderDataInvalid": {
         "message": "Transponder Data  ist <span class=\"message-negative\">ungültig</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos brauchen Firmware &gt;= 1.10.0 und Target Unterstützung"
@@ -3309,9 +3303,6 @@
     "ledStripClearAllButton": {
         "message": "ALLES löschen",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
     },
     "ledStripVtxOverlay": {
         "message": "Videosender (nutzt die Frequenz zur Farbzuweisung)"

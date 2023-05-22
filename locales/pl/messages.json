@@ -853,6 +853,10 @@
         "message": "Wykrywanie awarii jest aktywne",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Jednostka jest obecnie w trakcie kalibracji",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Kanał przepustnicy ma zbyt wysoką wartość",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2173,9 +2177,6 @@
     "auxiliaryButtonSave": {
         "message": "Zapisz"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisano</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2537,9 +2538,6 @@
     },
     "transponderDataInvalid": {
         "message": "Dane transpondera są <span class=\"message-negative\">nieprawidłowe</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisana</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Serwomechanizmy wymagają oprogramowania wewnętrznego &gt;= 1.10.0. 1.10.0. i wsparcia producenta."
@@ -3476,9 +3474,6 @@
     "ledStripClearAllButton": {
         "message": "Wyczyść wszystko",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisana</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX(użyj częstotliwości vtx do przypisania koloru)"

@@ -853,6 +853,10 @@
         "message": "Deteção de colisão está ativa",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "O aparelho está atualmente a calibrar",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "O valor do canal do acelerador está muito alto",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2173,9 +2177,6 @@
     "auxiliaryButtonSave": {
         "message": "Gravar"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravar</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2537,9 +2538,6 @@
     },
     "transponderDataInvalid": {
         "message": "Dados do transponder são <span class=\"message-negative\">inválidos</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravada</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requerem o firmware &gt;= 1.10.0. e suporte do destino."
@@ -3476,9 +3474,6 @@
     "ledStripClearAllButton": {
         "message": "Limpar TODOS",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravada</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (usa a frequência do VTX para controlar a cor)"

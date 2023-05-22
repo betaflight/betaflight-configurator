@@ -861,6 +861,10 @@
         "message": "La detecció de caiguda està activa",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "L'embarcació s'està calibrant",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "El canal accelerador està massa alt",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2181,9 +2185,6 @@
     "auxiliaryButtonSave": {
         "message": "Desa"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2545,9 +2546,6 @@
     },
     "transponderDataInvalid": {
         "message": "Les dades del transponder són <span class=\"message-negative\">invalides</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Els servos requereixen un firmware &gt;=1.10.0 i suport de la controladora."
@@ -3484,9 +3482,6 @@
     "ledStripClearAllButton": {
         "message": "Neteja-ho tot",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (fa servir la frequència de l'VTX per a assignar el color)"
