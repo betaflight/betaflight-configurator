@@ -1649,9 +1649,6 @@
     "auxiliaryButtonSave": {
         "message": "Gorde"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -1867,9 +1864,6 @@
     },
     "transponderDataInvalid": {
         "message": "Transpondedore datuak <span class=\"message-negative\">baliogabeak dira</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Serboek &gt;=1.10.0. firmwarea eta kontroladoreak onartzea behar du."
@@ -2559,9 +2553,6 @@
     "ledStripClearAllButton": {
         "message": "GUZTIA Garbitu",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (vtx maiztasuna erabiltzen du kolorea esleitzeko)"

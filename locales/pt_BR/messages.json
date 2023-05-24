@@ -2031,9 +2031,6 @@
     "auxiliaryButtonSave": {
         "message": "Salvar"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2255,9 +2252,6 @@
     },
     "transponderDataInvalid": {
         "message": "Dados do transponder são <span class=\"message-negative\">inválidos</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos requerem o firmware &gt;= 1.10.0. e suporte do destino."
@@ -3173,9 +3167,6 @@
     "ledStripClearAllButton": {
         "message": "Limpar TODOS",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (use a frequência do VTX para controlar a cor)"

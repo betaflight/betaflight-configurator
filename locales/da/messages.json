@@ -853,6 +853,10 @@
         "message": "Nedstyrtet drone er aktiv",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Dronen kalibrerer sig i øjeblikket",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Gas kanalværdi er for høj",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2173,9 +2177,6 @@
     "auxiliaryButtonSave": {
         "message": "Gem"
     },
-    "auxiliaryEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2194,7 +2195,7 @@
         "description": "Help text to ANGLE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
-        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning), når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
+        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning).<br>Når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
         "description": "Help text to HORIZON mode"
     },
     "auxiliaryHelpMode_MAG": {
@@ -2537,9 +2538,6 @@
     },
     "transponderDataInvalid": {
         "message": "Transponderdata er <span class=\"message-negative\">ugyldig</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servoer kræver firmware version &gt;= 1.10.0 og understøttelse af FC"
@@ -3476,9 +3474,6 @@
     "ledStripClearAllButton": {
         "message": "Slet ALT",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (bruger vtx-frekvens til at bestemme farve)"

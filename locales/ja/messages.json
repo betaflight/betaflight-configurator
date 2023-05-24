@@ -853,6 +853,10 @@
         "message": "クラッシュ検出が有効です",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "機体は現在キャリブレーション中です",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "スロットルチャンネルが高すぎます",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -2173,9 +2177,6 @@
     "auxiliaryButtonSave": {
         "message": "保存"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "自動"
     },
@@ -2537,9 +2538,6 @@
     },
     "transponderDataInvalid": {
         "message": "トランスポンダーデータが <span class=\"message-negative\">無効です。</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "サーボの利用はBetaflight Configurator 1.10.0か、それ以上が必要であり、サポートするファームウェアが必要です。"
@@ -3476,9 +3474,6 @@
     "ledStripClearAllButton": {
         "message": "全消去",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (周波数毎にカラー割り当て)"

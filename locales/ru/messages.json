@@ -1763,9 +1763,6 @@
     "auxiliaryButtonSave": {
         "message": "Сохранить"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранён</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "АВТО"
     },
@@ -1981,9 +1978,6 @@
     },
     "transponderDataInvalid": {
         "message": "Информация с транспондера <span class=\"message-negative\">не правильная</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранён</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Сервы требуют firmware &gt;= 1.10.0. и целевую поддержку."
@@ -2799,9 +2793,6 @@
     "ledStripClearAllButton": {
         "message": "Очистить ВСЕ",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранён</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (использует vtx частоты для присвоения цвета)"

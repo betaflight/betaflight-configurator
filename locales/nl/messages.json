@@ -1724,9 +1724,6 @@
     "auxiliaryButtonSave": {
         "message": "Opslaan"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -1942,9 +1939,6 @@
     },
     "transponderDataInvalid": {
         "message": "Transponder data is <span class=\"message-negative\">ongeldig</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos vereisen firmware &gt;= 1.10.0. en doel ondersteuning."
@@ -2748,9 +2742,6 @@
     "ledStripClearAllButton": {
         "message": "Wis alles",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (maakt gebruik van vtx frequentie om kleur toe te kennen)"

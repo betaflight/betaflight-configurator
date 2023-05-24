@@ -2127,9 +2127,6 @@
     "auxiliaryButtonSave": {
         "message": "Gardar"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gardada</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2351,9 +2348,6 @@
     },
     "transponderDataInvalid": {
         "message": "Os datos do transpondedor <span class=\"message-negative\">non son válidos</span>"
-    },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gardada</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "O servos necesitan como mínimo o firmware &gt;= 1.10.0. e soporte para esa placa."
@@ -3284,9 +3278,6 @@
     "ledStripClearAllButton": {
         "message": "Borrar todo",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gardada</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (usa a frecuencia VTX para asinar a cor)"
