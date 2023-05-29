@@ -38,7 +38,7 @@
         "message": "La memoria di archiviazione non è pronta. In caso di scheda SD, assicurati che sia riconosciuta correttamente dal controllore di volo."
     },
     "options_title": {
-        "message": "Opzioni applicazione"
+        "message": "Opzioni Applicazione"
     },
     "connect": {
         "message": "Connetti"
@@ -78,7 +78,7 @@
         "message": "Invia"
     },
     "autoConnectEnabled": {
-        "message": "Connessione automatica: Abilitata - Il configuratore proverà a connettersi automaticamente quando sarà rilevata una nuova porta"
+        "message": "Connessione automatica: Abilitata - Il configuratore si connette automaticamente quando rileva una nuova porta"
     },
     "autoConnectDisabled": {
         "message": "Connessione automatica: Disabilitata - E' necessario selezionare la porta seriale e fare click su \"Connetti\""

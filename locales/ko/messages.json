@@ -849,6 +849,10 @@
         "message": "폭주이륙방지가 실행되고 있습니다",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "충돌 감지가 활성화되어 있습니다",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
         "message": "기체가 현재 캘리브레이션 중입니다",
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
@@ -872,6 +876,10 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "시스템 부하가 안전한 비행을 하기에 너무 높습니다",
         "description": "Message that pops up to describe the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "가속도계 교정이 여전히 진행 중입니다",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI가 사용 중입니다",
@@ -908,6 +916,22 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM-기반 필터링이 활성화되었지만 하나 이상의 ESC가 유효한 DSHOT 텔레메트리를 공급하지 않습니다. ESC가 양방향 DSHOT 텔레메트리를 공급하기 위해 필요한 펌웨어가 적용가능한지와 설치되었는지를 확인하십시요.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
+        "message": "환경설정 변경은 재부팅을 필요로합니다.",
+        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "비트뱅(Bitbang)된 DSHOT이 제대로 작동하지 않아 모터를 제어할 수 없습니다. 비행 컨트롤러에서 활성화된 다른 기능과의 타이머 충돌로 인해 발생할 수 있습니다.",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "가속도계가 교정되지 않았으며 그에 의존하는 기능들이 활성화되어 있습니다. 가속도계를 교정하십시오.",
+        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
+        "message": "선택된 모터 출력 프로토콜이 없습니다",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
@@ -2218,6 +2242,10 @@
         "message": "블랙박스 로깅 활성화",
         "description": "Help text to BLACKBOX mode"
     },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "블랙박스 로그 지우기",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "표준 믹서/모드에서 롤, 피치 및 요가 계산되고 모터가 포화되면 모든 모터가 동일하게 감소합니다. 모터가 최저치 이하로 떨어지면 모터 출력이 잘립니다. 스로틀이 최저치를 약간 상회하고 빠른 롤을 당기려고 했다고 가정해 보십시오. 두 개의 모터가 더 이상 내려갈 수 없기 때문에 기본적으로 전력의 절반(PID 이득의 절반)을 얻을 수 있습니다. 입력에 하이 모터와 로우 모터 간의 차이가 100% 이상 필요한 경우 로우 모터가 잘리고 이득이 불균일하게 감소하여 모터 밸런스의 대칭이 깨집니다",
         "description": "Help text to AIRMODE mode"
@@ -2237,6 +2265,22 @@
     "auxiliaryHelpMode_CAMERACONTROL3": {
         "message": "사용자 정의 카메라 제어 3를 사용하세요. 공급자 매뉴얼을 확인하세요",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "사용자 정의된 사용자1을 사용하세요. 공급자 매뉴얼을 확인하세요",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "사용자 정의된 사용자2를 사용하세요. 공급자 매뉴얼을 확인하세요",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "사용자 정의된 사용자3을 사용하세요. 공급자 매뉴얼을 확인하세요",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "사용자 정의된 사용자4를 사용하세요. 공급자 매뉴얼을 확인하세요",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "충돌 후 모터를 반대로 돌려 뒤집기 (디샷 요구됨)",
@@ -2269,6 +2313,10 @@
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "레이스 스타트 지원 시스템",
         "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "스틱 명령 비활성/활성화",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
         "message": "경고, 상태 및 비퍼 모드를 포함한 비퍼음 비활성화/활성화",
