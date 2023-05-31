@@ -113,7 +113,7 @@
     "gulp-yarn": "^3.0.0",
     "gulp-zip": "^5.1.0",
     "husky": "^4.3.0",
-    "nw-builder": "^3.8.6",
+    "nw-builder": "3.8.3",
     "os": "^0.1.2",
     "postcss": "^8.4.17",
     "rollup": "^3.9.0",
