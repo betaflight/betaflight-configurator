@@ -48,12 +48,17 @@ firmware_flasher.initialize = function (callback) {
     function onDocumentLoad() {
 
         function loadSponsor() {
-            $('div.tab_sponsor').hide();
+            if (!navigator.onLine) {
+                return;
+            }
+
             self.releaseLoader.loadSponsorTile(
                 (content) => {
                     if (content) {
-                        $('div.tab_sponsor').innerHtml = content;
+                        $('div.tab_sponsor').html(content);
                         $('div.tab_sponsor').show();
+                    } else {
+                        $('div.tab_sponsor').hide();
                     }
                 },
             );
