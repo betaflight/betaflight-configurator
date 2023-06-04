@@ -407,7 +407,6 @@ firmware_flasher.initialize = function (callback) {
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL)
                     .flashProgress(0);
 
-                $('div.git_info').slideUp();
                 $('div.release_info').slideUp();
                 $('div.build_configuration').slideUp();
 
@@ -772,8 +771,6 @@ firmware_flasher.initialize = function (callback) {
                     return;
                 }
 
-                // hide github info (if it exists)
-                $('div.git_info').slideUp();
                 $('div.build_configuration').slideUp();
 
                 chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
