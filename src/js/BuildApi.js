@@ -170,4 +170,9 @@ export default class BuildApi {
         const url = `${this._url}/api/configurator/releases/${type}`;
         this.load(url, onSuccess, onFailure);
     }
+
+    loadSponsorTile(onSuccess, onFailure) {
+        const url = `${this._url}/api/configurator/sponsors`;
+        this.load(url, onSuccess, onFailure);
+    }
 }
