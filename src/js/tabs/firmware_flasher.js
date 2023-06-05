@@ -47,6 +47,23 @@ firmware_flasher.initialize = function (callback) {
 
     function onDocumentLoad() {
 
+        function loadSponsor() {
+            if (!navigator.onLine) {
+                return;
+            }
+
+            self.releaseLoader.loadSponsorTile(
+                (content) => {
+                    if (content) {
+                        $('div.tab_sponsor').html(content);
+                        $('div.tab_sponsor').show();
+                    } else {
+                        $('div.tab_sponsor').hide();
+                    }
+                },
+            );
+        }
+
         function parseHex(str, callback) {
             // parsing hex in different thread
             const worker = new Worker('./js/workers/hex_parser.js');
@@ -253,6 +270,8 @@ firmware_flasher.initialize = function (callback) {
 
         // translate to user-selected language
         i18n.localizePage();
+
+        loadSponsor();
 
         buildType_e.change(function() {
             tracking.setFirmwareData(tracking.DATA.FIRMWARE_CHANNEL, $('option:selected', this).text());
