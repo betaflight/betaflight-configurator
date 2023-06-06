@@ -339,9 +339,10 @@ onboard_logging.initialize = function (callback) {
                 }
             }
 
-            debugModeSelect.val(FC.PID_ADVANCED_CONFIG.debugMode);
-            debugModeSelect.sortSelect("NONE");
-
+            debugModeSelect
+                .val(FC.PID_ADVANCED_CONFIG.debugMode)
+                .select2()
+                .sortSelect("NONE");
         } else {
             $('.blackboxDebugMode').hide();
         }
