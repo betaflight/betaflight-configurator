@@ -10,7 +10,7 @@ jobs:
     name: 'Check and close stale issues'
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/stale@v4
+    - uses: actions/stale@v8
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         operations-per-run: 30
