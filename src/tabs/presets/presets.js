@@ -500,8 +500,8 @@ presets.getFitPresets = function(searchParams) {
     const result = [];
 
     for (const repo of this.presetsRepo){
-        for(const preset of repo.index.presets) {
-            if(this.isPresetFitSearch(preset, searchParams)) {
+        for (const preset of repo.index.presets) {
+            if (this.isPresetFitSearch(preset, searchParams)) {
                 result.push([preset, repo]);
             }
         }
