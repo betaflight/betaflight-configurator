@@ -1027,14 +1027,25 @@ firmware_flasher.initialize = function (callback) {
 
         $('a.flash_firmware').click(function () {
 
-            firmware_flasher.backupConfig();
-
             if (!$(this).hasClass('disabled')) {
-                if (self.developmentFirmwareLoaded) {
-                    checkShowAcknowledgementDialog();
-                } else {
-                    startFlashing();
+                function goFlashing() {
+                    if (self.developmentFirmwareLoaded) {
+                        checkShowAcknowledgementDialog();
+                    } else {
+                        startFlashing();
+                    }
                 }
+
+                GUI.showYesNoDialog(
+                    {
+                        title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
+                        text: i18n.getMessage('firmwareFlasherRemindBackup'),
+                        buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
+                        buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
+                        buttonYesCallback: () => firmware_flasher.backupConfig(goFlashing),
+                        buttonNoCallback: goFlashing,
+                    },
+                );
             }
         });
 
@@ -1220,7 +1231,7 @@ firmware_flasher.initialize = function (callback) {
     });
 };
 
-firmware_flasher.backupConfig = function () {
+firmware_flasher.backupConfig = function (callback) {
     let mspHelper;
     let cliBuffer = '';
     let catchOutputCallback = null;
@@ -1319,14 +1330,16 @@ firmware_flasher.backupConfig = function () {
         MSP.clearListeners();
     }
 
-    function onClose(success) {
+    function onClose() {
         serial.disconnect(onFinishClose);
         MSP.disconnect_cleanup();
+
+        if (callback) {
+            callback();
+        }
     }
 
     function onSaveConfig() {
-        const waitingDialog = GUI.showWaitDialog( { title: i18n.getMessage("presetsLoadingDumpAll"), buttonCancelCallback: null } );
-
         activateCliMode()
         .then(readCommand)
         .then(output => {
@@ -1336,10 +1349,7 @@ firmware_flasher.backupConfig = function () {
             const filename = generateFilename(prefix, suffix);
             return GUI.saveToTextFileDialog(text, filename, suffix);
         })
-        .then(() => {
-            waitingDialog.close();
-            sendCommand("exit", onClose);
-        });
+        .then(() => sendCommand("exit", onClose));
     }
 
     function onConnect(openInfo) {
@@ -1351,6 +1361,10 @@ firmware_flasher.backupConfig = function () {
             onSaveConfig();
         } else {
             gui_log(i18n.getMessage('serialPortOpenFail'));
+
+            if (callback) {
+                callback();
+            }
         }
     }
 
