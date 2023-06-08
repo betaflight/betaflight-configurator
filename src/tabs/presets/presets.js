@@ -17,7 +17,7 @@ import PresetsSourcesDialog from './SourcesDialog/SourcesDialog';
 import PresetSource from './SourcesDialog/PresetSource';
 
 const presets = {
-    presetsRepo: null,
+    presetsRepo: [],
     cliEngine: null,
     pickedPresetList: [],
     majorVersion: 1,
@@ -316,23 +316,25 @@ presets.reload = function() {
 };
 
 presets.tryLoadPresets = function() {
-    const presetSource = this.presetsSourcesDialog.getActivePresetSource();
+    const presetSources = this.presetsSourcesDialog.getActivePresetSource();
 
-    if (PresetSource.isUrlGithubRepo(presetSource.url)) {
-        this.presetsRepo = new PresetsGithubRepo(presetSource.url, presetSource.gitHubBranch);
-    } else {
-        this.presetsRepo = new PresetsWebsiteRepo(presetSource.url);
-    }
+    this.presetsRepo = presetSources.map(source => {
+        if (PresetSource.isUrlGithubRepo(source.url)) {
+            return new PresetsGithubRepo(source.url, source.gitHubBranch);
+        } else {
+            return new PresetsWebsiteRepo(source.url);
+        }
+    });
 
     this._divMainContent.toggle(false);
     this._divGlobalLoadingError.toggle(false);
     this._divGlobalLoading.toggle(true);
     this._domWarningNotOfficialSource.toggle(!this.presetsSourcesDialog.isOfficialActive);
 
-    this.presetsRepo.loadIndex()
+    Promise.all(this.presetsRepo.map(p => p.loadIndex()))
     .then(() => this.checkPresetSourceVersion())
     .then(() => {
-        favoritePresets.addLastPickDate(this.presetsRepo.index.presets);
+        this.presetsRepo.forEach(p => favoritePresets.addLastPickDate(p.index.presets));
         this.prepareFilterFields();
         this._divGlobalLoading.toggle(false);
         this._divMainContent.toggle(true);
@@ -365,11 +367,12 @@ presets.checkPresetSourceVersion = function() {
     const self = this;
 
     return new Promise((resolve, reject) => {
-        if (self.majorVersion === self.presetsRepo.index.majorVersion) {
+        const differentMajorVersionsRepos = self.presetsRepo.filter(pr => self.majorVersion !== pr.index.majorVersion);
+        if (differentMajorVersionsRepos.length === 0) {
             resolve();
         } else {
             const versionRequired = `${self.majorVersion}.X`;
-            const versionSource = `${self.presetsRepo.index.majorVersion}.${self.presetsRepo.index.minorVersion}`;
+            const versionSource = `${differentMajorVersionsRepos[0].index.majorVersion}.${differentMajorVersionsRepos[0].index.minorVersion}`;
 
             const dialogSettings = {
                 title: i18n.getMessage("presetsWarningDialogTitle"),
@@ -377,7 +380,7 @@ presets.checkPresetSourceVersion = function() {
                 buttonYesText: i18n.getMessage("yes"),
                 buttonNoText: i18n.getMessage("no"),
                 buttonYesCallback: () => resolve(),
-                buttonNoCallback: () => reject("Prset source version mismatch"),
+                buttonNoCallback: () => reject("Preset source version mismatch"),
             };
 
             GUI.showYesNoDialog(dialogSettings);
@@ -385,13 +388,21 @@ presets.checkPresetSourceVersion = function() {
     });
 };
 
+function getUniqueValues(objects, extractor) {
+    let values = objects.map(extractor);
+    let uniqueValues = [...values.reduce((a, b) => new Set([...a, ...b]), new Set())];
+    return uniqueValues.sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}));
+}
+
 presets.prepareFilterFields = function() {
     this._freezeSearch = true;
-    this.prepareFilterSelectField(this._selectCategory, this.presetsRepo.index.uniqueValues.category, 3);
-    this.prepareFilterSelectField(this._selectKeyword, this.presetsRepo.index.uniqueValues.keywords, 3);
-    this.prepareFilterSelectField(this._selectAuthor, this.presetsRepo.index.uniqueValues.author, 1);
-    this.prepareFilterSelectField(this._selectFirmwareVersion, this.presetsRepo.index.uniqueValues.firmware_version, 2);
-    this.prepareFilterSelectField(this._selectStatus, this.presetsRepo.index.settings.PresetStatusEnum, 2);
+
+    this.prepareFilterSelectField(this._selectCategory, getUniqueValues(this.presetsRepo, x => x.index.uniqueValues.category), 3);
+    this.prepareFilterSelectField(this._selectKeyword, getUniqueValues(this.presetsRepo, x => x.index.uniqueValues.keywords), 3);
+    this.prepareFilterSelectField(this._selectAuthor, getUniqueValues(this.presetsRepo, x => x.index.uniqueValues.author), 1);
+    this.prepareFilterSelectField(this._selectFirmwareVersion, getUniqueValues(this.presetsRepo, x => x.index.uniqueValues.firmware_version), 2);
+    this.prepareFilterSelectField(this._selectStatus, getUniqueValues(this.presetsRepo, x => x.index.settings.PresetStatusEnum), 2);
+
     this.multipleSelectComponentScrollFix().then(() => {
         this.preselectFilterFields();
         this._inputTextFilter.on('input', () => this.updateSearchResults());
@@ -404,9 +415,11 @@ presets.preselectFilterFields = function() {
     const currentVersion = FC.CONFIG.flightControllerVersion;
     const selectedVersions = [];
 
-    for(const bfVersion of this.presetsRepo.index.uniqueValues.firmware_version) {
-        if (currentVersion.startsWith(bfVersion)) {
-            selectedVersions.push(bfVersion);
+    for (const repo of this.presetsRepo) {
+        for (const bfVersion of repo.index.uniqueValues.firmware_version) {
+            if (currentVersion.startsWith(bfVersion)) {
+                selectedVersions.push(bfVersion);
+            }
         }
     }
 
@@ -474,10 +487,10 @@ presets.displayPresets = function(fitPresets) {
     this._domListNoFound.toggle(fitPresets.length === 0);
 
     fitPresets.forEach(preset => {
-        const presetPanel = new PresetTitlePanel(this._divPresetList, preset, true, undefined, favoritePresets);
+        const presetPanel = new PresetTitlePanel(this._divPresetList, preset[0], true, undefined, favoritePresets);
         presetPanel.load();
         this._presetPanels.push(presetPanel);
-        presetPanel.subscribeClick(this.presetsDetailedDialog, this.presetsRepo);
+        presetPanel.subscribeClick(this.presetsDetailedDialog, preset[1]);
     });
 
     this._domListTooManyFound.appendTo(this._divPresetList);
@@ -486,13 +499,15 @@ presets.displayPresets = function(fitPresets) {
 presets.getFitPresets = function(searchParams) {
     const result = [];
 
-    for(const preset of this.presetsRepo.index.presets) {
-        if(this.isPresetFitSearch(preset, searchParams)) {
-            result.push(preset);
+    for (const repo of this.presetsRepo){
+        for(const preset of repo.index.presets) {
+            if(this.isPresetFitSearch(preset, searchParams)) {
+                result.push([preset, repo]);
+            }
         }
     }
 
-    result.sort((a, b) => this.presetSearchPriorityComparer(a,b));
+    result.sort((a, b) => this.presetSearchPriorityComparer(a[0], b[0]));
 
     return result;
 };
@@ -653,7 +668,7 @@ presets.cleanup = function(callback) {
 presets.resetInitialValues = function() {
     CONFIGURATOR.cliEngineActive = false;
     CONFIGURATOR.cliEngineValid = false;
-    TABS.presets.presetsRepo = null;
+    TABS.presets.presetsRepo = [];
     TABS.presets.pickedPresetList.length = 0;
     this._domProgressDialog.close();
 };

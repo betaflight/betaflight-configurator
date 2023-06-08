@@ -9,7 +9,7 @@ export default class PresetsSourcesDialog {
         this._sourceSelectedPromiseResolve = null;
         this._sourcesPanels = [];
         this._sources = [];
-        this._activeSourceIndex = 0;
+        this._activeSourceIndexes = [0];
     }
 
     load() {
@@ -29,19 +29,19 @@ export default class PresetsSourcesDialog {
     }
 
     getActivePresetSource() {
-        return this._sources[this._activeSourceIndex];
+        return this._activeSourceIndexes.map(index => this._sources[index]);
     }
 
     get isOfficialActive() {
-        return this._activeSourceIndex === 0;
+        return this._activeSourceIndexes.includes(0);
     }
 
     _initializeSources() {
         this._sources = this._readSourcesFromStorage();
-        this._activeSourceIndex = this._readActiveSourceIndexFromStorage(this._sources.length);
+        this._activeSourceIndexes = this._readActiveSourceIndexFromStorage(this._sources.length);
 
         for (let i = 0; i < this._sources.length; i++) {
-            const isActive = this._activeSourceIndex === i;
+            const isActive = this._activeSourceIndexes.includes(i);
             this._addNewSourcePanel(this._sources[i], isActive, false);
         }
     }
@@ -67,15 +67,8 @@ export default class PresetsSourcesDialog {
     }
 
     _readActiveSourceIndexFromStorage(sourcesCount) {
-        const obj = getConfig('PresetSourcesActiveIndex');
-        const index = Number(obj.PresetSourcesActiveIndex);
-        let result = 0;
-
-        if (index && Number.isInteger(index) && index < sourcesCount) {
-            result = index;
-        }
-
-        return result;
+        const obj = getConfig('PresetSourcesActiveIndexes');
+        return obj.PresetSourcesActiveIndexes || [0];
     }
 
     _createOfficialSource() {
@@ -117,6 +110,7 @@ export default class PresetsSourcesDialog {
             sourcePanel.setOnSelectedCallback(selectedPanel => this._onSourcePanelSelected(selectedPanel));
             sourcePanel.setOnDeleteCallback(selectedPanel => this._onSourcePanelDeleted(selectedPanel));
             sourcePanel.setOnActivateCallback(selectedPanel => this._onSourcePanelActivated(selectedPanel));
+            sourcePanel.setOnDeactivateCallback(selectedPanel => this._onSourcePanelDeactivated(selectedPanel));
             sourcePanel.setOnSaveCallback(() => this._onSourcePanelSaved());
             sourcePanel.setActive(isActive);
             if (isSelected) {
@@ -140,18 +134,18 @@ export default class PresetsSourcesDialog {
 
     _readPanels() {
         this._sources = [];
-        this._activeSourceIndex = 0;
-        for(let i = 0; i < this._sourcesPanels.length; i++) {
+        this._activeSourceIndexes = [];
+        for (let i = 0; i < this._sourcesPanels.length; i++) {
             this._sources.push(this._sourcesPanels[i].presetSource);
             if (this._sourcesPanels[i].active) {
-                this._activeSourceIndex = i;
+                this._activeSourceIndexes.push(i);
             }
         }
     }
 
     _saveSources() {
         setConfig({'PresetSources': this._sources});
-        setConfig({'PresetSourcesActiveIndex': this._activeSourceIndex});
+        setConfig({'PresetSourcesActiveIndexes': this._activeSourceIndexes});
     }
 
     _updateSourcesFromPanels() {
@@ -183,10 +177,17 @@ export default class PresetsSourcesDialog {
 
     _onSourcePanelActivated(selectedPanel) {
         for (const panel of this._sourcesPanels) {
-            if (panel !== selectedPanel) {
-                panel.setActive(false);
-            } else {
+            if (panel === selectedPanel) {
                 panel.setActive(true);
+            }
+        }
+        this._updateSourcesFromPanels();
+    }
+
+    _onSourcePanelDeactivated(selectedPanel) {
+        for (const panel of this._sourcesPanels) {
+            if (panel === selectedPanel) {
+                panel.setActive(false);
             }
         }
         this._updateSourcesFromPanels();

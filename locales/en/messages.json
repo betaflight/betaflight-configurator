@@ -6981,6 +6981,10 @@
         "message": "Make Active",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "Make disabled",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "Delete",
         "description": "Presets tab, sources dialog, button to delete selected source"
