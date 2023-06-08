@@ -66,6 +66,10 @@ firmware_flasher.initialize = function (callback) {
             );
         }
 
+        function buildKeyExists() {
+            return FC.CONFIG.buildKey.length === 32;
+        }
+
         function parseHex(str, callback) {
             // parsing hex in different thread
             const worker = new Worker('./js/workers/hex_parser.js');
@@ -208,6 +212,19 @@ firmware_flasher.initialize = function (callback) {
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
+            if (!buildKeyExists()) {
+                preselectRadioProtocolFromStorage();
+            }
+        }
+
+        function preselectRadioProtocolFromStorage() {
+            const storedRadioProtocol = getConfig("ffRadioProtocol").ffRadioProtocol;
+            if (storedRadioProtocol) {
+                const valueExistsInSelect = $('select[name="radioProtocols"] option').filter(function (i, o) {return o.value === storedRadioProtocol;}).length !== 0;
+                if (valueExistsInSelect) {
+                    $('select[name="radioProtocols"]').val(storedRadioProtocol);
+                }
+            }
         }
 
         let buildTypesToShow;
@@ -350,7 +367,7 @@ firmware_flasher.initialize = function (callback) {
 
             self.releaseLoader.loadTarget(target, release, onTargetDetail);
 
-            if (FC.CONFIG.buildKey.length === 32 && navigator.onLine) {
+            if (buildKeyExists() && navigator.onLine) {
                 self.releaseLoader.loadOptionsByBuildKey(release, FC.CONFIG.buildKey, buildOptions);
             } else {
                 self.releaseLoader.loadOptions(release, buildOptions);
@@ -410,6 +427,13 @@ firmware_flasher.initialize = function (callback) {
         $('select[name="motorProtocols"]').select2();
         $('select[name="options"]').select2({ closeOnSelect: false });
         $('select[name="commits"]').select2({ tags: true });
+
+        $('select[name="radioProtocols"]').on("select2:select", function() {
+            const selectedProtocol = $('select[name="radioProtocols"] option:selected').first().val();
+            if (selectedProtocol) {
+                setConfig({"ffRadioProtocol" : selectedProtocol});
+            }
+        });
 
         $('select[name="board"]').change(function() {
             $("a.load_remote_file").addClass('disabled');
@@ -607,7 +631,7 @@ firmware_flasher.initialize = function (callback) {
                         }
 
                         MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
-                            if (FC.CONFIG.buildKey.length === 32) {
+                            if (buildKeyExists()) {
                                 self.releaseLoader.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, getBoardInfo);
                             } else {
                                 getBoardInfo();
