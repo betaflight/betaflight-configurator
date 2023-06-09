@@ -28,12 +28,12 @@ export default class PresetsSourcesDialog {
         return new Promise(resolve => this._sourceSelectedPromiseResolve = resolve);
     }
 
-    getActivePresetSource() {
+    getActivePresetSources() {
         return this._activeSourceIndexes.map(index => this._sources[index]);
     }
 
-    get isOfficialActive() {
-        return this._activeSourceIndexes.includes(0);
+    get isThirdPartyActive() {
+        return this.getActivePresetSources().filter(source => !source.official).length > 0;
     }
 
     _initializeSources() {

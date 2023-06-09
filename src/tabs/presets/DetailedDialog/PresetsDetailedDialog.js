@@ -78,7 +78,7 @@ export default class PresetsDetailedDialog {
         }
 
         this._titlePanel.empty();
-        const titlePanel = new PresetTitlePanel(this._titlePanel, this._preset, false,
+        const titlePanel = new PresetTitlePanel(this._titlePanel, this._preset, this._presetsRepo, false,
             () => this._setLoadingState(false), this._favoritePresets);
         titlePanel.load();
         this._loadOptionsSelect();
@@ -263,7 +263,7 @@ export default class PresetsDetailedDialog {
 
     _pickPreset() {
         const cliStrings = this._getFinalCliText();
-        const pickedPreset = new PickedPreset(this._preset, cliStrings);
+        const pickedPreset = new PickedPreset(this._preset, cliStrings, this._presetsRepo);
         this._pickedPresetList.push(pickedPreset);
         this._onPresetPickedCallback?.();
         this._isPresetPickedOnClose = true;

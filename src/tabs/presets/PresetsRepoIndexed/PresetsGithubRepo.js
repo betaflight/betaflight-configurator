@@ -1,7 +1,7 @@
 import PresetsRepoIndexed from "./PresetsRepoIndexed";
 
 export default class PresetsGithubRepo extends PresetsRepoIndexed {
-    constructor(urlRepo, branch) {
+    constructor(urlRepo, branch, official, name) {
         let correctUrlRepo = urlRepo.trim();
 
         if (!correctUrlRepo.endsWith("/")) {
@@ -22,5 +22,15 @@ export default class PresetsGithubRepo extends PresetsRepoIndexed {
         const urlViewOnline = `${correctUrlRepo}blob/${correctBranch}/`;
 
         super(urlRaw, urlViewOnline);
+        this._official = official;
+        this._name = name;
+    }
+
+    get official() {
+        return this._official;
+    }
+
+    get name() {
+        return this._name;
     }
 }

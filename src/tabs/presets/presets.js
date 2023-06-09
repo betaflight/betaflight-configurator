@@ -65,6 +65,7 @@ presets.readDom = function() {
     this._domButtonPresetSources = $(".presets_sources_show");
 
     this._domWarningNotOfficialSource = $(".presets_warning_not_official_source");
+    this._domWarningFailedToLoadRepositories = $(".presets_failed_to_load_repositories");
     this._domWarningBackup = $(".presets_warning_backup");
     this._domButtonHideBackupWarning = $(".presets_warning_backup_button_hide");
 
@@ -117,7 +118,9 @@ presets.onSaveClick = function() {
 
 presets.markPickedPresetsAsFavorites = function() {
     for(const pickedPreset of this.pickedPresetList) {
-        favoritePresets.add(pickedPreset.preset);
+        if (pickedPreset.presetRepo !== undefined){
+            favoritePresets.add(pickedPreset.preset, pickedPreset.presetRepo);
+        }
     }
 
     favoritePresets.saveToStorage();
@@ -268,7 +271,7 @@ presets.onLoadConfigClick = function() {
     .then(text => {
         if (text) {
             const cliStrings = text.split("\n");
-            const pickedPreset = new PickedPreset({title: "user configuration"}, cliStrings);
+            const pickedPreset = new PickedPreset({title: "user configuration"}, cliStrings, undefined);
             this.pickedPresetList.push(pickedPreset);
             this.onSaveClick();
         }
@@ -316,25 +319,32 @@ presets.reload = function() {
 };
 
 presets.tryLoadPresets = function() {
-    const presetSources = this.presetsSourcesDialog.getActivePresetSource();
+    const presetSources = this.presetsSourcesDialog.getActivePresetSources();
 
     this.presetsRepo = presetSources.map(source => {
         if (PresetSource.isUrlGithubRepo(source.url)) {
-            return new PresetsGithubRepo(source.url, source.gitHubBranch);
+            return new PresetsGithubRepo(source.url, source.gitHubBranch, source.official, source.name);
         } else {
-            return new PresetsWebsiteRepo(source.url);
+            return new PresetsWebsiteRepo(source.url, source.official, source.name);
         }
     });
 
     this._divMainContent.toggle(false);
     this._divGlobalLoadingError.toggle(false);
     this._divGlobalLoading.toggle(true);
-    this._domWarningNotOfficialSource.toggle(!this.presetsSourcesDialog.isOfficialActive);
+    this._domWarningNotOfficialSource.toggle(this.presetsSourcesDialog.isThirdPartyActive);
 
-    Promise.all(this.presetsRepo.map(p => p.loadIndex()))
-    .then(() => this.checkPresetSourceVersion())
+    const failedToLoad = [];
+
+    Promise.all(this.presetsRepo.map(p => p.loadIndex().catch((reason => failedToLoad.push(p)))))
     .then(() => {
-        this.presetsRepo.forEach(p => favoritePresets.addLastPickDate(p.index.presets));
+        this._domWarningFailedToLoadRepositories.toggle(failedToLoad.length > 0);
+        this._domWarningFailedToLoadRepositories.html(i18n.getMessage("presetsFailedToLoadRepositories", {"repos": failedToLoad.map(repo => repo.name).join("; ")}));
+        this.presetsRepo = this.presetsRepo.filter(repo => !failedToLoad.includes(repo));
+        return this.checkPresetSourceVersion();
+    })
+    .then(() => {
+        this.presetsRepo.forEach(p => favoritePresets.addLastPickDate(p.index.presets, p));
         this.prepareFilterFields();
         this._divGlobalLoading.toggle(false);
         this._divMainContent.toggle(true);
@@ -487,7 +497,7 @@ presets.displayPresets = function(fitPresets) {
     this._domListNoFound.toggle(fitPresets.length === 0);
 
     fitPresets.forEach(preset => {
-        const presetPanel = new PresetTitlePanel(this._divPresetList, preset[0], true, undefined, favoritePresets);
+        const presetPanel = new PresetTitlePanel(this._divPresetList, preset[0], preset[1],true, undefined, favoritePresets);
         presetPanel.load();
         this._presetPanels.push(presetPanel);
         presetPanel.subscribeClick(this.presetsDetailedDialog, preset[1]);
@@ -496,13 +506,15 @@ presets.displayPresets = function(fitPresets) {
     this._domListTooManyFound.appendTo(this._divPresetList);
 };
 
+
 presets.getFitPresets = function(searchParams) {
     const result = [];
-
+    const seenHashes = new Set();
     for (const repo of this.presetsRepo){
         for (const preset of repo.index.presets) {
-            if (this.isPresetFitSearch(preset, searchParams)) {
+            if (this.isPresetFitSearch(preset, searchParams) && !seenHashes.has(preset.hash)) {
                 result.push([preset, repo]);
+                seenHashes.add(preset.hash);
             }
         }
     }

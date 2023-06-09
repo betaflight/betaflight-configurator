@@ -75,19 +75,19 @@ class FavoritePresetsClass {
         this._favoritePresetsData = new FavoritePresetsData();
     }
 
-    add(preset) {
-        const favoritePreset = this._favoritePresetsData.add(preset.fullPath);
+    add(preset, repo) {
+        const favoritePreset = this._favoritePresetsData.add(repo.getPresetOnlineLink(preset));
         preset.lastPickDate = favoritePreset.lastPickDate;
     }
 
-    delete(preset) {
-        this._favoritePresetsData.delete(preset.fullPath);
+    delete(preset, repo) {
+        this._favoritePresetsData.delete(repo.getPresetOnlineLink(preset));
         preset.lastPickDate = undefined;
     }
 
-    addLastPickDate(presets) {
+    addLastPickDate(presets, repo) {
         for (let preset of presets) {
-            let favoritePreset = this._favoritePresetsData.findPreset(preset.fullPath);
+            let favoritePreset = this._favoritePresetsData.findPreset(repo.getPresetOnlineLink(preset));
 
             if (favoritePreset) {
                 preset.lastPickDate = favoritePreset.lastPickDate;
