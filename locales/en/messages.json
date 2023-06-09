@@ -3550,7 +3550,7 @@
         "description": "Warning message title before actual flashing takes place"
     },
     "firmwareFlasherRemindBackup": {
-        "message": "Flashing new firmware will wipe out all settings. We strongly recommend to save a backup before continueing flashing",
+        "message": "Flashing new firmware will wipe out all settings. We strongly recommend to save a backup before continuing.",
         "description": "Warning message before actual flashing takes place"
     },
     "firmwareFlasherBackup": {

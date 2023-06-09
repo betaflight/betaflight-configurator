@@ -25,6 +25,7 @@ const firmware_flasher = {
     localFirmwareLoaded: false,
     selectedBoard: undefined,
     boardNeedsVerification: false,
+    allowBoardDetection: true,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     isConfigLocal: false, // Set to true if the user loads one locally
@@ -1036,16 +1037,21 @@ firmware_flasher.initialize = function (callback) {
                     }
                 }
 
-                GUI.showYesNoDialog(
-                    {
-                        title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
-                        text: i18n.getMessage('firmwareFlasherRemindBackup'),
-                        buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
-                        buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
-                        buttonYesCallback: () => firmware_flasher.backupConfig(goFlashing),
-                        buttonNoCallback: goFlashing,
-                    },
-                );
+                // Backup not available in DFU mode
+                if (!$('option:selected', portPickerElement).data().isDFU) {
+                    GUI.showYesNoDialog(
+                        {
+                            title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
+                            text: i18n.getMessage('firmwareFlasherRemindBackup'),
+                            buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
+                            buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
+                            buttonYesCallback: () => firmware_flasher.backupConfig(goFlashing),
+                            buttonNoCallback: goFlashing,
+                        },
+                    );
+                } else {
+                    goFlashing();
+                }
             }
         });
 
@@ -1312,7 +1318,7 @@ firmware_flasher.backupConfig = function (callback) {
             output.push(str);
         });
 
-        sendCommand("status\ndiff all\ndump all");
+        sendCommand("diff all defaults");
 
         return new Promise(resolve => {
             GUI.interval_add(commandInterval, () => {
@@ -1334,12 +1340,22 @@ firmware_flasher.backupConfig = function (callback) {
         serial.disconnect(onFinishClose);
         MSP.disconnect_cleanup();
 
-        if (callback) {
-            callback();
-        }
+        // Allow reboot after CLI exit
+        setTimeout(function() {
+            // Activate auto-detection.
+            // TODO try setInterval and check for PortHandler.port_available to make the timeout dynamic
+            TABS.firmware_flasher.allowBoardDetection = true;
+
+            if (callback) {
+                callback();
+            }
+        }, 5000);
     }
 
     function onSaveConfig() {
+        // Prevent auto-detect after CLI reset
+        TABS.firmware_flasher.allowBoardDetection = false;
+
         activateCliMode()
         .then(readCommand)
         .then(output => {
@@ -1347,6 +1363,7 @@ firmware_flasher.backupConfig = function (callback) {
             const suffix = 'txt';
             const text = output.join("\n");
             const filename = generateFilename(prefix, suffix);
+
             return GUI.saveToTextFileDialog(text, filename, suffix);
         })
         .then(() => sendCommand("exit", onClose));
@@ -1369,11 +1386,10 @@ firmware_flasher.backupConfig = function (callback) {
     }
 
     const portPickerElement = $('div#port-picker #port');
+    const port = String(portPickerElement.val());
 
-    // Not available in DFU mode
-    if (String(portPickerElement.val()) !== '0') {
-        const port = String(portPickerElement.val());
-        let baud = 115200;
+    if (port !== '0') {
+        const baud = 115200;
 
         if (!(serial.connected || serial.connectionId)) {
             serial.connect(port, {bitrate: baud}, onConnect);
