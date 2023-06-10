@@ -2,7 +2,7 @@ import { i18n } from "../../../js/localization";
 
 export default class PresetTitlePanel
 {
-    constructor(parentDiv, preset, presetRepo, clickable, onLoadedCallback, favoritePresets)
+    constructor(parentDiv, preset, presetRepo, clickable, showPresetRepoName, onLoadedCallback, favoritePresets)
     {
         PresetTitlePanel.s_panelCounter ++;
         this._parentDiv = parentDiv;
@@ -10,6 +10,7 @@ export default class PresetTitlePanel
         this._domId = `preset_title_panel_${PresetTitlePanel.s_panelCounter}`;
         this._preset = preset;
         this._presetRepo = presetRepo;
+        this._showPresetRepoName = showPresetRepoName;
         this._clickable = clickable;
         this._favoritePresets = favoritePresets;
 
@@ -69,7 +70,7 @@ export default class PresetTitlePanel
     }
 
     _showPresetsDetailedDialog(presetsDetailedDialog, presetsRepo) {
-        presetsDetailedDialog.open(this._preset, presetsRepo).then(isPresetPicked => {
+        presetsDetailedDialog.open(this._preset, presetsRepo, this._showPresetRepoName).then(isPresetPicked => {
             if (isPresetPicked) {
                 const color = this._domWrapperDiv.css( "background-color" );
                 this._domWrapperDiv.css('background-color', 'green');
@@ -105,6 +106,7 @@ export default class PresetTitlePanel
         this._domAuthor.text(this._preset.author);
         this._domVersions.text(this._preset.firmware_version?.join("; "));
         this._domSourceRepository.text(this._presetRepo.name);
+        this._domSourceRepositoryRow.toggle(this._showPresetRepoName);
 
         this._domKeywords.text(this._preset.keywords?.join("; "));
         this._domKeywords.prop("title", this._preset.keywords?.join("; "));
@@ -134,6 +136,7 @@ export default class PresetTitlePanel
         this._domAuthor = this._domWrapperDiv.find('.preset_title_panel_author_text');
         this._domKeywords = this._domWrapperDiv.find('.preset_title_panel_keywords_text');
         this._domSourceRepository = this._domWrapperDiv.find('.preset_title_panel_repository_text');
+        this._domSourceRepositoryRow = this._domWrapperDiv.find('.preset_title_panel_repository_row');
         this._domVersions = this._domWrapperDiv.find('.preset_title_panel_versions_text');
         this._domStatusOfficial = this._domWrapperDiv.find('.preset_title_panel_status_official');
         this._domStatusCommunity = this._domWrapperDiv.find('.preset_title_panel_status_community');

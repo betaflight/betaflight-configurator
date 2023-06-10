@@ -497,7 +497,7 @@ presets.displayPresets = function(fitPresets) {
     this._domListNoFound.toggle(fitPresets.length === 0);
 
     fitPresets.forEach(preset => {
-        const presetPanel = new PresetTitlePanel(this._divPresetList, preset[0], preset[1],true, undefined, favoritePresets);
+        const presetPanel = new PresetTitlePanel(this._divPresetList, preset[0], preset[1], true, this.presetsSourcesDialog.isThirdPartyActive, favoritePresets);
         presetPanel.load();
         this._presetPanels.push(presetPanel);
         presetPanel.subscribeClick(this.presetsDetailedDialog, preset[1]);
