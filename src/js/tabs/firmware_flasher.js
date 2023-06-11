@@ -348,7 +348,7 @@ firmware_flasher.initialize = function (callback) {
 
             self.releaseLoader.loadTarget(target, release, onTargetDetail);
 
-            if (FC.CONFIG.buildKey.length === 32) {
+            if (FC.CONFIG.buildKey.length === 32 && navigator.onLine) {
                 self.releaseLoader.loadOptionsByBuildKey(release, FC.CONFIG.buildKey, buildOptions);
             } else {
                 self.releaseLoader.loadOptions(release, buildOptions);
