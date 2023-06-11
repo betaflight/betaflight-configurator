@@ -1,14 +1,24 @@
 import PresetParser from "./PresetParser";
 
 export default class PresetsRepoIndexed {
-    constructor(urlRaw, urlViewOnline) {
+    constructor(urlRaw, urlViewOnline, official, name) {
         this._urlRaw = urlRaw;
         this._urlViewOnline = urlViewOnline;
         this._index = null;
+        this._name = name;
+        this._official = official;
     }
 
     get index() {
         return this._index;
+    }
+
+    get official() {
+        return this._official;
+    }
+
+    get name() {
+        return this._name;
     }
 
     loadIndex() {

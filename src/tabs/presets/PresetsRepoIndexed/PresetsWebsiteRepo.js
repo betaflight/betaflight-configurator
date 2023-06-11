@@ -11,16 +11,6 @@ export default class PresetsWebsiteRepo extends PresetsRepoIndexed {
         const urlRaw = correctUrl;
         const urlViewOnline = correctUrl;
 
-        super(urlRaw, urlViewOnline);
-        this._official = official;
-        this._name = name;
-    }
-
-    get official() {
-        return this._official;
-    }
-
-    get name() {
-        return this._name;
+        super(urlRaw, urlViewOnline, official, name);
     }
 }
