@@ -370,7 +370,7 @@ setup.initialize = function (callback) {
             msp_api_e.text([FC.CONFIG.apiVersion]);
             build_date_e.text([FC.CONFIG.buildInfo]);
 
-            if (FC.CONFIG.buildKey.length > 1) {
+            if (FC.CONFIG.buildKey.length === 32) {
                 const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
                 const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
                                      <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
@@ -382,9 +382,10 @@ setup.initialize = function (callback) {
                 $('.build-info a').addClass('disabled');
             }
 
-            if (FC.CONFIG.buildOptions.length > 0) {
+            if (FC.CONFIG.buildOptions.length) {
                 let buildOptions = "";
                 build_opt_e.text = "";
+
                 for (const buildOption of FC.CONFIG.buildOptions) {
                     buildOptions = `${buildOptions} &nbsp ${buildOption}`;
                 }
@@ -392,7 +393,7 @@ setup.initialize = function (callback) {
                                   title="${i18n.getMessage('initialSetupInfoBuildOptions')}${buildOptions}">
                                   <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></span>`);
             } else {
-                build_opt_e.html(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
+                build_opt_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
             }
         };
 
