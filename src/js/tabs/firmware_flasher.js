@@ -1334,22 +1334,30 @@ firmware_flasher.backupConfig = function (callback) {
 
     function onFinishClose() {
         MSP.clearListeners();
+
+        // Include timeout in count
+        let count = 15;
+        // Allow reboot after CLI exit
+        const waitOnReboot = () => {
+            const disconnect = setInterval(function() {
+                if (PortHandler.port_available) {
+                    console.log(`Connection ready for flashing in ${count / 10} seconds`);
+                    clearInterval(disconnect);
+                    // Re-activate auto-detection. (Seems not be needed) :)
+                    TABS.firmware_flasher.allowBoardDetection = true;
+                    callback();
+                }
+                count++;
+            }, 100);
+        };
+
+        // PortHandler has a 500ms timer - so triple for safety
+        setTimeout(waitOnReboot, 1500);
     }
 
     function onClose() {
         serial.disconnect(onFinishClose);
         MSP.disconnect_cleanup();
-
-        // Allow reboot after CLI exit
-        setTimeout(function() {
-            // Activate auto-detection.
-            // TODO try setInterval and check for PortHandler.port_available to make the timeout dynamic
-            TABS.firmware_flasher.allowBoardDetection = true;
-
-            if (callback) {
-                callback();
-            }
-        }, 5000);
     }
 
     function onSaveConfig() {
@@ -1389,14 +1397,8 @@ firmware_flasher.backupConfig = function (callback) {
     const port = String(portPickerElement.val());
 
     if (port !== '0') {
-        const baud = 115200;
-
-        if (!(serial.connected || serial.connectionId)) {
-            serial.connect(port, {bitrate: baud}, onConnect);
-        } else {
-            console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId);
-            serial.disconnect();
-        }
+        const baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
+        serial.connect(port, {bitrate: baud}, onConnect);
     } else {
         gui_log(i18n.getMessage('firmwareFlasherNoPortSelected'));
     }
