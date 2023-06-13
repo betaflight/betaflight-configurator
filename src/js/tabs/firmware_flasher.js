@@ -559,7 +559,7 @@ firmware_flasher.initialize = function (callback) {
 
                 function onClose(success) {
                     if (!success) {
-                        gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFailed'));
+                        gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
                     }
 
                     serial.disconnect(onFinishClose);
