@@ -17,6 +17,7 @@ import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { checkChromeRuntimeError } from '../utils/common';
+import { generateFilename } from '../utils/generate_filename';
 
 const firmware_flasher = {
     targets: null,
@@ -24,6 +25,7 @@ const firmware_flasher = {
     localFirmwareLoaded: false,
     selectedBoard: undefined,
     boardNeedsVerification: false,
+    allowBoardDetection: true,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     isConfigLocal: false, // Set to true if the user loads one locally
@@ -597,7 +599,7 @@ firmware_flasher.initialize = function (callback) {
                 }
 
                 function getBuildInfo() {
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine) {
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
 
                         function onLoadCloudBuild(options) {
                             FC.CONFIG.buildOptions = options.Request.Options;
@@ -625,7 +627,7 @@ firmware_flasher.initialize = function (callback) {
                         } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                             onClose(false); // not supported
                         } else {
-                            MSP.send_message(MSPCodes.MSP_UID, false, false, getBuildInfo);
+                            MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, getBuildInfo);
                         }
                     });
                 }
@@ -1025,11 +1027,30 @@ firmware_flasher.initialize = function (callback) {
         }).trigger('change');
 
         $('a.flash_firmware').click(function () {
+
             if (!$(this).hasClass('disabled')) {
-                if (self.developmentFirmwareLoaded) {
-                    checkShowAcknowledgementDialog();
+                function goFlashing() {
+                    if (self.developmentFirmwareLoaded) {
+                        checkShowAcknowledgementDialog();
+                    } else {
+                        startFlashing();
+                    }
+                }
+
+                // Backup not available in DFU mode
+                if (!$('option:selected', portPickerElement).data().isDFU) {
+                    GUI.showYesNoDialog(
+                        {
+                            title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
+                            text: i18n.getMessage('firmwareFlasherRemindBackup'),
+                            buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
+                            buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
+                            buttonYesCallback: () => firmware_flasher.backupConfig(goFlashing),
+                            buttonNoCallback: goFlashing,
+                        },
+                    );
                 } else {
-                    startFlashing();
+                    goFlashing();
                 }
             }
         });
@@ -1214,6 +1235,173 @@ firmware_flasher.initialize = function (callback) {
     self.releaseLoader.loadTargets(() => {
        $('#content').load("./tabs/firmware_flasher.html", onDocumentLoad);
     });
+};
+
+firmware_flasher.backupConfig = function (callback) {
+    let mspHelper;
+    let cliBuffer = '';
+    let catchOutputCallback = null;
+
+    function readOutput(callback) {
+        catchOutputCallback = callback;
+    }
+
+    function writeOutput(text) {
+        if (catchOutputCallback) {
+            catchOutputCallback(text);
+        }
+    }
+
+    function readSerial(readInfo) {
+        const data = new Uint8Array(readInfo.data);
+
+        for (const charCode of data) {
+            const currentChar = String.fromCharCode(charCode);
+
+            switch (charCode) {
+                case 10:
+                    if (GUI.operating_system === "Windows") {
+                        writeOutput(cliBuffer);
+                        cliBuffer = '';
+                    }
+                    break;
+                case 13:
+                    if (GUI.operating_system !== "Windows") {
+                        writeOutput(cliBuffer);
+                        cliBuffer = '';
+                    }
+                    break;
+                default:
+                    cliBuffer += currentChar;
+            }
+        }
+    }
+
+    function activateCliMode() {
+        return new Promise(resolve => {
+            const bufferOut = new ArrayBuffer(1);
+            const bufView = new Uint8Array(bufferOut);
+
+            cliBuffer = '';
+            bufView[0] = 0x23;
+
+            serial.send(bufferOut);
+
+            GUI.timeout_add('enter_cli_mode_done', () => {
+                resolve();
+            }, 500);
+        });
+    }
+
+    function sendSerial(line, callback) {
+        const bufferOut = new ArrayBuffer(line.length);
+        const bufView = new Uint8Array(bufferOut);
+
+        for (let cKey = 0; cKey < line.length; cKey++) {
+            bufView[cKey] = line.charCodeAt(cKey);
+        }
+
+        serial.send(bufferOut, callback);
+    }
+
+    function sendCommand(line, callback) {
+        sendSerial(`${line}\n`, callback);
+    }
+
+    function readCommand() {
+        let timeStamp = performance.now();
+        const output = [];
+        const commandInterval = "COMMAND_INTERVAL";
+
+        readOutput(str => {
+            timeStamp = performance.now();
+            output.push(str);
+        });
+
+        sendCommand("diff all defaults");
+
+        return new Promise(resolve => {
+            GUI.interval_add(commandInterval, () => {
+                const currentTime = performance.now();
+                if (currentTime - timeStamp > 500) {
+                    catchOutputCallback = null;
+                    GUI.interval_remove(commandInterval);
+                    resolve(output);
+                }
+            }, 500, false);
+        });
+    }
+
+    function onFinishClose() {
+        MSP.clearListeners();
+
+        // Include timeout in count
+        let count = 15;
+        // Allow reboot after CLI exit
+        const waitOnReboot = () => {
+            const disconnect = setInterval(function() {
+                if (PortHandler.port_available) {
+                    console.log(`Connection ready for flashing in ${count / 10} seconds`);
+                    clearInterval(disconnect);
+                    // Re-activate auto-detection. (Seems not be needed) :)
+                    TABS.firmware_flasher.allowBoardDetection = true;
+                    callback();
+                }
+                count++;
+            }, 100);
+        };
+
+        // PortHandler has a 500ms timer - so triple for safety
+        setTimeout(waitOnReboot, 1500);
+    }
+
+    function onClose() {
+        serial.disconnect(onFinishClose);
+        MSP.disconnect_cleanup();
+    }
+
+    function onSaveConfig() {
+        // Prevent auto-detect after CLI reset
+        TABS.firmware_flasher.allowBoardDetection = false;
+
+        activateCliMode()
+        .then(readCommand)
+        .then(output => {
+            const prefix = 'cli_backup';
+            const suffix = 'txt';
+            const text = output.join("\n");
+            const filename = generateFilename(prefix, suffix);
+
+            return GUI.saveToTextFileDialog(text, filename, suffix);
+        })
+        .then(() => sendCommand("exit", onClose));
+    }
+
+    function onConnect(openInfo) {
+        if (openInfo) {
+            mspHelper = new MspHelper();
+            serial.onReceive.addListener(readSerial);
+            MSP.listen(mspHelper.process_data.bind(mspHelper));
+
+            onSaveConfig();
+        } else {
+            gui_log(i18n.getMessage('serialPortOpenFail'));
+
+            if (callback) {
+                callback();
+            }
+        }
+    }
+
+    const portPickerElement = $('div#port-picker #port');
+    const port = String(portPickerElement.val());
+
+    if (port !== '0') {
+        const baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
+        serial.connect(port, {bitrate: baud}, onConnect);
+    } else {
+        gui_log(i18n.getMessage('firmwareFlasherNoPortSelected'));
+    }
 };
 
 firmware_flasher.cleanup = function (callback) {

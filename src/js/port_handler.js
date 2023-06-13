@@ -216,7 +216,7 @@ PortHandler.detectPort = function(currentPorts) {
 
         self.port_available = true;
         // Signal board verification
-        if (GUI.active_tab === 'firmware_flasher') {
+        if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
             TABS.firmware_flasher.boardNeedsVerification = true;
         }
 
