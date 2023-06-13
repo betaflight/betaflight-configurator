@@ -40,7 +40,7 @@ const Features = function (config) {
 
     self._features = features;
 
-    if (semver.gte(config.apiVersion, API_VERSION_1_45) && config.buildKey.length === 32) {
+    if (semver.gte(config.apiVersion, API_VERSION_1_45) && config.buildOptions.length) {
         self._features = [];
 
         for (const feature of features) {

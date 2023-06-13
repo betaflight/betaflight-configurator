@@ -271,7 +271,9 @@ cli.initialize = function (callback) {
             });
         });
 
-        $('.tab-cli .support').click(function() {
+        $('.tab-cli .support')
+        .toggle(navigator.onLine)
+        .on('click', function() {
 
             function submitSupportData(data) {
                 clearHistory();

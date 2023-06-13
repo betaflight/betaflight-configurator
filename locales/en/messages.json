@@ -1092,6 +1092,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Local Build - no Defines used"
     },
+    "initialSetupNotOnline": {
+        "message": "Server unavailable"
+    },
     "initialSetupButtonSave": {
         "message": "Save"
     },
