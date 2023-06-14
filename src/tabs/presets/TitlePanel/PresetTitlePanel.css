@@ -20,7 +20,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: calc(100% - 30px);
+    width: calc(100% - 60px);
 }
 
 .preset_title_panel_star {

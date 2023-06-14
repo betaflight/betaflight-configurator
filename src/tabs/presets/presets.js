@@ -117,7 +117,7 @@ presets.onSaveClick = function() {
 };
 
 presets.markPickedPresetsAsFavorites = function() {
-    for(const pickedPreset of this.pickedPresetList) {
+    for (const pickedPreset of this.pickedPresetList) {
         if (pickedPreset.presetRepo !== undefined){
             favoritePresets.add(pickedPreset.preset, pickedPreset.presetRepo);
         }
@@ -137,7 +137,7 @@ presets.setupMenuButtons = function() {
 
 
     this._domButtonCancel.on("click", () => {
-        for(const pickedPreset of this.pickedPresetList) {
+        for (const pickedPreset of this.pickedPresetList) {
             pickedPreset.preset.isPicked = false;
         }
 
