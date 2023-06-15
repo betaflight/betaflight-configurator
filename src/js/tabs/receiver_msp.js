@@ -1,5 +1,4 @@
 import windowWatcherUtil from "../utils/window_watchers";
-import { i18n } from "../localization";
 
 const css_dark = [
     '/css/dark-theme.css',
@@ -43,10 +42,6 @@ let gimbalElems;
 let sliderElems;
 let enableTX = false;
 
-// NOTE: import should be enough right?
-// This is a hack to get the i18n var of the parent, but the localizePage not works
-// const i18n = opener.i18n;
-
 const watchers = {
     darkTheme: (val) => {
         if (val) {
@@ -56,17 +51,6 @@ const watchers = {
         }
     },
 };
-
-$(document).ready(function () {
-    $('[i18n]:not(.i18n-replaced)').each(function() {
-        const element = $(this);
-
-        element.html(i18n.getMessage(element.attr('i18n')));
-        element.addClass('i18n-replaced');
-    });
-
-    windowWatcherUtil.bindWatchers(window, watchers);
-});
 
 function transmitChannels() {
     const channelValues = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -107,10 +91,10 @@ function updateControlPositions() {
                 gimbalSize = $(gimbalElem).width(),
                 stickElem = $(".control-stick", gimbalElem);
 
-            if (gimbal[0] == stickName) {
+            if (gimbal[0] === stickName) {
                 stickElem.css('top', `${(1.0 - channelValueToStickPortion(stickValue)) * gimbalSize}px`);
                 break;
-            } else if (gimbal[1] == stickName) {
+            } else if (gimbal[1] === stickName) {
                 stickElem.css('left', `${channelValueToStickPortion(stickValue) * gimbalSize}px`);
                 break;
             }
@@ -127,6 +111,15 @@ function handleGimbalMouseDrag(e) {
     stickValues[gimbals[e.data.gimbalIndex][1]] = stickPortionToChannelValue((e.pageX - gimbalOffset.left) / gimbalSize);
 
     updateControlPositions();
+}
+
+function localizePage() {
+    $('[i18n]:not(.i18n-replaced)').each(function() {
+        const element = $(this);
+
+        element.html(i18n.getMessage(element.attr('i18n')));
+        element.addClass('i18n-replaced');
+    });
 }
 
 function localizeAxisNames() {
@@ -150,65 +143,70 @@ function applyNormalTheme() {
     css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
 }
 
-$(document).ready(function() {
-    $(".button-enable .btn").click(function() {
-        const shrinkHeight = $(".warning").height();
+$(".button-enable .btn").on("click", function() {
+    const shrinkHeight = $(".warning").height();
 
-        $(".warning").slideUp("short", function() {
-            chrome.app.window.current().innerBounds.minHeight -= shrinkHeight;
-            chrome.app.window.current().innerBounds.height -= shrinkHeight;
-            chrome.app.window.current().innerBounds.maxHeight -= shrinkHeight;
-        });
-
-        enableTX = true;
+    $(".warning").slideUp("short", function() {
+        chrome.app.window.current().innerBounds.minHeight -= shrinkHeight;
+        chrome.app.window.current().innerBounds.height -= shrinkHeight;
+        chrome.app.window.current().innerBounds.maxHeight -= shrinkHeight;
     });
 
-    gimbalElems = $(".control-gimbal");
-    sliderElems = $(".control-slider");
-
-    gimbalElems.each(function(gimbalIndex) {
-        $(this).on('mousedown', {gimbalIndex: gimbalIndex}, function(e) {
-            if (e.which == 1) { // Only move sticks on left mouse button
-                handleGimbalMouseDrag(e);
-
-                $(window).on('mousemove', {gimbalIndex: gimbalIndex}, handleGimbalMouseDrag);
-            }
-        });
-    });
-
-    $(".slider", sliderElems).each(function(sliderIndex) {
-        const initialValue = stickValues[`Aux${sliderIndex + 1}`];
-
-        $(this)
-            .noUiSlider({
-                start: initialValue,
-                range: {
-                    min: CHANNEL_MIN_VALUE,
-                    max: CHANNEL_MAX_VALUE,
-                },
-            }).on('slide change set', function(e, value) {
-                value = Math.round(parseFloat(value));
-
-                stickValues[`Aux${(sliderIndex + 1)}`] = value;
-
-                $(".tooltip", this).text(value);
-            });
-
-        $(this).append('<div class="tooltip"></div>');
-
-        $(".tooltip", this).text(initialValue);
-    });
-
-    /*
-     * Mouseup handler needs to be bound to the window in order to receive mouseup if mouse leaves window.
-     */
-    $(window).mouseup(function(e) {
-        $(this).off('mousemove', handleGimbalMouseDrag);
-    });
-
-    localizeAxisNames();
-
-    updateControlPositions();
-
-    setInterval(transmitChannels, 50);
+    enableTX = true;
 });
+
+gimbalElems = $(".control-gimbal");
+sliderElems = $(".control-slider");
+
+gimbalElems.each(function(gimbalIndex) {
+    $(this).on('mousedown', {gimbalIndex: gimbalIndex}, function(e) {
+        if (e.button === 0) { // Only move sticks on left mouse button
+            handleGimbalMouseDrag(e);
+
+            $(window).on('mousemove', {gimbalIndex: gimbalIndex}, handleGimbalMouseDrag);
+        }
+    });
+});
+
+$(".slider", sliderElems).each(function(sliderIndex) {
+    const initialValue = stickValues[`Aux${sliderIndex + 1}`];
+
+    $(this)
+        .noUiSlider({
+            start: initialValue,
+            range: {
+                min: CHANNEL_MIN_VALUE,
+                max: CHANNEL_MAX_VALUE,
+            },
+        }).on('slide change set', function(e, value) {
+            value = Math.round(parseFloat(value));
+
+            stickValues[`Aux${(sliderIndex + 1)}`] = value;
+
+            $(".tooltip", this).text(value);
+        });
+
+    $(this).append('<div class="tooltip"></div>');
+
+    $(".tooltip", this).text(initialValue);
+});
+
+/*
+ * Mouseup handler needs to be bound to the window in order to receive mouseup if mouse leaves window.
+ */
+$(window).on("mouseup", function(e) {
+    $(this).off('mousemove', handleGimbalMouseDrag);
+});
+
+windowWatcherUtil.bindWatchers(window, watchers);
+
+// This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
+// It seems than when node opens a new window, the module "context" is different, so the i18n var is not initialized
+const i18n = opener.i18n;
+
+localizePage();
+localizeAxisNames();
+
+updateControlPositions();
+
+setInterval(transmitChannels, 50);

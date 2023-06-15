@@ -2239,7 +2239,8 @@
         "message": "Binding phrase"
     },
     "receiverButtonSticks": {
-        "message": "Control sticks"
+        "message": "Radio Emulator",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "RC Tuning data <strong>refreshed</strong>"
