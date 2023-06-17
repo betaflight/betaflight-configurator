@@ -404,6 +404,7 @@ function dist_rollup() {
                 'js/main_cordova': 'src/js/main_cordova.js',
                 'js/utils/common': 'src/js/utils/common.js',
                 'js/main': 'src/js/main.js',
+                'js/tabs/receiver_msp': 'src/js/tabs/receiver_msp.js',
             },
             plugins: [
                 alias({
