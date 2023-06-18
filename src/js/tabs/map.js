@@ -1,13 +1,16 @@
+
 const DEFAULT_ZOOM = 16,
       DEFAULT_LON = 0,
       DEFAULT_LAT = 0,
-      ICON_IMAGE = '/images/icons/cf_icon_position.png',
+      ICON_IMAGE_GPS   = '/images/icons/cf_icon_position.png',
+      ICON_IMAGE_MAG   = '/images/icons/cf_icon_position_mag.png',
       ICON_IMAGE_NOFIX = '/images/icons/cf_icon_position_nofix.png';
 
 let iconGeometry,
     map,
     mapView,
-    iconStyle,
+    iconStyleGPS,
+    iconStyleMag,
     iconStyleNoFix,
     iconFeature;
 
@@ -33,11 +36,18 @@ function initializeMap() {
         controls: [],
       });
 
-    const icon = new ol.style.Icon(({
+      const iconGPS = new ol.style.Icon(({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
-        src: ICON_IMAGE,
+        src: ICON_IMAGE_GPS,
+    }));
+
+    const iconMag = new ol.style.Icon(({
+        anchor: [0.5, 1],
+        opacity: 1,
+        scale: 0.5,
+        src: ICON_IMAGE_MAG,
     }));
 
     const iconNoFix = new ol.style.Icon(({
@@ -47,8 +57,12 @@ function initializeMap() {
         src: ICON_IMAGE_NOFIX,
     }));
 
-    iconStyle = new ol.style.Style({
-        image: icon,
+    iconStyleGPS = new ol.style.Style({
+        image: iconGPS,
+    });
+
+    iconStyleMag = new ol.style.Style({
+        image: iconMag,
     });
 
     iconStyleNoFix = new ol.style.Style({
@@ -60,7 +74,7 @@ function initializeMap() {
         geometry: iconGeometry,
     });
 
-    iconFeature.setStyle(iconStyle);
+    iconFeature.setStyle(iconStyleGPS);
 
     const vectorSource = new ol.source.Vector({
         features: [iconFeature],
@@ -87,6 +101,8 @@ function processMapEvents(e) {
                 break;
 
             case 'center':
+            case 'centerMag':
+                const iconStyle = e.data.action == 'centerMag' ? iconStyleMag : iconStyleGPS;
                 iconFeature.setStyle(iconStyle);
                 const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
                 mapView.setCenter(center);

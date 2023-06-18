@@ -432,9 +432,10 @@ setup.initialize = function (callback) {
             gpsFix_e.text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             gpsFix_e.toggleClass('ready', FC.GPS_DATA.fix != 0);
 
+            const gspUnitText = i18n.getMessage('gpsPositionUnit');
             gpsSats_e.text(FC.GPS_DATA.numSat);
-            gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} deg`);
-            gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);
+            gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} ${gspUnitText}`);
+            gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} ${gspUnitText}`);
         }
 
         function get_fast_data() {
