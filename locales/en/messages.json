@@ -2701,7 +2701,7 @@
         "message": "Current GPS location"
     },
     "gpsMapHeadHelp": {
-        "message": "Show GPS location on map. Use mouse to zoom in and out.<br>Location icon show North direction when Magnetometer are in use",
+        "message": "Show GPS location on the map. Use mouse scroll button to zoom in and out.<br>The location icon shows the north direction when the magnetometer is in use",
         "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
