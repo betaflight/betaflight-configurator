@@ -2710,11 +2710,9 @@
     "gpsAltitude": {
         "message": "Altitude:"
     },
-    "gpsLat": {
-        "message": "Latitude:"
-    },
-    "gpsLon": {
-        "message": "Longitude:"
+    "gpsLatLon": {
+        "message": "Latitude / Longitude:",
+        "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
         "message": "Heading:"
@@ -2727,6 +2725,10 @@
     },
     "gpsDistToHome": {
         "message": "Dist to Home:"
+    },
+    "gpsHomeLatLon": {
+        "message": "Home Latitude / Longitude:",
+        "description": "Show FC stored home position - Latitude / Longitude"
     },
     "gpsSignalStrHead": {
         "message": "GPS Signal Strength"

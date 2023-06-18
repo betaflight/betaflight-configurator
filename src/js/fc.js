@@ -306,6 +306,8 @@ const FC = {
             distanceToHome:             0,
             directionToHome:            0,
             update:                     0,
+            home_lat:                   0,
+            home_lon:                   0,
 
             chn:                        [],
             svid:                       [],

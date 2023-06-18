@@ -302,6 +302,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.GPS_DATA.distanceToHome = data.readU16();
                 FC.GPS_DATA.directionToHome = data.readU16();
                 FC.GPS_DATA.update = data.readU8();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.GPS_DATA.home_lat = data.read32();
+                    FC.GPS_DATA.home_lon = data.read32();
+                }
                 break;
             case MSPCodes.MSP_ATTITUDE:
                 FC.SENSOR_DATA.kinematics[0] = data.read16() / 10.0; // x

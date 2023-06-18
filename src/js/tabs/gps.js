@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43 } from '../data_storage';
+import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
@@ -189,17 +189,25 @@ gps.initialize = async function (callback) {
             const usedArray = ['gnssUsedUnused', 'gnssUsedUsed'];
             const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
             let alt = FC.GPS_DATA.alt;
+            let homeLat = 0;
+            let homeLon = 0;
 
             $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
 
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.lat a').prop('href', url).text(`${lat.toFixed(4)} deg`);
-            $('.GPS_info td.lon a').prop('href', url).text(`${lon.toFixed(4)} deg`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} deg / ${lon.toFixed(4)} deg`);
             $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} deg`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
+
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                homeLat = FC.GPS_DATA.home_lat / 10000000;
+                homeLon = FC.GPS_DATA.home_lon / 10000000;
+            }
+            const urlHome = `https://maps.google.com/?q=${homeLat},${homeLon}`;
+            $('.GPS_info td.homeLatLon a').prop('href', urlHome).text(`${homeLat.toFixed(4)} deg / ${homeLon.toFixed(4)} deg`);
 
             // Update GPS Signal Strengths
             const eSsTable = $('div.GPS_signal_strength table');
