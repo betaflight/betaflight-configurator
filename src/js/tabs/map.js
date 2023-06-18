@@ -2,8 +2,8 @@
 const DEFAULT_ZOOM = 16,
       DEFAULT_LON = 0,
       DEFAULT_LAT = 0,
-      ICON_IMAGE_GPS   = '/images/icons/cf_icon_position.png',
-      ICON_IMAGE_MAG   = '/images/icons/cf_icon_position_mag.png',
+      ICON_IMAGE_GPS = '/images/icons/cf_icon_position.png',
+      ICON_IMAGE_MAG = '/images/icons/cf_icon_position_mag.png',
       ICON_IMAGE_NOFIX = '/images/icons/cf_icon_position_nofix.png';
 
 let iconGeometry,
