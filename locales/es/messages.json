@@ -995,6 +995,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Compilación local - sin DEFINES"
     },
+    "initialSetupNotOnline": {
+        "message": "Servidor no disponible"
+    },
     "initialSetupButtonSave": {
         "message": "Guardar"
     },
@@ -2135,7 +2138,8 @@
         "message": "Frase de enlace"
     },
     "receiverButtonSticks": {
-        "message": "Palancas de control"
+        "message": "Emulador de Radio",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "Datos de Ajustes de RC <strong>actualizados</strong>"
@@ -3440,6 +3444,22 @@
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detectado: <strong>$1</strong> - dispositivo anterior todavía en instalación, por favor vuelve a conectar para volver a intentarlo"
+    },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Borrado de configuración",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Instalar un nuevo firmware borrará todas las configuraciones. Recomendamos guardar una copia de seguridad antes de continuar.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Crear copia de seguridad",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignorar este riesgo",
+        "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
         "message": "El controlador de vuelo puede controlar colores y efectos de LEDs individuales de una tira.<br />Configura LEDs en la rejilla, configura el orden del cableado y añade LEDs a tu aeronave de acuerdo a las posiciones de la rejilla. LEDs sin número de orden de cableado no se guardarán.<br />Doble-pulsación en un color para editar los valores HSV."

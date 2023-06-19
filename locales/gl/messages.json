@@ -2084,9 +2084,6 @@
     "receiverButtonBindingPhrase": {
         "message": "Frase vinculante"
     },
-    "receiverButtonSticks": {
-        "message": "Sticks de control"
-    },
     "receiverDataRefreshed": {
         "message": "Datos de Axustes de RC <strong>actualizados</strong>"
     },

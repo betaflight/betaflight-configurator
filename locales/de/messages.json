@@ -2109,9 +2109,6 @@
     "receiverButtonBindingPhrase": {
         "message": "Schlüsselbegriff (binding phrase)"
     },
-    "receiverButtonSticks": {
-        "message": "Kontroll Sticks"
-    },
     "receiverDataRefreshed": {
         "message": "RC Einstellungen <strong>neu geladen</strong>"
     },

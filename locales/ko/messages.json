@@ -995,6 +995,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "로컬 빌드 - 사용된 정의값 없음"
     },
+    "initialSetupNotOnline": {
+        "message": "서버를 이용할 수 없음"
+    },
     "initialSetupButtonSave": {
         "message": "저장"
     },
@@ -2135,7 +2138,8 @@
         "message": "바인딩 구문"
     },
     "receiverButtonSticks": {
-        "message": "제어 스틱"
+        "message": "라디오 에뮬레이터",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "RC 튜닝 데이터 <strong>새로 고쳐짐</strong>"
@@ -3440,6 +3444,22 @@
     },
     "firmwareFlasherPreviousDevice": {
         "message": "감지됨: <strong>$1</strong> - 이전 기기가 여전히 플래시중입니다. 다시 연결하여 재시도하세요."
+    },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "설정 삭제",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "새 펌웨어를 업데이트하면 모든 설정이 지워집니다. 계속하기 전에 백업을 저장하는 것이 좋습니다.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "백업 생성",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "위험 무시",
+        "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
         "message": "비행 컨트롤러는 스트립에서 개별 LED의 색상과 효과를 제어할 수 있습니다.<br />그리드에서 LED를 구성하고, 배선 순서를 구성한 다음 그리드 위치에 따라 기체에 LED를 부착하십시오. 배선 순서 번호가 없는 LED는 저장되지 않습니다.<br />HSV 값을 편집하려면 색상을 더블클릭하십시오."
