@@ -625,7 +625,7 @@
         "message": "Brænd firmware"
     },
     "defaultDonateHead": {
-        "message": "Open Source/Donations meddelelse"
+        "message": "Vedrørende Open Source og støtte med donation"
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight</strong> er <strong>open source</strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti</strong>.</p><p>Hvis du fandt Betaflight eller Betaflight-Configurator nyttig, så overvej venligst at <strong>støtte</strong> udviklingen ved en donation.</p>"
@@ -995,6 +995,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Lokal release - ingen Defines anvendt"
     },
+    "initialSetupNotOnline": {
+        "message": "Serveren kan ikke kontaktes"
+    },
     "initialSetupButtonSave": {
         "message": "Gem"
     },
@@ -1032,7 +1035,7 @@
         "message": "Nivellieringskalibrering under flyvning"
     },
     "featureRX_SERIAL": {
-        "message": "Seriel (via UART)"
+        "message": "Seriel (UART styring)"
     },
     "featureMOTOR_STOP": {
         "message": "Rotér ikke motorerer, når aktiveret"
@@ -1077,7 +1080,7 @@
         "message": "PWM RX-input (en ledning pr. kanal)"
     },
     "featureRX_MSP": {
-        "message": "MSP RX-input (styring via MSP-port)"
+        "message": "MSP RX-input (MSP styring)"
     },
     "featureRSSI_ADC": {
         "message": "Analog RSSI-input"
@@ -1439,18 +1442,18 @@
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
-        "message": "Sæt hjempunkt 1. gang",
+        "message": "Sæt Hjem position når strøm tilsluttes",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Når valgt, vil kun den første aktivering efter batteriet er tilsluttet blive brugt som startpunkt. Hvis det ikke er aktiveret, opdateres hjempunkt, hver gang fartøj aktiveres.",
+        "message": "Når valgt, vil kun den første aktivering efter batteriet er tilsluttet blive brugt som Hjem position. Hvis indstilling ikke er valgt, opdateres Hjem position, hver gang fartøj aktiveres.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
-        "message": "Leverandør protokol til seriel modtagelse"
+        "message": "Leverandør af seriel protokol"
     },
     "configurationSpiRX": {
-        "message": "SPI-busmodtagerleverandør"
+        "message": "Leverandør af SPI modtager bus"
     },
     "configurationEepromSaved": {
         "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
@@ -2135,7 +2138,8 @@
         "message": "Forbind fase"
     },
     "receiverButtonSticks": {
-        "message": "Styrpinde"
+        "message": "Radio emulering",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "RC tuningdata <strong>opfrisket</strong>"
@@ -2621,7 +2625,7 @@
         "message": "Antal satelitter:"
     },
     "gpsDistToHome": {
-        "message": "Afstand til Hjem:"
+        "message": "Hjem afstand:"
     },
     "gpsSignalStrHead": {
         "message": "GPS signalstyrke"
@@ -3440,6 +3444,22 @@
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detekteret: <strong>$1</strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
+    },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Slet alle indstillinger",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Brændning af firmware vil slette alle indstillinger. Vi anbefaler kraftigt at der gemmes en sikkerhedskopi, før fortsættelse.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Opret backup",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignorer risiko",
+        "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
         "message": "Flight controlleren kan styre farver og effekter på individuelle LED'er på en strimmel.<br />Opsæt LED'er i gitteret, opsæt ledningsrækkefølge og forbnd så LED'erne på dit fly jf. gitterpositionerne. LED'er uden ledningsnummer vil ikke blive gemt.<br />Dobbeltklik på en farve for at redigere HSV-værdierne."
@@ -5019,11 +5039,11 @@
         "message": "Aktiverings meddelelse"
     },
     "osdTextElementDisarmed": {
-        "message": "Deaktiveret",
+        "message": "Meddelse hvis Deaktiveret",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisarmed": {
-        "message": "Afkoblings meddelelse"
+        "message": "Vis meddelelse hvis deaktiveret"
     },
     "osdTextElementCrosshairs": {
         "message": "Sigtekorn",
@@ -5347,11 +5367,11 @@
         "message": "Pil der viser retning til Hjem position"
     },
     "osdTextElementHomeDistance": {
-        "message": "Afstand til Hjem",
+        "message": "Hjem afstand",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementHomeDistance": {
-        "message": "Afstand til Hjem position (målt den valgte enhed for FC - Enheder)"
+        "message": "Afstand til Hjem position (bestemt med værdi i den valgte enhed for FC - Enheder)"
     },
     "osdTextElementNumericalHeading": {
         "message": "Numerisk overskrift",

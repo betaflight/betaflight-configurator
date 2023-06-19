@@ -2134,9 +2134,6 @@
     "receiverButtonBindingPhrase": {
         "message": "Frase per associare"
     },
-    "receiverButtonSticks": {
-        "message": "Stick di comando"
-    },
     "receiverDataRefreshed": {
         "message": "Dati di messa a punto RC <strong>aggiornati</strong>"
     },

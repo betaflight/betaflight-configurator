@@ -1588,9 +1588,6 @@
     "receiverButtonBindMessage": {
         "message": "對頻請求已發送到飛行控制器。"
     },
-    "receiverButtonSticks": {
-        "message": "控制搖桿"
-    },
     "receiverDataRefreshed": {
         "message": "RC 調整數據<strong>已刷新</strong>"
     },

@@ -1720,9 +1720,6 @@
     "receiverButtonBindMessage": {
         "message": "Запрос на привязку отправлен контроллеру полета."
     },
-    "receiverButtonSticks": {
-        "message": "Стики управления"
-    },
     "receiverDataRefreshed": {
         "message": "Данные PID <strong>обновлены</strong>"
     },

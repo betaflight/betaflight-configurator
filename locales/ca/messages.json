@@ -1003,6 +1003,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Compilació local - No es fa servir definició"
     },
+    "initialSetupNotOnline": {
+        "message": "Servidor no disponible"
+    },
     "initialSetupButtonSave": {
         "message": "Desa"
     },
@@ -2143,7 +2146,8 @@
         "message": "Frase vinculant"
     },
     "receiverButtonSticks": {
-        "message": "Sticks de control"
+        "message": "Simulador de radio",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "Dades RC Tuning <strong>actualitzades</strong>"
@@ -3448,6 +3452,22 @@
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detectat: <strong>$1</strong> - el dispositiu anterior encara es flasheja, torna a conectar per reintentar"
+    },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Esborrar els ajustos",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Flashejar el nou microprogramari esborrarà tota la configuració. Us recomanem que deseu una còpia de seguretat abans de continuar.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Crear còpia de seguretat",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignora el risc",
+        "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
         "message": "La controladora pot controlar colors i efectes d'una tira de LEDs individualment.<br />Configura els LEDs a la graella i configura l'ordre del cablejat. Els LEDs que no tinguin ordre no es desaran.<br />Fes doble clic a un color per editar el valor HSV."

@@ -2134,9 +2134,6 @@
     "receiverButtonBindingPhrase": {
         "message": "バインドフレーズ"
     },
-    "receiverButtonSticks": {
-        "message": "コントロールスティック"
-    },
     "receiverDataRefreshed": {
         "message": "RCチューニングデータ <strong>更新しました</strong>"
     },
