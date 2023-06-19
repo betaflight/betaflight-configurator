@@ -2711,7 +2711,7 @@
         "message": "Altitude:"
     },
     "gpsLatLon": {
-        "message": "Latitude / Longitude:",
+        "message": "Current Latitude / Longitude:",
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
@@ -2721,10 +2721,10 @@
         "message": "Speed:"
     },
     "gpsSats": {
-        "message": "Sats:"
+        "message": "Number of Satellites:"
     },
     "gpsDistToHome": {
-        "message": "Dist to Home:"
+        "message": "Distance Current to Home:"
     },
     "gpsHomeLatLon": {
         "message": "Home Latitude / Longitude:",
