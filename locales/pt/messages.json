@@ -995,6 +995,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Construção Local - nenhuma define usada"
     },
+    "initialSetupNotOnline": {
+        "message": "Servidor indisponível"
+    },
     "initialSetupButtonSave": {
         "message": "Gravar"
     },
@@ -2135,7 +2138,8 @@
         "message": "Frase de Bind"
     },
     "receiverButtonSticks": {
-        "message": "Sticks de controlo"
+        "message": "Emulador de Rádio",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "Dados de afinação do RC <strong>atualizados</strong>"
@@ -3440,6 +3444,22 @@
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detetado: <strong>$1</strong> - o dispositivo anterior ainda está a flashar, reconecte para tentar novamente"
+    },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Apagar definições",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Instalar um novo firmware apagará todas as definições. Recomendamos que faça um backup antes de continuar.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Criar Backup",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignorar o risco",
+        "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
         "message": "A controladora de voo pode controlar as cores e efeitos individuais de LEDs numa faixa. <br />Configure LEDs na grade, configure a ordem das soldas e depois conecte os LEDs na sua aeronave de acordo com as posições na grade. LEDs configurados em posições sem número não serão gravados.<br />Faça duplo clique numa cor para editar os valores HSV."

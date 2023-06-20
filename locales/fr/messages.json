@@ -2003,9 +2003,6 @@
     "receiverButtonBindingPhrase": {
         "message": "Phrase de Bind"
     },
-    "receiverButtonSticks": {
-        "message": "Contrôle des manches"
-    },
     "receiverDataRefreshed": {
         "message": "Données de réglage de la Radio Commande <strong> actualisées </ strong>"
     },

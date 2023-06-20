@@ -1684,9 +1684,6 @@
     "receiverButtonBindMessage": {
         "message": "Koppel verzoek verzonden naar de vlucht controller."
     },
-    "receiverButtonSticks": {
-        "message": "Controle sticks"
-    },
     "receiverDataRefreshed": {
         "message": "RC Tuning data <strong>vernieuwd</strong>"
     },

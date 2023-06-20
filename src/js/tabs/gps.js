@@ -195,9 +195,10 @@ gps.initialize = async function (callback) {
             $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
 
+            const gspUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} deg / ${lon.toFixed(4)} deg`);
-            $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} deg`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} ${gspUnitText} / ${lon.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} ${gspUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
 
@@ -287,15 +288,16 @@ gps.initialize = async function (callback) {
                 $('#connect').hide();
 
                 if (FC.GPS_DATA.fix) {
-                   gpsWasFixed = true;
+                    gpsWasFixed = true;
+                    message.action = hasMag ? 'centerMag' : 'center';
                     if (!!frame.contentWindow) {
-                        frame.contentWindow.postMessage(message, '*');
+                      frame.contentWindow.postMessage(message, '*');
                     }
-                   $('#loadmap').show();
-                   $('#waiting').hide();
+                    $('#loadmap').show();
+                    $('#waiting').hide();
                 } else if (!gpsWasFixed) {
-                   $('#loadmap').hide();
-                   $('#waiting').show();
+                    $('#loadmap').hide();
+                    $('#waiting').show();
                 } else {
                     message.action = 'nofix';
                     if (!!frame.contentWindow) {

@@ -995,6 +995,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Budowa lokalna — brak definicji"
     },
+    "initialSetupNotOnline": {
+        "message": "Serwer niedostępny"
+    },
     "initialSetupButtonSave": {
         "message": "Zapisz"
     },
@@ -2135,7 +2138,8 @@
         "message": "Wiążąca fraza"
     },
     "receiverButtonSticks": {
-        "message": "Kontrola drążkiem"
+        "message": "Emulator radiowy",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "Dane dostrajania RC <strong>odświeżone</strong>"
@@ -3441,6 +3445,22 @@
     "firmwareFlasherPreviousDevice": {
         "message": "Wykryto: <strong>$1</strong> - urządzenie nie odpowiada, podłącz się ponownie, aby spróbować ponownie"
     },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Wyczyść ustawienia",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Wgrywanie nowego oprogramowania usunie wszystkie ustawienia. Zdecydowanie zalecamy zapisanie kopii zapasowej przed kontynuacją.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Utwórz kopię zapasową",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignoruj ryzyko",
+        "description": "Ignore creating a backup before actual flashing takes place"
+    },
     "ledStripHelp": {
         "message": "Kontroler lotu może kontrolować kolory i efekty poszczególnych diod LED na pasku. <br /> Konfiguruj diody LED na siatce, skonfiguruj kolejność okablowania, a następnie podłącz diody LED w twoim modelu zgodnie z pozycjami na siatce. Diody LED bez numeru porządkowego nie zostaną zapisane. <br /> Kliknij dwukrotnie kolor, aby edytować wartości HSV."
     },
@@ -4485,7 +4505,7 @@
         "message": "Przełącznik Failsafe (konfiguracja Failsafe w zakładce Tryby)"
     },
     "failsafeKillSwitchHelp": {
-        "message": "Zaznacz tę opcję, aby ustawić przełącznik odpowiedzialny za failsafe (Zakładka Tryby). Będziesz go mugł użyć to testowania funkcji awaryjnego lądowania. <strong>Uwaga:</strong> Uzbrojenie silników jest niemożliwe gdy przełącznik odpowiedzialny za funkcje failsafe jest w pozycji włączonej"
+        "message": "Zaznacz tę opcję, aby ustawić przełącznik odpowiedzialny za failsafe (Zakładka Tryby). Będziesz go mógł użyć tego testowania funkcji awaryjnego lądowania. <strong>Uwaga:</strong> Uzbrojenie silników jest niemożliwe, gdy przełącznik odpowiedzialny za funkcje failsafe jest w pozycji włączonej"
     },
     "failsafeSwitchTitle": {
         "message": "Przełącznik Failsafe"

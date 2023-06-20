@@ -2707,6 +2707,10 @@
     "gpsFixFalse": {
         "message": "False"
     },
+    "gpsPositionUnit": {
+        "message": "deg",
+        "description": "Unit for GPS position."
+    },
     "gpsAltitude": {
         "message": "Altitude:"
     },

@@ -1609,9 +1609,6 @@
     "receiverButtonBindMessage": {
         "message": "Lotu eskaera hegaldi-kontroladoreari bidalita."
     },
-    "receiverButtonSticks": {
-        "message": "Kontrol palankak"
-    },
     "receiverDataRefreshed": {
         "message": "RC sintonizatzeko datuak <strong>berritu</strong>"
     },

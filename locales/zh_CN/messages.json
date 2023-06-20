@@ -1915,9 +1915,6 @@
     "receiverButtonBindMessage": {
         "message": "对频请求已发送到飞行控制器。"
     },
-    "receiverButtonSticks": {
-        "message": "控制摇杆"
-    },
     "receiverDataRefreshed": {
         "message": "RC 调整数据 <strong>已刷新</strong>"
     },

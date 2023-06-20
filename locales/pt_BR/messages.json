@@ -1988,9 +1988,6 @@
     "receiverButtonBindMessage": {
         "message": "Solicitação de vinculo enviado ao controlador de voo."
     },
-    "receiverButtonSticks": {
-        "message": "Controle Virtual"
-    },
     "receiverDataRefreshed": {
         "message": "Dados de afinação do RC <strong>atualizados</strong>"
     },
