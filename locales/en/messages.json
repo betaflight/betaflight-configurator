@@ -1518,6 +1518,10 @@
     "configurationGPS": {
         "message": "GPS Configuration"
     },
+    "configurationGPSHelp": {
+        "message": "Setup protocol for GPS device (remember to setup port in Port tab), use Auto baud (or setup speed at Port tab) and other configuration",
+        "description": "Help text GPS configuration"
+    },
     "configurationGPSProtocol": {
         "message": "Protocol"
     },
@@ -2689,8 +2693,16 @@
     "gpsHead": {
         "message": "GPS"
     },
+    "gpsHeadHelp": {
+        "message": "Show various information releated to GPS. Heading are only shown when Magnetometer are in use",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "Current GPS location"
+    },
+    "gpsMapHeadHelp": {
+        "message": "Show GPS location on the map. Use mouse scroll button to zoom in and out.<br>The location icon shows the north direction when the magnetometer is in use",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
@@ -2734,6 +2746,10 @@
     },
     "gpsSignalStrHead": {
         "message": "GPS Signal Strength"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "Show signal strength, quality and status for each discovered GPS source",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "Signal Strength"
