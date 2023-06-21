@@ -20,7 +20,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: calc(100% - 30px);
+    width: calc(100% - 60px);
 }
 
 .preset_title_panel_star {
@@ -34,6 +34,20 @@
     background-repeat: no-repeat;
     position: absolute;
     right: -6px;
+    top: -5px;
+}
+
+.preset_title_panel_betaflight_official {
+    background-image: url(../../../images/icons/cf_icon_welcome_orange.svg);
+    width: 25px;
+    height: 25px;
+    background-size: cover;
+    border-radius: 5px;
+    padding: 5px;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 26px;
     top: -5px;
 }
 
@@ -70,6 +84,12 @@
 }
 
 .preset_title_panel_keywords_text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preset_title_panel_repository_text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

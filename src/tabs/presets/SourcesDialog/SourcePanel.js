@@ -47,6 +47,12 @@ export default class SourcePanel {
         this._onActivateCallback = onActivateCallback;
     }
 
+    setOnDeactivateCallback(onDeactivateCallback) {
+        // callback with this (SourcePanel) argument
+        // so that consumer knew which panel was clicked on
+        this._onDeactivateCallback = onDeactivateCallback;
+    }
+
     setOnSaveCallback(onSaveCallback) {
         // callback with this (SourcePanel) argument
         // so that consumer knew which panel was clicked on
@@ -65,6 +71,7 @@ export default class SourcePanel {
         this._active = isActive;
         this._domDivSelectedIndicator.toggle(this._active);
         this._domButtonActivate.toggle(!isActive);
+        this._domButtonDeactivate.toggle(isActive);
     }
 
     _setUiOfficial() {
@@ -120,6 +127,7 @@ export default class SourcePanel {
         this._domButtonReset.on("click", () => this._onResetButtonClick());
         this._domButtonDelete.on("click", () => this._onDeleteButtonClick());
         this._domButtonActivate.on("click", () => this._onActivateButtonClick());
+        this._domButtonDeactivate.on("click", () => this._onDeactivateButtonClick());
 
         this._domEditName.on("input", () => this._onInputChange());
         this._domEditUrl.on("input", () => this._onInputChange());
@@ -168,6 +176,12 @@ export default class SourcePanel {
         this._onActivateCallback?.(this);
     }
 
+    _onDeactivateButtonClick() {
+        this._onSaveButtonClick();
+        this.setActive(false);
+        this._onDeactivateCallback?.(this);
+    }
+
     _setIsSaved(isSaved) {
         if (isSaved) {
             this._domButtonSave.addClass(GUI.buttonDisabledClass);
@@ -190,6 +204,7 @@ export default class SourcePanel {
         this._domButtonSave = this._domWrapperDiv.find(".presets_source_panel_save");
         this._domButtonReset = this._domWrapperDiv.find(".presets_source_panel_reset");
         this._domButtonActivate = this._domWrapperDiv.find(".presets_source_panel_activate");
+        this._domButtonDeactivate = this._domWrapperDiv.find(".presets_source_panel_deactivate");
         this._domButtonDelete = this._domWrapperDiv.find(".presets_source_panel_delete");
         this._domDivGithubBranch = this._domWrapperDiv.find(".presets_source_panel_editing_github_branch");
         this._domDivNoEditingName = this._domWrapperDiv.find(".presets_source_panel_no_editing_name");
