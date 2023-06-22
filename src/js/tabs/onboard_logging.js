@@ -366,6 +366,7 @@ onboard_logging.initialize = function (callback) {
                 { text: "Motor" },
                 { text: "GPS" },
                 { text: "RPM" },
+                { text: "Unfiltered Gyro"},
             ];
 
             let fieldsMask = FC.BLACKBOX.blackboxDisabledMask;
