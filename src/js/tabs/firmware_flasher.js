@@ -645,8 +645,8 @@ firmware_flasher.initialize = function (callback) {
                 function detectBoard() {
                     console.log(`Requesting board information`);
                     MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
-                        if (!FC.CONFIG.apiVersion || FC.CONFIG.apiVersion.includes('null')) {
-                            gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
+                        gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
+                        if (FC.CONFIG.apiVersion.includes('null')) {
                             onClose(false); // not supported
                         } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                             onClose(false); // not supported
