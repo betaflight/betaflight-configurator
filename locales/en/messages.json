@@ -5961,6 +5961,20 @@
     "osdDescStatMinRSNR": {
         "message": "Minimum RSNR value"
     },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "Best 3 consecutive laps",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "Best 3 consecutive laps"
+    },
+    "osdTextStatBestLap": {
+        "message": "Best lap",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Best lap"
+    },
     "osdTextStatUnknown": {
         "message": "Unknown $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
