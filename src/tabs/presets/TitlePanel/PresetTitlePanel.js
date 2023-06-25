@@ -125,7 +125,10 @@ export default class PresetTitlePanel
 
         i18n.localizePage();
         this._domWrapperDiv.toggle(true);
-        this._onLoadedCallback?.();
+
+        if (typeof this._onLoadedCallback === 'function') {
+            this._onLoadedCallback();
+        }
     }
 
     _readDom()
