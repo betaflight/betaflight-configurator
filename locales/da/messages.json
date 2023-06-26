@@ -1418,6 +1418,10 @@
     "configurationGPS": {
         "message": "GPS konfiguration"
     },
+    "configurationGPSHelp": {
+        "message": "Indstilling af GPS protokol (husk at indstille port i Porte menu), brug auto baud (eller indstil hastighed i Porte menu) og andre muligheder.",
+        "description": "Help text GPS configuration"
+    },
     "configurationGPSProtocol": {
         "message": "Protokol"
     },
@@ -2588,8 +2592,16 @@
     "gpsHead": {
         "message": "GPS status"
     },
+    "gpsHeadHelp": {
+        "message": "Angiver forskellig GPS information. Kurs vises kun hvis kompas anvendes.",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "Aktuel GPS position"
+    },
+    "gpsMapHeadHelp": {
+        "message": "Angiver GPS prosition på kortet, rul med muse hjul for at zoome ind/ud eller tryk på +/-.<br>Positions ikon viser retning for Nord, når kompas er i anvendelse.",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Tjek Internetforbindelsen"
@@ -2605,6 +2617,10 @@
     },
     "gpsFixFalse": {
         "message": "Falsk"
+    },
+    "gpsPositionUnit": {
+        "message": "grad",
+        "description": "Unit for GPS position."
     },
     "gpsAltitude": {
         "message": "Højde:"
@@ -2629,6 +2645,10 @@
     },
     "gpsSignalStrHead": {
         "message": "GPS signalstyrke"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "Angiver signal styrke, kvalitet og status for hver opdaget GPS station.",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "Signalstyrke"
@@ -6734,6 +6754,10 @@
         "message": "Søgeord:",
         "description": "Hint text in the presets detailed dialog"
     },
+    "presetsSourceRepository": {
+        "message": "Kilde:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
+    },
     "presetsVersions": {
         "message": "Firmware version:",
         "description": "Hint text in the presets detailed dialog"
@@ -6882,6 +6906,10 @@
         "message": "Gør Aktiv",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "Deaktiver !",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "Slet",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6889,6 +6917,10 @@
     "presetsWarningNotOfficialSource": {
         "message": "<span class=\"message-negative\">ADVARSEL!</span> En tredjeparts kilde for predefineret opsætning er valgt.",
         "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">ADVARSEL!</span> Kunne ikke indlæse disse bibiloteker: <b>{{repos}}</b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
         "message": "Kontroller, at du sikkerhedskopierer din nuværende konfiguration ('$t(presetsBackupSave.message)' knap eller via CLI, hvis knappen er deaktiveret) <strong>før</strong> du vælger og anvender predefineret opsætning. Uden sikkerhedskopi er der ingen måde til at vende tilbage til din tidligere konfiguration efter indlæsning af predefineret opsætning.",

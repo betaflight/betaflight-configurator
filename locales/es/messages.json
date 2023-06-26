@@ -1418,6 +1418,10 @@
     "configurationGPS": {
         "message": "Configuración del GPS"
     },
+    "configurationGPSHelp": {
+        "message": "Configura el protocolo para el dispositivo GPS (recuerda configurar el puerto en la pestaña Puertos), activa Velocidad automática (o configura la velocidad en la pestaña Puertos) y otras configuraciones",
+        "description": "Help text GPS configuration"
+    },
     "configurationGPSProtocol": {
         "message": "Protocolo"
     },
@@ -2588,8 +2592,16 @@
     "gpsHead": {
         "message": "GPS"
     },
+    "gpsHeadHelp": {
+        "message": "Muestra información variada relacionada con el GPS. El rumbo sólo se muestra cuando se utiliza un Magnetómetro",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "Localización GPS actual"
+    },
+    "gpsMapHeadHelp": {
+        "message": "Muestra ubicación GPS en el mapa. Utiliza la rueda de desplazamiento del ratón para acercar o alejar el zoom.<br>El icono de la ubicación muestra la dirección norte cuando el magnetómetro está en uso",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Por favor verifica tu conexión a internet"
@@ -2605,6 +2617,10 @@
     },
     "gpsFixFalse": {
         "message": "False"
+    },
+    "gpsPositionUnit": {
+        "message": "grados",
+        "description": "Unit for GPS position."
     },
     "gpsAltitude": {
         "message": "Altitud:"
@@ -2629,6 +2645,10 @@
     },
     "gpsSignalStrHead": {
         "message": "Fuerza Señal GPS"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "Muestra la fuerza de la señal, calidad y estado para cada fuente GPS descubierta",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "Fuerza de la Señal"
@@ -6734,6 +6754,10 @@
         "message": "Palabras clave:",
         "description": "Hint text in the presets detailed dialog"
     },
+    "presetsSourceRepository": {
+        "message": "Origen:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
+    },
     "presetsVersions": {
         "message": "Firmware:",
         "description": "Hint text in the presets detailed dialog"
@@ -6882,6 +6906,10 @@
         "message": "Marcar como activo",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "Deshabilitar",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "Borrar",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6889,6 +6917,10 @@
     "presetsWarningNotOfficialSource": {
         "message": "<span class=\"message-negative\">¡ATENCIÓN!</span>Se ha seleccionado una fuente de preajustes de terceros.",
         "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">¡ATENCIÓN!</span> Error al cargar los siguientes repositorios: <b>{{repos}}</b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
         "message": "Por favor, asegúrate de hacer una copia de seguridad de tu configuración actual (botón '$t(presetsBackupSave.message)' o vía CLI si el botón está desactivado) <strong>antes de</strong> seleccionar y aplicar preajustes. De lo contrario, no hay forma de volver a la configuración anterior después de aplicar preajustes.",
