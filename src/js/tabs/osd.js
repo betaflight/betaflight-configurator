@@ -7,7 +7,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import PortHandler from "../port_handler";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
@@ -1682,6 +1682,16 @@ OSD.constants = {
             text: 'osdTextStatMinRSNR',
             desc: 'osdDescStatMinRSNR',
         },
+        STAT_BEST_3_CONSEC_LAPS : {
+            name: 'STAT_BEST_3_CONSEC_LAPS',
+            text: 'osdTextStatBest3ConsecLaps',
+            desc: 'osdDescStatBest3ConsecLaps',
+        },
+        STAT_BEST_LAP : {
+            name: 'STAT_BEST_LAP',
+            text: 'osdTextStatBestLap',
+            desc: 'osdDescStatBestLap',
+        },
     },
     ALL_WARNINGS: {
         ARMING_DISABLED: {
@@ -1976,6 +1986,13 @@ OSD.chooseFields = function() {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
             F.USED_WH,
             F.MIN_RSNR,
+        ]);
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+            F.STAT_BEST_3_CONSEC_LAPS,
+            F.STAT_BEST_LAP,
         ]);
     }
 
