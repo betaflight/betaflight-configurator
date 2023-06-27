@@ -431,8 +431,18 @@ firmware_flasher.initialize = function (callback) {
         $('select[name="radioProtocols"]').select2();
         $('select[name="telemetryProtocols"]').select2();
         $('select[name="motorProtocols"]').select2();
-        $('select[name="options"]').select2({ closeOnSelect: false });
+        $('select[name="options"]').select2({ tags: false, closeOnSelect: false });
         $('select[name="commits"]').select2({ tags: true });
+
+        $('select[name="options"]')
+        .on('select2:opening', function() {
+            const searchfield = $(this).parent().find('.select2-search__field');
+            searchfield.prop('disabled', false);
+        })
+        .on('select2:closing', function() {
+            const searchfield = $(this).parent().find('.select2-search__field');
+            searchfield.prop('disabled', true);
+        });
 
         $('select[name="radioProtocols"]').on("select2:select", function() {
             const selectedProtocol = $('select[name="radioProtocols"] option:selected').first().val();
@@ -502,6 +512,7 @@ firmware_flasher.initialize = function (callback) {
             'select[name="options"]',
             'select[name="commits"]',
         ];
+
         $(document).on('select2:open', select2Elements.join(','), () => {
             const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
             $(this).one('mouseup keyup', () => {
