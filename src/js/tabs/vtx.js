@@ -947,6 +947,7 @@ vtx.initialize = function (callback) {
         }
         FC.VTX_CONFIG.vtx_power = parseInt($("#vtx_power").val());
         FC.VTX_CONFIG.vtx_pit_mode = $("#vtx_pit_mode").prop('checked');
+        FC.VTX_CONFIG.vtx_pit_mode_frequency = parseInt($("#vtx_pit_mode_frequency").val());
         FC.VTX_CONFIG.vtx_low_power_disarm = parseInt($("#vtx_low_power_disarm").val());
         FC.VTX_CONFIG.vtx_table_clear = true;
 
