@@ -995,6 +995,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "ローカルビルド - 定義なし"
     },
+    "initialSetupNotOnline": {
+        "message": "サーバーが利用できません"
+    },
     "initialSetupButtonSave": {
         "message": "保存"
     },
@@ -1414,6 +1417,10 @@
     },
     "configurationGPS": {
         "message": "GPS 設定"
+    },
+    "configurationGPSHelp": {
+        "message": "GPSデバイスのプロトコルを設定し (【ポート】タブでポート設定することを忘れずに)、オートボー (または【ポート】タブで速度を設定) を使用し、その他の設定を行います。",
+        "description": "Help text GPS configuration"
     },
     "configurationGPSProtocol": {
         "message": "プロトコル"
@@ -2134,6 +2141,10 @@
     "receiverButtonBindingPhrase": {
         "message": "バインドフレーズ"
     },
+    "receiverButtonSticks": {
+        "message": "送信機エミュレーター",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
+    },
     "receiverDataRefreshed": {
         "message": "RCチューニングデータ <strong>更新しました</strong>"
     },
@@ -2581,8 +2592,16 @@
     "gpsHead": {
         "message": "GPS"
     },
+    "gpsHeadHelp": {
+        "message": "GPSに関連する様々な情報を表示します。方位はコンパス使用時のみ表示されます。",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "現在のGPS測位"
+    },
+    "gpsMapHeadHelp": {
+        "message": "地図上にGPS位置を表示します。マウスのスクロールボタンで拡大・縮小できます。<br>コンパスが使用されている場合、位置アイコンは北の方位を示します。",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
@@ -2598,6 +2617,10 @@
     },
     "gpsFixFalse": {
         "message": "失敗"
+    },
+    "gpsPositionUnit": {
+        "message": "度",
+        "description": "Unit for GPS position."
     },
     "gpsAltitude": {
         "message": "高度:"
@@ -2622,6 +2645,10 @@
     },
     "gpsSignalStrHead": {
         "message": "GPS強度"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "検出された各GPS情報の信号強度、品質、ステータスを表示",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "電波強度:"
@@ -3437,6 +3464,22 @@
     },
     "firmwareFlasherPreviousDevice": {
         "message": "検出: <strong>$1</strong> - 以前のデバイスがまだ書き込まれています。再接続してもう一度お試しください。"
+    },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "設定を消去",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "新しいファームウェアをフラッシュすると、すべての設定が消去されます。続行する前にバックアップとして保存することを強く推奨します。",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "バックアップを作成",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "リスクを無視",
+        "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
         "message": "フライトコントローラは、個々のLEDストリップの色や効果を制御できます。<br/>グリッド上にLEDを配置、配線順序を設定し、グリッド位置に従って機体にLEDを取り付けます。 ワイヤーオーダー番号のないLEDは保存されません。<br />HSV値を編集するには、色を選択、ダブルクリックします。"
@@ -6711,6 +6754,10 @@
         "message": "キーワード:",
         "description": "Hint text in the presets detailed dialog"
     },
+    "presetsSourceRepository": {
+        "message": "ソース:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
+    },
     "presetsVersions": {
         "message": "ファームウェア:",
         "description": "Hint text in the presets detailed dialog"
@@ -6859,6 +6906,10 @@
         "message": "有効にする",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "使用不可にする",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "削除",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6866,6 +6917,10 @@
     "presetsWarningNotOfficialSource": {
         "message": "<span class=\"message-negative\">警告！</span> サードパーティのプリセットソースが選択されています。",
         "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">警告！</span>以下のリポジトリの読み込みに失敗しました: <b>{{repos}}</b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
         "message": "プリセットを選択して適用する前に、必ず現在の設定をバックアップしてください。(『$t(presetsBackupSave.message)』ボタン、またはボタンが無効になっている場合はCLI経由にて) バックアップしていない場合、プリセットを適用した後に<strong>以前の設定</strong>に戻すことができません。",

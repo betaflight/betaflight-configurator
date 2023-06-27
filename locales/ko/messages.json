@@ -2606,6 +2606,10 @@
     "gpsFixFalse": {
         "message": "거짓"
     },
+    "gpsPositionUnit": {
+        "message": "도",
+        "description": "Unit for GPS position."
+    },
     "gpsAltitude": {
         "message": "고도:"
     },
@@ -6734,6 +6738,10 @@
         "message": "키워드:",
         "description": "Hint text in the presets detailed dialog"
     },
+    "presetsSourceRepository": {
+        "message": "소스:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
+    },
     "presetsVersions": {
         "message": "펌웨어:",
         "description": "Hint text in the presets detailed dialog"
@@ -6882,6 +6890,10 @@
         "message": "활성화",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "생성이 비활성화됨",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "삭제",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6889,6 +6901,10 @@
     "presetsWarningNotOfficialSource": {
         "message": "<span class=\"message-negative\">경고!</span> 제3자 프리셋 소스가 선택되었습니다.",
         "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">경고!</span> 다음 저장소를 로드하지 못했습니다: <b>{{repos}}</b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
         "message": "프리셋을 선택하고 적용하기 <strong>전에</strong> 현재 환경설정('$t(presetsBackupSave.message)'버튼 또는 버튼이 비활성화된 경우 CLI를 통해)을 백업하십시오. 그렇지 않으면 프리셋을 적용한 후 이전 환경설정으로 돌아갈 수 없습니다.",

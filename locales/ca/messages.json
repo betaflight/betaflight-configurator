@@ -1426,6 +1426,10 @@
     "configurationGPS": {
         "message": "Configuració GPS"
     },
+    "configurationGPSHelp": {
+        "message": "Configureu el protocol per al dispositiu GPS (recordeu configurar el port a la pestanya Port), utilitzeu el baud automàtic (o configureu la velocitat a la pestanya Port) i altres configuracions",
+        "description": "Help text GPS configuration"
+    },
     "configurationGPSProtocol": {
         "message": "Protocol"
     },
@@ -2596,8 +2600,16 @@
     "gpsHead": {
         "message": "GPS"
     },
+    "gpsHeadHelp": {
+        "message": "Mostra informació diversa relacionada amb el GPS. Els títols només es mostren quan el magnetòmetre està en ús",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "Ubicació actual del GPS"
+    },
+    "gpsMapHeadHelp": {
+        "message": "Mostra la ubicació GPS al mapa. Utilitzeu el botó de desplaçament per apropar i allunyar.<br>La icona d'ubicació mostra la direcció nord quan el magnetòmetre està en ús",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Si us plau, revisa la connexió a Internet"
@@ -2613,6 +2625,10 @@
     },
     "gpsFixFalse": {
         "message": "Fals"
+    },
+    "gpsPositionUnit": {
+        "message": "grau/s",
+        "description": "Unit for GPS position."
     },
     "gpsAltitude": {
         "message": "Altitud:"
@@ -2637,6 +2653,10 @@
     },
     "gpsSignalStrHead": {
         "message": "Potència senyal GPS"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "Mostra la intensitat del senyal, la qualitat i l'estat de cada font GPS descoberta",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "Potència Senyal"
@@ -6742,6 +6762,10 @@
         "message": "Paraules claus:",
         "description": "Hint text in the presets detailed dialog"
     },
+    "presetsSourceRepository": {
+        "message": "Font:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
+    },
     "presetsVersions": {
         "message": "Programari:",
         "description": "Hint text in the presets detailed dialog"
@@ -6890,6 +6914,10 @@
         "message": "Activa",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "Fer desactivat",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "Eliminar",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6897,6 +6925,10 @@
     "presetsWarningNotOfficialSource": {
         "message": "<span class=\"message-negative\">ADVERTIMENT!</span> S'ha seleccionat una font de preajustos predeterminada de tercers.",
         "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">ADVERTIMENT!</span> No s'han pogut carregar els repositoris següents: <b>{{repos}}</b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
         "message": "Assegureu-vos de fer una còpia de seguretat de la vostra configuració actual (botó '$t(presetsBackupSave.message)' o mitjançant CLI si el botó està desactivat) <strong>abans</strong> d'escollir i aplicar els valors predefinits. En cas contrari, no hi ha manera de tornar a la configuració anterior després d'aplicar els valors predefinits.",
