@@ -1418,6 +1418,10 @@
     "configurationGPS": {
         "message": "GPS 환경설정"
     },
+    "configurationGPSHelp": {
+        "message": "GPS 장치에 대한 설정 프로토콜(포트 탭에서 포트 설정 기억), 오토 바우드(또는 포트 탭에서 속도 설정) 및 기타 구성",
+        "description": "Help text GPS configuration"
+    },
     "configurationGPSProtocol": {
         "message": "프로토콜"
     },
@@ -2588,8 +2592,16 @@
     "gpsHead": {
         "message": "GPS"
     },
+    "gpsHeadHelp": {
+        "message": "GPS와 관련된 다양한 정보를 표시합니다. 자기계를 사용하는 경우에만 제목이 표시됩니다",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "현재 GPS 위치"
+    },
+    "gpsMapHeadHelp": {
+        "message": "지도에 GPS 위치를 표시합니다. 마우스를 스크롤하여 줌인과 아웃을 사용하세요.<br>위치 아이콘은 자기계가 사용중일 때 북쪽 방향을 표시합니다",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "인터넷 연결 상태를 확인하십시오."
@@ -2633,6 +2645,10 @@
     },
     "gpsSignalStrHead": {
         "message": "GPS 신호 강도"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "각 발견된 GPS 소스의 신호 세기, 품질과 상태를 표시합니다",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "신호 강도"
@@ -5831,6 +5847,20 @@
     },
     "osdDescStatMinRSNR": {
         "message": "최소 RSNR 수치"
+    },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "베스트 3 연속 랩",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "베스트 3 연속 랩"
+    },
+    "osdTextStatBestLap": {
+        "message": "베스트 랩",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "베스트 랩"
     },
     "osdTextStatUnknown": {
         "message": "알 수 없음 $1",

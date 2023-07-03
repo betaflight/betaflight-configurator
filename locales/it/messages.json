@@ -5848,6 +5848,20 @@
     "osdDescStatMinRSNR": {
         "message": "Valore minimo RSNR"
     },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "Migliori 3 giri consecutivi",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "Migliori 3 giri consecutivi"
+    },
+    "osdTextStatBestLap": {
+        "message": "Miglior Giro",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Miglior Giro"
+    },
     "osdTextStatUnknown": {
         "message": "Sconosciuto $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
