@@ -5856,6 +5856,20 @@
     "osdDescStatMinRSNR": {
         "message": "Valor mínim RSNR"
     },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "Les tres millors voltes consecutives",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "Les tres millors voltes consecutives"
+    },
+    "osdTextStatBestLap": {
+        "message": "Millor volta",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Millor volta"
+    },
     "osdTextStatUnknown": {
         "message": "Desconegut $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
