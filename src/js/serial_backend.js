@@ -536,9 +536,10 @@ function setRtc() {
 
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
+
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
 
-        GUI.allowedTabs = GUI.defaultAllowedTabsCloudBuild;
+        GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
 
         for (const tab of GUI.defaultCloudBuildTabOptions) {
             if (FC.CONFIG.buildOptions.some(opt => opt.toLowerCase().includes(tab))) {
@@ -547,7 +548,7 @@ function finishOpen() {
         }
 
     } else {
-        GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
+        GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
     }
 
     if (GUI.isCordova()) {

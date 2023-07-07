@@ -414,7 +414,6 @@ ports.initialize = function (callback) {
         let enableBlackbox = false;
         let enableEsc = false;
         let enableGps = false;
-        let enableVtx = false;
 
         for (const port of FC.SERIAL_CONFIG.ports) {
             const func = port.functions;
@@ -437,10 +436,6 @@ ports.initialize = function (callback) {
 
             if (func.includes('GPS')) {
                 enableGps = true;
-            }
-
-            if (func.includes('IRC_TRAMP') || func.includes('TBS_SMARTAUDIO')) {
-                enableVtx = true;
             }
         }
 
@@ -472,12 +467,6 @@ ports.initialize = function (callback) {
             featureConfig.enable('GPS');
         } else {
             featureConfig.disable('GPS');
-        }
-
-        if (enableVtx) {
-            featureConfig.enable('VTX');
-        } else {
-            featureConfig.disable('VTX');
         }
 
         mspHelper.sendSerialConfig(save_features);

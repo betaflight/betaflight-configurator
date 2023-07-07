@@ -1,5 +1,5 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
+import { API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
 
@@ -40,6 +40,7 @@ const Features = function (config) {
 
     self._features = features;
 
+    // Filter features based on build options
     if (semver.gte(config.apiVersion, API_VERSION_1_45) && config.buildOptions.length) {
         self._features = [];
 
@@ -48,6 +49,11 @@ const Features = function (config) {
                 self._features.push(feature);
             }
         }
+    }
+
+    // Enable vtx feature if not already enabled in firmware. This is needed for the vtx tab to show up.
+    if (semver.gte(config.apiVersion, API_VERSION_1_46) && config.buildOptions.some(opt => opt.includes('VTX'))) {
+        self.enable('VTX');
     }
 
     self._features.sort((a, b) => a.name.localeCompare(b.name, window.navigator.language, { ignorePunctuation: true }));

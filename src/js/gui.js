@@ -34,7 +34,7 @@ class GuiControl {
             'help',
         ];
 
-        this.defaultAllowedTabsCloudBuild = [
+        this.defaultAllowedTabs = [
             'setup',
             'failsafe',
             'power',
@@ -62,7 +62,7 @@ class GuiControl {
             'vtx',
         ];
 
-        this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabsCloudBuild, ...this.defaultCloudBuildTabOptions];
+        this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
 
         this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 
