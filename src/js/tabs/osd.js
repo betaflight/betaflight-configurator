@@ -2099,24 +2099,18 @@ OSD.msp = {
 
                 OSD.updateDisplaySize();
 
-                if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-                    // size * y + x
-                    const xpos = ((bits >> 5) & 0x0020) | (bits & 0x001F);
-                    const ypos = (bits >> 5) & 0x001F;
+                // size * y + x
+                const xpos = ((bits >> 5) & 0x0020) | (bits & 0x001F);
+                const ypos = (bits >> 5) & 0x001F;
 
-                    displayItem.position = positionable ? OSD.data.displaySize.x * ypos + xpos : defaultPosition;
+                displayItem.position = positionable ? OSD.data.displaySize.x * ypos + xpos : defaultPosition;
 
-                    displayItem.isVisible = [];
-                    for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
-                        displayItem.isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) !== 0;
-                    }
-
-                    displayItem.variant = (bits & OSD.constants.VARIANTS) >> 14;
-
-                } else {
-                    displayItem.position = (bits === -1) ? defaultPosition : bits;
-                    displayItem.isVisible = [bits !== -1];
+                displayItem.isVisible = [];
+                for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
+                    displayItem.isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) !== 0;
                 }
+
+                displayItem.variant = (bits & OSD.constants.VARIANTS) >> 14;
 
                 return displayItem;
             },
@@ -2134,21 +2128,15 @@ OSD.msp = {
                 const position = displayItem.position;
                 const variant = displayItem.variant;
 
-                if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-
-                    let packed_visible = 0;
-                    for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
-                        packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
-                    }
-                    const variantSelected = (variant << 14);
-                    const xpos = position % OSD.data.displaySize.x;
-                    const ypos = (position - xpos) / OSD.data.displaySize.x;
-
-                    return packed_visible | variantSelected | ((ypos & 0x001F) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001F);
-                } else {
-                    const realPosition = position === -1 ? 0 : position;
-                    return isVisible[0] ? realPosition : -1;
+                let packed_visible = 0;
+                for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
+                    packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
                 }
+                const variantSelected = (variant << 14);
+                const xpos = position % OSD.data.displaySize.x;
+                const ypos = (position - xpos) / OSD.data.displaySize.x;
+
+                return packed_visible | variantSelected | ((ypos & 0x001F) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001F);
             },
             timer(timer) {
                 return (timer.src & 0x0F) | ((timer.precision & 0x0F) << 4) | ((timer.alarm & 0xFF) << 8);
