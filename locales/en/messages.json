@@ -5298,6 +5298,27 @@
     "osdDescElementSysFanSpeed": {
         "message": "Goggle fan speed rendered by the goggles"
     },
+    "osdTextElementLapTimeCurrent": {
+        "message": "GPS lap time current",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeCurrent": {
+        "message": "Current GPS lap time"
+    },
+    "osdTextElementLapTimePrevious": {
+        "message": "GPS lap time previous",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimePrevious": {
+        "message": "Previous GPS lap time"
+    },
+    "osdTextElementLapTimeBest3": {
+        "message": "GPS lap time best 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest": {
+        "message": "Best GPS lap time"
+    },
     "osdTextElementCraftName": {
         "message": "Craft name",
         "description": "One of the elements of the OSD"
