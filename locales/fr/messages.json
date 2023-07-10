@@ -2325,12 +2325,6 @@
     "gpsAltitude": {
         "message": "Altitude:"
     },
-    "gpsLat": {
-        "message": "Latitude:"
-    },
-    "gpsLon": {
-        "message": "Longitude:"
-    },
     "gpsSpeed": {
         "message": "Vitesse:"
     },

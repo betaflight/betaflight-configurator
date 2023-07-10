@@ -1901,12 +1901,6 @@
     "gpsAltitude": {
         "message": "高度："
     },
-    "gpsLat": {
-        "message": "緯度："
-    },
-    "gpsLon": {
-        "message": "經度："
-    },
     "gpsSpeed": {
         "message": "速度："
     },

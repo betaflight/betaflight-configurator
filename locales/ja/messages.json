@@ -2625,12 +2625,6 @@
     "gpsAltitude": {
         "message": "高度:"
     },
-    "gpsLat": {
-        "message": "緯度:"
-    },
-    "gpsLon": {
-        "message": "経度:"
-    },
     "gpsHeading": {
         "message": "ヘッディング:"
     },

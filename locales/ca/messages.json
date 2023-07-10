@@ -2633,12 +2633,6 @@
     "gpsAltitude": {
         "message": "Altitud:"
     },
-    "gpsLat": {
-        "message": "Latitud:"
-    },
-    "gpsLon": {
-        "message": "Longitud:"
-    },
     "gpsHeading": {
         "message": "Encapçalament:"
     },
