@@ -28,7 +28,7 @@
 export default {
     props: {
         fcTotalSize: { type: Number, default: 100000 },
-        fcUsedSize: { type: Number, default: 42000 },
+        fcUsedSize: { type: Number, default: 82000 },
     },
     computed: {
         suportDataflash() {
@@ -38,6 +38,9 @@ export default {
         freeSpace() {
             if (!this.suportDataflash) return;
             const bytes = this.fcTotalSize - this.fcUsedSize;
+            if(this.fcUsedSize >= this.fcTotalSize) {
+              return '0B';
+            }
             if (bytes < 1024) {
                 return `${bytes}B`;
             }
@@ -50,10 +53,10 @@ export default {
         },
         indicatorWidth() {
             if (!this.suportDataflash) return;
-            return `${
-                100 -
-                ((this.fcTotalSize - this.fcUsedSize) / this.fcTotalSize) * 100
-            }%`;
+            return `${Math.min(
+                (this.fcUsedSize / this.fcTotalSize) * 100,
+                100,
+            )}%`;
         },
     },
 };
