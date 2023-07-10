@@ -102,7 +102,7 @@ export default {
     border-radius: 2px;
     width: 25%;
     display: block;
-    background-color: yellow;
+    background-color: var(--accent);
 }
 .dataflash-contents_global div span {
     position: absolute;
