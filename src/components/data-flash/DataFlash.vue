@@ -38,8 +38,8 @@ export default {
         freeSpace() {
             if (!this.supportDataflash) return;
             const bytes = this.fcTotalSize - this.fcUsedSize;
-            if(this.fcUsedSize >= this.fcTotalSize) {
-              return '0B';
+            if (this.fcUsedSize >= this.fcTotalSize) {
+                return "0B";
             }
             if (bytes < 1024) {
                 return `${bytes}B`;
