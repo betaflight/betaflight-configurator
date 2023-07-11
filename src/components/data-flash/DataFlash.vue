@@ -1,13 +1,13 @@
 <template>
   <div class="data-flash">
     <div
-      v-if="!suportDataflash"
+      v-if="!supportDataflash"
       class="noflash_global i18n-replaced"
     >
       No dataflash <br>chip found
     </div>
     <div
-      v-if="suportDataflash"
+      v-if="supportDataflash"
       class="dataflash-contents_global"
     >
       <div
@@ -31,12 +31,12 @@ export default {
         fcUsedSize: { type: Number, default: 82000 },
     },
     computed: {
-        suportDataflash() {
+        supportDataflash() {
             if (this.fcTotalSize > 0) return true;
             else return false;
         },
         freeSpace() {
-            if (!this.suportDataflash) return;
+            if (!this.supportDataflash) return;
             const bytes = this.fcTotalSize - this.fcUsedSize;
             if(this.fcUsedSize >= this.fcTotalSize) {
               return '0B';
@@ -52,7 +52,7 @@ export default {
             return `${megabytes.toFixed(1)}MB`;
         },
         indicatorWidth() {
-            if (!this.suportDataflash) return;
+            if (!this.supportDataflash) return;
             return `${Math.min(
                 (this.fcUsedSize / this.fcTotalSize) * 100,
                 100,
