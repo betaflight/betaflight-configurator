@@ -2625,12 +2625,6 @@
     "gpsAltitude": {
         "message": "Højde:"
     },
-    "gpsLat": {
-        "message": "Breddegrad:"
-    },
-    "gpsLon": {
-        "message": "Længdegrad:"
-    },
     "gpsHeading": {
         "message": "Kurs:"
     },
@@ -5848,6 +5842,20 @@
     "osdDescStatMinRSNR": {
         "message": "Minimum RSNR værdi"
     },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "Bedst af 3 efterfølgende omgange",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "Bedst af 3 efterfølgende omgange"
+    },
+    "osdTextStatBestLap": {
+        "message": "Bedste omgang",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Bedste omgang"
+    },
     "osdTextStatUnknown": {
         "message": "Ukendt $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5958,7 +5966,7 @@
         "message": "Viser en visualisering af biperen (viser som 4 stjerner)"
     },
     "osdWarningTextCrashFlipMode": {
-        "message": "Vend styrtet drone tilstand",
+        "message": "Vend styrtet drone advarsel",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCrashFlipMode": {

@@ -2613,12 +2613,6 @@
     "gpsAltitude": {
         "message": "Wysokość:"
     },
-    "gpsLat": {
-        "message": "Szerokość:"
-    },
-    "gpsLon": {
-        "message": "Długość:"
-    },
     "gpsHeading": {
         "message": "Kurs:"
     },

@@ -1922,12 +1922,6 @@
     "gpsAltitude": {
         "message": "Altuera:"
     },
-    "gpsLat": {
-        "message": "Latitudea:"
-    },
-    "gpsLon": {
-        "message": "Luzera:"
-    },
     "gpsSpeed": {
         "message": "Abiadura:"
     },

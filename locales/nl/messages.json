@@ -1997,12 +1997,6 @@
     "gpsAltitude": {
         "message": "Hoogte:"
     },
-    "gpsLat": {
-        "message": "Breedtegraad:"
-    },
-    "gpsLon": {
-        "message": "Lengtegraad:"
-    },
     "gpsSpeed": {
         "message": "Snelheid:"
     },

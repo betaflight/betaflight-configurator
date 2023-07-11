@@ -2406,12 +2406,6 @@
     "gpsAltitude": {
         "message": "Altura:"
     },
-    "gpsLat": {
-        "message": "Latitude:"
-    },
-    "gpsLon": {
-        "message": "Lonxitude:"
-    },
     "gpsHeading": {
         "message": "Cabeceira:"
     },

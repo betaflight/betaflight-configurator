@@ -2625,12 +2625,6 @@
     "gpsAltitude": {
         "message": "고도:"
     },
-    "gpsLat": {
-        "message": "위도:"
-    },
-    "gpsLon": {
-        "message": "경도:"
-    },
     "gpsHeading": {
         "message": "진행방향:"
     },

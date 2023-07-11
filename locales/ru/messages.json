@@ -2036,12 +2036,6 @@
     "gpsAltitude": {
         "message": "Высота:"
     },
-    "gpsLat": {
-        "message": "Широта:"
-    },
-    "gpsLon": {
-        "message": "Долгота:"
-    },
     "gpsSpeed": {
         "message": "Скорость:"
     },
