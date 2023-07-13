@@ -51,9 +51,14 @@ const Features = function (config) {
         }
     }
 
-    // Enable vtx feature if not already enabled in firmware. This is needed for the vtx tab to show up.
-    if (semver.gte(config.apiVersion, API_VERSION_1_46) && config.buildOptions.some(opt => opt.includes('VTX'))) {
+    // Enable vtx feature if not already enabled in firmware unless we specifically disable it
+    if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
         self.enable('VTX');
+
+        if (config.buildOptions.length && !config.buildOptions.some(opt => opt.includes('VTX'))) {
+            console.log('VTX feature not enabled in firmware. Disabling VTX tab.');
+            self.disable('VTX');
+        }
     }
 
     self._features.sort((a, b) => a.name.localeCompare(b.name, window.navigator.language, { ignorePunctuation: true }));
