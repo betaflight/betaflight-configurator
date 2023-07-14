@@ -51,6 +51,7 @@ class GuiControl {
             'ports',
             'receiver',
             'sensors',
+            'vtx',
         ];
 
         this.defaultCloudBuildTabOptions = [
@@ -59,7 +60,6 @@ class GuiControl {
             'osd',
             'servos',
             'transponder',
-            'vtx',
         ];
 
         this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];

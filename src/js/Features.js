@@ -1,5 +1,5 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
+import { API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
 
@@ -26,7 +26,6 @@ const Features = function (config) {
         {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING', dependsOn: 'SERVOS'},
         {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true, dependsOn: 'TRANSPONDER'},
         {bit: 22, group: 'other', name: 'AIRMODE'},
-        {bit: 24, group: 'vtx', name: 'VTX', dependsOn: 'VTX'},
         {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
         {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
         {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
@@ -48,16 +47,6 @@ const Features = function (config) {
             if (config.buildOptions.some(opt => opt.includes(feature.dependsOn)) || feature.dependsOn === undefined) {
                 self._features.push(feature);
             }
-        }
-    }
-
-    // Enable vtx feature if not already enabled in firmware unless we specifically disable it
-    if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
-        self.enable('VTX');
-
-        if (config.buildOptions.length && !config.buildOptions.some(opt => opt.includes('VTX'))) {
-            console.log('VTX feature not enabled in firmware. Disabling VTX tab.');
-            self.disable('VTX');
         }
     }
 
