@@ -11,7 +11,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import PortHandler, { usbDevices } from '../port_handler';
-import CONFIGURATOR, { API_VERSION_1_39, API_VERSION_1_45 } from '../data_storage';
+import { API_VERSION_1_39, API_VERSION_1_45 } from '../data_storage';
 import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
@@ -581,6 +581,7 @@ firmware_flasher.initialize = function (callback) {
 
                 function onFinishClose() {
                     MSP.clearListeners();
+                    MSP.disconnect_cleanup();
                 }
 
                 function onClose(success) {
@@ -589,7 +590,6 @@ firmware_flasher.initialize = function (callback) {
                     }
 
                     serial.disconnect(onFinishClose);
-                    MSP.disconnect_cleanup();
                 }
 
                 function onFinish() {
@@ -646,6 +646,7 @@ firmware_flasher.initialize = function (callback) {
                     console.log(`Requesting board information`);
                     MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
                         gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
+
                         if (FC.CONFIG.apiVersion.includes('null')) {
                             onClose(false); // not supported
                         } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
@@ -684,8 +685,7 @@ firmware_flasher.initialize = function (callback) {
                         if (!(serial.connected || serial.connectionId)) {
                             serial.connect(port, {bitrate: baud}, onConnect);
                         } else {
-                            console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId);
-                            serial.disconnect();
+                            console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId, serial.openCanceled);
                         }
                     } else {
                         console.log('Releases not loaded yet');
