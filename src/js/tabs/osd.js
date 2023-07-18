@@ -1508,6 +1508,33 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: `F${FONT.symbol(SYM.TEMPERATURE)}5`,
         },
+        GPS_LAP_TIME_CURRENT: {
+            name: 'GPS_LAP_TIME_CURRENT',
+            text: 'osdTextElementLapTimeCurrent',
+            desc: 'osdDescElementLapTimeCurrent',
+            defaultPosition: -1,
+            draw_order: 540,
+            positionable: true,
+            preview: '1:23.456',
+        },
+        GPS_LAP_TIME_PREVIOUS: {
+            name: 'GPS_LAP_TIME_PREVIOUS',
+            text: 'osdTextElementLapTimePrevious',
+            desc: 'osdDescElementLapTimePrevious',
+            defaultPosition: -1,
+            draw_order: 545,
+            positionable: true,
+            preview: '1:23.456',
+        },
+        GPS_LAP_TIME_BEST3: {
+            name: 'GPS_LAP_TIME_BEST3',
+            text: 'osdTextElementLapTimeBest3',
+            desc: 'osdDescElementLapTimeBest3',
+            defaultPosition: -1,
+            draw_order: 550,
+            positionable: true,
+            preview: '1:23.456',
+        },
     };
 };
 
@@ -1934,6 +1961,14 @@ OSD.chooseFields = function() {
             F.SYS_WARNINGS,
             F.SYS_VTX_TEMP,
             F.SYS_FAN_SPEED,
+        ]);
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.GPS_LAP_TIME_CURRENT,
+            F.GPS_LAP_TIME_PREVIOUS,
+            F.GPS_LAP_TIME_BEST3,
         ]);
     }
 
