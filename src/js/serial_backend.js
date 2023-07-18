@@ -761,7 +761,7 @@ export function reinitializeConnection(callback) {
             clearInterval(reconnect);
             gui_log(i18n.getMessage('deviceReady'));
 
-            if (callback === typeof('function')) {
+            if (typeof callback === 'function') {
                 callback();
             }
         } else {

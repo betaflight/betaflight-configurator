@@ -2,7 +2,6 @@ import semver from 'semver';
 import { i18n } from "../localization";
 import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
-import { reinitializeConnection } from '../serial_backend';
 import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
 import MSP from '../msp';
@@ -296,8 +295,7 @@ ports.initialize = function (callback) {
 
         const pheripheralsSelectElement = $('select[name="function-peripherals"]');
         pheripheralsSelectElement.on('change', function() {
-            let vtxControlSelected = undefined;
-            let mspControlSelected = undefined;
+            let vtxControlSelected, mspControlSelected;
 
             pheripheralsSelectElement.each(function(index, element) {
                 const value = $(element).val();
@@ -476,11 +474,7 @@ ports.initialize = function (callback) {
         }
 
         function save_to_eeprom() {
-            mspHelper.writeConfiguration(function() {
-                GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
-                });
-            });
+            mspHelper.writeConfiguration(true);
         }
     }
 };
