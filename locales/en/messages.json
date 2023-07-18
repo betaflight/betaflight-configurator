@@ -2726,6 +2726,10 @@
     "gpsAltitude": {
         "message": "Altitude:"
     },
+    "gpsLatLon": {
+        "message": "Current Latitude / Longitude:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
     "gpsHeading": {
         "message": "Heading:"
     },
@@ -2733,7 +2737,8 @@
         "message": "Speed:"
     },
     "gpsSats": {
-        "message": "Sats:"
+        "message": "Number of Satellites:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Dist to Home:"
