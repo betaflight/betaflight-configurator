@@ -2296,15 +2296,15 @@
       "message": "AND"
     },
     "auxiliaryHelpMode_3D": {
-        "message": "3D enable/disable",
+        "message": "Enables reversible motor direction to provide negative thrust and allow inverted flight. Throttle becomes -100 to +100 instead of 0 to 100",
         "description": "Help text to 3D mode"
     },
     "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "Enable 'acro trainer' angle limiting in acro mode",
+        "message": "Flight mode which limits craft angle when flying in acro mode",
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Enable motors and flight stabilisation",
+        "message": "Enables motor output and allows the craft to fly",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2312,7 +2312,7 @@
         "description": "Help text to ANGLE mode"
     },
     "auxiliaryHelpMode_ANTIGRAVITY": {
-        "message": "Prevents dips and rolls on fast throttle changes",
+        "message": "Flight mode increases P and I term during fast throttle movements to improve stick tracking and avoid nose drift on fast throttle changes",
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
@@ -2380,7 +2380,7 @@
         "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
-        "message": "Use a number of beeps to indicate the number of GPS satellites found",
+        "message": "Use to indicate the number of GPS satellites found by beeping this number of times",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
@@ -2392,7 +2392,7 @@
         "description": "Help text to HEAD ADJ mode"
     },
     "auxiliaryHelpMode_HEADFREE": {
-        "message": "In this mode, the \"head\" of the multicopter is always pointing to the same direction as when the feature was activated. This means that when the multicopter rotates around the Z axis (yaw), the controls will always respond according the same \"head\" direction.<br>With this mode it is easier to control the multicopter, even fly it with the physical head towards you since the controls always respond the same. This is a friendly mode to new users of multicopters and can prevent losing the control when you don't know the head direction",
+        "message": "Flight mode where yaw is aligned with an external frame of reference (often where the pilot is facing) instead of the craft's. Designed for beginners but rarely used, advise ANGLE mode",
         "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
@@ -2408,7 +2408,7 @@
         "description": "Help text to LEDLOW mode"
     },
     "auxiliaryHelpMode_MAG": {
-        "message": "Heading lock to Magnetometer direction",
+        "message": "Heading lock to Magnetometer direction (compass control)",
         "description": "Help text to MAG mode"
     },
     "auxiliaryHelpMode_MSPOVERRIDE": {
@@ -2460,19 +2460,19 @@
         "description": "Help text to TELEMETRY mode"
     },
     "auxiliaryHelpMode_USER1": {
-        "message": "Use to toggle customized USER1. Check in vendor manual",
+        "message": "Use to toggle customized USER1. Controls arbitrary output via PINIO",
         "description": "Help text to customized USER1 mode"
     },
     "auxiliaryHelpMode_USER2": {
-        "message": "Use to toggle customized USER2. Check in vendor manual",
+        "message": "Use to toggle customized USER2. Controls arbitrary output via PINIO",
         "description": "Help text to customized USER2 mode"
     },
     "auxiliaryHelpMode_USER3": {
-        "message": "Use to toggle customized USER3. Check in vendor manual",
+        "message": "Use to toggle customized USER3. Controls arbitrary output via PINIO",
         "description": "Help text to customized USER3 mode"
     },
     "auxiliaryHelpMode_USER4": {
-        "message": "Use to toggle customized USER4. Check in vendor manual",
+        "message": "Use to toggle customized USER4. Controls arbitrary output via PINIO",
         "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
