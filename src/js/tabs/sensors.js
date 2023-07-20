@@ -22,6 +22,10 @@ sensors.initialize = function (callback) {
             FC.SENSOR_DATA.magnetometer[i] = 0;
             FC.SENSOR_DATA.sonar = 0;
             FC.SENSOR_DATA.altitude = 0;
+        }
+
+        // we now have 8 debug values
+        for (let i = 0; i < 8; i++) {
             FC.SENSOR_DATA.debug[i] = 0;
         }
     }
@@ -262,11 +266,15 @@ sensors.initialize = function (callback) {
             altitude_data = initDataArray(1),
             sonar_data = initDataArray(1),
             debug_data = [
-            initDataArray(1),
-            initDataArray(1),
-            initDataArray(1),
-            initDataArray(1),
-        ];
+                initDataArray(1),
+                initDataArray(1),
+                initDataArray(1),
+                initDataArray(1),
+                initDataArray(1),
+                initDataArray(1),
+                initDataArray(1),
+                initDataArray(1),
+            ];
 
         let gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
         let accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]);
@@ -274,10 +282,14 @@ sensors.initialize = function (callback) {
         const altitudeHelpers = initGraphHelpers('#altitude', samples_altitude_i);
         const sonarHelpers = initGraphHelpers('#sonar', samples_sonar_i);
         const debugHelpers = [
+            initGraphHelpers('#debug0', samples_debug_i),
             initGraphHelpers('#debug1', samples_debug_i),
             initGraphHelpers('#debug2', samples_debug_i),
             initGraphHelpers('#debug3', samples_debug_i),
             initGraphHelpers('#debug4', samples_debug_i),
+            initGraphHelpers('#debug5', samples_debug_i),
+            initGraphHelpers('#debug6', samples_debug_i),
+            initGraphHelpers('#debug7', samples_debug_i),
         ];
 
         const raw_data_text_ements = {
@@ -417,7 +429,7 @@ sensors.initialize = function (callback) {
             }
 
             function update_debug_graphs() {
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 8; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
 
                     addSampleToData(debug_data[i], samples_debug_i, [FC.SENSOR_DATA.debug[i]]);
