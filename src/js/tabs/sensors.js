@@ -182,7 +182,7 @@ sensors.initialize = function (callback) {
     function plot_debug(enable) {
         if (enable) {
             $('.wrapper.debug').show();
-            for (let i = 4; i < 8; i++) {
+            for (let i = 0; i < 8; i++) {
                 $(`svg#debug${i}`).hide();
                 $(`div.plot_control.debug${i}`).hide();
             }
