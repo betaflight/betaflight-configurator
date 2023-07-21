@@ -7,6 +7,8 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import serial from "../serial";
 import * as d3 from 'd3';
+import semver from 'semver';
+import { API_VERSION_1_46 } from "../data_storage";
 
 const sensors = {};
 sensors.initialize = function (callback) {
@@ -14,6 +16,8 @@ sensors.initialize = function (callback) {
     if (GUI.active_tab != 'sensors') {
         GUI.active_tab = 'sensors';
     }
+
+    sensors.debugColumns = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? 8 : 4;
 
     function initSensorData(){
         for (let i = 0; i < 3; i++) {
@@ -24,8 +28,7 @@ sensors.initialize = function (callback) {
             FC.SENSOR_DATA.altitude = 0;
         }
 
-        // we now have 8 debug values
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < sensors.debugColumns; i++) {
             FC.SENSOR_DATA.debug[i] = 0;
         }
     }
@@ -433,7 +436,7 @@ sensors.initialize = function (callback) {
             }
 
             function update_debug_graphs() {
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < sensors.debugColumns; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
 
                     // enable/disable graphs based on debug values
