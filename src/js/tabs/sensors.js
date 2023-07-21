@@ -272,32 +272,22 @@ sensors.initialize = function (callback) {
             mag_data = initDataArray(3),
             altitude_data = initDataArray(1),
             sonar_data = initDataArray(1),
-            debug_data = [
-                initDataArray(1),
-                initDataArray(1),
-                initDataArray(1),
-                initDataArray(1),
-                initDataArray(1),
-                initDataArray(1),
-                initDataArray(1),
-                initDataArray(1),
-            ];
+            debug_data = [];
+
+        for (let i = 0; i < sensors.debugColumns; i++) {
+            debug_data.push(initDataArray(1));
+        }
 
         let gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
         let accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]);
         let magHelpers = initGraphHelpers('#mag', samples_mag_i, [-1, 1]);
         const altitudeHelpers = initGraphHelpers('#altitude', samples_altitude_i);
         const sonarHelpers = initGraphHelpers('#sonar', samples_sonar_i);
-        const debugHelpers = [
-            initGraphHelpers('#debug0', samples_debug_i),
-            initGraphHelpers('#debug1', samples_debug_i),
-            initGraphHelpers('#debug2', samples_debug_i),
-            initGraphHelpers('#debug3', samples_debug_i),
-            initGraphHelpers('#debug4', samples_debug_i),
-            initGraphHelpers('#debug5', samples_debug_i),
-            initGraphHelpers('#debug6', samples_debug_i),
-            initGraphHelpers('#debug7', samples_debug_i),
-        ];
+        const debugHelpers = [];
+
+        for (let i = 0; i < sensors.debugColumns; i++) {
+            debugHelpers.push(initGraphHelpers(`#debug${i}`, samples_debug_i));
+        }
 
         const raw_data_text_ements = {
             x: [],
