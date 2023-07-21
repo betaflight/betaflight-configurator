@@ -182,6 +182,10 @@ sensors.initialize = function (callback) {
     function plot_debug(enable) {
         if (enable) {
             $('.wrapper.debug').show();
+            for (let i = 4; i < 8; i++) {
+                $(`svg#debug${i}`).hide();
+                $(`div.plot_control.debug${i}`).hide();
+            }
         } else {
             $('.wrapper.debug').hide();
         }
@@ -431,6 +435,12 @@ sensors.initialize = function (callback) {
             function update_debug_graphs() {
                 for (let i = 0; i < 8; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
+
+                    // enable/disable graphs based on debug values
+                    if (FC.SENSOR_DATA.debug[i]) {
+                        $(`svg#debug${i}`).show();
+                        $(`div.plot_control.debug${i}`).show();
+                    }
 
                     addSampleToData(debug_data[i], samples_debug_i, [FC.SENSOR_DATA.debug[i]]);
                     drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);
