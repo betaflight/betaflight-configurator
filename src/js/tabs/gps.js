@@ -259,9 +259,30 @@ gps.initialize = async function (callback) {
                     } else {
                         rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
                         rowContent += `<td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>`;
-                        const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
-                        const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
-                        const healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
+
+                        let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
+                        let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
+                        let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
+
+                        // Add color to the text
+                        if (quality.startsWith('fully locked')) {
+                            quality = `<span class="colorToggle ready">${quality}</span>`;
+                        } else {
+                            quality = `<span class="colorToggle">${quality}</span>`;
+                        }
+
+                        if (used.startsWith('used')) {
+                            used = `<span class="colorToggle ready">${used}</span>`;
+                        } else {
+                            used = `<span class="colorToggle">${used}</span>`;
+                        }
+
+                        if (healthy.startsWith('healthy')) {
+                            healthy = `<span class="colorToggle ready">${healthy}</span>`;
+                        } else {
+                            healthy = `<span class="colorToggle">${healthy}</span>`;
+                        }
+
                         rowContent += `<td>${quality} | ${used} | ${healthy}</td>`;
                     }
                     eSsTable.append(`<tr>${rowContent}</tr>`);
