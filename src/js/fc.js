@@ -280,7 +280,7 @@ const FC = {
             altitude:                   0,
             sonar:                      0,
             kinematics:                 [0.0, 0.0, 0.0],
-            debug:                      [0, 0, 0, 0],
+            debug:                      [0, 0, 0, 0, 0, 0, 0, 0],
         };
 
         this.MOTOR_DATA =               Array.from({length: 8});

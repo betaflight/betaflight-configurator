@@ -668,7 +668,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('Voltage config saved');
                 break;
             case MSPCodes.MSP_DEBUG:
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 8; i++) {
                     FC.SENSOR_DATA.debug[i] = data.read16();
                 }
                 break;

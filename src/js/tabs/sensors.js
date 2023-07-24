@@ -7,6 +7,8 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import serial from "../serial";
 import * as d3 from 'd3';
+import semver from 'semver';
+import { API_VERSION_1_46 } from "../data_storage";
 
 const sensors = {};
 sensors.initialize = function (callback) {
@@ -15,6 +17,8 @@ sensors.initialize = function (callback) {
         GUI.active_tab = 'sensors';
     }
 
+    sensors.debugColumns = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? 8 : 4;
+
     function initSensorData(){
         for (let i = 0; i < 3; i++) {
             FC.SENSOR_DATA.accelerometer[i] = 0;
@@ -22,6 +26,9 @@ sensors.initialize = function (callback) {
             FC.SENSOR_DATA.magnetometer[i] = 0;
             FC.SENSOR_DATA.sonar = 0;
             FC.SENSOR_DATA.altitude = 0;
+        }
+
+        for (let i = 0; i < sensors.debugColumns; i++) {
             FC.SENSOR_DATA.debug[i] = 0;
         }
     }
@@ -178,6 +185,10 @@ sensors.initialize = function (callback) {
     function plot_debug(enable) {
         if (enable) {
             $('.wrapper.debug').show();
+            for (let i = 0; i < 8; i++) {
+                $(`svg#debug${i}`).hide();
+                $(`div.plot_control.debug${i}`).hide();
+            }
         } else {
             $('.wrapper.debug').hide();
         }
@@ -261,24 +272,22 @@ sensors.initialize = function (callback) {
             mag_data = initDataArray(3),
             altitude_data = initDataArray(1),
             sonar_data = initDataArray(1),
-            debug_data = [
-            initDataArray(1),
-            initDataArray(1),
-            initDataArray(1),
-            initDataArray(1),
-        ];
+            debug_data = [];
+
+        for (let i = 0; i < sensors.debugColumns; i++) {
+            debug_data.push(initDataArray(1));
+        }
 
         let gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
         let accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]);
         let magHelpers = initGraphHelpers('#mag', samples_mag_i, [-1, 1]);
         const altitudeHelpers = initGraphHelpers('#altitude', samples_altitude_i);
         const sonarHelpers = initGraphHelpers('#sonar', samples_sonar_i);
-        const debugHelpers = [
-            initGraphHelpers('#debug1', samples_debug_i),
-            initGraphHelpers('#debug2', samples_debug_i),
-            initGraphHelpers('#debug3', samples_debug_i),
-            initGraphHelpers('#debug4', samples_debug_i),
-        ];
+        const debugHelpers = [];
+
+        for (let i = 0; i < sensors.debugColumns; i++) {
+            debugHelpers.push(initGraphHelpers(`#debug${i}`, samples_debug_i));
+        }
 
         const raw_data_text_ements = {
             x: [],
@@ -417,8 +426,14 @@ sensors.initialize = function (callback) {
             }
 
             function update_debug_graphs() {
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < sensors.debugColumns; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
+
+                    // enable/disable graphs based on debug values
+                    if (FC.SENSOR_DATA.debug[i]) {
+                        $(`svg#debug${i}`).show();
+                        $(`div.plot_control.debug${i}`).show();
+                    }
 
                     addSampleToData(debug_data[i], samples_debug_i, [FC.SENSOR_DATA.debug[i]]);
                     drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);

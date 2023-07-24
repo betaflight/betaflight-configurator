@@ -320,6 +320,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "GPS_RESCUE_VELOCITY"},
                 {text: "GPS_RESCUE_HEADING"},
                 {text: "GPS_RESCUE_TRACKING"},
+                {text: "GPS_UNIT_CONNECTION"},
                 {text: "ATTITUDE"},
                 {text: "VTX_MSP"},
                 {text: "GPS_DOP"},
@@ -329,6 +330,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "ANGLE_TARGET"},
                 {text: "CURRENT_ANGLE"},
                 {text: "DSHOT_TELEMETRY_COUNTS"},
+                {text: "RPM_LIMIT"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
