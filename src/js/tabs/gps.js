@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43 } from '../data_storage';
+import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
@@ -132,7 +132,10 @@ gps.initialize = async function (callback) {
 
         }).val(FC.GPS_CONFIG.provider).change();
 
-        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        // auto_baud is no longer used in API 1.46
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        }
 
         gpsAutoConfigElement.on('change', function () {
             const checked = $(this).is(":checked");
@@ -146,7 +149,7 @@ gps.initialize = async function (callback) {
             const enableSbasVisible = checked && ubloxSelected;
             gpsUbloxSbasGroup.toggle(enableSbasVisible);
 
-            gpsAutoBaudGroup.toggle(ubloxSelected || mspSelected);
+            gpsAutoBaudGroup.toggle((ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46));
             gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
 
         }).prop('checked', FC.GPS_CONFIG.auto_config === 1).trigger('change');
