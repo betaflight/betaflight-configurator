@@ -194,7 +194,11 @@
         "description": "Don't translate!!!"
     },
     "language_ru": {
-        "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A",
+        "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+        "description": "Don't translate!!!"
+    },
+    "language_uk": {
+        "message": "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
         "description": "Don't translate!!!"
     },
     "language_zh_CN": {
