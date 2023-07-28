@@ -2640,13 +2640,11 @@ MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
 };
 
 MspHelper.prototype.sendLedStripConfigValues = function(onCompleteCallback) {
-    {
-        const buffer = [];
-        buffer.push8(FC.LED_CONFIG_VALUES.brightness);
-        buffer.push8(FC.LED_CONFIG_VALUES.rainbow_delta);
-        buffer.push8(FC.LED_CONFIG_VALUES.rainbow_freq);
-        MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
-    }
+    const buffer = [];
+    buffer.push8(FC.LED_CONFIG_VALUES.brightness);
+    buffer.push8(FC.LED_CONFIG_VALUES.rainbow_delta);
+    buffer.push8(FC.LED_CONFIG_VALUES.rainbow_freq);
+    MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
 
 MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {
