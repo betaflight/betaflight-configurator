@@ -180,19 +180,9 @@ sensors.initialize = function (callback) {
         }
     }
 
-    // Not all debug modes have 8 columns so we hide [4:8] until we detect data
-    // function toggleDebugColumns(visibility) {
-    //     sensors.debugColumnsDisabled = !visibility;
-    //     for (let i = 4; i < 8; i++) {
-    //         $(`svg#debug${i}`).toggle(visibility);
-    //         $(`div.plot_control.debug${i}`).toggle(visibility);
-    //     }
-    // }
-
     function plot_debug(enable) {
         if (enable) {
             $('.wrapper.debug').show();
-            // toggleDebugColumns(false);
         } else {
             $('.wrapper.debug').hide();
         }
@@ -443,13 +433,6 @@ sensors.initialize = function (callback) {
             function update_debug_graphs() {
                 for (let i = 0; i < sensors.debugColumns; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
-
-                    // if (sensors.debugColumnsDisabled) {
-                    //     if (FC.SENSOR_DATA.debug[i] && i > 4) {
-                    //         toggleDebugColumns(true);
-                    //     }
-                    // }
-
                     addSampleToData(debug_data[i], samples_debug_i, [FC.SENSOR_DATA.debug[i]]);
                     drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);
                     raw_data_text_ements.x[5 + i].text(FC.SENSOR_DATA.debug[i]);
