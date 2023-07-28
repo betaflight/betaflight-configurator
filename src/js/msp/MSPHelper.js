@@ -1297,7 +1297,15 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_LED_STRIP_MODECOLOR:
                 console.log('Led strip mode colors saved');
                 break;
-
+            case MSPCodes.MSP_LED_STRIP_CONFIG_VALUES:
+                FC.LED_CONFIG_VALUES = {
+                    brightness: data.readU8(),
+                    rainbow_delta: data.readU8(),
+                    rainbow_freq: data.readU8(),
+                };
+                break;
+            case MSPCodes.MSP_SET_LED_STRIP_CONFIG_VALUES:
+                break;
             case MSPCodes.MSP_DATAFLASH_SUMMARY:
                 if (data.byteLength >= 13) {
                     flags = data.readU8();
@@ -2628,6 +2636,16 @@ MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
         }
 
         MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_MODECOLOR, buffer, false, nextFunction);
+    }
+};
+
+MspHelper.prototype.sendLedStripConfigValues = function(onCompleteCallback) {
+    {
+        const buffer = [];
+        buffer.push8(FC.LED_CONFIG_VALUES.brightness);
+        buffer.push8(FC.LED_CONFIG_VALUES.rainbow_delta);
+        buffer.push8(FC.LED_CONFIG_VALUES.rainbow_freq);
+        MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
     }
 };
 

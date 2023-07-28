@@ -127,6 +127,7 @@ const FC = {
     LED_COLORS: null,
     LED_MODE_COLORS: null,
     LED_STRIP: null,
+    LED_CONFIG_VALUES: [],
     MISC: null, // DEPRECATED
     MIXER_CONFIG: null,
     MODE_RANGES: null,

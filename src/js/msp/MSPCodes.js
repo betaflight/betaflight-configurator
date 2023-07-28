@@ -168,6 +168,8 @@ const MSPCodes = {
 
     MSP_MULTIPLE_MSP:               230,
 
+    MSP_SET_LED_STRIP_CONFIG_VALUES:231,
+    MSP_LED_STRIP_CONFIG_VALUES:    232,
     MSP_MODE_RANGES_EXTRA:          238,
     MSP_SET_ACC_TRIM:               239,
     MSP_ACC_TRIM:                   240,

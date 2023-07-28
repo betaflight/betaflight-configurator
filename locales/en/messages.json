@@ -3670,6 +3670,27 @@
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Brightness",
+        "description": "Brightness slider label"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Maximum brightness percent of the LEDs."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "Delta slider label"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Hue difference between each LEDs."
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Frequency",
+        "description": "Frequency slider label"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Frequency of the color change, in other terms the speed of the effect."
+    },
     "ledStripFunctionSection": {
         "message": "LED Functions"
     },
