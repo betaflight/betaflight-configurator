@@ -142,6 +142,9 @@ auxiliary.initialize = function (callback) {
             linkList.append(linkOption);
         }
 
+        // sort linkedTo options, empty option on top
+        linkList.sortSelect();
+
         linkOptionTemplate.val(0);
 
         configureLogicList(linkTemplate);
