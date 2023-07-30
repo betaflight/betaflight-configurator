@@ -25,39 +25,25 @@ export default {
     props: {
         lastReceivedTimestamp: { type: Number, default: 0 },
         mode: { type: Number, default: 0 },
-        auxConfig: { type: Object, default: null },
+        auxConfig: { type: Array, default: null },
     },
     computed: {
         setActiveArmed() {
-            if (!this.auxConfig?.length) {
-                return false;
-            }
-            if (
-                this.auxConfig.includes("ARM") &&
-                bit_check(this.mode, this.auxConfig.indexOf("ARM"))
-            ) {
-                return true;
-            }
-            return false;
+            return (
+                this.auxConfig?.length &&
+                this.auxConfig?.includes("ARM") &&
+                bit_check(this.mode, this.auxConfig?.indexOf("ARM"))
+            );
         },
         setFailsafeActive() {
-            if (!this.auxConfig?.length) {
-                return false;
-            }
-            if (
-                this.auxConfig.includes("FAILSAFE") &&
-                bit_check(this.mode, this.auxConfig.indexOf("FAILSAFE"))
-            ) {
-                return true;
-            }
-            return false;
+            return (
+                this.auxConfig?.length &&
+                this.auxConfig?.includes("FAILSAFE") &&
+                bit_check(this.mode, this.auxConfig?.indexOf("FAILSAFE"))
+            );
         },
         setActiveLink() {
-            const active = performance.now() - this.lastReceivedTimestamp < 300;
-            if (active) {
-                return true;
-            }
-            return false;
+            return (performance.now() - this.lastReceivedTimestamp < 300);
         },
     },
 };
