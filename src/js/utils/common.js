@@ -91,6 +91,18 @@ export function getTextWidth(text) {
     return Math.ceil(context.measureText(text).width);
 }
 
+export function urlExists(url) {
+    let http = new XMLHttpRequest ();
+
+    http.open('HEAD', url, false);
+    http.send();
+    if (http.status != 404) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 /**
  * Returns jquery sorted option list with optional value staying on top of the list.
  *
