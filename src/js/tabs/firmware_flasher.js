@@ -109,7 +109,7 @@ firmware_flasher.initialize = function (callback) {
 
             // Wiki link: #wiki found in unified target configuration, if board description exist or generel board missing
             let urlWiki = 'https://betaflight.com/docs/wiki/boards/missing';                // generel board missing
-            const urlBoard = `https://betaflight.com/docs/wiki/boards/'${summary.target}`; // board description
+            const urlBoard = `https://betaflight.com/docs/wiki/boards/${summary.target}`; // board description
             if (summary.wiki === undefined) {                                               // override if #wiki exist in unified target configuration
                 if (urlExists(urlBoard)) {
                     urlWiki = urlBoard;
