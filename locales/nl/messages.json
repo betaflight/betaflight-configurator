@@ -2000,9 +2000,6 @@
     "gpsSpeed": {
         "message": "Snelheid:"
     },
-    "gpsSats": {
-        "message": "Satelieten:"
-    },
     "gpsDistToHome": {
         "message": "Afst naar Home:"
     },

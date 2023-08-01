@@ -1904,9 +1904,6 @@
     "gpsSpeed": {
         "message": "速度："
     },
-    "gpsSats": {
-        "message": "衛星數："
-    },
     "gpsDistToHome": {
         "message": "離起飛位置距離："
     },

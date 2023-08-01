@@ -2437,9 +2437,6 @@
     "gpsSpeed": {
         "message": "Geschwindigkeit"
     },
-    "gpsSats": {
-        "message": "Satelliten:"
-    },
     "gpsDistToHome": {
         "message": "Entfernung zu Start:"
     },

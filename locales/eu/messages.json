@@ -1925,9 +1925,6 @@
     "gpsSpeed": {
         "message": "Abiadura:"
     },
-    "gpsSats": {
-        "message": "Sateliteak:"
-    },
     "gpsDistToHome": {
         "message": "Dist. Etxera:"
     },

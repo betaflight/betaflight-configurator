@@ -41,13 +41,13 @@
         "message": "Program indstillinger"
     },
     "connect": {
-        "message": "Tilslut"
+        "message": "Tilslut konfigurering"
     },
     "connecting": {
         "message": "Tilslutter"
     },
     "disconnect": {
-        "message": "Afbryd"
+        "message": "Afbryd konfigurering"
     },
     "portsSelectManual": {
         "message": "Manuelt valg"
@@ -84,7 +84,7 @@
         "message": "Autotilslut er slået fra - Du skal selv vælge den korrekte serielle port og klikke på knappen \"Tilslut\""
     },
     "expertMode": {
-        "message": "Aktiver ekspert tilstand"
+        "message": "Ekspert tilstand"
     },
     "expertModeDescription": {
         "message": "Vis valg for ekspert tilstand"
@@ -286,7 +286,7 @@
         "message": "Kanal justeringer"
     },
     "tabAuxiliary": {
-        "message": "Kanal tilstande"
+        "message": "Kanaler"
     },
     "logActionHide": {
         "message": "Skjul log"
@@ -2161,10 +2161,10 @@
         "message": "Aktivér kontroller"
     },
     "auxiliaryHelp": {
-        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og/eller kanalområder (kanal områder understøttes fra BF 4.0). Benyt <strong>Tilknyt kanal</strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med signal mellem et min/maks område, aktiverer tilstanden. Benyt et <strong>område</strong> for at aktivere en tilstand, når et andet område er aktiveret. <strong>Undtagelser:</strong> Aktiver(ARM) kan ikke tilknyttes til eller fra en anden tilstand, tilstande kan ikke tilknyttes til andre tilstande, som er opsat med en tilknytning (kædede tilknytninger). Flere områder/tilknytninger kan benyttes til at aktivere enhver tilstand.<br>Er der defineret mere end ét område/tilknytning for en tilstand, kan hver af dem opsættes til <strong>OG</strong> eller <strong>ELLER</strong>. En tilstand aktiveres, når: <br />- ALLE <strong>OG</strong> områder/tilknytninger er aktive; <br /> - ELLER mindst ét <strong>ELLER</strong> område/tilknytning er aktivt.<br /> <br />Husk at gemme dine indstillinger med knappen Gem."
+        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og/eller kanalområder (kanal områder understøttes fra BF 4.0).<br>Benyt <strong>Tilknyt kanal</strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med signal mellem et min/maks område, aktiverer tilstanden. Benyt et <strong>Tilknyt kanal område</strong> for at aktivere en tilstand, når et andet område er aktiveret.<br><strong>Undtagelser:</strong> Aktiver(ARM) kan ikke tilknyttes til eller fra en anden tilstand, tilstande kan ikke tilknyttes til andre tilstande, som er opsat med en tilknytning (kædede tilknytninger). Flere områder/tilknytninger kan benyttes til at aktivere enhver tilstand.<br>Er der defineret mere end ét område/tilknytning for en tilstand, kan hver af dem opsættes til <strong>OG</strong> eller <strong>ELLER</strong>. En tilstand aktiveres, når: <br />- ALLE <strong>OG</strong> områder/tilknytninger er aktive; <br /> - ELLER mindst ét <strong>ELLER</strong> område/tilknytning er aktivt.<br />Husk at gemme dine indstillinger med knappen Gem."
     },
     "auxiliaryToggleUnused": {
-        "message": "Skjul ubrugte kanal tilstande"
+        "message": "Skjul ubrugte kanaler"
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -2195,56 +2195,24 @@
         "message": "OG"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Aktiver / deaktiver drone",
+        "message": "Aktiverer motorer og aktiverer at fartøj kan flyve",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
         "message": "I denne auto-nivelleret tilstand styrer krængror og højderor vinklen mellem den relevante akse og den lodrette akse, for at udjævne flyning ved blot at lade pindende være centreret",
         "description": "Help text to ANGLE mode"
     },
-    "auxiliaryHelpMode_HORIZON": {
-        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning).<br>Når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
-        "description": "Help text to HORIZON mode"
-    },
-    "auxiliaryHelpMode_MAG": {
-        "message": "Lås kurs i kompas retning",
-        "description": "Help text to MAG mode"
-    },
-    "auxiliaryHelpMode_HEADFREE": {
-        "message": "I denne tilstand pegerkursen for dronen altid i samme retning som da funktionen blev aktiveret. Det betyder, at når dronen roterer rundt om Z-aksen (sideror), vil kontrollerne altid reagere mod samme kurs.<br>Med denne tilstand er det nemmere at styre dronen, fx kan du flyve med kursen mod dig, da kontrollerne altid reagerer omgående. Dette er en venlig tilstand til nye brugere af droner og kan forhindre du mister kontrollen, hvis du ikke kender dronens kurs",
-        "description": "Help text to HEADFREE mode"
-    },
-    "auxiliaryHelpMode_PASSTHRU": {
-        "message": "Gennemstiller krængeror, sideror og højderor fra radio sender direkte til servo",
-        "description": "Help text to PASSTHRU mode"
-    },
-    "auxiliaryHelpMode_FAILSAFE": {
-        "message": "Aktiver mauelt fejlsikring trin 2",
-        "description": "Help text to FAILSAFE mode"
-    },
-    "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Aktiver 'GPS redning' for at returnere fartøjet til det sted, hvor det sidst var aktiveret (Home)",
-        "description": "Help text to GPS RESCUE mode"
-    },
-    "auxiliaryHelpMode_HEADADJ": {
-        "message": "Kurs korrektion - indstiller ny sideror værdi for HEADFREE tilstand",
-        "description": "Help text to HEAD ADJ mode"
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "I standard mixer tilstand, når krængror, højderor og sideror beregnes og styrer en motor, vil alle motorer blive ændret ens. Når en motor går under minimum, bliver styring reduceret. Fx hvis du har din gas lige over minimum og forsøger en hurtig krængning - da to motorer ikke kan gå under minimum, vil du hovedsagelig kun få halvdelen af kraften (halvdelen af din PID værdi). Hvis dit input ville have bedt om mere end 100% forskel mellem de høje og lave motores hastighed ville de de langsomm motorer blive reduceret og symmetrien i motorens balance vil blive brudt",
+        "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",
         "description": "Help text to BEEPER mode"
     },
-    "auxiliaryHelpMode_LEDLOW": {
-        "message": "Tænd eller sluk for LED lys",
-        "description": "Help text to LEDLOW mode"
-    },
-    "auxiliaryHelpMode_OSDDISABLE": {
-        "message": "Aktiver/deaktiver On-Screen-Display - OSD",
-        "description": "Help text to OSD mode"
-    },
-    "auxiliaryHelpMode_TELEMETRY": {
-        "message": "Aktiver telemetri via kontakt",
-        "description": "Help text to TELEMETRY mode"
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Deaktiver / aktiver bippen, heruder advarsler, status og anden bippen.",
+        "description": "Help text to BEEPERMUTE mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "Aktiver Blackbox logning",
@@ -2254,13 +2222,9 @@
         "message": "Slet BlackBox log",
         "description": "Help text to BLACKBOX ERASE mode"
     },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "I standard mixer tilstand, når krængror, højderor og sideror beregnes og styrer en motor, vil alle motorer blive ændret ens. Når en motor går under minimum, bliver styring reduceret. Fx hvis du har din gas lige over minimum og forsøger en hurtig krængning - da to motorer ikke kan gå under minimum, vil du hovedsagelig kun få halvdelen af kraften (halvdelen af din PID værdi). Hvis dit input ville have bedt om mere end 100% forskel mellem de høje og lave motores hastighed ville de de langsomm motorer blive reduceret og symmetrien i motorens balance vil blive brudt",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_FPVANGLEMIX": {
-        "message": "Styrer sideror bevægelse i forhold til et FPV-kamera monteret i en forud indstillet vinkel",
-        "description": "Help text to FPV ANGLE MIX mode"
+    "auxiliaryHelpMode_CALIB": {
+        "message": "Start kalibrering under flyvning",
+        "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
         "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 1. Se i leverandørs manual",
@@ -2274,65 +2238,93 @@
         "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
-    "auxiliaryHelpMode_USER1": {
-        "message": "Brug til at skifte brugerdefineret USER1. Se i leverandør manual",
-        "description": "Help text to customized USER1 mode"
-    },
-    "auxiliaryHelpMode_USER2": {
-        "message": "Brug til at skifte brugerdefineret USER2. Se i leverandør manual",
-        "description": "Help text to customized USER2 mode"
-    },
-    "auxiliaryHelpMode_USER3": {
-        "message": "Brug til at skifte brugerdefineret USER3. Se i leverandør manual",
-        "description": "Help text to customized USER3 mode"
-    },
-    "auxiliaryHelpMode_USER4": {
-        "message": "Brug til at skifte brugerdefineret USER4. Se i leverandør manual",
-        "description": "Help text to customized USER4 mode"
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Aktiver mauelt fejlsikring trin 2",
+        "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Vender motor retning for at vende en styrtet drone (kun ved DShot protokol)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
-    "auxiliaryHelpMode_PREARM": {
-        "message": "Ved aktivering, skal denne kontakt også aktiveres, før dronen reelt er klar til flyvning = helt aktiveret",
-        "description": "Help text to PREARM mode"
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Styrer sideror bevægelse i forhold til et FPV-kamera monteret i en forud indstillet vinkel",
+        "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
-        "message": "Fortæl med antal bip, hvormange GPS satellitter som er fundet",
+        "message": "Angiver antallet af GPS-satellitter, der er fundet ved at bippe dette antal gange",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
-    "auxiliaryHelpMode_VTXPITMODE": {
-        "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
-        "description": "Help text to VTX PIT MODE mode"
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Aktiver 'GPS redning' for at returnere fartøjet til det sted, hvor det sidst var aktiveret (Home)",
+        "description": "Help text to GPS RESCUE mode"
     },
-    "auxiliaryHelpMode_PARALYZE": {
-        "message": "Deaktiver permanent en styrtet drone. For at aktivere skal strøm slukkes helt",
-        "description": "Help text to PARALYZE mode"
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Kurs korrektion - indstiller ny sideror værdi for HEADFREE tilstand",
+        "description": "Help text to HEAD ADJ mode"
     },
-    "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "Aktiver ACRO træner vinkelbegrænsning i ACRO tilstand",
-        "description": "Help text to ACRO TRAINER mode"
-    },
-    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
-        "message": "Deaktiver kontrol af VTX indstillinger via OSD",
-        "description": "Help text to VTX CONTROL DISABLE mode"
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning).<br>Når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
+        "description": "Help text to HORIZON mode"
     },
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "Ræs assistance system",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
-        "message": "Deaktiver/aktiver pind kommandoer",
-        "description": "Help text to STICK COMMANDS DISABLE mode"
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Tænd eller sluk for LED lys",
+        "description": "Help text to LEDLOW mode"
     },
-    "auxiliaryHelpMode_BEEPERMUTE": {
-        "message": "Deaktiver / aktiver bippen, heruder advarsler, status og anden bippen.",
-        "description": "Help text to BEEPERMUTE mode"
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Aktiver/deaktiver On-Screen-Display - OSD",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Gennemstiller krængeror, sideror og højderor fra radio sender direkte til servo",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Deaktiver permanent en styrtet drone. For at aktivere skal strøm slukkes helt",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "Tænd eller sluk for PIDAUDIO",
+        "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Ved aktivering, skal denne kontakt også aktiveres, før dronen reelt er klar til flyvning = helt aktiveret",
+        "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
         "message": "Tilføjet i BF4.4, så du kan vise 'KLAR' i OSD ved hjælp af en kontakt. Dette er en forbedring til ræs, hvor alle piloters video vises på en central skærm. Piloten kan vippe en kontakt for at indikere, at han er klar til at flyve, og ordet READY vises på deres OSD. Løbsinstruktøren kan derefter se om alle piloter er klar, ved at se på den centrale skærm. Ved aktivering forsvinder READY teksten",
         "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Deaktiver/aktiver pind kommandoer",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "Tænd eller sluk for SERVO 1",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "Tænd eller sluk for SERVO 2",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "Tænd eller sluk for SERVO 3",
+        "description": "Help text to SERVO3 mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Aktiver telemetri via kontakt",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Deaktiver kontrol af VTX indstillinger via OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "Opsætning af kanal justeringer. Se 'in-flight adjustments' delen af manualen for detaljer. Ændringer gemmes Ikke automatisk."
@@ -2600,7 +2592,7 @@
         "message": "Aktuel GPS position"
     },
     "gpsMapHeadHelp": {
-        "message": "Angiver GPS prosition på kortet, rul med muse hjul for at zoome ind/ud eller tryk på +/-.<br>Positions ikon viser retning for Nord, når kompas er i anvendelse.",
+        "message": "Angiver GPS prosition på kortet, rul med muse hjul for at zoome ind/ud eller tryk på +/-.<br>Positions ikon viser retning for Nord, når kompas anvendes.",
         "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
@@ -2625,6 +2617,10 @@
     "gpsAltitude": {
         "message": "Højde:"
     },
+    "gpsLatLon": {
+        "message": "Nuværende breddegrad / længdegrad:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
     "gpsHeading": {
         "message": "Kurs:"
     },
@@ -2632,7 +2628,8 @@
         "message": "Hastighed:"
     },
     "gpsSats": {
-        "message": "Antal satelitter:"
+        "message": "Antal satelitter:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Hjem afstand:"
@@ -5185,6 +5182,27 @@
     },
     "osdDescElementSysFanSpeed": {
         "message": "Videobrille blæser hastighed ændret af videobrille"
+    },
+    "osdTextElementLapTimeCurrent": {
+        "message": "GPS omgangstid aktuelt",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeCurrent": {
+        "message": "Angiver aktuel GPS omgangstid"
+    },
+    "osdTextElementLapTimePrevious": {
+        "message": "GPS forrige omgangstid",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimePrevious": {
+        "message": "Angiver forrige GPS omgangstid"
+    },
+    "osdTextElementLapTimeBest3": {
+        "message": "GPS omgangstid bedst af 3 omgange",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest": {
+        "message": "Angiver bedste GPS omgangstid"
     },
     "osdTextElementCraftName": {
         "message": "Navn: Fartøj",

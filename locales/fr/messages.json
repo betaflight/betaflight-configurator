@@ -2328,9 +2328,6 @@
     "gpsSpeed": {
         "message": "Vitesse:"
     },
-    "gpsSats": {
-        "message": "Satellites:"
-    },
     "gpsDistToHome": {
         "message": "Distance du point de décollage:"
     },
