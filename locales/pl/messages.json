@@ -2190,57 +2190,21 @@
     "auxiliaryModeLogicAND": {
         "message": "Oraz"
     },
-    "auxiliaryHelpMode_ARM": {
-        "message": "Włącza silniki i stabilizację lotu",
-        "description": "Help text to ARM mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "W tym trybie automatycznego poziomowania kanały przechyłu i pochylenia kontrolują kąt między odpowiednią osią a pionem, aby osiągnąć poziomy lot po prostu pozostaw drążek w pozycji środkowej",
         "description": "Help text to ANGLE mode"
     },
-    "auxiliaryHelpMode_HORIZON": {
-        "message": "Ten tryb hybrydowy działa dokładnie tak samo jak tryb ANGLE z wyśrodkowanym drążkiem przechyłu i pochylenia (umożliwiając w ten sposób lot z automatycznym poziomowaniem), a następnie, gdy drążek jest odchylany coraz bardziej od pozycji środkowej zachowuje się coraz bardziej jak domyślny tryb RATE",
-        "description": "Help text to HORIZON mode"
-    },
-    "auxiliaryHelpMode_MAG": {
-        "message": "Zablokuj kurs w kierunku magnetometru",
-        "description": "Help text to MAG mode"
-    },
-    "auxiliaryHelpMode_HEADFREE": {
-        "message": "W trybie \"head\" multikopter jest zawsze skierowany w tym samym kierunku, w którym wychylenie drążków.<br>W tym trybie łatwiej jest sterować multikopterem, a nawet latać nim przodem skierowanym w twoją stronę ponieważ elementy sterujące zawsze reagują tak samo jak wychylenie drążków. Jest to tryb przyjazny dla nowych użytkowników multikopterów i może zapobiec utracie kontroli, gdy nie znasz kierunku lotu",
-        "description": "Help text to HEADFREE mode"
-    },
-    "auxiliaryHelpMode_PASSTHRU": {
-        "message": "Przekazuj przechylenie, odchylenie i wychylenie bezpośrednio z rx do serwomechanizmów w miksie samolotowym",
-        "description": "Help text to PASSTHRU mode"
-    },
-    "auxiliaryHelpMode_FAILSAFE": {
-        "message": "Wejdź ręcznie w drugi etap Failsafe",
-        "description": "Help text to FAILSAFE mode"
-    },
-    "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Włącz „GPS Rescue”, aby statek powietrzny wrócił do miejsca, w którym był ostatnio uzbrojony",
-        "description": "Help text to GPS RESCUE mode"
-    },
-    "auxiliaryHelpMode_HEADADJ": {
-        "message": "Heading Adjust – Ustawia nowy początek odchylenia dla trybu HEADFREE",
-        "description": "Help text to HEAD ADJ mode"
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "W standardowym trybie miksera /, gdy przechylenie, nachylenie i odchylenie zostaną obliczone i nasycą silnik, wszystkie silniki zostaną jednakowo zredukowane. Kiedy silnik spada poniżej minimum, zostaje odcięty. Powiedzmy, że miałeś przepustnicę nieco powyżej minimum i próbowałeś szybko przechylić - ponieważ dwa silniki nie mogą zejść niżej, zasadniczo uzyskujesz połowę mocy (połowę wzmocnienia PID). Jeśli twoje dane wejściowe wymagałyby więcej niż 100% różnicy między wysokimi i niskimi silnikami, niskie silniki zostałyby obcięte, łamiąc symetrię równowagi silnika poprzez nierównomierne zmniejszenie wzmocnienia",
+        "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionego statku powietrznego",
         "description": "Help text to BEEPER mode"
     },
-    "auxiliaryHelpMode_LEDLOW": {
-        "message": "Wyłącz wyjście PASKA_LED RGB",
-        "description": "Help text to LEDLOW mode"
-    },
-    "auxiliaryHelpMode_OSDDISABLE": {
-        "message": "Włącz/wyłącz wyświetlanie na ekranie",
-        "description": "Help text to OSD mode"
-    },
-    "auxiliaryHelpMode_TELEMETRY": {
-        "message": "Włącz telemetrię za pomocą przełącznika",
-        "description": "Help text to TELEMETRY mode"
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Wyłącz/włącz sygnał dźwiękowy, w tym ostrzeżenie, stan i tryb BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "Włącz rejestrator parametrów lotu BlackBox",
@@ -2249,14 +2213,6 @@
     "auxiliaryHelpMode_BLACKBOXERASE": {
         "message": "Wyczyść dziennik BlackBox",
         "description": "Help text to BLACKBOX ERASE mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "W standardowym trybie miksera /, gdy przechylenie, nachylenie i odchylenie zostaną obliczone i nasycą silnik, wszystkie silniki zostaną jednakowo zredukowane. Kiedy silnik spada poniżej minimum, zostaje odcięty. Powiedzmy, że miałeś przepustnicę nieco powyżej minimum i próbowałeś szybko przechylić - ponieważ dwa silniki nie mogą zejść niżej, zasadniczo uzyskujesz połowę mocy (połowę wzmocnienia PID). Jeśli twoje dane wejściowe wymagałyby więcej niż 100% różnicy między wysokimi i niskimi silnikami, niskie silniki zostałyby obcięte, łamiąc symetrię równowagi silnika poprzez nierównomierne zmniejszenie wzmocnienia",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_FPVANGLEMIX": {
-        "message": "Zastosuj obrót odchylenia względem kamery FPV zamontowanej pod zadanym kątem",
-        "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
         "message": "Służy do niestandardowego przełączania STEROWANIA KAMERĄ 1. Sprawdź w instrukcji dostawcy",
@@ -2270,65 +2226,69 @@
         "message": "Służy do niestandardowego przełączania STEROWANIA KAMERĄ 3. Sprawdź w instrukcji dostawcy",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
-    "auxiliaryHelpMode_USER1": {
-        "message": "Używaj, aby przełączyć na profil niestandardowy USER1. Sprawdź w instrukcji dostawcy",
-        "description": "Help text to customized USER1 mode"
-    },
-    "auxiliaryHelpMode_USER2": {
-        "message": "Używaj, aby przełączyć na profil niestandardowy USER2. Sprawdź w instrukcji dostawcy",
-        "description": "Help text to customized USER2 mode"
-    },
-    "auxiliaryHelpMode_USER3": {
-        "message": "Używaj, aby przełączyć na profil niestandardowy USER3. Sprawdź w instrukcji dostawcy",
-        "description": "Help text to customized USER3 mode"
-    },
-    "auxiliaryHelpMode_USER4": {
-        "message": "Używaj, aby przełączyć na profil niestandardowy USER3. Sprawdź w instrukcji dostawcy",
-        "description": "Help text to customized USER4 mode"
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Wejdź ręcznie w drugi etap Failsafe",
+        "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Odwróć kierunek obrotu silników, aby przewrócić statek powietrzny do góry nogami po zderzeniu (wymagany DShot)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
-    "auxiliaryHelpMode_PREARM": {
-        "message": "Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
-        "description": "Help text to PREARM mode"
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Zastosuj obrót odchylenia względem kamery FPV zamontowanej pod zadanym kątem",
+        "description": "Help text to FPV ANGLE MIX mode"
     },
-    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
-        "message": "Użyj kilku sygnałów dźwiękowych, aby wskazać liczbę znalezionych satelitów GPS",
-        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Włącz „GPS Rescue”, aby statek powietrzny wrócił do miejsca, w którym był ostatnio uzbrojony",
+        "description": "Help text to GPS RESCUE mode"
     },
-    "auxiliaryHelpMode_VTXPITMODE": {
-        "message": "Przełącz VTX w tryb pit mode (niska moc wyjściowa, jeśli jest obsługiwana)",
-        "description": "Help text to VTX PIT MODE mode"
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Heading Adjust – Ustawia nowy początek odchylenia dla trybu HEADFREE",
+        "description": "Help text to HEAD ADJ mode"
     },
-    "auxiliaryHelpMode_PARALYZE": {
-        "message": "Trwale unieruchamiaj rozbity statek powietrzny, dopóki nie zostanie ponownie włączony",
-        "description": "Help text to PARALYZE mode"
-    },
-    "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "Włącz ograniczenie kąta „acro trainer” w trybie acro",
-        "description": "Help text to ACRO TRAINER mode"
-    },
-    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
-        "message": "Wyłącz kontrolę ustawień VTX poprzez OSD",
-        "description": "Help text to VTX CONTROL DISABLE mode"
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Ten tryb hybrydowy działa dokładnie tak samo jak tryb ANGLE z wyśrodkowanym drążkiem przechyłu i pochylenia (umożliwiając w ten sposób lot z automatycznym poziomowaniem), a następnie, gdy drążek jest odchylany coraz bardziej od pozycji środkowej zachowuje się coraz bardziej jak domyślny tryb RATE",
+        "description": "Help text to HORIZON mode"
     },
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "System wspomagania startu w wyścigu",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
-        "message": "Wyłącz/włącz polecenia z drążka",
-        "description": "Help text to STICK COMMANDS DISABLE mode"
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Włącz/wyłącz wyświetlanie na ekranie",
+        "description": "Help text to OSD mode"
     },
-    "auxiliaryHelpMode_BEEPERMUTE": {
-        "message": "Wyłącz/włącz sygnał dźwiękowy, w tym ostrzeżenie, stan i tryb BEEPER",
-        "description": "Help text to BEEPERMUTE mode"
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Przekazuj przechylenie, odchylenie i wychylenie bezpośrednio z rx do serwomechanizmów w miksie samolotowym",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Trwale unieruchamiaj rozbity statek powietrzny, dopóki nie zostanie ponownie włączony",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
+        "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
         "message": "Dodano w BF4.4, możesz teraz wyświetlać „READY” w OSD za pomocą przełącznika. Jest to niszowe ulepszenie w sytuacjach wyścigowych, w których wszystkie pilotowe kanały wideo są wyświetlane na jednym centralnym ekranie. Pilot może przesunąć przełącznik, aby wskazać, że jest gotowy do lotu, a na jego OSD pojawi się słowo READY. Dyrektor wyścigu może wtedy stwierdzić, czy wszyscy piloci są gotowi, patrząc na centralny ekran. Po uzbrojeniu napis READY znika",
         "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Wyłącz/włącz polecenia z drążka",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Włącz telemetrię za pomocą przełącznika",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Wyłącz kontrolę ustawień VTX poprzez OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Przełącz VTX w tryb pit mode (niska moc wyjściowa, jeśli jest obsługiwana)",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "Skonfiguruj przełączniki regulacji. Szczegółowe informacje można znaleźć w sekcji „Korekty podczas lotu”. Zmiany wprowadzone przez funkcje regulacji nie są zapisywane automatycznie."
@@ -2618,9 +2578,6 @@
     },
     "gpsSpeed": {
         "message": "Prędkość:"
-    },
-    "gpsSats": {
-        "message": "Satelity:"
     },
     "gpsDistToHome": {
         "message": "Dystans do Domu:"

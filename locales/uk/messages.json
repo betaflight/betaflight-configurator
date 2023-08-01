@@ -2194,57 +2194,45 @@
     "auxiliaryModeLogicAND": {
         "message": "ТА"
     },
+    "auxiliaryHelpMode_3D": {
+        "message": "Включає реверсивний напрямок обертання моторів, щоб забезпечити негативну тягу та дозволити перевернутий політ. Тяга стає від -100 до +100 замість 0 до 100",
+        "description": "Help text to 3D mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Режим польоту, який обмежує кут нахилу судна під час польоту в акро режимі",
+        "description": "Help text to ACRO TRAINER mode"
+    },
     "auxiliaryHelpMode_ARM": {
-        "message": "Взведення: запускає мотори і стабілізацію",
+        "message": "Включає подачу потужності на мотори та дозволяє судну літати",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
         "message": "В цьому режимі автоматичного вирівнювання, канали крену і тангажа контролюють кут між потрібною віссю і вертикаллю, забезпечуючи вирівнювання при центруванні стіків",
         "description": "Help text to ANGLE mode"
     },
-    "auxiliaryHelpMode_HORIZON": {
-        "message": "Цей гібридний режим працює точно як режим \"Кут\" (ANGLE) при відцентрованих стіках нахилу і тангажа (таким чином виходить самовирівнювання дрона), але потім поступово починає працювати більше і більше як режим за замовчуванням RATE/ACRO коли стіки відхиляються далі від центрального положення",
-        "description": "Help text to HORIZON mode"
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "Режим польоту збільшує значення P та I під час швидких рухів стіком тяги, щоб покращити відстеження стіків та уникнути дрейфу носа під час швидких змін тяги",
+        "description": "Help text to ANTIGRAVITY mode"
     },
-    "auxiliaryHelpMode_MAG": {
-        "message": "Фіксація поточного курсу за допомогою компаса",
-        "description": "Help text to MAG mode"
-    },
-    "auxiliaryHelpMode_HEADFREE": {
-        "message": "У цьому режимі \"голова\" коптера завжди повернута в ту саму сторону, в яку він був спрямований під час активації функції. Це означає, що коли коптер обертається навколо вісі Z (поворот), управління завжди реагує і тримає коптер в тому самому початковому напрямку. <br> З цим режимом легше керувати дроном, навіть літати з фізичною головою у вашому напрямку, оскільки управління завжди реагує однаково. Це дружній режим для нових користувачів дронів та може запобігти втраті контролю, коли ви не знаєте куди направлений дрон",
-        "description": "Help text to HEADFREE mode"
-    },
-    "auxiliaryHelpMode_PASSTHRU": {
-        "message": "Передавати крен, рискання та тангаж безпосередньо з приймача до сервоприводів у мікшері літака (режим PASSTHRU)",
-        "description": "Help text to PASSTHRU mode"
-    },
-    "auxiliaryHelpMode_FAILSAFE": {
-        "message": "Перейти вручну в етап 2 безаварійності",
-        "description": "Help text to FAILSAFE mode"
-    },
-    "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Увімкніть режим \"GPS порятунок\" щоб повернути повітряне судно на місце, де воно було взведене в останній раз",
-        "description": "Help text to GPS RESCUE mode"
-    },
-    "auxiliaryHelpMode_HEADADJ": {
-        "message": "Змінити курс - встановлює новий курс для режиму HEADFREE",
-        "description": "Help text to HEAD ADJ mode"
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "У стандартному міксері / режимі, коли обчислюються крен, тангаж і рискання, і якщо який-небудь мотор перевищує максимальне значення, всі мотори будуть однаково зменшені. Коли мотор опускається нижче мінімального значення, він обрізається. Наприклад, якщо рівень тяги був навколо мінімуму і ви спробували різко зробити крен, тоді, оскільки два мотора не можуть піти ще нижче, підсилення фактично зменшиться наполовину (половина ваших значень PID). Якщо ваші команди просили більше, ніж 100% різниці між високими та низькими моторами, низькі мотори будуть обрізані, порушуючи симетрію балансу моторів шляхом нерівного зменшення підсилення",
+        "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включити пищання - корисно для пошуку розбитого дрона",
         "description": "Help text to BEEPER mode"
     },
-    "auxiliaryHelpMode_LEDLOW": {
-        "message": "Вимкнути вивід LED_STRIP",
-        "description": "Help text to LEDLOW mode"
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Вимкнути/увімкнути звуковий сигнал, включаючи попередження, статус і режим BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
     },
-    "auxiliaryHelpMode_OSDDISABLE": {
-        "message": "Включити/виключити наекранне меню",
-        "description": "Help text to OSD mode"
+    "auxiliaryHelpMode_BEEPERON": {
+        "message": "Включити режим BEEPER ON",
+        "description": "Help text to BEEPER ON mode"
     },
-    "auxiliaryHelpMode_TELEMETRY": {
-        "message": "Увімкнути телеметрію за допомогою перемикача",
-        "description": "Help text to TELEMETRY mode"
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "Включити режим \"пищати кількість супутників GPS\"",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "Увімкнути ведення журналу Чорної скрині",
@@ -2254,13 +2242,13 @@
         "message": "Очистити журнал Чорної скрині",
         "description": "Help text to BLACKBOX ERASE mode"
     },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "У стандартному міксері / режимі, коли обчислюються крен, тангаж і рискання, і якщо який-небудь мотор перевищує максимальне значення, всі мотори будуть однаково зменшені. Коли мотор опускається нижче мінімального значення, він обрізається. Наприклад, якщо рівень тяги був навколо мінімуму і ви спробували різко зробити крен, тоді, оскільки два мотора не можуть піти ще нижче, підсилення фактично зменшиться наполовину (половина ваших значень PID). Якщо ваші команди просили більше, ніж 100% різниці між високими та низькими моторами, низькі мотори будуть обрізані, порушуючи симетрію балансу моторів шляхом нерівного зменшення підсилення",
-        "description": "Help text to AIRMODE mode"
+    "auxiliaryHelpMode_BOXPREARM": {
+        "message": "Включає режим BOXPREARM",
+        "description": "Help text to BOXPREARM mode"
     },
-    "auxiliaryHelpMode_FPVANGLEMIX": {
-        "message": "Застосуйте поворот-рискання відносно FPV-камери, змонтованої під попередньо заданим кутом",
-        "description": "Help text to FPV ANGLE MIX mode"
+    "auxiliaryHelpMode_CALIB": {
+        "message": "Почати калібрування під час польоту",
+        "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
         "message": "Використовуйте щоб увімкнути режим CAMERA CONTROL 1. Перевірте в посібнику виробника",
@@ -2274,65 +2262,93 @@
         "message": "Використовуйте щоб увімкнути режим CAMERA CONTROL 3. Перевірте в посібнику виробника",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
-    "auxiliaryHelpMode_USER1": {
-        "message": "Використовуйте щоб увімкнути налаштування USER1. Перевірте в посібнику виробника",
-        "description": "Help text to customized USER1 mode"
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "Включає режим стабілізації камери",
+        "description": "Help text to CAMSTAB mode"
     },
-    "auxiliaryHelpMode_USER2": {
-        "message": "Використовуйте щоб увімкнути налаштування USER2. Перевірте в посібнику виробника",
-        "description": "Help text to customized USER2 mode"
-    },
-    "auxiliaryHelpMode_USER3": {
-        "message": "Використовуйте щоб увімкнути налаштування USER3. Перевірте в посібнику виробника",
-        "description": "Help text to customized USER3 mode"
-    },
-    "auxiliaryHelpMode_USER4": {
-        "message": "Використовуйте щоб увімкнути налаштування USER4. Перевірте в посібнику виробника",
-        "description": "Help text to customized USER4 mode"
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Перейти вручну в етап 2 безаварійності",
+        "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "Розвернути рух моторів в протилежний бік щоб перевернути судно після аварії (потрібен DShot)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
-    "auxiliaryHelpMode_PREARM": {
-        "message": "При взведенні, очікувати активацію цього перемикача перед фактичним взведенням",
-        "description": "Help text to PREARM mode"
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Застосуйте поворот-рискання відносно FPV-камери, змонтованої під попередньо заданим кутом",
+        "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
-        "message": "Використовуйте звукові сигнали, кількість вказує на кількість знайдених супутників GPS",
+        "message": "Показує кількість знайдених супутників GPS, подаючи звуковий сигнал таку ж кількість разів",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
-    "auxiliaryHelpMode_VTXPITMODE": {
-        "message": "Перемкнути відеопередавач у режим ями (низька вихідна потужність, якщо підтримується)",
-        "description": "Help text to VTX PIT MODE mode"
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Увімкніть режим \"GPS порятунок\" щоб повернути повітряне судно на місце, де воно було взведене в останній раз",
+        "description": "Help text to GPS RESCUE mode"
     },
-    "auxiliaryHelpMode_PARALYZE": {
-        "message": "Режим ПАРАЛІЗУ. Вимикає модель, що розбилась, поки не буде перепідключено живлення",
-        "description": "Help text to PARALYZE mode"
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Змінити курс - встановлює новий курс для режиму HEADFREE",
+        "description": "Help text to HEAD ADJ mode"
     },
-    "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "Увімкнути «акротренажер» - обмеження кута в акро режимі",
-        "description": "Help text to ACRO TRAINER mode"
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Режим польоту, коли рискання узгоджується із зовнішньою системою відліку (часто куди пілот дивиться обличчям), а не з судном. Призначений для початківців, але використовується рідко, радимо режим ANGLE",
+        "description": "Help text to HEADFREE mode"
     },
-    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
-        "message": "Вимкнути керування налаштуваннями відеопередавача через наекранне меню",
-        "description": "Help text to VTX CONTROL DISABLE mode"
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Цей гібридний режим працює точно як режим \"Кут\" (ANGLE) при відцентрованих стіках нахилу і тангажа (таким чином виходить самовирівнювання дрона), але потім поступово починає працювати більше і більше як режим за замовчуванням RATE/ACRO коли стіки відхиляються далі від центрального положення",
+        "description": "Help text to HORIZON mode"
     },
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "Система допомоги під час старту на гонках",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
-        "message": "Виключити/включити команди стіками",
-        "description": "Help text to STICK COMMANDS DISABLE mode"
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Вимкнути LED стрічку",
+        "description": "Help text to LEDLOW mode"
     },
-    "auxiliaryHelpMode_BEEPERMUTE": {
-        "message": "Вимкнути/увімкнути звуковий сигнал, включаючи попередження, статус і режим BEEPER",
-        "description": "Help text to BEEPERMUTE mode"
+    "auxiliaryHelpMode_MAG": {
+        "message": "Блокування курсу за магнітометром (контроль компаса)",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_MSPOVERRIDE": {
+        "message": "Включити режим MSP Override",
+        "description": "Help text to MSP OVERRIDE mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Включити/виключити наекранне меню",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Передавати крен, рискання та тангаж безпосередньо з приймача до сервоприводів у мікшері літака (режим PASSTHRU)",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Режим ПАРАЛІЗУ. Вимикає модель, що розбилась, поки не буде перепідключено живлення",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "При взведенні, очікувати активацію цього перемикача перед фактичним взведенням",
+        "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
         "message": "Додано у BF4.4, тепер ви можете показувати 'READY' (ГОТОВИЙ) в наекранному меню за допомогою перемикача. Це нішеве вдосконалення для гоночних ситуацій, коли всі відеоканали пілотів відображаються на одному центральному екрані. Пілот може натиснути перемикач, щоб вказати, що він готовий до польоту, і на його екранному меню з’явиться слово READY. Тоді директор перегонів може визначити, чи всі пілоти готові, подивившись на центральний екран. При взведенні дрону, текст READY зникає",
         "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Виключити/включити команди стіками",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Увімкнути телеметрію за допомогою перемикача",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Вимкнути керування налаштуваннями відеопередавача через наекранне меню",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Перемкнути відеопередавач у режим ями (низька вихідна потужність, якщо підтримується)",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "Налаштувати перемикачі регулювання. Додаткову інформацію дивіться у розділі посібника «Коригування під час польоту». Зміни, внесені функціями налаштування, не зберігаються автоматично."
@@ -2630,9 +2646,6 @@
     },
     "gpsSpeed": {
         "message": "Швидкість:"
-    },
-    "gpsSats": {
-        "message": "Супутників:"
     },
     "gpsDistToHome": {
         "message": "Відс. до точки зльоту:"

@@ -2234,9 +2234,6 @@
     "gpsSpeed": {
         "message": "速度："
     },
-    "gpsSats": {
-        "message": "卫星数："
-    },
     "gpsDistToHome": {
         "message": "离起飞位置距离："
     },

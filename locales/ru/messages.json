@@ -2039,9 +2039,6 @@
     "gpsSpeed": {
         "message": "Скорость:"
     },
-    "gpsSats": {
-        "message": "Спутники:"
-    },
     "gpsDistToHome": {
         "message": "Расст. до дома:"
     },

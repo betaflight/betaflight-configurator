@@ -2194,57 +2194,25 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
-    "auxiliaryHelpMode_ARM": {
-        "message": "モーター＆フライトスタビライゼーションを有効にします",
-        "description": "Help text to ARM mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "このオートレベルモードでは、ロールとピッチのチャンネルが関連する軸と垂直の間の角度を制御し、スティックを中心に配置することで水平飛行を実現します。",
         "description": "Help text to ANGLE mode"
     },
-    "auxiliaryHelpMode_HORIZON": {
-        "message": "このハイブリッドモードは、ロールとピッチのスティックを中央に配置するとアングルモードと同じように動作し(オートレベル飛行が可能)、スティックを中央から遠ざけていくと、徐々にレートモードのように動作するようになります。",
-        "description": "Help text to HORIZON mode"
-    },
-    "auxiliaryHelpMode_MAG": {
-        "message": "コンパス方向へヘッディングを固定します",
-        "description": "Help text to MAG mode"
-    },
-    "auxiliaryHelpMode_HEADFREE": {
-        "message": "このモードでは、マルチコプターの『ヘッド』は機能が有効化されたとき同じ方向を常に指すこととなります。つまり、マルチコプターがZ軸を中心に回転 (ヨー) すると、常に同じ『ヘッド』の方向に従って反応することになります。<br>このモードでは、マルチコプターの操作が容易になり、常に同じ反応を示すため、物理的な『ヘッド』を自分の方に向けた状態で飛行させることも可能です。このモードはマルチコプターを初めて使う人にとって扱いやすいモードで、ヘッドの方向がわからないときに起きてしまうコントロール不能状態を防ぐことができます。",
-        "description": "Help text to HEADFREE mode"
-    },
-    "auxiliaryHelpMode_PASSTHRU": {
-        "message": "ロール、ヨー、ピッチのRX信号から直接サーボへ固定翼機MIX信号へ渡します",
-        "description": "Help text to PASSTHRU mode"
-    },
-    "auxiliaryHelpMode_FAILSAFE": {
-        "message": "フェイルセーフ ステージ2へ手動で切り替えます",
-        "description": "Help text to FAILSAFE mode"
-    },
-    "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "『GPSレスキュー』を有効にし、最後に離陸した地点に機体を帰還させます",
-        "description": "Help text to GPS RESCUE mode"
-    },
-    "auxiliaryHelpMode_HEADADJ": {
-        "message": "ヘッディング調整 - ヘッドフリーモードの新しいヨー基準点を設定します",
-        "description": "Help text to HEAD ADJ mode"
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "標準のミキサー / モードでは、ロール、ピッチ、ヨーが計算上モーターの強度が飽和状態となると、すべてのモーターが均等に回転が減少します。モーターが最小値を下回ると切り捨て状態となります。例えば、スロットルを最小値より少し上にしてクイックロールをしようとした場合、2つのモーターはそれ以上回転を下げることができないので、実質的に半分のパワー (PID強度の半分) を得ることになります。もし、入力が高回転モーターと低回転モーターの間に100％以上の差を求めたとしたら、低回転モーターは回転が切り捨てられ、強度を不均一に減少させることとなってしまいモーターバランスの対称性を破綻させてしまうでしょう。",
+        "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "ビープ音を有効にします - 墜落した機体の位置を特定するのに役立ちます",
         "description": "Help text to BEEPER mode"
     },
-    "auxiliaryHelpMode_LEDLOW": {
-        "message": "LEDストリップ出力をOFFにします",
-        "description": "Help text to LEDLOW mode"
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "警告、ステータス、BEEPERモードを含むビープ音を無効 / 有効にします",
+        "description": "Help text to BEEPERMUTE mode"
     },
-    "auxiliaryHelpMode_OSDDISABLE": {
-        "message": "OSD表示を有効 / 無効にします",
-        "description": "Help text to OSD mode"
-    },
-    "auxiliaryHelpMode_TELEMETRY": {
-        "message": "スイッチを使いテレメトリーを有効にします",
-        "description": "Help text to TELEMETRY mode"
+    "auxiliaryHelpMode_BEEPERON": {
+        "message": "BEPPER ONモードを有効にします",
+        "description": "Help text to BEEPER ON mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "BlackBoxログを有効にします",
@@ -2254,13 +2222,9 @@
         "message": "BlackBoxログを消去します",
         "description": "Help text to BLACKBOX ERASE mode"
     },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "標準のミキサー / モードでは、ロール、ピッチ、ヨーが計算上モーターの強度が飽和状態となると、すべてのモーターが均等に回転が減少します。モーターが最小値を下回ると切り捨て状態となります。例えば、スロットルを最小値より少し上にしてクイックロールをしようとした場合、2つのモーターはそれ以上回転を下げることができないので、実質的に半分のパワー (PID強度の半分) を得ることになります。もし、入力が高回転モーターと低回転モーターの間に100％以上の差を求めたとしたら、低回転モーターは回転が切り捨てられ、強度を不均一に減少させることとなってしまいモーターバランスの対称性を破綻させてしまうでしょう。",
-        "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_FPVANGLEMIX": {
-        "message": "装着するFPVカメラのプリセット角度に対してヨー回転をかけるよう適用します",
-        "description": "Help text to FPV ANGLE MIX mode"
+    "auxiliaryHelpMode_BOXPREARM": {
+        "message": "BOX PREARMモードを有効にします",
+        "description": "Help text to BOXPREARM mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
         "message": "カスタマイズ切り替えのためCAMERA CONTROL 1を使用します。メーカーのマニュアルをご確認ください。",
@@ -2274,65 +2238,81 @@
         "message": "カスタマイズ切り替えのためCAMERA CONTROL 3を使用します。メーカーのマニュアルをご確認ください。",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
-    "auxiliaryHelpMode_USER1": {
-        "message": "カスタマイズ切り替えのためUSER1を使用します。メーカーのマニュアルをご確認ください。",
-        "description": "Help text to customized USER1 mode"
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "カメラ スタビライザーモードを有効にします",
+        "description": "Help text to CAMSTAB mode"
     },
-    "auxiliaryHelpMode_USER2": {
-        "message": "カスタマイズ切り替えのためUSER2を使用します。メーカーのマニュアルをご確認ください。",
-        "description": "Help text to customized USER2 mode"
-    },
-    "auxiliaryHelpMode_USER3": {
-        "message": "カスタマイズ切り替えのためUSER3を使用します。メーカーのマニュアルをご確認ください。",
-        "description": "Help text to customized USER3 mode"
-    },
-    "auxiliaryHelpMode_USER4": {
-        "message": "カスタマイズ切り替えのためUSER4を使用します。メーカーのマニュアルをご確認ください。",
-        "description": "Help text to customized USER4 mode"
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "フェイルセーフ ステージ2へ手動で切り替えます",
+        "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "モーターを逆回転させクラッシュ後に逆さまになった機体をひっくり返します (要DShot)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
-    "auxiliaryHelpMode_PREARM": {
-        "message": "アーミング時、実際にこのスイッチが有効になるのを待ってからアームします",
-        "description": "Help text to PREARM mode"
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "装着するFPVカメラのプリセット角度に対してヨー回転をかけるよう適用します",
+        "description": "Help text to FPV ANGLE MIX mode"
     },
-    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
-        "message": "ビープ回数で、捕捉したGPS衛星数を示します",
-        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "『GPSレスキュー』を有効にし、最後に離陸した地点に機体を帰還させます",
+        "description": "Help text to GPS RESCUE mode"
     },
-    "auxiliaryHelpMode_VTXPITMODE": {
-        "message": "VTXをピットモードへ切り替えます (サポートされる場合は低出力)",
-        "description": "Help text to VTX PIT MODE mode"
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "ヘッディング調整 - ヘッドフリーモードの新しいヨー基準点を設定します",
+        "description": "Help text to HEAD ADJ mode"
     },
-    "auxiliaryHelpMode_PARALYZE": {
-        "message": "クラッシュした機体をバッテリーが切れるまで永久に使用不可とします",
-        "description": "Help text to PARALYZE mode"
-    },
-    "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "アクロモードにて『アクロ トレーナー』角度制限を有効にします",
-        "description": "Help text to ACRO TRAINER mode"
-    },
-    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
-        "message": "OSD経由でVTX設定の制御を無効にします",
-        "description": "Help text to VTX CONTROL DISABLE mode"
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "このハイブリッドモードは、ロールとピッチのスティックを中央に配置するとアングルモードと同じように動作し(オートレベル飛行が可能)、スティックを中央から遠ざけていくと、徐々にレートモードのように動作するようになります。",
+        "description": "Help text to HORIZON mode"
     },
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "レーススタート アシスタントシステム",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
-        "message": "スティックコマンドを無効 / 有効にします",
-        "description": "Help text to STICK COMMANDS DISABLE mode"
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "LEDストリップ出力をOFFにします",
+        "description": "Help text to LEDLOW mode"
     },
-    "auxiliaryHelpMode_BEEPERMUTE": {
-        "message": "警告、ステータス、BEEPERモードを含むビープ音を無効 / 有効にします",
-        "description": "Help text to BEEPERMUTE mode"
+    "auxiliaryHelpMode_MSPOVERRIDE": {
+        "message": "MSP上書きモードを有効にします",
+        "description": "Help text to MSP OVERRIDE mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "OSD表示を有効 / 無効にします",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "ロール、ヨー、ピッチのRX信号から直接サーボへ固定翼機MIX信号へ渡します",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "クラッシュした機体をバッテリーが切れるまで永久に使用不可とします",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "アーミング時、実際にこのスイッチが有効になるのを待ってからアームします",
+        "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
         "message": "BF4.4の追加機能として、スイッチを使ってOSD上に【READY】を表示させることができるようになりました。これは、すべてのパイロットのFPV映像が1つの中央スクリーンにあるようなレースの観戦状況において、ニッチな改善内容となります。パイロットがスイッチを押し飛行の準備ができたことを示すと、OSDに【READY】という文字が表示されます。レース運営者は、中央のスクリーンを見てすべてのパイロットが準備できているかどうかを判断することができます。アーミングすると【READY】の文字列が消えます。",
         "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "スティックコマンドを無効 / 有効にします",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "スイッチを使いテレメトリーを有効にします",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "OSD経由でVTX設定の制御を無効にします",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "VTXをピットモードへ切り替えます (サポートされる場合は低出力)",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "調整スイッチを設定します。詳細については、マニュアルの『in-flight adjustment(飛行調整)』の項目を参照してください。『調整』機能による変更は自動的には保存されません。"
@@ -2630,9 +2610,6 @@
     },
     "gpsSpeed": {
         "message": "速度:"
-    },
-    "gpsSats": {
-        "message": "衛星数:"
     },
     "gpsDistToHome": {
         "message": "ホームまでの距離:"
@@ -5185,6 +5162,27 @@
     },
     "osdDescElementSysFanSpeed": {
         "message": "ゴーグルで表示されるゴーグル FAN速度"
+    },
+    "osdTextElementLapTimeCurrent": {
+        "message": "GPSラップタイム 現在",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeCurrent": {
+        "message": "現在のGPSラップタイム"
+    },
+    "osdTextElementLapTimePrevious": {
+        "message": "GPSラップタイム 前回",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimePrevious": {
+        "message": "前回のGPSラップタイム"
+    },
+    "osdTextElementLapTimeBest3": {
+        "message": "GPSラップタイム ベスト3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest": {
+        "message": "GPSラップタイム ベスト"
     },
     "osdTextElementCraftName": {
         "message": "機体名",

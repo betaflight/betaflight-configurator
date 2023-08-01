@@ -2194,57 +2194,45 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
+    "auxiliaryHelpMode_3D": {
+        "message": "가역적 모터 방향이 음의 추력을 제공하고 배면비행을 허용합니다. 스로틀은 0~100이 아닌 -100~+100이 됩니다",
+        "description": "Help text to 3D mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "아크로 모드에서 비행할때 기체 앵글을 제한하는 비행 모드",
+        "description": "Help text to ACRO TRAINER mode"
+    },
     "auxiliaryHelpMode_ARM": {
-        "message": "모터 및 비행 안정화 활성화",
+        "message": "모터 출력을 활성화하고 기체가 비행할 수 있도록 합니다",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
         "message": "이 자동 레벨 모드에서 롤 및 피치 채널은 관련 축과 수직 사이의 각도를 제어하여 스틱을 중앙에 두는 것만으로 수평 비행을 달성합니다",
         "description": "Help text to ANGLE mode"
     },
-    "auxiliaryHelpMode_HORIZON": {
-        "message": "이 하이브리드 모드는 중앙 롤 및 피치 스틱이 있는 앵글 모드와 정확히 작동하며(따라서 자동 레벨 비행이 가능함), 스틱이 중앙 위치에서 멀어질수록 점차 기본 레이트 모드와 비슷하게 작동합니다",
-        "description": "Help text to HORIZON mode"
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "빠른 스로틀 이동 중에 P 및 I 텀을 증가시켜 스틱 추적을 개선하고 빠른 스로틀 변경 시 노즈 드리프트를 방지하는 비행 모드",
+        "description": "Help text to ANTIGRAVITY mode"
     },
-    "auxiliaryHelpMode_MAG": {
-        "message": "자기계 방향으로 향하는 헤딩 잠금",
-        "description": "Help text to MAG mode"
-    },
-    "auxiliaryHelpMode_HEADFREE": {
-        "message": "이 모드에서 멀티콥터의 \"헤드\"는 기능이 활성화되었을 때와 항상 같은 방향을 가리킵니다. 즉, 멀티콥터가 Z축(요)을 중심으로 회전할 때 컨트롤은 항상 동일한 \"헤드\" 방향에 따라 응답합니다.<br>이 모드를 사용하면 멀티콥터를 제어하는 것이 더 쉬워집니다. 컨트롤이 항상 동일하게 반응하기 때문에 물리적인 헤드를 사용하여 멀티콥터를 사용자 쪽으로 비행할 수 있습니다. 이 모드는 멀티콥터의 새로운 사용자에게 친숙한 모드이며 헤드 방향을 모를 때 컨트롤이 손실되는 것을 방지할 수 있습니다",
-        "description": "Help text to HEADFREE mode"
-    },
-    "auxiliaryHelpMode_PASSTHRU": {
-        "message": "비행기 믹스에서 롤, 요, 피치를 rx에서 서보로 직접 전달",
-        "description": "Help text to PASSTHRU mode"
-    },
-    "auxiliaryHelpMode_FAILSAFE": {
-        "message": "페일세이프 단계 2를 수동으로 입력",
-        "description": "Help text to FAILSAFE mode"
-    },
-    "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "'GPS 레스큐'를 활성화하면 기체가 마지막으로 아밍한 장소로 복귀합니다",
-        "description": "Help text to GPS RESCUE mode"
-    },
-    "auxiliaryHelpMode_HEADADJ": {
-        "message": "헤딩 조정 - 헤드프리 모드에서 새 요 방향 설정",
-        "description": "Help text to HEAD ADJ mode"
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "표준 믹서/모드에서 롤, 피치 및 요가 계산되고 모터가 포화되면 모든 모터가 동일하게 감소합니다. 모터가 최저치 이하로 떨어지면 모터 출력이 잘립니다. 스로틀이 최저치를 약간 상회하고 빠른 롤을 당기려고 했다고 가정해 보십시오. 두 개의 모터가 더 이상 내려갈 수 없기 때문에 기본적으로 전력의 절반(PID 이득의 절반)을 얻을 수 있습니다. 입력에 하이 모터와 로우 모터 간의 차이가 100% 이상 필요한 경우 로우 모터가 잘리고 이득이 불균일하게 감소하여 모터 밸런스의 대칭이 깨집니다",
+        "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "비프음 활성화 - 추락한 기체를 찾는 데 유용합니다",
         "description": "Help text to BEEPER mode"
     },
-    "auxiliaryHelpMode_LEDLOW": {
-        "message": "LED_스트립 출력 끄기",
-        "description": "Help text to LEDLOW mode"
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "경고, 상태 및 비퍼 모드를 포함한 비퍼음 비활성화/활성화",
+        "description": "Help text to BEEPERMUTE mode"
     },
-    "auxiliaryHelpMode_OSDDISABLE": {
-        "message": "온-스크린-디스플레이 활성/비활성",
-        "description": "Help text to OSD mode"
+    "auxiliaryHelpMode_BEEPERON": {
+        "message": "비퍼 ON 모드 활성화",
+        "description": "Help text to BEEPER ON mode"
     },
-    "auxiliaryHelpMode_TELEMETRY": {
-        "message": "스위치를 통한 텔레메트리 활성화",
-        "description": "Help text to TELEMETRY mode"
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "비프 GPS 위성 수 모드 활성화",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "블랙박스 로깅 활성화",
@@ -2254,13 +2242,13 @@
         "message": "블랙박스 로그 지우기",
         "description": "Help text to BLACKBOX ERASE mode"
     },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "표준 믹서/모드에서 롤, 피치 및 요가 계산되고 모터가 포화되면 모든 모터가 동일하게 감소합니다. 모터가 최저치 이하로 떨어지면 모터 출력이 잘립니다. 스로틀이 최저치를 약간 상회하고 빠른 롤을 당기려고 했다고 가정해 보십시오. 두 개의 모터가 더 이상 내려갈 수 없기 때문에 기본적으로 전력의 절반(PID 이득의 절반)을 얻을 수 있습니다. 입력에 하이 모터와 로우 모터 간의 차이가 100% 이상 필요한 경우 로우 모터가 잘리고 이득이 불균일하게 감소하여 모터 밸런스의 대칭이 깨집니다",
-        "description": "Help text to AIRMODE mode"
+    "auxiliaryHelpMode_BOXPREARM": {
+        "message": "BOXPREARM 모드 활성화",
+        "description": "Help text to BOXPREARM mode"
     },
-    "auxiliaryHelpMode_FPVANGLEMIX": {
-        "message": "사전 설정된 각도로 장착된 FPV 카메라를 기준으로 요 회전 적용",
-        "description": "Help text to FPV ANGLE MIX mode"
+    "auxiliaryHelpMode_CALIB": {
+        "message": "비행중 교정 시작",
+        "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
         "message": "사용자 정의 카메라 제어 1을 사용하세요. 공급자 매뉴얼을 확인하세요",
@@ -2274,65 +2262,125 @@
         "message": "사용자 정의 카메라 제어 3를 사용하세요. 공급자 매뉴얼을 확인하세요",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
-    "auxiliaryHelpMode_USER1": {
-        "message": "사용자 정의된 사용자1을 사용하세요. 공급자 매뉴얼을 확인하세요",
-        "description": "Help text to customized USER1 mode"
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "카메라 안정화 모드 활성화",
+        "description": "Help text to CAMSTAB mode"
     },
-    "auxiliaryHelpMode_USER2": {
-        "message": "사용자 정의된 사용자2를 사용하세요. 공급자 매뉴얼을 확인하세요",
-        "description": "Help text to customized USER2 mode"
-    },
-    "auxiliaryHelpMode_USER3": {
-        "message": "사용자 정의된 사용자3을 사용하세요. 공급자 매뉴얼을 확인하세요",
-        "description": "Help text to customized USER3 mode"
-    },
-    "auxiliaryHelpMode_USER4": {
-        "message": "사용자 정의된 사용자4를 사용하세요. 공급자 매뉴얼을 확인하세요",
-        "description": "Help text to customized USER4 mode"
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "페일세이프 단계 2를 수동으로 입력",
+        "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
         "message": "충돌 후 모터를 반대로 돌려 뒤집기 (디샷 요구됨)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
-    "auxiliaryHelpMode_PREARM": {
-        "message": "아밍을 실행할 때, 실제 아밍하기 전에 이 스위치가 활성화될 때까지 기다립니다",
-        "description": "Help text to PREARM mode"
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "사전 설정된 각도로 장착된 FPV 카메라를 기준으로 요 회전 적용",
+        "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
-        "message": "비프음의 수를 사용하여 발견된 GPS위성 수를 지시합니다.",
+        "message": "이 횟수만큼 삐삐 소리를 내어 발견된 GPS 위성의 수를 지시합니다",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
-    "auxiliaryHelpMode_VTXPITMODE": {
-        "message": "VTX를 피트모드로 전환합니다 (지원시 저전력 모드로 진입)",
-        "description": "Help text to VTX PIT MODE mode"
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "'GPS 레스큐'를 활성화하면 기체가 마지막으로 아밍한 장소로 복귀합니다",
+        "description": "Help text to GPS RESCUE mode"
     },
-    "auxiliaryHelpMode_PARALYZE": {
-        "message": "충돌한 기체의 전원을 껐다가 켤 때까지 영구적으로 비활성화합니다",
-        "description": "Help text to PARALYZE mode"
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "헤딩 조정 - 헤드프리 모드에서 새 요 방향 설정",
+        "description": "Help text to HEAD ADJ mode"
     },
-    "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "'아크로 트레이너'를 활성화하면 아크로 모드에서 앵글을 제한합니다",
-        "description": "Help text to ACRO TRAINER mode"
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "요가 기체 대신 외부 기준 프레임(종종 조종사가 향하는 곳)과 정렬되는 비행 모드. 초보자를 위해 설계되었지만 거의 사용하지 않으며, ANGLE 모드를 추천합니다",
+        "description": "Help text to HEADFREE mode"
     },
-    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
-        "message": "OSD를 통한 VTX 제어 설정을 비활성화합니다",
-        "description": "Help text to VTX CONTROL DISABLE mode"
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "이 하이브리드 모드는 중앙 롤 및 피치 스틱이 있는 앵글 모드와 정확히 작동하며(따라서 자동 레벨 비행이 가능함), 스틱이 중앙 위치에서 멀어질수록 점차 기본 레이트 모드와 비슷하게 작동합니다",
+        "description": "Help text to HORIZON mode"
     },
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "레이스 스타트 지원 시스템",
         "description": "Help text to LAUNCH CONTROL mode"
     },
-    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
-        "message": "스틱 명령 비활성/활성화",
-        "description": "Help text to STICK COMMANDS DISABLE mode"
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "LED 스트립 출력 끄기",
+        "description": "Help text to LEDLOW mode"
     },
-    "auxiliaryHelpMode_BEEPERMUTE": {
-        "message": "경고, 상태 및 비퍼 모드를 포함한 비퍼음 비활성화/활성화",
-        "description": "Help text to BEEPERMUTE mode"
+    "auxiliaryHelpMode_MAG": {
+        "message": "자기계 방향으로 향하는 헤딩 잠금(나침반 컨트롤)",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_MSPOVERRIDE": {
+        "message": "MSP 오버라이드 모드 활성화",
+        "description": "Help text to MSP OVERRIDE mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "온-스크린-디스플레이 활성/비활성",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "비행기 믹스에서 롤, 요, 피치를 rx에서 서보로 직접 전달",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "충돌한 기체의 전원을 껐다가 켤 때까지 영구적으로 비활성화합니다",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "PIDAUDIO을 전환할 때 사용",
+        "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "아밍을 실행할 때, 실제 아밍하기 전에 이 스위치가 활성화될 때까지 기다립니다",
+        "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
         "message": "BF4.4에 추가된 사항으로 이제 스위치를 사용하여 OSD에서 'READY'를 표시할 수 있습니다. 이것은 모든 파일럿 비디오 피드가 하나의 중앙 화면에 있는 레이싱 상황에 적합한 틈새 개선입니다. 조종자는 스위치를 깜박여 비행 준비가 되었음을 표시할 수 있으며, OSD에 READY라는 단어가 나타납니다. 그런 다음 경기 감독은 중앙 화면을 보고 모든 조종사가 준비되었는지 알 수 있습니다. 아밍할 때 READY 텍스트가 사라집니다",
         "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "스틱 명령 비활성/활성화",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "서보1을 전환할 때 사용",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "서보2를 전환할 때 사용",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "서보3을 전환할 때 사용",
+        "description": "Help text to SERVO3 mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "스위치를 통한 텔레메트리 활성화",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "사용자 정의된 USER1을 전환합니다. PINIO를 통해 임의 출력을 제어합니다",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "사용자 정의된 USER2를 전환합니다. PINIO를 통해 임의 출력을 제어합니다",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "사용자 정의된 USER3을 전환합니다. PINIO를 통해 임의 출력을 제어합니다",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "사용자 정의된 USER4를 전환합니다. PINIO를 통해 임의 출력을 제어합니다",
+        "description": "Help text to customized USER4 mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "OSD를 통한 VTX 제어 설정을 비활성화합니다",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "VTX를 피트모드로 전환합니다 (지원시 저전력 모드로 진입)",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "조정 스위치를 설정하세요. 자세한 내용은 매뉴얼의 '비행중 조정' 섹션을 참조하십시오. 조정 기능의 변경 사항은 자동으로 저장되지 않습니다."
@@ -2625,6 +2673,10 @@
     "gpsAltitude": {
         "message": "고도:"
     },
+    "gpsLatLon": {
+        "message": "현재 위도 / 경도:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
     "gpsHeading": {
         "message": "진행방향:"
     },
@@ -2632,7 +2684,8 @@
         "message": "속도:"
     },
     "gpsSats": {
-        "message": "상태:"
+        "message": "위성 수:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "홈까지 거리:"
@@ -5185,6 +5238,27 @@
     },
     "osdDescElementSysFanSpeed": {
         "message": "고글에 의해 제시된 고글 팬 속도"
+    },
+    "osdTextElementLapTimeCurrent": {
+        "message": "GPS 랩타임 현재",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeCurrent": {
+        "message": "현재 GPS 랩타임"
+    },
+    "osdTextElementLapTimePrevious": {
+        "message": "GPS 랩타임 이전",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimePrevious": {
+        "message": "이전 GPS 랩타임"
+    },
+    "osdTextElementLapTimeBest3": {
+        "message": "GPS 랩타임 베스트 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest": {
+        "message": "베스트 GPS 랩타임"
     },
     "osdTextElementCraftName": {
         "message": "기체 이름",
