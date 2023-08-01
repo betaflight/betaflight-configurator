@@ -27,39 +27,29 @@ const vtx = {
     analyticsChanges: {},
     updating: true,
     env: new djv(),
-    get _DEVICE_STATUS_UPDATE_INTERVAL_NAME() {
-        return "vtx_device_status_request";
-    },
 };
 
-vtx.isVtxDeviceStatusNotReady = function()
-{
+vtx.isVtxDeviceStatusNotReady = function() {
     const isReady = (null !== FC.VTX_DEVICE_STATUS) && (FC.VTX_DEVICE_STATUS.deviceIsReady);
     return !isReady;
 };
 
-vtx.updateVtxDeviceStatus = function()
-{
-    function vtxDeviceStatusReceived()
-    {
+vtx.updateVtxDeviceStatus = function() {
+    function vtxDeviceStatusReceived() {
         $("#vtx_type_description").text(TABS.vtx.getVtxTypeString());
-    }
 
-    function vtxDeviceStatusReady()
-    {
         const vtxReady_e = $('.VTX_info span.colorToggle');
+        const isReady = !vtx.isVtxDeviceStatusNotReady() || FC.VTX_CONFIG.vtx_device_ready;
 
         // update device ready state
-        vtxReady_e.text(FC.VTX_CONFIG.vtx_device_ready ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
-        vtxReady_e.toggleClass('ready', FC.VTX_CONFIG.vtx_device_ready);
+        vtxReady_e.text(isReady ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
+        vtxReady_e.toggleClass('ready', isReady);
     }
 
     MSP.send_message(MSPCodes.MSP2_GET_VTX_DEVICE_STATUS, false, false, vtxDeviceStatusReceived);
-    MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxDeviceStatusReady);
 };
 
-vtx.getVtxTypeString = function()
-{
+vtx.getVtxTypeString = function() {
     let result = i18n.getMessage(`vtxType_${FC.VTX_CONFIG.vtx_type}`);
 
     const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === FC.VTX_CONFIG.vtx_type;
@@ -118,11 +108,7 @@ vtx.initialize = function (callback) {
 
         function vtxConfigReceived() {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                GUI.interval_add_condition(self._DEVICE_STATUS_UPDATE_INTERVAL_NAME,
-                    TABS.vtx.updateVtxDeviceStatus,
-                    1000, false,
-                    TABS.vtx.isVtxDeviceStatusNotReady,
-                );
+                vtx.intervalId = setInterval(vtx.updateVtxDeviceStatus, 1000);
             }
 
             vtxtable_bands();
@@ -915,6 +901,8 @@ vtx.initialize = function (callback) {
 
             saveButton.html(i18n.getMessage('vtxButtonSaving')).addClass('disabled');
 
+            clearInterval(TABS.vtx.intervalId);
+
              // Allow firmware to make relevant changes before initialization
             setTimeout(() => {
                 saveButton.html(i18n.getMessage('vtxButtonSaved'));
@@ -1048,7 +1036,7 @@ vtx.cleanup = function (callback) {
     this.VTXTABLE_BAND_LIST = [];
     this.VTXTABLE_POWERLEVEL_LIST = [];
 
-    GUI.interval_remove(this._DEVICE_STATUS_UPDATE_INTERVAL_NAME);
+    clearInterval(this.intervalId);
 
     if (callback) {
         callback();
