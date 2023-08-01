@@ -17,8 +17,6 @@ sensors.initialize = function (callback) {
         GUI.active_tab = 'sensors';
     }
 
-    sensors.debugColumns = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? 8 : 4;
-
     function initSensorData(){
         for (let i = 0; i < 3; i++) {
             FC.SENSOR_DATA.accelerometer[i] = 0;
@@ -185,10 +183,6 @@ sensors.initialize = function (callback) {
     function plot_debug(enable) {
         if (enable) {
             $('.wrapper.debug').show();
-            for (let i = 0; i < 8; i++) {
-                $(`svg#debug${i}`).hide();
-                $(`div.plot_control.debug${i}`).hide();
-            }
         } else {
             $('.wrapper.debug').hide();
         }
@@ -256,6 +250,17 @@ sensors.initialize = function (callback) {
 
             setConfig({'graphs_enabled': _checkboxes});
         });
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            sensors.debugColumns = 8;
+        } else {
+            sensors.debugColumns = 4;
+
+            for (let i = 4; i < 8; i++) {
+                $(`svg#debug${i}`).hide();
+                $(`div.plot_control.debug${i}`).hide();
+            }
+        }
 
         // Always start with default/empty sensor data array, clean slate all
         initSensorData();
@@ -428,13 +433,6 @@ sensors.initialize = function (callback) {
             function update_debug_graphs() {
                 for (let i = 0; i < sensors.debugColumns; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
-
-                    // enable/disable graphs based on debug values
-                    if (FC.SENSOR_DATA.debug[i]) {
-                        $(`svg#debug${i}`).show();
-                        $(`div.plot_control.debug${i}`).show();
-                    }
-
                     addSampleToData(debug_data[i], samples_debug_i, [FC.SENSOR_DATA.debug[i]]);
                     drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);
                     raw_data_text_ements.x[5 + i].text(FC.SENSOR_DATA.debug[i]);
