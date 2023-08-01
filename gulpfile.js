@@ -46,7 +46,7 @@ const NODE_ENV = process.env.NODE_ENV || 'production';
 const NAME_REGEX = /-/g;
 
 const nwBuilderOptions = {
-    version: '0.77.0',
+    version: '0.72.0',
     files: `${DIST_DIR}**/*`,
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
