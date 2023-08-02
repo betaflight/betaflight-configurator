@@ -29,9 +29,10 @@ const vtx = {
     env: new djv(),
 };
 
-vtx.isVtxDeviceStatusNotReady = function() {
+vtx.isVtxDeviceStatusReady = function() {
     const isReady = (null !== FC.VTX_DEVICE_STATUS) && (FC.VTX_DEVICE_STATUS.deviceIsReady);
-    return !isReady;
+
+    return !!isReady;
 };
 
 vtx.updateVtxDeviceStatus = function() {
@@ -39,7 +40,7 @@ vtx.updateVtxDeviceStatus = function() {
         $("#vtx_type_description").text(TABS.vtx.getVtxTypeString());
 
         const vtxReady_e = $('.VTX_info span.colorToggle');
-        const isReady = !vtx.isVtxDeviceStatusNotReady() || FC.VTX_CONFIG.vtx_device_ready;
+        const isReady = vtx.isVtxDeviceStatusReady();
 
         // update device ready state
         vtxReady_e.text(isReady ? i18n.getMessage('vtxReadyTrue') : i18n.getMessage('vtxReadyFalse'));
