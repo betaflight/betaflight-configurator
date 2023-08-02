@@ -224,7 +224,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>${FC.GPS_DATA.svid[i]}</td>
-                            <td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>
+                            <td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>
                             <td>${FC.GPS_DATA.quality[i]}</td>
                         </tr>
                     `);
@@ -235,7 +235,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>-</td>
-                            <td><progress value="0" max="99"></progress></td>
+                            <td><meter value="0" max="55"></meter></td>
                             <td> </td>
                         </tr>
                     `);
@@ -256,11 +256,11 @@ gps.initialize = async function (callback) {
 
                     if (FC.GPS_DATA.chn[i] >= 7) {
                         rowContent += '<td>-</td>';
-                        rowContent += `<td><progress value="${0}" max="99"></progress></td>`;
+                        rowContent += `<td><meter value="${0}" max="55"></meter></td>`;
                         rowContent += `<td> </td>`;
                     } else {
                         rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
-                        rowContent += `<td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>`;
+                        rowContent += `<td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>`;
 
                         let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
                         let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
