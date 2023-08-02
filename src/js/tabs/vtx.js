@@ -292,7 +292,7 @@ vtx.initialize = function (callback) {
         $("#vtx_type_description").text(self.getVtxTypeString());
         $("#vtx_channel_description").text(FC.VTX_CONFIG.vtx_channel);
         $("#vtx_frequency_description").text(FC.VTX_CONFIG.vtx_frequency);
-        $("#vtx_pit_mode_description").text(FC.VTX_CONFIG.vtx_pit_mode ? i18n.getMessage("Yes") : i18n.getMessage("No"));
+        $("#vtx_pit_mode_description").text(FC.VTX_CONFIG.vtx_pit_mode ? i18n.getMessage("yes") : i18n.getMessage("no"));
         $("#vtx_pit_mode_frequency_description").text(FC.VTX_CONFIG.vtx_pit_mode_frequency);
         $("#vtx_low_power_disarm_description").text(i18n.getMessage(`vtxLowPowerDisarmOption_${FC.VTX_CONFIG.vtx_low_power_disarm}`));
 
