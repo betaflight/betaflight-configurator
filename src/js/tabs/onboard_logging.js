@@ -320,7 +320,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "GPS_RESCUE_VELOCITY"},
                 {text: "GPS_RESCUE_HEADING"},
                 {text: "GPS_RESCUE_TRACKING"},
-                {text: "GPS_UNIT_CONNECTION"},
+                {text: "GPS_CONNECTION"},
                 {text: "ATTITUDE"},
                 {text: "VTX_MSP"},
                 {text: "GPS_DOP"},

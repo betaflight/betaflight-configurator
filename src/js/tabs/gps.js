@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43 } from '../data_storage';
+import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
@@ -132,7 +132,10 @@ gps.initialize = async function (callback) {
 
         }).val(FC.GPS_CONFIG.provider).change();
 
-        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        // auto_baud is no longer used in API 1.46
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        }
 
         gpsAutoConfigElement.on('change', function () {
             const checked = $(this).is(":checked");
@@ -146,7 +149,7 @@ gps.initialize = async function (callback) {
             const enableSbasVisible = checked && ubloxSelected;
             gpsUbloxSbasGroup.toggle(enableSbasVisible);
 
-            gpsAutoBaudGroup.toggle(ubloxSelected || mspSelected);
+            gpsAutoBaudGroup.toggle((ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46));
             gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
 
         }).prop('checked', FC.GPS_CONFIG.auto_config === 1).trigger('change');
@@ -221,7 +224,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>${FC.GPS_DATA.svid[i]}</td>
-                            <td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>
+                            <td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>
                             <td>${FC.GPS_DATA.quality[i]}</td>
                         </tr>
                     `);
@@ -232,7 +235,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>-</td>
-                            <td><progress value="0" max="99"></progress></td>
+                            <td><meter value="0" max="55"></meter></td>
                             <td> </td>
                         </tr>
                     `);
@@ -253,11 +256,11 @@ gps.initialize = async function (callback) {
 
                     if (FC.GPS_DATA.chn[i] >= 7) {
                         rowContent += '<td>-</td>';
-                        rowContent += `<td><progress value="${0}" max="99"></progress></td>`;
+                        rowContent += `<td><meter value="${0}" max="55"></meter></td>`;
                         rowContent += `<td> </td>`;
                     } else {
                         rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
-                        rowContent += `<td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>`;
+                        rowContent += `<td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>`;
 
                         let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
                         let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
