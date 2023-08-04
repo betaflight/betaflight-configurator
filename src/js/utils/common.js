@@ -96,11 +96,7 @@ export function urlExists(url) {
 
     http.open('HEAD', url, false);
     http.send();
-    if (http.status !== 404) {
-        return true;
-    } else {
-        return false;
-    }
+    return http.status !== 404;
 }
 
 /**
