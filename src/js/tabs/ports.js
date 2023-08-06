@@ -8,6 +8,7 @@ import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
 import BOARD from '../boards';
+import $ from 'jquery';
 
 const ports = {
     analyticsChanges: {},

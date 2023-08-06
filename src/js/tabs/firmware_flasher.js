@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { i18n } from '../localization';
 import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';

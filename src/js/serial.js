@@ -6,6 +6,7 @@ import { gui_log } from "./gui_log";
 import inflection from "inflection";
 import PortHandler from "./port_handler";
 import { checkChromeRuntimeError } from "./utils/common";
+import $ from 'jquery';
 
 const serial = {
     connected:      false,

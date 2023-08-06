@@ -6,6 +6,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import jBox from 'jbox';
+import $ from 'jquery';
 
 const power = {
     supported: false,

@@ -3,6 +3,7 @@ import GUI, { TABS } from '../gui';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import { gui_log } from "../gui_log";
+import $ from 'jquery';
 
 const setup_osd = {
 };

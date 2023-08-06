@@ -1,6 +1,7 @@
 import { gui_log } from './gui_log';
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
+import $ from 'jquery';
 
 export default class BuildApi {
 

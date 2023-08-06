@@ -7,6 +7,7 @@ import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42 } from '../data_storage';
 import { gui_log } from '../gui_log';
 import semver from 'semver';
+import $ from 'jquery';
 
 const adjustments = {};
 

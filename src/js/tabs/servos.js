@@ -5,6 +5,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import { gui_log } from "../gui_log";
+import $ from 'jquery';
 
 const servos = {};
 servos.initialize = function (callback) {

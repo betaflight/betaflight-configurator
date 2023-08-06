@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export function updateTabList(features) {
     const isExpertModeEnabled = $('input[name="expertModeCheckbox"]').is(':checked');
 

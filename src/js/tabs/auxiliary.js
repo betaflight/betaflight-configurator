@@ -8,6 +8,7 @@ import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import adjustBoxNameIfPeripheralWithModeID from '../peripherals';
 import { getTextWidth } from '../utils/common';
+import $ from 'jquery';
 import inflection from "inflection";
 
 const auxiliary = {};

@@ -18,6 +18,7 @@ import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
 import semver from 'semver';
 import * as d3 from 'd3';
+import $ from 'jquery';
 
 const motors = {
     previousDshotBidir: null,

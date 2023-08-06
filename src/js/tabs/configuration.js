@@ -8,6 +8,7 @@ import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
 import { updateTabList } from '../utils/updateTabList';
+import $ from 'jquery';
 
 const configuration = {
     analyticsChanges: {},

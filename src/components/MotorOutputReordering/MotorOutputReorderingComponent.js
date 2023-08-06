@@ -8,6 +8,7 @@ import FC from "../../js/fc";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import GUI, { TABS } from "../../js/gui";
+import $ from "jquery";
 
 export default class MotorOutputReorderComponent
 {

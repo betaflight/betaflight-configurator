@@ -5,6 +5,7 @@ import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
+import $ from 'jquery';
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from '../msp/MSPHelper';
 import { updateTabList } from '../utils/updateTabList';

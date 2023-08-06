@@ -1,3 +1,4 @@
+import '../injected_methods';
 import { update_dataflash_global } from "../update_dataflash_global";
 import { sensor_status } from "../sensor_helpers";
 import { bit_check, bit_set } from "../bit";

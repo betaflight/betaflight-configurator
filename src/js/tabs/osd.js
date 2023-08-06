@@ -15,6 +15,7 @@ import jBox from "jbox";
 import inflection from "inflection";
 import { checkChromeRuntimeError } from "../utils/common";
 import debounce from "lodash.debounce";
+import $ from 'jquery';
 
 const FONT = {};
 const SYM = {};
