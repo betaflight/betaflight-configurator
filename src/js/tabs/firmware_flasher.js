@@ -16,7 +16,7 @@ import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
 import semver from 'semver';
-import { checkChromeRuntimeError } from '../utils/common';
+import { checkChromeRuntimeError, urlExists } from '../utils/common';
 import { generateFilename } from '../utils/generate_filename';
 
 const firmware_flasher = {
@@ -107,10 +107,15 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info #targetMCU').text(summary.mcu);
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
-            // Wiki link to url found in unified target configuration or if not defined to general wiki url
+            // Wiki link: #wiki found in unified target configuration, if board description exist or generel board missing
+            let urlWiki = 'https://betaflight.com/docs/wiki/boards/missing';                // generel board missing
+            const urlBoard = `https://betaflight.com/docs/wiki/boards/${summary.target}`;   // board description
+            if (urlExists(urlBoard)) {
+                urlWiki = urlBoard;
+            }
             const targetWiki = $('#targetWikiInfoUrl');
             targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
-            targetWiki.attr("href", summary.wiki === undefined ? "https://betaflight.com/docs/wiki/" : summary.wiki);
+            targetWiki.attr("href", urlWiki);
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
