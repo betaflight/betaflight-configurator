@@ -1301,7 +1301,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.LED_CONFIG_VALUES = {
                     brightness: data.readU8(),
                     rainbow_delta: data.readU8(),
-                    rainbow_freq: data.readU8(),
+                    rainbow_freq: data.readU16(),
                 };
                 break;
             case MSPCodes.MSP_SET_LED_STRIP_CONFIG_VALUES:
@@ -2643,7 +2643,7 @@ MspHelper.prototype.sendLedStripConfigValues = function(onCompleteCallback) {
     const buffer = [];
     buffer.push8(FC.LED_CONFIG_VALUES.brightness);
     buffer.push8(FC.LED_CONFIG_VALUES.rainbow_delta);
-    buffer.push8(FC.LED_CONFIG_VALUES.rainbow_freq);
+    buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq);
     MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
 
