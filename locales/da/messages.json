@@ -2274,6 +2274,10 @@
         "message": "Tænd eller sluk for LED lys",
         "description": "Help text to LEDLOW mode"
     },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Aktiverer låsning af kurs på aktuel kompasretning",
+        "description": "Help text to MAG mode"
+    },
     "auxiliaryHelpMode_OSDDISABLE": {
         "message": "Aktiver/deaktiver On-Screen-Display - OSD",
         "description": "Help text to OSD mode"
@@ -2317,6 +2321,22 @@
     "auxiliaryHelpMode_TELEMETRY": {
         "message": "Aktiver telemetri via kontakt",
         "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Skifter brugerdefineret USER1. Styrer via PINIO",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Skifter brugerdefineret USER2. Styrer via PINIO",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Skifter brugerdefineret USER3. Styrer via PINIO",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Skifter brugerdefineret USER4. Styrer via PINIO",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Deaktiver kontrol af VTX indstillinger via OSD",
