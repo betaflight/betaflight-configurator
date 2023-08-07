@@ -2326,6 +2326,10 @@
         "message": "Режим ПАРАЛІЗУ. Вимикає модель, що розбилась, поки не буде перепідключено живлення",
         "description": "Help text to PARALYZE mode"
     },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "Використовуйте для перемикання PIDAUDIO",
+        "description": "Help text to PIDAUDIO mode"
+    },
     "auxiliaryHelpMode_PREARM": {
         "message": "При взведенні, очікувати активацію цього перемикача перед фактичним взведенням",
         "description": "Help text to PREARM mode"
@@ -2338,9 +2342,37 @@
         "message": "Виключити/включити команди стіками",
         "description": "Help text to STICK COMMANDS DISABLE mode"
     },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "Використовуйте для перемикання SERVO1",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "Використовуйте для перемикання SERVO2",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "Використовуйте для перемикання SERVO3",
+        "description": "Help text to SERVO3 mode"
+    },
     "auxiliaryHelpMode_TELEMETRY": {
         "message": "Увімкнути телеметрію за допомогою перемикача",
         "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Використовуйте для перемикання налаштованого USER1. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Використовуйте для перемикання налаштованого USER2. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Використовуйте для перемикання налаштованого USER3. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Використовуйте для перемикання налаштованого USER4. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Вимкнути керування налаштуваннями відеопередавача через наекранне меню",
@@ -2641,11 +2673,19 @@
     "gpsAltitude": {
         "message": "Висота:"
     },
+    "gpsLatLon": {
+        "message": "Поточна широта/довгота:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
     "gpsHeading": {
         "message": "Курс:"
     },
     "gpsSpeed": {
         "message": "Швидкість:"
+    },
+    "gpsSats": {
+        "message": "Кількість супутників:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Відс. до точки зльоту:"

@@ -2194,9 +2194,25 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
+    "auxiliaryHelpMode_3D": {
+        "message": "モーターを反転させることで、マイナス推力を発生させ、倒立飛行を可能にします。スロットルは 0 ～ +100 ではなく -100 ～ +100 となります。",
+        "description": "Help text to 3D mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "アクロモードでの飛行時、機体角度を制限するフライトモード",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_ARM": {
+        "message": "モーター出力を有効にし飛行を可能とします",
+        "description": "Help text to ARM mode"
+    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "このオートレベルモードでは、ロールとピッチのチャンネルが関連する軸と垂直の間の角度を制御し、スティックを中心に配置することで水平飛行を実現します。",
         "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "フライトモードは、スロットルのすばやい操作時にP値とI値とを増加させ、スティック追従性を向上させ、スロットルのすばやい操作時におけるノーズドリフトを回避します。",
+        "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "標準のミキサー / モードでは、ロール、ピッチ、ヨーが計算上モーターの強度が飽和状態となると、すべてのモーターが均等に回転が減少します。モーターが最小値を下回ると切り捨て状態となります。例えば、スロットルを最小値より少し上にしてクイックロールをしようとした場合、2つのモーターはそれ以上回転を下げることができないので、実質的に半分のパワー (PID強度の半分) を得ることになります。もし、入力が高回転モーターと低回転モーターの間に100％以上の差を求めたとしたら、低回転モーターは回転が切り捨てられ、強度を不均一に減少させることとなってしまいモーターバランスの対称性を破綻させてしまうでしょう。",
@@ -2214,6 +2230,10 @@
         "message": "BEPPER ONモードを有効にします",
         "description": "Help text to BEEPER ON mode"
     },
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "ビープGPS衛星カウントモードを有効にします",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
+    },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "BlackBoxログを有効にします",
         "description": "Help text to BLACKBOX mode"
@@ -2225,6 +2245,10 @@
     "auxiliaryHelpMode_BOXPREARM": {
         "message": "BOX PREARMモードを有効にします",
         "description": "Help text to BOXPREARM mode"
+    },
+    "auxiliaryHelpMode_CALIB": {
+        "message": "飛行中のキャリブレーションを開始します",
+        "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
         "message": "カスタマイズ切り替えのためCAMERA CONTROL 1を使用します。メーカーのマニュアルをご確認ください。",
@@ -2254,6 +2278,10 @@
         "message": "装着するFPVカメラのプリセット角度に対してヨー回転をかけるよう適用します",
         "description": "Help text to FPV ANGLE MIX mode"
     },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "捕捉しているGPS衛星の数だけビープ音を鳴らします",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
     "auxiliaryHelpMode_GPSRESCUE": {
         "message": "『GPSレスキュー』を有効にし、最後に離陸した地点に機体を帰還させます",
         "description": "Help text to GPS RESCUE mode"
@@ -2261,6 +2289,10 @@
     "auxiliaryHelpMode_HEADADJ": {
         "message": "ヘッディング調整 - ヘッドフリーモードの新しいヨー基準点を設定します",
         "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "ヨーを機体の軸ではなく、外部の軸 (多くの場合パイロットが向いている方向) に合わせるフライトモードです。初心者のために用意されていますが、ほとんど使用されていません。",
+        "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
         "message": "このハイブリッドモードは、ロールとピッチのスティックを中央に配置するとアングルモードと同じように動作し(オートレベル飛行が可能)、スティックを中央から遠ざけていくと、徐々にレートモードのように動作するようになります。",
@@ -2273,6 +2305,10 @@
     "auxiliaryHelpMode_LEDLOW": {
         "message": "LEDストリップ出力をOFFにします",
         "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "コンパスで示した方向へのヘッディングロック (コンパス制御)",
+        "description": "Help text to MAG mode"
     },
     "auxiliaryHelpMode_MSPOVERRIDE": {
         "message": "MSP上書きモードを有効にします",
@@ -2290,6 +2326,10 @@
         "message": "クラッシュした機体をバッテリーが切れるまで永久に使用不可とします",
         "description": "Help text to PARALYZE mode"
     },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "PIDAUDIOを切り替えます",
+        "description": "Help text to PIDAUDIO mode"
+    },
     "auxiliaryHelpMode_PREARM": {
         "message": "アーミング時、実際にこのスイッチが有効になるのを待ってからアームします",
         "description": "Help text to PREARM mode"
@@ -2302,9 +2342,37 @@
         "message": "スティックコマンドを無効 / 有効にします",
         "description": "Help text to STICK COMMANDS DISABLE mode"
     },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "SERVO1を切り替えます",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "SERVO2を切り替えます",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "SERVO3を切り替えます",
+        "description": "Help text to SERVO3 mode"
+    },
     "auxiliaryHelpMode_TELEMETRY": {
         "message": "スイッチを使いテレメトリーを有効にします",
         "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "カスタマイズした USER1 を切り替えます。PINIO経由で任意の出力を制御します。",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "カスタマイズした USER2 を切り替えます。PINIO経由で任意の出力を制御します。",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "カスタマイズした USER3 を切り替えます。PINIO経由で任意の出力を制御します。",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "カスタマイズした USER4 を切り替えます。PINIO経由で任意の出力を制御します。",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "OSD経由でVTX設定の制御を無効にします",
@@ -2605,11 +2673,19 @@
     "gpsAltitude": {
         "message": "高度:"
     },
+    "gpsLatLon": {
+        "message": "現在の 緯度 / 経度:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
     "gpsHeading": {
         "message": "ヘッディング:"
     },
     "gpsSpeed": {
         "message": "速度:"
+    },
+    "gpsSats": {
+        "message": "衛星捕捉数:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "ホームまでの距離:"
@@ -3805,7 +3881,7 @@
         "message": "感度"
     },
     "pidTuningLevelHelp": {
-        "message": "以下の値は、アングルとホライゾンの飛行モードの動作を変更します。それぞれのPIDコントローラは異なる値を処理します。 ドキュメントを確認してください。"
+        "message": "以下の値は、アングルとホライゾンのフライトモードの動作を変更します。それぞれのPIDコントローラは異なる値を処理します。 ドキュメントを確認してください。"
     },
     "pidTuningMotorOutputLimit": {
         "message": "モーター出力リミット"
@@ -5221,7 +5297,7 @@
         "message": "アーム後の経過時間 (アラーム値を超えると点滅)"
     },
     "osdTextElementFlyMode": {
-        "message": "フライトモード",
+        "message": "飛行モード (Fly)",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlyMode": {

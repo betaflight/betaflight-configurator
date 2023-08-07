@@ -2673,11 +2673,19 @@
     "gpsAltitude": {
         "message": "Altitudine:"
     },
+    "gpsLatLon": {
+        "message": "Latitudine / Longitudine Attuale:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
     "gpsHeading": {
         "message": "Direzione:"
     },
     "gpsSpeed": {
         "message": "Velocità:"
+    },
+    "gpsSats": {
+        "message": "Numero di satelliti:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Distanza dal punto di partenza:"
