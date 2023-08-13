@@ -5,7 +5,7 @@ import MSP from "../msp";
 import FC from "../fc";
 import MSPCodes from "../msp/MSPCodes";
 import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
-import { API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import { API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import semver from 'semver';
 
 const failsafe = {};
@@ -295,14 +295,18 @@ failsafe.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                $('input[name="gps_rescue_min_dth"]').attr("min", 10);
+            } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                $('input[name="gps_rescue_min_dth"]').attr("min", 20);
+            }
+
             $('input[name="gps_rescue_min_dth"]').val(FC.GPS_RESCUE.minRescueDth);
         } else {
             $('input[name="gps_rescue_min_dth"]').closest('.number').hide();
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            $('input[name="gps_rescue_min_dth"]').attr("min", 20);
-        }
+
 
         $('a.save').click(function () {
             // gather data that doesn't have automatic change event bound
