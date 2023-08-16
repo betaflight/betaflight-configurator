@@ -1,3 +1,5 @@
+import './jqueryPlugins';
+import $ from 'jquery';
 import 'jbox';
 import '../components/init.js';
 import { gui_log } from './gui_log.js';

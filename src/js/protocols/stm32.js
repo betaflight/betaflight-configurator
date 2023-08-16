@@ -19,6 +19,7 @@ import { API_VERSION_1_42 } from "../data_storage";
 import serial from "../serial";
 import STM32DFU from "./stm32usbdfu";
 import semver from "semver";
+import $ from 'jquery';
 
 const STM32_protocol = function () {
     this.baud = null;

@@ -3,6 +3,7 @@ import CONFIGURATOR from './data_storage';
 import FC from './fc';
 import semver from 'semver';
 import { tracking } from './Analytics';
+import $ from 'jquery';
 
 /**
  * Encapsulates the AutoComplete logic

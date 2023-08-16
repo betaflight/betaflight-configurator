@@ -1,4 +1,5 @@
 import FC from "./fc";
+import $ from 'jquery';
 
 export function update_dataflash_global() {
     function formatFilesize(bytes) {

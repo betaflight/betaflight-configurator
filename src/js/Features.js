@@ -2,6 +2,7 @@ import { bit_check, bit_set, bit_clear } from "./bit";
 import { API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
+import $ from 'jquery';
 
 const Features = function (config) {
     const self = this;

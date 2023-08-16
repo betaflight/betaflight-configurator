@@ -22,6 +22,7 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from 'semver';
 import CryptoES from "crypto-es";
+import $ from 'jquery';
 import BuildApi from "./BuildApi";
 
 let mspHelper;

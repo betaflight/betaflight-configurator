@@ -1,4 +1,5 @@
 import windowWatcherUtil from "../utils/window_watchers";
+import $ from 'jquery';
 
 const css_dark = [
     '/css/dark-theme.css',

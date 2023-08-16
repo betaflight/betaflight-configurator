@@ -5,6 +5,7 @@ import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
 import FC from "../../../js/fc";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import $ from 'jquery';
 
 export default class PresetsDetailedDialog {
     constructor(domDialog, pickedPresetList, onPresetPickedCallback, favoritePresets) {

@@ -1,4 +1,5 @@
 import { bit_check } from './bit';
+import $ from 'jquery';
 
 export function have_sensor(sensors_detected, sensor_code) {
     switch(sensor_code) {
