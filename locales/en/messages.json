@@ -3670,6 +3670,29 @@
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Brightness",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Maximum brightness percent of the LEDs."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Hue difference between each LEDs.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Frequency",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Frequency of the color change, in other terms the speed of the effect.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
+    },
     "ledStripFunctionSection": {
         "message": "LED Functions"
     },
@@ -3827,7 +3850,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Rainbow",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"

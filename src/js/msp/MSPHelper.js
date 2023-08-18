@@ -851,6 +851,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 break;
 
+            case MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES:
+                FC.LED_CONFIG_VALUES.brightness = data.readU8();
+                FC.LED_CONFIG_VALUES.rainbow_delta = data.readU16();
+                FC.LED_CONFIG_VALUES.rainbow_freq = data.readU16();
+                break;
+
             case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
                 console.log('Channel forwarding saved');
                 break;
@@ -1162,7 +1168,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 let ledCount = (data.byteLength - 2) / 4;
 
-                // The 32 bit config of each LED contains these in LSB:
+                // The 32 bit config of each LED contains the following in LSB:
                 // +----------------------------------------------------------------------------------------------------------+
                 // | Directions - 6 bit | Color ID - 4 bit | Overlays - 10 bit | Function ID - 4 bit  | X - 4 bit | Y - 4 bit |
                 // +----------------------------------------------------------------------------------------------------------+
@@ -1213,9 +1219,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                         FC.LED_STRIP.push(led);
                     }
-                }
-                else {
-                    ledOverlayLetters = ledOverlayLetters.filter(x => x !== 'y');
+                } else {
+                    ledOverlayLetters = ledOverlayLetters.filter(x => x !== 'y'); //remove rainbow because it's only supported after API 1.46
 
                     for (let i = 0; i < ledCount; i++) {
 
@@ -1563,6 +1568,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP2_SET_TEXT:
                 console.log('Text set');
+                break;
+            case MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES:
                 break;
             case MSPCodes.MSP_SET_FILTER_CONFIG:
                 // removed as this fires a lot with firmware sliders console.log('Filter config set');
@@ -2111,6 +2118,9 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             }
             break;
 
+        case MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES:
+            break;
+
         case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
             buffer.push8(FC.BLACKBOX.blackboxDevice)
                 .push8(FC.BLACKBOX.blackboxRateNum)
@@ -2554,8 +2564,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
             }
 
             buffer.push32(mask);
-        }
-        else {
+        } else {
             for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
                 const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
                 if (bitIndex >= 0) {
@@ -2630,6 +2639,14 @@ MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
 
         MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_MODECOLOR, buffer, false, nextFunction);
     }
+};
+
+MspHelper.prototype.sendLedStripConfigValues = function(onCompleteCallback) {
+    const buffer = [];
+    buffer.push8(FC.LED_CONFIG_VALUES.brightness);
+    buffer.push16(FC.LED_CONFIG_VALUES.rainbow_delta);
+    buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq);
+    MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
 
 MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {
