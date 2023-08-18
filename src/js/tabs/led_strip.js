@@ -41,11 +41,7 @@ led_strip.initialize = function (callback, scrollPosition) {
     }
 
     function load_led_mode_colors() {
-        MSP.send_message(MSPCodes.MSP_LED_STRIP_MODECOLOR, false, false, load_led_config_values);
-    }
-
-    function load_led_config_values() {
-        MSP.send_message(MSPCodes.MSP_LED_STRIP_CONFIG_VALUES, false, false, load_html);
+        MSP.send_message(MSPCodes.MSP_LED_STRIP_MODECOLOR, false, false, load_html);
     }
 
     function load_html() {
@@ -382,8 +378,6 @@ led_strip.initialize = function (callback, scrollPosition) {
                         if (feature_o.is(':checked') !== newVal) {
                             feature_o.prop('checked', newVal);
                             feature_o.trigger('change');
-
-                            $('.rainbowSlidersDiv').toggle($('.checkbox.rainbowOverlay').find('input').is(':checked')); //rainbow slider visibility
                         }
                     });
 
@@ -510,11 +504,6 @@ led_strip.initialize = function (callback, scrollPosition) {
                     }
                 }
 
-                //Change Rainbow slider visibility
-                if (that.is('.function-y')) {
-                    $('.rainbowSlidersDiv').toggle(that.is(':checked'));
-                }
-
                 if ($('.ui-selected').length > 0) {
                     TABS.led_strip.overlays.forEach(function(letter) {
                         if ($(that).is(functionTag + letter)) {
@@ -565,78 +554,6 @@ led_strip.initialize = function (callback, scrollPosition) {
 
             $(this).addClass(`color-${led.color}`);
         });
-
-        //default slider values
-        $('div.brightnessSlider input').first().prop('value', FC.LED_CONFIG_VALUES.brightness);
-        $('div.brightnessSlider label').first().text($('div.brightnessSlider input').first().val());
-        $('div.rainbowDeltaSlider input').first().prop('value', FC.LED_CONFIG_VALUES.rainbow_delta);
-        $('div.rainbowDeltaSlider label').first().text($('div.rainbowDeltaSlider input').first().val());
-        $('div.rainbowFreqSlider input').first().prop('value', FC.LED_CONFIG_VALUES.rainbow_freq);
-        $('div.rainbowFreqSlider label').first().text($('div.rainbowFreqSlider input').first().val());
-
-        //Brightness slider
-        let bufferingBrightness = [],
-        buffer_delay_brightness = false;
-
-        $('div.brightnessSlider input').on('input', function () {
-            const val = $(this).val();
-            bufferingBrightness.push(val);
-
-            if (!buffer_delay_brightness) {
-                buffer_delay_brightness = setTimeout(function () {
-                    FC.LED_CONFIG_VALUES.brightness = bufferingBrightness.pop();
-                    mspHelper.sendLedStripConfigValues();
-
-                    bufferingBrightness = [];
-                    buffer_delay_brightness = false;
-                }, 10);
-            }
-
-            $('div.brightnessSlider label').first().text(val);
-        });
-
-        //Rainbow Delta slider
-        let bufferingRainbowDelta = [],
-        buffer_delay_rainbow_delta = false;
-
-        $('div.rainbowDeltaSlider input').on('input', function () {
-            const val = $(this).val();
-            bufferingRainbowDelta.push(val);
-
-            if (!buffer_delay_rainbow_delta) {
-                buffer_delay_rainbow_delta = setTimeout(function () {
-                    FC.LED_CONFIG_VALUES.rainbow_delta = bufferingRainbowDelta.pop();
-                    mspHelper.sendLedStripConfigValues();
-
-                    bufferingRainbowDelta = [];
-                    buffer_delay_rainbow_delta = false;
-                }, 10);
-            }
-
-            $('div.rainbowDeltaSlider label').first().text(val);
-        });
-
-        //Rainbow Frequency slider
-        let bufferingRainbowFreq = [],
-        buffer_delay_rainbow_freq = false;
-
-        $('div.rainbowFreqSlider input').on('input', function () {
-            const val = $(this).val();
-            bufferingRainbowFreq.push(val);
-
-            if (!buffer_delay_rainbow_freq) {
-                buffer_delay_rainbow_freq = setTimeout(function () {
-                    FC.LED_CONFIG_VALUES.rainbow_freq = bufferingRainbowFreq.pop();
-                    mspHelper.sendLedStripConfigValues();
-
-                    bufferingRainbowFreq = [];
-                    buffer_delay_rainbow_freq = false;
-                }, 10);
-            }
-
-            $('div.rainbowFreqSlider label').first().text(val);
-        });
-
 
         $('a.save').on('click', function () {
             mspHelper.sendLedStripConfig(send_led_strip_colors);
