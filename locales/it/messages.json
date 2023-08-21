@@ -190,7 +190,7 @@
         "message": "Utilizzando una versione più recente del firmware con una versione obsoleta del Configuratore può significare che la modifica di alcune impostazioni porterà a una <strong>configurazione corrotta del firmware e a un modello non funzionante</strong>. Inoltre, alcune caratteristiche del firmware saranno configurabili solo via CLI.<br><strong>La versione <b>$1</b> del Betaflight Configurator è disponibile per il download</strong>, visita <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina</a> per scaricare e installare l'ultima versione con correzioni e miglioramenti.<br>Chiudere la finestra del configuratore prima dell'aggiornamento."
     },
     "configuratorUpdateWebsite": {
-        "message": "Visita la pagina degli aggiornamenti"
+        "message": "Pagina web degli aggiornamenti"
     },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Riavvio in corso</span>"
@@ -1287,7 +1287,7 @@
         "message": "Comando minimo (valore dell'ESC quando disarmato)"
     },
     "configurationThrottleMinimumCommandHelp": {
-        "message": "Questo è il valore che viene inviato agli ESC quando il mezzo è disarmato. Impostalo su un valore che lasci i motori fermi (1000 per la maggior parte degli ESC)."
+        "message": "Questo è il valore che viene inviato agli ESC quando il modello è disarmato. Impostalo su un valore che lasci i motori fermi (1000 per la maggior parte degli ESC)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Seleziona un protocollo per l'output dei motori appropriato per i tuoi ESC.\n$t(escProtocolDisabledMessage.message)"
@@ -1442,7 +1442,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "Se abilitato, il modulo GPS userà anche il sistema satellitare Galileo, risultando generalmente in più satelliti agganciati. Su Betaflight 4.2.x o precedenti disabilita anche il sistema di potenziato QZSS.",
+        "message": "Se abilitato, il modulo GPS userà anche il sistema satellitare Galileo, risultando generalmente con più satelliti agganciati. Su Betaflight 4.2.x o precedenti disabilita anche il sistema di potenziato QZSS.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -1450,7 +1450,7 @@
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Quando abilitato, solo il primo armamento dopo la connessione della batteria verrà utilizzato come punto di partenza. Se non abilitato, ogni volta che il quad viene armato il punto di partenza verrà aggiornato.",
+        "message": "Se abilitato, al primo armamento dopo la connessione della batteria verrà usato come punto di partenza. Se non abilitato, ogni volta che il quad viene armato il punto di partenza verrà aggiornato.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -2674,7 +2674,7 @@
         "message": "Altitudine:"
     },
     "gpsLatLon": {
-        "message": "Latitudine / Longitudine Attuale:",
+        "message": "Latitudine / Longitudine Corrente:",
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
