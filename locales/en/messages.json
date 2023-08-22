@@ -830,14 +830,6 @@
         "message": "Heading:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:",
-        "description": "Pitch shown on Setup tab"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:",
-        "description": "Roll shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
     },
@@ -2783,7 +2775,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Heading:"
+        "message": "Heading Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Speed:"
@@ -4615,8 +4608,8 @@
     "failsafeGpsRescueItemAngle": {
         "message": "Angle"
     },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Initial altitude (meters)"
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Return altitude (meters) - <span class=\"message-negative\">Only when in FIXED Altitude mode.</span>"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Descent distance (meters)"
@@ -4626,6 +4619,12 @@
     },
     "failsafeGpsRescueItemMinDthHelp": {
         "message": "The minimum distance to home needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Initial climb (meters)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "The distance the quad will climb, above the current altitude, when a rescue is initiated and the altitude mode is set to CURRENT Altitude"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Ground speed (meters/second)"

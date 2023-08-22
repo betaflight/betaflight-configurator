@@ -514,7 +514,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
                 FC.GPS_RESCUE.angle             = data.readU16();
-                FC.GPS_RESCUE.initialAltitudeM  = data.readU16();
+                FC.GPS_RESCUE.returnAltitudeM   = data.readU16();
                 FC.GPS_RESCUE.descentDistanceM  = data.readU16();
                 FC.GPS_RESCUE.rescueGroundspeed = data.readU16();
                 FC.GPS_RESCUE.throttleMin       = data.readU16();
@@ -530,6 +530,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     FC.GPS_RESCUE.minRescueDth = data.readU16();
+                }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.GPS_RESCUE.initialClimbMode = data.readU8();
                 }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
@@ -1797,7 +1800,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
             buffer.push16(FC.GPS_RESCUE.angle)
-                  .push16(FC.GPS_RESCUE.initialAltitudeM)
+                  .push16(FC.GPS_RESCUE.returnAltitudeM)
                   .push16(FC.GPS_RESCUE.descentDistanceM)
                   .push16(FC.GPS_RESCUE.rescueGroundspeed)
                   .push16(FC.GPS_RESCUE.throttleMin)
@@ -1814,6 +1817,9 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             }
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                 buffer.push16(FC.GPS_RESCUE.minRescueDth);
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                buffer.push8(FC.GPS_RESCUE.initialClimbMode);
             }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:

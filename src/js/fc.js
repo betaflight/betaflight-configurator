@@ -578,7 +578,7 @@ const FC = {
 
         this.GPS_RESCUE = {
             angle:                          0,
-            initialAltitudeM:               0,
+            returnAltitudeM:                0,
             descentDistanceM:               0,
             rescueGroundspeed:              0,
             throttleMin:                    0,
@@ -591,6 +591,7 @@ const FC = {
             allowArmingWithoutFix:          0,
             altitudeMode:                   0,
             minRescueDth:                   0,
+            initialClimbMode:               0,
         };
 
         this.RXFAIL_CONFIG = [];
