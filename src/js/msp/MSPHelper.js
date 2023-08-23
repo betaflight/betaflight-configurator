@@ -532,7 +532,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.GPS_RESCUE.minRescueDth = data.readU16();
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                    FC.GPS_RESCUE.initialClimbMode = data.readU8();
+                    FC.GPS_RESCUE.initialClimbMode = data.readU16();
                 }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
@@ -1819,7 +1819,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 buffer.push16(FC.GPS_RESCUE.minRescueDth);
             }
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                buffer.push8(FC.GPS_RESCUE.initialClimbMode);
+                buffer.push16(FC.GPS_RESCUE.initialClimbMode);
             }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
