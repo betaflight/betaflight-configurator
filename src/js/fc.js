@@ -591,7 +591,7 @@ const FC = {
             allowArmingWithoutFix:          0,
             altitudeMode:                   0,
             minRescueDth:                   0,
-            initialClimbMode:               0,
+            initialClimbM:                  0,
         };
 
         this.RXFAIL_CONFIG = [];
