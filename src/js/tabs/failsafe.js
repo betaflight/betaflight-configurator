@@ -297,11 +297,11 @@ failsafe.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                $('input[name="gps_rescue_min_dth"]').attr("min", 10);
-                $('input[name="gps_rescue_min_dth"]').attr("max", 30);
+                $('input[name="gps_rescue_min_dth"]').attr({"min": 10, "max": 30});
+                $('input[name="gps_rescue_ground_speed"]').attr({"min": 3.0, "max": 30.0, "step": 0.1});
+                $('input[name="gps_rescue_ascend_rate"]').attr({"min": 1.0, "max": 25.0, "step": 0.1});
+                $('input[name="gps_rescue_descend_rate"]').attr({"min": 1.0, "max": 5.0, "step": 0.1});
                 $('input[name="gps_rescue_descent_distance"]').attr("min", 10);
-                $('input[name="gps_rescue_initial_climb"]').attr("min", 5);
-                $('input[name="gps_rescue_initial_climb"]').attr("max", 1000);
                 $('input[name="gps_rescue_initial_climb"]').val(FC.GPS_RESCUE.initialClimbM);
             } else {
                 $('input[name="gps_rescue_initial_climb"]').closest('.number').hide();
