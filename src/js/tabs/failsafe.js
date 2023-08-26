@@ -271,7 +271,7 @@ failsafe.initialize = function (callback) {
         $('input[name="gps_rescue_angle"]').val(FC.GPS_RESCUE.angle);
         $('input[name="gps_rescue_return_altitude"]').val(FC.GPS_RESCUE.returnAltitudeM);
         $('input[name="gps_rescue_descent_distance"]').val(FC.GPS_RESCUE.descentDistanceM);
-        $('input[name="gps_rescue_ground_speed"]').val((FC.GPS_RESCUE.rescueGroundspeed / 100).toFixed(2));
+        $('input[name="gps_rescue_ground_speed"]').val((FC.GPS_RESCUE.groundSpeed / 100).toFixed(1));
         $('input[name="gps_rescue_throttle_min"]').val(FC.GPS_RESCUE.throttleMin);
         $('input[name="gps_rescue_throttle_max"]').val(FC.GPS_RESCUE.throttleMax);
         $('input[name="gps_rescue_throttle_hover"]').val(FC.GPS_RESCUE.throttleHover);
@@ -284,8 +284,8 @@ failsafe.initialize = function (callback) {
         $('#failsafeGpsRescueItemAltitudeSelect').sortSelect();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            $('input[name="gps_rescue_ascend_rate"]').val((FC.GPS_RESCUE.ascendRate / 100).toFixed(2));
-            $('input[name="gps_rescue_descend_rate"]').val((FC.GPS_RESCUE.descendRate / 100).toFixed(2));
+            $('input[name="gps_rescue_ascend_rate"]').val((FC.GPS_RESCUE.ascendRate / 100).toFixed(1));
+            $('input[name="gps_rescue_descend_rate"]').val((FC.GPS_RESCUE.descendRate / 100).toFixed(1));
             $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked', FC.GPS_RESCUE.allowArmingWithoutFix > 0);
             $('select[name="gps_rescue_altitude_mode"]').val(FC.GPS_RESCUE.altitudeMode);
         } else {
@@ -296,27 +296,35 @@ failsafe.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                $('input[name="gps_rescue_min_dth"]').attr({"min": 10, "max": 30});
-                $('input[name="gps_rescue_ground_speed"]').attr({"min": 3.0, "max": 30.0, "step": 0.1});
-                $('input[name="gps_rescue_ascend_rate"]').attr({"min": 1.0, "max": 25.0, "step": 0.1});
-                $('input[name="gps_rescue_descend_rate"]').attr({"min": 1.0, "max": 5.0, "step": 0.1});
-                $('input[name="gps_rescue_descent_distance"]').attr("min", 10);
-                $('input[name="gps_rescue_initial_climb"]').val(FC.GPS_RESCUE.initialClimbM);
-            } else {
-                $('input[name="gps_rescue_initial_climb"]').closest('.number').hide();
-
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    $('input[name="gps_rescue_min_dth"]').attr("min", 20);
-                }
-            }
-
             $('input[name="gps_rescue_min_dth"]').val(FC.GPS_RESCUE.minRescueDth);
         } else {
             $('input[name="gps_rescue_min_dth"]').closest('.number').hide();
         }
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            $('input[name="gps_rescue_angle"]').attr("max", 80);
+            $('input[name="gps_rescue_return_altitude"]').attr({"min": 2, "max": 255});
+            $('input[name="gps_rescue_descent_distance"]').attr("min", 5);
+            $('input[name="gps_rescue_min_dth"]').attr("min", 20);
+            $('input[name="gps_rescue_ground_speed"]').attr("min", 0.0);
+            $('input[name="gps_rescue_ascend_rate"]').attr("min", 0.5);
+            $('input[name="gps_rescue_descend_rate"]').attr("min", 0.3);
+        }
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            $('input[name="gps_rescue_initial_climb"]').val(FC.GPS_RESCUE.initialClimbM);
+        } else {
+            $('input[name="gps_rescue_initial_climb"]').closest('.number').hide();
+        }
+
+        // Update attributes for API version 4.5
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            $('input[name="gps_rescue_angle"]').attr({"min": 30, "max": 60});
+            $('input[name="gps_rescue_return_altitude"]').attr({"min": 5, "max": 1000});
+            $('input[name="gps_rescue_descent_distance"]').attr("min", 10);
+            $('input[name="gps_rescue_min_dth"]').attr({"min": 10, "max": 30});
+            $('input[name="gps_rescue_descend_rate"]').attr({"min": 0.2, "max": 50.0});
+        }
 
         $('a.save').click(function () {
             // gather data that doesn't have automatic change event bound
@@ -345,7 +353,7 @@ failsafe.initialize = function (callback) {
             FC.GPS_RESCUE.angle             = $('input[name="gps_rescue_angle"]').val();
             FC.GPS_RESCUE.returnAltitudeM   = $('input[name="gps_rescue_return_altitude"]').val();
             FC.GPS_RESCUE.descentDistanceM  = $('input[name="gps_rescue_descent_distance"]').val();
-            FC.GPS_RESCUE.rescueGroundspeed = $('input[name="gps_rescue_ground_speed"]').val() * 100;
+            FC.GPS_RESCUE.groundSpeed       = $('input[name="gps_rescue_ground_speed"]').val() * 100;
             FC.GPS_RESCUE.throttleMin       = $('input[name="gps_rescue_throttle_min"]').val();
             FC.GPS_RESCUE.throttleMax       = $('input[name="gps_rescue_throttle_max"]').val();
             FC.GPS_RESCUE.throttleHover     = $('input[name="gps_rescue_throttle_hover"]').val();

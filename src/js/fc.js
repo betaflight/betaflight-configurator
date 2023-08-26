@@ -580,7 +580,7 @@ const FC = {
             angle:                          0,
             returnAltitudeM:                0,
             descentDistanceM:               0,
-            rescueGroundspeed:              0,
+            groundSpeed:                    0,
             throttleMin:                    0,
             throttleMax:                    0,
             throttleHover:                  0,
