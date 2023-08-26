@@ -590,7 +590,7 @@ const FC = {
             descendRate:                    0,
             allowArmingWithoutFix:          0,
             altitudeMode:                   0,
-            minRescueDth:                   0,
+            minStartDistM:                  0,
             initialClimbM:                  0,
         };
 

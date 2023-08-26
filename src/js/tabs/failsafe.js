@@ -296,16 +296,16 @@ failsafe.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('input[name="gps_rescue_min_dth"]').val(FC.GPS_RESCUE.minRescueDth);
+            $('input[name="gps_rescue_min_start_dist"]').val(FC.GPS_RESCUE.minStartDistM);
         } else {
-            $('input[name="gps_rescue_min_dth"]').closest('.number').hide();
+            $('input[name="gps_rescue_min_start_dist"]').closest('.number').hide();
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('input[name="gps_rescue_angle"]').attr("max", 80);
             $('input[name="gps_rescue_return_altitude"]').attr({"min": 2, "max": 255});
             $('input[name="gps_rescue_descent_distance"]').attr("min", 5);
-            $('input[name="gps_rescue_min_dth"]').attr("min", 20);
+            $('input[name="gps_rescue_min_start_dist"]').attr("min", 20);
             $('input[name="gps_rescue_ground_speed"]').attr("min", 0.0);
             $('input[name="gps_rescue_ascend_rate"]').attr("min", 0.5);
             $('input[name="gps_rescue_descend_rate"]').attr("min", 0.3);
@@ -322,7 +322,7 @@ failsafe.initialize = function (callback) {
             $('input[name="gps_rescue_angle"]').attr({"min": 30, "max": 60});
             $('input[name="gps_rescue_return_altitude"]').attr({"min": 5, "max": 1000});
             $('input[name="gps_rescue_descent_distance"]').attr("min", 10);
-            $('input[name="gps_rescue_min_dth"]').attr({"min": 10, "max": 30});
+            $('input[name="gps_rescue_min_start_dist"]').attr({"min": 10, "max": 30});
             $('input[name="gps_rescue_descend_rate"]').attr({"min": 0.2, "max": 50.0});
         }
 
@@ -368,7 +368,7 @@ failsafe.initialize = function (callback) {
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                FC.GPS_RESCUE.minRescueDth = $('input[name="gps_rescue_min_dth"]').val();
+                FC.GPS_RESCUE.minStartDistM = $('input[name="gps_rescue_min_start_dist"]').val();
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {

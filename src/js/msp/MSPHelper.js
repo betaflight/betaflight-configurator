@@ -529,7 +529,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.GPS_RESCUE.altitudeMode          = data.readU8();
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.GPS_RESCUE.minRescueDth = data.readU16();
+                    FC.GPS_RESCUE.minStartDistM = data.readU16();
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                     FC.GPS_RESCUE.initialClimbM = data.readU16();
@@ -1816,7 +1816,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                     .push8(FC.GPS_RESCUE.altitudeMode);
             }
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                buffer.push16(FC.GPS_RESCUE.minRescueDth);
+                buffer.push16(FC.GPS_RESCUE.minStartDistM);
             }
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 buffer.push16(FC.GPS_RESCUE.initialClimbM);
