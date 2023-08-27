@@ -61,7 +61,7 @@ const MSP = {
 
     JUMBO_FRAME_SIZE_LIMIT:     255,
 
-    read: function (readInfo) {
+    read(readInfo) {
         if (CONFIGURATOR.virtualMode) {
             return;
         }
@@ -209,11 +209,11 @@ const MSP = {
         }
         this.last_received_timestamp = Date.now();
     },
-    _initialize_read_buffer: function() {
+    _initialize_read_buffer() {
         this.message_buffer = new ArrayBuffer(this.message_length_expected);
         this.message_buffer_uint8_view = new Uint8Array(this.message_buffer);
     },
-    _dispatch_message: function(expectedChecksum) {
+    _dispatch_message(expectedChecksum) {
         if (this.message_checksum === expectedChecksum) {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
@@ -229,21 +229,20 @@ const MSP = {
         this.messageIsJumboFrame = false;
         this.crcError = false;
     },
-    notify: function() {
-        const self = this;
-        self.listeners.forEach(function(listener) {
-            listener(self);
+    notify() {
+        this.listeners.forEach((listener) => {
+            listener(this);
         });
     },
-    listen: function(listener) {
+    listen(listener) {
         if (this.listeners.indexOf(listener) == -1) {
             this.listeners.push(listener);
         }
     },
-    clearListeners: function() {
+    clearListeners() {
         this.listeners = [];
     },
-    crc8_dvb_s2: function(crc, ch) {
+    crc8_dvb_s2(crc, ch) {
         crc ^= ch;
         for (let ii = 0; ii < 8; ii++) {
             if (crc & 0x80) {
@@ -254,14 +253,14 @@ const MSP = {
         }
         return crc;
     },
-    crc8_dvb_s2_data: function(data, start, end) {
+    crc8_dvb_s2_data(data, start, end) {
         let crc = 0;
         for (let ii = start; ii < end; ii++) {
             crc = this.crc8_dvb_s2(crc, data[ii]);
         }
         return crc;
     },
-    encode_message_v1: function(code, data) {
+    encode_message_v1(code, data) {
         const dataLength = data ? data.length : 0;
         // always reserve 6 bytes for protocol overhead !
         const bufferSize = dataLength + 6;
@@ -284,7 +283,7 @@ const MSP = {
         bufView[5 + dataLength] = checksum;
         return bufferOut;
     },
-    encode_message_v2: function (code, data) {
+    encode_message_v2(code, data) {
         const dataLength = data ? data.length : 0;
         // 9 bytes for protocol overhead
         const bufferSize = dataLength + 9;
@@ -304,7 +303,7 @@ const MSP = {
         bufView[bufferSize - 1] = this.crc8_dvb_s2_data(bufView, 3, bufferSize - 1);
         return bufferOut;
     },
-    send_message: function (code, data, callback_sent, callback_msp, doCallbackOnError) {
+    send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
         if (code === undefined || !serial.connectionId || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
@@ -314,7 +313,7 @@ const MSP = {
 
         // Check if request already exists in the queue
         let requestExists = false;
-        for (const instance of MSP.callbacks) {
+        for (const instance of this.callbacks) {
             if (instance.code === code) {
                 requestExists = true;
 
@@ -333,25 +332,25 @@ const MSP = {
         };
 
         if (!requestExists) {
-            obj.timer = setTimeout(function () {
-                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${MSP.timeout} QUEUE: ${MSP.callbacks.length} (${MSP.callbacks.map(function (e) { return e.code; })})`);
-                serial.send(bufferOut, function (_sendInfo) {
+            obj.timer = setTimeout(() => {
+                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${this.timeout} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`);
+                serial.send(bufferOut, (_sendInfo) => {
                     obj.stop = performance.now();
                     const executionTime = Math.round(obj.stop - obj.start);
-                    MSP.timeout = Math.max(MSP.MIN_TIMEOUT, Math.min(executionTime, MSP.MAX_TIMEOUT));
+                    this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
                 });
-            }, MSP.timeout);
+            }, this.timeout);
         }
 
-        MSP.callbacks.push(obj);
+        this.callbacks.push(obj);
 
         // always send messages with data payload (even when there is a message already in the queue)
         if (data || !requestExists) {
-            if (MSP.timeout > MSP.MIN_TIMEOUT) {
-                MSP.timeout--;
+            if (this.timeout > this.MIN_TIMEOUT) {
+                this.timeout--;
             }
 
-            serial.send(bufferOut, function (sendInfo) {
+            serial.send(bufferOut, (sendInfo) => {
                 if (sendInfo.bytesSent === bufferOut.byteLength) {
                     if (callback_sent) {
                         callback_sent();
@@ -366,23 +365,21 @@ const MSP = {
     /**
      * resolves: {command: code, data: data, length: message_length}
      */
-    promise: async function(code, data) {
-        const self = this;
-
-        return new Promise(function(resolve) {
-            self.send_message(code, data, false, function(_data) {
+    async promise(code, data) {
+        return new Promise((resolve) => {
+            this.send_message(code, data, false, (_data) => {
                 resolve(_data);
             });
         });
     },
-    callbacks_cleanup: function () {
+    callbacks_cleanup() {
         for (const callback of this.callbacks) {
             clearInterval(callback.timer);
         }
 
         this.callbacks = [];
     },
-    disconnect_cleanup: function () {
+    disconnect_cleanup() {
         this.state = 0; // reset packet state for "clean" initial entry (this is only required if user hot-disconnects)
         this.packet_error = 0; // reset CRC packet error counter for next session
 
