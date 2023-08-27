@@ -4631,7 +4631,7 @@
         "message": "The distance the quad will climb, above the current altitude, when a rescue is initiated and the altitude mode is set to CURRENT Altitude"
     },
     "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Ground speed (meters/second)"
+        "message": "Return ground speed (meters/second)"
     },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Throttle minimum"
