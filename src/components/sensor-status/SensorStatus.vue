@@ -6,90 +6,78 @@
   >
     <ul>
       <li
-        i18n_title="sensorStatusGyro"
-        class="gyro i18n_title-replaced"
-        title="Gyroscope"
+        class="gyro"
+        :title="$t('sensorStatusGyro')"
         :class="{ on: setGyroActive }"
       >
         <div
-          i18n="sensorStatusGyroShort"
-          class="gyroicon i18n-replaced"
+          class="gyroicon"
           :class="{ active: setGyroActive }"
         >
-          Gyro
+          {{ $t('sensorStatusGyroShort') }}
         </div>
       </li>
       <li
-        i18n_title="sensorStatusAccel"
-        class="accel i18n_title-replaced"
-        title="Accelerometer"
+        class="accel"
+        :title="$t('sensorStatusAccel')"
         :class="{ on: setAccActive }"
       >
         <div
-          i18n="sensorStatusAccelShort"
-          class="accicon i18n-replaced"
+          class="accicon"
           :class="{ active: setAccActive }"
         >
-          Accel
+          {{ $t('sensorStatusAccelShort') }}
         </div>
       </li>
       <li
-        i18n_title="sensorStatusMag"
-        class="mag i18n_title-replaced"
-        title="Magnetometer"
+        class="mag"
+        :title="$t('sensorStatusMag')"
         :class="{ on: setMagActive }"
       >
         <div
-          i18n="sensorStatusMagShort"
-          class="magicon i18n-replaced"
+          class="magicon"
           :class="{ active: setMagActive }"
         >
-          Mag
+          {{ $t('sensorStatusMagShort') }}
         </div>
       </li>
       <li
-        i18n_title="sensorStatusBaro"
-        class="baro i18n_title-replaced"
-        title="Barometer"
+        class="baro"
+        :title="$t('sensorStatusBaro')"
         :class="{ on: setBaroActive }"
       >
         <div
-          i18n="sensorStatusBaroShort"
-          class="baroicon i18n-replaced"
+          class="baroicon"
           :class="{ active: setBaroActive }"
         >
-          Baro
+          {{ $t('sensorStatusBaroShort') }}
         </div>
       </li>
       <li
-        i18n_title="sensorStatusGPS"
-        class="gps i18n_title-replaced"
+        class="gps"
         :class="{ on: setGpsActive }"
-        title="GPS"
+        :title="$t('sensorStatusGPS')"
       >
         <div
-          i18n="sensorStatusGPSShort"
-          class="gpsicon i18n-replaced"
+          class="gpsicon"
           :class="{
             active: setGpsFixState && setGpsActive,
             active_fix: !setGpsFixState && setGpsActive,
           }"
         >
-          GPS
+          {{ $t('sensorStatusGPSShort') }}
         </div>
       </li>
       <li
-        i18n_title="sensorStatusSonar"
-        class="sonar i18n_title-replaced"
-        title="Sonar / Range finder"
+        class="sonar"
+        :title="$t('sensorStatusSonar')"
         :class="{ on: setSonarActive }"
       >
         <div
-          i18n="sensorStatusSonarShort"
-          class="sonaricon i18n-replaced"
+          class="sonaricon"
           :class="{ active: setSonarActive }"
         >
-          Sonar
+          {{ $t('sensorStatusSonarShort') }}
         </div>
       </li>
     </ul>

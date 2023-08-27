@@ -6,10 +6,7 @@
   >
     <label
       for="port-override"
-    ><span
-       i18n="portOverrideText"
-       class="i18n-replaced"
-     >Port:</span>
+    ><span>{{ $t("portOverrideText") }}</span>
       <input
         id="port-override"
         type="text"
