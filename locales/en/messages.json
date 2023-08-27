@@ -4620,6 +4620,10 @@
     "failsafeGpsRescueItemMinDthHelp": {
         "message": "The minimum distance to home needed for GPS rescue to activate"
     },
+    "failsafeGpsRescueItemMinStartDistHelp" : {
+        "message": "If a rescue is initiated within this distance from home, the quad will pitch forward and fly away, on its current heading, until it is at least this distance from home, and then initiate normal rescue behaviour.",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueInitialClimb": {
         "message": "Initial climb (meters)"
     },
