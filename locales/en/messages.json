@@ -4606,7 +4606,7 @@
     },
 
     "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
+        "message": "Maximum pitch angle"
     },
     "failsafeGpsRescueItemReturnAltitude": {
         "message": "Return altitude (meters) - <span class=\"message-negative\">Only when in FIXED Altitude mode.</span>"
