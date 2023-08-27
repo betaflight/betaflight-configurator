@@ -11,10 +11,10 @@
         title="Port"
       >
         <option value="virtual">
-          Virtual Mode (Experimental)
+          {{ $t("portsSelectVirtual") }}
         </option>
         <option value="manual">
-          Manual Selection
+          {{ $t("portsSelectManual") }}
         </option>
       </select>
     </div>
@@ -30,68 +30,43 @@
           >
           <span
             class="switchery switchery-small"
-            :style="{ backgroundColor: isAutoConnect ? '#ffbb00' : '#858585' }"
+            :style="{
+              backgroundColor: isAutoConnect
+                ? '#ffbb00'
+                : '#858585',
+            }"
           >
             <small
-              :style="{ left: isAutoConnect ? '10px' : '0px', transition: 'ease-in-out 0.2s' }"
+              :style="{
+                left: isAutoConnect ? '10px' : '0px',
+                transition: 'ease-in-out 0.2s',
+              }"
               @click="isAutoConnect = !isAutoConnect"
             /></span>
           <span
             i18n="autoConnect"
-            class="auto_connect i18n-replaced"
+            class="auto_connect"
             title="Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
-          >Auto-Connect</span></label>
+          >{{ $t("autoConnect") }}
+          </span>
+        </label>
       </div>
       <div id="baudselect">
         <div class="dropdown dropdown-dark">
           <select
             id="baud"
+            v-model="selectedBaudRate"
             i18n_title="firmwareFlasherBaudRate"
             class="dropdown-select i18n_title-replaced"
             title="Baud Rate"
             :disabled="isAutoConnect"
           >
-            <option value="1000000">
-              1000000
-            </option>
-            <option value="500000">
-              500000
-            </option>
-            <option value="250000">
-              250000
-            </option>
             <option
-              value="115200"
-              selected="selected"
+              v-for="baudRate in baudRates"
+              :key="baudRate.value"
+              :value="baudRate.value"
             >
-              115200
-            </option>
-            <option value="57600">
-              57600
-            </option>
-            <option value="38400">
-              38400
-            </option>
-            <option value="28800">
-              28800
-            </option>
-            <option value="19200">
-              19200
-            </option>
-            <option value="14400">
-              14400
-            </option>
-            <option value="9600">
-              9600
-            </option>
-            <option value="4800">
-              4800
-            </option>
-            <option value="2400">
-              2400
-            </option>
-            <option value="1200">
-              1200
+              {{ baudRate.label }}
             </option>
           </select>
         </div>
@@ -105,6 +80,22 @@ export default {
     data() {
         return {
             isAutoConnect: false,
+            selectedBaudRate: "115200",
+            baudRates: [
+                { value: "1000000", label: "1000000" },
+                { value: "500000", label: "500000" },
+                { value: "250000", label: "250000" },
+                { value: "115200", label: "115200" },
+                { value: "57600", label: "57600" },
+                { value: "38400", label: "38400" },
+                { value: "28800", label: "28800" },
+                { value: "19200", label: "19200" },
+                { value: "14400", label: "14400" },
+                { value: "9600", label: "9600" },
+                { value: "4800", label: "4800" },
+                { value: "2400", label: "2400" },
+                { value: "1200", label: "1200" },
+            ],
         };
     },
 };
