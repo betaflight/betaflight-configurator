@@ -1,6 +1,9 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
-import serial from "./serial.js";
+import serialNWJS from "./serial.js";
+import serialWeb from "./webSerial.js";
+
+const serial = import.meta.env ? serialWeb : serialNWJS;
 
 const MSP = {
     symbols: {
@@ -66,7 +69,7 @@ const MSP = {
             return;
         }
 
-        const data = new Uint8Array(readInfo.data);
+        const data = new Uint8Array(readInfo.data ?? readInfo);
 
         for (const chunk of data) {
             switch (this.state) {
@@ -304,14 +307,14 @@ const MSP = {
         return bufferOut;
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        if (code === undefined || !serial.connectionId || CONFIGURATOR.virtualMode) {
+        const connected = import.meta.env ? serial.connected : serial.connectionId;
+        if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
             }
             return false;
         }
 
-        // Check if request already exists in the queue
         let requestExists = false;
         for (const instance of this.callbacks) {
             if (instance.code === code) {
@@ -320,6 +323,12 @@ const MSP = {
                 break;
             }
         }
+
+        if (import.meta.env && (code === undefined || !serial.connectionInfo)) {
+          console.log('ERROR: code undefined or no connectionId');
+          return false;
+        }
+
 
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
 
@@ -374,7 +383,7 @@ const MSP = {
     },
     callbacks_cleanup() {
         for (const callback of this.callbacks) {
-            clearInterval(callback.timer);
+            clearTimeout(callback.timer);
         }
 
         this.callbacks = [];

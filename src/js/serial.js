@@ -6,6 +6,7 @@ import { gui_log } from "./gui_log";
 import inflection from "inflection";
 import PortHandler from "./port_handler";
 import { checkChromeRuntimeError } from "./utils/common";
+import { serialDevices } from './serial_devices';
 import $ from 'jquery';
 
 const serial = {
@@ -23,14 +24,7 @@ const serial = {
     transmitting:   false,
     outputBuffer:   [],
 
-    serialDevices: [
-        {'vendorId': 1027, 'productId': 24577}, // FT232R USB UART
-        {'vendorId': 1155, 'productId': 22336}, // STM Electronics Virtual COM Port
-        {'vendorId': 4292, 'productId': 60000}, // CP210x
-        {'vendorId': 4292, 'productId': 60001}, // CP210x
-        {'vendorId': 4292, 'productId': 60002}, // CP210x
-        {'vendorId': 0x2e3c, 'productId': 0x5740}, // AT32 VCP
-    ],
+    serialDevices,
 
     connect: function (path, options, callback) {
         const self = this;
