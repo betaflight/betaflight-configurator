@@ -4078,7 +4078,7 @@
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
-        "message": "Відповідь на стіки:<br /><i><small>Підсилення упередження</small></i>",
+        "message": "Відповідь на стіки:<br /><i><small>Коефіцієнт упередження</small></i>",
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
@@ -4102,7 +4102,7 @@
         "description": "D_min slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Демпфування тангажу: <br /><i><small>Тангаж:Крен D</small></i>",
+        "message": "Демпфування тангажа: <br /><i><small>Тангаж:Крен D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
