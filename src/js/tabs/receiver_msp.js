@@ -1,6 +1,10 @@
 import windowWatcherUtil from "../utils/window_watchers";
 import $ from 'jquery';
 
+// This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
+// It seems than when node opens a new window, the module "context" is different, so the i18n var is not initialized
+const i18n = opener.i18n;
+
 const css_dark = [
     '/css/dark-theme.css',
 ];
@@ -200,10 +204,6 @@ $(window).on("mouseup", function(e) {
 });
 
 windowWatcherUtil.bindWatchers(window, watchers);
-
-// This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
-// It seems than when node opens a new window, the module "context" is different, so the i18n var is not initialized
-const i18n = opener.i18n;
 
 localizePage();
 localizeAxisNames();

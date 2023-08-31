@@ -280,6 +280,11 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 
     // remove gulp-appdmg from the package.json we're going to write
     delete pkg.optionalDependencies['gulp-appdmg'];
+    // keeping this package in `package.json` for some reason
+    // breaks the nwjs builds. This is not really needed for
+    // nwjs nor it's imported anywhere at runtime ¯\_(ツ)_/¯
+    // this probably can go away if we fully move to pwa.
+    delete pkg.dependencies['@vitejs/plugin-vue2'];
 
     pkg.gitRevision = gitRevision;
     if (!isReleaseBuild) {

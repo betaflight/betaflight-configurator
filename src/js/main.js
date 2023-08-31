@@ -50,10 +50,12 @@ function useGlobalNodeFunctions() {
 }
 
 function readConfiguratorVersionMetadata() {
-    const manifest = chrome.runtime.getManifest();
-    CONFIGURATOR.productName = manifest.productName;
-    CONFIGURATOR.version = manifest.version;
-    CONFIGURATOR.gitRevision = manifest.gitRevision;
+    if (GUI.isNWJS()) {
+        const manifest = chrome.runtime.getManifest();
+        CONFIGURATOR.productName = manifest.productName;
+        CONFIGURATOR.version = manifest.version;
+        CONFIGURATOR.gitRevision = manifest.gitRevision;
+    }
 }
 
 function cleanupLocalStorage() {

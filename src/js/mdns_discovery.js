@@ -49,6 +49,9 @@ MdnsDiscovery.initialize = function() {
 
         reinit();
     } else {
+        if(typeof require === 'undefined') {
+            return 'not implemented';
+        }
         const bonjour = require('bonjour')();
 
         self.mdnsBrowser.browser = bonjour.find({ type: 'http' }, service => {

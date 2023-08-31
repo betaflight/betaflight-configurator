@@ -29,6 +29,12 @@ const PortHandler = new function () {
 PortHandler.initialize = function () {
     const self = this;
 
+    // currently web build doesn't need port handler,
+    // so just bail out.
+    if (import.meta.env) {
+        return 'not implemented';
+    }
+
     const portPickerElementSelector = "div#port-picker #port";
     self.portPickerElement = $(portPickerElementSelector);
     self.selectList = document.querySelector(portPickerElementSelector);
