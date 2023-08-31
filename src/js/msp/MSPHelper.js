@@ -514,9 +514,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
                 FC.GPS_RESCUE.angle             = data.readU16();
-                FC.GPS_RESCUE.initialAltitudeM  = data.readU16();
+                FC.GPS_RESCUE.returnAltitudeM   = data.readU16();
                 FC.GPS_RESCUE.descentDistanceM  = data.readU16();
-                FC.GPS_RESCUE.rescueGroundspeed = data.readU16();
+                FC.GPS_RESCUE.groundSpeed       = data.readU16();
                 FC.GPS_RESCUE.throttleMin       = data.readU16();
                 FC.GPS_RESCUE.throttleMax       = data.readU16();
                 FC.GPS_RESCUE.throttleHover     = data.readU16();
@@ -529,7 +529,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.GPS_RESCUE.altitudeMode          = data.readU8();
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.GPS_RESCUE.minRescueDth = data.readU16();
+                    FC.GPS_RESCUE.minStartDistM = data.readU16();
+                }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.GPS_RESCUE.initialClimbM = data.readU16();
                 }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
@@ -1797,9 +1800,9 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
             buffer.push16(FC.GPS_RESCUE.angle)
-                  .push16(FC.GPS_RESCUE.initialAltitudeM)
+                  .push16(FC.GPS_RESCUE.returnAltitudeM)
                   .push16(FC.GPS_RESCUE.descentDistanceM)
-                  .push16(FC.GPS_RESCUE.rescueGroundspeed)
+                  .push16(FC.GPS_RESCUE.groundSpeed)
                   .push16(FC.GPS_RESCUE.throttleMin)
                   .push16(FC.GPS_RESCUE.throttleMax)
                   .push16(FC.GPS_RESCUE.throttleHover)
@@ -1813,7 +1816,10 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                     .push8(FC.GPS_RESCUE.altitudeMode);
             }
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                buffer.push16(FC.GPS_RESCUE.minRescueDth);
+                buffer.push16(FC.GPS_RESCUE.minStartDistM);
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                buffer.push16(FC.GPS_RESCUE.initialClimbM);
             }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
