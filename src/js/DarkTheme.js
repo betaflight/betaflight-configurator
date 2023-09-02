@@ -9,6 +9,7 @@ const css_dark = [
 
 const DarkTheme = {
     configEnabled: undefined,
+    enabled: false,
 };
 
 DarkTheme.isDarkThemeEnabled = function (callback) {
@@ -61,12 +62,13 @@ DarkTheme.setConfig = function (result) {
 
 DarkTheme.applyDark = function () {
     css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', false));
+    this.enabled = true;
 };
 
 DarkTheme.applyNormal = function () {
     css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
+    this.enabled = false;
 };
-
 
 export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
