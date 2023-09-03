@@ -4,6 +4,21 @@ import vue from "@vitejs/plugin-vue2";
 import path from "node:path";
 import { readFileSync } from "node:fs";
 
+function serveFileFromDirectory(directory) {
+    return (req, res, next) => {
+        const filePath = req.url.replace(new RegExp(`^/${directory}/`), "");
+        const absolutePath = path.resolve(process.cwd(), directory, filePath);
+
+        try {
+            const fileContents = readFileSync(absolutePath, "utf-8");
+            res.end(fileContents);
+        } catch (e) {
+            // If file not found or any other error, pass to the next middleware
+            next();
+        }
+    };
+}
+
 /**
  * This is plugin to work around the file structure required nwjs.
  * In future this can be dropped if we restructure folder structure
@@ -17,24 +32,9 @@ function serveLocalesPlugin() {
             return () => {
                 server.middlewares.use((req, res, next) => {
                     if (req.url.startsWith("/locales/")) {
-                        // Extract the file path from the URL
-                        const filePath = req.url.replace(/^\/locales\//, "");
-                        const absolutePath = path.resolve(
-                            process.cwd(),
-                            "locales",
-                            filePath,
-                        );
-
-                        try {
-                            const fileContents = readFileSync(
-                                absolutePath,
-                                "utf-8",
-                            );
-                            res.end(fileContents);
-                        } catch (e) {
-                            // If file not found or any other error, pass to the next middleware
-                            next();
-                        }
+                        serveFileFromDirectory('locales')(req, res, next);
+                    } else if (req.url.startsWith("/resources/")) {
+                        serveFileFromDirectory('resources')(req, res, next);
                     } else {
                         next();
                     }
