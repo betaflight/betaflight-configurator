@@ -193,10 +193,10 @@ gps.initialize = async function (callback) {
             $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
 
-            const gspUnitText = i18n.getMessage('gpsPositionUnit');
+            const gpsUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} deg / ${lon.toFixed(4)} deg`);
-            $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gpsUnitText}`);
+            $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} ${gpsUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -264,19 +264,19 @@ gps.initialize = async function (callback) {
                         let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
 
                         // Add color to the text
-                        if (quality.startsWith('fully locked')) {
+                        if (quality.startsWith(i18n.getMessage('gnssQualityFullyLocked')) || quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
                             quality = `<span class="colorToggle ready">${quality}</span>`;
                         } else {
                             quality = `<span class="colorToggle">${quality}</span>`;
                         }
 
-                        if (used.startsWith('used')) {
+                        if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
                             used = `<span class="colorToggle ready">${used}</span>`;
                         } else {
                             used = `<span class="colorToggle">${used}</span>`;
                         }
 
-                        if (healthy.startsWith('healthy')) {
+                        if (healthy.startsWith(i18n.getMessage('gnssHealthyHealthy'))) {
                             healthy = `<span class="colorToggle ready">${healthy}</span>`;
                         } else {
                             healthy = `<span class="colorToggle">${healthy}</span>`;
