@@ -737,12 +737,6 @@
         "message": "ヘッディング:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "ピッチ:"
-    },
-    "initialSetupRoll": {
-        "message": "ロール:"
-    },
     "initialSetupMixerHead": {
         "message": "ミキサータイプ"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "加速度センサー トリム"
+    },
+    "initialSetupPitch": {
+        "message": "ピッチ:"
+    },
+    "initialSetupRoll": {
+        "message": "ロール:"
     },
     "initialSetupMagHead": {
         "message": "コンパス"
@@ -2678,7 +2678,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "ヘッディング:"
+        "message": "ヘッディング方位 / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "速度:"
@@ -4505,45 +4506,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS レスキュー"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "帰還時 最大傾斜角 アングル"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "基準高度 (メートル)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "降下開始距離 (メートル)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "ホーム位置までの最短距離 (メートル)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "GPSレスキューが有効になるまでの最短距離を示します"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "帰還時 速度 (m/s)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "帰還時 スロットル最小値"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "帰還時 スロットル最大値"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "帰還時 スロットル ホバリング値"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "上昇レート (m/s)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "下降レート (m/s)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "GPS 衛星捕捉数 最小値"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "GPS捕捉せずにアーム許可 - <span class=\"message-negative\">警告: GPSレスキューは利用できません</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "高度維持モード"
     },
@@ -4555,6 +4517,70 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "現在高度"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "初期上昇 (m)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "GPSレスキューが開始され高度モードが【現在高度】に設定されている時、機体が現在の高度より上昇する距離を示します。また最大高度モードの場合にも追加されました。"
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "帰還時 高度 (m) - <strong>指定高度モードのみ適用</strong>"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "上昇レート (m/s)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "帰還時 地上速度 (m/s)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "最大ピッチ角"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "最大角度が大きいほど、よりアグレッシブな旋回と高い前進速度が得られます。より重量のある機体、高抗力や低スペックのFCボート、より強風の中での使用に有効です。警告: 最大角度を大きくする場合、通常GPSレスキュー時のスロットル値を大きくする必要があります！ そうしないと機体が高度を失い墜落する可能性があります！"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "降下開始距離 (m)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "下降レート (m/s)"
+    },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "初期降下率はこの値の3倍に設定され、着陸高度になると設定値まで減少します。"
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "GPSレスキューの開始がホーム位置に近すぎる (設定した最短距離よりも近い) 場合、機体は現在の方位のまま、少なくともホーム位置から設定した距離になるまで一旦離れ、それから通常のGPSレスキューモードが開始されます。",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "帰還時 スロットル最小値"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "帰還時 スロットル最大値"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "より重量のある、高抗力や低スペックのFCボートの機体、強風に逆らう可能性がある場合や最大ピッチ角を大きくする場合は、この値を大きくする必要があります。"
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "ホバリング スロットル - <span class=\"message-negative\">重要: この値は正確に設定してください</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "適正値を見つけるには、フェイルセーフスイッチの挙動をステージ2に設定し、ステージ2 フェイルセーフ手順を【着陸】に設定し、着陸時に使用するスロットル値を機体がホバリングするか、ゆっくり下降するまで調整します。次にGPSレスキューのホバリング スロットルと、スロットルのステージ1 チャンネルフォールバック設定をこの値に設定します。"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "ホーム位置までの最短距離 (m)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "GPSレスキューが有効になるまでの最短距離を示します"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "GPS 衛星捕捉数 最小値"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "修正せずアーム許可 - <span class=\"message-negative\">警告: 修正なし = フェイルセーフ発動によりアームできません！</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "推奨されません。ホームポイントを設定せずにアームが許可されますが、実際RX LOSSによるフェイルセーフとなった場合は機体がディスアームして墜落してしまいます。スイッチでテストする場合は、ディスアーム前に短い可動停止時間があります。"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "健全性チェック"
@@ -4994,7 +5020,7 @@
         "message": "カスタム画像:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "サイズは $t(logoWidthPx)×$t(logoHeightPx) ピクセルでなければなりません"
+        "message": "サイズは $t(logoWidthPx)x$t(logoHeightPx) ピクセルでなければなりません"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "緑・白・黒色ピクセルで構成しなければなりません"
@@ -5003,7 +5029,7 @@
         "message": "<b>$t(osdSetupUploadFont.message)</b> をクリックしカスタムロゴを保存してください"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "画像サイズが無効: {{width}}×{{height}} (既定サイズ $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "画像サイズが無効: {{width}}x{{height}} (既定サイズ $t(logoWidthPx)x$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "画像に無効なピクセルが含まれています: RGB({{valueR}}, {{valueG}}, {{valueB}}) 座標 {{posX}}×{{posY}}"
@@ -6611,7 +6637,7 @@
         "message": "OSDで表示できます。</br>CLI変数『<b>pilot_name</b>』でも設定可能です。"
     },
     "configurationFpvCamAngleDegrees": {
-        "message": "FPVカメラアングル [degrees]"
+        "message": "FPVカメラ角 [degrees]"
     },
     "onboardLoggingBlackbox": {
         "message": "Blackboxログデバイス"

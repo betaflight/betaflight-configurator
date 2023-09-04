@@ -737,12 +737,6 @@
         "message": "Kurs:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Typ Modelu"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Dostrajanie akcelerometru"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometr"
@@ -2678,7 +2678,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Kurs:"
+        "message": "Kierunek Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Prędkość:"
@@ -4505,45 +4506,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS Ratunek"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Początkowa wysokość(metry)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Długość zniżania (metry)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Minimalna odległość do domu (metry)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Minimalna odległość do domu wymagana do aktywacji automatycznego powrotu do punktu startu"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Prędkość na ziemi (metry/sekunde)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Przepustnica minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Przepustnica w pozycji max"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Zawieszenie przepustnicy"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Prędkość wznoszenia (metry/sekundę)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Prędkość opadania (metry/sekundę)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Minimalna liczba satelitów"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Pozwól na uzbrojenie bez FIX-a - <span class=\"message-negative\">UWAGA: GPS Rescue będzie NIEDOSTĘPNY</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Tryb Wysokości"
     },
@@ -4555,6 +4517,33 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Aktualna wysokość"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Początkowa wysokość (metry)"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Prędkość wznoszenia (metry/sekundę)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Długość zniżania (metry)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Prędkość opadania (metry/sekundę)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Przepustnica minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Przepustnica w pozycji max"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimalna odległość do domu (metry)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Minimalna odległość do domu wymagana do aktywacji automatycznego powrotu do punktu startu"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Minimalna liczba satelitów"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sprawdzenie kontrolne"
@@ -4993,17 +4982,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Własny obraz:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Rozmiar musi wynosić $t(logoWidthPx)×$t(logoHeightPx) pikseli"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Musi zawierać zielone, czarne i białe piksele"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Kliknij <b>$t(osdSetupUploadFont.message)</b> aby ustwwić niestandardowe logo"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Nieprawidłowy rozmiar obrazu: {{width}}×{{height}} (oczekiwano $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Obraz zawiera nieprawidłowy piksel: rgb({{valueR}}, {{valueG}}, {{valueB}}) o współrzędnych {{posX}}×{{posY}}"

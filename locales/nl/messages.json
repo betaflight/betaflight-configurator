@@ -656,12 +656,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Herstel Z axis, verschil $1 graden"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
     },
@@ -694,6 +688,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Versnellingsmeter trims"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -3317,45 +3317,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS Redding"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Hoek"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Initiële hoogte (meter)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Afstand inzet daling (meters)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Minimale afstand tot thuis (meter)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "De minimale afstand tot thuis die nodig is om GPS-redding te activeren"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Grondsnelheid (meter/seconde)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Throttle minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Throttle maximum"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Throttle zweven (hoogte behouden)"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Stijgsnelheid (meter/seconde)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Daalsnelheid (meter/seconde)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Minimum aantal satellieten"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Sta arming toe zonder GPS-fix - <span class=\"message-negative\">WAARSCHUWING: GPS Redding zal niet beschikbaar zijn</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Hoogte modus"
     },
@@ -3367,6 +3328,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Huidige hoogte"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Stijgsnelheid (meter/seconde)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Afstand inzet daling (meters)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Daalsnelheid (meter/seconde)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Throttle minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Throttle maximum"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimale afstand tot thuis (meter)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "De minimale afstand tot thuis die nodig is om GPS-redding te activeren"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Minimum aantal satellieten"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Gezondheidscontroles"
@@ -3797,17 +3782,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Aangepaste afbeelding:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Grootte moet $t(logoWidthPx)×$t(logoHeightPx) pixels zijn"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Moet groen, zwarte en witte pixels bevatten"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik <b>$t(osdSetupUploadFont.message)</b> om het aangepaste logo toe te passen"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Ongeldige afbeeldingsgrootte: {{width}}×{{height}} (verwacht $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "De afbeelding bevat een ongeldige pixel: rgb({{valueR}}, {{valueG}}, {{valueB}}) op de coördinaten {{posX}}×{{posY}}"

@@ -737,12 +737,6 @@
         "message": "Direção:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Ajustes do acelerômetro"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetômetro"
@@ -2584,9 +2584,6 @@
     },
     "gpsAltitude": {
         "message": "Altitude:"
-    },
-    "gpsHeading": {
-        "message": "Direção:"
     },
     "gpsSpeed": {
         "message": "Velocidade:"
@@ -4409,45 +4406,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "Resgate com GPS"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Ângulo"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Altitude inicial (metros)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Distância a descer (metros)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Distância mínima da base (metros)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "A distância mínima entre a base e a aeronave para que o Resgate com GPS possa ser ativado"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Velocidade no solo (metros/segundo)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Acelerador mínimo"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Acelerador máximo"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Acelerador para flutuar"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Velocidade para subir (metros/segundo)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Velocidade para descer (metros/segundo)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Quantidade mínima satélites"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Permitir armar sem sinal GPS - <span class=\"message-negative\">Atenção: O modo de Resgate com GPS não estará disponível</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Modo Altitude"
     },
@@ -4459,6 +4417,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Altitude atual"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Velocidade para subir (metros/segundo)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Distância a descer (metros)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Velocidade para descer (metros/segundo)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Acelerador mínimo"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Acelerador máximo"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distância mínima da base (metros)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "A distância mínima entre a base e a aeronave para que o Resgate com GPS possa ser ativado"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Quantidade mínima satélites"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Verificações de sanidade"
@@ -4897,17 +4879,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Imagem personalizada:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "O tamanho deve ser $t(logoWidthPx)×$t(logoHeightPx) pixels"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Deve conter pixels verdes, preto e branco"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Pressione <b>$t(osdSetupUploadFont.message)</b> para manter o logo personalizado"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Tamanho da imagem inválido: {{width}}×{{height}} (deveria ser $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "A imagem contém um pixel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) nas coordenadas {{posX}}x{{posY}}"

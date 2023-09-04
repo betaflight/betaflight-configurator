@@ -621,12 +621,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Berrezarri Z ardatza, desplazatua: $1 gradu"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Nahaste-mota"
     },
@@ -659,6 +653,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Azelerometroaren trimak"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometroa"
@@ -3121,39 +3121,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS-ez Berrezkuratu"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Hasierako altitudea (metrotan)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Jaitsieraren distantzia (metrotan)"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Lurreko abiadura (metro / segunduko)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Azeleragailua minimoa"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Azekeragailua maximoa"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Throttle-z hover-a egin"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Igoera tasa (metro / segunduko)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Jaitsiera tasa (metro / segunduko)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Gutxieneko Satelite Kopurua"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Baimendu gabe armatzea kompondu - <span class=\"message-negative\">KONTUZ: GPS Berrezkuratzea ez da erabilgarri egongo</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Altitude modua"
     },
@@ -3165,6 +3132,24 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Momentuko altitudea"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Igoera tasa (metro / segunduko)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Jaitsieraren distantzia (metrotan)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Jaitsiera tasa (metro / segunduko)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Azeleragailua minimoa"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Azekeragailua maximoa"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Gutxieneko Satelite Kopurua"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Segurtazun kontrolak"
@@ -3595,17 +3580,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Irudi Pertsonalizatua:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Neurriak $t(logoWidthPx)×$t(logoHeightPx) pixel izan behar du"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Pixel berde beltz eta zuriak eduki behar ditu"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Sakatu <b>$t(osdSetupUploadFont.message)</b> logo pertsonalizatua mantentzeko"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Irudi tamaina baliogabea: {{width}}×{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Irudiak pixel baliogabea dauka: rgb({{valueR}}, {{valueG}}, {{valueB}}) koordenatuetan {{posX}}×{{posY}}"

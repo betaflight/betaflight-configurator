@@ -737,12 +737,6 @@
         "message": "Rumbo:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Trimados del acelerómetro"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetómetro"
@@ -2678,7 +2678,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Rumbo:"
+        "message": "Rumbo Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocidad:"
@@ -4505,45 +4506,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS Rescate"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Ángulo"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Altitud inicial (metros)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Distancia de descenso (metros)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Distancia mínima a casa (metros)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "La distancia mínima a casa necesaria para que el rescate GPS pueda activarse"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Velocidad (metros/segundo)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Acelerador mínimo"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Acelerador máximo"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Acelerador flotar"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Velocidad de ascenso (metros/segundo)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Velocidad de descenso (metros/segundo)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Satélites mínimos"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Permitir armar sin satélites fijados - <span class=\"message-negative\">ADVERTENCIA: el GPS Rescate no estará disponible</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Modo altitud"
     },
@@ -4555,6 +4517,70 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Altitud actual"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Ascenso inicial (metros)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "La distancia a la que la aeronave ascenderá, sobre la altitud actual, cuando se inicia un rescate y el modo de altitud está configurado como Altitud ACTUAL; también se añade cuando el modo es Altitud MAX."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Altitud de retorno (metros) - <strong>sólo se aplica en modo Altitud Fija</strong>"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Velocidad de ascenso (metros/segundo)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Velocidad de retorno (metros / segundo)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Ángulo máximo de pitch"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Ángulos máximos más altos producen retornos más agresivos y mayores velocidades hacia delante. Puede ser útil para aeronaves pesadas, cargadas o de baja autoridad, o cuando el viento es muy fuerte. ADVERTENCIA: ¡Normalmente se necesita aumentar el acelerador de rescate si se incrementa el ángulo máximo! De lo contrario, ¡la aeronave puede perder altitud y estrellarse!"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Distancia de descenso (metros)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Velocidad de descenso (metros/segundo)"
+    },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "La tasa inicial de descenso se establece a 3 veces este valor, disminuyendo hasta el valor establecido en la altitud de aterrizaje."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Si el rescate comienza demasiado cerca de casa (dentro de esta distancia mínima), la aeronave volará, en su rumbo actual, hasta al menos esta distancia de casa, y luego comenzará un comportamiento normal de rescate",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Acelerador mínimo"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Acelerador máximo"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Debe incrementarse para aeronaves pesadas, con carga o baja autoridad, o si son probables fuertes vientos en contra, o si se ha aumentado el ángulo máximo de pitch."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Acelerador para flotar - <span class=\"message-negative\">IMPORTANTE: ajusta este valor con precisión</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Para encontrar el valor correcto, establece la acción del interruptor de Modo de Seguridad a Etapa 2, ajusta el procedimiento de la Etapa 2 del Modo de Seguridad a Aterrizar, y ajusta el valor del acelerador mientras aterriza hasta que la aeronave flote o descienda lentamente. Entonces ajusta el acelerador del Rescate GPS, y el canal de seguridad del acelerador a este valor."
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distancia mínima a casa (metros)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "La distancia mínima a casa necesaria para que el rescate GPS pueda activarse"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Satélites mínimos"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Permitir armar sin satélites fijados - <span class=\"message-negative\">ADVERTENCIA: el Rescate GPS no estará disponible</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Permite armar sin que se establezca un punto de casa, pero la aeronave se desarmará y estrellará en caso de pérdida de señal. Si se prueba con un interruptor, hay un período corto de no hacer nada antes del desarme."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Controles de corrección"
@@ -4994,7 +5020,7 @@
         "message": "Imagen personalizada:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "Tamaño debe ser de $t(logoWidthPx) ×$t(logoHeightPx) píxeles"
+        "message": "Tamaño debe ser de $t(logoWidthPx)x$t(logoHeightPx) píxeles"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Debe contener píxeles verdes, blancos y negros"
@@ -5003,7 +5029,7 @@
         "message": "Pulse <b>$t(osdSetupUploadFont.message)</b> para persistir logo personalizado"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Tamaño de imagen no válido: {{width}}×{{height}} (esperado $t(logoWidthPx) ×$t(logoHeightPx))"
+        "message": "Tamaño de imagen no válido: {{width}}x{{height}} (esperado $t(logoWidthPx)x$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "La imagen contiene un pixel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) en las coordenadas {{posX}}×{{posY}}"

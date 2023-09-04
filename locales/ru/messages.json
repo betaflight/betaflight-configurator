@@ -657,12 +657,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Сбросить ось Z (ось вращения), смещение: $1 град"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Тип микшера"
     },
@@ -695,6 +689,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Триммирование акселерометра"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Магнитометр"
@@ -3449,45 +3449,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS спасение"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Угол"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Первоначальная высота (м)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Пройденное расстояние (м)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Минимальное расстояние до дома (метры)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Минимальное расстояние до дома, необходимое для активации GPS rescue"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Скорость относительно земли (м/сек)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Газ минимум"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Газ максимум"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Газ висения"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Скорость подъёма (м/сек)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Скорость понижения (м/сек)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Минимум спутников"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Разрешить включение без GPS fix - <span class=\"message-negative\">ВНИМАНИЕ: функция GPS Rescue не будет доступна</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Режим высоты"
     },
@@ -3499,6 +3460,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Текущая высота"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Скорость подъёма (м/сек)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Пройденное расстояние (м)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Скорость понижения (м/сек)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Газ минимум"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Газ максимум"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Минимальное расстояние до дома (метры)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Минимальное расстояние до дома, необходимое для активации GPS rescue"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Минимум спутников"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Проверка на исправность"
@@ -3929,17 +3914,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Свое изображение"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Размер должен быть $t(logoWidthPx)×$t(logoHeightPx) пикселей"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Должен содержать зеленые, черные и белые пиксели"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Нажмите <b>$t(osdSetupUploadFont.message)</b> для установки собственного логотипа"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Недопустимый размер: {{width}}×{{height}} (ожидаемый $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Изображение содержит недопустимый пиксель: rgb ({{valueR}}, {{valueG}}, {{valueB}}) в координаты {{posX}}×{{posY}}"

@@ -737,12 +737,6 @@
         "message": "Kurs:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Højderor:"
-    },
-    "initialSetupRoll": {
-        "message": "Krængror:"
-    },
     "initialSetupMixerHead": {
         "message": "Mixertype"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Accelerometer trim"
+    },
+    "initialSetupPitch": {
+        "message": "Højderor:"
+    },
+    "initialSetupRoll": {
+        "message": "Krængror:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -2677,9 +2677,6 @@
         "message": "Nuværende breddegrad / længdegrad:",
         "description": "Show GPS position - Latitude / Longitude"
     },
-    "gpsHeading": {
-        "message": "Kurs:"
-    },
     "gpsSpeed": {
         "message": "Hastighed:"
     },
@@ -4505,45 +4502,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "Flyv hjem med GPS (Return To Home)"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Vinkel"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Indledende højde (meter)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Nedstigningsdistance (meter)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Mindste afstand til hjem (meter)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Mindste afstand til hjem, der er nødvendig for at GPS redning kan aktiveres"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Jordhastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Gas minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Gas maksimum"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Gas værdi ved svævning"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Stignings hastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Nedstignings hastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Mindste antal satellitter"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Test ved at tillade aktivering uden GPS er låst - <span class=\"message-negative\">ADVARSEL: GPS-redningen ved flyvning vil ikke være mulig med denne slået til</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Højde tilstand"
     },
@@ -4555,6 +4513,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Aktuel højde"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Stignings hastighed (meter/sekund)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Nedstigningsdistance (meter)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Nedstignings hastighed (meter/sekund)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Gas minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Gas maksimum"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Mindste afstand til hjem (meter)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Mindste afstand til hjem, der er nødvendig for at GPS redning kan aktiveres"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Mindste antal satellitter"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Overvågning af GPS fejlsikring "
@@ -4993,17 +4975,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Tilpasset billede:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Størrelse skal være $t(logoWidthPx)×$t(logoHeightPx) pixels"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Skal indeholde grønne, sorte og hvide pixels"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik på <b>$t(osdSetupUploadFont.message)</b> for at bevare tilpasset logo"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Ugyldig billedstørrelse: {{width}}×{{height}} (forventet $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Billedet indeholder en ugyldig pixel: rgb ({{valueR}}, {{valueG}}, {{valueB}}) i koordinaterne {{posX}}×{{posY}}"

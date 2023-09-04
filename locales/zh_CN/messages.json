@@ -666,12 +666,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "重置 Z 轴，补偿: $1 度"
     },
-    "initialSetupPitch": {
-        "message": "俯仰:"
-    },
-    "initialSetupRoll": {
-        "message": "横滚:"
-    },
     "initialSetupMixerHead": {
         "message": "混控类型"
     },
@@ -704,6 +698,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "加速度计微调"
+    },
+    "initialSetupPitch": {
+        "message": "俯仰:"
+    },
+    "initialSetupRoll": {
+        "message": "横滚:"
     },
     "initialSetupMagHead": {
         "message": "磁力计"
@@ -3900,45 +3900,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS 救援"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "角度"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "初始高度 (米)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "下降距离 (米)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "距起飞点的最近距离 (米)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "距离起飞点的最近的距离，需要激活GPS救援"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "地面速度 (米/秒)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "最低油门"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "最高油门"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "悬停油门"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "上升速率（米/秒）"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "下降速率（米/秒）"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "最小卫星数"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "允许在未锁定的情况下解锁 - <span class=\"message-negative\">警告: 这样将无法使用GPS救援</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "高度模式"
     },
@@ -3950,6 +3911,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "当前高度"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "上升速率（米/秒）"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "下降距离 (米)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "下降速率（米/秒）"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "最低油门"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "最高油门"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "距起飞点的最近距离 (米)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "距离起飞点的最近的距离，需要激活GPS救援"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "最小卫星数"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "可用性检测"
@@ -4380,17 +4365,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "自定义图像:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "大小必须是 $t(logoWidthPx) x$t(logoHeightPx) 像素"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "必须是绿色、黑色和白色像素"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "单击 <b>$t(osdSetupUploadFont.message)</b> 以保存自定义徽标"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "无效的图像大小: {{width}}x{{height}} (应是 $t(logoWidthPx) x$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "图像包含无效的像素： rgb ({{valueR}}, {{valueG}}, {{valueB}}) ，坐标 {{posX}}x{{posY}}"
