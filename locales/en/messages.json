@@ -4578,7 +4578,7 @@
         "message": "Guard time for stage 2 activation after signal lost [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "Time for stage 1 to wait for recovery"
+        "message": "Time for stage 2 to wait for recovery"
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe Throttle Low Delay [seconds]"
