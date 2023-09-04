@@ -603,12 +603,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "重置 Z 軸，補償: $1 度"
     },
-    "initialSetupPitch": {
-        "message": "俯仰:"
-    },
-    "initialSetupRoll": {
-        "message": "橫滾:"
-    },
     "initialSetupMixerHead": {
         "message": "混控類型"
     },
@@ -641,6 +635,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "加速度計微調"
+    },
+    "initialSetupPitch": {
+        "message": "俯仰:"
+    },
+    "initialSetupRoll": {
+        "message": "橫滾:"
     },
     "initialSetupMagHead": {
         "message": "磁力計"
@@ -3052,39 +3052,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS 救援"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "角度"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "初始高度 (米)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "下降距離 (米)"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "地面速度 (米/秒)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "最低油門"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "最高油門"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "懸停油門"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "上升速率（米/秒）"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "下降速率（米/秒）"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "最小衛星數"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "允許在未鎖定的情況下解鎖 - <span class=\"message-negative\">警告: 這樣將無法使用GPS救援</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "高度模式"
     },
@@ -3096,6 +3063,24 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "當前高度"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "上升速率（米/秒）"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "下降距離 (米)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "下降速率（米/秒）"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "最低油門"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "最高油門"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "最小衛星數"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "可用性檢測"
@@ -3522,17 +3507,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "自定义图像:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "大小必須是 $t(logoWidthPx) x$t(logoHeightPx) 像素"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "必須是綠色、黑色和白色像素"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "單擊 <b>$t(osdSetupUploadFont.message)</b> 以保存自定義徽標"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "無效的圖像大小: {{width}}x{{height}} (應是 $t(logoWidthPx) x$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "圖像包含無效的像素： rgb ({{valueR}}, {{valueG}}, {{valueB}}) ，坐標 {{posX}}x{{posY}}"

@@ -745,12 +745,6 @@
         "message": "Títol:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Tipus de Mixer"
     },
@@ -783,6 +777,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Trim d'acceleròmetre"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetòmetre"
@@ -2686,7 +2686,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Encapçalament:"
+        "message": "Encapçalament Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocitat:"
@@ -4513,45 +4514,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "Rescat GPS"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Altitud inicial (metres)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Distància de baixada (metres)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Distància mínima fins a casa (metres)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "La distància mínima a casa necessària per activar el rescat GPS"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Velocitat del sòl (metres/segon)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Throttle mínim"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Throttle màxim"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Throttle mitja"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Taxa d’ascens (metres/segon)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Taxa de descens (metres/segon)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Satèl·lits mínims"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Permet armar sense fixar - <span class=\"message-negative\">ADVERTIMENT: el rescat GPS no estarà disponible</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Mode altitud"
     },
@@ -4563,6 +4525,70 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Altitud actual"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Desnivell inicial (metres)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "La distància que pujarà el quad, per sobre de l'altitud actual, quan s'inicia un rescat i el mode d'altitud s'estableix en Altitud ACTUAL; també s'ha afegit quan està en mode d'altitud MAX."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "​Altitud de retorn (metres) - <strong>només s'aplica al mode d'altitud fixa</strong>"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Taxa d’ascens (metres/segon)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Velocitat de retorn (metres/segon)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Angle de pas màxim"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Angles màxims més alts condueixen a retorns més agressius i velocitats d'avançament més altes. Pot ser útil per a quads més pesades, de gran arrossegament o de baixa autoritat, o per utilitzar-les amb vents més forts. ADVERTÈNCIA: l'accelerador de rescat normalment s'ha d'augmentar si augmenta l'angle màxim. En cas contrari, el quad pot perdre alçada i estavellar-se!"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Distància de baixada (metres)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Taxa de descens (metres/segon)"
+    },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "La velocitat de descens inicial s'estableix en 3 vegades aquest valor, disminuint fins al valor establert a l'altitud d'aterratge."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Si el rescat comença massa a prop de casa (dins d'aquesta distància mínima), l'embarcació volarà lluny, en el seu rumb actual, fins almenys a aquesta distància de casa, i després començarà un comportament de rescat normal",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Throttle mínim"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Throttle màxim"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "S'hauria d'augmentar per a quads més pesades, d'arrossegament elevat o de baixa autoritat, si és probable un retorn contra vents forts, o si s'augmenta l'angle d'inclinació màxim."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Hover de l'accelerador - <span class=\"message-negative\">IMPORTANT: establiu aquest valor amb precisió</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Per trobar el valor correcte, configureu l'acció del commutador Failsafe a l'etapa 2, configureu el procediment Failsafe de l'etapa 2 a Aterratge i ajusteu el valor de l'accelerador que s'utilitza durant l'aterratge fins que el quad surti o baixi lentament. A continuació, configureu el gir de l'accelerador de rescat de GPS i el valor de reserva del canal de l'etapa 1 per a l'accelerador en aquest valor."
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distància mínima fins a casa (metres)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "La distància mínima a casa necessària per activar el rescat GPS"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Satèl·lits mínims"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Permetre l'armament sense correcció - <span class=\"message-negative\">ADVERTIMENT: No hi ha cap solució = desarmar a seguretat contra errors!</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "No es recomana. Permet armar sense que s'estableixi un punt d'inici, però el quad es desarmarà i s'estavellarà amb una veritable seguretat de pèrdua de Rx. Si es prova amb un interruptor, hi ha un breu període de no fer res abans del desarmament."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Controls de sanejament"
@@ -5002,7 +5028,7 @@
         "message": "Imatge personalitzada:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "La mida ha de ser de $t(logoWidthPx)×$t(logoHeightPx) pixels"
+        "message": "La mida ha de ser de $t(logoWidthPx)x$t(logoHeightPx) píxels"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Ha de contenir píxels verds, blancs i negres"
@@ -5011,7 +5037,7 @@
         "message": "Prem <b>$t(osdSetupUploadFont.message)</b> per a desar la imatge personalitzada"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Mida de la imatge no vàlida: {{width}}×{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Mida de la imatge no vàlida: {{width}}x{{height}} (s'esperava $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "L'imatge conte píxels invàlids: rgb({{valueR}}, {{valueG}}, {{valueB}}) a les coordenades {{posX}}×{{posY}}"

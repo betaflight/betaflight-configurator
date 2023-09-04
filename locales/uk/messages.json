@@ -737,12 +737,6 @@
         "message": "Курс:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Тангаж:"
-    },
-    "initialSetupRoll": {
-        "message": "Крен:"
-    },
     "initialSetupMixerHead": {
         "message": "Тип Мікшеру"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Коригування акселерометра"
+    },
+    "initialSetupPitch": {
+        "message": "Тангаж:"
+    },
+    "initialSetupRoll": {
+        "message": "Крен:"
     },
     "initialSetupMagHead": {
         "message": "Магнітометр"
@@ -914,7 +914,7 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "RPM фільтрування увімкнено, але один або декілька електронних контролерів швидкості ESC не надають дійсну DSHOT телеметрію. Перевірте, чи ESC підтримує там має необхідну прошивку для двонаправленої DSHOT телеметрії.",
+        "message": "RPM фільтрацію увімкнено, але один або декілька електронних контролерів швидкості ESC не надають дійсну DSHOT телеметрію. Перевірте, чи ESC підтримує та має необхідну прошивку для двонаправленої DSHOT телеметрії.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
@@ -2677,9 +2677,6 @@
         "message": "Поточна широта/довгота:",
         "description": "Show GPS position - Latitude / Longitude"
     },
-    "gpsHeading": {
-        "message": "Курс:"
-    },
     "gpsSpeed": {
         "message": "Швидкість:"
     },
@@ -4118,7 +4115,7 @@
         "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
-        "message": "Фільтри нижніх частот гіроскопа"
+        "message": "Фільтри низьких частот гіроскопа"
     },
     "pidTuningGyroLowpassType": {
         "message": "Тип фільтра нижніх частот гіроскопа 1"
@@ -4505,45 +4502,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS порятунок"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Кут"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Початкова висота (метри)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Відстань для спуску (метри)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Мінімальна відстань до точки зльоту (метри)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Мінімальна відстань до точки зльоту, потрібна для активації функції GPS порятунок"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Швидкість на землі (м/с)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Мінімум тяги"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Максимум тяги"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Тяга зависання"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Швидкість підйому (м/с)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Швидкість зниження (м/с)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Мінімум супутників"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Дозволити взведення без отримання координат GPS - <span class=\"message-negative\">УВАГА: функція \"GPS порятунок\" буде недоступна</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Режим висоти"
     },
@@ -4555,6 +4513,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Поточна висота"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Швидкість підйому (м/с)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Відстань для спуску (метри)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Швидкість зниження (м/с)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Мінімум тяги"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Максимум тяги"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Мінімальна відстань до точки зльоту (метри)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Мінімальна відстань до точки зльоту, потрібна для активації функції GPS порятунок"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Мінімум супутників"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Перевірки придатності"
@@ -4993,17 +4975,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Власне зображення:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Розмір повинен бути $t(logoWidthPx)×$t(logoHeightPx) пікселів"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Має містити зелені, чорні та білі пікселі"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Натисніть <b>$t(osdSetupUploadFont.message)</b> щоб зберегти користувацький логотип"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Неправильний розмір зображення: {{width}}×{{height}} (очікується $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Зображення містить неприпустимий піксель: rgb({{valueR}}, {{valueG}}, {{valueB}}) у координатах {{posX}}×{{posY}}"

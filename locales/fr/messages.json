@@ -720,12 +720,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Réinitialiser l'axe Z, écart: $1 deg"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Type de mixer"
     },
@@ -758,6 +752,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Trim accéléromètre"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetomètre"
@@ -4115,45 +4115,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "Sauvetage GPS"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Altitude initiale (mètres)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Distance descendue (en mètres)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Distance minimale à la maison (mètres)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "La distance minimale à la maison nécessaire pour que le GPS rescue soit activé"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Vitesse-sol (mètres/seconde)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Gaz minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Gaz maximum"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Maintien gaz"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Vitesse de montée (mètres/seconde)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Vitesse de descente (mètres/seconde)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Satellites minimum"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Autoriser l'armement sans fix GPS - <span class=\"message-negative\">ATTENTION: la sauvetage GPS ne fonctionnera pas</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Mode Altitude"
     },
@@ -4165,6 +4126,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Altitude actuelle"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Vitesse de montée (mètres/seconde)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Distance descendue (en mètres)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Vitesse de descente (mètres/seconde)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Gaz minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Gaz maximum"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distance minimale à la maison (mètres)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "La distance minimale à la maison nécessaire pour que le GPS rescue soit activé"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Satellites minimum"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Vérification"
@@ -4603,17 +4588,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Image personnalisée:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "La taille doit être de $t(logoWidthPx)×$t(logoHeightPx) pixels"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Doit contenir des pixels verts, noir et blancs"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Cliquer <b>$t(osdSetupUploadFont.message)</b> afin de conserver le logo personnalisé"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Taille de l'image non valide: {{width}}×{{height}} (attendue $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "L'image contient un pixel non valide : rgb({{valueR}}, {{valueG}}, {{valueB}}) aux coordonnées {{posX}}×{{posY}}"

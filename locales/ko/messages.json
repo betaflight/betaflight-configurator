@@ -737,12 +737,6 @@
         "message": "진행방향:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "피치:"
-    },
-    "initialSetupRoll": {
-        "message": "롤:"
-    },
     "initialSetupMixerHead": {
         "message": "믹서 형식"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "가속도계 트림"
+    },
+    "initialSetupPitch": {
+        "message": "피치:"
+    },
+    "initialSetupRoll": {
+        "message": "롤:"
     },
     "initialSetupMagHead": {
         "message": "자력계"
@@ -2678,7 +2678,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "진행방향:"
+        "message": "Mag / GPS 머리방향:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "속도:"
@@ -4505,45 +4506,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS 레스큐"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "각도"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "초기 고도 (미터)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "하강 거리 (미터)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "홈까지 최소 거리 (미터)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "GPS 레스큐를 활성화하는 데 필요한 홈까지의 최소 거리"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "지면 속도 (미터/초)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "스로틀 최소값"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "스로틀 최대값"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "스로틀 호버"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "상승속도 (미터/초)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "하강속도 (미터/초)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "최소위성수"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "고정없이 아밍 허용 - <span class=\"message-negative\">경고: GPS 레스큐 사용 불가</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "고도 모드"
     },
@@ -4555,6 +4517,70 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "현재 고도"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "초기 고도 (미터)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "레스큐가 시작되고 고도 모드가 현재 고도로 설정되어 있을 때 쿼드가 현재 고도 이상으로 상승하는 거리; MAX 고도 모드일 때도 추가됩니다."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "복귀 고도(미터) - <strong>고정된 고도 모드에서만 적용</strong>"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "상승속도 (미터/초)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "복귀 지면 속도(미터/초)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "최대 피치각"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "최대 각도가 높아지면 더 공격적인 리턴과 전방 속도가 빨라집니다.  중량이 더 무겁고, 항력이 높거나 권한이 낮은 기체 또는 강풍에 사용할 때 유용할 수 있습니다. 경고: 일반적으로 최대 각도가 증가하면 레스큐 스로틀을 증가시켜야 합니다!  그렇지 않으면 쿼드가 고도를 잃고 충돌할 수 있습니다!"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "하강 거리 (미터)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "하강속도 (미터/초)"
+    },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "초기 하강 속도는 이 값의 3배로 설정되어 착륙 고도에서 설정된 값으로 감소합니다."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "레스큐가 홈에서 너무 가까이(이 최소 거리 이내) 시작되면 현재 방향으로 최소 홈에서 이 거리까지 비행한 다음 정상적인 레스큐 동작을 시작합니다",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "스로틀 최소값"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "스로틀 최대값"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "더 무겁고, 높은 항력 또는 낮은 권한을 가진 기체의 경우, 강풍에 대한 복귀 가능성이 있거나 최대 피치 각도가 증가하는 경우 증가되어야 합니다."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "스로틀 호버 - <span class=\"message-negative\">중요: 이 값을 정확하게 설정하세요</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "올바른 값을 찾으려면 Failsafe 스위치 동작을 2단계로 설정하고 단계 2 Failsafe 절차를 착륙으로 설정한 후 쿼드가 호버 또는 천천히 하강할 때까지 착륙에 사용되는 스로틀 값을 조정합니다.  그런 다음 GPS 레스큐 스로틀 호버 및 스로틀에 대한 단계 1 채널 피드백 값을 이 값으로 설정합니다."
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "홈까지 최소 거리 (미터)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "GPS 레스큐를 활성화하는 데 필요한 홈까지의 최소 거리"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "최소위성수"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "고정없이 아밍 허용 - <span class=\"message-negative\">경고: no fix - 페일세이프 사용 불가!</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "권장되지 않습니다. 홈 포인트를 설정하지 않고도 아밍을 허용하지만, 쿼드가 아밍을 해제하고 진정한 Rx 손실 페일 세이프와 충돌합니다.  스위치를 사용하여 테스트할 경우 해제까지 짧은 시간 동안 아무 작업도 수행하지 않습니다."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "온전성 검사"
@@ -4994,7 +5020,7 @@
         "message": "사용자 이미지:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "크기는 $t(logoWidthPx) ×$t(logoHeightPx) 픽셀 이어야 합니다."
+        "message": "크기는 $t(logoWidthPx)×$t(logoHeightPx) 픽셀 이어야 합니다"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "녹색, 검은색과 흰색 픽셀을 포함 해야 합니다."
@@ -5003,7 +5029,7 @@
         "message": "서용자 로고를 지속하려면 <b>$t(osdSetupUploadFont.message)</b>를 클릭하세요."
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "잘못 된 이미지 크기: {{width}}×{{height}} (예상된 크기 $t(logoWidthPx) ×$t(logoHeightPx))"
+        "message": "잘못 된 이미지 크기: {{width}}×{{height}} (예상된 크기 $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "이미지가 유효하지 않은 픽셀을 포함하고 있습니다: 좌표계 {{posX}}×{{posY}} 에서 rgb({{valueR}}, {{valueG}}, {{valueB}})"
