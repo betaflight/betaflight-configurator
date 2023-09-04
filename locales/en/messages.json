@@ -1910,7 +1910,7 @@
     "pidTuningFeedforwardJitterHelp": {
         "message": "Jitter Reduction reduces Feedforward when the sticks move slowly, regardless of their position.<br><br>This allows smooth, jitter-free flight when making smooth slow arcs, yet provides full feedforward without any delay when the sticks are moved quickly. Transition is not required, and should be set to zero, when jitter reduction is active.<br><br>Default is 7. Higher values, eg 10-12, are good for cinematic or HD freestyle purposes, 5 may be better for racing with fast RC links."
     },
-    "idTuningFeedforwardSmoothFactor": {
+    "pidTuningFeedforwardSmoothFactor": {
         "message": "Smoothness"
     },
     "pidTuningFeedforwardSmoothnessHelp": {
