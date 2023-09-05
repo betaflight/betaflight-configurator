@@ -230,7 +230,11 @@ motors.initialize = async function (callback) {
 
     function update_model(mixer) {
         const imgSrc = getMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir);
-        $('.mixerPreview img').attr('src', imgSrc);
+
+        $.get(imgSrc, function(data) {
+            const svg = $(data).find('svg');
+            $('.mixerPreview').html(svg);
+        }, 'xml');
 
         const motorOutputReorderConfig = new MotorOutputReorderConfig(100);
         const domMotorOutputReorderDialogOpen = $('#motorOutputReorderDialogOpen');
@@ -351,10 +355,12 @@ motors.initialize = async function (callback) {
         mixerListElement.sortSelect();
 
         function refreshMixerPreview() {
-            const mixer = FC.MIXER_CONFIG.mixer;
-            const reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
+            const imgSrc = getMixerImageSrc(FC.MIXER_CONFIG.mixer, FC.MIXER_CONFIG.reverseMotorDir);
 
-            $('.mixerPreview img').attr('src', `./resources/motor_order/${mixerList[mixer - 1].image}${reverse}.svg`);
+            $.get(imgSrc, function(data) {
+                const svg = $(data).find('svg');
+                $('.mixerPreview').html(svg);
+            }, 'xml');
         }
 
         const reverseMotorSwitchElement = $('#reverseMotorSwitch');
