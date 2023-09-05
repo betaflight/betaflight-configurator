@@ -1,10 +1,11 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43 } from '../data_storage';
+import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
+import $ from 'jquery';
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from '../msp/MSPHelper';
 import { updateTabList } from '../utils/updateTabList';
@@ -132,7 +133,10 @@ gps.initialize = async function (callback) {
 
         }).val(FC.GPS_CONFIG.provider).change();
 
-        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        // auto_baud is no longer used in API 1.46
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        }
 
         gpsAutoConfigElement.on('change', function () {
             const checked = $(this).is(":checked");
@@ -146,7 +150,7 @@ gps.initialize = async function (callback) {
             const enableSbasVisible = checked && ubloxSelected;
             gpsUbloxSbasGroup.toggle(enableSbasVisible);
 
-            gpsAutoBaudGroup.toggle(ubloxSelected || mspSelected);
+            gpsAutoBaudGroup.toggle((ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46));
             gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
 
         }).prop('checked', FC.GPS_CONFIG.auto_config === 1).trigger('change');
@@ -181,8 +185,9 @@ gps.initialize = async function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
-            const heading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
-            const headingDeg = heading === undefined ? 0 : heading * 180 / Math.PI;
+            const magHeading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
+            const magHeadingDeg = magHeading === undefined ? 0 : magHeading * 180 / Math.PI;
+            const gpsHeading = FC.GPS_DATA.ground_course / 100;
             const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
             const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
                 'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
@@ -193,10 +198,10 @@ gps.initialize = async function (callback) {
             $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
 
-            const gpsUnitText = i18n.getMessage('gpsPositionUnit');
+            const gspUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gpsUnitText}`);
-            $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} ${gpsUnitText}`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.heading').text(`${magHeadingDeg.toFixed(4)} / ${gpsHeading.toFixed(4)} ${gspUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -221,7 +226,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>${FC.GPS_DATA.svid[i]}</td>
-                            <td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>
+                            <td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>
                             <td>${FC.GPS_DATA.quality[i]}</td>
                         </tr>
                     `);
@@ -232,7 +237,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>-</td>
-                            <td><progress value="0" max="99"></progress></td>
+                            <td><meter value="0" max="55"></meter></td>
                             <td> </td>
                         </tr>
                     `);
@@ -253,21 +258,36 @@ gps.initialize = async function (callback) {
 
                     if (FC.GPS_DATA.chn[i] >= 7) {
                         rowContent += '<td>-</td>';
-                        rowContent += `<td><progress value="${0}" max="99"></progress></td>`;
+                        rowContent += `<td><meter value="${0}" max="55"></meter></td>`;
                         rowContent += `<td> </td>`;
                     } else {
                         rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
-                        rowContent += `<td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>`;
+                        rowContent += `<td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>`;
 
                         let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
                         let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
                         let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
 
                         // Add color to the text
-                        if (quality.startsWith(i18n.getMessage('gnssQualityFullyLocked')) || quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
+                        // yellow for searching and orange for locked, green only when fully locked, used and healthy
+                        // 1st column: unusable = red, searching = yellow, locked = orange and fully locked = green
+                        // 2nd column: unused = red, used = green
+                        // 3d  column: non healthy = red, healthy = green
+
+                        // || quality.startsWith(i18n.getMessage('gnssQualityLocked'))
+
+                        if (quality.startsWith(i18n.getMessage('gnssQualityFullyLocked'))) {
                             quality = `<span class="colorToggle ready">${quality}</span>`;
                         } else {
-                            quality = `<span class="colorToggle">${quality}</span>`;
+                            if (quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
+                                quality = `<span class="colorToggle almostReady">${quality}</span>`;
+                            } else {
+                                if (quality.startsWith(i18n.getMessage('gnssQualitySearching'))) {
+                                    quality = `<span class="colorToggle search">${quality}</span>`;
+                                } else {
+                                    quality = `<span class="colorToggle">${quality}</span>`;
+                                }
+                            }
                         }
 
                         if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
@@ -292,7 +312,7 @@ gps.initialize = async function (callback) {
                 action: 'center',
                 lat: lat,
                 lon: lon,
-                heading: heading,
+                heading: magHeading,
             };
 
             frame = document.getElementById('map');
