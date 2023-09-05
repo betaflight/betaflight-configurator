@@ -227,13 +227,17 @@ motors.initialize = async function (callback) {
         lines.attr('d', graphHelpers.line);
     }
 
-    function update_model(mixer) {
-        const imgSrc = getMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir);
-
+    function replace_mixer_preview(imgSrc) {
         $.get(imgSrc, function(data) {
             const svg = $(data).find('svg');
             $('.mixerPreview').html(svg);
         }, 'xml');
+    }
+
+    function update_model(mixer) {
+        const imgSrc = getMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir);
+
+        replace_mixer_preview(imgSrc);
 
         const motorOutputReorderConfig = new MotorOutputReorderConfig(100);
         const domMotorOutputReorderDialogOpen = $('#motorOutputReorderDialogOpen');
@@ -355,11 +359,7 @@ motors.initialize = async function (callback) {
 
         function refreshMixerPreview() {
             const imgSrc = getMixerImageSrc(FC.MIXER_CONFIG.mixer, FC.MIXER_CONFIG.reverseMotorDir);
-
-            $.get(imgSrc, function(data) {
-                const svg = $(data).find('svg');
-                $('.mixerPreview').html(svg);
-            }, 'xml');
+            replace_mixer_preview(imgSrc);
         }
 
         const reverseMotorSwitchElement = $('#reverseMotorSwitch');
