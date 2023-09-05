@@ -7,6 +7,9 @@
   "chromium-args": "--disable-features=nw2",
   "scripts": {
     "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "review": "vite build && vite preview",
     "start": "run-script-os",
     "start:default": "NODE_ENV=development NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' gulp debug",
     "start:windows": "set NODE_ENV=development && set NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' && gulp debug",
@@ -81,6 +84,7 @@
     "switchery-latest": "^0.8.2",
     "three": "~0.97.0",
     "universal-ga": "^1.2.0",
+    "vite-plugin-static-copy": "^0.17.0",
     "vue": "^2.7.10"
   },
   "devDependencies": {
