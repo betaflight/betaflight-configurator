@@ -7,8 +7,9 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import adjustBoxNameIfPeripheralWithModeID from '../peripherals';
-import { gui_log } from '../gui_log';
 import { getTextWidth } from '../utils/common';
+import $ from 'jquery';
+import inflection from "inflection";
 
 const auxiliary = {};
 
@@ -53,10 +54,15 @@ auxiliary.initialize = function (callback) {
 
         let modeName = FC.AUX_CONFIG[modeIndex];
         // Adjust the name of the box if a peripheral is selected
-        modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
+        const modeNameAjusted = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
+        // Camlize modeName
+        const modeNameCamel = inflection.camelize(modeName.replace(/\s+/g, ''));
 
         $(newMode).attr('id', `mode-${modeIndex}`);
-        $(newMode).find('.name').text(modeName);
+        $(newMode).find('.name').text(modeNameAjusted);
+
+        // add help to mode
+        $(newMode).find('.helpicon').attr('i18n_title', `auxiliaryHelpMode_${modeNameCamel}`);
 
         $(newMode).data('index', modeIndex);
         $(newMode).data('id', modeId);
@@ -136,6 +142,9 @@ auxiliary.initialize = function (callback) {
             linkOption.val(FC.AUX_CONFIG_IDS[index]);  // set value to mode id
             linkList.append(linkOption);
         }
+
+        // sort linkedTo options, empty option on top
+        linkList.sortSelect();
 
         linkOptionTemplate.val(0);
 
@@ -397,9 +406,7 @@ auxiliary.initialize = function (callback) {
             mspHelper.sendModeRanges(save_to_eeprom);
 
             function save_to_eeprom() {
-                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    gui_log(i18n.getMessage('auxiliaryEepromSaved'));
-                });
+                mspHelper.writeConfiguration(false);
             }
         });
 

@@ -1,3 +1,5 @@
+import './jqueryPlugins';
+import $ from 'jquery';
 import 'jbox';
 import '../components/init.js';
 import { gui_log } from './gui_log.js';
@@ -48,10 +50,12 @@ function useGlobalNodeFunctions() {
 }
 
 function readConfiguratorVersionMetadata() {
-    const manifest = chrome.runtime.getManifest();
-    CONFIGURATOR.productName = manifest.productName;
-    CONFIGURATOR.version = manifest.version;
-    CONFIGURATOR.gitRevision = manifest.gitRevision;
+    if (GUI.isNWJS()) {
+        const manifest = chrome.runtime.getManifest();
+        CONFIGURATOR.productName = manifest.productName;
+        CONFIGURATOR.version = manifest.version;
+        CONFIGURATOR.gitRevision = manifest.gitRevision;
+    }
 }
 
 function cleanupLocalStorage() {

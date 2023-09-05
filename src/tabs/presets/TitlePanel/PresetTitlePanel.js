@@ -1,14 +1,17 @@
 import { i18n } from "../../../js/localization";
+import $ from 'jquery';
 
 export default class PresetTitlePanel
 {
-    constructor(parentDiv, preset, clickable, onLoadedCallback, favoritePresets)
+    constructor(parentDiv, preset, presetRepo, clickable, showPresetRepoName, onLoadedCallback, favoritePresets)
     {
         PresetTitlePanel.s_panelCounter ++;
         this._parentDiv = parentDiv;
         this._onLoadedCallback = onLoadedCallback;
         this._domId = `preset_title_panel_${PresetTitlePanel.s_panelCounter}`;
         this._preset = preset;
+        this._presetRepo = presetRepo;
+        this._showPresetRepoName = showPresetRepoName;
         this._clickable = clickable;
         this._favoritePresets = favoritePresets;
 
@@ -68,7 +71,7 @@ export default class PresetTitlePanel
     }
 
     _showPresetsDetailedDialog(presetsDetailedDialog, presetsRepo) {
-        presetsDetailedDialog.open(this._preset, presetsRepo).then(isPresetPicked => {
+        presetsDetailedDialog.open(this._preset, presetsRepo, this._showPresetRepoName).then(isPresetPicked => {
             if (isPresetPicked) {
                 const color = this._domWrapperDiv.css( "background-color" );
                 this._domWrapperDiv.css('background-color', 'green');
@@ -103,11 +106,16 @@ export default class PresetTitlePanel
         this._domTitle.prop("title", this._preset.title);
         this._domAuthor.text(this._preset.author);
         this._domVersions.text(this._preset.firmware_version?.join("; "));
+        this._domSourceRepository.text(this._presetRepo.name);
+        this._domSourceRepositoryRow.toggle(this._showPresetRepoName);
+
         this._domKeywords.text(this._preset.keywords?.join("; "));
         this._domKeywords.prop("title", this._preset.keywords?.join("; "));
         this._domStatusOfficial.toggle(this._preset.status === "OFFICIAL");
         this._domStatusCommunity.toggle(this._preset.status === "COMMUNITY");
         this._domStatusExperimental.toggle(this._preset.status === "EXPERIMENTAL");
+        this._domOfficialSourceIcon.toggle(this._presetRepo.official);
+
         this.setPicked(this._preset.isPicked);
         this._setupStar();
 
@@ -118,7 +126,10 @@ export default class PresetTitlePanel
 
         i18n.localizePage();
         this._domWrapperDiv.toggle(true);
-        this._onLoadedCallback?.();
+
+        if (typeof this._onLoadedCallback === 'function') {
+            this._onLoadedCallback();
+        }
     }
 
     _readDom()
@@ -128,10 +139,13 @@ export default class PresetTitlePanel
         this._domCategory = this._domWrapperDiv.find('.preset_title_panel_category');
         this._domAuthor = this._domWrapperDiv.find('.preset_title_panel_author_text');
         this._domKeywords = this._domWrapperDiv.find('.preset_title_panel_keywords_text');
+        this._domSourceRepository = this._domWrapperDiv.find('.preset_title_panel_repository_text');
+        this._domSourceRepositoryRow = this._domWrapperDiv.find('.preset_title_panel_repository_row');
         this._domVersions = this._domWrapperDiv.find('.preset_title_panel_versions_text');
         this._domStatusOfficial = this._domWrapperDiv.find('.preset_title_panel_status_official');
         this._domStatusCommunity = this._domWrapperDiv.find('.preset_title_panel_status_community');
         this._domStatusExperimental = this._domWrapperDiv.find('.preset_title_panel_status_experimental');
+        this._domOfficialSourceIcon = this._domWrapperDiv.find('.preset_title_panel_betaflight_official');
     }
 
     _setupStar() {
@@ -145,9 +159,9 @@ export default class PresetTitlePanel
 
     _processStarClick() {
         if (this._preset.lastPickDate) {
-            this._favoritePresets.delete(this._preset);
+            this._favoritePresets.delete(this._preset, this._presetRepo);
         } else {
-            this._favoritePresets.add(this._preset);
+            this._favoritePresets.add(this._preset, this._presetRepo);
         }
 
         this._favoritePresets.saveToStorage();

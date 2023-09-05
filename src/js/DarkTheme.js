@@ -1,6 +1,7 @@
 import GUI from "./gui";
 import windowWatcherUtil from "./utils/window_watchers";
 import { checkSetupAnalytics } from "./Analytics";
+import $ from 'jquery';
 
 const css_dark = [
     './css/dark-theme.css',

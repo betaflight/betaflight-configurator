@@ -1,7 +1,7 @@
 import PresetsRepoIndexed from "./PresetsRepoIndexed";
 
 export default class PresetsWebsiteRepo extends PresetsRepoIndexed {
-    constructor(url) {
+    constructor(url, official, name) {
         let correctUrl = url.trim();
 
         if (!correctUrl.endsWith("/")) {
@@ -11,6 +11,6 @@ export default class PresetsWebsiteRepo extends PresetsRepoIndexed {
         const urlRaw = correctUrl;
         const urlViewOnline = correctUrl;
 
-        super(urlRaw, urlViewOnline);
+        super(urlRaw, urlViewOnline, official, name);
     }
 }

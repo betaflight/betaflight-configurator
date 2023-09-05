@@ -1,4 +1,5 @@
 import GUI from "./gui";
+import $ from 'jquery';
 
 const UI_PHONES = {
     background: '#background',

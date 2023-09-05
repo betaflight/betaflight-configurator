@@ -7,7 +7,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import PortHandler from "../port_handler";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
@@ -15,6 +15,7 @@ import jBox from "jbox";
 import inflection from "inflection";
 import { checkChromeRuntimeError } from "../utils/common";
 import debounce from "lodash.debounce";
+import $ from 'jquery';
 
 const FONT = {};
 const SYM = {};
@@ -1508,6 +1509,33 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: `F${FONT.symbol(SYM.TEMPERATURE)}5`,
         },
+        GPS_LAP_TIME_CURRENT: {
+            name: 'GPS_LAP_TIME_CURRENT',
+            text: 'osdTextElementLapTimeCurrent',
+            desc: 'osdDescElementLapTimeCurrent',
+            defaultPosition: -1,
+            draw_order: 540,
+            positionable: true,
+            preview: '1:23.456',
+        },
+        GPS_LAP_TIME_PREVIOUS: {
+            name: 'GPS_LAP_TIME_PREVIOUS',
+            text: 'osdTextElementLapTimePrevious',
+            desc: 'osdDescElementLapTimePrevious',
+            defaultPosition: -1,
+            draw_order: 545,
+            positionable: true,
+            preview: '1:23.456',
+        },
+        GPS_LAP_TIME_BEST3: {
+            name: 'GPS_LAP_TIME_BEST3',
+            text: 'osdTextElementLapTimeBest3',
+            desc: 'osdDescElementLapTimeBest3',
+            defaultPosition: -1,
+            draw_order: 550,
+            positionable: true,
+            preview: '1:23.456',
+        },
     };
 };
 
@@ -1681,6 +1709,16 @@ OSD.constants = {
             name: 'MIN_RSNR',
             text: 'osdTextStatMinRSNR',
             desc: 'osdDescStatMinRSNR',
+        },
+        STAT_BEST_3_CONSEC_LAPS : {
+            name: 'STAT_BEST_3_CONSEC_LAPS',
+            text: 'osdTextStatBest3ConsecLaps',
+            desc: 'osdDescStatBest3ConsecLaps',
+        },
+        STAT_BEST_LAP : {
+            name: 'STAT_BEST_LAP',
+            text: 'osdTextStatBestLap',
+            desc: 'osdDescStatBestLap',
         },
     },
     ALL_WARNINGS: {
@@ -1927,6 +1965,14 @@ OSD.chooseFields = function() {
         ]);
     }
 
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.GPS_LAP_TIME_CURRENT,
+            F.GPS_LAP_TIME_PREVIOUS,
+            F.GPS_LAP_TIME_BEST3,
+        ]);
+    }
+
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
     F = OSD.constants.ALL_STATISTIC_FIELDS;
@@ -1976,6 +2022,13 @@ OSD.chooseFields = function() {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
             F.USED_WH,
             F.MIN_RSNR,
+        ]);
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+            F.STAT_BEST_3_CONSEC_LAPS,
+            F.STAT_BEST_LAP,
         ]);
     }
 
@@ -2082,24 +2135,18 @@ OSD.msp = {
 
                 OSD.updateDisplaySize();
 
-                if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-                    // size * y + x
-                    const xpos = ((bits >> 5) & 0x0020) | (bits & 0x001F);
-                    const ypos = (bits >> 5) & 0x001F;
+                // size * y + x
+                const xpos = ((bits >> 5) & 0x0020) | (bits & 0x001F);
+                const ypos = (bits >> 5) & 0x001F;
 
-                    displayItem.position = positionable ? OSD.data.displaySize.x * ypos + xpos : defaultPosition;
+                displayItem.position = positionable ? OSD.data.displaySize.x * ypos + xpos : defaultPosition;
 
-                    displayItem.isVisible = [];
-                    for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
-                        displayItem.isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) !== 0;
-                    }
-
-                    displayItem.variant = (bits & OSD.constants.VARIANTS) >> 14;
-
-                } else {
-                    displayItem.position = (bits === -1) ? defaultPosition : bits;
-                    displayItem.isVisible = [bits !== -1];
+                displayItem.isVisible = [];
+                for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
+                    displayItem.isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) !== 0;
                 }
+
+                displayItem.variant = (bits & OSD.constants.VARIANTS) >> 14;
 
                 return displayItem;
             },
@@ -2117,21 +2164,15 @@ OSD.msp = {
                 const position = displayItem.position;
                 const variant = displayItem.variant;
 
-                if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
-
-                    let packed_visible = 0;
-                    for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
-                        packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
-                    }
-                    const variantSelected = (variant << 14);
-                    const xpos = position % OSD.data.displaySize.x;
-                    const ypos = (position - xpos) / OSD.data.displaySize.x;
-
-                    return packed_visible | variantSelected | ((ypos & 0x001F) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001F);
-                } else {
-                    const realPosition = position === -1 ? 0 : position;
-                    return isVisible[0] ? realPosition : -1;
+                let packed_visible = 0;
+                for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
+                    packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
                 }
+                const variantSelected = (variant << 14);
+                const xpos = position % OSD.data.displaySize.x;
+                const ypos = (position - xpos) / OSD.data.displaySize.x;
+
+                return packed_visible | variantSelected | ((ypos & 0x001F) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001F);
             },
             timer(timer) {
                 return (timer.src & 0x0F) | ((timer.precision & 0x0F) << 4) | ((timer.alarm & 0xFF) << 8);

@@ -3,6 +3,7 @@ import MSP from './msp';
 import Switchery from 'switchery-latest';
 import jBox from 'jbox';
 import { checkChromeRuntimeError } from './utils/common';
+import $ from 'jquery';
 
 const TABS = {};
 
@@ -34,7 +35,7 @@ class GuiControl {
             'help',
         ];
 
-        this.defaultAllowedTabsCloudBuild = [
+        this.defaultAllowedTabs = [
             'setup',
             'failsafe',
             'power',
@@ -51,6 +52,7 @@ class GuiControl {
             'ports',
             'receiver',
             'sensors',
+            'vtx',
         ];
 
         this.defaultCloudBuildTabOptions = [
@@ -59,10 +61,9 @@ class GuiControl {
             'osd',
             'servos',
             'transponder',
-            'vtx',
         ];
 
-        this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabsCloudBuild, ...this.defaultCloudBuildTabOptions];
+        this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
 
         this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 
@@ -316,7 +317,7 @@ class GuiControl {
         documentationButton.html("Wiki").attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
 
         // loading tooltip
-        jQuery(function () {
+        $(function () {
 
             new jBox('Tooltip', {
                 attach: '.cf_tip',

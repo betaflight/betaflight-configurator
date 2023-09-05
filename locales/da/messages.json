@@ -41,13 +41,13 @@
         "message": "Program indstillinger"
     },
     "connect": {
-        "message": "Tilslut"
+        "message": "Tilslut konfigurering"
     },
     "connecting": {
         "message": "Tilslutter"
     },
     "disconnect": {
-        "message": "Afbryd"
+        "message": "Afbryd konfigurering"
     },
     "portsSelectManual": {
         "message": "Manuelt valg"
@@ -84,7 +84,7 @@
         "message": "Autotilslut er slået fra - Du skal selv vælge den korrekte serielle port og klikke på knappen \"Tilslut\""
     },
     "expertMode": {
-        "message": "Aktiver ekspert tilstand"
+        "message": "Ekspert tilstand"
     },
     "expertModeDescription": {
         "message": "Vis valg for ekspert tilstand"
@@ -286,7 +286,7 @@
         "message": "Kanal justeringer"
     },
     "tabAuxiliary": {
-        "message": "Kanal tilstande"
+        "message": "Kanaler"
     },
     "logActionHide": {
         "message": "Skjul log"
@@ -625,7 +625,7 @@
         "message": "Brænd firmware"
     },
     "defaultDonateHead": {
-        "message": "Open Source/Donations meddelelse"
+        "message": "Vedrørende Open Source og støtte med donation"
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight</strong> er <strong>open source</strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti</strong>.</p><p>Hvis du fandt Betaflight eller Betaflight-Configurator nyttig, så overvej venligst at <strong>støtte</strong> udviklingen ved en donation.</p>"
@@ -689,10 +689,10 @@
         "message": "Anbring FC/drone på en <strong>plan og ret</strong> overflade, fortsæt kalibreringen, tjek at overfladen/FC/dronen ikke bevæges under kalibreringen"
     },
     "initialSetupButtonCalibrateMag": {
-        "message": "Kalibrering af Magnetometer (kompas)"
+        "message": "Kalibrering af Magnetometer / kompas"
     },
     "initialSetupCalibrateMagText": {
-        "message": "Bevæg indenfor 30 sek. multirotoren mindst <strong>360</strong> grader i alle dens rotationsakser"
+        "message": "Bevæg indenfor 30 sek. dronen <strong>360</strong> grader i alle dens rotationsakser"
     },
     "initialSetupButtonCalibratingText": {
         "message": "Kalibrerér..."
@@ -737,12 +737,6 @@
         "message": "Kurs:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Højderor:"
-    },
-    "initialSetupRoll": {
-        "message": "Krængror:"
-    },
     "initialSetupMixerHead": {
         "message": "Mixertype"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Accelerometer trim"
+    },
+    "initialSetupPitch": {
+        "message": "Højderor:"
+    },
+    "initialSetupRoll": {
+        "message": "Krængror:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -849,9 +849,13 @@
         "message": "Runway Takeoff-beskyttelse er blevet udløst",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Deaktiveret via havaridetektering",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Nedstyrtet drone er aktiv",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Dronen kalibrerer sig i øjeblikket",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Gas kanalværdi er for høj",
@@ -873,9 +877,9 @@
         "message": "Systembelastning for høj til sikker flyvning",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sensorkalibrering er stadig i gang",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "Accelerometerkalibrering er stadig i gang",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI er aktiv",
@@ -913,19 +917,19 @@
         "message": "RPM eller omdrejnings-baseret filtrering er aktiv, men èn eller flere esc'ere sender ikke gyldige DShot telemetri data. Tjek at esc'erne har den nødvendige firmware for at kunne køre to-vejs DShot telemetri.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Ændringer i opsætning kræver en genstart",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged / kommunikation med DSHOT fungerer ikke korrekt og motorerne kan ikke kontrolleres. Sandsynligvis forårsaget af en timer konflikt med andre funktioner aktiveret på FC.",
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "Motor protokol (DSHOT) melder fejl, fungerer ikke korrekt og motorere er ikke i kontrol. Sandsynligvis på grund af en timer konflikt med andre funktioner aktiveret i FC.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Accelerometeret er ikke kalibreret og der er ændret opsætninger som kræver kalibriering. Kalibrer accelerometret.",
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "Accelerometeret er ikke kalibreret og funktioner er ændret, der er afhængige af det. Kalibrer accelerometret.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "Der er ikke valgt en protokol til motor kontrol",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -991,6 +995,9 @@
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Lokal release - ingen Defines anvendt"
     },
+    "initialSetupNotOnline": {
+        "message": "Serveren kan ikke kontaktes"
+    },
     "initialSetupButtonSave": {
         "message": "Gem"
     },
@@ -1028,7 +1035,7 @@
         "message": "Nivellieringskalibrering under flyvning"
     },
     "featureRX_SERIAL": {
-        "message": "Seriel (via UART)"
+        "message": "Seriel (UART styring)"
     },
     "featureMOTOR_STOP": {
         "message": "Rotér ikke motorerer, når aktiveret"
@@ -1073,7 +1080,7 @@
         "message": "PWM RX-input (en ledning pr. kanal)"
     },
     "featureRX_MSP": {
-        "message": "MSP RX-input (styring via MSP-port)"
+        "message": "MSP RX-input (MSP styring)"
     },
     "featureRSSI_ADC": {
         "message": "Analog RSSI-input"
@@ -1211,7 +1218,7 @@
         "message": "ACCEL-justering"
     },
     "configurationSensorAlignmentMag": {
-        "message": "Magnetometer (kompas) justering"
+        "message": "Justering af Magnetometer / kompas"
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
@@ -1358,7 +1365,7 @@
         "message": "Bip ved fuldført Blackbox-sletning"
     },
     "beeperCRASH_FLIP": {
-        "message": "Bip, når crash flip-tistand er aktiv"
+        "message": "Bip, når \"Vend styrtet drone\" er aktiv"
     },
     "beeperCAM_CONNECTION_OPEN": {
         "message": "Bip, når 5-tasts kamerakontrol tilgås"
@@ -1411,6 +1418,10 @@
     "configurationGPS": {
         "message": "GPS konfiguration"
     },
+    "configurationGPSHelp": {
+        "message": "Indstilling af GPS protokol (husk at indstille port i Porte menu), brug auto baud (eller indstil hastighed i Porte menu) og andre muligheder.",
+        "description": "Help text GPS configuration"
+    },
     "configurationGPSProtocol": {
         "message": "Protokol"
     },
@@ -1435,18 +1446,18 @@
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
-        "message": "Sæt hjempunkt 1. gang",
+        "message": "Sæt Hjem position når strøm tilsluttes",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Når valgt, vil kun den første aktivering efter batteriet er tilsluttet blive brugt som startpunkt. Hvis det ikke er aktiveret, opdateres hjempunkt, hver gang fartøj aktiveres.",
+        "message": "Når valgt, vil kun den første aktivering efter batteriet er tilsluttet blive brugt som Hjem position. Hvis indstilling ikke er valgt, opdateres Hjem position, hver gang fartøj aktiveres.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
-        "message": "Leverandør protokol til seriel modtagelse"
+        "message": "Leverandør af seriel protokol"
     },
     "configurationSpiRX": {
-        "message": "SPI-busmodtagerleverandør"
+        "message": "Leverandør af SPI modtager bus"
     },
     "configurationEepromSaved": {
         "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
@@ -1794,7 +1805,7 @@
         "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes centerpositioner, hvilket betyder en mere glidende afslutning på flips og rolls.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind centreret, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens centerposition. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pind udfalds område."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "Denne parameter afgør pindaccelerationseffekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle målemetode, hvor D kun sporer gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pindsporingsforhold.<br> Lavere værdi modsvarer langsommere/jævnere pindrespons, mens højere værdi giver øget pindaccelerationsrespons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
+        "message": "Denne parameter afgør pindaccelerationseffekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle måle metode, hvor D kun styres af gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pind respons.<br> Lavere værdi modsvarer langsommere/jævnere pindrespons, mens højere værdi giver øget pindaccelerationsrespons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser centerpositionerne.</span>"
@@ -2131,7 +2142,8 @@
         "message": "Forbind fase"
     },
     "receiverButtonSticks": {
-        "message": "Styrpinde"
+        "message": "Radio emulering",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "RC tuningdata <strong>opfrisket</strong>"
@@ -2146,13 +2158,13 @@
         "message": "Disse pinde tillader indkobling og test af Betaflight, uden en sender/modtager er til stede. Bemærk, <strong>at denne funktion ikke er beregnet til flyvning, og propeller må ikke monteres.</strong><br /><br />Denne funktion garanterer ikke pålidelig kontrol med dit fartøj. <strong>Risiko for alvorlig skade, hvis propellerne er påsat.</strong>"
     },
     "receiverMspEnableButton": {
-        "message": "Aktivér kontroller"
+        "message": "Aktiver kontroller"
     },
     "auxiliaryHelp": {
-        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og/eller kanalområder (kanal områder understøttes fra BF 4.0). Benyt <strong>kanal</strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med en udlæsning mellem et min/maks område, aktiverer tilstanden. Benyt et <strong>område</strong> for at aktivere en tilstand, når et andet område er aktiveret. <strong>Undtagelser:</strong> Aktiver(ARM) kan ikke linkes til eller fra en anden tilstand, tilstande kan ikke linkes til andre tilstande, som er opsat med et link (kædede links). Flere områder/links kan benyttes til at aktivere enhver tilstand. Er derdefineret mere end ét område/link for en tilstand, kan hver af dem opsættes til <strong>AND</strong> eller <strong>OR</strong>. En tilstand aktiveres, når: <br />- ALLE <strong>AND</strong> områder/links er aktive; ELLER<br /> - mindst ét <strong>OR</strong> område/link er aktivt.<br /> <br />Husk at gemme dine indstillinger med knappen Gem."
+        "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og/eller kanalområder (kanal områder understøttes fra BF 4.0).<br>Benyt <strong>Tilknyt kanal</strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med signal mellem et min/maks område, aktiverer tilstanden. Benyt et <strong>Tilknyt kanal område</strong> for at aktivere en tilstand, når et andet område er aktiveret.<br><strong>Undtagelser:</strong> Aktiver(ARM) kan ikke tilknyttes til eller fra en anden tilstand, tilstande kan ikke tilknyttes til andre tilstande, som er opsat med en tilknytning (kædede tilknytninger). Flere områder/tilknytninger kan benyttes til at aktivere enhver tilstand.<br>Er der defineret mere end ét område/tilknytning for en tilstand, kan hver af dem opsættes til <strong>OG</strong> eller <strong>ELLER</strong>. En tilstand aktiveres, når: <br />- ALLE <strong>OG</strong> områder/tilknytninger er aktive; <br /> - ELLER mindst ét <strong>ELLER</strong> område/tilknytning er aktivt.<br />Husk at gemme dine indstillinger med knappen Gem."
     },
     "auxiliaryToggleUnused": {
-        "message": "Skjul ubrugte kanal tilstande"
+        "message": "Skjul ubrugte kanaler"
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -2173,9 +2185,6 @@
     "auxiliaryButtonSave": {
         "message": "Gem"
     },
-    "auxiliaryEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2184,6 +2193,194 @@
     },
     "auxiliaryModeLogicAND": {
         "message": "OG"
+    },
+    "auxiliaryHelpMode_3D": {
+        "message": "Muliggør reversibel motorretning for at give negativ gas og tillade omvendt flyvning. Gassen bliver -100 til +100 i stedet for 0 til 100.\nAnvendes til at flyve et fartøj, som er endt på 'ryggen'",
+        "description": "Help text to 3D mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Flyvetilstand som begrænser fartøjets vinkel når det er i ARCO tilstand",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Aktiverer motorer og aktiverer at fartøj kan flyve",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "I denne auto-nivelleret tilstand styrer krængror og højderor vinklen mellem den relevante akse og den lodrette akse, for at udjævne flyning ved blot at lade pindende være centreret",
+        "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "Flytilstand som øger P og I Term ved hurtige gasbevægelser, for at forbedre pind respons og undgå næsen på fartøjer går ud af kurs ved hurtige ændringer af gassen",
+        "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "I standard mixer tilstand, når krængror, højderor og sideror beregnes og styrer en motor, vil alle motorer blive ændret ens. Når en motor går under minimum, bliver styring reduceret. Fx hvis du har din gas lige over minimum og forsøger en hurtig krængning - da to motorer ikke kan gå under minimum, vil du hovedsagelig kun få halvdelen af kraften (halvdelen af din PID værdi). Hvis dit input ville have bedt om mere end 100% forskel mellem de høje og lave motores hastighed ville de de langsomm motorer blive reduceret og symmetrien i motorens balance vil blive brudt",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Deaktiver / aktiver bippen, heruder advarsler, status og anden bippen.",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_BEEPERON": {
+        "message": "Aktiver BEEPER ON, altså at bipper kan give lyd",
+        "description": "Help text to BEEPER ON mode"
+    },
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "Aktiver  BEEP GPS SATELLITE COUNT, altså at bipper giver lyd det antal gange der er låste sattelitter",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "Aktiver Blackbox logning",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Slet BlackBox log",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
+    "auxiliaryHelpMode_BOXPREARM": {
+        "message": "Aktiverer BOXPREARM tilstand",
+        "description": "Help text to BOXPREARM mode"
+    },
+    "auxiliaryHelpMode_CALIB": {
+        "message": "Start kalibrering under flyvning",
+        "description": "Help text to CALIB mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 1. Se i leverandørs manual",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 2. Se i leverandørs manual",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "Aktiverer stabiliseringstilstand for kamera",
+        "description": "Help text to CAMSTAB mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Aktiver mauelt fejlsikring trin 2",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Vender motor retning for at vende en styrtet drone (kun ved DShot protokol)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Styrer sideror bevægelse i forhold til et FPV-kamera monteret i en forud indstillet vinkel",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Angiver antallet af GPS-satellitter, der er fundet ved at bippe dette antal gange",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Aktiver 'GPS redning' for at returnere fartøjet til det sted, hvor det sidst var aktiveret (Home)",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Kurs korrektion - indstiller ny sideror værdi for HEADFREE tilstand",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Flyvningstilstand, hvor sideror styres af en ekstern reference (typisk den som piloten ser imod) i stedet for fartøjets egen reference. Designet til begyndere, men sjældent brugt, normalt bedre at anvende ANGLE tilstand",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning).<br>Når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "Ræs assistance system",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Tænd eller sluk for LED lys",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Aktiverer låsning af kurs på aktuel kompasretning",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_MSPOVERRIDE": {
+        "message": "Aktiver MSP overstyring",
+        "description": "Help text to MSP OVERRIDE mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Aktiver/deaktiver On-Screen-Display - OSD",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Gennemstiller krængeror, sideror og højderor fra radio sender direkte til servo",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Deaktiver permanent en styrtet drone. For at aktivere skal strøm slukkes helt",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "Tænd eller sluk for PIDAUDIO",
+        "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Ved aktivering, skal denne kontakt også aktiveres, før dronen reelt er klar til flyvning = helt aktiveret",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Tilføjet i BF4.4, så du kan vise 'KLAR' i OSD ved hjælp af en kontakt. Dette er en forbedring til ræs, hvor alle piloters video vises på en central skærm. Piloten kan vippe en kontakt for at indikere, at han er klar til at flyve, og ordet READY vises på deres OSD. Løbsinstruktøren kan derefter se om alle piloter er klar, ved at se på den centrale skærm. Ved aktivering forsvinder READY teksten",
+        "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Deaktiver/aktiver pind kommandoer",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "Tænd eller sluk for SERVO 1",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "Tænd eller sluk for SERVO 2",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "Tænd eller sluk for SERVO 3",
+        "description": "Help text to SERVO3 mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Aktiver telemetri via kontakt",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Skifter brugerdefineret USER1. Styrer via PINIO",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Skifter brugerdefineret USER2. Styrer via PINIO",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Skifter brugerdefineret USER3. Styrer via PINIO",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Skifter brugerdefineret USER4. Styrer via PINIO",
+        "description": "Help text to customized USER4 mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Deaktiver kontrol af VTX indstillinger via OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "Opsætning af kanal justeringer. Se 'in-flight adjustments' delen af manualen for detaljer. Ændringer gemmes Ikke automatisk."
@@ -2398,9 +2595,6 @@
     "transponderDataInvalid": {
         "message": "Transponderdata er <span class=\"message-negative\">ugyldig</span>"
     },
-    "transponderEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
-    },
     "servosFirmwareUpgradeRequired": {
         "message": "Servoer kræver firmware version &gt;= 1.10.0 og understøttelse af FC"
     },
@@ -2446,8 +2640,16 @@
     "gpsHead": {
         "message": "GPS status"
     },
+    "gpsHeadHelp": {
+        "message": "Angiver forskellig GPS information. Kurs vises kun hvis kompas anvendes.",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "Aktuel GPS position"
+    },
+    "gpsMapHeadHelp": {
+        "message": "Angiver GPS prosition på kortet, rul med muse hjul for at zoome ind/ud eller tryk på +/-.<br>Positions ikon viser retning for Nord, når kompas anvendes.",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Tjek Internetforbindelsen"
@@ -2459,34 +2661,38 @@
         "message": "3D-fiksering:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Sand</span>"
+        "message": "Sand"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Falsk</span>"
+        "message": "Falsk"
+    },
+    "gpsPositionUnit": {
+        "message": "grad",
+        "description": "Unit for GPS position."
     },
     "gpsAltitude": {
         "message": "Højde:"
     },
-    "gpsLat": {
-        "message": "Breddegrad:"
-    },
-    "gpsLon": {
-        "message": "Længdegrad:"
-    },
-    "gpsHeading": {
-        "message": "Kurs:"
+    "gpsLatLon": {
+        "message": "Nuværende breddegrad / længdegrad:",
+        "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsSpeed": {
         "message": "Hastighed:"
     },
     "gpsSats": {
-        "message": "Antal satelitter:"
+        "message": "Antal satelitter:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
-        "message": "Afstand til Hjem:"
+        "message": "Hjem afstand:"
     },
     "gpsSignalStrHead": {
         "message": "GPS signalstyrke"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "Angiver signal styrke, kvalitet og status for hver opdaget GPS station.",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "Signalstyrke"
@@ -3303,6 +3509,22 @@
     "firmwareFlasherPreviousDevice": {
         "message": "Detekteret: <strong>$1</strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
     },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Slet alle indstillinger",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Brændning af firmware vil slette alle indstillinger. Vi anbefaler kraftigt at der gemmes en sikkerhedskopi, før fortsættelse.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Opret backup",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignorer risiko",
+        "description": "Ignore creating a backup before actual flashing takes place"
+    },
     "ledStripHelp": {
         "message": "Flight controlleren kan styre farver og effekter på individuelle LED'er på en strimmel.<br />Opsæt LED'er i gitteret, opsæt ledningsrækkefølge og forbnd så LED'erne på dit fly jf. gitterpositionerne. LED'er uden ledningsnummer vil ikke blive gemt.<br />Dobbeltklik på en farve for at redigere HSV-værdierne."
     },
@@ -3336,9 +3558,6 @@
     "ledStripClearAllButton": {
         "message": "Slet ALT",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (bruger vtx-frekvens til at bestemme farve)"
@@ -4028,7 +4247,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM filtrering er en gruppe af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br /><br /><b><span class=\"message-positive\">VIGTIGT</span>: ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.</b>",
+        "message": "RPM filtrering er en gruppe af hak filtre på gyro som bruger RPM telemetri data til at fjerne motorstøj med kirurgisk præcision.<br /><br /><b><span class=\"message-positive\">VIGTIGT</span>: </b><br>ESC skal understøtte todirectional DShot protokollen og værdien af $t(configurationMotorPoles.message) i $t(tabMotorTesting.message) fanen skal være korrekt for at dette filter kan virke.",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -4283,45 +4502,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "Flyv hjem med GPS (Return To Home)"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Vinkel"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Indledende højde (meter)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Nedstigningsdistance (meter)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Mindste afstand til hjem (meter)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Mindste afstand til hjem, der er nødvendig for at GPS redning kan aktiveres"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Jordhastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Gas minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Gas maksimum"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Gas værdi ved svævning"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Stignings hastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Nedstignings hastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Mindste antal satellitter"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Test ved at tillade aktivering uden GPS er låst - <span class=\"message-negative\">ADVARSEL: GPS-redningen ved flyvning vil ikke være mulig med denne slået til</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Højde tilstand"
     },
@@ -4333,6 +4513,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Aktuel højde"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Stignings hastighed (meter/sekund)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Nedstigningsdistance (meter)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Nedstignings hastighed (meter/sekund)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Gas minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Gas maksimum"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Mindste afstand til hjem (meter)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Mindste afstand til hjem, der er nødvendig for at GPS redning kan aktiveres"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Mindste antal satellitter"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Overvågning af GPS fejlsikring "
@@ -4359,7 +4563,7 @@
         "message": "Trin som startes ved, når aktivering sker fra AUX knap"
     },
     "failsafeSwitchModeHelp": {
-        "message": "Denne indstilling afgør, hvad der sker, når fejlsikring via AUX-knappen:<br/><strong>Trin 1</strong> aktiverer Trin 1 fejlsikring, der er nyttig til at simulere den nøjagtige fejlsikringsadfærd ved signaltab.<br/><strong>Trin 2</strong> overspringer Trin 1 og aktiverer omgående Trin 2-proceduren <br/><strong>SLUK</strong>, der straks afkobler (fartøjet havarerer)"
+        "message": "Denne indstilling afgør, hvad der sker, når fejlsikring via AUX-knappen:<br/><strong>Trin 1</strong> aktiverer Trin 1 fejlsikring, der er nyttig til at simulere den nøjagtige fejlsikringsadfærd ved signaltab.<br/><strong>Trin 2</strong> overspringer Trin 1 og aktiverer omgående Trin 2-proceduren <br/><strong>SLUK</strong>, der straks afkobler (dronen styrter ned)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Trin 1"
@@ -4771,17 +4975,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Tilpasset billede:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Størrelse skal være $t(logoWidthPx)×$t(logoHeightPx) pixels"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Skal indeholde grønne, sorte og hvide pixels"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik på <b>$t(osdSetupUploadFont.message)</b> for at bevare tilpasset logo"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Ugyldig billedstørrelse: {{width}}×{{height}} (forventet $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Billedet indeholder en ugyldig pixel: rgb ({{valueR}}, {{valueG}}, {{valueB}}) i koordinaterne {{posX}}×{{posY}}"
@@ -4884,11 +5082,11 @@
         "message": "Aktiverings meddelelse"
     },
     "osdTextElementDisarmed": {
-        "message": "Deaktiveret",
+        "message": "Meddelse hvis Deaktiveret",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisarmed": {
-        "message": "Afkoblings meddelelse"
+        "message": "Vis meddelelse hvis deaktiveret"
     },
     "osdTextElementCrosshairs": {
         "message": "Sigtekorn",
@@ -5016,6 +5214,27 @@
     },
     "osdDescElementSysFanSpeed": {
         "message": "Videobrille blæser hastighed ændret af videobrille"
+    },
+    "osdTextElementLapTimeCurrent": {
+        "message": "GPS omgangstid aktuelt",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeCurrent": {
+        "message": "Angiver aktuel GPS omgangstid"
+    },
+    "osdTextElementLapTimePrevious": {
+        "message": "GPS forrige omgangstid",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimePrevious": {
+        "message": "Angiver forrige GPS omgangstid"
+    },
+    "osdTextElementLapTimeBest3": {
+        "message": "GPS omgangstid bedst af 3 omgange",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest": {
+        "message": "Angiver bedste GPS omgangstid"
     },
     "osdTextElementCraftName": {
         "message": "Navn: Fartøj",
@@ -5212,11 +5431,11 @@
         "message": "Pil der viser retning til Hjem position"
     },
     "osdTextElementHomeDistance": {
-        "message": "Afstand til Hjem",
+        "message": "Hjem afstand",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementHomeDistance": {
-        "message": "Afstand til Hjem position (målt den valgte enhed for FC - Enheder)"
+        "message": "Afstand til Hjem position (bestemt med værdi i den valgte enhed for FC - Enheder)"
     },
     "osdTextElementNumericalHeading": {
         "message": "Numerisk overskrift",
@@ -5335,7 +5554,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Pil, der viser, hvilke motorer der er oppe i skildpadde tilstand"
+        "message": "Retning med pil som viser de motorer som kan vende havereret drone (accelerometer skal være aktiveret)"
     },
     "osdTextElementLinkQuality": {
         "message": "Link kvalitet",
@@ -5673,6 +5892,20 @@
     "osdDescStatMinRSNR": {
         "message": "Minimum RSNR værdi"
     },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "Bedst af 3 efterfølgende omgange",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "Bedst af 3 efterfølgende omgange"
+    },
+    "osdTextStatBestLap": {
+        "message": "Bedste omgang",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Bedste omgang"
+    },
     "osdTextStatUnknown": {
         "message": "Ukendt $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5783,11 +6016,11 @@
         "message": "Viser en visualisering af biperen (viser som 4 stjerner)"
     },
     "osdWarningTextCrashFlipMode": {
-        "message": "Crash flip tilstand",
+        "message": "Vend styrtet drone advarsel",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCrashFlipMode": {
-        "message": "Advarer når flip over efter nedbrudstilstand er aktiveret"
+        "message": "Advarer når \"vend styrtet drone\" er aktiveret"
     },
     "osdWarningTextEscFail": {
         "message": "ESC fejl",
@@ -6020,6 +6253,14 @@
     "vtxFrequencyHelp": {
         "message": "Her kan du vælge frekvensen for din VTX, hvis den er understøttet",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Ja",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Nej",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Enheden er klar",
@@ -6400,13 +6641,13 @@
         "message": "Fortryd"
     },
     "modeCameraWifi": {
-        "message": "KAMERA WI-FI KNAP"
+        "message": "KAMERA WI-FI"
     },
     "modeCameraPower": {
         "message": "KAMERA TÆND/SLUK"
     },
     "modeCameraChangeMode": {
-        "message": "KAMERA KONFIGURATION TILSTAND"
+        "message": "KAMERA KONFIGURATION"
     },
     "flashTab": {
         "message": "Brænd firmware"
@@ -6571,6 +6812,10 @@
         "message": "Søgeord:",
         "description": "Hint text in the presets detailed dialog"
     },
+    "presetsSourceRepository": {
+        "message": "Kilde:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
+    },
     "presetsVersions": {
         "message": "Firmware version:",
         "description": "Hint text in the presets detailed dialog"
@@ -6719,6 +6964,10 @@
         "message": "Gør Aktiv",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "Deaktiver !",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "Slet",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6726,6 +6975,10 @@
     "presetsWarningNotOfficialSource": {
         "message": "<span class=\"message-negative\">ADVARSEL!</span> En tredjeparts kilde for predefineret opsætning er valgt.",
         "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">ADVARSEL!</span> Kunne ikke indlæse disse bibiloteker: <b>{{repos}}</b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
         "message": "Kontroller, at du sikkerhedskopierer din nuværende konfiguration ('$t(presetsBackupSave.message)' knap eller via CLI, hvis knappen er deaktiveret) <strong>før</strong> du vælger og anvender predefineret opsætning. Uden sikkerhedskopi er der ingen måde til at vende tilbage til din tidligere konfiguration efter indlæsning af predefineret opsætning.",

@@ -12,6 +12,7 @@ import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import jBox from "jbox";
 import { checkChromeRuntimeError } from "../utils/common";
+import $ from 'jquery';
 
 const cli = {
     lineDelayMs: 15,
@@ -271,7 +272,9 @@ cli.initialize = function (callback) {
             });
         });
 
-        $('.tab-cli .support').click(function() {
+        $('.tab-cli .support')
+        .toggle(navigator.onLine)
+        .on('click', function() {
 
             function submitSupportData(data) {
                 clearHistory();
@@ -591,13 +594,13 @@ cli.cleanup = function (callback) {
         // (another approach is however much more complicated):
         // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
         // we could probably implement this someday
-        if (callback) {
-            callback();
-        }
-
-        CONFIGURATOR.cliActive = false;
-        CONFIGURATOR.cliValid = false;
+        reinitializeConnection(function () {
+            GUI.timeout_add('tab_change_callback', callback, 500);
+        });
     });
+
+    CONFIGURATOR.cliActive = false;
+    CONFIGURATOR.cliValid = false;
 
     CliAutoComplete.cleanup();
     $(CliAutoComplete).off();

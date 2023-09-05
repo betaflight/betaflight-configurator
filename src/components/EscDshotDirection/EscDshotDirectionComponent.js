@@ -6,6 +6,7 @@ import DshotCommand from "../../js/utils/DshotCommand.js";
 import FC from "../../js/fc.js";
 import { API_VERSION_1_44 } from '../../js/data_storage.js';
 import { getMixerImageSrc } from "../../js/utils/common.js";
+import $ from "jquery";
 
 class EscDshotDirectionComponent
 {

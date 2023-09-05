@@ -125,6 +125,10 @@ If no platform is provided, the build for the host platform is run.
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32`, `--linux32` and `--armv8` can be used too, but they are not officially supported, so use them at your own risk.
 
+#### Leverage GitHub-Actions to build binaries
+
+You can use the GitHub `Actions` tab in your fork to build binaries as well. Select `Actions`>`Manual Build`>`Run Workflow`. Choose your custom branch and click `Run workflow`. The workflow will dispatch in a few moments and upon completion, the build "Artifacts" will be available for download from within the workflow run.
+
 ## Support
 
 If you need help please reach out on the [betaflightgroup](https://betaflightgroup.slack.com) slack channel before raising issues on github. Register and [request slack access here](https://slack.betaflight.com).

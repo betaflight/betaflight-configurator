@@ -5,6 +5,7 @@ import { generateVirtualApiVersions, getTextWidth } from './utils/common';
 import { get as getConfig } from "./ConfigStorage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
+import $ from 'jquery';
 
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
@@ -27,6 +28,12 @@ const PortHandler = new function () {
 
 PortHandler.initialize = function () {
     const self = this;
+
+    // currently web build doesn't need port handler,
+    // so just bail out.
+    if (import.meta.env) {
+        return 'not implemented';
+    }
 
     const portPickerElementSelector = "div#port-picker #port";
     self.portPickerElement = $(portPickerElementSelector);
@@ -216,7 +223,7 @@ PortHandler.detectPort = function(currentPorts) {
 
         self.port_available = true;
         // Signal board verification
-        if (GUI.active_tab === 'firmware_flasher') {
+        if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
             TABS.firmware_flasher.boardNeedsVerification = true;
         }
 

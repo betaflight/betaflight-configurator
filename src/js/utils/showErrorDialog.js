@@ -1,3 +1,4 @@
+import $ from 'jquery';
 
 export function showErrorDialog(message) {
    const dialog = $('.dialogError')[0];

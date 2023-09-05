@@ -2,6 +2,7 @@ import semver from "semver";
 import { mixerList } from "../model";
 import CONFIGURATOR from "../data_storage";
 import { gui_log } from "../gui_log";
+import $ from "jquery";
 
 export function millitime() {
     return new Date().getTime();
@@ -89,6 +90,14 @@ export function getTextWidth(text) {
     context.font = getComputedStyle(document.body).font;
 
     return Math.ceil(context.measureText(text).width);
+}
+
+export function urlExists(url) {
+    let http = new XMLHttpRequest ();
+
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status !== 404;
 }
 
 /**

@@ -8,6 +8,7 @@ import MSP from '../msp.js';
 import MSPCodes from '../msp/MSPCodes.js';
 import CONFIGURATOR from '../data_storage.js';
 import { gui_log } from '../gui_log.js';
+import $ from 'jquery';
 
 const logging = {};
 logging.initialize = function (callback) {

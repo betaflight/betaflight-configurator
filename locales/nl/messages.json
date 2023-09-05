@@ -656,12 +656,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Herstel Z axis, verschil $1 graden"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
     },
@@ -694,6 +688,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Versnellingsmeter trims"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -755,10 +755,6 @@
         "message": "Runway Takeoff preventie is geactiveerd",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Uitgeschakeld via crash detectie",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle kanaal is te hoog",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -778,10 +774,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Systeembelasting is te hoog voor een veilige vlucht",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sensor kalibratie is nog steeds bezig",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI is actief",
@@ -818,22 +810,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM-gebaseerde filtering is ingeschakeld, maar één of meerdere ESC's leveren geen geldige DSHOT telemetry aan. Controleer of de ESC's de vereiste firmware geïnstalleerd hebben om zo bidirectionele DSHOT telemetry te ondersteunen.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Een configuratie wijziging vereist een herstart",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged DSHOT werkt niet correct. De motoren kunnen niet worden gecontroleerd. Waarschijnlijk wordt dit veroorzaakt door een timer conflict van andere functies die zijn ingeschakeld op de vluchtcontroller.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "De versnellingsmeter is niet gekalibreerd. Er zijn functies ingeschakeld die hierop vertrouwen. Kalibreer de versnellingsmeter.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Er is geen motoruitgangsprotocol geselecteerd",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Een van de andere disarm flags is actief bij arming",
@@ -1708,9 +1684,6 @@
     "receiverButtonBindMessage": {
         "message": "Koppel verzoek verzonden naar de vlucht controller."
     },
-    "receiverButtonSticks": {
-        "message": "Controle sticks"
-    },
     "receiverDataRefreshed": {
         "message": "RC Tuning data <strong>vernieuwd</strong>"
     },
@@ -1747,9 +1720,6 @@
     },
     "auxiliaryButtonSave": {
         "message": "Opslaan"
-    },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -1967,9 +1937,6 @@
     "transponderDataInvalid": {
         "message": "Transponder data is <span class=\"message-negative\">ongeldig</span>"
     },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
-    },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos vereisen firmware &gt;= 1.10.0. en doel ondersteuning."
     },
@@ -2027,26 +1994,11 @@
     "gps3dFix": {
         "message": "3D Fix:"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Waar</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Onwaar</span>"
-    },
     "gpsAltitude": {
         "message": "Hoogte:"
     },
-    "gpsLat": {
-        "message": "Breedtegraad:"
-    },
-    "gpsLon": {
-        "message": "Lengtegraad:"
-    },
     "gpsSpeed": {
         "message": "Snelheid:"
-    },
-    "gpsSats": {
-        "message": "Satelieten:"
     },
     "gpsDistToHome": {
         "message": "Afst naar Home:"
@@ -2779,9 +2731,6 @@
         "message": "Wis alles",
         "description": "In the LED STRIP, clear all leds"
     },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
-    },
     "ledStripVtxOverlay": {
         "message": "VTX (maakt gebruik van vtx frequentie om kleur toe te kennen)"
     },
@@ -3368,45 +3317,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS Redding"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Hoek"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Initiële hoogte (meter)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Afstand inzet daling (meters)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Minimale afstand tot thuis (meter)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "De minimale afstand tot thuis die nodig is om GPS-redding te activeren"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Grondsnelheid (meter/seconde)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Throttle minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Throttle maximum"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Throttle zweven (hoogte behouden)"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Stijgsnelheid (meter/seconde)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Daalsnelheid (meter/seconde)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Minimum aantal satellieten"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Sta arming toe zonder GPS-fix - <span class=\"message-negative\">WAARSCHUWING: GPS Redding zal niet beschikbaar zijn</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Hoogte modus"
     },
@@ -3418,6 +3328,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Huidige hoogte"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Stijgsnelheid (meter/seconde)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Afstand inzet daling (meters)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Daalsnelheid (meter/seconde)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Throttle minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Throttle maximum"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimale afstand tot thuis (meter)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "De minimale afstand tot thuis die nodig is om GPS-redding te activeren"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Minimum aantal satellieten"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Gezondheidscontroles"
@@ -3848,17 +3782,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Aangepaste afbeelding:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Grootte moet $t(logoWidthPx)×$t(logoHeightPx) pixels zijn"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Moet groen, zwarte en witte pixels bevatten"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik <b>$t(osdSetupUploadFont.message)</b> om het aangepaste logo toe te passen"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Ongeldige afbeeldingsgrootte: {{width}}×{{height}} (verwacht $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "De afbeelding bevat een ongeldige pixel: rgb({{valueR}}, {{valueG}}, {{valueB}}) op de coördinaten {{posX}}×{{posY}}"
@@ -4307,9 +4235,6 @@
     "osdTextElementFlipArrow": {
         "message": "Flip na crash pijl",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlipArrow": {
-        "message": "Pijl die laat zien welke kant de motoren hoger liggen in turtle modus"
     },
     "osdTextElementLinkQuality": {
         "message": "Kwaliteit van de verbinding",

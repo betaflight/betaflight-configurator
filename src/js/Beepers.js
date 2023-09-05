@@ -1,4 +1,5 @@
 import { bit_check, bit_clear, bit_set } from './bit';
+import $ from 'jquery';
 
 class Beepers {
     constructor(config, supportedConditions) {

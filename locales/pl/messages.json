@@ -415,7 +415,7 @@
         "message": "Nie udało się uruchomić procedury odbezpieczania"
     },
     "noConfigurationReceived": {
-        "message": "Nie otrzymano konfiguracji przez <span class=\"message-negative\">10 sekund</span>, komunikacja <span class=\"message-negative\">zawiodła</span>."
+        "message": "Nie udało się połączyć przez <span class=\"message-negative\">10 sekund</span>, komunikacja <span class=\"message-negative\">zawiodła</span>"
     },
     "firmwareVersionNotSupported": {
         "message": "Ta wersja oprogramowania kontrolera <span class=\"message-negative\">nie jest wspierana</span>. Proszę uaktualnij oprogramowaniedo wersji, która wspiera API <strong>$1</strong>, lub wyższej. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
@@ -442,7 +442,7 @@
         "message": "<strong>wersja konfiguratora, której używasz ($3) jest starsza niż oprogramowanie, którego używasz ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC w '$t(configurationEscFeatures.message)' karcie '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
@@ -601,7 +601,7 @@
         "message": "Sprzęt"
     },
     "defaultWelcomeText": {
-        "message": "Aplikacja obsługuje cały sprzęt, na którym można uruchomić Betaflight. Pełna lista sprzętu znajduje się w zakładce Wgraj oprogramowanie.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer \">Pobierz przeglądarkę logów Betaflight Blackbox</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Pobierz skrypty Betaflight TX Lua</a><br /><br />Kod źródłowy oprogramowania układowego można pobrać ze strony <a href=\"https://github.com/betaflight/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">tutaj</a><br /><br />Dla starszego sprzętu korzystającego z portu szeregowego USB CP210x:<br />Najnowsze <b>sterowniki CP210x</b> można pobrać z <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj</a><br />Najnowszą instalację sterownika USB <b>Zadig</b> dla systemu Windows można pobrać ze strony <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel =\"noopener noreferrer\">tutaj</a><br /><b>Impul seRC Driver Fixer</b> można pobrać <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">tutaj</a>"
+        "message": "Aplikacja obsługuje cały sprzęt, na którym można uruchomić Betaflight. Pełna lista sprzętu znajduje się w zakładce Wgraj oprogramowanie.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer \">Pobierz przeglądarkę logów Betaflight Blackbox</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Pobierz skrypty Betaflight TX Lua</a><br /><br />Kod źródłowy oprogramowania układowego można pobrać ze strony <a href=\"https://github.com/betaflight/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">tutaj</a><br /><br />Dla starszego sprzętu korzystającego z portu szeregowego USB CP210x:<br />Najnowsze <b>sterowniki CP210x</b> można pobrać ze strony <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj</a><br />Najnowszą instalację sterownika USB <b>Zadig</b> dla systemu Windows można pobrać ze strony <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel =\"noopener noreferrer\">tutaj</a><br /><b>Impul seRC Driver Fixer</b> można pobrać ze strony <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">tutaj</a>"
     },
     "defaultContributingHead": {
         "message": "Współtworzenie"
@@ -628,7 +628,7 @@
         "message": "Open Source / Informacja o darowiznach"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> to oprogramowanie kontrolera lotu które jest na licencji <strong>open source</strong> i jest dostępne <strong>za darmo</strong> dla wszystkich użytkowników.</p><p>Jeśli używasz Betaflight lub Konfiguratora Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie</strong> jego rozwoju poprzez darowiznę.</p>"
+        "message": "<p><strong>Betaflight</strong> to oprogramowanie kontrolera lotu  jest na licencji <strong>open source</strong> i jest dostępne <strong>za darmo</strong> dla wszystkich użytkowników.</p><p>Jeśli używasz oprogramowania Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie</strong> jego rozwoju poprzez darowiznę.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym sponsorem $t(patreonLink.message)</p>"
@@ -686,7 +686,7 @@
         "message": "Kalibracja akcelerometru"
     },
     "initialSetupCalibrateAccelText": {
-        "message": "Połóż kontroler lotu lub ramę na <strong>płaskiej</strong> powierzchni i kontynuuj kalibrację. Zwróć uwagę by kontroler lub rama nie ruszały się podczas trwania kalibracji"
+        "message": "Połóż kontroler lotu lub drona na <strong>płaskiej</strong> powierzchni i kontynuuj kalibrację. Zwróć uwagę by płytka kontrolera lotu nie ruszała się podczas trwania kalibracji"
     },
     "initialSetupButtonCalibrateMag": {
         "message": "Kalibracja magnetometru"
@@ -737,12 +737,6 @@
         "message": "Kurs:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Typ Modelu"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Dostrajanie akcelerometru"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometr"
@@ -849,9 +849,13 @@
         "message": "Uaktywniono zabezpieczenie przed niekontrolowanym startem",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Rozbrojony przez wykrycie wypadku",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "Wykrywanie awarii jest aktywne",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Jednostka jest obecnie w trakcie kalibracji",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Kanał przepustnicy ma zbyt wysoką wartość",
@@ -873,9 +877,9 @@
         "message": "Obciążenie systemu jest zbyt wysokie, aby zapewnić bezpieczny lot",
         "description": "Message that pops up to describe the LOAD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Kalibracja czujnika nadal trwa",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "Trwa kalibracja akcelerometru",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Wiersz poleceń - aktywny",
@@ -913,19 +917,19 @@
         "message": "Filtrowanie w oparciu o RPM jest włączone ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowanie wspierające dwukierunkową telemetrię DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Zmiana w konfiguracji wymaga ponownego uruchomienia",
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
+        "message": "Zmiana konfiguracji wymaga ponownego uruchomienia",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Komunikacja DSHOT nie działa poprawnie i nie można kontrolować silników. Prawdopodobnie jest to spowodowane przez konflikt z innymi funkcjami włączonymi w kontrolerze lotu.",
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "Protokół DSHOT nie działa prawidłowo i nie można sterować silnikami. Prawdopodobnie jest to spowodowane konfliktem z innymi funkcjami włączonymi na kontrolerze lotu.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Akcelerometr nie został skalibrowany i są włączone funkcje, które na nim polegają. Skalibruj akcelerometr.",
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "Akcelerometr nie został skalibrowany, a są włączone funkcje, które na nim polegają. Skalibruj akcelerometr.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "Nie ma wybranego protokołu sterowania silnika",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
@@ -990,6 +994,9 @@
     },
     "initialSetupInfoBuildOptionsEmpty": {
         "message": "Budowa lokalna — brak definicji"
+    },
+    "initialSetupNotOnline": {
+        "message": "Serwer niedostępny"
     },
     "initialSetupButtonSave": {
         "message": "Zapisz"
@@ -1286,7 +1293,7 @@
         "message": "Proszę wybrać protokół sterujący silnikiem odpowiedni dla ESC. $t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Uwaga:</strong> Wybranie protokołu sterowania silnika, który nie jest obsługiwany przez ESC, może doprowadzić do niekontrolowanego wysterowania silnika przez ESC. <strong>Silnik może wystartować samoczynnie jak tylko bateria zostanie podłączona</strong>. Z tego powodu <strong>zawsze upewnij się, że nie ma zamontowanych śmigieł przy pierwszym podłączeniu baterii po zmianie protokołu sterującego silnikami</strong>."
+        "message": "<strong>Uwaga:</strong> Wybranie protokołu sterowania silnika, który nie jest obsługiwany przez twoje ESC , może doprowadzić do niekontrolowanego uruchomienia silnika.<strong> Po podłaczeniu bateri silnik może wystartować samoczynnie</strong>  <strong>dlatego zawsze upewnij się, że nie ma zamontowanych śmigieł przy pierwszym podłączeniu baterii po zmianie protokołu sterującego silnikami</strong>."
     },
     "configurationDshotBeeper": {
         "message": "Konfiguracja sygnału radiowego Dshot"
@@ -1410,6 +1417,10 @@
     },
     "configurationGPS": {
         "message": "Konfiguracja GPS"
+    },
+    "configurationGPSHelp": {
+        "message": "Skonfiguruj protokół dla urządzenia GPS (pamiętaj, aby skonfigurować odpowiedni UART w zakładce Pory), użyj Automatycznej prędkości odświeżania lub wybierz inną prędkość, którą obsługuje twój GPS",
+        "description": "Help text GPS configuration"
     },
     "configurationGPSProtocol": {
         "message": "Protokół"
@@ -2131,7 +2142,8 @@
         "message": "Wiążąca fraza"
     },
     "receiverButtonSticks": {
-        "message": "Kontrola drążkiem"
+        "message": "Emulator radiowy",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
     },
     "receiverDataRefreshed": {
         "message": "Dane dostrajania RC <strong>odświeżone</strong>"
@@ -2173,9 +2185,6 @@
     "auxiliaryButtonSave": {
         "message": "Zapisz"
     },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisano</span>"
-    },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
     },
@@ -2184,6 +2193,194 @@
     },
     "auxiliaryModeLogicAND": {
         "message": "Oraz"
+    },
+    "auxiliaryHelpMode_3D": {
+        "message": "Umożliwia odwracalny kierunek silnika, aby zapewnić ujemny ciąg i umożliwić odwrócenie lotu. Przepustnica staje się od -100 do +100 zamiast od 0 do 100",
+        "description": "Help text to 3D mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Tryb lotu, który ogranicza kąt pochylenia jednostki podczas lotu w trybie Akro",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Włącza wejścia silników - Pozwala uzbroić silniki",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_ANGLE": {
+        "message": "W tym trybie automatycznego poziomowania kanały przechyłu i pochylenia kontrolują kąt między odpowiednią osią a pionem, aby osiągnąć poziomy lot po prostu pozostaw drążek w pozycji środkowej",
+        "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "Anti Gravity poprzez zwiększenie parametru P oraz I podczas gwałtownego dodania gazu ma spowodować, iż dron utrzyma poziom, pochylenie oraz wychylenie w czasie szybkiego wznoszenia ",
+        "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "W standardowym trybie miksera /, gdy przechylenie, nachylenie i odchylenie zostaną obliczone i nasycą silnik, wszystkie silniki zostaną jednakowo zredukowane. Kiedy silnik spada poniżej minimum, zostaje odcięty. Powiedzmy, że miałeś przepustnicę nieco powyżej minimum i próbowałeś szybko przechylić - ponieważ dwa silniki nie mogą zejść niżej, zasadniczo uzyskujesz połowę mocy (połowę wzmocnienia PID). Jeśli twoje dane wejściowe wymagałyby więcej niż 100% różnicy między wysokimi i niskimi silnikami, niskie silniki zostałyby obcięte, łamiąc symetrię równowagi silnika poprzez nierównomierne zmniejszenie wzmocnienia",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionego statku powietrznego",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Wyłącz/włącz sygnał dźwiękowy, w tym ostrzeżenie, stan i tryb BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
+    },
+    "auxiliaryHelpMode_BEEPERON": {
+        "message": "Włącza tryb BEEPER ON",
+        "description": "Help text to BEEPER ON mode"
+    },
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "Włącza tryb POBIERANIA GPS SATELITE COUNT",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_BLACKBOX": {
+        "message": "Włącz rejestrator parametrów lotu BlackBox",
+        "description": "Help text to BLACKBOX mode"
+    },
+    "auxiliaryHelpMode_BLACKBOXERASE": {
+        "message": "Wyczyść dziennik BlackBox",
+        "description": "Help text to BLACKBOX ERASE mode"
+    },
+    "auxiliaryHelpMode_BOXPREARM": {
+        "message": "Włącza tryb BOXPREARM",
+        "description": "Help text to BOXPREARM mode"
+    },
+    "auxiliaryHelpMode_CALIB": {
+        "message": "Rozpocznij kalibrację podczas lotu",
+        "description": "Help text to CALIB mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL1": {
+        "message": "Służy do niestandardowego przełączania STEROWANIA KAMERĄ 1. Sprawdź w instrukcji dostawcy",
+        "description": "Help text to customized CAMERA CONTROL 1 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL2": {
+        "message": "Służy do niestandardowego przełączania STEROWANIA KAMERĄ 2. Sprawdź w instrukcji dostawcy",
+        "description": "Help text to customized CAMERA CONTROL 2 mode"
+    },
+    "auxiliaryHelpMode_CAMERACONTROL3": {
+        "message": "Służy do niestandardowego przełączania STEROWANIA KAMERĄ 3. Sprawdź w instrukcji dostawcy",
+        "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "Włącza tryb stabilizacji kamery",
+        "description": "Help text to CAMSTAB mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Wejdź ręcznie w drugi etap Failsafe",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Odwróć kierunek obrotu silników, aby przewrócić statek powietrzny do góry nogami po zderzeniu (wymagany DShot)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_FPVANGLEMIX": {
+        "message": "Zastosuj obrót odchylenia względem kamery FPV zamontowanej pod zadanym kątem",
+        "description": "Help text to FPV ANGLE MIX mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Służy do wskazywania liczby znalezionych satelitów GPS poprzez wydawanie liczby sygnałów dźwiękowych",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Włącz „GPS Rescue”, aby statek powietrzny wrócił do miejsca, w którym był ostatnio uzbrojony",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADADJ": {
+        "message": "Heading Adjust – Ustawia nowy początek odchylenia dla trybu HEADFREE",
+        "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Tryb lotu w którym niezależnie, jak usytuowany jest dron (którą stroną) w stosunku do pilota – sterowanie w przód zawsze będzie skutkowało lotem drona do przodu. Tak samo do tyłu i w pozostałe kierunki. Przydatne dla początkujących pilotów, którzy mają problemy z orjętacją w przestrzeni podczas lotu",
+        "description": "Help text to HEADFREE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Ten tryb hybrydowy działa dokładnie tak samo jak tryb ANGLE z wyśrodkowanym drążkiem przechyłu i pochylenia (umożliwiając w ten sposób lot z automatycznym poziomowaniem), a następnie, gdy drążek jest odchylany coraz bardziej od pozycji środkowej zachowuje się coraz bardziej jak domyślny tryb RATE",
+        "description": "Help text to HORIZON mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "System wspomagania startu w wyścigu",
+        "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Wyłącz wyjście PASKA LED RGB",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Blokada kursu za pomocą magnetometru (sterowanie kompasem)",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_MSPOVERRIDE": {
+        "message": "Włącz tryb zastępowania MSP",
+        "description": "Help text to MSP OVERRIDE mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Włącz/wyłącz wyświetlanie na ekranie",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_PASSTHRU": {
+        "message": "Przekazuj przechylenie, odchylenie i wychylenie bezpośrednio z rx do serwomechanizmów w miksie samolotowym",
+        "description": "Help text to PASSTHRU mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Trwale unieruchamiaj rozbity statek powietrzny, dopóki nie zostanie ponownie włączony",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "Użyj aby przełączyć PIDAUDIO",
+        "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Dodano w BF4.4, możesz teraz wyświetlać „READY” w OSD za pomocą przełącznika. Jest to niszowe ulepszenie w sytuacjach wyścigowych, w których wszystkie pilotowe kanały wideo są wyświetlane na jednym centralnym ekranie. Pilot może przesunąć przełącznik, aby wskazać, że jest gotowy do lotu, a na jego OSD pojawi się słowo READY. Dyrektor wyścigu może wtedy stwierdzić, czy wszyscy piloci są gotowi, patrząc na centralny ekran. Po uzbrojeniu napis READY znika",
+        "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Wyłącz/włącz polecenia z drążka",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "Użyj do przełączania SERVO1",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "Użyj do przełączania SERVO2",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "Użyj do przełączania SERVO3",
+        "description": "Help text to SERVO3 mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Włącz telemetrię za pomocą przełącznika",
+        "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Służy do przełączania dostosowanego przez użytkownika profilu USER1. Kontroluje dowolne wyjście przez PINIO",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Służy do przełączania dostosowanego przez użytkownika profilu USER2. Kontroluje dowolne wyjście przez PINIO",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Służy do przełączania dostosowanego przez użytkownika profilu USER3. Kontroluje dowolne wyjście przez PINIO",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Służy do przełączania dostosowanego przez użytkownika profilu USER4. Kontroluje dowolne wyjście przez PINIO",
+        "description": "Help text to customized USER4 mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Wyłącz kontrolę ustawień VTX poprzez OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Przełącz VTX w tryb pit mode (niska moc wyjściowa, jeśli jest obsługiwana)",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "Skonfiguruj przełączniki regulacji. Szczegółowe informacje można znaleźć w sekcji „Korekty podczas lotu”. Zmiany wprowadzone przez funkcje regulacji nie są zapisywane automatycznie."
@@ -2398,9 +2595,6 @@
     "transponderDataInvalid": {
         "message": "Dane transpondera są <span class=\"message-negative\">nieprawidłowe</span>"
     },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisana</span>"
-    },
     "servosFirmwareUpgradeRequired": {
         "message": "Serwomechanizmy wymagają oprogramowania wewnętrznego &gt;= 1.10.0. 1.10.0. i wsparcia producenta."
     },
@@ -2446,8 +2640,16 @@
     "gpsHead": {
         "message": "GPS"
     },
+    "gpsHeadHelp": {
+        "message": "Pokaż różne informacje związane z GPS. Kierunki są wyświetlane tylko wtedy, gdy używany jest magnetometr",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "Aktualna lokalizacja GPS"
+    },
+    "gpsMapHeadHelp": {
+        "message": "Pokaż lokalizację GPS na mapie. Użyj przycisku przewijania w myszce, aby powiększyć i pomniejszyć widok na mapie.<br> Ikona lokalizacji pokazuje kierunek północny, gdy magnetometr jest używany",
+        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Sprawdź swoje połączenie internetowe"
@@ -2459,34 +2661,42 @@
         "message": "Fix 3D:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Poprawny</span>"
+        "message": "Ok"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Błąd</span>"
+        "message": "Błąd"
+    },
+    "gpsPositionUnit": {
+        "message": "stopni",
+        "description": "Unit for GPS position."
     },
     "gpsAltitude": {
         "message": "Wysokość:"
     },
-    "gpsLat": {
-        "message": "Szerokość:"
-    },
-    "gpsLon": {
-        "message": "Długość:"
+    "gpsLatLon": {
+        "message": "Bieżąca szerokość / długość geograficzna:",
+        "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Kurs:"
+        "message": "Kierunek Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Prędkość:"
     },
     "gpsSats": {
-        "message": "Satelity:"
+        "message": "Liczba Satelit",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Dystans do Domu:"
     },
     "gpsSignalStrHead": {
         "message": "Siła sygnału GPS"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "Pokaż siłę sygnału oraz jakość i status dla każdego wykrytego połączenia GPS",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "Siła Sygnału"
@@ -2661,7 +2871,7 @@
         "message": "Kolejność silników"
     },
     "motorOutputReorderDialogOpen": {
-        "message": "Sprawdź kolejność silników"
+        "message": "Edytuj kolejność silników"
     },
     "motorOutputReorderDialogSelectSpinningMotor": {
         "message": "Kliknij na wirujący silnik, aby przejść dalej"
@@ -3207,10 +3417,10 @@
         "message": "Postępuj według wytycznych <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Oraz<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> płytki lub <strong> nie wyłączaj </strong> komputera podczas flashowania. <br /> <br /> <strong> Uwaga: </strong> bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> upewnij się, że masz kopię zapasową; niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie kable od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Odzyskiwanie / Utracono komunikacje</strong>"
+        "message": "<strong>W przypadku problemów podczas podłączania płytki  kontrolera lotów postępuj zgodnie z poniższą instrukcją</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odepnij zasilanie</li><li>Włącz „Nie restartuj”, włącz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT.</li><li>Podłącz zasilanie (dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (patrz <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji FC).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
+        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odłącz zasilanie kontrolera lotu</li><li>Włącz ustawienia „Nie restartuj”, oraz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT na kontlorerze lotu.</li><li>Podłącz zasilanie kontlolera lotu(dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (patrz <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji FC).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
@@ -3303,6 +3513,22 @@
     "firmwareFlasherPreviousDevice": {
         "message": "Wykryto: <strong>$1</strong> - urządzenie nie odpowiada, podłącz się ponownie, aby spróbować ponownie"
     },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Wyczyść ustawienia",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Wgrywanie nowego oprogramowania usunie wszystkie ustawienia. Zdecydowanie zalecamy zapisanie kopii zapasowej przed kontynuacją.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Utwórz kopię zapasową",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignoruj ryzyko",
+        "description": "Ignore creating a backup before actual flashing takes place"
+    },
     "ledStripHelp": {
         "message": "Kontroler lotu może kontrolować kolory i efekty poszczególnych diod LED na pasku. <br /> Konfiguruj diody LED na siatce, skonfiguruj kolejność okablowania, a następnie podłącz diody LED w twoim modelu zgodnie z pozycjami na siatce. Diody LED bez numeru porządkowego nie zostaną zapisane. <br /> Kliknij dwukrotnie kolor, aby edytować wartości HSV."
     },
@@ -3336,9 +3562,6 @@
     "ledStripClearAllButton": {
         "message": "Wyczyść wszystko",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisana</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX(użyj częstotliwości vtx do przypisania koloru)"
@@ -4283,45 +4506,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS Ratunek"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Początkowa wysokość(metry)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Długość zniżania (metry)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Minimalna odległość do domu (metry)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Minimalna odległość do domu wymagana do aktywacji automatycznego powrotu do punktu startu"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Prędkość na ziemi (metry/sekunde)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Przepustnica minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Przepustnica w pozycji max"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Zawieszenie przepustnicy"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Prędkość wznoszenia (metry/sekundę)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Prędkość opadania (metry/sekundę)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Minimalna liczba satelitów"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Pozwól na uzbrojenie bez FIX-a - <span class=\"message-negative\">UWAGA: GPS Rescue będzie NIEDOSTĘPNY</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Tryb Wysokości"
     },
@@ -4333,6 +4517,33 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Aktualna wysokość"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Początkowa wysokość (metry)"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Prędkość wznoszenia (metry/sekundę)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Długość zniżania (metry)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Prędkość opadania (metry/sekundę)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Przepustnica minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Przepustnica w pozycji max"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimalna odległość do domu (metry)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Minimalna odległość do domu wymagana do aktywacji automatycznego powrotu do punktu startu"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Minimalna liczba satelitów"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sprawdzenie kontrolne"
@@ -4350,7 +4561,7 @@
         "message": "Przełącznik Failsafe (konfiguracja Failsafe w zakładce Tryby)"
     },
     "failsafeKillSwitchHelp": {
-        "message": "Zaznacz tę opcję, aby ustawić przełącznik odpowiedzialny za failsafe (Zakładka Tryby). Będziesz go mugł użyć to testowania funkcji awaryjnego lądowania. <strong>Uwaga:</strong> Uzbrojenie silników jest niemożliwe gdy przełącznik odpowiedzialny za funkcje failsafe jest w pozycji włączonej"
+        "message": "Zaznacz tę opcję, aby ustawić przełącznik odpowiedzialny za failsafe (Zakładka Tryby). Będziesz go mógł użyć tego testowania funkcji awaryjnego lądowania. <strong>Uwaga:</strong> Uzbrojenie silników jest niemożliwe, gdy przełącznik odpowiedzialny za funkcje failsafe jest w pozycji włączonej"
     },
     "failsafeSwitchTitle": {
         "message": "Przełącznik Failsafe"
@@ -4771,17 +4982,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Własny obraz:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Rozmiar musi wynosić $t(logoWidthPx)×$t(logoHeightPx) pikseli"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Musi zawierać zielone, czarne i białe piksele"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Kliknij <b>$t(osdSetupUploadFont.message)</b> aby ustwwić niestandardowe logo"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Nieprawidłowy rozmiar obrazu: {{width}}×{{height}} (oczekiwano $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Obraz zawiera nieprawidłowy piksel: rgb({{valueR}}, {{valueG}}, {{valueB}}) o współrzędnych {{posX}}×{{posY}}"
@@ -5016,6 +5221,27 @@
     },
     "osdDescElementSysFanSpeed": {
         "message": "Prędkość wentylatora Gogli renderowana przez gogle"
+    },
+    "osdTextElementLapTimeCurrent": {
+        "message": "Aktualny czas okrążenia GPS",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeCurrent": {
+        "message": "Aktualny czas okrążania GPS"
+    },
+    "osdTextElementLapTimePrevious": {
+        "message": "Czas poprzedniego okrążenia GPS",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimePrevious": {
+        "message": "Poprzedni czas okrążania GPS"
+    },
+    "osdTextElementLapTimeBest3": {
+        "message": "Najlepszy czas okrążenia GPS 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest": {
+        "message": "Najlepszy czas okrążenia GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nazwa modelu",
@@ -5335,7 +5561,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Strzałka pokazuje, które silniki mogą być użyte w trybie turtle"
+        "message": "Strzałka pokazująca, które silniki boczne są w trybie żółwia (akcelerometr musi być włączony)"
     },
     "osdTextElementLinkQuality": {
         "message": "Jakość połączenia",
@@ -5672,6 +5898,20 @@
     },
     "osdDescStatMinRSNR": {
         "message": "Minimalna wartość RSNR"
+    },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "Najlepsze 3 kolejne okrążenia",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "Najlepsze 3 kolejne okrążenia"
+    },
+    "osdTextStatBestLap": {
+        "message": "Najlepsze okrążenie",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Najlepsze okrążenie"
     },
     "osdTextStatUnknown": {
         "message": "Nieznane $1",
@@ -6020,6 +6260,14 @@
     "vtxFrequencyHelp": {
         "message": "Możesz tutaj wybrać częstotliwość dla swojego VTX, jeśli jest obsługiwana",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Ok",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Błąd",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Urządzenie gotowe",
@@ -6571,6 +6819,10 @@
         "message": "Słowa kluczowe:",
         "description": "Hint text in the presets detailed dialog"
     },
+    "presetsSourceRepository": {
+        "message": "Źródło:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
+    },
     "presetsVersions": {
         "message": "Firmware:",
         "description": "Hint text in the presets detailed dialog"
@@ -6719,6 +6971,10 @@
         "message": "Aktywuj",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "Wyłączono",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "Usuń",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6726,6 +6982,10 @@
     "presetsWarningNotOfficialSource": {
         "message": "<span class=\"message-negative\">OSTRZEŻENIE!</span> Wybrano gotowe źródło innej firmy.",
         "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">OSTRZEŻENIE!</span> Nie udało się załadować następujących repozytoriów: <b>{{repos}}</b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
     },
     "presetsWarningBackup": {
         "message": "Upewnij się, że wykonałeś kopię zapasową bieżącej konfiguracji przyciskiem ('$t(presetsBackupSave.message)' lub za pośrednictwem interfejsu wiersza polecenia, jeśli przycisk jest wyłączony) <strong>przed</strong> wybraniem i zastosowaniem ustawień wstępnych. W przeciwnym razie nie ma możliwości powrotu do poprzedniej konfiguracji po zastosowaniu ustawień wstępnych.",

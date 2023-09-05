@@ -621,12 +621,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Berrezarri Z ardatza, desplazatua: $1 gradu"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Nahaste-mota"
     },
@@ -659,6 +653,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Azelerometroaren trimak"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometroa"
@@ -720,10 +720,6 @@
         "message": "Runway Takeoff prevention piztu da",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Desarmatu egin da istripuen detekzioaren bidez",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle kanala oso altua dago",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -743,10 +739,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Sistemaren karga handiegia da hegaldi seguruetarako",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sentsoreen kalibrazioa martxan dago",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI aktiboa",
@@ -783,22 +775,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM iragazkia gaituta dago, baina ESC bat edo gehiago ez dira DSHOT telemetria baliozkoak hornitzen. Egiaztatu ESC- ak gai direla eta beharrezko firmware instalatua DSHOT telemetria bidirekzionala laguntzeko.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Konfigurazio aldaketeen ondoren berrabiarazi behar da",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "DSHOT bitbanged ez da behar bezala funtzionatzen eta motorrak ezin dira kontrolatu. Litekeena da hegaldiaren kontroladorean gaitutako beste funtzio batzuekin tenporizadore baten gatazka.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Azelerometroa ez da kalibratu eta hori behar duten ezaugarriak dituzu. Azelerometroa kalibratu.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Ez da motorra irteeraren protokoloa hautatu",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Desarmatzeko beste banderietako bat gaituta zegoen armatzerakoan",
@@ -1633,9 +1609,6 @@
     "receiverButtonBindMessage": {
         "message": "Lotu eskaera hegaldi-kontroladoreari bidalita."
     },
-    "receiverButtonSticks": {
-        "message": "Kontrol palankak"
-    },
     "receiverDataRefreshed": {
         "message": "RC sintonizatzeko datuak <strong>berritu</strong>"
     },
@@ -1672,9 +1645,6 @@
     },
     "auxiliaryButtonSave": {
         "message": "Gorde"
-    },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde</span>"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -1892,9 +1862,6 @@
     "transponderDataInvalid": {
         "message": "Transpondedore datuak <span class=\"message-negative\">baliogabeak dira</span>"
     },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde</span>"
-    },
     "servosFirmwareUpgradeRequired": {
         "message": "Serboek &gt;=1.10.0. firmwarea eta kontroladoreak onartzea behar du."
     },
@@ -1952,26 +1919,11 @@
     "gps3dFix": {
         "message": "3D zuzenketa:"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Egia</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Gezurra</span>"
-    },
     "gpsAltitude": {
         "message": "Altuera:"
     },
-    "gpsLat": {
-        "message": "Latitudea:"
-    },
-    "gpsLon": {
-        "message": "Luzera:"
-    },
     "gpsSpeed": {
         "message": "Abiadura:"
-    },
-    "gpsSats": {
-        "message": "Sateliteak:"
     },
     "gpsDistToHome": {
         "message": "Dist. Etxera:"
@@ -2590,9 +2542,6 @@
         "message": "GUZTIA Garbitu",
         "description": "In the LED STRIP, clear all leds"
     },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde</span>"
-    },
     "ledStripVtxOverlay": {
         "message": "VTX (vtx maiztasuna erabiltzen du kolorea esleitzeko)"
     },
@@ -3172,39 +3121,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS-ez Berrezkuratu"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Hasierako altitudea (metrotan)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Jaitsieraren distantzia (metrotan)"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Lurreko abiadura (metro / segunduko)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Azeleragailua minimoa"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Azekeragailua maximoa"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Throttle-z hover-a egin"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Igoera tasa (metro / segunduko)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Jaitsiera tasa (metro / segunduko)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Gutxieneko Satelite Kopurua"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Baimendu gabe armatzea kompondu - <span class=\"message-negative\">KONTUZ: GPS Berrezkuratzea ez da erabilgarri egongo</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Altitude modua"
     },
@@ -3216,6 +3132,24 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Momentuko altitudea"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Igoera tasa (metro / segunduko)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Jaitsieraren distantzia (metrotan)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Jaitsiera tasa (metro / segunduko)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Azeleragailua minimoa"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Azekeragailua maximoa"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Gutxieneko Satelite Kopurua"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Segurtazun kontrolak"
@@ -3646,17 +3580,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Irudi Pertsonalizatua:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Neurriak $t(logoWidthPx)×$t(logoHeightPx) pixel izan behar du"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Pixel berde beltz eta zuriak eduki behar ditu"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Sakatu <b>$t(osdSetupUploadFont.message)</b> logo pertsonalizatua mantentzeko"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Irudi tamaina baliogabea: {{width}}×{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Irudiak pixel baliogabea dauka: rgb({{valueR}}, {{valueG}}, {{valueB}}) koordenatuetan {{posX}}×{{posY}}"
@@ -4065,9 +3993,6 @@
     "osdTextElementFlipArrow": {
         "message": "Aurrez aurre behera erori ondoren: gezia",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlipArrow": {
-        "message": "Gezia, alboko motorrak zein diren dortoka moduan"
     },
     "osdTextElementLinkQuality": {
         "message": "Loturaren kalitatea",

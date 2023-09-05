@@ -5,8 +5,8 @@ import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
-import { gui_log } from '../gui_log';
 import jBox from 'jbox';
+import $ from 'jquery';
 
 const power = {
     supported: false,
@@ -500,12 +500,10 @@ power.initialize = function (callback) {
         }
 
         function save_to_eeprom() {
-            MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, save_completed);
+            mspHelper.writeConfiguration(false, save_completed);
         }
 
         function save_completed() {
-            gui_log(i18n.getMessage('configurationEepromSaved'));
-
             TABS.power.initialize();
         }
 

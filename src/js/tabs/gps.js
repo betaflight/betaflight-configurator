@@ -1,14 +1,13 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43 } from '../data_storage';
+import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { gui_log } from '../gui_log';
+import $ from 'jquery';
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from '../msp/MSPHelper';
-import { reinitializeConnection } from '../serial_backend';
 import { updateTabList } from '../utils/updateTabList';
 
 const gps = {};
@@ -134,7 +133,10 @@ gps.initialize = async function (callback) {
 
         }).val(FC.GPS_CONFIG.provider).change();
 
-        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        // auto_baud is no longer used in API 1.46
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
+        }
 
         gpsAutoConfigElement.on('change', function () {
             const checked = $(this).is(":checked");
@@ -148,7 +150,7 @@ gps.initialize = async function (callback) {
             const enableSbasVisible = checked && ubloxSelected;
             gpsUbloxSbasGroup.toggle(enableSbasVisible);
 
-            gpsAutoBaudGroup.toggle(ubloxSelected || mspSelected);
+            gpsAutoBaudGroup.toggle((ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46));
             gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
 
         }).prop('checked', FC.GPS_CONFIG.auto_config === 1).trigger('change');
@@ -183,8 +185,9 @@ gps.initialize = async function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
-            const heading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
-            const headingDeg = heading === undefined ? 0 : heading * 180 / Math.PI;
+            const magHeading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
+            const magHeadingDeg = magHeading === undefined ? 0 : magHeading * 180 / Math.PI;
+            const gpsHeading = FC.GPS_DATA.ground_course / 100;
             const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
             const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
                 'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
@@ -192,11 +195,13 @@ gps.initialize = async function (callback) {
             const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
             let alt = FC.GPS_DATA.alt;
 
-            $('.GPS_info td.fix').html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
+
+            const gspUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.lat a').prop('href', url).text(`${lat.toFixed(4)} deg`);
-            $('.GPS_info td.lon a').prop('href', url).text(`${lon.toFixed(4)} deg`);
-            $('.GPS_info td.heading').text(`${headingDeg.toFixed(4)} deg`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.heading').text(`${magHeadingDeg.toFixed(4)} / ${gpsHeading.toFixed(4)} ${gspUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -221,7 +226,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>${FC.GPS_DATA.svid[i]}</td>
-                            <td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>
+                            <td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>
                             <td>${FC.GPS_DATA.quality[i]}</td>
                         </tr>
                     `);
@@ -232,7 +237,7 @@ gps.initialize = async function (callback) {
                         <tr>
                             <td>-</td>
                             <td>-</td>
-                            <td><progress value="0" max="99"></progress></td>
+                            <td><meter value="0" max="55"></meter></td>
                             <td> </td>
                         </tr>
                     `);
@@ -253,14 +258,35 @@ gps.initialize = async function (callback) {
 
                     if (FC.GPS_DATA.chn[i] >= 7) {
                         rowContent += '<td>-</td>';
-                        rowContent += `<td><progress value="${0}" max="99"></progress></td>`;
+                        rowContent += `<td><meter value="${0}" max="55"></meter></td>`;
                         rowContent += `<td> </td>`;
                     } else {
                         rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
-                        rowContent += `<td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>`;
-                        const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
-                        const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
-                        const healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
+                        rowContent += `<td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>`;
+
+                        let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
+                        let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
+                        let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
+
+                        // Add color to the text
+                        if (quality.startsWith('fully locked')) {
+                            quality = `<span class="colorToggle ready">${quality}</span>`;
+                        } else {
+                            quality = `<span class="colorToggle">${quality}</span>`;
+                        }
+
+                        if (used.startsWith('used')) {
+                            used = `<span class="colorToggle ready">${used}</span>`;
+                        } else {
+                            used = `<span class="colorToggle">${used}</span>`;
+                        }
+
+                        if (healthy.startsWith('healthy')) {
+                            healthy = `<span class="colorToggle ready">${healthy}</span>`;
+                        } else {
+                            healthy = `<span class="colorToggle">${healthy}</span>`;
+                        }
+
                         rowContent += `<td>${quality} | ${used} | ${healthy}</td>`;
                     }
                     eSsTable.append(`<tr>${rowContent}</tr>`);
@@ -271,7 +297,7 @@ gps.initialize = async function (callback) {
                 action: 'center',
                 lat: lat,
                 lon: lon,
-                heading: heading,
+                heading: magHeading,
             };
 
             frame = document.getElementById('map');
@@ -279,15 +305,16 @@ gps.initialize = async function (callback) {
                 $('#connect').hide();
 
                 if (FC.GPS_DATA.fix) {
-                   gpsWasFixed = true;
+                    gpsWasFixed = true;
+                    message.action = hasMag ? 'centerMag' : 'center';
                     if (!!frame.contentWindow) {
-                        frame.contentWindow.postMessage(message, '*');
+                      frame.contentWindow.postMessage(message, '*');
                     }
-                   $('#loadmap').show();
-                   $('#waiting').hide();
+                    $('#loadmap').show();
+                    $('#waiting').hide();
                 } else if (!gpsWasFixed) {
-                   $('#loadmap').hide();
-                   $('#waiting').show();
+                    $('#loadmap').hide();
+                    $('#waiting').show();
                 } else {
                     message.action = 'nofix';
                     if (!!frame.contentWindow) {
@@ -342,27 +369,14 @@ gps.initialize = async function (callback) {
             frame.contentWindow.postMessage(message, '*');
         });
 
-        $('a.save').on('click', function() {
+        $('a.save').on('click', async function() {
             // fill some data
             FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
             FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
 
-            async function saveConfiguration() {
-                await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
-                await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
-                await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-                reboot();
-            }
-
-            function reboot() {
-                gui_log(i18n.getMessage('configurationEepromSaved'));
-
-                GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
-                });
-            }
-
-            saveConfiguration();
+            await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+            await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+            mspHelper.writeConfiguration(true);
         });
 
         GUI.content_ready(callback);

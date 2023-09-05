@@ -740,12 +740,6 @@
         "message": "Richtung:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Typ"
     },
@@ -778,6 +772,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Beschleunigungssensor Anpassung"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -852,10 +852,6 @@
         "message": "Versehentlicher Start erkannt und unterbunden",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "Durch Absturzerkennung disarmt",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Gaskanal ist zu hoch",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -875,10 +871,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Systemauslastung zu hoch für einen sicheren Flug",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Sensorkalibrierung noch nicht abgeschlossen",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "Kommandozeile ist aktiv",
@@ -915,22 +907,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Die RPM-basierte Filterung ist aktiviert, aber ein oder mehrere ESCs liefern keine gültige DSHOT-Telemetrie. Prüfe, ob die ESCs kompatibel sind und die erforderliche Firmware installiert haben, um bidirektionale DSHOT-Telemetrie zu unterstützen.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "Eine Konfigurationsänderung erfordert einen Neustart",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged DSHOT funktioniert nicht richtig und die Motoren können nicht gesteuert werden. Wahrscheinlich wird das durch einen Timer-Konflikt mit anderen Funktionen, die auf dem Flugcontroller aktiviert sind, verursacht.",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Der Beschleunigungssensor wurde nicht kalibriert und Funktionen sind aktiviert, die davon abhängen. Kalibrieren Sie den Beschleunigungssensor.",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "Es ist kein Motorausgabeprotokoll ausgewählt",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Einer der anderen 'Disarm-Flags' ist aktiv während des Armings",
@@ -2133,9 +2109,6 @@
     "receiverButtonBindingPhrase": {
         "message": "Schlüsselbegriff (binding phrase)"
     },
-    "receiverButtonSticks": {
-        "message": "Kontroll Sticks"
-    },
     "receiverDataRefreshed": {
         "message": "RC Einstellungen <strong>neu geladen</strong>"
     },
@@ -2175,9 +2148,6 @@
     },
     "auxiliaryButtonSave": {
         "message": "Speichern"
-    },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -2401,9 +2371,6 @@
     "transponderDataInvalid": {
         "message": "Transponder Data  ist <span class=\"message-negative\">ungültig</span>"
     },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
-    },
     "servosFirmwareUpgradeRequired": {
         "message": "Servos brauchen Firmware &gt;= 1.10.0 und Target Unterstützung"
     },
@@ -2461,29 +2428,11 @@
     "gps3dFix": {
         "message": "3D Position"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">wahr</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">falsch</span>"
-    },
     "gpsAltitude": {
         "message": "Höhe:"
     },
-    "gpsLat": {
-        "message": "Breite:"
-    },
-    "gpsLon": {
-        "message": "Länge:"
-    },
-    "gpsHeading": {
-        "message": "Richtung:"
-    },
     "gpsSpeed": {
         "message": "Geschwindigkeit"
-    },
-    "gpsSats": {
-        "message": "Satelliten:"
     },
     "gpsDistToHome": {
         "message": "Entfernung zu Start:"
@@ -3339,9 +3288,6 @@
     "ledStripClearAllButton": {
         "message": "ALLES löschen",
         "description": "In the LED STRIP, clear all leds"
-    },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
     },
     "ledStripVtxOverlay": {
         "message": "Videosender (nutzt die Frequenz zur Farbzuweisung)"
@@ -4286,45 +4232,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS-Rettung"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Winkel"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Anfängliche Höhe (Meter)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Sink-Entfernung (meter)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Minimale Distanz zur Startposition in Metern"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Die minimale Entfernung zum 'Start' Punkt, welche für die Aktivierung der GPS Rettung benötigt wird"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Geschwindigkeit über Grund (Meter/Sekunde)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Gas min"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Gas max"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Gas schweben"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Steigrate (Meter/Sekunde)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Sinkrate (Meter/Sekunde)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Mindestanzahl Satelliten"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "\"Armen\" ohne GPS-Fix zulassen - <span class=\"message-negative\">WARNUNG: GPS-Rettung wird dann nicht zur Verfügung stehen</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Höhenmodus"
     },
@@ -4336,6 +4243,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Aktuelle Höhe"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Steigrate (Meter/Sekunde)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Sink-Entfernung (meter)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Sinkrate (Meter/Sekunde)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Gas min"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Gas max"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimale Distanz zur Startposition in Metern"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Die minimale Entfernung zum 'Start' Punkt, welche für die Aktivierung der GPS Rettung benötigt wird"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Mindestanzahl Satelliten"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Plausibilitätsprüfungen"
@@ -4774,17 +4705,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Benutzerdefiniertes Bild:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Größe muss $t(logoWidthPx) ×$t(logoHeightPx) Pixel betragen"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Darf nur grüne, schwarze und weiße Pixel enthalten"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klicke <b>$t(osdSetupUploadFont.message)</b> um ein eigenes Logo zu setzen"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Ungültige Bildgröße: {{width}}×{{height}} (erwartete $t(logoWidthPx) ×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Das Bild enthält ein ungültiges Pixel: rgb({{valueR}}, {{valueG}}, {{valueB}}) an Postion {{posX}}×{{posY}}"
@@ -5338,7 +5263,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Ein Pfeil zeigt, welche Motorseite im Turtle-Modus vom Boden weiter weg ist"
+        "message": "Pfeil zur Anzeige der Seite der oben befindlichen Motoren im Schildkrötenmodus (Beschleunigungsmesser muss aktiviert sein)"
     },
     "osdTextElementLinkQuality": {
         "message": "Verbindungsqualität",

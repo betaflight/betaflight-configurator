@@ -11,6 +11,7 @@ import Model from '../model';
 import MSPCodes from '../msp/MSPCodes';
 import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
+import $ from 'jquery';
 
 const setup = {
     yaw_fix: 0.0,
@@ -24,7 +25,7 @@ setup.initialize = function (callback) {
     }
 
     function load_status() {
-        MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_mixer_config);
+        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, load_mixer_config);
     }
 
     function load_mixer_config() {
@@ -192,10 +193,8 @@ setup.initialize = function (callback) {
             rssi_e = $('.rssi'),
             cputemp_e = $('.cpu-temp'),
             arming_disable_flags_e = $('.arming-disable-flags'),
-            gpsFix_e = $('.gpsFix'),
+            gpsFix_e = $('.GPS_info span.colorToggle'),
             gpsSats_e = $('.gpsSats'),
-            gpsLat_e = $('.gpsLat'),
-            gpsLon_e = $('.gpsLon'),
             roll_e = $('dd.roll'),
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading'),
@@ -362,7 +361,7 @@ setup.initialize = function (callback) {
                     }
                     sensor_e.append(i18n.getMessage('sensorStatusSonarShort'), ': ', sonarElements[[FC.SENSOR_CONFIG.sonar_hardware]]);
                 }
-});
+            });
         };
 
         const showFirmwareInfo = function() {
@@ -370,7 +369,7 @@ setup.initialize = function (callback) {
             msp_api_e.text([FC.CONFIG.apiVersion]);
             build_date_e.text([FC.CONFIG.buildInfo]);
 
-            if (FC.CONFIG.buildKey.length > 1) {
+            if (FC.CONFIG.buildKey.length === 32) {
                 const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
                 const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
                                      <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
@@ -382,9 +381,10 @@ setup.initialize = function (callback) {
                 $('.build-info a').addClass('disabled');
             }
 
-            if (FC.CONFIG.buildOptions.length > 0) {
+            if (FC.CONFIG.buildOptions.length) {
                 let buildOptions = "";
                 build_opt_e.text = "";
+
                 for (const buildOption of FC.CONFIG.buildOptions) {
                     buildOptions = `${buildOptions} &nbsp ${buildOption}`;
                 }
@@ -392,7 +392,7 @@ setup.initialize = function (callback) {
                                   title="${i18n.getMessage('initialSetupInfoBuildOptions')}${buildOptions}">
                                   <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></span>`);
             } else {
-                build_opt_e.html(i18n.getMessage('initialSetupInfoBuildOptionsEmpty'));
+                build_opt_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
             }
         };
 
@@ -401,7 +401,7 @@ setup.initialize = function (callback) {
         showFirmwareInfo();
 
         // Show Sonar info box if sensor exist
-        if (! have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
+        if (!have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
             $('.sonarBox').hide();
         }
 
@@ -427,11 +427,15 @@ setup.initialize = function (callback) {
             }
 
             // GPS info is acquired in the background using update_live_status() in serial_backend.js
-
-            gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            gpsFix_e.text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            gpsFix_e.toggleClass('ready', FC.GPS_DATA.fix != 0);
             gpsSats_e.text(FC.GPS_DATA.numSat);
-            gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} deg`);
-            gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);
+
+            const lat = FC.GPS_DATA.lat / 10000000;
+            const lon = FC.GPS_DATA.lon / 10000000;
+            const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const gpsUnitText = i18n.getMessage('gpsPositionUnit');
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} ${gpsUnitText} / ${lon.toFixed(4)} ${gpsUnitText}`);
         }
 
         function get_fast_data() {

@@ -1,5 +1,5 @@
-import FC from './fc';
 import { bit_check } from './bit';
+import $ from 'jquery';
 
 export function have_sensor(sensors_detected, sensor_code) {
     switch(sensor_code) {
@@ -29,7 +29,7 @@ export function sensor_status(sensors_detected = 0, gps_fix_state = 0) {
     }
 
     // update UI (if necessary)
-    if (sensor_status.previous_sensors_detected == sensors_detected && sensor_status.previous_gps_fix_state == gps_fix_state) {
+    if (sensor_status.previous_sensors_detected === sensors_detected && sensor_status.previous_gps_fix_state === gps_fix_state) {
         return;
     }
 
@@ -47,10 +47,7 @@ export function sensor_status(sensors_detected = 0, gps_fix_state = 0) {
         $(".accicon", eSensorStatus).removeClass("active");
     }
 
-    if (
-        (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) &&
-        have_sensor(sensors_detected, "gyro")
-    ) {
+    if (have_sensor(sensors_detected, "gyro")) {
         $(".gyro", eSensorStatus).addClass("on");
         $(".gyroicon", eSensorStatus).addClass("active");
     } else {

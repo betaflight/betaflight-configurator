@@ -1,7 +1,6 @@
 import { i18n } from "../localization";
 import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
-import { reinitializeConnection } from "../serial_backend";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
@@ -12,6 +11,7 @@ import { generateFilename } from "../utils/generate_filename";
 import semver from 'semver';
 import { showErrorDialog } from "../utils/showErrorDialog";
 import { checkChromeRuntimeError } from "../utils/common";
+import $ from 'jquery';
 
 let sdcardTimer;
 
@@ -56,18 +56,6 @@ onboard_logging.initialize = function (callback) {
             return a;
 
         return gcd(b, a % b);
-    }
-
-    function save_to_eeprom() {
-        MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
-    }
-
-    function reboot() {
-        gui_log(i18n.getMessage('configurationEepromSaved'));
-
-        GUI.tab_switch_cleanup(function() {
-            MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
-        });
     }
 
     function load_html() {
@@ -142,7 +130,7 @@ onboard_logging.initialize = function (callback) {
                         await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
                     }
 
-                    save_to_eeprom();
+                    mspHelper.writeConfiguration(true);
                 });
             }
 
@@ -333,6 +321,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "GPS_RESCUE_VELOCITY"},
                 {text: "GPS_RESCUE_HEADING"},
                 {text: "GPS_RESCUE_TRACKING"},
+                {text: "GPS_CONNECTION"},
                 {text: "ATTITUDE"},
                 {text: "VTX_MSP"},
                 {text: "GPS_DOP"},
@@ -341,6 +330,8 @@ onboard_logging.initialize = function (callback) {
                 {text: "ANGLE_MODE"},
                 {text: "ANGLE_TARGET"},
                 {text: "CURRENT_ANGLE"},
+                {text: "DSHOT_TELEMETRY_COUNTS"},
+                {text: "RPM_LIMIT"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
@@ -351,9 +342,10 @@ onboard_logging.initialize = function (callback) {
                 }
             }
 
-            debugModeSelect.val(FC.PID_ADVANCED_CONFIG.debugMode);
-            debugModeSelect.sortSelect("NONE");
-
+            debugModeSelect
+                .val(FC.PID_ADVANCED_CONFIG.debugMode)
+                .select2()
+                .sortSelect("NONE");
         } else {
             $('.blackboxDebugMode').hide();
         }
@@ -376,6 +368,8 @@ onboard_logging.initialize = function (callback) {
                 { text: "Debug Log" },
                 { text: "Motor" },
                 { text: "GPS" },
+                { text: "RPM" },
+                { text: "Unfiltered Gyro"},
             ];
 
             let fieldsMask = FC.BLACKBOX.blackboxDisabledMask;

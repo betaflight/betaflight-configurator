@@ -196,6 +196,8 @@ const MSPCodes = {
     MSP2_GET_OSD_WARNINGS:          0x3005,
     MSP2_GET_TEXT:                  0x3006,
     MSP2_SET_TEXT:                  0x3007,
+    MSP2_GET_LED_STRIP_CONFIG_VALUES: 0x3008,
+    MSP2_SET_LED_STRIP_CONFIG_VALUES: 0x3009,
 
     // MSP2_GET_TEXT and MSP2_SET_TEXT variable types
     PILOT_NAME:                     1,

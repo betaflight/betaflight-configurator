@@ -11,7 +11,6 @@ import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
-import serial from "./serial";
 import UI_PHONES from "./phones_ui";
 import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
@@ -22,7 +21,13 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from 'semver';
 import CryptoES from "crypto-es";
+import $ from 'jquery';
 import BuildApi from "./BuildApi";
+
+import serialNWJS from "./serial.js";
+import serialWeb from "./webSerial.js";
+
+const serial = import.meta.env ? serialWeb : serialNWJS;
 
 let mspHelper;
 let connectionTimestamp;
@@ -63,10 +68,21 @@ export function initializeSerialBackend() {
         GUI.updateManualPortVisibility();
     });
 
-    $('div.connect_controls a.connect').click(function () {
-        if (!GUI.connect_lock) { // GUI control overrides the user control
 
-            const toggleStatus = function() {
+    $("div.connect_controls a.connect").on('click', function () {
+
+        const selectedPort = $('div#port-picker #port option:selected');
+        let portName;
+        if (selectedPort.data().isManual) {
+            portName = $('#port-override').val();
+        } else {
+            portName = String($('div#port-picker #port').val());
+        }
+
+        if (!GUI.connect_lock) {
+            // GUI control overrides the user control
+
+            const toggleStatus = function () {
                 clicks = !clicks;
             };
 
@@ -74,13 +90,6 @@ export function initializeSerialBackend() {
 
             const selected_baud = parseInt($('div#port-picker #baud').val());
             const selectedPort = $('div#port-picker #port option:selected');
-
-            let portName;
-            if (selectedPort.data().isManual) {
-                portName = $('#port-override').val();
-            } else {
-                portName = String($('div#port-picker #port').val());
-            }
 
             if (selectedPort.data().isDFU) {
                 $('select#baud').hide();
@@ -93,16 +102,27 @@ export function initializeSerialBackend() {
                     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
                     $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
+                    const baudRate = parseInt($('div#port-picker #baud').val());
                     if (selectedPort.data().isVirtual) {
                         CONFIGURATOR.virtualMode = true;
                         CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown :selected').val();
 
                         serial.connect('virtual', {}, onOpenVirtual);
+                    } else if (import.meta.env) {
+                        serial.addEventListener('connect', (event) => {
+                            onOpen(event.detail);
+                            toggleStatus();
+                        });
+                        serial.connect({ baudRate });
                     } else {
-                        serial.connect(portName, {bitrate: selected_baud}, onOpen);
+                        serial.connect(
+                            portName,
+                            { bitrate: selected_baud },
+                            onOpen,
+                        );
+                        toggleStatus();
                     }
 
-                    toggleStatus();
                 } else {
                     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
                         $('div#flashbutton a.flash_state').removeClass('active');
@@ -239,6 +259,26 @@ function setConnectionTimeout() {
     }, 10000);
 }
 
+function abortConnection() {
+    GUI.timeout_remove('connecting'); // kill connecting timer
+
+    GUI.connected_to = false;
+    GUI.connecting_to = false;
+
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
+
+    gui_log(i18n.getMessage('serialPortOpenFail'));
+
+    $('div#connectbutton div.connect_state').text(i18n.getMessage('connect'));
+    $('div#connectbutton a.connect').removeClass('active');
+
+    // unlock port select & baud
+    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
+
+    // reset data
+    clicks = false;
+}
+
 function onOpen(openInfo) {
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
@@ -266,7 +306,11 @@ function onOpen(openInfo) {
         result = getConfig('expertMode')?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
-        serial.onReceive.addListener(read_serial);
+        if(import.meta.env) {
+            serial.addEventListener('receive', (e) => read_serial(e.detail.buffer));
+        } else {
+            serial.onReceive.addListener(read_serial);
+        }
         setConnectionTimeout();
         FC.resetState();
         mspHelper = new MspHelper();
@@ -275,12 +319,16 @@ function onOpen(openInfo) {
         console.log(`Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
+            gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
+
+            if (FC.CONFIG.apiVersion.includes('null')) {
+                abortConnection();
+                return;
+            }
+
             tracking.setFlightControllerData(tracking.DATA.API_VERSION, FC.CONFIG.apiVersion);
 
-            gui_log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
-
             if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
-
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
                     tracking.setFlightControllerData(tracking.DATA.FIRMWARE_TYPE, FC.CONFIG.flightControllerIdentifier);
                     if (FC.CONFIG.flightControllerIdentifier === 'BTFL') {
@@ -329,12 +377,7 @@ function onOpen(openInfo) {
             }
         });
     } else {
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
-
-        console.log('Failed to open serial port');
-        gui_log(i18n.getMessage('serialPortOpenFail'));
-
-        abortConnect();
+        abortConnection();
     }
 }
 
@@ -353,17 +396,6 @@ function onOpenVirtual() {
     update_dataflash_global();
     sensor_status(FC.CONFIG.activeSensors);
     updateTabList(FC.FEATURE_CONFIG.features);
-}
-
-function abortConnect() {
-    $('div#connectbutton div.connect_state').text(i18n.getMessage('connect'));
-    $('div#connectbutton a.connect').removeClass('active');
-
-    // unlock port select & baud
-    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
-
-    // reset data
-    clicks = false;
 }
 
 function processCustomDefaults() {
@@ -528,9 +560,10 @@ function setRtc() {
 
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildKey.length === 32) {
 
-        GUI.allowedTabs = GUI.defaultAllowedTabsCloudBuild;
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
+
+        GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
 
         for (const tab of GUI.defaultCloudBuildTabOptions) {
             if (FC.CONFIG.buildOptions.some(opt => opt.toLowerCase().includes(tab))) {
@@ -539,7 +572,7 @@ function finishOpen() {
         }
 
     } else {
-        GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
+        GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
     }
 
     if (GUI.isCordova()) {
@@ -671,30 +704,11 @@ async function update_live_status() {
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_ANALOG);
-        await MSP.promise(MSPCodes.MSP_BOXNAMES);
-        await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
-        const active = (performance.now() - FC.ANALOG.last_received_timestamp) < 300;
-
-        for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-            if (FC.AUX_CONFIG[i] === 'ARM') {
-                $(".armedicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
-            }
-            if (FC.AUX_CONFIG[i] === 'FAILSAFE') {
-                $(".failsafeicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
-            }
-        }
-
-        let nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
-
-        if (FC.ANALOG.voltage === 0) {
-            nbCells = 1;
-        }
-
+        const nbCells = FC.ANALOG.voltage === 0 ? 1 : Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
         const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
         const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
         const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
-
         const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
 
         if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
@@ -710,13 +724,25 @@ async function update_live_status() {
             }
         }
 
-        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
-            await MSP.promise(MSPCodes.MSP_RAW_GPS);
+        await MSP.promise(MSPCodes.MSP_BOXNAMES);
+        await MSP.promise(MSPCodes.MSP_STATUS_EX);
+
+        const active = (performance.now() - FC.ANALOG.last_received_timestamp) < 300;
+        $(".linkicon").toggleClass('active', active);
+
+        for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
+            if (FC.AUX_CONFIG[i] === 'ARM') {
+                $(".armedicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
+            }
+            if (FC.AUX_CONFIG[i] === 'FAILSAFE') {
+                $(".failsafeicon").toggleClass('active', bit_check(FC.CONFIG.mode, i));
+            }
         }
 
-        sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
-
-        $(".linkicon").toggleClass('active', active);
+        if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
+            await MSP.promise(MSPCodes.MSP_RAW_GPS);
+            sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
+        }
 
         statuswrapper.show();
     }
@@ -759,7 +785,7 @@ export function reinitializeConnection(callback) {
             clearInterval(reconnect);
             gui_log(i18n.getMessage('deviceReady'));
 
-            if (callback === typeof('function')) {
+            if (typeof callback === 'function') {
                 callback();
             }
         } else {

@@ -603,12 +603,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "重置 Z 軸，補償: $1 度"
     },
-    "initialSetupPitch": {
-        "message": "俯仰:"
-    },
-    "initialSetupRoll": {
-        "message": "橫滾:"
-    },
     "initialSetupMixerHead": {
         "message": "混控類型"
     },
@@ -641,6 +635,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "加速度計微調"
+    },
+    "initialSetupPitch": {
+        "message": "俯仰:"
+    },
+    "initialSetupRoll": {
+        "message": "橫滾:"
     },
     "initialSetupMagHead": {
         "message": "磁力計"
@@ -702,10 +702,6 @@
         "message": "已觸發預防起飛失控",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCRASH": {
-        "message": "檢測到墜機事故",
-        "description": "Message that pops up to describe the CRASH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "油門通道值過高",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
@@ -725,10 +721,6 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "系統負載過高, 無法安全飛行",
         "description": "Message that pops up to describe the LOAD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "傳感器校準仍在進行中",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI (命令列) 已激活",
@@ -765,22 +757,6 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "基於轉速的濾波器已開啟，但一個或多個電調未發送有效的 DSHOT 回傳數據。請確認電調支援 DSHOT 回傳功能並且已刷入支援雙向 DSHOT 回傳的固件。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
-        "message": "配置更改需要重啟",
-        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
-        "message": "Bitbanged Dshot 無法正常工作，無法正常控制電機。可能是由於在飛控上啟用了其他功能造成了定時器衝突。",
-        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "已啟用了使用加速度計的功能，但加速度計未校準。請校準加速度計。",
-        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
-        "message": "尚未選擇電機輸出協議",
-        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解鎖時有一個阻止解鎖的標誌處於活躍狀態",
@@ -1612,9 +1588,6 @@
     "receiverButtonBindMessage": {
         "message": "對頻請求已發送到飛行控制器。"
     },
-    "receiverButtonSticks": {
-        "message": "控制搖桿"
-    },
     "receiverDataRefreshed": {
         "message": "RC 調整數據<strong>已刷新</strong>"
     },
@@ -1651,9 +1624,6 @@
     },
     "auxiliaryButtonSave": {
         "message": "保存"
-    },
-    "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "自動"
@@ -1871,9 +1841,6 @@
     "transponderDataInvalid": {
         "message": "收發器數據 <span class=\"message-negative\">無效</span>"
     },
-    "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
-    },
     "servosFirmwareUpgradeRequired": {
         "message": "舵機功能要求固件版本大於1.10.0 且飛控支援"
     },
@@ -1931,26 +1898,11 @@
     "gps3dFix": {
         "message": "3D 定位…"
     },
-    "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">定位成功</span>"
-    },
-    "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">定位失敗</span>"
-    },
     "gpsAltitude": {
         "message": "高度："
     },
-    "gpsLat": {
-        "message": "緯度："
-    },
-    "gpsLon": {
-        "message": "經度："
-    },
     "gpsSpeed": {
         "message": "速度："
-    },
-    "gpsSats": {
-        "message": "衛星數："
     },
     "gpsDistToHome": {
         "message": "離起飛位置距離："
@@ -2527,9 +2479,6 @@
         "message": "全部清除",
         "description": "In the LED STRIP, clear all leds"
     },
-    "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
-    },
     "ledStripVtxOverlay": {
         "message": "圖傳(顏色根據圖傳頻率而變化)"
     },
@@ -3103,39 +3052,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS 救援"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "角度"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "初始高度 (米)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "下降距離 (米)"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "地面速度 (米/秒)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "最低油門"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "最高油門"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "懸停油門"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "上升速率（米/秒）"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "下降速率（米/秒）"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "最小衛星數"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "允許在未鎖定的情況下解鎖 - <span class=\"message-negative\">警告: 這樣將無法使用GPS救援</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "高度模式"
     },
@@ -3147,6 +3063,24 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "當前高度"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "上升速率（米/秒）"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "下降距離 (米)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "下降速率（米/秒）"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "最低油門"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "最高油門"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "最小衛星數"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "可用性檢測"
@@ -3573,17 +3507,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "自定义图像:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "大小必須是 $t(logoWidthPx) x$t(logoHeightPx) 像素"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "必須是綠色、黑色和白色像素"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "單擊 <b>$t(osdSetupUploadFont.message)</b> 以保存自定義徽標"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "無效的圖像大小: {{width}}x{{height}} (應是 $t(logoWidthPx) x$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "圖像包含無效的像素： rgb ({{valueR}}, {{valueG}}, {{valueB}}) ，坐標 {{posX}}x{{posY}}"
@@ -3992,9 +3920,6 @@
     "osdTextElementFlipArrow": {
         "message": "反烏龜箭頭",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlipArrow": {
-        "message": "在反烏龜模式中，箭頭指示哪邊的電機朝上"
     },
     "osdTextElementLinkQuality": {
         "message": "連接質量",

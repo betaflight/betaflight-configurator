@@ -6,7 +6,6 @@ import MotorOutputReorderComponent from "../../components/MotorOutputReordering/
 import EscDshotDirectionComponent from "../../components/EscDshotDirection/EscDshotDirectionComponent";
 import DshotCommand from "../../js/utils/DshotCommand.js";
 import { tracking } from "../Analytics";
-import { reinitializeConnection } from "../serial_backend";
 import { bit_check } from "../bit";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
@@ -15,11 +14,11 @@ import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
-import { gui_log } from "../gui_log";
 import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
 import semver from 'semver';
 import * as d3 from 'd3';
+import $ from 'jquery';
 
 const motors = {
     previousDshotBidir: null,
@@ -256,7 +255,7 @@ motors.initialize = async function (callback) {
         const motorsEnableTestModeElement = $('#motorsEnableTestMode');
         self.analyticsChanges = {};
 
-        motorsEnableTestModeElement.prop('checked', false).trigger('change');
+        motorsEnableTestModeElement.prop('checked', self.armed);
 
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42) || !(FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
             $(".motor_testing .telemetry").hide();
@@ -1138,6 +1137,8 @@ motors.initialize = async function (callback) {
         }
 
         $('a.save').on('click', async function() {
+            GUI.interval_kill_all(['motor_and_status_pull','motors_power_data_pull_slow']);
+
             // gather data that doesn't have automatic change event bound
             FC.MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
             FC.MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
@@ -1162,16 +1163,16 @@ motors.initialize = async function (callback) {
             await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }
-            await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
 
             tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};
             self.configHasChanged = false;
 
-            reboot();
+            mspHelper.writeConfiguration(true);
         });
 
         $('a.stop').on('click', () => motorsEnableTestModeElement.prop('checked', false).trigger('change'));
@@ -1190,11 +1191,6 @@ motors.initialize = async function (callback) {
         }
 
         content_ready();
-    }
-
-    function reboot() {
-        gui_log(i18n.getMessage('configurationEepromSaved'));
-        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
     }
 
     function showDialogMixerReset(message) {

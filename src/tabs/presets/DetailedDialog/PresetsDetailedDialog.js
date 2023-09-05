@@ -5,6 +5,7 @@ import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
 import FC from "../../../js/fc";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import $ from 'jquery';
 
 export default class PresetsDetailedDialog {
     constructor(domDialog, pickedPresetList, onPresetPickedCallback, favoritePresets) {
@@ -26,9 +27,10 @@ export default class PresetsDetailedDialog {
         });
     }
 
-    open(preset, presetsRepo) {
+    open(preset, presetsRepo, showPresetRepoName) {
         this._presetsRepo = presetsRepo;
         this._preset = preset;
+        this._showPresetRepoName = showPresetRepoName;
         this._setLoadingState(true);
         this._domDialog[0].showModal();
         this._optionsShowedAtLeastOnce = false;
@@ -78,8 +80,8 @@ export default class PresetsDetailedDialog {
         }
 
         this._titlePanel.empty();
-        const titlePanel = new PresetTitlePanel(this._titlePanel, this._preset, false,
-            () => this._setLoadingState(false), this._favoritePresets);
+        const titlePanel = new PresetTitlePanel(this._titlePanel, this._preset, this._presetsRepo, false,
+            this._showPresetRepoName, () => this._setLoadingState(false), this._favoritePresets);
         titlePanel.load();
         this._loadOptionsSelect();
         this._updateFinalCliText();
@@ -263,7 +265,7 @@ export default class PresetsDetailedDialog {
 
     _pickPreset() {
         const cliStrings = this._getFinalCliText();
-        const pickedPreset = new PickedPreset(this._preset, cliStrings);
+        const pickedPreset = new PickedPreset(this._preset, cliStrings, this._presetsRepo);
         this._pickedPresetList.push(pickedPreset);
         this._onPresetPickedCallback?.();
         this._isPresetPickedOnClose = true;

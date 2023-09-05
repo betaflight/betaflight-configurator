@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import i18nextXHRBackend from 'i18next-xhr-backend';
 import { gui_log } from './gui_log.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
+import $ from "jquery";
 
 const i18n = {};
 /*
@@ -10,7 +11,7 @@ const i18n = {};
 window.i18n = i18n;
 
 
-const languagesAvailables = ['ca', 'da', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'it', 'ja', 'ko', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'zh_CN', 'zh_TW'];
+const languagesAvailables = ['ca', 'da', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'it', 'ja', 'ko', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'uk', 'zh_CN', 'zh_TW'];
 
 const languageFallback = {
                             'pt': ['pt_BR', 'en'],

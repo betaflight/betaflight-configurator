@@ -1,6 +1,7 @@
 import { gui_log } from './gui_log';
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
+import $ from 'jquery';
 
 export default class BuildApi {
 
@@ -168,6 +169,11 @@ export default class BuildApi {
 
     loadConfiguratorRelease(type, onSuccess, onFailure) {
         const url = `${this._url}/api/configurator/releases/${type}`;
+        this.load(url, onSuccess, onFailure);
+    }
+
+    loadSponsorTile(onSuccess, onFailure) {
+        const url = `${this._url}/api/configurator/sponsors`;
         this.load(url, onSuccess, onFailure);
     }
 }
