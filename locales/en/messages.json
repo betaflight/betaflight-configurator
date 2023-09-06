@@ -4575,10 +4575,10 @@
         "message": "Stage 2 - Settings"
     },
     "failsafeDelayItem": {
-        "message": "Guard time for stage 2 activation after signal lost [seconds]"
+        "message": "Period of time in Stage 1 failsafe after signal loss [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "Time for stage 2 to wait for recovery"
+        "message": "Set the period of time in Stage 1 failsafe after signal loss. If the delay time expires without return of signal, Stage 2 failsafe will start"
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe Throttle Low Delay [seconds]"
