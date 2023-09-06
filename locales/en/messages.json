@@ -1472,6 +1472,9 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Beep when armed and rc smoothing has not initialized filters"
     },
+    "beeperSTICK_COMMAND_EXECUTED": {
+	"message": "Beep whenever a stick command is executed"
+    },
     "configuration3d": {
         "message": "3D ESC/Motor Features"
     },
