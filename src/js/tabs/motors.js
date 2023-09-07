@@ -227,9 +227,17 @@ motors.initialize = async function (callback) {
         lines.attr('d', graphHelpers.line);
     }
 
+    function replace_mixer_preview(imgSrc) {
+        $.get(imgSrc, function(data) {
+            const svg = $(data).find('svg');
+            $('.mixerPreview').html(svg);
+        }, 'xml');
+    }
+
     function update_model(mixer) {
         const imgSrc = getMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir);
-        $('.mixerPreview img').attr('src', imgSrc);
+
+        replace_mixer_preview(imgSrc);
 
         const motorOutputReorderConfig = new MotorOutputReorderConfig(100);
         const domMotorOutputReorderDialogOpen = $('#motorOutputReorderDialogOpen');
@@ -350,10 +358,8 @@ motors.initialize = async function (callback) {
         mixerListElement.sortSelect();
 
         function refreshMixerPreview() {
-            const mixer = FC.MIXER_CONFIG.mixer;
-            const reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
-
-            $('.mixerPreview img').attr('src', `./resources/motor_order/${mixerList[mixer - 1].image}${reverse}.svg`);
+            const imgSrc = getMixerImageSrc(FC.MIXER_CONFIG.mixer, FC.MIXER_CONFIG.reverseMotorDir);
+            replace_mixer_preview(imgSrc);
         }
 
         const reverseMotorSwitchElement = $('#reverseMotorSwitch');
