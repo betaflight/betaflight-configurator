@@ -2836,7 +2836,7 @@
         "message": "unused"
     },
     "gnssUsedUsed": {
-        "message": "used"
+        "message": "USED&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "unknown"

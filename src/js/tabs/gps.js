@@ -269,18 +269,21 @@ gps.initialize = async function (callback) {
                         let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
 
                         // Add color to the text
-                        // yellow for searching and orange for locked, green only when fully locked, used and healthy
-                        // 1st column: unusable = red, searching = yellow, locked = orange and fully locked = green
-                        // 2nd column: unused = red, used = green
-                        // 3d  column: non healthy = red, healthy = green
+                        // 1st column: unused = red, used = green
+                        // 2nd column: unknown = red, non healthy = grey, healthy = orange
+                        // 3d  column: no signal = red, unusable = red, searching = grey, locked = yellow and fully locked = orange
 
-                        // || quality.startsWith(i18n.getMessage('gnssQualityLocked'))
+                        if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
+                            used = `<span class="colorToggle ready">&nbsp${used}&nbsp</span>`;
+                        } else {
+                            used = `<span class="colorToggle">${used}</span>`;
+                        }
 
                         if (quality.startsWith(i18n.getMessage('gnssQualityFullyLocked'))) {
-                            quality = `<span class="colorToggle ready">${quality}</span>`;
+                            quality = `<span class="colorToggle almostReady">${quality}</span>`;
                         } else {
                             if (quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
-                                quality = `<span class="colorToggle almostReady">${quality}</span>`;
+                                quality = `<span class="colorToggle locked">${quality}</span>`;
                             } else {
                                 if (quality.startsWith(i18n.getMessage('gnssQualitySearching'))) {
                                     quality = `<span class="colorToggle search">${quality}</span>`;
@@ -290,19 +293,17 @@ gps.initialize = async function (callback) {
                             }
                         }
 
-                        if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
-                            used = `<span class="colorToggle ready">${used}</span>`;
-                        } else {
-                            used = `<span class="colorToggle">${used}</span>`;
-                        }
-
                         if (healthy.startsWith(i18n.getMessage('gnssHealthyHealthy'))) {
-                            healthy = `<span class="colorToggle ready">${healthy}</span>`;
+                            healthy = `<span class="colorToggle almostReady">${healthy}</span>`;
                         } else {
-                            healthy = `<span class="colorToggle">${healthy}</span>`;
+                            if (healthy.startsWith(i18n.getMessage('gnssHealthyUnhealthy'))) {
+                                healthy = `<span class="colorToggle search">${healthy}</span>`;
+                            } else {
+                                healthy = `<span class="colorToggle">${healthy}</span>`;
+                            }
                         }
 
-                        rowContent += `<td>${quality} | ${used} | ${healthy}</td>`;
+                        rowContent += `<td>${used} | ${healthy} | ${quality}</td>`;
                     }
                     eSsTable.append(`<tr>${rowContent}</tr>`);
                 }
