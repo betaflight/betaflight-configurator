@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import path from "node:path";
 import { readFileSync } from "node:fs";
-import { viteStaticCopy  } from "vite-plugin-static-copy";
+import copy from "rollup-plugin-copy";
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -58,13 +58,11 @@ export default defineConfig({
     plugins: [
         vue(),
         serveLocalesPlugin(),
-        viteStaticCopy({
+        copy({
             targets: [
-                { src: "../locales", dest: "" },
-                { src: "../resources", dest: "" },
-                { src: "tabs", dest: "" },
-                { src: "images", dest: "" },
+                { src: ["locales", "resources", "src/tabs", "src/images"], dest: "src/dist" },
             ],
+            hook: "writeBundle",
         }),
     ],
     root: "./src",
