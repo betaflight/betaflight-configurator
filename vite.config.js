@@ -74,4 +74,10 @@ export default defineConfig({
             "vue": path.resolve(__dirname, "node_modules/vue/dist/vue.esm.js"),
         },
     },
+    server: {
+        port: 8000,
+    },
+    preview: {
+        port: 8080,
+    },
 });
