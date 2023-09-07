@@ -309,6 +309,7 @@ OSD.initData = function() {
         video_system: null,
         unit_mode: null,
         alarms: [],
+        car: [],
         statItems: [],
         warnings: [],
         displayItems: [],
@@ -1536,6 +1537,24 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: '1:23.456',
         },
+        CAM_ANGLE_REFERENCE: {
+            name: 'CAM_ANGLE_REFERENCE',
+            text: 'osdTextElementCameraAngleReference',
+            desc: 'osdDescElementCameraAngleReference',
+            defaultPosition: -1,
+            draw_order: 555,
+            positionable: true,
+            preview: '***CAR***',
+        },
+        CAM_ANGLE_REFERENCE_SBAR: {
+            name: 'CAM_ANGLE_REFERENCE_SBAR',
+            text: 'osdTextElementCameraAngleReferenceSidebar',
+            desc: 'osdDescElementCameraAngleReferenceSidebar',
+            defaultPosition: -1,
+            draw_order: 560,
+            positionable: true,
+            preview: '***SBR***||',
+        },
     };
 };
 
@@ -1970,6 +1989,8 @@ OSD.chooseFields = function() {
             F.GPS_LAP_TIME_CURRENT,
             F.GPS_LAP_TIME_PREVIOUS,
             F.GPS_LAP_TIME_BEST3,
+            F.CAM_ANGLE_REFERENCE,
+            F.CAM_ANGLE_REFERENCE_SBAR,
         ]);
     }
 
@@ -2188,6 +2209,7 @@ OSD.msp = {
             result.push16(OSD.data.alarms.cap.value);
             result.push16(0); // This value is unused by the firmware with configurable timers
             result.push16(OSD.data.alarms.alt.value);
+     
 
             let warningFlags = 0;
             for (let i = 0; i < OSD.data.warnings.length; i++) {
@@ -2211,6 +2233,19 @@ OSD.msp = {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                 result.push8(OSD.data.parameters.cameraFrameWidth);
                 result.push8(OSD.data.parameters.cameraFrameHeight);
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                result.push8(OSD.data.car.scale.value);
+                result.push8(OSD.data.car.width.value);
+                result.push8(OSD.data.car.channel.value);
+                result.push8(OSD.data.car.dots.value);
+
+                result.push8(OSD.data.car.sbar_scale.value);
+                result.push8(OSD.data.car.sbar_low.value);
+                result.push8(OSD.data.car.sbar_mid_low.value);
+                result.push8(OSD.data.car.sbar_mid.value);
+                result.push8(OSD.data.car.sbar_mid_high.value);
+                result.push8(OSD.data.car.sbar_high.value);
             }
         }
         return result;
@@ -2304,7 +2339,7 @@ OSD.msp = {
                 d.alarms['alt'] = { display_name: i18n.getMessage('osdTimerAlarmOptionAltitude'), value: view.readU16() };
             }
         }
-
+ 
         d.state = {};
         d.state.haveSomeOsd = (d.flags !== 0);
         d.state.haveMax7456Configured = bit_check(d.flags, 4);
@@ -2422,6 +2457,22 @@ OSD.msp = {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             d.parameters.cameraFrameWidth = view.readU8();
             d.parameters.cameraFrameHeight = view.readU8();
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            d.car = {};
+            d.car['scale'] = { display_name: i18n.getMessage('osdCarOptionScale'), value: view.readU8()  };
+            d.car['width'] = { display_name: i18n.getMessage('osdCarOptionWidth'), value: view.readU8()  };
+            d.car['channel'] = { display_name: i18n.getMessage('osdCarOptionChannel'), value: view.readU8()  };
+            d.car['dots'] = { display_name: i18n.getMessage('osdCarOptionDots'), value: view.readU8()  };
+           
+            d.car['sbar_scale'] = { display_name: i18n.getMessage('osdCarOptionSbarScale'), value: view.readU8()  };
+            d.car['sbar_low'] = { display_name: i18n.getMessage('osdCarOptionSbarLow'), value: view.readU8()  };
+            d.car['sbar_mid_low'] = { display_name: i18n.getMessage('osdCarOptionSbarMidLow'), value: view.readU8()  };
+            d.car['sbar_mid'] = { display_name: i18n.getMessage('osdCarOptionSbarMid'), value: view.readU8()  };
+            d.car['sbar_mid_high'] = { display_name: i18n.getMessage('osdCarOptionSbarMidHigh'), value: view.readU8()  };
+            d.car['sbar_high'] = { display_name: i18n.getMessage('osdCarOptionSbarHigh'), value: view.readU8()  };
+
         }
 
         this.processOsdElements(d, itemsPositionsRead);
@@ -2684,6 +2735,7 @@ osd.initialize = function(callback) {
         $('.units-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpUnits'));
         $('.timers-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpTimers'));
         $('.alarms-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpAlarms'));
+        $('.car-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpCar'));
         $('.stats-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpStats'));
         $('.warnings-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpWarnings'));
 
@@ -2800,6 +2852,22 @@ osd.initialize = function(callback) {
                         });
                         const $input = $('<label/>').append(alarmInput);
                         $alarms.append($input);
+                    }
+
+                    // Camera Angle Reference
+                    $('.car-container').show();
+                    const $car = $('.car').empty();
+                    for (const k in OSD.data.car) {
+                        const car = OSD.data.car[k];
+                        const carInput = $(`<input name="car" type="number" id="${k}"/>${car.display_name}</label>`);
+                        carInput.val(car.value);
+                        carInput.focusout(function() {
+                            OSD.data.car[$(this)[0].id].value = $(this)[0].value;
+                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
+                               .then(updateOsdView);
+                        });
+                        const $input = $('<label/>').append(carInput);
+                        $car.append($input);
                     }
 
                     // Timers

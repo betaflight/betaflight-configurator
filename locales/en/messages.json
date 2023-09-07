@@ -5110,6 +5110,9 @@
     "osdSetupAlarmsTitle": {
         "message": "Alarms"
     },
+    "osdSetupCarTitle": {
+        "message": "Camera Angle Reference"
+    },
     "osdSetupStatsTitle": {
         "message": "Post Flight Statistics"
     },
@@ -5289,6 +5292,20 @@
     },
     "osdDescElementHorizonSidebars": {
         "message": "Sidebars around artificial horizon indicator"
+    },
+    "osdTextElementCameraAngleReference": {
+        "message": "Camera Angle Reference",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCameraAngleReference": {
+        "message": "Camera angle reference for flying with FPV tilt gimbal"
+    },
+    "osdTextElementCameraAngleReferenceSidebar": {
+        "message": "Camera Angle Reference Sidebar",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCameraAngleReferenceSidebar": {
+        "message": "Sidebar for Camera angle reference"
     },
     "osdTextElementCurrentDraw": {
         "message": "Battery current draw",
@@ -6164,7 +6181,46 @@
       "message": "Altitude",
       "description": "Text of the altitude alarm"
     },
-
+    "osdCarOptionScale": {
+       "message": "Scale",
+       "description": "Scale"
+    },
+    "osdCarOptionWidth": {
+       "message": "Width",
+       "description": "Width"
+    },
+    "osdCarOptionChannel": {
+        "message": "Channel",
+        "description": "Channel"
+    },
+    "osdCarOptionDots": {
+        "message": "Dots",
+        "description": "Dots"
+    },
+    "osdCarOptionSbarScale": {
+        "message": "Sidebar Scale",
+        "description": "Sidebar Scale"
+    },
+    "osdCarOptionSbarLow": {
+        "message": "Sidebar Angle 1/5",
+        "description": "Sidebar Scale"
+    },
+    "osdCarOptionSbarMidLow": {
+        "message": "Sidebar Angle 2/5",
+        "description": "Sidebar Scale"
+    },
+    "osdCarOptionSbarMid": {
+        "message": "Sidebar Angle 3/5",
+        "description": "Sidebar Scale"
+    },
+    "osdCarOptionSbarMidHigh": {
+        "message": "Sidebar Angle 4/5",
+        "description": "Sidebar Scale"
+    },
+    "osdCarOptionSbarHigh": {
+        "message": "Sidebar Angle 5/5",
+        "description": "Sidebar Scale"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6312,6 +6368,9 @@
     },
     "osdSectionHelpAlarms": {
         "message": "Set the thresholds used for OSD elements with alarm states."
+    },
+    "osdSectionHelpCar": {
+        "message": "Set the Camera Angle Reference parameter values"
     },
     "osdSectionHelpStats": {
         "message": "Set the values dispalyed on the post flight statistics screen."

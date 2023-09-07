@@ -233,6 +233,18 @@ const VirtualFC = {
             alt: { display_name: i18n.getMessage('osdTimerAlarmOptionAltitude'), value: 0 },
             time: { display_name: 'Minutes', value: 0 },
         };
+        virtualOSD.data.car = {
+            scale: { display_name: i18n.getMessage('osdCarOptionScale'), value: 0 },
+            width: { display_name: i18n.getMessage('osdCarOptionWidth'), value: 0 },
+            channel: { display_name: i18n.getMessage('osdCarOptionChannel'), value: 0 },
+            dots: { display_name: i18n.getMessage('osdCarOptionDots'), value: 0 },
+            sbar_scale: { display_name: i18n.getMessage('osdCarOptionSbarScale'), value: 0 },
+            sbar_low: { display_name: i18n.getMessage('osdCarOptionSbarLow'), value: 0 },
+            sbar_mid_low: { display_name: i18n.getMessage('osdCarOptionSbarMidLow'), value: 0 },
+            sbar_mid: { display_name: i18n.getMessage('osdCarOptionSbarMid'), value: 0 },
+            sbar_mid_high: { display_name: i18n.getMessage('osdCarOptionSbarMidHigh'), value: 0 },
+            sbar_high: { display_name: i18n.getMessage('osdCarOptionSbarHigh'), value: 0 },
+        };
     },
 };
 
