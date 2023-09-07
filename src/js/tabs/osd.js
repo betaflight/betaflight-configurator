@@ -1536,6 +1536,24 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: '1:23.456',
         },
+        CAM_ANGLE_REFERENCE: {
+            name: 'CAM_ANGLE_REFERENCE',
+            text: 'osdTextElementCameraAngleReference',
+            desc: 'osdDescElementCameraAngleReference',
+            defaultPosition: -1,
+            draw_order: 555,
+            positionable: true,
+            preview: '***CAR***',
+        },
+        CAM_ANGLE_REFERENCE_SBAR: {
+            name: 'CAM_ANGLE_REFERENCE_SBAR',
+            text: 'osdTextElementCameraAngleReferenceSidebar',
+            desc: 'osdDescElementCameraAngleReferenceSidebar',
+            defaultPosition: -1,
+            draw_order: 560,
+            positionable: true,
+            preview: '***SBR***||',
+        },
     };
 };
 
@@ -1970,6 +1988,8 @@ OSD.chooseFields = function() {
             F.GPS_LAP_TIME_CURRENT,
             F.GPS_LAP_TIME_PREVIOUS,
             F.GPS_LAP_TIME_BEST3,
+            F.CAM_ANGLE_REFERENCE,
+            F.CAM_ANGLE_REFERENCE_SBAR,
         ]);
     }
 
