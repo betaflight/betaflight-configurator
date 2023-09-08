@@ -7,6 +7,9 @@
   "chromium-args": "--disable-features=nw2",
   "scripts": {
     "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "review": "vite build && vite preview",
     "start": "run-script-os",
     "start:default": "NODE_ENV=development NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' gulp debug",
     "start:windows": "set NODE_ENV=development && set NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' && gulp debug",
@@ -120,6 +123,7 @@
     "os": "^0.1.2",
     "postcss": "^8.4.17",
     "rollup": "^3.9.0",
+    "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-vue": "^5.*.*",
     "rpm-builder": "^1.2.1",
     "run-script-os": "^1.1.6",

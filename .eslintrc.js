@@ -38,4 +38,6 @@ module.exports = {
         appAvailability: true,
         // end cordova bindings
     },
+    // ignore src/dist folders
+    ignorePatterns: ["src/dist/*"],
 };
