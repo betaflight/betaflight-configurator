@@ -267,7 +267,6 @@ gps.initialize = async function (callback) {
 
                         let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
                         let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
-                        // let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
 
                         // Add color to the text
                         // 2nd column: no signal = red, unusable = red, searching = red, locked = yellow and fully locked = green
@@ -290,20 +289,6 @@ gps.initialize = async function (callback) {
                         } else {
                             used = `<span class="colorToggle ${usedColor}">${used}</span>`;
                         }
-
-                        /*
-                        // 3d column: unknown = red, non healthy = grey, healthy = orange
-                        if (healthy.startsWith(i18n.getMessage('gnssHealthyHealthy'))) {
-                            healthy = `<span class="colorToggle notReady">${healthy}</span>`;
-                        } else {
-                            if (healthy.startsWith(i18n.getMessage('gnssHealthyUnhealthy'))) {
-                                healthy = `<span class="colorToggle search">${healthy}</span>`;
-                            } else {
-                                healthy = `<span class="colorToggle">${healthy}</span>`;
-                            }
-                        }
-                        rowContent += `<td>${used} | ${healthy} | ${quality}</td>`;
-                        */
 
                         rowContent += `<td>${used} | ${quality}</td>`;
                     }

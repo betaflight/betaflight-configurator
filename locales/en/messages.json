@@ -2812,7 +2812,7 @@
         "message": "Sat ID"
     },
     "gpsSignalStatusQly": {
-        "message": "Status / Quality"
+        "message": "Status &nbsp;&nbsp;&nbsp; | &nbsp;Quality"
     },
     "gnssQualityNoSignal": {
         "message": "no signal"
