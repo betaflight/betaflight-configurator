@@ -280,11 +280,7 @@ gps.initialize = async function (callback) {
                                 quality = `<span class="colorToggle locked">${quality}</span>`;
                             } else {
                                 usedColor = '';
-                                if (quality.startsWith(i18n.getMessage('gnssQualitySearching'))) {
-                                    quality = `<span class="colorToggle">${quality}</span>`;
-                                } else {
-                                    quality = `<span class="colorToggle">${quality}</span>`;
-                                }
+                                quality = `<span class="colorToggle">${quality}</span>`;
                             }
                         }
 
