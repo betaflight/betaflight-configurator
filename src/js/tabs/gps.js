@@ -192,7 +192,7 @@ gps.initialize = async function (callback) {
             const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
                 'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
             const usedArray = ['gnssUsedUnused', 'gnssUsedUsed'];
-            const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
+            // const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
             let alt = FC.GPS_DATA.alt;
 
             $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
@@ -200,7 +200,7 @@ gps.initialize = async function (callback) {
 
             const gspUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gspUnitText}`);
             $('.GPS_info td.heading').text(`${magHeadingDeg.toFixed(4)} / ${gpsHeading.toFixed(4)} ${gspUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
@@ -250,6 +250,7 @@ gps.initialize = async function (callback) {
 
                 for (let i = 0; i < channels; i++) {
                     let rowContent = '';
+                    let usedColor = '';
                     if (FC.GPS_DATA.chn[i] <= 6) {
                         rowContent += `<td>${gnssArray[FC.GPS_DATA.chn[i]]}</td>`;
                     } else {
@@ -266,35 +267,38 @@ gps.initialize = async function (callback) {
 
                         let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
                         let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
-                        let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
+                        // let healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
 
                         // Add color to the text
-                        // 1st column: unused = red, used = green
-                        // 2nd column: unknown = red, non healthy = grey, healthy = orange
-                        // 3d  column: no signal = red, unusable = red, searching = grey, locked = yellow and fully locked = orange
-
-                        if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
-                            used = `<span class="colorToggle ready">&nbsp${used}&nbsp</span>`;
-                        } else {
-                            used = `<span class="colorToggle">${used}</span>`;
-                        }
-
+                        // 2nd column: no signal = red, unusable = red, searching = red, locked = yellow and fully locked = green
                         if (quality.startsWith(i18n.getMessage('gnssQualityFullyLocked'))) {
-                            quality = `<span class="colorToggle almostReady">${quality}</span>`;
+                            usedColor = 'locked';
+                            quality = `<span class="colorToggle ready">${quality}</span>`;
                         } else {
                             if (quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
+                                usedColor = 'notReady';
                                 quality = `<span class="colorToggle locked">${quality}</span>`;
                             } else {
+                                usedColor = '';
                                 if (quality.startsWith(i18n.getMessage('gnssQualitySearching'))) {
-                                    quality = `<span class="colorToggle search">${quality}</span>`;
+                                    quality = `<span class="colorToggle">${quality}</span>`;
                                 } else {
                                     quality = `<span class="colorToggle">${quality}</span>`;
                                 }
                             }
                         }
 
+                        // 1st column: unused = red, used = green
+                        if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
+                            used = `<span class="colorToggle ready">&nbsp${used}&nbsp</span>`;
+                        } else {
+                            used = `<span class="colorToggle ${usedColor}">${used}</span>`;
+                        }
+
+                        /*
+                        // 3d column: unknown = red, non healthy = grey, healthy = orange
                         if (healthy.startsWith(i18n.getMessage('gnssHealthyHealthy'))) {
-                            healthy = `<span class="colorToggle almostReady">${healthy}</span>`;
+                            healthy = `<span class="colorToggle notReady">${healthy}</span>`;
                         } else {
                             if (healthy.startsWith(i18n.getMessage('gnssHealthyUnhealthy'))) {
                                 healthy = `<span class="colorToggle search">${healthy}</span>`;
@@ -302,8 +306,10 @@ gps.initialize = async function (callback) {
                                 healthy = `<span class="colorToggle">${healthy}</span>`;
                             }
                         }
-
                         rowContent += `<td>${used} | ${healthy} | ${quality}</td>`;
+                        */
+
+                        rowContent += `<td>${used} | ${quality}</td>`;
                     }
                     eSsTable.append(`<tr>${rowContent}</tr>`);
                 }
