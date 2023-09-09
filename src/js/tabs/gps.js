@@ -272,13 +272,11 @@ gps.initialize = async function (callback) {
                         if (quality.startsWith(i18n.getMessage('gnssQualityFullyLocked'))) {
                             usedColor = 'locked';
                             quality = `<span class="colorToggle ready">${quality}</span>`;
+                        } else if (quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
+                            usedColor = 'notReady';
+                            quality = `<span class="colorToggle locked">${quality}</span>`;
                         } else {
-                            if (quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
-                                usedColor = 'notReady';
-                                quality = `<span class="colorToggle locked">${quality}</span>`;
-                            } else {
-                                quality = `<span class="colorToggle">${quality}</span>`;
-                            }
+                            quality = `<span class="colorToggle">${quality}</span>`;
                         }
 
                         // 1st column: unused = red, used = green
