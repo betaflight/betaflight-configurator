@@ -435,7 +435,7 @@ setup.initialize = function (callback) {
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
             const gpsUnitText = i18n.getMessage('gpsPositionUnit');
-            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} ${gpsUnitText} / ${lon.toFixed(4)} ${gpsUnitText}`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gpsUnitText}`);
         }
 
         function get_fast_data() {

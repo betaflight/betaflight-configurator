@@ -1725,13 +1725,22 @@ dialog {
     }
 }
 .colorToggle {
-    background-color: #e60000;
+    background-color: #ff0000;
     padding: 2px 5px;
     border-radius: 3px;
     color: #fff;
     font-size: 10px;
+    &.low {
+        background-color: #808080;
+    }
+    &.notReady {
+        background-color: #ffcc3f;
+    }
+    &.locked {
+        background-color: #ff9500;
+    }
     &.ready {
-        background-color: #56ac1d;
+        background-color: #008000;
     }
 }
 .buildInfoBtn {
