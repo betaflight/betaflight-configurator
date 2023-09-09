@@ -15,6 +15,7 @@ import { gui_log } from "../gui_log";
 import { degToRad, isInt } from "../utils/common";
 import semver from "semver";
 import * as THREE from "three";
+import $ from 'jquery';
 
 const pid_tuning = {
     RATE_PROFILE_MASK: 128,

@@ -6,6 +6,7 @@ import { isExpertModeEnabled } from "./utils/isExportModeEnabled";
 import semver from "semver";
 import { mspHelper } from "./msp/MSPHelper";
 import { TABS } from "./gui";
+import $ from 'jquery';
 
 const TuningSliders = {
     // Legacy Sliders

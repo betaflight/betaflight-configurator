@@ -2,6 +2,7 @@ import { i18n } from "../../../js/localization";
 import { get as getConfig, set as setConfig } from "../../../js/ConfigStorage";
 import PresetSource from "./PresetSource";
 import SourcePanel from "./SourcePanel";
+import $ from 'jquery';
 
 export default class PresetsSourcesDialog {
     constructor(domDialog) {

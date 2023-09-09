@@ -1,6 +1,7 @@
 import { i18n } from "../../../js/localization";
 import GUI from "../../../js/gui";
 import PresetSource from "./PresetSource";
+import $ from 'jquery';
 
 export default class SourcePanel {
     constructor(parentDiv, presetSource) {

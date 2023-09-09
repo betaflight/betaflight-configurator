@@ -1,5 +1,6 @@
 import GUI, { TABS } from '../gui';
 import { i18n } from '../localization';
+import $ from 'jquery';
 
 const help = {};
 help.initialize = function (callback) {

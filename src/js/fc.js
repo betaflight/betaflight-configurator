@@ -127,6 +127,7 @@ const FC = {
     LED_COLORS: null,
     LED_MODE_COLORS: null,
     LED_STRIP: null,
+    LED_CONFIG_VALUES: [],
     MISC: null, // DEPRECATED
     MIXER_CONFIG: null,
     MODE_RANGES: null,
@@ -578,9 +579,9 @@ const FC = {
 
         this.GPS_RESCUE = {
             angle:                          0,
-            initialAltitudeM:               0,
+            returnAltitudeM:                0,
             descentDistanceM:               0,
-            rescueGroundspeed:              0,
+            groundSpeed:                    0,
             throttleMin:                    0,
             throttleMax:                    0,
             throttleHover:                  0,
@@ -590,7 +591,8 @@ const FC = {
             descendRate:                    0,
             allowArmingWithoutFix:          0,
             altitudeMode:                   0,
-            minRescueDth:                   0,
+            minStartDistM:                  0,
+            initialClimbM:                  0,
         };
 
         this.RXFAIL_CONFIG = [];

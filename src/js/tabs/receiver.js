@@ -18,7 +18,7 @@ import semver from 'semver';
 import { updateTabList } from "../utils/updateTabList";
 import * as THREE from 'three';
 import * as d3 from "d3";
-
+import $ from 'jquery';
 import CryptoES from 'crypto-es';
 
 const receiver = {

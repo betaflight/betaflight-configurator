@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { i18n } from '../localization';
 import GUI, { TABS } from '../gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
@@ -16,7 +17,7 @@ import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
 import semver from 'semver';
-import { checkChromeRuntimeError } from '../utils/common';
+import { checkChromeRuntimeError, urlExists } from '../utils/common';
 import { generateFilename } from '../utils/generate_filename';
 
 const firmware_flasher = {
@@ -107,10 +108,15 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info #targetMCU').text(summary.mcu);
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
-            // Wiki link to url found in unified target configuration or if not defined to general wiki url
+            // Wiki link: #wiki found in unified target configuration, if board description exist or generel board missing
+            let urlWiki = 'https://betaflight.com/docs/wiki/boards/missing';                // generel board missing
+            const urlBoard = `https://betaflight.com/docs/wiki/boards/${summary.target}`;   // board description
+            if (urlExists(urlBoard)) {
+                urlWiki = urlBoard;
+            }
             const targetWiki = $('#targetWikiInfoUrl');
             targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
-            targetWiki.attr("href", summary.wiki === undefined ? "https://betaflight.com/docs/wiki/" : summary.wiki);
+            targetWiki.attr("href", urlWiki);
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
@@ -425,8 +431,18 @@ firmware_flasher.initialize = function (callback) {
         $('select[name="radioProtocols"]').select2();
         $('select[name="telemetryProtocols"]').select2();
         $('select[name="motorProtocols"]').select2();
-        $('select[name="options"]').select2({ closeOnSelect: false });
+        $('select[name="options"]').select2({ tags: false, closeOnSelect: false });
         $('select[name="commits"]').select2({ tags: true });
+
+        $('select[name="options"]')
+        .on('select2:opening', function() {
+            const searchfield = $(this).parent().find('.select2-search__field');
+            searchfield.prop('disabled', false);
+        })
+        .on('select2:closing', function() {
+            const searchfield = $(this).parent().find('.select2-search__field');
+            searchfield.prop('disabled', true);
+        });
 
         $('select[name="radioProtocols"]').on("select2:select", function() {
             const selectedProtocol = $('select[name="radioProtocols"] option:selected').first().val();
@@ -496,6 +512,7 @@ firmware_flasher.initialize = function (callback) {
             'select[name="options"]',
             'select[name="commits"]',
         ];
+
         $(document).on('select2:open', select2Elements.join(','), () => {
             const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
             $(this).one('mouseup keyup', () => {

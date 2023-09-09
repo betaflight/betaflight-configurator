@@ -5,6 +5,7 @@ import { generateVirtualApiVersions, getTextWidth } from './utils/common';
 import { get as getConfig } from "./ConfigStorage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
+import $ from 'jquery';
 
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
@@ -12,6 +13,7 @@ export const usbDevices = { filters: [
     {'vendorId': 1155, 'productId': 57105}, // STM Device in DFU Mode || Digital Radio in USB mode
     {'vendorId': 10473, 'productId': 393},  // GD32 DFU Bootloader
     {'vendorId': 0x2E3C, 'productId': 0xDF11},  // AT32F435 DFU Bootloader
+    {'vendorId': 12619, 'productId': 262}, // APM32 DFU Bootloader
 ] };
 
 const PortHandler = new function () {
@@ -27,6 +29,12 @@ const PortHandler = new function () {
 
 PortHandler.initialize = function () {
     const self = this;
+
+    // currently web build doesn't need port handler,
+    // so just bail out.
+    if (import.meta.env) {
+        return 'not implemented';
+    }
 
     const portPickerElementSelector = "div#port-picker #port";
     self.portPickerElement = $(portPickerElementSelector);

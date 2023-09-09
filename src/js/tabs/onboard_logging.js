@@ -11,6 +11,7 @@ import { generateFilename } from "../utils/generate_filename";
 import semver from 'semver';
 import { showErrorDialog } from "../utils/showErrorDialog";
 import { checkChromeRuntimeError } from "../utils/common";
+import $ from 'jquery';
 
 let sdcardTimer;
 
@@ -320,7 +321,7 @@ onboard_logging.initialize = function (callback) {
                 {text: "GPS_RESCUE_VELOCITY"},
                 {text: "GPS_RESCUE_HEADING"},
                 {text: "GPS_RESCUE_TRACKING"},
-                {text: "GPS_UNIT_CONNECTION"},
+                {text: "GPS_CONNECTION"},
                 {text: "ATTITUDE"},
                 {text: "VTX_MSP"},
                 {text: "GPS_DOP"},

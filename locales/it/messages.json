@@ -190,7 +190,7 @@
         "message": "Utilizzando una versione più recente del firmware con una versione obsoleta del Configuratore può significare che la modifica di alcune impostazioni porterà a una <strong>configurazione corrotta del firmware e a un modello non funzionante</strong>. Inoltre, alcune caratteristiche del firmware saranno configurabili solo via CLI.<br><strong>La versione <b>$1</b> del Betaflight Configurator è disponibile per il download</strong>, visita <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina</a> per scaricare e installare l'ultima versione con correzioni e miglioramenti.<br>Chiudere la finestra del configuratore prima dell'aggiornamento."
     },
     "configuratorUpdateWebsite": {
-        "message": "Visita la pagina degli aggiornamenti"
+        "message": "Pagina web degli aggiornamenti"
     },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Riavvio in corso</span>"
@@ -737,12 +737,6 @@
         "message": "Direzione:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo Mixer"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Trim Accelerometro"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometro"
@@ -1287,7 +1287,7 @@
         "message": "Comando minimo (valore dell'ESC quando disarmato)"
     },
     "configurationThrottleMinimumCommandHelp": {
-        "message": "Questo è il valore che viene inviato agli ESC quando il mezzo è disarmato. Impostalo su un valore che lasci i motori fermi (1000 per la maggior parte degli ESC)."
+        "message": "Questo è il valore che viene inviato agli ESC quando il modello è disarmato. Impostalo su un valore che lasci i motori fermi (1000 per la maggior parte degli ESC)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Seleziona un protocollo per l'output dei motori appropriato per i tuoi ESC.\n$t(escProtocolDisabledMessage.message)"
@@ -1442,7 +1442,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "Se abilitato, il modulo GPS userà anche il sistema satellitare Galileo, risultando generalmente in più satelliti agganciati. Su Betaflight 4.2.x o precedenti disabilita anche il sistema di potenziato QZSS.",
+        "message": "Se abilitato, il modulo GPS userà anche il sistema satellitare Galileo, risultando generalmente con più satelliti agganciati. Su Betaflight 4.2.x o precedenti disabilita anche il sistema di potenziato QZSS.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -1450,7 +1450,7 @@
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Quando abilitato, solo il primo armamento dopo la connessione della batteria verrà utilizzato come punto di partenza. Se non abilitato, ogni volta che il quad viene armato il punto di partenza verrà aggiornato.",
+        "message": "Se abilitato, al primo armamento dopo la connessione della batteria verrà usato come punto di partenza. Se non abilitato, ogni volta che il quad viene armato il punto di partenza verrà aggiornato.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -2673,11 +2673,20 @@
     "gpsAltitude": {
         "message": "Altitudine:"
     },
+    "gpsLatLon": {
+        "message": "Latitudine / Longitudine Corrente:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
     "gpsHeading": {
-        "message": "Direzione:"
+        "message": "Direzione Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocità:"
+    },
+    "gpsSats": {
+        "message": "Numero di satelliti:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Distanza dal punto di partenza:"
@@ -4497,45 +4506,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS Rescue"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Altitudine iniziale (metri)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Distanza di discesa (metri)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Distanza minima da home (metri)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "La distanza minima da home necessaria per attivare il GPS rescue"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Velocità al suolo (metri/secondo)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Gas minimo"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Gas massimo"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Gas hovering"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Velocità di ascesa (metri/secondo)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Velocità di discesa (metri/secondo)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Satelliti minimi"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Consenti l'armamento senza fix - <span class=\"message-negative\">ATTENZIONE: il GPS Rescue non sarà disponibile</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Modalità altitudine"
     },
@@ -4547,6 +4517,70 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Altitudine attuale"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Salita iniziale (metri)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "La distanza dove il quad salirà, al di sopra dell'altitudine corrente, quando si inizia un recupero e la modalità altitudine è impostata all'altitudine ATTUALE; aggiunta anche in modalità Altitudine MAX."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Altitudine di rientro (metri) - <strong>applicabile solo in modalità Altitudine fissa</strong>"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Velocità di ascesa (metri/secondo)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Velocità di rientro al suolo (metri/secondo)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Angolo massimo di beccheggio"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Angoli massimi più alti portano a rientri aggressivi e velocità più elevate. Può essere utile per modelli pesanti, ad alta resistenza o a bassa autorità, o per l'uso in venti più forti. ATTENZIONE: L'acceleratore durante il recupero di solito deve essere aumentato se l'angolo massimo è aumentato! Altrimenti il quad potrebbe perdere altitudine e fare crash!"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Distanza di discesa (metri)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Velocità di discesa (metri/secondo)"
+    },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "La velocità di discesa iniziale è impostata a 3 volte questo valore, diminuendo fino al valore impostato per l'altitudine di atterraggio."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Se il recupero inizia vicino al punto di partenza (entro questa distanza minima), il modello volerà via verso la sua direzione impostata, fino a che raggiunge la distanza del punto di partenza, per poi iniziare il normale recupero",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Gas minimo"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Gas massimo"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Dovrebbe essere aumentato per modelli pesanti, ad alta resistenza o a bassa autorità, se è probabile un ritorno con forti venti, o se l'angolo massimo di beccheggio è aumentato."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Acceleratore per l'hover - <span class=\"message-negative\">IMPORTANTE: imposta bene questo valore</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Per trovare il giusto valore, imposta l'interruttore di Failsafe sullo Stadio 2, imposta la procedura di Failsafe Stadio 2 per atterrare, e regola il valore dell'acceleratore mentre si atterra, fino a quando il quad e' in hover o scende lentamente. Imposta poi l'acceleratore in hover nel GPS Rescue e il valore per l'acceleratore nello Stadio 1 del CanaleFallback su questo valore."
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distanza minima da home (metri)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "La distanza minima da home necessaria per attivare il GPS rescue"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Satelliti minimi"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Consenti armamento senza fix - <span class=\"message-negative\">ATTENZIONE: No fix = disarmo in failsafe</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Non consigliato. Permette di armare senza un punto Home impostato, ma il quad disarmerà e va in crash con perdita totale di Rx failsafe. Se testato con un interruttore, c'è un breve periodo nullo prima del disarmo."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Controlli di salute"
@@ -4986,7 +5020,7 @@
         "message": "Immagine personalizzata:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "Le dimensioni devono essere $t(logoWidthPx)×$t(logoHeightPx) pixel"
+        "message": "Le dimensioni devono essere $t(logoWidthPx)×$t(logoHeightPx) pixels"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Deve contenere pixel verdi, bianchi e neri"
@@ -4995,7 +5029,7 @@
         "message": "Fare clic su <b>$t(osdSetupUploadFont.message)</b> per mantenere il logo personalizzato"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Dimensione dell'immagine non valida: {{width}}×{{height}} (dimensione prevista $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Dimensione immagine non valida: {{width}}×{{height}} (prevista $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "L'immagine contiene un pixel non valido: RGB({{valueR}}, {{valueG}}, {{valueB}}) alle coordinate {{posX}}×{{posY}}"

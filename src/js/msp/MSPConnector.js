@@ -9,6 +9,9 @@ import CONFIGURATOR from "../data_storage";
 import serial from "../serial";
 import { gui_log } from "../gui_log";
 
+/**
+ * This seems to be mainly used in firmware flasher parts.
+ */
 const MSPConnectorImpl = function () {
     this.baud = undefined;
     this.port = undefined;

@@ -75,6 +75,25 @@ Betaflight Configurator has been translated into several languages. The applicat
 
 If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
 
+## App build via Vite (web)
+
+### Development
+
+1. Install node.js (refer to [.nvmrc](./.nvmrc) for required version)
+2. Install yarn: `npm install yarn -g`
+3. Change to project folder and run `yarn install`.
+4. Run `yarn dev`.
+
+The web app will be available at http://localhost:8000 with full HMR.
+
+### Build Preview
+
+1. Run `yarn build`.
+2. Run `yarn preview` after build has finished.
+3. Alternatively run `yarn review` to build and preview in one step.
+
+The web app should behave directly as in production, available at http://localhost:8080.
+
 ## App build via NW.js (windows/linux/macos) or Cordova (android)
 
 ### Development
@@ -106,7 +125,7 @@ List of possible values of `<task-name>`:
 * **dist** copies all the JS and CSS files in the `./dist` folder [2].
 * **apps** builds the apps in the `./apps` folder [1].
 * **debug** builds debug version of the apps in the `./debug` folder [1][3].
-* **release** zips up the apps into individual archives in the `./release` folder [1]. 
+* **release** zips up the apps into individual archives in the `./release` folder [1].
 
 [1] Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app (build for specific platform to avoid errors).
 [2] For Android platform, **dist** task will generate folders and files in the `./dist_cordova` folder.
@@ -117,13 +136,17 @@ To build or release only for one specific platform you can append the plaform af
 If no platform is provided, the build for the host platform is run.
 
 * **MacOS X** use `yarn gulp <task-name> --osx64`
-* **Linux** use `yarn gulp <task-name> --linux64` 
+* **Linux** use `yarn gulp <task-name> --linux64`
 * **Windows** use `yarn gulp <task-name> --win64`
 * **Android** use `yarn gulp <task-name> --android`
 
 **Note:** Support for cross-platform building is very limited due to the requirement for platform specific build tools. If in doubt, build on the target platform.
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32`, `--linux32` and `--armv8` can be used too, but they are not officially supported, so use them at your own risk.
+
+#### Leverage GitHub-Actions to build binaries
+
+You can use the GitHub `Actions` tab in your fork to build binaries as well. Select `Actions`>`Manual Build`>`Run Workflow`. Choose your custom branch and click `Run workflow`. The workflow will dispatch in a few moments and upon completion, the build "Artifacts" will be available for download from within the workflow run.
 
 ## Support
 

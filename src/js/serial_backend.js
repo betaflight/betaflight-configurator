@@ -11,7 +11,6 @@ import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
-import serial from "./serial";
 import UI_PHONES from "./phones_ui";
 import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
@@ -22,7 +21,13 @@ import { get as getConfig, set as setConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from 'semver';
 import CryptoES from "crypto-es";
+import $ from 'jquery';
 import BuildApi from "./BuildApi";
+
+import serialNWJS from "./serial.js";
+import serialWeb from "./webSerial.js";
+
+const serial = import.meta.env ? serialWeb : serialNWJS;
 
 let mspHelper;
 let connectionTimestamp;
@@ -63,10 +68,21 @@ export function initializeSerialBackend() {
         GUI.updateManualPortVisibility();
     });
 
-    $('div.connect_controls a.connect').click(function () {
-        if (!GUI.connect_lock) { // GUI control overrides the user control
 
-            const toggleStatus = function() {
+    $("div.connect_controls a.connect").on('click', function () {
+
+        const selectedPort = $('div#port-picker #port option:selected');
+        let portName;
+        if (selectedPort.data().isManual) {
+            portName = $('#port-override').val();
+        } else {
+            portName = String($('div#port-picker #port').val());
+        }
+
+        if (!GUI.connect_lock) {
+            // GUI control overrides the user control
+
+            const toggleStatus = function () {
                 clicks = !clicks;
             };
 
@@ -74,13 +90,6 @@ export function initializeSerialBackend() {
 
             const selected_baud = parseInt($('div#port-picker #baud').val());
             const selectedPort = $('div#port-picker #port option:selected');
-
-            let portName;
-            if (selectedPort.data().isManual) {
-                portName = $('#port-override').val();
-            } else {
-                portName = String($('div#port-picker #port').val());
-            }
 
             if (selectedPort.data().isDFU) {
                 $('select#baud').hide();
@@ -93,16 +102,27 @@ export function initializeSerialBackend() {
                     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
                     $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
+                    const baudRate = parseInt($('div#port-picker #baud').val());
                     if (selectedPort.data().isVirtual) {
                         CONFIGURATOR.virtualMode = true;
                         CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown :selected').val();
 
                         serial.connect('virtual', {}, onOpenVirtual);
+                    } else if (import.meta.env) {
+                        serial.addEventListener('connect', (event) => {
+                            onOpen(event.detail);
+                            toggleStatus();
+                        });
+                        serial.connect({ baudRate });
                     } else {
-                        serial.connect(portName, {bitrate: selected_baud}, onOpen);
+                        serial.connect(
+                            portName,
+                            { bitrate: selected_baud },
+                            onOpen,
+                        );
+                        toggleStatus();
                     }
 
-                    toggleStatus();
                 } else {
                     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
                         $('div#flashbutton a.flash_state').removeClass('active');
@@ -286,7 +306,11 @@ function onOpen(openInfo) {
         result = getConfig('expertMode')?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
-        serial.onReceive.addListener(read_serial);
+        if(import.meta.env) {
+            serial.addEventListener('receive', (e) => read_serial(e.detail.buffer));
+        } else {
+            serial.onReceive.addListener(read_serial);
+        }
         setConnectionTimeout();
         FC.resetState();
         mspHelper = new MspHelper();

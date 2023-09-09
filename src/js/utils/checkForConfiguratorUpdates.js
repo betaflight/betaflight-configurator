@@ -3,6 +3,7 @@ import { get as getConfig } from "../ConfigStorage";
 import CONFIGURATOR from "../data_storage";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
+import $ from 'jquery';
 
 function notifyOutdatedVersion(data) {
 

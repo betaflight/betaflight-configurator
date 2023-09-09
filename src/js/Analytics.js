@@ -3,6 +3,7 @@ import googleAnalytics from 'universal-ga';
 import { set as setConfig, get as getConfig } from './ConfigStorage';
 import GUI from './gui';
 import CONFIGURATOR from './data_storage';
+import $ from 'jquery';
 
 let tracking = null;
 export { tracking };

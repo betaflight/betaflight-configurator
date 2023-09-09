@@ -1,3 +1,4 @@
+import '../injected_methods';
 import { update_dataflash_global } from "../update_dataflash_global";
 import { sensor_status } from "../sensor_helpers";
 import { bit_check, bit_set } from "../bit";
@@ -513,9 +514,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
                 FC.GPS_RESCUE.angle             = data.readU16();
-                FC.GPS_RESCUE.initialAltitudeM  = data.readU16();
+                FC.GPS_RESCUE.returnAltitudeM   = data.readU16();
                 FC.GPS_RESCUE.descentDistanceM  = data.readU16();
-                FC.GPS_RESCUE.rescueGroundspeed = data.readU16();
+                FC.GPS_RESCUE.groundSpeed       = data.readU16();
                 FC.GPS_RESCUE.throttleMin       = data.readU16();
                 FC.GPS_RESCUE.throttleMax       = data.readU16();
                 FC.GPS_RESCUE.throttleHover     = data.readU16();
@@ -528,7 +529,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.GPS_RESCUE.altitudeMode          = data.readU8();
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.GPS_RESCUE.minRescueDth = data.readU16();
+                    FC.GPS_RESCUE.minStartDistM = data.readU16();
+                }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.GPS_RESCUE.initialClimbM = data.readU16();
                 }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
@@ -850,6 +854,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 break;
 
+            case MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES:
+                FC.LED_CONFIG_VALUES.brightness = data.readU8();
+                FC.LED_CONFIG_VALUES.rainbow_delta = data.readU16();
+                FC.LED_CONFIG_VALUES.rainbow_freq = data.readU16();
+                break;
+
             case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
                 console.log('Channel forwarding saved');
                 break;
@@ -1161,7 +1171,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 let ledCount = (data.byteLength - 2) / 4;
 
-                // The 32 bit config of each LED contains these in LSB:
+                // The 32 bit config of each LED contains the following in LSB:
                 // +----------------------------------------------------------------------------------------------------------+
                 // | Directions - 6 bit | Color ID - 4 bit | Overlays - 10 bit | Function ID - 4 bit  | X - 4 bit | Y - 4 bit |
                 // +----------------------------------------------------------------------------------------------------------+
@@ -1212,9 +1222,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                         FC.LED_STRIP.push(led);
                     }
-                }
-                else {
-                    ledOverlayLetters = ledOverlayLetters.filter(x => x !== 'y');
+                } else {
+                    ledOverlayLetters = ledOverlayLetters.filter(x => x !== 'y'); //remove rainbow because it's only supported after API 1.46
 
                     for (let i = 0; i < ledCount; i++) {
 
@@ -1563,6 +1572,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP2_SET_TEXT:
                 console.log('Text set');
                 break;
+            case MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES:
+                break;
             case MSPCodes.MSP_SET_FILTER_CONFIG:
                 // removed as this fires a lot with firmware sliders console.log('Filter config set');
                 break;
@@ -1796,9 +1807,9 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
             buffer.push16(FC.GPS_RESCUE.angle)
-                  .push16(FC.GPS_RESCUE.initialAltitudeM)
+                  .push16(FC.GPS_RESCUE.returnAltitudeM)
                   .push16(FC.GPS_RESCUE.descentDistanceM)
-                  .push16(FC.GPS_RESCUE.rescueGroundspeed)
+                  .push16(FC.GPS_RESCUE.groundSpeed)
                   .push16(FC.GPS_RESCUE.throttleMin)
                   .push16(FC.GPS_RESCUE.throttleMax)
                   .push16(FC.GPS_RESCUE.throttleHover)
@@ -1812,7 +1823,10 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                     .push8(FC.GPS_RESCUE.altitudeMode);
             }
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                buffer.push16(FC.GPS_RESCUE.minRescueDth);
+                buffer.push16(FC.GPS_RESCUE.minStartDistM);
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                buffer.push16(FC.GPS_RESCUE.initialClimbM);
             }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
@@ -2108,6 +2122,9 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                     console.log('Unsupported text type');
                     break;
             }
+            break;
+
+        case MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES:
             break;
 
         case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
@@ -2553,8 +2570,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
             }
 
             buffer.push32(mask);
-        }
-        else {
+        } else {
             for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
                 const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
                 if (bitIndex >= 0) {
@@ -2629,6 +2645,14 @@ MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
 
         MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_MODECOLOR, buffer, false, nextFunction);
     }
+};
+
+MspHelper.prototype.sendLedStripConfigValues = function(onCompleteCallback) {
+    const buffer = [];
+    buffer.push8(FC.LED_CONFIG_VALUES.brightness);
+    buffer.push16(FC.LED_CONFIG_VALUES.rainbow_delta);
+    buffer.push16(FC.LED_CONFIG_VALUES.rainbow_freq);
+    MSP.send_message(MSPCodes.MSP2_SET_LED_STRIP_CONFIG_VALUES, buffer, false, onCompleteCallback);
 };
 
 MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {

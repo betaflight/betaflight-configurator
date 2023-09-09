@@ -1,4 +1,5 @@
 import { i18n } from "../../../js/localization";
+import $ from 'jquery';
 
 export default class PresetTitlePanel
 {

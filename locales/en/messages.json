@@ -830,14 +830,6 @@
         "message": "Heading:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Pitch:",
-        "description": "Pitch shown on Setup tab"
-    },
-    "initialSetupRoll": {
-        "message": "Roll:",
-        "description": "Roll shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
     },
@@ -2783,7 +2775,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Heading:"
+        "message": "Heading Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Speed:"
@@ -3670,6 +3663,29 @@
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Brightness",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Maximum brightness percent of the LEDs."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Hue difference between each LEDs.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Frequency",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Frequency of the color change, in other terms the speed of the effect.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
+    },
     "ledStripFunctionSection": {
         "message": "LED Functions"
     },
@@ -3827,7 +3843,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Rainbow",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"
@@ -4612,45 +4628,6 @@
         "message": "GPS Rescue"
     },
 
-    "failsafeGpsRescueItemAngle": {
-        "message": "Angle"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Initial altitude (meters)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Descent distance (meters)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Minimum distance to home (meters)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "The minimum distance to home needed for GPS rescue to activate"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Ground speed (meters/second)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Throttle minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Throttle maximum"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Throttle hover"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Ascend rate (meters/second)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Descend rate (meters/second)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Minimum satellites"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Allow arming without fix - <span class=\"message-negative\">WARNING: the GPS Rescue will not be available</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Altitude mode"
     },
@@ -4662,6 +4639,70 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Current altitude"
+    },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Initial climb (meters)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "The distance the quad will climb, above the current altitude, when a rescue is initiated and the altitude mode is set to CURRENT Altitude; also added when in MAX Altitude mode."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Return altitude (meters) - <strong>only applies in Fixed Altitude mode</strong>"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Ascend rate (meters/second)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Return ground speed (meters/second)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Maximum pitch angle"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Higher maximum angles lead to more aggressive returns and higher forward speeds.  May be useful for heavier, high-drag or low authority craft, or for use in stronger winds.  WARNING: Rescue throttle usually needs to be increased if the max angle is increased!  Otherwise the quad may lose altitude and crash!"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Descent distance (meters)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Descend rate (meters/second)"
+    },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "The initial descent rate is set to 3 times this value, decreasing to the set value at the landing altitude."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp" : {
+        "message": "If the rescue starts too close to home (within this minimum distance), the craft will fly away, on its current heading, until at least this distance from home, and then start normal rescue behaviour",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Throttle minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Throttle maximum"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Should be increased for heavier, high-drag or low authority craft, if a return against strong winds is likely, or if the maximum pitch angle is increased."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Throttle hover - <span class=\"message-negative\">IMPORTANT: set this value accurately</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "To find the right value, set the Failsafe switch action to Stage 2, set the Stage 2 Failsafe Procedure to Land, and adjust the Throttle value used while landing until the quad hovers or descends slowly.  Then set GPS Rescue Throttle Hover, and the Stage 1 Channel Fallback value for Throttle to this value."
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimum distance to home (meters)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "The minimum distance to home needed for GPS rescue to activate"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Minimum satellites"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Allow arming without fix - <span class=\"message-negative\">WARNING: No fix = disarm on failsafe!</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Not recommended. Permits arming without a Home point being set, but the quad will disarm and crash with a true Rx loss failsafe.  If tested with a switch, there is a short Do Nothing period before the disarm."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sanity checks"
@@ -5107,7 +5148,7 @@
         "message": "Custom image:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "Size must be $t(logoWidthPx)×$t(logoHeightPx) pixels"
+        "message": "Size must be $t(logoWidthPx)x$t(logoHeightPx) pixels"
     },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Must contain green, black and white pixels"
@@ -5116,7 +5157,7 @@
         "message": "Click <b>$t(osdSetupUploadFont.message)</b> to persist custom logo"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Invalid image size: {{width}}×{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Invalid image size: {{width}}x{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "The image contains an invalid pixel: rgb({{valueR}}, {{valueG}}, {{valueB}}) at coordinates {{posX}}×{{posY}}"

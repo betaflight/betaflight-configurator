@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 /**
  * log to GUI
  * @param {string} message message to log to GUI

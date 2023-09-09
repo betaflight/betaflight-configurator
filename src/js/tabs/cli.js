@@ -12,6 +12,7 @@ import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import jBox from "jbox";
 import { checkChromeRuntimeError } from "../utils/common";
+import $ from 'jquery';
 
 const cli = {
     lineDelayMs: 15,

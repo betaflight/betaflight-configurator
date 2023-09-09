@@ -737,12 +737,6 @@
         "message": "Kurs:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Højderor:"
-    },
-    "initialSetupRoll": {
-        "message": "Krængror:"
-    },
     "initialSetupMixerHead": {
         "message": "Mixertype"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Accelerometer trim"
+    },
+    "initialSetupPitch": {
+        "message": "Højderor:"
+    },
+    "initialSetupRoll": {
+        "message": "Krængror:"
     },
     "initialSetupMagHead": {
         "message": "Magnetometer"
@@ -1805,7 +1805,7 @@
         "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes centerpositioner, hvilket betyder en mere glidende afslutning på flips og rolls.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind centreret, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens centerposition. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pind udfalds område."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "Denne parameter afgør pindaccelerationseffekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle målemetode, hvor D kun sporer gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pindsporingsforhold.<br> Lavere værdi modsvarer langsommere/jævnere pindrespons, mens højere værdi giver øget pindaccelerationsrespons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
+        "message": "Denne parameter afgør pindaccelerationseffekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle måle metode, hvor D kun styres af gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pind respons.<br> Lavere værdi modsvarer langsommere/jævnere pindrespons, mens højere værdi giver øget pindaccelerationsrespons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser centerpositionerne.</span>"
@@ -2158,7 +2158,7 @@
         "message": "Disse pinde tillader indkobling og test af Betaflight, uden en sender/modtager er til stede. Bemærk, <strong>at denne funktion ikke er beregnet til flyvning, og propeller må ikke monteres.</strong><br /><br />Denne funktion garanterer ikke pålidelig kontrol med dit fartøj. <strong>Risiko for alvorlig skade, hvis propellerne er påsat.</strong>"
     },
     "receiverMspEnableButton": {
-        "message": "Aktivér kontroller"
+        "message": "Aktiver kontroller"
     },
     "auxiliaryHelp": {
         "message": "Opsæt kanal tilstande her vha. en kombination af kanal tilknytninger og/eller kanalområder (kanal områder understøttes fra BF 4.0).<br>Benyt <strong>Tilknyt kanal</strong> til at definere kanaler og tilhørende kanal områder. En modtagerkanal med signal mellem et min/maks område, aktiverer tilstanden. Benyt et <strong>Tilknyt kanal område</strong> for at aktivere en tilstand, når et andet område er aktiveret.<br><strong>Undtagelser:</strong> Aktiver(ARM) kan ikke tilknyttes til eller fra en anden tilstand, tilstande kan ikke tilknyttes til andre tilstande, som er opsat med en tilknytning (kædede tilknytninger). Flere områder/tilknytninger kan benyttes til at aktivere enhver tilstand.<br>Er der defineret mere end ét område/tilknytning for en tilstand, kan hver af dem opsættes til <strong>OG</strong> eller <strong>ELLER</strong>. En tilstand aktiveres, når: <br />- ALLE <strong>OG</strong> områder/tilknytninger er aktive; <br /> - ELLER mindst ét <strong>ELLER</strong> område/tilknytning er aktivt.<br />Husk at gemme dine indstillinger med knappen Gem."
@@ -2194,6 +2194,14 @@
     "auxiliaryModeLogicAND": {
         "message": "OG"
     },
+    "auxiliaryHelpMode_3D": {
+        "message": "Muliggør reversibel motorretning for at give negativ gas og tillade omvendt flyvning. Gassen bliver -100 til +100 i stedet for 0 til 100.\nAnvendes til at flyve et fartøj, som er endt på 'ryggen'",
+        "description": "Help text to 3D mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Flyvetilstand som begrænser fartøjets vinkel når det er i ARCO tilstand",
+        "description": "Help text to ACRO TRAINER mode"
+    },
     "auxiliaryHelpMode_ARM": {
         "message": "Aktiverer motorer og aktiverer at fartøj kan flyve",
         "description": "Help text to ARM mode"
@@ -2201,6 +2209,10 @@
     "auxiliaryHelpMode_ANGLE": {
         "message": "I denne auto-nivelleret tilstand styrer krængror og højderor vinklen mellem den relevante akse og den lodrette akse, for at udjævne flyning ved blot at lade pindende være centreret",
         "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "Flytilstand som øger P og I Term ved hurtige gasbevægelser, for at forbedre pind respons og undgå næsen på fartøjer går ud af kurs ved hurtige ændringer af gassen",
+        "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "I standard mixer tilstand, når krængror, højderor og sideror beregnes og styrer en motor, vil alle motorer blive ændret ens. Når en motor går under minimum, bliver styring reduceret. Fx hvis du har din gas lige over minimum og forsøger en hurtig krængning - da to motorer ikke kan gå under minimum, vil du hovedsagelig kun få halvdelen af kraften (halvdelen af din PID værdi). Hvis dit input ville have bedt om mere end 100% forskel mellem de høje og lave motores hastighed ville de de langsomm motorer blive reduceret og symmetrien i motorens balance vil blive brudt",
@@ -2214,6 +2226,14 @@
         "message": "Deaktiver / aktiver bippen, heruder advarsler, status og anden bippen.",
         "description": "Help text to BEEPERMUTE mode"
     },
+    "auxiliaryHelpMode_BEEPERON": {
+        "message": "Aktiver BEEPER ON, altså at bipper kan give lyd",
+        "description": "Help text to BEEPER ON mode"
+    },
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "Aktiver  BEEP GPS SATELLITE COUNT, altså at bipper giver lyd det antal gange der er låste sattelitter",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
+    },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "Aktiver Blackbox logning",
         "description": "Help text to BLACKBOX mode"
@@ -2221,6 +2241,10 @@
     "auxiliaryHelpMode_BLACKBOXERASE": {
         "message": "Slet BlackBox log",
         "description": "Help text to BLACKBOX ERASE mode"
+    },
+    "auxiliaryHelpMode_BOXPREARM": {
+        "message": "Aktiverer BOXPREARM tilstand",
+        "description": "Help text to BOXPREARM mode"
     },
     "auxiliaryHelpMode_CALIB": {
         "message": "Start kalibrering under flyvning",
@@ -2237,6 +2261,10 @@
     "auxiliaryHelpMode_CAMERACONTROL3": {
         "message": "Brug til at skifte leverandør bestemte CAMERA CONTROL 3. Se i leverandørs manual",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
+    },
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "Aktiverer stabiliseringstilstand for kamera",
+        "description": "Help text to CAMSTAB mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Aktiver mauelt fejlsikring trin 2",
@@ -2262,6 +2290,10 @@
         "message": "Kurs korrektion - indstiller ny sideror værdi for HEADFREE tilstand",
         "description": "Help text to HEAD ADJ mode"
     },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Flyvningstilstand, hvor sideror styres af en ekstern reference (typisk den som piloten ser imod) i stedet for fartøjets egen reference. Designet til begyndere, men sjældent brugt, normalt bedre at anvende ANGLE tilstand",
+        "description": "Help text to HEADFREE mode"
+    },
     "auxiliaryHelpMode_HORIZON": {
         "message": "Denne hybrid tilstand fungerer præcis som ANGLE tilstand med centreret krængror og højderor pind (dermed muliggør auto-nivelleret flyvning).<br>Når pind flyttes væk fra center position, går styring mere og mere mod ACRO tilstand",
         "description": "Help text to HORIZON mode"
@@ -2273,6 +2305,14 @@
     "auxiliaryHelpMode_LEDLOW": {
         "message": "Tænd eller sluk for LED lys",
         "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Aktiverer låsning af kurs på aktuel kompasretning",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_MSPOVERRIDE": {
+        "message": "Aktiver MSP overstyring",
+        "description": "Help text to MSP OVERRIDE mode"
     },
     "auxiliaryHelpMode_OSDDISABLE": {
         "message": "Aktiver/deaktiver On-Screen-Display - OSD",
@@ -2317,6 +2357,22 @@
     "auxiliaryHelpMode_TELEMETRY": {
         "message": "Aktiver telemetri via kontakt",
         "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Skifter brugerdefineret USER1. Styrer via PINIO",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Skifter brugerdefineret USER2. Styrer via PINIO",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Skifter brugerdefineret USER3. Styrer via PINIO",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Skifter brugerdefineret USER4. Styrer via PINIO",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Deaktiver kontrol af VTX indstillinger via OSD",
@@ -2620,9 +2676,6 @@
     "gpsLatLon": {
         "message": "Nuværende breddegrad / længdegrad:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "Kurs:"
     },
     "gpsSpeed": {
         "message": "Hastighed:"
@@ -4449,45 +4502,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "Flyv hjem med GPS (Return To Home)"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Vinkel"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Indledende højde (meter)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Nedstigningsdistance (meter)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Mindste afstand til hjem (meter)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Mindste afstand til hjem, der er nødvendig for at GPS redning kan aktiveres"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Jordhastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Gas minimum"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Gas maksimum"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Gas værdi ved svævning"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Stignings hastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Nedstignings hastighed (meter/sekund)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Mindste antal satellitter"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Test ved at tillade aktivering uden GPS er låst - <span class=\"message-negative\">ADVARSEL: GPS-redningen ved flyvning vil ikke være mulig med denne slået til</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Højde tilstand"
     },
@@ -4499,6 +4513,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Aktuel højde"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Stignings hastighed (meter/sekund)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Nedstigningsdistance (meter)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Nedstignings hastighed (meter/sekund)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Gas minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Gas maksimum"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Mindste afstand til hjem (meter)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Mindste afstand til hjem, der er nødvendig for at GPS redning kan aktiveres"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Mindste antal satellitter"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Overvågning af GPS fejlsikring "
@@ -4937,17 +4975,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Tilpasset billede:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Størrelse skal være $t(logoWidthPx)×$t(logoHeightPx) pixels"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Skal indeholde grønne, sorte og hvide pixels"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik på <b>$t(osdSetupUploadFont.message)</b> for at bevare tilpasset logo"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Ugyldig billedstørrelse: {{width}}×{{height}} (forventet $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Billedet indeholder en ugyldig pixel: rgb ({{valueR}}, {{valueG}}, {{valueB}}) i koordinaterne {{posX}}×{{posY}}"

@@ -11,6 +11,7 @@ import Model from '../model';
 import MSPCodes from '../msp/MSPCodes';
 import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
+import $ from 'jquery';
 
 const setup = {
     yaw_fix: 0.0,

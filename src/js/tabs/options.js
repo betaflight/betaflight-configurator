@@ -6,6 +6,7 @@ import CliAutoComplete from '../CliAutoComplete';
 import DarkTheme, { setDarkTheme } from '../DarkTheme';
 import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdates';
 import { checkSetupAnalytics } from '../Analytics';
+import $ from 'jquery';
 import CONFIGURATOR from '../data_storage';
 
 const options = {};

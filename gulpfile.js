@@ -46,7 +46,7 @@ const NODE_ENV = process.env.NODE_ENV || 'production';
 const NAME_REGEX = /-/g;
 
 const nwBuilderOptions = {
-    version: '0.77.0',
+    version: '0.72.0',
     files: `${DIST_DIR}**/*`,
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
@@ -280,6 +280,11 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 
     // remove gulp-appdmg from the package.json we're going to write
     delete pkg.optionalDependencies['gulp-appdmg'];
+    // keeping this package in `package.json` for some reason
+    // breaks the nwjs builds. This is not really needed for
+    // nwjs nor it's imported anywhere at runtime ¯\_(ツ)_/¯
+    // this probably can go away if we fully move to pwa.
+    delete pkg.dependencies['@vitejs/plugin-vue2'];
 
     pkg.gitRevision = gitRevision;
     if (!isReleaseBuild) {
@@ -403,6 +408,7 @@ function dist_rollup() {
                 // I will be picked up by rollup and bundled accordingly.
                 'js/main_cordova': 'src/js/main_cordova.js',
                 'js/utils/common': 'src/js/utils/common.js',
+                'js/jquery': 'src/js/jquery.js',
                 'js/main': 'src/js/main.js',
                 'js/tabs/receiver_msp': 'src/js/tabs/receiver_msp.js',
             },
@@ -437,8 +443,16 @@ function dist_rollup() {
                 sourcemap: true,
                 // put any 3rd party module in vendor.js
                 manualChunks(id) {
+                    /**
+                     * This splits every npm module loaded in into it's own package
+                     * to preserve the loading order. This is to prevent issues
+                     * where after bundling some modules are loaded in the wrong order.
+                     */
                     if (id.includes('node_modules')) {
-                        return 'vendor';
+                        const parts = id.split(/[\\/]/);
+                        const nodeModulesIndex = parts.indexOf('node_modules');
+                        const packageName = parts[nodeModulesIndex + 1];
+                        return packageName;
                     }
                 },
                 dir: DIST_DIR,

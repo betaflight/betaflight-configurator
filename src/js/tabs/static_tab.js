@@ -1,5 +1,6 @@
 import { i18n } from '../localization';
 import GUI, { TABS } from '../gui';
+import $ from 'jquery';
 
 const staticTab = {};
 staticTab.initialize = function (staticTabName, callback) {

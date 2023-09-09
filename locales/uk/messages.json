@@ -737,12 +737,6 @@
         "message": "Курс:",
         "description": "Heading shown on Setup tab"
     },
-    "initialSetupPitch": {
-        "message": "Тангаж:"
-    },
-    "initialSetupRoll": {
-        "message": "Крен:"
-    },
     "initialSetupMixerHead": {
         "message": "Тип Мікшеру"
     },
@@ -775,6 +769,12 @@
     },
     "initialSetupAccelTrimsHead": {
         "message": "Коригування акселерометра"
+    },
+    "initialSetupPitch": {
+        "message": "Тангаж:"
+    },
+    "initialSetupRoll": {
+        "message": "Крен:"
     },
     "initialSetupMagHead": {
         "message": "Магнітометр"
@@ -914,7 +914,7 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "RPM фільтрування увімкнено, але один або декілька електронних контролерів швидкості ESC не надають дійсну DSHOT телеметрію. Перевірте, чи ESC підтримує там має необхідну прошивку для двонаправленої DSHOT телеметрії.",
+        "message": "RPM фільтрацію увімкнено, але один або декілька електронних контролерів швидкості ESC не надають дійсну DSHOT телеметрію. Перевірте, чи ESC підтримує та має необхідну прошивку для двонаправленої DSHOT телеметрії.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
@@ -2326,6 +2326,10 @@
         "message": "Режим ПАРАЛІЗУ. Вимикає модель, що розбилась, поки не буде перепідключено живлення",
         "description": "Help text to PARALYZE mode"
     },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "Використовуйте для перемикання PIDAUDIO",
+        "description": "Help text to PIDAUDIO mode"
+    },
     "auxiliaryHelpMode_PREARM": {
         "message": "При взведенні, очікувати активацію цього перемикача перед фактичним взведенням",
         "description": "Help text to PREARM mode"
@@ -2338,9 +2342,37 @@
         "message": "Виключити/включити команди стіками",
         "description": "Help text to STICK COMMANDS DISABLE mode"
     },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "Використовуйте для перемикання SERVO1",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "Використовуйте для перемикання SERVO2",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "Використовуйте для перемикання SERVO3",
+        "description": "Help text to SERVO3 mode"
+    },
     "auxiliaryHelpMode_TELEMETRY": {
         "message": "Увімкнути телеметрію за допомогою перемикача",
         "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Використовуйте для перемикання налаштованого USER1. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Використовуйте для перемикання налаштованого USER2. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Використовуйте для перемикання налаштованого USER3. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Використовуйте для перемикання налаштованого USER4. Керує довільним виводом через PINIO",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Вимкнути керування налаштуваннями відеопередавача через наекранне меню",
@@ -2641,11 +2673,16 @@
     "gpsAltitude": {
         "message": "Висота:"
     },
-    "gpsHeading": {
-        "message": "Курс:"
+    "gpsLatLon": {
+        "message": "Поточна широта/довгота:",
+        "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsSpeed": {
         "message": "Швидкість:"
+    },
+    "gpsSats": {
+        "message": "Кількість супутників:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Відс. до точки зльоту:"
@@ -4038,7 +4075,7 @@
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
-        "message": "Відповідь на стіки:<br /><i><small>Підсилення упередження</small></i>",
+        "message": "Відповідь на стіки:<br /><i><small>Коефіцієнт упередження</small></i>",
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
@@ -4062,7 +4099,7 @@
         "description": "D_min slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Демпфування тангажу: <br /><i><small>Тангаж:Крен D</small></i>",
+        "message": "Демпфування тангажа: <br /><i><small>Тангаж:Крен D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
@@ -4078,7 +4115,7 @@
         "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
-        "message": "Фільтри нижніх частот гіроскопа"
+        "message": "Фільтри низьких частот гіроскопа"
     },
     "pidTuningGyroLowpassType": {
         "message": "Тип фільтра нижніх частот гіроскопа 1"
@@ -4465,45 +4502,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS порятунок"
     },
-    "failsafeGpsRescueItemAngle": {
-        "message": "Кут"
-    },
-    "failsafeGpsRescueItemInitialAltitude": {
-        "message": "Початкова висота (метри)"
-    },
-    "failsafeGpsRescueItemDescentDistance": {
-        "message": "Відстань для спуску (метри)"
-    },
-    "failsafeGpsRescueItemMinDth": {
-        "message": "Мінімальна відстань до точки зльоту (метри)"
-    },
-    "failsafeGpsRescueItemMinDthHelp": {
-        "message": "Мінімальна відстань до точки зльоту, потрібна для активації функції GPS порятунок"
-    },
-    "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Швидкість на землі (м/с)"
-    },
-    "failsafeGpsRescueItemThrottleMin": {
-        "message": "Мінімум тяги"
-    },
-    "failsafeGpsRescueItemThrottleMax": {
-        "message": "Максимум тяги"
-    },
-    "failsafeGpsRescueItemThrottleHover": {
-        "message": "Тяга зависання"
-    },
-    "failsafeGpsRescueItemAscendRate": {
-        "message": "Швидкість підйому (м/с)"
-    },
-    "failsafeGpsRescueItemDescendRate": {
-        "message": "Швидкість зниження (м/с)"
-    },
-    "failsafeGpsRescueItemMinSats": {
-        "message": "Мінімум супутників"
-    },
-    "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Дозволити взведення без отримання координат GPS - <span class=\"message-negative\">УВАГА: функція \"GPS порятунок\" буде недоступна</span>"
-    },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Режим висоти"
     },
@@ -4515,6 +4513,30 @@
     },
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Поточна висота"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Швидкість підйому (м/с)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Відстань для спуску (метри)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Швидкість зниження (м/с)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Мінімум тяги"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Максимум тяги"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Мінімальна відстань до точки зльоту (метри)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Мінімальна відстань до точки зльоту, потрібна для активації функції GPS порятунок"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Мінімум супутників"
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Перевірки придатності"
@@ -4953,17 +4975,11 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Власне зображення:"
     },
-    "osdSetupCustomLogoInfoImageSize": {
-        "message": "Розмір повинен бути $t(logoWidthPx)×$t(logoHeightPx) пікселів"
-    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Має містити зелені, чорні та білі пікселі"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Натисніть <b>$t(osdSetupUploadFont.message)</b> щоб зберегти користувацький логотип"
-    },
-    "osdSetupCustomLogoImageSizeError": {
-        "message": "Неправильний розмір зображення: {{width}}×{{height}} (очікується $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Зображення містить неприпустимий піксель: rgb({{valueR}}, {{valueG}}, {{valueB}}) у координатах {{posX}}×{{posY}}"
