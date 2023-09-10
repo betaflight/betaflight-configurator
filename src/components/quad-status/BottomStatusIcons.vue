@@ -1,18 +1,18 @@
 <template>
   <div class="bottomStatusIcons">
     <div
-      i18n_title="mainHelpArmed"
-      class="armedicon cf_tip i18n_title-replaced"
+      class="armedicon cf_tip"
+      :title="$t('mainHelpArmed')"
       :class="{ active: setActiveArmed }"
     />
     <div
-      i18n_title="mainHelpFailsafe"
-      class="failsafeicon cf_tip i18n_title-replaced"
+      class="failsafeicon cf_tip"
+      :title="$t('mainHelpFailsafe')"
       :class="{ active: setFailsafeActive }"
     />
     <div
-      i18n_title="mainHelpLink"
-      class="linkicon cf_tip i18n_title-replaced"
+      class="linkicon cf_tip"
+      :title="$t('mainHelpLink')"
       :class="{ active: setActiveLink }"
     />
   </div>

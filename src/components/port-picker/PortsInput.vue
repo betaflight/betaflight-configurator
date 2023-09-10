@@ -6,9 +6,8 @@
     <div class="dropdown dropdown-dark">
       <select
         id="port"
-        i18n_title="firmwareFlasherManualPort"
-        class="dropdown-select i18n_title-replaced"
-        title="Port"
+        class="dropdown-select"
+        :title="$t('firmwareFlasherManualPort')"
       >
         <option value="virtual">
           {{ $t("portsSelectVirtual") }}
@@ -56,9 +55,8 @@
           <select
             id="baud"
             v-model="selectedBaudRate"
-            i18n_title="firmwareFlasherBaudRate"
-            class="dropdown-select i18n_title-replaced"
-            title="Baud Rate"
+            class="dropdown-select"
+            :title="$t('firmwareFlasherBaudRate')"
             :disabled="isAutoConnect"
           >
             <option

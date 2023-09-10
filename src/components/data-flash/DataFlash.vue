@@ -2,9 +2,9 @@
   <div class="data-flash">
     <div
       v-if="!supportDataflash"
-      class="noflash_global i18n-replaced"
+      class="noflash_global"
     >
-      No dataflash <br>chip found
+      {{ $t("sensorDataFlashNotFound") }}
     </div>
     <div
       v-if="supportDataflash"
@@ -16,8 +16,8 @@
           width: indicatorWidth,
         }"
       >
-        <span class="i18n-replaced">
-          Dataflash: free
+        <span>
+          {{ $t("sensorDataFlashFreeSpace") }}
           {{ freeSpace }}
         </span>
       </div>
