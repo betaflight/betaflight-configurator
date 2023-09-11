@@ -1,9 +1,8 @@
 import { webSerialDevices } from "./serial_devices";
 
-async function* streamAsyncIterable(stream) {
-    const reader = stream.getReader();
+async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
-        while (true) {
+        while (keepReadingFlag()) {
             const { done, value } = await reader.read();
             if (done) {
                 return;
@@ -34,8 +33,18 @@ class WebSerial extends EventTarget {
         this.port = null;
         this.reader = null;
         this.writer = null;
+        this.reading = false;
 
         this.connect = this.connect.bind(this);
+    }
+
+    handleReceiveBytes(info) {
+        this.bytesReceived += info.detail.byteLength;
+    }
+
+    handleDisconnect() {
+        this.removeEventListener('receive', this.handleReceiveBytes);
+        this.removeEventListener('disconnect', this.handleDisconnect);
     }
 
     async connect(options) {
@@ -48,6 +57,7 @@ class WebSerial extends EventTarget {
         const connectionInfo = this.port.getInfo();
         this.connectionInfo = connectionInfo;
         this.writer = this.port.writable.getWriter();
+        this.reader = this.port.readable.getReader();
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
@@ -58,9 +68,8 @@ class WebSerial extends EventTarget {
             this.failed = 0;
             this.openRequested = false;
 
-            this.addEventListener("receive", (info) => {
-                this.bytesReceived += info.detail.byteLength;
-            });
+            this.addEventListener("receive", this.handleReceiveBytes);
+            this.addEventListener('disconnect', this.handleDisconnect);
 
             console.log(
                 `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, Baud: ${options.baudRate}`,
@@ -73,7 +82,9 @@ class WebSerial extends EventTarget {
             // the stream async iterable interface:
             // https://web.dev/streams/#asynchronous-iteration
 
-            for await (let value of streamAsyncIterable(this.port.readable)) {
+
+            this.reading = true;
+            for await (let value of streamAsyncIterable(this.reader, () => this.reading)) {
                 this.dispatchEvent(
                     new CustomEvent("receive", { detail: value }),
                 );
@@ -108,32 +119,46 @@ class WebSerial extends EventTarget {
 
     async disconnect() {
         this.connected = false;
+        this.transmitting = false;
+        this.reading = false;
+        this.bytesReceived = 0;
+        this.bytesSent = 0;
 
-        if (this.port) {
-            this.transmitting = false;
+        const doCleanup = async () => {
+            if (this.reader) {
+                this.reader.releaseLock();
+                this.reader = null;
+            }
             if (this.writer) {
-                await this.writer.close();
+                await this.writer.releaseLock();
                 this.writer = null;
             }
-            try {
+            if (this.port) {
                 await this.port.close();
                 this.port = null;
-
-                console.log(
-                    `${this.logHead}Connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
-                );
-
-                this.connectionId = false;
-                this.bitrate = 0;
-                this.dispatchEvent(new CustomEvent("disconnect"));
-            } catch (error) {
-                console.error(error);
-                console.error(
-                    `${this.logHead}Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
-                );
             }
-        } else {
-            this.openCanceled = true;
+        };
+
+        try {
+            await doCleanup();
+
+            console.log(
+                `${this.logHead}Connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
+            );
+
+            this.connectionId = false;
+            this.bitrate = 0;
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+        } catch (error) {
+            console.error(error);
+            console.error(
+                `${this.logHead}Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
+            );
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+        } finally {
+            if (this.openCanceled) {
+                this.openCanceled = false;
+            }
         }
     }
 
