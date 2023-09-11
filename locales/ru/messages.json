@@ -2054,9 +2054,6 @@
     "gpsSignalSatId": {
         "message": "ID спут."
     },
-    "gpsSignalStatusQly": {
-        "message": "Статус / Качество"
-    },
     "gnssQualityNoSignal": {
         "message": "нет сигнала"
     },
@@ -2074,9 +2071,6 @@
     },
     "gnssUsedUnused": {
         "message": "не используется"
-    },
-    "gnssUsedUsed": {
-        "message": "используется"
     },
     "gnssHealthyUnknown": {
         "message": "неизвестно"

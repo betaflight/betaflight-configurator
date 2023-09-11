@@ -2707,9 +2707,6 @@
     "gpsSignalSatId": {
         "message": "ID Sat"
     },
-    "gpsSignalStatusQly": {
-        "message": "Estado / Calidad"
-    },
     "gnssQualityNoSignal": {
         "message": "sin señal"
     },
@@ -2730,9 +2727,6 @@
     },
     "gnssUsedUnused": {
         "message": "no usado"
-    },
-    "gnssUsedUsed": {
-        "message": "usado"
     },
     "gnssHealthyUnknown": {
         "message": "desconocido"
@@ -3723,7 +3717,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Arcoiris",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Superposición"

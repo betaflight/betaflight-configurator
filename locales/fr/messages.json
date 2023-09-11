@@ -2343,9 +2343,6 @@
     "gpsSignalSatId": {
         "message": "Sat ID"
     },
-    "gpsSignalStatusQly": {
-        "message": "Statut / Qualité"
-    },
     "gnssQualityNoSignal": {
         "message": "aucun signal"
     },
@@ -2366,9 +2363,6 @@
     },
     "gnssUsedUnused": {
         "message": "inutilisé"
-    },
-    "gnssUsedUsed": {
-        "message": "utilisé"
     },
     "gnssHealthyUnknown": {
         "message": "inconnu"

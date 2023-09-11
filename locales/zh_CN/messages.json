@@ -2249,9 +2249,6 @@
     "gpsSignalSatId": {
         "message": "卫星编号"
     },
-    "gpsSignalStatusQly": {
-        "message": "状态/质量"
-    },
     "gnssQualityNoSignal": {
         "message": "无信号"
     },
@@ -2272,9 +2269,6 @@
     },
     "gnssUsedUnused": {
         "message": "未使用"
-    },
-    "gnssUsedUsed": {
-        "message": "已使用"
     },
     "gnssHealthyUnknown": {
         "message": "未知"
