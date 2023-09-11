@@ -2610,9 +2610,6 @@
     "gpsSignalSatId": {
         "message": "Identificación satélite"
     },
-    "gpsSignalStatusQly": {
-        "message": "Estado / Calidade"
-    },
     "gnssQualityNoSignal": {
         "message": "sen sinal"
     },
@@ -2633,9 +2630,6 @@
     },
     "gnssUsedUnused": {
         "message": "sen uso"
-    },
-    "gnssUsedUsed": {
-        "message": "en uso"
     },
     "gnssHealthyUnknown": {
         "message": "descoñecido"
@@ -3626,7 +3620,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Arco da vella",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Superposición"

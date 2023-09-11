@@ -2058,7 +2058,7 @@
         "message": "<strong>Pid Tuning Slider tilstand</strong><br><br>Pidtuning slider mode kan være:<br><br>&bull; FRA - ingen skydere, indtast værdier manuelt<br>&bull; RP - skydere kontrol Roll og Pitch kun, indtast sideror værdier manuelt<br>&bull; RPY - skydere styrer alle PID værdier<br><br><span class=\"message-negative\"><b>Advarsel:</b></span>At gå fra RP til RPY tilstand vil overskrive sideror indstillinger med firmware indstillinger."
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configurator er i Eksperttilstand.<br> &#8226; <b>Brug den seneste firmware i din sender / transmitter  !</b>&nbsp<strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiver altid ADC filter</a></strong> i senderen, hvis du bruger fx OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\"https://betaflight.com/docs/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentationen</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Kontroller altid, at din konfiguration af fejlsikring fungerer korrekt !</a></strong></b> Indstillingerne på fanen Fejlsikring kræver Configurator er i Eksperttilstand.<br> &#8226; <b>Brug den seneste firmware i din sender / transmitter  !</b>&nbsp<strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiver altid ADC filter</a></strong> i senderen, hvis du bruger fx OpenTx eller EdgeTx.<br>Grundlæggende opsætning: Indstil indstillingerne 'Modtager' korrekt. Vælg det korrekte 'Kanalkort' for din radio. Kontroller at krængror, højderor, gas, sideror og andre søjlegrafer bevæger sig korrekt. Justér kanalens endepunkt eller intervalværdier i senderen til ~1000 til ~2000, og sæt midtpunktet til 1500. <br>For mere information, læs <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentationen</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas MID"
@@ -2661,10 +2661,10 @@
         "message": "3D-fiksering:"
     },
     "gpsFixTrue": {
-        "message": "Sand"
+        "message": "Ja"
     },
     "gpsFixFalse": {
-        "message": "Falsk"
+        "message": "Nej"
     },
     "gpsPositionUnit": {
         "message": "grad",
@@ -2676,6 +2676,10 @@
     "gpsLatLon": {
         "message": "Nuværende breddegrad / længdegrad:",
         "description": "Show GPS position - Latitude / Longitude"
+    },
+    "gpsHeading": {
+        "message": "Kompas / GPS kurs:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Hastighed:"
@@ -2704,7 +2708,7 @@
         "message": "Sat-ID"
     },
     "gpsSignalStatusQly": {
-        "message": "Status&nbsp;&nbsp;&nbsp;&nbsp;| Anvendelse&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |  Kvalitet"
+        "message": "Status &nbsp;&nbsp;&nbsp; | Kvalitet"
     },
     "gnssQualityNoSignal": {
         "message": "ingen signal"
@@ -2728,7 +2732,7 @@
         "message": "anvendes ikke"
     },
     "gnssUsedUsed": {
-        "message": "anvendes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        "message": "ANVENDES"
     },
     "gnssHealthyUnknown": {
         "message": "ukendt"
@@ -3562,6 +3566,29 @@
     "ledStripVtxOverlay": {
         "message": "VTX (bruger vtx-frekvens til at bestemme farve)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Lysstyrke",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Maksimal lysstyrke som procent af lysdioderne."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Hue-forskel mellem hver lysdiode.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Frekvens",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Frekvens af farveændring, forstået som effektens hastighed.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
+    },
     "ledStripFunctionSection": {
         "message": "LED funktioner"
     },
@@ -3683,7 +3710,7 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeGPSNoLock": {
-        "message": "GPS: ingen lås",
+        "message": "GPS: søger",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeGPSLocked": {
@@ -3719,7 +3746,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Regnbue",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlag"
@@ -4440,7 +4467,7 @@
         "message": "Modtager fejlsikring"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Fejlsikring har to faser. <strong><br>\nFase 1</strong> begynder, når en flykanal har en ugyldig pulslængde, modtageren rapporterer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter kanalreserveindstillingerne for <span class=\"message- negativ\">alle kanaler</span> anvendes, og der ventes et kort øjeblik for at muliggøre gendannelse. <strong><br>\nFase 2</strong> begynder, når fejltilstanden, mens fartøjet er <span class=\"message-negative\">aktiveret</span>, tager længere tid end den opsatte beskyttelsestid, og her forbliver alle kanaler på den anvendte kanalreserveindstilling, medmindre den tilsidesættes af den valgte procedure.<br /><strong>Bemærk:</strong> Inden Fase 1 begynder, anvendes kanalreserveindstillingerne også på individuelle AUX-kanaler, som har ugyldige impulser."
+        "message": "Fejlsikring har to trin.<br>\n<strong>Trin 1</strong> begynder, når en flykanal har en ugyldig pulslængde, modtageren aktiverer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter \"Trin 1 - Fejlsikring for kanaler\" for tages ibrug for <span class=\"message-negative\">alle kanaler</span>, der ventes et kort øjeblik - styret af \"Periode i trin1 fejlsikring\" for at muliggøre en gendannelse.<br>\n<strong>Trin 2</strong> begynder, når fejltilstanden og fartøjet er <span class=\"message-negative\">aktiveret</span>, tager længere tid end den indstillede til til gendannelse. Kanalerne bliver på indstillingerne i \"Trin 1 - Fejlsikring for kanaler\", medmindre de tilsidesættes af den valgte procedure for Trin 2.<br /><strong>Bemærk:</strong> Inden Trin1 begynder, anvendes indstillingerne i \"Trin 1 - Fejlsikring for kanaler\" også på AUX-kanaler, der har ugyldige impulslængder."
     },
     "failsafePulsrangeTitle": {
         "message": "Indstilling af gyldigt signal interval"
@@ -4455,28 +4482,28 @@
         "message": "Største signal"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Fejlsikring for kanaler"
+        "message": "Trin 1 - Fejlsikring for kanaler"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Disse indstillinger anvendes ved fejlsikring for individuelle kanaler eller på alle kanaler, når disse overgår til fejlsikring Trin 1. <strong>Bemærk:</strong> Værdierne gemmes i trin på 25 mikrosek, så små ændringer udjævnes"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto</strong> betyder krængror, højderor og sideror til centrum og gas lav. <br><strong>Hold</strong> betyder at den sidste gode modtagne værdi fastholdes"
+        "message": "<strong>Auto</strong> betyder krængror, højderor og sideror sat til centrum og gas sat lav.<br><strong>Behold</strong> betyder at opretholde den sidste gode værdi som er modtaget.<br><strong>Sæt</strong> betyder, at værdien angivet her vil blive brugt."
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>Hold</strong> betyder at opretholde den sidste gode værdi modtaget. <br><strong>Sæt</strong> betyder, at værdien angivet her vil blive brugt"
+        "message": "<strong>Behold</strong> betyder at opretholde den sidste gode værdi som er modtaget.<br><strong>Sæt</strong> betyder, at værdien angivet her vil blive brugt."
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Trin 2 - Indstillinger"
     },
     "failsafeDelayItem": {
-        "message": "Pause til at kunne nå trin 2-aktivering efter tabt signal [sekunder]"
+        "message": "Fortryd pause efter tabt signal, før Trin 2 aktiveres [sekunder]"
     },
     "failsafeDelayHelp": {
         "message": "Trin 1-ventetid for gendannelse"
     },
     "failsafeThrottleLowItem": {
-        "message": "Fejlsikring: lav gas forsinkelse [sekunder]"
+        "message": "Periode før afkobling ved lav gas [sekunder]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Afkobler blot fartøjet i stedet for at udføre den valgte fejlsikringsprocedure, når gassen har været lav i dette tidsinterval"
@@ -4503,7 +4530,7 @@
         "message": "Flyv hjem med GPS (Return To Home)"
     },
     "failsafeGpsRescueItemAltitudeMode": {
-        "message": "Højde tilstand"
+        "message": "Højde indstilling"
     },
     "failsafeGpsRescueItemAltitudeModeMaxAlt": {
         "message": "Maksimal højde"
@@ -4514,8 +4541,26 @@
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Aktuel højde"
     },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Indledende stigning (meter)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "Afstanden fartøjet vil stige op over sin aktuelle højde, når en fejlsikring er startet og højde indstilling er sat til Aktuel eller Maximal højde."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Højde ved retur (meter) - <strong>gælder kun i Fast højde indstilling</strong>"
+    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Stignings hastighed (meter/sekund)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Jordhastighed ved retur (meter/sekund)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Maximal nedstignings vinkel"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Højere maksimal nedstignings vinkel vil føre til mere aggressive returnering ved og højere hastighed. Kan være nyttig for tungere, ustabile fartøjer eller ved stærk vind. ADVARSEL: Gas maximum skal normalt øges, hvis den maksimale nedstignings vinkel øges! Ellers kan fartøjet miste højde og falde ned!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Nedstigningsdistance (meter)"
@@ -4523,11 +4568,27 @@
     "failsafeGpsRescueItemDescendRate": {
         "message": "Nedstignings hastighed (meter/sekund)"
     },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "Den indledende nedstigningshastighed er 3 gange denne værdi, faldende til den indstillede værdi ved landingshøjden."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Hvis fejlsikring starter for tæt på hjem position (inden for Mindste afstand til hjem), vil fartøjet fastholde sin kurs og flyve væk indtil afstand bliver Mindste afstand til hjem, og derefter starte normal fejlsikrings adfærd",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Gas minimum"
     },
     "failsafeGpsRescueItemThrottleMax": {
         "message": "Gas maksimum"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Bør øges for tungere eller ustabile fartøjer, hvis en tilbagevenden mod kraftig vind er sandsynlig, eller hvis den maksimale nedstignings vinkel øges."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Gas indstilling for svævning - <span class=\"message-negative\">VIGTIGT: Indstil denne værdi præcist</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "For at bestemme rigtige værdi, indstil Fejlsikring til Trin 2, indstil trin 2 Fejlsikring til Land straks, og juster gasværdi anvendt under landing indtil fartøj svæver eller falder langsomt.<br>Indstil derefter Gas indstilling for svævning, og Trin 1 - Fejlsikring for kanaler - Gas[T] , Aktion \"Sæt\", til denne værdi."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Mindste afstand til hjem (meter)"
@@ -4537,6 +4598,12 @@
     },
     "failsafeGpsRescueItemMinSats": {
         "message": "Mindste antal satellitter"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Til test !. Tillad aktivering af fartøj uden låst GPS - <span class=\"message-negative\">ADVARSEL: GPS fejlsikring vil ikke virke med denne indstilling slået til</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Anbefales ikke.<br>Tillader aktivering af fartøj uden GPS er indstillet, men fartøj vil deaktiveres og falde ned hvis radio signal mistes.<br>Hvis testen er med en kontakt, er der en kort fortryd pause før deaktiveringen sker."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Overvågning af GPS fejlsikring "
@@ -4942,7 +5009,7 @@
         "message": "Flyvestatistikker"
     },
     "osdSetupVtxTitle": {
-        "message": "Vtx indstillinger"
+        "message": "VTX indstillinger"
     },
     "osdSetupCraftNameTitle": {
         "message": "Navn: Fartøj"
@@ -4975,11 +5042,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Tilpasset billede:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Størrelse skal være $t(logoWidthPx)×$t(logoHeightPx) pixel"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Skal indeholde grønne, sorte og hvide pixels"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Klik på <b>$t(osdSetupUploadFont.message)</b> for at bevare tilpasset logo"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Ugyldig billedstørrelse: {{width}}×{{height}} (forventet $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Billedet indeholder en ugyldig pixel: rgb ({{valueR}}, {{valueG}}, {{valueB}}) i koordinaterne {{posX}}×{{posY}}"
@@ -5143,77 +5216,77 @@
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysGoggleVoltage": {
-        "message": "Videobrille spænding ændret af videobrille"
+        "message": "Videobrille spænding kontrolleret fra videobrille"
     },
     "osdTextElementSysVtxVoltage": {
         "message": "VTX spænding",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysVtxVoltage": {
-        "message": "VTX spænding ændret af videobrille"
+        "message": "VTX spænding kontrolleret fra videobrille"
     },
     "osdTextElementSysBitrate": {
         "message": "VTX bit hastighed",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysBitrate": {
-        "message": "Video bit hastighed ændret af videobrille"
+        "message": "Video bit hastighed kontrolleret fra videobrille"
     },
     "osdTextElementSysDelay": {
         "message": "VTX forsinkelse",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysDelay": {
-        "message": "Video forsinkelse ændret af videobrille"
+        "message": "Video forsinkelse kontrolleret fra videobrille"
     },
     "osdTextElementSysDistance": {
         "message": "VTX afstand",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysDistance": {
-        "message": "Video transmission afstand ændret af videobrille"
+        "message": "Video transmission afstand kontrolleret fra videobrille"
     },
     "osdTextElementSysLQ": {
         "message": "Videobrille link kvalitet",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysLQ": {
-        "message": "Video link kvalitet ændret af videobrille"
+        "message": "Video link kvalitet kontrolleret fra videobrille"
     },
     "osdTextElementSysGoggleDVR": {
         "message": "Videobrille DVR status",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysGoggleDVR": {
-        "message": "Videobrille DVR status ændret af videobrille"
+        "message": "Videobrille DVR status kontrolleret fra videobrille"
     },
     "osdTextElementSysVtxDVR": {
         "message": "VTX DVR status",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysVtxDVR": {
-        "message": "VTX DVR status ændret af videobrille"
+        "message": "VTX DVR status kontrolleret fra videobrille"
     },
     "osdTextElementSysWarnings": {
         "message": "Videobrille system advarsel",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysWarnings": {
-        "message": "Video system advarsler ændret af videobrille"
+        "message": "Video system advarsler kontrolleret fra videobrille"
     },
     "osdTextElementSysVtxTemp": {
         "message": "VTX temperatur",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysVtxTemp": {
-        "message": "VTX temperatur ændret af videobrille"
+        "message": "VTX temperatur kontrolleret fra videobrille"
     },
     "osdTextElementSysFanSpeed": {
         "message": "Videobrille ventilator hastighed",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysFanSpeed": {
-        "message": "Videobrille blæser hastighed ændret af videobrille"
+        "message": "Videobrille blæser hastighed kontrolleret fra videobrille"
     },
     "osdTextElementLapTimeCurrent": {
         "message": "GPS omgangstid aktuelt",
@@ -6143,7 +6216,7 @@
         "message": "Gemt"
     },
     "vtxHelp": {
-        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">denne</a> side;<br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den;<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs den;<br>4. Kontroller, at indstillingerne er korrekte;<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\" href=\\\"https://github.com/betaflight/betaflight-tx-lua-scripts/\\\">her</a>.)",
+        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">denne</a> side;<br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den;<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs den;<br>4. Kontroller, at indstillingerne er korrekte;<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">her</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {

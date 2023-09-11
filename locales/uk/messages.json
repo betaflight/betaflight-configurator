@@ -2703,9 +2703,6 @@
     "gpsSignalSatId": {
         "message": "ID супутника"
     },
-    "gpsSignalStatusQly": {
-        "message": "Стан / Якість"
-    },
     "gnssQualityNoSignal": {
         "message": "немає сигналу"
     },
@@ -2726,9 +2723,6 @@
     },
     "gnssUsedUnused": {
         "message": "не використовується"
-    },
-    "gnssUsedUsed": {
-        "message": "використовується"
     },
     "gnssHealthyUnknown": {
         "message": "невідомо"
@@ -3719,7 +3713,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Веселка",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Накладання"

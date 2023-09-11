@@ -2708,7 +2708,7 @@
         "message": "ID Sat"
     },
     "gpsSignalStatusQly": {
-        "message": "Stato / Qualità"
+        "message": "Stato &nbsp;&nbsp;&nbsp; | &nbsp;Qualità"
     },
     "gnssQualityNoSignal": {
         "message": "nessun segnale"
@@ -2732,7 +2732,7 @@
         "message": "non usato"
     },
     "gnssUsedUsed": {
-        "message": "usato"
+        "message": "USATO&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "sconosciuto"
@@ -3566,6 +3566,29 @@
     "ledStripVtxOverlay": {
         "message": "VTX (usa la frequenza della VTX per assegnare il colore)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Luminosità",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Massima percentuale di luminosità dei LED."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Differenza di tonalità tra ogni LED.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Frequenza",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Frequenza del cambio di colore, in breve la velocità dell'effetto.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
+    },
     "ledStripFunctionSection": {
         "message": "Funzioni LED"
     },
@@ -3723,7 +3746,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Arcobaleno",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Sovrapposizione"

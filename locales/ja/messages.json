@@ -2708,7 +2708,7 @@
         "message": "衛星ID"
     },
     "gpsSignalStatusQly": {
-        "message": "ステータス / 品質"
+        "message": "ステータス &nbsp;&nbsp;&nbsp; | &nbsp;品質"
     },
     "gnssQualityNoSignal": {
         "message": "圏外"
@@ -2732,7 +2732,7 @@
         "message": "未使用"
     },
     "gnssUsedUsed": {
-        "message": "使用中"
+        "message": "使用中&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "不明"
@@ -3566,6 +3566,29 @@
     "ledStripVtxOverlay": {
         "message": "VTX (周波数毎にカラー割り当て)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "明るさ",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "LED最大輝度 (明るさ) をパーセント表示で示します。"
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "色相差",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "レインボーエフェクトの各LEDの色相差 (範囲) を示します。",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "変色速度",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "変色頻度、つまりレインボーエフェクトの速度を示します。",
+        "description": "Hint on LED Strip tab for rainbow frequency"
+    },
     "ledStripFunctionSection": {
         "message": "LED機能"
     },
@@ -3723,7 +3746,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "レインボー",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "オーバーレイ"

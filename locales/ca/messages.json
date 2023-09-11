@@ -2716,7 +2716,7 @@
         "message": "Sat ID"
     },
     "gpsSignalStatusQly": {
-        "message": "Estat / Qualitat"
+        "message": "Estat &nbsp;&nbsp;&nbsp; | &nbsp;Qualitat"
     },
     "gnssQualityNoSignal": {
         "message": "sense senyal"
@@ -2740,7 +2740,7 @@
         "message": "no utilitzat"
     },
     "gnssUsedUsed": {
-        "message": "utilitzat"
+        "message": "USAT&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "desconegut"
@@ -3574,6 +3574,29 @@
     "ledStripVtxOverlay": {
         "message": "VTX (fa servir la frequència de l'VTX per a assignar el color)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Lluminositat",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Percentatge màxim de brillantor dels LED."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Diferència de to entre cada LED.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Freqüència",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Freqüència del canvi de color, en altres termes la velocitat de l'efecte.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
+    },
     "ledStripFunctionSection": {
         "message": "Funcions LED"
     },
@@ -3731,7 +3754,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Arc de Sant Martí",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Overlay"

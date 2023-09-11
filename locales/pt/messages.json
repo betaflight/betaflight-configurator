@@ -2677,6 +2677,10 @@
         "message": "Latitude /Longitude atual:",
         "description": "Show GPS position - Latitude / Longitude"
     },
+    "gpsHeading": {
+        "message": "Direção Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
+    },
     "gpsSpeed": {
         "message": "Velocidade:"
     },
@@ -2703,9 +2707,6 @@
     "gpsSignalSatId": {
         "message": "ID Satélite"
     },
-    "gpsSignalStatusQly": {
-        "message": "Estado / Qualidade"
-    },
     "gnssQualityNoSignal": {
         "message": "sem sinal"
     },
@@ -2726,9 +2727,6 @@
     },
     "gnssUsedUnused": {
         "message": "não usado"
-    },
-    "gnssUsedUsed": {
-        "message": "usado"
     },
     "gnssHealthyUnknown": {
         "message": "desconhecido"
@@ -3562,6 +3560,29 @@
     "ledStripVtxOverlay": {
         "message": "VTX (usa a frequência do VTX para controlar a cor)"
     },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Luminosidade",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Percentagem máxima de luminosidade dos LEDs."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Diferença do Tonalidade entre cada LEDs.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Frequência",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Frequência da alteração de cores, ou de outra forma a velocidade do efeito.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
+    },
     "ledStripFunctionSection": {
         "message": "Funções do LED"
     },
@@ -3719,7 +3740,7 @@
     },
     "ledStripRainbowOverlay": {
         "message": "Arco-íris",
-        "description": "Rainbow effect switch label on LED Strip tab"
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Sobreposição"
@@ -4514,8 +4535,26 @@
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Altitude Atual"
     },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Ascenção inicial (metros)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "A distância que a aeronave irá subir, acima da altitude atual, quando um resgate for iniciado e o modo de altitude for definido para Altitude CORRENTE; também adicionado quando no modo de Altitude MÁX."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Altitude de retorno (metros) - <strong>aplica-se apenas no modo de Altitude Fixa</strong>"
+    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Ritmo de Subida (metros / segundo)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Velocidade de retorno no solo (metros/segundo)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Ângulo máximo do pitch"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Ângulos máximos maiores levam a retornos mais agressivos e velocidades mais altas para a frente. Pode ser útil para aeronaves mais pesadas, com alta resistência ou de baixa autoridade, ou para utilização em ventos mais fortes. AVISO: O acelerador de resgate normalmente precisa de ser aumentado se o ângulo máximo for aumentado! Caso contrário, a aeronave pode perder altitude e cair!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distância de descida (metros)"
@@ -4523,11 +4562,27 @@
     "failsafeGpsRescueItemDescendRate": {
         "message": "Ritmo de Descida (metros/segundo)"
     },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "A taxa de descida inicial está definida para 3 vezes este valor, diminuindo para o valor definido na altitude de aterragem."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Se o resgate começar perto demais de casa (dentro desta distância mínima), a aeronave irá voar, na sua direção atual, até pelo menos esta distância de casa, e depois iniciar um comportamento normal de resgate",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Acelerador mínimo"
     },
     "failsafeGpsRescueItemThrottleMax": {
         "message": "Acelerador máximo"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Deve ser aumentada para aeronaves pesadas, de grande resistência ou de baixa autoridade, se um retorno contra ventos fortes for provável, ou se o ângulo máximo de pitch for aumentado."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Pairar do acelerador - <span class=\"message-negative\">IMPORTANTE: defina este valor com precisão</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Para encontrar o valor correto, configure a ação do switch de Failsafe para Fase 2, defina o procedimento da Fase 2 como Land e ajuste o valor de Acelerador usado durante a aterragem até que a aeronave paire ou desça lentamente. De seguida, defina o Pairar do Acelerador de Resgate por GPS, e o valor da Fase 1 do valor do Fallback do Canal para este valor."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Distância mínima para casa (metros)"
@@ -4537,6 +4592,12 @@
     },
     "failsafeGpsRescueItemMinSats": {
         "message": "Mínimo de satélites"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Permitir armar sem sinal fixo de GPS - <span class=\"message-negative\">ATENÇÃO: Não fixo = disarmar em caso de failsafe!</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Não recomendado. Permite armar sem a definição de um ponto de Casa, mas a aeronave desarmará e cairá com um verdadeiro failsafe de perda de Rx. Se testado com um switch, há um curto período de Não Fazer Nada antes do desarmar."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Verificações de sanidade"
@@ -4975,11 +5036,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Imagem personalizada:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "O tamanho deve ser $t(logoWidthPx)×$t(logoHeightPx) pixels"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Deve conter píxeis verdes, pretos e brancos"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Clique <b>$t(osdSetupUploadFont.message)</b> para manter o logo personalizado"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Tamanho de imagem inválido: {{width}}×{{height}} (esperado $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "A imagem contém um píxel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) nas coordenadas {{posX}} x{{posY}}"
