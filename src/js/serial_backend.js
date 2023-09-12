@@ -31,8 +31,22 @@ const serial = import.meta.env ? serialWeb : serialNWJS;
 
 let mspHelper;
 let connectionTimestamp;
-let clicks = false;
 let liveDataRefreshTimerId = false;
+
+let isConnected = false;
+
+const toggleStatus = function () {
+    isConnected = !isConnected;
+};
+
+function connectHandler(event) {
+    onOpen(event.detail);
+    toggleStatus();
+}
+
+function disconnectHandler(event) {
+    onClosed(event.detail);
+}
 
 export function initializeSerialBackend() {
     GUI.updateManualPortVisibility = function() {
@@ -82,10 +96,6 @@ export function initializeSerialBackend() {
         if (!GUI.connect_lock) {
             // GUI control overrides the user control
 
-            const toggleStatus = function () {
-                clicks = !clicks;
-            };
-
             GUI.configuration_loaded = false;
 
             const selected_baud = parseInt($('div#port-picker #baud').val());
@@ -94,7 +104,7 @@ export function initializeSerialBackend() {
             if (selectedPort.data().isDFU) {
                 $('select#baud').hide();
             } else if (portName !== '0') {
-                if (!clicks) {
+                if (!isConnected) {
                     console.log(`Connecting to: ${portName}`);
                     GUI.connecting_to = portName;
 
@@ -109,10 +119,13 @@ export function initializeSerialBackend() {
 
                         serial.connect('virtual', {}, onOpenVirtual);
                     } else if (import.meta.env) {
-                        serial.addEventListener('connect', (event) => {
-                            onOpen(event.detail);
-                            toggleStatus();
-                        });
+                        // Explicitly disconnect the event listeners before attaching the new ones.
+                        serial.removeEventListener('connect', connectHandler);
+                        serial.addEventListener('connect', connectHandler);
+
+                        serial.removeEventListener('disconnect', disconnectHandler);
+                        serial.addEventListener('disconnect', disconnectHandler);
+
                         serial.connect({ baudRate });
                     } else {
                         serial.connect(
@@ -276,7 +289,15 @@ function abortConnection() {
     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
 
     // reset data
-    clicks = false;
+    isConnected = false;
+}
+
+/**
+ * purpose of this is to bridge the old and new api
+ * when serial events are handled.
+ */
+function read_serial_adapter(event) {
+    read_serial(event.detail.buffer);
 }
 
 function onOpen(openInfo) {
@@ -307,7 +328,8 @@ function onOpen(openInfo) {
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
         if(import.meta.env) {
-            serial.addEventListener('receive', (e) => read_serial(e.detail.buffer));
+            serial.removeEventListener('receive', read_serial_adapter);
+            serial.addEventListener('receive', read_serial_adapter);
         } else {
             serial.onReceive.addListener(read_serial);
         }
