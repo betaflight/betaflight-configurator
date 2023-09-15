@@ -1,0 +1,12 @@
+name: App Weekly Release
+
+on:
+  schedule:
+    - cron: '0 1 * * 0'
+
+jobs:
+  ci:
+    name: App Build
+    uses: ./.github/workflows/app-build.yml
+    with:
+      path: 'weekly'

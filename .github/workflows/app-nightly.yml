@@ -1,0 +1,12 @@
+name: App Nightly Release
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  ci:
+    name: App Build
+    uses: ./.github/workflows/app-build.yml
+    with:
+      path: 'nightly'

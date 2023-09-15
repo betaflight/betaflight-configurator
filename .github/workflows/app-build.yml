@@ -1,0 +1,74 @@
+# Builds Betaflight Configurator for Web Deployment.
+
+name: App Build (Web)
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: 'Specifies the path to use in the output of the build'
+        required: false
+        type: string
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules/
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Run unit tests
+        run: yarn test
+
+  build:
+    name: Build (Web App)
+    needs: test
+    runs-on:  ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Vite
+        uses: actions/cache@v3
+        with:
+          path: cache/
+          key: vite-${{ inputs.path }}-${{ hashFiles('vite.config.js') }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules/
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - run: yarn install --immutable --immutable-cache --check-cache
+
+      - run: yarn build
+
+      - name: Push to AWS
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_DIR: 'dist'
+          DEST_DIR: ${{ inputs.path }}
