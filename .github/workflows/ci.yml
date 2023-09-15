@@ -1,10 +1,10 @@
 # Builds Betaflight Configurator on Windows, Android, Linux and macOS platforms.
 #
-# After building, artifacts are released to a seperate repository.
+# After building, artifacts are released to a separate repository.
 
 name: CI
 
-on: 
+on:
   workflow_call:
     inputs:
       debug_build:
