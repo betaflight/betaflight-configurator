@@ -498,7 +498,6 @@
     "stm32UnprotectInitFailed": {
         "message": "Failed to initiate unprotect routine"
     },
-
     "noConfigurationReceived": {
         "message": "No configuration received within <span class=\"message-negative\">10 seconds</span>, communication <span class=\"message-negative\">failed</span>"
     },
@@ -532,7 +531,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>.<br>If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the craft will be disabled until the accelerometer has been calibrated.<br>If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
     },
-
     "infoVersionOs": {
         "message" : "OS: <strong>{{operatingSystem}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -583,7 +581,6 @@
     "tabSwitchWaitForOperation": {
         "message": "You <span class=\"message-negative\">can't</span> do this right now, please wait for current operation to finish ..."
     },
-
     "tabSwitchUpgradeRequired": {
         "message": "You need to <strong>upgrade</strong> your firmware to the latest version of Betaflight before you can use the $1 tab."
     },
@@ -629,14 +626,12 @@
     "versionLabelConfigurator": {
         "message": "Configurator"
     },
-
     "notifications_app_just_updated_to_version": {
         "message": "Application just updated to version: $1"
     },
     "notifications_click_here_to_start_app": {
         "message": "Click here to start the application"
     },
-
     "statusbar_port_utilization": {
         "message": "Port utilization:",
         "description": "Port utilization text shown in the status bar"
@@ -665,7 +660,6 @@
         "message": "CPU Load:",
         "description": "CPU load text shown in the status bar"
     },
-
     "dfu_connect_message": {
         "message": "Please use the Firmware Flasher to access DFU devices"
     },
@@ -681,15 +675,12 @@
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Error</span>: Supplied image is larger then flash available on the chip! Image: $1 KiB, limit = $2 KiB"
     },
-
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
-
     "defaultWelcomeIntro": {
         "message": "Welcome to <strong>Betaflight - Configurator</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
     },
-
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
@@ -4580,7 +4571,7 @@
         "message": "Maximum length"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Channel Fallback Settings"
+        "message": "Stage 1 - Channel Fallback Settings"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "These settings are applied to invalid individual AUX channels or to all channels when entering stage 1. <strong>Note:</strong> values are saved in steps of 25usec, so small changes disappear"
@@ -4591,14 +4582,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold</strong> means maintain the last good value received. <strong>Set</strong> means the value given here will be used"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Hold",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Set",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Stage 2 - Settings"
     },
     "failsafeDelayItem": {
-        "message": "Guard time for stage 2 activation after signal lost [seconds]"
+        "message": "Period of time in Stage 1 failsafe after signal loss [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "Time for stage 1 to wait for recovery"
+        "message": "Set the period of time in Stage 1 failsafe after signal loss. If the delay time expires without return of signal, Stage 2 failsafe will start"
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe Throttle Low Delay [seconds]"
@@ -4627,7 +4630,6 @@
     "failsafeProcedureItemSelect4": {
         "message": "GPS Rescue"
     },
-
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Altitude mode"
     },
@@ -4716,7 +4718,6 @@
     "failsafeGpsRescueItemSanityChecksFSOnly": {
         "message": "Failsafe only"
     },
-
     "failsafeKillSwitchItem": {
         "message": "Failsafe Kill Switch (setup Failsafe in Modes Tab)"
     },
@@ -4903,8 +4904,6 @@
     "powerVoltageId85": {
         "message": "Cell 6"
     },
-
-
     "powerVoltageScale": {
         "message": "Scale"
     },
@@ -4914,7 +4913,6 @@
     "powerVoltageMultiplier": {
         "message": "Multiplier Value"
     },
-
     "powerAmperageHead": {
         "message": "Amperage Meter"
     },
@@ -4975,7 +4973,6 @@
     "powerMahValue": {
         "message": "$1 mAh"
     },
-
     "powerAmperageScale": {
         "message": "Scale [1/10th mV/A]"
     },
@@ -4988,7 +4985,6 @@
     "powerAmperageCalibratedScale": {
         "message": "Calibrated Amperage Scale:"
     },
-
     "powerBatteryHead": {
         "message": "Battery"
     },
@@ -5190,14 +5186,12 @@
     "osdSetupCameraConnected": {
         "message": "Camera Connected"
     },
-
     "osdSetupResetText": {
         "message": "Reset OSD to default"
     },
     "osdSetupButtonReset": {
         "message": "Reset Settings"
     },
-
     "osdTextElementMainBattVoltage": {
         "message": "Battery voltage",
         "description": "One of the elements of the OSD"
@@ -5877,7 +5871,6 @@
     "osdDescElementUnknown" : {
         "message": "Unknown element (details to be added in a future release)"
     },
-
     "osdTextStatMaxSpeed": {
         "message": "Speed maximum",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -6095,7 +6088,6 @@
     "osdDescStatUnknown": {
         "message": "Unknown statistic (details to be added in a future release)"
     },
-
     "osdDescribeFontVersion1": {
         "message": "Font version: 1 (Betaflight 4.0 or older)"
     },
@@ -6105,7 +6097,6 @@
     "osdDescribeFontVersionCUSTOM": {
         "message": "Font version: user provided"
     },
-
     "osdTimerSource": {
       "message": "Source:"
     },
@@ -6164,7 +6155,6 @@
       "message": "Altitude",
       "description": "Text of the altitude alarm"
     },
-
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6328,7 +6318,6 @@
     "osdButtonSaved": {
         "message": "Saved"
     },
-
     "vtxHelp": {
         "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
@@ -6617,7 +6606,6 @@
         "message": "{{version}} unlocked",
         "description": "Indicates if SA device is unlocked"
     },
-
     "mainHelpArmed": {
         "message": "Motor Arming"
     },

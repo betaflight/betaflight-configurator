@@ -149,9 +149,9 @@ failsafe.initialize = function (callback) {
                         </div>\
                         <div class="cf_tip channelsetting" title="${i18n.getMessage("failsafeChannelFallbackSettingsAuto")}">\
                             <select class="aux_set" id="${i}">\
-                                <option value="0">Auto</option>\
-                                <option value="1">Hold</option>\
-                                <option value="2">Set</option>\
+                                <option value="0">${i18n.getMessage("failsafeChannelFallbackSettingsValueAuto")}</option>\
+                                <option value="1">${i18n.getMessage("failsafeChannelFallbackSettingsValueHold")}</option>\
+                                <option value="2">${i18n.getMessage("failsafeChannelFallbackSettingsValueSet")}</option>\
                             </select>\
                         </div>\
                         <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="${i}"/></div>\
@@ -167,8 +167,8 @@ failsafe.initialize = function (callback) {
                         </div>\
                         <div class="cf_tip channelsetting" title="${i18n.getMessage("failsafeChannelFallbackSettingsHold")}">\
                             <select class="aux_set" id="${i}">\
-                                <option value="1">Hold</option>\
-                                <option value="2">Set</option>\
+                                <option value="1">${i18n.getMessage("failsafeChannelFallbackSettingsValueHold")}</option>\
+                                <option value="2">${i18n.getMessage("failsafeChannelFallbackSettingsValueSet")}</option>\
                             </select>\
                         </div>\
                         <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="${i}"/></div>\
@@ -258,7 +258,8 @@ failsafe.initialize = function (callback) {
         }
 
         // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
-        $('#failsafeSwitchSelect').sortSelect();
+        // Stage1 on top
+        $('#failsafeSwitchSelect').sortSelect(i18n.getMessage("failsafeSwitchOptionStage1"));
 
         // `failsafe_kill_switch` has been renamed to `failsafe_switch_mode`.
         // It is backwards compatible with `failsafe_kill_switch`
