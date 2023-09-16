@@ -1340,11 +1340,8 @@
     "configurationDigitalIdlePercent": {
         "message": "Motor Idle ( %, static)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Dynamic Idle is active at {{dynamicIdle}} rpm. See the PID tuning tab."
-    },
     "configurationDigitalIdlePercentHelp": {
-        "message": "The 'Motor Idle (static)' value is the percent of maximum throttle that is sent to the ESCs when the throttle at minimum stick position and the craft is armed. <br><br>Increase it to gain more idle speed and avoid desyncs. Too high and the craft feels floaty. Too low and the motors can desync or be slow to start up.<br><br>In 4.3, when Dynamic Idle is active, the static idle value is disregarded, because the idle value is continually adjusted to maintain the configured minimum rpm on the slowest motor."
+        "message": "The 'Motor Idle (static)' value is the percent of maximum throttle that is sent to the ESCs when the throttle at minimum stick position and the craft is armed. <br><br>Increase it to gain more idle speed and avoid desyncs. Too high and the craft feels floaty. Too low and the motors can desync or be slow to start up."
     },
     "configurationMotorPoles": {
         "message": "Motor poles",
@@ -4526,7 +4523,7 @@
         "message": "Dynamic Idle Value [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. For 4.2, set the DShot idle value low, eg 1%.  There is no need to adjust the DShot Idle value in 4.3. <br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle is OFF because Dshot Telemetry is OFF"
