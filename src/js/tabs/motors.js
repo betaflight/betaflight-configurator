@@ -904,6 +904,8 @@ motors.initialize = async function (callback) {
             'Home',
             'ArrowUp',
             'ArrowDown',
+            'AltLeft',
+            'AltRight',
         ];
 
         motorsEnableTestModeElement.on('change', function () {
@@ -978,12 +980,20 @@ motors.initialize = async function (callback) {
             }
         });
 
+        $('div.sliders input:not(.master)').on('input wheel', function (e) {
+            self.scrollSlider($(this), e);
+        });
+
         $('div.sliders input.master').on('input', function () {
             const val = $(this).val();
 
             $('div.sliders input:not(:disabled, :last)').val(val);
             $('div.values li:not(:last)').slice(0, self.numberOfValidOutputs).text(val);
             $('div.sliders input:not(:last):first').trigger('input');
+        });
+
+        $('div.sliders input.master').on('input wheel', function (e) {
+            self.scrollSlider($(this), e);
         });
 
         // check if motors are already spinning
@@ -1314,6 +1324,25 @@ motors.refresh = function (callback) {
 
 motors.cleanup = function (callback) {
     if (callback) callback();
+};
+
+motors.scrollSlider = function(slider, e) {
+    if (slider.prop('disabled')) {
+        return;
+    }
+
+    if (!(e.originalEvent?.deltaY && e.originalEvent?.altKey)) {
+        return;
+    }
+
+    e.preventDefault();
+
+    const step = 25;
+    const delta = e.originalEvent.deltaY > 0 ? -step : step;
+    const val = parseInt(slider.val()) + delta;
+    const roundedVal = Math.round(val / step) * step;
+    slider.val(roundedVal);
+    slider.trigger('input');
 };
 
 TABS.motors = motors;
