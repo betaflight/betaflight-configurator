@@ -208,13 +208,29 @@ gps.initialize = async function (callback) {
             // Update GPS Signal Strengths
             const eSsTable = $('div.GPS_signal_strength table');
 
+            // construct "Status | Quality" aligned with max of status identifiers surrounded by 2 spaces
+            let strStatusQuality = i18n.getMessage('gpsSignalStatus');
+            let maxStrStatus = Math.max(i18n.getMessage('gnssUsedUsed').length + 2, i18n.getMessage('gnssUsedUnused').length);
+            let posQuality = maxStrStatus + 1;
+            for (let i = 0; i < posQuality; i++) {
+                strStatusQuality = `${strStatusQuality}&nbsp;`;
+            }
+            strStatusQuality = `${strStatusQuality} | ${i18n.getMessage('gpsSignalQuality')}`;
+
+            // construct Used aligned with Unused
+            let strUsed = i18n.getMessage('gnssUsedUsed');
+            let lenAlign = (maxStrStatus - i18n.getMessage('gnssUsedUsed').length) / 2;
+            for (let i = 0; i < lenAlign; i++) {
+                strUsed = `&nbsp${strUsed}&nbsp;`;
+            }
+
             eSsTable.html('');
             eSsTable.append(`
                 <tr class="titles">
                     <td style="width: 12%;" i18n="gpsSignalGnssId">${i18n.getMessage('gpsSignalGnssId')}</td>
                     <td style="width: 10%;" i18n="gpsSignalSatId">${i18n.getMessage('gpsSignalSatId')}</td>
                     <td style="width: 25%;" i18n="gpsSignalStr">${i18n.getMessage('gpsSignalStr')}</td>
-                    <td style="width: 53%;" i18n="gpsSignalStatusQly">${i18n.getMessage('gpsSignalStatusQly')}</td>
+                    <td style="width: 53%;">${strStatusQuality}</td>
                 </tr>
             `);
 
@@ -281,7 +297,7 @@ gps.initialize = async function (callback) {
 
                         // 1st column: unused = red, used = green
                         if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
-                            used = `<span class="colorToggle ready">&nbsp${used}&nbsp</span>`;
+                            used = `<span class="colorToggle ready">${strUsed}</span>`;
                         } else {
                             used = `<span class="colorToggle ${usedColor}">${used}</span>`;
                         }
