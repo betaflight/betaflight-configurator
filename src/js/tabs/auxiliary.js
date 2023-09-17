@@ -13,6 +13,9 @@ import inflection from "inflection";
 
 const auxiliary = {};
 
+const flightModes = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","SERVO1","SERVO2","SERVO3",
+"FAILSAFE","AIR MODE","3D","FPV ANGLE MIX","FLIP OVER AFTER CRASH","USER1","USER2","USER3","USER4","ACRO TRAINER","LAUNCH CONTROL"];
+
 auxiliary.initialize = function (callback) {
     GUI.active_tab_ref = this;
     GUI.active_tab = 'auxiliary';
@@ -45,6 +48,15 @@ auxiliary.initialize = function (callback) {
 
     function load_html() {
         $('#content').load("./tabs/auxiliary.html", process_html);
+    }
+
+    function isFlightMode(name) {
+        for (let i = 0; i < flightModes.length; i++) {
+            if (name == flightModes[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, get_mode_ranges);
@@ -303,6 +315,9 @@ auxiliary.initialize = function (callback) {
             }
         }
 
+        // translate to user-selected language
+        i18n.localizePage();
+
         const length = Math.max(...(FC.AUX_CONFIG.map(el => el.length)));
         $('.tab-auxiliary .mode .info').css('min-width', `${Math.round(length * getTextWidth('A'))}px`);
 
@@ -317,9 +332,6 @@ auxiliary.initialize = function (callback) {
             // default to 'OR' logic and no link selected
             addLinkedToMode(modeElement, 0, 0);
         });
-
-        // translate to user-selected language
-        i18n.localizePage();
 
         // UI Hooks
         $('a.save').click(function () {
@@ -411,7 +423,6 @@ auxiliary.initialize = function (callback) {
             }
         });
 
-
         function limit_channel(channelPosition) {
             if (channelPosition < 900) {
                 channelPosition = 900;
@@ -487,16 +498,19 @@ auxiliary.initialize = function (callback) {
                 hasUsedMode = true;
             }
 
-            if (hasDirtyUnusedModes) {
-                hasDirtyUnusedModes = false;
-                let hideUnused = hideUnusedModes && hasUsedMode;
-                for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-                    let modeElement = $(`#mode-${i}`);
-                    if (!modeElement.find(' .range').length && !modeElement.find(' .link').length) {
-                        modeElement.toggle(!hideUnused);
-                    }
+            let hideUnused = hideUnusedModes && hasUsedMode;
+            let hideNoFlight = hideNoFlightMode && hasUsedMode;
+            for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
+                let modeElement = $(`#mode-${i}`);
+                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
+                    // unused mode
+                    modeElement.toggle(!hideUnused);
                 }
-            }
+                if( ! isFlightMode(FC.AUX_CONFIG[i])) {
+                    // not flightMode mode
+                    modeElement.toggle(!hideNoFlight);
+                }
+        }
 
             auto_select_channel(FC.RC.channels, FC.RC.active_channels, FC.RSSI_CONFIG.channel);
 
@@ -548,7 +562,10 @@ auxiliary.initialize = function (callback) {
         }
 
         let hideUnusedModes = false;
-        const result = getConfig('hideUnusedModes');
+        let hideNoFlightMode = false;
+
+        // hide unused modes
+        const configUnusedModes = getConfig('hideUnusedModes');
         $("input#switch-toggle-unused")
             .change(function() {
                 hideUnusedModes = $(this).prop("checked");
@@ -556,7 +573,18 @@ auxiliary.initialize = function (callback) {
                 setConfig({ hideUnusedModes: hideUnusedModes });
                 update_ui();
             })
-            .prop("checked", !!result.hideUnusedModes)
+            .prop("checked", !!configUnusedModes.hideUnusedModes)
+            .change();
+
+        // hide non flightmodes
+        const configNoFlightMode = getConfig('hideNoFlightMode');
+        $("input#switch-toggle-hideNoFlightMode")
+            .change(function() {
+                hideNoFlightMode = $(this).prop("checked");
+                setConfig({ hideNoFlightMode: hideNoFlightMode });
+                update_ui();
+            })
+            .prop("checked", !!configNoFlightMode.hideNoFlightMode)
             .change();
 
         // update ui instantly on first load

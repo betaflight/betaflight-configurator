@@ -2314,6 +2314,10 @@
     "auxiliaryToggleUnused": {
         "message": "Hide unused modes"
     },
+    "auxiliaryToggleNoFlightMode": {
+        "message": "Show only flight modes",
+        "descripton": "Toggle if all modes are shown or only Flight modes"
+    },
     "auxiliaryMin": {
         "message": "Min"
     },
