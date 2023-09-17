@@ -51,8 +51,8 @@ auxiliary.initialize = function (callback) {
     }
 
     function isFlightMode(name) {
-        for (let i = 0; i < flightModes.length; i++) {
-            if (name == flightModes[i]) {
+        for (let value of flightModes) {
+            if (name == value) {
                 return true;
             }
         }
@@ -469,7 +469,7 @@ auxiliary.initialize = function (callback) {
                     }
                 } else {
 
-                    //ARM mode is a special case
+                    // ARM mode is a special case
                     if (i == 0) {
                         let armSwitchActive = false;
 
@@ -550,12 +550,14 @@ auxiliary.initialize = function (callback) {
                 return (x > y) ? x : y;
             }, 0);
 
-            //minimum change to autoselect is 100
-            if (largest < 100) return fillPrevChannelsValues();
+            // minimum change to autoselect is 100
+            if (largest < 100) {
+                return fillPrevChannelsValues();
+            }
 
             const indexOfMaxValue = diff_array.indexOf(largest);
-            if (indexOfMaxValue >= 4 && indexOfMaxValue != RSSI_channel - 1){ //set channel
-                auto_option.parent().val(indexOfMaxValue - 4);
+            if (indexOfMaxValue >= 4 && indexOfMaxValue != RSSI_channel - 1) {
+                auto_option.parent().val(indexOfMaxValue - 4); //set channel
             }
 
             return fillPrevChannelsValues();
