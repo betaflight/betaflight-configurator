@@ -1256,12 +1256,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Dynamiczny bieg jałowy( %)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Dynamiczny bezczynność jest aktywna przy {{dynamicIdle}} rpm. Zobacz kartę dostrajania PID."
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Wartość Dynamicznego biegu jałowego to procent otwarcia przepustnicy w momęcie uzbrojenia jednostki latającej, gdy przepustnica znajduje się w minimalnej pozycji drążka. <br><br>Zwiększ procent, aby uzyskać większą prędkość biegu jałowego i uniknąć desynchronizacji obrotów silników. Zbyt wysokie ustawienie spowoduje pływanie jednostki latającej we wszystkich kierunkach i uniesienie jej tuż nad ziemie. Zbyt niskie może spowodować desynchronizację lub spowolnienie rozruchu silników.<br><br>W wersji betaflight 4.3 gdy dynamiczny bieg jałowy jest aktywny, statyczna wartość biegu jałowego jest ignorowana, ponieważ wartość biegu jałowego jest stale dostosowywana w celu utrzymania skonfigurowanych minimalnych obrotów na najwolniejszy silnik. Proponowane wartosci to między 1 a 7%."
-    },
     "configurationMotorPoles": {
         "message": "Bieguny silnika",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -4407,9 +4401,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy zerowej, odwrócony czas zawieszenia i hamowanie silnikiem.<br /><br />Minimalne obroty dynamicznego biegu jałowego powinny być ustawione na około 3000 - 3500 obr./min. Dla wersji 4.2 ustaw niską wartość bezczynności DShot, np. 1%. Nie ma potrzeby dostosowywania wartości DShot Idle w wersji 4.3. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
-    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Opcja Dynamicznego biegu jałowego jest WYŁĄCZONA, ponieważ telemetria Dshot jest WYŁĄCZONA"
     },
@@ -4452,9 +4443,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Maksymalna długość"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Zastępcze ustawienia kanału"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Te ustawienia są stosowane do błędnych kanałów AUX lub do wszystkich kanałów gdy jest aktywny etap 1. <strong>Uwaga:</strong> wartości są zapisywane w krokach 25 usec, więc małe zmiany znikają"
     },
@@ -4466,12 +4454,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Etap 2 - Ustawienia"
-    },
-    "failsafeDelayItem": {
-        "message": "Czas zwłoki pomiędzy wykryciem zaniku sygnału a aktywacją etapu 2. [sekund]"
-    },
-    "failsafeDelayHelp": {
-        "message": "Czas oczekiwania zanim przejdzie z etapu 1 do trybu ratunkowego \"recovery\""
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe niskie położenie przepustnicy [sekund]"

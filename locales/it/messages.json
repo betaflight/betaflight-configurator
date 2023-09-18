@@ -1254,13 +1254,10 @@
         "message": "L'armamento dei motori è sempre disabilitato quando lo stick del gas non è abbassato. Fai attenzione in quanto potresti disarmare accidentalmente con un interruttore quando voli con questa opzione attiva."
     },
     "configurationDigitalIdlePercent": {
-        "message": "Idle Motore (%, statico)"
-    },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "L'Idle Dinamico è attivo a {{dynamicIdle}} rpm. Vedi la scheda Tuning PID."
+        "message": "Motore Minimo (%, statico)"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "Il valore 'Idle Motore (statico)' è la percentuale del gas massimo che viene inviato agli ESC quando il gas è al minimo e il modello è armato. <br><br>Aumentalo per ottenere più velocità in idle ed evitare desincronizzazioni. Un valore troppo alto renderà il modello fluttuante. Un valore troppo basso farà andare in desync i motori o renderli lenti all'avvio.<br><br>In 4.3, quando l'Idle Dinamico è attivo, il valore statico di idle non viene considerato, perché il valore è continuamente impostato per mantenere gli rpm minimi impostati sul motore più lento."
+        "message": "Il valore 'Motore Minimo (statico)' è una percentuale dell'acceleratore massimo che viene inviato ail'ESC quando lo stick dell'acceleratore è al minimo ed il modello è armato. <br><br>Aumentalo per ottenere più velocità al minimo ed evitare disincronizzazioni. Troppo alto e il modello sembra fluttuante. Troppo basso e i motori possono desincronizzarsi o essere lenti all'avvio."
     },
     "configurationMotorPoles": {
         "message": "Poli motore",
@@ -4437,7 +4434,7 @@
         "message": "Valore idle dinamico [*100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "L'Idle Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori.<br /><br /> Migliora il controllo dei PID, la stabilità con zero gas, il tempo in volo invertito e il freno dei motori.<br /><br />Gli rpm dell'Idle Dinamico dovrebbero essere impostati a circa 3000-3500rpm. In 4.2 imposta un valore Dshot basso, es 1%. Non c'è bisogno di cambiare il valore dell'Idle Dshot in 4.3.<br /><br />Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">questa pagina wiki</a> per maggiori informazioni."
+        "message": "Il Minimo Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori.<br /><br /> Migliora il controllo dei PID, la stabilità con zero gas, il tempo in volo invertito e il freno dei motori.<br /><br />Il Minimo Dinamico dovrebbe essere impostato a circa 3000-3500 rpm.<br /><br />Visita la wiki <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\"></a> per maggiori info."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "L'Idle Dinamico è OFF perché la telemetria Dshot è OFF"
@@ -4482,7 +4479,7 @@
         "message": "Durata masssima"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Impostazioni di fallback del canale"
+        "message": "Fase 1- Impostazioni del Canale Fallback"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Queste impostazioni vengono applicate ai singoli canali AUX non validi o a tutti i canali quando si accede allo Stadio 1. <strong>Nota:</strong> i valori vengono salvati in step di 25usec, quindi piccole modifiche scompaiono"
@@ -4493,14 +4490,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold:</strong> significa che verrà mantenuto l'ultimo valore valido ricevuto. <strong>Set:</strong> significa che verrà utilizzato il valore indicato qui"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Mantieni",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Imposta",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Impostazioni - Stadio 2"
     },
     "failsafeDelayItem": {
-        "message": "Tempo di attesa per l'attivazione dello Stadio 2 dopo la perdita del segnale [secondi]"
+        "message": "Periodo di tempo nella fase 1 failsafe dopo la perdita del segnale [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "Tempo per lo Stadio 1 di attesa del recupero"
+        "message": "Imposta il periodo di tempo della fase 1 failsafe dopo la perdita del segnale. Se il tempo va oltre senza un ritorno del segnale, verrà avviato il failsafe fase 2"
     },
     "failsafeThrottleLowItem": {
         "message": "Ritardo del Failsafe Gas basso [secondi]"
@@ -4627,7 +4636,7 @@
         "message": "Switch del Failsafe"
     },
     "failsafeSwitchModeItem": {
-        "message": "Azione dello Switch del Failsafe"
+        "message": "Azioni del Failsafe Switch"
     },
     "failsafeSwitchModeHelp": {
         "message": "Questa opzione determina cosa succede quando il Failsafe viene attivato tramite switch AUX:<br/><strong>Stadio 1</strong> attiva failsafe stadio 1. È utile se vuoi simulare esattamente il comportamento alla perdita di segnale.<br/><strong>Stadio 2</strong> salta lo stadio 1 e attiva direttamente la procedura dello stadio 2 <br/><strong>Kill</strong> disarma istantaneamente (il tuo modello cadrà)"

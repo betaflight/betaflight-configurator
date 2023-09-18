@@ -3013,9 +3013,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "最大長度"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "預置通道設置"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "當進入一階失控保護時，這些設置將會應用於單獨無效的AUX 通道，或者是所有通道。 <strong>注意：</strong>數值應是25us的整數倍，小於25us的設置會被上下取整。"
     },
@@ -3027,9 +3024,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "二階失控保護 - 設置"
-    },
-    "failsafeDelayHelp": {
-        "message": "一階失控保護等待訊號恢復時間"
     },
     "failsafeThrottleLowHelp": {
         "message": "在油門保持低位超過該時間，不再執行失控保護措施轉而直接鎖定電機。"

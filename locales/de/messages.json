@@ -1228,12 +1228,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Motor Leerlauf (%, statisch)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Dynamischer Leerlauf ist bei {{dynamicIdle}} U/min aktiv. Siehe PID Tuning Tab."
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Der 'Motor Idle (static)' Wert bestimmt wieviel Prozent des maximalen Throttle-Wertes zum ESC gesendet wird wenn der Copter scharfgeschalten (arming) ist und der Throttle(Schub)-stick auf minimum steht (idle). <br><br>Erhöhe den Wert um Synchronisierungsfehler \"desyncs\" zu vermeiden. Zu hohe Werte und der Copter fühlt sich nicht stabil an oder hebt ab nach dem armen. Bei zu niedrigen Werten können die Motoren zu langsam sein um zu starten oder Synchronisierungsfehler provozieren (Garantierter Absturz).<br><br>In 4.3 wird bei aktivem dynamischem Leerlauf der statische Leerlaufwert ignoriert, da der Leerlaufwert kontinuierlich angepasst wird, um die konfigurierte Mindestdrehzahl basierend auf dem langsamsten Motor einzustellen."
-    },
     "configurationMotorPoles": {
         "message": "Motor Pole",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -4133,9 +4127,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Dynamischer Leerlaufwert [*100 U/min]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamischer Leerlauf (Dynamic Idle) verbessert die Kontrolle bei niedrigen Drehzahlen und reduziert das Risiko von Motor-Desyncs. <br /><br /> Es verbessert PID-Autorität, Null-Gas-Stabilität, die Hangtime bei invertiertem Copter und die Motorbremse.<br /><br />Die Minimaldrehzahl sollte etwa 3000 - 3500 U/min betragen. Für Betaflight 4.2 den DShot Leerlaufwert niedrig setzen, z.B. 1%. Es nicht notwendig, den DShot Idle Wert in Betaflight 4.3 anzupassen. <br /><br />Siehe <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">diesen Wiki-Eintrag</a> für weitere Informationen."
-    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamischer Leerlauf(Idle) ist AUS da DShot Telemetrie AUS ist"
     },
@@ -4178,9 +4169,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Maximale Länge"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Kanal-Rückfalleinstellungen"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Im Fall eines Stage 1 Failsafe werden diese Einstellungen den AUX Kanälen zugewiesen. <strong>Hinweis:</strong> Werte werden im Abstand von 25us gesetzt, kleinere Einstellungen werden vernachlässigt."
     },
@@ -4192,12 +4180,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Stufe 2 Einstellungen"
-    },
-    "failsafeDelayItem": {
-        "message": "Signalverlustdauer für die Aktivierung von Stufe 2 [seconds]"
-    },
-    "failsafeDelayHelp": {
-        "message": "Stage 1 Wartezeit für Signalwiederherstellung"
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe Gas niedrig Verzögerung [seconds]"

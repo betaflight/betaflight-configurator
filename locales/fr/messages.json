@@ -1128,12 +1128,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Ralenti moteurs (%, statique)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Le ralenti dynamique est actif à {{dynamicIdle}} rpm. Voir l'onglet Réglage du PID."
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "La valeur \"Ralenti moteurs (statique)\" est le pourcentage de gaz maximum qui est envoyé aux ESC lorsque l'accélérateur à la position minimale du stick et que le moteur est armé. <br><br>Augmentez-la pour gagner plus de vitesse de roulis et éviter les désynchronisations. Trop haut et l'appareil semble flotter. Trop bas et les moteurs peuvent désynchroniser ou être lents au démarrage.<br><br>Dans 4.3, lorsque le ralenti dynamique est actif, la valeur statique du roulis est ignorée, parce que la valeur de roulis est continuellement ajustée pour maintenir les rpm minimaux configurés sur le moteur le plus lent."
-    },
     "configurationMotorPoles": {
         "message": "Pôles moteur",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -4016,9 +4010,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Valeur du ralenti dynamique [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Le ralenti dynamique améliore le contrôle à basse vitesse et réduit le risque de désynchronisation du moteur. <br /><br /> Améliore le pouvoir des PID, la stabilité gaz coupés, le temps lors du vol inversé et le freinage des moteurs.<br /><br />La vitesse de rotation minimum du ralenti dynamique devrait être fixé à environ 3000 - 3500 rpm. Pour la version 4.2, réglez la valeur de DShot au ralenti bas, par exemple 1%. Il n'est pas nécessaire d'ajuster la valeur de DShot Idle sur la version 4.3. <br /><br />Visitez <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">cette entrée du wiki</a> pour plus d'informations."
-    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Le ralenti dynamique est DÉSACTIVÉ parce que la télémétrie Dshot est DÉSACTIVÉE"
     },
@@ -4061,9 +4052,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Longueur maximum"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Valeur de sécurité pour la voie"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Ces paramètres sont appliqués à toutes les voies AUX en erreur ou toutes les voies en Stage 1. <strong>Note: </strong> les valeurs sont sauvegardées par pas de 25µsec, afin d'effacer les petites variations."
     },
@@ -4075,12 +4063,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Stage 2 - Paramètres"
-    },
-    "failsafeDelayItem": {
-        "message": "Temps de réserve avant l'activation du stage 2 après une perte de signal [secondes]"
-    },
-    "failsafeDelayHelp": {
-        "message": "Période d'attente de recovery pour le Stage 1"
     },
     "failsafeThrottleLowItem": {
         "message": "Délais avant la mise à zéro des gaz pour failsafe [secondes]"

@@ -1256,11 +1256,8 @@
     "configurationDigitalIdlePercent": {
         "message": "Motor tomgang ( %, statisk)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Dynamisk tomgang er aktiv på {{dynamicIdle}} rpm. Se fanen PID tuning."
-    },
     "configurationDigitalIdlePercentHelp": {
-        "message": "Værdien 'Motor tomgang (statisk)' er den procent af maksimal gas, der sendes til ESC'erne, når gas er på minimum position, og motor er aktiveret. <br><br>Forøg den for at få mere tomgangs hastighed og undgå desynkronisering. For højt og fartøjet føles flydende. For lavt og motorerne kan desynkronisere eller være langsomme til at starte op.<br><br>I 4.3, når dynamisk tomgang er aktiv, ses der bort fra den statiske tomgangsværdi fordi inaktiv værdi konstant justeretes for at opretholde den konfigurerede minimum rpm på den langsomste motor."
+        "message": "Værdien 'Motor tomgang (statisk)' er den procent af maksimal gas, der sendes til ESC'erne, når gas er på minimum position, og motor er aktiveret. <br><br>Forøg den for at få mere tomgangs hastighed og undgå desynkronisering. For højt og fartøjet føles flydende. For lavt og motorerne kan desynkronisere eller være langsomme til at starte op."
     },
     "configurationMotorPoles": {
         "message": "Motor magneter",
@@ -2708,7 +2705,7 @@
         "message": "Sat-ID"
     },
     "gpsSignalStatusQly": {
-        "message": "Status &nbsp;&nbsp;&nbsp; | Kvalitet"
+        "message": "Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Kvalitet"
     },
     "gnssQualityNoSignal": {
         "message": "ingen signal"
@@ -2732,7 +2729,7 @@
         "message": "anvendes ikke"
     },
     "gnssUsedUsed": {
-        "message": "ANVENDES"
+        "message": "&nbsp;ANVENDES&nbsp;&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "ukendt"
@@ -4437,7 +4434,7 @@
         "message": "Dynamisk tomgang [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamisk tomgang forbedrer styringen ved lav omdr/min og reducerer risikoen for desynkronisering af motor. <br /><br /> Det forbedrer PID værdi, stabilitet ved nul gas, omvendt hænge tid og motorbremsning.<br /><br />Dynamic tomgang min rpm skal sættes til omkring 3000 - 3500 rpm. For 4.2, indstil DShot tomgangs værdi lavt, fx 1%. Der er ingen grund til at justere DShot tomgangs værdi i 4.3. <br /><br />Besøg <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post</a> for mere info."
+        "message": "Dynamisk tomgang forbedrer styringen ved lav omdr/min og reducerer risikoen for desynkronisering af motor. <br /><br /> Det forbedrer PID værdi, stabilitet ved nul gas, langsomhed ved hastighedsændring og motorbremsning.<br /><br />Dynamic tomgang min rpm skal sættes til omkring 3000 - 3500 rpm. <br /><br />Besøg <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki artikel</a> for mere info (engelsk)."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamisk tomgang er slået fra, fordi Dshot Telemetry er slået FRA"
@@ -4467,7 +4464,7 @@
         "message": "Modtager fejlsikring"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Fejlsikring har to trin.<br>\n<strong>Trin 1</strong> begynder, når en flykanal har en ugyldig pulslængde, modtageren aktiverer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter \"Trin 1 - Fejlsikring for kanaler\" for tages ibrug for <span class=\"message-negative\">alle kanaler</span>, der ventes et kort øjeblik - styret af \"Periode i trin1 fejlsikring\" for at muliggøre en gendannelse.<br>\n<strong>Trin 2</strong> begynder, når fejltilstanden og fartøjet er <span class=\"message-negative\">aktiveret</span>, tager længere tid end den indstillede til til gendannelse. Kanalerne bliver på indstillingerne i \"Trin 1 - Fejlsikring for kanaler\", medmindre de tilsidesættes af den valgte procedure for Trin 2.<br /><strong>Bemærk:</strong> Inden Trin1 begynder, anvendes indstillingerne i \"Trin 1 - Fejlsikring for kanaler\" også på AUX-kanaler, der har ugyldige impulslængder."
+        "message": "Fejlsikring har to trin.<br>\n<strong>Trin 1</strong> begynder, når en flykanal har en ugyldig pulslængde, modtageren aktiverer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter \"Trin 1 - Fejlsikring for kanaler\" for tages ibrug for <span class=\"message-negative\">alle kanaler</span>, der ventes et kort øjeblik - styret af \"Periode i trin1 fejlsikring\" for at muliggøre en gendannelse.<br>\n<strong>Trin 2</strong> begynder, når fejltilstanden og fartøjet er <span class=\"message-negative\">aktiveret</span>, tager længere tid end den indstillede til gendannelse. Kanalerne bliver på indstillingerne i \"Trin 1 - Fejlsikring for kanaler\", medmindre de tilsidesættes af den valgte procedure for Trin 2.<br /><strong>Bemærk:</strong> Inden Trin1 begynder, anvendes indstillingerne i \"Trin 1 - Fejlsikring for kanaler\" også på AUX-kanaler, der har ugyldige impulslængder."
     },
     "failsafePulsrangeTitle": {
         "message": "Indstilling af gyldigt signal interval"
@@ -4493,14 +4490,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Behold</strong> betyder at opretholde den sidste gode værdi som er modtaget.<br><strong>Sæt</strong> betyder, at værdien angivet her vil blive brugt."
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Behold",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Sæt",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Trin 2 - Indstillinger"
     },
     "failsafeDelayItem": {
-        "message": "Fortryd pause efter tabt signal, før Trin 2 aktiveres [sekunder]"
+        "message": "Ventetid på Trin 1, før Trin 2 aktiveres"
     },
     "failsafeDelayHelp": {
-        "message": "Trin 1-ventetid for gendannelse"
+        "message": "Fortryd pause efter tabt signal, før Trin 2 aktiveres [sekunder]"
     },
     "failsafeThrottleLowItem": {
         "message": "Periode før afkobling ved lav gas [sekunder]"

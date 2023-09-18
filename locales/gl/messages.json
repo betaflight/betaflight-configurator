@@ -1259,12 +1259,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Ralentí Motor (%, estático)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Ralentí Dinámico está activo en {{dynamicIdle}} rpm. Mire a pestana de axuste do PID."
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "O valor do \"ralentí do motor (estático)\" é o porcentaxe do acelerador máximo que se envía ao CES cando o acelerador está na posición mínima de stick e o quad está armado. <br><br>Aumemteo para obter unha velocidade máis alta e evitar desincronismos. Demasiado alto e o quad séntese flotar. Demasiado baixo e os motores poden desincronizar ou ser lentos ó acelerar. <br><br>En 4.3, cando o ralentí dinámico está activo, o valor estático é descartado, xa que o valor ralentí está continuamente axustado para manter as rpm mínimas configuradas no motor máis lento."
-    },
     "configurationMotorPoles": {
         "message": "Postes do motor",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -4310,9 +4304,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Valor Dinámico Idle [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle mellora o control a baixas revolucións e reduce o risco de desincronización do motor. <br /><br /> Mellora a autoridade PID, a estabilidade do acelerador cero, o tempo de suspensión invertido e o freado do motor.<br /><br />As rpm mínimas de ralentí dinámico deben establecerse entre 3000 e 3500 rpm. Para 4.2, configure o valor de inactividade de DShot baixo, por exemplo, 1%. Non é necesario axustar o valor de DShot Idle en 4.3. <br /><br />Visita  <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki< /a> para máis información."
-    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Ralentí Dinámico está DESACTIVADO porque a Telemetría Dshot está DESACTIVADA"
     },
@@ -4355,9 +4346,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Lonxitud máxima"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Configuracións de respaldo dos canáis"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Estes axustes aplicaranse a cada canal auxiliar non válido ou a tódolos canáis cando se entra na Etapa 1.<strong>Nota:</strong> os valores gárdanse en pasos de 25usec, polo que os cambios pequenos desaparecen"
     },
@@ -4369,12 +4357,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Etapa 2 - Axustes"
-    },
-    "failsafeDelayItem": {
-        "message": "Tempo de espera antes de activar a etapa 2 tras perder o sinal [seconds]"
-    },
-    "failsafeDelayHelp": {
-        "message": "Tempo para recuperación na Etapa 1"
     },
     "failsafeThrottleLowItem": {
         "message": "Demora para baixar o acelerador en Failsafe [seconds]"
