@@ -12,6 +12,7 @@ import semver from 'semver';
 import { showErrorDialog } from "../utils/showErrorDialog";
 import { checkChromeRuntimeError } from "../utils/common";
 import $ from 'jquery';
+import DEBUG from "../debug";
 
 let sdcardTimer;
 
@@ -240,112 +241,21 @@ onboard_logging.initialize = function (callback) {
     }
 
     function populateDebugModes(debugModeSelect) {
-        let debugModes = [];
-
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             $('.blackboxDebugMode').show();
 
-            debugModes = [
-                {text: "NONE"},
-                {text: "CYCLETIME"},
-                {text: "BATTERY"},
-                {text: "GYRO_FILTERED"},
-                {text: "ACCELEROMETER"},
-                {text: "PIDLOOP"},
-                {text: "GYRO_SCALED"},
-                {text: "RC_INTERPOLATION"},
-                {text: "ANGLERATE"},
-                {text: "ESC_SENSOR"},
-                {text: "SCHEDULER"},
-                {text: "STACK"},
-                {text: "ESC_SENSOR_RPM"},
-                {text: "ESC_SENSOR_TMP"},
-                {text: "ALTITUDE"},
-                {text: "FFT"},
-                {text: "FFT_TIME"},
-                {text: "FFT_FREQ"},
-                {text: "RX_FRSKY_SPI"},
-                {text: "RX_SFHSS_SPI"},
-                {text: "GYRO_RAW"},
-                {text: "DUAL_GYRO_RAW"},
-                {text: "DUAL_GYRO_DIFF"},
-                {text: "MAX7456_SIGNAL"},
-                {text: "MAX7456_SPICLOCK"},
-                {text: "SBUS"},
-                {text: "FPORT"},
-                {text: "RANGEFINDER"},
-                {text: "RANGEFINDER_QUALITY"},
-                {text: "LIDAR_TF"},
-                {text: "ADC_INTERNAL"},
-                {text: "RUNAWAY_TAKEOFF"},
-                {text: "SDIO"},
-                {text: "CURRENT_SENSOR"},
-                {text: "USB"},
-                {text: "SMARTAUDIO"},
-                {text: "RTH"},
-                {text: "ITERM_RELAX"},
-                {text: "ACRO_TRAINER"},
-                {text: "RC_SMOOTHING"},
-                {text: "RX_SIGNAL_LOSS"},
-                {text: "RC_SMOOTHING_RATE"},
-                {text: "ANTI_GRAVITY"},
-                {text: "DYN_LPF"},
-                {text: "RX_SPEKTRUM_SPI"},
-                {text: "DSHOT_RPM_TELEMETRY"},
-                {text: "RPM_FILTER"},
-                {text: "D_MIN"},
-                {text: "AC_CORRECTION"},
-                {text: "AC_ERROR"},
-                {text: "DUAL_GYRO_SCALED"},
-                {text: "DSHOT_RPM_ERRORS"},
-                {text: "CRSF_LINK_STATISTICS_UPLINK"},
-                {text: "CRSF_LINK_STATISTICS_PWR"},
-                {text: "CRSF_LINK_STATISTICS_DOWN"},
-                {text: "BARO"},
-                {text: "GPS_RESCUE_THROTTLE_PID"},
-                {text: "DYN_IDLE"},
-                {text: "FEEDFORWARD_LIMIT"},
-                {text: "FEEDFORWARD"},
-                {text: "BLACKBOX_OUTPUT"},
-                {text: "GYRO_SAMPLE"},
-                {text: "RX_TIMING"},
-                {text: "D_LPF"},
-                {text: "VTX_TRAMP"},
-                {text: "GHST"},
-                {text: "GHST_MSP"},
-                {text: "SCHEDULER_DETERMINISM"},
-                {text: "TIMING_ACCURACY"},
-                {text: "RX_EXPRESSLRS_SPI"},
-                {text: "RX_EXPRESSLRS_PHASELOCK"},
-                {text: "RX_STATE_TIME"},
-                {text: "GPS_RESCUE_VELOCITY"},
-                {text: "GPS_RESCUE_HEADING"},
-                {text: "GPS_RESCUE_TRACKING"},
-                {text: "GPS_CONNECTION"},
-                {text: "ATTITUDE"},
-                {text: "VTX_MSP"},
-                {text: "GPS_DOP"},
-                {text: "FAILSAFE"},
-                {text: "GYRO_CALIBRATION"},
-                {text: "ANGLE_MODE"},
-                {text: "ANGLE_TARGET"},
-                {text: "CURRENT_ANGLE"},
-                {text: "DSHOT_TELEMETRY_COUNTS"},
-                {text: "RPM_LIMIT"},
-            ];
-
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
-                if (i < debugModes.length) {
-                    debugModeSelect.append(new Option(debugModes[i].text, i));
+                if (i < DEBUG.modes.length) {
+                    debugModeSelect.append(new Option(DEBUG.modes[i].text, i));
                 } else {
                     debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
                 }
             }
 
             debugModeSelect
-                .val(FC.PID_ADVANCED_CONFIG.debugMode)
-                .select2()
-                .sortSelect("NONE");
+            .val(FC.PID_ADVANCED_CONFIG.debugMode)
+            .select2()
+            .sortSelect("NONE");
         } else {
             $('.blackboxDebugMode').hide();
         }
@@ -355,28 +265,11 @@ onboard_logging.initialize = function (callback) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('.blackboxDebugFields').show();
 
-            const debugFields = [
-                { text: "PID" },
-                { text: "RC Commands" },
-                { text: "Setpoint" },
-                { text: "Battery" },
-                { text: "Magnetometer" },
-                { text: "Altitude" },
-                { text: "RSSI" },
-                { text: "Gyro" },
-                { text: "Accelerometer" },
-                { text: "Debug Log" },
-                { text: "Motor" },
-                { text: "GPS" },
-                { text: "RPM" },
-                { text: "Unfiltered Gyro"},
-            ];
-
             let fieldsMask = FC.BLACKBOX.blackboxDisabledMask;
 
-            for (let i = 0; i < debugFields.length; i++) {
+            for (let i = 0; i < DEBUG.enableFields.length; i++) {
                 const enabled = (fieldsMask & (1 << i)) === 0;
-                debugFieldsSelect.append(new Option(debugFields[i].text, i, false, enabled));
+                debugFieldsSelect.append(new Option(DEBUG.enableFields[i].text, i, false, enabled));
             }
 
             debugFieldsSelect.sortSelect().multipleSelect();
