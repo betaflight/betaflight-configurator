@@ -3404,9 +3404,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Максимальная длительность"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Значения каналов при отсутствии сигнала с приёмника"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Эти настройки применятся во время сценария 1. <strong>Примечание:\n </strong> значения сохраняются шагами в 25 мкс, поэтому небольшие изменения исчезают"
     },
@@ -3418,9 +3415,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Этап 2 - Настройки"
-    },
-    "failsafeDelayHelp": {
-        "message": "Время ожидания восстановления сигнала для этапа 1"
     },
     "failsafeThrottleLowHelp": {
         "message": "Задизармить аппарат вместо выполнения выбранной процедуры failsafe, если значение газа будет низким в течение указанного времени"

@@ -1256,11 +1256,8 @@
     "configurationDigitalIdlePercent": {
         "message": "Idle do Motor ( %, estático)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Idle dinâmico está ativo em {{dynamicIdle}} rpm. Veja a aba de ajuste PID."
-    },
     "configurationDigitalIdlePercentHelp": {
-        "message": "O valor de 'Idle do Motor (estático)' é a percentagem de acelerador máximo que é enviado para os ESCs quando o acelerador está na posição mínima e o aparelho está armado. <br><br>Aumente para ganhar mais velocidade ociosa e evitar dessincronizações. Muito alta e o aparelho parecerá flutuar. Muito baixa e os motores podem dessincronizar-se ou ser lentos a iniciar.<br><br>No 4.3, quando o Idle Dinâmico está ativo, o valor idle estático não é considerado, porque o valor do idle é continuamente ajustado para manter o valor mínimo de rpm no motor mais lento."
+        "message": "O valor de 'Motor Idle (estático)' é a percentagem de acelerador máximo que é enviado para os ESCs quando o acelerador está em posição de stick mínima e a aeronave está armada. <br><br>Aumenta-o para ganhar mais velocidade em idle e evitar dessincronizações. Muito alto e a aeronave fica flutuante. Muito baixa e os motores podem dessincronizar ou ficar lentos no arranque."
     },
     "configurationMotorPoles": {
         "message": "Polaridade dos motores",
@@ -2707,6 +2704,9 @@
     "gpsSignalSatId": {
         "message": "ID Satélite"
     },
+    "gpsSignalStatusQly": {
+        "message": "Estado &nbsp;&nbsp;&nbsp; ├ &nbsp;Qualidade"
+    },
     "gnssQualityNoSignal": {
         "message": "sem sinal"
     },
@@ -2727,6 +2727,9 @@
     },
     "gnssUsedUnused": {
         "message": "não usado"
+    },
+    "gnssUsedUsed": {
+        "message": "USADO&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "desconhecido"
@@ -4431,7 +4434,7 @@
         "message": "Valor Idle Dinâmico [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "O Idle Dinâmico melhora o controle em baixas rpm e reduz o risco de dessincronização dos motores. <br /><br /> Melhora a autoridade do PID, estabilidade com acelerador a zero, tempo invertido no ar, e a travagem do motor.<br /><br />O min rpm do Idle Dinâmico deve ser definido para cerca de 3000 - 3500 rpm. Na 4.2, defina um valor idle de DShot baixo, por exemplo, 1%. Não há necessidade de ajustar o valor do DShot Idle na 4.3. <br /><br />Visite <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">esta entrada wiki</a> para mais informações."
+        "message": "O Idle Dinâmico melhora o controlo a baixas rotações e reduz o risco de dessincronização dos motores. <br /><br /> Melhora a autoridade dos PIDs, a estabilidade em acelerador zero, tempo quando invertido, e travagem do motor.<br /><br />A miníma rotação do Idle Dinâmico deve ser definido em cerca de 3000 - 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> para mais informação."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "O Idle Dinâmico está DESLIGADO porque a Telemetria Dshot está DESLIGADA"
@@ -4476,7 +4479,7 @@
         "message": "Comprimento Máximo"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Definições de Segurança do Canal"
+        "message": "Estágio 1 - Definições de Reposição do Canal"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Estas configurações são aplicadas em canais AUX individuais inválidos ou em todos os canais quando entrar no estágio 1. <strong>Nota:</strong> Os valores são gravados em passos de 25usec, para que mudanças pequenas desapareçam"
@@ -4487,14 +4490,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold</strong> significa manter o ultimo valor válido recebido. <strong>Set</strong> significa que o valor definido aqui será usado"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Manter",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Definir",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Estágio 2 - Definições"
     },
     "failsafeDelayItem": {
-        "message": "Tempo de espera para ativação da fase 2 após perda de sinal [seconds]"
+        "message": "Período de tempo de Failsafe na Fase 1 após a perda de sinal [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "Tempo para o estágio 1 esperar por recuperação"
+        "message": "Definir o período de tempo de Failsafe na Fase 1 após a perda de sinal. Se o tempo de atraso expirar sem a devolução do sinal, a fase 2 iniciará"
     },
     "failsafeThrottleLowItem": {
         "message": "Atraso do Failsafe por Acelerador Baixo [seconds]"

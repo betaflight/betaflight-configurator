@@ -3278,9 +3278,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Maximale lengte"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Kanaalterugval instellingen"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Deze instellingen worden toegepast op afzonderlijke AUX-kanalen of op alle kanalen bij het intreden van fase 1. <strong>Opmerking:</strong> waarden worden opgeslagen in stappen van 25usec, kleine wijzigingen zullen daarom verdwijnen"
     },
@@ -3292,9 +3289,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Fase 2 - Instellingen"
-    },
-    "failsafeDelayHelp": {
-        "message": "Tijd dat fase 1 wacht op herstel"
     },
     "failsafeThrottleLowHelp": {
         "message": "Schakel het vaartuig gewoon uit in plaats van de geselecteerde failsafe-procedure uit te voeren wanneer de gashendel gedurende deze tijd laag stond"

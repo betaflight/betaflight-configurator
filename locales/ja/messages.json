@@ -1256,11 +1256,8 @@
     "configurationDigitalIdlePercent": {
         "message": "モーターアイドル ( %, static)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "動的アイドルは {{dynamicIdle}} RPM [回転数] で有効になります。PIDチューニング タブを参照してください。"
-    },
     "configurationDigitalIdlePercentHelp": {
-        "message": "『モーターアイドル (static) 』は、スロットルがスティックの最小位置で機体がアームしているときにESCに送られる最大スロットルの割合です。<br><br>この値を大きくするとアイドリング速度が上がり非同期を避けることができます。高すぎると機体が浮上した状態になります。低すぎるとモーターが同期しなかったり [一つだけ回らなかったり]、起動遅延したりします。<br><br>BF4.3では動的アイドルが有効な場合、アイドル値は設定された最小回転数を最も遅いモーターで維持、継続的に自動調整されるため、静的アイドル値は無視されます。"
+        "message": "『モーターアイドル (静的)』値は、スロットルがスティック最小位置にあり機体がアームしているときに、ESCに送信される最大スロットルの割合 [%] です。<br><br>アイドリングスピードを上げてモーターのばらつきを回避させます。値が高すぎると機体が浮いてしまいます。低すぎるとモーターがどこか回らなくなったり、起動が遅くなったりします。"
     },
     "configurationMotorPoles": {
         "message": "モーター極数",
@@ -4437,7 +4434,7 @@
         "message": "動的アイドル値 [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。BF4.2の場合、DShotのアイドル値を1%など低めに設定します。BF4.3ではDShotアイドル値を調整する必要はありません。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
+        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dshotテレメトリー がオフのため動的アイドルはオフとなります"
@@ -4482,7 +4479,7 @@
         "message": "範囲 最大値"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "チャンネルフォールバック設定"
+        "message": "ステージ 1 - チャンネルフォールバック設定"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "これらの設定は、無効な個々のAUXチャンネルまたはステージ1に入るときのすべてのチャンネルに適用されます。 <strong>注:</strong> 値は25usec単位で保存されるため、小さな変化は消失します。"
@@ -4493,14 +4490,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>ホールド</strong>は、受信した最後の良好な値を保持することを意味します。<strong>セット</strong>は、ここで指定された値が使用されることを意味します"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "自動",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "ホールド",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "設定",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "ステージ2 - 設定"
     },
     "failsafeDelayItem": {
-        "message": "シグナル消失後、ステージ2起動までの保護時間 [seconds]"
+        "message": "シグナル消失後のステージ 1 フェイルセーフ時間 [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "ステージ1の回復を待つための時間"
+        "message": "検索\nシグナル消失後のステージ 1 フェイルセーフ時間を設定します。信号が回復せず期限の時間が経過した場合、ステージ 2 フェイルセーフが開始されます。"
     },
     "failsafeThrottleLowItem": {
         "message": "フェイルセーフ スロットル低遅延 [seconds]"

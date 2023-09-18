@@ -1256,12 +1256,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Motor Ocioso (em %, estático)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Modo ocioso dinâmico está ativo em {{dynamicIdle}} rpm. Veja a aba de ajuste PID."
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "O valor 'Motor ocioso (estático)' é a porcentagem do acelerador máximo que é enviado para os ESCs quando o stick do acelerador está na posição mínima e a aeronave está armada.<br><br>Aumente este valor para ganhar mais velocidade ociosa e evitar dessincronizações. Valores muito altos fazem com que a aeronave parece flutuar. Muito baixos podem fazer os motores dessincronizar ou demorar demais para iniciar.<br><br>Na versão 4.3, quando o modo Ocioso Dinâmico está ativo, o valor ocioso estático é desconsiderado, porque o valor ocioso é continuamente ajustado para manter o rpm mínimo configurado no motor mais lento."
-    },
     "configurationMotorPoles": {
         "message": "Polaridade dos motores",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -4307,9 +4301,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Valor Ocioso Dinâmico [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "O Modo Ocioso Dinâmico melhora o controle em rpm baixos e reduz o risco de dessincronização dos motores. <br /><br /> Melhora a autoridade do PID, estabilidade com acelerador em zero, tempo invertido no ar, e a frenagem do motor.<br /><br />Recomendamos que min rpm do modo Ocioso Dinâmico seja definido entre 3000 a 3500 rpm. Na versão 4.2, defina o valor Ocioso do DShot baixo, por exemplo, 1%. Não há necessidade de ajustar o valor do DShot Ocioso na versão 4.3. <br /><br />Visite <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">esta pagina do wiki</a> para mais informações."
-    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "O Modo Ocioso Dinâmico está DESLIGADO porque a Telemetria Dshot está DESLIGADA"
     },
@@ -4352,9 +4343,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Comprimento Máximo"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Configurações de segurança do canal"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Estas configurações são aplicadas em canais AUX individuais inválidos ou em todos os canais quando entrar no estágio 1. <strong>Nota:</strong> Os valores são salvos em passos de 25usec, para que mudanças pequenas desapareçam"
     },
@@ -4366,12 +4354,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Estágio 2 - Configurações"
-    },
-    "failsafeDelayItem": {
-        "message": "Tempo de espera antes de ativar o estágio 2 após perder o sinal [segundos]"
-    },
-    "failsafeDelayHelp": {
-        "message": "Tempo para recuperação no estágio 1"
     },
     "failsafeThrottleLowItem": {
         "message": "Tempo até Acelerador Baixo [segundos]"

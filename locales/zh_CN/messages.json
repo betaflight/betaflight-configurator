@@ -1074,12 +1074,6 @@
     "configurationDigitalIdlePercent": {
         "message": "电机怠速 ( %, 静态)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "动态怠速将于 {{dynamicIdle}} RPM 开启。请查看 PID 调校 选项卡"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "‘电机怠速 (静态)’ 值指的是当飞机解锁后摇杆保持最低位时，飞控向电调发送的命令，其为最大油门命令的一个百分比。<br><br>增大该值以获得更高的怠速值并避免失步。过高将会导致飞行感觉虚浮，过低将会导致电机易于失步或启动缓慢。<br><br>在 4.3 中，当 动态怠速 启用时，静态怠速值将被忽略，这是因为怠速值将不断调整以保持最慢的电机的 RPM 高于配置的最低 RPM。"
-    },
     "configurationMotorPoles": {
         "message": "电机极数",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -3846,9 +3840,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "最大长度"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "预置通道设置"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "当进入一阶失控保护时，这些设置将会应用于单独无效的AUX 通道，或者是所有通道。<strong>注意：</strong>数值应是25us的整数倍，小于25us的设置会被上下取整。"
     },
@@ -3860,12 +3851,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "二阶失控保护 - 设置"
-    },
-    "failsafeDelayItem": {
-        "message": "触发二阶失控保护的信号丢失保护时间 [秒]"
-    },
-    "failsafeDelayHelp": {
-        "message": "一阶失控保护等待信号恢复时间"
     },
     "failsafeThrottleLowItem": {
         "message": "低油门失控保护延迟 [秒]"

@@ -1264,11 +1264,8 @@
     "configurationDigitalIdlePercent": {
         "message": "Motor inactiu (%, estàtic)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "Dynamic Idle està actiu a {{dynamicIdle}} rpm. Consulteu la pestanya d'ajustament PID."
-    },
     "configurationDigitalIdlePercentHelp": {
-        "message": "El valor \"Motor Idle (estàtic)\" és el percentatge de l'acceleració màxima que s'envia als ESC quan l'accelerador a la posició mínima del stick i el dron està armat. <br><br>Augmenteu-lo per obtenir més velocitat de ralentí i evitar desincronitzacions. Massa alt i el dron se sent flotant. Massa baix i els motors es poden desincronitzar o engegar-se lentament.<br><br>A 4.3, quan Dynamic Idle està actiu, el valor de ralentí estàtic no es té en compte, perquè el valor de ralentí s'ajusta contínuament per mantenir les rpm mínimes configurades activades. el motor més lent."
+        "message": "El valor \"Motor Idle (estàtic)\" és el percentatge de l'acceleració màxima que s'envia als ESC quan l'accelerador a la posició mínima del pal i el quad està armat. <br><br>Augmenteu-lo per obtenir més velocitat de ralentí i evitar desincronitzacions. Massa alt i el quad se sent flotant. Massa baix i els motors es poden desincronitzar o engegar-se lentament."
     },
     "configurationMotorPoles": {
         "message": "Pols de motor",
@@ -4445,7 +4442,7 @@
         "message": "Valor Dinàmic Idle [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. Per a 4.2, establiu el valor d'inactivitat de DShot baix, per exemple, 1%. No cal ajustar el valor de DShot Idle a 4.3. <br /><br />Visiteu <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada de la wiki</a> per a més informació."
+        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. <br /><br />Visiteu <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki</a> per a més informació."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle està DESACTIVAT perquè la telemetria Dshot està DESACTIVADA"
@@ -4490,7 +4487,7 @@
         "message": "Mida màxima"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Ajustos de Channel Fallback"
+        "message": "Etapa 1: Configuració de reserva del canal"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Aquests ajustaments apliquen a canals AUX individuals i invàlids quan s'entra a l'stage 1.  <strong>Nota:</strong> aquests valors es desen en passos de 25usec així desapareixen els petits canvis"
@@ -4501,14 +4498,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold</strong> vol dir mantenir l'últim valor correcte rebut. <strong>Set</strong> vol dir que el valor que proporcionis serà l'utilitzat"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Automàtic",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Mantingueu apretat",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Assigna",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Stage 2 - Ajustos"
     },
     "failsafeDelayItem": {
-        "message": "Temps de guarda per activar l'stage 2 després de perdre la senyal [seconds]"
+        "message": "Període de temps a l'etapa 1 de seguretat després de la pèrdua del senyal [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "Temps d'espera de l'stage 1 per a recuperació"
+        "message": "Estableix el període de temps a l'etapa 1 de seguretat després de la pèrdua del senyal. Si el temps de retard expira sense retorn del senyal, s'iniciarà l'etapa 2 de seguretat contra errors"
     },
     "failsafeThrottleLowItem": {
         "message": "Retard de Failsafe Throttle Low [seconds]"

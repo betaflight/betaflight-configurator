@@ -1256,11 +1256,8 @@
     "configurationDigitalIdlePercent": {
         "message": "모터 공회전 ( %, 정적)"
     },
-    "configurationDigitalIdlePercentDisabled": {
-        "message": "다이나믹 아이들은 {{dynamicIdle}} rpm에서 활성화됩니다. PID 튜닝 탭을 보세요."
-    },
     "configurationDigitalIdlePercentHelp": {
-        "message": "'모터 공회전(정적)' 값은 스로틀이 최소 스틱 위치에 있을 때 스로틀이 설정되었을 때 ESC로 전송되는 최대 스로틀의 백분율입니다. <br><br>공회전 속도를 높이고 디싱크를 피하려면 높입니다. 너무 높아서 기체가 둥둥 떠 있는 느낌을 가집니다. 너무 낮으면 모터가 디싱크되거나 시동 속도가 느려질 수 있습니다.<br><br>4.3에서 다이나믹 아이들(Dynamic Idle) 이 활성화되면, 가장 느린 모터에서 구성된 최소 rpm을 유지하기 위해 공회전 값이 지속적으로 조정되기 때문에 정적 공회전 값은 무시됩니다."
+        "message": "'모터 아이들 (정적)' 값은 스로틀이 최소 스틱 위치에 있을 때 ESC로 전송되는 최대 스로틀의 백분율입니다. <br><br>아이들(공회전) 속도를 높이고 디싱크를 방지하려면 이 값을 증가시키십시오. 너무 높으면 기체가 떠다니게 느껴집니다. 너무 낮으면 모터가 디싱크되거나 띄울 때 느려질 수 있습니다."
     },
     "configurationMotorPoles": {
         "message": "모터 폴수",
@@ -2707,6 +2704,9 @@
     "gpsSignalSatId": {
         "message": "위성 ID"
     },
+    "gpsSignalStatusQly": {
+        "message": "상태 &nbsp;&nbsp;&nbsp; | &nbsp;품질"
+    },
     "gnssQualityNoSignal": {
         "message": "신호 없음"
     },
@@ -2727,6 +2727,9 @@
     },
     "gnssUsedUnused": {
         "message": "미사용"
+    },
+    "gnssUsedUsed": {
+        "message": "사용됨&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "알 수 없음"
@@ -4431,7 +4434,7 @@
         "message": "다이나믹 아이들 값 [× 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. 4.2의 경우, D샷 아이들 값을 낮게(예: 1%) 설정하세요.  4.3에서는 D샷 아이들 값을 조정할 필요가 없습니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 Wiki 항목</a>을 방문하십시오."
+        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 Wiki 항목</a>을 방문하십시오."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "D샷 텔레메트리가 꺼져있어서 다이나믹 아이들이 꺼집니다."
@@ -4476,7 +4479,7 @@
         "message": "최대 길이"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "채널 폴백 설정"
+        "message": "1 단계 - 채널 폴백 설정"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "이러한 설정은 유효하지 않은 개별 AUX 채널 또는 스테이지 1에 들어갈 때 모든 채널에 적용됩니다. <strong>참고:</strong> 값은 25us 단위로 저장되므로 작은 변화가 사라집니다."
@@ -4487,14 +4490,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>홀드</strong> 는 수신한 마지막 값을 유지한다는 의미입니다. <strong>설정</strong>은 여기에 주어진 값이 사용되어 진다는 것을 의미합니다."
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "자동",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "정지",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "설정",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "단계 2 - 설정"
     },
     "failsafeDelayItem": {
-        "message": "신호가 손실 된 후 단계 2 활성화를 위한 보호 시간 [seconds]"
+        "message": "신호 손실 후 1단계 페일세이프에서 시간 [seconds]"
     },
     "failsafeDelayHelp": {
-        "message": "단계 1에서 복구 대기 시간"
+        "message": "신호가 손실된 후 1단계 페일세이프에서 시간을 설정합니다. 신호가 반환되지 않은 상태에서 지연 시간이 만료되면 2단계 페일세이프가 시작됩니다"
     },
     "failsafeThrottleLowItem": {
         "message": "페일세이프 스로틀 낮음 지연시간 [seconds]"

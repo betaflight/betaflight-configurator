@@ -3082,9 +3082,6 @@
     "failsafeRxMaxUsecItem": {
         "message": "Gehienezko luzera"
     },
-    "failsafeChannelFallbackSettingsTitle": {
-        "message": "Kanalaren Segurtasun Ezarpenak"
-    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Ezarpen hauek AUX kanal baliogabeak edo kanal guztiei aplikatzen zaizkie 1. Etapa sartzen denean. <strong>Oharra:</strong> Balioak 25usec urratsetan gordetzen dira, beraz aldaketa txikiak desagertzen dira"
     },
@@ -3096,9 +3093,6 @@
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "2. Etapa - Ezarpenak"
-    },
-    "failsafeDelayHelp": {
-        "message": "1. Etapa berreskuratzeko denbora"
     },
     "failsafeThrottleLowHelp": {
         "message": "Besterik gabe, desarmatu artisautza hautatutako segurtasun prozedura exekutatu beharrean, azeleragailua denbora horretan gutxienez dagoenean"
