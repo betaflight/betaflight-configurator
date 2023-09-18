@@ -2,8 +2,9 @@ import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import serialNWJS from "./serial.js";
 import serialWeb from "./webSerial.js";
+import { isWeb } from "./utils/isWeb.js";
 
-const serial = import.meta.env ? serialWeb : serialNWJS;
+const serial = isWeb() ? serialWeb : serialNWJS;
 
 const MSP = {
     symbols: {
@@ -307,7 +308,7 @@ const MSP = {
         return bufferOut;
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        const connected = import.meta.env ? serial.connected : serial.connectionId;
+        const connected = isWeb ? serial.connected : serial.connectionId;
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
@@ -324,7 +325,7 @@ const MSP = {
             }
         }
 
-        if (import.meta.env && (code === undefined || !serial.connectionInfo)) {
+        if (isWeb() && (code === undefined || !serial.connectionInfo)) {
           console.log('ERROR: code undefined or no connectionId');
           return false;
         }

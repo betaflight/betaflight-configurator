@@ -26,8 +26,9 @@ import BuildApi from "./BuildApi";
 
 import serialNWJS from "./serial.js";
 import serialWeb from "./webSerial.js";
+import { isWeb } from "./utils/isWeb";
 
-const serial = import.meta.env ? serialWeb : serialNWJS;
+const serial = isWeb() ? serialWeb : serialNWJS;
 
 let mspHelper;
 let connectionTimestamp;
@@ -118,7 +119,7 @@ export function initializeSerialBackend() {
                         CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown :selected').val();
 
                         serial.connect('virtual', {}, onOpenVirtual);
-                    } else if (import.meta.env) {
+                    } else if (isWeb()) {
                         // Explicitly disconnect the event listeners before attaching the new ones.
                         serial.removeEventListener('connect', connectHandler);
                         serial.addEventListener('connect', connectHandler);
@@ -327,7 +328,7 @@ function onOpen(openInfo) {
         result = getConfig('expertMode')?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
-        if(import.meta.env) {
+        if(isWeb()) {
             serial.removeEventListener('receive', read_serial_adapter);
             serial.addEventListener('receive', read_serial_adapter);
         } else {

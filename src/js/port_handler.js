@@ -6,6 +6,7 @@ import { get as getConfig } from "./ConfigStorage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
 import $ from 'jquery';
+import { isWeb } from "./utils/isWeb";
 
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
@@ -32,7 +33,7 @@ PortHandler.initialize = function () {
 
     // currently web build doesn't need port handler,
     // so just bail out.
-    if (import.meta.env) {
+    if (isWeb()) {
         return 'not implemented';
     }
 

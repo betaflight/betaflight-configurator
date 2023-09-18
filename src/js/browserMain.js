@@ -21,12 +21,10 @@ import "../css/tabs/led_strip.less";
 import "../css/tabs/sensors.less";
 import "../css/tabs/cli.less";
 import "../tabs/presets/presets.less";
-// TODO: for some reason can't resolve these less files
-// import "../tabs/presets/TitlePanel/PresetTitlePanel.less";
+import "../tabs/presets/TitlePanel/PresetTitlePanel.css";
 import "../tabs/presets/DetailedDialog/PresetsDetailedDialog.less";
-// TODO: for some reason can't resolve these less files
-// import "../tabs/presets/SourcesDialog/SourcesDialog.less";
-// import "../tabs/presets/SourcesDialog/SourcePanel.less";
+import "../tabs/presets/SourcesDialog/SourcesDialog.css";
+import "../tabs/presets/SourcesDialog/SourcePanel.css";
 import "../css/tabs/logging.less";
 import "../css/tabs/onboard_logging.less";
 import "../css/tabs/firmware_flasher.less";
