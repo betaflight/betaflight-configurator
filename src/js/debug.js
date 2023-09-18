@@ -86,6 +86,7 @@ const DEBUG = {
         {text: "CURRENT_ANGLE"},
         {text: "DSHOT_TELEMETRY_COUNTS"},
         {text: "RPM_LIMIT"},
+        {text: "RC_STATS"},
     ],
 
     fieldNames : {

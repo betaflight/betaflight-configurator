@@ -192,10 +192,14 @@ sensors.initialize = function (callback) {
     }
 
     function displayDebugColumnNames() {
+        const debugModeName = DEBUG.modes[FC.PID_ADVANCED_CONFIG.debugMode].text;
+        const debugFields = DEBUG.fieldNames[debugModeName];
+
         for (let i = 0; i < sensors.debugColumns; i++) {
-            const debugModeName = DEBUG.modes[FC.PID_ADVANCED_CONFIG.debugMode].text;
-            const debugFields = DEBUG.fieldNames[debugModeName];
-            const msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
+            let msg = `Debug ${i} unknown`;
+            if (debugFields) {
+                msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
+            }
 
             $(`.plot_control.debug${i}`)
             .children('.title')
