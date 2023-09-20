@@ -10,8 +10,10 @@ import * as d3 from 'd3';
 import $ from 'jquery';
 import semver from 'semver';
 import { API_VERSION_1_46 } from "../data_storage";
+import DEBUG from "../debug";
 
 const sensors = {};
+
 sensors.initialize = function (callback) {
 
     if (GUI.active_tab != 'sensors') {
@@ -189,6 +191,22 @@ sensors.initialize = function (callback) {
         }
     }
 
+    function displayDebugColumnNames() {
+        const debugModeName = DEBUG.modes[FC.PID_ADVANCED_CONFIG.debugMode].text;
+        const debugFields = DEBUG.fieldNames[debugModeName];
+
+        for (let i = 0; i < sensors.debugColumns; i++) {
+            let msg = `Debug ${i} unknown`;
+            if (debugFields) {
+                msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
+            }
+
+            $(`.plot_control.debug${i}`)
+            .children('.title')
+            .text(msg);
+        }
+    }
+
     $('#content').load("./tabs/sensors.html", function load_html() {
         // translate to user-selected language
         i18n.localizePage();
@@ -254,6 +272,8 @@ sensors.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             sensors.debugColumns = 8;
+
+            MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, displayDebugColumnNames);
         } else {
             sensors.debugColumns = 4;
 
