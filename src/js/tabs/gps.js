@@ -211,10 +211,11 @@ gps.initialize = async function (callback) {
             eSsTable.html('');
             eSsTable.append(`
                 <tr class="titles">
-                    <td style="width: 12%;" i18n="gpsSignalGnssId">${i18n.getMessage('gpsSignalGnssId')}</td>
-                    <td style="width: 10%;" i18n="gpsSignalSatId">${i18n.getMessage('gpsSignalSatId')}</td>
-                    <td style="width: 25%;" i18n="gpsSignalStr">${i18n.getMessage('gpsSignalStr')}</td>
-                    <td style="width: 53%;" i18n="gpsSignalStatusQly">${i18n.getMessage('gpsSignalStatusQly')}</td>
+                    <td style="text-align: left;  width: 12%;" i18n="gpsSignalGnssId">${i18n.getMessage('gpsSignalGnssId')}</td>
+                    <td style="text-align: center;width: 10%;" i18n="gpsSignalSatId">${i18n.getMessage('gpsSignalSatId')}</td>
+                    <td style="text-align: center;width: 25%;" i18n="gpsSignalStr">${i18n.getMessage('gpsSignalStr')}</td>
+                    <td style="text-align: left;  width: 17%;" i18n="gpsSignalStatus">${i18n.getMessage('gpsSignalStatus')}</td>
+                    <td style="text-align: left;  width: 33%;" i18n="gpsSignalQuality">${i18n.getMessage('gpsSignalQuality')}</td>
                 </tr>
             `);
 
@@ -281,12 +282,13 @@ gps.initialize = async function (callback) {
 
                         // 1st column: unused = red, used = green
                         if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
-                            used = `<span class="colorToggle ready">&nbsp${used}&nbsp</span>`;
+                            used = `<span class="colorToggle ready">${used}</span>`;
                         } else {
                             used = `<span class="colorToggle ${usedColor}">${used}</span>`;
                         }
 
-                        rowContent += `<td>${used} | ${quality}</td>`;
+                        rowContent += `<td style="text-align: left;  width: 17%;">${used}</td>
+                                       <td style="text-align: left;  width: 33%;">${quality}</td>`;
                     }
                     eSsTable.append(`<tr>${rowContent}</tr>`);
                 }
