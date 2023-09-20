@@ -510,7 +510,7 @@ auxiliary.initialize = function (callback) {
                     // not flightMode mode
                     modeElement.toggle(!hideNoFlight);
                 }
-        }
+            }
 
             auto_select_channel(FC.RC.channels, FC.RC.active_channels, FC.RSSI_CONFIG.channel);
 
