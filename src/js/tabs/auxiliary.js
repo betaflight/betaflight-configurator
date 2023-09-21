@@ -51,12 +51,7 @@ auxiliary.initialize = function (callback) {
     }
 
     function isFlightMode(name) {
-        for (let value of flightModes) {
-            if (name == value) {
-                return true;
-            }
-        }
-        return false;
+        return flightModes.includes(name);
     }
 
     MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, get_mode_ranges);
