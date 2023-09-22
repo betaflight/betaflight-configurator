@@ -2021,6 +2021,10 @@ pid_tuning.initialize = function (callback) {
                 self.analyticsChanges['PidTuningSliders'] = "On";
             });
 
+            allPidTuningSliders.each(function (i) {
+               self.sliderOnScroll($(this));
+            });
+
             // reset to middle with double click
             allPidTuningSliders.dblclick(function() {
                 const slider = $(this);
@@ -2116,6 +2120,10 @@ pid_tuning.initialize = function (callback) {
                     self.calculateNewDTermFilters();
                     self.analyticsChanges['DTermFilterTuningSlider'] = "On";
                 }
+            });
+
+            allFilterTuningSliders.each(function() {
+               self.sliderOnScroll($(this));
             });
 
             // reset to middle with double click
@@ -2968,6 +2976,29 @@ pid_tuning.changeRatesTypeLogo = function() {
 
 pid_tuning.expertModeChanged = function(expertModeEnabled) {
     TuningSliders.setExpertMode(expertModeEnabled);
+};
+
+pid_tuning.sliderOnScroll = function(slider, e) {
+    slider.parent().on('input wheel', function(e) {
+        if (slider.prop('disabled')) {
+            return;
+        }
+
+        if (!(e.originalEvent?.deltaY && e.originalEvent?.altKey)) {
+            return;
+        }
+
+        e.preventDefault();
+
+        const step = parseFloat(slider.attr('step'));
+        const delta = e.originalEvent.deltaY > 0 ? -step : step;
+        const preScrollSliderValue = isInt(slider.val()) ? parseInt(slider.val()) : parseFloat(slider.val());
+        const sliderValue =  (Math.floor(preScrollSliderValue * 100) + Math.floor(delta * 100)) / 100;
+
+        slider.val(sliderValue);
+        slider.trigger('input');
+        slider.trigger('change');
+    });
 };
 
 TABS.pid_tuning = pid_tuning;
