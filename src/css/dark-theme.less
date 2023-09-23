@@ -460,6 +460,15 @@ progress[value] {
             background-color: #3a3a3a;
             color: white;
         }
+        .x {
+            background-color: #00A8F0;
+        }
+        .y {
+            background-color: #C0D800;
+        }
+        .z {
+            background-color: #CB4B4B;
+        }    
     }
     .motorblock {
         background-color: #393b3a;
@@ -481,6 +490,17 @@ progress[value] {
     text {
         fill: white;
     }
+    .line {
+		&:nth-child(1) {
+			stroke: #00A8F0;
+		}
+		&:nth-child(2) {
+			stroke: #C0D800;
+		}
+		&:nth-child(3) {
+			stroke: #CB4B4B;
+		}
+	}
 }
 .tab-onboard_logging {
     .regular-button.disabled {
@@ -833,6 +853,39 @@ progress[value] {
         select {
             background-color: #3a3a3a;
             color: white;
+        }
+        .x {
+            background-color: #00A8F0;
+        }
+        .y {
+            background-color: #C0D800;
+        }
+        .z {
+            background-color: #CB4B4B;
+        }
+    }
+    .line {
+		&:nth-child(1) {
+			stroke: #00A8F0;
+		}
+		&:nth-child(2) {
+			stroke: #C0D800;
+		}
+		&:nth-child(3) {
+			stroke: #CB4B4B;
+		}
+    }
+    .legend {
+		.item {
+			&:nth-child(1) {
+				fill: #00A8F0;
+			}
+			&:nth-child(2) {
+				fill: #C0D800;
+			}
+			&:nth-child(3) {
+				fill: #CB4B4B;
+			}
         }
     }
     text {
