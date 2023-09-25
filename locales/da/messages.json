@@ -1173,7 +1173,7 @@
         "message": "&#8226; UART til modtageren skal indstilles til ‘Serial Rx’ (i fanen <i>Porte</i>)<br>&#8226; Vælg den korrekte leverandør protokol i rullemenu"
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>Note:</strong> SPI RX-leverandøren vil kun fungere, hvis den nødvendige hardware er on-board eller tilsluttet en SPI-bus."
+        "message": "<strong>Note:</strong> SPI RX konfiguration kræver at den nødvendige hardware er integreret i FC eller FC tilsluttet en SPI-bus."
     },
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Bemærk:</strong> Ikke alle funktioner understøttes af alle FC / flight controllere. Aktiveres en bestemt funktion, og er den derefter deaktiveret, når du har valgt \"Gem og genstart\", er funktionen ikke understøttet af din FC."
@@ -2082,19 +2082,19 @@
         "message": "Minimumsværdien (i μs) for at en pind registreres som høj/højre for kommandoinput (MAX_CHECK)."
     },
     "receiverDeadband": {
-        "message": "RC Deadband"
+        "message": "RC afvigelse"
     },
     "receiverHelpDeadband": {
         "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med output-fluktueringer, kan denne værdi øges, hvis RC input rykker i tomgang."
     },
     "receiverYawDeadband": {
-        "message": "Sideror Deadband"
+        "message": "Sideror afvigelse"
     },
     "receiverHelpYawDeadband": {
         "message": "Disse er værdier (i μs) af, hvor meget RC input kan afvige, før det anses som gyldigt. For sendere med output-fluktueringer, kan denne værdi øges, hvis RC input rykker  i tomgang. <strong>Denne indstilling gælder kun sideror.</strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": "3D gas Deadband"
+        "message": "3D gas afvigelse"
     },
     "receiverHelp3dDeadbandThrottle": {
         "message": "Disse er værdier (i μs). For at udvide den neutrale zone, forøg værdien. <strong>Denne indstilling gælder kun 3D gas.</strong>"
@@ -2704,8 +2704,11 @@
     "gpsSignalSatId": {
         "message": "Sat-ID"
     },
-    "gpsSignalStatusQly": {
-        "message": "Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Kvalitet"
+    "gpsSignalStatus": {
+        "message": "Status"
+    },
+    "gpsSignalQuality": {
+        "message": "Kvalitet"
     },
     "gnssQualityNoSignal": {
         "message": "ingen signal"
@@ -2729,7 +2732,7 @@
         "message": "anvendes ikke"
     },
     "gnssUsedUsed": {
-        "message": "&nbsp;ANVENDES&nbsp;&nbsp;"
+        "message": "ANVENDT"
     },
     "gnssHealthyUnknown": {
         "message": "ukendt"

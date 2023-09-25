@@ -1259,6 +1259,9 @@
     "configurationDigitalIdlePercent": {
         "message": "Ralentí Motor (%, estático)"
     },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "O valor \"Motor Idle (estático)\" é a porcentaxe do acelerador máximo que se envía aos ESC cando o acelerador está na posición mínima da palanca e a aeronave está armada. <br><br>Auménteo para gañar máis velocidade de inactividade e evitar desincronizacións. Demasiado alto e a aeronave parece flotar. Demasiado baixo e os motores poden desincronizarse ou tardar en iniciarse."
+    },
     "configurationMotorPoles": {
         "message": "Postes do motor",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -2191,9 +2194,25 @@
     "auxiliaryModeLogicAND": {
         "message": "E"
     },
+    "auxiliaryHelpMode_3D": {
+        "message": "Permite a dirección reversible do motor para proporcionar un empuxe negativo e permitir o voo invertido. O acelerador pasa a ser de -100 a +100 en lugar de 0 a 100",
+        "description": "Help text to 3D mode"
+    },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Modo de voo que limita o ángulo da aeronave ao voar en modo acro",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Habilita a saída do motor e permite que a aeronave voe",
+        "description": "Help text to ARM mode"
+    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "Neste modo de nivelación automática, as canles de roll e pitch controlan o ángulo entre o eixe relevante e o vertical, logrando un voo nivelado só deixando os sticks centrados",
         "description": "Help text to ANGLE mode"
+    },
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "Este modo de voo aumenta P e I durante os movementos rápidos do acelerador para mellorar o seguimento do stick e evitar a deriva do morro nos cambios rápidos do acelerador",
+        "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "No modo mesturador estándar, cando se calcula o balance, o cabeceo e o guiñada e satura un motor, tódolos motores reduciranse por igual. Cando un motor vai por debaixo do mínimo, córtase. Digamos que tivese o acelerador xusto por encima do mínimo e intentou un roll rápido; xa que dous motores non poden baixar, obtén esencialmente a metade da potencia (a metade da súa ganancia PID). Se as súas entradas solicitasen máis dun 100% de diferenza entre os motores altos e baixos, os motores baixos quedarían cortados, rompendo a simetría do equilibrio do motor reducindo a ganancia de forma desigual",
@@ -2207,6 +2226,14 @@
         "message": "Desactivar/activar pitidos, incluíndo avisos, estado e modo BEEPER",
         "description": "Help text to BEEPERMUTE mode"
     },
+    "auxiliaryHelpMode_BEEPERON": {
+        "message": "Activa o modo BEEPER ON",
+        "description": "Help text to BEEPER ON mode"
+    },
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "Activa o modo BEEP GPS SATELLITE COUNT",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
+    },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "Activa o rexistro da Caixa Negra",
         "description": "Help text to BLACKBOX mode"
@@ -2214,6 +2241,14 @@
     "auxiliaryHelpMode_BLACKBOXERASE": {
         "message": "Borrar rxgistro da Caixa Negra",
         "description": "Help text to BLACKBOX ERASE mode"
+    },
+    "auxiliaryHelpMode_BOXPREARM": {
+        "message": "Activa o modo BOXPREARM",
+        "description": "Help text to BOXPREARM mode"
+    },
+    "auxiliaryHelpMode_CALIB": {
+        "message": "Inicia a calibración en voo",
+        "description": "Help text to CALIB mode"
     },
     "auxiliaryHelpMode_CAMERACONTROL1": {
         "message": "Use para alternar o CONTROL personalizado da CÁMARA 1. Consulte o manual do provedor",
@@ -2227,6 +2262,10 @@
         "message": "Use para alternar o CONTROL DA CÁMARA personalizado 3. Consulte o manual do vendedor",
         "description": "Help text to customized CAMERA CONTROL 3 mode"
     },
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "Activa o modo de estabilización da cámara",
+        "description": "Help text to CAMSTAB mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Entra manualmente a fase 2 a proba de fallos",
         "description": "Help text to FAILSAFE mode"
@@ -2239,6 +2278,10 @@
         "message": "Aplique a rotación de guiñada en relación a unha cámara FPV montada nun ángulo preestablecido",
         "description": "Help text to FPV ANGLE MIX mode"
     },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Utilízao para indicar o número de satélites GPS atopados soando tantas veces como satélites atopara",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
+    },
     "auxiliaryHelpMode_GPSRESCUE": {
         "message": "Activa o 'GPS Rescue' para voltar a aeronave ao lugar onde foi armada por última vez",
         "description": "Help text to GPS RESCUE mode"
@@ -2247,6 +2290,10 @@
         "message": "Axuste de rumbo - Establece unha nova orixe de yaw para o modo HEADFREE",
         "description": "Help text to HEAD ADJ mode"
     },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Modo de voo onde o yaw está aliñado cun marco de referencia externo (a miúdo cara onde o piloto está mirando) en lugar do da aeronave. Deseñado para principiantes pero de uso pouco frecuente, recomenda mellor o modo ANGLE",
+        "description": "Help text to HEADFREE mode"
+    },
     "auxiliaryHelpMode_HORIZON": {
         "message": "Este modo híbrido funciona exactamente igual que o modo ANGLE cos sticks de roll e pitch centrados (permitindo así o voo autonivelado), despois compórtase gradualmente máis e máis como o modo RATE predeterminado a medida que os paus se afastan da posición central",
         "description": "Help text to HORIZON mode"
@@ -2254,6 +2301,18 @@
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "Sistema de asistencia ao inicio de carreira",
         "description": "Help text to LAUNCH CONTROL mode"
+    },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Desactiva a saída LED STRIP",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Bloqueo de rumbo á dirección do magnetómetro (control do compás)",
+        "description": "Help text to MAG mode"
+    },
+    "auxiliaryHelpMode_MSPOVERRIDE": {
+        "message": "Activa o modo MSP Override",
+        "description": "Help text to MSP OVERRIDE mode"
     },
     "auxiliaryHelpMode_OSDDISABLE": {
         "message": "Activar/Desactivar a visualización en pantalla",
@@ -2267,6 +2326,10 @@
         "message": "Desactiva permanentemente unha aeronave accidentada ata que se apague",
         "description": "Help text to PARALYZE mode"
     },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "Use para alternar PIDAUDIO",
+        "description": "Help text to PIDAUDIO mode"
+    },
     "auxiliaryHelpMode_PREARM": {
         "message": "Ao armar, agarde a que este interruptor se active antes de armar",
         "description": "Help text to PREARM mode"
@@ -2279,9 +2342,37 @@
         "message": "Desactivar/activar comandos cos stick",
         "description": "Help text to STICK COMMANDS DISABLE mode"
     },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "Use para alternar SERVO1",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "Use para alternar SERVO2",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "Use para alternar SERVO3",
+        "description": "Help text to SERVO3 mode"
+    },
     "auxiliaryHelpMode_TELEMETRY": {
         "message": "Activa a telemetría mediante o interruptor",
         "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_USER1": {
+        "message": "Use para alternar o USUARIO1 personalizado. Controla a saída arbitraria mediante PINIO",
+        "description": "Help text to customized USER1 mode"
+    },
+    "auxiliaryHelpMode_USER2": {
+        "message": "Use para alternar o USUARIO2 personalizado. Controla a saída arbitraria mediante PINIO",
+        "description": "Help text to customized USER2 mode"
+    },
+    "auxiliaryHelpMode_USER3": {
+        "message": "Use para alternar o USUARIO3 personalizado. Controla a saída arbitraria mediante PINIO",
+        "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Use para alternar o USUARIO4 personalizado. Controla a saída arbitraria mediante PINIO",
+        "description": "Help text to customized USER4 mode"
     },
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Desactive o control da configuración de VTX a través do OSD",
@@ -2582,8 +2673,20 @@
     "gpsAltitude": {
         "message": "Altura:"
     },
+    "gpsLatLon": {
+        "message": "Latitude / Lonxitude actual:",
+        "description": "Show GPS position - Latitude / Longitude"
+    },
+    "gpsHeading": {
+        "message": "Rumbo Mag / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
+    },
     "gpsSpeed": {
         "message": "Velocidade:"
+    },
+    "gpsSats": {
+        "message": "Número de satélites:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Distancia a casa:"
@@ -2603,6 +2706,12 @@
     },
     "gpsSignalSatId": {
         "message": "Identificación satélite"
+    },
+    "gpsSignalStatus": {
+        "message": "Estado"
+    },
+    "gpsSignalQuality": {
+        "message": "Calidade"
     },
     "gnssQualityNoSignal": {
         "message": "sen sinal"
@@ -2624,6 +2733,9 @@
     },
     "gnssUsedUnused": {
         "message": "sen uso"
+    },
+    "gnssUsedUsed": {
+        "message": "USADO"
     },
     "gnssHealthyUnknown": {
         "message": "descoñecido"
@@ -3456,6 +3568,29 @@
     },
     "ledStripVtxOverlay": {
         "message": "VTX (usa a frecuencia VTX para asinar a cor)"
+    },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Brillo",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Porcentaxe do brillo máximo dos LEDs."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Diferenza de tonalidade entre cada LED.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Frecuencia",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Frecuencia do cambio de cor, noutros termos a velocidade do efecto.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
     },
     "ledStripFunctionSection": {
         "message": "Funcións LED"
@@ -4304,6 +4439,9 @@
     "pidTuningIdleMinRpm": {
         "message": "Valor Dinámico Idle [* 100 RPM]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamic Idle mellora o control a baixas revolucións e reduce o risco de desincronización do motor. <br /><br /> Mellora a autoridade PID, a estabilidade do acelerador cero, o tempo de suspensión invertido e o freado do motor.<br /><br />As rpm mínimas de ralentí dinámico deben establecerse entre 3000 e 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki </a> para máis información."
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Ralentí Dinámico está DESACTIVADO porque a Telemetría Dshot está DESACTIVADA"
     },
@@ -4346,6 +4484,9 @@
     "failsafeRxMaxUsecItem": {
         "message": "Lonxitud máxima"
     },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "Etapa 1 - Configuración de reserva de canles"
+    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Estes axustes aplicaranse a cada canal auxiliar non válido ou a tódolos canáis cando se entra na Etapa 1.<strong>Nota:</strong> os valores gárdanse en pasos de 25usec, polo que os cambios pequenos desaparecen"
     },
@@ -4355,8 +4496,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold</strong> significa manter o último valor correcto recibido. <strong>Set</strong> significa que se utilizará o valor especificado aquí"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Manter",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Establecer",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Etapa 2 - Axustes"
+    },
+    "failsafeDelayItem": {
+        "message": "Período de tempo na fase 1 a proba de fallos despois da perda do sinal [seconds]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Establece o período de tempo na fase 1 a proba de fallos despois da perda do sinal. Se o tempo de atraso expira sen retorno do sinal, comezará a Fase 2 a proba de fallos"
     },
     "failsafeThrottleLowItem": {
         "message": "Demora para baixar o acelerador en Failsafe [seconds]"
@@ -4397,8 +4556,26 @@
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Altitude actual"
     },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Ascenso inicial (metros)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "A distancia que subirá o quad, por riba da altitude actual, cando se inicie un rescate e o modo de altitude estea configurado en Altitude ACTUAL; tamén se engade cando está no modo Altitude MAX."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Altitude de retorno (metros) - <strong>só se aplica no modo Altitude Fixa</strong>"
+    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Velocidade de ascenso (metros/segundo)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Velocidade de retorno (metros/segundo)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Ángulo máximo de pitch"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Os ángulos máximos máis altos dan lugar a retornos máis agresivos e velocidades de avance máis altas. Pode ser útil para aeronaves máis pesadas, de alta resistencia ou de baixa autoridade, ou para usar con ventos máis fortes. ADVERTENCIA: O acelerador de rescate xeralmente debe aumentarse se aumenta o ángulo máximo. Se non, o quad pode perder altitude e chocar!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distancia de descenso (metros)"
@@ -4406,11 +4583,27 @@
     "failsafeGpsRescueItemDescendRate": {
         "message": "Velocidade de descenso (metros/segundo)"
     },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "A taxa de descenso inicial establécese en 3 veces este valor, diminuíndo ata o valor establecido na altitude de aterraxe."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Se o rescate comeza demasiado preto da casa (dentro desta distancia mínima), a aeronave voará, no seu rumbo actual, ata polo menos esta distancia da casa, e despois comezará o comportamento normal de rescate",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Aceleredor mínimo"
     },
     "failsafeGpsRescueItemThrottleMax": {
         "message": "Acelerador máximo"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Debe aumentarse para as aeronaves máis pesadas, cargadas ou de baixa autoridade, se é probable un retorno contra ventos fortes ou se aumenta o ángulo de cabeceo máximo."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Acelerador para flotar - <span class=\"message-negative\">IMPORTANTE: estableza este valor con precisión</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Para atopar o valor correcto, configure a acción do interruptor Failsafe na Fase 2, configure o Procedemento Failsafe da Fase 2 en Aterrar e axuste o valor do acelerador que se usa ao aterrar ata que o quad se coloque ou descenda lentamente. A continuación, configure o Hover do acelerador de rescate do GPS e o valor de reserva da canle da etapa 1 para o acelerador a este valor."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Distancia mínima a casa (metros)"
@@ -4420,6 +4613,12 @@
     },
     "failsafeGpsRescueItemMinSats": {
         "message": "Satélites mínimos"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Permitir armar sen corrección - <span class=\"message-negative\">ADVERTENCIA: Non hai corrección = desarmar en caso de fallo!</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Non recomendado. Permite armar sen que se estableza un punto de inicio, pero o quad desarmarase e fallará cunha verdadeira perda de Rx. Se se proba cun interruptor, hai un breve período de non facer nada antes do desarmado."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Controis de corrección"
@@ -4858,11 +5057,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Imaxen personalizada:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "O tamaño debe ser de $t(logoWidthPx)x$t(logoHeightPx) píxeles"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Debe conter píxeles verdes, brancos e negros"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Pulse <b>$t(osdSetupUploadFont.message)</b> para conservar logo personalizado"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Tamaño da imaxe inválido: {{width}}×{{height}} (esperado $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "A imaxen conten un píxel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) nas coordenadas {{posX}}×{{posY}}"

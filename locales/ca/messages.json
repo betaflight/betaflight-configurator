@@ -2712,8 +2712,11 @@
     "gpsSignalSatId": {
         "message": "Sat ID"
     },
-    "gpsSignalStatusQly": {
-        "message": "Estat &nbsp;&nbsp;&nbsp; | &nbsp;Qualitat"
+    "gpsSignalStatus": {
+        "message": "Estat"
+    },
+    "gpsSignalQuality": {
+        "message": "Qualitat"
     },
     "gnssQualityNoSignal": {
         "message": "sense senyal"
@@ -2737,7 +2740,7 @@
         "message": "no utilitzat"
     },
     "gnssUsedUsed": {
-        "message": "USAT&nbsp;"
+        "message": "USAT"
     },
     "gnssHealthyUnknown": {
         "message": "desconegut"

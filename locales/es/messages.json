@@ -2701,9 +2701,6 @@
     "gpsSignalSatId": {
         "message": "ID Sat"
     },
-    "gpsSignalStatusQly": {
-        "message": "Estado &nbsp;&nbsp;&nbsp; | &nbsp;Calidad"
-    },
     "gnssQualityNoSignal": {
         "message": "sin señal"
     },
@@ -2724,9 +2721,6 @@
     },
     "gnssUsedUnused": {
         "message": "no usado"
-    },
-    "gnssUsedUsed": {
-        "message": "USED&nbsp;"
     },
     "gnssHealthyUnknown": {
         "message": "desconocido"
