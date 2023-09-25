@@ -2220,7 +2220,7 @@
         "description": "Help text to BEEPER mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
-        "message": "警告、ステータス、BEEPERモードを含むビープ音を無効 / 有効にします",
+        "message": "警告や状態、BEEPERモードを含むビープ音を無効 / 有効にします",
         "description": "Help text to BEEPERMUTE mode"
     },
     "auxiliaryHelpMode_BEEPERON": {
@@ -2692,7 +2692,7 @@
         "message": "GPS強度"
     },
     "gpsSignalStrHeadHelp": {
-        "message": "検出された各GPS情報の信号強度、品質、ステータスを表示",
+        "message": "検出された各GPS情報の信号強度、品質、状態を表示",
         "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
@@ -2704,8 +2704,11 @@
     "gpsSignalSatId": {
         "message": "衛星ID"
     },
-    "gpsSignalStatusQly": {
-        "message": "ステータス &nbsp;&nbsp;&nbsp; | &nbsp;品質"
+    "gpsSignalStatus": {
+        "message": "状態"
+    },
+    "gpsSignalQuality": {
+        "message": "品質"
     },
     "gnssQualityNoSignal": {
         "message": "圏外"
@@ -2729,7 +2732,7 @@
         "message": "未使用"
     },
     "gnssUsedUsed": {
-        "message": "使用中&nbsp;"
+        "message": "使用中"
     },
     "gnssHealthyUnknown": {
         "message": "不明"
@@ -6955,7 +6958,7 @@
         "description": "UI filter name"
     },
     "presetsFilterStatus": {
-        "message": "ステータス",
+        "message": "状態",
         "description": "UI filter name - official/community/experimental"
     },
     "presetsLoadError": {

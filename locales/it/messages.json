@@ -2704,8 +2704,11 @@
     "gpsSignalSatId": {
         "message": "ID Sat"
     },
-    "gpsSignalStatusQly": {
-        "message": "Stato &nbsp;&nbsp;&nbsp; | &nbsp;Qualità"
+    "gpsSignalStatus": {
+        "message": "Stato"
+    },
+    "gpsSignalQuality": {
+        "message": "Qualità"
     },
     "gnssQualityNoSignal": {
         "message": "nessun segnale"
@@ -2729,7 +2732,7 @@
         "message": "non usato"
     },
     "gnssUsedUsed": {
-        "message": "USATO&nbsp;"
+        "message": "USATO"
     },
     "gnssHealthyUnknown": {
         "message": "sconosciuto"
