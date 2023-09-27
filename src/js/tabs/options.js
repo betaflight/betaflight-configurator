@@ -179,7 +179,7 @@ options.initCordovaForceComputerUI = function () {
 
 options.initDarkTheme = function () {
     $('#darkThemeSelect')
-        .val(DarkTheme.configEnabled)
+        .val(DarkTheme.configSetting)
         .change(function () {
             const value = parseInt($(this).val());
 

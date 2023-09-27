@@ -8,13 +8,14 @@ const css_dark = [
 ];
 
 const DarkTheme = {
-    configEnabled: undefined,
+    configSetting: undefined,
+    enabled: false,
 };
 
 DarkTheme.isDarkThemeEnabled = function (callback) {
-    if (this.configEnabled === 0) {
+    if (this.configSetting === 0) {
         callback(true);
-    } else if (this.configEnabled === 2) {
+    } else if (this.configSetting === 2) {
         if (GUI.isCordova()) {
             cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
                 callback(success.value);
@@ -47,26 +48,27 @@ DarkTheme.apply = function() {
 };
 
 DarkTheme.autoSet = function() {
-    if (this.configEnabled === 2) {
+    if (this.configSetting === 2) {
         this.apply();
     }
 };
 
 DarkTheme.setConfig = function (result) {
-    if (this.configEnabled !== result) {
-        this.configEnabled = result;
+    if (this.configSetting !== result) {
+        this.configSetting = result;
         this.apply();
     }
 };
 
 DarkTheme.applyDark = function () {
     css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', false));
+    this.enabled = true;
 };
 
 DarkTheme.applyNormal = function () {
     css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
+    this.enabled = false;
 };
-
 
 export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);

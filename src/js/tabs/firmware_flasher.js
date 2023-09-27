@@ -19,6 +19,7 @@ import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { checkChromeRuntimeError, urlExists } from '../utils/common';
 import { generateFilename } from '../utils/generate_filename';
+import DarkTheme from '../DarkTheme';
 
 const firmware_flasher = {
     targets: null,
@@ -55,7 +56,7 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
-            self.releaseLoader.loadSponsorTile(
+            self.releaseLoader.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light',
                 (content) => {
                     if (content) {
                         $('div.tab_sponsor').html(content);
