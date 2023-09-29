@@ -6,7 +6,6 @@ const DEBUG = {
         {text: "GYRO_FILTERED"},
         {text: "ACCELEROMETER"},
         {text: "PIDLOOP"},
-        {text: "GYRO_SCALED"},
         {text: "RC_INTERPOLATION"},
         {text: "ANGLERATE"},
         {text: "ESC_SENSOR"},
@@ -50,7 +49,6 @@ const DEBUG = {
         {text: "D_MIN"},
         {text: "AC_CORRECTION"},
         {text: "AC_ERROR"},
-        {text: "DUAL_GYRO_SCALED"},
         {text: "DSHOT_RPM_ERRORS"},
         {text: "CRSF_LINK_STATISTICS_UPLINK"},
         {text: "CRSF_LINK_STATISTICS_PWR"},
@@ -150,12 +148,6 @@ const DEBUG = {
             'debug[0]':'Gyro Pre-Notch [roll]',
             'debug[1]':'Gyro Pre-Notch [pitch]',
             'debug[2]':'Gyro Pre-Notch [yaw]',
-        },
-        'GYRO_SCALED' : {
-            'debug[all]':'Debug Gyro Scaled',
-            'debug[0]':'Gyro Scaled [roll]',
-            'debug[1]':'Gyro Scaled [pitch]',
-            'debug[2]':'Gyro Scaled [yaw]',
         },
         'RC_INTERPOLATION' : {
             'debug[all]':'Debug RC Interpolation',
@@ -451,13 +443,6 @@ const DEBUG = {
             'debug[0]':'AC Error [roll]',
             'debug[1]':'AC Error [pitch]',
             'debug[2]':'AC Error [yaw]',
-        },
-        'DUAL_GYRO_SCALED' : {
-            'debug[all]':'Dual Gyro Scaled',
-            'debug[0]':'Gyro 1 [roll]',
-            'debug[1]':'Gyro 1 [pitch]',
-            'debug[2]':'Gyro 2 [roll]',
-            'debug[3]':'Gyro 2 [pitch]',
         },
         'DSHOT_RPM_ERRORS' : {
             'debug[all]':'DSHOT RPM Error',
