@@ -3097,7 +3097,7 @@
         "message": "Accelerometer - g (deg)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetometer - Ga"
+        "message": "Magnetometer"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitude - meters"
