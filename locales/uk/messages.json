@@ -1256,6 +1256,9 @@
     "configurationDigitalIdlePercent": {
         "message": "% тяги на холостому ходу (статичний)"
     },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "Значення \"Відсоток тяги холостого ходу (статичний)\" - це відсоток від максимальної тяги, який надсилається до ESC, коли стік тяги знаходиться в мінімальному положенні і судно взведене. <br><br>Збільште це значення, щоб отримати більшу швидкість на холостому ходу та уникнути десинхронізації. Занадто високе значення - апарат відчувається плаваючим, буде погано опускатись. Занадто низьке значення - можуть мати місце десинхронізації моторів або повільний запуск."
+    },
     "configurationMotorPoles": {
         "message": "Полюси двигуна",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -2671,6 +2674,10 @@
         "message": "Поточна широта/довгота:",
         "description": "Show GPS position - Latitude / Longitude"
     },
+    "gpsHeading": {
+        "message": "Курс за компасом / GPS:",
+        "description": "Show GPS heading - Magnetic / GPS course over ground"
+    },
     "gpsSpeed": {
         "message": "Швидкість:"
     },
@@ -2697,6 +2704,12 @@
     "gpsSignalSatId": {
         "message": "ID супутника"
     },
+    "gpsSignalStatus": {
+        "message": "Стан"
+    },
+    "gpsSignalQuality": {
+        "message": "Якість"
+    },
     "gnssQualityNoSignal": {
         "message": "немає сигналу"
     },
@@ -2717,6 +2730,9 @@
     },
     "gnssUsedUnused": {
         "message": "не використовується"
+    },
+    "gnssUsedUsed": {
+        "message": "використовується"
     },
     "gnssHealthyUnknown": {
         "message": "невідомо"
@@ -3549,6 +3565,29 @@
     },
     "ledStripVtxOverlay": {
         "message": "VTX (використовує частоту відеопередавача, щоб призначити колір)"
+    },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Яскравість",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Максимум яскравості світлодіодів у відсотках."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Дельта",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Різниця в кольорі між світлодіодами.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Частота",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Частота зміни кольору, іншими словами швидкість ефекту.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
     },
     "ledStripFunctionSection": {
         "message": "Функції LED"
@@ -4397,6 +4436,9 @@
     "pidTuningIdleMinRpm": {
         "message": "Значення динамічного холостого ходу [* 100 об/хв]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Динамічний режим холостого ходу поліпшує керування при низьких оборотах та зменшує ризик десинхронізації моторів. <br /><br /> Він також покращує керованість дрона циклом ПІД, стабільність при нульовій тязі, час полоту дороги дриґом та гальмування моторів.<br /><br />\nМінімальні обороти динамічного холостого ходу повинні бути встановлені приблизно на рівні 3000 - 3500 об/хв. <br /><br />Відвідайте <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">цей запис вікі</a> для отримання додаткової інформації."
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Динамічний холостий хід вимкнено, оскільки Dshot телеметрія вимкнена"
     },
@@ -4439,17 +4481,38 @@
     "failsafeRxMaxUsecItem": {
         "message": "Максимальна довжина"
     },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "Етап 1 - Налаштування резервних каналів"
+    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Ці налаштування застосовуються до недійсних окремих каналів AUX або до всіх каналів під час переходу до етапу 1. <strong>Примітка:</strong> значення зберігаються з кроком 25 мкс, тому невеликі зміни зникають"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Авто</strong> означає, що крен, тангаж і рискання по центру і тяга низька. <strong>Утримання</strong> означає збереження останнього, отриманого хорошого значення"
+        "message": "<strong>Авто</strong> означає, що крен, тангаж і рискання по центру і тяга низька. <strong>Утримувати</strong> означає збереження останнього отриманого хорошого значення"
     },
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold</strong> означає збереження останнього прийнятного значення. <strong>Set</strong> означає, що використовуватиметься вказане тут значення"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Автоматично",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Утримувати",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Задати",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Етап 2 - Налаштування"
+    },
+    "failsafeDelayItem": {
+        "message": "Тривалість Етапу 1 безаварійності, з моменту втрати сигналу [seconds]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Встановлює тривалість Етапу 1 з моменту втрати сигналу. Якщо час закінчиться без повернення сигналу, запуститься Етап 2"
     },
     "failsafeThrottleLowItem": {
         "message": "Затримка перед вимиканням при низькій тязі [seconds]"
@@ -4490,8 +4553,26 @@
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Поточна висота"
     },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Початковий підйом (метри)"
+    },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "Відстань, на яку квадрокоптер підніметься вище поточної висоти, коли ініціюється GPS порятунок і режим висоти встановлено на \"Поточна висота\"; також додається в режимі \"Максимальна висота\"."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Висота повернення (метри) - <strong>лише у режимі Фіксованої Висоти</strong>"
+    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Швидкість підйому (м/с)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Швидкість повернення відносно землі (м/с)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Максимальний кут тангажу"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Більші максимальні кути призводить до більш агресивних повертань і вищих горизонтальних швидкостей. Це може бути корисним для важких суден, суден з високим опором повітря або поганокерованих суден, або при сильних вітрах. ПОПЕРЕДЖЕННЯ: Зазвичай потрібно збільшити тягу, якщо збільшено максимальний кут! Інакше квадрокоптер може втратити висоту і врізатися!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Відстань для спуску (метри)"
@@ -4499,11 +4580,27 @@
     "failsafeGpsRescueItemDescendRate": {
         "message": "Швидкість зниження (м/с)"
     },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "Початкова швидкість зниження встановлюється втричі більшою за вказане значення, зменшиться до встановленого значення при досягненні висоти посадки."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Якщо процедура порятунку почнеться надто близько до точки зльоту (в межах мінімальної відстані), судно продовжить рух прямо за поточним курсом і почне процедуру порятунку після віддалення від точки зльоту на задану відстань",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Мінімум тяги"
     },
     "failsafeGpsRescueItemThrottleMax": {
         "message": "Максимум тяги"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Слід збільшити для важчих суден, суден з великою парусністю або низькою керованістю, якщо ймовірне повернення проти сильного вітру або якщо збільшено максимальний кут тангажу."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Тяга зависання - <span class=\"message-negative\">ВАЖЛИВО: встановіть цю величину точно</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Щоб знайти правильне значення, встановіть дію перемикача безаварійності на Етап 2, встановіть процедуру безаварійності Етапа 2 - Приземлитись та налаштовуйте значення тяги, яке використовується під час посадки, до того моменту, коли квадрокоптер буде зависати в повітрі або повільно опускатися. Потім встановіть значення тяги зависання для GPS порятунку та у якості значення запасного каналу тяги для Етапу 1."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Мінімальна відстань до точки зльоту (метри)"
@@ -4513,6 +4610,12 @@
     },
     "failsafeGpsRescueItemMinSats": {
         "message": "Мінімум супутників"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Дозволити взведення без отримання координат GPS - <span class=\"message-negative\">УВАГА: нема координат = при безаварійності дрон буде охолощено!</span>"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Не рекомендується. Дозволяє взведення без визначення координат точки взльоту, але коптер охолоститься і впаде при втраті радіозв'язку. У випадку тестування перемикачем, перед охолощенням буде коротка пауза."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Перевірки придатності"
@@ -4951,11 +5054,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Власне зображення:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Розмір повинен бути $t(logoWidthPx)x$t(logoHeightPx) пікселів"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Має містити зелені, чорні та білі пікселі"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Натисніть <b>$t(osdSetupUploadFont.message)</b> щоб зберегти користувацький логотип"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Неправильний розмір зображення: {{width}}×{{height}} (очікується $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Зображення містить неприпустимий піксель: rgb({{valueR}}, {{valueG}}, {{valueB}}) у координатах {{posX}}×{{posY}}"
