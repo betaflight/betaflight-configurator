@@ -121,7 +121,7 @@
     "husky": "^4.3.0",
     "nw-builder": "3.8.3",
     "os": "^0.1.2",
-    "postcss": "^8.4.17",
+    "postcss": "^8.4.31",
     "rollup": "^3.9.0",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-vue": "^5.*.*",
