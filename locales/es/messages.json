@@ -1256,6 +1256,9 @@
     "configurationDigitalIdlePercent": {
         "message": "Ralentí Motor (%, estático)"
     },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "El valor de 'ralentí motor (estático)' es el porcentaje del valor máximo del acelerador que es enviado a los ESCs cuando el mando del acelerador está al mínimo y la aeronave está armada.<br><br> Incrementa este valor para obtener más velocidad al ralentí y evitar desincronizaciones. Un valor demasiado alto y la aeronave se notará muy flotante. Un valor muy bajo puede provocar desincronizaciones y que sea lento al iniciar."
+    },
     "configurationMotorPoles": {
         "message": "Polos del motor",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -2701,6 +2704,12 @@
     "gpsSignalSatId": {
         "message": "ID Sat"
     },
+    "gpsSignalStatus": {
+        "message": "Estado"
+    },
+    "gpsSignalQuality": {
+        "message": "Calidad"
+    },
     "gnssQualityNoSignal": {
         "message": "sin señal"
     },
@@ -2721,6 +2730,9 @@
     },
     "gnssUsedUnused": {
         "message": "no usado"
+    },
+    "gnssUsedUsed": {
+        "message": "USADO"
     },
     "gnssHealthyUnknown": {
         "message": "desconocido"
@@ -4424,6 +4436,9 @@
     "pidTuningIdleMinRpm": {
         "message": "Valor de Ralentí Dinámico [* 100 RPM]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Ralentí Dinámico mejora el control a bajas rpm y reduce el riesgo de desincronización del motor. <br /><br /> Mejora la autoridad del PID, la estabilidad con el acelerador a cero, el tiempo invertido y el freno del motor.<br /><br />Las rpm mínimas para el Ralentí Dinámico deben establecerse en unos 3000 - 3500 rpm. <br /><br />Visita <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki</a> para más información."
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Ralentí Dinámico está APAGADO porque la Telemetría Dshot está APAGADA"
     },
@@ -4466,6 +4481,9 @@
     "failsafeRxMaxUsecItem": {
         "message": "Longitud máxima"
     },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "Etapa 1 - Ajustes de Seguridad del Canal"
+    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Estos ajustes se aplican a canales individuales AUX inválidos o a todos los canales cuando se entra en etapa 1. <strong>Nota:</strong> los valores se guardan en pasos de 25usec, por lo que los cambios pequeños desaparecen"
     },
@@ -4475,8 +4493,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Mantener</strong> significa mantener el último valor bueno recibido. <strong>Ajustar</strong> significa que se usará el valor indicado aquí"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Mantener",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Ajustar",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Etapa 2 - Ajustes"
+    },
+    "failsafeDelayItem": {
+        "message": "Periodo de tiempo en la Etapa 1 de seguridad después de la pérdida de señal [segundos]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Establece el período de tiempo en la Etapa 1 de seguridad tras la pérdida de la señal. Si el tiempo de retraso expira sin que se devuelva la señal, se iniciará la Etapa 2"
     },
     "failsafeThrottleLowItem": {
         "message": "Retardo del Modo de Seguridad con Acelerador Bajo [segundos]"
