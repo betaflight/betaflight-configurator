@@ -3000,7 +3000,7 @@
         "message": "Sonar"
     },
     "sensorsDebugSelect": {
-        "message": "Fejlfinding"
+        "message": "Brugerstyret logning"
     },
     "sensorsGyroTitle": {
         "message": "Gyroskop - grad/s"
@@ -3021,7 +3021,7 @@
         "message": "Sonar - cm"
     },
     "sensorsDebugTitle": {
-        "message": "Fejlfinding"
+        "message": "Logning"
     },
     "cliInfo": {
         "message": "<strong>Bemærk:</strong> Forlades CLI vinduet eller trykkes på enhver anden fane vil Configurator <strong>automatisk</strong> sende \"<strong>exit</strong>\" til FC. Med den nyeste firmware vil FC <strong>genstarte</strong> og ændringer som ikke er gemt vil gå <strong>tabt</strong>.<p><strong><span class=\"message-negative\">Advarsel:</span></strong> Nogle kommandoer i CLI kan betyde , at vilkårlige signaler sendes til motorens ESC. Dette kan få motorerne til at rotere, hvis et batteri er tilsluttet. Derfor anbefales det stærkt at sikre, at <strong>enten - intet batteri er tilkoblet - eller at - propellerne er afmonteret,</strong> før du indtaster kommandoer i CLI."
@@ -5409,11 +5409,11 @@
         "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
-        "message": "Fejlsøgning",
+        "message": "Brugerstyret logning",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDebug": {
-        "message": "Fejlsøg variabler"
+        "message": "Logger variabler (for debug)"
     },
     "osdTextElementPIDRoll": {
         "message": "PID krængror",
