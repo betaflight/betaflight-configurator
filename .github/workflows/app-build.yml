@@ -9,7 +9,8 @@ on:
         description: 'Specifies the path to use in the output of the build'
         required: false
         type: string
-
+    secrets: inherit
+       
 jobs:
   test:
     name: Test
