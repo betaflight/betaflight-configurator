@@ -10,4 +10,3 @@ jobs:
     uses: ./.github/workflows/app-build.yml
     with:
       path: 'nightly'
-      secrets: inherit
