@@ -492,21 +492,7 @@ auxiliary.initialize = function (callback) {
                 }
                 hasUsedMode = true;
             }
-            /*
-            let hideUnused = hideUnusedModes && hasUsedMode;
-            // let hideNoFlight = hideNoFlightMode && hasUsedMode;
-            for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-                let modeElement = $(`#mode-${i}`);
-                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
-                    // unused mode
-                    modeElement.toggle( ! hideUnused);
-                }
-                if( isFlightMode(FC.AUX_CONFIG[i])) {
-                    // not flightMode
-                    modeElement.toggle( ! (hideNoFlightMode && hideUnused));
-                }
-            }
-            */
+
             let hideUnused = hideUnusedModes && hasUsedMode;
             let hideNoFlight = hideNoFlightMode && hasUsedMode;
             for (let i = 1; i < FC.AUX_CONFIG.length; i++) {    // ARM has index 0
@@ -516,11 +502,12 @@ auxiliary.initialize = function (callback) {
                     modeElement.toggle(!hideUnused);
                 }
 
-                if( ! isFlightMode(FC.AUX_CONFIG[i])) {
+                if ( ! isFlightMode(FC.AUX_CONFIG[i])) {
                     // not flightMode mode
                     modeElement.toggle(!hideNoFlight);
                 }
             }
+
             auto_select_channel(FC.RC.channels, FC.RC.active_channels, FC.RSSI_CONFIG.channel);
 
             auxChannelCount = FC.RC.active_channels - 4;
