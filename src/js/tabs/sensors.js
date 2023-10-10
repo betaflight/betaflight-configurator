@@ -216,17 +216,17 @@ sensors.initialize = function (callback) {
     function magCalX(newData) {
         magMaxX = Math.max(magMaxX, newData);
         magMinX = Math.min(magMinX, newData);
-        return ((magMaxX + magMinX)/2).toFixed(2);
+        return ((magMaxX + magMinX)/2).toFixed(0);
     }
     function magCalY(newData) {
         magMaxY = Math.max(magMaxY, newData);
         magMinY = Math.min(magMinY, newData);
-        return ((magMaxY + magMinY)/2).toFixed(2);
+        return ((magMaxY + magMinY)/2).toFixed(0);
     }
     function magCalZ(newData) {
         magMaxZ = Math.max(magMaxZ, newData);
         magMinZ = Math.min(magMinZ, newData);
-        return ((magMaxZ + magMinZ)/2).toFixed(2);
+        return ((magMaxZ + magMinZ)/2).toFixed(0);
     }
 
 
@@ -453,19 +453,20 @@ sensors.initialize = function (callback) {
                     samples_mag_i = addSampleToData(mag_data, samples_mag_i, FC.SENSOR_DATA.magnetometer);
                     drawGraph(magHelpers, mag_data, samples_mag_i);
 
-                    const magX = FC.SENSOR_DATA.magnetometer[0].toFixed(2);
-                    const magY = FC.SENSOR_DATA.magnetometer[1].toFixed(2);
-                    const magZ = FC.SENSOR_DATA.magnetometer[2].toFixed(2);
+                    const magX = FC.SENSOR_DATA.magnetometer[0];
+                    const magY = FC.SENSOR_DATA.magnetometer[1];
+                    const magZ = FC.SENSOR_DATA.magnetometer[2];
                     const magXSquared = Math.pow(FC.SENSOR_DATA.magnetometer[0], 2);
                     const magYSquared = Math.pow(FC.SENSOR_DATA.magnetometer[1], 2);
                     const magZSquared = Math.pow(FC.SENSOR_DATA.magnetometer[2], 2);
-                    const magSumSqR = Math.sqrt(magXSquared + magYSquared + magZSquared).toFixed(2);
+                    const magSumSqR = Math.sqrt(magXSquared + magYSquared + magZSquared).toFixed(0);
                     const magCalibrationX = magCalX(magX);
                     const magCalibrationY = magCalY(magY);
                     const magCalibrationZ = magCalZ(magZ);
 
                     samples_mag_i = addSampleToData(mag_data, samples_mag_i, FC.SENSOR_DATA.magnetometer);
                     drawGraph(magHelpers, mag_data, samples_mag_i);
+
 //                    raw_data_text_ements.x[2].text(FC.SENSOR_DATA.magnetometer[0].toFixed(2));
                     raw_data_text_ements.x[2].text(`${magX}  C${magCalibrationX}`);
 //                    raw_data_text_ements.y[2].text(FC.SENSOR_DATA.magnetometer[1].toFixed(2));
