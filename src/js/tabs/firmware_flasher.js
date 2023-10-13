@@ -1011,7 +1011,7 @@ firmware_flasher.initialize = function (callback) {
                                 updateStatus('Processing', response.key, retries * 10, false);
                                 retries = retries + 1;
                             });
-                        }, 4000);
+                        }, 5000);
                     });
                 }, onLoadFailed);
             }
