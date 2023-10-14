@@ -55,6 +55,10 @@ function readConfiguratorVersionMetadata() {
         CONFIGURATOR.productName = manifest.productName;
         CONFIGURATOR.version = manifest.version;
         CONFIGURATOR.gitRevision = manifest.gitRevision;
+    } else {
+        CONFIGURATOR.productName = __APP_PRODUCTNAME__;
+        CONFIGURATOR.version = __APP_VERSION__;
+        CONFIGURATOR.gitRevision = __APP_REVISION__;
     }
 }
 
