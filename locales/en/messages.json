@@ -209,7 +209,6 @@
         "message": "\u7e41\u9ad4\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
-
     "sensorDataFlashNotFound": {
         "message": "No dataflash <br>chip found",
         "description": "Text of the dataflash image in the header of the page."
@@ -302,7 +301,6 @@
     "tabOptions": {
         "message": "Options"
     },
-
     "tabSetup": {
         "message": "Setup"
     },
@@ -369,21 +367,18 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-
     "logActionHide": {
         "message": "Hide Log"
     },
     "logActionShow": {
         "message": "Show Log"
     },
-
     "serialErrorFrameError": {
         "message": "Serial connection error: bad framing"
     },
     "serialErrorParityError": {
         "message": "Serial connection error: bad parity"
     },
-
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> opened with ID: $1"
     },
@@ -396,10 +391,10 @@
     "serialPortClosedFail": {
         "message": "<span class=\"message-negative\">Failed</span> to close serial port"
     },
-    "serialUnrecoverable" : {
+    "serialUnrecoverable": {
         "message": "Unrecoverable <span class=\"message-negative\">failure</span> of serial connection, disconnecting..."
     },
-    "serialPortLoading" : {
+    "serialPortLoading": {
         "message": "Loading ..."
     },
     "usbDeviceOpened": {
@@ -532,21 +527,21 @@
         "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>.<br>If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the craft will be disabled until the accelerometer has been calibrated.<br>If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
     },
     "infoVersionOs": {
-        "message" : "OS: <strong>{{operatingSystem}}</strong>",
+        "message": "OS: <strong>{{operatingSystem}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message" : "Configurator: <strong>{{configuratorVersion}}</strong>",
+        "message": "Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerSuccess": {
-        "message" : "Success: $1"
+        "message": "Success: $1"
     },
     "buildServerFailure": {
-        "message" : "<b>Build server failure: $1 <code>$2</code></b>"
+        "message": "<b>Build server failure: $1 <code>$2</code></b>"
     },
     "buildServerUsingCached": {
-        "message" : "Using cached builds information for $1."
+        "message": "Using cached builds information for $1."
     },
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Support data submitted *** <br>Id: $1<br><br><br># copy ID and provide to the betaflight team."
@@ -564,16 +559,16 @@
         "message": "Describe the problem"
     },
     "releaseCheckLoaded": {
-        "message" : "Loaded release information for $1 from GitHub."
+        "message": "Loaded release information for $1 from GitHub."
     },
     "releaseCheckFailed": {
-        "message" : "<b>GitHub query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
+        "message": "<b>GitHub query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
     },
     "releaseCheckCached": {
-        "message" : "Using cached release information for $1 releases."
+        "message": "Using cached release information for $1 releases."
     },
     "releaseCheckNoInfo": {
-        "message" : "No release information available for $1."
+        "message": "No release information available for $1."
     },
     "tabSwitchConnectionRequired": {
         "message": "You need to <strong>connect</strong> before you can view any of the tabs."
@@ -685,7 +680,7 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "The application supports all hardware that can run Betaflight. Check flash tab for full list of hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight TX Lua Scripts</a><br /><br />The firmware source code can be downloaded from <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><br />For legacy hardware using a CP210x USB to serial chip:<br />The latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br />The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">here</a>"
+        "message": "The application supports all hardware that can run Betaflight. Check flash tab for full list of hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight TX Lua Scripts</a><br /><br />The firmware source code can be downloaded from <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><br />The latest <b>STM USB VCP Driver</b> can be downloaded <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>.<br />For legacy hardware using a CP210x USB to serial chip:<br />The latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br />The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">here</a>"
     },
     "defaultContributingHead": {
         "message": "Contributing"
@@ -1305,7 +1300,7 @@
         "message": "MAG Alignment"
     },
     "configurationSensorAlignmentDefaultOption": {
-       "message": "Default"
+        "message": "Default"
     },
     "configurationAccelTrims": {
         "message": "Accelerometer Trim"
@@ -1325,7 +1320,7 @@
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"
     },
-       "configurationReverseMotorSwitchHelp": {
+    "configurationReverseMotorSwitchHelp": {
         "message": "This option configures the mixer to expect the motor direction to be reversed and the propellers to be on accordingly. <strong>Warning:</strong> This does not reverse the motor direction. Use the configuration tool for your ESCs or switch the ESC - motor wiring order to achieve this. Also, make sure to check with propellers off that your motors are rotating in the directions shown in the diagram above before attempting to arm."
     },
     "configurationAutoDisarmDelay": {
@@ -1693,7 +1688,6 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Profile independent PID Controller Settings"
     },
-
     "pidTuningAntiGravity": {
         "message": "Anti Gravity"
     },
@@ -2271,13 +2265,13 @@
         "message": "Save"
     },
     "auxiliaryAutoChannelSelect": {
-      "message": "AUTO"
+        "message": "AUTO"
     },
     "auxiliaryModeLogicOR": {
-      "message": "OR"
+        "message": "OR"
     },
     "auxiliaryModeLogicAND": {
-      "message": "AND"
+        "message": "AND"
     },
     "auxiliaryHelpMode_3D": {
         "message": "Enables reversible motor direction to provide negative thrust and allow inverted flight. Throttle becomes -100 to +100 instead of 0 to 100",
@@ -2849,70 +2843,70 @@
     "motorsmAhDrawnValue": {
         "message": "$1 mAh"
     },
-    "motorsText":{
+    "motorsText": {
         "message": "Motors"
     },
-    "motorNumber1":{
+    "motorNumber1": {
         "message": "Motor - 1"
     },
-    "motorNumber2":{
+    "motorNumber2": {
         "message": "Motor - 2"
     },
-    "motorNumber3":{
+    "motorNumber3": {
         "message": "Motor - 3"
     },
-    "motorNumber4":{
+    "motorNumber4": {
         "message": "Motor - 4"
     },
-    "motorNumber5":{
+    "motorNumber5": {
         "message": "Motor - 5"
     },
-    "motorNumber6":{
+    "motorNumber6": {
         "message": "Motor - 6"
     },
-    "motorNumber7":{
+    "motorNumber7": {
         "message": "Motor - 7"
     },
-    "motorNumber8":{
+    "motorNumber8": {
         "message": "Motor - 8"
     },
-    "servosText":{
+    "servosText": {
         "message": "Servos"
     },
-    "servoNumber1":{
+    "servoNumber1": {
         "message": "Servo - 1"
     },
-    "servoNumber2":{
+    "servoNumber2": {
         "message": "Servo - 2"
     },
-    "servoNumber3":{
+    "servoNumber3": {
         "message": "Servo - 3"
     },
-    "servoNumber4":{
+    "servoNumber4": {
         "message": "Servo - 4"
     },
-    "servoNumber5":{
+    "servoNumber5": {
         "message": "Servo - 5"
     },
-    "servoNumber6":{
+    "servoNumber6": {
         "message": "Servo - 6"
     },
-    "servoNumber7":{
+    "servoNumber7": {
         "message": "Servo - 7"
     },
-    "servoNumber8":{
+    "servoNumber8": {
         "message": "Servo - 8"
     },
-    "motorsResetMaximumButton":{
+    "motorsResetMaximumButton": {
         "message": "Reset"
     },
-    "motorsResetMaximum":{
+    "motorsResetMaximum": {
         "message": "Reset overtime maximum"
     },
-    "motorsSensorGyroSelect":{
+    "motorsSensorGyroSelect": {
         "message": "gyro"
     },
-    "motorsSensorAccelSelect":{
+    "motorsSensorAccelSelect": {
         "message": "accel"
     },
     "motorsTelemetryHelp": {
@@ -3432,10 +3426,10 @@
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
     },
-    "firmwareFlasherShowDevelopmentReleases":{
+    "firmwareFlasherShowDevelopmentReleases": {
         "message": "Show release candidates"
     },
-    "firmwareFlasherShowDevelopmentReleasesDescription":{
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Show release candidates in addition to stable releases"
     },
     "firmwareFlasherOptionLoading": {
@@ -4161,7 +4155,7 @@
         "message": "P and D Gain:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningPDGainSliderHelp":{
+    "pidTuningPDGainSliderHelp": {
         "message": "Lower P and D Gain will result in cooler motors but also in more prop-wash oscillation. Too low value may cause the quad to be unstable.<br /><br />P and D terms work together to reduce prop-wash.<br /><br />Higher values will increase motor heat and could increase oscillations during smooth forward flight due to higher D term gains.",
         "description": "P and D gain tuning slider helpicon message"
     },
@@ -4173,7 +4167,6 @@
         "message": "Lower FF values will worsen the stick response and may result in slow bounceback at the end of a flip or roll due to the quad lagging the sticks too much and I-term winding up and cousing 'I-term Bounceback'.<br /><br />Higher FF values will give snappier stick responses in sharp moves. Excessively high FF values can cause overshoots and fast bounceback at the end of a flip or roll.<br /><br />Note:<br />The feature I-term Relax can stop the I-term from winding up on stick move for a low authority quads or if low Stick Response Gains are used.",
         "description": "Stick response gain tuning slider helpicon message"
     },
-
     "pidTuningDGainSlider": {
         "message": "Damping:<br /><i><small>D Gains</small></i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4672,7 +4665,7 @@
     "failsafeGpsRescueDescendRateHelp": {
         "message": "The initial descent rate is set to 3 times this value, decreasing to the set value at the landing altitude."
     },
-    "failsafeGpsRescueItemMinStartDistHelp" : {
+    "failsafeGpsRescueItemMinStartDistHelp": {
         "message": "If the rescue starts too close to home (within this minimum distance), the craft will fly away, on its current heading, until at least this distance from home, and then start normal rescue behaviour",
         "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
     },
@@ -5167,7 +5160,6 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
     },
-
     "osdSetupSave": {
         "message": "Save"
     },
@@ -5658,7 +5650,7 @@
         "message": "Timer: remaining time estimate",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate" : {
+    "osdDescElementRemaningTimeEstimate": {
         "message": "Estimate of flight time remaning"
     },
     "osdTextElementRtcDateTime": {
@@ -5679,14 +5671,14 @@
         "message": "Timer 1",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementTimer1" : {
+    "osdDescElementTimer1": {
         "message": "Shows the value of timer 1"
     },
     "osdTextElementTimer2": {
         "message": "Timer 2",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementTimer2" : {
+    "osdDescElementTimer2": {
         "message": "Shows the value of timer 2"
     },
     "osdTextElementCoreTemperature": {
@@ -5868,7 +5860,7 @@
         "message": "Unknown $1",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementUnknown" : {
+    "osdDescElementUnknown": {
         "message": "Unknown element (details to be added in a future release)"
     },
     "osdTextStatMaxSpeed": {
@@ -6098,62 +6090,62 @@
         "message": "Font version: user provided"
     },
     "osdTimerSource": {
-      "message": "Source:"
+        "message": "Source:"
     },
     "osdTimerSourceTooltip": {
         "message": "Select the timer source, this controls the duration/event that the timer measures"
     },
     "osdTimerSourceOptionOnTime": {
-      "message": "On time",
-      "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
+        "message": "On time",
+        "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
     },
     "osdTimerSourceOptionTotalArmedTime": {
-      "message": "Total armed time",
-      "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "message": "Total armed time",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
-      "message": "Last armed time",
-      "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "message": "Last armed time",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
-      "message": "On/Armed time",
-      "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "message": "On/Armed time",
+        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
-      "message": "Precision:"
+        "message": "Precision:"
     },
     "osdTimerPrecisionTooltip": {
         "message": "Select the timer precision, this controls to what precision the time is reported in"
     },
     "osdTimerPrecisionOptionSecond": {
-      "message": "Second",
-      "description": "Selectable option for the precision of the timer in the OSD"
+        "message": "Second",
+        "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerPrecisionOptionHundredth": {
-      "message": "Hundredth",
-      "description": "Selectable option for the precision of the timer in the OSD"
+        "message": "Hundredth",
+        "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerPrecisionOptionTenth": {
-      "message": "Tenth",
-      "description": "Selectable option for the precision of the timer in the OSD"
+        "message": "Tenth",
+        "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerAlarm": {
-      "message": "Alarm:"
+        "message": "Alarm:"
     },
     "osdTimerAlarmTooltip": {
         "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"
     },
     "osdTimerAlarmOptionRssi": {
-      "message": "RSSI",
-      "description": "Text of the RSSI alarm"
+        "message": "RSSI",
+        "description": "Text of the RSSI alarm"
     },
     "osdTimerAlarmOptionCapacity": {
-      "message": "Capacity",
-      "description": "Text of the capacity alarm"
+        "message": "Capacity",
+        "description": "Text of the capacity alarm"
     },
     "osdTimerAlarmOptionAltitude": {
-      "message": "Altitude",
-      "description": "Text of the altitude alarm"
+        "message": "Altitude",
+        "description": "Text of the altitude alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
@@ -6287,7 +6279,6 @@
     "osdWarningUnknown": {
         "message": "Unknown warning (details to be added in a future release)"
     },
-
     "osdSectionHelpElements": {
         "message": "Enable or disable OSD elements."
     },
@@ -6578,7 +6569,7 @@
         "message": "Save Lua Script",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxLuaFileHelp" :{
+    "vtxLuaFileHelp": {
         "message": "The '$t(vtxButtonSaveLua.message)' button will allow you to save a <i>mcuid</i>.lua file containing the VTX table configuration that can be used with the <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>Version 1.6.0 and above can use the file as is, but for older versions of the scripts it should be renamed to match the modelname on the TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
