@@ -464,16 +464,14 @@ sensors.initialize = function (callback) {
                     const magCalibrationY = magCalY(magY);
                     const magCalibrationZ = magCalZ(magZ);
 
-                    samples_mag_i = addSampleToData(mag_data, samples_mag_i, FC.SENSOR_DATA.magnetometer);
-                    drawGraph(magHelpers, mag_data, samples_mag_i);
 
 //                    raw_data_text_ements.x[2].text(FC.SENSOR_DATA.magnetometer[0].toFixed(2));
-                    raw_data_text_ements.x[2].text(`${magX}  C${magCalibrationX}`);
+                    raw_data_text_ements.x[2].text(`${magX} ${magCalibrationX}`);
 //                    raw_data_text_ements.y[2].text(FC.SENSOR_DATA.magnetometer[1].toFixed(2));
-                    raw_data_text_ements.y[2].text(`${magY}  C${magCalibrationY}`);
+                    raw_data_text_ements.y[2].text(`${magY} ${magCalibrationY}`);
 //                    raw_data_text_ements.z[2].text(FC.SENSOR_DATA.magnetometer[2].toFixed(2));
 //                    raw_data_text_ements.z[2].text(`${magZ}  R${magSumSqR}`);
-                    raw_data_text_ements.z[2].text(`${magZ}  C${magCalibrationZ}`);
+                    raw_data_text_ements.z[2].text(`${magZ} ${magCalibrationZ} ${magSumSqR}`);
 
                 }
             }
