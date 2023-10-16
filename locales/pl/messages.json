@@ -41,13 +41,13 @@
         "message": "Ustawienia aplikacji"
     },
     "connect": {
-        "message": "Połącz"
+        "message": "POŁĄCZ"
     },
     "connecting": {
         "message": "Łączenie"
     },
     "disconnect": {
-        "message": "Rozłącz"
+        "message": "ROZŁĄCZ"
     },
     "portsSelectManual": {
         "message": "Wybór ręczny"
@@ -256,7 +256,7 @@
         "message": "OSD"
     },
     "tabVtx": {
-        "message": "Nadajnik wideo"
+        "message": "Nadajnik wideo "
     },
     "tabPower": {
         "message": "Zasilanie i Bateria"
@@ -355,7 +355,7 @@
         "message": "Komunikacja z bootloader'em zawiodła"
     },
     "stm32ResponseBootloaderFailed": {
-        "message": "Brak odpowiedzi z bootloader'a, programowanie nie udało się"
+        "message": "Brak odpowiedzi z botloadera. "
     },
     "stm32GlobalEraseExtended": {
         "message": "Uruchamianie całkowitego czyszczenia pamięci FLASH ..."
@@ -418,7 +418,7 @@
         "message": "Nie udało się połączyć przez <span class=\"message-negative\">10 sekund</span>, komunikacja <span class=\"message-negative\">zawiodła</span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "Ta wersja oprogramowania kontrolera <span class=\"message-negative\">nie jest wspierana</span>. Proszę uaktualnij oprogramowaniedo wersji, która wspiera API <strong>$1</strong>, lub wyższej. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
+        "message": "Ta wersja oprogramowania kontrolera lotu <span class=\"message-negative\">nie jest wspierana</span>. Proszę uaktualnij oprogramowanie do wersji, która wspiera API <strong>$1</strong>, lub wyższej. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania oraz przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz również pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
     },
     "firmwareTypeNotSupported": {
         "message": "Oprogramowanie inne niż Betaflight <span class=\"message-negative\">nie jest wspierane</span>, z wyjątkiem trybu CLI."
@@ -427,7 +427,7 @@
         "message": "Oprogramowanie tego kontrolera lotu wymaga aktualizacji do nowszej wersji. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
     },
     "resetToCustomDefaultsDialog": {
-        "message": "Dostępne są niestandardowe ustawienia domyślne dla tego kontrolera lotu. Zwykle kontroler nie będzie działał poprawnie, jeśli nie zostaną one zastosowane.<br />Czy chcesz zastosować niestandardowe ustawienia domyślne dla tego kontrolera?"
+        "message": "Dostępne są niestandardowe ustawienia domyślne dla tego kontrolera lotu. Zwykle kontroler lotu będzie działał  nie prawidłowo, jeśli nie zostaną one zastosowane.<br />Czy chcesz zastosować niestandardowe ustawienia domyślne dla tego kontrolera?"
     },
     "resetToCustomDefaultsAccept": {
         "message": "Zastosuj niestandardowe ustawienia domyślne"
@@ -436,13 +436,13 @@
         "message": "Wykryto następujące <strong>problemy z konfiguracją</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Napraw<strong> te problemy przed próbą latania swoim statkiem powietrznym </strong>."
+        "message": "Napraw<strong> te problemy przed próbą latania swoją jednostką latającą</strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>wersja konfiguratora, której używasz ($3) jest starsza niż oprogramowanie, którego używasz ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>Nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
@@ -465,7 +465,7 @@
         "message": "Użycie informacji o kompilacji z bufora dla $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Przesłano dane wsparcia *** <br>Id: $1<br><br><br># skopiuj identyfikator i prześlij zespołowi betaflight."
+        "message": "<br>*** Zgłoszono problem *** <br>Id: $1<br><br><br># skopiuj identyfikator i prześlij zespołowi betaflight."
     },
     "buildKey": {
         "message": "Zbuduj klucz: <strong>$1</strong>"
@@ -501,7 +501,7 @@
         "message": "Aby zobaczyć zakładkę $1 musisz <strong>zaktualizować</strong> oprogramowanie kontrolera lotu do najnowszej wersji."
     },
     "firmwareVersion": {
-        "message": "Wersja oprogramowania FC: <strong>$1</strong>"
+        "message": "Wersja oprogramowania kontrolera lotu: <strong>$1</strong>"
     },
     "apiVersionReceived": {
         "message": "Wersja MultiWii API: <strong>$1</strong>"
@@ -686,7 +686,7 @@
         "message": "Kalibracja akcelerometru"
     },
     "initialSetupCalibrateAccelText": {
-        "message": "Połóż kontroler lotu lub drona na <strong>płaskiej</strong> powierzchni i kontynuuj kalibrację. Zwróć uwagę by płytka kontrolera lotu nie ruszała się podczas trwania kalibracji"
+        "message": "Połóż kontroler lotu lub jednostke latającą na <strong>płaskiej</strong> powierzchni i kontynuuj kalibrację. Zwróć uwagę by płytka kontrolera lotu nie ruszała się podczas trwania kalibracji"
     },
     "initialSetupButtonCalibrateMag": {
         "message": "Kalibracja magnetometru"
@@ -783,7 +783,7 @@
         "message": "Informacje o systemie"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Pokazuje flagi FC do rozbrojenia oraz informacje takie jak rodzaj baterii, poziom RSSI oraz rodzaj podłączonych czujników",
+        "message": "Pokazuje flagi kontrolera lotu, które uniemożliwiają uzbrojenie jednostki latającej, oraz rodzaj baterii, poziom RSSI, a także rodzaj podłączonych czujników.",
         "description": "Message that pops up to describe the System info section"
     },
     "initialSetupBattery": {
@@ -862,7 +862,7 @@
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "Dron nie jest (wystarczająco) wypoziomowany",
+        "message": "Jednostka latająca nie jest wypoziomowana",
         "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
@@ -906,11 +906,11 @@
         "description": "Message that pops up to describe the PARALYZE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipGPS": {
-        "message": "Tryb ratunkowy GPS jest skonfigurowany, ale wymagana liczba satelitów nie została połączona",
+        "message": "Tryb ratunkowy GPS jest skonfigurowany, ale wymagana liczba satelitów nie została osiągnięta.",
         "description": "Message that pops up to describe the GPS arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRESC": {
-        "message": "Włączono przełącznik „GPS Rescue”",
+        "message": "Włączono przełącznik „GPS RATUNKOWY ”",
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
@@ -941,7 +941,7 @@
         "message": "GPS"
     },
     "initialSetupGPSHeadHelp": {
-        "message": "Pokazuje informacje GPS, jeśli poprawnie skonfigurowano  tę opcję w zakładce Porty, zakładce konfiguracji i zakładce GPS",
+        "message": "Pokazuje informacje GPS, jeśli poprawnie skonfigurowano  tę opcję w zakładkach: Porty, Konfiguracja i GPS",
         "description": "Message that pops up to describe the GPS section"
     },
     "initialSetupSonarHead": {
@@ -1056,7 +1056,7 @@
         "message": "GPS do nawigacji i telemetrii"
     },
     "featureGPSTip": {
-        "message": "Skonfiguruj najpierw porty"
+        "message": "Włącz GPS. Skonfiguruj również  tę opcję w zakładce Porty"
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -1095,13 +1095,13 @@
         "message": "Wyświetlacz OLED"
     },
     "featureDISPLAYTip": {
-        "message": "Jeżeli ta funkcja jest uruchomiona i nie jest podłączony wyświetlacz (lub nie jest zasilony), każde uruchomienie lub restart FC będzie dłuższe o około 10 sekund."
+        "message": "Jeżeli ta funkcja jest uruchomiona i nie jest podłączony wyświetlacz (lub nie jest zasilony), każde uruchomienie lub restart kontrolera lotu będzie dłuższe o około 10 sekund."
     },
     "featureOSD": {
         "message": "OSD"
     },
     "featureOSDTip": {
-        "message": "Włącz OSD. Skonfiguruj tę opcję w zakładce OSD"
+        "message": "Włącz OSD. Skonfiguruj również tę opcję w zakładce OSD"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Prześlij wartość kanału AUX do wyjść serwomechanizmów"
@@ -1161,7 +1161,7 @@
         "message": "RSSI (Siła sygnału)"
     },
     "configurationRSSIHelp": {
-        "message": "RSSI jest wskaźnikiem siły sygnału i jest bardzo pomocna gdy Twój dron odlatuje z zasięgu lub występują zakłócenia sygnału."
+        "message": "Siła sygnału RSSI  jest bardzo pomocna, bo pokazuje, gdy Twoja jednostka latająca traci zasięg lub występują zakłócenia sygnału."
     },
     "configurationEscFeatures": {
         "message": "Ustawienia ESC/Silników"
@@ -1173,7 +1173,7 @@
         "message": "&#8226; UART dla odbiornika musi być ustawiony na, szeregowy Rx' (w karcie <i>Porty</i>)<br>&#8226; Wybierz prawidłowy format danych z listy rozwijanej poniżej:"
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>Uwaga:</strong> Odbiornik typu SPI RX będzie działa tylko gdy odbiornik jest zintegrowany z FC lub jest podłączony do magistrali SPI."
+        "message": "<strong>Uwaga:</strong> Odbiornik typu SPI RX będzie działa tylko gdy odbiornik jest zintegrowany z kontrolerem lotu lub jest podłączony do magistrali SPI."
     },
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Uwaga:</strong> Nie każda funkcja jest obsługiwana przez każdy kontroler lotu. Jeśli włączysz daną funkcję a po wciśnięciu 'Zapisz i zrestartuj' nie zostanie ona włączona to oznacza, że funkcja ta jest nieobsługiwana przez twój kontroler lotu."
@@ -1209,10 +1209,10 @@
         "message": "Oba"
     },
     "configurationSensorAlignmentGyro1": {
-        "message": "Pierwsze GYRO"
+        "message": " GYRO 1"
     },
     "configurationSensorAlignmentGyro2": {
-        "message": "Drugie GYRO"
+        "message": "GYRO 2"
     },
     "configurationSensorAlignmentAcc": {
         "message": "Ułożenie akcelerometru"
@@ -1256,6 +1256,9 @@
     "configurationDigitalIdlePercent": {
         "message": "Dynamiczny bieg jałowy( %)"
     },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "Wartość „silnik na biegu jałowym” to procent maksymalnego otwarcia przepustnicy wysyłany do regulatorów ESC, gdy drążek przepustnicy znajduje się w minimalnym położeniu, a jednostka jest uzbrojona. <br><br>Zwiększ ten parametr, aby uzyskać większą prędkość obrotową silników na biegu jałowym i uniknąć desynchronizacji. Zbyt wysokie ustawienie tego parametru spowoduje dryfowanie jesnostki latającej tuż nad ziemią. Zbyt niska wartość i silniki mogą się rozsynchronizować lub wolno uruchamiać."
+    },
     "configurationMotorPoles": {
         "message": "Bieguny silnika",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -1272,7 +1275,7 @@
         "message": "Minimum przepustnicy (Najniższa wartość ESC gdy uzbrojony)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "Jest to wartość 'bezczynności', która jest wysyłana do ESC, gdy dron jest uzbrojony i drążek przepustnicy jest w najniższym położeniu. Zwiększ wartość aby uzyskać większą prędkość obrotową. Zwiększ wartość w przypadku desynchronizacji!"
+        "message": "Jest to wartość 'bezczynności', która jest wysyłana do ESC, gdy jednostka latająca jest uzbrojona i drążek przepustnicy jest w najniższym położeniu. Zwiększ wartość, aby uzyskać większą prędkość obrotową. Zwiększ wartość w przypadku desynchronizacji!"
     },
     "configurationThrottleMaximum": {
         "message": "Maksymalna wartość przepustnicy (Kiedy ESC jest uzbrojone)"
@@ -1290,16 +1293,16 @@
         "message": "<strong>Uwaga:</strong> Wybranie protokołu sterowania silnika, który nie jest obsługiwany przez twoje ESC , może doprowadzić do niekontrolowanego uruchomienia silnika.<strong> Po podłaczeniu bateri silnik może wystartować samoczynnie</strong>  <strong>dlatego zawsze upewnij się, że nie ma zamontowanych śmigieł przy pierwszym podłączeniu baterii po zmianie protokołu sterującego silnikami</strong>."
     },
     "configurationDshotBeeper": {
-        "message": "Konfiguracja sygnału radiowego Dshot"
+        "message": "Konfiguracja sygnału dzwiękowego Dshot"
     },
     "configurationUseDshotBeeper": {
         "message": "Użyj sygnału radiowego Dhsot (Pozwala użyć silników do generowania sygnału dzwiękowego gdy rozbrojony)"
     },
     "configurationDshotBeaconTone": {
-        "message": "Sygnał Radiowy"
+        "message": "Sygnał dzwiękowy"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Sygnał radiowy Dshot wykorzstuje układy ESC i silniki do generowania dźwięku. Oznacza to, że protokół Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, gdy próbuje się uzbroić silniki występuje opóźnienie o 2 sekundy, zanim jednostka zostanie uzbrojona. Ma to zapobiec przed zakłóceniem funkcji sygnału radiowego Dshot podczas wysyłania sygnału</strong> wysyłanego podczas uzbrajania. <br/> <strong> Ostrzeżenie: </strong> Ponieważ sygnał Dshot przepływa przez silniki, gdy są aktywne, może to spowodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału ostrzegawczego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
+        "message": "Sygnał dzwiękowy Dshot wykorzstuje układy ESC i silniki do generowania dźwięku. Oznacza to, że protokół Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, gdy próbuje się uzbroić silniki występuje opóźnienie o 2 sekundy, zanim jednostka zostanie uzbrojona. Ma to zapobiegać przed zakłóceniami funkcji sygnału dzwiękowego Dshot, podczas gdy  wysyłany jest  sygnał</strong> dzwiękowy  podczas uzbrajania jednostki latającej. <br/> <strong> Ostrzeżenie: </strong> Ponieważ sygnał Dshot przepływa przez silniki, gdy są aktywne, może powodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału ostrzegawczego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
     },
     "configurationBeeper": {
         "message": "Ustawienia buzzer'a"
@@ -1311,7 +1314,7 @@
         "message": "Sygnał dźwiękowy gdy nadajnik RC wyłączy się lub gdy straci zasięg (sygnał powtarzany do chwili gdy problemy z nadajnikiem nie miną)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "Emituje sygnał SOS gdy jest uzbrojony a nadajnik RC jest wyłączony lub nie ma zasięgu (automatyczne lądowanie/rozbrajanie)"
+        "message": "Sygnał SOS gdy nadajnik RC wyłączy się, lub nie ma zasięgu (automatyczne lądowanie/rozbrajanie)"
     },
     "beeperDISARMING": {
         "message": "Sygnał dźwiękowy podczas rozbrojenia kontrolera lotu"
@@ -1341,7 +1344,7 @@
         "message": "Kalibracja akcelerometru podczas lotu nie powiodła się"
     },
     "beeperREADY_BEEP": {
-        "message": "Wydaj dźwięk kiedy GPS namierzony i gotowy"
+        "message": "Sygnał dźwiękowy, gdy GPS jest gotowy do użycia."
     },
     "beeperDISARM_REPEAT": {
         "message": "Rozlega się sygnał dźwiękowy, gdy drążek jest w pozycji rozbrojenia"
@@ -1353,7 +1356,7 @@
         "message": "Sygnał dźwiękowy podczas Inicjalizacji, emitowany gdy kontroler lotu jest włączony"
     },
     "beeperUSB": {
-        "message": "Sygnał dźwiękowy gdy kontroler lotu jest zasilany z USB. Wyłącz tą opcje jeśli nie chcesz słyszeć buzzer'a podczas pracy nad dronem"
+        "message": "Sygnał dźwiękowy, gdy kontroler lotu jest zasilany z USB. Wyłącz tę opcję, jeśli nie chcesz słyszeć buzzer'a podczas pracy nad jednostką latającą"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Sygnał dźwiękowy po zakończeniu wymazywania Rejestrator lotów"
@@ -1436,7 +1439,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "Po włączeniu modułu GPS będzie również śledzić system satelitarny Galileo, co zazwyczaj skutkuje większą liczbą zablokowanych satelitów. W przypadku lotu Betaflight 4.2.x lub wcześniej wyłącza on również system wspomagania QZSS.",
+        "message": "Po włączeniu moduł GPS będzie również śledzić system satelitarny Galileo, co zazwyczaj skutkuje większą liczbą zablokowanych satelitów. W przypadku  Betaflight 4.2.x lub wcześniejszych wersji wyłącza on również system satelitarny QZSS.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -1444,7 +1447,7 @@
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Po włączeniu tej opcji pierwsze uzbrojenie drona po podłączeniu bateri będzie używane na stałe jako punkt początkowy. Jeśli opcja ta nie zostanie aktywowana to za każdym razem, gdy dron zostanie uzbrojony, punkt początkowy zostanie zaktualizowany.",
+        "message": "Po włączeniu tej opcji pierwsze uzbrojenie jednostki latającej po podłączeniu bateri będzie używane na stałe jako punkt początkowy. Jeśli opcja ta nie zostanie aktywowana to za każdym razem, gdy dron zostanie uzbrojony, punkt początkowy zostanie zaktualizowany.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -1872,7 +1875,7 @@
         "message": "<b>I</b>ntegral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Kontroluje utrzymujące się małe przesunięcia.<br><br>Podobne do P, ale kumuluje się stopniowo i powoli, aż błąd wyniesie zero. Ważne dla długoterminowych odchyleń, takich jak przesunięcie środka ciężkości lub utrzymujące się wpływy zewnętrzne, takie jak wiatr.<br /><br />Wyższe wzmocnienia zapewniają dokładniejsze śledzenie, zwłaszcza na zakrętach, ale mogą sprawić, że statek będzie sztywny.<br> <br>Może powodować powolne oscylacje w kompilacjach o niskim autorytecie lub jeśli jest wysoki proporcjonalnie do P.",
+        "message": "Kontroluje utrzymujące się małe przesunięcia.<br><br>Podobne do P, ale kumuluje się stopniowo i powoli, aż błąd wyniesie zero. Ważne dla długoterminowych odchyleń, takich jak przesunięcie środka ciężkości lub utrzymujące się wpływy zewnętrzne, takie jak wiatr.<br /><br />Wyższe wzmocnienia zapewniają dokładniejsze śledzenie, zwłaszcza na zakrętach, ale mogą sprawić, że jednostka latająca będzie sztywna.<br> <br>Może powodować powolne oscylacje w kompilacjach o niskim autorytecie lub jeśli jest wysoki proporcjonalnie do P.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
@@ -1886,14 +1889,14 @@
         "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Kontroluje z jaką siłą odbywać ma się korekta ruch drona przy KAŻDEJ zmia kierunku. Kiedy drążki są poruszane, D-term tłumi polece. W przypadku wpływu zewnętrznego ( dryfowa  lub porywy wiatru) D-term tłumi wpływ. <br> <br> Wyższe wzmoc zapewnia większe tłumie i zmjsza nadmiar P-term i FF. <br> D-term jest BARDZO wrażliwy na wibracje wysokiej częstotliwości które zakłócają  pracę żyroskopu  (zakłócenia zwiększają się od 10 do 100x). <br> <br> Wibracje o wysokiej częstotliwości mogą powodować grza się silników co może doprowadzić do ich zniszczenia, jeśli wzmoc D jest zbyt wysokie lub wibracje żyroskopowe   są dobrze filtrowane (patrz w zakładce Filtr). <br> <br> D-term jest podobny do amortyzatora, ale ma negatywną właściwość wzmacniania szumu żyroskopowego wysokiej częstotliwości.",
+        "message": "Kontroluje z jaką siłą odbywać ma się korekta ruch jednostki latającej przy KAŻDEJ zmia kierunku. Kiedy drążki są poruszane, D-term tłumi polece. W przypadku wpływu zewnętrznego ( dryfowa  lub porywy wiatru) D-term tłumi wpływ. <br> <br> Wyższe wzmoc zapewnia większe tłumie i zmjsza nadmiar P-term i FF. <br> D-term jest BARDZO wrażliwy na wibracje wysokiej częstotliwości które zakłócają  pracę żyroskopu  (zakłócenia zwiększają się od 10 do 100x). <br> <br> Wibracje o wysokiej częstotliwości mogą powodować grza się silników co może doprowadzić do ich zniszczenia, jeśli wzmoc D jest zbyt wysokie lub wibracje żyroskopowe   są dobrze filtrowane (patrz w zakładce Filtr). <br> <br> D-term jest podobny do amortyzatora, ale ma negatywną właściwość wzmacniania szumu żyroskopowego wysokiej częstotliwości.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F</b>eedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "Dodatkowy czynnik napędowy, pochodzący wyłącznie z sygnału wejściowego drążka, który pomaga szybko wepchnąć statek w szybkie ruchy drążkiem.<br><br>FF nie może powodować oscylacji, pozwala na niższe P dla podobnych reakcji drążka i kompensuje naturalną opozycję D względem chore dane wejściowe.<br><br>Niskie lub zerowe wartości spowodują płynniejszą, ale bardziej opóźnioną reakcję na sygnały wejściowe drążka.",
+        "message": "Dodatkowy czynnik napędowy, pochodzący wyłącznie z sygnału wejściowego drążka, który pomaga szybko poruszać  jednostką latającą za pomocą  szybkich ruchów drążkiem.<br><br>FF nie może powodować oscylacji, pozwala na niższe P dla podobnych reakcji drążka i kompensuje naturalną opozycję D względem danych wejściowych.<br><br>Niskie lub zerowe wartości spowodują płynniejszą, ale bardziej opóźnioną reakcję na sygnały wejściowe drążka.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -2205,7 +2208,7 @@
         "description": "Help text to ANGLE mode"
     },
     "auxiliaryHelpMode_ANTIGRAVITY": {
-        "message": "Anti Gravity poprzez zwiększenie parametru P oraz I podczas gwałtownego dodania gazu ma spowodować, iż dron utrzyma poziom, pochylenie oraz wychylenie w czasie szybkiego wznoszenia ",
+        "message": "Anti Gravity poprzez zwiększenie parametru P oraz I podczas gwałtownego dodania gazu ma spowodować, iż jednostka latająca utrzyma poziom, pochylenie oraz wychylenie w czasie szybkiego wznoszenia ",
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
@@ -2265,7 +2268,7 @@
         "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
-        "message": "Odwróć kierunek obrotu silników, aby przewrócić statek powietrzny do góry nogami po zderzeniu (wymagany DShot)",
+        "message": "Odwróć kierunek obrotu silników, aby przewrócić  jednostkę latającą do góry nogami po zderzeniu (wymagany DShot)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
     "auxiliaryHelpMode_FPVANGLEMIX": {
@@ -2277,7 +2280,7 @@
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Włącz „GPS Rescue”, aby statek powietrzny wrócił do miejsca, w którym był ostatnio uzbrojony",
+        "message": "Włącz „GPS Ratunkowy”, aby jednostka latająca wróciła do miejsca, w którym była ostatnio uzbrojona",
         "description": "Help text to GPS RESCUE mode"
     },
     "auxiliaryHelpMode_HEADADJ": {
@@ -2285,7 +2288,7 @@
         "description": "Help text to HEAD ADJ mode"
     },
     "auxiliaryHelpMode_HEADFREE": {
-        "message": "Tryb lotu w którym niezależnie, jak usytuowany jest dron (którą stroną) w stosunku do pilota – sterowanie w przód zawsze będzie skutkowało lotem drona do przodu. Tak samo do tyłu i w pozostałe kierunki. Przydatne dla początkujących pilotów, którzy mają problemy z orjętacją w przestrzeni podczas lotu",
+        "message": "Tryb lotu w którym niezależnie, jak usytuowana jest jednostka latająca (którą stroną) w stosunku do pilota – sterowanie w przód zawsze będzie skutkowało lotem drona do przodu. Tak samo do tyłu i w pozostałe kierunki. Przydatne dla początkujących pilotów, którzy mają problemy z orjętacją w przestrzeni podczas lotu",
         "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
@@ -2317,7 +2320,7 @@
         "description": "Help text to PASSTHRU mode"
     },
     "auxiliaryHelpMode_PARALYZE": {
-        "message": "Trwale unieruchamiaj rozbity statek powietrzny, dopóki nie zostanie ponownie włączony",
+        "message": "Trwale unieruchamia rozbitą jednostkę latającą, dopóki nie zostanie ponownie włączona",
         "description": "Help text to PARALYZE mode"
     },
     "auxiliaryHelpMode_PIDAUDIO": {
@@ -2701,6 +2704,12 @@
     "gpsSignalSatId": {
         "message": "Sat ID"
     },
+    "gpsSignalStatus": {
+        "message": "Status"
+    },
+    "gpsSignalQuality": {
+        "message": "Jakość"
+    },
     "gnssQualityNoSignal": {
         "message": "brak sygnału"
     },
@@ -2721,6 +2730,9 @@
     },
     "gnssUsedUnused": {
         "message": "nieużywany"
+    },
+    "gnssUsedUsed": {
+        "message": "Używany"
     },
     "gnssHealthyUnknown": {
         "message": "nieznany"
@@ -3042,7 +3054,7 @@
         "message": "Wczytaj plik"
     },
     "cliSupportRequestBtn": {
-        "message": "Prześlij dane wsparcia"
+        "message": "Zgłoś problem"
     },
     "cliConfirmSnippetDialogTitle": {
         "message": "Wczytano plik <strong> {{fileName}} </strong>. Przejrzyj wczytane polecenia"
@@ -3300,19 +3312,19 @@
         "message": "Wybierz wersję oprogramowania dla swojej płytki."
     },
     "firmwareFlasherNoRebootDescription": {
-        "message": "Włącz, jeśli twój FC jest w trybie DFU. np. jeśli włączyłeś swój FC za pomocą zwarcia dwóch pinów bootloadera lub przytrzymując przycisk BOOT swojego FC."
+        "message": "Włącz, jeśli twój kontroler lotu jest w trybie DFU. np. jeśli włączyłeś swój kontroler za pomocą zwarcia dwóch pinów bootloadera lub przytrzymując przycisk BOOT."
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Wgraj w momęcie połączenia"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Próba automatycznego flashowania płytki (uruchamiana przez nowo wykryty port szeregowy)."
+        "message": "Próba automatycznego flashowania kontrolera lotu (uruchamiana przez nowo wykryty port szeregowy)."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Wyczyść pamięć"
     },
     "firmwareFlasherFullChipEraseDescription": {
-        "message": "Usuwa wszystkie dane konfiguracyjne aktualnie przechowywane w pamięci kontrolera."
+        "message": "Usuwa wszystkie dane konfiguracyjne aktualnie przechowywane w pamięci kontrolera lotu."
     },
     "firmwareFlasherFlashDevelopmentFirmware": {
         "message": "Użyj oprogramowania twórcy programu"
@@ -3327,7 +3339,7 @@
         "message": "Ręczna prędkość transmisji"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "Ręczny wybór szybkości przesyłania, dla płyt które nie obsługują domyślnej prędkości lub połączenia przez bluetooth.<br /><span class=\"message-negative\">Uwaga:</span> Nie używane podczas połączenia przez DFU USB"
+        "message": "Ręczny wybór szybkości przesyłania, dla kontrolerów lotu które nie obsługują domyślnej prędkości lub połączenia przez bluetooth.<br /><span class=\"message-negative\"> Uwaga:</span> Nie używane podczas połączenia przez DFU USB"
     },
     "firmwareFlasherBaudRate": {
         "message": "Prędkość transmisji"
@@ -3402,13 +3414,13 @@
         "message": "Wiadomość:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Postępuj według wytycznych <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Oraz<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> płytki lub <strong> nie wyłączaj </strong> komputera podczas flashowania. <br /> <br /> <strong> Uwaga: </strong> bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> upewnij się, że masz kopię zapasową; niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie kable od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
+        "message": "Postępuj według wytycznych <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Oraz<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> płytki lub <strong> nie wyłączaj </strong> komputera podczas flashowania. <br /> <br /> <strong> Uwaga: </strong> Bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> Upewnij się, że masz kopię zapasową, niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> Jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie przewody od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>W przypadku problemów podczas podłączania płytki  kontrolera lotów postępuj zgodnie z poniższą instrukcją</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odłącz zasilanie kontrolera lotu</li><li>Włącz ustawienia „Nie restartuj”, oraz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT na kontlorerze lotu.</li><li>Podłącz zasilanie kontlolera lotu(dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (patrz <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji FC).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
+        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odłącz zasilanie kontrolera lotu</li><li>Włącz ustawienia „Nie restartuj”, oraz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT na kontlorerze lotu.</li><li>Podłącz zasilanie kontlolera lotu(dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (<a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji kontrolera lotu).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
@@ -3553,6 +3565,29 @@
     },
     "ledStripVtxOverlay": {
         "message": "VTX(użyj częstotliwości vtx do przypisania koloru)"
+    },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Jasność",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Maksymalny procent jasności diod LED."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Delta",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Różnica odcieni pomiędzy każdą diodą LED.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Częstotliwość",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Częstotliwość zmiany koloru.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
     },
     "ledStripFunctionSection": {
         "message": "Funkcje LED"
@@ -4401,6 +4436,9 @@
     "pidTuningIdleMinRpm": {
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Opcja Dynamicznego biegu jałowego jest WYŁĄCZONA, ponieważ telemetria Dshot jest WYŁĄCZONA"
     },
@@ -4429,13 +4467,13 @@
         "message": "Odbiornik Failsafe"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Failsafe ma dwa etapy. <br><strong> Etap 1 </strong> jest aktywowany, gdy kanał radiowy ma nieprawidłową długość impulsu, odbiornik zgłasza tryb awaryjny lub wogóle nie ma sygnału z odbiornika, ustawienia zastępcze kanału są stosowane do <span class = \"message-negative\"> WSZYSTKICH kanałów </span> oraz jest zarezerwowany krótki czas ochrony na powrót trasmisji danych w kanale radiowym. <br><strong> Etap 2 </strong> jest aktywowany, gdy warunek błędu trwa dłużej niż skonfigurowany czas ochronny, gdy jednostka jest <span class = \"message-negative\"> uzbrojona </span>, wszystkie kanały zostaną ustawione na podstawie ustawień zastępczych, chyba że wybrano inną procedurę. <br /> <span class = \"message-negative\"><strong> Uwaga: </strong></span> Przed wejściem do etapu 1 ustawienia zastępcze kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
+        "message": "Failsafe ma dwa etapy. <br><strong> Etap 1 </strong> jest aktywowany w stuacjach  gdy kanał radiowy ma nieprawidłową długość impulsu oraz w  chwili gdy odbiornik zgłasza tryb awaryjny albo wogóle nie ma sygnału z odbiornika.  Ustawienia zastępcze kanałów odbiornika są stosowane do <span class = \"message-negative\"> WSZYSTKICH KANAŁÓW. </span> Pamiętaj że  zarezerwowany jest krótki czas ochrony na powrót trasmisji danych w kanale radiowym. <br><strong> Etap 2 </strong> jest aktywowany, gdy utrata sygnału  trwa dłużej niż skonfigurowany czas ochronny a jednostka latająca jest <span class = \"message-negative\"> UZBROJONA. </span> Wszystkie ustawienia kanału zastępczego  zostaną ustawione na podstawie wybranych przez ciebie wartości, chyba że wybrano inną procedurę. <br /> <span class = \"message-negative\"><strong> UWAGA: </strong></span> Przed wejściem do etapu 1 ustawienia zastępcze kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
     },
     "failsafePulsrangeTitle": {
-        "message": "Ustawienia akceptowalnego zakresu impulsu"
+        "message": "USTAWIENIA AKCEPTOWALNEGO ZAKRESU IMPULSÓW"
     },
     "failsafePulsrangeHelp": {
-        "message": "Impulsy krótsze od minimum lub dłuższe od maksimum są nieprawidłowe i będą wyzwalały zastosowanie indywidualnych ustawień awaryjnych kanału dla kanałów AUX lub zastosowanie 1 etapu trybu awaryjnego \"failsafe\" dla kanałów lotów"
+        "message": "Impulsy krótsze od minimum lub dłuższe od maksimum są nieprawidłowe i będą powodowały włączenie się indywidualnych ustawień awaryjnych dla kanałów AUX lub zastosowanie etapu pierwszego trybu \"failsafe\""
     },
     "failsafeRxMinUsecItem": {
         "message": "Minimalna długość"
@@ -4443,23 +4481,44 @@
     "failsafeRxMaxUsecItem": {
         "message": "Maksymalna długość"
     },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "ETAP 1 – USTAWIENIA KANAŁU ZASTĘPCZEGO"
+    },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "Te ustawienia są stosowane do błędnych kanałów AUX lub do wszystkich kanałów gdy jest aktywny etap 1. <strong>Uwaga:</strong> wartości są zapisywane w krokach 25 usec, więc małe zmiany znikają"
+        "message": "Ustawienia są stosowane do kanałów AUX w których wykryto błąd lub do wszystkich kanałów gdy jest aktywny etap pierwszy. <strong>Uwaga:</strong> czas opóźnienia jest zapisywany co 25 usec"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto</strong> ustawia poziomy Odchylenia \"Roll\", Pochylenia \"Pitch\", Przechylenia \"Yaw\" wyśrodkowane, a Gazu \"Throttle\" na poziomie minimalnym. <strong>Przytrzymaj \"Hold\"</strong> oznacza utrzymanie takiej wartości jaką ostatnio odebrano - ostatnia wartość bez błędów"
+        "message": "<strong>Auto</strong> ustawia Roll,Pitch oraz Yaw w pozcji neutralnej  a Throttle na poziomie minimalnym. <strong>Bez zmian</strong> to ostatnia poprawna odebranea wartość"
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>Przytrzymaj \"Hold\"</strong> oznacza utrzymanie ostatniej otrzymanej dobrej wartości. <strong>Ustaw \"Set\"</strong> oznacza, że podana tutaj wartość zostanie użyta"
+        "message": "<strong>Bez zmian</strong> oznacza utrzymanie ostatniej poprawnej wartości. <strong>Ustaw</strong> oznacza, że  zostanie użyta  podana przez ciebie wartość."
+    },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Bez zmian",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Ustaw",
+        "description": "Text for Set option"
     },
     "failsafeStageTwoSettingsTitle": {
-        "message": "Etap 2 - Ustawienia"
+        "message": "ETAP 2 - USTAWIENIA"
+    },
+    "failsafeDelayItem": {
+        "message": "Czas trwania Etapu pierwszego w trybie failsafe po utracie sygnału [sekund]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Ustaw czas opóźnienia zabezpieczenia przed utratą sygnału Etapu pierwszego. Jeżeli czas upłynie, a sygnał nie zostanie odzyskany, rozpocznie się Etap drugi failsafe"
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe niskie położenie przepustnicy [sekund]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Doprowadza do rozbrojenia maszyny zamiast wykonywać wybraną procedurę awaryjną, gdy gaz był na minimum przez dany okres czasu"
+        "message": "Doprowadza do rozbrojenia jednostki latającej zamiast wykonywać wybraną procedurę awaryjną, gdy przepustnica była na minimum przez dany okres czasu"
     },
     "failsafeThrottleItem": {
         "message": "Wartość przepustnicy użyta podczas lądowania"
@@ -4468,19 +4527,19 @@
         "message": "Opóźnienie wyłączenia silnika podczas Failsafe [sekund]"
     },
     "failsafeOffDelayHelp": {
-        "message": "Czas pozostawania w trybie lądowania do momentu wyłączenia silników i wyłączenia jednostki"
+        "message": "Czas po wylądowaniu do momentu wyłączenia silników i rozbrojenia jednostki latającej"
     },
     "failsafeSubTitle1": {
         "message": "Etap 2 – Procedura Failsafe"
     },
     "failsafeProcedureItemSelect1": {
-        "message": "Ląduj"
+        "message": "LĄDOWANIE"
     },
     "failsafeProcedureItemSelect2": {
-        "message": "Upadek"
+        "message": "UPADEK"
     },
     "failsafeProcedureItemSelect4": {
-        "message": "GPS Ratunek"
+        "message": "GPS  RATUNKOWY"
     },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "Tryb Wysokości"
@@ -4497,8 +4556,23 @@
     "failsafeGpsRescueInitialClimb": {
         "message": "Początkowa wysokość (metry)"
     },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "Wysokość, na jaką wzniesienie się jednostka latająca powyżej bieżącej wysokości, po rozpoczęciu procedury ratunkowej failsafe i ustawieniu trybu CURRENT Altitude. Dodano także w trybie MAX Altitude."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Wysokość powrotna (w metrach) - <strong>ma zastosowanie tylko w trybie stałej wysokości</strong>"
+    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Prędkość wznoszenia (metry/sekundę)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Prędkość względem ziemi (metry/sekunde)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Maksymalny kąt pochylenia"
+    },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Wyższe kąty maksymalne pochylenia prowadzą do bardziej agresywnych zwrotów i wyższych prędkości podczas lotu do przodu. Może to być przydatne w przypadku dużych jednostek, o większym oporze powietrza lub małej mocy, lub do stosowania przy silniejszym wietrze. OSTRZEŻENIE: W przypadku zwiększenia maksymalnego kąta pochylenia zwykle należy zwiększyć  moc przepustnicy ratunkowej! W przeciwnym razie jednostka latająca  może stracić wysokość i rozbić się!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Długość zniżania (metry)"
@@ -4506,11 +4580,27 @@
     "failsafeGpsRescueItemDescendRate": {
         "message": "Prędkość opadania (metry/sekundę)"
     },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "Początkowa prędkość opadania jest ustawiana na 3-krotność tej wartości i zmniejsza się do ustawionej wartości na wysokości lądowania."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Jeśli utrata sygnału nastąpi zbyt blisko miejsca startu (w tej minimalnej odległości), jednostka odleci zgodnie z bieżącym kursem, aż do tej odległości od miejsca startu, a następnie rozpocznie normalne zachowanie ratownicze failsafe.",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Przepustnica minimum"
     },
     "failsafeGpsRescueItemThrottleMax": {
         "message": "Przepustnica w pozycji max"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Należy zwiększyć w przypadku jednostek cięższych, o większym oporze lub o małej mocy, jeśli prawdopodobny jest powrót przy silnym wietrze lub jeśli zwiększony jest maksymalny kąt pochylenia."
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Moc przepustnicy - <span class=\"message-negative\">WAŻNE: USTAW TĘ WARTOŚĆ DOKŁADNIE</span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Aby znaleźć właściwą wartość, ustaw działanie przełącznika Failsafe na Etap 2, ustaw Procedurę Failsafe Etapu drugirgo na Lądowanie i dostosuj wartość przepustnicy używaną podczas lądowania, aż jednostka latająca zawiśnie w powietrzu lub zacznie powoli opadać"
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Minimalna odległość do domu (metry)"
@@ -4520,6 +4610,12 @@
     },
     "failsafeGpsRescueItemMinSats": {
         "message": "Minimalna liczba satelitów"
+    },
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!</span"
+    },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Nie rekomendowane. Umożliwia uzbrojenie bez poprawnego sygnału GPS, może spowodować, że jednostka latająca rozbroi się i ulegnie awarii z prawdziwym zabezpieczeniem przed utratą sygnału Rx. Jeśli testowano za pomocą przełącznika, przed rozbrojeniem następuje krótki okres bezczynności."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sprawdzenie kontrolne"
@@ -4540,13 +4636,13 @@
         "message": "Zaznacz tę opcję, aby ustawić przełącznik odpowiedzialny za failsafe (Zakładka Tryby). Będziesz go mógł użyć tego testowania funkcji awaryjnego lądowania. <strong>Uwaga:</strong> Uzbrojenie silników jest niemożliwe, gdy przełącznik odpowiedzialny za funkcje failsafe jest w pozycji włączonej"
     },
     "failsafeSwitchTitle": {
-        "message": "Przełącznik Failsafe"
+        "message": "PRZEŁĄCZNIK FAILSAFE"
     },
     "failsafeSwitchModeItem": {
         "message": "Wybrany typ Failsafe"
     },
     "failsafeSwitchModeHelp": {
-        "message": "Ta opcja określa, co się dzieje, gdy tryb Failsafe jest aktywowany przez przełącznik AUX:<br/><strong>Etap 1</strong> aktywuje Etap 1 Failsafe. Jest to przydatne, jeśli chcesz symulować zachowanie bezpiecznej utraty sygnału.<br/><strong>Etap 2</strong> pomija Etap 1 i natychmiast aktywuje procedurę Etap 2<br/><strong>Zabij</strong> rozbraja natychmiast (twoja jednostka spadnie na ziemię)"
+        "message": "Ta opcja określa co się stanie gdy tryb Failsafe zostanie aktywowany przez przełącznik AUX:<br/><strong>Etap 1</strong> aktywuje pierwszy etap Failsafe. Jest to przydatne w sytuacji gdy chcesz zasymulować  w bezpieczny sposób  utrate sygnału.<br/><strong>Etap 2</strong> pomija Etap 1 i natychmiast aktywuje procedurę etapu drugiego.<br/><strong>Upadek</strong> wyłącza silniki natychmiast a twoja jednostka latająca  spadnie na ziemię."
     },
     "failsafeSwitchOptionStage1": {
         "message": "Etap 1"
@@ -4555,7 +4651,7 @@
         "message": "Etap 2"
     },
     "failsafeSwitchOptionKill": {
-        "message": "Zabij"
+        "message": "Upadek"
     },
     "powerButtonSave": {
         "message": "Zapisz"
@@ -4612,7 +4708,7 @@
         "message": "Aby skalibrować, użyj multimetru do pomiaru rzeczywistego napięcia / prądu pobieranego przez jednostkę (z podłączoną baterią) i wprowadź poniższe wartości. Następnie, gdy ta sama bateria jest nadal podłączona, kliknij [Calibrate]."
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>Uwaga:</strong> Przed kalibracją skali upewnij się, że dzielnik i mnożnik napięcia oraz offset dla amperażu są ustawione prawidłowo.<br>Pozostawienie wartości na 0 nie spowoduje kalibracji.</br><strong>Pamiętaj, aby zdjąć śmigła przed podłączeniem do baterii!</strong>"
+        "message": "<strong>Uwaga:</strong> Przed kalibracją skali upewnij się, że dzielnik i mnożnik napięcia oraz przesunięcie dla amperażu są ustawione prawidłowo.<br>    Pozostawienie wartości na 0 nie spowoduje kalibracji.</br><strong> Pamiętaj, aby zdjąć śmigła przed podłączeniem  baterii!</strong>"
     },
     "powerCalibrationManagerWarning": {
         "message": "<span class=\"message-negative\">Ostrzeżenie:</span> Bateria <span class=\"message-negative\">nie jest podłączona</span> lub woltomierz albo amperomierz <span class=\"message-negative\">nie są ustawione/ nie działają prawidłowo.</span> Upewnij się, że woltomierz i/lub amperomierz odczytują wartość powyżej 0. W przeciwnym razie nie będziesz w stanie skalibrować tego narzędzia."
@@ -4958,11 +5054,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Własny obraz:"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Rozmiar musi wynosić $t(logoWidthPx)×$t(logoHeightPx) pikseli"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Musi zawierać zielone, czarne i białe piksele"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Kliknij <b>$t(osdSetupUploadFont.message)</b> aby ustwwić niestandardowe logo"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Nieprawidłowy rozmiar obrazu: {{width}}×{{height}} (oczekiwano $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Obraz zawiera nieprawidłowy piksel: rgb({{valueR}}, {{valueG}}, {{valueB}}) o współrzędnych {{posX}}×{{posY}}"
@@ -5335,7 +5437,7 @@
         "message": "Wzmocnienie PID osi odchylenia (yaw)"
     },
     "osdTextElementPower": {
-        "message": "Pobierana Moc z baterii",
+        "message": "Pobierana Moc",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPower": {
@@ -5909,7 +6011,7 @@
         "message": "Źródło:"
     },
     "osdTimerSourceTooltip": {
-        "message": "Wybierz źródło zegara, to kontroluje czas trwania zdarzenia które mierzy zegar"
+        "message": "Wybierz źródło zegara.  Kontroluje czas trwania zdarzenia które mierzy zegar"
     },
     "osdTimerSourceOptionOnTime": {
         "message": "Uruchomiony od",
@@ -6041,14 +6143,14 @@
         "message": "Ostrzega, gdy tryb kontroli uruchamiania jest włączony"
     },
     "osdWarningTextGpsRescueUnavailable": {
-        "message": "Ratowanie GPS niedostępne",
+        "message": "GPS Ratunkowy jest w tej chwili niedostępny",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueUnavailable": {
-        "message": "Ostrzega, gdy funkcja ratowania GPS jest niedostępna i nie można jej aktywować"
+        "message": "Ostrzeżenie, gdy funkcja Ratunkowego GPS jest niedostępna i nie można jej aktywować"
     },
     "osdWarningTextGpsRescueDisabled": {
-        "message": "Ratowanie GPS wyłączone",
+        "message": "GPS Ratunkowy  wyłączony",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueDisabled": {
@@ -6290,7 +6392,7 @@
         "description": "One of the options for the Low Power Disarm mode of the VTX"
     },
     "vtxLowPowerDisarmOption_2": {
-        "message": "Włączony do pierwszego ramienia",
+        "message": "Włączony do pierwszego uzbrojenia",
         "description": "One of the options for the Low Power Disarm mode of the VTX"
     },
     "vtxTable": {
@@ -6470,10 +6572,10 @@
         "message": "Magnetometr (jeśli wspierany)"
     },
     "configurationSmallAngle": {
-        "message": "Maksymalny kąt ARM [degrees]"
+        "message": "Maksymalny kąt trybu ARM [Stopnie]"
     },
     "configurationSmallAngleHelp": {
-        "message": "Dron nie uzbroi się jeśli jest pochylony o kąt większy niż ustalony. Działa tylko jeśli akcelerometr jest włączony. Ustawienie kąta 180 efektywnie wyłączy tą funkcje"
+        "message": "Jednostka latająca nie uzbroi się jeśli jest pochylona o kąt większy niż ustalony. Działa tylko jeśli akcelerometr jest włączony. Ustawienie kąta 180 definitywnie wyłączy tą funkcje"
     },
     "configurationBatteryVoltage": {
         "message": "Napięcie baterii"
@@ -6570,7 +6672,7 @@
         "message": "Może być wyświetlana w OSD.</br>Może być ustawiona przez <b>pilot_name</b> zmienną CLI."
     },
     "configurationFpvCamAngleDegrees": {
-        "message": "Kąt nachylenia kamery FPV [degrees]"
+        "message": "Kąt pochylenia kamery FPV [stopnie]"
     },
     "onboardLoggingBlackbox": {
         "message": "Urządzenie zapisu logów"
@@ -6633,7 +6735,7 @@
         "message": "TRYB ZMIANY KAMERY"
     },
     "flashTab": {
-        "message": "Aktualizuj"
+        "message": "WGRAJ"
     },
     "cliAutoComplete": {
         "message": "Zaawansowane autouzupełnianie wiersza poleceń"
@@ -6968,7 +7070,7 @@
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">OSTRZEŻENIE!</span> Korzystanie z wstępnie ustawionych źródeł innych firm może być niebezpieczne.<br/>Upewnij się, że dodajesz i używasz tylko zaufanych źródeł. Złośliwe lub źle ustawione źródła zepsują konfigurację drona i mogą potencjalnie uszkodzić urządzenie.",
+        "message": "<span class=\"message-negative\">OSTRZEŻENIE!</span> Korzystanie ze wstępnych ustawień innych firm może być niebezpieczne.<br/>  Upewnij się, że korzystasz tylko ze sprawdzonych ustawień. Złośliwe oprogramowanie lub błędna konfiguracja jednostki latającej może potencjalnie uszkodzić urządzenie.",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
