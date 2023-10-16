@@ -37,7 +37,12 @@ module.exports = {
         cordovaChromeapi: true,
         appAvailability: true,
         // end cordova bindings
+        
+        // globals for vite
+		__APP_PRODUCTNAME__: "readonly",
+        __APP_VERSION__: "readonly",
+        __APP_REVISION__: "readonly",     
     },
     // ignore src/dist folders
-    ignorePatterns: ["src/dist/*", "src/js/version.js"],
+    ignorePatterns: ["src/dist/*"],
 };
