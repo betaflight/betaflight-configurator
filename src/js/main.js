@@ -21,6 +21,7 @@ import { updateTabList } from './utils/updateTabList.js';
 import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates.js';
 import * as THREE from 'three';
 import * as d3 from 'd3';
+import version from './version.js';
 
 if (typeof String.prototype.replaceAll === "undefined") {
     String.prototype.replaceAll = function(match, replace) {
@@ -56,9 +57,9 @@ function readConfiguratorVersionMetadata() {
         CONFIGURATOR.version = manifest.version;
         CONFIGURATOR.gitRevision = manifest.gitRevision;
     } else {
-        CONFIGURATOR.productName = __APP_PRODUCTNAME__;
-        CONFIGURATOR.version = __APP_VERSION__;
-        CONFIGURATOR.gitRevision = __APP_REVISION__;
+        CONFIGURATOR.productName = version.productName;
+        CONFIGURATOR.version = version.version;
+        CONFIGURATOR.gitRevision = version.gitRevision;
     }
 }
 

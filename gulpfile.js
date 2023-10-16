@@ -297,6 +297,16 @@ function processPackage(done, gitRevision, isReleaseBuild) {
         metadata.packageId = pkg.name;
     }
 
+    const version = {
+        productName: pkg.productName,
+        version: pkg.version,
+        gitRevision: gitRevision,
+        buildDate: new Date(),
+    };
+
+    const output = `const version = ${JSON.stringify(version, null, 2)};\nexport default version;\n`;
+    fs.writeFileSync('./src/js/version.js', output);
+
     function version_prompt() {
         return gulp.src('.')
             .pipe(prompt.prompt([{

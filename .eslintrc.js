@@ -39,5 +39,5 @@ module.exports = {
         // end cordova bindings
     },
     // ignore src/dist folders
-    ignorePatterns: ["src/dist/*"],
+    ignorePatterns: ["src/dist/*", "src/js/version.js"],
 };

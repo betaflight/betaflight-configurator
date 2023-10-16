@@ -33,3 +33,5 @@ nbproject/
 .settings/
 test-results-junit/
 /src/package.json
+/src/version.json
+/src/js/version.js
