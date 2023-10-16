@@ -39,7 +39,7 @@ module.exports = {
         // end cordova bindings
         
         // globals for vite
-		__APP_PRODUCTNAME__: "readonly",
+        __APP_PRODUCTNAME__: "readonly",
         __APP_VERSION__: "readonly",
         __APP_REVISION__: "readonly",     
     },
