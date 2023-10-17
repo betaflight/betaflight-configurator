@@ -4,6 +4,9 @@ import vue from "@vitejs/plugin-vue2";
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import copy from "rollup-plugin-copy";
+import pkg from './package.json';
+
+const childProcess = require('child_process');
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -46,6 +49,11 @@ function serveLocalesPlugin() {
 }
 
 export default defineConfig({
+    define: {
+        '__APP_VERSION__': JSON.stringify(pkg.version),
+        '__APP_PRODUCTNAME__': JSON.stringify(pkg.productName),
+        '__APP_REVISION__': JSON.stringify(childProcess.execSync("git rev-parse --short HEAD").toString().trim()),
+    },
     test: {
         // NOTE: this is a replacement location for karma tests.
         //       moving forward we should colocate tests with the
