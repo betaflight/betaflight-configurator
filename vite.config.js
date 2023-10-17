@@ -4,7 +4,7 @@ import vue from "@vitejs/plugin-vue2";
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import copy from "rollup-plugin-copy";
-import pkg from './package.json'
+import pkg from './package.json';
 
 const childProcess = require('child_process');
 
