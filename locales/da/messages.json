@@ -5635,7 +5635,7 @@
         "message": "Blackbox nummer og advarsler"
     },
     "osdTextElementFlipArrow": {
-        "message": "Flip after crash pil",
+        "message": "Pil for \"vend styrtet drone\" motorretning",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {

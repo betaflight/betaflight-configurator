@@ -400,7 +400,7 @@
         "message": "Zabezpieczenie odczytu nieaktywne"
     },
     "stm32ReadProtected": {
-        "message": "Płytka jest zabezpieczona przed odczytem. Odbezpieczanie. Nie rozłączaj urządzenia!"
+        "message": "Płytka kontrolera lotu jest zabezpieczona przed odczytem. Odbezpieczanie. Nie rozłączaj urządzenia!"
     },
     "stm32UnprotectSuccessful": {
         "message": "Usunięcie zabezpieczenia powiodło się."
@@ -409,7 +409,7 @@
         "message": "WYMAGANE DZIAŁANIE UŻYTKOWNIKA: Aby spróbować wgrać oprogramowanieponownie odłącz i podłącz kontroler lotu w trybie DFU!"
     },
     "stm32UnprotectFailed": {
-        "message": "Nie udało się odbezpieczyć płytki"
+        "message": "Nie udało się odbezpieczyć płytki kontrolera lotu"
     },
     "stm32UnprotectInitFailed": {
         "message": "Nie udało się uruchomić procedury odbezpieczania"
@@ -3499,7 +3499,7 @@
         "message": "Auto-wykrywanie działa tylko wtedy, gdy nie jest w trybie DFU i gdy komunikacja MSP działa. Czasami musisz ponowić próbę kilka razy, a nawet ponownie połączyć się z USB. Spróbuj połączyć się tak normalnie, jak można było zapomnieć o stosowaniu niestandardowych ustawień domyślnych. Uruchom ponownie po wgraniu - podłącz ponownie swój USB."
     },
     "firmwareFlasherDetectBoardQuery": {
-        "message": "Znajdź informacje na płytce, aby wstępnie wybrać odpowiednie oprogramowanie"
+        "message": "Znajdź informacje na płytce kontrolera lotu, aby wstępnie wybrać odpowiednie oprogramowanie"
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego</strong>. Ciągle trwają prace nad tą wersją, a każda z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie będzie działć;</li><li>oprogramowanie będzie miało problemy ze sterowaniem lotu;</li><li>wystąpią problemy z bezpieczeństwem, na przykład podczas lotu</li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieprzewidywalny, lub doprowadzi do uszkodzenia maszyny lub czyjegoś zdrowia</li></ul></strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji</strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami</strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
@@ -3730,7 +3730,7 @@
         "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripWiringClearAllControl": {
-        "message": "Wyczyść WSZYSTKIE połączenia",
+        "message": "Wyczyść wszystko",
         "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripWiringMessage": {
