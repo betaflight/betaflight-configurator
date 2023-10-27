@@ -2029,6 +2029,9 @@ OSD.chooseFields = function() {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
             F.STAT_BEST_3_CONSEC_LAPS,
             F.STAT_BEST_LAP,
+            F.STAT_FULL_THROTTLE_TIME,
+            F.STAT_FULL_THROTTLE_COUNTER,
+            F.STAT_AVG_THROTTLE,
         ]);
     }
 
