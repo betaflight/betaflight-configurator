@@ -1720,6 +1720,21 @@ OSD.constants = {
             text: 'osdTextStatBestLap',
             desc: 'osdDescStatBestLap',
         },
+        STAT_FULL_THROTTLE_TIME : {
+            name: 'STAT_FULL_THROTTLE_TIME',
+            text: 'osdTextStatFullThrottleTime',
+            desc: 'osdDescStatFullThrottleTime',
+        },
+        STAT_FULL_THROTTLE_COUNTER : {
+            name: 'STAT_FULL_THROTTLE_COUNTER',
+            text: 'osdTextStatFullThrottleCounter',
+            desc: 'osdDescStatFullThrottleCounter',
+        },
+        STAT_AVG_THROTTLE : {
+            name: 'STAT_AVG_THROTTLE',
+            text: 'osdTextStatAvgThrottle',
+            desc: 'osdDescStatAvgThrottle',
+        },
     },
     ALL_WARNINGS: {
         ARMING_DISABLED: {

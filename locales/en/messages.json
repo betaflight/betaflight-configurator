@@ -6081,6 +6081,27 @@
     "osdDescStatBestLap": {
         "message": "Best lap"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "Full throttle timer",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Full throttle timer"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Full throttle counter",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Full throttle counter"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Average throttle",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Average throttle"
+    },
     "osdTextStatUnknown": {
         "message": "Unknown $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
