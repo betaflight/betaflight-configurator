@@ -5991,6 +5991,27 @@
     "osdDescStatBestLap": {
         "message": "Найкраще коло"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "Таймер повної тяги",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Таймер повної тяги"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Лічильник повної тяги",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Лічильник повної тяги"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Середнє значення тяги",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Середнє значення тяги"
+    },
     "osdTextStatUnknown": {
         "message": "Невідомо $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
