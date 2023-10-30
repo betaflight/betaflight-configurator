@@ -409,6 +409,7 @@ function onOpenVirtual() {
     GUI.connecting_to = false;
 
     CONFIGURATOR.connectionValid = true;
+    isConnected = true;
 
     mspHelper = new MspHelper();
 
