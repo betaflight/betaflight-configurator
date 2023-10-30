@@ -324,6 +324,7 @@ setup.initialize = function (callback) {
                 'QMC5883',
                 'LIS3MDL',
                 'MPU925X_AK8963',
+                'IST8310',
             ];
 
             let sonarElements = [
