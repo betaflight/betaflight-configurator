@@ -5978,18 +5978,39 @@
         "message": "Mínimo valor del RSNR"
     },
     "osdTextStatBest3ConsecLaps": {
-        "message": "Mejores tres vueltas consecutivas",
+        "message": "Cronometraje: mejores tres vueltas consecutivas",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBest3ConsecLaps": {
-        "message": "Mejores tres vueltas consecutivas"
+        "message": "Tiempos de las tres mejores vueltas consecutivas"
     },
     "osdTextStatBestLap": {
-        "message": "Mejor vuelta",
+        "message": "Cronometraje: mejor vuelta",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBestLap": {
-        "message": "Mejor vuelta"
+        "message": "Tiempo de la mejor vuelta"
+    },
+    "osdTextStatFullThrottleTime": {
+        "message": "Acelerador: temporizador de acelerador al máximo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Muestra el tiempo que el acelerador ha estado al máximo"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Acelerador: contador de acelerador al máximo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Muestra el número de veces que el acelerador ha estado al máximo"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Acelerador: valor promedio",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Muestra el valor medio del acelerador durante el vuelo"
     },
     "osdTextStatUnknown": {
         "message": "Desconocido $1",

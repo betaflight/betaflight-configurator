@@ -2961,7 +2961,7 @@
         "message": "Liczba silników wynosi 0.<br />Zweryfikuj aktualny Mixer w $t(tabMotorTesting.message) lub zmień ustawienia przez CLI. Więcej info<a href=\"https://betaflight.com/docs/development/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">strona Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
-        "message": "Zaktualizuj oprogramowanie.<br /> Upewnij się, że używasz najnowszego firmware: Betaflight 4.3 lub nowszego."
+        "message": "Zaktualizuj oprogramowanie.<br /> Upewnij się, że używasz najnowszego oprogramowania: Betaflight 4.3 lub nowszego."
     },
     "escDshotDirectionDialog-WizardActionHint": {
         "message": "Kliknij na numer silnika, aby zmienić kierunek obrotów"
@@ -5990,6 +5990,27 @@
     },
     "osdDescStatBestLap": {
         "message": "Najlepsze okrążenie"
+    },
+    "osdTextStatFullThrottleTime": {
+        "message": "Czas pełnego otwarcia przepustnicy",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Czas pełnego otwarcia przepustnicy"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Czas pełnego otwarcia przepustnicy",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Czas pełnego otwarcia przepustnicy"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Średnia przepustnica",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Średnia przepustnica"
     },
     "osdTextStatUnknown": {
         "message": "Nieznane $1",

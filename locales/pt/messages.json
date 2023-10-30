@@ -5991,6 +5991,27 @@
     "osdDescStatBestLap": {
         "message": "Melhor volta"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "Temporizador de acelerador máximo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Temporizador de acelerador máximo"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Contador de acelerador máximo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Contador de acelerador máximo"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Média de Acelerador",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Média de Acelerador"
+    },
     "osdTextStatUnknown": {
         "message": "$1 desconhecido",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"

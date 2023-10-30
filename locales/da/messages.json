@@ -5991,6 +5991,18 @@
     "osdDescStatBestLap": {
         "message": "Bedste omgang"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "Gas: Samlet tid med fuld gas",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Gas: Antal gange med fuld gas",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Gas: Gennemsnit for flyvningens gas",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdTextStatUnknown": {
         "message": "Ukendt $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"

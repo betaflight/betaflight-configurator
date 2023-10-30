@@ -5991,6 +5991,27 @@
     "osdDescStatBestLap": {
         "message": "베스트 랩"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "풀 스로틀 터이머",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "풀 스로틀 터이머"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "풀 스로틀 카운터",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "풀 스로틀 카운터"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "평균 스로틀",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "평균 스로틀"
+    },
     "osdTextStatUnknown": {
         "message": "알 수 없음 $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"

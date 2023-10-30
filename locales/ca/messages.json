@@ -5999,6 +5999,27 @@
     "osdDescStatBestLap": {
         "message": "Millor volta"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "Temporitzador a tot l'accelerador",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Temporitzador a tot l'accelerador"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Comptador a tot l'accelerador",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Comptador a tot l'accelerador"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Acelerador mitjà",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Acelerador mitjà"
+    },
     "osdTextStatUnknown": {
         "message": "Desconegut $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
