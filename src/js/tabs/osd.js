@@ -1830,16 +1830,16 @@ OSD.constants = {
 
     },
     FONT_TYPES: [
-        { file: "default", name: "Default" },
-        { file: "bold", name: "Bold" },
-        { file: "large", name: "Large" },
-        { file: "extra_large", name: "Extra Large" },
-        { file: "betaflight", name: "Betaflight" },
-        { file: "digital", name: "Digital" },
-        { file: "clarity", name: "Clarity" },
-        { file: "vision", name: "Vision" },
-        { file: "impact", name: "Impact" },
-        { file: "impact_mini", name: "Impact Mini" },
+        { file: "default", name: "osdSetupFontTypeDefault" },
+        { file: "bold", name: "osdSetupFontTypeBold" },
+        { file: "large", name: "osdSetupFontTypeLarge" },
+        { file: "extra_large", name: "osdSetupFontTypeLargeExtra" },
+        { file: "betaflight", name: "osdSetupFontTypeBetaflight" },
+        { file: "digital", name: "osdSetupFontTypeDigital" },
+        { file: "clarity", name: "osdSetupFontTypeClarity" },
+        { file: "vision", name: "osdSetupFontTypeVision" },
+        { file: "impact", name: "osdSetupFontTypeImpact" },
+        { file: "impact_mini", name: "osdSetupFontTypeImpactMini" },
     ],
 };
 
@@ -2666,10 +2666,13 @@ osd.initialize = function(callback) {
             const option = $('<option>', {
                 "data-font-file": e.file,
                 value: e.file,
-                text: e.name,
+                text: i18n.getMessage(e.name),
             });
             fontPresetsElement.append($(option));
         });
+
+        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+        fontPresetsElement.sortSelect(i18n.getMessage("osdSetupFontTypeDefault"));
 
         const fontbuttons = $('.fontpresets_wrapper');
         fontbuttons.append($('<button>', { class: "load_font_file", i18n: "osdSetupOpenFont" }));
@@ -3040,9 +3043,11 @@ osd.initialize = function(callback) {
 
                         // Standard fonts
                         OSD.constants.FONT_TYPES.forEach(function(e) {
-                            const optionText = i18n.getMessage('osdSetupPreviewSelectFontElement', {fontName : e.name});
-                            osdFontSelectorElement.append(new Option(optionText, e.file));
+                            osdFontSelectorElement.append(new Option(i18n.getMessage(e.name), e.file));
                         });
+
+                        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
+                        osdFontSelectorElement.sortSelect(i18n.getMessage("osdSetupFontTypeDefault"));
 
                         osdFontSelectorElement.change(function() {
                             // Change the font selected in the Font Manager, in this way it is easier to flash if the user likes it
