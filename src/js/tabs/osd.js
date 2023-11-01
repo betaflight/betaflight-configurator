@@ -3047,7 +3047,7 @@ osd.initialize = function(callback) {
                         });
 
                         // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
-                        osdFontSelectorElement.sortSelect(i18n.getMessage("osdSetupPreviewSelectFont"));
+                        osdFontSelectorElement.sortSelect(i18n.getMessage("osdSetupFontTypeDefault"));
 
                         osdFontSelectorElement.change(function() {
                             // Change the font selected in the Font Manager, in this way it is easier to flash if the user likes it
