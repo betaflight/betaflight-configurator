@@ -5058,8 +5058,8 @@
         "message": "OSD Profile {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Font {{fontName}}",
+    "osdSetupPreviewSelectFont": {
+        "message": "Font",
         "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupFontTypeDefault": {
@@ -5074,9 +5074,9 @@
         "message": "Large",
         "description": "Font Large"
     },
-    "osdSetupFontTypeExtraLarge": {
-        "message": "Extra Large",
-        "description": "Font Extra Large"
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Large Extra",
+        "description": "Font Large Extra"
     },
     "osdSetupFontTypeBetaflight": {
         "message": "Betaflight",

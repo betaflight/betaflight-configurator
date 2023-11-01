@@ -1833,7 +1833,7 @@ OSD.constants = {
         { file: "default", name: "osdSetupFontTypeDefault" },
         { file: "bold", name: "osdSetupFontTypeBold" },
         { file: "large", name: "osdSetupFontTypeLarge" },
-        { file: "extra_large", name: "osdSetupFontTypeExtraLarge" },
+        { file: "extra_large", name: "osdSetupFontTypeLargeExtra" },
         { file: "betaflight", name: "osdSetupFontTypeBetaflight" },
         { file: "digital", name: "osdSetupFontTypeDigital" },
         { file: "clarity", name: "osdSetupFontTypeClarity" },
@@ -3043,12 +3043,11 @@ osd.initialize = function(callback) {
 
                         // Standard fonts
                         OSD.constants.FONT_TYPES.forEach(function(e) {
-                            const optionText = i18n.getMessage('osdSetupPreviewSelectFontElement', {fontName : i18n.getMessage(e.name)});
-                            osdFontSelectorElement.append(new Option(optionText, e.file));
+                            osdFontSelectorElement.append(new Option(i18n.getMessage(e.name), e.file));
                         });
 
                         // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
-                        osdFontSelectorElement.sortSelect(i18n.getMessage("osdSetupFontTypeDefault"));
+                        osdFontSelectorElement.sortSelect(i18n.getMessage("osdSetupPreviewSelectFont"));
 
                         osdFontSelectorElement.change(function() {
                             // Change the font selected in the Font Manager, in this way it is easier to flash if the user likes it
