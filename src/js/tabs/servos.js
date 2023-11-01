@@ -50,7 +50,7 @@ servos.initialize = function (callback) {
         for (let i = 0; i < FC.RC.active_channels-4; i++) {
             servoHeader += `<th>A${(i+1)}</th>`;
         }
-        servoHeader += '<th style="width: 110px" i18n="servosDirectionAndRate"></th>';
+        servoHeader += '<th style="width: 110px" i18n="servosRateAndDirection"></th>';
 
         for (let i = 0; i < FC.RC.active_channels; i++) {
             servoCheckbox += `<td class="channel"><input type="checkbox"/></td>`;
@@ -69,8 +69,8 @@ servos.initialize = function (callback) {
             const subElement = `<input type="number" min="500" max="2500" value="`;
 
             let element = `<tr><td style="text-align: center">${name}</td>`;
-            element += `<td class="middle">${subElement}${FC.SERVO_CONFIG[obj].middle}" /></td>`;
             element += `<td class="min">${subElement}${FC.SERVO_CONFIG[obj].min}" /></td>`;
+            element += `<td class="middle">${subElement}${FC.SERVO_CONFIG[obj].middle}" /></td>`;
             element += `<td class="max">${subElement}${FC.SERVO_CONFIG[obj].max}" /></td>`;
             element += `${servoCheckbox}<td class="direction"></td></tr>`;
 
@@ -85,8 +85,9 @@ servos.initialize = function (callback) {
 
             const select = $('div.tab-servos table.fields tr:last td.direction select');
 
+            let rateLabel = i18n.getMessage('servosRate');
             for (let i = 100; i > -101; i--) {
-                select.append(`<option value="${i}">Rate: ${i}%</option>`);
+                select.append(`<option value="${i}">${rateLabel} ${i}%</option>`);
             }
 
             // select current rate

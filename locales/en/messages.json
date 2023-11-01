@@ -2704,8 +2704,12 @@
     "servosAngleAtMax": {
         "message": "Angle at max"
     },
-    "servosDirectionAndRate": {
-        "message": "Direction and rate"
+    "servosRateAndDirection": {
+        "message": "Rate and direction"
+    },
+    "servosRate": {
+        "message": "Rate:",
+        "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
         "message": "Enable Live mode"
