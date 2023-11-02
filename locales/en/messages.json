@@ -4533,7 +4533,7 @@
         "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningIdleMinRpmDisabled": {
-        "message": "Dynamic Idle is OFF because Dshot Telemetry is OFF"
+        "message": "Dynamic Idle is DISABLED because Dshot Telemetry is OFF"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"
