@@ -94,8 +94,6 @@ failsafe.initialize = function (callback) {
         // generate labels for assigned aux modes
         const auxAssignment = [];
 
-        let element;
-
         for (let channelIndex = 0; channelIndex < FC.RC.active_channels - 4; channelIndex++) {
             auxAssignment.push("");
         }
@@ -104,6 +102,7 @@ failsafe.initialize = function (callback) {
             auxAssignment[FC.RSSI_CONFIG.channel - 5] += "<span class=\"modename\">" + "RSSI" + "</span>";         // Aux channels start at 5 in backend so we have to substract 5
         }
 
+        let hasGpsRescueAsMode = false;
         for (let modeIndex = 0; modeIndex < FC.AUX_CONFIG.length; modeIndex++) {
 
             const modeId = FC.AUX_CONFIG_IDS[modeIndex];
@@ -123,6 +122,10 @@ failsafe.initialize = function (callback) {
 
                 // Search for the real name if it belongs to a peripheral
                 let modeName = FC.AUX_CONFIG[modeIndex];
+                // Check if GPS Rescue is enabled as a mode
+                if (!hasGpsRescueAsMode && modeName === "GPS RESCUE") {
+                    hasGpsRescueAsMode = true;
+                }
                 modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
                 auxAssignment[modeRange.auxChannelIndex] += `<span class="modename">${modeName}</span>`;
@@ -232,28 +235,34 @@ failsafe.initialize = function (callback) {
         $('input[name="failsafe_delay"]').val((FC.FAILSAFE_CONFIG.failsafe_delay / 10.0).toFixed(1));
 
         // set stage 2 failsafe procedure
-        $('input[type="radio"].procedure').change(function () {
+        const rescueSettings = $('input[id="gps_rescue"]').parent().parent().find(':input');
+        $('input[type="radio"].procedure').on("change", function () {
             // Disable all the settings
-            $('.proceduresettings :input').attr('disabled',true);
+            $('.proceduresettings :input').attr('disabled', true);
             // Enable only selected
-            $(this).parent().parent().find(':input').attr('disabled',false);
+            $(this).parent().parent().find(':input').attr('disabled', false);
+            // Also enable GPS Rescue if configured as a mode
+            if (hasGpsRescueAsMode) {
+                rescueSettings.attr('disabled', false);
+            }
         });
 
+        let radio;
         switch(FC.FAILSAFE_CONFIG.failsafe_procedure) {
             case 0:
-                element = $('input[id="land"]') ;
-                element.prop('checked', true);
-                element.change();
+                radio = $('input[id="land"]') ;
+                radio.prop('checked', true);
+                radio.trigger("change");
                 break;
             case 1:
-                element = $('input[id="drop"]');
-                element.prop('checked', true);
-                element.change();
+                radio = $('input[id="drop"]');
+                radio.prop('checked', true);
+                radio.trigger("change");
                 break;
             case 2:
-                element = $('input[id="gps_rescue"]');
-                element.prop('checked', true);
-                element.change();
+                radio = $('input[id="gps_rescue"]');
+                radio.prop('checked', true);
+                radio.trigger("change");
                 break;
         }
 
