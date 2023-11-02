@@ -12,7 +12,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_44, API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
@@ -772,19 +772,8 @@ motors.initialize = async function (callback) {
 
             $('div.digitalIdlePercent').toggle(protocolConfigured && digitalProtocol);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                $('input[name="digitalIdlePercent"]').prop('disabled', protocolConfigured && digitalProtocol && FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry);
-            }
-
             if (FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry) {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                    $('div.digitalIdlePercent').hide();
-                } else {
-                    const dynamicIdle = FC.ADVANCED_TUNING.idleMinRpm * 100;
-                    $('span.digitalIdlePercentDisabled').text(i18n.getMessage('configurationDigitalIdlePercentDisabled', { dynamicIdle }));
-                }
-            } else {
-                $('span.digitalIdlePercentDisabled').text(i18n.getMessage('configurationDigitalIdlePercent'));
+                $('div.digitalIdlePercent').hide();
             }
 
             $('.escSensor').toggle(protocolConfigured && digitalProtocol);
