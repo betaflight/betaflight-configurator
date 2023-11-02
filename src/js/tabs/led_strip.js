@@ -639,6 +639,10 @@ led_strip.initialize = function (callback, scrollPosition) {
 
 
         $('a.save').on('click', function () {
+            const saveButton = $('a.save');
+            const oldText = saveButton.text();
+            saveButton.html(i18n.getMessage('buttonSaving')).addClass('disabled');
+
             mspHelper.sendLedStripConfig(send_led_strip_colors);
 
             function send_led_strip_colors() {
@@ -650,7 +654,20 @@ led_strip.initialize = function (callback, scrollPosition) {
             }
 
             function save_to_eeprom() {
-                mspHelper.writeConfiguration(false);
+                mspHelper.writeConfiguration(false, save_completed);
+            }
+
+            function save_completed() {
+                const buttonDelay = 1500;
+
+                 // Allow firmware to make relevant changes before initialization
+                setTimeout(() => {
+                    saveButton.html(i18n.getMessage('buttonSaved'));
+
+                    setTimeout(() => {
+                        saveButton.html(oldText).removeClass('disabled');
+                    }, buttonDelay);
+                }, buttonDelay);
             }
         });
 

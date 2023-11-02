@@ -899,15 +899,15 @@ vtx.initialize = function (callback) {
 
             const saveButton = $("#save_button");
             const oldText = saveButton.text();
-            const buttonDelay = 2000;
+            const buttonDelay = 1500;
 
-            saveButton.html(i18n.getMessage('vtxButtonSaving')).addClass('disabled');
+            saveButton.html(i18n.getMessage('buttonSaving')).addClass('disabled');
 
             clearInterval(TABS.vtx.intervalId);
 
              // Allow firmware to make relevant changes before initialization
             setTimeout(() => {
-                saveButton.html(i18n.getMessage('vtxButtonSaved'));
+                saveButton.html(i18n.getMessage('buttonSaved'));
 
                 setTimeout(() => {
                     TABS.vtx.initialize();

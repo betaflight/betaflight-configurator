@@ -6655,13 +6655,13 @@
         "message": "Save",
         "description": "Save button in the VTX tab"
     },
-    "vtxButtonSaving": {
+    "buttonSaving": {
         "message": "Saving",
-        "description": "Show state of the Save button in the VTX tab"
+        "description": "Show state of the Save button in the VTX/LED tab"
     },
-    "vtxButtonSaved": {
+    "buttonSaved": {
         "message": "Saved",
-        "description": "Saved action button in the VTX tab"
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} unlocked",
