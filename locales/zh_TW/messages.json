@@ -1865,9 +1865,6 @@
     "servosAngleAtMax": {
         "message": "最大角度"
     },
-    "servosDirectionAndRate": {
-        "message": "方向和 Rate"
-    },
     "servosLiveMode": {
         "message": "激活實時模式"
     },
@@ -3428,10 +3425,6 @@
         "message": "OSD 配置文件 {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "字體 {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
-    },
     "osdSetupVideoFormatTitle": {
         "message": "視頻制式"
     },
@@ -4653,10 +4646,6 @@
     "vtxButtonSave": {
         "message": "保存",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "已保存",
-        "description": "Saved action button in the VTX tab"
     },
     "mainHelpArmed": {
         "message": "電機解鎖"

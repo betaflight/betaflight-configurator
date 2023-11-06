@@ -2616,8 +2616,12 @@
     "servosAngleAtMax": {
         "message": "Кут при макс."
     },
-    "servosDirectionAndRate": {
-        "message": "Напрямок і швидкість"
+    "servosRateAndDirection": {
+        "message": "Діапазон і напрямок"
+    },
+    "servosRate": {
+        "message": "Діапазон:",
+        "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
         "message": "Включити \"живий режим\""
@@ -4440,7 +4444,7 @@
         "message": "Динамічний режим холостого ходу поліпшує керування при низьких оборотах та зменшує ризик десинхронізації моторів. <br /><br /> Він також покращує керованість дрона циклом ПІД, стабільність при нульовій тязі, час полоту дороги дриґом та гальмування моторів.<br /><br />\nМінімальні обороти динамічного холостого ходу повинні бути встановлені приблизно на рівні 3000 - 3500 об/хв. <br /><br />Відвідайте <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">цей запис вікі</a> для отримання додаткової інформації."
     },
     "pidTuningIdleMinRpmDisabled": {
-        "message": "Динамічний холостий хід вимкнено, оскільки Dshot телеметрія вимкнена"
+        "message": "Динамічний режим холостого ходу вимкнено, оскільки Dshot телеметрія вимкнена"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Обмеження кута для Acro Trainer"
@@ -4969,9 +4973,49 @@
         "message": "Профіль OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Шрифт {{fontName}}",
+    "osdSetupPreviewSelectFont": {
+        "message": "Шрифт",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "За замовчуванням",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Жирний",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Великий",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Дуже великий",
+        "description": "Font Large Extra"
+    },
+    "osdSetupFontTypeBetaflight": {
+        "message": "Betaflight",
+        "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Digital",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Clarity",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Vision",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Impact",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Impact Mini",
+        "description": "Font Impact Mini"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Масштабування",
@@ -6524,13 +6568,13 @@
         "message": "Зберегти",
         "description": "Save button in the VTX tab"
     },
-    "vtxButtonSaving": {
-        "message": "Збереження",
-        "description": "Show state of the Save button in the VTX tab"
+    "buttonSaving": {
+        "message": "Зберігається",
+        "description": "Show state of the Save button in the VTX/LED tab"
     },
-    "vtxButtonSaved": {
+    "buttonSaved": {
         "message": "Збережено",
-        "description": "Saved action button in the VTX tab"
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} розблоковано",

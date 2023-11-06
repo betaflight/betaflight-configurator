@@ -2619,9 +2619,6 @@
     "servosAngleAtMax": {
         "message": "Ángulo máximo"
     },
-    "servosDirectionAndRate": {
-        "message": "Dirección e valor"
-    },
     "servosLiveMode": {
         "message": "Activar o modo en directo"
     },
@@ -4442,9 +4439,6 @@
     "pidTuningIdleMinRpmHelp": {
         "message": "Dynamic Idle mellora o control a baixas revolucións e reduce o risco de desincronización do motor. <br /><br /> Mellora a autoridade PID, a estabilidade do acelerador cero, o tempo de suspensión invertido e o freado do motor.<br /><br />As rpm mínimas de ralentí dinámico deben establecerse entre 3000 e 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki </a> para máis información."
     },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": "Ralentí Dinámico está DESACTIVADO porque a Telemetría Dshot está DESACTIVADA"
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Ángulo límite para Entrenador Acro"
     },
@@ -4971,10 +4965,6 @@
     "osdSetupPreviewSelectProfileElement": {
         "message": "Perfil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Fonte {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
@@ -6505,14 +6495,6 @@
     "vtxButtonSave": {
         "message": "Gardar",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaving": {
-        "message": "Gardando",
-        "description": "Show state of the Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "Gardado",
-        "description": "Saved action button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} desbloqueado",

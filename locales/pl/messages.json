@@ -41,13 +41,13 @@
         "message": "Ustawienia aplikacji"
     },
     "connect": {
-        "message": "POŁĄCZ"
+        "message": "Połącz"
     },
     "connecting": {
         "message": "Łączenie"
     },
     "disconnect": {
-        "message": "ROZŁĄCZ"
+        "message": "Rozłącz"
     },
     "portsSelectManual": {
         "message": "Wybór ręczny"
@@ -427,10 +427,10 @@
         "message": "Oprogramowanie tego kontrolera lotu wymaga aktualizacji do nowszej wersji. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
     },
     "resetToCustomDefaultsDialog": {
-        "message": "Dostępne są niestandardowe ustawienia domyślne dla tego kontrolera lotu. Zwykle kontroler lotu będzie działał  nie prawidłowo, jeśli nie zostaną one zastosowane.<br />Czy chcesz zastosować niestandardowe ustawienia domyślne dla tego kontrolera?"
+        "message": "Dostępne są wstępne ustawienia domyślne dla tego kontrolera lotu. Zwykle kontroler lotu będzie działał  nie prawidłowo, jeśli nie zostaną one zastosowane.<br /> Czy chcesz zastosować wstępne ustawienia domyślne dla tego kontrolera?"
     },
     "resetToCustomDefaultsAccept": {
-        "message": "Zastosuj niestandardowe ustawienia domyślne"
+        "message": "Zastosuj wstępne ustawienia domyślne"
     },
     "reportProblemsDialogHeader": {
         "message": "Wykryto następujące <strong>problemy z konfiguracją</strong>:"
@@ -445,7 +445,7 @@
         "message": "<strong>Nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
+        "message": "<strong>Akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}</strong>",
@@ -2616,9 +2616,6 @@
     "servosAngleAtMax": {
         "message": "Kąt przy max"
     },
-    "servosDirectionAndRate": {
-        "message": "Kierunek i stawka"
-    },
     "servosLiveMode": {
         "message": "Wyłącz tryb podglądu na żywo"
     },
@@ -3908,13 +3905,13 @@
         "message": "Poniższe wartości zmieniają zachowanie trybów lotu ANGLE i HORIZON. Różne sterowniki PID obsługują wartości w inny sposób. Sprawdź dokumentację."
     },
     "pidTuningMotorOutputLimit": {
-        "message": "Limit wyjściowy silnika"
+        "message": "Limit mocy silnika"
     },
     "pidTuningMotorLimit": {
         "message": "Współczynnik skali [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Procentowa redukcja sygnału napędu na silnik.<br><br>Zmniejsza prąd ESC i ciepło silnika podczas korzystania z akumulatorów o większej liczbie ogniw w silnikach o wysokim współczynniku KV.<br><br>W przypadku korzystania z akumulatora 6S w jednostce wyposażonej w silniki 4S, śmigła i ustawienia, spróbuj 66%; jeśli używasz baterii 4S na jednostce przeznaczonym do 3S, spróbuj 75%.<br><br>Upewnij się, że wszystkie komponenty mogą wytrzymać napięcie używanej baterii."
+        "message": "Procentowa redukcja napięcia dostarczanego do silnika.<br><br>Zmniejsza prąd ESC oraz ciepło silnika podczas korzystania z akumulatorów o większej liczbie ogniw w silnikach o wysokim KV.<br><br>W przypadku korzystania z akumulatora 6S w jednostce wyposażonej w silniki oraz śmigła dostosowane do napięcia 4S, spróbuj 66%; jeśli używasz baterii 4S na jednostce dostosowanej do 3S, spróbuj 75%.<br><br>Upewnij się, że wszystkie komponenty mogą wytrzymać napięcie używanej baterii."
     },
     "pidTuningCellCount": {
         "message": "Liczba ogniw baterii — dla funkcji automatycznej zmiany profilu"
@@ -4356,7 +4353,7 @@
         "message": "Kompensacja opadania napięcia baterii"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Zapewnia stałą pracę przepustnicy i regulatora PID w użytecznym zakresie napięcia akumulatora, zwiększając moc wyjściową silnika wraz ze spadkiem napięcia akumulatora.<br /><br />Kwotę kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna kompensacja (100%).<br /><br />Odwiedź <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" cel =\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki</a>, aby uzyskać więcej informacji."
+        "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br /><br />Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br /><br />Odwiedź <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation \"target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki</a>, aby uzyskać więcej informacji."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4365,7 +4362,7 @@
         "message": "Linearyzacja ciągu silników"
     },
     "pidTuningThrustLinearizationHelp": {
-        "message": "Poprawia autorytet niskiej przepustnicy i zdolność reagowania. <br><br> Szczególnie przydatne dla kotów i 48k RSG. Nie ma efektu przy wyższej przepustnicy.<br><br>Kwota rekompensaty może być zróżnicowana między 0 a 150%. Zazwyczaj 30-40% wystarczy."
+        "message": "Poprawia autorytet i szybkość reakcji przy niskiej przepustnicy. <br><br> Szczególnie przydatne w przypadku  ESC 48k.  Nie ma wpływu przy większej przepustnicy. <br><br>Zakres rekompensacji może wynosić od 0 do 150%. Zwykle wystarczy 30-40%."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -4431,7 +4428,7 @@
         "message": "Wzmocnienie przepustnicy"
     },
     "pidTuningThrottleBoostHelp": {
-        "message": "Przejściowo zwiększa przepustnicę za pomocą szybszych sygnałów wejściowych przepustnicy, zapewniając bardziej natychmiastową reakcję przepustnicy."
+        "message": "Zwiększa reakcję na przepustnicę za pomocą szybszych sygnałów wejściowych, zapewniając szybszy czas reakcji."
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
@@ -4440,7 +4437,7 @@
         "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
     },
     "pidTuningIdleMinRpmDisabled": {
-        "message": "Opcja Dynamicznego biegu jałowego jest WYŁĄCZONA, ponieważ telemetria Dshot jest WYŁĄCZONA"
+        "message": "Dynamiczny bieg jałowy jest WYŁĄCZONY, ponieważ telemetria Dshot jest wyłączona"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limit kąta trybu treningowego akrobatycznego"
@@ -4969,9 +4966,9 @@
         "message": "Profil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Czcionka {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
+    "osdSetupFontTypeBetaflight": {
+        "message": "Betaflight",
+        "description": "Font Betaflight"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Powiększ",
@@ -6524,13 +6521,13 @@
         "message": "Zapisz",
         "description": "Save button in the VTX tab"
     },
-    "vtxButtonSaving": {
+    "buttonSaving": {
         "message": "Zapisywanie",
-        "description": "Show state of the Save button in the VTX tab"
+        "description": "Show state of the Save button in the VTX/LED tab"
     },
-    "vtxButtonSaved": {
+    "buttonSaved": {
         "message": "Zapisano",
-        "description": "Saved action button in the VTX tab"
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} odblokowany",
@@ -6756,7 +6753,7 @@
         "message": "TRYB ZMIANY KAMERY"
     },
     "flashTab": {
-        "message": "WGRAJ"
+        "message": "Wgraj"
     },
     "cliAutoComplete": {
         "message": "Zaawansowane autouzupełnianie wiersza poleceń"

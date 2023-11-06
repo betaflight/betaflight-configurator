@@ -2283,9 +2283,6 @@
     "servosAngleAtMax": {
         "message": "Angle sur max"
     },
-    "servosDirectionAndRate": {
-        "message": "Direction et rate"
-    },
     "servosLiveMode": {
         "message": "Activer le mode direct"
     },
@@ -4010,9 +4007,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Valeur du ralenti dynamique [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": "Le ralenti dynamique est DÉSACTIVÉ parce que la télémétrie Dshot est DÉSACTIVÉE"
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limite d'angle Acro Trainer"
     },
@@ -4478,10 +4472,6 @@
     "osdSetupPreviewSelectProfileElement": {
         "message": "Profil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Police {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
@@ -5960,14 +5950,6 @@
     "vtxButtonSave": {
         "message": "Enregistrer",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaving": {
-        "message": "Sauvegarde",
-        "description": "Show state of the Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "Enregistré",
-        "description": "Saved action button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} déverrouillé",

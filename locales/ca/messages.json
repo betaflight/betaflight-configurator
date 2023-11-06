@@ -2624,8 +2624,12 @@
     "servosAngleAtMax": {
         "message": "Angle al màx"
     },
-    "servosDirectionAndRate": {
-        "message": "Direcció i rate"
+    "servosRateAndDirection": {
+        "message": "Ritme i direcció"
+    },
+    "servosRate": {
+        "message": "Ritme:",
+        "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
         "message": "Habilita live mode"
@@ -4448,7 +4452,7 @@
         "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. <br /><br />Visiteu <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki</a> per a més informació."
     },
     "pidTuningIdleMinRpmDisabled": {
-        "message": "Dynamic Idle està DESACTIVAT perquè la telemetria Dshot està DESACTIVADA"
+        "message": "Dynamic Idle està DESACTIVAT perquè la telemetria DSHOT està DESACTIVADA"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Límit d’angle del Acro Trainer"
@@ -4977,9 +4981,49 @@
         "message": "Perfil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Font {{fontName}}",
+    "osdSetupPreviewSelectFont": {
+        "message": "Font",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "Per defecte",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Negreta",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Gran",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Extra gran",
+        "description": "Font Large Extra"
+    },
+    "osdSetupFontTypeBetaflight": {
+        "message": "Betaflight",
+        "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Digital",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Claredat",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Visió",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Impacte",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Impacte menor",
+        "description": "Font Impact Mini"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Apropar",
@@ -6532,13 +6576,13 @@
         "message": "Desa",
         "description": "Save button in the VTX tab"
     },
-    "vtxButtonSaving": {
+    "buttonSaving": {
         "message": "Desant",
-        "description": "Show state of the Save button in the VTX tab"
+        "description": "Show state of the Save button in the VTX/LED tab"
     },
-    "vtxButtonSaved": {
+    "buttonSaved": {
         "message": "Desat",
-        "description": "Saved action button in the VTX tab"
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} Desbloquejat",

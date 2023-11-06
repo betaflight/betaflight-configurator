@@ -2189,9 +2189,6 @@
     "servosAngleAtMax": {
         "message": "最大角度"
     },
-    "servosDirectionAndRate": {
-        "message": "方向和 Rate"
-    },
     "servosLiveMode": {
         "message": "激活实时模式"
     },
@@ -3801,9 +3798,6 @@
     "pidTuningIdleMinRpm": {
         "message": "动态怠速值 [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": "由于Dshot 回传已关闭，动态怠速已关闭"
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "训练模式角度限制"
     },
@@ -4266,10 +4260,6 @@
     "osdSetupPreviewSelectProfileElement": {
         "message": "OSD 配置文件 {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "字体 {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupVideoFormatTitle": {
         "message": "视频制式"
@@ -5576,10 +5566,6 @@
     "vtxButtonSave": {
         "message": "保存",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "已保存",
-        "description": "Saved action button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} 已解锁",

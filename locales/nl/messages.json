@@ -1961,9 +1961,6 @@
     "servosAngleAtMax": {
         "message": "Hoek op max"
     },
-    "servosDirectionAndRate": {
-        "message": "Richting en ratio"
-    },
     "servosLiveMode": {
         "message": "Live modus inschakelen"
     },
@@ -3699,10 +3696,6 @@
         "message": "OSD Profiel {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Lettertype {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
-    },
     "osdSetupVideoFormatTitle": {
         "message": "Video formaat"
     },
@@ -5000,10 +4993,6 @@
     "vtxButtonSave": {
         "message": "Opslaan",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "Opgeslagen",
-        "description": "Saved action button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} ontgrendeld",
