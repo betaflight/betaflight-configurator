@@ -2525,9 +2525,6 @@
     "servosAngleAtMax": {
         "message": "Angulo no máximo"
     },
-    "servosDirectionAndRate": {
-        "message": "Direção e taxa"
-    },
     "servosLiveMode": {
         "message": "Habilitar modo ao vivo"
     },
@@ -4301,9 +4298,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Valor Ocioso Dinâmico [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": "O Modo Ocioso Dinâmico está DESLIGADO porque a Telemetria Dshot está DESLIGADA"
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angulo máximo do Treinador Acro"
     },
@@ -4769,10 +4763,6 @@
     "osdSetupPreviewSelectProfileElement": {
         "message": "Perfil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Fonte {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
@@ -6297,14 +6287,6 @@
     "vtxButtonSave": {
         "message": "Salvar",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaving": {
-        "message": "Salvando",
-        "description": "Show state of the Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "Salvo",
-        "description": "Saved action button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} desbloqueado",

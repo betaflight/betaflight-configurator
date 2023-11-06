@@ -1886,9 +1886,6 @@
     "servosAngleAtMax": {
         "message": "Gehieneko angelua"
     },
-    "servosDirectionAndRate": {
-        "message": "Zuzendaritza eta tasa"
-    },
     "servosLiveMode": {
         "message": "Zuzeneko modua gaitu"
     },
@@ -3497,10 +3494,6 @@
         "message": "OSD Profila {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Letra-mota {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
-    },
     "osdSetupVideoFormatTitle": {
         "message": "Bideo formatua"
     },
@@ -4733,10 +4726,6 @@
     "vtxButtonSave": {
         "message": "Gorde",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "Gordeta",
-        "description": "Saved action button in the VTX tab"
     },
     "mainHelpArmed": {
         "message": "Motorea armatua"

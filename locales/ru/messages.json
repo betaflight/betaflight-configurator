@@ -2000,9 +2000,6 @@
     "servosAngleAtMax": {
         "message": "Угол на Макс"
     },
-    "servosDirectionAndRate": {
-        "message": "Направление и Rate"
-    },
     "servosLiveMode": {
         "message": "Включить живой режим"
     },
@@ -3371,9 +3368,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Динамическое значение холостого хода [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": "Динамический холостой ход выключен, так как телеметрия Dshot выключена"
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Акро тренер лимит угла"
     },
@@ -3824,10 +3818,6 @@
     "osdSetupPreviewSelectProfileElement": {
         "message": "OSD Profile {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Шрифт {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupVideoFormatTitle": {
         "message": "Формат видео"
@@ -5134,10 +5124,6 @@
     "vtxButtonSave": {
         "message": "Сохранить",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "Сохранено",
-        "description": "Saved action button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} разблокировано",

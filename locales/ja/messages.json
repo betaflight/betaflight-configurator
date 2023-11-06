@@ -1221,7 +1221,7 @@
         "message": "コンパス アライメント"
     },
     "configurationSensorAlignmentDefaultOption": {
-        "message": "デフォルト"
+        "message": "デフォルト値"
     },
     "configurationAccelTrims": {
         "message": "加速度センサー トリム"
@@ -2103,7 +2103,7 @@
         "message": "チャンネルマップ"
     },
     "receiverChannelDefaultOption": {
-        "message": "初期値"
+        "message": "デフォルト値"
     },
     "receiverChannelMapTitle": {
         "message": "枠内をクリックする事で、独自のチャンネルマップを定義できます"
@@ -2616,8 +2616,12 @@
     "servosAngleAtMax": {
         "message": "最大角度"
     },
-    "servosDirectionAndRate": {
-        "message": "レート"
+    "servosRateAndDirection": {
+        "message": "レートと方向"
+    },
+    "servosRate": {
+        "message": "レート:",
+        "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
         "message": "Liveモード有効"
@@ -4046,7 +4050,7 @@
         "description": "Tuning Slider Low header"
     },
     "pidTuningSliderDefault": {
-        "message": "初期値",
+        "message": "デフォルト値",
         "description": "Tuning Slider Default header"
     },
     "pidTuningSliderHigh": {
@@ -4440,7 +4444,7 @@
         "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
     },
     "pidTuningIdleMinRpmDisabled": {
-        "message": "Dshotテレメトリー がオフのため動的アイドルはオフとなります"
+        "message": "Dshotテレメトリーがオフのため動的アイドルは無効となります"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "アクロトレーナー 角度制限"
@@ -4969,9 +4973,49 @@
         "message": "OSD Profile {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "フォント {{fontName}}",
+    "osdSetupPreviewSelectFont": {
+        "message": "フォント",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "Default",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Bold",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Large",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Large Extra",
+        "description": "Font Large Extra"
+    },
+    "osdSetupFontTypeBetaflight": {
+        "message": "Betaflight",
+        "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Digital",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Clarity",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Vision",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Impact",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Impact Mini",
+        "description": "Font Impact Mini"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "ズーム",
@@ -5097,7 +5141,7 @@
         "message": "カメラが接続されました"
     },
     "osdSetupResetText": {
-        "message": "OSDを初期値にリセット"
+        "message": "OSDをデフォルト値にリセット"
     },
     "osdSetupButtonReset": {
         "message": "設定をリセット"
@@ -5991,6 +6035,27 @@
     "osdDescStatBestLap": {
         "message": "Best lap"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "フルスロットルタイマー",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "フルスロットルタイマー"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "フルスロットルカウンター",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "フルスロットルカウンター"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "スロットル平均",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "スロットル平均"
+    },
     "osdTextStatUnknown": {
         "message": "不明 $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -6503,13 +6568,13 @@
         "message": "保存",
         "description": "Save button in the VTX tab"
     },
-    "vtxButtonSaving": {
+    "buttonSaving": {
         "message": "保存中",
-        "description": "Show state of the Save button in the VTX tab"
+        "description": "Show state of the Save button in the VTX/LED tab"
     },
-    "vtxButtonSaved": {
+    "buttonSaved": {
         "message": "保存しました",
-        "description": "Saved action button in the VTX tab"
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} ロック解除",

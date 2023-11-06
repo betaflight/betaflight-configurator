@@ -250,7 +250,7 @@
         "message": "Fejlsikring"
     },
     "tabTransponder": {
-        "message": "Race-transponder"
+        "message": "Race transponder"
     },
     "tabOsd": {
         "message": "OSD"
@@ -1107,7 +1107,7 @@
         "message": "Videresend aux-kanaler til servoudgange"
     },
     "featureTRANSPONDER": {
-        "message": "Race Transponder"
+        "message": "Race transponder"
     },
     "featureTRANSPONDERTip": {
         "message": "Efter aktivering, opsæt via fanen Race Transponder."
@@ -2167,7 +2167,7 @@
         "message": "Min"
     },
     "auxiliaryMax": {
-        "message": "Maks"
+        "message": "Max"
     },
     "auxiliaryDisabled": {
         "message": "(SLÅET FRA)",
@@ -2428,7 +2428,7 @@
         "message": "Min"
     },
     "adjustmentsMax": {
-        "message": "Maks"
+        "message": "Max"
     },
     "adjustmentsFunction0": {
         "message": "Ingen ændringer"
@@ -2608,7 +2608,7 @@
         "message": "MIN"
     },
     "servosMax": {
-        "message": "MAKS"
+        "message": "MAX"
     },
     "servosAngleAtMin": {
         "message": "Vinkel ved min"
@@ -2616,8 +2616,12 @@
     "servosAngleAtMax": {
         "message": "Vinkel ved maks"
     },
-    "servosDirectionAndRate": {
-        "message": "Retning og hastighed"
+    "servosRateAndDirection": {
+        "message": "Hastighed og retning"
+    },
+    "servosRate": {
+        "message": "Hastighed:",
+        "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
         "message": "Aktivér Live-tilstand"
@@ -4969,9 +4973,49 @@
         "message": "OSD profil {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Font {{fontName}}",
+    "osdSetupPreviewSelectFont": {
+        "message": "Skrifttype",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "Standard",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Fed",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Stor",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Stor plus",
+        "description": "Font Large Extra"
+    },
+    "osdSetupFontTypeBetaflight": {
+        "message": "Betaflight",
+        "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Digital",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Klar",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Tydelig",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Komprimeret",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Komprimeret mini",
+        "description": "Font Impact Mini"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
@@ -5043,7 +5087,7 @@
         "message": "eller"
     },
     "osdSetupOpenFont": {
-        "message": "Åbn skrifttypefil"
+        "message": "Åbn skrifttype fil"
     },
     "osdSetupCustomLogoTitle": {
         "message": "Boot logo:"
@@ -5070,7 +5114,7 @@
         "message": "Billedet indeholder en ugyldig pixel: rgb ({{valueR}}, {{valueG}}, {{valueB}}) i koordinaterne {{posX}}×{{posY}}"
     },
     "osdSetupUploadFont": {
-        "message": "Upload Skrifttype"
+        "message": "Hent skrifttype"
     },
     "osdSetupUploadingFont": {
         "message": "Uploader..."
@@ -5082,7 +5126,7 @@
         "message": "Gem"
     },
     "osdSetupFontManager": {
-        "message": "Rediger font"
+        "message": "Rediger skrifttype"
     },
     "osdSetupUncheckAll": {
         "message": "Fravælg alle"
@@ -5995,13 +6039,22 @@
         "message": "Gas: Samlet tid med fuld gas",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatFullThrottleTime": {
+        "message": "Angiver den samlede tid under en flyvning, hvor der har været fuld gas\n<br>\nStatistik tæller mens strømmen er til.<br>\nTæller kun når fratør er aktiveret (ikke FLIP_OVER).<br>\nTæller efter fartøj er aktiveret og der er sat mindst 15% gas."
+    },
     "osdTextStatFullThrottleCounter": {
         "message": "Gas: Antal gange med fuld gas",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Angiver antal gange under en flyvning, hvor der har været fuld gas\n<br>\nStatistik tæller mens strømmen er til.<br>\nTæller kun når fratør er aktiveret (ikke FLIP_OVER).<br>\nTæller efter fartøj er aktiveret og der er sat mindst 15% gas."
+    },
     "osdTextStatAvgThrottle": {
         "message": "Gas: Gennemsnit for flyvningens gas",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Angiver under en flyvning, gennemsnit for gas\n<br>\nStatistik tæller mens strømmen er til.<br>\nTæller kun når fratør er aktiveret (ikke FLIP_OVER).<br>\nTæller efter fartøj er aktiveret og der er sat mindst 15% gas."
     },
     "osdTextStatUnknown": {
         "message": "Ukendt $1",
@@ -6113,7 +6166,7 @@
         "message": "Viser en visualisering af biperen (viser som 4 stjerner)"
     },
     "osdWarningTextCrashFlipMode": {
-        "message": "Vend styrtet drone advarsel",
+        "message": "Vend styrtet drone",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCrashFlipMode": {
@@ -6515,13 +6568,13 @@
         "message": "Gem",
         "description": "Save button in the VTX tab"
     },
-    "vtxButtonSaving": {
-        "message": "gemmer",
-        "description": "Show state of the Save button in the VTX tab"
+    "buttonSaving": {
+        "message": "Gemmer",
+        "description": "Show state of the Save button in the VTX/LED tab"
     },
-    "vtxButtonSaved": {
+    "buttonSaved": {
         "message": "Gemt",
-        "description": "Saved action button in the VTX tab"
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} låst op",

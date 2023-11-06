@@ -2389,9 +2389,6 @@
     "servosAngleAtMax": {
         "message": "Maximaler Winkel"
     },
-    "servosDirectionAndRate": {
-        "message": "Richtung und Rate"
-    },
     "servosLiveMode": {
         "message": "Aktiviere Live Modus"
     },
@@ -4127,9 +4124,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Dynamischer Leerlaufwert [*100 U/min]"
     },
-    "pidTuningIdleMinRpmDisabled": {
-        "message": "Dynamischer Leerlauf(Idle) ist AUS da DShot Telemetrie AUS ist"
-    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Winkelbegrenzung"
     },
@@ -4595,10 +4589,6 @@
     "osdSetupPreviewSelectProfileElement": {
         "message": "OSD-Profil {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
-    },
-    "osdSetupPreviewSelectFontElement": {
-        "message": "Schriftart {{fontName}}",
-        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
@@ -6080,14 +6070,6 @@
     "vtxButtonSave": {
         "message": "Speichern",
         "description": "Save button in the VTX tab"
-    },
-    "vtxButtonSaving": {
-        "message": "Speichern",
-        "description": "Show state of the Save button in the VTX tab"
-    },
-    "vtxButtonSaved": {
-        "message": "Gespeichert",
-        "description": "Saved action button in the VTX tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} entsperrt",
