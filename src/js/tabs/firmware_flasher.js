@@ -28,6 +28,8 @@ const firmware_flasher = {
     selectedBoard: undefined,
     boardNeedsVerification: false,
     allowBoardDetection: true,
+    isFirstRun: true,
+    isFlashing: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     isConfigLocal: false, // Set to true if the user loads one locally
@@ -92,7 +94,7 @@ firmware_flasher.initialize = function (callback) {
                 self.flashingMessage(`<a class="save_firmware" href="#" title="Save Firmware">${i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', { filename: fileName, bytes: self.parsed_hex.bytes_total })}</a>`,
                     self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
-            self.enableFlashing(true);
+            self.enableFlashButton(true);
         }
 
         function showReleaseNotes(summary) {
@@ -156,7 +158,7 @@ firmware_flasher.initialize = function (callback) {
                     showLoadedHex(key);
                 } else {
                     self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
-                    self.enableFlashing(false);
+                    self.enableFlashButton(false);
                 }
             });
         }
@@ -165,7 +167,7 @@ firmware_flasher.initialize = function (callback) {
             self.localFirmwareLoaded = false;
 
             processHex(data, key);
-            $("a.load_remote_file").removeClass('disabled');
+            self.enableLoadRemoteFileButton(true);
             $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
         }
 
@@ -299,11 +301,12 @@ firmware_flasher.initialize = function (callback) {
 
         loadSponsor();
 
-        buildType_e.change(function() {
+        buildType_e.on('change', function() {
+            self.enableLoadRemoteFileButton(false);
+
             tracking.setFirmwareData(tracking.DATA.FIRMWARE_CHANNEL, $('option:selected', this).text());
 
-            $("a.load_remote_file").addClass('disabled');
-            const build_type = $(this).val();
+            const build_type = buildType_e.val();
 
             $('select[name="board"]').empty()
             .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`));
@@ -327,7 +330,7 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info').slideUp();
 
             if (!self.localFirmwareLoaded) {
-                self.enableFlashing(false);
+                self.enableFlashButton(false);
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
                 if (self.parsed_hex && self.parsed_hex.bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
@@ -369,7 +372,7 @@ firmware_flasher.initialize = function (callback) {
                     setBoardConfig(response.configuration);
                 }
 
-                $("a.load_remote_file").removeClass('disabled');
+                self.enableLoadRemoteFileButton(true);
             }
 
             self.releaseLoader.loadTarget(target, release, onTargetDetail);
@@ -452,8 +455,8 @@ firmware_flasher.initialize = function (callback) {
             }
         });
 
-        $('select[name="board"]').change(function() {
-            $("a.load_remote_file").addClass('disabled');
+        $('select[name="board"]').on('change', function() {
+            self.enableLoadRemoteFileButton(false);
             let target = $(this).val();
 
             // exception for board flashed with local custom firmware
@@ -473,7 +476,7 @@ firmware_flasher.initialize = function (callback) {
                 $('div.build_configuration').slideUp();
 
                 if (!self.localFirmwareLoaded) {
-                    self.enableFlashing(false);
+                    self.enableFlashButton(false);
                 }
 
                 const versions_e = $('select[name="firmware_version"]');
@@ -590,6 +593,8 @@ firmware_flasher.initialize = function (callback) {
 
                 STM32DFU.connect(usbDevices, firmware, options);
             }
+
+            self.isFlashing = false;
         }
 
         function verifyBoard() {
@@ -727,10 +732,11 @@ firmware_flasher.initialize = function (callback) {
         function updateDetectBoardButton() {
             const isDfu = PortHandler.dfu_available;
             const isBusy = GUI.connect_lock;
-            const isAvailable = PortHandler.port_available;
+            const isAvailable = PortHandler.port_available || self.isFirstRun;
             const isButtonDisabled = isDfu || isBusy || !isAvailable;
 
             detectBoardElement.toggleClass('disabled', isButtonDisabled);
+            self.isFirstRun = false;
         }
 
         let result = getConfig('erase_chip');
@@ -814,8 +820,8 @@ firmware_flasher.initialize = function (callback) {
         $('input.flash_manual_baud_rate').change();
 
         // UI Hooks
-        $('a.load_file').click(function () {
-            self.enableFlashing(false);
+        $('a.load_file').on('click', function () {
+            self.enableFlashButton(false);
             self.developmentFirmwareLoaded = false;
 
             tracking.setFirmwareData(tracking.DATA.FIRMWARE_CHANNEL, undefined);
@@ -874,7 +880,7 @@ firmware_flasher.initialize = function (callback) {
                                         }
 
                                         if ((self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) || self.localFirmwareLoaded) {
-                                            self.enableFlashing(true);
+                                            self.enableFlashButton(true);
                                             self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
                                         }
                                     }
@@ -896,8 +902,13 @@ firmware_flasher.initialize = function (callback) {
             },
         );
 
-        $('a.load_remote_file').click(function (evt) {
-            self.enableFlashing(false);
+        $('a.load_remote_file').on('click', function (evt) {
+            if (!self.selectedBoard) {
+                return;
+            }
+
+            self.enableLoadRemoteFileButton(false);
+
             self.localFirmwareLoaded = false;
             self.developmentFirmwareLoaded = buildTypesToShow[$('select[name="build_type"]').val()].tag === 'firmwareFlasherOptionLabelBuildTypeDevelopment';
 
@@ -910,7 +921,7 @@ firmware_flasher.initialize = function (callback) {
 
             function onLoadFailed() {
                 $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');
-                $("a.load_remote_file").removeClass('disabled');
+                self.enableLoadRemoteFileButton(true);
                 $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
                 i18n.localizePage();
             }
@@ -1009,7 +1020,7 @@ firmware_flasher.initialize = function (callback) {
                                 }
 
                                 updateStatus('Processing', response.key, retries * 10, false);
-                                retries = retries + 1;
+                                retries++;
                             });
                         }, 5000);
                     });
@@ -1018,7 +1029,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (self.targetDetail) { // undefined while list is loading or while running offline
                 $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonDownloading'));
-                $("a.load_remote_file").addClass('disabled');
+                self.enableLoadRemoteFileButton(false);
 
                 showReleaseNotes(self.targetDetail);
 
@@ -1031,17 +1042,16 @@ firmware_flasher.initialize = function (callback) {
 
         const exitDfuElement = $('a.exit_dfu');
 
-        exitDfuElement.click(function () {
-            if (!exitDfuElement.hasClass('disabled')) {
-                exitDfuElement.addClass("disabled");
-                if (!GUI.connect_lock) { // button disabled while flashing is in progress
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
-                    try {
-                        console.log('Closing DFU');
-                        STM32DFU.connect(usbDevices, self.parsed_hex, { exitDfu: true });
-                    } catch (e) {
-                        console.log(`Exiting DFU failed: ${e.message}`);
-                    }
+        exitDfuElement.on('click', function () {
+            self.enableDfuExitButton(false);
+
+            if (!GUI.connect_lock) { // button disabled while flashing is in progress
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
+                try {
+                    console.log('Closing DFU');
+                    STM32DFU.connect(usbDevices, self.parsed_hex, { exitDfu: true });
+                } catch (e) {
+                    console.log(`Exiting DFU failed: ${e.message}`);
                 }
             }
         });
@@ -1050,50 +1060,57 @@ firmware_flasher.initialize = function (callback) {
             if (GUI.active_tab === 'firmware_flasher') {
                 if (!GUI.connect_lock) {
                     if ($('option:selected', this).data().isDFU) {
-                        exitDfuElement.removeClass('disabled');
+                        self.enableDfuExitButton(true);
                     } else {
-                        // Porthandler resets board on port detect
-                        if (self.boardNeedsVerification) {
-                            // reset to prevent multiple calls
-                            self.boardNeedsVerification = false;
-                            verifyBoard();
+                        if (!self.isFlashing) {
+                            // Porthandler resets board on port detect
+                            if (self.boardNeedsVerification) {
+                                // reset to prevent multiple calls
+                                self.boardNeedsVerification = false;
+                                verifyBoard();
+                            }
+                            if (self.selectedBoard) {
+                                self.enableLoadRemoteFileButton(true);
+                                self.enableLoadFileButton(true);
+                            }
                         }
-
-                        $("a.load_remote_file").removeClass('disabled');
-                        $("a.load_file").removeClass('disabled');
-                        exitDfuElement.addClass('disabled');
+                        self.enableDfuExitButton(false);
                     }
                 }
                 updateDetectBoardButton();
             }
         }).trigger('change');
 
-        $('a.flash_firmware').click(function () {
+        $('a.flash_firmware').on('click', function () {
+            self.isFlashing = true;
 
-            if (!$(this).hasClass('disabled')) {
-                function goFlashing() {
-                    if (self.developmentFirmwareLoaded) {
-                        checkShowAcknowledgementDialog();
-                    } else {
-                        startFlashing();
-                    }
-                }
+            self.enableFlashButton(false);
+            self.enableDfuExitButton(false);
+            self.enableLoadRemoteFileButton(false);
+            self.enableLoadFileButton(false);
 
-                // Backup not available in DFU mode
-                if (!$('option:selected', portPickerElement).data().isDFU) {
-                    GUI.showYesNoDialog(
-                        {
-                            title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
-                            text: i18n.getMessage('firmwareFlasherRemindBackup'),
-                            buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
-                            buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
-                            buttonYesCallback: () => firmware_flasher.backupConfig(goFlashing),
-                            buttonNoCallback: goFlashing,
-                        },
-                    );
+            function initiateFlashing() {
+                if (self.developmentFirmwareLoaded) {
+                    checkShowAcknowledgementDialog();
                 } else {
-                    goFlashing();
+                    startFlashing();
                 }
+            }
+
+            // Backup not available in DFU mode
+            if (!$('option:selected', portPickerElement).data().isDFU) {
+                GUI.showYesNoDialog(
+                    {
+                        title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
+                        text: i18n.getMessage('firmwareFlasherRemindBackup'),
+                        buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
+                        buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
+                        buttonYesCallback: () => firmware_flasher.backupConfig(initiateFlashing),
+                        buttonNoCallback: initiateFlashing,
+                    },
+                );
+            } else {
+                initiateFlashing();
             }
         });
 
@@ -1153,10 +1170,6 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function startFlashing() {
-            exitDfuElement.addClass('disabled');
-            $('a.flash_firmware').addClass('disabled');
-            $("a.load_remote_file").addClass('disabled');
-            $("a.load_file").addClass('disabled');
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
                 if (self.parsed_hex) {
                     try {
@@ -1268,9 +1281,6 @@ firmware_flasher.initialize = function (callback) {
 
         self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
-        // Update Firmware button at top
-        $('div#flashbutton a.flash_state').addClass('active');
-        $('div#flashbutton a.flash').addClass('active');
         GUI.content_ready(callback);
     }
 
@@ -1385,8 +1395,6 @@ firmware_flasher.backupConfig = function (callback) {
                 if (PortHandler.port_available) {
                     console.log(`Connection ready for flashing in ${count / 10} seconds`);
                     clearInterval(disconnect);
-                    // Re-activate auto-detection. (Seems not be needed) :)
-                    TABS.firmware_flasher.allowBoardDetection = true;
                     callback();
                 }
                 count++;
@@ -1453,21 +1461,25 @@ firmware_flasher.cleanup = function (callback) {
     $(document).unbind('keypress');
     $(document).off('click', 'span.progressLabel a');
 
-    // Update Firmware button at top
-    $('div#flashbutton a.flash_state').removeClass('active');
-    $('div#flashbutton a.flash').removeClass('active');
-
     tracking.resetFirmwareData();
 
     if (callback) callback();
 };
 
-firmware_flasher.enableFlashing = function (enabled) {
-    if (enabled) {
-        $('a.flash_firmware').removeClass('disabled');
-    } else {
-        $('a.flash_firmware').addClass('disabled');
-    }
+firmware_flasher.enableFlashButton = function (enabled) {
+    $('a.flash_firmware').toggleClass('disabled', !enabled);
+};
+
+firmware_flasher.enableLoadRemoteFileButton = function (enabled) {
+    $('a.load_remote_file').toggleClass('disabled', !enabled);
+};
+
+firmware_flasher.enableLoadFileButton = function (enabled) {
+    $('a.load_file').toggleClass('disabled', !enabled);
+};
+
+firmware_flasher.enableDfuExitButton = function (enabled) {
+    $('a.exit_dfu').toggleClass('disabled', !enabled);
 };
 
 firmware_flasher.refresh = function (callback) {
