@@ -89,6 +89,10 @@ gps.initialize = async function (callback) {
             'MSP',
         ];
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            gpsProtocols.shift();
+        }
+
         const gpsBaudRates = [
             '115200',
             '57600',
