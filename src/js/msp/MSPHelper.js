@@ -239,9 +239,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.SENSOR_DATA.gyroscope[2] = data.read16() * (4 / 16.4);
 
                 // no clue about scaling factor
-                FC.SENSOR_DATA.magnetometer[0] = data.read16() / 1090;
-                FC.SENSOR_DATA.magnetometer[1] = data.read16() / 1090;
-                FC.SENSOR_DATA.magnetometer[2] = data.read16() / 1090;
+                FC.SENSOR_DATA.magnetometer[0] = data.read16();
+                FC.SENSOR_DATA.magnetometer[1] = data.read16();
+                FC.SENSOR_DATA.magnetometer[2] = data.read16();
                 break;
             case MSPCodes.MSP_SERVO:
                 const servoCount = data.byteLength / 2;
