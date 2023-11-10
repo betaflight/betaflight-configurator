@@ -281,6 +281,7 @@ motors.initialize = async function (callback) {
             dshotBidir:         FC.MOTOR_CONFIG.use_dshot_telemetry,
             motorPoles:         FC.MOTOR_CONFIG.motor_poles,
             digitalIdlePercent: FC.PID_ADVANCED_CONFIG.digitalIdlePercent,
+            idleMinRpm:         FC.ADVANCED_TUNING.idleMinRpm,
             _3ddeadbandlow:     FC.MOTOR_3D_CONFIG.deadband3d_low,
             _3ddeadbandhigh:    FC.MOTOR_3D_CONFIG.deadband3d_high,
             _3dneutral:         FC.MOTOR_3D_CONFIG.neutral,
@@ -693,6 +694,8 @@ motors.initialize = async function (callback) {
         unsyncedPWMSwitchElement.prop('checked', FC.PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0).trigger("change");
         $('input[name="unsyncedpwmfreq"]').val(FC.PID_ADVANCED_CONFIG.motor_pwm_rate);
         $('input[name="digitalIdlePercent"]').val(FC.PID_ADVANCED_CONFIG.digitalIdlePercent);
+        $('input[name="idleMinRpm"]').val(FC.ADVANCED_TUNING.idleMinRpm);
+
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             dshotBidirElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_telemetry).trigger("change");
 
@@ -771,6 +774,7 @@ motors.initialize = async function (callback) {
             divUnsyncedPWMFreq.toggle(protocolConfigured && !digitalProtocol);
 
             $('div.digitalIdlePercent').toggle(protocolConfigured && digitalProtocol);
+            $('div.idleMinRpm').toggle(protocolConfigured && digitalProtocol && FC.MOTOR_CONFIG.use_dshot_telemetry);
 
             if (FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry) {
                 $('div.digitalIdlePercent').hide();

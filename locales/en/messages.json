@@ -1355,6 +1355,10 @@
         "message": "The pole count is the number of magnets on the bell of the motor. Do NOT count the stators where the windings are located. 5\" motors usually have 14 magnets, 3\" or smaller often have 12 magnets.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp" : {
+        "message": "This is the dynamic idle value from the active PID profile. When Dynamic Idle is set to zero, only static motor idle will apply. Change the Dynamic Idle settings on the PID tuning tab.",
+        "description": "Help text for dynamic idle setting" 
+    },
     "configurationThrottleMinimum": {
         "message": "Minimum Throttle (Lowest ESC value when armed)"
     },
