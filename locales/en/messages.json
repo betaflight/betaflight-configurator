@@ -1356,7 +1356,7 @@
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationMotorIdleRpmHelp" : {
-        "message": "You will be able to edit Dynamic Idle setting on the PID tuning tab as this setting is profile dependant. When Dynamic Idle is set to zero static motor idle will apply",
+        "message": "This is the dynamic idle value from the active PID profile. When Dynamic Idle is set to zero, only static motor idle will apply. Change the Dynamic Idle settings on the PID tuning tab.",
         "description": "Help text for dynamic idle setting" 
     },
     "configurationThrottleMinimum": {
