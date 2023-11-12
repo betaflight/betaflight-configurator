@@ -9,7 +9,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -510,6 +510,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                     FC.GPS_CONFIG.home_point_once = data.readU8();
                     FC.GPS_CONFIG.ublox_use_galileo = data.readU8();
+                }
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.GPS_CONFIG.ublox_enable_ana = data.readU8();
                 }
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
@@ -1804,6 +1808,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 buffer.push8(FC.GPS_CONFIG.home_point_once)
                     .push8(FC.GPS_CONFIG.ublox_use_galileo);
             }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(FC.GPS_CONFIG.ublox_enable_ana);
+            }
+
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
             buffer.push16(FC.GPS_RESCUE.angle)

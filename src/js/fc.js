@@ -368,6 +368,7 @@ const FC = {
             auto_baud:                  0,
             home_point_once:            0,
             ublox_use_galileo:          0,
+            ublox_enable_ana:           0,
         };
 
         this.RSSI_CONFIG = {

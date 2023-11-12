@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_43, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
@@ -116,6 +116,10 @@ gps.initialize = async function (callback) {
         const gpsAutoConfigGroup = $('.gps_auto_config');
         const gpsUbloxGalileoElement = $('input[name="gps_ublox_galileo"]');
         const gpsUbloxGalileoGroup = $('.gps_ublox_galileo');
+
+        const gpsUbloxAnaElement = $('input[name="gps_ublox_ana"]');
+        const gpsUbloxAnaGroup = $('.gps_ublox_ana');
+
         const gpsUbloxSbasElement = $('select.gps_ubx_sbas');
         const gpsUbloxSbasGroup = $('.gps_ubx_sbas');
         const gpsHomeOnceElement = $('input[name="gps_home_once"]');
@@ -147,6 +151,9 @@ gps.initialize = async function (callback) {
             const enableGalileoVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43);
             gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
 
+            const enableAnaVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
+            gpsUbloxAnaGroup.toggle(enableAnaVisible);
+
             const enableSbasVisible = checked && ubloxSelected;
             gpsUbloxSbasGroup.toggle(enableSbasVisible);
 
@@ -158,6 +165,10 @@ gps.initialize = async function (callback) {
         gpsUbloxGalileoElement.change(function() {
             FC.GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', FC.GPS_CONFIG.ublox_use_galileo > 0).change();
+
+        gpsUbloxAnaElement.change(function() {
+            FC.GPS_CONFIG.ublox_enable_ana = $(this).is(':checked') ? 1 : 0;
+        }).prop('checked', FC.GPS_CONFIG.ublox_enable_ana > 0).change();
 
         for (let sbasIndex = 0; sbasIndex < gpsSbas.length; sbasIndex++) {
             gpsUbloxSbasElement.append(`<option value="${sbasIndex}">${gpsSbas[sbasIndex]}</option>`);
