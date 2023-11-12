@@ -495,16 +495,38 @@ auxiliary.initialize = function (callback) {
 
             let hideUnused = hideUnusedModes && hasUsedMode;
             let hideNoFlight = hideNoFlightMode && hasUsedMode;
+            console.log(`0 hideUnusedModes: ${hideUnusedModes}, hideNoFlightMode: ${hideNoFlightMode}`);
+            console.log(`0 hasUsedMode: ${hasUsedMode}, hideUnused: ${hideUnused}, hideNoFlight: ${hideNoFlight}`);
+
             for (let i = 1; i < FC.AUX_CONFIG.length; i++) {    // ARM has index 0
                 let modeElement = $(`#mode-${i}`);
+                let style = modeElement.css('display');
+
                 if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     // unused mode
+                    style = modeElement.css('display');
+                    console.log(`1 HIDE: ${FC.AUX_CONFIG[i]} ${style}`);
+
                     modeElement.toggle(!hideUnused);
+
+                    style = modeElement.css('display');
+                    console.log(`2 HIDE: ${FC.AUX_CONFIG[i]} ${style}`);
                 }
 
                 if ( ! isFlightMode(FC.AUX_CONFIG[i])) {
                     // not flightMode mode
-                    modeElement.toggle(!hideNoFlight);
+                    style = modeElement.css('display');
+                    console.log(`1 NOT flightmode: ${FC.AUX_CONFIG[i]} - ${hideNoFlight} - ${style}`);
+                    // modeElement.toggle(!hideNoFlight);
+                    if( hideNoFlight && ! style === 'none') {
+                        modeElement.toggle(!hideUnused);
+                    }
+                    style = modeElement.css('display');
+                    console.log(`2 NOT flightmode: ${FC.AUX_CONFIG[i]} - ${hideNoFlight} - ${style}`);
+                }
+                else {
+                    style = modeElement.css('display');
+                    console.log(`Flightmode: ${FC.AUX_CONFIG[i]} - ${style}`);
                 }
             }
 
