@@ -5348,6 +5348,20 @@
     "osdDescElementHorizonSidebars": {
         "message": "Sidebars around artificial horizon indicator"
     },
+    "osdTextElementCameraAngleReference": {
+        "message": "Camera Angle Reference",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCameraAngleReference": {
+        "message": "Camera angle reference for flying with FPV tilt gimbal"
+    },
+    "osdTextElementCameraAngleReferenceSidebar": {
+        "message": "Camera Angle Reference Sidebar",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCameraAngleReferenceSidebar": {
+        "message": "Sidebar for Camera angle reference"
+    },
     "osdTextElementCurrentDraw": {
         "message": "Battery current draw",
         "description": "One of the elements of the OSD"
