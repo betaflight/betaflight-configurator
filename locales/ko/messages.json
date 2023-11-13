@@ -1271,6 +1271,10 @@
         "message": "극 카운트는 모터의 벨에 있는 자석의 수입니다. 권선이 위치한 스테이터를 세지 마십시오. 5\" 모터는 보통 14개의 자석을 가지며, 3\" 이하의 모터는 주로 12개의 자석을 가지고 있습니다.\n\n컨텍스트편집",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "이 값은 활성 PID 프로파일의 다이나믹 아이들 값입니다. 다이나믹 아이들이 0으로 설정되면 정적 모터 아이들만 적용됩니다. PID 튜닝 탭에서 다이나믹 아이들 설정을 변경합니다.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "최소 스로틀 (아밍시 가장 낮은 ESC 값)"
     },
@@ -2122,6 +2126,22 @@
     },
     "receiverResetRefreshRateTitle": {
         "message": "리프레쉬 레이트 초기화"
+    },
+    "receiverRowContainerRoll": {
+        "message": "롤 [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "피치 [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "요 [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "스로틀 [T]:",
+        "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
         "message": "저장"
@@ -3013,7 +3033,7 @@
         "message": "가속도계 - g (도)"
     },
     "sensorsMagTitle": {
-        "message": "자력계 - Ga"
+        "message": "자력계"
     },
     "sensorsAltitudeTitle": {
         "message": "고도 - 미터"

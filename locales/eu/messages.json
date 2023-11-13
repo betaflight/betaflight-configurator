@@ -2106,9 +2106,6 @@
     "sensorsAccelTitle": {
         "message": "Azelerometroa - g (deg)"
     },
-    "sensorsMagTitle": {
-        "message": "Magnetometroa - Ga"
-    },
     "sensorsAltitudeTitle": {
         "message": "Altitudea - metroak"
     },

@@ -1279,6 +1279,10 @@
         "message": "El nombre de pols és el nombre d’imants de la campana del motor. NO compteu els estators on es troben els bobinatges. Els motors de 5 \"solen tenir 14 imants, 3\" o més petits solen tenir 12 imants.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Aquest és el valor inactiu dinàmic del perfil PID actiu. Quan Dynamic Idle s'estableix a zero, només s'aplicarà el ralentí del motor estàtic. Canvieu la configuració de Dynamic Idle a la pestanya d'ajustament PID.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "Throttle mínim (Valor mínim dels ESC quan està armat)"
     },
@@ -2130,6 +2134,22 @@
     },
     "receiverResetRefreshRateTitle": {
         "message": "Resetejar la tasa d'actualització"
+    },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
         "message": "Desa"
@@ -3021,7 +3041,7 @@
         "message": "Acceleròmetre - g (graus)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetòmetre - Ga"
+        "message": "Magnetòmetre"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitud - metres"

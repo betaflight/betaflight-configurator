@@ -701,7 +701,7 @@
         "message": "Resetuj ustawienia"
     },
     "initialSetupResetText": {
-        "message": "Przywróć ustawienia <strong>domyślne</strong>."
+        "message": "Przywróć ustawienia <strong>fabryczne</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Kopia zapasowa JSON"
@@ -1071,7 +1071,7 @@
         "message": "Włącz wyjście telemetryczne, aby wysyłać dane do nadajnika"
     },
     "feature3D": {
-        "message": "Tryb 3D (do użytku tylko z ESC pozwalającym odwracanie kierunku)"
+        "message": "Tryb 3D (do użytku tylko z ESC pozwalającym na odwracanie kierunku obrotów)"
     },
     "feature3DTip": {
         "message": "Włącz tryb 3D do użytku z  ESC które pozwalają na zmianę kierunku obrotów silnika. Skonfiguruj tę opcję w zakładce Silniki"
@@ -1463,10 +1463,10 @@
         "message": "Zapisz i zrestartuj"
     },
     "dialogDynFiltersChangeTitle": {
-        "message": "Zakres dynamicznego filtra wycinającego"
+        "message": "Zakres filtra dynamicznego"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Ta zmiana włącz/wyłączy filtrowanie RPM, zwiększająca/zmniejszająca opóźnienie/skuteczność filtrów.</b></span><br><br>Zresetować dynamiczne filtry do zalecanych wartości?"
+        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Ta zmiana włączy filtrowanie RPM, zwiększając opóźnienie i skuteczność innych filtrów.</b></span><br><br> Zresetować dynamiczne filtry do zalecanych wartości?"
     },
     "portsIdentifier": {
         "message": "Identyfikator"
@@ -2123,6 +2123,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Resetuj szybkość odświeżania"
     },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Zapisz"
     },
@@ -2216,7 +2232,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
-        "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionego statku powietrznego",
+        "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionej jednostki latającej",
         "description": "Help text to BEEPER mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
@@ -2328,7 +2344,7 @@
         "description": "Help text to PIDAUDIO mode"
     },
     "auxiliaryHelpMode_PREARM": {
-        "message": "Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
+        "message": "Dodatkowe zabezpieczenie - Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
         "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
@@ -2615,6 +2631,13 @@
     },
     "servosAngleAtMax": {
         "message": "Kąt przy max"
+    },
+    "servosRateAndDirection": {
+        "message": "Stawka i kierunek"
+    },
+    "servosRate": {
+        "message": "Stawka:",
+        "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
         "message": "Wyłącz tryb podglądu na żywo"
@@ -3006,7 +3029,7 @@
         "message": "Akcelerometr - g (deg)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetometr - Ga"
+        "message": "Magnetometr"
     },
     "sensorsAltitudeTitle": {
         "message": "Wysokośc-metry"
@@ -3198,7 +3221,7 @@
         "message": "Brak włożonej karty"
     },
     "sdcardStatusReboot": {
-        "message": "Krytyczny błąd<br>Zresetuj aby spróbować ponownie"
+        "message": "Nie wykryto karty SD<br>"
     },
     "sdcardStatusReady": {
         "message": "Karta gotowa"
@@ -3480,7 +3503,7 @@
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Konfiguracja <span class=\"message-negative\">nie powiodła się</span> weryfikacja tablicy, jeśli to nie działa, spróbuj przełączyć kartę powoli, aby spróbować ponownie, utwórz nowe połączenie lub połącz się najpierw jeśli zapomniałeś zastosować niestandardowe ustawienia domyślne",
+        "message": "Konfiguracja <span class=\"message-negative\">nie powiodła się</span> nie udało się zweryfikować kontrolera lotu. Spróbuj powoli przełączyć kartę, aby spróbować ponownie lub utwórz nowe połączenie Usb, jeśli zapomniałeś zastosować niestandardowe ustawienia domyślne",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -3502,7 +3525,7 @@
         "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego</strong>. Ciągle trwają prace nad tą wersją, a każda z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie będzie działć;</li><li>oprogramowanie będzie miało problemy ze sterowaniem lotu;</li><li>wystąpią problemy z bezpieczeństwem, na przykład podczas lotu</li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieprzewidywalny, lub doprowadzi do uszkodzenia maszyny lub czyjegoś zdrowia</li></ul></strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji</strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami</strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "Przeczytałem powyższe i <strong>Biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
+        "message": "Przeczytałem powyższe i <strong>biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Wgraj"
@@ -4231,7 +4254,7 @@
         "message": "Filtr dynamiczny notch jest wyłączony. Aby go użyć, upewnij się, że częstotliwość pętli PID jest ustawiona na co najmniej 2Khz w karcie '$t(tabConfiguration.message)."
     },
     "pidTuningDynamicNotchRange": {
-        "message": "Zakres dynamicznego filtra wycinającego"
+        "message": "Zakres filtra dynamicznego:"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Procent szerokości dynamicznego wycięcia"
@@ -4966,9 +4989,49 @@
         "message": "Profil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
+    "osdSetupPreviewSelectFont": {
+        "message": "Czcionka",
+        "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "Domyślne",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Pogrubiona",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Duże",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Extra Duże",
+        "description": "Font Large Extra"
+    },
     "osdSetupFontTypeBetaflight": {
         "message": "Betaflight",
         "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Cyfrowy",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Ostrość",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Wizja",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Wpływ",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Wpływ Mini",
+        "description": "Font Impact Mini"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Powiększ",
@@ -6562,11 +6625,11 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "ESC wysyła dane zwrotne do Kontrolera lotu przez kanał telemetrii DShot. Co jest wymagane przez funkcje Filtrowania RPM i dynamiczną wartość gazu spoczynkowego \"dynamic IDLE\". <br><br>Uwaga: Wymagany jest ESC który posiada takie funkcje w oprogramowaniu np. JESC, Jazzmac, BLHeli-32.",
+        "message": "ESC wysyła dane zwrotne do Kontrolera lotu przez kanał telemetrii DShot, jest  to wymagane przez funkcje Filtrowania RPM oraz funkcje Dynamicznego biegu jałowego. <br><br>  Uwaga: Wymagany jest ESC, który posiada takie funkcje w oprogramowaniu np. JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
-        "message": "Częstotliwość aktualizacji z żyroskopu"
+        "message": "Częstotliwość aktualizacji żyroskopu"
     },
     "configurationPidProcessDenom": {
         "message": "Częstotliwość pętli PID"
@@ -6584,10 +6647,10 @@
         "message": "Akcelerometr"
     },
     "configurationBaroHardware": {
-        "message": "Barometr (jeśli wspierany)"
+        "message": "Barometr"
     },
     "configurationMagHardware": {
-        "message": "Magnetometr (jeśli wspierany)"
+        "message": "Magnetometr"
     },
     "configurationSmallAngle": {
         "message": "Maksymalny kąt trybu ARM [Stopnie]"
@@ -6732,10 +6795,10 @@
         "message": "Tryb pamięci masowej nie może być aktywowany, ponieważ urządzenie nie jest gotowe."
     },
     "dialogConfirmResetTitle": {
-        "message": "Potwierdź"
+        "message": "Upewnij się, że wiesz co robisz."
     },
     "dialogConfirmResetNote": {
-        "message": "OSTRZEŻENIE: Czy na pewno chcesz zresetować <strong>WSZYSTKIE ustawienia</strong> do domyślnych? To <strong>nie</strong> \"resetowanie fabryczne\". Może to spowodować nieoczekiwane problemy i konieczne może być ponowne wgranie firmware w celu ponownego połączenia."
+        "message": "OSTRZEŻENIE: Czy na pewno chcesz zresetować <strong>WSZYSTKIE ustawienia</strong> do ustawień fabrycznych? To <strong>nie jest </strong> \"Przywrócenie ustawień domyślnych\". Może to spowodować nieoczekiwane problemy i konieczne może być ponowne wgranie oprogramowania w celu ponownego połączenia."
     },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
@@ -6753,7 +6816,7 @@
         "message": "TRYB ZMIANY KAMERY"
     },
     "flashTab": {
-        "message": "Wgraj"
+        "message": "Wgraj Firmware"
     },
     "cliAutoComplete": {
         "message": "Zaawansowane autouzupełnianie wiersza poleceń"

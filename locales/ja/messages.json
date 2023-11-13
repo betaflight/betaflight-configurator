@@ -1271,6 +1271,10 @@
         "message": "極数はモーター外装[ベル] にある磁石の数を示します。巻線されているステーターをカウントしないでください。典型的な5インチモーターには通常14個の磁石が、3インチ以下のような小さいモーターには通常12個の磁石があります。",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "現在有効な PIDプロファイルの動的アイドル値です。動的アイドル値がゼロに設定されているときは、静的なモーターアイドル値のみが適用されます。PIDチューニングタブで動的アイドル設定を変更します。",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "最小スロットル値 (アーム時の最小ESC値)"
     },
@@ -2122,6 +2126,22 @@
     },
     "receiverResetRefreshRateTitle": {
         "message": "リフレッシュレートをリセット"
+    },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
         "message": "保存"
@@ -3013,7 +3033,7 @@
         "message": "加速度センサー -g (度)"
     },
     "sensorsMagTitle": {
-        "message": "コンパス - Ga"
+        "message": "コンパス"
     },
     "sensorsAltitudeTitle": {
         "message": "高度 - メートル"

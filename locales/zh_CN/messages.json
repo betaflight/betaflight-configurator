@@ -2529,9 +2529,6 @@
     "sensorsAccelTitle": {
         "message": "加速度计 - g (°)"
     },
-    "sensorsMagTitle": {
-        "message": "磁力计 - Ga"
-    },
     "sensorsAltitudeTitle": {
         "message": "高度 - 米"
     },
