@@ -2123,6 +2123,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Ripristina frequenza"
     },
+    "receiverRowContainerRoll": {
+        "message": "Rollio [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Beccheggio [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Imbardata [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Gas [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Salva"
     },
@@ -2616,6 +2632,13 @@
     "servosAngleAtMax": {
         "message": "Angolo al massimo"
     },
+    "servosRateAndDirection": {
+        "message": "Rate e direzione"
+    },
+    "servosRate": {
+        "message": "Rate:",
+        "description": "Label for 'Rate:' direction"
+    },
     "servosLiveMode": {
         "message": "Abilita la modalità Live"
     },
@@ -3006,7 +3029,7 @@
         "message": "Accelerometro - g (gradi)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetometro - Ga"
+        "message": "Magnetometro"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitudine - metri"
@@ -4435,6 +4458,9 @@
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Il Minimo Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori.<br /><br /> Migliora il controllo dei PID, la stabilità con zero gas, il tempo in volo invertito e il freno dei motori.<br /><br />Il Minimo Dinamico dovrebbe essere impostato a circa 3000-3500 rpm.<br /><br />Visita la wiki <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\"></a> per maggiori info."
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "L'Idle Dinamico è disabilitato perché la telemetria Dshot è OFF"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angolo limite per l'Acro Trainer"

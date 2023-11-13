@@ -1271,6 +1271,10 @@
         "message": "Motor magneter er antallet af magneter på motor blokken. Tæl IKKE de statorer, hvor viklingerne er placeret. 5\" motorer har normalt 14 magneter, 3\" eller mindre ofte 12 magneter.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Dette er den dynamiske værdi for tomgangs i den aktive PID profil. Når dynamisk tomgang er sat til nul, gælder kun værdi for den statiske motors tomgang. Ændr indstillingerne for dynamisk tomgang på fanen PID tuning.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "Minimal gas (laveste ESC-værdi, når aktiveret)"
     },
@@ -2122,6 +2126,22 @@
     },
     "receiverResetRefreshRateTitle": {
         "message": "Nulstil genopfrisknings hastighed"
+    },
+    "receiverRowContainerRoll": {
+        "message": "Krængror [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Højderor [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Sideror [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Gas [T]:",
+        "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
         "message": "Gem"
@@ -3013,7 +3033,7 @@
         "message": "Accelerometer - g (deg)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetometer - Ga"
+        "message": "Magnetometer / Kompas"
     },
     "sensorsAltitudeTitle": {
         "message": "Højde - meter"
@@ -3807,10 +3827,10 @@
         "message": "Krængror[A]"
     },
     "controlAxisPitch": {
-        "message": "Højderor[E]"
+        "message": "Højderor [E]"
     },
     "controlAxisYaw": {
-        "message": "Sideror[R]"
+        "message": "Sideror [R]"
     },
     "controlAxisThrottle": {
         "message": "Gas [T]"

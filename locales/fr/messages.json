@@ -2629,9 +2629,6 @@
     "sensorsAccelTitle": {
         "message": "Accéléromètre - g (deg)"
     },
-    "sensorsMagTitle": {
-        "message": "Magnétomètre - Ga"
-    },
     "sensorsAltitudeTitle": {
         "message": "Altitude - mètres"
     },

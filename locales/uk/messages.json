@@ -1271,6 +1271,10 @@
         "message": "Кількість полюсів - це кількість магнітів на дзвоні мотора. НЕ рахуйте статори, де розташовані обмотки. 5-дюймові двигуни зазвичай мають 14 магнітів, 3-дюймові або менші часто мають 12 магнітів.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Це значення динамічного холостого ходу з активного профілю ПІД. Коли динамічний холостий хід встановлено в нуль, застосовується тільки статичне значення холостого ходу. Змініть налаштування динамічного холостого ходу у вкладці налаштувань ПІД.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "Мінімальна тяга (найнижче значення ESC коли заживлено)"
     },
@@ -2122,6 +2126,22 @@
     },
     "receiverResetRefreshRateTitle": {
         "message": "Скинути частоту оновлення"
+    },
+    "receiverRowContainerRoll": {
+        "message": "Крен [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Тангаж [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Рискання [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Тяга [T]:",
+        "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
         "message": "Зберегти"
@@ -3013,7 +3033,7 @@
         "message": "Акселерометр - градуси"
     },
     "sensorsMagTitle": {
-        "message": "Магнетометр - Гауси"
+        "message": "Магнітометр"
     },
     "sensorsAltitudeTitle": {
         "message": "Висота - метри"

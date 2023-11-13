@@ -2052,9 +2052,6 @@
     "sensorsGyroTitle": {
         "message": "陀螺儀 - 度/秒"
     },
-    "sensorsMagTitle": {
-        "message": "磁力計 - Ga"
-    },
     "sensorsAltitudeTitle": {
         "message": "高度 -米"
     },

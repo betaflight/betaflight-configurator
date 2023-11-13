@@ -2735,9 +2735,6 @@
     "sensorsAccelTitle": {
         "message": "Beschleungungssensor -g(Grad)"
     },
-    "sensorsMagTitle": {
-        "message": "Magnetometer - Ga"
-    },
     "sensorsAltitudeTitle": {
         "message": "Flughöhe - Meter"
     },

@@ -1271,6 +1271,10 @@
         "message": "El número de polos es el número de imanes que contiene la campana del motor. NO cuentes los estátor que están situados donde los bobinados. Habitualmente los motores de 5\" tienen 15 imanes, los más pequeños como 3\" o menos suelen tener 12 imanes.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Este es el valor de ralentí dinámico del perfil PID activo actualmente. Cuando el ralentí dinámico tiene valor cero, sólo se aplicará el ralentí estático del motor. Puedes cambiar la configuración del ralentí dinámico en la pestaña de ajuste del PID.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "Acelerador Mínimo (valor más bajo de ESC al estar armado)"
     },
@@ -2123,6 +2127,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Reiniciar tasa de refresco"
     },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Guardar"
     },
@@ -2616,6 +2636,13 @@
     "servosAngleAtMax": {
         "message": "Ángulo al máx"
     },
+    "servosRateAndDirection": {
+        "message": "Tasa y dirección"
+    },
+    "servosRate": {
+        "message": "Tasa:",
+        "description": "Label for 'Rate:' direction"
+    },
     "servosLiveMode": {
         "message": "Activar modo en vivo"
     },
@@ -3006,7 +3033,7 @@
         "message": "Acelerómetro - g (grad)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetómetro - Ga"
+        "message": "Magnetómetro"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitud - metros"
@@ -4435,6 +4462,9 @@
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Ralentí Dinámico mejora el control a bajas rpm y reduce el riesgo de desincronización del motor. <br /><br /> Mejora la autoridad del PID, la estabilidad con el acelerador a cero, el tiempo invertido y el freno del motor.<br /><br />Las rpm mínimas para el Ralentí Dinámico deben establecerse en unos 3000 - 3500 rpm. <br /><br />Visita <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki</a> para más información."
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "Ralentí Dinámico está DESACTIVADO porque la Telemetría Dshot está APAGADA"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Ángulo Límite para Entrenador Acro"
@@ -6557,6 +6587,14 @@
     "vtxButtonSave": {
         "message": "Guardar",
         "description": "Save button in the VTX tab"
+    },
+    "buttonSaving": {
+        "message": "Guardando",
+        "description": "Show state of the Save button in the VTX/LED tab"
+    },
+    "buttonSaved": {
+        "message": "Guardado",
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} desbloqueado",

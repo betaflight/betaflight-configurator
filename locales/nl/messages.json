@@ -2268,9 +2268,6 @@
     "sensorsAccelTitle": {
         "message": "Versnellingsmeter - g (graden)"
     },
-    "sensorsMagTitle": {
-        "message": "Magnetometer - Ga"
-    },
     "sensorsAltitudeTitle": {
         "message": "Hoogte - meters"
     },

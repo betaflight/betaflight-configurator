@@ -1271,6 +1271,10 @@
         "message": "A contagem de pólos é o número de ímanes no sino do motor. NÃO conte os estatores onde se encontram os fios. Motores de 5\" motores têm normalmente 14 ímanes, 3\" ou menores têm frequentemente 12 ímanes.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Este é o valor dinâmico por defeito do perfil PID ativo. Quando o Idle Dinâmico está definido para zero, apenas o motor estático por defeito será aplicado. Altere as configurações do Idle dinamico por defeito na aba de ajuste PID.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "Acelerador mínimo (Valor mínimo do ESC quando armado)"
     },
@@ -2122,6 +2126,22 @@
     },
     "receiverResetRefreshRateTitle": {
         "message": "Repor taxa de atualização"
+    },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
         "message": "Gravar"
@@ -3013,7 +3033,7 @@
         "message": "Acelerómetro - g (deg)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetómetro - Ga"
+        "message": "Magnetómetro"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitude - metros"
