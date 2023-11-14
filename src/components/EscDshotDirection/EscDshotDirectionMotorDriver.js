@@ -126,18 +126,16 @@ class EscDshotDirectionMotorDriver
 
         let logString = "";
         if (motorIndex === DshotCommand.ALL_MOTORS) {
-            if (direction === DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
-                logString += i18n.getMessage('motorsText').concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandNormal'));
-            } else {
-                logString += i18n.getMessage('motorsText').concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandReverse'));
-            }
+            logString += i18n.getMessage('motorsText');
         } else {
             const  motorNumber = motorIndex+1;
-            if (direction === DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
-                logString += i18n.getMessage(`motorNumber${motorNumber}`).concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandNormal'));
-            } else {
-                logString += i18n.getMessage(`motorNumber${motorNumber}`).concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandReverse'));
-            }
+            logString += i18n.getMessage(`motorNumber${motorNumber}`);
+        }
+        logString += ': ';
+        if (direction === DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
+            logString += i18n.getMessage('escDshotDirectionDialog-CommandNormal');
+        } else {
+            logString += i18n.getMessage('escDshotDirectionDialog-CommandReverse');
         }
         gui_log(logString);
     }
