@@ -125,18 +125,18 @@ class EscDshotDirectionMotorDriver
         this._EscDshotCommandQueue.pushCommand(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
 
         let logString = "";
-        if (motorIndex==DshotCommand.ALL_MOTORS) {
-            if (direction==DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
-                logString+=i18n.getMessage('motorsText').concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandNormal'));
+        if (motorIndex === DshotCommand.ALL_MOTORS) {
+            if (direction === DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
+                logString += i18n.getMessage('motorsText').concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandNormal'));
             } else {
-                logString+=i18n.getMessage('motorsText').concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandReverse'));
+                logString += i18n.getMessage('motorsText').concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandReverse'));
             }
         } else {
-            let motorNumber = motorIndex+1;
-            if (direction==DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
-                logString+=i18n.getMessage(`motorNumber${motorNumber}`).concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandNormal'));
+            const  motorNumber = motorIndex+1;
+            if (direction === DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
+                logString += i18n.getMessage(`motorNumber${motorNumber}`).concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandNormal'));
             } else {
-                logString+=i18n.getMessage(`motorNumber${motorNumber}`).concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandReverse'));
+                logString += i18n.getMessage(`motorNumber${motorNumber}`).concat(': ', i18n.getMessage('escDshotDirectionDialog-Open')).concat(' ',i18n.getMessage('escDshotDirectionDialog-CommandReverse'));
             }
         }
         gui_log(logString);
