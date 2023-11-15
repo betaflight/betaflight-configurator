@@ -124,8 +124,8 @@ gps.initialize = async function (callback) {
         // do not include NMEA for firmware 4.5
         let protocolIndex = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? 1 : 0;
 
-        for (let optionIndex = 0; protocolIndex < gpsProtocols.length; optionIndex++, protocolIndex++) {
-            gpsProtocolElement.append(`<option value="${optionIndex}">${gpsProtocols[protocolIndex]}</option>`);
+        for (; protocolIndex < gpsProtocols.length; protocolIndex++) {
+            gpsProtocolElement.append(`<option value="${protocolIndex}">${gpsProtocols[protocolIndex]}</option>`);
         }
 
         gpsProtocolElement.change(function () {
