@@ -90,7 +90,7 @@ gps.initialize = async function (callback) {
         ];
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            gpsProtocols.shift();
+            gpsProtocols.splice(0, 1, 'NONE');
         }
 
         const gpsBaudRates = [
