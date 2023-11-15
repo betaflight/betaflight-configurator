@@ -89,10 +89,6 @@ gps.initialize = async function (callback) {
             'MSP',
         ];
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            gpsProtocols.splice(0, 1, 'NONE');
-        }
-
         const gpsBaudRates = [
             '115200',
             '57600',
@@ -125,7 +121,10 @@ gps.initialize = async function (callback) {
         const gpsHomeOnceElement = $('input[name="gps_home_once"]');
         const gpsBaudrateElement = $('select.gps_baudrate');
 
-        for (let protocolIndex = 0; protocolIndex < gpsProtocols.length; protocolIndex++) {
+        // do not include NMEA for firmware 4.5
+        let protocolIndex = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? 1 : 0;
+
+        for (protocolIndex; protocolIndex < gpsProtocols.length; protocolIndex++) {
             gpsProtocolElement.append(`<option value="${protocolIndex}">${gpsProtocols[protocolIndex]}</option>`);
         }
 
