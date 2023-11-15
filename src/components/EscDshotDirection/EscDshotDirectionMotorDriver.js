@@ -1,6 +1,7 @@
 import EscDshotCommandQueue from './EscDshotCommandQueue.js';
 import DshotCommand from '../../js/utils/DshotCommand.js';
 import MSPCodes from '../../js/msp/MSPCodes.js';
+import { gui_log } from "../../js/gui_log";
 
 class EscDshotDirectionMotorDriver
 {
@@ -122,6 +123,21 @@ class EscDshotDirectionMotorDriver
         buffer.push8(direction);
         buffer.push8(DshotCommand.dshotCommands_e.DSHOT_CMD_SAVE_SETTINGS);
         this._EscDshotCommandQueue.pushCommand(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+
+        let logString = "";
+        if (motorIndex === DshotCommand.ALL_MOTORS) {
+            logString += i18n.getMessage('motorsText');
+        } else {
+            const  motorNumber = motorIndex+1;
+            logString += i18n.getMessage(`motorNumber${motorNumber}`);
+        }
+        logString += ': ';
+        if (direction === DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1) {
+            logString += i18n.getMessage('escDshotDirectionDialog-CommandNormal');
+        } else {
+            logString += i18n.getMessage('escDshotDirectionDialog-CommandReverse');
+        }
+        gui_log(logString);
     }
 
     _spinMotor(motorIndex, value)
