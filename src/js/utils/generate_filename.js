@@ -16,16 +16,17 @@ export function generateFilename(prefix, suffix) {
     const date = new Date();
     const yyyymmdd = `${date.getFullYear()}${zeroPad(date.getMonth() + 1, 2)}${zeroPad(date.getDate(), 2)}`;
     const hhmmss = `${zeroPad(date.getHours(), 2)}${zeroPad(date.getMinutes(), 2)}${zeroPad(date.getSeconds(), 2)}`;
+    const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? FC.CONFIG.craftName : FC.CONFIG.name;
+    let filename = `${FC.CONFIG.flightControllerIdentifier || 'UNKNOWN'}_${prefix}`;
 
-    let filename = `${FC.CONFIG.flightControllerIdentifier || 'UNKNOWN'}_${prefix}_${yyyymmdd}_${hhmmss}`;
+    if (craftName.length) {
+        filename += `_${craftName.trim().replace(" ", "_").toUpperCase()}`;
+    }
+
+    filename += `_${yyyymmdd}_${hhmmss}`;
 
     if (FC.CONFIG.boardName) {
         filename += `_${FC.CONFIG.boardName}`;
-
-        const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? FC.CONFIG.craftName : FC.CONFIG.name;
-        if (craftName.length) {
-            filename += `_${craftName.trim().replace(" ", "_").toUpperCase()}`;
-        }
     }
 
     return `${filename}.${suffix}`;
