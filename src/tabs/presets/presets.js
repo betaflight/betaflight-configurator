@@ -96,7 +96,7 @@ presets.applyCommandsList = function(strings) {
 
 presets.forceSave = function() {
     this.cliEngine.sendLine(CliEngine.s_commandSave, null, () => {
-        // In case of batch CLI commands errors Firmware requeires extra "save" comand for CLI safety.
+        // In case of batch CLI command errors the firmware requires extra "save" command for safety.
         this.cliEngine.sendLine(CliEngine.s_commandSave);
     });
     this.disconnectCliMakeSure();
