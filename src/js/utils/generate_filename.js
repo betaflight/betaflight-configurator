@@ -19,11 +19,13 @@ export function generateFilename(prefix, suffix) {
 
     let filename = `${FC.CONFIG.flightControllerIdentifier || 'UNKNOWN'}_${prefix}_${yyyymmdd}_${hhmmss}`;
 
-    if (FC.CONFIG) {
-        const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? FC.CONFIG.craftName : FC.CONFIG.name;
-        const boardName = FC.CONFIG.boardName || craftName.trim().replace(" ", "_");
+    if (FC.CONFIG.boardName) {
+        filename += `_${FC.CONFIG.boardName}`;
 
-        filename = `${filename}_${boardName}`;
+        const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? FC.CONFIG.craftName : FC.CONFIG.name;
+        if (craftName.length) {
+            filename += `_${craftName.trim().replace(" ", "_").toUpperCase()}`;
+        }
     }
 
     return `${filename}.${suffix}`;
