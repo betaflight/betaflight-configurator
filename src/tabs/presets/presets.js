@@ -94,6 +94,14 @@ presets.applyCommandsList = function(strings) {
     });
 };
 
+presets.forceSave = function() {
+    this.cliEngine.sendLine(CliEngine.s_commandSave, null, () => {
+        // In case of batch CLI commands errors Firmware requeires extra "save" comand for CLI safety.
+        this.cliEngine.sendLine(CliEngine.s_commandSave);
+    });
+    this.disconnectCliMakeSure();
+};
+
 presets.onSaveClick = function() {
     this._domProgressDialogProgressBar.val(0);
     this._domProgressDialog.showModal();
@@ -111,8 +119,7 @@ presets.onSaveClick = function() {
                 this._domDialogCliErrorsSavePressed = false;
             } else {
                 this._domProgressDialog.close();
-                this.cliEngine.sendLine(CliEngine.s_commandSave);
-                this.disconnectCliMakeSure();
+                this.forceSave();
             }
         });
     });
@@ -156,13 +163,7 @@ presets.setupMenuButtons = function() {
     this._domButtonaSaveAnyway.on("click", () => {
         this._domDialogCliErrorsSavePressed = true;
         this._domDialogCliErrors[0].close();
-        this.cliEngine.sendLine(CliEngine.s_commandSave, null, () => {
-            // In case of batch CLI commands errors Firmware requeires extra "save" comand for CLI safety.
-            // No need for this safety in presets as preset tab already detected errors and showed them to the user.
-            // At this point user clicked "save anyway".
-            this.cliEngine.sendLine(CliEngine.s_commandSave);
-        });
-        this.disconnectCliMakeSure();
+        this.forceSave();
     });
 
     this._domDialogCliErrors.on("close", () => {

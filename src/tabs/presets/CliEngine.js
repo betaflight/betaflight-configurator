@@ -9,7 +9,7 @@ export default class CliEngine
 {
     constructor(currentTab) {
         this._currentTab = currentTab;
-        this._lineDelayMs = 15;
+        this._lineDelayMs = 2;
         this._profileSwitchDelayMs = 100;
         this._cliBuffer = "";
         this._window = null;
@@ -19,6 +19,7 @@ export default class CliEngine
         this._onSendCommandsProgressChange = undefined;
         this._responseCallback = undefined;
         this._onRowCameCallback = undefined;
+        this._lastCommandIsDefaults = false;
     }
 
     setUi(window, windowWrapper, textarea) {
@@ -41,7 +42,7 @@ export default class CliEngine
     enterCliMode() {
         const bufferOut = new ArrayBuffer(1);
         const bufView = new Uint8Array(bufferOut);
-        this.cliBuffer = "";
+        this._cliBuffer = "";
 
         bufView[0] = 0x23;
 
@@ -72,7 +73,7 @@ export default class CliEngine
     }
 
     close(callback) {
-        this.send(this.getCliCommand('exit\r', ""), function () { //this.cliBuffer
+        this.send(this.getCliCommand('exit\r', ""), function () { //this._cliBuffer
             if (callback) {
                 callback();
             }
@@ -92,17 +93,17 @@ export default class CliEngine
             p.then((delay) =>
                 new Promise((resolve) => {
                     GUI.timeout_add('CLI_send_slowly', () => {
-                        let processingDelay = this.lineDelayMs;
+                        let processingDelay = this._lineDelayMs;
                         line = line.trim();
 
                         if (line.toLowerCase().startsWith('profile')) {
-                            processingDelay = this.profileSwitchDelayMs;
+                            processingDelay = this._profileSwitchDelayMs;
                         }
 
                         const isLastCommand = totalCommandsCount === index + 1;
 
-                        if (isLastCommand && this.cliBuffer) {
-                            line = this.getCliCommand(line, this.cliBuffer);
+                        if (isLastCommand && this._cliBuffer) {
+                            line = this.getCliCommand(line, this._cliBuffer);
                         }
 
                         this.sendLine(line, () => { /* empty on-send callback */ }, () => {
@@ -158,9 +159,14 @@ export default class CliEngine
 
     writeLineToOutput(text) {
         if (text.startsWith("###ERROR")) {
-            this.writeToOutput(`<span class="error_message">${text}</span><br>`);
-            this._cliErrorsCount++;
+            if (this._lastCommandIsDefaults) {
+                this.writeToOutput(`<span class="warning_message">${text}</span><br>`);
+            } else {
+                this.writeToOutput(`<span class="error_message">${text}</span><br>`);
+                this._cliErrorsCount++;
+            }
         } else {
+            this._lastCommandIsDefaults = text.toLowerCase().includes(CliEngine.s_outputResetting);
             this.writeToOutput(`${text}<br>`);
         }
         this._responseCallback?.();
@@ -281,3 +287,4 @@ CliEngine.s_commandDiffAll = "diff all";
 CliEngine.s_commandDefaultsNoSave = "defaults nosave";
 CliEngine.s_commandSave = "save";
 CliEngine.s_commandExit = "exit";
+CliEngine.s_outputResetting = "resetting";
