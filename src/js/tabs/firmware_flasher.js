@@ -654,11 +654,13 @@ firmware_flasher.initialize = function (callback) {
                         }
 
                         MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
-                            if (buildKeyExists()) {
-                                self.releaseLoader.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, getBoardInfo);
-                            } else {
-                                getBoardInfo();
-                            }
+                            MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME), false, () => {
+                                if (buildKeyExists()) {
+                                    self.releaseLoader.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, getBoardInfo);
+                                } else {
+                                    getBoardInfo();
+                                }
+                            });
                         });
                     } else {
                         getBoardInfo();
@@ -670,9 +672,7 @@ firmware_flasher.initialize = function (callback) {
                     MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
                         gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
 
-                        if (FC.CONFIG.apiVersion.includes('null')) {
-                            onClose(false); // not supported
-                        } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
+                        if (FC.CONFIG.apiVersion.includes('null') || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                             onClose(false); // not supported
                         } else {
                             MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, getBuildInfo);
