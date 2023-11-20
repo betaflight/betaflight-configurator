@@ -41,13 +41,13 @@
         "message": "Параметри додатку"
     },
     "connect": {
-        "message": "З'єднати"
+        "message": "Під'єднати"
     },
     "connecting": {
-        "message": "З'єднання"
+        "message": "Під'єднуємось"
     },
     "disconnect": {
-        "message": "Роз'єднати"
+        "message": "Від'єднати"
     },
     "portsSelectManual": {
         "message": "Ручний вибір"
