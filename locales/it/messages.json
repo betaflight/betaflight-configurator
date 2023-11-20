@@ -1271,6 +1271,10 @@
         "message": "Il numero di poli è il numero di magneti che si trovano sulla campana del motore. NON contare gli statori dove si trovano gli avvolgimenti. I tipici motori di un 5\" hanno 14 magneti, quelli più piccoli, come un 3\" o più piccoli, hanno 12 magneti.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Questo è il valore dinamico minimo del profilo PID attivo. Quando il minimo dinamico è su zero, verrà applicato solo il minimo statico del motore. Modificare le impostazioni del minimo dinamico nella scheda Regolazione PID.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "Gas Minimo (Il più basso valore degli ESC quando armato)"
     },
