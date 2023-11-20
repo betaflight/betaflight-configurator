@@ -1,5 +1,5 @@
 import { i18n } from '../localization';
-import GUI from '../gui';
+import GUI, { TABS } from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { bit_check } from '../bit';
 import { mspHelper } from '../msp/MSPHelper';
@@ -16,11 +16,51 @@ const auxiliary = {};
 const flightModes = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","SERVO1","SERVO2","SERVO3",
                      "FAILSAFE","AIR MODE","3D","FPV ANGLE MIX","FLIP OVER AFTER CRASH","USER1","USER2","USER3","USER4","ACRO TRAINER","LAUNCH CONTROL"];
 
+// Categories
+let categoryTable = createTable([
+    ['3D',         '3D DISABLE / SWITCH'],
+    ['BEEP',       'BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT'],
+    ['BLACKBOX',   'BLACKBOX', 'BLACKBOX ERASE'],
+    ['CAM',        'CAMERA CONTROL 1', 'CAMERA CONTROL 2', 'CAMERA CONTROL 3'],
+    ['FLIGHTMODE', 'ARM','ANGLE','HORIZON','ANTI GRAVITY','MAG','HEADFREE','HEADADJ','SERVO1','SERVO2','SERVO3',
+                   'FAILSAFE','AIR MODE','3D','FPV ANGLE MIX','FLIP OVER AFTER CRASH','USER1','USER2','USER3','USER4','ACRO TRAINER','LAUNCH CONTROL'],
+    ['GPS',        'GPS BEEP SATELLITE COUNT', 'GPS RESCUE'],
+    ['LED',        'LEDLOW'],
+    ['OSD',        'OSD DISABLE'],
+    ['OTHER',      'CALIB', 'MSP OVERRIDE', 'LAP TIMER RESET', 'PASSTHRU', 'PARALYZE', 'PID AUDIO', 'PREARM', 'TELEMETRY'],
+    ['SERVO',      'SERVO1', 'SERVO2', 'SERVO3'],
+    ['USER',       'USER1', 'USER2', 'USER3', 'USER4'],
+    ['VTX',        'STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE'],
+]);
+
+const categoryFieldsSelect = $(".auxiliary_filter_category select");
+
+function createTable(data) {
+    // Create a dynamic table with fixed values
+    let table = [];
+
+    for (let i = 0; i < data.length; i++) {
+        let row = data[i].slice();              // Use slice to clone the array
+        table.push(row);
+    }
+
+    return table;
+}
+
+// Function to display the table in the console
+function displayTable(table) {
+    for (let i = 0; i < table.length; i++) {
+        console.log(table[i].join('\t'));
+    }
+}
+
 auxiliary.initialize = function (callback) {
     GUI.active_tab_ref = this;
     GUI.active_tab = 'auxiliary';
     let prevChannelsValues = null;
     let hasDirtyUnusedModes = true;
+
+    this._selectCategory = $('#auxiliary_filter_category');
 
     function get_mode_ranges() {
         MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, get_mode_ranges_extra);
@@ -312,6 +352,10 @@ auxiliary.initialize = function (callback) {
 
         // translate to user-selected language
         i18n.localizePage();
+        //categoryFieldsSelect
+
+        // generate category multiple select
+        displayTable(categoryTable);
 
         const length = Math.max(...(FC.AUX_CONFIG.map(el => el.length)));
         $('.tab-auxiliary .mode .info').css('min-width', `${Math.round(length * getTextWidth('A'))}px`);
@@ -495,39 +539,31 @@ auxiliary.initialize = function (callback) {
 
             let hideUnused = hideUnusedModes && hasUsedMode;
             let hideNoFlight = hideNoFlightMode && hasUsedMode;
-            console.log(`0 hideUnusedModes: ${hideUnusedModes}, hideNoFlightMode: ${hideNoFlightMode}`);
-            console.log(`0 hasUsedMode: ${hasUsedMode}, hideUnused: ${hideUnused}, hideNoFlight: ${hideNoFlight}`);
 
             for (let i = 1; i < FC.AUX_CONFIG.length; i++) {    // ARM has index 0
                 let modeElement = $(`#mode-${i}`);
-                let style = modeElement.css('display');
 
                 if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     // unused mode
-                    style = modeElement.css('display');
-                    console.log(`1 HIDE: ${FC.AUX_CONFIG[i]} ${style}`);
-
                     modeElement.toggle(!hideUnused);
-
-                    style = modeElement.css('display');
-                    console.log(`2 HIDE: ${FC.AUX_CONFIG[i]} ${style}`);
                 }
 
+                /*
                 if ( ! isFlightMode(FC.AUX_CONFIG[i])) {
                     // not flightMode mode
+                    hide = hide || !hideNoFlight;
                     style = modeElement.css('display');
-                    console.log(`1 NOT flightmode: ${FC.AUX_CONFIG[i]} - ${hideNoFlight} - ${style}`);
+                    console.log(`1 HIDE not flightmode: ${FC.AUX_CONFIG[i]} -> ${hide}`);
                     // modeElement.toggle(!hideNoFlight);
+                    / *
                     if( hideNoFlight && ! style === 'none') {
                         modeElement.toggle(!hideUnused);
                     }
                     style = modeElement.css('display');
-                    console.log(`2 NOT flightmode: ${FC.AUX_CONFIG[i]} - ${hideNoFlight} - ${style}`);
+                    console.log(`2 NOT flightmode: ${FC.AUX_CONFIG[i]} - ${style}`);
+                    * /
                 }
-                else {
-                    style = modeElement.css('display');
-                    console.log(`Flightmode: ${FC.AUX_CONFIG[i]} - ${style}`);
-                }
+                */
             }
 
             auto_select_channel(FC.RC.channels, FC.RC.active_channels, FC.RSSI_CONFIG.channel);

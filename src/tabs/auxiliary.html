@@ -8,11 +8,20 @@
             <p i18n="auxiliaryHelp"></p>
         </div>
 
+        <div id="auxiliary_main_content">
+            <div class="auxiliary_search_settings">
+                <div class="auxiliary_filter_table_wrapper">
+                    <div class="auxiliary_filter_row">
+                        <div class = "auxiliary_fitler_table_header" i18n="auxiliaryFilterCategory"></div>
+                        <div class = "auxiliary_fitler_table_value">
+                            <select multiple="multiple" class="presets_filter_select" id="auxiliary_filter_category"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="toolbox">
-            <form>
-                <input type="checkbox" id="switch-toggle-hideNoFlightMode" name="switch-toggle-hideNoFlightMode" class="toggle" />
-                <span i18n="auxiliaryToggleNoFlightMode"></span>
-            </form>
             <form>
                 <input type="checkbox" id="switch-toggle-unused" name="switch-toggle-unused" class="toggle" />
                 <span i18n="auxiliaryToggleUnused"></span>
