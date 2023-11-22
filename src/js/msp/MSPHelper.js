@@ -1,6 +1,5 @@
 import '../injected_methods';
 import { update_dataflash_global } from "../update_dataflash_global";
-import { sensor_status } from "../sensor_helpers";
 import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
@@ -193,7 +192,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.mode = data.readU32();
                 FC.CONFIG.profile = data.readU8();
 
-                sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
                 break;
             case MSPCodes.MSP_STATUS_EX:
                 FC.CONFIG.cycleTime = data.readU16();
@@ -223,7 +221,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.CONFIG.cpuTemp = data.readU16();
                 }
 
-                sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
                 break;
 
             case MSPCodes.MSP_RAW_IMU:
