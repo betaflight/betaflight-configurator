@@ -765,8 +765,9 @@ async function update_live_status() {
 
         if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
             await MSP.promise(MSPCodes.MSP_RAW_GPS);
-            sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
         }
+
+        sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
 
         statuswrapper.show();
     }
