@@ -355,12 +355,8 @@ sensors.initialize = function (callback) {
             // and use the "slower" refresh rates only for re-drawing the graphs (to save resources/computing power)
 
             let fastest;
-            const attr = $(this).attr('name');
-
-
-            console.log('attr', attr);
             // if any of the refresh rates change, we need to re-determine the fastest refresh rate
-            if (attr === 'gyro_refresh_rate' || attr === 'accel_refresh_rate' || attr === 'mag_refresh_rate') {
+            if (['gyro_refresh_rate', 'accel_refresh_rate', 'mag_refresh_rate'].includes($(this).attr('name'))) {
                 fastest = $(this).val();
 
                 $('.tab-sensors select[name="gyro_refresh_rate"]').val(fastest);
