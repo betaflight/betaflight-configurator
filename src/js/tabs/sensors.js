@@ -357,6 +357,8 @@ sensors.initialize = function (callback) {
             let fastest;
             const attr = $(this).attr('name');
 
+
+            console.log('attr', attr);
             // if any of the refresh rates change, we need to re-determine the fastest refresh rate
             if (attr === 'gyro_refresh_rate' || attr === 'accel_refresh_rate' || attr === 'mag_refresh_rate') {
                 fastest = $(this).val();
