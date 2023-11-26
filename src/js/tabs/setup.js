@@ -334,33 +334,38 @@ setup.initialize = function (callback) {
                 'TF02',
             ];
 
-            MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
+            MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function() {
                 // Sensor info
-                let appendComma = false;
                 sensor_e.text('');
-                if (have_sensor(FC.CONFIG.activeSensors, "acc") && FC.SENSOR_CONFIG.acc_hardware > 1) {
-                    sensor_e.append(i18n.getMessage('sensorStatusAccelShort'), ': ', accElements[[FC.SENSOR_CONFIG.acc_hardware]]);
-                    appendComma = true;
+
+                sensor_e.append(`${i18n.getMessage('sensorStatusAccelShort')}: `);
+                if (FC.SENSOR_CONFIG_ACTIVE.acc_hardware == 0xFF) {
+                    sensor_e.append('N/A');
+                } else if (have_sensor(FC.CONFIG.activeSensors, "acc") && FC.SENSOR_CONFIG_ACTIVE.acc_hardware > 1) {
+                    sensor_e.append(accElements[FC.SENSOR_CONFIG_ACTIVE.acc_hardware]);
                 }
-                if (have_sensor(FC.CONFIG.activeSensors, "baro") && FC.SENSOR_CONFIG.baro_hardware > 1) {
-                    if (appendComma) {
-                        sensor_e.append(', ');
-                    }
-                    sensor_e.append(i18n.getMessage('sensorStatusBaroShort'), ': ', baroElements[[FC.SENSOR_CONFIG.baro_hardware]]);
-                    appendComma = true;
+
+                sensor_e.append(`<br>${i18n.getMessage('sensorStatusBaroShort')}: `);
+                if (FC.SENSOR_CONFIG_ACTIVE.baro_hardware == 0xFF) {
+                    sensor_e.append('N/A');
+                } else if (have_sensor(FC.CONFIG.activeSensors, "baro") && FC.SENSOR_CONFIG_ACTIVE.baro_hardware > 1) {
+                    sensor_e.append(baroElements[FC.SENSOR_CONFIG_ACTIVE.baro_hardware]);
                 }
-                if (have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
-                    if (appendComma) {
-                        sensor_e.append(', ');
-                    }
-                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]]);
-                    appendComma = true;
+
+                sensor_e.append(`<br>${i18n.getMessage('sensorStatusMagShort')}: `);
+                if (FC.SENSOR_CONFIG_ACTIVE.mag_hardware == 0xFF) {
+                    sensor_e.append('N/A');
+                } else if (have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG_ACTIVE.mag_hardware > 1) {
+                    sensor_e.append(magElements[FC.SENSOR_CONFIG_ACTIVE.mag_hardware]);
                 }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG.sonar_hardware > 1) {
-                    if (appendComma) {
-                        sensor_e.append(', ');
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    sensor_e.append(`<br>${i18n.getMessage('sensorStatusSonarShort')}: `);
+                    if (FC.SENSOR_CONFIG_ACTIVE.sonar_hardware == 0xFF) {
+                        sensor_e.append('N/A');
+                    } else if (have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG_ACTIVE.sonar_hardware > 1) {
+                        sensor_e.append(sonarElements[FC.SENSOR_CONFIG_ACTIVE.sonar_hardware]);
                     }
-                    sensor_e.append(i18n.getMessage('sensorStatusSonarShort'), ': ', sonarElements[[FC.SENSOR_CONFIG.sonar_hardware]]);
                 }
             });
         };
