@@ -1170,12 +1170,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                     FC.SENSOR_CONFIG_ACTIVE.sonar_hardware = data.readU8();
                 }
-
-                console.log(FC.SENSOR_CONFIG_ACTIVE.gyro_hardware);
-                console.log(FC.SENSOR_CONFIG_ACTIVE.acc_hardware);
-                console.log(FC.SENSOR_CONFIG_ACTIVE.baro_hardware);
-                console.log(FC.SENSOR_CONFIG_ACTIVE.mag_hardware);
-                console.log(FC.SENSOR_CONFIG_ACTIVE.sonar_hardware);
                 break;
 
             case MSPCodes.MSP_LED_STRIP_CONFIG:

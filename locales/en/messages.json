@@ -867,8 +867,15 @@
         "message": "System info"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Shows FC flags for disarming, Battery information, RSSI level and Sensors hardware",
+        "message": "Shows FC flags for disarming, Battery information, RSSI level.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Sensor info"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Shows sensors hardware",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Battery voltage:"
