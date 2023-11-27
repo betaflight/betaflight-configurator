@@ -2128,19 +2128,19 @@
         "message": "Nulstil genopfrisknings hastighed"
     },
     "receiverRowContainerRoll": {
-        "message": "Krængror [A]:",
+        "message": "Krængror [A]",
         "description": "Roll label in signal graph"
     },
     "receiverRowContainerPitch": {
-        "message": "Højderor [E]:",
+        "message": "Højderor [E]",
         "description": "Pitch label in signal graph"
     },
     "receiverRowContainerYaw": {
-        "message": "Sideror [R]:",
+        "message": "Sideror [R]",
         "description": "Yaw label in signal graph"
     },
     "receiverRowContainerThrottle": {
-        "message": "Gas [T]:",
+        "message": "Gas [T]",
         "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
