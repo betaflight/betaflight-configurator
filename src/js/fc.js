@@ -542,7 +542,7 @@ const FC = {
             sonar_hardware:             0,
         };
 
-        this.SENSOR_CONFIG_ACTIVE = { ...this.SENSOR_CONFIG };
+        this.SENSOR_CONFIG_ACTIVE = { gyro_hardware: 0, ...this.SENSOR_CONFIG };
 
         this.RX_CONFIG = {
             serialrx_provider:            0,
