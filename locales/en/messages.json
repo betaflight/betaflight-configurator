@@ -366,21 +366,18 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-
     "logActionHide": {
         "message": "Hide Log"
     },
     "logActionShow": {
         "message": "Show Log"
     },
-
     "serialErrorFrameError": {
         "message": "Serial connection error: bad framing"
     },
     "serialErrorParityError": {
         "message": "Serial connection error: bad parity"
     },
-
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> opened with ID: $1"
     },
@@ -2314,9 +2311,9 @@
     "auxiliaryToggleUnused": {
         "message": "Hide unused modes"
     },
-    "auxiliaryToggleNoFlightMode": {
-        "message": "Show only flight modes",
-        "descripton": "Toggle if all modes are shown or only Flight modes"
+    "auxiliaryFilterCategory": {
+        "message": "Category",
+        "descripton": "Category for Flight modes"
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -2466,7 +2463,7 @@
         "message": "Enable MSP Override mode",
         "description": "Help text to MSP OVERRIDE mode"
     },
-    "auxiliaryHelpMode_OSDDISABLE": {
+    "auxiliaryHelpMode_OSD": {
         "message": "Enable/Disable On-Screen-Display",
         "description": "Help text to OSD mode"
     },
@@ -2526,7 +2523,7 @@
         "message": "Use to toggle customized USER4. Controls arbitrary output via PINIO",
         "description": "Help text to customized USER4 mode"
     },
-    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+    "auxiliaryHelpMode_DISABLEVTXCONTROL": {
         "message": "Disable the control of VTX settings through the OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },

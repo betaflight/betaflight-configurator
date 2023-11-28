@@ -13,34 +13,50 @@ import inflection from "inflection";
 
 const auxiliary = {};
 
+// BF build Options mapped to build Key
+let buildMap = [
+    { buildKey: 'xxx',       buildOption: ['USE_ARCO_TRAINER', 'USE_DASHBOARD', 'USE_PINIO']},
+    { buildKey: 'cam',       buildOption: ['USE_CAMERA_CONTROL']},
+    { buildKey: 'dshot',     buildOption: ['USE_DSHOT']},
+    { buildKey: 'gps',       buildOption: ['USE_GPS', 'USE_GPS_PLUS_CODES']},
+    { buildKey: 'led_strip', buildOption: ['USE_LED_STRIP', 'USE_LED_STRIP_64']},
+    { buildKey: 'mag',       buildOption: ['USE_MAG']},
+    { buildKey: 'osd',       buildOption: ['USE_OSD', 'USE_OSD_SD', 'USE_OSD_HD', 'USE_FRSKYOSD']},
+    { buildKey: 'serial',    buildOption: ['USE_SERIALRX', 'USE_SERIALRX_FPORT']},
+    { buildKey: 'servos',    buildOption: ['USE_SERVOS']},
+    { buildKey: 'telemetry', buildOption: ['USE_TELEMETRY', 'USE_TELEMETRY_SMARTPORT']},
+    { buildKey: 'vtx',       buildOption: ['USE_VTX']},
+];
+
 const flightModes = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","SERVO1","SERVO2","SERVO3",
-                     "FAILSAFE","AIR MODE","3D","FPV ANGLE MIX","FLIP OVER AFTER CRASH","USER1","USER2","USER3","USER4","ACRO TRAINER","LAUNCH CONTROL"];
+                     "FAILSAFE","AIR MODE","FPV ANGLE MIX","FLIP OVER AFTER CRASH","USER1","USER2","USER3","USER4","ACRO TRAINER","LAUNCH CONTROL"];
 
 // Categories
-let categoryTable = createTable([
-    ['3D',         '3D DISABLE / SWITCH'],
-    ['BEEP',       'BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT'],
-    ['BLACKBOX',   'BLACKBOX', 'BLACKBOX ERASE'],
-    ['CAM',        'CAMERA CONTROL 1', 'CAMERA CONTROL 2', 'CAMERA CONTROL 3'],
-    ['FLIGHTMODE', 'ARM','ANGLE','HORIZON','ANTI GRAVITY','MAG','HEADFREE','HEADADJ','SERVO1','SERVO2','SERVO3',
-                   'FAILSAFE','AIR MODE','3D','FPV ANGLE MIX','FLIP OVER AFTER CRASH','USER1','USER2','USER3','USER4','ACRO TRAINER','LAUNCH CONTROL'],
-    ['GPS',        'GPS BEEP SATELLITE COUNT', 'GPS RESCUE'],
-    ['LED',        'LEDLOW'],
-    ['OSD',        'OSD DISABLE'],
-    ['OTHER',      'CALIB', 'MSP OVERRIDE', 'LAP TIMER RESET', 'PASSTHRU', 'PARALYZE', 'PID AUDIO', 'PREARM', 'TELEMETRY'],
-    ['SERVO',      'SERVO1', 'SERVO2', 'SERVO3'],
-    ['USER',       'USER1', 'USER2', 'USER3', 'USER4'],
-    ['VTX',        'STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE'],
-]);
+let categoryTable = [
+    { name: '3D',         buildKey: ['dshot'],     modes: ['3D', '3D DISABLE / SWITCH']},
+    { name: 'BEEP',       buildKey: ['all'],       modes: ['BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT']},
+    { name: 'BLACKBOX',   buildKey: ['all'],       modes: ['BLACKBOX', 'BLACKBOX ERASE']},
+    { name: 'CAM',        buildKey: ['cam'],       modes: ['CAMERA CONTROL 1', 'CAMERA CONTROL 2', 'CAMERA CONTROL 3']},
+    { name: 'FLIGHTMODE', buildKey: ['all'],       modes: flightModes},
+    { name: 'GPS',        buildKey: ['gps'],       modes: ['GPS BEEP SATELLITE COUNT', 'GPS RESCUE']},
+    { name: 'LED',        buildKey: ['led_strip'], modes: ['LEDLOW']},
+    { name: 'OSD',        buildKey: ['osd'],       modes: ['OSD DISABLE']},
+    { name: 'OTHER',      buildKey: ['all'],       modes: ['CALIB', 'MSP OVERRIDE', 'LAP TIMER RESET', 'PASSTHRU', 'PARALYZE', 'PID AUDIO', 'PREARM']},
+    { name: 'SERVO',      buildKey: ['servos'],    modes: ['SERVO1', 'SERVO2', 'SERVO3']},
+    { name: 'TELEMETRI',  buildKey: ['telemetry'], modes: ['TELEMETRY']},
+    { name: 'USER',       buildKey: ['all'],       modes: ['USER1', 'USER2', 'USER3', 'USER4']},
+    { name: 'VTX',        buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
+];
 
-const categoryFieldsSelect = $(".auxiliary_filter_category select");
+
+const categoryFieldsSelect = $('.auxiliary_category');
 
 function createTable(data) {
     // Create a dynamic table with fixed values
     let table = [];
 
     for (let i = 0; i < data.length; i++) {
-        let row = data[i].slice();              // Use slice to clone the array
+        let row = data[i].modes.slice();              // Use slice to clone the array
         table.push(row);
     }
 
@@ -50,8 +66,57 @@ function createTable(data) {
 // Function to display the table in the console
 function displayTable(table) {
     for (let i = 0; i < table.length; i++) {
-        console.log(table[i].join('\t'));
+        console.log(`${table[i].name}: ${table[i].modes}`);
     }
+}
+
+// Function to simulate mouseover and select an option
+function simulateMouseoverAndSelectOption(selectElement, optionIndex) {
+    // Trigger mouseover event
+    const mouseoverEvent = new Event('mouseover');
+    selectElement.dispatchEvent(mouseoverEvent);
+
+    // Select the specified option
+    selectElement.selectedIndex = optionIndex;
+
+    // Trigger change event to notify any listeners
+    const changeEvent = new Event('change');
+    selectElement.dispatchEvent(changeEvent);
+}
+
+// Function to iterate over options and simulate mouseover and selection
+function simulateMouseoverAndSelectForEachOption() {
+    // Get the select element
+    const selectElement = document.getElementById('yourSelectElementId'); // Replace with your actual select element ID
+
+    // Iterate over each option and simulate mouseover and selection
+    for (let i = 0; i < selectElement.options.length; i++) {
+        simulateMouseoverAndSelectOption(selectElement, i);
+        // You can add a delay here if needed
+        // setTimeout(() => {
+        //     simulateMouseoverAndSelectOption(selectElement, i);
+        // }, 1000 * i); // Adjust the delay as needed
+    }
+}
+
+// Call the function when needed
+//simulateMouseoverAndSelectForEachOption();
+/*
+Replace 'yourSelectElementId' with the actual ID of your select element.
+The simulateMouseoverAndSelectForEachOption function iterates over each option in the select element, simulates a mouseover, and selects the option.
+You can also add a delay between each iteration if needed (commented out in the code). Adjust the delay according to your requirements.
+*/
+
+function createCategorySelect(table) {
+    for (let i = 0; i < table.length; i++) {
+        const str = `<option value="${table[i].name}">${table[i].name}</option>`;
+        $('#auxiliary_filter_category .select').append(`<option value="${table[i].name}">${table[i].name}</option>`);
+        console.log(str);
+    }
+}
+
+function isFlightMode(name) {
+    return flightModes.includes(name);
 }
 
 auxiliary.initialize = function (callback) {
@@ -59,8 +124,6 @@ auxiliary.initialize = function (callback) {
     GUI.active_tab = 'auxiliary';
     let prevChannelsValues = null;
     let hasDirtyUnusedModes = true;
-
-    this._selectCategory = $('#auxiliary_filter_category');
 
     function get_mode_ranges() {
         MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, get_mode_ranges_extra);
@@ -88,10 +151,6 @@ auxiliary.initialize = function (callback) {
 
     function load_html() {
         $('#content').load("./tabs/auxiliary.html", process_html);
-    }
-
-    function isFlightMode(name) {
-        return flightModes.includes(name);
     }
 
     MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, get_mode_ranges);
@@ -356,6 +415,7 @@ auxiliary.initialize = function (callback) {
 
         // generate category multiple select
         displayTable(categoryTable);
+        createCategorySelect(categoryTable);
 
         const length = Math.max(...(FC.AUX_CONFIG.map(el => el.length)));
         $('.tab-auxiliary .mode .info').css('min-width', `${Math.round(length * getTextWidth('A'))}px`);
