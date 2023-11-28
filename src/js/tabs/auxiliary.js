@@ -534,7 +534,7 @@ auxiliary.initialize = function (callback) {
             }, 0);
 
             //minimum change to autoselect is 100
-            if (largest < 100) return fillPrevChannelsValues();
+            if (largest < 100) return fillPrevChannelsValues();
 
             const indexOfMaxValue = diff_array.indexOf(largest);
             if (indexOfMaxValue >= 4 && indexOfMaxValue != RSSI_channel - 1){ //set channel
