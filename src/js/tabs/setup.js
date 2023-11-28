@@ -200,7 +200,11 @@ setup.initialize = function (callback) {
             heading_e = $('dd.heading'),
             sonar_e = $('.sonarAltitude'),
             // Sensor info
-            sensor_e = $('.sensor-hw'),
+            sensor_gyro_e = $('.sensor_gyro_hw'),
+            sensor_acc_e = $('.sensor_acc_hw'),
+            sensor_mag_e = $('.sensor_mag_hw'),
+            sensor_baro_e = $('.sensor_baro_hw'),
+            sensor_sonar_e = $('.sensor_sonar_hw'),
             // Firmware info
             msp_api_e = $('.api-version'),
             build_date_e = $('.build-date'),
@@ -277,7 +281,30 @@ setup.initialize = function (callback) {
         };
 
         const showSensorInfo = function() {
-            let accElements = [
+            const gyroElements = [
+                'NONE',
+                'DEFAULT',
+                'MPU6050',
+                'L3G4200D',
+                'MPU3050',
+                'L3GD20',
+                'MPU6000',
+                'MPU6500',
+                'MPU9250',
+                'ICM20601',
+                'ICM20602',
+                'ICM20608G',
+                'ICM20649',
+                'ICM20689',
+                'ICM42605',
+                'ICM42688P',
+                'BMI160',
+                'BMI270',
+                'LSM6DSO',
+                'VIRTUAL',
+            ];
+
+            const accElements = [
                 'DEFAULT',
                 'NONE',
                 'ADXL345',
@@ -301,7 +328,7 @@ setup.initialize = function (callback) {
                 'VIRTUAL',
             ];
 
-            let baroElements = [
+            const baroElements = [
                 'DEFAULT',
                 'NONE',
                 'BMP085',
@@ -315,7 +342,7 @@ setup.initialize = function (callback) {
                 'VIRTUAL',
             ];
 
-            let magElements = [
+            const magElements = [
                 'DEFAULT',
                 'NONE',
                 'HMC5883',
@@ -327,42 +354,60 @@ setup.initialize = function (callback) {
                 'IST8310',
             ];
 
-            let sonarElements = [
+            const sonarElements = [
                 'NONE',
                 'HCSR04',
                 'TFMINI',
                 'TF02',
             ];
 
-            MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
-                // Sensor info
-                let appendComma = false;
-                sensor_e.text('');
-                if (have_sensor(FC.CONFIG.activeSensors, "acc") && FC.SENSOR_CONFIG.acc_hardware > 1) {
-                    sensor_e.append(i18n.getMessage('sensorStatusAccelShort'), ': ', accElements[[FC.SENSOR_CONFIG.acc_hardware]]);
-                    appendComma = true;
-                }
-                if (have_sensor(FC.CONFIG.activeSensors, "baro") && FC.SENSOR_CONFIG.baro_hardware > 1) {
-                    if (appendComma) {
-                        sensor_e.append(', ');
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function() {
+                    // Sensor info
+                    const textNA = 'N/A';
+                    const textDisabled = 'disabled';
+
+                    if (FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == 0xFF) {
+                        sensor_gyro_e.text(textNA);
+                    } else if (have_sensor(FC.CONFIG.activeSensors, "gyro") && FC.SENSOR_CONFIG_ACTIVE.gyro_hardware > 1) {
+                        sensor_gyro_e.text(gyroElements[FC.SENSOR_CONFIG_ACTIVE.gyro_hardware]);
+                    } else {
+                        sensor_gyro_e.text(textDisabled);
                     }
-                    sensor_e.append(i18n.getMessage('sensorStatusBaroShort'), ': ', baroElements[[FC.SENSOR_CONFIG.baro_hardware]]);
-                    appendComma = true;
-                }
-                if (have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG.mag_hardware > 1) {
-                    if (appendComma) {
-                        sensor_e.append(', ');
+
+                    if (FC.SENSOR_CONFIG_ACTIVE.acc_hardware == 0xFF) {
+                        sensor_acc_e.text(textNA);
+                    } else if (have_sensor(FC.CONFIG.activeSensors, "acc") && FC.SENSOR_CONFIG_ACTIVE.acc_hardware > 1) {
+                        sensor_acc_e.text(accElements[FC.SENSOR_CONFIG_ACTIVE.acc_hardware]);
+                    } else {
+                        sensor_acc_e.text(textDisabled);
                     }
-                    sensor_e.append(i18n.getMessage('sensorStatusMagShort'), ': ', magElements[[FC.SENSOR_CONFIG.mag_hardware]]);
-                    appendComma = true;
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG.sonar_hardware > 1) {
-                    if (appendComma) {
-                        sensor_e.append(', ');
+
+                    if (FC.SENSOR_CONFIG_ACTIVE.baro_hardware == 0xFF) {
+                        sensor_baro_e.text(textNA);
+                    } else if (have_sensor(FC.CONFIG.activeSensors, "baro") && FC.SENSOR_CONFIG_ACTIVE.baro_hardware > 1) {
+                        sensor_baro_e.text(baroElements[FC.SENSOR_CONFIG_ACTIVE.baro_hardware]);
+                    } else {
+                        sensor_baro_e.text(textDisabled);
                     }
-                    sensor_e.append(i18n.getMessage('sensorStatusSonarShort'), ': ', sonarElements[[FC.SENSOR_CONFIG.sonar_hardware]]);
-                }
-            });
+
+                    if (FC.SENSOR_CONFIG_ACTIVE.mag_hardware == 0xFF) {
+                        sensor_mag_e.text(textNA);
+                    } else if (have_sensor(FC.CONFIG.activeSensors, "mag") && FC.SENSOR_CONFIG_ACTIVE.mag_hardware > 1) {
+                        sensor_mag_e.text(magElements[FC.SENSOR_CONFIG_ACTIVE.mag_hardware]);
+                    } else {
+                        sensor_mag_e.text(textDisabled);
+                    }
+
+                    if (FC.SENSOR_CONFIG_ACTIVE.sonar_hardware == 0xFF) {
+                        sensor_sonar_e.text(textNA);
+                    } else if (have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG_ACTIVE.sonar_hardware > 1) {
+                        sensor_sonar_e.text(sonarElements[FC.SENSOR_CONFIG_ACTIVE.sonar_hardware]);
+                    } else {
+                        sensor_sonar_e.text(textDisabled);
+                    }
+                });
+            }
         };
 
         const showFirmwareInfo = function() {

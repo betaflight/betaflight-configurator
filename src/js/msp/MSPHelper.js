@@ -1162,6 +1162,15 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.SENSOR_CONFIG.sonar_hardware = data.readU8();
                 }
                 break;
+            case MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE:
+                FC.SENSOR_CONFIG_ACTIVE.gyro_hardware = data.readU8();
+                FC.SENSOR_CONFIG_ACTIVE.acc_hardware = data.readU8();
+                FC.SENSOR_CONFIG_ACTIVE.baro_hardware = data.readU8();
+                FC.SENSOR_CONFIG_ACTIVE.mag_hardware = data.readU8();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.SENSOR_CONFIG_ACTIVE.sonar_hardware = data.readU8();
+                }
+                break;
 
             case MSPCodes.MSP_LED_STRIP_CONFIG:
                 FC.LED_STRIP = [];
