@@ -140,7 +140,10 @@ Features.prototype.generateElements = function (featuresElements) {
             element += `type="checkbox"/></td><td><div>${newFeatureName}</div>`;
             element += `<span class="xs" i18n="feature${featureName}"></span></td>`;
             element += `<td><span class="sm-min" i18n="feature${featureName}"></span>`;
-            element += `${feature_tip_html}</td></tr>`;
+            if (feature.haveTip) {
+                element += feature_tip_html;
+            }
+            element += '</td></tr>';
 
             const newElement = $(element);
 
