@@ -901,6 +901,14 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Not included in build",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupUserDisabled": {
+        "message": "Disabled by user",
+        "description": "Message that pops up when hardware are disabled by user"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
