@@ -15,8 +15,8 @@ const auxiliary = {};
 
 // BF build Options mapped to build Key
 let buildMap = [
-    { buildKey: 'xxx',       buildOption: ['USE_ARCO_TRAINER', 'USE_DASHBOARD', 'USE_PINIO']},
     { buildKey: 'cam',       buildOption: ['USE_CAMERA_CONTROL']},
+    { buildKey: 'div',       buildOption: ['USE_ARCO_TRAINER', 'USE_DASHBOARD', 'USE_PINIO']},
     { buildKey: 'dshot',     buildOption: ['USE_DSHOT']},
     { buildKey: 'gps',       buildOption: ['USE_GPS', 'USE_GPS_PLUS_CODES']},
     { buildKey: 'led_strip', buildOption: ['USE_LED_STRIP', 'USE_LED_STRIP_64']},
@@ -47,9 +47,6 @@ let categoryTable = [
     { name: 'USER',       buildKey: ['all'],       modes: ['USER1', 'USER2', 'USER3', 'USER4']},
     { name: 'VTX',        buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
 ];
-
-
-const categoryFieldsSelect = $('.auxiliary_category');
 
 function createTable(data) {
     // Create a dynamic table with fixed values
@@ -107,16 +104,28 @@ The simulateMouseoverAndSelectForEachOption function iterates over each option i
 You can also add a delay between each iteration if needed (commented out in the code). Adjust the delay according to your requirements.
 */
 
-function createCategorySelect(table) {
-    for (let i = 0; i < table.length; i++) {
-        const str = `<option value="${table[i].name}">${table[i].name}</option>`;
-        $('#auxiliary_filter_category .select').append(`<option value="${table[i].name}">${table[i].name}</option>`);
-        console.log(str);
+function isInBuildKey(map, name) {
+
+    if(name === 'all') {
+        return true;
+    }
+    for (let i = 0; i < map.length; i++) {
+        return flightModes.includes(name);
     }
 }
 
 function isFlightMode(name) {
     return flightModes.includes(name);
+}
+
+function createCategorySelect(table) {
+    let categorySelect = $('select.auxiliary_category_select');
+
+    for (let i = 0; i < table.length; i++) {
+        if (isInBuildKey(buildMap, table[i].buildKey)) {
+            categorySelect.append(`<option value="${table[i].name}">${table[i].name}</option>`);
+        }
+    }
 }
 
 auxiliary.initialize = function (callback) {
@@ -411,7 +420,6 @@ auxiliary.initialize = function (callback) {
 
         // translate to user-selected language
         i18n.localizePage();
-        //categoryFieldsSelect
 
         // generate category multiple select
         displayTable(categoryTable);

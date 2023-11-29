@@ -8,25 +8,33 @@
             <p i18n="auxiliaryHelp"></p>
         </div>
 
-        <div id="auxiliary_main_content">
-            <div class="auxiliary_search_settings">
-                <div class="auxiliary_filter_table_wrapper">
-                    <div class="auxiliary_filter_row">
-                        <div class = "auxiliary_fitler_table_header" i18n="auxiliaryFilterCategory"></div>
-                        <div class = "auxiliary_fitler_table_value">
-                            <select id="auxiliary_category" multiple="multiple" class="auxiliary_filter_select"></select>
+        <table>
+            <tr>
+                <td>
+                    <div id="auxiliary_main_content">
+                        <div class="auxiliary_search_settings">
+                            <div class="auxiliary_filter_table_wrapper">
+                                <div class="auxiliary_filter_row">
+                                    <div class = "auxiliary_fitler_table_header" i18n="auxiliaryFilterCategory"></div>
+                                    <div class="line auxiliary_filter_table_value">
+                                        <select id="auxiliary_category" multiple="multiple" class="auxiliary_category_select"></select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="toolbox">
-            <form>
-                <input type="checkbox" id="switch-toggle-unused" name="switch-toggle-unused" class="toggle" />
-                <span i18n="auxiliaryToggleUnused"></span>
-            </form>
-        </div>
+                </td>
+                <td>&nbsp;</td>
+                <td vertical-align: bottom;>
+                    <div class="toolbox">
+                        <form>
+                            <input type="checkbox" id="switch-toggle-unused" name="switch-toggle-unused" class="toggle"/>
+                            <span i18n="auxiliaryToggleUnused"></span>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
         <div class="modes"></div>
     </div>
