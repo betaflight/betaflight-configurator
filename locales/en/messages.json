@@ -901,6 +901,14 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Not included in build",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Not detected",
+        "description": "Message that pops up when hardware are not detected"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
@@ -911,7 +919,7 @@
         "message": "Gyro:"
     },
     "initialSetupSensorAcc": {
-        "message": "Acc:"
+        "message": "Accel:"
     },
     "initialSetupSensorMag": {
         "message": "Mag:"

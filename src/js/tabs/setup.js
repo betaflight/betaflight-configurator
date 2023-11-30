@@ -328,6 +328,18 @@ setup.initialize = function (callback) {
                 'VIRTUAL',
             ];
 
+            const magElements = [
+                'DEFAULT',
+                'NONE',
+                'HMC5883',
+                'AK8975',
+                'AK8963',
+                'QMC5883',
+                'LIS3MDL',
+                'MPU925X_AK8963',
+                'IST8310',
+            ];
+
             const baroElements = [
                 'DEFAULT',
                 'NONE',
@@ -342,18 +354,6 @@ setup.initialize = function (callback) {
                 'VIRTUAL',
             ];
 
-            const magElements = [
-                'DEFAULT',
-                'NONE',
-                'HMC5883',
-                'AK8975',
-                'AK8963',
-                'QMC5883',
-                'LIS3MDL',
-                'MPU925X_AK8963',
-                'IST8310',
-            ];
-
             const sonarElements = [
                 'NONE',
                 'HCSR04',
@@ -364,8 +364,8 @@ setup.initialize = function (callback) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function() {
                     // Sensor info
-                    const textNA = 'Not included in build';
-                    const textDisabled = 'Disabled by user';
+                    const textNA = i18n.getMessage('initialSetupNotInBuild');
+                    const textDisabled = i18n.getMessage('initialSetupNotDetected');
 
                     if (FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == 0xFF) {
                         sensor_gyro_e.text(textNA);
