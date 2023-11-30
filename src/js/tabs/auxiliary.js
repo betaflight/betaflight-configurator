@@ -48,6 +48,32 @@ let categoryTable = [
     { name: 'VTX',        buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
 ];
 
+function isInBuildKey(map, name) {
+    if (name === 'all') {
+        return true;
+    }
+    for (let i = 0; i < map.length; i++) {
+        if (name == map[i].buildKey) {
+            return FC.CONFIG.buildOptions.includes(map[i].buildOption);
+        }
+    }
+    return false;
+}
+
+function isFlightMode(name) {
+    return flightModes.includes(name);
+}
+
+function createCategorySelect(table) {
+    let categorySelect = $('select.auxiliary_category_select');
+
+    for (let i = 0; i < table.length; i++) {
+        if (isInBuildKey(buildMap, table[i].buildKey)) {
+            categorySelect.append(`<option value="${table[i].name}">${table[i].name}</option>`);
+        }
+    }
+}
+
 function createTable(data) {
     // Create a dynamic table with fixed values
     let table = [];
@@ -104,29 +130,6 @@ The simulateMouseoverAndSelectForEachOption function iterates over each option i
 You can also add a delay between each iteration if needed (commented out in the code). Adjust the delay according to your requirements.
 */
 
-function isInBuildKey(map, name) {
-
-    if(name === 'all') {
-        return true;
-    }
-    for (let i = 0; i < map.length; i++) {
-        return flightModes.includes(name);
-    }
-}
-
-function isFlightMode(name) {
-    return flightModes.includes(name);
-}
-
-function createCategorySelect(table) {
-    let categorySelect = $('select.auxiliary_category_select');
-
-    for (let i = 0; i < table.length; i++) {
-        if (isInBuildKey(buildMap, table[i].buildKey)) {
-            categorySelect.append(`<option value="${table[i].name}">${table[i].name}</option>`);
-        }
-    }
-}
 
 auxiliary.initialize = function (callback) {
     GUI.active_tab_ref = this;
