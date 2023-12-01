@@ -49,19 +49,19 @@ let categoryTable = [
 ];
 
 function isInBuildKey(map, name) {
-    if (name === 'all') {
+    if (name == 'all') {
         return true;
     }
     for (let i = 0; i < map.length; i++) {
         if (name == map[i].buildKey) {
-            return FC.CONFIG.buildOptions.includes(map[i].buildOption);
+            for (let y = 0; y < map[i].buildOption.length; y++) {
+                if (FC.CONFIG.buildOptions.includes(map[i].buildOption[y])) {
+                    return true;
+                }
+            }
         }
     }
     return false;
-}
-
-function isFlightMode(name) {
-    return flightModes.includes(name);
 }
 
 function createCategorySelect(table) {
@@ -72,6 +72,19 @@ function createCategorySelect(table) {
             categorySelect.append(`<option value="${table[i].name}">${table[i].name}</option>`);
         }
     }
+
+    categorySelect.multipleSelect({
+        filter: true,
+        // locale: selectOptions,
+        showClear: true,
+        // minimumCountSelected : minimumCountSelected,
+        placeholder: i18n.getMessage("dropDownFilterDisabled"),
+        // onClick: () => { this.updateSearchResults(); },
+        // onCheckAll: () => { this.updateSearchResults(); },
+        // onUncheckAll: () => { this.updateSearchResults(); },
+        formatSelectAll() { return i18n.getMessage("dropDownSelectAll"); },
+        formatAllSelected() { return i18n.getMessage("dropDownAll"); },
+    });
 }
 
 function createTable(data) {
