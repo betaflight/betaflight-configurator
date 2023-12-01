@@ -50,7 +50,7 @@ function useGlobalNodeFunctions() {
 }
 
 function readConfiguratorVersionMetadata() {
-    if (GUI.isNWJS()) {
+    if (GUI.isNWJS() || GUI.isCordova()) {
         const manifest = chrome.runtime.getManifest();
         CONFIGURATOR.productName = manifest.productName;
         CONFIGURATOR.version = manifest.version;
@@ -196,7 +196,7 @@ function startProcess() {
         if (CONFIGURATOR.isDevVersion() && !!config.showDevToolsOnStartup) {
             nwWindow.showDevTools();
         }
-    } else if (GUI.isCordova()) {
+    } else if () {
         window.addEventListener('beforeunload', closeHandler);
         document.addEventListener('backbutton', function(e) {
             e.preventDefault();
