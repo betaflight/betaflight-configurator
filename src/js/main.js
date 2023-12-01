@@ -196,7 +196,7 @@ function startProcess() {
         if (CONFIGURATOR.isDevVersion() && !!config.showDevToolsOnStartup) {
             nwWindow.showDevTools();
         }
-    } else if () {
+    } else if (GUI.isCordova()) {
         window.addEventListener('beforeunload', closeHandler);
         document.addEventListener('backbutton', function(e) {
             e.preventDefault();
