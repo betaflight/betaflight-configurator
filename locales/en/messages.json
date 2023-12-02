@@ -6276,6 +6276,10 @@
       "message": "Altitude",
       "description": "Text of the altitude alarm"
     },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Link Quality",
+        "description": "Text of the link quality alarm"
+      },
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
         "description": "One of the warnings that can be selected to be shown in the OSD"
