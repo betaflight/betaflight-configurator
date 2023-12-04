@@ -782,10 +782,6 @@
     "initialSetupInfoHead": {
         "message": "Informações do sistema"
     },
-    "initialSetupInfoHeadHelp": {
-        "message": "Mostra sinalizadores FC para desarmar, informações da bateria, nível RSSI e hardware dos sensores",
-        "description": "Message that pops up to describe the System info section"
-    },
     "initialSetupBattery": {
         "message": "Voltagem da bateria:"
     },
@@ -812,9 +808,6 @@
     },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Armar bloqueado. Indicadores:"

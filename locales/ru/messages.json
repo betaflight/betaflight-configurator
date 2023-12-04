@@ -720,9 +720,6 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
-    },
     "initialSetupArmingDisableFlags": {
         "message": "Флаги, запрещающие arming:"
     },

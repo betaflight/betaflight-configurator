@@ -53,7 +53,7 @@
         "message": "Wybór ręczny"
     },
     "portsSelectVirtual": {
-        "message": "Tryb wirtualny (Eksperymentalny)",
+        "message": "Tryb wirtualny ",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "virtualMSPVersion": {
@@ -713,7 +713,7 @@
         "message": "Aktywacja Boot Loadera / DFU"
     },
     "initialSetupBackupRestoreHeader": {
-        "message": "Tworzenie i Przywracanie kopii"
+        "message": "Tworzenie i Przywracanie kopii zapasowej"
     },
     "initialSetupBackupRestoreText": {
         "message": "<strong>Utwórz kopię zapasową</strong> swojej konfiguracji na wypadek utraty, <strong>Ustawienia CLI</strong> <span class=\"message-negative\">nie są</span> uwzględniane - użyj do tego komendy 'diff all' w CLI."
@@ -783,8 +783,15 @@
         "message": "Informacje o systemie"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Pokazuje flagi kontrolera lotu, które uniemożliwiają uzbrojenie jednostki latającej, oraz rodzaj baterii, poziom RSSI, a także rodzaj podłączonych czujników.",
+        "message": "Pokazuje flagi kontrolera lotu, które uniemożliwiają uzbrojenie jednostki latającej, oraz rodzaj baterii i poziom RSSI.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Sensor info"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Pokazuje czujniki",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Napięcie baterii:"
@@ -810,11 +817,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Nie uwzględnione w kompilacji",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Nie wykryto",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Czujniki:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Gyro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Akcel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Flagi wyłączające uzbrojenie:"
@@ -1964,7 +2000,7 @@
         "message": "OGRANICZ"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Wybierz rodzaj ograniczenia przepustnicy. <b> WYŁĄCZ</b> wyłącza tę funkcję, <b> SKALA </b> zmieni czułość przepustnicy z 0 na wybraną wartość, w całym zakresie przepustnicy, <b> OGRARICZ/b> ustawi czułość przepustnicy w niei sposób że wychylenie drążka powyżej określonej wartości nie będzie miało dodatkowego efektu"
+        "message": "Wybierz rodzaj ograniczenia przepustnicy. <b> WYŁĄCZ</b> wyłącza tę funkcję, <b> SKALA </b> zmieni czułość przepustnicy z 0 na wybraną wartość, w całym zakresie przepustnicy, <b> OGRARICZ</b> ustawi czułość przepustnicy w taki sposób że wychylenie drążka powyżej określonej wartości nie będzie miało dodatkowego efektu"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Ustaw żądany procentowy limit przepustnicy. Ustawienie na 100% wyłącza tą funkcję."
@@ -6149,6 +6185,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Wysokość",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Jakość połączenia",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Uzbrajanie nieaktywne",

@@ -729,9 +729,6 @@
     "initialSetupRSSI": {
         "message": "RSSI："
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
-    },
     "initialSetupArmingDisableFlags": {
         "message": "禁止解锁标志："
     },
