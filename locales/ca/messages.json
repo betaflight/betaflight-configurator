@@ -791,8 +791,15 @@
         "message": "Informació del sistema"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Mostra les banderes FC per al desarmament, la informació de la bateria, el nivell RSSI i el maquinari dels sensors",
+        "message": "Mostra les banderes FC per al desarmament, la informació de la bateria, el nivell RSSI.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Informació de sensors"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Mostra el maquinari dels sensors",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Voltatge de bateria:"
@@ -818,11 +825,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "No inclòs a la compil-lació",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "No detectat",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensors:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Gyro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Accel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Flags deshabilitant l'armat:"
@@ -6157,6 +6193,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Altitud",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Qualitat enllaç",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Armant des-habilitat",

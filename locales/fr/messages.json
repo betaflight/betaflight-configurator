@@ -762,6 +762,10 @@
     "initialSetupMagHead": {
         "message": "Magnetomètre"
     },
+    "initialSensorInfoHeadHelp": {
+        "message": "Montre le matériel des capteurs",
+        "description": "Message that pops up to describe the Sensor info section"
+    },
     "initialSetupBattery": {
         "message": "Tension de la batterie:"
     },
@@ -784,7 +788,25 @@
         "message": "RSSI:"
     },
     "initialSetupRSSIValue": {
-        "message": "$1 %"
+        "message": "$1 dBm"
+    },
+    "initialSetupSensorGyro": {
+        "message": "Gyro:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Paramètres empêchant l'armement:"

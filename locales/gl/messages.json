@@ -785,10 +785,6 @@
     "initialSetupInfoHead": {
         "message": "Información do sistema"
     },
-    "initialSetupInfoHeadHelp": {
-        "message": "Mostra avisos da FC para o desarmado, a información da batería, o nivel RSSI e o hardware dos sensores",
-        "description": "Message that pops up to describe the System info section"
-    },
     "initialSetupBattery": {
         "message": "Voltaxe da batería:"
     },
@@ -815,9 +811,6 @@
     },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Flags Armado Desactivado:"

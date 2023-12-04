@@ -783,8 +783,15 @@
         "message": "Інформація про систему"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Показує позначки польотного контролера для охолощення, інформації про батарею, рівень індикатора рівня потужності отриманого сигналу RSSI та сенсори",
+        "message": "Показує позначки заборони взведення, інформацію про батарею, рівень RSSI.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Інформація про сенсори"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Показує апаратну частину сенсорів",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Напруга акумулятора:"
@@ -810,11 +817,29 @@
     "initialSetupRSSI": {
         "message": "RSSI: "
     },
+    "initialSetupRSSIValue": {
+        "message": "$1 дБм"
+    },
     "initialSetupSensorHardware": {
         "message": "Датчики:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Гіроскоп:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Компас:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Барометр:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Сонар:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Радар:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Позначки заборони взведення:"

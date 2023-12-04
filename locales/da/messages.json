@@ -783,8 +783,15 @@
         "message": "System info"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Viser FC flag som betyder deaktivering. Også batteri information, RSSI niveau og Sensor hardware",
+        "message": "Viser FC flag som betyder deaktivering. Også batteri information og RSSI niveau",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Sensor enheder"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Viser de sensor enheder som er konfigureret",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Batteri spænding:"
@@ -810,11 +817,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Ikke inkluderet i firmware build",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Ikke fundet",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensorer:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Gyroskop:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Accel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Magnetometer / Kompas:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Barometer:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Deaktiverings flag:"
@@ -4684,7 +4720,7 @@
         "message": "Firmware opgradering <span class=\"message-negative\">kræves</span>. Batteri/Amperage/Spænding konfigurationer ved hjælp af API &lt; 1.33.0 (Betaflight release &lt;= 3.17) understøttes ikke."
     },
     "powerBatteryVoltageMeterSource": {
-        "message": "Kilde for spændingsmåling"
+        "message": "Sensor ved måling af spænding"
     },
     "powerBatteryVoltageMeterTypeNone": {
         "message": "Ingen"
@@ -4696,7 +4732,7 @@
         "message": "ESC sensor"
     },
     "powerBatteryCurrentMeterSource": {
-        "message": "Kilde for strømforbrug måling"
+        "message": "Sensor ved måling af strømforbrug"
     },
     "powerBatteryCurrentMeterTypeNone": {
         "message": "Ingen"
@@ -5477,7 +5513,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDebug": {
-        "message": "Logger variabler (for debug)"
+        "message": "Brugerstyret logning til debug"
     },
     "osdTextElementPIDRoll": {
         "message": "PID krængror",
@@ -6149,6 +6185,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Højde (m el. fod)",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Link kvalitet",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Aktivering slået fra",

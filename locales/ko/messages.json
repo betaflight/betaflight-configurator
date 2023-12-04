@@ -783,8 +783,15 @@
         "message": "시스템 정보"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "디스아밍에 대한 FC 플래그, 배터리 정보, RSSI 레벨 및 센서 하드웨어 표시",
+        "message": "디스아밍에 대한 FC 플래그, 배터리 정보, RSSI 레벨표시",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "센서 정보"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "센서 하드웨어 표시",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "배터리 전압:"
@@ -810,11 +817,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "빌드에 포함되지 않음",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "발견되지 않음",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "센서:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "자이로:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "가속도계:"
+    },
+    "initialSetupSensorMag": {
+        "message": "자력계:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "기압계:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "초음파:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "레이더:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "아밍 불가 플래그:"
@@ -906,7 +942,7 @@
         "description": "Message that pops up to describe the PARALYZE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipGPS": {
-        "message": "GPS 레스큐 모드가 구성 되어 있지만 위성의 필요한 수가 고정되지 않았습니다",
+        "message": "GPS 레스큐 모드가 구성 되어 있지만 필요한 위성 수가 확보되지 않았습니다",
         "description": "Message that pops up to describe the GPS arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRESC": {
@@ -1327,7 +1363,7 @@
         "message": "비행컨트롤러가 아밍 중일때 신호음을 울립니다."
     },
     "beeperARMING_GPS_FIX": {
-        "message": "보드가 아밍 중이고 GPS가 고정되면 특별한 톤으로 신호음을 울립니다."
+        "message": "보드가 아밍 중이고 GPS가 고정신호를 가지면 특별한 톤으로 신호음을 울립니다."
     },
     "beeperBAT_CRIT_LOW": {
         "message": "배터리가 매우 부족할 때 긴 경고음을 울립니다. (반복)"
@@ -1348,7 +1384,7 @@
         "message": "비행중 가속도계 교정이 실패하였습니다."
     },
     "beeperREADY_BEEP": {
-        "message": "GPS가 고정되고 준비되면 링톤을 울립니다."
+        "message": "GPS 신호가 고정되고 준비되면 링톤을 울립니다."
     },
     "beeperDISARM_REPEAT": {
         "message": "디스아밍 위치에서 스틱이 고정되어 있는 동안 신호음을 울립니다."
@@ -2676,10 +2712,10 @@
         "message": "인터넷 연결 상태를 확인하십시오."
     },
     "gpsMapMessage2": {
-        "message": "GPS 3D 고정을 기다리는 중…"
+        "message": "GPS 3D fix를 기다리는 중…"
     },
     "gps3dFix": {
-        "message": "3D 고정:"
+        "message": "3D Fix:"
     },
     "gpsFixTrue": {
         "message": "참"
@@ -3039,7 +3075,7 @@
         "message": "고도 - 미터"
     },
     "sensorsAltitudeHint": {
-        "message": "고도는 기압계(사용 가능한 경우)의 출력과 GPS(사용 가능한 경우)로부터의 고도 출력을 결합하여 계산합니다. GPS가 연결되어 있고 GPS가 고정되어 있는 경우, 아밍 해제시 해수면 위의 절대 고도가 표시됩니다. 아밍을 할 경우, 아밍 할 때의 위치에 상대적인 고도가 표시됩니다."
+        "message": "고도는 기압계(사용 가능한 경우) 의 출력과 GPS(사용 가능한 경우) 로부터의 고도 출력을 결합하여 계산합니다. GPS가 연결되어 있고 GPS가 고정신호를 가진 경우, 아밍 해제시 해수면 위의 절대 고도가 표시됩니다. 아밍을 할 경우, 아밍 할 때의 위치에 상대적인 고도가 표시됩니다."
     },
     "sensorsSonarTitle": {
         "message": "초음파 - cm"
@@ -4522,7 +4558,7 @@
         "description": "Text for Auto option"
     },
     "failsafeChannelFallbackSettingsValueHold": {
-        "message": "정지",
+        "message": "홀드",
         "description": "Text for Hold option"
     },
     "failsafeChannelFallbackSettingsValueSet": {
@@ -4636,7 +4672,7 @@
         "message": "최소위성수"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "고정없이 아밍 허용 - <span class=\"message-negative\">경고: no fix - 페일세이프 사용 불가!</span>"
+        "message": "Fix 없이 아밍 허용 - <span class=\"message-negative\">경고: fix 없음 = 페일세이프시 디스아밍됨!</span>"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
         "message": "권장되지 않습니다. 홈 포인트를 설정하지 않고도 아밍을 허용하지만, 쿼드가 아밍을 해제하고 진정한 Rx 손실 페일 세이프와 충돌합니다.  스위치를 사용하여 테스트할 경우 해제까지 짧은 시간 동안 아무 작업도 수행하지 않습니다."
@@ -5440,7 +5476,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSSats": {
-        "message": "GPS 위성 수"
+        "message": "GPS fix를 제공하는 위성 수"
     },
     "osdTextElementGPSLon": {
         "message": "GPS 경도",
@@ -5801,7 +5837,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEfficiency": {
-        "message": "순간 배터리 소비량을 mAh/거리 단위로 표시. (유효한 GPS 고정 필요)"
+        "message": "순간 배터리 소비량을 mAh/거리 단위로 표시. (유효한 GPS fix 필요)"
     },
     "osdTextTotalFlights": {
         "message": "총 비행 횟수",
@@ -6149,6 +6185,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "고도",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "링크 품질",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "아밍이 비활성화됨",
