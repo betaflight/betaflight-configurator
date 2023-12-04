@@ -224,11 +224,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_RAW_IMU:
-                // 512 for mpu6050, 256 for mma
-                // currently we are unable to differentiate between the sensor types, so we are goign with 512
-                FC.SENSOR_DATA.accelerometer[0] = data.read16() / 512;
-                FC.SENSOR_DATA.accelerometer[1] = data.read16() / 512;
-                FC.SENSOR_DATA.accelerometer[2] = data.read16() / 512;
+                // 2048 for mpu6050, 1024 for mma (times 4 since we don't scale in the firmware)
+                // currently we are unable to differentiate between the sensor types, so we are going with 2048
+                FC.SENSOR_DATA.accelerometer[0] = data.read16() / 2048;
+                FC.SENSOR_DATA.accelerometer[1] = data.read16() / 2048;
+                FC.SENSOR_DATA.accelerometer[2] = data.read16() / 2048;
 
                 // properly scaled
                 FC.SENSOR_DATA.gyroscope[0] = data.read16() * (4 / 16.4);
