@@ -301,6 +301,7 @@ setup.initialize = function (callback) {
                 'BMI160',
                 'BMI270',
                 'LSM6DSO',
+                'LSM6DSV16X',
                 'VIRTUAL',
             ];
 
@@ -325,6 +326,7 @@ setup.initialize = function (callback) {
                 'BMI160',
                 'BMI270',
                 'LSM6DSO',
+                'LSM6DSV16X',
                 'VIRTUAL',
             ];
 
