@@ -89,6 +89,7 @@ const DEBUG = {
         {text: "RC_STATS"},
         {text: "MAG_CALIB"},
         {text: "MAG_TASK_RATE"},
+        {text: "EZLANDING"},
     ],
 
     fieldNames : {
@@ -741,6 +742,13 @@ const DEBUG = {
             'debug[4]': 'Bus Busy',
             'debug[5]': 'Read State',
             'debug[6]': 'Task Time (Us)',
+        },
+        'EZLANDING' : {
+            'debug[all]': 'EZ Landing',
+            'debug[0]': 'EZ Land Factor',
+            'debug[1]': 'Adjusted Throttle',
+            'debug[2]': 'Upper Limit',
+            'debug[3]': 'EZ Land Limit',
         },
     },
 
