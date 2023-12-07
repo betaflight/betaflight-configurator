@@ -818,8 +818,8 @@
         "message": "Reset Z axis, offset: $1 deg"
     },
     "initialSetupHeading": {
-        "message": "Heading:",
-        "description": "Heading shown on Setup tab"
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
