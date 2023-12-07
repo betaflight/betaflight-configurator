@@ -98,7 +98,11 @@ pid_tuning.initialize = function (callback) {
             // Assign each value
             searchRow.each((indexInput, element) => {
                 if (FC.PIDS[indexPid][indexInput] !== undefined) {
-                    $(element).val(FC.PIDS_ACTIVE[indexPid][indexInput]);
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                        $(element).val(FC.PIDS[indexPid][indexInput]);
+                    } else {
+                        $(element).val(FC.PIDS_ACTIVE[indexPid][indexInput]);
+                    }
                 }
             });
         });
@@ -2732,11 +2736,13 @@ pid_tuning.updatePIDColors = function(clear = false) {
         element.css({ "background-color": getColorForPercentage(change, colorTables.pidSlider) });
     };
 
-    FC.PID_NAMES.forEach(function(elementPid, indexPid) {
-        $(`.pid_tuning .${elementPid} input`).each(function(indexInput) {
-            setTuningElementColor($(this), FC.PIDS_ACTIVE[indexPid][indexInput], FC.PIDS[indexPid][indexInput]);
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        FC.PID_NAMES.forEach(function(elementPid, indexPid) {
+            $(`.pid_tuning .${elementPid} input`).each(function(indexInput) {
+                setTuningElementColor($(this), FC.PIDS_ACTIVE[indexPid][indexInput], FC.PIDS[indexPid][indexInput]);
+            });
         });
-    });
+    }
 
     setTuningElementColor($('.pid_tuning input[name="dMinRoll"]'), FC.ADVANCED_TUNING_ACTIVE.dMinRoll, FC.ADVANCED_TUNING.dMinRoll);
     setTuningElementColor($('.pid_tuning input[name="dMinPitch"]'), FC.ADVANCED_TUNING_ACTIVE.dMinPitch, FC.ADVANCED_TUNING.dMinPitch);
