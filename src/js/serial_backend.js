@@ -616,7 +616,7 @@ function connectCli() {
 }
 
 function onConnect() {
-    if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+    if ($('div#flashbutton a.flash_state').hasClass('active') || $('div#flashbutton a.flash').hasClass('active')) {
         $('div#flashbutton a.flash_state').removeClass('active');
         $('div#flashbutton a.flash').removeClass('active');
     }
