@@ -455,11 +455,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 for (let i = 0, needle = 0; i < (data.byteLength / 3); i++, needle += 3) {
                     // main for loop selecting the pid section
                     for (let j = 0; j < 3; j++) {
-                        FC.PIDS[i][j] = data.readU8();
+                        FC.PIDS_ACTIVE[i][j] = data.readU8();
+                        FC.PIDS[i][j] = FC.PIDS_ACTIVE[i][j];
                     }
-                }
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.PIDS_ACTIVE = FC.PIDS.map(array => array.slice());
                 }
                 break;
 
@@ -623,9 +621,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_SET_PID:
                 console.log('PID settings saved');
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.PIDS_ACTIVE = FC.PIDS.map(array => array.slice());
-                }
+                FC.PIDS_ACTIVE = FC.PIDS.map(array => array.slice());
                 break;
             case MSPCodes.MSP_SET_RC_TUNING:
                 console.log('RC Tuning saved');

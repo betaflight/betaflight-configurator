@@ -98,11 +98,7 @@ pid_tuning.initialize = function (callback) {
             // Assign each value
             searchRow.each((indexInput, element) => {
                 if (FC.PIDS[indexPid][indexInput] !== undefined) {
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                        $(element).val(FC.PIDS[indexPid][indexInput]);
-                    } else {
-                        $(element).val(FC.PIDS_ACTIVE[indexPid][indexInput]);
-                    }
+                    $(element).val(FC.PIDS_ACTIVE[indexPid][indexInput]);
                 }
             });
         });
@@ -1294,27 +1290,8 @@ pid_tuning.initialize = function (callback) {
             $('.acroTrainerAngleLimit').hide();
         }
 
-        const hideSensorPid = function(element, sensorReady) {
-            let isVisible = element.is(":visible");
-            if (!isVisible || !sensorReady) {
-                element.hide();
-                isVisible = false;
-            }
-
-            return isVisible;
-        };
-
-        let isVisibleBaroMagGps = false;
-
-/*      TODO: revise support for baro, mag and gps
-
-        isVisibleBaroMagGps |= hideSensorPid($('#pid_baro'), have_sensor(FC.CONFIG.activeSensors, 'baro') || have_sensor(FC.CONFIG.activeSensors, 'sonar'));
-        isVisibleBaroMagGps |= hideSensorPid($('#pid_mag'), have_sensor(FC.CONFIG.activeSensors, 'mag'));
-        isVisibleBaroMagGps |= hideSensorPid($('#pid_gps'), have_sensor(FC.CONFIG.activeSensors, 'GPS'));
-*/
-        if (!isVisibleBaroMagGps) {
-            $('#pid_baro_mag_gps').hide();
-        }
+        // Hide all optional elements
+        $('#pid_baro_mag_gps').hide();
     }
 
     function drawAxes(curveContext, width, height) {
@@ -2736,13 +2713,11 @@ pid_tuning.updatePIDColors = function(clear = false) {
         element.css({ "background-color": getColorForPercentage(change, colorTables.pidSlider) });
     };
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        FC.PID_NAMES.forEach(function(elementPid, indexPid) {
-            $(`.pid_tuning .${elementPid} input`).each(function(indexInput) {
-                setTuningElementColor($(this), FC.PIDS_ACTIVE[indexPid][indexInput], FC.PIDS[indexPid][indexInput]);
-            });
+    FC.PID_NAMES.forEach(function(elementPid, indexPid) {
+        $(`.pid_tuning .${elementPid} input`).each(function(indexInput) {
+            setTuningElementColor($(this), FC.PIDS_ACTIVE[indexPid][indexInput], FC.PIDS[indexPid][indexInput]);
         });
-    }
+    });
 
     setTuningElementColor($('.pid_tuning input[name="dMinRoll"]'), FC.ADVANCED_TUNING_ACTIVE.dMinRoll, FC.ADVANCED_TUNING.dMinRoll);
     setTuningElementColor($('.pid_tuning input[name="dMinPitch"]'), FC.ADVANCED_TUNING_ACTIVE.dMinPitch, FC.ADVANCED_TUNING.dMinPitch);
