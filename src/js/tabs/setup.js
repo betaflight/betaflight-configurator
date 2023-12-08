@@ -255,6 +255,10 @@ setup.initialize = function (callback) {
                 disarmFlagElements = disarmFlagElements.concat(['ACC_CALIBRATION', 'MOTOR_PROTOCOL']);
             }
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                disarmFlagElements.splice(disarmFlagElements.indexOf('RPMFILTER'), 0, 'DSHOT_TELEM');
+            }
+
             // Always the latest element
             disarmFlagElements = disarmFlagElements.concat(['ARM_SWITCH']);
 
