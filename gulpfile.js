@@ -30,8 +30,6 @@ const prompt = require('gulp-prompt');
 const less = require('gulp-less');
 const sourcemaps = require('gulp-sourcemaps');
 
-const appdmg = require('./gulp-appdmg');
-
 const cordova = require('cordova-lib').cordova;
 
 const DIST_DIR = './dist/';
@@ -850,29 +848,30 @@ function getLinuxPackageArch(type, arch) {
 }
 // Create distribution package for macOS platform
 function release_osx64(appDirectory) {
+    const macdmg = require('gulp-macdmg');
 
     // appdmg does not generate the folder correctly, manually
     createDirIfNotExists(RELEASE_DIR);
 
     // The src pipe is not used
     return gulp.src(['.'])
-        .pipe(appdmg({
+        .pipe(macdmg({
             target: path.join(RELEASE_DIR, getReleaseFilename('macOS', 'dmg')),
             basepath: path.join(appDirectory, metadata.name, 'osx64'),
             specification: {
                 title: 'Betaflight Configurator',
-                contents: [
-                    { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
-                    { 'x': 192, 'y': 344, 'type': 'file', 'path': `${metadata.name}.app`, 'name': 'Betaflight Configurator.app' },
-                ],
                 background: path.join(__dirname, 'assets/osx/dmg-background.png'),
-                format: 'UDZO',
                 window: {
                     size: {
                         width: 638,
                         height: 479,
                     },
                 },
+                format: 'UDZO',
+                contents: [
+                    { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
+                    { 'x': 192, 'y': 344, 'type': 'file', 'path': `${metadata.name}.app`, 'name': 'Betaflight Configurator.app' },
+                ],
             },
         }),
     );

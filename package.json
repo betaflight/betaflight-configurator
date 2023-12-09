@@ -140,7 +140,8 @@
     "yarn": "^1.22.19"
   },
   "optionalDependencies": {
-    "appdmg": "^0.6.4"
+    "appdmg": "^0.6.4",
+    "gulp-macdmg": "^0.0.1"
   },
   "resolutions": {
     "jquery": "3.6.3",
