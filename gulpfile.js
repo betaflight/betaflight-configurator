@@ -20,8 +20,8 @@ const rollup = require('rollup');
 const yarn = require("gulp-yarn");
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
-const jeditor = require("gulp-json-editor");
-const xmlTransformer = require("gulp-xml-transformer");
+const jeditor = require('gulp-json-editor');
+const xmlTransformer = require('fix-esm').require('gulp-xml-transformer');
 const os = require('os');
 const git = require('simple-git')();
 const source = require('vinyl-source-stream');
@@ -30,7 +30,9 @@ const prompt = require('gulp-prompt');
 const less = require('gulp-less');
 const sourcemaps = require('gulp-sourcemaps');
 
-const cordova = require("cordova-lib").cordova;
+const appdmg = require('./gulp-appdmg');
+
+const cordova = require('cordova-lib').cordova;
 
 const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
@@ -279,7 +281,7 @@ function processPackage(done, gitRevision, isReleaseBuild) {
     const pkg = require('./package.json');
 
     // remove gulp-appdmg from the package.json we're going to write
-    delete pkg.optionalDependencies['gulp-appdmg'];
+    delete pkg.optionalDependencies['appdmg'];
     // keeping this package in `package.json` for some reason
     // breaks the nwjs builds. This is not really needed for
     // nwjs nor it's imported anywhere at runtime ¯\_(ツ)_/¯
@@ -848,9 +850,8 @@ function getLinuxPackageArch(type, arch) {
 }
 // Create distribution package for macOS platform
 function release_osx64(appDirectory) {
-    const appdmg = require('./gulp-appdmg');
 
-    // The appdmg does not generate the folder correctly, manually
+    // appdmg does not generate the folder correctly, manually
     createDirIfNotExists(RELEASE_DIR);
 
     // The src pipe is not used
