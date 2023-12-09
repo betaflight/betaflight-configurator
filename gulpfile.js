@@ -278,8 +278,6 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 
     const pkg = require('./package.json');
 
-    // remove gulp-appdmg from the package.json we're going to write
-    delete pkg.optionalDependencies['appdmg'];
     // keeping this package in `package.json` for some reason
     // breaks the nwjs builds. This is not really needed for
     // nwjs nor it's imported anywhere at runtime ¯\_(ツ)_/¯
