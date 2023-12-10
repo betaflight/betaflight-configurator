@@ -52,15 +52,15 @@ gps.initialize = async function (callback) {
         }
 
         function get_gpsvinfo_data() {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, get_imu_data);
-        }
-
-        function get_imu_data() {
-            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, get_attitude_data);
+            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, get_attitude_data);
         }
 
         function get_attitude_data() {
-            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, update_ui);
+            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, hasMag ? get_imu_data : update_ui);
+        }
+
+        function get_imu_data() {
+            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_ui);
         }
 
         // To not flicker the divs while the fix is unstable
