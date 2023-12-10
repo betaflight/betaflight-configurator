@@ -52,11 +52,15 @@ gps.initialize = async function (callback) {
         }
 
         function get_gpsvinfo_data() {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, hasMag ? get_imu_data : update_ui);
+            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, get_imu_data);
         }
 
         function get_imu_data() {
-            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_ui);
+            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, get_attitude_data);
+        }
+
+        function get_attitude_data() {
+            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, update_ui);
         }
 
         // To not flicker the divs while the fix is unstable
@@ -201,7 +205,7 @@ gps.initialize = async function (callback) {
             const gspUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
             $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gspUnitText}`);
-            $('.GPS_info td.heading').text(`${imuHeading.toFixed(4)} / ${gpsHeading.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.heading').text(`${imuHeading.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gspUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -299,7 +303,7 @@ gps.initialize = async function (callback) {
                 action: 'center',
                 lat: lat,
                 lon: lon,
-                heading: imuHeading,
+                heading: gpsHeading,
             };
 
             frame = document.getElementById('map');

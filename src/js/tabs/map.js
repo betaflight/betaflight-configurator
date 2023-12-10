@@ -106,8 +106,9 @@ function processMapEvents(e) {
                 iconFeature.setStyle(iconStyle);
                 const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
                 mapView.setCenter(center);
-                const heading = e.data.heading === undefined ? 0 : e.data.heading;
-                mapView.setRotation(heading);
+                // TODO - add rotation for the icon
+                // const heading = e.data.heading === undefined ? 0 : e.data.heading;
+                // mapView.setRotation(heading);
                 iconGeometry.setCoordinates(center);
                 break;
 
