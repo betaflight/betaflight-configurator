@@ -153,6 +153,7 @@ const FC = {
     SDCARD: null,
     SENSOR_ALIGNMENT: null,
     SENSOR_CONFIG: null,
+    SENSOR_CONFIG_ACTIVE: null,
     SENSOR_DATA: null,
     SERIAL_CONFIG: null,
     SERVO_CONFIG: null,
@@ -540,6 +541,8 @@ const FC = {
             mag_hardware:               0,
             sonar_hardware:             0,
         };
+
+        this.SENSOR_CONFIG_ACTIVE = { gyro_hardware: 0, ...this.SENSOR_CONFIG };
 
         this.RX_CONFIG = {
             serialrx_provider:            0,

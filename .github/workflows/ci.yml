@@ -78,6 +78,13 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
+      - name: Install macos dependencies
+        run: |
+          sudo -H pip install setuptools packaging
+          sudo npm install -g yarn@1.22.0 node-gyp@10 macos-alias
+          yarn --network-timeout 1000000
+        if: ${{ matrix.name == 'macOs' }}
+
       - name: Install Java JDK 8
         uses: actions/setup-java@v3
         if: ${{ matrix.name == 'Android' }}

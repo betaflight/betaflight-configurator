@@ -50,7 +50,7 @@ function useGlobalNodeFunctions() {
 }
 
 function readConfiguratorVersionMetadata() {
-    if (GUI.isNWJS()) {
+    if (GUI.isNWJS() || GUI.isCordova()) {
         const manifest = chrome.runtime.getManifest();
         CONFIGURATOR.productName = manifest.productName;
         CONFIGURATOR.version = manifest.version;

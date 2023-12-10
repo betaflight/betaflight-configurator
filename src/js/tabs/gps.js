@@ -52,7 +52,11 @@ gps.initialize = async function (callback) {
         }
 
         function get_gpsvinfo_data() {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, hasMag ? get_imu_data : update_ui);
+            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, get_attitude_data);
+        }
+
+        function get_attitude_data() {
+            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, hasMag ? get_imu_data : update_ui);
         }
 
         function get_imu_data() {
@@ -185,6 +189,7 @@ gps.initialize = async function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const imuHeading = FC.SENSOR_DATA.kinematics[2];
             const magHeading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
             const magHeadingDeg = magHeading === undefined ? 0 : magHeading * 180 / Math.PI;
             const gpsHeading = FC.GPS_DATA.ground_course / 100;
@@ -200,7 +205,7 @@ gps.initialize = async function (callback) {
             const gspUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
             $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gspUnitText}`);
-            $('.GPS_info td.heading').text(`${magHeadingDeg.toFixed(4)} / ${gpsHeading.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.heading').text(`${imuHeading.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gspUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -298,7 +303,7 @@ gps.initialize = async function (callback) {
                 action: 'center',
                 lat: lat,
                 lon: lon,
-                heading: magHeading,
+                heading: gpsHeading,
             };
 
             frame = document.getElementById('map');

@@ -5,8 +5,9 @@ import path from "node:path";
 import { readFileSync } from "node:fs";
 import copy from "rollup-plugin-copy";
 import pkg from './package.json';
+import * as child from 'child_process';
 
-const childProcess = require('child_process');
+const commitHash = child.execSync('git rev-parse --short HEAD').toString();
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -52,7 +53,7 @@ export default defineConfig({
     define: {
         '__APP_VERSION__': JSON.stringify(pkg.version),
         '__APP_PRODUCTNAME__': JSON.stringify(pkg.productName),
-        '__APP_REVISION__': JSON.stringify(childProcess.execSync("git rev-parse --short HEAD").toString().trim()),
+        '__APP_REVISION__': JSON.stringify(commitHash),
     },
     test: {
         // NOTE: this is a replacement location for karma tests.

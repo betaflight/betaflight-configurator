@@ -1,6 +1,5 @@
 import '../injected_methods';
 import { update_dataflash_global } from "../update_dataflash_global";
-import { sensor_status } from "../sensor_helpers";
 import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
@@ -193,7 +192,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.mode = data.readU32();
                 FC.CONFIG.profile = data.readU8();
 
-                sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
                 break;
             case MSPCodes.MSP_STATUS_EX:
                 FC.CONFIG.cycleTime = data.readU16();
@@ -223,15 +221,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.CONFIG.cpuTemp = data.readU16();
                 }
 
-                sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
                 break;
 
             case MSPCodes.MSP_RAW_IMU:
-                // 512 for mpu6050, 256 for mma
-                // currently we are unable to differentiate between the sensor types, so we are goign with 512
-                FC.SENSOR_DATA.accelerometer[0] = data.read16() / 512;
-                FC.SENSOR_DATA.accelerometer[1] = data.read16() / 512;
-                FC.SENSOR_DATA.accelerometer[2] = data.read16() / 512;
+                // 2048 for mpu6050, 1024 for mma (times 4 since we don't scale in the firmware)
+                // currently we are unable to differentiate between the sensor types, so we are going with 2048
+                FC.SENSOR_DATA.accelerometer[0] = data.read16() / 2048;
+                FC.SENSOR_DATA.accelerometer[1] = data.read16() / 2048;
+                FC.SENSOR_DATA.accelerometer[2] = data.read16() / 2048;
 
                 // properly scaled
                 FC.SENSOR_DATA.gyroscope[0] = data.read16() * (4 / 16.4);
@@ -1163,6 +1160,15 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.SENSOR_CONFIG.mag_hardware = data.readU8();
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                     FC.SENSOR_CONFIG.sonar_hardware = data.readU8();
+                }
+                break;
+            case MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE:
+                FC.SENSOR_CONFIG_ACTIVE.gyro_hardware = data.readU8();
+                FC.SENSOR_CONFIG_ACTIVE.acc_hardware = data.readU8();
+                FC.SENSOR_CONFIG_ACTIVE.baro_hardware = data.readU8();
+                FC.SENSOR_CONFIG_ACTIVE.mag_hardware = data.readU8();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.SENSOR_CONFIG_ACTIVE.sonar_hardware = data.readU8();
                 }
                 break;
 

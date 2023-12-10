@@ -783,8 +783,15 @@
         "message": "Información del sistema"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Muestra motivos de desarme del FC, información de batería, nivel RSSI y sensores de hardware",
+        "message": "Muestra banderas de desarme del FC, información de batería, nivel RSSI.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Información del sensor"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Muestra sensores hardware",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Voltaje batería:"
@@ -810,11 +817,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "No incluido en la compilación",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "No detectado",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Giro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Acel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Banderas Armado Desactivado:"
@@ -6149,6 +6185,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Altitud",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Calidad del enlace",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Armado desactivado",

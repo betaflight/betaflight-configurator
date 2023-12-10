@@ -21,41 +21,41 @@ function initializeMap() {
     const lonLat = ol.proj.fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
 
     mapView = new ol.View({
-                        center: lonLat,
-                        zoom: DEFAULT_ZOOM,
-                      });
+        center: lonLat,
+        zoom: DEFAULT_ZOOM,
+    });
 
     map = new ol.Map({
         target: 'map-canvas',
         layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM(),
-          }),
+            new ol.layer.Tile({
+                source: new ol.source.OSM(),
+            }),
         ],
         view: mapView,
         controls: [],
-      });
+    });
 
-      const iconGPS = new ol.style.Icon(({
+    const iconGPS = new ol.style.Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_GPS,
-    }));
+    });
 
-    const iconMag = new ol.style.Icon(({
+    const iconMag = new ol.style.Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_MAG,
-    }));
+    });
 
-    const iconNoFix = new ol.style.Icon(({
+    const iconNoFix = new ol.style.Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_NOFIX,
-    }));
+    });
 
     iconStyleGPS = new ol.style.Style({
         image: iconGPS,
@@ -70,6 +70,7 @@ function initializeMap() {
     });
 
     iconGeometry = new ol.geom.Point(lonLat);
+
     iconFeature = new ol.Feature({
         geometry: iconGeometry,
     });
@@ -106,8 +107,9 @@ function processMapEvents(e) {
                 iconFeature.setStyle(iconStyle);
                 const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
                 mapView.setCenter(center);
-                const heading = e.data.heading === undefined ? 0 : e.data.heading;
-                mapView.setRotation(heading);
+                // TODO - add rotation for the icon
+                // const heading = e.data.heading === undefined ? 0 : e.data.heading;
+                // mapView.setRotation(heading);
                 iconGeometry.setCoordinates(center);
                 break;
 
