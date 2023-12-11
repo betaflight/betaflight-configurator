@@ -733,10 +733,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Redefinir eixo Z, offset: $1 graus"
     },
-    "initialSetupHeading": {
-        "message": "Direção:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
     },

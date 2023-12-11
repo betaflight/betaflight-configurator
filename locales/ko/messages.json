@@ -734,8 +734,8 @@
         "message": "Z 축 초기화, 오프셋: $1 도"
     },
     "initialSetupHeading": {
-        "message": "진행방향:",
-        "description": "Heading shown on Setup tab"
+        "message": "요:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "믹서 형식"
@@ -2735,8 +2735,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Mag / GPS 머리방향:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "IMU / GPS 머리방향:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "속도:"

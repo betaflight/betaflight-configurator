@@ -733,10 +733,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Resetuj oś Z, położenie: $1 stopni"
     },
-    "initialSetupHeading": {
-        "message": "Kurs:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Typ Modelu"
     },
@@ -902,7 +898,7 @@
         "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
-        "message": "Uzbrojenie zbyt szybko po włączeniu zasilania",
+        "message": "Po włączeniu zasilania uzbrojenie nastąpiło za szybko",
         "description": "Message that pops up to describe the BOOT_GRACE_TIME arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNOPREARM": {
@@ -1479,7 +1475,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "Po włączeniu moduł GPS będzie również śledzić system satelitarny Galileo, co zazwyczaj skutkuje większą liczbą zablokowanych satelitów. W przypadku  Betaflight 4.2.x lub wcześniejszych wersji wyłącza on również system satelitarny QZSS.",
+        "message": "Po włączeniu moduł GPS będzie również śledzić system satelitarny Galileo, co zazwyczaj skutkuje większą liczbą zablokowanych satelitów. W przypadku Betaflight 4.2.x lub nowszej wersji wyłącza on również system satelitarny QZSS.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -2733,10 +2729,6 @@
     "gpsLatLon": {
         "message": "Bieżąca szerokość / długość geograficzna:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "Kierunek Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Prędkość:"
@@ -4062,7 +4054,7 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">UWAGA</span>: Aktualne ustawienia suwaków może powodować zniszczenie silnika lub niebezpieczne zachowanie platformy. Proszę postępować ostrożnie.",
+        "message": "<span class=\"message-negative\">UWAGA</span>: Aktualne ustawienia suwaków mogą powodować zniszczenie silnika lub niebezpieczne zachowanie jednostki latającej. Proszę postępować ostrożnie.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -6497,7 +6489,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeFrequencyHelp": {
-        "message": "Częstotliwość, z jaką zmienia się tryb Pita po włączeniu.",
+        "message": "Częstotliwość, z jaką zmienia się tryb Pit po włączeniu.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxLowPowerDisarm": {

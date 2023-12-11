@@ -736,10 +736,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Z Achse zurücksetzen, Abweichung: $1 Grad"
     },
-    "initialSetupHeading": {
-        "message": "Richtung:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Typ"
     },
