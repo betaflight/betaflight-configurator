@@ -14,7 +14,7 @@ import inflection from "inflection";
 const auxiliary = {};
 
 // BF build Options mapped to buildKey.
-let buildMap = [
+const buildMap = [
     { buildKey: 'cam',       buildOption: ['USE_CAMERA_CONTROL']},
     { buildKey: 'div',       buildOption: ['USE_ARCO_TRAINER', 'USE_DASHBOARD', 'USE_PINIO']},
     { buildKey: 'dshot',     buildOption: ['USE_DSHOT']},
@@ -32,7 +32,7 @@ const flightModes = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HE
                      "FAILSAFE","AIR MODE","FPV ANGLE MIX","FLIP OVER AFTER CRASH","USER1","USER2","USER3","USER4","ACRO TRAINER","LAUNCH CONTROL"];
 
 // Categories to be mapped with buildMap. Category 'all' are virtuel and always included
-let categoryTable = [
+const categoryTable = [
     { name: '3D',         buildKey: ['dshot'],     modes: ['3D', '3D DISABLE / SWITCH']},
     { name: 'BEEP',       buildKey: ['all'],       modes: ['BEEPERON', 'BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT']},
     { name: 'BLACKBOX',   buildKey: ['all'],       modes: ['BLACKBOX', 'BLACKBOX ERASE']},
@@ -726,9 +726,7 @@ auxiliary.initialize = function (callback) {
             }, 0);
 
             // minimum change to autoselect is 100
-            if (largest < 100) {
-                return fillPrevChannelsValues();
-            }
+            if (largest < 100) return fillPrevChannelsValues();
 
             const indexOfMaxValue = diff_array.indexOf(largest);
             if (indexOfMaxValue >= 4 && indexOfMaxValue != RSSI_channel - 1) {
