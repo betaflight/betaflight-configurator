@@ -31,8 +31,9 @@ const languageISOcode = ['ca-ES', 'da-DK', 'de-DE', 'en-US', 'es-ES', 'eu-ES', '
  */
 function getCurrentLocaleISO() {
     const isoCodeIndex = languagesAvailables.indexOf(i18next.language);
-    if (isoCodeIndex === -1)
+    if (isoCodeIndex === -1) {
         return 'en-US';
+    }
     return languageISOcode[isoCodeIndex];
 }
 
