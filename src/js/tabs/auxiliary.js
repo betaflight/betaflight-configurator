@@ -1,4 +1,4 @@
-import { i18n } from '../localization';
+import { i18n, getCurrentLocaleISO } from "../localization";
 import GUI, { TABS } from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { bit_check } from '../bit';
@@ -13,7 +13,7 @@ import inflection from "inflection";
 
 const auxiliary = {};
 
-// BF build Options mapped to build Key
+// BF build Options mapped to buildKey.
 let buildMap = [
     { buildKey: 'cam',       buildOption: ['USE_CAMERA_CONTROL']},
     { buildKey: 'div',       buildOption: ['USE_ARCO_TRAINER', 'USE_DASHBOARD', 'USE_PINIO']},
@@ -31,10 +31,10 @@ let buildMap = [
 const flightModes = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","SERVO1","SERVO2","SERVO3",
                      "FAILSAFE","AIR MODE","FPV ANGLE MIX","FLIP OVER AFTER CRASH","USER1","USER2","USER3","USER4","ACRO TRAINER","LAUNCH CONTROL"];
 
-// Categories
+// Categories to be mapped with buildMap. Category 'all' are virtuel and always included
 let categoryTable = [
     { name: '3D',         buildKey: ['dshot'],     modes: ['3D', '3D DISABLE / SWITCH']},
-    { name: 'BEEP',       buildKey: ['all'],       modes: ['BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT']},
+    { name: 'BEEP',       buildKey: ['all'],       modes: ['BEEPERON', 'BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT']},
     { name: 'BLACKBOX',   buildKey: ['all'],       modes: ['BLACKBOX', 'BLACKBOX ERASE']},
     { name: 'CAM',        buildKey: ['cam'],       modes: ['CAMERA CONTROL 1', 'CAMERA CONTROL 2', 'CAMERA CONTROL 3']},
     { name: 'FLIGHTMODE', buildKey: ['all'],       modes: flightModes},
@@ -48,7 +48,9 @@ let categoryTable = [
     { name: 'VTX',        buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
 ];
 
-function isInBuildKey(map, name) {
+let modeList = [];
+
+function inBuildMap(map, name) {
     if (name == 'all') {
         return true;
     }
@@ -64,46 +66,100 @@ function isInBuildKey(map, name) {
     return false;
 }
 
-function createCategorySelect(table) {
+function isSelectedMode(mList, modeName) {
+    for (let i = 0; i < mList.length; i++) {
+        if (mList[i].includes(modeName)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function resolveCategoryName(category, choise) {
+    let mList = [];
+    for (let i = 0; i < choise.length; i++) {
+        for (let j = 0; j < category.length; j++) {
+            if (choise[i] == category[j].name) {
+                mList.push(category[j].modes);
+            }
+        }
+    }
+    return mList;
+}
+
+function isPreSelectedCategory(categoryList, categoryName) {
+    for (let i = 0; i < categoryList.length; i++) {
+        if (categoryName == categoryList[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function updateSearchResults() {
     let categorySelect = $('select.auxiliary_category_select');
 
+    const categoryNameList = categorySelect.multipleSelect("getSelects", "text");
+    setConfig({ auxiliaryCategoryNameList: categoryNameList });                 // save as users choise
+    modeList = resolveCategoryName(categoryTable, categoryNameList);
+    // like to call, but not out of scope ---- update_ui();
+}
+
+function getCategoryNames(table, buildKey) {
+    // return names for buildKey category
+    let categoryChoise = [];
     for (let i = 0; i < table.length; i++) {
-        if (isInBuildKey(buildMap, table[i].buildKey)) {
-            categorySelect.append(`<option value="${table[i].name}">${table[i].name}</option>`);
+        if (buildKey == table[i].name) {
+            categoryChoise.push(table[i].name);
+        }
+    }
+    return categoryChoise;
+}
+
+function createCategorySelect(table, map) {
+    let categorySelect = $('select.auxiliary_category_select');
+
+    const categoryNameObj = getConfig('auxiliaryCategoryNameList');      // read user pre selected categories
+    let categoryNameList = categoryNameObj.auxiliaryCategoryNameList;
+    if (categoryNameList.length == 0) {
+        categoryNameList = getCategoryNames(table, 'all');         // empty choise -> select names from 'all' category
+        setConfig({ auxiliaryCategoryNameList: categoryNameList });
+    }
+
+    for (let i = 0; i < table.length; i++) {
+        if (inBuildMap(map, table[i].buildKey)) {
+            if (isPreSelectedCategory(categoryNameList, table[i].name)) {
+                categorySelect.append(`<option value="${table[i].name}" selected="selected">${table[i].name}</option>`);
+            }
+            else {
+                categorySelect.append(`<option value="${table[i].name}">${table[i].name}</option>`);
+            }
+        }
+        else {
+            categorySelect.append(`<option value="${table[i].name}" disabled="disabled">${table[i].name}</option>`);
         }
     }
 
-    categorySelect.multipleSelect({
-        filter: true,
-        // locale: selectOptions,
+    const modeWidth = 125;
+    const heightUnit = categoryTable.length;
+
+    categorySelect.sortSelect().multipleSelect({
+        width: modeWidth + 50,
+        dropWidth: modeWidth + 165,
+        minimumCountSelected: 3,                    // number before we use xx of yy
+        maxHeightUnit: heightUnit,                  // in px
+        locale: getCurrentLocaleISO(),
+        filter: false,
         showClear: true,
-        // minimumCountSelected : minimumCountSelected,
+        ellipsis: true,
+        openOnHover: true,
         placeholder: i18n.getMessage("dropDownFilterDisabled"),
-        // onClick: () => { this.updateSearchResults(); },
-        // onCheckAll: () => { this.updateSearchResults(); },
-        // onUncheckAll: () => { this.updateSearchResults(); },
+        onClick: () => { updateSearchResults(); },
+        onCheckAll: () => { updateSearchResults(); },
+        onUncheckAll: () => { updateSearchResults(); },
         formatSelectAll() { return i18n.getMessage("dropDownSelectAll"); },
         formatAllSelected() { return i18n.getMessage("dropDownAll"); },
     });
-}
-
-function createTable(data) {
-    // Create a dynamic table with fixed values
-    let table = [];
-
-    for (let i = 0; i < data.length; i++) {
-        let row = data[i].modes.slice();              // Use slice to clone the array
-        table.push(row);
-    }
-
-    return table;
-}
-
-// Function to display the table in the console
-function displayTable(table) {
-    for (let i = 0; i < table.length; i++) {
-        console.log(`${table[i].name}: ${table[i].modes}`);
-    }
 }
 
 // Function to simulate mouseover and select an option
@@ -142,7 +198,6 @@ Replace 'yourSelectElementId' with the actual ID of your select element.
 The simulateMouseoverAndSelectForEachOption function iterates over each option in the select element, simulates a mouseover, and selects the option.
 You can also add a delay between each iteration if needed (commented out in the code). Adjust the delay according to your requirements.
 */
-
 
 auxiliary.initialize = function (callback) {
     GUI.active_tab_ref = this;
@@ -437,10 +492,6 @@ auxiliary.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        // generate category multiple select
-        displayTable(categoryTable);
-        createCategorySelect(categoryTable);
-
         const length = Math.max(...(FC.AUX_CONFIG.map(el => el.length)));
         $('.tab-auxiliary .mode .info').css('min-width', `${Math.round(length * getTextWidth('A'))}px`);
 
@@ -455,6 +506,9 @@ auxiliary.initialize = function (callback) {
             // default to 'OR' logic and no link selected
             addLinkedToMode(modeElement, 0, 0);
         });
+
+        // setup category multiple select
+        createCategorySelect(categoryTable, buildMap);
 
         // UI Hooks
         $('a.save').click(function () {
@@ -622,32 +676,19 @@ auxiliary.initialize = function (callback) {
             }
 
             let hideUnused = hideUnusedModes && hasUsedMode;
-            let hideNoFlight = hideNoFlightMode && hasUsedMode;
 
             for (let i = 1; i < FC.AUX_CONFIG.length; i++) {    // ARM has index 0
                 let modeElement = $(`#mode-${i}`);
 
-                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
-                    // unused mode
-                    modeElement.toggle(!hideUnused);
+                if ( ! isSelectedMode(modeList, FC.AUX_CONFIG[i])) {
+                    modeElement.toggle( false);
                 }
-
-                /*
-                if ( ! isFlightMode(FC.AUX_CONFIG[i])) {
-                    // not flightMode mode
-                    hide = hide || !hideNoFlight;
-                    style = modeElement.css('display');
-                    console.log(`1 HIDE not flightmode: ${FC.AUX_CONFIG[i]} -> ${hide}`);
-                    // modeElement.toggle(!hideNoFlight);
-                    / *
-                    if( hideNoFlight && ! style === 'none') {
+                else {
+                    if ( ! isSelectedMode(modeList, FC.AUX_CONFIG[i]) && modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
+                        // unused mode
                         modeElement.toggle(!hideUnused);
                     }
-                    style = modeElement.css('display');
-                    console.log(`2 NOT flightmode: ${FC.AUX_CONFIG[i]} - ${style}`);
-                    * /
                 }
-                */
             }
 
             auto_select_channel(FC.RC.channels, FC.RC.active_channels, FC.RSSI_CONFIG.channel);
@@ -702,9 +743,8 @@ auxiliary.initialize = function (callback) {
         }
 
         let hideUnusedModes = false;
-        let hideNoFlightMode = false;
 
-        // hide unused modes
+        // get or save hide unused modes
         const configUnusedModes = getConfig('hideUnusedModes');
         $("input#switch-toggle-unused")
             .change(function() {
@@ -714,17 +754,6 @@ auxiliary.initialize = function (callback) {
                 update_ui();
             })
             .prop("checked", !!configUnusedModes.hideUnusedModes)
-            .change();
-
-        // hide non flightmodes
-        const configNoFlightMode = getConfig('hideNoFlightMode');
-        $("input#switch-toggle-hideNoFlightMode")
-            .change(function() {
-                hideNoFlightMode = $(this).prop("checked");
-                setConfig({ hideNoFlightMode: hideNoFlightMode });
-                update_ui();
-            })
-            .prop("checked", !!configNoFlightMode.hideNoFlightMode)
             .change();
 
         // update ui instantly on first load

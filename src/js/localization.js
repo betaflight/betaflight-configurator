@@ -11,13 +11,30 @@ const i18n = {};
 window.i18n = i18n;
 
 
-const languagesAvailables = ['ca', 'da', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'it', 'ja', 'ko', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'uk', 'zh_CN', 'zh_TW'];
+const languagesAvailables = ['ca', 'da', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'it',
+                             'ja', 'ko', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'uk', 'zh_CN', 'zh_TW'];
 
 const languageFallback = {
                             'pt': ['pt_BR', 'en'],
                             'pt_BR': ['pt', 'en'],
                             'default': ['en'],
 };
+
+// must be aligned with languagesAvailables
+const languageISOcode = ['ca-ES', 'da-DK', 'de-DE', 'en-US', 'es-ES', 'eu-ES', 'fr-FR', 'gl-ES', 'it-IT',
+                         'ja-JP', 'ko-KR', 'nl-NL', 'pt-PT', 'pt-BR', 'pl-PL', 'ru-RU', 'uk-UA', 'zh-CN', 'zh-TW'];
+
+/**
+ * Functions that return ISO Language Code Table from http://www.lingoes.net/en/translator/langcode.htm
+ * Map between languagesAvailables and languageISOcode
+ * Fallback to en-US
+ */
+function getCurrentLocaleISO() {
+    const isoCodeIndex = languagesAvailables.indexOf(i18next.language);
+    if (isoCodeIndex === -1)
+        return 'en-US';
+    return languageISOcode[isoCodeIndex];
+}
 
 /**
  * Functions that depend on the i18n framework
@@ -238,4 +255,4 @@ i18n.addResources = function(bundle) {
     i18next.addResourceBundle(lang, ns, bundle, true, true);
 };
 
-export { i18n };
+export { i18n, getCurrentLocaleISO };

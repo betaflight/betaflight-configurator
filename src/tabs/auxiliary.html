@@ -7,25 +7,22 @@
         <div class="note">
             <p i18n="auxiliaryHelp"></p>
         </div>
-
         <table>
             <tr>
                 <td>
-                    <div id="auxiliary_main_content">
-                        <div class="auxiliary_search_settings">
-                            <div class="auxiliary_filter_table_wrapper">
-                                <div class="auxiliary_filter_row">
-                                    <div class = "auxiliary_fitler_table_header" i18n="auxiliaryFilterCategory"></div>
-                                    <div class="line auxiliary_filter_table_value">
-                                        <select id="auxiliary_category" multiple="multiple" class="auxiliary_category_select"></select>
-                                    </div>
-                                </div>
+                    <div id="auxiliary_category_content">
+                        <div class="auxiliary_filter_row">
+                            <div>
+                                <div class="auxiliary_category_header" i18n="auxiliaryFilterCategory"></div>
+                            </div>
+                            <div class="line auxiliary_category_select_value">
+                                <select id="auxiliary_category" multiple="multiple" class="auxiliary_category_select" width: 100%; size='14'></select>
                             </div>
                         </div>
                     </div>
                 </td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td vertical-align: bottom;>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>
                     <div class="toolbox">
                         <form>
                             <input type="checkbox" id="switch-toggle-unused" name="switch-toggle-unused" class="toggle"/>
@@ -35,7 +32,6 @@
                 </td>
             </tr>
         </table>
-
         <div class="modes"></div>
     </div>
     <div class="content_toolbar">
