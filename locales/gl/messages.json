@@ -736,10 +736,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reiniciar eixo Z, offset: $1 º"
     },
-    "initialSetupHeading": {
-        "message": "Título:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
     },
@@ -2666,10 +2662,6 @@
     "gpsLatLon": {
         "message": "Latitude / Lonxitude actual:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "Rumbo Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocidade:"

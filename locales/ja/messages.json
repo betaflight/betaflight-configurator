@@ -733,10 +733,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "リセット Z 軸、オフセット: $1 度"
     },
-    "initialSetupHeading": {
-        "message": "ヘッディング:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "ミキサータイプ"
     },
@@ -2690,10 +2686,6 @@
     "gpsLatLon": {
         "message": "現在の 緯度 / 経度:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "ヘッディング方位 / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "速度:"

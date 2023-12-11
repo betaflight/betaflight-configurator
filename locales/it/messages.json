@@ -733,10 +733,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reset asse Z, offset: $1 gradi"
     },
-    "initialSetupHeading": {
-        "message": "Direzione:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo Mixer"
     },
@@ -782,6 +778,17 @@
     "initialSetupInfoHead": {
         "message": "Informazioni di sistema"
     },
+    "initialSetupInfoHeadHelp": {
+        "message": "Mostra i flag dell' FC per il disarmo, informazioni batteria, livello RSSI.",
+        "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Info Sensore"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Mostra i sensori hardware",
+        "description": "Message that pops up to describe the Sensor info section"
+    },
     "initialSetupBattery": {
         "message": "Tensione Batteria:"
     },
@@ -806,8 +813,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Non incluso nella build",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Non rilevato",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensori:"
+    },
+    "initialSetupSensorGyro": {
+        "message": "Gyro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Accel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Flag Armato Disabilitato:"
@@ -2690,10 +2729,6 @@
     "gpsLatLon": {
         "message": "Latitudine / Longitudine Corrente:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "Direzione Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocità:"
@@ -6142,6 +6177,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Altitudine",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Qualità Link",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Armamento disabilitato",

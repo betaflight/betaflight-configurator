@@ -733,10 +733,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Nulstil Z-akse, forskydn.: $1 gr"
     },
-    "initialSetupHeading": {
-        "message": "Kurs:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Mixertype"
     },
@@ -2733,10 +2729,6 @@
     "gpsLatLon": {
         "message": "Nuværende breddegrad / længdegrad:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "Kompas / GPS kurs:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Hastighed:"

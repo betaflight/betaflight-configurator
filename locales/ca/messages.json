@@ -741,10 +741,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Restableix l'eix Z, offset: $1 graus"
     },
-    "initialSetupHeading": {
-        "message": "Títol:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Tipus de Mixer"
     },
@@ -2741,10 +2737,6 @@
     "gpsLatLon": {
         "message": "Latitud/Longitud actuals:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "Encapçalament Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocitat:"

@@ -733,10 +733,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Скинути вісь Z, зміщення: $1 градус"
     },
-    "initialSetupHeading": {
-        "message": "Курс:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Тип Мікшеру"
     },
@@ -817,6 +813,14 @@
     "initialSetupRSSI": {
         "message": "RSSI: "
     },
+    "initialSetupNotInBuild": {
+        "message": "Не включено до збірки",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Не виявлено",
+        "description": "Message that pops up when hardware are not detected"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 дБм"
     },
@@ -825,6 +829,9 @@
     },
     "initialSetupSensorGyro": {
         "message": "Гіроскоп:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Акселерометр:"
     },
     "initialSetupSensorMag": {
         "message": "Компас:"
@@ -2722,10 +2729,6 @@
     "gpsLatLon": {
         "message": "Поточна широта/довгота:",
         "description": "Show GPS position - Latitude / Longitude"
-    },
-    "gpsHeading": {
-        "message": "Курс за компасом / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Швидкість:"
@@ -6174,6 +6177,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Висота",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Якість зв'язку",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Взведення заборонене",
