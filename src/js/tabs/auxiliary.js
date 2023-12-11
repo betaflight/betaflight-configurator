@@ -1,5 +1,5 @@
 import { i18n, getCurrentLocaleISO } from "../localization";
-import GUI, { TABS } from '../../js/gui';
+import GUI from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { bit_check } from '../bit';
 import { mspHelper } from '../msp/MSPHelper';
@@ -54,10 +54,10 @@ function inBuildMap(map, name) {
     if (name == 'all') {
         return true;
     }
-    for (let i = 0; i < map.length; i++) {
-        if (name == map[i].buildKey) {
-            for (let y = 0; y < map[i].buildOption.length; y++) {
-                if (FC.CONFIG.buildOptions.includes(map[i].buildOption[y])) {
+    for (let value of map) {
+        if (name == value.buildKey) {
+            for (let y = 0; y < value.buildOption.length; y++) {
+                if (FC.CONFIG.buildOptions.includes(value.buildOption[y])) {
                     return true;
                 }
             }
@@ -67,8 +67,8 @@ function inBuildMap(map, name) {
 }
 
 function isSelectedMode(mList, modeName) {
-    for (let i = 0; i < mList.length; i++) {
-        if (mList[i].includes(modeName)) {
+    for (let value of mList) {
+        if (value.includes(modeName)) {
             return true;
         }
     }
@@ -77,10 +77,10 @@ function isSelectedMode(mList, modeName) {
 
 function resolveCategoryName(category, choise) {
     let mList = [];
-    for (let i = 0; i < choise.length; i++) {
-        for (let j = 0; j < category.length; j++) {
-            if (choise[i] == category[j].name) {
-                mList.push(category[j].modes);
+    for (let value of choise) {
+        for (let elm of category) {
+            if (value == elm.name) {
+                mList.push(elm.modes);
             }
         }
     }
@@ -88,8 +88,8 @@ function resolveCategoryName(category, choise) {
 }
 
 function isPreSelectedCategory(categoryList, categoryName) {
-    for (let i = 0; i < categoryList.length; i++) {
-        if (categoryName == categoryList[i]) {
+    for (let value of categoryList) {
+        if (value == categoryName) {
             return true;
         }
     }
@@ -108,9 +108,9 @@ function updateSearchResults() {
 function getCategoryNames(table, buildKey) {
     // return names for buildKey category
     let categoryChoise = [];
-    for (let i = 0; i < table.length; i++) {
-        if (buildKey == table[i].name) {
-            categoryChoise.push(table[i].name);
+    for (let value of table) {
+        if (value.name == buildKey) {
+            categoryChoise.push(value.name);
         }
     }
     return categoryChoise;
@@ -126,17 +126,17 @@ function createCategorySelect(table, map) {
         setConfig({ auxiliaryCategoryNameList: categoryNameList });
     }
 
-    for (let i = 0; i < table.length; i++) {
-        if (inBuildMap(map, table[i].buildKey)) {
-            if (isPreSelectedCategory(categoryNameList, table[i].name)) {
-                categorySelect.append(`<option value="${table[i].name}" selected="selected">${table[i].name}</option>`);
+    for (let value of table) {
+        if (inBuildMap(map, value.buildKey)) {
+            if (isPreSelectedCategory(categoryNameList, value.name)) {
+                categorySelect.append(`<option value="${value.name}" selected="selected">${value.name}</option>`);
             }
             else {
-                categorySelect.append(`<option value="${table[i].name}">${table[i].name}</option>`);
+                categorySelect.append(`<option value="${value.name}">${value.name}</option>`);
             }
         }
         else {
-            categorySelect.append(`<option value="${table[i].name}" disabled="disabled">${table[i].name}</option>`);
+            categorySelect.append(`<option value="${value.name}" disabled="disabled">${value.name}</option>`);
         }
     }
 
