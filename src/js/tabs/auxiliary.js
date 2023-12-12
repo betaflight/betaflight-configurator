@@ -681,7 +681,7 @@ auxiliary.initialize = function (callback) {
                 if ( ! isSelectedMode(modeList, FC.AUX_CONFIG[i])) {
                     modeElement.toggle( false);
                 }
-                else if ( ! isSelectedMode(modeList, FC.AUX_CONFIG[i]) && modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
+                else if ( modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     // unused mode
                     modeElement.toggle(!hideUnused);
                 }
@@ -725,7 +725,7 @@ auxiliary.initialize = function (callback) {
                 return (x > y) ? x : y;
             }, 0);
 
-            // minimum change to autoselect is 100
+            //minimum change to autoselect is 100
             if (largest < 100) return fillPrevChannelsValues();
 
             const indexOfMaxValue = diff_array.indexOf(largest);
