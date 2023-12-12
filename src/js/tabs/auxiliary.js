@@ -100,9 +100,8 @@ function updateSearchResults() {
     let categorySelect = $('select.auxiliary_category_select');
 
     const categoryNameList = categorySelect.multipleSelect("getSelects", "text");
-    setConfig({ auxiliaryCategoryNameList: categoryNameList });                 // save as users choise
+    setConfig({ auxiliaryCategoryNameList: categoryNameList });         // save as users choise
     modeList = resolveCategoryName(categoryTable, categoryNameList);
-    // like to call, but not out of scope ---- update_ui();
 }
 
 function getCategoryNames(table, buildKey) {
@@ -119,15 +118,16 @@ function getCategoryNames(table, buildKey) {
 function createCategorySelect(table, map) {
     let categorySelect = $('select.auxiliary_category_select');
 
-    const categoryNameObj = getConfig('auxiliaryCategoryNameList');      // read user pre selected categories
+    const categoryNameObj = getConfig('auxiliaryCategoryNameList');     // read user pre selected categories
     let categoryNameList = categoryNameObj.auxiliaryCategoryNameList;
     if (categoryNameList.length == 0) {
-        categoryNameList = getCategoryNames(table, 'all');         // empty choise -> select names from 'all' category
+        categoryNameList = getCategoryNames(table, 'all');              // empty choise -> select names from 'all' category
         setConfig({ auxiliaryCategoryNameList: categoryNameList });
     }
 
     for (let value of table) {
-        if (inBuildMap(map, value.buildKey)) {
+        if (inBuildMap(map, value.buildKey) || FC.CONFIG.buildOptions.length == 0) {
+            // selected build option or local build
             if (isPreSelectedCategory(categoryNameList, value.name)) {
                 categorySelect.append(`<option value="${value.name}" selected="selected">${value.name}</option>`);
             }
@@ -145,14 +145,15 @@ function createCategorySelect(table, map) {
 
     categorySelect.sortSelect().multipleSelect({
         width: modeWidth + 50,
-        dropWidth: modeWidth + 165,
+        dropWidth: modeWidth + 63,
         minimumCountSelected: 3,                    // number before we use xx of yy
-        maxHeightUnit: heightUnit,                  // in px
+        maxHeight: heightUnit * 30,                 // in px
+        maxHeightUnit: heightUnit,                  // show all categories
         locale: getCurrentLocaleISO(),
         filter: false,
         showClear: true,
         ellipsis: true,
-        openOnHover: true,
+        openOnHover: true,                          // open when muse over
         placeholder: i18n.getMessage("dropDownFilterDisabled"),
         onClick: () => { updateSearchResults(); },
         onCheckAll: () => { updateSearchResults(); },
@@ -161,43 +162,6 @@ function createCategorySelect(table, map) {
         formatAllSelected() { return i18n.getMessage("dropDownAll"); },
     });
 }
-
-// Function to simulate mouseover and select an option
-function simulateMouseoverAndSelectOption(selectElement, optionIndex) {
-    // Trigger mouseover event
-    const mouseoverEvent = new Event('mouseover');
-    selectElement.dispatchEvent(mouseoverEvent);
-
-    // Select the specified option
-    selectElement.selectedIndex = optionIndex;
-
-    // Trigger change event to notify any listeners
-    const changeEvent = new Event('change');
-    selectElement.dispatchEvent(changeEvent);
-}
-
-// Function to iterate over options and simulate mouseover and selection
-function simulateMouseoverAndSelectForEachOption() {
-    // Get the select element
-    const selectElement = document.getElementById('yourSelectElementId'); // Replace with your actual select element ID
-
-    // Iterate over each option and simulate mouseover and selection
-    for (let i = 0; i < selectElement.options.length; i++) {
-        simulateMouseoverAndSelectOption(selectElement, i);
-        // You can add a delay here if needed
-        // setTimeout(() => {
-        //     simulateMouseoverAndSelectOption(selectElement, i);
-        // }, 1000 * i); // Adjust the delay as needed
-    }
-}
-
-// Call the function when needed
-//simulateMouseoverAndSelectForEachOption();
-/*
-Replace 'yourSelectElementId' with the actual ID of your select element.
-The simulateMouseoverAndSelectForEachOption function iterates over each option in the select element, simulates a mouseover, and selects the option.
-You can also add a delay between each iteration if needed (commented out in the code). Adjust the delay according to your requirements.
-*/
 
 auxiliary.initialize = function (callback) {
     GUI.active_tab_ref = this;

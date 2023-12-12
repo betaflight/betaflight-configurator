@@ -7,16 +7,17 @@
         <div class="note">
             <p i18n="auxiliaryHelp"></p>
         </div>
-        <table>
+        <table role="presentation">
+            <tbody>
             <tr>
                 <td>
                     <div id="auxiliary_category_content">
-                        <div class="auxiliary_filter_row">
+                        <div class="auxiliary_filter_row" width: 100%;>
                             <div>
                                 <div class="auxiliary_category_header" i18n="auxiliaryFilterCategory"></div>
                             </div>
                             <div class="line auxiliary_category_select_value">
-                                <select id="auxiliary_category" multiple="multiple" class="auxiliary_category_select" width: 100%; size='14'></select>
+                                <select id="auxiliary_category" multiple="multiple" class="auxiliary_category_select"></select>
                             </div>
                         </div>
                     </div>
@@ -31,6 +32,7 @@
                     </div>
                 </td>
             </tr>
+            </tbody>
         </table>
         <div class="modes"></div>
     </div>
