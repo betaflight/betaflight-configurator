@@ -189,10 +189,13 @@ gps.initialize = async function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
-            const imuHeading = FC.SENSOR_DATA.kinematics[2];
-            const magHeading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
-            const magHeadingDeg = magHeading === undefined ? 0 : magHeading * 180 / Math.PI;
-            const gpsHeading = FC.GPS_DATA.ground_course / 100;
+            const imuHeadingDegrees = FC.SENSOR_DATA.kinematics[2];
+            // Convert to radians and add 180 degrees to make icon point in the right direction
+            const imuHeadingRadians = (imuHeadingDegrees + 180) * Math.PI / 180;
+            // These are not used, but could be used to show the heading from the magnetometer
+            // const magHeadingDegrees = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
+            // const magHeadingRadians = magHeadingDegrees === undefined ? 0 : magHeadingDegrees * Math.PI / 180;
+            const gpsHeading = FC.GPS_DATA.ground_course / 10;
             const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
             const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
                 'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
@@ -202,10 +205,10 @@ gps.initialize = async function (callback) {
             $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
 
-            const gspUnitText = i18n.getMessage('gpsPositionUnit');
+            const gpsUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gspUnitText}`);
-            $('.GPS_info td.heading').text(`${imuHeading.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gspUnitText}`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gpsUnitText}`);
+            $('.GPS_info td.heading').text(`${imuHeadingDegrees.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gpsUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -303,7 +306,7 @@ gps.initialize = async function (callback) {
                 action: 'center',
                 lat: lat,
                 lon: lon,
-                heading: gpsHeading,
+                heading: imuHeadingRadians,
             };
 
             frame = document.getElementById('map');
