@@ -103,13 +103,11 @@ function processMapEvents(e) {
 
             case 'center':
             case 'centerMag':
-                const iconStyle = e.data.action == 'centerMag' ? iconStyleMag : iconStyleGPS;
-                iconFeature.setStyle(iconStyle);
+                const hasMag = e.data.action == 'centerMag';
+                (hasMag ? iconStyleMag : iconStyleGPS).getImage().setRotation(e.data.heading);
+                iconFeature.setStyle(hasMag ? iconStyleMag : iconStyleGPS);
                 const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
                 mapView.setCenter(center);
-                // TODO - add rotation for the icon
-                // const heading = e.data.heading === undefined ? 0 : e.data.heading;
-                // mapView.setRotation(heading);
                 iconGeometry.setCoordinates(center);
                 break;
 
