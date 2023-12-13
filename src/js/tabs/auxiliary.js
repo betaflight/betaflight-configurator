@@ -146,7 +146,7 @@ function createCategorySelect(table, map) {
     categorySelect.sortSelect().multipleSelect({
         width: modeWidth + 50,
         dropWidth: modeWidth + 63,
-        minimumCountSelected: 3,                    // number before we use xx of yy
+        minimumCountSelected: 2,                    // number before we use xx of yy
         maxHeight: heightUnit * 30,                 // in px
         maxHeightUnit: heightUnit,                  // show all categories
         locale: getCurrentLocaleISO(),
