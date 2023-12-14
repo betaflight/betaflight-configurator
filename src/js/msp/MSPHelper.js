@@ -1270,6 +1270,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         FC.LED_STRIP.push(led);
                     }
                 }
+
+                FC.LED_STRIP_CONFIG.status = data.readU8();   // basic or advanced
+                FC.LED_STRIP_CONFIG.profile = data.readU8();
+
                 break;
             case MSPCodes.MSP_SET_LED_STRIP_CONFIG:
                 console.log('Led strip config saved');
@@ -2603,6 +2607,9 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
         if (ledIndex == FC.LED_STRIP.length) {
             nextFunction = onCompleteCallback;
         }
+
+        buffer.push8(FC.LED_STRIP_CONFIG.status);   // basic or advanced
+        buffer.push8(FC.LED_STRIP_CONFIG.profile);
 
         MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer, false, nextFunction);
     }
