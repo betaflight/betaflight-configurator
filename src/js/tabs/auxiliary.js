@@ -469,7 +469,7 @@ auxiliary.initialize = function (callback) {
             addLinkedToMode(modeElement, 0, 0);
         });
 
-        // setup category multiple select
+        // create category multiple select
         createCategorySelect(categoryTable, buildMap);
 
         // UI Hooks
@@ -713,6 +713,9 @@ auxiliary.initialize = function (callback) {
             })
             .prop("checked", !!configUnusedModes.hideUnusedModes)
             .change();
+
+        // setup categoryList
+        updateSearchResults();
 
         // update ui instantly on first load
         update_ui();
