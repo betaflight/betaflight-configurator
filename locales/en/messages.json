@@ -1037,6 +1037,10 @@
         "message": "RPM-based filtering is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Dshot telemetry is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "A configuration change requires a reboot",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
