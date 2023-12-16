@@ -106,16 +106,6 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info #targetMCU').text(summary.mcu);
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
 
-            // Wiki link: #wiki found in unified target configuration, if board description exist or generel board missing
-            let urlWiki = 'https://betaflight.com/docs/wiki/boards/missing';                // generel board missing
-            const urlBoard = `https://betaflight.com/docs/wiki/boards/${summary.target}`;   // board description
-            if (urlExists(urlBoard)) {
-                urlWiki = urlBoard;
-            }
-            const targetWiki = $('#targetWikiInfoUrl');
-            targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
-            targetWiki.attr("href", urlWiki);
-
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
                 $('div.release_info #cloudTargetLog').text('');
@@ -933,6 +923,17 @@ firmware_flasher.initialize = function (callback) {
                 self.updateDetectBoardButton();
             }
         }).trigger('change');
+
+        const targetSupportInfo = $('#targetSupportInfoUrl');
+
+        targetSupportInfo.on('click', function() {
+            let urlSupport = 'https://betaflight.com/docs/wiki/boards/missing';                 // general board missing
+            const urlBoard = `https://betaflight.com/docs/wiki/boards/${self.selectedBoard}`;   // board description
+            if (urlExists(urlBoard)) {
+                urlSupport = urlBoard;
+            }
+            targetSupportInfo.attr("href", urlSupport);
+        });
 
         const detectBoardElement = $('a.detect-board');
 
