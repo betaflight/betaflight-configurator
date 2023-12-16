@@ -927,13 +927,11 @@ firmware_flasher.initialize = function (callback) {
         const targetSupportInfo = $('#targetSupportInfoUrl');
 
         targetSupportInfo.on('click', function() {
-            console.log('Support URL clicked:', self.selectedBoard);
             let urlSupport = 'https://betaflight.com/docs/wiki/boards/missing';                 // general board missing
             const urlBoard = `https://betaflight.com/docs/wiki/boards/${self.selectedBoard}`;   // board description
             if (urlExists(urlBoard)) {
                 urlSupport = urlBoard;
             }
-            console.log('Support URL:', urlSupport);
             targetSupportInfo.attr("href", urlSupport);
         });
 

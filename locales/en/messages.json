@@ -3387,8 +3387,8 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherTargetSupportUrlInfo": {
-        "message": "Get more information about target at Betaflight support",
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Get more information about the target on the Betaflight Wiki",
         "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
@@ -7364,7 +7364,7 @@
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
     },
     "betaflightSupportButton": {
-        "message": "Support",
+        "message": "Wiki",
         "description": "Text for the button to open the support URL"
     }
 }
