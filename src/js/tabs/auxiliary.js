@@ -55,7 +55,7 @@ function inBuildMap(map, name) {
         return true;
     }
     for (let value of map) {
-        if (name == value.buildKey) {
+        if (name.includes(value.buildKey)) {
             for (let option of value.buildOption) {
                 if (FC.CONFIG.buildOptions.includes(option)) {
                     return true;
@@ -79,21 +79,12 @@ function resolveCategoryName(category, choise) {
     let mList = [];
     for (let value of choise) {
         for (let elm of category) {
-            if (value == elm.name) {
+            if (value.includes(elm.name)) {
                 mList.push(elm.modes);
             }
         }
     }
     return mList;
-}
-
-function isPreSelectedCategory(categoryList, categoryName) {
-    for (let value of categoryList) {
-        if (value == categoryName) {
-            return true;
-        }
-    }
-    return false;
 }
 
 function updateSearchResults() {
@@ -128,7 +119,7 @@ function createCategorySelect(table, map) {
     for (let value of table) {
         if (inBuildMap(map, value.buildKey) || FC.CONFIG.buildOptions.length == 0) {
             // selected build option or local build
-            if (isPreSelectedCategory(categoryNameList, value.name)) {
+            if (categoryNameList.includes(value.name)) {
                 categorySelect.append(`<option value="${value.name}" selected="selected">${value.name}</option>`);
             }
             else {
