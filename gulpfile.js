@@ -97,9 +97,19 @@ function process_package_debug(done) {
     getGitRevision(done, processPackage, false);
 }
 
-// dist_yarn MUST be done after dist_src
-
-const distCommon = gulp.series(dist_src, dist_less, dist_changelog, dist_yarn, dist_locale, dist_libraries, dist_resources, dist_rollup, gulp.series(cordova_dist()));
+const distCommon = gulp.series(
+    dist_src,
+    dist_node_modules_css,
+    dist_less,
+    dist_changelog,
+    dist_locale,
+    dist_libraries,
+    dist_resources,
+    dist_rollup,
+    gulp.series(
+        cordova_dist(),
+    ),
+);
 
 const distBuild = gulp.series(process_package_release, distCommon);
 
@@ -344,13 +354,21 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 function dist_src() {
     const distSources = [
         './src/**/*',
+        '!./src/**/*.js',
+        '!./src/**/*.vue',
         '!./src/css/dropdown-lists/LICENSE',
         '!./src/support/**',
         '!./src/**/*.less',
+        './src/js/workers/hex_parser.js',
     ];
 
     return gulp.src(distSources, { base: 'src' })
         .pipe(gulp.src('yarn.lock'))
+        .pipe(gulp.dest(DIST_DIR));
+}
+
+function dist_node_modules_css() {
+    return gulp.src('./**/*.min.css')
         .pipe(gulp.dest(DIST_DIR));
 }
 
@@ -359,21 +377,12 @@ function dist_less() {
     .pipe(sourcemaps.init())
     .pipe(less())
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(`${DIST_DIR}`));
+    .pipe(gulp.dest(DIST_DIR));
 }
 
 function dist_changelog() {
     return gulp.src('changelog.html')
         .pipe(gulp.dest(`${DIST_DIR}tabs/`));
-}
-
-// This function relies on files from the dist_src function
-function dist_yarn() {
-    return gulp.src([`${DIST_DIR}package.json`, `${DIST_DIR}yarn.lock`])
-        .pipe(gulp.dest(DIST_DIR))
-        .pipe(yarn({
-            production: true,
-        }));
 }
 
 function dist_locale() {
@@ -400,6 +409,7 @@ function dist_rollup() {
 
     return rollup
         .rollup({
+            strictDeprecations: true,
             input: {
                 // For any new file migrated to modules add the output path
                 // in dist on the left, on the right it's input file path.
@@ -441,7 +451,6 @@ function dist_rollup() {
                 // we want to see code in the same way as it
                 // is in the source files while debugging
                 sourcemap: true,
-                // put any 3rd party module in vendor.js
                 manualChunks(id) {
                     /**
                      * This splits every npm module loaded in into it's own package
