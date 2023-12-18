@@ -3519,7 +3519,7 @@ app-root-dir@^1.0.2:
   resolved "https://registry.yarnpkg.com/app-root-dir/-/app-root-dir-1.0.2.tgz#38187ec2dea7577fff033ffcb12172692ff6e118"
   integrity sha512-jlpIfsOoNoafl92Sz//64uQHGSyMrD2vYG5d8o2a4qGvyNCvXur7bzIsWtAC/6flI2RYAp3kv8rsfBtaLm7w0g==
 
-appdmg@^0.6.4:
+appdmg@^0.6.6:
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/appdmg/-/appdmg-0.6.6.tgz#d06bd82b530032fd7a8f0970a1c6ee6196e1efce"
   integrity sha512-GRmFKlCG+PWbcYF4LUNonTYmy0GjguDy6Jh9WP8mpd0T6j80XIJyXBiWlD0U+MLNhqV9Nhx49Gl9GpVToulpLg==
