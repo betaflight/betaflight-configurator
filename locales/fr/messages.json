@@ -2876,9 +2876,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Cible:"
     },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtenir plus d'informations sur la cible sur Betaflight wiki (url wiki trouvée dans la configuration de la cible unifiée)"
-    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },

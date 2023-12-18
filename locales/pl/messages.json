@@ -733,6 +733,10 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Resetuj oś Z, położenie: $1 stopni"
     },
+    "initialSetupHeading": {
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
+    },
     "initialSetupMixerHead": {
         "message": "Typ Modelu"
     },
@@ -948,6 +952,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Filtrowanie w oparciu o RPM jest włączone ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowanie wspierające dwukierunkową telemetrię DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Filtrowanie w oparciu o RPM jest włączone, ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź, czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowanie wspierające dwukierunkową telemetrię DSHOT.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Zmiana konfiguracji wymaga ponownego uruchomienia",
@@ -2730,6 +2738,10 @@
         "message": "Bieżąca szerokość / długość geograficzna:",
         "description": "Show GPS position - Latitude / Longitude"
     },
+    "gpsHeading": {
+        "message": "Kierunek IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
+    },
     "gpsSpeed": {
         "message": "Prędkość:"
     },
@@ -3291,9 +3303,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Uzyskaj więcej informacji na ten temat w wiki Betaflight (adres url wiki znaleziony w ujednoliconej konfiguracji docelowej)"
-    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
@@ -3466,7 +3475,7 @@
         "message": "Wiadomość:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Postępuj według wytycznych <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Pamiętaj<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> kontrolera lotu oraz <strong> nie wyłączaj </strong> komputera podczas wgrywania oprogramowania. <br /> <br /> <strong> Uwaga: </strong> Bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> Upewnij się, że masz kopię zapasową, niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> Jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie przewody od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
+        "message": "Postępuj według wytycznych oraz <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Pamiętaj<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> kontrolera lotu oraz <strong> nie wyłączaj </strong> komputera podczas wgrywania oprogramowania. <br /> <br /> <strong> Uwaga: </strong> Bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> Upewnij się, że masz kopię zapasową, niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> Jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie przewody od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>W przypadku problemów podczas podłączania płytki  kontrolera lotów postępuj zgodnie z poniższą instrukcją</strong>"

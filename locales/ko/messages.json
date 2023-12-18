@@ -953,6 +953,10 @@
         "message": "RPM-기반 필터링이 활성화되었지만 하나 이상의 ESC가 유효한 DSHOT 텔레메트리를 공급하지 않습니다. ESC가 양방향 DSHOT 텔레메트리를 공급하기 위해 필요한 펌웨어가 적용가능한지와 설치되었는지를 확인하십시요.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "디샷 텔레메트리가 활성화되었지만 하나 이상의 ESC가 유효한 디샷 텔레메트리를 공급하지 않습니다. ESC가 양방향 디샷 텔레메트리를 공급하기 위해 필요한 펌웨어가 적용가능한지와 설치되었는지를 확인하십시요.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "환경설정 변경은 재부팅을 필요로합니다.",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
@@ -1203,7 +1207,7 @@
         "message": "ESC/모터 기능"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>참고:</strong> 모든 기능 조합이 유효하지는 않습니다. 비행 컨트롤러 펌웨어가 잘못된 기능 조합을 감지하면 충돌하는 기능이 비활성화됩니다.<br /><strong>참고:</strong> 포트를 사용할 기능을 활성화 하기  <span class=\"message-negative\">전에</span> 시리얼 포트를 설정하십시오."
+        "message": "<strong>참고:</strong> 모든 기능 조합이 유효하지는 않습니다. 비행 컨트롤러 펌웨어가 잘못된 기능 조합을 감지하면 상충하는 기능이 비활성화됩니다.<br /><strong>참고:</strong> 포트를 사용할 기능을 활성화 하기  <span class=\"message-negative\">전에</span> 시리얼 포트를 설정하십시오."
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; 수신기를 위한 UART는 (<i>포트</i> 탭에서) 반드시 '시리얼 Rx'로 설정되어야 합니다<br>&#8226; 아래 드롭-다운으로부터 올바른 데이터 형식을 선택하세요:"
@@ -1479,7 +1483,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "활성화되면 GPS 모듈은 또한 갈릴레오 위성 시스템을 추적하여 보통 더 많은 위성들이 잠기게 됩니다. 베타라이트 4.2.x 이전 버전에서는 QZSS 증강 시스템도 비활성화됩니다.",
+        "message": "활성화되면 GPS 모듈은 또한 갈릴레오 위성 시스템을 추적하여 보통 더 많은 고정된 위성을 생성합니다. 베타라이트 4.2.x 이전 버전에서는 QZSS 증강 시스템도 비활성화됩니다.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -2783,10 +2787,10 @@
         "message": "사용불가"
     },
     "gnssQualityLocked": {
-        "message": "고정"
+        "message": "고정됨"
     },
     "gnssQualityFullyLocked": {
-        "message": "완전히 고정"
+        "message": "완전히 고정됨"
     },
     "gnssUsedUnused": {
         "message": "미사용"
@@ -2946,7 +2950,7 @@
         "message": "<strong>안전 공지</strong><br /><strong class=\"message-negative\">부상을 피하기 위해 모든 프로펠러를 제거하세요!</strong><br />모터가 <strong>회전합니다!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 페이지</a>를 참고하세요."
+        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
     },
     "motorsRemapDialogSave": {
         "message": "저장"
@@ -3300,7 +3304,8 @@
         "message": "타겟:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "베타플라이트 wiki에서 타겟에 대한 더 많은 정보를 얻으세요 (wiki url은 통합 타겟 환경설정에서 찾을 수 있습니다)"
+        "message": "베타플라이트 위키에서 타겟에 관한 더 많은 정보를 얻으세요",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3774,7 +3779,7 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeGPSLocked": {
-        "message": "GPS: 양호",
+        "message": "GPS: 고정됨",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripWiring": {
@@ -4497,7 +4502,7 @@
         "message": "다이나믹 아이들 값 [× 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 Wiki 항목</a>을 방문하십시오."
+        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 항목</a>을 방문하십시오."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "D샷 텔레메트리가 꺼져있어서 다이나믹 아이들이 비활성화됩니다."
@@ -4578,7 +4583,7 @@
         "message": "페일세이프 스로틀 낮음 지연시간 [seconds]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "스로틀이 이 시간 동안 낮으면 선택한 페일세이프 절차를 실행하는 대신 기체를 해제합니다."
+        "message": "스로틀이 이 시간 동안 낮으면 선택한 페일세이프 절차를 실행하는 대신 기체를 디스아밍합니다."
     },
     "failsafeThrottleItem": {
         "message": "착륙 시 사용되는 스로틀 값"
@@ -7127,7 +7132,7 @@
         "description": "Cancel button in the presets warning dialog"
     },
     "presetsWiki": {
-        "message": "프리셋 Wiki",
+        "message": "프리셋 위키",
         "description": "Button to open Presets Wiki link"
     },
     "presetsBackupSave": {
@@ -7270,5 +7275,9 @@
     "showDevToolsOnStartup": {
         "message": "개발 모드에서 DevTool 자동 열기",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "위키",
+        "description": "Text for the button to open the support URL"
     }
 }
