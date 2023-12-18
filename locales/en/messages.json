@@ -863,6 +863,9 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
+    "initialSetupMagDeclination": {
+        "message": "Mag Declination:"
+    },
     "initialSetupInfoHead": {
         "message": "System info"
     },
@@ -1361,6 +1364,9 @@
     },
     "configurationArmingHelp": {
         "message": "Some Arming options may require accelerometer be enabled"
+    },
+    "configurationMagDeclination": {
+        "message": "Magnetometer Declination [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"
