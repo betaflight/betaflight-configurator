@@ -2952,9 +2952,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Ziel:"
     },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Erhalte weitere Informationen über das 'Target' im Betaflight-Wiki (Wiki-URL in der 'Unified Target'-Konfiguration)"
-    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },

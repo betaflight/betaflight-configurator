@@ -3110,9 +3110,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Destino:"
     },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtenha mais informações sobre o destino na wiki do Betaflight (a URL da wiki pode ser encontrada na configuração do destino unificado)"
-    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },

@@ -733,6 +733,10 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Nulstil Z-akse, forskydn.: $1 gr"
     },
+    "initialSetupHeading": {
+        "message": "Sideror:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
+    },
     "initialSetupMixerHead": {
         "message": "Mixertype"
     },
@@ -948,6 +952,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM eller omdrejnings-baseret filtrering er aktiv, men èn eller flere esc'ere sender ikke gyldige DShot telemetri data. Tjek at esc'erne har den nødvendige firmware for at kunne køre to-vejs DShot telemetri.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "RPM eller omdrejnings-baseret filtrering er aktiv, men mindst en ESC sender ugyldige DShot telemetri data. Tjek at alle ESC har den nødvendige firmware for at kunne køre to-vejs DShot telemetri.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Ændringer i opsætning kræver en genstart",
@@ -2730,6 +2738,10 @@
         "message": "Nuværende breddegrad / længdegrad:",
         "description": "Show GPS position - Latitude / Longitude"
     },
+    "gpsHeading": {
+        "message": "Retning IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
+    },
     "gpsSpeed": {
         "message": "Hastighed:"
     },
@@ -3292,7 +3304,8 @@
         "message": "FC type:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Se mere information om FC type på Betaflight Wiki (Wiki url findes i FC fælles type / unified target konfiguration) "
+        "message": "Få mere information på Betaflight Wiki",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -7262,5 +7275,9 @@
     "showDevToolsOnStartup": {
         "message": "Åbn automatisk DevTools i udviklingstilstand",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

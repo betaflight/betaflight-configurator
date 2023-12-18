@@ -733,6 +733,10 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reset asse Z, offset: $1 gradi"
     },
+    "initialSetupHeading": {
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
+    },
     "initialSetupMixerHead": {
         "message": "Tipo Mixer"
     },
@@ -2730,6 +2734,10 @@
         "message": "Latitudine / Longitudine Corrente:",
         "description": "Show GPS position - Latitude / Longitude"
     },
+    "gpsHeading": {
+        "message": "Direzione IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
+    },
     "gpsSpeed": {
         "message": "Velocità:"
     },
@@ -3290,9 +3298,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Destinazione:"
-    },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Se vuoi più informazioni sul target, vedi il wiki Betaflight (url del wiki si trova nella configurazione unificata)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"

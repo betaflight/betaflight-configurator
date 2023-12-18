@@ -957,6 +957,10 @@
         "message": "El filtratge basat en RPM està habilitat, però un o més ESC no subministren telemetria vàlida DSHOT. Comproveu que els sistemes ESC siguin capaços i tinguin instal·lat el programari necessari per suportar la telemetria bidireccional DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "La telemetria DSHOT està activada, però un o més ESC no proporcionen telemetria DSHOT vàlida. Comproveu que els ESC són capaços i tenen el microprogramari necessari instal·lat per suportar la telemetria DSHOT bidireccional.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un canvi de configuració requereix reiniciar",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
@@ -3300,7 +3304,8 @@
         "message": "Model:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obteniu més informació sobre la controladora de vol a la wiki de Betaflight (l'url de la wiki es troba a la configuració de la FC unificada)"
+        "message": "Obteniu més informació sobre la plataforma a la wiki de Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -7270,5 +7275,9 @@
     "showDevToolsOnStartup": {
         "message": "Obriu automàticament DevTools en mode de desenvolupament",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

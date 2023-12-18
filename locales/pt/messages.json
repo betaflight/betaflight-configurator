@@ -3300,7 +3300,8 @@
         "message": "Destino:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtenha mais informações sobre target na wiki do Betaflight (url da wiki encontrada na configuração de target unificado)"
+        "message": "Obtenha mais informações sobre o target na Wiki Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -7270,5 +7271,9 @@
     "showDevToolsOnStartup": {
         "message": "Abrir automaticamente o DevTools no modo de desenvolvimento",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

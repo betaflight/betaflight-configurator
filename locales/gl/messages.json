@@ -3221,9 +3221,6 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Placa:"
     },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtén máis información sobre a controladora na wiki de Betaflight (url wiki atopado na configuración de destino unificado)"
-    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
