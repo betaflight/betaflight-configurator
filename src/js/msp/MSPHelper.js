@@ -500,7 +500,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_COMPASS_CONFIG:
                 FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
-                console.log(FC.COMPASS_CONFIG.mag_declination);
                 break;
             case MSPCodes.MSP_GPS_CONFIG:
                 FC.GPS_CONFIG.provider = data.readU8();
@@ -1844,7 +1843,6 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             }
             break;
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
-            console.log(FC.COMPASS_CONFIG.mag_declination);
             buffer.push16(Math.round(FC.COMPASS_CONFIG.mag_declination) * 10);
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
