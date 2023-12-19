@@ -28,6 +28,8 @@ const firmware_flasher = {
     selectedBoard: undefined,
     boardNeedsVerification: false,
     allowBoardDetection: true,
+    cloudBuildKey: null,
+    cloudBuildOptions: null,
     isFlashing: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
@@ -45,6 +47,10 @@ firmware_flasher.initialize = function (callback) {
     }
 
     self.selectedBoard = undefined;
+
+    self.cloudBuildKey = null;
+    self.cloudBuildOptions = null;
+
     self.localFirmwareLoaded = false;
     self.isConfigLocal = false;
     self.intel_hex = undefined;
@@ -202,11 +208,13 @@ firmware_flasher.initialize = function (callback) {
             if (!navigator.onLine) {
                 return;
             }
+
             buildOptionsList($('select[name="radioProtocols"]'), data.radioProtocols);
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
-            if (!self.buildKeyExists()) {
+
+            if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
             }
         }
@@ -362,8 +370,8 @@ firmware_flasher.initialize = function (callback) {
 
             self.releaseLoader.loadTarget(target, release, onTargetDetail);
 
-            if (self.buildKeyExists() && navigator.onLine) {
-                self.releaseLoader.loadOptionsByBuildKey(release, FC.CONFIG.buildKey, buildOptions);
+            if (self.validateBuildKey() && navigator.onLine) {
+                self.releaseLoader.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions);
             } else {
                 self.releaseLoader.loadOptions(release, buildOptions);
             }
@@ -1170,14 +1178,15 @@ firmware_flasher.updateDetectBoardButton = function() {
     $('a.detect-board').toggleClass('disabled', !this.isSerialPortAvailable());
 };
 
-firmware_flasher.buildKeyExists = function() {
-    return FC.CONFIG.buildKey.length === 32;
+firmware_flasher.validateBuildKey = function() {
+    return this.cloudBuildKey.length === 32;
 };
 
 /**
  *
  *    Auto-detect board and set the dropdown to the correct value
  */
+
 firmware_flasher.verifyBoard = function() {
     const self = this;
 
@@ -1240,7 +1249,9 @@ firmware_flasher.verifyBoard = function() {
     }
 
     function getCloudBuildOptions(options) {
-        FC.CONFIG.buildOptions = options.Request.Options;
+        // Do not use FC.CONFIG.buildOptions here as the object gets destroyed.
+        self.cloudBuildOptions = options.Request.Options;
+
         getBoardInfo();
     }
 
@@ -1248,8 +1259,11 @@ firmware_flasher.verifyBoard = function() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
             MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
                 MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME), false, () => {
-                    if (self.buildKeyExists()) {
-                        self.releaseLoader.requestBuildOptions(FC.CONFIG.buildKey, getCloudBuildOptions, getBoardInfo);
+                    // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
+                    self.cloudBuildKey = FC.CONFIG.buildKey;
+
+                    if (self.validateBuildKey()) {
+                        self.releaseLoader.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
                     } else {
                         getBoardInfo();
                     }
