@@ -5519,8 +5519,8 @@
         "message": "GPS lap time best 3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Best GPS lap time"
+    "osdDescElementLapTimeBest3": {
+        "message": "Best 3 GPS lap times"
     },
     "osdTextElementCraftName": {
         "message": "Craft name",

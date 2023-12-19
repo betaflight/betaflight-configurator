@@ -341,7 +341,7 @@ failsafe.initialize = function (callback) {
             $('input[name="gps_rescue_return_altitude"]').attr({"min": 5, "max": 1000});
             $('input[name="gps_rescue_descent_distance"]').attr("min", 10);
             $('input[name="gps_rescue_min_start_dist"]').attr({"min": 10, "max": 30})
-            .closest('.number').children('.helpicon').attr("i18n_title", i18n.getMessage("failsafeGpsRescueItemMinStartDistHelp"));
+            .closest('.number').children('.helpicon').attr("i18n_title", "failsafeGpsRescueItemMinStartDistHelp");
             $('input[name="gps_rescue_descend_rate"]').attr({"min": 0.2, "max": 50.0});
         }
 
