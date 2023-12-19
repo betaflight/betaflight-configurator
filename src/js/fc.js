@@ -122,6 +122,7 @@ const FC = {
     FEATURE_CONFIG: null,
     FILTER_CONFIG: null,
     GPS_CONFIG: null,
+    COMPASS_CONFIG: null,
     GPS_DATA: null,
     GPS_RESCUE: null,
     LED_COLORS: null,
@@ -371,6 +372,10 @@ const FC = {
             auto_baud:                  0,
             home_point_once:            0,
             ublox_use_galileo:          0,
+        };
+
+        this.COMPASS_CONFIG = {
+            mag_declination:            0,
         };
 
         this.RSSI_CONFIG = {

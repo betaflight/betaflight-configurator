@@ -498,6 +498,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
                 }
                 break;
+            case MSPCodes.MSP_COMPASS_CONFIG:
+                FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
+                break;
             case MSPCodes.MSP_GPS_CONFIG:
                 FC.GPS_CONFIG.provider = data.readU8();
                 FC.GPS_CONFIG.ublox_sbas = data.readU8();
@@ -1838,6 +1841,9 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 buffer.push16(FC.GPS_RESCUE.initialClimbM);
             }
+            break;
+        case MSPCodes.MSP_SET_COMPASS_CONFIG:
+            buffer.push16(Math.round(FC.COMPASS_CONFIG.mag_declination) * 10);
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
             buffer.push8(FC.RSSI_CONFIG.channel);

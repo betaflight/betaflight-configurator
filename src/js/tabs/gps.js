@@ -17,9 +17,15 @@ gps.initialize = async function (callback) {
     GUI.active_tab = 'gps';
 
     await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-    await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
-    const hasMag = have_sensor(FC.CONFIG.activeSensors, 'mag');
+    // mag support added in 1.46
+    const hasMag = have_sensor(FC.CONFIG.activeSensors, 'mag') && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+
+    if (hasMag) {
+        await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
+    }
+
+    await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
     load_html();
 
@@ -56,7 +62,15 @@ gps.initialize = async function (callback) {
         }
 
         function get_attitude_data() {
-            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, hasMag ? get_imu_data : update_ui);
+            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, load_compass_config);
+        }
+
+        function load_compass_config() {
+            if (hasMag) {
+                MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, get_imu_data);
+            } else {
+                get_imu_data();
+            }
         }
 
         function get_imu_data() {
@@ -182,6 +196,13 @@ gps.initialize = async function (callback) {
 
         gpsBaudrateElement.prop("disabled", true);
         gpsBaudrateElement.parent().hide();
+
+        // fill magnetometer
+        if (hasMag) {
+            $('input[name="mag_declination"]').val(FC.COMPASS_CONFIG.mag_declination.toFixed(1));
+        } else {
+            $('div.mag_declination').hide();
+        }
 
         // End GPS Configuration
 
@@ -382,9 +403,14 @@ gps.initialize = async function (callback) {
             // fill some data
             FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
             FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
+            FC.COMPASS_CONFIG.mag_declination = parseFloat($('input[name="mag_declination"]').val());
 
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+            if (hasMag) {
+                await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
+            }
             await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+
             mspHelper.writeConfiguration(true);
         });
 
