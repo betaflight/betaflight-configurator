@@ -1,7 +1,7 @@
 import { View, Map, Feature } from "ol";
 import { fromLonLat } from "ol/proj";
-import { Tile, Vector as LayerVector } from "ol/layer";
-import { OSM, Vector as SourceVector } from "ol/source";
+import { Group as LayerGroup, Tile, Vector as LayerVector } from "ol/layer";
+import { OSM, XYZ, Vector as SourceVector } from "ol/source";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
 
@@ -25,6 +25,39 @@ export function initMap() {
         layers: [
             new Tile({
                 source: new OSM(),
+            }),
+            new LayerGroup({
+                layers: [
+                    new Tile({
+                        source: new XYZ({
+                            attributions: [
+                                'Powered by Esri',
+                                'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
+                            ],
+                            attributionsCollapsible: false,
+                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                            maxZoom: DEFAULT_ZOOM,
+                        }),
+                    }),
+                    new Tile({
+                        source: new XYZ({
+                            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+                            maxZoom: DEFAULT_ZOOM,
+                        }),
+                    }),
+                    new Tile({
+                        source: new XYZ({
+                            url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+                            maxZoom: DEFAULT_ZOOM,
+                        }),
+                    }),
+                    new Tile({
+                        source: new XYZ({
+                            url: 'https://mt1.google.com/vt/lyrs=t&x={x}&y={y}&z={z}',
+                            maxZoom: DEFAULT_ZOOM,
+                        }),
+                    }),
+                ],
             }),
         ],
         view: mapView,
@@ -81,6 +114,39 @@ export function initMap() {
     });
 
     map.addLayer(currentPositionLayer);
+
+    function bindInputs(layerid, layer) {
+        const visibilityInput = $(`${layerid} input.visible`);
+        visibilityInput.on('change', function () {
+            layer.setVisible(this.checked);
+        });
+        visibilityInput.prop('checked', layer.getVisible());
+
+        const opacityInput = $(`${layerid} input.opacity`);
+        opacityInput.on('input', function () {
+            layer.setOpacity(parseFloat(this.value));
+        });
+        opacityInput.val(String(layer.getOpacity()));
+    }
+
+    function setup(id, group) {
+        group.getLayers().forEach(function (layer, i) {
+            const layerid = id + i;
+            bindInputs(layerid, layer);
+            if (layer instanceof LayerGroup) {
+                setup(layerid, layer);
+            }
+        });
+    }
+
+    setup('#layer', map.getLayerGroup());
+
+    $('#layertree li > span').click(function () {
+        $(this).siblings('fieldset').toggle();
+    })
+    .siblings('fieldset')
+    .hide();
+
 
     return {
         mapView,
