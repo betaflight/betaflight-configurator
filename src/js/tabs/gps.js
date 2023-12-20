@@ -9,6 +9,8 @@ import $ from 'jquery';
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from '../msp/MSPHelper';
 import { updateTabList } from '../utils/updateTabList';
+import { initMap } from './map';
+import { fromLonLat } from "ol/proj";
 
 const gps = {};
 
@@ -204,6 +206,15 @@ gps.initialize = async function (callback) {
             $('div.mag_declination').hide();
         }
 
+        const {
+            mapView,
+            iconStyleMag,
+            iconStyleGPS,
+            iconStyleNoFix,
+            iconFeature,
+            iconGeometry,
+        } = initMap();
+
         // End GPS Configuration
 
         function update_ui() {
@@ -323,41 +334,33 @@ gps.initialize = async function (callback) {
                 }
             }
 
-            const message = {
-                action: 'center',
-                lat: lat,
-                lon: lon,
-                heading: imuHeadingRadians,
-            };
-
-            frame = document.getElementById('map');
             if (navigator.onLine) {
                 $('#connect').hide();
 
                 if (FC.GPS_DATA.fix) {
                     gpsWasFixed = true;
-                    message.action = hasMag ? 'centerMag' : 'center';
-                    if (!!frame.contentWindow) {
-                      frame.contentWindow.postMessage(message, '*');
-                    }
+
+                    (hasMag ? iconStyleMag : iconStyleGPS)
+                        .getImage()
+                        .setRotation(imuHeadingRadians);
+                    iconFeature.setStyle(hasMag ? iconStyleMag : iconStyleGPS);
+                    const center = fromLonLat([lon, lat]);
+                    mapView.setCenter(center);
+                    iconGeometry.setCoordinates(center);
+
                     $('#loadmap').show();
                     $('#waiting').hide();
                 } else if (!gpsWasFixed) {
                     $('#loadmap').hide();
                     $('#waiting').show();
                 } else {
-                    message.action = 'nofix';
-                    if (!!frame.contentWindow) {
-                        frame.contentWindow.postMessage(message, '*');
-                    }
+                    iconFeature.setStyle(iconStyleNoFix);
                 }
             } else {
                 gpsWasFixed = false;
                 set_offline();
             }
         }
-
-        let frame = document.getElementById('map');
 
         // enable data pulling
         GUI.interval_add('gps_pull', function gps_update() {
@@ -385,18 +388,12 @@ gps.initialize = async function (callback) {
 
         $('#zoom_in').click(function() {
             console.log('zoom in');
-            const message = {
-                action: 'zoom_in',
-            };
-            frame.contentWindow.postMessage(message, '*');
+            mapView.setZoom(mapView.getZoom() + 1);
         });
 
         $('#zoom_out').click(function() {
             console.log('zoom out');
-            const message = {
-                action: 'zoom_out',
-            };
-            frame.contentWindow.postMessage(message, '*');
+            mapView.setZoom(mapView.getZoom() - 1);
         });
 
         $('a.save').on('click', async function() {
