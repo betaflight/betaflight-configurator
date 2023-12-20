@@ -34,22 +34,6 @@
     "type": "git",
     "url": "github.com/betaflight/betaflight-configurator"
   },
-  "webview": {
-    "partitions": [
-      {
-        "name": "map",
-        "accessible_resources": [
-          "tabs/map.html",
-          "js/tabs/map.js",
-          "/js/libraries/openlayers/ol.css",
-          "/js/libraries/openlayers/ol.js",
-          "/images/icons/cf_icon_position.png",
-          "/images/icons/cf_icon_position_mag.png",
-          "/images/icons/cf_icon_position_nofix.png"
-        ]
-      }
-    ]
-  },
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
@@ -78,6 +62,7 @@
     "multicast-dns": "^7.2.5",
     "multiple-select": "^1.6.0",
     "nw-vue-devtools-prebuilt": "^0.0.10",
+    "ol": "^8.2.0",
     "select2": "^4.0.13",
     "semver-min": "^0.7.2",
     "short-unique-id": "^4.4.4",

@@ -1,121 +1,93 @@
+import { View, Map, Feature } from "ol";
+import { fromLonLat } from "ol/proj";
+import { Tile, Vector as LayerVector } from "ol/layer";
+import { OSM, Vector as SourceVector } from "ol/source";
+import { Icon, Style } from "ol/style";
+import { Point } from "ol/geom";
 
 const DEFAULT_ZOOM = 16,
-      DEFAULT_LON = 0,
-      DEFAULT_LAT = 0,
-      ICON_IMAGE_GPS = '/images/icons/cf_icon_position.png',
-      ICON_IMAGE_MAG = '/images/icons/cf_icon_position_mag.png',
-      ICON_IMAGE_NOFIX = '/images/icons/cf_icon_position_nofix.png';
+    DEFAULT_LON = 0,
+    DEFAULT_LAT = 0,
+    ICON_IMAGE_GPS = "/images/icons/cf_icon_position.png",
+    ICON_IMAGE_MAG = "/images/icons/cf_icon_position_mag.png",
+    ICON_IMAGE_NOFIX = "/images/icons/cf_icon_position_nofix.png";
 
-let iconGeometry,
-    map,
-    mapView,
-    iconStyleGPS,
-    iconStyleMag,
-    iconStyleNoFix,
-    iconFeature;
+export function initMap() {
+    const lonLat = fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
 
-window.onload = initializeMap;
-
-function initializeMap() {
-
-    const lonLat = ol.proj.fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
-
-    mapView = new ol.View({
+    const mapView = new View({
         center: lonLat,
         zoom: DEFAULT_ZOOM,
     });
 
-    map = new ol.Map({
-        target: 'map-canvas',
+    const map = new Map({
+        target: "map",
         layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM(),
+            new Tile({
+                source: new OSM(),
             }),
         ],
         view: mapView,
         controls: [],
     });
 
-    const iconGPS = new ol.style.Icon({
+    const iconGPS = new Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_GPS,
     });
 
-    const iconMag = new ol.style.Icon({
+    const iconMag = new Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_MAG,
     });
 
-    const iconNoFix = new ol.style.Icon({
+    const iconNoFix = new Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_NOFIX,
     });
 
-    iconStyleGPS = new ol.style.Style({
+    const iconStyleGPS = new Style({
         image: iconGPS,
     });
 
-    iconStyleMag = new ol.style.Style({
+    const iconStyleMag = new Style({
         image: iconMag,
     });
 
-    iconStyleNoFix = new ol.style.Style({
+    const iconStyleNoFix = new Style({
         image: iconNoFix,
     });
 
-    iconGeometry = new ol.geom.Point(lonLat);
+    const iconGeometry = new Point(lonLat);
 
-    iconFeature = new ol.Feature({
+    const iconFeature = new Feature({
         geometry: iconGeometry,
     });
 
     iconFeature.setStyle(iconStyleGPS);
 
-    const vectorSource = new ol.source.Vector({
+    const vectorSource = new SourceVector({
         features: [iconFeature],
     });
 
-    const currentPositionLayer = new ol.layer.Vector({
+    const currentPositionLayer = new LayerVector({
         source: vectorSource,
     });
 
     map.addLayer(currentPositionLayer);
 
-    window.addEventListener('message', processMapEvents);
-}
-
-function processMapEvents(e) {
-    try {
-        switch (e.data.action) {
-            case 'zoom_in':
-                mapView.setZoom(mapView.getZoom() + 1);
-                break;
-
-            case 'zoom_out':
-                mapView.setZoom(mapView.getZoom() - 1);
-                break;
-
-            case 'center':
-            case 'centerMag':
-                const hasMag = e.data.action == 'centerMag';
-                (hasMag ? iconStyleMag : iconStyleGPS).getImage().setRotation(e.data.heading);
-                iconFeature.setStyle(hasMag ? iconStyleMag : iconStyleGPS);
-                const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
-                mapView.setCenter(center);
-                iconGeometry.setCoordinates(center);
-                break;
-
-            case 'nofix':
-                iconFeature.setStyle(iconStyleNoFix);
-                break;
-        }
-    } catch (err) {
-        console.error('Map error', err);
-    }
+    return {
+        mapView,
+        iconStyleMag,
+        iconStyleGPS,
+        iconStyleNoFix,
+        iconFeature,
+        iconGeometry,
+    };
 }
