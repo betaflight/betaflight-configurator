@@ -124,7 +124,7 @@ gulp.task('apps', appsBuild);
 const debugAppsBuild = gulp.series(gulp.parallel(clean_debug, gulp.series(clean_dist, debugDistBuild)), debug, gulp.series(cordova_apps(false)), gulp.parallel(listPostBuildTasks(DEBUG_DIR)));
 
 const debugBuildNoStart = gulp.series(debugDistBuild, debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)));
-const debugBuild = gulp.series(debugBuildNoStart, start_debug);
+const debugBuild = gulp.series(clean_dist, debugBuildNoStart, start_debug);
 gulp.task('debug', debugBuild);
 gulp.task('debug-no-start', debugBuildNoStart);
 
@@ -360,6 +360,7 @@ function dist_src() {
         '!./src/support/**',
         '!./src/**/*.less',
         './src/js/workers/hex_parser.js',
+        './src/js/tabs/map.js',
     ];
 
     return gulp.src(distSources, { base: 'src' })
