@@ -360,6 +360,7 @@ function dist_src() {
         '!./src/support/**',
         '!./src/**/*.less',
         './src/js/workers/hex_parser.js',
+        './src/js/tabs/map.js',
     ];
 
     return gulp.src(distSources, { base: 'src' })
