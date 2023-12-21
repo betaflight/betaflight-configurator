@@ -7,33 +7,24 @@
         <div class="note">
             <p i18n="auxiliaryHelp"></p>
         </div>
-        <table class="auxiliary_category">
-            <tbody>
-            <tr>
-                <td>
-                    <div id="auxiliary_category_content">
-                        <div class="auxiliary_filter_row" width: 100%;>
-                            <div>
-                                <div class="auxiliary_category_header" i18n="auxiliaryFilterCategory"></div>
-                            </div>
-                            <div class="line auxiliary_category_select_value">
-                                <select id="auxiliary_category_list" multiple="multiple" class="auxiliary_category_select"></select>
-                            </div>
-                        </div>
+        <div class="auxiliary_toolbox">
+            <form>
+                <input type="checkbox" id="switch-toggle-unused" name="switch-toggle-unused" class="toggle"/>
+                <span i18n="auxiliaryToggleUnused"></span>
+            </form>
+        </div>
+        <div class="auxiliary_category">
+            <div id="auxiliary_category_content">
+                <div class="auxiliary_filter_row">
+                    <div>
+                        <div class="auxiliary_category_header" i18n="auxiliaryFilterCategory"></div>
                     </div>
-                </td>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                <td>
-                    <div class="toolbox">
-                        <form>
-                            <input type="checkbox" id="switch-toggle-unused" name="switch-toggle-unused" class="toggle"/>
-                            <span i18n="auxiliaryToggleUnused"></span>
-                        </form>
+                    <div class="auxiliary_category_select_value">
+                        <select id="auxiliary_category_list" multiple="multiple" class="auxiliary_category_select"></select>
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+            </div>
+        </div>
         <div class="modes"></div>
     </div>
     <div class="content_toolbar">
