@@ -100,6 +100,10 @@ export function initMap() {
 
     map.addLayer(currentPositionLayer);
 
+    // Hide all layers initially except OSM
+    googleSatLayer.setVisible(false);
+    googleHybridLayer.setVisible(false);
+
     $('#mapview').click(function (e) {
         switch (e.target.text) {
             case 'R':
