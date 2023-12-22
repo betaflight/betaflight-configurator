@@ -102,29 +102,27 @@ export function initMap() {
     osmLayer.setVisible(false);
     googleHybridLayer.setVisible(false);
 
-    $('#mapview').click(function (e) {
-        switch (e.target.text) {
-            case 'R':
-                if (!osmLayer.isVisible()) {
-                    osmLayer.setVisible(true);
-                    googleSatLayer.setVisible(false);
-                    googleHybridLayer.setVisible(false);
-                }
-                break;
-            case 'S':
-                if (!googleSatLayer.isVisible()) {
-                    osmLayer.setVisible(false);
-                    googleSatLayer.setVisible(true);
-                    googleHybridLayer.setVisible(false);
-                }
-                break;
-            case 'H':
-                if (!googleHybridLayer.isVisible()) {
-                    osmLayer.setVisible(false);
-                    googleSatLayer.setVisible(false);
-                    googleHybridLayer.setVisible(true);
-                }
-                break;
+    $('#Hybrid').on('click', function () {
+        if (!googleHybridLayer.isVisible()) {
+            osmLayer.setVisible(false);
+            googleSatLayer.setVisible(false);
+            googleHybridLayer.setVisible(true);
+        }
+    });
+
+    $('#Satellite').on('click', function () {
+        if (!googleSatLayer.isVisible()) {
+            osmLayer.setVisible(false);
+            googleSatLayer.setVisible(true);
+            googleHybridLayer.setVisible(false);
+        }
+    });
+
+    $('#Street').on('click', function () {
+        if (!osmLayer.isVisible()) {
+            osmLayer.setVisible(true);
+            googleSatLayer.setVisible(false);
+            googleHybridLayer.setVisible(false);
         }
     });
 
