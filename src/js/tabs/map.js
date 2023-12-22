@@ -108,10 +108,6 @@ export function initMap() {
         switch (e.target.text) {
             case 'R':
                 if (!osmLayer.isVisible()) {
-                //     osmLayer.setVisible(false);
-                //     googleSatLayer.setVisible(true);
-                //     googleHybridLayer.setVisible(false);
-                // } else {
                     $('#layer_tag').text('Roadmap');
                     osmLayer.setVisible(true);
                     googleSatLayer.setVisible(false);
@@ -120,10 +116,6 @@ export function initMap() {
                 break;
             case 'S':
                 if (!googleSatLayer.isVisible()) {
-                //     osmLayer.setVisible(false);
-                //     googleSatLayer.setVisible(false);
-                //     googleHybridLayer.setVisible(true);
-                // } else {
                     $('#layer_tag').text('Satellite');
                     osmLayer.setVisible(false);
                     googleSatLayer.setVisible(true);
@@ -132,10 +124,6 @@ export function initMap() {
                 break;
             case 'H':
                 if (!googleHybridLayer.isVisible()) {
-                //     osmLayer.setVisible(true);
-                //     googleSatLayer.setVisible(false);
-                //     googleHybridLayer.setVisible(false);
-                // } else {
                     $('#layer_tag').text('Hybrid');
                     osmLayer.setVisible(false);
                     googleSatLayer.setVisible(false);
