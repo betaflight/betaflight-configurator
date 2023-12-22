@@ -27,14 +27,12 @@ export function initMap() {
     const googleSatLayer = new Tile({
         source: new XYZ({
             url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
-            maxZoom: DEFAULT_ZOOM,
         }),
     });
 
     const googleHybridLayer = new Tile({
         source: new XYZ({
             url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
-            maxZoom: DEFAULT_ZOOM,
         }),
     });
 
