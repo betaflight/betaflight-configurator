@@ -215,6 +215,24 @@ gps.initialize = async function (callback) {
         // End GPS Configuration
 
         function update_ui() {
+            // testing from Rotterdam Airport
+            FC.GPS_DATA = {
+                "fix": 2,
+                "numSat": 10,
+                "lat": 519555090,
+                "lon": 44398830,
+                "alt": 0,
+                "speed": 0,
+                "ground_course": 1337,
+                "distanceToHome": 0,
+                "directionToHome": 0,
+                "update": 0,
+                "chn": [0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 6, 6, 6, 6, 6, 6, 6, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255],
+                "svid": [1, 2, 10, 15, 18, 23, 26, 123, 136, 1, 15, 2, 3, 4, 9, 10, 16, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "quality": [3, 95, 95, 95, 95, 95, 95, 23, 23, 1, 31, 20, 31, 23, 20, 17, 31, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "cno": [27, 37, 43, 37, 34, 47, 44, 42, 39, 0, 40, 24, 40, 35, 26, 0, 35, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            };
+
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;

@@ -20,45 +20,30 @@ export function initMap() {
         zoom: DEFAULT_ZOOM,
     });
 
+    const osmLayer = new Tile({
+        source: new OSM(),
+    });
+
+    const googleSatLayer = new Tile({
+        source: new XYZ({
+            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+            maxZoom: DEFAULT_ZOOM,
+        }),
+    });
+
+    const googleHybridLayer = new Tile({
+        source: new XYZ({
+            url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+            maxZoom: DEFAULT_ZOOM,
+        }),
+    });
+
     const map = new Map({
         target: "map",
         layers: [
-            new Tile({
-                source: new OSM(),
-            }),
-            new LayerGroup({
-                layers: [
-                    new Tile({
-                        source: new XYZ({
-                            attributions: [
-                                'Powered by Esri',
-                                'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
-                            ],
-                            attributionsCollapsible: false,
-                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-                            maxZoom: DEFAULT_ZOOM,
-                        }),
-                    }),
-                    new Tile({
-                        source: new XYZ({
-                            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
-                            maxZoom: DEFAULT_ZOOM,
-                        }),
-                    }),
-                    new Tile({
-                        source: new XYZ({
-                            url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
-                            maxZoom: DEFAULT_ZOOM,
-                        }),
-                    }),
-                    new Tile({
-                        source: new XYZ({
-                            url: 'https://mt1.google.com/vt/lyrs=t&x={x}&y={y}&z={z}',
-                            maxZoom: DEFAULT_ZOOM,
-                        }),
-                    }),
-                ],
-            }),
+            osmLayer,
+            googleSatLayer,
+            googleHybridLayer,
         ],
         view: mapView,
         controls: [],
@@ -115,38 +100,43 @@ export function initMap() {
 
     map.addLayer(currentPositionLayer);
 
-    function bindInputs(layerid, layer) {
-        const visibilityInput = $(`${layerid} input.visible`);
-        visibilityInput.on('change', function () {
-            layer.setVisible(this.checked);
-        });
-        visibilityInput.prop('checked', layer.getVisible());
-
-        const opacityInput = $(`${layerid} input.opacity`);
-        opacityInput.on('input', function () {
-            layer.setOpacity(parseFloat(this.value));
-        });
-        opacityInput.val(String(layer.getOpacity()));
-    }
-
-    function setup(id, group) {
-        group.getLayers().forEach(function (layer, i) {
-            const layerid = id + i;
-            bindInputs(layerid, layer);
-            if (layer instanceof LayerGroup) {
-                setup(layerid, layer);
-            }
-        });
-    }
-
-    setup('#layer', map.getLayerGroup());
-
-    $('#layertree li > span').click(function () {
-        $(this).siblings('fieldset').toggle();
-    })
-    .siblings('fieldset')
-    .hide();
-
+    $('#mapview').click(function (e) {
+        switch (e.target.text) {
+            case 'R':
+                if (osmLayer.isVisible()) {
+                    osmLayer.setVisible(false);
+                    googleSatLayer.setVisible(true);
+                    googleHybridLayer.setVisible(false);
+                } else {
+                    osmLayer.setVisible(true);
+                    googleSatLayer.setVisible(false);
+                    googleHybridLayer.setVisible(false);
+                }
+                break;
+            case 'S':
+                if (googleSatLayer.isVisible()) {
+                    osmLayer.setVisible(false);
+                    googleSatLayer.setVisible(false);
+                    googleHybridLayer.setVisible(true);
+                } else {
+                    osmLayer.setVisible(false);
+                    googleSatLayer.setVisible(true);
+                    googleHybridLayer.setVisible(false);
+                }
+                break;
+            case 'H':
+                if (googleHybridLayer.isVisible()) {
+                    osmLayer.setVisible(true);
+                    googleSatLayer.setVisible(false);
+                    googleHybridLayer.setVisible(false);
+                } else {
+                    osmLayer.setVisible(false);
+                    googleSatLayer.setVisible(false);
+                    googleHybridLayer.setVisible(true);
+                }
+                break;
+        }
+    });
 
     return {
         mapView,

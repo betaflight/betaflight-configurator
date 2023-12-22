@@ -7027,10 +7027,6 @@
         "message": "None",
         "description": "One of the options selectable for the GPS SBAS system"
     },
-    "gpsMapTypeESRI": {
-        "message": "ESRI",
-        "description": "One of the options selectable for the GPS map type"
-    },
     "gpsMapTypeRoadmap": {
         "message": "Roadmap",
         "description": "One of the options selectable for the GPS map type"
@@ -7041,10 +7037,6 @@
     },
     "gpsMapTypeHybrid": {
         "message": "Hybrid",
-        "description": "One of the options selectable for the GPS map type"
-    },
-    "gpsMapTypeTerrain": {
-        "message": "Terrain",
         "description": "One of the options selectable for the GPS map type"
     },
     "dialogFileNameTitle": {

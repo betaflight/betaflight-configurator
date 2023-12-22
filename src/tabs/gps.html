@@ -134,92 +134,14 @@
                         <div class="info" i18n="gpsMapMessage2"></div>
                     </div>
                     <div id="loadmap">
-                        <!-- <div class="radioboxes" id="map-type-control">
-                            <label><input type="radio" name="map-type" /><span i18n="gpsMapTypeRoadmap"></span></label>
-                            <label><input type="radio" name="map-type" /><span i18n="gpsMapTypeSatellite"></span></label>
-                            <label><input type="radio" name="map-type" /><span i18n="gpsMapTypeHybrid"></span></label>
-                            <label><input type="radio" name="map-type" /><span i18n="gpsMapTypeTerrain"></span></label>
-                        </div> -->
                         <div id="map" class="map"> </div>
 
-                        <div id="layertree">
-                            <h5>Click on layer nodes below to change their properties.</h5>
-                            <ul>
-                              <li>
-                                <span i18n="gpsMapTypeRoadmap"></span>
-                                <fieldset id="layer0">
-                                  <label class="checkbox" for="visible0">
-                                    visible <input id="visible0" class="visible" type="checkbox"/>
-                                  </label>
-                                  <label>
-                                    opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
-                                  </label>
-                                </fieldset>
-                              </li>
-                              <li>
-                                <span>Layer group</span>
-                                <fieldset id="layer1">
-                                  <label class="checkbox" for="visible1">
-                                    visible <input id="visible1" class="visible" type="checkbox"/>
-                                  </label>
-                                  <label>
-                                    opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
-                                  </label>
-                                </fieldset>
-
-                                <ul>
-                                    <li>
-                                        <span>ESRI Layer</span>
-                                        <fieldset id="layer10">
-                                            <label class="checkbox" for="visible10">
-                                                visible <input id="visible10" class="visible" type="checkbox"/>
-                                            </label>
-                                            <label>
-                                                opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
-                                            </label>
-                                        </fieldset>
-                                    </li>
-                                    <li>
-                                        <span span i18n="gpsMapTypeSatellite"></span>
-                                        <fieldset id="layer11">
-                                            <label class="checkbox" for="visible11">
-                                                visible <input id="visible11" class="visible" type="checkbox"/>
-                                            </label>
-                                            <label>
-                                                opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
-                                            </label>
-                                        </fieldset>
-                                    </li>
-
-                                    <li>
-                                        <span i18n="gpsMapTypeHybrid"></span>
-                                        <fieldset id="layer12">
-                                            <label class="checkbox" for="visible12">
-                                                visible <input id="visible12" class="visible" type="checkbox"/>
-                                            </label>
-                                            <label>
-                                                opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
-                                            </label>
-                                        </fieldset>
-                                    </li>
-
-                                    <li>
-                                        <span i18n="gpsMapTypeTerrain"></span>
-                                        <fieldset id="layer13">
-                                          <label class="checkbox" for="visible13">
-                                            visible <input id="visible13" class="visible" type="checkbox"/>
-                                          </label>
-                                          <label>
-                                            opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
-                                          </label>
-                                        </fieldset>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            </ul>
-                          </div>
                         <div class="controls">
+                            <div id="mapview" class="mapview">
+                                <a href="#" id="Hybrid">H</a>
+                                <a href="#" id="Satellite">S</a>
+                                <a href="#" id="OSM">R</a>
+                            </div>
                             <a href="#" id="zoom_in">+</a>
                             <a href="#" id="zoom_out">–</a>
                         </div>
