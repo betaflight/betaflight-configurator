@@ -1,5 +1,6 @@
 import GUI from './gui';
 import PortHandler from './port_handler';
+import { isWeb } from './utils/isWeb';
 
 const MDNS_INTERVAL = 10000;
 const TCP_CHECK_INTERVAL = 5000;
@@ -49,20 +50,19 @@ MdnsDiscovery.initialize = function() {
 
         reinit();
     } else {
-        if(typeof require === 'undefined') {
-            return 'not implemented';
-        }
-        const bonjour = require('bonjour')();
-
-        self.mdnsBrowser.browser = bonjour.find({ type: 'http' }, service => {
-            console.log("Found HTTP service", service);
-            self.mdnsBrowser.services.push({
-                addresses: service.addresses,
-                txt: service.txt,
-                fqdn: service.fqdn,
-                ready: true,
+        if(!isWeb()) {
+            import('bonjour').then(({ default: bonjour  }) => {
+                self.mdnsBrowser.browser = bonjour.find({ type: 'http' }, service => {
+                    console.log("Found HTTP service", service);
+                    self.mdnsBrowser.services.push({
+                        addresses: service.addresses,
+                        txt: service.txt,
+                        fqdn: service.fqdn,
+                        ready: true,
+                    });
+                });
             });
-        });
+        }
     }
 
     setInterval(() => {
