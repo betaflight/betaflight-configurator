@@ -1,6 +1,6 @@
 import { View, Map, Feature } from "ol";
 import { fromLonLat } from "ol/proj";
-import { Group as LayerGroup, Tile, Vector as LayerVector } from "ol/layer";
+import { Tile, Vector as LayerVector } from "ol/layer";
 import { OSM, XYZ, Vector as SourceVector } from "ol/source";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
