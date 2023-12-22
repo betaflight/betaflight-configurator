@@ -5,7 +5,7 @@ import { OSM, XYZ, Vector as SourceVector } from "ol/source";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
 
-const DEFAULT_ZOOM = 16,
+const DEFAULT_ZOOM = 17,
     DEFAULT_LON = 0,
     DEFAULT_LAT = 0,
     ICON_IMAGE_GPS = "/images/icons/cf_icon_position.png",
@@ -98,15 +98,14 @@ export function initMap() {
 
     map.addLayer(currentPositionLayer);
 
-    // Hide all layers initially except OSM
-    googleSatLayer.setVisible(false);
+    // Start with Satellite layer
+    osmLayer.setVisible(false);
     googleHybridLayer.setVisible(false);
 
     $('#mapview').click(function (e) {
         switch (e.target.text) {
             case 'R':
                 if (!osmLayer.isVisible()) {
-                    $('#layer_tag').text('Roadmap');
                     osmLayer.setVisible(true);
                     googleSatLayer.setVisible(false);
                     googleHybridLayer.setVisible(false);
@@ -114,7 +113,6 @@ export function initMap() {
                 break;
             case 'S':
                 if (!googleSatLayer.isVisible()) {
-                    $('#layer_tag').text('Satellite');
                     osmLayer.setVisible(false);
                     googleSatLayer.setVisible(true);
                     googleHybridLayer.setVisible(false);
@@ -122,7 +120,6 @@ export function initMap() {
                 break;
             case 'H':
                 if (!googleHybridLayer.isVisible()) {
-                    $('#layer_tag').text('Hybrid');
                     osmLayer.setVisible(false);
                     googleSatLayer.setVisible(false);
                     googleHybridLayer.setVisible(true);
