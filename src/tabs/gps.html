@@ -125,7 +125,6 @@
                 <div class="gui_box grey gps_map">
                     <div class="gui_box_titlebar" style="margin-bottom: 0px;">
                         <div class="spacer_box_title" i18n="gpsMapHead"></div>
-                        <div class="helpicon cf_tip" i18n_title="gpsMapHeadHelp"></div>
                     </div>
                     <div id="connect" i18n="gpsMapMessage1">
                         <div class="default_btn" style="width:50px; margin-left:auto; margin-right:auto; float:none;"><a id="check">retry</a></div>
@@ -135,9 +134,13 @@
                     </div>
                     <div id="loadmap">
                         <div id="map" class="map"> </div>
+
                         <div class="controls">
-                            <a href="#" id="zoom_in">+</a>
-                            <a href="#" id="zoom_out">–</a>
+                            <button id="Hybrid">H</button>
+                            <button id="Satellite">S</button>
+                            <button id="Street">R</button>
+                            <button id="zoom_in">+</button>
+                            <button id="zoom_out">–</button>
                         </div>
                     </div>
                 </div>

@@ -79,9 +79,6 @@ gps.initialize = async function (callback) {
             MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_ui);
         }
 
-        // To not flicker the divs while the fix is unstable
-        let gpsWasFixed = false;
-
         // GPS Configuration
         const features_e = $('.tab-gps .features');
 
@@ -334,12 +331,14 @@ gps.initialize = async function (callback) {
                 }
             }
 
+            let gpsFoundPosition = false;
+
             if (navigator.onLine) {
                 $('#connect').hide();
 
-                if (FC.GPS_DATA.fix) {
-                    gpsWasFixed = true;
+                gpsFoundPosition = !!(lon && lat);
 
+                if (gpsFoundPosition) {
                     (hasMag ? iconStyleMag : iconStyleGPS)
                         .getImage()
                         .setRotation(imuHeadingRadians);
@@ -347,19 +346,15 @@ gps.initialize = async function (callback) {
                     const center = fromLonLat([lon, lat]);
                     mapView.setCenter(center);
                     iconGeometry.setCoordinates(center);
-
-                    $('#loadmap').show();
-                    $('#waiting').hide();
-                } else if (!gpsWasFixed) {
-                    $('#loadmap').hide();
-                    $('#waiting').show();
                 } else {
                     iconFeature.setStyle(iconStyleNoFix);
                 }
             } else {
-                gpsWasFixed = false;
                 set_offline();
             }
+
+            $('#loadmap').toggle(gpsFoundPosition);
+            $('#waiting').toggle(!gpsFoundPosition);
         }
 
         // enable data pulling

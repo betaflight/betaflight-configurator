@@ -1,11 +1,11 @@
 import { View, Map, Feature } from "ol";
 import { fromLonLat } from "ol/proj";
 import { Tile, Vector as LayerVector } from "ol/layer";
-import { OSM, Vector as SourceVector } from "ol/source";
+import { OSM, XYZ, Vector as SourceVector } from "ol/source";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
 
-const DEFAULT_ZOOM = 16,
+const DEFAULT_ZOOM = 17,
     DEFAULT_LON = 0,
     DEFAULT_LAT = 0,
     ICON_IMAGE_GPS = "/images/icons/cf_icon_position.png",
@@ -20,12 +20,28 @@ export function initMap() {
         zoom: DEFAULT_ZOOM,
     });
 
+    const osmLayer = new Tile({
+        source: new OSM(),
+    });
+
+    const googleSatLayer = new Tile({
+        source: new XYZ({
+            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+        }),
+    });
+
+    const googleHybridLayer = new Tile({
+        source: new XYZ({
+            url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+        }),
+    });
+
     const map = new Map({
         target: "map",
         layers: [
-            new Tile({
-                source: new OSM(),
-            }),
+            osmLayer,
+            googleSatLayer,
+            googleHybridLayer,
         ],
         view: mapView,
         controls: [],
@@ -81,6 +97,34 @@ export function initMap() {
     });
 
     map.addLayer(currentPositionLayer);
+
+    // Start with Satellite layer
+    osmLayer.setVisible(false);
+    googleHybridLayer.setVisible(false);
+
+    $('#Hybrid').on('click', function () {
+        if (!googleHybridLayer.isVisible()) {
+            osmLayer.setVisible(false);
+            googleSatLayer.setVisible(false);
+            googleHybridLayer.setVisible(true);
+        }
+    });
+
+    $('#Satellite').on('click', function () {
+        if (!googleSatLayer.isVisible()) {
+            osmLayer.setVisible(false);
+            googleSatLayer.setVisible(true);
+            googleHybridLayer.setVisible(false);
+        }
+    });
+
+    $('#Street').on('click', function () {
+        if (!osmLayer.isVisible()) {
+            osmLayer.setVisible(true);
+            googleSatLayer.setVisible(false);
+            googleHybridLayer.setVisible(false);
+        }
+    });
 
     return {
         mapView,
