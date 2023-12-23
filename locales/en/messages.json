@@ -7023,18 +7023,6 @@
         "message": "None",
         "description": "One of the options selectable for the GPS SBAS system"
     },
-    "gpsMapTypeRoadmap": {
-        "message": "Roadmap",
-        "description": "One of the options selectable for the GPS map type"
-    },
-    "gpsMapTypeSatellite": {
-        "message": "Satellite",
-        "description": "One of the options selectable for the GPS map type"
-    },
-    "gpsMapTypeHybrid": {
-        "message": "Hybrid",
-        "description": "One of the options selectable for the GPS map type"
-    },
     "dialogFileNameTitle": {
         "message": "File name"
     },
