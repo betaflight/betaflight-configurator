@@ -100,6 +100,7 @@ function process_package_debug(done) {
 const distCommon = gulp.series(
     dist_src,
     dist_node_modules_css,
+    dist_ol_css,
     dist_less,
     dist_changelog,
     dist_locale,
@@ -369,10 +370,15 @@ function dist_src() {
 }
 
 function dist_node_modules_css() {
-    return gulp.src([
-        './**/*.min.css',
-        './node_modules/ol/ol.css',
-    ], { base: 'node_modules' }).pipe(gulp.dest(`${DIST_DIR}node_modules/`));
+  return gulp
+    .src("./**/*.min.css")
+    .pipe(gulp.dest(DIST_DIR));
+}
+
+function dist_ol_css() {
+    return gulp
+        .src("./node_modules/ol/ol.css", { base: "node_modules" })
+        .pipe(gulp.dest(DIST_DIR));
 }
 
 function dist_less() {
