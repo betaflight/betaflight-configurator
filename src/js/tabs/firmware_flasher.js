@@ -1179,7 +1179,7 @@ firmware_flasher.updateDetectBoardButton = function() {
 };
 
 firmware_flasher.validateBuildKey = function() {
-    return this.cloudBuildKey.length === 32;
+    return this.cloudBuildKey?.length === 32;
 };
 
 /**
