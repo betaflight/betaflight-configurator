@@ -199,6 +199,7 @@ const MSPCodes = {
     MSP2_GET_LED_STRIP_CONFIG_VALUES:   0x3008,
     MSP2_SET_LED_STRIP_CONFIG_VALUES:   0x3009,
     MSP2_SENSOR_CONFIG_ACTIVE:          0x300A,
+    MSP2_UBLOX_REQUEST_SV_INFO:         0x300B,
 
     // MSP2_GET_TEXT and MSP2_SET_TEXT variable types
     PILOT_NAME:                     1,
