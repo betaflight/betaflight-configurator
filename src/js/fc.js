@@ -128,7 +128,6 @@ const FC = {
     LED_COLORS: null,
     LED_MODE_COLORS: null,
     LED_STRIP: null,
-    LED_STRIP_CONFIG: null,
     LED_CONFIG_VALUES: [],
     MISC: null, // DEPRECATED
     MIXER_CONFIG: null,
@@ -212,7 +211,6 @@ const FC = {
         };
 
         this.LED_STRIP =                [];
-        this.LED_STRIP_CONFIG =         [];
         this.LED_COLORS =               [];
         this.LED_MODE_COLORS =          [];
 
