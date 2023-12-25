@@ -783,6 +783,9 @@
     "initialSetupMagHead": {
         "message": "Magnetòmetre"
     },
+    "initialSetupMagDeclination": {
+        "message": "Declinació del Magnetómetre:"
+    },
     "initialSetupInfoHead": {
         "message": "Informació del sistema"
     },
@@ -1281,6 +1284,9 @@
     },
     "configurationArmingHelp": {
         "message": "Algunes opcions d'armat requereixen l'acceleròmetre habilitat"
+    },
+    "configurationMagDeclination": {
+        "message": "Declinació del magnetòmetre [graus]"
     },
     "configurationReverseMotorSwitch": {
         "message": "La direcció dels motors és inversa"
@@ -2711,10 +2717,6 @@
     },
     "gpsMapHead": {
         "message": "Ubicació actual del GPS"
-    },
-    "gpsMapHeadHelp": {
-        "message": "Mostra la ubicació GPS al mapa. Utilitzeu el botó de desplaçament per apropar i allunyar.<br>La icona d'ubicació mostra la direcció nord quan el magnetòmetre està en ús",
-        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Si us plau, revisa la connexió a Internet"
@@ -5423,8 +5425,8 @@
         "message": "Millor temps de 3 voltas GPS",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Millor temps de volta per GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Millor temps de 3 voltas per GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nom de l'aeronau",

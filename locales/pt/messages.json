@@ -779,6 +779,9 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
+    "initialSetupMagDeclination": {
+        "message": "Declinação Mag:"
+    },
     "initialSetupInfoHead": {
         "message": "Info. do Sistema"
     },
@@ -952,6 +955,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Filtragem baseada em RPM está habilitada, mas um ou mais ESCs não estão a fornecer telemetria DSHOT. Verifique se os ESCs são capazes disso e se o firmware necessário está instalado para suportar telemetria DSHOT bidirecional.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Telemetria Dshot está habilitada, mas um ou mais ESCs não estão a fornecer telemetria DSHOT válida. Verifique se os ESCs são capazes disso e têm o firmware necessário instalado para suportar telemetria DSHOT bidirecional.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Uma alteração de configuração requer uma reinicialização",
@@ -1273,6 +1280,9 @@
     },
     "configurationArmingHelp": {
         "message": "Algumas opções de Armar podem necessitar que o acelerómetro esteja ativado"
+    },
+    "configurationMagDeclination": {
+        "message": "Declinação do Magnetómetro [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direção do motor está invertida"
@@ -2703,10 +2713,6 @@
     },
     "gpsMapHead": {
         "message": "Localização GPS atual"
-    },
-    "gpsMapHeadHelp": {
-        "message": "Mostra a localização do GPS no mapa. Use o botão de scroll do rato para ampliar e reduzir.<br>O ícone de localização mostra a direção do norte quando o magnetómetro está em uso",
-        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Verifique a sua ligação de internet"
@@ -5419,8 +5425,8 @@
         "message": "Tempo GPS da melhor de 3 voltas",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Melhor tempo de volta GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Melhores 3 voltas segundo o GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nome do aparelho",

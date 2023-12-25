@@ -2704,10 +2704,6 @@
     "gpsMapHead": {
         "message": "現在のGPS測位"
     },
-    "gpsMapHeadHelp": {
-        "message": "地図上にGPS位置を表示します。マウスのスクロールボタンで拡大・縮小できます。<br>コンパスが使用されている場合、位置アイコンは北の方位を示します。",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
     },
@@ -5418,9 +5414,6 @@
     "osdTextElementLapTimeBest3": {
         "message": "GPSラップタイム ベスト3",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementLapTimeBest": {
-        "message": "GPSラップタイム ベスト"
     },
     "osdTextElementCraftName": {
         "message": "機体名",

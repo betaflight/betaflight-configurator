@@ -779,6 +779,9 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
+    "initialSetupMagDeclination": {
+        "message": "Declinación Mag:"
+    },
     "initialSetupInfoHead": {
         "message": "Información del sistema"
     },
@@ -1277,6 +1280,9 @@
     },
     "configurationArmingHelp": {
         "message": "Algunas opciones de Armado pueden requerir que el acelerómetro esté activado"
+    },
+    "configurationMagDeclination": {
+        "message": "Declinación del magnetómetro [grad]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de los motores invertida"
@@ -2707,10 +2713,6 @@
     },
     "gpsMapHead": {
         "message": "Localización GPS actual"
-    },
-    "gpsMapHeadHelp": {
-        "message": "Muestra ubicación GPS en el mapa. Utiliza la rueda de desplazamiento del ratón para acercar o alejar el zoom.<br>El icono de la ubicación muestra la dirección norte cuando el magnetómetro está en uso",
-        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Por favor verifica tu conexión a internet"
@@ -5423,8 +5425,8 @@
         "message": "GPS: mejor 3 vueltas GPS",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Muestra las mejores vueltas según el GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Muestra las 3 mejores vueltas según el GPS"
     },
     "osdTextElementCraftName": {
         "message": "Identificador: nombre de la aeronave",

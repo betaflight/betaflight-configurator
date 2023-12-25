@@ -2539,10 +2539,6 @@
     "gpsMapHead": {
         "message": "Localização GPS atual"
     },
-    "gpsMapHeadHelp": {
-        "message": "Mostra a localização do GPS no mapa. Use a roda do mouse para aumentar ou diminuir o zoom.<br>O ícone de localização mostra a direção norte quando o magnetômetro está em uso",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Verifique sua conexão com a internet"
     },
@@ -5085,9 +5081,6 @@
     "osdTextElementLapTimeBest3": {
         "message": "Tempo GPS da melhor das 3 voltas",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementLapTimeBest": {
-        "message": "Melhor tempo de volta GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nome da aeronave",
