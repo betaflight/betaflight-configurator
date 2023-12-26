@@ -58,7 +58,7 @@ firmware_flasher.initialize = function (callback) {
 
     function onDocumentLoad() {
 
-        function loadSponsor() {
+        function loadSponsorTile() {
             if (!navigator.onLine) {
                 return;
             }
@@ -292,7 +292,7 @@ firmware_flasher.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        loadSponsor();
+        loadSponsorTile();
 
         buildType_e.on('change', function() {
             self.enableLoadRemoteFileButton(false);
