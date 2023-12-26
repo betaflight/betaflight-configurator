@@ -1,11 +1,10 @@
 import GUI, { TABS } from '../gui';
 import { i18n } from '../localization';
+import Sponsor from '../Sponsor';
 import $ from 'jquery';
-import BuildApi from '../BuildApi';
-import DarkTheme from '../DarkTheme';
 
 const landing = {
-    buildApi: new BuildApi(),
+    sponsor: new Sponsor(),
 };
 
 landing.initialize = function (callback) {
@@ -15,37 +14,20 @@ landing.initialize = function (callback) {
         GUI.active_tab = 'landing';
     }
 
-    function loadSponsorTile() {
-        if (!navigator.onLine) {
-            return;
-        }
-
-        self.buildApi.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light', 'landing',
-            (content) => {
-                if (content) {
-                    $('div.tab_sponsor').html(content);
-                    $('div.tab_sponsor').show();
+    $('#content').load("./tabs/landing.html", function () {
+        function showLang(newLang) {
+            bottomSection = $('.languageSwitcher');
+            bottomSection.find('a').each(function(index) {
+                const element = $(this);
+                const languageSelected = element.attr('lang');
+                if (newLang == languageSelected) {
+                    element.removeClass('selected_language');
+                    element.addClass('selected_language');
                 } else {
-                    $('div.tab_sponsor').hide();
+                    element.removeClass('selected_language');
                 }
-            },
-        );
-    }
-
-  $('#content').load("./tabs/landing.html", function () {
-    function showLang(newLang) {
-        bottomSection = $('.languageSwitcher');
-        bottomSection.find('a').each(function(index) {
-            const element = $(this);
-            const languageSelected = element.attr('lang');
-            if (newLang == languageSelected) {
-            element.removeClass('selected_language');
-            element.addClass('selected_language');
-            } else {
-            element.removeClass('selected_language');
-            }
-        });
-    }
+            });
+        }
 
     let bottomSection = $('.languageSwitcher');
     bottomSection.html(' <span i18n="language_choice_message"></span>');
@@ -73,7 +55,7 @@ landing.initialize = function (callback) {
     // translate to user-selected language
     i18n.localizePage();
 
-    loadSponsorTile();
+    self.sponsor.loadSponsorTile('landing', $('div.tab_sponsor'));
 
     GUI.content_ready(callback);
   });
