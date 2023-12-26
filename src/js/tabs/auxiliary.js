@@ -18,9 +18,8 @@ const buildMap = [
     { buildKey: 'cam',       buildOption: ['USE_CAMERA_CONTROL']},
     { buildKey: 'div',       buildOption: ['USE_ARCO_TRAINER', 'USE_DASHBOARD', 'USE_PINIO']},
     { buildKey: 'dshot',     buildOption: ['USE_DSHOT']},
-    { buildKey: 'gps',       buildOption: ['USE_GPS', 'USE_GPS_PLUS_CODES']},
+    { buildKey: 'gps_mag',   buildOption: ['USE_GPS', 'USE_GPS_PLUS_CODES', 'USE_MAG']},
     { buildKey: 'led_strip', buildOption: ['USE_LED_STRIP', 'USE_LED_STRIP_64']},
-    { buildKey: 'mag',       buildOption: ['USE_MAG']},
     { buildKey: 'osd',       buildOption: ['USE_OSD', 'USE_OSD_SD', 'USE_OSD_HD', 'USE_FRSKYOSD']},
     { buildKey: 'serial',    buildOption: ['USE_SERIALRX', 'USE_SERIALRX_FPORT']},
     { buildKey: 'servos',    buildOption: ['USE_SERVOS']},
@@ -28,24 +27,23 @@ const buildMap = [
     { buildKey: 'vtx',       buildOption: ['USE_VTX']},
 ];
 
-const flightModes = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","SERVO1","SERVO2","SERVO3",
-                     "FAILSAFE","AIR MODE","FPV ANGLE MIX","FLIP OVER AFTER CRASH","USER1","USER2","USER3","USER4","ACRO TRAINER","LAUNCH CONTROL"];
+const flightControl = ['ARM', 'ANGLE', 'HORIZON', 'ANTI GRAVITY', 'HEADFREE', 'HEADADJ', 'FAILSAFE', 'AIR MODE', 'FPV ANGLE MIX', 'ACRO TRAINER', 'LAUNCH CONTROL'];
 
 // Categories to be mapped with buildMap. Category 'all' are virtuel and always included
 const categoryTable = [
-    { name: '3D',         buildKey: ['dshot'],     modes: ['3D', '3D DISABLE / SWITCH']},
-    { name: 'BEEP',       buildKey: ['all'],       modes: ['BEEPERON', 'BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT']},
-    { name: 'BLACKBOX',   buildKey: ['all'],       modes: ['BLACKBOX', 'BLACKBOX ERASE']},
-    { name: 'CAM',        buildKey: ['cam'],       modes: ['CAMERA CONTROL 1', 'CAMERA CONTROL 2', 'CAMERA CONTROL 3']},
-    { name: 'FLIGHTMODE', buildKey: ['all'],       modes: flightModes},
-    { name: 'GPS',        buildKey: ['gps'],       modes: ['GPS BEEP SATELLITE COUNT', 'GPS RESCUE']},
-    { name: 'LED',        buildKey: ['led_strip'], modes: ['LEDLOW']},
-    { name: 'OSD',        buildKey: ['osd'],       modes: ['OSD DISABLE']},
-    { name: 'OTHER',      buildKey: ['all'],       modes: ['CALIB', 'MSP OVERRIDE', 'LAP TIMER RESET', 'PASSTHRU', 'PARALYZE', 'PID AUDIO', 'PREARM']},
-    { name: 'SERVO',      buildKey: ['servos'],    modes: ['SERVO1', 'SERVO2', 'SERVO3']},
-    { name: 'TELEMETRI',  buildKey: ['telemetry'], modes: ['TELEMETRY']},
-    { name: 'USER',       buildKey: ['all'],       modes: ['USER1', 'USER2', 'USER3', 'USER4']},
-    { name: 'VTX',        buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
+    { name: 'BEEP',           buildKey: ['all'],       modes: ['BEEPERON', 'BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT']},
+    { name: 'BLACKBOX',       buildKey: ['all'],       modes: ['BLACKBOX', 'BLACKBOX ERASE']},
+    { name: 'CAM',            buildKey: ['cam'],       modes: ['CAMERA CONTROL 1', 'CAMERA CONTROL 2', 'CAMERA CONTROL 3']},
+    { name: 'DSHOT / 3D',     buildKey: ['dshot'],     modes: ['3D', '3D DISABLE / SWITCH', 'FLIP OVER AFTER CRASH']},
+    { name: 'FLIGHT CONTROL', buildKey: ['all'],       modes: flightControl},
+    { name: 'GPS / MAG',      buildKey: ['gps_mag'],   modes: ['GPS BEEP SATELLITE COUNT', 'GPS RESCUE', 'MAG']},
+    { name: 'LED',            buildKey: ['led_strip'], modes: ['LEDLOW']},
+    { name: 'OSD',            buildKey: ['osd'],       modes: ['OSD DISABLE']},
+    { name: 'OTHER',          buildKey: ['all'],       modes: ['CALIB', 'MSP OVERRIDE', 'LAP TIMER RESET', 'PASSTHRU', 'PARALYZE', 'PID AUDIO', 'PREARM', 'READY']},
+    { name: 'SERVO',          buildKey: ['servos'],    modes: ['SERVO1', 'SERVO2', 'SERVO3']},
+    { name: 'TELEMETRY',      buildKey: ['telemetry'], modes: ['TELEMETRY']},
+    { name: 'USER',           buildKey: ['all'],       modes: ['USER1', 'USER2', 'USER3', 'USER4']},
+    { name: 'VTX',            buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
 ];
 
 let modeList = [];
@@ -627,6 +625,9 @@ auxiliary.initialize = function (callback) {
                 }
                 hasUsedMode = true;
             }
+
+            // setup categoryList to reflect changes when aux change
+            updateSearchResults();
 
             let hideUnused = hideUnusedModes && hasUsedMode;
 
