@@ -14,7 +14,7 @@ landing.initialize = function (callback) {
         GUI.active_tab = 'landing';
     }
 
-    $('#content').load("./tabs/landing.html", function () {
+    $('#content').load("./tabs/landing.html", () => {
         function showLang(newLang) {
             bottomSection = $('.languageSwitcher');
             bottomSection.find('a').each(function(index) {
@@ -29,36 +29,36 @@ landing.initialize = function (callback) {
             });
         }
 
-    let bottomSection = $('.languageSwitcher');
-    bottomSection.html(' <span i18n="language_choice_message"></span>');
-    bottomSection.append(' <a href="#" i18n="language_default_pretty" lang="DEFAULT"></a>');
-    const languagesAvailables = i18n.getLanguagesAvailables();
+        let bottomSection = $('.languageSwitcher');
+        bottomSection.html(' <span i18n="language_choice_message"></span>');
+        bottomSection.append(' <a href="#" i18n="language_default_pretty" lang="DEFAULT"></a>');
+        const languagesAvailables = i18n.getLanguagesAvailables();
 
-    languagesAvailables.forEach(function(element) {
-        bottomSection.append(` <a href="#" lang="${element}" i18n="language_${element}"></a>`);
-    });
-
-    bottomSection.find('a').each(function(index) {
-        let element = $(this);
-        element.click(function(){
-            element = $(this);
-            const languageSelected = element.attr('lang');
-            if (!languageSelected) { return; }
-            if (i18n.selectedLanguage != languageSelected) {
-                i18n.changeLanguage(languageSelected);
-                showLang(languageSelected);
-            }
+        languagesAvailables.forEach((element) => {
+            bottomSection.append(` <a href="#" lang="${element}" i18n="language_${element}"></a>`);
         });
+
+        bottomSection.find('a').each((index) => {
+            let element = $(this);
+            element.click(() => {
+                element = $(this);
+                const languageSelected = element.attr('lang');
+                if (!languageSelected) { return; }
+                if (i18n.selectedLanguage != languageSelected) {
+                    i18n.changeLanguage(languageSelected);
+                    showLang(languageSelected);
+                }
+            });
+        });
+
+        showLang(i18n.selectedLanguage);
+        // translate to user-selected language
+        i18n.localizePage();
+
+        self.sponsor.loadSponsorTile('landing', $('div.tab_sponsor'));
+
+        GUI.content_ready(callback);
     });
-
-    showLang(i18n.selectedLanguage);
-    // translate to user-selected language
-    i18n.localizePage();
-
-    self.sponsor.loadSponsorTile('landing', $('div.tab_sponsor'));
-
-    GUI.content_ready(callback);
-  });
 };
 
 landing.cleanup = function (callback) {
