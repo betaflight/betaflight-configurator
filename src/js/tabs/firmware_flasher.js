@@ -63,7 +63,7 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
-            self.releaseLoader.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light',
+            self.releaseLoader.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light', 'flash',
                 (content) => {
                     if (content) {
                         $('div.tab_sponsor').html(content);
