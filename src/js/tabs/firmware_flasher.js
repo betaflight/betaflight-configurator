@@ -37,6 +37,7 @@ const firmware_flasher = {
     configFilename: null,
     config: {},
     developmentFirmwareLoaded: false, // Is the firmware to be flashed from the development branch?
+    maxCloudTries: 15,
 };
 
 firmware_flasher.initialize = function (callback) {
@@ -793,7 +794,7 @@ firmware_flasher.initialize = function (callback) {
                     }
                     self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
                 } else {
-                    updateStatus(retries > 10 ? 'TimedOut' : "Failed", response.key, 0, true);
+                    updateStatus(retries > firmware_flasher.maxCloudTries ? 'TimedOut' : "Failed", response.key, 0, true);
                     onLoadFailed();
                 }
             }
@@ -864,13 +865,13 @@ firmware_flasher.initialize = function (callback) {
 
                         const timer = setInterval(() => {
                             self.releaseLoader.requestBuildStatus(response.key, (statusResponse) => {
-                                if (statusResponse.status !== 'queued' || retries > 10) {
+                                if (statusResponse.status !== 'queued' || retries > firmware_flasher.maxCloudTries) {
                                     clearInterval(timer);
                                     processBuildStatus(response, statusResponse, retries);
                                     return;
                                 }
 
-                                updateStatus('Processing', response.key, retries * 10, false);
+                                updateStatus('Processing', response.key, retries / firmware_flasher.maxCloudTries * 100, false);
                                 retries++;
                             });
                         }, 5000);
