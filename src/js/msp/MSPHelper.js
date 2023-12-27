@@ -1608,10 +1608,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('DSHOT command sent');
                 break;
 
-            case MSPCodes.MSP2_UBLOX_REQUEST_SV_INFO:
-                console.log('UBLOX SV info requested');
-                break;
-
             case MSPCodes.MSP_MULTIPLE_MSP:
 
                 let hasReturnedSomeCommand = false; // To avoid infinite loops
