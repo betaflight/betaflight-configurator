@@ -29,11 +29,6 @@ gps.initialize = async function (callback) {
 
     await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
-    // GPS SV info request added in 1.46 for UBLOX protocol
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.GPS_CONFIG.provider === 1) {
-        await MSP.promise(MSPCodes.MSP2_UBLOX_REQUEST_SV_INFO);
-    }
-
     load_html();
 
     function load_html() {
