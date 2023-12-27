@@ -19,11 +19,12 @@ import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { checkChromeRuntimeError, urlExists } from '../utils/common';
 import { generateFilename } from '../utils/generate_filename';
-import DarkTheme from '../DarkTheme';
+import Sponsor from '../Sponsor';
 
 const firmware_flasher = {
     targets: null,
     releaseLoader: new BuildApi(),
+    sponsor: new Sponsor(),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
     boardNeedsVerification: false,
@@ -57,23 +58,6 @@ firmware_flasher.initialize = function (callback) {
     self.parsed_hex = undefined;
 
     function onDocumentLoad() {
-
-        function loadSponsor() {
-            if (!navigator.onLine) {
-                return;
-            }
-
-            self.releaseLoader.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light',
-                (content) => {
-                    if (content) {
-                        $('div.tab_sponsor').html(content);
-                        $('div.tab_sponsor').show();
-                    } else {
-                        $('div.tab_sponsor').hide();
-                    }
-                },
-            );
-        }
 
         function parseHex(str, callback) {
             // parsing hex in different thread
@@ -292,7 +276,7 @@ firmware_flasher.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        loadSponsor();
+        self.sponsor.loadSponsorTile('flash', $('div.tab_sponsor'));
 
         buildType_e.on('change', function() {
             self.enableLoadRemoteFileButton(false);
