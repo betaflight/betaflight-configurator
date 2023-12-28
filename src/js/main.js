@@ -66,7 +66,7 @@ function readConfiguratorVersionMetadata() {
 }
 
 function cleanupLocalStorage() {
-
+    // storage quota is 5MB, we need to clean up some stuff (more info see PR #2937)
     const cleanupLocalStorageList = [
         'cache',
         'firmware',
@@ -74,6 +74,7 @@ function cleanupLocalStorage() {
         'selected_board',
         'unifiedConfigLast',
         'unifiedSourceCache',
+        'erase_chip',
     ];
 
     for (const key in localStorage) {
