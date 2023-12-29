@@ -585,9 +585,10 @@ firmware_flasher.initialize = function (callback) {
                 eraseAll = true;
             }
 
-            if (!$('option:selected', portPickerElement).data().isDFU) {
-                if (String(portPickerElement.val()) !== '0') {
-                    const port = String(portPickerElement.val());
+            const portSelect = document.querySelector('#port');
+            if (!portSelect.value.startsWith('DFU')) {
+                if (portSelect.value !== '0') {
+                    const port = portSelect.value;
 
                     if ($('input.updating').is(':checked')) {
                         options.no_reboot = true;
@@ -967,10 +968,12 @@ firmware_flasher.initialize = function (callback) {
             }
         });
 
+        const portSelect = document.querySelector('#port');
+
         portPickerElement.on('change', function () {
             if (GUI.active_tab === 'firmware_flasher') {
                 if (!GUI.connect_lock) {
-                    if ($('option:selected', this).data().isDFU) {
+                    if (portSelect.value.startsWith('DFU')) {
                         self.enableDfuExitButton(true);
                     } else {
                         if (!self.isFlashing) {
@@ -1227,6 +1230,16 @@ firmware_flasher.initialize = function (callback) {
 
 
 firmware_flasher.isSerialPortAvailable = function() {
+    // const selected_port = $('div#port-picker #port option:selected');
+    // const isBusy = GUI.connect_lock;
+    // const isDfu = PortHandler.dfu_available;
+    // const portSelect = document.querySelector('#port');
+    // console.log(portSelect.value.includes('manual'), portSelect.value, portSelect);
+    // console.log('isManual', selected_port.data().isManual, 'isVirtual', selected_port.data().isVirtual, 'isBusy', isBusy, 'isDfu', isDfu);
+    // const isManual = selected_port.data().isManual || false;
+    // const isVirtual = selected_port.data().isVirtual || false;
+
+    // return !isDfu && !isManual && !isVirtual && !isBusy;
     return PortHandler.port_available && !GUI.connect_lock;
 };
 

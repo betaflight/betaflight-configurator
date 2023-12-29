@@ -25,6 +25,7 @@ options.initialize = function (callback) {
         TABS.options.initShowAllSerialDevices();
         TABS.options.initUseMdnsBrowser();
         TABS.options.initShowVirtualMode();
+        TABS.options.initUseManualConnection();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
         TABS.options.initShowDevToolsOnStartup();
@@ -141,6 +142,17 @@ options.initShowVirtualMode = function() {
         .prop('checked', !!result.showVirtualMode)
         .on('change', () => {
             setConfig({ showVirtualMode: showVirtualModeElement.is(':checked') });
+            PortHandler.reinitialize();
+        });
+};
+
+options.initUseManualConnection = function() {
+    const showManualModeElement = $('div.showManualMode input');
+    const result = getConfig('showManualMode');
+    showManualModeElement
+        .prop('checked', !!result.showManualMode)
+        .on('change', () => {
+            setConfig({ showManualMode: showManualModeElement.is(':checked') });
             PortHandler.reinitialize();
         });
 };

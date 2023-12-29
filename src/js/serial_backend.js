@@ -56,19 +56,23 @@ export function initializeSerialBackend() {
         const selected_port = $('#port').val();
 
         if (selected_port === 'manual') {
+        // const portSelect = document.querySelector('#port');
+
+        // console.log(`Port select value: ${portSelect.value}`);
+        // if (portSelect.value.startsWith("manual")) {
             $('#port-override-option').show();
-        }
-        else {
+        } else {
             $('#port-override-option').hide();
         }
         if (selected_port === 'virtual') {
+        // if (portSelect.value.startsWith("virtual")) {
             $('#firmware-virtual-option').show();
-        }
-        else {
+        } else {
             $('#firmware-virtual-option').hide();
         }
 
         $('#auto-connect-and-baud').toggle(selected_port !== 'DFU');
+        // $('#auto-connect-and-baud').toggle(!portSelect.value.startsWith("DFU"));
     };
 
     GUI.updateManualPortVisibility();
@@ -92,6 +96,16 @@ export function initializeSerialBackend() {
         const selectedPort = $('#port').val();
         let portName;
         if (selectedPort === 'manual') {
+    // $("div.connect_controls a.connect").on('click', function (e) {
+    //     const portSelect = document.querySelector('#port');
+    //     let portName;
+
+    //     if (portSelect.value.startsWith('none')) {
+    //         e.preventDefault();
+    //         return;
+    //     }
+
+    //     if (portSelect.value.startsWith("manual")) {
             portName = $('#port-override').val();
         } else {
             portName = String($('div#port-picker #port').val());
@@ -106,15 +120,18 @@ export function initializeSerialBackend() {
             const selectedPort = $('#port').val();
 
             if (selectedPort === 'DFU') {
-                $('select#baud').hide();
-            } else if (portName !== '0') {
-                if (!isConnected) {
-                    console.log(`Connecting to: ${portName}`);
-                    GUI.connecting_to = portName;
 
-                    // lock port select & baud while we are connecting / connected
-                    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
-                    $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
+            // const portSelect = document.querySelector('#port');
+
+            // if (portSelect.value.startsWith('DFU')) {
+                $('select#baud').hide();
+                e.preventDefault();
+                return;
+            }
+
+            if (!isConnected) {
+                console.log(`Connecting to: ${portName}`);
+                GUI.connecting_to = portName;
 
                     const baudRate = parseInt($('#baud').val());
                     if (selectedPort === 'virtual') {
@@ -130,20 +147,25 @@ export function initializeSerialBackend() {
                         // Explicitly disconnect the event listeners before attaching the new ones.
                         serial.removeEventListener('connect', connectHandler);
                         serial.addEventListener('connect', connectHandler);
+                // // lock port select & baud while we are connecting / connected
+                // $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
+                // $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
+                // const baudRate = document.querySelector('div#port-picker #baud').value;
+                // console.log(`Baud rate: ${baudRate}`);
+                // if (portSelect.value.startsWith('virtual')) {
+                //     CONFIGURATOR.virtualMode = true;
+                //     CONFIGURATOR.virtualApiVersion = document.querySelector('#firmware-version-dropdown').value;
 
-                        serial.removeEventListener('disconnect', disconnectHandler);
-                        serial.addEventListener('disconnect', disconnectHandler);
+                //     serial.connect('virtual', {}, onOpenVirtual);
+                // } else if (isWeb()) {
+                //     // Explicitly disconnect the event listeners before attaching the new ones.
+                //     serial.removeEventListener('connect', connectHandler);
+                //     serial.addEventListener('connect', connectHandler);
 
-                        serial.connect({ baudRate });
-                    } else {
-                        serial.connect(
-                            portName,
-                            { bitrate: selected_baud },
-                            onOpen,
-                        );
-                        toggleStatus();
-                    }
+                    serial.removeEventListener('disconnect', disconnectHandler);
+                    serial.addEventListener('disconnect', disconnectHandler);
 
+                    serial.connect({ baudRate });
                 } else {
                     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
                         $('div#flashbutton a.flash_state').removeClass('active');
@@ -158,7 +180,28 @@ export function initializeSerialBackend() {
                     }
 
                     mspHelper?.setArmingEnabled(true, false, onFinishCallback);
+                    serial.connect(
+                        portName,
+                        { bitrate: selected_baud },
+                        onOpen,
+                    );
+                    toggleStatus();
                 }
+
+            // } else {
+            //     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+            //         $('div#flashbutton a.flash_state').removeClass('active');
+            //         $('div#flashbutton a.flash').removeClass('active');
+            //     }
+            //     GUI.timeout_kill_all();
+            //     GUI.interval_kill_all();
+            //     GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
+
+            //     function onFinishCallback() {
+            //         finishClose(toggleStatus);
+            //     }
+
+            //     mspHelper.setArmingEnabled(true, false, onFinishCallback);
             }
         }
     });
