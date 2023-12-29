@@ -2852,6 +2852,9 @@
     "gpsSignalStr": {
         "message": "Signal Strength"
     },
+    "gpsSignalLost": {
+        "message": "The GPS icon lights up only when the connection to the GPS module is confirmed.<br /><br />It will be red at first, changing to yellow when the 3D fix is attained.<br /><br />If the GPS icon does not light up, check your wiring and configuration, and confirm that the GPS module is receiving power.<br /><br />The CLI 'status' command provides more information about the state of the GPS connection."
+    },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
     },
