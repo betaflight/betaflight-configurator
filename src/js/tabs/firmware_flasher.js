@@ -1149,13 +1149,7 @@ firmware_flasher.initialize = function (callback) {
 
 
 firmware_flasher.isSerialPortAvailable = function() {
-    const selected_port = $('div#port-picker #port option:selected');
-    const isBusy = GUI.connect_lock;
-    const isDfu = PortHandler.dfu_available;
-    const isManual = selected_port.data().isManual || false;
-    const isVirtual = selected_port.data().isVirtual || false;
-
-    return !isDfu && !isManual && !isVirtual && !isBusy;
+    return PortHandler.port_available && !GUI.connect_lock ;
 };
 
 firmware_flasher.updateDetectBoardButton = function() {
