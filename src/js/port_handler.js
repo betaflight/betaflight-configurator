@@ -5,7 +5,6 @@ import { generateVirtualApiVersions, getTextWidth } from './utils/common';
 import { get as getConfig } from "./ConfigStorage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
-import $ from 'jquery';
 import { isWeb } from "./utils/isWeb";
 
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
@@ -18,6 +17,7 @@ export const usbDevices = { filters: [
 ] };
 
 const PortHandler = new function () {
+    this.currentPorts = [];
     this.initialPorts = false;
     this.port_detected_callbacks = [];
     this.port_removed_callbacks = [];
@@ -26,6 +26,7 @@ const PortHandler = new function () {
     this.showAllSerialDevices = false;
     this.useMdnsBrowser = false;
     this.showVirtualMode = false;
+    this.showManualMode = false;
 };
 
 PortHandler.initialize = function () {
@@ -56,6 +57,7 @@ PortHandler.reinitialize = function () {
     }
 
     this.showVirtualMode = getConfig('showVirtualMode').showVirtualMode;
+    this.showManualMode = getConfig('showManualMode').showManualMode;
     this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
     this.useMdnsBrowser = getConfig('useMdnsBrowser').useMdnsBrowser;
 
@@ -86,10 +88,10 @@ PortHandler.check_serial_devices = function () {
     const self = this;
 
     serial.getDevices(function(cp) {
-        let currentPorts = [];
+        self.currentPorts = [];
 
         if (self.useMdnsBrowser) {
-            currentPorts = [
+            self.currentPorts = [
                 ...cp,
                 ...(MdnsDiscovery.mdnsBrowser.services?.filter(s => s.txt?.vendor === 'elrs' && s.txt?.type === 'rx' && s.ready === true)
                     .map(s => s.addresses.map(a => ({
@@ -101,59 +103,63 @@ PortHandler.check_serial_devices = function () {
                     }))).flat() ?? []),
             ].filter(Boolean);
         } else {
-            currentPorts = cp;
+            self.currentPorts = cp;
         }
 
         // auto-select port (only during initialization)
         if (!self.initialPorts) {
-            currentPorts = self.updatePortSelect(currentPorts);
-            self.selectPort(currentPorts);
-            self.initialPorts = currentPorts;
+            self.currentPorts = self.updatePortSelect(self.currentPorts);
+            self.selectPort(self.currentPorts);
+            self.initialPorts = self.currentPorts;
             GUI.updateManualPortVisibility();
         } else {
-            self.removePort(currentPorts);
-            self.detectPort(currentPorts);
+            self.removePort();
+            self.detectPort();
         }
     });
 };
 
 PortHandler.check_usb_devices = function (callback) {
     const self = this;
+    const portSelect = document.querySelector('#port');
+
     chrome.usb.getDevices(usbDevices, function (result) {
+        const dfuActive = !!portSelect.value.startsWith('DFU');
 
-        const dfuElement = self.portPickerElement.children("[value='DFU']");
         if (result.length) {
-            if (!dfuElement.length) {
-                self.portPickerElement.empty();
-                let usbText;
-                if (result[0].productName) {
-                    usbText = (`DFU - ${result[0].productName}`);
-                } else {
-                    usbText = "DFU";
-                }
+            // Found device in DFU mode, add it to the list
+            if (!dfuActive) {
+                self.clearOptions();
 
-                self.portPickerElement.append($('<option/>', {
-                    value: "DFU",
-                    text: usbText,
-                    data: {isDFU: true},
-                }));
+                const usbText = result[0].productName ? `DFU - ${result[0].productName}` : "DFU";
+                const dfuOption = document.createElement('option');
 
-                self.portPickerElement.append($('<option/>', {
-                    value: 'manual',
-                    text: i18n.getMessage('portsSelectManual'),
-                    data: {isManual: true},
-                }));
+                dfuOption.value = 'DFU';
+                dfuOption.text = usbText;
 
-                self.portPickerElement.val('DFU').trigger('change');
+                portSelect.add(dfuOption);
+                // portSelect.value = 'DFU';
+
                 self.setPortsInputWidth();
+
                 self.dfu_available = true;
             }
-        } else if (dfuElement.length) {
-            dfuElement.remove();
-            self.setPortsInputWidth();
-            self.dfu_available = false;
+        } else {
+            // We are not in DFU mode anymore. Add items here as check_serial_devices() will not be called without a change in serial devices.
+            if (dfuActive) {
+                self.clearOptions();
+
+                self.addManualOption();
+                self.addVirtualOption();
+                self.addNoPortsOption();
+
+                self.setPortsInputWidth();
+
+                self.dfu_available = false;
+            }
         }
-        if (!$('option:selected', self.portPickerElement).data().isDFU) {
+
+        if (!dfuActive) {
             if (!(GUI.connected_to || GUI.connect_lock)) {
                 FC.resetState();
             }
@@ -169,9 +175,62 @@ PortHandler.check_usb_devices = function (callback) {
     });
 };
 
-PortHandler.removePort = function(currentPorts) {
+PortHandler.clearOptions = function () {
+    const portSelect = document.querySelector('#port');
+    let index = portSelect.length;
+
+    while (index--) {
+        if (portSelect.options[index]) {
+            portSelect.remove(index);
+        }
+    }
+};
+
+PortHandler.addManualOption = function() {
     const self = this;
-    const removePorts = self.array_difference(self.initialPorts, currentPorts);
+
+    if (self.showManualMode) {
+        const portSelect = document.querySelector('#port');
+        const manualOption = document.createElement('option');
+
+        manualOption.value = 'manual';
+        manualOption.text = i18n.getMessage('portsSelectManual');
+
+        portSelect.add(manualOption);
+    }
+};
+
+PortHandler.addVirtualOption = function() {
+    const self = this;
+
+    if (self.showVirtualMode) {
+        const portSelect = document.querySelector('#port');
+        const virtualOption = document.createElement('option');
+
+        virtualOption.value = 'virtual';
+        virtualOption.text = i18n.getMessage('portsSelectVirtual');
+
+        portSelect.add(virtualOption);
+    }
+};
+
+PortHandler.addNoPortsOption = function() {
+    const self = this;
+
+    if (!self.showVirtualMode && !self.showManualMode) {
+        const portSelect = document.querySelector('#port');
+        const noPortsOption = document.createElement('option');
+
+        noPortsOption.value = 'none';
+        noPortsOption.text = 'No connections available';
+
+        portSelect.add(noPortsOption);
+    }
+};
+
+PortHandler.removePort = function() {
+    const self = this;
+    const removePorts = self.array_difference(self.initialPorts, self.currentPorts);
 
     if (removePorts.length) {
         console.log(`PortHandler - Removed: ${JSON.stringify(removePorts)}`);
@@ -180,8 +239,11 @@ PortHandler.removePort = function(currentPorts) {
         if (GUI.connected_to) {
             for (let i = 0; i < removePorts.length; i++) {
                 if (removePorts[i].path === GUI.connected_to) {
-                    $('div.connect_controls a.connect').click();
-                    $('div.connect_controls a.connect.active').click();
+                    const button = document.querySelector('div.connect_controls a.connect');
+                    button.click();
+
+                    const buttonActive = document.querySelector('div.connect_controls a.connect.active');
+                    buttonActive.click();
                 }
             }
         }
@@ -209,18 +271,18 @@ PortHandler.removePort = function(currentPorts) {
     }
 };
 
-PortHandler.detectPort = function(currentPorts) {
+PortHandler.detectPort = function() {
     const self = this;
-    const newPorts = self.array_difference(currentPorts, self.initialPorts);
+    const newPorts = self.array_difference(self.currentPorts, self.initialPorts);
 
     if (newPorts.length) {
-        currentPorts = self.updatePortSelect(currentPorts);
+        self.currentPorts = self.updatePortSelect(self.currentPorts);
         console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
 
         if (newPorts.length === 1) {
             self.portPickerElement.val(newPorts[0].path);
         } else if (newPorts.length > 1) {
-            self.selectPort(currentPorts);
+            self.selectPort(self.currentPorts);
         }
 
         self.port_available = true;
@@ -235,7 +297,8 @@ PortHandler.detectPort = function(currentPorts) {
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {
             // start connect procedure. We need firmware flasher protection over here
             if (GUI.active_tab !== 'firmware_flasher') {
-                $('div.connect_controls a.connect').click();
+                const button = document.querySelector('div.connect_controls a.connect');
+                button.click();
             }
         }
         // trigger callbacks
@@ -254,7 +317,7 @@ PortHandler.detectPort = function(currentPorts) {
                 self.port_detected_callbacks.splice(index, 1);
             }
         }
-        self.initialPorts = currentPorts;
+        self.initialPorts = self.currentPorts;
     }
 };
 
@@ -268,37 +331,26 @@ PortHandler.sortPorts = function(ports) {
 };
 
 PortHandler.updatePortSelect = function (ports) {
+    const portSelect = document.querySelector('#port');
+
     ports = this.sortPorts(ports);
-    this.portPickerElement.empty();
+
+    this.clearOptions();
 
     for (let i = 0; i < ports.length; i++) {
-        let portText;
-        if (ports[i].displayName) {
-            portText = (`${ports[i].path} - ${ports[i].displayName}`);
-        } else {
-            portText = ports[i].path;
-        }
+        const portOption = document.createElement('option');
+        const portText = ports[i].displayName ? `${ports[i].path} - ${ports[i].displayName}` : ports[i].path;
 
-        this.portPickerElement.append($("<option/>", {
-            value: ports[i].path,
-            text: portText,
-            data: {isManual: false},
-        }));
+        portOption.value = ports[i].path;
+        portOption.text = portText;
+
+        portSelect.add(portOption);
     }
 
-    if (this.showVirtualMode) {
-        this.portPickerElement.append($("<option/>", {
-            value: 'virtual',
-            text: i18n.getMessage('portsSelectVirtual'),
-            data: {isVirtual: true},
-        }));
-    }
+    this.addVirtualOption();
+    this.addManualOption();
 
-    this.portPickerElement.append($("<option/>", {
-        value: 'manual',
-        text: i18n.getMessage('portsSelectManual'),
-        data: {isManual: true},
-    }));
+    if (!ports.length) { this.addNoPortsOption(); }
 
     this.setPortsInputWidth();
     return ports;
