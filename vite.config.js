@@ -51,9 +51,9 @@ function serveLocalesPlugin() {
 
 export default defineConfig({
     define: {
-        '__APP_VERSION__': JSON.stringify(pkg.version),
-        '__APP_PRODUCTNAME__': JSON.stringify(pkg.productName),
-        '__APP_REVISION__': JSON.stringify(commitHash),
+        __APP_VERSION__: JSON.stringify(pkg.version),
+        __APP_PRODUCTNAME__: JSON.stringify(pkg.productName),
+        __APP_REVISION__: JSON.stringify(commitHash),
     },
     test: {
         // NOTE: this is a replacement location for karma tests.

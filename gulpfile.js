@@ -1073,6 +1073,7 @@ function cordova_packagejson() {
     return gulp.src(`${CORDOVA_DIST_DIR}package.json`)
         .pipe(jeditor({
             'name': metadata.name,
+            'productName': metadata.productName,
             'description': metadata.description,
             'version': metadata.version,
             'author': metadata.author,
