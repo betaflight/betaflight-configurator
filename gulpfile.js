@@ -370,15 +370,15 @@ function dist_src() {
 }
 
 function dist_node_modules_css() {
-  return gulp
-    .src("./**/*.min.css")
-    .pipe(gulp.dest(DIST_DIR));
+    return gulp
+        .src("./**/*.min.css")
+        .pipe(gulp.dest(DIST_DIR));
 }
 
 function dist_ol_css() {
     return gulp
-        .src("./node_modules/ol/ol.css", { base: "node_modules" })
-        .pipe(gulp.dest(DIST_DIR));
+        .src("./node_modules/ol/ol.css")
+        .pipe(gulp.dest(`${DIST_DIR}node_modules/ol`));
 }
 
 function dist_less() {
