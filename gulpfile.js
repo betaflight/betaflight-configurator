@@ -378,7 +378,7 @@ function dist_node_modules_css() {
 function dist_ol_css() {
     return gulp
         .src("./node_modules/ol/ol.css", { base: "node_modules" })
-        .pipe(gulp.dest(DIST_DIR));
+        .pipe(gulp.dest(`${DIST_DIR}css/tabs/`));
 }
 
 function dist_less() {
