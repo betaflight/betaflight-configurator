@@ -9,7 +9,7 @@ import FC from "./fc";
 import { mspHelper } from "./msp/MSPHelper";
 import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_41, API_VERSION_1_45 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_41, API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
 import { gui_log } from './gui_log';
 import { generateFilename } from "./utils/generate_filename";
 import semver from "semver";
@@ -117,6 +117,9 @@ export function configuration_backup(callback) {
         uniqueData.push(MSPCodes.MSP_MOTOR_CONFIG);
         uniqueData.push(MSPCodes.MSP_RSSI_CONFIG);
         uniqueData.push(MSPCodes.MSP_GPS_CONFIG);
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            uniqueData.push(MSPCodes.MSP_COMPASS_CONFIG);
+        }
         uniqueData.push(MSPCodes.MSP_FEATURE_CONFIG);
         uniqueData.push(MSPCodes.MSP_MODE_RANGES_EXTRA);
     }
@@ -161,6 +164,9 @@ export function configuration_backup(callback) {
                 configuration.FEATURE_CONFIG = jQuery.extend(true, {}, FC.FEATURE_CONFIG);
                 configuration.MOTOR_CONFIG = jQuery.extend(true, {}, FC.MOTOR_CONFIG);
                 configuration.GPS_CONFIG = jQuery.extend(true, {}, FC.GPS_CONFIG);
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    configuration.COMPASS_CONFIG = jQuery.extend(true, {}, FC.COMPASS_CONFIG);
+                }
                 configuration.BEEPER_CONFIG = jQuery.extend(true, {}, FC.BEEPER_CONFIG);
                 configuration.MODE_RANGES_EXTRA = jQuery.extend(true, [], FC.MODE_RANGES_EXTRA);
 
@@ -803,6 +809,7 @@ export function configuration_restore(callback) {
                     uniqueData.push(MSPCodes.MSP_SET_FEATURE_CONFIG);
                     uniqueData.push(MSPCodes.MSP_SET_MOTOR_CONFIG);
                     uniqueData.push(MSPCodes.MSP_SET_GPS_CONFIG);
+                    uniqueData.push(MSPCodes.MSP_SET_COMPASS_CONFIG);
                     uniqueData.push(MSPCodes.MSP_SET_RSSI_CONFIG);
                 }
 
@@ -823,6 +830,9 @@ export function configuration_restore(callback) {
                     FC.FEATURE_CONFIG = configuration.FEATURE_CONFIG;
                     FC.MOTOR_CONFIG = configuration.MOTOR_CONFIG;
                     FC.GPS_CONFIG = configuration.GPS_CONFIG;
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                        FC.COMPASS_CONFIG = configuration.COMPASS_CONFIG;
+                    }
                     FC.RSSI_CONFIG = configuration.RSSI_CONFIG;
                     FC.BOARD_ALIGNMENT_CONFIG = configuration.BOARD_ALIGNMENT_CONFIG;
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {

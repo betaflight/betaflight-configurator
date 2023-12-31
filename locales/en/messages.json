@@ -863,6 +863,9 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
+    "initialSetupMagDeclination": {
+        "message": "Mag Declination:"
+    },
     "initialSetupInfoHead": {
         "message": "System info"
     },
@@ -1036,6 +1039,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM-based filtering is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Dshot telemetry is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "A configuration change requires a reboot",
@@ -1357,6 +1364,9 @@
     },
     "configurationArmingHelp": {
         "message": "Some Arming options may require accelerometer be enabled"
+    },
+    "configurationMagDeclination": {
+        "message": "Magnetometer Declination [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"
@@ -2792,10 +2802,6 @@
     "gpsMapHead": {
         "message": "Current GPS location"
     },
-    "gpsMapHeadHelp": {
-        "message": "Show GPS location on the map. Use mouse scroll button to zoom in and out.<br>The location icon shows the north direction when the magnetometer is in use",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
     },
@@ -3388,7 +3394,8 @@
         "message": "Target:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Get more information about target at Betaflight wiki (wiki url found in unified target configuration)"
+        "message": "Get more information about the target on the Betaflight Wiki",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -5508,8 +5515,8 @@
         "message": "GPS lap time best 3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Best GPS lap time"
+    "osdDescElementLapTimeBest3": {
+        "message": "Best 3 GPS lap times"
     },
     "osdTextElementCraftName": {
         "message": "Craft name",
@@ -7361,5 +7368,9 @@
     "showDevToolsOnStartup": {
         "message": "Automatically open DevTools in development mode",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

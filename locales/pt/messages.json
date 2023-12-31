@@ -734,8 +734,8 @@
         "message": "Repor eixo Z, offset: $1 graus"
     },
     "initialSetupHeading": {
-        "message": "Direção:",
-        "description": "Heading shown on Setup tab"
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
@@ -2735,8 +2735,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Direção Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "Direção IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocidade:"
@@ -3300,7 +3300,8 @@
         "message": "Destino:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtenha mais informações sobre target na wiki do Betaflight (url da wiki encontrada na configuração de target unificado)"
+        "message": "Obtenha mais informações sobre o target na Wiki Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -7270,5 +7271,9 @@
     "showDevToolsOnStartup": {
         "message": "Abrir automaticamente o DevTools no modo de desenvolvimento",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

@@ -734,8 +734,8 @@
         "message": "Скинути вісь Z, зміщення: $1 градус"
     },
     "initialSetupHeading": {
-        "message": "Курс:",
-        "description": "Heading shown on Setup tab"
+        "message": "Рискання:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Тип Мікшеру"
@@ -817,6 +817,14 @@
     "initialSetupRSSI": {
         "message": "RSSI: "
     },
+    "initialSetupNotInBuild": {
+        "message": "Не включено до збірки",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Не виявлено",
+        "description": "Message that pops up when hardware are not detected"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 дБм"
     },
@@ -825,6 +833,9 @@
     },
     "initialSetupSensorGyro": {
         "message": "Гіроскоп:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Акселерометр:"
     },
     "initialSetupSensorMag": {
         "message": "Компас:"
@@ -941,6 +952,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM фільтрацію увімкнено, але один або декілька електронних контролерів швидкості ESC не надають дійсну DSHOT телеметрію. Перевірте, чи ESC підтримує та має необхідну прошивку для двонаправленої DSHOT телеметрії.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Телеметрію Dshot увімкнено, але один або декілька електронних контролерів швидкості ESC не надають дійсну DSHOT телеметрію. Перевірте, чи регулятори підтримують та мають необхідну прошивку для двонаправленої DSHOT телеметрії.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Зміна конфігурації потребує перезавантаження",
@@ -2724,8 +2739,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Курс за компасом / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "Курс за ІВП / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Швидкість:"
@@ -3289,7 +3304,8 @@
         "message": "Цільовий пристрій:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Дізнайтесь більше інформації про цільовий пристрій на вікі Betaflight (wiki-адресу можна знайти в уніфікованій цільовій конфігурації)"
+        "message": "Отримайте більше інформації про цільовий пристрій на Betaflight Wiki",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "Мікроконтролер:"
@@ -6175,6 +6191,10 @@
         "message": "Висота",
         "description": "Text of the altitude alarm"
     },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Якість зв'язку",
+        "description": "Text of the link quality alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Взведення заборонене",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -7255,5 +7275,9 @@
     "showDevToolsOnStartup": {
         "message": "Автоматично відкривати інструменти розробника в режимі розробки",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

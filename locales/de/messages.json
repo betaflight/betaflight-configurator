@@ -736,10 +736,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Z Achse zurücksetzen, Abweichung: $1 Grad"
     },
-    "initialSetupHeading": {
-        "message": "Richtung:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Typ"
     },
@@ -2955,9 +2951,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Ziel:"
-    },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Erhalte weitere Informationen über das 'Target' im Betaflight-Wiki (Wiki-URL in der 'Unified Target'-Konfiguration)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"

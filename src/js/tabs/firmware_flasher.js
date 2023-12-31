@@ -19,16 +19,18 @@ import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { checkChromeRuntimeError, urlExists } from '../utils/common';
 import { generateFilename } from '../utils/generate_filename';
-import DarkTheme from '../DarkTheme';
+import Sponsor from '../Sponsor';
 
 const firmware_flasher = {
     targets: null,
     releaseLoader: new BuildApi(),
+    sponsor: new Sponsor(),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
     boardNeedsVerification: false,
     allowBoardDetection: true,
-    isFirstRun: true,
+    cloudBuildKey: null,
+    cloudBuildOptions: null,
     isFlashing: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
@@ -46,33 +48,16 @@ firmware_flasher.initialize = function (callback) {
     }
 
     self.selectedBoard = undefined;
+
+    self.cloudBuildKey = null;
+    self.cloudBuildOptions = null;
+
     self.localFirmwareLoaded = false;
     self.isConfigLocal = false;
     self.intel_hex = undefined;
     self.parsed_hex = undefined;
 
     function onDocumentLoad() {
-
-        function loadSponsor() {
-            if (!navigator.onLine) {
-                return;
-            }
-
-            self.releaseLoader.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light',
-                (content) => {
-                    if (content) {
-                        $('div.tab_sponsor').html(content);
-                        $('div.tab_sponsor').show();
-                    } else {
-                        $('div.tab_sponsor').hide();
-                    }
-                },
-            );
-        }
-
-        function buildKeyExists() {
-            return FC.CONFIG.buildKey.length === 32;
-        }
 
         function parseHex(str, callback) {
             // parsing hex in different thread
@@ -110,16 +95,6 @@ firmware_flasher.initialize = function (callback) {
             $('div.release_info .date').text(summary.date);
             $('div.release_info #targetMCU').text(summary.mcu);
             $('div.release_info .configFilename').text(self.isConfigLocal ? self.configFilename : "[default]");
-
-            // Wiki link: #wiki found in unified target configuration, if board description exist or generel board missing
-            let urlWiki = 'https://betaflight.com/docs/wiki/boards/missing';                // generel board missing
-            const urlBoard = `https://betaflight.com/docs/wiki/boards/${summary.target}`;   // board description
-            if (urlExists(urlBoard)) {
-                urlWiki = urlBoard;
-            }
-            const targetWiki = $('#targetWikiInfoUrl');
-            targetWiki.html(`&nbsp;&nbsp;&nbsp;[Wiki]`);
-            targetWiki.attr("href", urlWiki);
 
             if (summary.cloudBuild) {
                 $('div.release_info #cloudTargetInfo').show();
@@ -217,11 +192,13 @@ firmware_flasher.initialize = function (callback) {
             if (!navigator.onLine) {
                 return;
             }
+
             buildOptionsList($('select[name="radioProtocols"]'), data.radioProtocols);
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
-            if (!buildKeyExists()) {
+
+            if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
             }
         }
@@ -299,7 +276,7 @@ firmware_flasher.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        loadSponsor();
+        self.sponsor.loadSponsorTile('flash', $('div.tab_sponsor'));
 
         buildType_e.on('change', function() {
             self.enableLoadRemoteFileButton(false);
@@ -377,8 +354,8 @@ firmware_flasher.initialize = function (callback) {
 
             self.releaseLoader.loadTarget(target, release, onTargetDetail);
 
-            if (buildKeyExists() && navigator.onLine) {
-                self.releaseLoader.loadOptionsByBuildKey(release, FC.CONFIG.buildKey, buildOptions);
+            if (self.validateBuildKey() && navigator.onLine) {
+                self.releaseLoader.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions);
             } else {
                 self.releaseLoader.loadOptions(release, buildOptions);
             }
@@ -595,148 +572,6 @@ firmware_flasher.initialize = function (callback) {
             }
 
             self.isFlashing = false;
-        }
-
-        function verifyBoard() {
-            if (!$('option:selected', portPickerElement).data().isDFU) {
-
-                let mspHelper;
-
-                function onFinishClose() {
-                    MSP.clearListeners();
-                    MSP.disconnect_cleanup();
-                }
-
-                function onClose(success) {
-                    if (!success) {
-                        gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
-                    }
-
-                    serial.disconnect(onFinishClose);
-                }
-
-                function onFinish() {
-                    const board = FC.CONFIG.boardName;
-                    const boardSelect = $('select[name="board"]');
-                    const boardSelectOptions = $('select[name="board"] option');
-                    const target = boardSelect.val();
-                    let targetAvailable = false;
-
-                    if (board) {
-                        boardSelectOptions.each((_, e) => {
-                            if ($(e).text() === board) {
-                                targetAvailable = true;
-                            }
-                        });
-
-                        if (board !== target) {
-                            boardSelect.val(board).trigger('change');
-                        }
-
-                        gui_log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
-                            { boardName: board }));
-                        onClose(true);
-                    } else {
-                        onClose(false);
-                    }
-                }
-
-                function getBoardInfo() {
-                    MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish);
-                }
-
-                function getBuildInfo() {
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
-
-                        function onLoadCloudBuild(options) {
-                            FC.CONFIG.buildOptions = options.Request.Options;
-                            getBoardInfo();
-                        }
-
-                        MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
-                            MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME), false, () => {
-                                if (buildKeyExists()) {
-                                    self.releaseLoader.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, getBoardInfo);
-                                } else {
-                                    getBoardInfo();
-                                }
-                            });
-                        });
-                    } else {
-                        getBoardInfo();
-                    }
-                }
-
-                function detectBoard() {
-                    console.log(`Requesting board information`);
-                    MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
-                        gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
-
-                        if (FC.CONFIG.apiVersion.includes('null') || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                            onClose(false); // not supported
-                        } else {
-                            MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, getBuildInfo);
-                        }
-                    });
-                }
-
-                function onConnect(openInfo) {
-                    if (openInfo) {
-                        serial.onReceive.addListener(data => MSP.read(data));
-                        mspHelper = new MspHelper();
-                        MSP.listen(mspHelper.process_data.bind(mspHelper));
-                        detectBoard();
-                    } else {
-                        gui_log(i18n.getMessage('serialPortOpenFail'));
-                    }
-                }
-
-                // Can only verify if not in DFU mode.
-                if (String(portPickerElement.val()) !== '0') {
-                    const port = String(portPickerElement.val());
-                    let baud = 115200;
-
-                    if ($('input.flash_manual_baud').is(':checked')) {
-                        baud = parseInt($('#flash_manual_baud_rate').val());
-                    }
-
-                    gui_log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
-
-                    const isLoaded = self.targets ? Object.keys(self.targets).length > 0 : false;
-
-                    if (isLoaded) {
-                        if (!(serial.connected || serial.connectionId)) {
-                            serial.connect(port, {bitrate: baud}, onConnect);
-                        } else {
-                            console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId, serial.openCanceled);
-                        }
-                    } else {
-                        console.log('Releases not loaded yet');
-                    }
-                } else {
-                    gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
-                }
-            }
-        }
-
-        const detectBoardElement = $('a.detect-board');
-
-        detectBoardElement.on('click', () => {
-            detectBoardElement.addClass('disabled');
-
-            verifyBoard();
-
-            setTimeout(() => detectBoardElement.removeClass('disabled'), 1000);
-        });
-
-        function updateDetectBoardButton() {
-            const isDfu = PortHandler.dfu_available;
-            const isBusy = GUI.connect_lock;
-            const isAvailable = PortHandler.port_available || self.isFirstRun;
-            const isButtonDisabled = isDfu || isBusy || !isAvailable;
-
-            detectBoardElement.toggleClass('disabled', isButtonDisabled);
-            self.isFirstRun = false;
         }
 
         let result = getConfig('erase_chip');
@@ -1067,7 +902,7 @@ firmware_flasher.initialize = function (callback) {
                             if (self.boardNeedsVerification) {
                                 // reset to prevent multiple calls
                                 self.boardNeedsVerification = false;
-                                verifyBoard();
+                                self.verifyBoard();
                             }
                             if (self.selectedBoard) {
                                 self.enableLoadRemoteFileButton(true);
@@ -1077,9 +912,29 @@ firmware_flasher.initialize = function (callback) {
                         self.enableDfuExitButton(false);
                     }
                 }
-                updateDetectBoardButton();
+                self.updateDetectBoardButton();
             }
         }).trigger('change');
+
+        const targetSupportInfo = $('#targetSupportInfoUrl');
+
+        targetSupportInfo.on('click', function() {
+            let urlSupport = 'https://betaflight.com/docs/wiki/boards/missing';                 // general board missing
+            const urlBoard = `https://betaflight.com/docs/wiki/boards/${self.selectedBoard}`;   // board description
+            if (urlExists(urlBoard)) {
+                urlSupport = urlBoard;
+            }
+            targetSupportInfo.attr("href", urlSupport);
+        });
+
+        const detectBoardElement = $('a.detect-board');
+
+        detectBoardElement.on('click', () => {
+            detectBoardElement.addClass('disabled');
+
+            self.verifyBoard();
+            setTimeout(() => detectBoardElement.removeClass('disabled'), 1000);
+        });
 
         $('a.flash_firmware').on('click', function () {
             self.isFlashing = true;
@@ -1097,8 +952,8 @@ firmware_flasher.initialize = function (callback) {
                 }
             }
 
-            // Backup not available in DFU mode
-            if (!$('option:selected', portPickerElement).data().isDFU) {
+            // Backup not available in DFU, manual or virtual mode.
+            if (self.isSerialPortAvailable()) {
                 GUI.showYesNoDialog(
                     {
                         title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
@@ -1289,6 +1144,159 @@ firmware_flasher.initialize = function (callback) {
     });
 };
 
+
+// Helper functions
+
+
+firmware_flasher.isSerialPortAvailable = function() {
+    const selected_port = $('div#port-picker #port option:selected');
+    const isBusy = GUI.connect_lock;
+    const isDfu = PortHandler.dfu_available;
+    const isManual = selected_port.data().isManual || false;
+    const isVirtual = selected_port.data().isVirtual || false;
+
+    return !isDfu && !isManual && !isVirtual && !isBusy;
+};
+
+firmware_flasher.updateDetectBoardButton = function() {
+    $('a.detect-board').toggleClass('disabled', !this.isSerialPortAvailable());
+};
+
+firmware_flasher.validateBuildKey = function() {
+    return this.cloudBuildKey?.length === 32;
+};
+
+/**
+ *
+ *    Auto-detect board and set the dropdown to the correct value
+ */
+
+firmware_flasher.verifyBoard = function() {
+    const self = this;
+
+    if (!self.isSerialPortAvailable()) {
+        gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
+        return;
+    }
+
+    function onClose(success) {
+        if (!success) {
+            gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
+        }
+
+        serial.disconnect(function () {
+            MSP.clearListeners();
+            MSP.disconnect_cleanup();
+        });
+    }
+
+    function onFinish() {
+        const board = FC.CONFIG.boardName;
+        const boardSelect = $('select[name="board"]');
+        const boardSelectOptions = $('select[name="board"] option');
+        const target = boardSelect.val();
+        let targetAvailable = false;
+
+        if (board) {
+            boardSelectOptions.each((_, e) => {
+                if ($(e).text() === board) {
+                    targetAvailable = true;
+                }
+            });
+
+            if (board !== target) {
+                boardSelect.val(board).trigger('change');
+            }
+
+            gui_log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable',
+                { boardName: board }));
+            onClose(true);
+        } else {
+            onClose(false);
+        }
+    }
+
+    function requestBoardInformation(onSucces, onFail) {
+        MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
+            gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
+
+            if (FC.CONFIG.apiVersion.includes('null') || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
+                onFail(); // not supported
+            } else {
+                MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, onSucces);
+            }
+        });
+    }
+
+    function getBoardInfo() {
+        MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish);
+    }
+
+    function getCloudBuildOptions(options) {
+        // Do not use FC.CONFIG.buildOptions here as the object gets destroyed.
+        self.cloudBuildOptions = options.Request.Options;
+
+        getBoardInfo();
+    }
+
+    function getBuildInfo() {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
+            MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
+                MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME), false, () => {
+                    // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
+                    self.cloudBuildKey = FC.CONFIG.buildKey;
+
+                    if (self.validateBuildKey()) {
+                        self.releaseLoader.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
+                    } else {
+                        getBoardInfo();
+                    }
+                });
+            });
+        } else {
+            getBoardInfo();
+        }
+    }
+
+    function onConnect(openInfo) {
+        if (openInfo) {
+            serial.onReceive.addListener(data => MSP.read(data));
+            mspHelper = new MspHelper();
+            MSP.listen(mspHelper.process_data.bind(mspHelper));
+            requestBoardInformation(getBuildInfo, onClose);
+        } else {
+            gui_log(i18n.getMessage('serialPortOpenFail'));
+        }
+    }
+
+    let mspHelper;
+    const port = String($('div#port-picker #port').val());
+    const baud = $('input.flash_manual_baud').is(':checked') ? parseInt($('#flash_manual_baud_rate').val()) : 115200;
+    const isLoaded = self.targets ? Object.keys(self.targets).length > 0 : false;
+
+    if (!isLoaded) {
+        console.log('Releases not loaded yet');
+        gui_log(i18n.getMessage('firmwareFlasherNoTargetsLoaded'));
+        return;
+    }
+
+    if (!(serial.connected || serial.connectionId)) {
+        gui_log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
+        serial.connect(port, {bitrate: baud}, onConnect);
+    } else {
+        console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId, serial.openCanceled);
+    }
+};
+
+firmware_flasher.getPort = function () {
+    return String($('div#port-picker #port').val());
+};
+
+/**
+ *
+ * Bacup the current configuration to a file before flashing in serial mode
+ */
+
 firmware_flasher.backupConfig = function (callback) {
     let mspHelper;
     let cliBuffer = '';
@@ -1443,8 +1451,7 @@ firmware_flasher.backupConfig = function (callback) {
         }
     }
 
-    const portPickerElement = $('div#port-picker #port');
-    const port = String(portPickerElement.val());
+    const port = this.getPort();
 
     if (port !== '0') {
         const baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
@@ -1453,6 +1460,8 @@ firmware_flasher.backupConfig = function (callback) {
         gui_log(i18n.getMessage('firmwareFlasherNoPortSelected'));
     }
 };
+
+
 
 firmware_flasher.cleanup = function (callback) {
     PortHandler.flush_callbacks();

@@ -62,7 +62,15 @@ failsafe.initialize = function (callback) {
     }
 
     function load_motor_config() {
-        MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, load_gps_config);
+        MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, load_compass_config);
+    }
+
+    function load_compass_config() {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, load_gps_config);
+        } else {
+            load_gps_config();
+        }
     }
 
     function load_gps_config() {
@@ -333,7 +341,7 @@ failsafe.initialize = function (callback) {
             $('input[name="gps_rescue_return_altitude"]').attr({"min": 5, "max": 1000});
             $('input[name="gps_rescue_descent_distance"]').attr("min", 10);
             $('input[name="gps_rescue_min_start_dist"]').attr({"min": 10, "max": 30})
-            .closest('.number').children('.helpicon').attr("i18n_title", i18n.getMessage("failsafeGpsRescueItemMinStartDistHelp"));
+            .closest('.number').children('.helpicon').attr("i18n_title", "failsafeGpsRescueItemMinStartDistHelp");
             $('input[name="gps_rescue_descend_rate"]').attr({"min": 0.2, "max": 50.0});
         }
 

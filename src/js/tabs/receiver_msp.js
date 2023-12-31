@@ -1,3 +1,4 @@
+import '../jqueryPlugins';
 import windowWatcherUtil from "../utils/window_watchers";
 import $ from 'jquery';
 

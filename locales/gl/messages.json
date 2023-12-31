@@ -736,10 +736,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reiniciar eixo Z, offset: $1 º"
     },
-    "initialSetupHeading": {
-        "message": "Título:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
     },
@@ -2667,10 +2663,6 @@
         "message": "Latitude / Lonxitude actual:",
         "description": "Show GPS position - Latitude / Longitude"
     },
-    "gpsHeading": {
-        "message": "Rumbo Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
-    },
     "gpsSpeed": {
         "message": "Velocidade:"
     },
@@ -3228,9 +3220,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Placa:"
-    },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtén máis información sobre a controladora na wiki de Betaflight (url wiki atopado na configuración de destino unificado)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"

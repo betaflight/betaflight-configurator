@@ -107,7 +107,7 @@ const MSPCodes = {
     MSP_BATTERY_STATE:              130,
     MSP_MOTOR_CONFIG:               131,
     MSP_GPS_CONFIG:                 132,
-// Removed:   MSP_COMPASS_CONFIG:             133,
+    MSP_COMPASS_CONFIG:             133,
     MSP_GPS_RESCUE:                 135,
 
     MSP_VTXTABLE_BAND:              137,
@@ -160,7 +160,7 @@ const MSPCodes = {
     MSP_SET_LED_STRIP_MODECOLOR:    221,
     MSP_SET_MOTOR_CONFIG:           222,
     MSP_SET_GPS_CONFIG:             223,
-// Removed:    MSP_SET_COMPASS_CONFIG:         224,
+    MSP_SET_COMPASS_CONFIG:         224,
     MSP_SET_GPS_RESCUE:             225,
 
     MSP_SET_VTXTABLE_BAND:          227,

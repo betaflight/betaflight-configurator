@@ -734,8 +734,8 @@
         "message": "Reiniciar eje Z, desplazamiento: $1 grad"
     },
     "initialSetupHeading": {
-        "message": "Rumbo:",
-        "description": "Heading shown on Setup tab"
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
@@ -952,6 +952,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "El filtro basado en RPM está activado pero uno o más ESCs no están proporcionando telemetría DSHOT válida. Comprueba que los ESCs son compatibles y tienen el firmware necesario instalado para soportar telemetría bidireccional DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "La telemetría Dshot está activada, pero uno o más ESC no están suministrando telemetría DSHOT válida. Comprueba que los ESC son capaces y tienen el firmware necesario instalado para soportar la telemetría bidireccional DSHOT.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un cambio en la configuración requiere reiniciar",
@@ -2735,8 +2739,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Rumbo Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "Rumbo IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocidad:"
@@ -3300,7 +3304,8 @@
         "message": "Placa:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtén más información sobre la placa en la wiki de Betaflight (la URL de la wiki se encuentra en la configuración de placas unificadas)"
+        "message": "Obtén más información sobre la placa en la Wiki de Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -7270,5 +7275,9 @@
     "showDevToolsOnStartup": {
         "message": "Abrir automáticamente las herramientas de desarrollo",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

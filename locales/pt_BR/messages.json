@@ -733,10 +733,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Redefinir eixo Z, offset: $1 graus"
     },
-    "initialSetupHeading": {
-        "message": "Direção:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
     },
@@ -3113,9 +3109,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Destino:"
-    },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtenha mais informações sobre o destino na wiki do Betaflight (a URL da wiki pode ser encontrada na configuração do destino unificado)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
