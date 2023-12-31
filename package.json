@@ -69,6 +69,7 @@
     "switchery-latest": "^0.8.2",
     "three": "~0.97.0",
     "universal-ga": "^1.2.0",
+    "vite-plugin-pwa": "^0.17.4",
     "vue": "^2.7.10"
   },
   "devDependencies": {
