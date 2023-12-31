@@ -219,9 +219,10 @@ gps.initialize = async function (callback) {
             const eSsTable = $('div.GPS_signal_strength table');
             const hasGPS = have_sensor(FC.CONFIG.activeSensors, 'gps');
 
-            $('.signal_strength').toggle(hasGPS);
+            $('.signal_strength').toggle(!hasGPS);
 
             if (!hasGPS) {
+                eSsTable.html('');
                 return;
             }
 
