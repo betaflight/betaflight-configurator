@@ -371,8 +371,8 @@ function dist_src() {
 
 function dist_node_modules_css() {
   return gulp
-    .src("./**/*.min.css")
-    .pipe(gulp.dest(DIST_DIR));
+    .src("./node_modules/**/*.min.css")
+    .pipe(gulp.dest(`${DIST_DIR}node_modules`));
 }
 
 function dist_ol_css() {
