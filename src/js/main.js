@@ -228,7 +228,7 @@ function startProcess() {
     document.createElement('canvas');
 
     // log library versions in console to make version tracking easier
-    console.log(`Libraries: jQuery - ${$.fn.jquery}, d3 - ${d3.version}, three.js - ${THREE.REVISION}`);
+    console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
     // Tabs
     $("#tabs ul.mode-connected li").click(function() {
