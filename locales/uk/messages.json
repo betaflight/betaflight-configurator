@@ -2708,10 +2708,6 @@
     "gpsMapHead": {
         "message": "Поточне GPS-розташування"
     },
-    "gpsMapHeadHelp": {
-        "message": "Показати місцезнаходження GPS на мапі. Використовуйте колесо прокрутки миші для збільшення та зменшення масштабу.<br>Значок місцезнаходження показує напрямок на північ якщо використовується компас",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Перевірте інтернет-з'єднання"
     },
@@ -5422,9 +5418,6 @@
     "osdTextElementLapTimeBest3": {
         "message": "Час кращих 3 за GPS",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementLapTimeBest": {
-        "message": "Найкращий час кола за GPS"
     },
     "osdTextElementCraftName": {
         "message": "Назва повітряного судна",

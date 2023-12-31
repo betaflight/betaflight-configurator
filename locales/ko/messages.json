@@ -779,6 +779,9 @@
     "initialSetupMagHead": {
         "message": "자력계"
     },
+    "initialSetupMagDeclination": {
+        "message": "자력계 기울기:"
+    },
     "initialSetupInfoHead": {
         "message": "시스템 정보"
     },
@@ -1277,6 +1280,9 @@
     },
     "configurationArmingHelp": {
         "message": "몇몇 아밍 옵션은 가속도계 사용이 필요할 수도 있습니다."
+    },
+    "configurationMagDeclination": {
+        "message": "자력계 기울기 [도]"
     },
     "configurationReverseMotorSwitch": {
         "message": "모터 방향이 반대로 됩니다."
@@ -2707,10 +2713,6 @@
     },
     "gpsMapHead": {
         "message": "현재 GPS 위치"
-    },
-    "gpsMapHeadHelp": {
-        "message": "지도에 GPS 위치를 표시합니다. 마우스를 스크롤하여 줌인과 아웃을 사용하세요.<br>위치 아이콘은 자기계가 사용중일 때 북쪽 방향을 표시합니다",
-        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "인터넷 연결 상태를 확인하십시오."
@@ -5423,8 +5425,8 @@
         "message": "GPS 랩타임 베스트 3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "베스트 GPS 랩타임"
+    "osdDescElementLapTimeBest3": {
+        "message": "베스트 3 GPS 랩타임"
     },
     "osdTextElementCraftName": {
         "message": "기체 이름",

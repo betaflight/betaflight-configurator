@@ -736,6 +736,10 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Reiniciar eixo Z, offset: $1 º"
     },
+    "initialSetupHeading": {
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
+    },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
     },
@@ -778,8 +782,22 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
+    "initialSetupMagDeclination": {
+        "message": "Declinación mag:"
+    },
     "initialSetupInfoHead": {
         "message": "Información do sistema"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "Mostra as bandeiras do FC para o desarmado, a información da batería, o nivel RSSI.",
+        "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Información do sensor"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Mostrar o hardware do sensor",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Voltaxe da batería:"
@@ -805,8 +823,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Non incluído na compilación",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Non detectado",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
+    },
+    "initialSetupSensorGyro": {
+        "message": "Xiro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Accel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Flags Armado Desactivado:"
@@ -908,6 +958,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "O filtrado baseado en RPM está activado, pero un ou máis ESC non están a proporcionar unha telemetría DSHOT válida. Comprobe que os ESC son capaces de instalar e posúen o firmware necesario para soportar a telemetría bidireccional DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "A telemetría Dshot está activada pero un ou máis ESC non proporcionan telemetría DSHOT válida. Comprobe que os ESC son capaces e teñen o firmware necesario instalado para admitir a telemetría DSHOT bidireccional.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un cambio de configuración require un reinicio",
@@ -1230,6 +1284,9 @@
     "configurationArmingHelp": {
         "message": "Algunhas opcións de armado poderían necesitar que actives o acelerómetro"
     },
+    "configurationMagDeclination": {
+        "message": "Declinación del magnetómetro [deg]"
+    },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de motor invertida"
     },
@@ -1262,6 +1319,10 @@
     "configurationMotorPolesHelp": {
         "message": "O número de polos é o número de imáns na campá do motor. Non conte os estatores onde están enrolados os fíos de cobre. Os motores de 5\" normalmente teñen 14 imáns, 3\" ou máis pequenos adoitan ter 12 imáns.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Este é o valor inactivo dinámico do perfil PID activo. Cando Dynamic Idle está configurado en cero, só se aplicará ó ralentí do motor estático. Cambie a configuración de inactividade dinámica na pestana Axuste PID.",
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Minimun Throttle (Valor minimo do ESC ó armar)"
@@ -2115,6 +2176,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Restablecer a frecuencia de actualización"
     },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Gardar"
     },
@@ -2608,6 +2685,13 @@
     "servosAngleAtMax": {
         "message": "Ángulo máximo"
     },
+    "servosRateAndDirection": {
+        "message": "Velocidade e dirección"
+    },
+    "servosRate": {
+        "message": "Velocidade:",
+        "description": "Label for 'Rate:' direction"
+    },
     "servosLiveMode": {
         "message": "Activar o modo en directo"
     },
@@ -2632,10 +2716,6 @@
     },
     "gpsMapHead": {
         "message": "Localización GPS actual"
-    },
-    "gpsMapHeadHelp": {
-        "message": "Mostrar a localización GPS no mapa. Usa o botón de desprazamento do rato para achegar e afastar o zoom.<br>A icona de localización mostra a dirección norte cando o magnetómetro está en uso",
-        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Por favor comprove a súa conexión a internet"
@@ -2662,6 +2742,10 @@
     "gpsLatLon": {
         "message": "Latitude / Lonxitude actual:",
         "description": "Show GPS position - Latitude / Longitude"
+    },
+    "gpsHeading": {
+        "message": "Rumbo IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocidade:"
@@ -2993,6 +3077,9 @@
     "sensorsAccelTitle": {
         "message": "Acelerómetro - g (grados)"
     },
+    "sensorsMagTitle": {
+        "message": "Magnetómetro"
+    },
     "sensorsAltitudeTitle": {
         "message": "Altitude - metros"
     },
@@ -3220,6 +3307,10 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Placa:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Obtén máis información sobre o destino na Wiki de Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -4418,6 +4509,9 @@
     "pidTuningIdleMinRpmHelp": {
         "message": "Dynamic Idle mellora o control a baixas revolucións e reduce o risco de desincronización do motor. <br /><br /> Mellora a autoridade PID, a estabilidade do acelerador cero, o tempo de suspensión invertido e o freado do motor.<br /><br />As rpm mínimas de ralentí dinámico deben establecerse entre 3000 e 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki </a> para máis información."
     },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "Dynamic Idle está DESACTIVADO porque a telemetría Dshot está DESACTIVADA"
+    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Ángulo límite para Entrenador Acro"
     },
@@ -4945,6 +5039,50 @@
         "message": "Perfil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
+    "osdSetupPreviewSelectFont": {
+        "message": "Fonte",
+        "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "Por defecto",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Negriña",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Grande",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Extra Grande",
+        "description": "Font Large Extra"
+    },
+    "osdSetupFontTypeBetaflight": {
+        "message": "Betaflight",
+        "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Dixital",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Claridade",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Visión",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Impacto",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Impacto pequeno",
+        "description": "Font Impact Mini"
+    },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
         "description": "Check to select a bigger display of the OSD preview in small screens"
@@ -5290,8 +5428,8 @@
         "message": "Mellor tempo de 3 voltas por GPS",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Mellor tempo de volta por GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Os 3 mellores tempos de volta por GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nome da aeronave",
@@ -5963,6 +6101,27 @@
     "osdDescStatBestLap": {
         "message": "Mellor volta"
     },
+    "osdTextStatFullThrottleTime": {
+        "message": "Temporizador de aceleración total",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Temporizador de aceleración total"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Contador da aceleración total",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Contador da aceleración total"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Aceleración media",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Aceleración media"
+    },
     "osdTextStatUnknown": {
         "message": "Descoñecido $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -6036,6 +6195,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Altitude",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Calidade do enlace",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Armado Desactivado",
@@ -6474,6 +6637,14 @@
     "vtxButtonSave": {
         "message": "Gardar",
         "description": "Save button in the VTX tab"
+    },
+    "buttonSaving": {
+        "message": "Gardando",
+        "description": "Show state of the Save button in the VTX/LED tab"
+    },
+    "buttonSaved": {
+        "message": "Gardado",
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} desbloqueado",
@@ -7109,5 +7280,9 @@
     "showDevToolsOnStartup": {
         "message": "Abre automaticamente DevTools no modo de desenvolvemento",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

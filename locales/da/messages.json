@@ -2708,10 +2708,6 @@
     "gpsMapHead": {
         "message": "Aktuel GPS position"
     },
-    "gpsMapHeadHelp": {
-        "message": "Angiver GPS prosition på kortet, rul med muse hjul for at zoome ind/ud eller tryk på +/-.<br>Positions ikon viser retning for Nord, når kompas anvendes.",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Tjek Internetforbindelsen"
     },
@@ -5422,9 +5418,6 @@
     "osdTextElementLapTimeBest3": {
         "message": "GPS omgangstid bedst af 3 omgange",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementLapTimeBest": {
-        "message": "Angiver bedste GPS omgangstid"
     },
     "osdTextElementCraftName": {
         "message": "Navn: Fartøj",

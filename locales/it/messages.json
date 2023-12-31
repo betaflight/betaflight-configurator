@@ -607,7 +607,7 @@
         "message": "Contribuisci"
     },
     "defaultContributingText": {
-        "message": "Se vuoi aiutare a migliorare Betaflight puoi aiutare in diversi modi, tra cui:<br /><ul><li>Utilizzare la tua conoscenza di Betaflight per creare o aggiornare contenuti sulla <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki</a>, o rispondere alle domande degli altri utenti nei forum online;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Contribuire al codice</a> del firmware e del Configuratore - nuove funzionalità, correzioni, miglioramenti;</li><li>Testare <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuove funzioni e correzioni</a> e fornire feedback;</li><li>Aiutando altri utenti a risolvere i problemi segnalati nei <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nostri issue tracker</a>, e partecipare alle discussioni sulle richieste di funzioni;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Traducendo</a> il Betaflight Configurator in una nuova lingua o aggiornando le traduzioni esistenti.</li></ul>"
+        "message": "Se vuoi aiutare a migliorare Betaflight puoi aiutare in diversi modi, tra cui:<br /><ul><li>Utilizzare la tua conoscenza di Betaflight per creare o aggiornare contenuti sulla <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki</a>, o rispondere alle domande degli altri utenti nei forum online;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">Contribuire al codice</a> del firmware e del Configuratore - nuove funzionalità, correzioni, miglioramenti;</li><li>Testare <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuove funzioni e correzioni</a> e fornire feedback;</li><li>Aiutando altri utenti a risolvere i problemi segnalati nei <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nostri issue tracker</a>, e partecipare alle discussioni sulle richieste di funzioni;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Traducendo</a> il Betaflight Configurator in una nuova lingua o aggiornando le traduzioni esistenti.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Abbiamo anche un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">gruppo Facebook</a>.<br /> Unisciti a noi per discutere di Betaflight, fare domande riguardo la configurazione, o semplicemente ritrovarti con altri piloti."
@@ -778,6 +778,9 @@
     },
     "initialSetupMagHead": {
         "message": "Magnetometro"
+    },
+    "initialSetupMagDeclination": {
+        "message": "Declinazione Mag:"
     },
     "initialSetupInfoHead": {
         "message": "Informazioni di sistema"
@@ -952,6 +955,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Il filtraggio basato su RPM è abilitato ma uno o più ESC non forniscono una telemetria DSHOT valida. Verificare che gli ESC siano in grado di installare il firmware richiesto per supportare la telemetria DSHOT bidirezionale.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "La telemetria Dshot è abilitata, ma uno o più ESC non forniscono una telemetria DSHOT valida. Controllare che gli ESC siano in grado di supportare la telemetria bidirezionale DSHOT ed il firmware sia compatibile.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un cambio configurazione richiede un riavvio",
@@ -1273,6 +1280,9 @@
     },
     "configurationArmingHelp": {
         "message": "Alcune opzioni di armamento motori possono richiedere l'abilitazione dell'accelerometro"
+    },
+    "configurationMagDeclination": {
+        "message": "Declinazione Magnetometro [gradi]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direzione motori invertita"
@@ -2704,10 +2714,6 @@
     "gpsMapHead": {
         "message": "Posizione GPS attuale"
     },
-    "gpsMapHeadHelp": {
-        "message": "Mostra la posizione GPS sulla mappa. Usa lo scorrimento del mouse per ingrandire e rimpicciolire.<br>L'icona della posizione mostra la direzione nord se il magnetometro è in uso",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Per favore controlla la tua connessione Internet"
     },
@@ -3298,6 +3304,10 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Destinazione:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Maggiori informazioni per il target sul Wiki Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -5415,8 +5425,8 @@
         "message": "Migliori 3 tempi del giro GPS",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Miglior tempo del giro GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Migliori tempi di 3 giri GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nome Modello",
@@ -7267,5 +7277,9 @@
     "showDevToolsOnStartup": {
         "message": "Apri automaticamente DevTools in modalità sviluppo",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

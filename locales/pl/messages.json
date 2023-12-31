@@ -779,6 +779,9 @@
     "initialSetupMagHead": {
         "message": "Magnetometr"
     },
+    "initialSetupMagDeclination": {
+        "message": "Deklinacja Mag:"
+    },
     "initialSetupInfoHead": {
         "message": "Informacje o systemie"
     },
@@ -1277,6 +1280,9 @@
     },
     "configurationArmingHelp": {
         "message": "Niektóre opcje uzbrajania mogą wymagać uruchomionego akcelerometru"
+    },
+    "configurationMagDeclination": {
+        "message": "Deklinacja magnetometru [stopnie]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Odwrócono kierunek obrotów silników"
@@ -2708,10 +2714,6 @@
     "gpsMapHead": {
         "message": "Aktualna lokalizacja GPS"
     },
-    "gpsMapHeadHelp": {
-        "message": "Pokaż lokalizację GPS na mapie. Użyj przycisku przewijania w myszce, aby powiększyć i pomniejszyć widok na mapie.<br> Ikona lokalizacji pokazuje kierunek północny, gdy magnetometr jest używany",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Sprawdź swoje połączenie internetowe"
     },
@@ -3223,7 +3225,7 @@
         "message": "Zrzut pamięci flash do pliku... (nie wspierany)"
     },
     "dataflashSavetoFileNote": {
-        "message": "Bezpośrednie zapisywanie zawartości flash do pliku jest powolne i z natury podatne na błąd / uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać dla małych plików, ale to nie jest obsługiwane i żądania dodania wsparcia zostaną zamknięte natychmiastowo bez komentarza - zamiast tego użyj trybu masowej pamięci."
+        "message": "Bezpośrednie zapisywanie zawartości Flash do pliku jest powolne i z natury podatne na błąd / uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać podczas zapisu małych plików, ale zalecane jest użycie trybu pamięci masowej."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Ta metoda jest powolna i z natury podatna na błąd / uszkodzenie plików, ponieważ połączenie MSP jest zmienne, co jest podstawowym ograniczeniem, które sprawia, że jest nieodpowiednie do przesyłania plików. Może zadziałać tylko dla małych plików. Nie twórz żądań dodania wsparcia tej funkcji gdy transfer plików nie powiedzie się po zapisaniu, przy użyciu tej metody. Zalecaną metodą jest użycie '<b>$t(onboardLoggingRebootMscText.message)</b>' (poniżej) aby aktywować tryb pamięci masowej i uzyskać dostęp do kontrolera lotu jako urządzenia pamięci."
@@ -3302,6 +3304,10 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Więcej szczegółowych informacji znajdziesz na Wiki Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -4673,7 +4679,7 @@
         "message": "Minimalna liczba satelitów"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!</span"
+        "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS - <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!</span"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
         "message": "Nie rekomendowane. Umożliwia uzbrojenie bez poprawnego sygnału GPS, może spowodować, że jednostka latająca rozbroi się i ulegnie awarii z prawdziwym zabezpieczeniem przed utratą sygnału Rx. Jeśli testowano za pomocą przełącznika, przed rozbrojeniem następuje krótki okres bezczynności."
@@ -5419,8 +5425,8 @@
         "message": "Najlepszy czas okrążenia GPS 3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Najlepszy czas okrążenia GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Najlepsze 3 czasy okrążania GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nazwa modelu",
@@ -6907,19 +6913,19 @@
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasEuropeanEGNOS": {
-        "message": "Europejski EGNOS (wspomagający systemy GPS i GLONASS)",
+        "message": "Europejski EGNOS",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasNorthAmericanWAAS": {
-        "message": "WAAS(System nawigacji powietrznej)",
+        "message": "WAAS (system wspomagający NAVSTAR-GPS)",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasJapaneseMSAS": {
-        "message": "Japoński MSAS(wspiera DGPS - różnicowy sygnał gps)",
+        "message": "Japoński MSAS",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasIndianGAGAN": {
-        "message": "Indyjski GAGAN (rozszerzona nawigacja wspomagana GPS-em)",
+        "message": "Indyjski GAGAN",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasNone": {
@@ -7271,5 +7277,9 @@
     "showDevToolsOnStartup": {
         "message": "Automatycznie otwórz DevTools w trybie deweloperskim",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }
