@@ -439,6 +439,7 @@ function dist_rollup() {
                 }),
                 rollupReplace({
                     'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+                    'preventAssignment': true,
                 }),
                 resolve(),
                 commonjs(),
