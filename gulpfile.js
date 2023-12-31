@@ -353,6 +353,9 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 }
 
 function dist_src() {
+    const platforms = getPlatforms();
+    const isAndroid = platforms.includes('android');
+
     const distSources = [
         './src/**/*',
         '!./src/**/*.js',
@@ -364,8 +367,14 @@ function dist_src() {
         './src/js/tabs/map.js',
     ];
 
-    return gulp.src(distSources, { base: 'src' })
-        .pipe(gulp.src('yarn.lock'))
+    const distSourcesCordova = [
+        './src/**/*',
+        '!./src/css/dropdown-lists/LICENSE',
+        '!./src/support/**',
+        '!./src/**/*.less',
+    ];
+
+    return gulp.src(isAndroid ? distSourcesCordova : distSources, { base: 'src' })
         .pipe(gulp.dest(DIST_DIR));
 }
 
