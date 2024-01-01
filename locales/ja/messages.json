@@ -779,6 +779,9 @@
     "initialSetupMagHead": {
         "message": "コンパス"
     },
+    "initialSetupMagDeclination": {
+        "message": "コンパス偏角値:"
+    },
     "initialSetupInfoHead": {
         "message": "システム情報"
     },
@@ -950,8 +953,12 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "RPMベースのフィルタリングは有効ですが、1つ以上のESCが有効なDSHOTテレメトリー情報を提供していません。ESCがDSHOT双方向テレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
+        "message": "RPMベースのフィルタリングは有効ですが、1つ以上の有効なESCのDSHOTテレメトリー情報を提供していません。ESCが双方向DSHOTテレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "DSHOTテレメトリーは有効ですが、1つ以上の有効なESCのDSHOTテレメトリー情報を提供していません。ESCが双方向DSHOTテレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "設定を変更するには再起動が必要です",
@@ -1273,6 +1280,9 @@
     },
     "configurationArmingHelp": {
         "message": "アーミングオプションによっては、加速度センサーを有効にする必要があります"
+    },
+    "configurationMagDeclination": {
+        "message": "コンパス偏角値 [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "モーター回転方向: リバース構成"
@@ -4331,7 +4341,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br /><br /><b><span class=\"message-positive\">重要:</span> ESCは双方向DShotプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
+        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br /><br /><b><span class=\"message-positive\">重要:</span> ESCは双方向DSHOTプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -5414,6 +5424,9 @@
     "osdTextElementLapTimeBest3": {
         "message": "GPSラップタイム ベスト3",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest3": {
+        "message": "GPSラップタイム ベスト3"
     },
     "osdTextElementCraftName": {
         "message": "機体名",
@@ -6659,7 +6672,7 @@
         "message": "モーターPWM 周波数"
     },
     "configurationDshotBidir": {
-        "message": "双方向DShot (ESCファームウェアサポートが必要)",
+        "message": "双方向DSHOT (ESCファームウェアサポートが必要)",
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {

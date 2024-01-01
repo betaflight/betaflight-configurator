@@ -779,6 +779,9 @@
     "initialSetupMagHead": {
         "message": "Магнітометр"
     },
+    "initialSetupMagDeclination": {
+        "message": "Магнітне схилення:"
+    },
     "initialSetupInfoHead": {
         "message": "Інформація про систему"
     },
@@ -1277,6 +1280,9 @@
     },
     "configurationArmingHelp": {
         "message": "Для деяких опцій взведення може знадобитися ввімкнений акселерометр"
+    },
+    "configurationMagDeclination": {
+        "message": "Схилення магнітометра [градуси]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Напрямок мотора змінено на протилежний"
@@ -5418,6 +5424,9 @@
     "osdTextElementLapTimeBest3": {
         "message": "Час кращих 3 за GPS",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest3": {
+        "message": "3 найкращі часи кола за GPS"
     },
     "osdTextElementCraftName": {
         "message": "Назва повітряного судна",

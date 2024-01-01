@@ -130,6 +130,10 @@
     "language_default_pretty": {
         "message": "시스템 기본 ($t(detectedLanguage))"
     },
+    "language_pl": {
+        "message": "Polski",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "데이터플래시 <br>칩이 발견되지 않음",
         "description": "Text of the dataflash image in the header of the page."

@@ -131,7 +131,7 @@
         "message": "Predeterminat del sistema ($t(detectedLanguage))"
     },
     "language_pl": {
-        "message": "Polski",
+        "message": "Polonès",
         "description": "Don't translate!!!"
     },
     "language_zh_TW": {
@@ -740,6 +740,10 @@
     },
     "initialSetupButtonResetZaxisValue": {
         "message": "Restableix l'eix Z, offset: $1 graus"
+    },
+    "initialSetupHeading": {
+        "message": "Eix de guinyada:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Tipus de Mixer"
@@ -2743,6 +2747,10 @@
     "gpsLatLon": {
         "message": "Latitud/Longitud actuals:",
         "description": "Show GPS position - Latitude / Longitude"
+    },
+    "gpsHeading": {
+        "message": "Mostra Mag / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocitat:"
