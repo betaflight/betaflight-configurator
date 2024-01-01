@@ -130,6 +130,10 @@
     "language_default_pretty": {
         "message": "Standard sprog fra windows ($t(detectedLanguage))"
     },
+    "language_pl": {
+        "message": "Polski",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "Ingen dataflash-<br>chip fundet",
         "description": "Text of the dataflash image in the header of the page."
@@ -779,6 +783,9 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
+    "initialSetupMagDeclination": {
+        "message": "Kompas afvigelse:"
+    },
     "initialSetupInfoHead": {
         "message": "System info"
     },
@@ -1216,7 +1223,7 @@
         "message": "<strong>Note:</strong> SPI RX konfiguration kræver at den nødvendige hardware er integreret i FC eller FC tilsluttet en SPI-bus."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>Bemærk:</strong> Ikke alle funktioner understøttes af alle FC / flight controllere. Aktiveres en bestemt funktion, og er den derefter deaktiveret, når du har valgt \"Gem og genstart\", er funktionen ikke understøttet af din FC."
+        "message": "<strong>Bemærk:</strong> Ikke alle funktioner understøttes af alle FC / flight controllere. Aktiveres en bestemt funktion, og er den alligevel deaktiveret, efter du har trykket \"Gem og genstart\", er funktionen ikke understøttet af din FC."
     },
     "configurationBoardAlignment": {
         "message": "FC sensor justering"
@@ -1277,6 +1284,9 @@
     },
     "configurationArmingHelp": {
         "message": "Visse Tilkoblingsfunktioner kan kræve aktivt accelerometer"
+    },
+    "configurationMagDeclination": {
+        "message": "Kompas afvigelse [grader]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motorretning er vendt om"
@@ -1349,7 +1359,7 @@
         "message": "Motor bip benytter ESC'erne og motorerne til lydafgivelse. Motor bip kan ikke bruges, når motorerne roterer.<br/>Fra Betaflight 3.4: Forsøges aktivering, mens motor bip er aktivt, er der en 2 sekunders forsinkelse efter det seneste motor bip, før fartøjet aktiveres. Dette forhindrer motor bip funktionen i at forstyrre Dshot kommandoer.<br/><br/><strong>Advarsel:</strong> Når aktiveret, sender mottor bip strøm gennem motorerne, hvilket kan resultere i for høj varmeudvikling og beskadigelse af motorer og/eller ESC'er, hvis bip styrken er for høj. Benyt BLHeli Configurator eller BLHeli Suite til at justere og teste bip styrken."
     },
     "configurationBeeper": {
-        "message": "Opsætning af bip"
+        "message": "Opsætning af funktions bip"
     },
     "beeperGYRO_CALIBRATED": {
         "message": "Bipper, når gyro er færdigkalibreret"
@@ -2659,7 +2669,7 @@
         "message": "Skift retning i TX for at matche"
     },
     "servosName": {
-        "message": "Navn servo"
+        "message": "Servo"
     },
     "servosMid": {
         "message": "MID"
@@ -5419,6 +5429,9 @@
         "message": "GPS omgangstid bedst af 3 omgange",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementLapTimeBest3": {
+        "message": "Bedste af 3 omgangstider med GPS"
+    },
     "osdTextElementCraftName": {
         "message": "Navn: Fartøj",
         "description": "One of the elements of the OSD"
@@ -6789,7 +6802,7 @@
         "message": "Kan vises i loggen, filnavn for sikkkerhedskopi og OSD.</br>Indstilles via <b>craft_name</b> CLI variabel."
     },
     "configurationPilotName": {
-        "message": "Pilot navn"
+        "message": "Navn: Pilot"
     },
     "configurationPilotNameHelp": {
         "message": "Mulig at vise i OSD.</br>Indstilles via <b>pilot_name</b> CLI variabel."

@@ -130,6 +130,10 @@
     "language_default_pretty": {
         "message": "Domyślne ustawienie systemowe ($t(detectedLanguage))"
     },
+    "language_pl": {
+        "message": "Polski",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "Nie znaleziono <br>układu scalonego",
         "description": "Text of the dataflash image in the header of the page."
