@@ -195,6 +195,31 @@ firmware_flasher.initialize = function (callback) {
             });
         }
 
+        function toggleTelemetryProtocolInfo() {
+            const radioProtocol = $('select[name="radioProtocols"] option:selected').val();
+            const hasTelemetryEnabledByDefault = [
+                'USE_SERIALRX_CRSF',
+                'USE_SERIALRX_FPORT',
+                'USE_SERIALRX_GHST',
+            ].includes(radioProtocol);
+
+            $('select[name="telemetryProtocols"]').attr('disabled', hasTelemetryEnabledByDefault);
+
+            if (hasTelemetryEnabledByDefault) {
+                $('select[name="telemetryProtocols"] option:selected').val('-1');
+            }
+
+            $('select[name="telemetryProtocols"]').select2({
+                templateSelection: function (data) {
+                    if (data.id === '-1') {
+                        return hasTelemetryEnabledByDefault ? i18n.getMessage('firmwareFlasherOptionLabelTelemetryProtocolIncluded') : '[None]';
+                    }
+
+                    return data.text;
+                },
+            });
+        }
+
         function buildOptions(data) {
             if (!navigator.onLine) {
                 return;
@@ -208,6 +233,8 @@ firmware_flasher.initialize = function (callback) {
             if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
             }
+
+            toggleTelemetryProtocolInfo();
         }
 
         function preselectRadioProtocolFromStorage() {
@@ -435,6 +462,8 @@ firmware_flasher.initialize = function (callback) {
             if (selectedProtocol) {
                 setConfig({"ffRadioProtocol" : selectedProtocol});
             }
+
+            toggleTelemetryProtocolInfo();
         });
 
         $('select[name="board"]').on('change', function() {
