@@ -379,8 +379,20 @@ function dist_src() {
 }
 
 function dist_node_modules_css() {
-  return gulp
-    .src("./node_modules/**/*.min.css")
+    const platforms = getPlatforms();
+    const isAndroid = platforms.includes('android');
+
+    const cssSources = [
+        './node_modules/**/*.min.css',
+    ];
+
+    if (isAndroid) {
+        cssSources.push("./node_modules/**/*.woff2");
+        cssSources.push("./node_modules/**/*.ttf");
+    }
+
+    return gulp
+    .src(cssSources)
     .pipe(gulp.dest(`${DIST_DIR}node_modules`));
 }
 
