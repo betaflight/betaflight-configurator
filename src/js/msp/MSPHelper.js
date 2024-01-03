@@ -1707,10 +1707,6 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             buffer.push8(FC.BEEPER_CONFIG.dshotBeaconTone);
             buffer.push32(FC.BEEPER_CONFIG.dshotBeaconConditions.getDisabledMask());
             break;
-        case MSPCodes.MSP_SET_OSD_CANVAS:
-            buffer.push8(OSD.data.VIDEO_COLS[OSD.data.video_system]);
-            buffer.push8(OSD.data.VIDEO_ROWS[OSD.data.video_system]);
-            break;
         case MSPCodes.MSP_SET_MIXER_CONFIG:
             buffer.push8(FC.MIXER_CONFIG.mixer);
             buffer.push8(FC.MIXER_CONFIG.reverseMotorDir);
