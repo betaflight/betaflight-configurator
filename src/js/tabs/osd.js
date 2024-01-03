@@ -16,7 +16,6 @@ import inflection from "inflection";
 import { checkChromeRuntimeError } from "../utils/common";
 import debounce from "lodash.debounce";
 import $ from 'jquery';
-import { mspHelper } from "../msp/MSPHelper";
 
 const FONT = {};
 const SYM = {};
@@ -3355,7 +3354,6 @@ osd.initialize = function(callback) {
         });
 
         $('a.save').click(function() {
-            MSP.promise(MSPCodes.MSP_SET_OSD_CANVAS, mspHelper.crunch(MSPCodes.MSP_SET_OSD_CANVAS));
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             gui_log(i18n.getMessage('osdSettingsSaved'));
             const oldText = $(this).html();
