@@ -27,8 +27,6 @@ function setupAnalytics(result) {
     const optOut = !!result.analyticsOptOut;
     const checkForDebugVersions = !!result.checkForConfiguratorUnstableVersions;
 
-    const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
-
     const settings = {
         sessionId: uid.randomUUID(16),
         userId: userId,
@@ -112,7 +110,7 @@ class Analytics {
     }
 
     sendSaveAndChangeEvents(category, changeList, tabName) {
-        this.sendEvent(category, 'Save', { tab: tabName, changes: Object.keys(changeList).map((k) => k) });
+        this.sendEvent(category, 'Save', { tab: tabName, changes: changeList });
     }
 
     sendAppView(viewName) {
