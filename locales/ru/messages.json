@@ -200,9 +200,6 @@
     "tabLanding": {
         "message": "Приветствие"
     },
-    "tabChangelog": {
-        "message": "Изменения"
-    },
     "tabPrivacyPolicy": {
         "message": "Политика конфиденциальности"
     },
@@ -571,9 +568,6 @@
     },
     "defaultFacebookText": {
         "message": "Также у нас есть группа на Facebook<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\"></a>.<br />Присоединяйтесь к нам, чтобы поговорить о Betaflight, задать вопросы о конфигурации или просто пообщаться с другими пилотами."
-    },
-    "defaultChangelogHead": {
-        "message": "Список изменений конфигуратора"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Программатор"

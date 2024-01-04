@@ -210,9 +210,6 @@
     "tabLanding": {
         "message": "ようこそ"
     },
-    "tabChangelog": {
-        "message": "変更履歴"
-    },
     "tabPrivacyPolicy": {
         "message": "プライバシーポリシー"
     },
@@ -617,9 +614,6 @@
     },
     "statisticsDisclaimer": {
         "message": "Betaflight Configuratorは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
-    },
-    "defaultChangelogHead": {
-        "message": "Configurator - 変更履歴"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "ファームフラッシャー"

@@ -102,7 +102,6 @@ const distCommon = gulp.series(
     dist_node_modules_css,
     dist_ol_css,
     dist_less,
-    dist_changelog,
     dist_locale,
     dist_libraries,
     dist_resources,
@@ -408,11 +407,6 @@ function dist_less() {
     .pipe(less())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(DIST_DIR));
-}
-
-function dist_changelog() {
-    return gulp.src('changelog.html')
-        .pipe(gulp.dest(`${DIST_DIR}tabs/`));
 }
 
 function dist_locale() {

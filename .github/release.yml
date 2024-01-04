@@ -16,10 +16,10 @@ changelog:
         - "RN: REFACTOR"
         - "RN: FONT"
     - title: Fixes
-      labels: 
+      labels:
         - "RN: BUGFIX"
     - title: Translation
-      labels: 
+      labels:
         - "RN: TRANSLATION"
     - title: Known Issues
       labels:
