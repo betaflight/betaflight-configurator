@@ -574,13 +574,14 @@ firmware_flasher.initialize = function (callback) {
             self.isFlashing = false;
         }
 
-        $('input.erase_chip').prop('checked', true); // force true because people flashing without regard for new configs
+        let result = getConfig('erase_chip');
+        $('input.erase_chip').prop('checked', result.erase_chip); // users can override this during the session
 
         $('input.erase_chip').change(function () {
             setConfig({'erase_chip': $(this).is(':checked')});
         }).change();
 
-        let result = getConfig('show_development_releases');
+        result = getConfig('show_development_releases');
         $('input.show_development_releases')
         .prop('checked', result.show_development_releases)
         .change(function () {

@@ -74,6 +74,7 @@ function cleanupLocalStorage() {
         'selected_board',
         'unifiedConfigLast',
         'unifiedSourceCache',
+        'erase_chip',
     ];
 
     for (const key in localStorage) {
@@ -83,6 +84,8 @@ function cleanupLocalStorage() {
             }
         }
     }
+
+    setConfig({'erase_chip': true}); // force erase chip on first run
 }
 
 function appReady() {
