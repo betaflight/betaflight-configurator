@@ -56,7 +56,7 @@ const MSP = {
     packet_error:               0,
     unsupported:                0,
 
-    MIN_TIMEOUT:                50,
+    MIN_TIMEOUT:                100,
     MAX_TIMEOUT:                2000,
     timeout:                    200,
 
