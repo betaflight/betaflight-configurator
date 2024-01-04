@@ -29,7 +29,7 @@ function setupAnalytics(result) {
 
     const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    let settings = {
+    const settings = {
         sessionId: uid.randomUUID(16),
         userId: userId,
         appName:  CONFIGURATOR.productName,
