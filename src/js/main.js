@@ -74,7 +74,6 @@ function cleanupLocalStorage() {
         'selected_board',
         'unifiedConfigLast',
         'unifiedSourceCache',
-        'erase_chip',
     ];
 
     for (const key in localStorage) {
