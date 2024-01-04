@@ -206,9 +206,6 @@
     "tabLanding": {
         "message": "Bienvenue"
     },
-    "tabChangelog": {
-        "message": "Journal des modifications"
-    },
     "tabPrivacyPolicy": {
         "message": "Politique de confidentialité"
     },
@@ -604,9 +601,6 @@
     },
     "statisticsDisclaimer": {
         "message": "Betaflight Configurator collecte des statistiques d'utilisation anonymes. Par exemple, ces données incluent (mais ne se limitent pas à) le nombre de lancements, la région géographique des utilisateurs, types de contrôleurs de vol, versions du micrologiciel, utilisation des éléments et des onglets de l'interface, etc. Le résumé de ces données est partagé <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>. La collecte est faite afin de mieux comprendre comment Betaflight Configurator est utilisé, pour comprendre les tendances de la communauté, et pour les éventuelles améliorations de l'interface utilisateur. Les utilisateurs peuvent se retirer de la collecte de données dans l'onglet Options."
-    },
-    "defaultChangelogHead": {
-        "message": "Configurateur - Changelog"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Flasher le Firmware"

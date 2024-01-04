@@ -172,9 +172,6 @@
     "tabLanding": {
         "message": "歡迎"
     },
-    "tabChangelog": {
-        "message": "更新日誌"
-    },
     "tabPrivacyPolicy": {
         "message": "隱私政策"
     },
@@ -517,9 +514,6 @@
     },
     "defaultFacebookText": {
         "message": "我們還有一個<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\"> Facebook 小組</a>。<br />加入我們來一起討論 Betaflight，咨詢配置問題，或者只是和小夥伴們閒聊。"
-    },
-    "defaultChangelogHead": {
-        "message": "配置程式 - 更新日誌"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "固件燒寫器"

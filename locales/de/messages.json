@@ -213,9 +213,6 @@
     "tabLanding": {
         "message": "Willkommen"
     },
-    "tabChangelog": {
-        "message": "Änderungen"
-    },
     "tabPrivacyPolicy": {
         "message": "Datenschutzerklärung"
     },
@@ -620,9 +617,6 @@
     },
     "statisticsDisclaimer": {
         "message": "Betaflight Konfigurator sammelt anonyme Nutzungsdaten. Diese Daten umfassen zum Beispiel (aber nicht beschränkt) die Anzahl der Starts, die geographische Region der Nutzer, Typen von Flugsteuerungen, Firmware-Versionen, Verwendung von UI-Elementen und Tabs etc. Die Zusammenfassung dieser Daten ist hier <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">einsehbar.</a>. Die Erfassung wird durchgeführt, um besser zu verstehen, wie Betaflight Configurator verwendet wird, um Community-Trends zu verstehen und für mögliche UI-Verbesserungen. Benutzer können die Datenerfassung über die Registerkarte Optionen abstellen (Opt-out)."
-    },
-    "defaultChangelogHead": {
-        "message": "Konfigurator - Changelog"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"

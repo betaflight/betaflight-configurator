@@ -214,9 +214,6 @@
     "tabLanding": {
         "message": "환영합니다"
     },
-    "tabChangelog": {
-        "message": "변경이력"
-    },
     "tabPrivacyPolicy": {
         "message": "개인정보 보호정책"
     },
@@ -621,9 +618,6 @@
     },
     "statisticsDisclaimer": {
         "message": "베타플라이트 컨피규레이터는 익명의 사용 통계를 수집합니다. 예를 들어, 이 데이터에는 실행 횟수, 사용자의 지리적 지역, 비행 컨트롤러 유형, 펌웨어 버전, UI 요소 및 탭 사용 등이 포함됩니다(이것들로 제한되지는 않습니다). 이 데이터의 요약은 <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에 공유됩니다. 베타플라이트 컨피규레이터가 어떻게 사용되고 있는지를 더 잘 이해하고 커뮤니티 추세를 이해하며 가능한 UI 개선을 위해 수집이 수행됩니다. 사용자는 옵션 탭에서 데이터 수집을 거부할 수 있습니다."
-    },
-    "defaultChangelogHead": {
-        "message": "컨피규레이터 - 변경이력"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "펌웨어 플래시 도구"

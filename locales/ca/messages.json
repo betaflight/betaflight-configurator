@@ -218,9 +218,6 @@
     "tabLanding": {
         "message": "Benvingut"
     },
-    "tabChangelog": {
-        "message": "Registre de canvis"
-    },
     "tabPrivacyPolicy": {
         "message": "Política de privacitat"
     },
@@ -625,9 +622,6 @@
     },
     "statisticsDisclaimer": {
         "message": "Betaflight Configurator recopila estadístiques d'ús anònimes. Per exemple, aquestes dades inclouen (però no es limiten a) el nombre de llançaments, la regió geogràfica dels usuaris, els tipus de controladors de vol, les versions del microprogramari, l'ús d'elements i pestanyes de la IU, etc. El resum d'aquestes dades es comparteix <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>. La recollida es fa per entendre millor com s'utilitza Betaflight Configurator, per entendre les tendències de la comunitat i per a possibles millores de la interfície d'usuari. Els usuaris poden desactivar la recollida de dades a la pestanya Opcions."
-    },
-    "defaultChangelogHead": {
-        "message": "Configurador - Llista de canvis"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Flashejador de Firmware"

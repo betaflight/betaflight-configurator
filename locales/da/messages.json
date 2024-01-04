@@ -214,9 +214,6 @@
     "tabLanding": {
         "message": "Velkommen"
     },
-    "tabChangelog": {
-        "message": "Ændringslog"
-    },
     "tabPrivacyPolicy": {
         "message": "Privatlivs politik"
     },
@@ -621,9 +618,6 @@
     },
     "statisticsDisclaimer": {
         "message": "Betaflight Configurator indsamler anonym brugsstatistik. For eksempel omfatter disse data (men er ikke begrænset til) antallet af release udgivelser, geografiske region af brugerne, FC type, firmwareversioner, brug af UI-elementer og faner osv. Resuméet af disse data er delt <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">her</a>. Indsamlingen skal anvendes til bedre at forstå, hvordan Betaflight Configurator bliver brugt, for at forstå fællesskabstendenser og for mulige UI forbedringer. Brugere kan fravælge dataindsamling i fanen Indstillinger."
-    },
-    "defaultChangelogHead": {
-        "message": "Konfigurator - Ændringslog"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Brænd firmware"
