@@ -570,7 +570,7 @@ function startProcess() {
         const checked = expertModeCheckbox.is(':checked');
 
         checkSetupAnalytics(function (analyticsService) {
-            analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'ExpertMode', { status: checked ? 'On' : 'Off' });
         });
 
         if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
