@@ -176,4 +176,15 @@ export default class BuildApi {
         const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
         this.load(url, onSuccess, onFailure);
     }
+
+    sendAnalytics(type, parcel) {
+        const url = `${this._url}/analytics/${type}`;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(parcel),
+            contentType: "application/json",
+            dataType: "json",
+        });
+    }
 }

@@ -372,9 +372,12 @@ onboard_logging.initialize = function (callback) {
 
         if (dataflashPresent && FC.SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
             loggingStatus = 'Dataflash';
-            tracking.setFlightControllerData(tracking.DATA.LOG_SIZE, FC.DATAFLASH.usedSize);
         }
-        tracking.setFlightControllerData(tracking.DATA.LOGGING_STATUS, loggingStatus);
+
+        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'DataLogging', {
+            logSize: FC.DATAFLASH.usedSize,
+            logStatus: loggingStatus,
+        });
 
         if (FC.SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status
@@ -569,9 +572,6 @@ onboard_logging.initialize = function (callback) {
 };
 
 onboard_logging.cleanup = function (callback) {
-    tracking.setFlightControllerData(tracking.DATA.LOGGING_STATUS, undefined);
-    tracking.setFlightControllerData(tracking.DATA.LOG_SIZE, undefined);
-
     if (sdcardTimer) {
         clearTimeout(sdcardTimer);
         sdcardTimer = false;
