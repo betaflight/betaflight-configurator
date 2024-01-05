@@ -215,10 +215,8 @@ firmware_flasher.initialize = function (callback) {
                 } else {
                     $('select[name="telemetryProtocols"] option:first').attr('selected', 'selected').text(i18n.getMessage('firmwareFlasherOptionLabelTelemetryProtocolIncluded'));
                 }
-            } else {
-                if ($('select[name="telemetryProtocols"] option[value="-1"]').length) {
-                    $('select[name="telemetryProtocols"] option:first').remove();
-                }
+            } else if ($('select[name="telemetryProtocols"] option[value="-1"]').length) {
+                $('select[name="telemetryProtocols"] option:first').remove();
             }
         }
 
