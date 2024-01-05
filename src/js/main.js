@@ -66,7 +66,7 @@ function readConfiguratorVersionMetadata() {
 }
 
 function cleanupLocalStorage() {
-
+    // storage quota is 5MB, we need to clean up some stuff (more info see PR #2937)
     const cleanupLocalStorageList = [
         'cache',
         'firmware',
@@ -83,6 +83,8 @@ function cleanupLocalStorage() {
             }
         }
     }
+
+    setConfig({'erase_chip': true}); // force erase chip on first run
 }
 
 function appReady() {

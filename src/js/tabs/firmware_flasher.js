@@ -579,11 +579,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         let result = getConfig('erase_chip');
-        if (result.erase_chip) {
-            $('input.erase_chip').prop('checked', true);
-        } else {
-            $('input.erase_chip').prop('checked', false);
-        }
+        $('input.erase_chip').prop('checked', result.erase_chip); // users can override this during the session
 
         $('input.erase_chip').change(function () {
             setConfig({'erase_chip': $(this).is(':checked')});
