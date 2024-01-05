@@ -13,11 +13,25 @@ const VirtualFC = {
         virtualFC.resetState();
         virtualFC.CONFIG.deviceIdentifier = 0;
 
-        virtualFC.CONFIG.flightControllerVersion = "4.2.4";
+        virtualFC.CONFIG.flightControllerVersion = "4.5.0";
         virtualFC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
+
+        virtualFC.CONFIG.cpuTemp = 48;
+
+        virtualFC.CONFIG.buildInfo = "now";
+
+        virtualFC.CONFIG.craftName = "BetaFlight" ;
+        virtualFC.CONFIG.pilotName = "BF pilot" ;
 
         virtualFC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
         virtualFC.FEATURE_CONFIG.features.setMask(0);
+        virtualFC.FEATURE_CONFIG.features.enable('ESC_SENSOR');
+        virtualFC.FEATURE_CONFIG.features.enable('GPS');
+        virtualFC.FEATURE_CONFIG.features.enable('LED_STRIP');
+        virtualFC.FEATURE_CONFIG.features.enable('OSD');
+        virtualFC.FEATURE_CONFIG.features.enable('SONAR');
+        virtualFC.FEATURE_CONFIG.features.enable('TELEMETRY');
+        virtualFC.FEATURE_CONFIG.features.enable('TRANSPONDER');
 
         virtualFC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         virtualFC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, [ "RX_LOST", "RX_SET" ]);
@@ -117,22 +131,20 @@ const VirtualFC = {
 
         virtualFC.BLACKBOX.supported = true;
 
-        virtualFC.VTX_CONFIG.vtx_type = 1;
-
         virtualFC.BATTERY_CONFIG = {
-            vbatmincellvoltage: 1,
-            vbatmaxcellvoltage: 4,
-            vbatwarningcellvoltage: 3,
-            capacity: 10000,
-            voltageMeterSource: 1,
-            currentMeterSource: 1,
+            vbatmincellvoltage: 3.7,
+            vbatmaxcellvoltage: 4.3,
+            vbatwarningcellvoltage: 3.8,
+            capacity: 5000,
+            voltageMeterSource: 2,
+            currentMeterSource: 3,
         };
 
         virtualFC.BATTERY_STATE = {
-            cellCount: 10,
-            voltage: 20,
-            mAhDrawn: 1000,
-            amperage: 3,
+            cellCount: 4,
+            voltage: 16.1,
+            mAhDrawn: 3000,
+            amperage: 2,
         };
 
         virtualFC.DATAFLASH = {
@@ -150,12 +162,6 @@ const VirtualFC = {
             totalSizeKB: 2048,
         };
 
-        virtualFC.SENSOR_CONFIG = {
-            acc_hardware: 1,
-            baro_hardware: 1,
-            mag_hardware: 1,
-        };
-
         virtualFC.SENSOR_DATA = { ...FC.SENSOR_DATA };
 
         virtualFC.RC = {
@@ -171,8 +177,8 @@ const VirtualFC = {
         "OSD","TELEMETRY","SERVO1","SERVO2","SERVO3","BLACKBOX","FAILSAFE","AIR MODE","3D","FPV ANGLE MIX","BLACKBOX ERASE","CAMERA CONTROL 1",
         "CAMERA CONTROL 2","CAMERA CONTROL 3","FLIP OVER AFTER CRASH","BOXPREARM","BEEP GPS SATELLITE COUNT","VTX PIT MODE","USER1","USER2",
         "USER3","USER4","PID AUDIO","PARALYZE","GPS RESCUE","ACRO TRAINER","DISABLE VTX CONTROL","LAUNCH CONTROL", "MSP OVERRIDE", "STICK COMMANDS DISABLE",
-        "BEEPER MUTE", "READY"];
-        FC.AUX_CONFIG_IDS = [0,1,2,4,5,6,7,8,12,13,15,17,19,20,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53];
+        "BEEPER MUTE", "READY", "LAP TIMER RESET"];
+        FC.AUX_CONFIG_IDS = [0,1,2,4,5,6,7,8,12,13,15,17,19,20,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54];
 
         for (let i = 0; i < 16; i++) {
             virtualFC.RXFAIL_CONFIG[i] = {
@@ -183,6 +189,16 @@ const VirtualFC = {
 
         // 11 1111 (pass bitchecks)
         virtualFC.CONFIG.activeSensors = 63;
+
+        virtualFC.SENSOR_CONFIG_ACTIVE = {
+            gyro_hardware: 2,           // MPU6050
+            acc_hardware: 3,            // MPU6050
+            baro_hardware: 4,           // BMP280
+            mag_hardware: 5,            // QMC5883
+            sonar_hardware: 1,          // HCSR04
+        };
+
+        virtualFC.SENSOR_DATA.sonars = 231;
 
         virtualFC.GPS_CONFIG = {
             provider: 1,
@@ -199,8 +215,8 @@ const VirtualFC = {
     setupVirtualOSD() {
         const virtualOSD = OSD;
 
-        virtualOSD.data.video_system = 1;
-        virtualOSD.data.unit_mode = 1;
+        virtualOSD.data.video_system = 1;       // PAL
+        virtualOSD.data.unit_mode = 1;          // METRIC
 
         virtualOSD.virtualMode = {
             itemPositions: Array.from({length: 77}),
