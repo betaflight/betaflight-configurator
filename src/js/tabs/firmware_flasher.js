@@ -206,18 +206,20 @@ firmware_flasher.initialize = function (callback) {
             $('select[name="telemetryProtocols"]').attr('disabled', hasTelemetryEnabledByDefault);
 
             if (hasTelemetryEnabledByDefault) {
-                $('select[name="telemetryProtocols"] option:selected').val('-1');
+                if ($('select[name="telemetryProtocols"] option[value="-1"]').length === 0) {
+                    $('select[name="telemetryProtocols"]').prepend($('<option>', {
+                        value: '-1',
+                        selected: 'selected',
+                        text: i18n.getMessage('firmwareFlasherOptionLabelTelemetryProtocolIncluded'),
+                    }));
+                } else {
+                    $('select[name="telemetryProtocols"] option:first').attr('selected', 'selected').text(i18n.getMessage('firmwareFlasherOptionLabelTelemetryProtocolIncluded'));
+                }
+            } else {
+                if ($('select[name="telemetryProtocols"] option[value="-1"]').length) {
+                    $('select[name="telemetryProtocols"] option:first').remove();
+                }
             }
-
-            $('select[name="telemetryProtocols"]').select2({
-                templateSelection: function (data) {
-                    if (data.id === '-1') {
-                        return hasTelemetryEnabledByDefault ? i18n.getMessage('firmwareFlasherOptionLabelTelemetryProtocolIncluded') : '[None]';
-                    }
-
-                    return data.text;
-                },
-            });
         }
 
         function buildOptions(data) {
