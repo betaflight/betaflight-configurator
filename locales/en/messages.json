@@ -7338,6 +7338,9 @@
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Select the telemetry protocol you would like included in this build. Note this is a drop down, but only one item maybe selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
     },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Automatically Included"
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items maybe selected. Such items as fixes, e.g. AKK VTX, are included here."
     },

@@ -195,6 +195,31 @@ firmware_flasher.initialize = function (callback) {
             });
         }
 
+        function toggleTelemetryProtocolInfo() {
+            const radioProtocol = $('select[name="radioProtocols"] option:selected').val();
+            const hasTelemetryEnabledByDefault = [
+                'USE_SERIALRX_CRSF',
+                'USE_SERIALRX_FPORT',
+                'USE_SERIALRX_GHST',
+            ].includes(radioProtocol);
+
+            $('select[name="telemetryProtocols"]').attr('disabled', hasTelemetryEnabledByDefault);
+
+            if (hasTelemetryEnabledByDefault) {
+                if ($('select[name="telemetryProtocols"] option[value="-1"]').length === 0) {
+                    $('select[name="telemetryProtocols"]').prepend($('<option>', {
+                        value: '-1',
+                        selected: 'selected',
+                        text: i18n.getMessage('firmwareFlasherOptionLabelTelemetryProtocolIncluded'),
+                    }));
+                } else {
+                    $('select[name="telemetryProtocols"] option:first').attr('selected', 'selected').text(i18n.getMessage('firmwareFlasherOptionLabelTelemetryProtocolIncluded'));
+                }
+            } else if ($('select[name="telemetryProtocols"] option[value="-1"]').length) {
+                $('select[name="telemetryProtocols"] option:first').remove();
+            }
+        }
+
         function buildOptions(data) {
             if (!navigator.onLine) {
                 return;
@@ -208,6 +233,8 @@ firmware_flasher.initialize = function (callback) {
             if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
             }
+
+            toggleTelemetryProtocolInfo();
         }
 
         function preselectRadioProtocolFromStorage() {
@@ -435,6 +462,8 @@ firmware_flasher.initialize = function (callback) {
             if (selectedProtocol) {
                 setConfig({"ffRadioProtocol" : selectedProtocol});
             }
+
+            toggleTelemetryProtocolInfo();
         });
 
         $('select[name="board"]').on('change', function() {
