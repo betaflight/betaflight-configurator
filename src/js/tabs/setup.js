@@ -407,7 +407,7 @@ setup.initialize = function (callback) {
 
                     if (FC.SENSOR_CONFIG_ACTIVE.sonar_hardware == 0xFF) {
                         sensor_sonar_e.text(textNA);
-                    } else if (have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG_ACTIVE.sonar_hardware > 1) {
+                    } else if (have_sensor(FC.CONFIG.activeSensors, "sonar") && FC.SENSOR_CONFIG_ACTIVE.sonar_hardware > 0) {
                         sensor_sonar_e.text(sonarElements[FC.SENSOR_CONFIG_ACTIVE.sonar_hardware]);
                     } else {
                         sensor_sonar_e.text(textDisabled);
