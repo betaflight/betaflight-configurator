@@ -766,6 +766,9 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
+            // Reset button when loading a new firmware
+            self.enableFlashButton(false);
+
             self.enableLoadRemoteFileButton(false);
 
             self.localFirmwareLoaded = false;
@@ -887,6 +890,34 @@ firmware_flasher.initialize = function (callback) {
                 self.enableLoadRemoteFileButton(false);
 
                 showReleaseNotes(self.targetDetail);
+
+                // Add health and queue status
+                const cloudBuildHealthStatusElement = $('#cloudBuildHealthStatus');
+                const cloudBuildHealthStatusValue = $('#cloudBuildHealthStatusValue');
+                const cloudBuildHealthStatusQueueElement = $('#cloudBuildHealthStatusQueue');
+                const cloudBuildHealthStatusQueueValue = $('#cloudBuildHealthStatusQueueValue');
+
+                if (self.targetDetail.cloudBuild === true) {
+                    self.releaseLoader.getHealthStatus(health => {
+
+                        if (health.status !== 'OK') {
+                            cloudBuildHealthStatusValue.text(health.status);
+                            cloudBuildHealthStatusElement.show();
+                        } else {
+                            cloudBuildHealthStatusElement.hide();
+                        }
+
+                        if (health.queued > 0) {
+                            cloudBuildHealthStatusQueueValue.text(health.queued);
+                            cloudBuildHealthStatusQueueElement.show();
+                        } else {
+                            cloudBuildHealthStatusQueueElement.hide();
+                        }
+                    });
+                } else {
+                    cloudBuildHealthStatusElement.hide();
+                    cloudBuildHealthStatusQueueElement.hide();
+                }
 
                 requestCloudBuild(self.targetDetail);
             } else {
