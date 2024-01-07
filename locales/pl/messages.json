@@ -3331,10 +3331,10 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "ukończono"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "przekroczono limit czasu (spróbuj ponownie)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "nie powiodło się (proszę sprawdzić logi)"
     },
     "firmwareFlasherReleaseFileUrl": {

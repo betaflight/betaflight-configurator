@@ -2894,10 +2894,10 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "succès"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "temps expiré (veuillez réessayer)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "échec (veuillez vérifier le log)"
     },
     "firmwareFlasherReleaseFileUrl": {

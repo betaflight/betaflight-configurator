@@ -3331,10 +3331,10 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "succes"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "timeout (prøv igen)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "mislykkedes (tjek log)"
     },
     "firmwareFlasherReleaseFileUrl": {

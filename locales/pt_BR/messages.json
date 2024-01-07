@@ -3124,10 +3124,10 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "sucesso"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "tempo esgotado (tente novamente)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "falhou (por favor, verifique o log)"
     },
     "firmwareFlasherReleaseFileUrl": {

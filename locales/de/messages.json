@@ -2970,10 +2970,10 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "Erfolgreich"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "Zeitüberschreitung (bitte erneut versuchen)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "Fehlgeschlagen (bitte Log prüfen)"
     },
     "firmwareFlasherReleaseFileUrl": {

@@ -3327,10 +3327,10 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "successo"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "timeout (riprova)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "fallito (si prega di controllare il log)"
     },
     "firmwareFlasherReleaseFileUrl": {
