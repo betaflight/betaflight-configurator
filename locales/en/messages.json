@@ -3364,7 +3364,7 @@
         "message": "Unknown state $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Select commit"
+        "message": "Select Pull Request or Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release and Build info"
