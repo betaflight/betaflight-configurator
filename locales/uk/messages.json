@@ -3327,6 +3327,9 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "успішно"
     },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cкасовано"
+    },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "час вийшов (спробуйте ще раз)"
     },

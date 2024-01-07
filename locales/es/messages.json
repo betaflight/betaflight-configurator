@@ -3327,6 +3327,9 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "éxito"
     },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "anulado"
+    },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "tiempo agotado (vuelve a intentarlo)"
     },

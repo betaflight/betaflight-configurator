@@ -3327,6 +3327,9 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "成功しました"
     },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "キャンセル"
+    },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "タイムアウトしました (再試行してください)"
     },

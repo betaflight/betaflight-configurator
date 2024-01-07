@@ -3331,6 +3331,9 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "성공"
     },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "취소가"
+    },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "시간 초과됨 (재시도하세요)"
     },

@@ -3335,6 +3335,9 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "èxit"
     },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancel"
+    },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "s'ha esgotat el temps d'espera (torneu-ho a provar)"
     },
