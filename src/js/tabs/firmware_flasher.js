@@ -797,17 +797,20 @@ firmware_flasher.initialize = function (callback) {
                 $('.buildProgress').val(val);
             }
 
-            function processBuildStatus(response, statusResponse, suffix) {
-                if (statusResponse.status === 'success') {
-                    updateStatus(`Success${suffix}`, response.key, 100, true);
-                    if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
-                        setBoardConfig(statusResponse.configuration);
-                    }
-                    self.buildApi.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
-                } else {
-                    updateStatus(`Fail${suffix}`, response.key, 0, true);
-                    onLoadFailed();
+            function processBuildSuccess(response, statusResponse, suffix) {
+                if (statusResponse.status !== 'success') {
+                    return;
                 }
+                updateStatus(`Success${suffix}`, response.key, 100, true);
+                if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
+                    setBoardConfig(statusResponse.configuration);
+                }
+                self.buildApi.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
+            }
+
+            function processBuildFailure(key, suffix) {
+                updateStatus(`Fail${suffix}`, key, 0, true);
+                onLoadFailed();
             }
 
             function requestCloudBuild(targetDetail) {
@@ -865,22 +868,38 @@ firmware_flasher.initialize = function (callback) {
                     updateStatus('Pending', response.key, 0, false);
                     self.cancelBuild = false;
 
-                    let retries = 1;
                     self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
-                        if (statusResponse.status !== "queued") {
+                        if (statusResponse.status === "success") {
                             // will be cached already, no need to wait.
-                            processBuildStatus(response, statusResponse, "Cached");
+                            processBuildSuccess(response, statusResponse, "Cached");
                             return;
                         }
 
-                        $('a.cloud_build_cancel').toggleClass('disabled', false);
+                        self.enableCancelBuildButton(true);
                         const retrySeconds = 5;
+                        let retries = 1;
+                        let processing = false;
+                        let timeout = 120;
                         const timer = setInterval(() => {
                             self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
-                                const timeout = statusResponse.timeOut !== undefined ? statusResponse.timeOut : 60;
+                                if (statusResponse.timeOut !== undefined) {
+                                    if (!processing) {
+                                        processing = true;
+                                        retries = 1;
+                                    }
+                                    timeout = statusResponse.timeOut;
+                                }
                                 const retryTotal = timeout / retrySeconds;
 
                                 if (statusResponse.status !== 'queued' || retries > retryTotal || self.cancelBuild) {
+                                    self.enableCancelBuildButton(false);
+                                    clearInterval(timer);
+
+                                    if (statusResponse.status === 'success') {
+                                        processBuildSuccess(response, statusResponse, "");
+                                        return;
+                                    }
+
                                     let suffix = "";
                                     if (retries > retryTotal) {
                                         suffix = "TimeOut";
@@ -889,19 +908,14 @@ firmware_flasher.initialize = function (callback) {
                                     if (self.cancelBuild) {
                                         suffix = "Cancel";
                                     }
-
-                                    $('a.cloud_build_cancel').toggleClass('disabled', true);
-                                    self.cancelBuild = false;
-                                    clearInterval(timer);
-
-                                    processBuildStatus(response, statusResponse, suffix);
+                                    processBuildFailure(response.key, suffix);
                                     return;
                                 }
 
-                                updateStatus('Processing', response.key, retries * (100 / retryTotal), false);
-                                if (statusResponse.timeOut !== undefined) {
-                                    retries++;
+                                if (processing) {
+                                    updateStatus('Processing', response.key, retries * (100 / retryTotal), false);
                                 }
+                                retries++;
                             });
                         }, retrySeconds * 1000);
                     });
@@ -1517,6 +1531,11 @@ firmware_flasher.cleanup = function (callback) {
     $(document).off('click', 'span.progressLabel a');
 
     if (callback) callback();
+};
+
+firmware_flasher.enableCancelBuildButton = function (enabled) {
+    $('a.cloud_build_cancel').toggleClass('disabled', !enabled);
+    self.cancelBuild = false; // remove the semaphore
 };
 
 firmware_flasher.enableFlashButton = function (enabled) {
