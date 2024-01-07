@@ -891,34 +891,6 @@ firmware_flasher.initialize = function (callback) {
 
                 showReleaseNotes(self.targetDetail);
 
-                // Add health and queue status
-                const cloudBuildHealthStatusElement = $('#cloudBuildHealthStatus');
-                const cloudBuildHealthStatusValue = $('#cloudBuildHealthStatusValue');
-                const cloudBuildHealthStatusQueueElement = $('#cloudBuildHealthStatusQueue');
-                const cloudBuildHealthStatusQueueValue = $('#cloudBuildHealthStatusQueueValue');
-
-                if (self.targetDetail.cloudBuild === true) {
-                    self.releaseLoader.getHealthStatus(health => {
-
-                        if (health.status !== 'OK') {
-                            cloudBuildHealthStatusValue.text(health.status);
-                            cloudBuildHealthStatusElement.show();
-                        } else {
-                            cloudBuildHealthStatusElement.hide();
-                        }
-
-                        if (health.queued > 0) {
-                            cloudBuildHealthStatusQueueValue.text(health.queued);
-                            cloudBuildHealthStatusQueueElement.show();
-                        } else {
-                            cloudBuildHealthStatusQueueElement.hide();
-                        }
-                    });
-                } else {
-                    cloudBuildHealthStatusElement.hide();
-                    cloudBuildHealthStatusQueueElement.hide();
-                }
-
                 requestCloudBuild(self.targetDetail);
             } else {
                 $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');

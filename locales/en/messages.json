@@ -3421,14 +3421,6 @@
     "firmwareFlasherCloudBuildFailed": {
         "message": "failed (please check log)"
     },
-    "firmwareFlasherCloudBuildHealthStatus": {
-        "message": "Cloud API Health Status:",
-        "description": "Label for Cloud build health status"
-    },
-    "firmwareFlasherCloudBuildHealthStatusQueue": {
-        "message": "Cloud API Queue:",
-        "description": "Label for Cloud build queue"
-    },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manually."
     },

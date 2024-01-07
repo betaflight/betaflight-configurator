@@ -76,18 +76,6 @@ export default class BuildApi {
         });
     }
 
-    getHealthStatus(onSuccess, onFailure) {
-        const url = `${this._url}/healthcheck`;
-        $.get(url, function (data) {
-            onSuccess(data);
-        }).fail(xhr => {
-            gui_log(i18n.getMessage('buildServerFailure', [url, `HTTP ${xhr.status}`]));
-            if (onFailure !== undefined) {
-                onFailure();
-            }
-        });
-    }
-
     getSupportCommands(onSuccess, onFailure) {
         const url = `${this._url}/api/support/commands`;
         $.get(url, function (data) {
