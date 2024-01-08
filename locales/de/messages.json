@@ -2595,9 +2595,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Sicherheitshinweis</strong><br /><strong class=\"message-negative\">Entfernen alle Propeller um Verletzungen zu verhindern!</strong><br />Die Motoren werden sich <strong>drehen!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Informationshinweis</strong><br />Die Motoren laufen einzeln und du kannst wählen, welcher Motor läuft. Der Akku sollte angeschlossen und das richtige ESC-Protokoll sollte ausgewählt werden. Diese Funktion kann nur aktive Motoren neu anordnen. Eine komplexere Neuzuordnung erfordert den CLI-Befehl \"Resource\". Siehe hierzu die <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki Seite</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Speichern"
     },
@@ -3122,9 +3119,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Wiederherstellung / abgebrochene Kommunikation</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Bei Verlust der Kommunikation mit Ihrem Board, folge diesen Schritten, um die Kommunikation wiederherzustellen: <ul><li>Spannungsversorgung trennen.</li><li>Aktiviere 'Keine Neustart-Sequenz', aktiviere 'Full Chip Löschung'.</li><li>Kontaktiere die BOOT-Pins per Jumper oder halte den BOOT-Button gedrückt.</li><li>Spannungsversorgung herstellen (Aktivitäts-LED blinkt NICHT, wenn korrekt).</li><li>Installiere bei Bedarf alle STM32-Treiber und Zadig (siehe <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB-Flashen</a>-Abschnitt des Betaflight-Handbuchs).</li><li>Konfigurator schließen, Konfigurator neu starten.</li><li>BOOT-Button loslassen, wenn auf dem FC vorhanden.</li><li>Flashen mit korrekter Firmware (Verwendung der manuellen Baudrate wenn im FC-Handbuch angegeben).</li><li>Spannungsversorgung trennen</li><li>BOOT-Jumper entfernen.</li><li>Spannungsversorgung anschließen (Aktivitäts-LED sollte blinken).</li><li>Normal verbinden.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware-Flasher verlassen"
@@ -4109,9 +4103,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ACHTUNG</span>: Bei Aktivierung dieser Funktion müssen die YAW PID-Werte entsprechend angepasst werden. Mehr Info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Der 'Integrierter Yaw' Wert integriert die Werte P, I und D und erlaubt Yaw den P, I, D etwas zu verändernt ähnlich wie wenn Du Pitch und Roll tunest.<br><br>I-Werte sind sehr wenig erforderlich, weil das integrierte P wie I wirkt und integrierte D-Werte wirken wie P.<br><br>HINWEIS: Integrierter Yaw erfordert die Verwendung von Absoluter Kontrolle, da I mit dem integrierten Yaw nicht benötigt wird."
@@ -5779,10 +5770,6 @@
     },
     "osdButtonSaved": {
         "message": "Gespeichert"
-    },
-    "vtxHelp": {
-        "message": "Hier können die Werte des Video Transmitter (VTX) konfiguriert werden. Es können die Übertragungswerte, einschließlich der VTX-Tabelle, angezeigt und geändert werden, wenn der Flugcontroller und der VTX dies unterstützen.<br>Um den VTX einzurichten, folge diesen Schritten:<br>1. Gehe zu<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">dieser</a> Seite;<br>2. Finde die passende VTX-Konfigurationsdatei für das Land in dem der Copter betrieben wird und lade sie herunter;<br>3. Klicke unten auf '$t(vtxButtonLoadFile.message)', wähle die VTX-Konfigurationsdatei und lade sie;<br>4. Überprüfe, ob die Einstellungen korrekt sind;<br>5. Klicke auf '$t(vtxButtonSave.message)' um die VTX-Einstellungen auf dem Flugcontroller zu speichern.<br>6. Optional: klicke '$t(vtxButtonSaveLua.message)' um eine Lua-Konfigurationsdatei zu speichern, welche mit den Betaflight Lua-Scripten benutzt werden kann. (Mehr dazu <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hier</a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Achtung:</span> Dein VTX ist nicht konfiguriert oder nicht unterstützt. Dadurch kannst du die VTX-Werte von hier aus nicht ändern. Dies ist nur möglich, wenn der Flugcontroller mit einem Protokoll wie Tramp oder SmartAudio verbunden ist und in der Registerkarte $t(tabPorts.message) korrekt konfiguriert ist.",

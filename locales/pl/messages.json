@@ -608,7 +608,7 @@
         "message": "Współtworzenie"
     },
     "defaultContributingText": {
-        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> oraz dostarczanie informacji zwrotnych</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów</a> oraz w uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
+        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych.</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia.</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> oraz dostarczanie informacji zwrotnych.</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów</a> oraz w uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku</a>.<br />Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
@@ -629,7 +629,7 @@
         "message": "<p><strong>Betaflight</strong> to oprogramowanie kontrolera lotu  jest na licencji <strong>open source</strong> i jest dostępne <strong>za darmo</strong> dla wszystkich użytkowników.</p><p>Jeśli używasz oprogramowania Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie</strong> jego rozwoju poprzez darowiznę.</p>"
     },
     "defaultDonateBottom": {
-        "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym sponsorem $t(patreonLink.message)</p>"
+        "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym subskrybentem $t(patreonLink.message).</p>"
     },
     "patreonLink": {
         "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
@@ -2950,7 +2950,7 @@
         "message": "<strong>Informacja bezpieczeństwa</strong><br /><strong class=\"message-negative\">zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br />Silniki <strong>będą włączane!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Informacja</strong><br />Silniki będą się obracać jeden po drugim i będzie można wybrać, który z nich ma się obracać. Akumulator powinien być podłączony oraz powinien zostać wybrany protokół ESC. To narzędzie może ponownie rozmieścić tylko aktualnie aktywne silniki. Bardziej złożone ponowne mapowanie wymaga polecenia zasobów interfejsu CLI. Zapoznaj się z tą <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">stroną wiki</a>."
+        "message": "<strong>Notatka informacyjna</strong><br />Silniki będą włączane pojedyńczo i będziesz mógł wybrać, który silnik ma być włączony. Bateria powinna być podłączona, oraz należy wybrać poprawny protokół ESC. To narzędzie może zmienić tylko aktualnie aktywne silniki. Bardziej skomplikowane przemapowanie wymaga komendy CLI Resource. Przejdź do tej: <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">strony Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Zapisz"
@@ -3166,10 +3166,10 @@
         "message": "Automatycznie wczytano poprzedni plik dziennika: <strong> $1</strong>"
     },
     "blackboxNotSupported": {
-        "message": "Oprogramowanie kontrolera lotu nie obsługuje rejestrowania w Blackbox."
+        "message": "Oprogramowanie kontrolera lotu nie obsługuje rejestra lotów."
     },
     "blackboxMaybeSupported": {
-        "message": "Oprogramowanie kontrolera lotu jest zbyt stare, aby obsługiwać tę funkcję. Dlatego funkcja Blackbox jest wyłączona w zakładce Konfiguracji."
+        "message": "Oprogramowanie kontrolera lotu jest zbyt stare, aby obsługiwać tę funkcję. Dlatego funkcja Rejestratora lotów jest wyłączona w zakładce Konfiguracji."
     },
     "blackboxConfiguration": {
         "message": "Konfiguracja rejestratora lotów"
@@ -3181,7 +3181,7 @@
         "message": "Brak logowania"
     },
     "blackboxLoggingFlash": {
-        "message": "Wsad oprogramowania płytki"
+        "message": "Wbudowany uklad pamięci"
     },
     "blackboxLoggingSdCard": {
         "message": "Karta SD"
@@ -3217,7 +3217,7 @@
         "message": "Aktualizacja wymaga oprogramowania&gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
-        "message": "Zapisz flash do pliku..."
+        "message": "Zapisz do pliku..."
     },
     "dataflashButtonSaveFileDeprecated": {
         "message": "Zrzut pamięci flash do pliku... (nie wspierany)"
@@ -3235,7 +3235,7 @@
         "message": "Potwierdź kasowanie pamięci"
     },
     "dataflashConfirmEraseNote": {
-        "message": "Spowoduje to wymazywanie logów i wszystkich innych danych znajdujących się na chipie. Powinno to potrwać około 20 sekund, jesteś pewny?"
+        "message": "Spowoduje to wymazywanie logów i wszystkich innych danych znajdujących się w wbudowanej pamięci kontrolera lotów. Powinno to potrwać około 20 sekund, jesteś pewny?"
     },
     "dataflashSavingTitle": {
         "message": "Zapisywanie danych do pliku"
@@ -3253,7 +3253,7 @@
         "message": "Ok"
     },
     "dataflashButtonEraseConfirm": {
-        "message": "Tak, wymaż pamieć flash"
+        "message": "Tak, wymaż pamięć"
     },
     "dataflashButtonEraseCancel": {
         "message": "Anuluj"
@@ -3485,7 +3485,7 @@
         "message": "<strong>W przypadku problemów podczas podłączania płytki  kontrolera lotów postępuj zgodnie z poniższą instrukcją</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odłącz zasilanie kontrolera lotu</li><li>Włącz ustawienia „Nie restartuj”, oraz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT na kontlorerze lotu.</li><li>Podłącz zasilanie kontlolera lotu(dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (<a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji kontrolera lotu).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
+        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odłącz zasilanie kontrolera lotu</li><li>Włącz ustawienia „Nie restartuj”, oraz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT na kontlorerze lotu.</li><li>Podłącz zasilanie kontlolera lotu(dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne. Więcej przydatnych informacji znajdziesz na stronie:\n<a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"> Wgrywanie oprogramowania</a> w instrukcji Betaflight.</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji kontrolera lotu).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
@@ -3548,7 +3548,7 @@
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Konfiguracja <span class=\"message-negative\">nie powiodła się</span> nie udało się zweryfikować kontrolera lotu. Spróbuj powoli przełączyć kartę, aby spróbować ponownie lub utwórz nowe połączenie Usb, jeśli zapomniałeś zastosować niestandardowe ustawienia domyślne",
+        "message": "Konfiguracja <span class=\"message-negative\">nie powiodła się</span> ponieważ nie zdołano zidentyfikować kontrolera lotu. Spróbuj ponownie lub utwórz nowe połączenie USB, jeśli to nie pomogło podłącz kontroler lotu w trybie DFU",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -3629,7 +3629,7 @@
         "description": "In the LED STRIP, clear all leds"
     },
     "ledStripVtxOverlay": {
-        "message": "VTX(użyj częstotliwości vtx do przypisania koloru)"
+        "message": "VTX (użyj częstotliwości vtx do przypisania koloru)"
     },
     "ledStripBrightnessSliderTitle": {
         "message": "Jasność",
@@ -4502,7 +4502,7 @@
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
+        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamiczny bieg jałowy jest WYŁĄCZONY, ponieważ telemetria Dshot jest wyłączona"
@@ -4517,7 +4517,7 @@
         "message": "Zintegrowane odchylenie Yaw"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">UWAGA</span>: jeśli włączysz tę funkcję, musisz odpowiednio dostosować PID YAW <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">. Więcej informacji <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj</a>"
+        "message": "<span class=\"message-negative\">UWAGA</span>: jeśli włączysz tę funkcję, musisz odpowiednio dostosować YAW PID. Więcej informacji <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Zintegrowany odchylacz integruje wartości P, I i D odchyłu, umożliwiając dostrojenie wartości P, I i D odchyłu w sposób podobny do tego, w jaki dostrajasz nachylenie i przechył.<br><br>Wymagana jest bardzo mała ilość I, ponieważ zintegrowane P działa jak I, a zintegrowane D działa jak P.<br><br>UWAGA: Zintegrowany odchylacz wymaga użycia sterowania absolutnego, ponieważ w przypadku Zintegrowanego odchyłu nie jest potrzebne I."
@@ -5971,11 +5971,11 @@
         "message": "Maksymalna odległość od domu"
     },
     "osdTextStatBlackboxLogNumber": {
-        "message": "Numer logu czarnej skrzynki",
+        "message": "Numer logu rejestratora lotu",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackboxLogNumber": {
-        "message": "Numer logu czarnej skrzynki dla tego lotu"
+        "message": "Numer logu rejestratora dla tego lotu"
     },
     "osdTextStatTimer1": {
         "message": "Zegar 1",
@@ -6358,7 +6358,7 @@
         "message": "Zapisano"
     },
     "vtxHelp": {
-        "message": "Tutaj możesz skonfigurować wartości dla swojego Video Transmitter (VTX). Możesz przeglądać i zmieniać wartości transmisji, w tym tabele VTX, jeśli kontroler lotu i VTX to obsługują.<br>Aby skonfigurować VTX, wykonaj następujące czynności:<br>1. Przejdź do <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">tej</a> strony;<br>2. Znajdź odpowiedni plik konfiguracyjny VTX dla swojego kraju i modelu VTX i pobierz go;<br>3. Kliknij „$t(vtxButtonLoadFile.message)” poniżej, wybierz plik konfiguracyjny VTX, załaduj go;<br>4. Sprawdź, czy ustawienia są prawidłowe;<br>5. Kliknij „$t(vtxButtonSave.message)”, aby zapisać ustawienia VTX w kontrolerze lotu.<br>6. Opcjonalnie kliknij „$t(vtxButtonSaveLua.message)”, aby zapisać plik konfiguracyjny lua, którego możesz używać ze skryptami lua betaflight (Zobacz więcej <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\">tutaj</a>.)",
+        "message": "Tutaj możesz skonfigurować wartości dla swojego Nadajnika wideo (VTX). Możesz przeglądać i zmieniać wartości transmisji, w tym tabele VTX, jeśli kontroler lotu i VTX to obsługują.<br>Aby skonfigurować VTX, wykonaj następujące czynności:<br>1. Przejdź do <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">tej</a> strony.<br>2. Znajdź odpowiedni plik konfiguracyjny VTX dla swojego kraju i modelu VTX i pobierz go.<br>3. Kliknij „$t(vtxButtonLoadFile.message)” następnie, wybierz plik konfiguracyjny VTX i załaduj go.<br>4. Sprawdź, czy ustawienia są prawidłowe.<br>5. Kliknij „$t(vtxButtonSave.message)”, aby zapisać ustawienia VTX w kontrolerze lotu.<br>6. Opcjonalnie kliknij „$t(vtxButtonSaveLua.message)”, aby zapisać plik konfiguracyjny lua, którego możesz używać ze skryptami lua betaflight (Zobacz więcej <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">tutaj</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6538,7 +6538,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "Tabela ta przedstawia różne wartości mocy, które mogą być wykorzystane dla VTX. Zostały podzielone na dwa: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> każdy poziom mocy wymaga wartości zdefiniowanej przez producenta sprzętu. Poproś producenta o poprawną wartość lub sprawdź tabelę VTX na Betaflight wiki. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> możesz tutaj umieścić etykietę dla każdej wartości poziomu energii. Mogą to być liczby (25, 200, 600, 1.2), litery (OFF, MIN, MAX) lub je mieszać. <br /><br />Musisz skonfigurować <b>tylko</b> poziomy mocy zgodne z prawem w Twoim kraju.",
+        "message": "Tabela ta przedstawia różne wartości mocy, które mogą być wykorzystane dla VTX. Zostały podzielone na dwie części: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> każdy poziom mocy wymaga wartości zdefiniowanej przez producenta sprzętu. Poproś producenta o poprawną wartość lub sprawdź tabelę VTX na Betaflight wiki. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> możesz tutaj umieścić etykietę dla każdej wartości poziomu energii. Mogą to być liczby (25, 200, 600, 1.2), litery (OFF, MIN, MAX) lub je mieszać. <br /><br />Musisz skonfigurować <b>tylko</b> poziomy mocy zgodne z prawem w Twoim kraju.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -6574,7 +6574,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "Ta tabela przedstawia wszystkie częstotliwości, które mogą być użyte dla Twojego VTX. Możesz mieć kilka pasm i dla każdego pasma musisz skonfigurować:<br><b>- $t(vtxTableBandTitleName.message):</b> Nazwisko, które chcesz przypisać do tego zakresu, takie jak BOSCAM_A, FATSHARK lub RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Skrócona litera, która odnosi się do tego zakresu.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Wskazuje, czy jest to pasmo fabryczne. Jeśli włączone, Betaflight wysyła do VTX pasmo i numer kanału. VTX użyje następnie wbudowanej tabeli częstotliwości, a częstotliwości skonfigurowane tutaj pokazują tylko wartość w OSD i innych miejscach. Jeśli nie jest włączona, Betaflight wyśle do VTX prawdziwą częstotliwość skonfigurowaną tutaj.<br><b>- Częstotliwości:</b> Częstości dla tego pasma.<br /><br />Pamiętaj, że nie wszystkie częstotliwości są legalne w Twoim kraju. Musisz wpisać wartość <b>zero</b> dla każdego indeksu częstotliwości, którego nie możesz użyć, aby go wyłączyć.",
+        "message": "Ta tabela przedstawia wszystkie częstotliwości, które mogą być użyte dla Twojego VTX. Możesz mieć kilka pasm i dla każdego pasma możesz skonfigurować takie zmienne jak:<br><b>- $t(vtxTableBandTitleName.message):</b> Nazwę, którą chcesz przypisać do tego zakresu, np: BOSCAM_A, FATSHARK lub RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Naprzykład pierwsza litera, która odnosi się do nazwy tego zakresu.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Wskazuje, czy jest to pasmo fabryczne. Jeśli włączone, Betaflight wysyła do VTX pasmo i numer kanału. VTX użyje następnie wbudowanej tabeli częstotliwości, a częstotliwości skonfigurowane tutaj pokazują tylko wartość w OSD i innych miejscach. Jeśli nie jest włączona, Betaflight wyśle do VTX prawdziwą częstotliwość skonfigurowaną tutaj.<br><b>- Częstotliwość:</b> Częstotliwość dla tego pasma.<br /><br />Pamiętaj, że nie wszystkie częstotliwości są legalne w Twoim kraju. Musisz wpisać wartość <b>zero</b> dla każdego indeksu częstotliwości, którego nie możesz użyć, aby go wyłączyć.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -7250,6 +7250,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Wybierz protokół telemetrii, który chcesz uwzględnić w tej kompilacji. Uwaga: jest to lista rozwijana, ale można wybrać tylko jeden element. Istnieją również protokoły telemetrii, które zostaną włączone, niezależnie od dokonanego tutaj wyboru w oparciu o wybrany protokół radiowy, np. CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Automatycznie uwzględnione"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Wybierz ogólne opcje, które chcesz uwzględnić w tej kompilacji. Pamiętaj, że jest to lista rozwijana i można wybrać wiele elementów. Takie elementy jak poprawki, m.in. AKK VTX, są tutaj zawarte."

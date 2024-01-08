@@ -2946,7 +2946,7 @@
         "message": "<strong>Avviso di sicurezza</strong><br /><strong class=\"message-negative\">Rimuovi tutte le eliche per evitare danni!</strong><br />I motori <strong>gireranno!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Avviso</strong><br />I motori gireranno uno alla volta e potrai selezionare quale motore sta girando. Collegare la batteria selezionare il protocollo ESC corretto. Questa utility può solo riorganizzare i motori attualmente attivi. Rimappature più complesse richiedono il comando CLI Resource. Fai riferimento a questa <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
+        "message": "<strong>Avviso</strong><br />I motori gireranno uno alla volta e puoi selezionare quale motore far girare. La batteria deve essere collegata, il corretto protocollo ESC selezionato. Questa utility può solo riorganizzare i motori attualmente attivi. Rimappature più complesse richiedono comandi CLI. Fai riferimento a questa <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Salva"
@@ -3481,7 +3481,7 @@
         "message": "<strong> Recupero / comunicazione persa </strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Se hai perso la comunicazione con la tua scheda segui questi passaggi per ripristinare la comunicazione: <ul><li>Spegni</li><li>Abilita 'Nessuna sequenza di riavvio', attiva la 'Cancellazione completa del chip'.</li><li>Collega i pin BOOT o tieni premuto il pulsante BOOT.</li><li>Accendere (il LED di attività NON lampeggerà se eseguito correttamente).</li><li>Installa tutti i driver STM32 e Zadig se necessario (vedere la sezione <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> del manuale di Betaflight).</li><li>Chiudi e riavvia il configuratore.</li><li>Rilascia il pulsante BOOT se il tuo FC ne ha uno.</li><li>Flasha con il firmware corretto (utilizzando il baud rate manuale se specificato nel manuale del tuo controllore di volo).</li><li>Spegni.</li><li>Rimuovi il collegamento dei pin BOOT.</li><li>Accendi (il LED di attività dovrebbe lampeggiare).</li><li>Connetti normalmente.</li></ul>"
+        "message": "Se hai perso la comunicazione con la tua scheda segui questi passaggi per ripristinare la comunicazione: <ul><li>Spegni</li><li>Abilita 'Nessuna sequenza di riavvio', attiva la 'Cancellazione completa del chip'.</li><li>Collega i pin BOOT o tieni premuto il pulsante BOOT.</li><li>Accendere (il LED di attività NON lampeggerà se eseguito correttamente).</li><li>Installa tutti i driver STM32 e Zadig se necessario (vedi la sezione <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> del manuale di Betaflight).</li><li>Chiudi e riavvia il configuratore.</li><li>Rilascia il pulsante BOOT se il tuo FC ne ha uno.</li><li>Flasha con il firmware corretto (utilizzando il baud rate manuale se specificato nel manuale del tuo controllore di volo).</li><li>Spegni.</li><li>Rimuovi il collegamento dei pin BOOT.</li><li>Accendi (il LED di attività dovrebbe lampeggiare).</li><li>Connetti normalmente.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Lascia il firmware flasher"
@@ -4498,7 +4498,7 @@
         "message": "Valore idle dinamico [*100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Il Minimo Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori.<br /><br /> Migliora il controllo dei PID, la stabilità con zero gas, il tempo in volo invertito e il freno dei motori.<br /><br />Il Minimo Dinamico dovrebbe essere impostato a circa 3000-3500 rpm.<br /><br />Visita la wiki <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\"></a> per maggiori info."
+        "message": "Il Dynamic Idle migliora il controllo a bassi rpm e riduce il rischio di desincronizzazione dei motori. <br /><br /> Migliora l'autorità PID, la stabilità zero dell'acceleratore, il tempo di sospensione invertito e il freno motore.<br /><br />Settare il Dynamic Idle min rpm a circa 3000 - 3500 rpm. <br /><br />Visita <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki</a> per ulteriori informazioni."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "L'Idle Dinamico è disabilitato perché la telemetria Dshot è OFF"
@@ -4513,7 +4513,7 @@
         "message": "Yaw integrato"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATTENZIONE</span>: se attivi questa opzione, dovrai anche modificare anche il PID dello YAW. Più informazioni <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>"
+        "message": "<span class=\"message-negative\">ATTENZIONE</span>: se abiliti questa funzione, devi anche correggere il PID YAW. Più info <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">qui</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "L'Integrated Yaw integra i valori di P, I e D del yaw, consentendo di impostare P, I e D del yaw un po' come quelle di pitch e roll.<br><br>È richiesta poca I perché la P integrata agisce come una I e la D integrata agisce come una P.<br><br>NOTA: L'integrated Yaw richiede l'uso dell'Absolute Control poiché non è necessaria nessuna I con l'integrated Yaw."
@@ -6354,7 +6354,7 @@
         "message": "Salvato"
     },
     "vtxHelp": {
-        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX utilizza i seguenti passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller del volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (più informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
+        "message": "Qui puoi configurare i valori della Trasmittente Video (VTX). Puoi visualizzare e modificare i valori di trasmissione, incluse le tabelle della VTX, se il controller di volo e la VTX lo supportano.<br>Per impostare la VTX effettuare questi passaggi:<br>1. Vai su <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">questa</a> pagina;<br>2. Trova il file di configurazione VTX appropriato per il tuo paese e il modello VTX e scaricalo;<br>3. Clicca su '$t(vtxButtonLoadFile.message)', seleziona il file di configurazione VTX e caricalo;<br>4. Verifica che le impostazioni siano corrette;<br>5. Clicca su '$t(vtxButtonSave.message)' per salvare le impostazioni della VTX sul controller di volo.<br>6. Se vuoi puoi usare '$t(vtxButtonSaveLua.message)' per salvare un file di configurazione da usare con gli script lua di Betaflight (più informazioni <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">qui</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {

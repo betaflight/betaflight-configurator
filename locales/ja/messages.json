@@ -2946,7 +2946,7 @@
         "message": "<strong>注意事項</strong><br /><strong class=\"message-negative\">怪我を防止するために、すべてのプロペラを取り外してください！</strong><br />モーターが<strong>回転します！</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくはこちらの<a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
+        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくはこちらの<a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
     },
     "motorsRemapDialogSave": {
         "message": "保存"
@@ -4498,7 +4498,7 @@
         "message": "動的アイドル値 [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
+        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dshotテレメトリーがオフのため動的アイドルは無効となります"
@@ -4513,7 +4513,7 @@
         "message": "統合ヨー制御"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">注意</span>: この機能を有効にした場合は、それに応じてヨーのPIDを調整する必要があります。詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>"
+        "message": "<span class=\"message-negative\">注意</span>: この機能を有効にした場合は、それに応じてヨーのPIDを調整する必要があります。詳しくは<a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "統合ヨー制御は、ヨーP、I、Dの値を統合し、ピッチとロールを調整するのと同じようにヨーのP、I、D値を調整することができます。<br><br>統合されたP値はI値のように、統合されたD値はP値のように作用するため、I値はほとんど必要がなくなります。<br><br>備考: 統合ヨー制御ではI値が必要ないため、アブソリュート コントロールを使用する必要があります。"
@@ -6354,7 +6354,7 @@
         "message": "保存しました"
     },
     "vtxHelp": {
-        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">こちらのページ</a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">こちら</a>を参照)",
+        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">こちらのページ</a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">こちら</a>を参照)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -7246,6 +7246,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "このビルドに含まれるテレメトリープロトコルを選択します。これはドロップダウン操作となりますが、1つの項目しか選択できませんのでご注意ください。またCRSFなど、選択した送信プロトコルに関係なく有効となるテレメトリープロトコルもあります。"
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "自動的に付帯"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "このビルドに含まれる一般的なオプションを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。AKK VTXのような修正項目はこちらに含まれます。"

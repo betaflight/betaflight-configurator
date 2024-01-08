@@ -2950,7 +2950,7 @@
         "message": "<strong>안전 공지</strong><br /><strong class=\"message-negative\">부상을 피하기 위해 모든 프로펠러를 제거하세요!</strong><br />모터가 <strong>회전합니다!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
+        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
     },
     "motorsRemapDialogSave": {
         "message": "저장"
@@ -4502,7 +4502,7 @@
         "message": "다이나믹 아이들 값 [× 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 항목</a>을 방문하십시오."
+        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 항목</a>을 방문하십시오."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "D샷 텔레메트리가 꺼져있어서 다이나믹 아이들이 비활성화됩니다."
@@ -4517,7 +4517,7 @@
         "message": "통합 요(Yaw)"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">주의</span>:이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 확인하세요."
+        "message": "<span class=\"message-negative\">주의</span>: 이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 확인하세요."
     },
     "pidTuningIntegratedYawHelp": {
         "message": "통합된 요는 요 P, I, D 값을 통합하여 요 P, I, D가 피치와 롤을 튜닝하는 것처럼 튜닝됩니다.<br><br>적분 P는 I처럼 작용하고, 적분 D는 P처럼 작용하기 때문에 I는 거의 필요하지 않습니다.<br><br>참고: 통합 요의 경우 I가 필요하지 않으므로, 통합 요의 경우 절대 제어를 사용해야 합니다."
@@ -7250,6 +7250,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "이 빌드에 포함할 텔레메트리 프로토콜을 선택하십시오. 이것은 드롭다운으로 오직 하나의 항목을 선택할 수 있습니다. 선택한 무선 프로토콜(예: CRSF)에 따라 여기서 선택한 것과 관계없이 활성화되는 텔레메트리 프로토콜도 있습니다."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "자동으로 포함됨"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "이 빌드에 포함할 일반 옵션을 선택하십시오. 이것은 드롭다운으로 여러 항목을 선택할 수 있습니다. 수정 사항(예: AKK VTX)이 여기에 포함됩니다."

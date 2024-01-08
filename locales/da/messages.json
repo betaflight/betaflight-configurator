@@ -2594,7 +2594,7 @@
         "message": "Konfiguration  <span class=\"message-positive\">gemt</span> i EEPROM"
     },
     "transponderNotSupported": {
-        "message": "Din FC firmware understøtter ikke transponderfunktionalitet."
+        "message": "<span class=\"message-negative\">Bemærk:</span> Din FC firmware understøtter ikke transponderfunktionalitet."
     },
     "transponderInformation": {
         "message": "Transpondersystemer gør tidtagning af dine omgange mulig for konkurrencearrangører. Transponderen monteres på fartøjet, og når det passerer tidtagningsporten, registrerer banemodtageren din kode og gemmer din omgangstid. Monteres en IR-baseret transponder, så tjek, at den peger udad fra fartøjet mod banemodtageren, samt at lysstrålen ikke er obstrueres af steldele, batteribefæstigelser, kabler, propeller mv."
@@ -2950,7 +2950,7 @@
         "message": "<strong>Sikkerheds meddelelse</strong><br /><strong class=\"message-negative\">Fjern alle propeller for at forhindre skader !</strong><br />Motorerne vil <strong>rotere !</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Bemærk</strong><br />Motorer vil rotere en efter en, og du vil være i stand til at vælge hvilken motor der skal rotere. Batteriet skal tilsluttes, den korrekte ESC-protokol skal vælges. Dette værktøj kan kun omarrangere motorer som er opdaget af FC . Mere komplekse ommapping kan ske med CLI 'resource' kommando. Se denne <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side</a>."
+        "message": "<strong>Bemærk</strong><br />Motorer vil rotere en efter en, og du vil være i stand til at vælge hvilken motor der skal rotere. Batteriet skal være tilsluttet og den korrekte ESC-protokol valgt. Dette værktøj kan kun omarrangere motorer som er opdaget af FC. Mere komplekse ommapping kan ske med CLI 'resource' kommando. Se denne <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki side</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Gem"
@@ -3485,7 +3485,7 @@
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.</li><li>Tænd (aktivitet LED vil IKKE blinke, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\\\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\\\"target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">Betaflight installation</a> sektion i Betaflight manual (engelsk).</li><li>Luk konfigurator, Genstart konfigurator.</li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Hvis der er en BOOT jumper, fjern den.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.</li><li>Tænd (aktivitet LED blinker IKKE, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> sektion i Betaflight manual (engelsk).</li><li>Genstart konfigurator (luk / åben)</li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Hvis der er en BOOT jumper, fjern den.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -4502,7 +4502,7 @@
         "message": "Dynamisk tomgang [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamisk tomgang forbedrer styringen ved lav omdr/min og reducerer risikoen for desynkronisering af motor. <br /><br /> Det forbedrer PID værdi, stabilitet ved nul gas, langsomhed ved hastighedsændring og motorbremsning.<br /><br />Dynamic tomgang min rpm skal sættes til omkring 3000 - 3500 rpm. <br /><br />Besøg <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki artikel</a> for mere info (engelsk)."
+        "message": "Dynamisk tomgang forbedrer styringen ved lav omdr/min og reducerer risikoen for desynkronisering af motor. <br /><br /> Det forbedrer PID værdi, stabilitet ved nul gas, langsomhed ved hastighedsændring og motorbremsning.<br /><br />Dynamic tomgang min rpm skal sættes til omkring 3000 - 3500 rpm. <br /><br />Se<a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki artikel</a> for mere info (engelsk)."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamisk tomgang er slået fra, fordi Dshot Telemetry er slået FRA"
@@ -4517,7 +4517,7 @@
         "message": "Integreret sideror"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ADVARSEL</span>: Hvis du aktiverer denne funktion, skal du justere sideror PID i overensstemmelse hermed (Yaw PID). Mere info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">her</a>"
+        "message": "<span class=\"message-negative\">ADVARSEL</span>: Hvis du aktiverer denne funktion, skal du justere PID sideror tilsvarende. Mere info <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">her</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integreret sideror integrerer sideror P, I og D værdier, der tillader at sideror P, I og D kan tunes lidt, som hvis du tuner højderor og krængror.<br><br>Meget lidt I er påkrævet, fordi den integrerede P fungerer som I, og integreret D fungerer som P.<br><br>BEMÆRK: Integreret sideror kræver brug af Absolut kontrol, da der ikke er brug for I med Integreret sideror."
@@ -6358,15 +6358,15 @@
         "message": "Gemt"
     },
     "vtxHelp": {
-        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">denne</a> side;<br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den;<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs den;<br>4. Kontroller, at indstillingerne er korrekte;<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">her</a>.)",
+        "message": "Her kan du konfigurere værdierne for din videosender (VTX). Du kan se og ændre transmissionsværdierne, herunder VTX-tabellerne, hvis FC og VTX sender understøtter det.<br>For at opsætte din VTX skal du bruge følgende trin:<br>1. Gå til <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-Tables\">VTX-tabeller</a><br>2. Find den passende VTX-konfigurationsfil til dit land og din VTX-model og hent den<br>3. Klik på '$t(vtxButtonLoadFile.message)' nedenfor, vælg VTX konfigurationsfilen, indlæs<br>4. Kontroller, at indstillingerne er korrekte<br>5. Klik på '$t(vtxButtonSave.message)' for at gemme VTX-indstillingerne på FC.<br>6. Klik eventuelt på '$t(vtxButtonSaveLua.message)' for at gemme en lua konfigurationsfil, som du kan bruge med betaflight lua scripts (Se mere <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">her</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne herfra. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
+        "message": "<span class=\"message-negative\">Bemærk:</span> Din VTX er ikke konfigureret eller understøttes ikke. Så du kan ikke ændre VTX-værdierne her. Dette vil kun være muligt, hvis FC er knyttet til VTX ved hjælp af protokol som Tramp eller SmartAudio og er korrekt konfigureret i fanen $t(tabPorts.message). Måske skal batteri også tilsluttes.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
-        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Du skal konfigurere og gemme den første VTX tabel i bunden, før du kan gøre brug af $t(vtxSelectedMode.message) felter.",
+        "message": "<span class=\"message-negative\">Bemærk:</span> Du skal konfigurere og gemme den første VTX tabel i bunden, før du kan gøre brug af $t(vtxSelectedMode.message) felter.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
@@ -6374,7 +6374,7 @@
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">Opmærksomhed:</span> Værdierne i VTX tabellen er blevet indlæst, men endnu ikke gemt i FC. Du skal bekræfte og ændre værdierne for at sikre, at de er lovlige i dit land, og tryk derefter på $t(vtxButtonSave.message) knappen for at gemme dem i FC.",
+        "message": "<span class=\"message-negative\">Bemærk:</span> Værdierne i VTX tabellen er blevet indlæst, men endnu ikke gemt i FC. Du skal bekræfte og ændre værdierne for at sikre, at de er lovlige i dit land, og tryk derefter på $t(vtxButtonSave.message) knappen for at gemme dem i FC.",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -7250,6 +7250,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Vælg den telemetri protokol som skal være med i denne release. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol.. Der er protokoller som er medtaget, uanset dit valg, da det også styres af den valgte radio protokol, fx. CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Automatisk medtaget"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Vælg det generiske tilvalg du ønsker i denne release. Bemærk at du kan vælge flere elementer. Tilvalg kan også være rettelser, fx. AKK VTX."
