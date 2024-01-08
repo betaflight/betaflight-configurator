@@ -2946,7 +2946,7 @@
         "message": "<strong>Aviso de seguridad</strong><br /><strong class=\"message-negative\">¡Quita todas las hélices para evitar lesiones!</strong><br />¡Los motores <strong>van a girar!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Aviso informativo</strong><br />Los motores van a girar uno a uno y podrás seleccionar que motor está girando. La batería debe estar conectada, y el protocolo ESC correcto debe estar seleccionado. Esta utilidad sólo puede reordenar los motores actualmente activos. Un mapeo más complejo necesita el comando Resource en CLI. Consulta esta <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">página de la Wiki</a>."
+        "message": "<strong>Aviso informativo</strong><br />Los motores van a girar uno a uno y podrás seleccionar que motor está girando. La batería debe estar conectada, y el protocolo ESC correcto debe estar seleccionado. Esta utilidad sólo puede reordenar los motores actualmente activos. Un mapeo más complejo necesita el comando Resource en CLI. Consulta esta <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">página de la Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Guardar"
@@ -4498,7 +4498,7 @@
         "message": "Valor de Ralentí Dinámico [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Ralentí Dinámico mejora el control a bajas rpm y reduce el riesgo de desincronización del motor. <br /><br /> Mejora la autoridad del PID, la estabilidad con el acelerador a cero, el tiempo invertido y el freno del motor.<br /><br />Las rpm mínimas para el Ralentí Dinámico deben establecerse en unos 3000 - 3500 rpm. <br /><br />Visita <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki</a> para más información."
+        "message": "Ralentí Dinámico mejora el control a bajas rpm y reduce el riesgo de desincronización del motor. <br /><br /> Mejora la autoridad del PID, la estabilidad con el acelerador a cero, el tiempo invertido y el freno del motor.<br /><br />Las rpm mínimas para el Ralentí Dinámico deben establecerse en unos 3000 - 3500 rpm. <br /><br />Visita <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki</a> para más información."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Ralentí Dinámico está DESACTIVADO porque la Telemetría Dshot está APAGADA"
@@ -4513,7 +4513,7 @@
         "message": "Yaw Integrado"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATENCIÓN</span>: si activas esta funcionalidad, debes ajustar el PID del YAW en consecuencia. Más información <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>"
+        "message": "<span class=\"message-negative\">ATENCIÓN</span>: si activas esta funcionalidad, debes ajustar el PID del YAW en consecuencia. Más información <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra valores P, I y D del yaw, permitiendo que P, I y D de yaw se ajusten del mismo modo que se hace con el pitch y el roll.<br><br>Se necesita muy poca I, porque la P integrada actúa como I, y la D integrada actúa como P.<br><br>NOTA: Yaw integrado requiere el uso de Control Absoluto, ya que no se necesita I con Yaw Integrado."
@@ -7246,6 +7246,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Selecciona el protocolo de telemetría que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, pero sólo se puede seleccionar un único elemento. También hay algunos protocolos de telemetría que se habilitarán, independientemente de tu selección aquí, dependiendo del protocolo de radio seleccionado, por ejemplo, CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Incluido automáticamente"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Selecciona las opciones generales que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos. Algunos elementos como parches, por ejemplo, AKK VTX, están incluidos aquí."

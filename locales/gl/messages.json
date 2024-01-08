@@ -2948,9 +2948,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Aviso de seguridade</strong><br /><strong class=\"message-negative\"> Retire tódalas hélices para evitar lesións!</strong><br />Os motores<strong> xirarán</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Aviso informativo</strong><br />Os motores xirarán un por un e poderá seleccionar que motor está a xirar. A batería debe estar conectada, debe seleccionarse o protocolo ESC correcto. Esta utilidade só pode reorganizar os motores actualmente activos. A reasignación máis complexa require o comando CLI Resource. Consulte esta <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Gardar"
     },
@@ -3482,9 +3479,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> Recuperación / comunicación perdida </strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Se perdeu a comunicación coa súa placa, sigua estes pasos para restaurar a comunicación: <ul><li>Apagar</li><li>Active \"Sen secuencia de reinicio\", active \"Borrado completo do chip\".</li><li>Una os pines de ARRANQUE ou manteña premido o botón de ARRANQUE.</li><li>Encender (o LED de actividade NON parpadeará se se fai correctamente).</li><li>Instale todos os controladores STM32 e Zadig se é necesario (consulta <a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Parpadeo USB</a> do manual de Betaflight).</li><li >Pecha o configurador, reinicia o configurador.</li><li>Solte o botón BOOT se o teu FC ten un.</li><li>Flash co firmware correcto (usando a velocidade de transmisión manual se se especifica no manual do teu FC).</li><li>Apagar.</li><li>Eliminar o puente de arranque.</li><li>Acender (o LED de actividade debería parpadear).</li><li>Conéctese normalmente.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Abandoando o Instalador o Firmware"
@@ -4500,9 +4494,6 @@
     "pidTuningIdleMinRpm": {
         "message": "Valor Dinámico Idle [* 100 RPM]"
     },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle mellora o control a baixas revolucións e reduce o risco de desincronización do motor. <br /><br /> Mellora a autoridade PID, a estabilidade do acelerador cero, o tempo de suspensión invertido e o freado do motor.<br /><br />As rpm mínimas de ralentí dinámico deben establecerse entre 3000 e 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki </a> para máis información."
-    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle está DESACTIVADO porque a telemetría Dshot está DESACTIVADA"
     },
@@ -4514,9 +4505,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">PRECAUCIÓN</span>: se habilita esta función, deberá axustar o PID de guiñada en consecuencia. Máis información <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw integrado integra os valores de Yaw P, I e D, permitindo que estes se axusten do mesmo modo que pich e roll<br><br>Necesítase moi pouca I, porque o P integrado actua como I e a D integrada como P.<br><br>Nota: Yaw integrado require uso do control absoluto, xa que non é necesario I con Yaw integrado."
@@ -6355,10 +6343,6 @@
     },
     "osdButtonSaved": {
         "message": "Gardado"
-    },
-    "vtxHelp": {
-        "message": "Aquí pode configurar os valores para o seu transmisor de vídeo (VTX). Pode ver e cambiar os valores de transmisión, incluídas as táboas VTX, se o controlador de voo e o VTX o admiten.<br>Para configurar o seu VTX, faga os seguintes pasos:<br>1. Vaia a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">esta</a> páxina;<br>2. Busque o ficheiro de configuración VTX adecuado para o seu país e o seu modelo VTX e descárgueo;<br>3. Faga clic en \"$t(vtxButtonLoadFile.message)\" a continuación, seleccione o ficheiro de configuración VTX e cárgueo;<br>4. Verifique que a configuración é correcta;<br>5. Faga clic en \"$t(vtxButtonSave.message)\" para almacenar a configuración de VTX no controlador de voo.<br>6. Opcionalmente, faga clic en '$t(vtxButtonSaveLua.message)' para gardar un ficheiro de configuración lua que pode usar cos scripts lua de betaflight (Ver máis <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\">aquí</a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atención:</span>O seu VTX non está configurado ou non é compatible. Polo tanto, non pode modificar os valores VTX desde aquí. Isto só será posible se o controlador de voo está unido ó VTX usando algún protocolo como Tramp ou SmartAudio e está configurado correctamente na pestana $t(tabPorts.message) se fose necesario.",

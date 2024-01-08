@@ -2946,7 +2946,7 @@
         "message": "<strong>Aviso de segurança</strong><br /><strong class=\"message-negative\">Remova todas as hélices para evitar ferimentos!</strong><br />Os motores vão <strong>girar!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Aviso de informação</strong><br />Os motores vão girar um a um e poderá selecionar que motor está a girar. A bateria deve estar conetada, deve estar selecionado o protocolo ESC correto. Este utilitário só pode reorganizar os motores ativos atualmente. O re-mapeamento mais complexo requer o comando CLI Resource. Consulte esta <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki</a>."
+        "message": "<strong>Aviso de informação</strong><br />Os motores vão girar um a um e poderá selecionar que motor está a girar. A bateria deve estar conetada, deve estar selecionado o protocolo ESC correto. Este utilitário só pode reorganizar os motores ativos atualmente. O re-mapeamento mais complexo requer o comando CLI Resource. Consulte esta <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Gravar"
@@ -3481,7 +3481,7 @@
         "message": "<strong>Recuperação / Comunicação perdida</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Se perdeu a comunicação com a sua controladora, execute estes passos para restaurar a comunicação: <ul><li>Desligue</li><li>Ative 'Sem sequência de reinicialização', Ative 'Apagar completo do chip'.</li><li>Faça um Jump nos pinos de BOOT ou mantenha pressionado o botão de BOOT.</li><li>Ligue (LED de atividade não acenderá se feito corretamente).</li><li>Instale todos os drivers STM32 e Zadig se necessário (veja a secção <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> do manual do Betaflight).</li><li>Feche o configurador, Reinicie o configurador.</li><li>Solte o botão BOOT se a sua FC o tiver.</li><li>Flash o firmware correto (usando baud rate manual se especificado no manual da sua FC).</li><li>Desligue.</li><li>Remova o Jump do Boot.</li><li>Ligue (LED de atividade deve acender).</li><li>Conecte-se normalmente.</li></ul>"
+        "message": "Se perdeu a comunicação com a sua controladora, execute estes passos para restaurar a comunicação: <ul><li>Desligue</li><li>Ative 'Sem sequência de reinicialização', Ative 'Apagar completo do chip'.</li><li>Faça um Jump nos pinos de BOOT ou mantenha pressionado o botão de BOOT.</li><li>Ligue (LED de atividade não acenderá se feito corretamente).</li><li>Instale todos os drivers STM32 e Zadig se necessário (veja a secção <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> do manual do Betaflight).</li><li>Feche o configurador, Reinicie o configurador.</li><li>Solte o botão BOOT se a sua FC o tiver.</li><li>Flash com o firmware correto (usando baud rate manual se especificado no manual da sua FC).</li><li>Desligue.</li><li>Remova o Jump do Boot.</li><li>Ligue (LED de atividade deve acender).</li><li>Conecte-se normalmente.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Sair do Flasher de Firmware"
@@ -4498,7 +4498,7 @@
         "message": "Valor Idle Dinâmico [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "O Idle Dinâmico melhora o controlo a baixas rotações e reduz o risco de dessincronização dos motores. <br /><br /> Melhora a autoridade dos PIDs, a estabilidade em acelerador zero, tempo quando invertido, e travagem do motor.<br /><br />A miníma rotação do Idle Dinâmico deve ser definido em cerca de 3000 - 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> para mais informação."
+        "message": "O Idle Dinâmico melhora o controlo a baixas rotações e reduz o risco de dessincronização dos motores. <br /><br /> Melhora a autoridade dos PIDs, a estabilidade em acelerador zero, tempo quando invertido, e travagem do motor.<br /><br />A miníma rotação do Idle Dinâmico deve ser definida em cerca de 3000 - 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada wiki</a> para mais informação."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "O Idle Dinâmico está DESLIGADO porque a Telemetria Dshot está DESLIGADA"
@@ -4513,7 +4513,7 @@
         "message": "Yaw Integrado"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATENÇÃO</span>: se ativar esta funcionalidade, deverá ajustar o PID YAW de acordo. Mais informações <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>"
+        "message": "<span class=\"message-negative\">ATENÇÃO</span>: se ativar esta funcionalidade, tem de ajustar o PID do YAW de acordo.Mais info <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra os valores do yaw P, I e D, permitindo aos yaw P, I e D serem afinados um pouco como a afinação do pitch e roll.<br><br>É necessário muito pouco I, porque o P integrado atua como I, e o D integrado atua como P.<br><br>NOTA: O Yaw Integrado requer o uso de Controle Absoluto, uma vez que nenhum I é necessário com Yaw Integrado."
@@ -6354,7 +6354,7 @@
         "message": "Gravado"
     },
     "vtxHelp": {
-        "message": "Aqui pode configurar os valores para o seu transmissor de vídeo (VTX). Pode ver e alterar os valores de transmissão, incluindo as tabelas VTX, se a controladora de voo e o VTX o suportarem.<br>Para configurar o seu VTX use os seguintes passos:<br>1. Vá a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">esta</a> página;<br>2. Encontre o ficheiro apropriado de configuração do VTX para o seu país e modelo de VTX e faça download;<br>3. Clique '$t(vtxButtonLoadFile.message)' abaixo, selecione o ficheiro de configuração do VT e carregue-o;<br>4. Verifique que as definições estão corretas;<br>5. Clique '$t(vtxButtonSave.message)' para guardar as definições do VTX na controladora de voo.<br>6. Opcionalmente clique '$t(vtxButtonSaveLua.message)' para guardar o ficheiro de configuração lua que pode usar com os scripts lua do Betaflight (Veja mais <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aqui</a>.)",
+        "message": "Aqui pode configurar os valores para o seu transmissor de vídeo (VTX). Pode ver e alterar os valores de transmissão, incluindo as tabelas VTX, se a controladora de voo e o VTX o suportarem.<br>Para configurar o seu VTX use os seguintes passos:<br>1. Vá a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">esta</a> página;<br>2. Encontre o ficheiro apropriado de configuração do VTX para o seu país e modelo de VTX e faça download;<br>3. Clique '$t(vtxButtonLoadFile.message)' abaixo, selecione o ficheiro de configuração do VTX e carregue-o;<br>4. Verifique que as definições estão corretas;<br>5. Clique '$t(vtxButtonSave.message)' para guardar as definições do VTX na controladora de voo.<br>6. Opcionalmente clique '$t(vtxButtonSaveLua.message)' para guardar o ficheiro de configuração lua que pode usar com os scripts lua do Betaflight (Veja mais <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aqui</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -7246,6 +7246,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Selecione o protocolo de telemetria que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado. Existem também alguns protocolos de telemetria que serão ativados independentemente da sua seleção aqui baseada no protocolo de rádio selecionado, por exemplo, CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Incluído Automaticamente"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Selecione as opções genéricas que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Tais itens como correções, por exemplo, VTX AKK, estão incluídos aqui."

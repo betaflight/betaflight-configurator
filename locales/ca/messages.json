@@ -2954,7 +2954,7 @@
         "message": "<strong>Avis de seguretat</strong><br /><strong class=\"message-negative\">Retireu totes les hélices per evitar lesions!</strong><br />Els motors <strong>giraran!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Avís d'informació</strong><br />Els motors giraran un per un i podreu seleccionar el motor que gira. S'ha de connectar la bateria, s'ha de seleccionar el protocol ESC correcte. Aquesta utilitat només pot reorganitzar motors actualment actius. El re-mapeig més complex requereix la comanda de recursos CLI. Consulteu aquest <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Pàgina Wiki</a>."
+        "message": "<strong>Avís d'informació</strong><br />Els motors giraran un per un i podreu seleccionar el motor que gira. S'ha de connectar la bateria, s'ha de seleccionar el protocol ESC correcte. Aquesta utilitat només pot reorganitzar motors actualment actius. El re-mapeig més complex requereix la comanda de recursos CLI. Consulteu aquest <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Página Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Desa"
@@ -4506,7 +4506,7 @@
         "message": "Valor Dinàmic Idle [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. <br /><br />Visiteu <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki</a> per a més informació."
+        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. <br /><br />Visiteu <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki</a> per a més informació."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle està DESACTIVAT perquè la telemetria DSHOT està DESACTIVADA"
@@ -4521,7 +4521,7 @@
         "message": "Yaw Integrat"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATENCIÓ</span>: si activeu aquesta característica, heu d'ajustar el PID YAW en conseqüència. Més informació<a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\"target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
+        "message": "<span class=\"message-negative\">ATENCIÓ</span>: si activeu aquesta característica, heu d'ajustar el PID YAW en conseqüència. Més informació <a href=\"https://github.com/cleanflight/cleanflight/wiki/Integrated-Yaw\"target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integra els valors de guiñada P, I i D, la qual cosa permet que les guiñades P, I i D s'ajustin una mica com si sintonitzeu el pas i el gir.<br><br>Es requereix molt poca I, perquè la P integrada actua com I i la D integrada actuen com P.<br><br>NOTA: La guiada integrada requereix l'ús del control absolut, ja que no es necessita cap I amb la guiada integrada."
@@ -7254,6 +7254,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Seleccioneu el protocol de telemetria que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, però només es pot seleccionar un element.. També hi ha alguns protocols de telemetria que s'habilitaran, independentment de la vostra selecció aquí en funció del protocol de ràdio seleccionat, p. CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Inclòs automàticament"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Seleccioneu les opcions genèriques que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements. Elements com ara correccions, p. AKK VTX, s'inclouen aquí."

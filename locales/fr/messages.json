@@ -2522,9 +2522,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Avis de sécurité</strong><br /><strong class=\"message-negative\">Retirez toutes les hélices pour éviter les blessures !</strong><br />Les moteurs vont <strong>tourner !</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Avis d'information</strong><br />Les moteurs vont tourner un par un et vous pourrez choisir quel moteur tourne. La batterie doit être branchée, un protocole ESC valide doit être sélectionné. Cet utilitaire ne peut réorganiser que les moteurs actuellement actifs. Un mappage plus complexe nécessite la commande<a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\"> CLI \"resource\". Référez-vous à cette <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">page du Wiki</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Enregistrer"
     },
@@ -3046,9 +3043,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Récupération / Communication coupée</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Si vous avez perdu la communication avec votre carte suivez ces étapes: <ul><li>Débranchez</li><li> Activez 'Séquence sans redémarrage', activez 'Effacement complet de la puce '.</li><li>Shuntez les bornes BOOT ou maintenez le bouton BOOT.</li><li>Re branchez (la LED d'activité ne clignotera PAS si cela est fait correctement).</li><li>Installez les drivers STM32 drivers et Zadig si besoin (voir la partie <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash USB</a> du manuel Betaflight).</li><li>Fermez le configurateur, redémarrez le Configurateur.</li><li>Relâchez le bouton BOOT si votre carte en a une.</li><li>Flashez avec le bon firmware (en utilisant le baudrate préconisé pour votre carte).</li><li>Déconnectez.</li><li>Supprimez le shunt sur le BOOT.</li><li>Re branchez (La LED d'activité devrait clignoter).</li><li>Connectez normalement.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Quitter le firmware flasheur"
@@ -4025,9 +4019,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw intégré"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATTENTION</span>: si vous activez cette fonctionnalité, vous devez ajuster le PID YAW en conséquence. Plus d'infos <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">ici</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw intégré intègre les valeurs P, I et D, du yaw, permettant à P, I et D d'être altérés de la même manière que le pitch et le roll.<br><br>Très pe ude I est requis, car le P intégré agit comme I, et D intégré agit comme P.<br><br>REMARQUE : Le Yaw intégré nécessite l'utilisation du contrôle absolu, car I n'est pas nécessaire avec Yaw intégré."
@@ -5692,10 +5683,6 @@
     },
     "osdButtonSaved": {
         "message": "Enregistré"
-    },
-    "vtxHelp": {
-        "message": "Ici, vous pouvez configurer les valeurs de votre Transmetteur Vidéo (VTX). Vous pouvez voir et modifier les valeurs de transmission, y compris les tables VTX, si le contrôleur de vol et le VTX le supportent.<br>Pour configurer votre VTX utilisez les étapes suivantes :<br>1. Allez sur <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">cette</a> page ;<br>2. Trouvez le fichier de configuration VTX approprié pour votre pays et votre modèle VTX et téléchargez-le ;<br>3. Cliquez sur '$t(vtxButtonLoadFile.message)' ci-dessous, sélectionnez le fichier de configuration VTX, chargez-le ;<br>4. Vérifiez que les paramètres sont corrects ;<br>5. Cliquez sur '$t(vtxButtonSave.message)' pour stocker les paramètres VTX sur le contrôleur de vol.<br>6. Vous pouvez éventuellement cliquer sur '$t(vtxButtonSaveLua.message)' pour enregistrer un fichier de configuration de lua que vous pouvez utiliser avec les scripts de betaflight lua (Voir plus <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">ici</a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Attention :</span> Votre VTX n'est pas configuré ou non pris en charge. Vous ne pouvez donc pas modifier les valeurs VTX. Cela n'est possible que si le contrôleur de vol communique avec le VTX en utilisant un protocole comme Tramp ou SmartAudio et est correctement configuré dans l'onglet $t(tabPorts.message) si nécessaire.",
