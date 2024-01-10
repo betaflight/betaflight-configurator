@@ -3121,10 +3121,13 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "sucesso"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancelado"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "tempo esgotado (tente novamente)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "falhou (por favor, verifique o log)"
     },
     "firmwareFlasherReleaseFileUrl": {

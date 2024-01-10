@@ -2891,10 +2891,13 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "succès"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "annulé"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "temps expiré (veuillez réessayer)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "échec (veuillez vérifier le log)"
     },
     "firmwareFlasherReleaseFileUrl": {

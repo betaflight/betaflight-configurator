@@ -3327,10 +3327,13 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "成功しました"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "キャンセル"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "タイムアウトしました (再試行してください)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "失敗しました (ログを確認してください)"
     },
     "firmwareFlasherReleaseFileUrl": {

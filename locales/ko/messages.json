@@ -3331,10 +3331,13 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "성공"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "취소가"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "시간 초과됨 (재시도하세요)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "실패 (로그기록을 확인하세요)"
     },
     "firmwareFlasherReleaseFileUrl": {

@@ -1397,7 +1397,7 @@
     },
     "configurationMotorIdleRpmHelp" : {
         "message": "This is the dynamic idle value from the active PID profile. When Dynamic Idle is set to zero, only static motor idle will apply. Change the Dynamic Idle settings on the PID tuning tab.",
-        "description": "Help text for dynamic idle setting" 
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Minimum Throttle (Lowest ESC value when armed)"
@@ -3415,10 +3415,13 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "success"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancelled"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "timed out (please retry)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "failed (please check log)"
     },
     "firmwareFlasherReleaseFileUrl": {

@@ -3327,10 +3327,13 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "успішно"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cкасовано"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "час вийшов (спробуйте ще раз)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "не вдалося (перевірте журнал)"
     },
     "firmwareFlasherReleaseFileUrl": {

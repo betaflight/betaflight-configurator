@@ -3335,10 +3335,13 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "èxit"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancel"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "s'ha esgotat el temps d'espera (torneu-ho a provar)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFail": {
         "message": "ha fallat (comproveu el registre)"
     },
     "firmwareFlasherReleaseFileUrl": {

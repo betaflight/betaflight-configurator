@@ -23,7 +23,7 @@ import Sponsor from '../Sponsor';
 
 const firmware_flasher = {
     targets: null,
-    releaseLoader: new BuildApi(),
+    buildApi: new BuildApi(),
     sponsor: new Sponsor(),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
@@ -39,6 +39,7 @@ const firmware_flasher = {
     configFilename: null,
     config: {},
     developmentFirmwareLoaded: false, // Is the firmware to be flashed from the development branch?
+    cancelBuild: false,
 };
 
 firmware_flasher.initialize = function (callback) {
@@ -325,7 +326,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 try {
-                    self.releaseLoader.loadTargets(loadTargetList);
+                    self.buildApi.loadTargets(loadTargetList);
                 } catch (err) {
                     console.error(err);
                 }
@@ -360,7 +361,7 @@ firmware_flasher.initialize = function (callback) {
                     const expertMode = expertMode_e.is(':checked');
                     if (expertMode) {
                         if (response.releaseType === 'Unstable') {
-                            self.releaseLoader.loadCommits(response.release, (commits) => {
+                            self.buildApi.loadCommits(response.release, (commits) => {
                                 const select_e = $('select[name="commits"]');
                                 select_e.empty();
                                 commits.forEach((commit) => {
@@ -384,12 +385,12 @@ firmware_flasher.initialize = function (callback) {
                 self.enableLoadRemoteFileButton(true);
             }
 
-            self.releaseLoader.loadTarget(target, release, onTargetDetail);
+            self.buildApi.loadTarget(target, release, onTargetDetail);
 
             if (self.validateBuildKey() && navigator.onLine) {
-                self.releaseLoader.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions);
+                self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions);
             } else {
-                self.releaseLoader.loadOptions(release, buildOptions);
+                self.buildApi.loadOptions(release, buildOptions);
             }
         }
 
@@ -514,7 +515,7 @@ firmware_flasher.initialize = function (callback) {
                         ),
                     );
 
-                    self.releaseLoader.loadTargetReleases(target, (data) => populateReleases(versions_e, data));
+                    self.buildApi.loadTargetReleases(target, (data) => populateReleases(versions_e, data));
                 }
             }
         });
@@ -761,6 +762,11 @@ firmware_flasher.initialize = function (callback) {
             },
         );
 
+        $('a.cloud_build_cancel').on('click', function (evt) {
+            $('a.cloud_build_cancel').toggleClass('disabled', true);
+            self.cancelBuild = true;
+        });
+
         $('a.load_remote_file').on('click', function (evt) {
             if (!self.selectedBoard) {
                 return;
@@ -791,17 +797,20 @@ firmware_flasher.initialize = function (callback) {
                 $('.buildProgress').val(val);
             }
 
-            function processBuildStatus(response, statusResponse, retries) {
-                if (statusResponse.status === 'success') {
-                    updateStatus(retries <= 0 ? 'SuccessCached' : "Success", response.key, 100, true);
-                    if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
-                        setBoardConfig(statusResponse.configuration);
-                    }
-                    self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
-                } else {
-                    updateStatus(retries > 10 ? 'TimedOut' : "Failed", response.key, 0, true);
-                    onLoadFailed();
+            function processBuildSuccess(response, statusResponse, suffix) {
+                if (statusResponse.status !== 'success') {
+                    return;
                 }
+                updateStatus(`Success${suffix}`, response.key, 100, true);
+                if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
+                    setBoardConfig(statusResponse.configuration);
+                }
+                self.buildApi.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
+            }
+
+            function processBuildFailure(key, suffix) {
+                updateStatus(`Fail${suffix}`, key, 0, true);
+                onLoadFailed();
             }
 
             function requestCloudBuild(targetDetail) {
@@ -844,7 +853,7 @@ firmware_flasher.initialize = function (callback) {
                 }
 
                 console.info("Build request:", request);
-                self.releaseLoader.requestBuild(request, (response) => {
+                self.buildApi.requestBuild(request, (response) => {
                     console.info("Build response:", response);
 
                     // Complete the summary object to be used later
@@ -852,32 +861,63 @@ firmware_flasher.initialize = function (callback) {
 
                     if (!targetDetail.cloudBuild) {
                         // it is a previous release, so simply load the hex
-                        self.releaseLoader.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
+                        self.buildApi.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
                         return;
                     }
 
                     updateStatus('Pending', response.key, 0, false);
+                    self.cancelBuild = false;
 
-                    let retries = 1;
-                    self.releaseLoader.requestBuildStatus(response.key, (statusResponse) => {
-                        if (statusResponse.status !== "queued") {
+                    self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
+                        if (statusResponse.status === "success") {
                             // will be cached already, no need to wait.
-                            processBuildStatus(response, statusResponse, 0);
+                            processBuildSuccess(response, statusResponse, "Cached");
                             return;
                         }
 
+                        self.enableCancelBuildButton(true);
+                        const retrySeconds = 5;
+                        let retries = 1;
+                        let processing = false;
+                        let timeout = 120;
                         const timer = setInterval(() => {
-                            self.releaseLoader.requestBuildStatus(response.key, (statusResponse) => {
-                                if (statusResponse.status !== 'queued' || retries > 10) {
+                            self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
+                                if (statusResponse.timeOut !== undefined) {
+                                    if (!processing) {
+                                        processing = true;
+                                        retries = 1;
+                                    }
+                                    timeout = statusResponse.timeOut;
+                                }
+                                const retryTotal = timeout / retrySeconds;
+
+                                if (statusResponse.status !== 'queued' || retries > retryTotal || self.cancelBuild) {
+                                    self.enableCancelBuildButton(false);
                                     clearInterval(timer);
-                                    processBuildStatus(response, statusResponse, retries);
+
+                                    if (statusResponse.status === 'success') {
+                                        processBuildSuccess(response, statusResponse, "");
+                                        return;
+                                    }
+
+                                    let suffix = "";
+                                    if (retries > retryTotal) {
+                                        suffix = "TimeOut";
+                                    }
+
+                                    if (self.cancelBuild) {
+                                        suffix = "Cancel";
+                                    }
+                                    processBuildFailure(response.key, suffix);
                                     return;
                                 }
 
-                                updateStatus('Processing', response.key, retries * 10, false);
+                                if (processing) {
+                                    updateStatus('Processing', response.key, retries * (100 / retryTotal), false);
+                                }
                                 retries++;
                             });
-                        }, 5000);
+                        }, retrySeconds * 1000);
                     });
                 }, onLoadFailed);
             }
@@ -1159,7 +1199,7 @@ firmware_flasher.initialize = function (callback) {
         GUI.content_ready(callback);
     }
 
-    self.releaseLoader.loadTargets(() => {
+    self.buildApi.loadTargets(() => {
        $('#content').load("./tabs/firmware_flasher.html", onDocumentLoad);
     });
 };
@@ -1267,7 +1307,7 @@ firmware_flasher.verifyBoard = function() {
                     self.cloudBuildKey = FC.CONFIG.buildKey;
 
                     if (self.validateBuildKey()) {
-                        self.releaseLoader.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
+                        self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
                     } else {
                         getBoardInfo();
                     }
@@ -1491,6 +1531,11 @@ firmware_flasher.cleanup = function (callback) {
     $(document).off('click', 'span.progressLabel a');
 
     if (callback) callback();
+};
+
+firmware_flasher.enableCancelBuildButton = function (enabled) {
+    $('a.cloud_build_cancel').toggleClass('disabled', !enabled);
+    self.cancelBuild = false; // remove the semaphore
 };
 
 firmware_flasher.enableFlashButton = function (enabled) {
