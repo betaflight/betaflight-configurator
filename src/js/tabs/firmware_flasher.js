@@ -691,7 +691,10 @@ firmware_flasher.initialize = function (callback) {
 
         // UI Hooks
         $('a.load_file').on('click', function () {
+            // Reset button when loading a new firmware
             self.enableFlashButton(false);
+            self.enableLoadRemoteFileButton(false);
+
             self.developmentFirmwareLoaded = false;
 
             chrome.fileSystem.chooseEntry({
@@ -777,6 +780,8 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
+            // Reset button when loading a new firmware
+            self.enableFlashButton(false);
             self.enableLoadRemoteFileButton(false);
 
             self.localFirmwareLoaded = false;
