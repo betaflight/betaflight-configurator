@@ -27,7 +27,7 @@ const firmware_flasher = {
     sponsor: new Sponsor(),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
-    boardNeedsVerification: true,
+    boardNeedsVerification: false,
     allowBoardDetection: true,
     cloudBuildKey: null,
     cloudBuildOptions: null,
@@ -51,7 +51,6 @@ firmware_flasher.initialize = function (callback) {
 
     // reset on tab change
     self.selectedBoard = undefined;
-    self.boardNeedsVerification = true;
     self.allowBoardDetection = true;
 
     self.cloudBuildKey = null;
@@ -481,8 +480,6 @@ firmware_flasher.initialize = function (callback) {
             }
 
             if (!GUI.connect_lock) {
-                // self.boardNeedsVerification = self.selectedBoard === undefined || target !== self.selectedBoard;
-                // self.updateDetectBoardButton();
                 self.selectedBoard = target;
                 console.log('board changed to', target);
 
@@ -969,7 +966,7 @@ firmware_flasher.initialize = function (callback) {
                     } else {
                         if (!self.isFlashing) {
                             // Porthandler resets board on port detect
-                            if (self.boardNeedsVerification) {
+                            if (self.allowBoardDetection && self.boardNeedsVerification) {
                                 // reset to prevent multiple calls
                                 self.boardNeedsVerification = false;
                                 self.verifyBoard();
@@ -1001,8 +998,10 @@ firmware_flasher.initialize = function (callback) {
 
         detectBoardElement.on('click', () => {
             detectBoardElement.toggleClass('disabled', true);
-            // self.boardNeedsVerification = false;
+            self.boardNeedsVerification = false;
+
             self.verifyBoard();
+            // prevent spamming the button
             setTimeout(() => detectBoardElement.toggleClass('disabled', false), 1000);
         });
 
@@ -1223,7 +1222,7 @@ firmware_flasher.isSerialPortAvailable = function() {
 };
 
 firmware_flasher.updateDetectBoardButton = function() {
-    $('a.detect-board').toggleClass('disabled', !this.isSerialPortAvailable() && this.boardNeedsVerification);
+    $('a.detect-board').toggleClass('disabled', !this.isSerialPortAvailable() && this.boardNeedsVerification && this.allowBoardDetection);
 };
 
 firmware_flasher.validateBuildKey = function() {
