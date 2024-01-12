@@ -21,8 +21,6 @@ const onboard_logging = {
     writeError: false,
 
     BLOCK_SIZE: 4096,
-    VCP_BLOCK_SIZE_3_0: 512,
-    VCP_BLOCK_SIZE: 4096,
 };
 
 onboard_logging.initialize = function (callback) {
@@ -434,11 +432,8 @@ onboard_logging.initialize = function (callback) {
 
     function flash_save_begin() {
         if (GUI.connected_to) {
-            if (FC.boardHasVcp()) {
-                self.blockSize = self.VCP_BLOCK_SIZE;
-            } else {
-                self.blockSize = self.BLOCK_SIZE;
-            }
+
+            self.blockSize = self.BLOCK_SIZE;
 
             // Begin by refreshing the occupied size in case it changed while the tab was open
             flash_update_summary(function() {
