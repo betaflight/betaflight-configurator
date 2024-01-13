@@ -3421,6 +3421,9 @@
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "timed out (please retry)"
     },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "build request error (please check build configuration, e.g. custom defines)"
+    },
     "firmwareFlasherCloudBuildFail": {
         "message": "failed (please check log)"
     },
