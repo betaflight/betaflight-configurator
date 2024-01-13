@@ -926,7 +926,10 @@ firmware_flasher.initialize = function (callback) {
                             });
                         }, retrySeconds * 1000);
                     });
-                }, onLoadFailed);
+                }, () => {
+                    updateStatus('FailRequest', '', 0, false);
+                    onLoadFailed();
+                });
             }
 
             if (self.targetDetail) { // undefined while list is loading or while running offline
