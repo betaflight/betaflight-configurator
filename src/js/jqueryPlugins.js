@@ -5,6 +5,6 @@ import 'jquery-touchswipe';
 import select2 from 'select2';
 select2(jQuery);
 import 'multiple-select';
-import 'multiple-select/dist/multiple-select-locale-all.js'
+import 'multiple-select/dist/multiple-select-locale-all.js';
 import '../../libraries/jquery.nouislider.all.min.js';
 import '../../libraries/jquery.flightindicators.js';
