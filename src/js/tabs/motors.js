@@ -945,8 +945,8 @@ motors.initialize = async function (callback) {
             mspHelper.setArmingEnabled(enabled, enabled);
         });
 
-        let bufferingSetMotor = [],
-        buffer_delay = false;
+        let lastMotorsCommand = null;
+        let buffer_delay = false;
 
         $('div.sliders input:not(.master)').on('input', function () {
             const index = $(this).index();
@@ -959,17 +959,13 @@ motors.initialize = async function (callback) {
                 buffer.push16(val);
             }
 
-            bufferingSetMotor.push(buffer);
+            lastMotorsCommand = buffer;
 
             if (!buffer_delay) {
                 buffer_delay = setTimeout(function () {
-                    buffer = bufferingSetMotor.pop();
-
-                    MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
-
-                    bufferingSetMotor = [];
+                    MSP.send_message(MSPCodes.MSP_SET_MOTOR, lastMotorsCommand);
                     buffer_delay = false;
-                }, 10);
+                }, 100);
             }
         });
 

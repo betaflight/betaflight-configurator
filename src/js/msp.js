@@ -320,8 +320,7 @@ const MSP = {
         for (const instance of this.callbacks) {
             if (instance.code === code) {
                 requestExists = true;
-
-                break;
+                clearTimeout(instance.timer);
             }
         }
 
@@ -341,16 +340,14 @@ const MSP = {
             'start': performance.now(),
         };
 
-        if (!requestExists) {
-            obj.timer = setTimeout(() => {
-                console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${this.timeout} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`);
-                serial.send(bufferOut, (_sendInfo) => {
-                    obj.stop = performance.now();
-                    const executionTime = Math.round(obj.stop - obj.start);
-                    this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
-                });
-            }, this.timeout);
-        }
+        obj.timer = setTimeout(() => {
+            console.warn(`MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${this.timeout} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`);
+            serial.send(bufferOut, (_sendInfo) => {
+                obj.stop = performance.now();
+                const executionTime = Math.round(obj.stop - obj.start);
+                this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
+            });
+        }, this.timeout);
 
         this.callbacks.push(obj);
 
