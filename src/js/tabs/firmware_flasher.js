@@ -1474,6 +1474,7 @@ firmware_flasher.backupConfig = function (callback) {
                     clearInterval(disconnect);
                     // Allow auto-detect after CLI reset
                     self.allowBoardDetection = true;
+                    callback();
                 }
                 count++;
             }, 100);
