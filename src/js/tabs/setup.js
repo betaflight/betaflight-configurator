@@ -442,7 +442,9 @@ setup.initialize = function (callback) {
                 }
                 build_opt_e.html(`<span class="buildInfoClassOptions" 
                                   title="${i18n.getMessage('initialSetupInfoBuildOptions')}${buildOptions}">
-                                  <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></span>`);
+                                  <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong>
+                                  </span>
+                                  <div class="helpicon cf_tip" i18n_title="initialSetupInfoBuildOptionsHelp"></div>`);
             } else {
                 build_opt_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
             }
