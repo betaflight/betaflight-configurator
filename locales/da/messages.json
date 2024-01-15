@@ -475,7 +475,7 @@
         "message": "Bekræft indsendelse af log oplysninger"
     },
     "supportWarningDialogText": {
-        "message": "Bekræft venligst indsendelse af logoplysninger til Betaflight-teamet.<br><br>Denne proces vil køre nogle kommandoer og indsende data til release server.<br><br>Du vil derefter få en entydig identifikator på din indsendelse af data.<br><br>Angiv denne entydige identifikator til Betaflight-teamet, når du bruger Discord eller åbner problemer på Github."
+        "message": "Bekræft venligst indsendelse af logoplysninger til Betaflight-teamet.<br><br>Denne proces vil køre nogle kommandoer og indsende data til Build server.<br><br>Du vil derefter få en entydig identifikator på din indsendelse af data.<br><br>Angiv denne entydige identifikator til Betaflight-teamet, når du bruger Discord eller åbner problemer på Github."
     },
     "supportWarningDialogInputPlaceHolder": {
         "message": "Beskriv problem"
@@ -1009,7 +1009,7 @@
         "message": "Firmware info"
     },
     "initialSetupInfoBuildHelp": {
-        "message": "Viser oplysninger om release. Release Konfiguration og release Log peger til links i skyen via Release ID",
+        "message": "Viser oplysninger om Build. Build Konfiguration og Build Log peger til links i skyen via Build ID",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -3280,7 +3280,7 @@
         "message": "Ukendt tilstand $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Vælg github commit"
+        "message": "Vælg github Pull Request (PR #) eller commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release information"
@@ -3320,10 +3320,10 @@
         "message": "Status:"
     },
     "firmwareFlasherCloudBuildPending": {
-        "message": "afventer"
+        "message": "afventer ..."
     },
     "firmwareFlasherCloudBuildProcessing": {
-        "message": "arbejder"
+        "message": "arbejder ..."
     },
     "firmwareFlasherCloudBuildSuccessCached": {
         "message": "succes (cached)"
@@ -3332,13 +3332,16 @@
         "message": "succes"
     },
     "firmwareFlasherCloudBuildFailCancel": {
-        "message": "aflyst"
+        "message": "annulleret"
     },
     "firmwareFlasherCloudBuildFailTimeOut": {
-        "message": "timeout (prøv igen)"
+        "message": "tiden gået (forsøg igen)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "Ønsket build fejlet (kontroller build konfiguration, f.eks brugertilpassede Defines)"
     },
     "firmwareFlasherCloudBuildFail": {
-        "message": "mislykkedes (tjek log)"
+        "message": "mislykket (se årsag i loggen)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manuelt."
@@ -3374,7 +3377,7 @@
         "message": "Vælg eller detekter automatisk FC type, for at se mulige firmware versioner - Vælg den rette firmware version som passer til din FC."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight configurator understøtter FC fælles type (unified target) med konfiguration af FC i et trin. Begrebet FC fælles type betyder, at den samme firmware .hex fil kan bruges til alle FC med samme MCU.<br><br>Betaflight 4.4 indfører  <strong>Sky releases (Cloud Build)</strong><br><br>Med reases i skyen, er det nødvendigt at definere hardware tilvalg: indstillinger/protokol, som skal findes i din release.<br><br>Forskelle mellem de forskellige FC  styres af en konfigurationsfil, som kommer sammen med firmware, når en FC fælles type brændes i din FC..<br><br>Ved at indlæse en lokal release fra din pc, kan du indlæse en FC fælles type konfiguration, eller vælge anden FC type, før du henter et firmware image.<br><br>Hvis du støder på problemer ved anvendelse af FC firmware image, overvej at gå ppå Discord eller åbn et <a href=\\\"https://github.com/betaflight/betaflight/issues\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">problem</a>, overvej at undlade anvendelse af image, indtil problemet er blevet afklaret eller løst."
+        "message": "Betaflight configurator understøtter FC fælles type (unified target) med konfiguration af FC i et trin. Begrebet FC fælles type betyder, at den samme firmware .hex fil kan bruges til alle FC med samme MCU.<br><br>Betaflight 4.4 indfører  <strong>Sky Build (Cloud Build)</strong><br><br>Med Build i skyen, er det nødvendigt at definere hardware tilvalg, indstillinger og protokol, som skal findes i din release.<br><br>Forskelle mellem de forskellige FC styres af en konfigurationsfil, som kommer sammen med firmware, når en FC fælles type brændes i din FC..<br><br>Ved at indlæse en lokal Build fra din pc, kan du indlæse en FC fælles type konfiguration, eller vælge anden FC type, før du henter et firmware image.<br><br>Hvis du støder på problemer ved anvendelse af FC firmware image, overvej at gå på Discord eller åbn et <a href=\\\"https://github.com/betaflight/betaflight/issues\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">problem</a>, overvej at undlade anvendelse af image, indtil problemet er blevet afklaret eller løst."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Vælg firmware version."
@@ -3488,7 +3491,7 @@
         "message": "<strong>Gendannelse / tabt kommunikation</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.</li><li>Tænd (aktivitet LED blinker IKKE, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> sektion i Betaflight manual (engelsk).</li><li>Genstart konfigurator (luk / åben)</li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Hvis der er en BOOT jumper, fjern den.</li><li>Tænd (aktivitet LED skal blinke).</li><li>Forbind normalt.</li></ul>"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.</li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.</li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.</li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).</li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> sektion i Betaflight manual (engelsk).</li><li>Genstart konfigurator (luk / åben)</li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.</li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).</li><li>Sluk FC.</li><li>Hvis der er en BOOT jumper, fjern den.</li><li>Tænd FC (aktivitet LED skal blinke).</li><li>Forbind FC normalt.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -3570,7 +3573,7 @@
         "message": "Spørg FC for information om valg af rette firmware image"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "Du er ved at installere en <strong>firmware udviklings release</strong>. Da udviklingen er undervejs, er der risiko for at du kan opleve:<strong><ul><li>firmwaren fungerer slet ikke</li><li>firmwaren kan ikke bruges til flyvning</li><li>der er sikkerhedsproblemer med firmwaren for eksempel at fartøjet flyver væk</li><li>firmwaren kan bevirke, at FC ikke reagerer eller bliver beskadiget</li></ul></strong>Hvis du fortsætter med releasen, <strong>påtager du dig det fulde ansvar i risikoen for, at noget af ovenstående sker</strong>. Desuden anerkender du, at det er nødvendigt at udføre <strong>grundige test UDEN propeller</strong> , før du forsøger at flyve med denne firmware."
+        "message": "Du er ved at installere en <strong>firmware et udviklings Build</strong>. Da udviklingen er undervejs, er der risiko for at du kan opleve:<strong><ul><li>firmwaren slet ikke  fungerer </li><li>firmwaren ikke kan bruges til flyvning</li><li>der er sikkerhedsproblemer med firmwaren for eksempel at fartøjet flyver væk</li><li>firmwaren kan bevirke, at FC ikke reagerer eller bliver beskadiget</li></ul></strong>Hvis du fortsætter med dette Build, <strong>påtager du dig det fulde ansvar i risikoen for, at noget af ovenstående sker</strong>. Desuden anerkender du, at det er nødvendigt at udføre <strong>grundige test UDEN propeller</strong> , før du forsøger at flyve med den firmware som kommer med dette Build."
     },
     "unstableFirmwareAcknowledgement": {
         "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar<strong> for at anvende en udviklings firmware release"
@@ -7231,7 +7234,7 @@
         "description": "Dialog text to prompt user to review options for the preset"
     },
     "firmwareFlasherBuildConfigurationHead": {
-        "message": "Release konfirguration"
+        "message": "Build konfirguration"
     },
     "firmwareFlasherBuildOptions": {
         "message": "Andre indstillinger"
@@ -7249,10 +7252,10 @@
         "message": "Konfigurations filnavn:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Vælg den radio protokol som skal være med i denne release. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol."
+        "message": "Vælg den radio protokol som skal være med i dette Build. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Vælg den telemetri protokol som skal være med i denne release. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol.. Der er protokoller som er medtaget, uanset dit valg, da det også styres af den valgte radio protokol, fx. CRSF."
+        "message": "Vælg den telemetri protokol som skal være med i dette Build. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol.. Der er protokoller som er medtaget, uanset dit valg, da det også styres af den valgte radio protokol, fx. CRSF."
     },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Automatisk medtaget"
@@ -7261,7 +7264,7 @@
         "message": "Vælg det generiske tilvalg du ønsker i denne release. Bemærk at du kan vælge flere elementer. Tilvalg kan også være rettelser, fx. AKK VTX."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Vælg den motor (ESC) protokol som skal være med i denne release. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol."
+        "message": "Vælg den motor (ESC) protokol som skal være med i dette Build. Bemærk at selvom det er muligt at vælge flere elementer, kan du kun vælge een protokol."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Særligt brugbar for udvikling, da du her kan vælge et flettet PR (Pull request), angive et commit punkt, eller en kommende PR, ved at angive #efterfulgt af PR nummer, fx #1234 (som er kort for branch 'pull/1234/head')."

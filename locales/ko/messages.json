@@ -3280,7 +3280,7 @@
         "message": "알 수 없는 상태 $1"
     },
     "firmwareFlasherBranch": {
-        "message": "커밋 선택"
+        "message": "풀 리퀘스트 또는 커밋 선택"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "릴리즈와 빌드 정보"
@@ -3332,10 +3332,13 @@
         "message": "성공"
     },
     "firmwareFlasherCloudBuildFailCancel": {
-        "message": "취소가"
+        "message": "취소됨"
     },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "시간 초과됨 (재시도하세요)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "빌드 요청 오류 (빌드 구성을 확인하세요, 예. 사용자 정의)"
     },
     "firmwareFlasherCloudBuildFail": {
         "message": "실패 (로그기록을 확인하세요)"

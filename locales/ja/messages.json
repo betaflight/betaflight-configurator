@@ -3275,9 +3275,6 @@
     "sdcardStatusUnknown": {
         "message": "不明な状態 $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "コミットを選択"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "リリースおよびビルド情報"
     },
@@ -3326,15 +3323,6 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "成功しました"
-    },
-    "firmwareFlasherCloudBuildFailCancel": {
-        "message": "キャンセル"
-    },
-    "firmwareFlasherCloudBuildFailTimeOut": {
-        "message": "タイムアウトしました (再試行してください)"
-    },
-    "firmwareFlasherCloudBuildFail": {
-        "message": "失敗しました (ログを確認してください)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手動でダウンロードしてください。"

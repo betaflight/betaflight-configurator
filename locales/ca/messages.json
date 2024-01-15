@@ -3284,7 +3284,7 @@
         "message": "Estat desconegut $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Selecciona aplicar"
+        "message": "Seleccioneu Pull Request o Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Versió i informació de compilació"
@@ -3336,10 +3336,13 @@
         "message": "èxit"
     },
     "firmwareFlasherCloudBuildFailCancel": {
-        "message": "cancel"
+        "message": "cancel·lat"
     },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "s'ha esgotat el temps d'espera (torneu-ho a provar)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "error de sol·licitud de compilació (si us plau, comproveu la configuració de compilació, per exemple, definicions personalitzades)"
     },
     "firmwareFlasherCloudBuildFail": {
         "message": "ha fallat (comproveu el registre)"
