@@ -1682,7 +1682,7 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "Przeciw grawitacja zwiększa I (oraz, w ppkt 4.3, P) podczas i krótko po szybkiej zmianie przepustnicy, zwiększając stabilność położenia podczas pomp przepustnicy.<br><br>Wyższe wartości zysku mogą poprawić stabilność maszyn o niskim autoryzacji lub takich, które mają przesunięty środek ciężkości."
+        "message": "Przeciw grawitacja zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w maszynach o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
     },
     "pidTuningDMin": {
         "message": "<b>D</b>pochodna",
@@ -3223,7 +3223,7 @@
         "message": "Zrzut pamięci flash do pliku... (nie wspierany)"
     },
     "dataflashSavetoFileNote": {
-        "message": "Bezpośrednie zapisywanie zawartości Flash do pliku jest powolne i z natury podatne na błąd / uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać podczas zapisu małych plików, ale zalecane jest użycie trybu pamięci masowej."
+        "message": "Bezpośrednie zapisywanie zawartości pamięci do pliku jest powolne i z natury podatne na błąd lub nawet uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać podczas zapisu małych plików, ale zalecane jest użycie trybu pamięci masowej."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Ta metoda jest powolna i z natury podatna na błąd / uszkodzenie plików, ponieważ połączenie MSP jest zmienne, co jest podstawowym ograniczeniem, które sprawia, że jest nieodpowiednie do przesyłania plików. Może zadziałać tylko dla małych plików. Nie twórz żądań dodania wsparcia tej funkcji gdy transfer plików nie powiedzie się po zapisaniu, przy użyciu tej metody. Zalecaną metodą jest użycie '<b>$t(onboardLoggingRebootMscText.message)</b>' (poniżej) aby aktywować tryb pamięci masowej i uzyskać dostęp do kontrolera lotu jako urządzenia pamięci."
@@ -3279,9 +3279,6 @@
     "sdcardStatusUnknown": {
         "message": "Nieznany stan $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "Wybierz zatwierdzone"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informacje o wydaniu i budowie"
     },
@@ -3332,13 +3329,16 @@
         "message": "ukończono"
     },
     "firmwareFlasherCloudBuildFailCancel": {
-        "message": "anulowane"
+        "message": "Anulowano"
     },
     "firmwareFlasherCloudBuildFailTimeOut": {
-        "message": "przekroczono limit czasu (spróbuj ponownie)"
+        "message": "Przekroczono limit czasu "
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "błąd kompilacji, sprawdź konfigurację kompilacji  którą wybrałeś"
     },
     "firmwareFlasherCloudBuildFail": {
-        "message": "nie powiodło się (proszę sprawdzić logi)"
+        "message": "Nie powiodło się"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Pobierz ręcznie."

@@ -3073,9 +3073,6 @@
     "sdcardStatusUnknown": {
         "message": "Estado desconhecido $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "Selecionar commit"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informações de build e release"
     },
@@ -3120,15 +3117,6 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "sucesso"
-    },
-    "firmwareFlasherCloudBuildFailCancel": {
-        "message": "cancelado"
-    },
-    "firmwareFlasherCloudBuildFailTimeOut": {
-        "message": "tempo esgotado (tente novamente)"
-    },
-    "firmwareFlasherCloudBuildFail": {
-        "message": "falhou (por favor, verifique o log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Baixar manualmente."

@@ -3276,7 +3276,7 @@
         "message": "Estado desconocido $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Seleccionar commit"
+        "message": "Selecciona Pull Request o Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Lanzamiento e información de compilación"
@@ -3328,10 +3328,13 @@
         "message": "éxito"
     },
     "firmwareFlasherCloudBuildFailCancel": {
-        "message": "anulado"
+        "message": "cancelado"
     },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "tiempo agotado (vuelve a intentarlo)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "error en la petición de compilación (por favor, comprueba la configuración de compilación, por ejemplo, defines personalizados)"
     },
     "firmwareFlasherCloudBuildFail": {
         "message": "error (revisa el registro)"

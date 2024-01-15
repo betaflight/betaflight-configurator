@@ -3276,7 +3276,7 @@
         "message": "Невідомий стан $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Виберіть коміт"
+        "message": "Оберіть запит на злиття або коміт"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Інформація про реліз і збірку"
@@ -3328,10 +3328,13 @@
         "message": "успішно"
     },
     "firmwareFlasherCloudBuildFailCancel": {
-        "message": "cкасовано"
+        "message": "скасовано"
     },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "час вийшов (спробуйте ще раз)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "помилка запиту збірки (будь ласка, перевірте конфігурацію збірки, наприклад користувацькі #define)"
     },
     "firmwareFlasherCloudBuildFail": {
         "message": "не вдалося (перевірте журнал)"
@@ -7249,6 +7252,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Виберіть протокол телеметрії, який ви хотіли б включити у цю збірку. Зауважте, що це випадаючий список, але можна вибрати лише один елемент. Також деякі протоколи телеметрії будуть увімкнені автоматично, незалежно від вашого вибору тут, якщо вони потрібні для радіообміну, наприклад, CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Автоматично включено"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Оберіть загальні опції, які б ви хотіли включили до цієї збірки. Зауважте, що це випадаючий список, і можна вибрати декілька елементів. Такі речі як виправлення, наприклад, відеопередавача AKK, знаходяться в цьому списку."

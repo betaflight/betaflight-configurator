@@ -3276,7 +3276,7 @@
         "message": "Estado desconhecido $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Selecionar commit"
+        "message": "Selecione Pull Request ou Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Info de Lançamento e Compilação"
@@ -3332,6 +3332,9 @@
     },
     "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "tempo expirou (pf tente novamente)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "erro de solicitação de compilação (por favor, verifique configuração de compilação, ex.: definições personalizadas)"
     },
     "firmwareFlasherCloudBuildFail": {
         "message": "falhou (pf verifique o log)"
