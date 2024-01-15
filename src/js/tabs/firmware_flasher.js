@@ -1241,7 +1241,7 @@ firmware_flasher.verifyBoard = function() {
     const self = this;
 
     if (!self.isSerialPortAvailable()) {
-        gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
+        // return silently as port-picker will trigger again when port becomes available
         return;
     }
 
