@@ -1241,7 +1241,7 @@ firmware_flasher.verifyBoard = function() {
     const self = this;
 
     if (!self.isSerialPortAvailable()) {
-        gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
+        // return silently as port-picker will trigger again when port becomes available
         return;
     }
 
@@ -1474,6 +1474,9 @@ firmware_flasher.backupConfig = function (callback) {
                     clearInterval(disconnect);
                     // Allow auto-detect after CLI reset
                     self.allowBoardDetection = true;
+                    if (callback) {
+                        callback();
+                    }
                 }
                 count++;
             }, 100);

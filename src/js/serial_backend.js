@@ -803,7 +803,7 @@ export function reinitializeConnection(callback) {
     const reconnect = setInterval(waitforSerial, 100);
 
     function waitforSerial() {
-        if (connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) {
+        if ((connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) || GUI.active_tab === 'firmware_flasher') {
             console.log(`Serial connection available after ${attempts / 10} seconds`);
             clearInterval(reconnect);
             gui_log(i18n.getMessage('deviceReady'));
