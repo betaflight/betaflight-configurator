@@ -5752,7 +5752,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "Temperature reported by ESC telemetry"
+        "message": "Temperature reported by ESC telemetry, either by serial one wire telemetry, or by DShot bidirectional telemetry with EDT, if supported by your ESC firmware."
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
