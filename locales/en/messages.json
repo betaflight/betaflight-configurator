@@ -1088,8 +1088,8 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Shows information regarding the build of firmware. The Build Config and Bulid Log links to the cloud information found by the Build key",
+    "initialSetupInfoFirmware": {
+        "message": "Shows information for firmware Build. If connected to Build Server, Log and Config links to cloud information found by Build key stored in firmware. Options defined, show with mouse over, defines used in Cloud Build.<br>Section are empty if local Build.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1108,13 +1108,10 @@
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Build Options:"
+        "message": "Options defined"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defines used"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Local Build - no Defines used"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Local Build - no Cloud information"
     },
     "initialSetupNotOnline": {
         "message": "Server unavailable"

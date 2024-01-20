@@ -208,8 +208,7 @@ setup.initialize = function (callback) {
             // Firmware info
             msp_api_e = $('.api-version'),
             build_date_e = $('.build-date'),
-            build_info_e = $('.build-info'),
-            build_opt_e = $('.build-options');
+            build_info_e = $('.build-info');
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
@@ -422,30 +421,35 @@ setup.initialize = function (callback) {
             msp_api_e.text([FC.CONFIG.apiVersion]);
             build_date_e.text([FC.CONFIG.buildInfo]);
 
-            if (FC.CONFIG.buildKey.length === 32) {
-                const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
-                const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
-                                     <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
-                const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
-                                     <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></strong></span>`;
-                build_info_e.html(`${buildConfig} &nbsp &nbsp ${buildLog}`);
-                $('.build-info a').removeClass('disabled');
-            } else {
-                $('.build-info a').addClass('disabled');
-            }
-
-            if (FC.CONFIG.buildOptions.length) {
+            if (navigator.onLine) {
                 let buildOptions = "";
-                build_opt_e.text = "";
 
-                for (const buildOption of FC.CONFIG.buildOptions) {
-                    buildOptions = `${buildOptions} &nbsp ${buildOption}`;
+                if (FC.CONFIG.buildOptions.length) {
+                    let buildOptionList = "";
+
+                    for (const buildOptionElement of FC.CONFIG.buildOptions) {
+                        buildOptionList = `${buildOptionList} &nbsp ${buildOptionElement}`;
+                    }
+                    buildOptions = `<span class="buildInfoClassOptions"
+                                   title="${i18n.getMessage('initialSetupInfoBuildOptions')}:${buildOptionList}">
+                                   <strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></span>`;
                 }
-                build_opt_e.html(`<span class="buildInfoClassOptions" 
-                                  title="${i18n.getMessage('initialSetupInfoBuildOptions')}${buildOptions}">
-                                  <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></span>`);
+
+                if (FC.CONFIG.buildKey.length === 32) {
+                    const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+                    const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
+                                         <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
+                    const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
+                                         <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></strong></span>`;
+                    build_info_e.html(`${buildConfig} ${buildLog} &nbsp &nbsp ${buildOptions}`);
+                    $('.build-info a').removeClass('disabled');
+                } else {
+                    build_info_e.html(i18n.getMessage('initialSetupInfoBuildEmpty'));
+                    $('.build-info a').addClass('disabled');
+                }
             } else {
-                build_opt_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
+                build_info_e.html(i18n.getMessage('initialSetupNotOnline'));
+                $('.build-info a').addClass('disabled');
             }
         };
 
