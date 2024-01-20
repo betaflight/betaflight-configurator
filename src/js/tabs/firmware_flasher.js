@@ -90,6 +90,8 @@ firmware_flasher.initialize = function (callback) {
                 firmwareSize: self.parsed_hex.bytes_total,
                 firmwareName: filename,
                 firmwareSource: self.localFirmwareLoaded ? 'file' : 'http',
+                selectedTarget: self.targetDetail?.target,
+                selectedRelease: self.targetDetail?.release,
             });
         }
 
@@ -594,7 +596,7 @@ firmware_flasher.initialize = function (callback) {
                         baud = parseInt($('#flash_manual_baud_rate').val());
                     }
 
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', self.filename || null);
+                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', { filename: self.filename || null });
 
                     STM32.connect(port, baud, firmware, options);
                 } else {
@@ -602,7 +604,7 @@ firmware_flasher.initialize = function (callback) {
                     gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             } else {
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'DFU Flashing', self.filename || null);
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'DFU Flashing', { filename: self.filename || null });
 
                 STM32DFU.connect(usbDevices, firmware, options);
             }
@@ -1152,7 +1154,7 @@ firmware_flasher.initialize = function (callback) {
                                         return;
                                     }
 
-                                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'SaveFirmware', path);
+                                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'SaveFirmware', { path: path });
                                 };
 
                                 writer.write(blob);
