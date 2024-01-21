@@ -1607,6 +1607,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP2_SEND_DSHOT_COMMAND:
                 console.log('DSHOT command sent');
                 break;
+            case MSPCodes.MSP2_CLI:
+                const decoder = new TextDecoder();
+                console.log("CLI response: ");
+                console.log(decoder.decode(data));
+                break;
 
             case MSPCodes.MSP_MULTIPLE_MSP:
 
