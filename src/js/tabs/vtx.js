@@ -658,7 +658,7 @@ vtx.initialize = function (callback) {
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', { length: text.length });
                         console.log('Write VTX table lua file end');
                         gui_log(i18n.getMessage('vtxSavedLuaFileOk'));
                     };
@@ -709,7 +709,7 @@ vtx.initialize = function (callback) {
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', { length: text.length });
                         console.log(vtxConfig);
                         console.log('Write VTX file end');
                         gui_log(i18n.getMessage('vtxSavedFileOk'));

@@ -356,7 +356,7 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareType', FC.CONFIG.flightControllerIdentifier);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareType', { identifier: FC.CONFIG.flightControllerIdentifier });
 
                         const dialog = $('.dialogConnectWarning')[0];
 
@@ -372,7 +372,7 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareVersion', FC.CONFIG.apiVersion);
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareVersion', { apiVersion: FC.CONFIG.apiVersion });
 
                 const dialog = $('.dialogConnectWarning')[0];
 
