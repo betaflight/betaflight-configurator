@@ -172,9 +172,6 @@
     "tabLanding": {
         "message": "歡迎"
     },
-    "tabChangelog": {
-        "message": "更新日誌"
-    },
     "tabPrivacyPolicy": {
         "message": "隱私政策"
     },
@@ -518,9 +515,6 @@
     "defaultFacebookText": {
         "message": "我們還有一個<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\"> Facebook 小組</a>。<br />加入我們來一起討論 Betaflight，咨詢配置問題，或者只是和小夥伴們閒聊。"
     },
-    "defaultChangelogHead": {
-        "message": "配置程式 - 更新日誌"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "固件燒寫器"
     },
@@ -665,9 +659,6 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI："
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "禁止解鎖標誌："
@@ -2051,9 +2042,6 @@
     },
     "sensorsGyroTitle": {
         "message": "陀螺儀 - 度/秒"
-    },
-    "sensorsMagTitle": {
-        "message": "磁力計 - Ga"
     },
     "sensorsAltitudeTitle": {
         "message": "高度 -米"

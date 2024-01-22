@@ -210,9 +210,6 @@
     "tabLanding": {
         "message": "ようこそ"
     },
-    "tabChangelog": {
-        "message": "変更履歴"
-    },
     "tabPrivacyPolicy": {
         "message": "プライバシーポリシー"
     },
@@ -519,10 +516,10 @@
         "message": "<strong>アーミング有効</strong>"
     },
     "runawayTakeoffPreventionDisabled": {
-        "message": "<strong>暴走離陸防止機能を一時的に無効</strong>"
+        "message": "<strong>離陸時暴走防止機能を一時的に無効</strong>"
     },
     "runawayTakeoffPreventionEnabled": {
-        "message": "<strong>暴走離陸防止機能を有効</strong>"
+        "message": "<strong>離陸時暴走防止機能を有効</strong>"
     },
     "boardInfoReceived": {
         "message": "FCボード: <strong>$1</strong> バージョン: <strong>$2</strong>"
@@ -617,9 +614,6 @@
     },
     "statisticsDisclaimer": {
         "message": "Betaflight Configuratorは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
-    },
-    "defaultChangelogHead": {
-        "message": "Configurator - 変更履歴"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "ファームフラッシャー"
@@ -734,8 +728,8 @@
         "message": "リセット Z 軸、オフセット: $1 度"
     },
     "initialSetupHeading": {
-        "message": "ヘッディング:",
-        "description": "Heading shown on Setup tab"
+        "message": "ヨー:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "ミキサータイプ"
@@ -779,12 +773,22 @@
     "initialSetupMagHead": {
         "message": "コンパス"
     },
+    "initialSetupMagDeclination": {
+        "message": "コンパス偏角値:"
+    },
     "initialSetupInfoHead": {
         "message": "システム情報"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "ディスアーム時のFCフラグ、バッテリー情報、RSSIレベル、センサーのハードウェアを表示",
+        "message": "ディスアーム時のFCフラグ、バッテリー情報、RSSIレベルを表示",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "センサー情報"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "センサーのハードウェアを表示",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "バッテリー電圧:"
@@ -810,11 +814,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "ビルドに含まれていません",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "検出されませんでした",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "センサー:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "ジャイロ:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "加速度:"
+    },
+    "initialSetupSensorMag": {
+        "message": "コンパス:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "気圧:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "ソナー:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "レーダー:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "アーム無効フラグ:"
@@ -846,7 +879,7 @@
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
-        "message": "暴走離陸防止機能が実行されました",
+        "message": "離陸時暴走防止機能が実行されました",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
@@ -914,8 +947,12 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "RPMベースのフィルタリングは有効ですが、1つ以上のESCが有効なDSHOTテレメトリー情報を提供していません。ESCがDSHOT双方向テレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
+        "message": "RPMベースのフィルタリングは有効ですが、1つ以上の有効なESCのDSHOTテレメトリー情報を提供していません。ESCが双方向DSHOTテレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "DSHOTテレメトリーは有効ですが、1つ以上の有効なESCのDSHOTテレメトリー情報を提供していません。ESCが双方向DSHOTテレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "設定を変更するには再起動が必要です",
@@ -1238,6 +1275,9 @@
     "configurationArmingHelp": {
         "message": "アーミングオプションによっては、加速度センサーを有効にする必要があります"
     },
+    "configurationMagDeclination": {
+        "message": "コンパス偏角値 [deg]"
+    },
     "configurationReverseMotorSwitch": {
         "message": "モーター回転方向: リバース構成"
     },
@@ -1270,6 +1310,10 @@
     "configurationMotorPolesHelp": {
         "message": "極数はモーター外装[ベル] にある磁石の数を示します。巻線されているステーターをカウントしないでください。典型的な5インチモーターには通常14個の磁石が、3インチ以下のような小さいモーターには通常12個の磁石があります。",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
+    "configurationMotorIdleRpmHelp": {
+        "message": "現在有効な PIDプロファイルの動的アイドル値です。動的アイドル値がゼロに設定されているときは、静的なモーターアイドル値のみが適用されます。PIDチューニングタブで動的アイドル設定を変更します。",
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "最小スロットル値 (アーム時の最小ESC値)"
@@ -2045,7 +2089,7 @@
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ない状態です。これは機体制御が困難となる可能性があり、フライアウェイが発生する可能性があります。<b>『動的ジャイロローパス』または『ジャイロローパス 1』の少なくとも1つと『D値動的ローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
+        "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ない状態です。これは機体制御が困難となる可能性があり、飛行散逸 [フライアウェイ] が発生する可能性があります。<b>『動的ジャイロローパス』または『ジャイロローパス 1』の少なくとも1つと『D値動的ローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
     },
     "pidTuningSliderPidsMode": {
         "message": "モード:",
@@ -2055,7 +2099,7 @@
         "message": "<strong>PIDチューニング スライダーモード</strong><br><br>PIDチューニング スライダーモードは以下のように使用します: <br><br>&bull; OFF - スライダーを使用せず手動で値を入力<br>&bull; RP - スライダーはロールとピッチのみをコントロールし、ヨーの値は手動で入力<br>&bull; RPY - スライダーにてすべてのPID値をコントロール<br><br><span class=\"message-negative\"><b>警告:</b></span>RPモードからRPYモードに切り替えると、ヨーの設定がファームウェアのデフォルト値に上書きされます。"
     },
     "receiverHelp": {
-        "message": "&#8226; <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">フェイルセーフが正しく動作していることを常に確認してください！</a></strong></b>設定は『フェイルセーフ』タブにあり、Expertモードの有効が必要です。<br>&#8226; <b>最新の送信ファームウェアを使用してください！</b><br> &#8226; OpenTXまたはEdgeTXを使用している場合は、送信機の<strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">ハードウェア ADCフィルタを無効</a></strong>にします。<br>基本セットアップ:『受信機』設定を正しく行ってください。送信機の正しい『チャンネルマップ』を選択します。ロール、ピッチ、その他のスライダーグラフが正しく動作することを確認します。送信機のチャンネル始点・終点または範囲の値を1000以下、2000以上に調整し、中心点を1500に設定します。詳しくは<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">ドキュメント</a></strong>をご覧ください。"
+        "message": "&#8226; <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">フェイルセーフが正しく動作していることを常に確認してください！</a></strong></b>設定は『フェイルセーフ』タブにあり、Expertモードの有効が必要です。<br>&#8226; <b>最新の送信ファームウェアを使用してください！</b><br> &#8226; OpenTXまたはEdgeTXを使用している場合は、送信機の<strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">ハードウェア ADCフィルターを無効</a></strong>にします。<br>基本セットアップ:『受信機』設定を正しく行ってください。送信機の正しい『チャンネルマップ』を選択します。ロール、ピッチ、その他のスライダーグラフが正しく動作することを確認します。送信機のチャンネル始点・終点または範囲の値を1000以下、2000以上に調整し、中心点を1500に設定します。詳しくは<strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">ドキュメント</a></strong>をご覧ください。"
     },
     "receiverThrottleMid": {
         "message": "スロットルMID"
@@ -2122,6 +2166,22 @@
     },
     "receiverResetRefreshRateTitle": {
         "message": "リフレッシュレートをリセット"
+    },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
     },
     "receiverButtonSave": {
         "message": "保存"
@@ -2648,10 +2708,6 @@
     "gpsMapHead": {
         "message": "現在のGPS測位"
     },
-    "gpsMapHeadHelp": {
-        "message": "地図上にGPS位置を表示します。マウスのスクロールボタンで拡大・縮小できます。<br>コンパスが使用されている場合、位置アイコンは北の方位を示します。",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
     },
@@ -2680,7 +2736,7 @@
     },
     "gpsHeading": {
         "message": "ヘッディング方位 / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "速度:"
@@ -2851,10 +2907,10 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>モーターテストモード / アーミングでの注意:</strong><br />スライダーを動かすか、又は送信機から機体をアームした場合、モーターが<strong>回転</strong>します。<br />事故防止のために、この機能を使用する前に<strong class=\"message-negative\">すべてのプロペラ</strong>を取り外してください。<br />モーターテストモードを有効にする事により一時的に暴走離陸防止機能 [Runaway Takeoff Prevention] が無効になります。これはプロペラを外した状態でベンチテストする際に機体がディスアームするのを防止するためです。<br />"
+        "message": "<strong>モーターテストモード / アーミングでの注意:</strong><br />スライダーを動かすか、又は送信機から機体をアームした場合、モーターが<strong>回転</strong>します。<br />事故防止のために、この機能を使用する前に<strong class=\"message-negative\">すべてのプロペラ</strong>を取り外してください。<br />モーターテストモードを有効にする事により一時的に離陸時暴走防止機能 [Runaway Takeoff Prevention] が無効になります。これはプロペラを外した状態でベンチテストする際に機体がディスアームするのを防止するためです。<br />"
     },
     "motorsEnableControl": {
-        "message": "<strong>リスクを認識し</strong>、プロペラはすべて外しました - モーター制御とアーミングを可能にし、暴走離陸防止機能を無効にします。"
+        "message": "<strong>リスクを認識し</strong>、プロペラはすべて外しました - モーター制御とアーミングを可能にし、離陸時暴走防止機能を無効にします。"
     },
     "motorsDialogMixerReset": {
         "message": "<strong>ミキサーモードの問題を検出</strong><br /><br /> {{mixerName}} モデルは<strong class=\"message-positive\">{{mixerMotors}}</strong> モーターリソースを必要とし、ファームウェアの現在の構成では、選択されたモードに対して <strong class=\"message-positive\">{{outputs}}</strong> 個の使用可能な出力を提供します。<br /><br />カスタムミキサーモードを使用している場合は、ミキサーモードを変更する前にカスタムミキサーを定義する必要があります。<br /><br />構成を確認し、必要なモーターリソースを追加してください。"
@@ -2890,7 +2946,7 @@
         "message": "<strong>注意事項</strong><br /><strong class=\"message-negative\">怪我を防止するために、すべてのプロペラを取り外してください！</strong><br />モーターが<strong>回転します！</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくはこちらの<a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
+        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくはこちらの<a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
     },
     "motorsRemapDialogSave": {
         "message": "保存"
@@ -3013,7 +3069,7 @@
         "message": "加速度センサー -g (度)"
     },
     "sensorsMagTitle": {
-        "message": "コンパス - Ga"
+        "message": "コンパス"
     },
     "sensorsAltitudeTitle": {
         "message": "高度 - メートル"
@@ -3219,9 +3275,6 @@
     "sdcardStatusUnknown": {
         "message": "不明な状態 $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "コミットを選択"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "リリースおよびビルド情報"
     },
@@ -3244,7 +3297,8 @@
         "message": "ターゲット:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Betaflight Wikiにてターゲットに関するより多くの情報を取得します (WikiのURLは 統一ターゲット設定内にあります)"
+        "message": "Betaflight Wiki で対象の詳細情報を取得",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3269,12 +3323,6 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "成功しました"
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": "タイムアウトしました (再試行してください)"
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": "失敗しました (ログを確認してください)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手動でダウンロードしてください。"
@@ -3506,7 +3554,7 @@
         "message": "適切なファームウェアを選択するためにボード情報を照会する"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "<strong>開発ビルド版ファームウェア</strong>をフラッシュしようとしています。これらのビルドは開発作業中のものであり、次のいずれかが当てはまる場合があります:<strong><ul><li>ファームウェアがまったく機能しない場合;</li><li>ファームウェアが飛行不能な場合;</li><li>フライアウェイなど、ファームウェアに安全性の問題がある場合;</li><li>ファームウェアが原因で、フライトコントローラが応答しなくなったり、破損したりする可能性がある場合</li></ul></strong>このファームウェアのフラッシュを続行する場合は、<strong>上記のいずれかのリスクに対して自己責任を負うこととなります。</strong>さらにこのファームウェアを飛ばす前に、<strong>プロペラを外し徹底的なベンチテストを実行する</strong>必要があることを周知してください。"
+        "message": "<strong>開発ビルド版ファームウェア</strong>をフラッシュしようとしています。これらのビルドは開発作業中のものであり、次のいずれかが当てはまる場合があります:<strong><ul><li>ファームウェアがまったく機能しない場合;</li><li>ファームウェアが飛行不能な場合;</li><li>飛行散逸 [フライアウェイ] など、ファームウェアに安全性の問題がある場合;</li><li>ファームウェアが原因で、フライトコントローラが応答しなくなったり、破損したりする可能性がある場合</li></ul></strong>このファームウェアのフラッシュを続行する場合は、<strong>上記のいずれかのリスクに対して自己責任を負うこととなります。</strong>さらにこのファームウェアを飛ばす前に、<strong>プロペラを外し徹底的なベンチテストを実行する</strong>必要があることを周知してください。"
     },
     "unstableFirmwareAcknowledgement": {
         "message": "上記を確認し、<strong>自己責任において</strong>未検証ファームウェアをフラッシュします"
@@ -3982,7 +4030,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "ジャイロ ローパスフィルターのカットオフを変更します。<br /><br />スライダーを左側に動かすと、ジャイロのフィルタリングが強くなります。(カットオフ周波数が低くなります) <br /><br />スライダーを右側に動かすと、ジャイロのフィルタリングが弱くなります。(カットオフ周波数が高くなります) <br /><br />スライダーを右側に動かしてプロップウォッシュの挙動を向上させる場合、あまり過激な状態とならないように注意してください。 P値、D値ともにノイズが多くなり、フライアウェイやモーター焼損が発生する場合があります。<br /><br />フレーム共振問題、ベアリングの不良、プロペラ劣化、モーターの発熱などがある場合は、スライダーを左側に移動させる必要があります。<br /><br />ジャイロフィルタリングは、D値フィルタリングの前、または付加され適用されます。",
+        "message": "ジャイロ ローパスフィルターのカットオフを変更します。<br /><br />スライダーを左側に動かすと、ジャイロのフィルタリングが強くなります。(カットオフ周波数が低くなります) <br /><br />スライダーを右側に動かすと、ジャイロのフィルタリングが弱くなります。(カットオフ周波数が高くなります) <br /><br />スライダーを右側に動かしてプロップウォッシュの挙動を向上させる場合、あまり過激な状態とならないように注意してください。 P値、D値ともにノイズが多くなり、飛行散逸 [フライアウェイ] やモーター焼損が発生する場合があります。<br /><br />フレーム共振問題、ベアリングの不良、プロペラ劣化、モーターの発熱などがある場合は、スライダーを左側に移動させる必要があります。<br /><br />ジャイロフィルタリングは、D値フィルタリングの前、または付加され適用されます。",
         "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningGyroSliderEnabled": {
@@ -4006,7 +4054,7 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">警告:</span> 現在のスライダー位置は、フライアウェイやモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
+        "message": "<span class=\"message-negative\">警告:</span> 現在のスライダー位置は、飛行散逸 [フライアウェイ] やモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -4278,7 +4326,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br /><br /><b><span class=\"message-positive\">重要:</span> ESCは双方向DShotプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
+        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br /><br /><b><span class=\"message-positive\">重要:</span> ESCは双方向DSHOTプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -4304,7 +4352,7 @@
         "message": "D値 ローパス1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "2つのD値 ローパスフィルターのうち、1つ目のフィルタとなります。<br /><br />動的モードでは、低スロットル時にフィルタリングが強くなり、スロットルが大きくなるとフィルタリングが弱くなり遅延も少なくなります。これにより、アーミング時のモーターグラインドや予期せぬフライアウェイを抑制し、離陸後の遅延やプロップウォッシュを低減することができます。D値 ローパスExpoの値が高いほど、スロットルを大きくしたときにカットオフ低値からカットオフ高値への遷移が速くなります。<br /><br />静的モードではカットオフ周波数が固定されます。D値フィルタリングには推奨できません。<br /><br />フィルタータイプのデフォルト値はPT1ですが、一部のユーザはここで動的BIQUADフィルターを1つだけ使用し、2つ目のPT1フィルターを使用しない場合があります。<br /><br />D値フィルタリングが少なくなるような変更は、モーター発熱やアーミング時のフライアウェイが深刻化する場合があります。",
+        "message": "2つのD値 ローパスフィルターのうち、1つ目のフィルタとなります。<br /><br />動的モードでは、低スロットル時にフィルタリングが強くなり、スロットルが大きくなるとフィルタリングが弱くなり遅延も少なくなります。これにより、アーミング時のモーターグラインドや予期せぬ飛行散逸 [フライアウェイ] を抑制し、離陸後の遅延やプロップウォッシュを低減することができます。D値 ローパスExpoの値が高いほど、スロットルを大きくしたときにカットオフ低値からカットオフ高値への遷移が速くなります。<br /><br />静的モードではカットオフ周波数が固定されます。D値フィルタリングには推奨できません。<br /><br />フィルタータイプのデフォルト値はPT1ですが、一部のユーザはここで動的BIQUADフィルターを1つだけ使用し、2つ目のPT1フィルターを使用しない場合があります。<br /><br />D値フィルタリングが少なくなるような変更は、モーター発熱やアーミング時のフライアウェイが深刻化する場合があります。",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpassMode": {
@@ -4314,7 +4362,7 @@
         "message": "D値 ローパス2"
     },
     "pidTuningDTermLowpass2Help": {
-        "message": "2つのD値 ローパスフィルターのうちの2つ目のフィルターとなります。<br /><br />このフィルターは常に静的 (固定カットオフ) モードです。 D値フィルタリングには，少なくとも 2 つのPT1ローパスフィルター，または 単一の2次フィルターが必要です。<br /><br />通常、このカットオフ値は動的ローパス1の範囲の中で高値に設定されます。これにより、その周波数以上の2次ノイズを制御することができます。<br /><br />D値フィルタリングが少なくなるような変更では、モーター発熱やアーミング時のフライアウェイが深刻化する場合があります。",
+        "message": "2つのD値 ローパスフィルターのうちの2つ目のフィルターとなります。<br /><br />このフィルターは常に静的 (固定カットオフ) モードです。 D値フィルタリングには，少なくとも 2 つのPT1ローパスフィルター，または 単一の2次フィルターが必要です。<br /><br />通常、このカットオフ値は動的ローパス1の範囲の中で高値に設定されます。これにより、その周波数以上の2次ノイズを制御することができます。<br /><br />D値フィルタリングが少なくなるような変更では、モーター発熱やアーミング時の飛行散逸 [フライアウェイ] が深刻化する場合があります。",
         "description": "Help icon for the DTerm Lowpass 2 Filter"
     },
     "pidTuningDTermLowpassFiltersGroup": {
@@ -4441,7 +4489,7 @@
         "message": "動的アイドル値 [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
+        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dshotテレメトリーがオフのため動的アイドルは無効となります"
@@ -4456,7 +4504,7 @@
         "message": "統合ヨー制御"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">注意</span>: この機能を有効にした場合は、それに応じてヨーのPIDを調整する必要があります。詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>"
+        "message": "<span class=\"message-negative\">注意</span>: この機能を有効にした場合は、それに応じてヨーのPIDを調整する必要があります。詳しくは<a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "統合ヨー制御は、ヨーP、I、Dの値を統合し、ピッチとロールを調整するのと同じようにヨーのP、I、D値を調整することができます。<br><br>統合されたP値はI値のように、統合されたD値はP値のように作用するため、I値はほとんど必要がなくなります。<br><br>備考: 統合ヨー制御ではI値が必要ないため、アブソリュート コントロールを使用する必要があります。"
@@ -4616,7 +4664,7 @@
         "message": "GPS 衛星捕捉数 最小値"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "修正せずアーム許可 - <span class=\"message-negative\">警告: 修正なし = フェイルセーフ発動によりアームできません！</span>"
+        "message": "修正をせずにアームを許可 - <span class=\"message-negative\">警告: 修正なし = 通常フェイルセーフ発動によりアームできません！</span>"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
         "message": "推奨されません。ホームポイントを設定せずにアームが許可されますが、実際RX LOSSによるフェイルセーフとなった場合は機体がディスアームして墜落してしまいます。スイッチでテストする場合は、ディスアーム前に短い可動停止時間があります。"
@@ -5362,8 +5410,8 @@
         "message": "GPSラップタイム ベスト3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "GPSラップタイム ベスト"
+    "osdDescElementLapTimeBest3": {
+        "message": "GPSラップタイム ベスト3"
     },
     "osdTextElementCraftName": {
         "message": "機体名",
@@ -6130,6 +6178,10 @@
         "message": "高度",
         "description": "Text of the altitude alarm"
     },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "リンク品質",
+        "description": "Text of the link quality alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "アーム無効",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6293,7 +6345,7 @@
         "message": "保存しました"
     },
     "vtxHelp": {
-        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">こちらのページ</a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">こちら</a>を参照)",
+        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">こちらのページ</a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">こちら</a>を参照)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6605,7 +6657,7 @@
         "message": "モーターPWM 周波数"
     },
     "configurationDshotBidir": {
-        "message": "双方向DShot (ESCファームウェアサポートが必要)",
+        "message": "双方向DSHOT (ESCファームウェアサポートが必要)",
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
@@ -7186,6 +7238,9 @@
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "このビルドに含まれるテレメトリープロトコルを選択します。これはドロップダウン操作となりますが、1つの項目しか選択できませんのでご注意ください。またCRSFなど、選択した送信プロトコルに関係なく有効となるテレメトリープロトコルもあります。"
     },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "自動的に付帯"
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "このビルドに含まれる一般的なオプションを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。AKK VTXのような修正項目はこちらに含まれます。"
     },
@@ -7210,5 +7265,9 @@
     "showDevToolsOnStartup": {
         "message": "開発者向けツールを自動的に開く",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

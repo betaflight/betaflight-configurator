@@ -210,9 +210,6 @@
     "tabLanding": {
         "message": "Bem-vindo"
     },
-    "tabChangelog": {
-        "message": "Histórico de alterações"
-    },
     "tabPrivacyPolicy": {
         "message": "Política de Privacidade"
     },
@@ -618,9 +615,6 @@
     "statisticsDisclaimer": {
         "message": "O Configurador Betaflight coleta estatísticas de uso anônimas. Por exemplo, estes dados incluem (mas não estão limitados a) a quantidade de aberturas, região geográfica dos usuários, tipos de controladores de voo, versões de firmware, uso de elementos e guias de interface do usuário, etc. O resumo destes dados é aberto e compartilhado <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>. A coleta é feita para entender melhor como o Configurador Betaflight está sendo usado, para entender as tendências da comunidade e para possíveis melhorias na interface. Os usuários podem optar por não enviar os dados coletados na aba Opções."
     },
-    "defaultChangelogHead": {
-        "message": "Configurador - Novidades"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Atualizador de firmware"
     },
@@ -733,10 +727,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Redefinir eixo Z, offset: $1 graus"
     },
-    "initialSetupHeading": {
-        "message": "Direção:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Tipo de Mixer"
     },
@@ -782,10 +772,6 @@
     "initialSetupInfoHead": {
         "message": "Informações do sistema"
     },
-    "initialSetupInfoHeadHelp": {
-        "message": "Mostra sinalizadores FC para desarmar, informações da bateria, nível RSSI e hardware dos sensores",
-        "description": "Message that pops up to describe the System info section"
-    },
     "initialSetupBattery": {
         "message": "Voltagem da bateria:"
     },
@@ -812,9 +798,6 @@
     },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Armar bloqueado. Indicadores:"
@@ -2550,10 +2533,6 @@
     "gpsMapHead": {
         "message": "Localização GPS atual"
     },
-    "gpsMapHeadHelp": {
-        "message": "Mostra a localização do GPS no mapa. Use a roda do mouse para aumentar ou diminuir o zoom.<br>O ícone de localização mostra a direção norte quando o magnetômetro está em uso",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Verifique sua conexão com a internet"
     },
@@ -2770,9 +2749,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Aviso de segurança</strong><br /><strong class=\"message-negative\">Remova todas as hélices para evitar ferimentos!</strong><br />Os motores irão <strong>girar!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Aviso</strong><br />Os motores irão girar um a um e você poderá selecionar qual o motor que está girando. A bateria deve estar conectada, o protocolo ESC correto deve estar selecionado. Este utilitário só pode reordenar os motores atualmente ativos. Um mapeamento mais complexo requer configurações pela Linha de Comandos (CLI). Consulte esta <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Salvar"
     },
@@ -2892,9 +2868,6 @@
     },
     "sensorsAccelTitle": {
         "message": "Acelerômetro - g (graus)"
-    },
-    "sensorsMagTitle": {
-        "message": "Magnetômetro - Ga"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitude - metros"
@@ -3100,9 +3073,6 @@
     "sdcardStatusUnknown": {
         "message": "Estado desconhecido $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "Selecionar commit"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informações de build e release"
     },
@@ -3123,9 +3093,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Destino:"
-    },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtenha mais informações sobre o destino na wiki do Betaflight (a URL da wiki pode ser encontrada na configuração do destino unificado)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3150,12 +3117,6 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "sucesso"
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": "tempo esgotado (tente novamente)"
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": "falhou (por favor, verifique o log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Baixar manualmente."
@@ -3303,9 +3264,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperação / Comunicação perdida</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Se você perdeu a comunicação com sua placa, siga estas instruções para restaurar a comunicação: <ul><li>Desligue a placa</li><li>Ative a opção 'Sem sequencia de reinicialização' e 'Formatar chip'.</li><li> Conecte os pinos BOOT ou segure o botão BOOT.</li><li>Ligue a placa (O LED de atividade NÃO irá piscar se realizado corretamente).</li><li>Instale todos os drivers STM32 e Zadig se necessário (veja a sessão <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> do manual do Betaflight).</li><li>Feche o Configurador, reinicie o Configurador.</li><li>Solte o botão BOOT se seu FC tem um.</li><li>Atualize o Firmware correto (usando o Baud rate manual se especificado no manual do seu FC).</li><li>Desligue a placa.</li><li>Desconecte os pinos do BOOT.</li><li>Ligue a placa (O LED de atividade deve piscar).</li><li>Conecte normalmente.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Sair do atualizador de Firmware"
@@ -4307,9 +4265,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">CUIDADO</span>: Ao habilitar esta função, você deve ajustar o PID do YAW de acordo. Mais informações <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>"
-    },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra os valores dos termos P, I e D do yaw, permitindo que sejam configurados da mesma maneira de como se configura o PID do pitch e roll.<br><br>É necessário muito pouco I, porque o P integrado atua como I, e o D integrado atua como P.<br><br>NOTA: O Yaw Integrado requer o uso de Controle Absoluto, uma vez que nenhum I é necessário com Yaw Integrado."
     },
@@ -5102,9 +5057,6 @@
     "osdTextElementLapTimeBest3": {
         "message": "Tempo GPS da melhor das 3 voltas",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementLapTimeBest": {
-        "message": "Melhor tempo de volta GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nome da aeronave",
@@ -6011,10 +5963,6 @@
     },
     "osdButtonSaved": {
         "message": "Salvo"
-    },
-    "vtxHelp": {
-        "message": "Aqui é possível configurar os valores para o seu transmissor de vídeo (VTX). É possível visualizar e alterar os valores de transmissão, incluindo as tabelas do VTX, se o controlador e o VTX tiverem suporte.<br>Para configurar seu VTX, siga os seguintes passos:<br>1. Vá até <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">esta página</a><br>2. Encontre o arquivo de configuração apropriado para o seu país e modelo de VTX e faça o download.<br>3. Clique no botão '$t(vtxButtonLoadFile.message)' abaixo, selecione o arquivo de configuração do VTX e carregue<br>4. Verifique que as configurações estão corretas<br>5. Clique no botão '$t(vtxButtonSave.message)' para salvar as configurações do VTX em sua controladora de voo (FC).<br>6. Opcional: Clique em '$t(vtxButtonSaveLua.message)' para salvar as configurações em um arquivo lua que você pode utilizar com os scripts lua do betaflight (Veja mais informações <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aqui</a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atenção:</span> O VTX não está configurado ou não é compatível. Não é possível modificar os valores por aqui. Isto somente é possível se o controlador de voo está conectado ao VTX utilizando um protocolo como Tramp ou SmartAudio e está corretamente configurado na aba $t(tabPorts.message).",

@@ -190,7 +190,7 @@
         "description": "Don't translate!!!"
     },
     "language_pl": {
-        "message": "polski",
+        "message": "Polski",
         "description": "Don't translate!!!"
     },
     "language_ru": {
@@ -289,9 +289,6 @@
     },
     "tabLanding": {
         "message": "Welcome"
-    },
-    "tabChangelog": {
-        "message": "Changelog"
     },
     "tabPrivacyPolicy": {
         "message": "Privacy Policy"
@@ -702,9 +699,6 @@
     "statisticsDisclaimer": {
         "message": "Betaflight Configurator collects anonymous usage statistics. For example, this data includes (but is not limited to) the number of launches, geographical region of the users, types of flight controllers, firmware versions, usage of UI elements and tabs, etc. The summary of this data is shared <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>. Collection is done in order to better understand how Betaflight Configurator is being used, to understand community trends, and for possible UI improvements. Users can opt-out of data collection in the Options tab."
     },
-    "defaultChangelogHead": {
-        "message": "Configurator - Changelog"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
@@ -818,8 +812,8 @@
         "message": "Reset Z axis, offset: $1 deg"
     },
     "initialSetupHeading": {
-        "message": "Heading:",
-        "description": "Heading shown on Setup tab"
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Mixer Type"
@@ -863,12 +857,22 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
+    "initialSetupMagDeclination": {
+        "message": "Mag Declination:"
+    },
     "initialSetupInfoHead": {
         "message": "System info"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Shows FC flags for disarming, Battery information, RSSI level and Sensors hardware",
+        "message": "Shows FC flags for disarming, Battery information, RSSI level.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Sensor info"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Shows sensors hardware",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Battery voltage:"
@@ -894,11 +898,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Not included in build",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Not detected",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensors:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Gyro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Accel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Arming Disable Flags:"
@@ -1000,6 +1033,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "RPM-based filtering is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Dshot telemetry is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "A configuration change requires a reboot",
@@ -1322,6 +1359,9 @@
     "configurationArmingHelp": {
         "message": "Some Arming options may require accelerometer be enabled"
     },
+    "configurationMagDeclination": {
+        "message": "Magnetometer Declination [deg]"
+    },
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"
     },
@@ -1357,7 +1397,7 @@
     },
     "configurationMotorIdleRpmHelp" : {
         "message": "This is the dynamic idle value from the active PID profile. When Dynamic Idle is set to zero, only static motor idle will apply. Change the Dynamic Idle settings on the PID tuning tab.",
-        "description": "Help text for dynamic idle setting" 
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Minimum Throttle (Lowest ESC value when armed)"
@@ -2764,10 +2804,6 @@
     "gpsMapHead": {
         "message": "Current GPS location"
     },
-    "gpsMapHeadHelp": {
-        "message": "Show GPS location on the map. Use mouse scroll button to zoom in and out.<br>The location icon shows the north direction when the magnetometer is in use",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
     },
@@ -2795,8 +2831,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Heading Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "Heading IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Speed:"
@@ -3006,7 +3042,7 @@
         "message": "<strong>Safety notice</strong><br /><strong class=\"message-negative\">Remove all propellers to prevent injury!</strong><br />The motors will <strong>spin up!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Information notice</strong><br />Motors will spin up one by one and you will be able to select which motor is spinning. The battery should be plugged in, correct ESC protocol should be selected. This utility can only re-arrange currently active motors. More complex re-mapping requires the CLI Resource command. Refer to this <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
+        "message": "<strong>Information notice</strong><br />Motors will spin up one by one and you will be able to select which motor is spinning. The battery should be plugged in, correct ESC protocol should be selected. This utility can only re-arrange currently active motors. More complex re-mapping requires the CLI Resource command. Refer to this <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Save"
@@ -3336,7 +3372,7 @@
         "message": "Unknown state $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Select commit"
+        "message": "Select Pull Request or Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release and Build info"
@@ -3360,7 +3396,8 @@
         "message": "Target:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Get more information about target at Betaflight wiki (wiki url found in unified target configuration)"
+        "message": "Get more information about the target on the Betaflight Wiki",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3386,10 +3423,16 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "success"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancelled"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "timed out (please retry)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "build request error (please check build configuration, e.g. custom defines)"
+    },
+    "firmwareFlasherCloudBuildFail": {
         "message": "failed (please check log)"
     },
     "firmwareFlasherReleaseFileUrl": {
@@ -3540,7 +3583,7 @@
         "message": "<strong>Recovery / Lost communication</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close configurator, Restart Configurator.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+        "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close configurator, Restart Configurator.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
@@ -4558,7 +4601,7 @@
         "message": "Dynamic Idle Value [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle is DISABLED because Dshot Telemetry is OFF"
@@ -4573,7 +4616,7 @@
         "message": "Integrated Yaw"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">CAUTION</span>: if you enable this feature, you must adjust the YAW PID accordingly. More info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>"
+        "message": "<span class=\"message-negative\">CAUTION</span>: if you enable this feature, you must adjust the YAW PID accordingly. More info <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integrates yaw P, I and D values, allowing yaw P, I and D to be tuned a bit like you'd tune pitch and roll.<br><br>Very little I is required, because the integrated P acts like I, and integrated D acts like P.<br><br>NOTE: Integrated Yaw requires use of Absolute Control, since no I is needed with Integrated Yaw."
@@ -5480,8 +5523,8 @@
         "message": "GPS lap time best 3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Best GPS lap time"
+    "osdDescElementLapTimeBest3": {
+        "message": "Best 3 GPS lap times"
     },
     "osdTextElementCraftName": {
         "message": "Craft name",
@@ -5717,7 +5760,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "Temperature reported by ESC telemetry"
+        "message": "Temperature reported by ESC telemetry, either by serial one wire telemetry, or by DShot bidirectional telemetry with EDT, if supported by your ESC firmware."
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
@@ -6248,6 +6291,10 @@
       "message": "Altitude",
       "description": "Text of the altitude alarm"
     },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Link Quality",
+        "description": "Text of the link quality alarm"
+      },
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6412,7 +6459,7 @@
         "message": "Saved"
     },
     "vtxHelp": {
-        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
+        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -7305,6 +7352,9 @@
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Select the telemetry protocol you would like included in this build. Note this is a drop down, but only one item maybe selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
     },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Automatically Included"
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items maybe selected. Such items as fixes, e.g. AKK VTX, are included here."
     },
@@ -7329,5 +7379,9 @@
     "showDevToolsOnStartup": {
         "message": "Automatically open DevTools in development mode",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

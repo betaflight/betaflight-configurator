@@ -1,3 +1,11 @@
+@import 'ol/ol.css';
+
+#map {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
 .tab-gps {
 	.GPS_signal_strength {
 		table {
@@ -44,6 +52,18 @@
 		font-size: 11px;
 		.line {
 			clear: left;
+		}
+		input {
+			float: left;
+			width: 90px;
+			height: 20px;
+			margin: 0 10px 5px 0;
+			padding-left: 5px;
+			padding-right: 5px;
+			border: 1px solid var(--subtleAccent);
+			border-radius: 3px;
+			background: var(--boxBackground);
+			color: var(--defaultText);
 		}
 		select {
 			float: left;
@@ -160,13 +180,11 @@
 			border-bottom-left-radius: 3px;
 			border-bottom-right-radius: 3px;
 			background-color: #D1D1D1;
-			a {
+			button {
 				background-color: white;
 				border-radius: 4px;
 				border: 1px var(--subtleAccent) solid;
 				color: grey;
-				height: 10px;
-				width: 10px;
 				text-align: center;
 				font-size: 20px;
 				line-height: 10px;

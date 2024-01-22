@@ -28,7 +28,6 @@ class GuiControl {
 
         this.defaultAllowedTabsWhenDisconnected = [
             'landing',
-            'changelog',
             'firmware_flasher',
             'privacy_policy',
             'options',
@@ -311,10 +310,11 @@ class GuiControl {
 
         this.switchery();
 
-        const documentationButton = $('div#content #button-documentation');
         const tRex = GUI.active_tab.replaceAll('_', '-').toLowerCase();
 
-        documentationButton.html("Wiki").attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
+        $('div#content #button-documentation')
+        .html(i18n.getMessage('betaflightSupportButton'))
+        .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
 
         // loading tooltip
         $(function () {
@@ -355,7 +355,7 @@ class GuiControl {
     }
     selectDefaultTabWhenConnected() {
         const result = getConfig(['rememberLastTab', 'lastTab']);
-        const tab = result.rememberLastTab && result.lastTab ? result.lastTab : 'tab_setup';
+        const tab = result.rememberLastTab && result.lastTab && this.allowedTabs.includes(result.lastTab.substring(4)) ? result.lastTab : 'tab_setup';
 
         $(`#tabs ul.mode-connected .${tab} a`).trigger('click');
     }

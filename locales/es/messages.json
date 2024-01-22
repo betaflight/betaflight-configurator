@@ -210,9 +210,6 @@
     "tabLanding": {
         "message": "Bienvenido"
     },
-    "tabChangelog": {
-        "message": "Novedades"
-    },
     "tabPrivacyPolicy": {
         "message": "Política de Privacidad"
     },
@@ -618,9 +615,6 @@
     "statisticsDisclaimer": {
         "message": "Betaflight Configurator recopila estadísticas de uso anónimas. Por ejemplo, estos datos incluyen (pero no se limitan a) el número de ejecuciones, la región geográfica de los usuarios, tipos de controladores de vuelo, versiones de firmware, uso de elementos y pestañas, etc. El resumen de estos datos se comparte <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>. La recolección se hace para entender mejor cómo se utiliza el Configurador Betaflight, para entender las tendencias de la comunidad, y para posibles mejoras en la interfaz de usuario. Los usuarios pueden dejar de recolectar datos en la pestaña Opciones."
     },
-    "defaultChangelogHead": {
-        "message": "Configurator - Novedades"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Instalar Firmware"
     },
@@ -734,8 +728,8 @@
         "message": "Reiniciar eje Z, desplazamiento: $1 grad"
     },
     "initialSetupHeading": {
-        "message": "Rumbo:",
-        "description": "Heading shown on Setup tab"
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Tipo Mezclador"
@@ -779,12 +773,22 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
+    "initialSetupMagDeclination": {
+        "message": "Declinación Mag:"
+    },
     "initialSetupInfoHead": {
         "message": "Información del sistema"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Muestra motivos de desarme del FC, información de batería, nivel RSSI y sensores de hardware",
+        "message": "Muestra banderas de desarme del FC, información de batería, nivel RSSI.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Información del sensor"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Muestra sensores hardware",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Voltaje batería:"
@@ -810,11 +814,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "No incluido en la compilación",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "No detectado",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Giro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Acel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Banderas Armado Desactivado:"
@@ -916,6 +949,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "El filtro basado en RPM está activado pero uno o más ESCs no están proporcionando telemetría DSHOT válida. Comprueba que los ESCs son compatibles y tienen el firmware necesario instalado para soportar telemetría bidireccional DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "La telemetría Dshot está activada, pero uno o más ESC no están suministrando telemetría DSHOT válida. Comprueba que los ESC son capaces y tienen el firmware necesario instalado para soportar la telemetría bidireccional DSHOT.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un cambio en la configuración requiere reiniciar",
@@ -1238,6 +1275,9 @@
     "configurationArmingHelp": {
         "message": "Algunas opciones de Armado pueden requerir que el acelerómetro esté activado"
     },
+    "configurationMagDeclination": {
+        "message": "Declinación del magnetómetro [grad]"
+    },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de los motores invertida"
     },
@@ -1270,6 +1310,10 @@
     "configurationMotorPolesHelp": {
         "message": "El número de polos es el número de imanes que contiene la campana del motor. NO cuentes los estátor que están situados donde los bobinados. Habitualmente los motores de 5\" tienen 15 imanes, los más pequeños como 3\" o menos suelen tener 12 imanes.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Este es el valor de ralentí dinámico del perfil PID activo actualmente. Cuando el ralentí dinámico tiene valor cero, sólo se aplicará el ralentí estático del motor. Puedes cambiar la configuración del ralentí dinámico en la pestaña de ajuste del PID.",
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Acelerador Mínimo (valor más bajo de ESC al estar armado)"
@@ -2123,6 +2167,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Reiniciar tasa de refresco"
     },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Guardar"
     },
@@ -2616,6 +2676,13 @@
     "servosAngleAtMax": {
         "message": "Ángulo al máx"
     },
+    "servosRateAndDirection": {
+        "message": "Tasa y dirección"
+    },
+    "servosRate": {
+        "message": "Tasa:",
+        "description": "Label for 'Rate:' direction"
+    },
     "servosLiveMode": {
         "message": "Activar modo en vivo"
     },
@@ -2640,10 +2707,6 @@
     },
     "gpsMapHead": {
         "message": "Localización GPS actual"
-    },
-    "gpsMapHeadHelp": {
-        "message": "Muestra ubicación GPS en el mapa. Utiliza la rueda de desplazamiento del ratón para acercar o alejar el zoom.<br>El icono de la ubicación muestra la dirección norte cuando el magnetómetro está en uso",
-        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Por favor verifica tu conexión a internet"
@@ -2672,8 +2735,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Rumbo Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "Rumbo IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocidad:"
@@ -2883,7 +2946,7 @@
         "message": "<strong>Aviso de seguridad</strong><br /><strong class=\"message-negative\">¡Quita todas las hélices para evitar lesiones!</strong><br />¡Los motores <strong>van a girar!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Aviso informativo</strong><br />Los motores van a girar uno a uno y podrás seleccionar que motor está girando. La batería debe estar conectada, y el protocolo ESC correcto debe estar seleccionado. Esta utilidad sólo puede reordenar los motores actualmente activos. Un mapeo más complejo necesita el comando Resource en CLI. Consulta esta <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">página de la Wiki</a>."
+        "message": "<strong>Aviso informativo</strong><br />Los motores van a girar uno a uno y podrás seleccionar que motor está girando. La batería debe estar conectada, y el protocolo ESC correcto debe estar seleccionado. Esta utilidad sólo puede reordenar los motores actualmente activos. Un mapeo más complejo necesita el comando Resource en CLI. Consulta esta <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">página de la Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Guardar"
@@ -3006,7 +3069,7 @@
         "message": "Acelerómetro - g (grad)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetómetro - Ga"
+        "message": "Magnetómetro"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitud - metros"
@@ -3213,7 +3276,7 @@
         "message": "Estado desconocido $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Seleccionar commit"
+        "message": "Selecciona Pull Request o Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Lanzamiento e información de compilación"
@@ -3237,7 +3300,8 @@
         "message": "Placa:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obtén más información sobre la placa en la wiki de Betaflight (la URL de la wiki se encuentra en la configuración de placas unificadas)"
+        "message": "Obtén más información sobre la placa en la Wiki de Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3263,10 +3327,16 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "éxito"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancelado"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "tiempo agotado (vuelve a intentarlo)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "error en la petición de compilación (por favor, comprueba la configuración de compilación, por ejemplo, defines personalizados)"
+    },
+    "firmwareFlasherCloudBuildFail": {
         "message": "error (revisa el registro)"
     },
     "firmwareFlasherReleaseFileUrl": {
@@ -4434,7 +4504,10 @@
         "message": "Valor de Ralentí Dinámico [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Ralentí Dinámico mejora el control a bajas rpm y reduce el riesgo de desincronización del motor. <br /><br /> Mejora la autoridad del PID, la estabilidad con el acelerador a cero, el tiempo invertido y el freno del motor.<br /><br />Las rpm mínimas para el Ralentí Dinámico deben establecerse en unos 3000 - 3500 rpm. <br /><br />Visita <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki</a> para más información."
+        "message": "Ralentí Dinámico mejora el control a bajas rpm y reduce el riesgo de desincronización del motor. <br /><br /> Mejora la autoridad del PID, la estabilidad con el acelerador a cero, el tiempo invertido y el freno del motor.<br /><br />Las rpm mínimas para el Ralentí Dinámico deben establecerse en unos 3000 - 3500 rpm. <br /><br />Visita <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki</a> para más información."
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "Ralentí Dinámico está DESACTIVADO porque la Telemetría Dshot está APAGADA"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Ángulo Límite para Entrenador Acro"
@@ -4446,7 +4519,7 @@
         "message": "Yaw Integrado"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATENCIÓN</span>: si activas esta funcionalidad, debes ajustar el PID del YAW en consecuencia. Más información <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>"
+        "message": "<span class=\"message-negative\">ATENCIÓN</span>: si activas esta funcionalidad, debes ajustar el PID del YAW en consecuencia. Más información <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra valores P, I y D del yaw, permitiendo que P, I y D de yaw se ajusten del mismo modo que se hace con el pitch y el roll.<br><br>Se necesita muy poca I, porque la P integrada actúa como I, y la D integrada actúa como P.<br><br>NOTA: Yaw integrado requiere el uso de Control Absoluto, ya que no se necesita I con Yaw Integrado."
@@ -5352,8 +5425,8 @@
         "message": "GPS: mejor 3 vueltas GPS",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Muestra las mejores vueltas según el GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Muestra las 3 mejores vueltas según el GPS"
     },
     "osdTextElementCraftName": {
         "message": "Identificador: nombre de la aeronave",
@@ -6120,6 +6193,10 @@
         "message": "Altitud",
         "description": "Text of the altitude alarm"
     },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Calidad del enlace",
+        "description": "Text of the link quality alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Armado desactivado",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6557,6 +6634,14 @@
     "vtxButtonSave": {
         "message": "Guardar",
         "description": "Save button in the VTX tab"
+    },
+    "buttonSaving": {
+        "message": "Guardando",
+        "description": "Show state of the Save button in the VTX/LED tab"
+    },
+    "buttonSaved": {
+        "message": "Guardado",
+        "description": "Saved action button in the VTX/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} desbloqueado",
@@ -7168,6 +7253,9 @@
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Selecciona el protocolo de telemetría que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, pero sólo se puede seleccionar un único elemento. También hay algunos protocolos de telemetría que se habilitarán, independientemente de tu selección aquí, dependiendo del protocolo de radio seleccionado, por ejemplo, CRSF."
     },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Incluido automáticamente"
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Selecciona las opciones generales que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, y se pueden seleccionar varios elementos. Algunos elementos como parches, por ejemplo, AKK VTX, están incluidos aquí."
     },
@@ -7192,5 +7280,9 @@
     "showDevToolsOnStartup": {
         "message": "Abrir automáticamente las herramientas de desarrollo",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

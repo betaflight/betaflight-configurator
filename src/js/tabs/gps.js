@@ -9,6 +9,8 @@ import $ from 'jquery';
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from '../msp/MSPHelper';
 import { updateTabList } from '../utils/updateTabList';
+import { initMap } from './map';
+import { fromLonLat } from "ol/proj";
 
 const gps = {};
 
@@ -17,9 +19,15 @@ gps.initialize = async function (callback) {
     GUI.active_tab = 'gps';
 
     await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-    await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
-    const hasMag = have_sensor(FC.CONFIG.activeSensors, 'mag');
+    // mag support added in 1.46
+    const hasMag = have_sensor(FC.CONFIG.activeSensors, 'mag') && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+
+    if (hasMag) {
+        await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
+    }
+
+    await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
     load_html();
 
@@ -52,15 +60,24 @@ gps.initialize = async function (callback) {
         }
 
         function get_gpsvinfo_data() {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, hasMag ? get_imu_data : update_ui);
+            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, get_attitude_data);
+        }
+
+        function get_attitude_data() {
+            MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, load_compass_config);
+        }
+
+        function load_compass_config() {
+            if (hasMag) {
+                MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, get_imu_data);
+            } else {
+                get_imu_data();
+            }
         }
 
         function get_imu_data() {
             MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_ui);
         }
-
-        // To not flicker the divs while the fix is unstable
-        let gpsWasFixed = false;
 
         // GPS Configuration
         const features_e = $('.tab-gps .features');
@@ -190,15 +207,35 @@ gps.initialize = async function (callback) {
         gpsBaudrateElement.prop("disabled", true);
         gpsBaudrateElement.parent().hide();
 
+        // fill magnetometer
+        if (hasMag) {
+            $('input[name="mag_declination"]').val(FC.COMPASS_CONFIG.mag_declination.toFixed(1));
+        } else {
+            $('div.mag_declination').hide();
+        }
+
+        const {
+            mapView,
+            iconStyleMag,
+            iconStyleGPS,
+            iconStyleNoFix,
+            iconFeature,
+            iconGeometry,
+        } = initMap();
+
         // End GPS Configuration
 
         function update_ui() {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
-            const magHeading = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
-            const magHeadingDeg = magHeading === undefined ? 0 : magHeading * 180 / Math.PI;
-            const gpsHeading = FC.GPS_DATA.ground_course / 100;
+            const imuHeadingDegrees = FC.SENSOR_DATA.kinematics[2];
+            // Convert to radians and add 180 degrees to make icon point in the right direction
+            const imuHeadingRadians = (imuHeadingDegrees + 180) * Math.PI / 180;
+            // These are not used, but could be used to show the heading from the magnetometer
+            // const magHeadingDegrees = hasMag ? Math.atan2(FC.SENSOR_DATA.magnetometer[1], FC.SENSOR_DATA.magnetometer[0]) : undefined;
+            // const magHeadingRadians = magHeadingDegrees === undefined ? 0 : magHeadingDegrees * Math.PI / 180;
+            const gpsHeading = FC.GPS_DATA.ground_course / 10;
             const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
             const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
                 'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
@@ -208,10 +245,10 @@ gps.initialize = async function (callback) {
             $('.GPS_info span.colorToggle').text(FC.GPS_DATA.fix ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info span.colorToggle').toggleClass('ready', FC.GPS_DATA.fix != 0);
 
-            const gspUnitText = i18n.getMessage('gpsPositionUnit');
+            const gpsUnitText = i18n.getMessage('gpsPositionUnit');
             $('.GPS_info td.alt').text(`${alt} m`);
-            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gspUnitText}`);
-            $('.GPS_info td.heading').text(`${magHeadingDeg.toFixed(4)} / ${gpsHeading.toFixed(4)} ${gspUnitText}`);
+            $('.GPS_info td.latLon a').prop('href', url).text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gpsUnitText}`);
+            $('.GPS_info td.heading').text(`${imuHeadingDegrees.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gpsUnitText}`);
             $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed} cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
@@ -305,41 +342,31 @@ gps.initialize = async function (callback) {
                 }
             }
 
-            const message = {
-                action: 'center',
-                lat: lat,
-                lon: lon,
-                heading: magHeading,
-            };
+            let gpsFoundPosition = false;
 
-            frame = document.getElementById('map');
             if (navigator.onLine) {
                 $('#connect').hide();
 
-                if (FC.GPS_DATA.fix) {
-                    gpsWasFixed = true;
-                    message.action = hasMag ? 'centerMag' : 'center';
-                    if (!!frame.contentWindow) {
-                      frame.contentWindow.postMessage(message, '*');
-                    }
-                    $('#loadmap').show();
-                    $('#waiting').hide();
-                } else if (!gpsWasFixed) {
-                    $('#loadmap').hide();
-                    $('#waiting').show();
+                gpsFoundPosition = !!(lon && lat);
+
+                if (gpsFoundPosition) {
+                    (hasMag ? iconStyleMag : iconStyleGPS)
+                        .getImage()
+                        .setRotation(imuHeadingRadians);
+                    iconFeature.setStyle(hasMag ? iconStyleMag : iconStyleGPS);
+                    const center = fromLonLat([lon, lat]);
+                    mapView.setCenter(center);
+                    iconGeometry.setCoordinates(center);
                 } else {
-                    message.action = 'nofix';
-                    if (!!frame.contentWindow) {
-                        frame.contentWindow.postMessage(message, '*');
-                    }
+                    iconFeature.setStyle(iconStyleNoFix);
                 }
             } else {
-                gpsWasFixed = false;
                 set_offline();
             }
-        }
 
-        let frame = document.getElementById('map');
+            $('#loadmap').toggle(gpsFoundPosition);
+            $('#waiting').toggle(!gpsFoundPosition);
+        }
 
         // enable data pulling
         GUI.interval_add('gps_pull', function gps_update() {
@@ -367,27 +394,26 @@ gps.initialize = async function (callback) {
 
         $('#zoom_in').click(function() {
             console.log('zoom in');
-            const message = {
-                action: 'zoom_in',
-            };
-            frame.contentWindow.postMessage(message, '*');
+            mapView.setZoom(mapView.getZoom() + 1);
         });
 
         $('#zoom_out').click(function() {
             console.log('zoom out');
-            const message = {
-                action: 'zoom_out',
-            };
-            frame.contentWindow.postMessage(message, '*');
+            mapView.setZoom(mapView.getZoom() - 1);
         });
 
         $('a.save').on('click', async function() {
             // fill some data
             FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
             FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
+            FC.COMPASS_CONFIG.mag_declination = parseFloat($('input[name="mag_declination"]').val());
 
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+            if (hasMag) {
+                await MSP.promise(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG));
+            }
             await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
+
             mspHelper.writeConfiguration(true);
         });
 

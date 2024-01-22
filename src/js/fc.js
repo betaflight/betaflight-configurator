@@ -122,6 +122,7 @@ const FC = {
     FEATURE_CONFIG: null,
     FILTER_CONFIG: null,
     GPS_CONFIG: null,
+    COMPASS_CONFIG: null,
     GPS_DATA: null,
     GPS_RESCUE: null,
     LED_COLORS: null,
@@ -153,6 +154,7 @@ const FC = {
     SDCARD: null,
     SENSOR_ALIGNMENT: null,
     SENSOR_CONFIG: null,
+    SENSOR_CONFIG_ACTIVE: null,
     SENSOR_DATA: null,
     SERIAL_CONFIG: null,
     SERVO_CONFIG: null,
@@ -371,6 +373,10 @@ const FC = {
             ublox_enable_ana:           0,
         };
 
+        this.COMPASS_CONFIG = {
+            mag_declination:            0,
+        };
+
         this.RSSI_CONFIG = {
             channel:                    0,
         };
@@ -541,6 +547,8 @@ const FC = {
             mag_hardware:               0,
             sonar_hardware:             0,
         };
+
+        this.SENSOR_CONFIG_ACTIVE = { gyro_hardware: 0, ...this.SENSOR_CONFIG };
 
         this.RX_CONFIG = {
             serialrx_provider:            0,

@@ -346,14 +346,25 @@ sensors.initialize = function (callback) {
             const scales = {
                 'gyro':  parseFloat($('.tab-sensors select[name="gyro_scale"]').val()),
                 'accel': parseFloat($('.tab-sensors select[name="accel_scale"]').val()),
-                'mag':   parseFloat($('.tab-sensors select[name="mag_scale"]').val()),
+                'mag':   parseInt($('.tab-sensors select[name="mag_scale"]').val(), 10),
             };
 
             // handling of "data pulling" is a little bit funky here, as MSP_RAW_IMU contains values for gyro/accel/mag but not altitude
             // this means that setting a slower refresh rate on any of the attributes would have no effect
             // what we will do instead is = determinate the fastest refresh rate for those 3 attributes, use that as a "polling rate"
             // and use the "slower" refresh rates only for re-drawing the graphs (to save resources/computing power)
-            const fastest = d3.min([rates.gyro, rates.accel, rates.mag]);
+
+            let fastest;
+            // if any of the refresh rates change, we need to re-determine the fastest refresh rate
+            if (['gyro_refresh_rate', 'accel_refresh_rate', 'mag_refresh_rate'].includes($(this).attr('name'))) {
+                fastest = $(this).val();
+
+                $('.tab-sensors select[name="gyro_refresh_rate"]').val(fastest);
+                $('.tab-sensors select[name="accel_refresh_rate"]').val(fastest);
+                $('.tab-sensors select[name="mag_refresh_rate"]').val(fastest);
+            } else {
+                fastest = d3.max([rates.gyro, rates.accel, rates.mag]);
+            }
 
             // store current/latest refresh rates in the storage
             setConfig({'sensor_settings': {'rates': rates, 'scales': scales}});

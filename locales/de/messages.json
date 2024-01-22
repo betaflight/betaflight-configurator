@@ -213,9 +213,6 @@
     "tabLanding": {
         "message": "Willkommen"
     },
-    "tabChangelog": {
-        "message": "Änderungen"
-    },
     "tabPrivacyPolicy": {
         "message": "Datenschutzerklärung"
     },
@@ -621,9 +618,6 @@
     "statisticsDisclaimer": {
         "message": "Betaflight Konfigurator sammelt anonyme Nutzungsdaten. Diese Daten umfassen zum Beispiel (aber nicht beschränkt) die Anzahl der Starts, die geographische Region der Nutzer, Typen von Flugsteuerungen, Firmware-Versionen, Verwendung von UI-Elementen und Tabs etc. Die Zusammenfassung dieser Daten ist hier <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">einsehbar.</a>. Die Erfassung wird durchgeführt, um besser zu verstehen, wie Betaflight Configurator verwendet wird, um Community-Trends zu verstehen und für mögliche UI-Verbesserungen. Benutzer können die Datenerfassung über die Registerkarte Optionen abstellen (Opt-out)."
     },
-    "defaultChangelogHead": {
-        "message": "Konfigurator - Changelog"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
@@ -736,10 +730,6 @@
     "initialSetupButtonResetZaxisValue": {
         "message": "Z Achse zurücksetzen, Abweichung: $1 Grad"
     },
-    "initialSetupHeading": {
-        "message": "Richtung:",
-        "description": "Heading shown on Setup tab"
-    },
     "initialSetupMixerHead": {
         "message": "Mixer Typ"
     },
@@ -785,10 +775,6 @@
     "initialSetupInfoHead": {
         "message": "Systeminfo"
     },
-    "initialSetupInfoHeadHelp": {
-        "message": "FC-Flags für Disarming, Akku-Information, RSSI-Level und Sensor-Hardware anzeigen",
-        "description": "Message that pops up to describe the System info section"
-    },
     "initialSetupBattery": {
         "message": "Akku Spannung"
     },
@@ -815,9 +801,6 @@
     },
     "initialSetupSensorHardware": {
         "message": "Sensoren:"
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Arming deaktiviert aufgrund:"
@@ -2612,9 +2595,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Sicherheitshinweis</strong><br /><strong class=\"message-negative\">Entfernen alle Propeller um Verletzungen zu verhindern!</strong><br />Die Motoren werden sich <strong>drehen!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Informationshinweis</strong><br />Die Motoren laufen einzeln und du kannst wählen, welcher Motor läuft. Der Akku sollte angeschlossen und das richtige ESC-Protokoll sollte ausgewählt werden. Diese Funktion kann nur aktive Motoren neu anordnen. Eine komplexere Neuzuordnung erfordert den CLI-Befehl \"Resource\". Siehe hierzu die <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki Seite</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Speichern"
     },
@@ -2734,9 +2714,6 @@
     },
     "sensorsAccelTitle": {
         "message": "Beschleungungssensor -g(Grad)"
-    },
-    "sensorsMagTitle": {
-        "message": "Magnetometer - Ga"
     },
     "sensorsAltitudeTitle": {
         "message": "Flughöhe - Meter"
@@ -2942,9 +2919,6 @@
     "sdcardStatusUnknown": {
         "message": "Unbekannter Status $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "Commit auswählen"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Versions- und Build-Info"
     },
@@ -2965,9 +2939,6 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Ziel:"
-    },
-    "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Erhalte weitere Informationen über das 'Target' im Betaflight-Wiki (Wiki-URL in der 'Unified Target'-Konfiguration)"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -2992,12 +2963,6 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "Erfolgreich"
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": "Zeitüberschreitung (bitte erneut versuchen)"
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": "Fehlgeschlagen (bitte Log prüfen)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Manuell herunterladen."
@@ -3145,9 +3110,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Wiederherstellung / abgebrochene Kommunikation</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Bei Verlust der Kommunikation mit Ihrem Board, folge diesen Schritten, um die Kommunikation wiederherzustellen: <ul><li>Spannungsversorgung trennen.</li><li>Aktiviere 'Keine Neustart-Sequenz', aktiviere 'Full Chip Löschung'.</li><li>Kontaktiere die BOOT-Pins per Jumper oder halte den BOOT-Button gedrückt.</li><li>Spannungsversorgung herstellen (Aktivitäts-LED blinkt NICHT, wenn korrekt).</li><li>Installiere bei Bedarf alle STM32-Treiber und Zadig (siehe <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB-Flashen</a>-Abschnitt des Betaflight-Handbuchs).</li><li>Konfigurator schließen, Konfigurator neu starten.</li><li>BOOT-Button loslassen, wenn auf dem FC vorhanden.</li><li>Flashen mit korrekter Firmware (Verwendung der manuellen Baudrate wenn im FC-Handbuch angegeben).</li><li>Spannungsversorgung trennen</li><li>BOOT-Jumper entfernen.</li><li>Spannungsversorgung anschließen (Aktivitäts-LED sollte blinken).</li><li>Normal verbinden.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware-Flasher verlassen"
@@ -4132,9 +4094,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ACHTUNG</span>: Bei Aktivierung dieser Funktion müssen die YAW PID-Werte entsprechend angepasst werden. Mehr Info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Der 'Integrierter Yaw' Wert integriert die Werte P, I und D und erlaubt Yaw den P, I, D etwas zu verändernt ähnlich wie wenn Du Pitch und Roll tunest.<br><br>I-Werte sind sehr wenig erforderlich, weil das integrierte P wie I wirkt und integrierte D-Werte wirken wie P.<br><br>HINWEIS: Integrierter Yaw erfordert die Verwendung von Absoluter Kontrolle, da I mit dem integrierten Yaw nicht benötigt wird."
@@ -5802,10 +5761,6 @@
     },
     "osdButtonSaved": {
         "message": "Gespeichert"
-    },
-    "vtxHelp": {
-        "message": "Hier können die Werte des Video Transmitter (VTX) konfiguriert werden. Es können die Übertragungswerte, einschließlich der VTX-Tabelle, angezeigt und geändert werden, wenn der Flugcontroller und der VTX dies unterstützen.<br>Um den VTX einzurichten, folge diesen Schritten:<br>1. Gehe zu<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">dieser</a> Seite;<br>2. Finde die passende VTX-Konfigurationsdatei für das Land in dem der Copter betrieben wird und lade sie herunter;<br>3. Klicke unten auf '$t(vtxButtonLoadFile.message)', wähle die VTX-Konfigurationsdatei und lade sie;<br>4. Überprüfe, ob die Einstellungen korrekt sind;<br>5. Klicke auf '$t(vtxButtonSave.message)' um die VTX-Einstellungen auf dem Flugcontroller zu speichern.<br>6. Optional: klicke '$t(vtxButtonSaveLua.message)' um eine Lua-Konfigurationsdatei zu speichern, welche mit den Betaflight Lua-Scripten benutzt werden kann. (Mehr dazu <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hier</a>.)",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Achtung:</span> Dein VTX ist nicht konfiguriert oder nicht unterstützt. Dadurch kannst du die VTX-Werte von hier aus nicht ändern. Dies ist nur möglich, wenn der Flugcontroller mit einem Protokoll wie Tramp oder SmartAudio verbunden ist und in der Registerkarte $t(tabPorts.message) korrekt konfiguriert ist.",

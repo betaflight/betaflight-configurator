@@ -5,8 +5,10 @@ import path from "node:path";
 import { readFileSync } from "node:fs";
 import copy from "rollup-plugin-copy";
 import pkg from './package.json';
+import * as child from 'child_process';
+import { VitePWA } from "vite-plugin-pwa";
 
-const childProcess = require('child_process');
+const commitHash = child.execSync('git rev-parse --short HEAD').toString();
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -52,7 +54,7 @@ export default defineConfig({
     define: {
         '__APP_VERSION__': JSON.stringify(pkg.version),
         '__APP_PRODUCTNAME__': JSON.stringify(pkg.productName),
-        '__APP_REVISION__': JSON.stringify(childProcess.execSync("git rev-parse --short HEAD").toString().trim()),
+        '__APP_REVISION__': JSON.stringify(commitHash),
     },
     test: {
         // NOTE: this is a replacement location for karma tests.
@@ -71,6 +73,33 @@ export default defineConfig({
                 { src: ["locales", "resources", "src/tabs", "src/images"], dest: "src/dist" },
             ],
             hook: "writeBundle",
+        }),
+        VitePWA({
+            registerType: 'autoUpdate',
+            workbox: {
+                globPatterns: ['**/*.{js,css,html,ico,png,svg,json,mcm}'],
+                // 5MB
+                maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+            },
+            includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+            manifest: {
+                name: pkg.productName,
+                short_name: pkg.productName,
+                description: pkg.description,
+                theme_color: '#ffffff',
+                icons: [
+                    {
+                        src: '/images/pwa/pwa-192-192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                    },
+                    {
+                        src: '/images/pwa/pwa-512-512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                    },
+                ],
+            },
         }),
     ],
     root: "./src",

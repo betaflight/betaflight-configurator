@@ -200,9 +200,6 @@
     "tabLanding": {
         "message": "欢迎"
     },
-    "tabChangelog": {
-        "message": "更新日志"
-    },
     "tabPrivacyPolicy": {
         "message": "隐私政策"
     },
@@ -578,9 +575,6 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 服务器</a>。<br />分享您的飞行经验，讨论 Betaflight，帮助其他人或从社区中为自己获得一些帮助。"
     },
-    "defaultChangelogHead": {
-        "message": "配置程序 - 更新日志"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "固件烧写器"
     },
@@ -728,9 +722,6 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI："
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "禁止解锁标志："
@@ -2528,9 +2519,6 @@
     },
     "sensorsAccelTitle": {
         "message": "加速度计 - g (°)"
-    },
-    "sensorsMagTitle": {
-        "message": "磁力计 - Ga"
     },
     "sensorsAltitudeTitle": {
         "message": "高度 - 米"

@@ -175,9 +175,6 @@
     "tabLanding": {
         "message": "Ongi Etorri"
     },
-    "tabChangelog": {
-        "message": "Aldaketak"
-    },
     "tabPrivacyPolicy": {
         "message": "Pribautasun Agiriak"
     },
@@ -536,9 +533,6 @@
     "defaultFacebookText": {
         "message": "<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Talde</a> bat badaukagu.<br />Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
     },
-    "defaultChangelogHead": {
-        "message": "Konfiguratzailea - Aldaketen zerrenda"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasheatzailea"
     },
@@ -683,9 +677,6 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Armatua desgaitua:"
@@ -2105,9 +2096,6 @@
     },
     "sensorsAccelTitle": {
         "message": "Azelerometroa - g (deg)"
-    },
-    "sensorsMagTitle": {
-        "message": "Magnetometroa - Ga"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitudea - metroak"

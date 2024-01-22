@@ -107,7 +107,7 @@ const MSPCodes = {
     MSP_BATTERY_STATE:              130,
     MSP_MOTOR_CONFIG:               131,
     MSP_GPS_CONFIG:                 132,
-// Removed:   MSP_COMPASS_CONFIG:             133,
+    MSP_COMPASS_CONFIG:             133,
     MSP_GPS_RESCUE:                 135,
 
     MSP_VTXTABLE_BAND:              137,
@@ -160,7 +160,7 @@ const MSPCodes = {
     MSP_SET_LED_STRIP_MODECOLOR:    221,
     MSP_SET_MOTOR_CONFIG:           222,
     MSP_SET_GPS_CONFIG:             223,
-// Removed:    MSP_SET_COMPASS_CONFIG:         224,
+    MSP_SET_COMPASS_CONFIG:         224,
     MSP_SET_GPS_RESCUE:             225,
 
     MSP_SET_VTXTABLE_BAND:          227,
@@ -184,20 +184,21 @@ const MSPCodes = {
     MSP_DEBUG:                      254,
 
     // MSPv2 Common
-    MSP2_COMMON_SERIAL_CONFIG:      0x1009,
-    MSP2_COMMON_SET_SERIAL_CONFIG:  0x100A,
+    MSP2_COMMON_SERIAL_CONFIG:          0x1009,
+    MSP2_COMMON_SET_SERIAL_CONFIG:      0x100A,
 
     // MSPv2 Betaflight specific
-    MSP2_BETAFLIGHT_BIND:           0x3000,
-    MSP2_MOTOR_OUTPUT_REORDERING:   0x3001,
-    MSP2_SET_MOTOR_OUTPUT_REORDERING:    0x3002,
-    MSP2_SEND_DSHOT_COMMAND:        0x3003,
-    MSP2_GET_VTX_DEVICE_STATUS:     0x3004,
-    MSP2_GET_OSD_WARNINGS:          0x3005,
-    MSP2_GET_TEXT:                  0x3006,
-    MSP2_SET_TEXT:                  0x3007,
-    MSP2_GET_LED_STRIP_CONFIG_VALUES: 0x3008,
-    MSP2_SET_LED_STRIP_CONFIG_VALUES: 0x3009,
+    MSP2_BETAFLIGHT_BIND:               0x3000,
+    MSP2_MOTOR_OUTPUT_REORDERING:       0x3001,
+    MSP2_SET_MOTOR_OUTPUT_REORDERING:   0x3002,
+    MSP2_SEND_DSHOT_COMMAND:            0x3003,
+    MSP2_GET_VTX_DEVICE_STATUS:         0x3004,
+    MSP2_GET_OSD_WARNINGS:              0x3005,
+    MSP2_GET_TEXT:                      0x3006,
+    MSP2_SET_TEXT:                      0x3007,
+    MSP2_GET_LED_STRIP_CONFIG_VALUES:   0x3008,
+    MSP2_SET_LED_STRIP_CONFIG_VALUES:   0x3009,
+    MSP2_SENSOR_CONFIG_ACTIVE:          0x300A,
 
     // MSP2_GET_TEXT and MSP2_SET_TEXT variable types
     PILOT_NAME:                     1,

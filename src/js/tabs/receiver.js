@@ -409,19 +409,11 @@ receiver.initialize = function (callback) {
         });
 
         function checkShowSerialRxBox() {
-            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SERIAL')) {
-                $('div.serialRXBox').show();
-            } else {
-                $('div.serialRXBox').hide();
-            }
+            $('div.serialRXBox').toggle(FC.FEATURE_CONFIG.features.isEnabled('RX_SERIAL'));
         }
 
         function checkShowSpiRxBox() {
-            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI')) {
-                $('div.spiRxBox').show();
-            } else {
-                $('div.spiRxBox').hide();
-            }
+            $('div.spiRxBox').toggle(FC.FEATURE_CONFIG.features.isEnabled('RX_SPI'));
         }
 
         function checkShowElrsBindingPhrase() {

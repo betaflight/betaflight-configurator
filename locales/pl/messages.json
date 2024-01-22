@@ -53,7 +53,7 @@
         "message": "Wybór ręczny"
     },
     "portsSelectVirtual": {
-        "message": "Tryb wirtualny (Eksperymentalny)",
+        "message": "Tryb wirtualny ",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "virtualMSPVersion": {
@@ -129,6 +129,10 @@
     },
     "language_default_pretty": {
         "message": "Domyślne ustawienie systemowe ($t(detectedLanguage))"
+    },
+    "language_pl": {
+        "message": "Polski",
+        "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
         "message": "Nie znaleziono <br>układu scalonego",
@@ -209,9 +213,6 @@
     },
     "tabLanding": {
         "message": "Witaj"
-    },
-    "tabChangelog": {
-        "message": "Wykaz zmian"
     },
     "tabPrivacyPolicy": {
         "message": "Polityka Prywatności"
@@ -607,7 +608,7 @@
         "message": "Współtworzenie"
     },
     "defaultContributingText": {
-        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> i dostarczanie informacji zwrotnych</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">naszym systemie śledzenia problemów</a> oraz uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
+        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych.</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia.</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> oraz dostarczanie informacji zwrotnych.</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów</a> oraz w uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku</a>.<br />Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
@@ -616,10 +617,7 @@
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serwer Discord</a>.<br /> Podziel się doświadczeniami pilota, porozmawiaj o Betaflight i pomóż innym osobom lub uzyskaj pomoc dla siebie od społeczności."
     },
     "statisticsDisclaimer": {
-        "message": "Konfiguracja Betaflight zbiera anonimowe statystyki użytkowania. Na przykład dane które obejmują: liczbę uruchomień, region geograficzny użytkowników, typy kontrolera lotu, wersje oprogramowania firmware, wykorzystanie z elementów interfejsu użytkownika, kart itp. Podsumowanie tych danych jest dostępne <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a>. Statystyki te są wykorzystywane w celu lepszego zrozumienia, jak jest używany konfigurator Betaflight oraz poznania trendów jakie panują w społeczności. Użytkownicy mogą wyłączyć zbieranie danych w zakładce Opcje."
-    },
-    "defaultChangelogHead": {
-        "message": "Wykaz zmian w konfiguratorze"
+        "message": "Konfigurator Betaflight zbiera anonimowe statystyki użytkownika. Na przykład dane które obejmują: liczbę uruchomień, region geograficzny użytkowników, typy kontrolera lotu, wersje oprogramowania, korzystanie z elementów interfejsu użytkownika, zakładki itp. Podsumowanie tych danych jest dostępne <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a>. Statystyki te są wykorzystywane w celu lepszego zrozumienia, jak jest używany konfigurator Betaflight oraz poznania trendów jakie panują w społeczności. Użytkownicy mogą wyłączyć zbieranie danych w zakładce Opcje."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Wgrywanie oprogramowania"
@@ -631,7 +629,7 @@
         "message": "<p><strong>Betaflight</strong> to oprogramowanie kontrolera lotu  jest na licencji <strong>open source</strong> i jest dostępne <strong>za darmo</strong> dla wszystkich użytkowników.</p><p>Jeśli używasz oprogramowania Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie</strong> jego rozwoju poprzez darowiznę.</p>"
     },
     "defaultDonateBottom": {
-        "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym sponsorem $t(patreonLink.message)</p>"
+        "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym subskrybentem $t(patreonLink.message).</p>"
     },
     "patreonLink": {
         "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
@@ -701,19 +699,19 @@
         "message": "Resetuj ustawienia"
     },
     "initialSetupResetText": {
-        "message": "Przywróć ustawienia <strong>domyślne</strong>."
+        "message": "Przywróć ustawienia <strong>fabryczne</strong>"
     },
     "initialSetupButtonBackup": {
-        "message": "Kopia zapasowa JSON"
+        "message": "Utwórz kopie"
     },
     "initialSetupButtonRestore": {
-        "message": "Przywróć JSON"
+        "message": "Przywróć kopie"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Aktywacja Boot Loadera / DFU"
     },
     "initialSetupBackupRestoreHeader": {
-        "message": "Eksperymentalna kopia zapasowa i przywracanie"
+        "message": "Tworzenie i Przywracanie kopii zapasowej"
     },
     "initialSetupBackupRestoreText": {
         "message": "<strong>Utwórz kopię zapasową</strong> swojej konfiguracji na wypadek utraty, <strong>Ustawienia CLI</strong> <span class=\"message-negative\">nie są</span> uwzględniane - użyj do tego komendy 'diff all' w CLI."
@@ -734,8 +732,8 @@
         "message": "Resetuj oś Z, położenie: $1 stopni"
     },
     "initialSetupHeading": {
-        "message": "Kurs:",
-        "description": "Heading shown on Setup tab"
+        "message": "Yaw:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Typ Modelu"
@@ -779,12 +777,22 @@
     "initialSetupMagHead": {
         "message": "Magnetometr"
     },
+    "initialSetupMagDeclination": {
+        "message": "Deklinacja Mag:"
+    },
     "initialSetupInfoHead": {
         "message": "Informacje o systemie"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Pokazuje flagi kontrolera lotu, które uniemożliwiają uzbrojenie jednostki latającej, oraz rodzaj baterii, poziom RSSI, a także rodzaj podłączonych czujników.",
+        "message": "Pokazuje flagi kontrolera lotu, które uniemożliwiają uzbrojenie jednostki latającej, oraz rodzaj baterii i poziom RSSI.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Sensor info"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Pokazuje czujniki",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Napięcie baterii:"
@@ -810,11 +818,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "Nie uwzględnione w kompilacji",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "Nie wykryto",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Czujniki:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Gyro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Akcel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Flagi wyłączające uzbrojenie:"
@@ -866,7 +903,7 @@
         "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
-        "message": "Uzbrojenie zbyt szybko po włączeniu zasilania",
+        "message": "Po włączeniu zasilania uzbrojenie nastąpiło za szybko",
         "description": "Message that pops up to describe the BOOT_GRACE_TIME arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNOPREARM": {
@@ -916,6 +953,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Filtrowanie w oparciu o RPM jest włączone ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowanie wspierające dwukierunkową telemetrię DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Filtrowanie w oparciu o RPM jest włączone, ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź, czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowanie wspierające dwukierunkową telemetrię DSHOT.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Zmiana konfiguracji wymaga ponownego uruchomienia",
@@ -1071,7 +1112,7 @@
         "message": "Włącz wyjście telemetryczne, aby wysyłać dane do nadajnika"
     },
     "feature3D": {
-        "message": "Tryb 3D (do użytku tylko z ESC pozwalającym odwracanie kierunku)"
+        "message": "Tryb 3D (do użytku tylko z ESC pozwalającym na odwracanie kierunku obrotów)"
     },
     "feature3DTip": {
         "message": "Włącz tryb 3D do użytku z  ESC które pozwalają na zmianę kierunku obrotów silnika. Skonfiguruj tę opcję w zakładce Silniki"
@@ -1238,6 +1279,9 @@
     "configurationArmingHelp": {
         "message": "Niektóre opcje uzbrajania mogą wymagać uruchomionego akcelerometru"
     },
+    "configurationMagDeclination": {
+        "message": "Deklinacja magnetometru [stopnie]"
+    },
     "configurationReverseMotorSwitch": {
         "message": "Odwrócono kierunek obrotów silników"
     },
@@ -1270,6 +1314,10 @@
     "configurationMotorPolesHelp": {
         "message": "Liczba biegunów to ilość magnesów na wirniku silnika. Proszę nie liczyć żłobków stojana gdzie są nawinięte uzwojenia silnika. Silniki 5 calowe mają zazwyczaj 14 magnesów, 3 calowe lub mniejsze mają często 12 magnesów.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Jest to dynamiczna wartość biegu jałowego z aktywnego profilu PID. Gdy dynamiczny bieg jałowy jest ustawiony na zero, obowiązywać będzie tylko statyczny bieg jałowy silnika. Zmień ustawienia Dynamicznego biegu jałowego w zakładce PID.",
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Minimum przepustnicy (Najniższa wartość ESC gdy uzbrojony)"
@@ -1439,7 +1487,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "Po włączeniu moduł GPS będzie również śledzić system satelitarny Galileo, co zazwyczaj skutkuje większą liczbą zablokowanych satelitów. W przypadku  Betaflight 4.2.x lub wcześniejszych wersji wyłącza on również system satelitarny QZSS.",
+        "message": "Po włączeniu moduł GPS będzie również śledzić system satelitarny Galileo, co zazwyczaj skutkuje większą liczbą zablokowanych satelitów. W przypadku Betaflight 4.2.x lub nowszej wersji wyłącza on również system satelitarny QZSS.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -1463,10 +1511,10 @@
         "message": "Zapisz i zrestartuj"
     },
     "dialogDynFiltersChangeTitle": {
-        "message": "Zakres dynamicznego filtra wycinającego"
+        "message": "Zakres filtra dynamicznego"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Ta zmiana włącz/wyłączy filtrowanie RPM, zwiększająca/zmniejszająca opóźnienie/skuteczność filtrów.</b></span><br><br>Zresetować dynamiczne filtry do zalecanych wartości?"
+        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Ta zmiana włączy filtrowanie RPM, zwiększając opóźnienie i skuteczność innych filtrów.</b></span><br><br> Zresetować dynamiczne filtry do zalecanych wartości?"
     },
     "portsIdentifier": {
         "message": "Identyfikator"
@@ -1634,7 +1682,7 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "Przeciw grawitacja zwiększa I (oraz, w ppkt 4.3, P) podczas i krótko po szybkiej zmianie przepustnicy, zwiększając stabilność położenia podczas pomp przepustnicy.<br><br>Wyższe wartości zysku mogą poprawić stabilność maszyn o niskim autoryzacji lub takich, które mają przesunięty środek ciężkości."
+        "message": "Przeciw grawitacja zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w maszynach o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
     },
     "pidTuningDMin": {
         "message": "<b>D</b>pochodna",
@@ -1960,7 +2008,7 @@
         "message": "OGRANICZ"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Wybierz rodzaj ograniczenia przepustnicy. <b> WYŁĄCZ</b> wyłącza tę funkcję, <b> SKALA </b> zmieni czułość przepustnicy z 0 na wybraną wartość, w całym zakresie przepustnicy, <b> OGRARICZ/b> ustawi czułość przepustnicy w niei sposób że wychylenie drążka powyżej określonej wartości nie będzie miało dodatkowego efektu"
+        "message": "Wybierz rodzaj ograniczenia przepustnicy. <b> WYŁĄCZ</b> wyłącza tę funkcję, <b> SKALA </b> zmieni czułość przepustnicy z 0 na wybraną wartość, w całym zakresie przepustnicy, <b> OGRARICZ</b> ustawi czułość przepustnicy w taki sposób że wychylenie drążka powyżej określonej wartości nie będzie miało dodatkowego efektu"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Ustaw żądany procentowy limit przepustnicy. Ustawienie na 100% wyłącza tą funkcję."
@@ -2123,6 +2171,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Resetuj szybkość odświeżania"
     },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Zapisz"
     },
@@ -2216,7 +2280,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
-        "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionego statku powietrznego",
+        "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionej jednostki latającej",
         "description": "Help text to BEEPER mode"
     },
     "auxiliaryHelpMode_BEEPERMUTE": {
@@ -2328,7 +2392,7 @@
         "description": "Help text to PIDAUDIO mode"
     },
     "auxiliaryHelpMode_PREARM": {
-        "message": "Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
+        "message": "Dodatkowe zabezpieczenie - Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
         "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
@@ -2616,6 +2680,13 @@
     "servosAngleAtMax": {
         "message": "Kąt przy max"
     },
+    "servosRateAndDirection": {
+        "message": "Stawka i kierunek"
+    },
+    "servosRate": {
+        "message": "Stawka:",
+        "description": "Label for 'Rate:' direction"
+    },
     "servosLiveMode": {
         "message": "Wyłącz tryb podglądu na żywo"
     },
@@ -2640,10 +2711,6 @@
     },
     "gpsMapHead": {
         "message": "Aktualna lokalizacja GPS"
-    },
-    "gpsMapHeadHelp": {
-        "message": "Pokaż lokalizację GPS na mapie. Użyj przycisku przewijania w myszce, aby powiększyć i pomniejszyć widok na mapie.<br> Ikona lokalizacji pokazuje kierunek północny, gdy magnetometr jest używany",
-        "description": "Help text for gpsHeadMap"
     },
     "gpsMapMessage1": {
         "message": "Sprawdź swoje połączenie internetowe"
@@ -2672,8 +2739,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Kierunek Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "Kierunek IMU / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Prędkość:"
@@ -2883,7 +2950,7 @@
         "message": "<strong>Informacja bezpieczeństwa</strong><br /><strong class=\"message-negative\">zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br />Silniki <strong>będą włączane!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Informacja</strong><br />Silniki będą się obracać jeden po drugim i będzie można wybrać, który z nich ma się obracać. Akumulator powinien być podłączony oraz powinien zostać wybrany protokół ESC. To narzędzie może ponownie rozmieścić tylko aktualnie aktywne silniki. Bardziej złożone ponowne mapowanie wymaga polecenia zasobów interfejsu CLI. Zapoznaj się z tą <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">stroną wiki</a>."
+        "message": "<strong>Notatka informacyjna</strong><br />Silniki będą włączane pojedyńczo i będziesz mógł wybrać, który silnik ma być włączony. Bateria powinna być podłączona, oraz należy wybrać poprawny protokół ESC. To narzędzie może zmienić tylko aktualnie aktywne silniki. Bardziej skomplikowane przemapowanie wymaga komendy CLI Resource. Przejdź do tej: <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">strony Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Zapisz"
@@ -3006,7 +3073,7 @@
         "message": "Akcelerometr - g (deg)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetometr - Ga"
+        "message": "Magnetometr"
     },
     "sensorsAltitudeTitle": {
         "message": "Wysokośc-metry"
@@ -3099,10 +3166,10 @@
         "message": "Automatycznie wczytano poprzedni plik dziennika: <strong> $1</strong>"
     },
     "blackboxNotSupported": {
-        "message": "Oprogramowanie kontrolera lotu nie obsługuje rejestrowania w Blackbox."
+        "message": "Oprogramowanie kontrolera lotu nie obsługuje rejestra lotów."
     },
     "blackboxMaybeSupported": {
-        "message": "Oprogramowanie kontrolera lotu jest zbyt stare, aby obsługiwać tę funkcję. Dlatego funkcja Blackbox jest wyłączona w zakładce Konfiguracji."
+        "message": "Oprogramowanie kontrolera lotu jest zbyt stare, aby obsługiwać tę funkcję. Dlatego funkcja Rejestratora lotów jest wyłączona w zakładce Konfiguracji."
     },
     "blackboxConfiguration": {
         "message": "Konfiguracja rejestratora lotów"
@@ -3114,7 +3181,7 @@
         "message": "Brak logowania"
     },
     "blackboxLoggingFlash": {
-        "message": "Wsad oprogramowania płytki"
+        "message": "Wbudowany uklad pamięci"
     },
     "blackboxLoggingSdCard": {
         "message": "Karta SD"
@@ -3150,13 +3217,13 @@
         "message": "Aktualizacja wymaga oprogramowania&gt;= 1.8.0."
     },
     "dataflashButtonSaveFile": {
-        "message": "Zapisz flash do pliku..."
+        "message": "Zapisz do pliku..."
     },
     "dataflashButtonSaveFileDeprecated": {
         "message": "Zrzut pamięci flash do pliku... (nie wspierany)"
     },
     "dataflashSavetoFileNote": {
-        "message": "Bezpośrednie zapisywanie zawartości flash do pliku jest powolne i z natury podatne na błąd / uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać dla małych plików, ale to nie jest obsługiwane i żądania dodania wsparcia zostaną zamknięte natychmiastowo bez komentarza - zamiast tego użyj trybu masowej pamięci."
+        "message": "Bezpośrednie zapisywanie zawartości pamięci do pliku jest powolne i z natury podatne na błąd lub nawet uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać podczas zapisu małych plików, ale zalecane jest użycie trybu pamięci masowej."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Ta metoda jest powolna i z natury podatna na błąd / uszkodzenie plików, ponieważ połączenie MSP jest zmienne, co jest podstawowym ograniczeniem, które sprawia, że jest nieodpowiednie do przesyłania plików. Może zadziałać tylko dla małych plików. Nie twórz żądań dodania wsparcia tej funkcji gdy transfer plików nie powiedzie się po zapisaniu, przy użyciu tej metody. Zalecaną metodą jest użycie '<b>$t(onboardLoggingRebootMscText.message)</b>' (poniżej) aby aktywować tryb pamięci masowej i uzyskać dostęp do kontrolera lotu jako urządzenia pamięci."
@@ -3168,7 +3235,7 @@
         "message": "Potwierdź kasowanie pamięci"
     },
     "dataflashConfirmEraseNote": {
-        "message": "Spowoduje to wymazywanie logów i wszystkich innych danych znajdujących się na chipie. Powinno to potrwać około 20 sekund, jesteś pewny?"
+        "message": "Spowoduje to wymazywanie logów i wszystkich innych danych znajdujących się w wbudowanej pamięci kontrolera lotów. Powinno to potrwać około 20 sekund, jesteś pewny?"
     },
     "dataflashSavingTitle": {
         "message": "Zapisywanie danych do pliku"
@@ -3186,7 +3253,7 @@
         "message": "Ok"
     },
     "dataflashButtonEraseConfirm": {
-        "message": "Tak, wymaż pamieć flash"
+        "message": "Tak, wymaż pamięć"
     },
     "dataflashButtonEraseCancel": {
         "message": "Anuluj"
@@ -3198,7 +3265,7 @@
         "message": "Brak włożonej karty"
     },
     "sdcardStatusReboot": {
-        "message": "Krytyczny błąd<br>Zresetuj aby spróbować ponownie"
+        "message": "Nie wykryto karty SD<br>"
     },
     "sdcardStatusReady": {
         "message": "Karta gotowa"
@@ -3211,9 +3278,6 @@
     },
     "sdcardStatusUnknown": {
         "message": "Nieznany stan $1"
-    },
-    "firmwareFlasherBranch": {
-        "message": "Wybierz zatwierdzone"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informacje o wydaniu i budowie"
@@ -3237,7 +3301,8 @@
         "message": "Target:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Uzyskaj więcej informacji na ten temat w wiki Betaflight (adres url wiki znaleziony w ujednoliconej konfiguracji docelowej)"
+        "message": "Więcej szczegółowych informacji znajdziesz na Wiki Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3263,11 +3328,17 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "ukończono"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": "przekroczono limit czasu (spróbuj ponownie)"
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "Anulowano"
     },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": "nie powiodło się (proszę sprawdzić logi)"
+    "firmwareFlasherCloudBuildFailTimeOut": {
+        "message": "Przekroczono limit czasu "
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "błąd kompilacji, sprawdź konfigurację kompilacji  którą wybrałeś"
+    },
+    "firmwareFlasherCloudBuildFail": {
+        "message": "Nie powiodło się"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Pobierz ręcznie."
@@ -3369,7 +3440,7 @@
         "message": "Wybierz Oprogramowanie / Płytkę"
     },
     "firmwareFlasherOptionLabelSelectBoard": {
-        "message": "Wybierz płytkę"
+        "message": "Wybierz kontroler"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
         "message": "Wybierz wersję oprogramowania"
@@ -3411,13 +3482,13 @@
         "message": "Wiadomość:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Postępuj według wytycznych <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Oraz<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> płytki lub <strong> nie wyłączaj </strong> komputera podczas flashowania. <br /> <br /> <strong> Uwaga: </strong> Bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> Upewnij się, że masz kopię zapasową, niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> Jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie przewody od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
+        "message": "Postępuj według wytycznych oraz <span class = \"message-negative\"> nie </span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight </strong> za pomocą tego oprogramowania. <br /> Pamiętaj<span class = \"message-negative\" > nie </span> <strong> odłączaj </strong> kontrolera lotu oraz <strong> nie wyłączaj </strong> komputera podczas wgrywania oprogramowania. <br /> <br /> <strong> Uwaga: </strong> Bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br /> <strong> Uwaga: </strong> <span class = \"message-negative\"> Automatyczne połączenie </span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br /> <strong> Uwaga: </strong> Upewnij się, że masz kopię zapasową, niektóre aktualizacje mogą usunąć twoją konfigurację. <br /> <strong> Uwaga: </strong> Jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie przewody od kontrolera lotu </strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br /> <strong> Uwaga: </strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>W przypadku problemów podczas podłączania płytki  kontrolera lotów postępuj zgodnie z poniższą instrukcją</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odłącz zasilanie kontrolera lotu</li><li>Włącz ustawienia „Nie restartuj”, oraz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT na kontlorerze lotu.</li><li>Podłącz zasilanie kontlolera lotu(dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne (<a href =\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flashowanie USB</a> w instrukcji Betaflight).</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji kontrolera lotu).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
+        "message": "Jeśli utraciłeś komunikację z płytką kontrolera lotu, wykonaj następujące kroki, aby przywrócić komunikację: <ul><li>Odłącz zasilanie kontrolera lotu</li><li>Włącz ustawienia „Nie restartuj”, oraz „Wyczyść pamięć”.</li><li >Zepnij styki BOOT lub przytrzymaj przycisk BOOT na kontlorerze lotu.</li><li>Podłącz zasilanie kontlolera lotu(dioda aktywności NIE będzie migać, jeśli zrobisz to poprawnie).</li><li>Zainstaluj wszystkie sterowniki STM32 i Zadig, jeśli to konieczne. Więcej przydatnych informacji znajdziesz na stronie:\n<a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"> Wgrywanie oprogramowania</a> w instrukcji Betaflight.</li><li >Zamknij konfigurator a następnie uruchom ponownie konfigurator.</li><li>Zwolnij przycisk BOOT, jeśli Twój kontroler lotu go posiada.</li><li>Flashuj z poprawnym oprogramowaniem sprzętowym (używając ręcznej szybkości transmisji, jeśli jest to określone w instrukcji kontrolera lotu).</li ><li>Wyłącz.</li><li>Usuń zworkę BOOT.</li><li>Włącz (dioda aktywności powinna migać).</li><li>Połącz normalnie.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
@@ -3480,7 +3551,7 @@
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Konfiguracja <span class=\"message-negative\">nie powiodła się</span> weryfikacja tablicy, jeśli to nie działa, spróbuj przełączyć kartę powoli, aby spróbować ponownie, utwórz nowe połączenie lub połącz się najpierw jeśli zapomniałeś zastosować niestandardowe ustawienia domyślne",
+        "message": "Konfiguracja <span class=\"message-negative\">nie powiodła się</span> ponieważ nie zdołano zidentyfikować kontrolera lotu. Spróbuj ponownie lub utwórz nowe połączenie USB, jeśli to nie pomogło podłącz kontroler lotu w trybie DFU",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -3502,7 +3573,7 @@
         "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego</strong>. Ciągle trwają prace nad tą wersją, a każda z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie będzie działć;</li><li>oprogramowanie będzie miało problemy ze sterowaniem lotu;</li><li>wystąpią problemy z bezpieczeństwem, na przykład podczas lotu</li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieprzewidywalny, lub doprowadzi do uszkodzenia maszyny lub czyjegoś zdrowia</li></ul></strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji</strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami</strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "Przeczytałem powyższe i <strong>Biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
+        "message": "Przeczytałem powyższe i <strong>biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Wgraj"
@@ -3561,7 +3632,7 @@
         "description": "In the LED STRIP, clear all leds"
     },
     "ledStripVtxOverlay": {
-        "message": "VTX(użyj częstotliwości vtx do przypisania koloru)"
+        "message": "VTX (użyj częstotliwości vtx do przypisania koloru)"
     },
     "ledStripBrightnessSliderTitle": {
         "message": "Jasność",
@@ -3999,7 +4070,7 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">UWAGA</span>: Aktualne ustawienia suwaków może powodować zniszczenie silnika lub niebezpieczne zachowanie platformy. Proszę postępować ostrożnie.",
+        "message": "<span class=\"message-negative\">UWAGA</span>: Aktualne ustawienia suwaków mogą powodować zniszczenie silnika lub niebezpieczne zachowanie jednostki latającej. Proszę postępować ostrożnie.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -4231,7 +4302,7 @@
         "message": "Filtr dynamiczny notch jest wyłączony. Aby go użyć, upewnij się, że częstotliwość pętli PID jest ustawiona na co najmniej 2Khz w karcie '$t(tabConfiguration.message)."
     },
     "pidTuningDynamicNotchRange": {
-        "message": "Zakres dynamicznego filtra wycinającego"
+        "message": "Zakres filtra dynamicznego:"
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "Procent szerokości dynamicznego wycięcia"
@@ -4434,7 +4505,7 @@
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
+        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamiczny bieg jałowy jest WYŁĄCZONY, ponieważ telemetria Dshot jest wyłączona"
@@ -4449,7 +4520,7 @@
         "message": "Zintegrowane odchylenie Yaw"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">UWAGA</span>: jeśli włączysz tę funkcję, musisz odpowiednio dostosować PID YAW <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">. Więcej informacji <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj</a>"
+        "message": "<span class=\"message-negative\">UWAGA</span>: jeśli włączysz tę funkcję, musisz odpowiednio dostosować YAW PID. Więcej informacji <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Zintegrowany odchylacz integruje wartości P, I i D odchyłu, umożliwiając dostrojenie wartości P, I i D odchyłu w sposób podobny do tego, w jaki dostrajasz nachylenie i przechył.<br><br>Wymagana jest bardzo mała ilość I, ponieważ zintegrowane P działa jak I, a zintegrowane D działa jak P.<br><br>UWAGA: Zintegrowany odchylacz wymaga użycia sterowania absolutnego, ponieważ w przypadku Zintegrowanego odchyłu nie jest potrzebne I."
@@ -4609,7 +4680,7 @@
         "message": "Minimalna liczba satelitów"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!</span"
+        "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS - <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!</span"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
         "message": "Nie rekomendowane. Umożliwia uzbrojenie bez poprawnego sygnału GPS, może spowodować, że jednostka latająca rozbroi się i ulegnie awarii z prawdziwym zabezpieczeniem przed utratą sygnału Rx. Jeśli testowano za pomocą przełącznika, przed rozbrojeniem następuje krótki okres bezczynności."
@@ -4966,9 +5037,49 @@
         "message": "Profil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
+    "osdSetupPreviewSelectFont": {
+        "message": "Czcionka",
+        "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "Domyślne",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Pogrubiona",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Duże",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Extra Duże",
+        "description": "Font Large Extra"
+    },
     "osdSetupFontTypeBetaflight": {
         "message": "Betaflight",
         "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Cyfrowy",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Ostrość",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Wizja",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Wpływ",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Wpływ Mini",
+        "description": "Font Impact Mini"
     },
     "osdSetupPreviewCheckZoom": {
         "message": "Powiększ",
@@ -5315,8 +5426,8 @@
         "message": "Najlepszy czas okrążenia GPS 3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Najlepszy czas okrążenia GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Najlepsze 3 czasy okrążania GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nazwa modelu",
@@ -5863,11 +5974,11 @@
         "message": "Maksymalna odległość od domu"
     },
     "osdTextStatBlackboxLogNumber": {
-        "message": "Numer logu czarnej skrzynki",
+        "message": "Numer logu rejestratora lotu",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackboxLogNumber": {
-        "message": "Numer logu czarnej skrzynki dla tego lotu"
+        "message": "Numer logu rejestratora dla tego lotu"
     },
     "osdTextStatTimer1": {
         "message": "Zegar 1",
@@ -6083,6 +6194,10 @@
         "message": "Wysokość",
         "description": "Text of the altitude alarm"
     },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Jakość połączenia",
+        "description": "Text of the link quality alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Uzbrajanie nieaktywne",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6246,7 +6361,7 @@
         "message": "Zapisano"
     },
     "vtxHelp": {
-        "message": "Tutaj możesz skonfigurować wartości dla swojego Video Transmitter (VTX). Możesz przeglądać i zmieniać wartości transmisji, w tym tabele VTX, jeśli kontroler lotu i VTX to obsługują.<br>Aby skonfigurować VTX, wykonaj następujące czynności:<br>1. Przejdź do <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">tej</a> strony;<br>2. Znajdź odpowiedni plik konfiguracyjny VTX dla swojego kraju i modelu VTX i pobierz go;<br>3. Kliknij „$t(vtxButtonLoadFile.message)” poniżej, wybierz plik konfiguracyjny VTX, załaduj go;<br>4. Sprawdź, czy ustawienia są prawidłowe;<br>5. Kliknij „$t(vtxButtonSave.message)”, aby zapisać ustawienia VTX w kontrolerze lotu.<br>6. Opcjonalnie kliknij „$t(vtxButtonSaveLua.message)”, aby zapisać plik konfiguracyjny lua, którego możesz używać ze skryptami lua betaflight (Zobacz więcej <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\">tutaj</a>.)",
+        "message": "Tutaj możesz skonfigurować wartości dla swojego Nadajnika wideo (VTX). Możesz przeglądać i zmieniać wartości transmisji, w tym tabele VTX, jeśli kontroler lotu i VTX to obsługują.<br>Aby skonfigurować VTX, wykonaj następujące czynności:<br>1. Przejdź do <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">tej</a> strony.<br>2. Znajdź odpowiedni plik konfiguracyjny VTX dla swojego kraju i modelu VTX i pobierz go.<br>3. Kliknij „$t(vtxButtonLoadFile.message)” następnie, wybierz plik konfiguracyjny VTX i załaduj go.<br>4. Sprawdź, czy ustawienia są prawidłowe.<br>5. Kliknij „$t(vtxButtonSave.message)”, aby zapisać ustawienia VTX w kontrolerze lotu.<br>6. Opcjonalnie kliknij „$t(vtxButtonSaveLua.message)”, aby zapisać plik konfiguracyjny lua, którego możesz używać ze skryptami lua betaflight (Zobacz więcej <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">tutaj</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6390,7 +6505,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeFrequencyHelp": {
-        "message": "Częstotliwość, z jaką zmienia się tryb Pita po włączeniu.",
+        "message": "Częstotliwość, z jaką zmienia się tryb Pit po włączeniu.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxLowPowerDisarm": {
@@ -6426,7 +6541,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "Tabela ta przedstawia różne wartości mocy, które mogą być wykorzystane dla VTX. Zostały podzielone na dwa: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> każdy poziom mocy wymaga wartości zdefiniowanej przez producenta sprzętu. Poproś producenta o poprawną wartość lub sprawdź tabelę VTX na Betaflight wiki. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> możesz tutaj umieścić etykietę dla każdej wartości poziomu energii. Mogą to być liczby (25, 200, 600, 1.2), litery (OFF, MIN, MAX) lub je mieszać. <br /><br />Musisz skonfigurować <b>tylko</b> poziomy mocy zgodne z prawem w Twoim kraju.",
+        "message": "Tabela ta przedstawia różne wartości mocy, które mogą być wykorzystane dla VTX. Zostały podzielone na dwie części: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> każdy poziom mocy wymaga wartości zdefiniowanej przez producenta sprzętu. Poproś producenta o poprawną wartość lub sprawdź tabelę VTX na Betaflight wiki. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> możesz tutaj umieścić etykietę dla każdej wartości poziomu energii. Mogą to być liczby (25, 200, 600, 1.2), litery (OFF, MIN, MAX) lub je mieszać. <br /><br />Musisz skonfigurować <b>tylko</b> poziomy mocy zgodne z prawem w Twoim kraju.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -6462,7 +6577,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "Ta tabela przedstawia wszystkie częstotliwości, które mogą być użyte dla Twojego VTX. Możesz mieć kilka pasm i dla każdego pasma musisz skonfigurować:<br><b>- $t(vtxTableBandTitleName.message):</b> Nazwisko, które chcesz przypisać do tego zakresu, takie jak BOSCAM_A, FATSHARK lub RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Skrócona litera, która odnosi się do tego zakresu.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Wskazuje, czy jest to pasmo fabryczne. Jeśli włączone, Betaflight wysyła do VTX pasmo i numer kanału. VTX użyje następnie wbudowanej tabeli częstotliwości, a częstotliwości skonfigurowane tutaj pokazują tylko wartość w OSD i innych miejscach. Jeśli nie jest włączona, Betaflight wyśle do VTX prawdziwą częstotliwość skonfigurowaną tutaj.<br><b>- Częstotliwości:</b> Częstości dla tego pasma.<br /><br />Pamiętaj, że nie wszystkie częstotliwości są legalne w Twoim kraju. Musisz wpisać wartość <b>zero</b> dla każdego indeksu częstotliwości, którego nie możesz użyć, aby go wyłączyć.",
+        "message": "Ta tabela przedstawia wszystkie częstotliwości, które mogą być użyte dla Twojego VTX. Możesz mieć kilka pasm i dla każdego pasma możesz skonfigurować takie zmienne jak:<br><b>- $t(vtxTableBandTitleName.message):</b> Nazwę, którą chcesz przypisać do tego zakresu, np: BOSCAM_A, FATSHARK lub RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Naprzykład pierwsza litera, która odnosi się do nazwy tego zakresu.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Wskazuje, czy jest to pasmo fabryczne. Jeśli włączone, Betaflight wysyła do VTX pasmo i numer kanału. VTX użyje następnie wbudowanej tabeli częstotliwości, a częstotliwości skonfigurowane tutaj pokazują tylko wartość w OSD i innych miejscach. Jeśli nie jest włączona, Betaflight wyśle do VTX prawdziwą częstotliwość skonfigurowaną tutaj.<br><b>- Częstotliwość:</b> Częstotliwość dla tego pasma.<br /><br />Pamiętaj, że nie wszystkie częstotliwości są legalne w Twoim kraju. Musisz wpisać wartość <b>zero</b> dla każdego indeksu częstotliwości, którego nie możesz użyć, aby go wyłączyć.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -6562,11 +6677,11 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "ESC wysyła dane zwrotne do Kontrolera lotu przez kanał telemetrii DShot. Co jest wymagane przez funkcje Filtrowania RPM i dynamiczną wartość gazu spoczynkowego \"dynamic IDLE\". <br><br>Uwaga: Wymagany jest ESC który posiada takie funkcje w oprogramowaniu np. JESC, Jazzmac, BLHeli-32.",
+        "message": "ESC wysyła dane zwrotne do Kontrolera lotu przez kanał telemetrii DShot, jest  to wymagane przez funkcje Filtrowania RPM oraz funkcje Dynamicznego biegu jałowego. <br><br>  Uwaga: Wymagany jest ESC, który posiada takie funkcje w oprogramowaniu np. JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
-        "message": "Częstotliwość aktualizacji z żyroskopu"
+        "message": "Częstotliwość aktualizacji żyroskopu"
     },
     "configurationPidProcessDenom": {
         "message": "Częstotliwość pętli PID"
@@ -6584,10 +6699,10 @@
         "message": "Akcelerometr"
     },
     "configurationBaroHardware": {
-        "message": "Barometr (jeśli wspierany)"
+        "message": "Barometr"
     },
     "configurationMagHardware": {
-        "message": "Magnetometr (jeśli wspierany)"
+        "message": "Magnetometr"
     },
     "configurationSmallAngle": {
         "message": "Maksymalny kąt trybu ARM [Stopnie]"
@@ -6732,10 +6847,10 @@
         "message": "Tryb pamięci masowej nie może być aktywowany, ponieważ urządzenie nie jest gotowe."
     },
     "dialogConfirmResetTitle": {
-        "message": "Potwierdź"
+        "message": "Upewnij się, że wiesz co robisz."
     },
     "dialogConfirmResetNote": {
-        "message": "OSTRZEŻENIE: Czy na pewno chcesz zresetować <strong>WSZYSTKIE ustawienia</strong> do domyślnych? To <strong>nie</strong> \"resetowanie fabryczne\". Może to spowodować nieoczekiwane problemy i konieczne może być ponowne wgranie firmware w celu ponownego połączenia."
+        "message": "OSTRZEŻENIE: Czy na pewno chcesz zresetować <strong>WSZYSTKIE ustawienia</strong> do ustawień fabrycznych? To <strong>nie jest </strong> \"Przywrócenie ustawień domyślnych\". Może to spowodować nieoczekiwane problemy i konieczne może być ponowne wgranie oprogramowania w celu ponownego połączenia."
     },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
@@ -6753,7 +6868,7 @@
         "message": "TRYB ZMIANY KAMERY"
     },
     "flashTab": {
-        "message": "Wgraj"
+        "message": "Wgraj Firmware"
     },
     "cliAutoComplete": {
         "message": "Zaawansowane autouzupełnianie wiersza poleceń"
@@ -6799,19 +6914,19 @@
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasEuropeanEGNOS": {
-        "message": "Europejski EGNOS (wspomagający systemy GPS i GLONASS)",
+        "message": "Europejski EGNOS",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasNorthAmericanWAAS": {
-        "message": "WAAS(System nawigacji powietrznej)",
+        "message": "WAAS (system wspomagający NAVSTAR-GPS)",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasJapaneseMSAS": {
-        "message": "Japoński MSAS(wspiera DGPS - różnicowy sygnał gps)",
+        "message": "Japoński MSAS",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasIndianGAGAN": {
-        "message": "Indyjski GAGAN (rozszerzona nawigacja wspomagana GPS-em)",
+        "message": "Indyjski GAGAN",
         "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasNone": {
@@ -7139,6 +7254,9 @@
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Wybierz protokół telemetrii, który chcesz uwzględnić w tej kompilacji. Uwaga: jest to lista rozwijana, ale można wybrać tylko jeden element. Istnieją również protokoły telemetrii, które zostaną włączone, niezależnie od dokonanego tutaj wyboru w oparciu o wybrany protokół radiowy, np. CRSF."
     },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Automatycznie uwzględnione"
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Wybierz ogólne opcje, które chcesz uwzględnić w tej kompilacji. Pamiętaj, że jest to lista rozwijana i można wybrać wiele elementów. Takie elementy jak poprawki, m.in. AKK VTX, są tutaj zawarte."
     },
@@ -7163,5 +7281,9 @@
     "showDevToolsOnStartup": {
         "message": "Automatycznie otwórz DevTools w trybie deweloperskim",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

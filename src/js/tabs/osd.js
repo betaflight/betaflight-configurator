@@ -2230,6 +2230,10 @@ OSD.msp = {
                 result.push8(OSD.data.parameters.cameraFrameWidth);
                 result.push8(OSD.data.parameters.cameraFrameHeight);
             }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                result.push16(OSD.data.alarms.link_quality.value);
+            }
         }
         return result;
     },
@@ -2440,6 +2444,10 @@ OSD.msp = {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             d.parameters.cameraFrameWidth = view.readU8();
             d.parameters.cameraFrameHeight = view.readU8();
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            d.alarms['link_quality'] = { display_name: i18n.getMessage('osdTimerAlarmOptionLinkQuality'), value: view.readU16() };
         }
 
         this.processOsdElements(d, itemsPositionsRead);

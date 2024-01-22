@@ -146,25 +146,25 @@ PortHandler.check_usb_devices = function (callback) {
 
                 self.portPickerElement.val('DFU').trigger('change');
                 self.setPortsInputWidth();
+                self.dfu_available = true;
             }
-            self.dfu_available = true;
-        } else {
-            if (dfuElement.length) {
-               dfuElement.remove();
-               self.setPortsInputWidth();
-            }
+        } else if (dfuElement.length) {
+            dfuElement.remove();
+            self.setPortsInputWidth();
             self.dfu_available = false;
-        }
-        if (callback) {
-            callback(self.dfu_available);
         }
         if (!$('option:selected', self.portPickerElement).data().isDFU) {
             if (!(GUI.connected_to || GUI.connect_lock)) {
                 FC.resetState();
             }
+
             if (self.dfu_available) {
                 self.portPickerElement.trigger('change');
             }
+        }
+
+        if (callback) {
+            callback(self.dfu_available);
         }
     });
 };
@@ -227,9 +227,8 @@ PortHandler.detectPort = function(currentPorts) {
         // Signal board verification
         if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
             TABS.firmware_flasher.boardNeedsVerification = true;
+            self.portPickerElement.trigger('change');
         }
-
-        self.portPickerElement.trigger('change');
 
         // auto-connect if enabled
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {

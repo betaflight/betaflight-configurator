@@ -131,7 +131,7 @@
         "message": "Predeterminat del sistema ($t(detectedLanguage))"
     },
     "language_pl": {
-        "message": "Polski",
+        "message": "Polonès",
         "description": "Don't translate!!!"
     },
     "language_zh_TW": {
@@ -217,9 +217,6 @@
     },
     "tabLanding": {
         "message": "Benvingut"
-    },
-    "tabChangelog": {
-        "message": "Registre de canvis"
     },
     "tabPrivacyPolicy": {
         "message": "Política de privacitat"
@@ -626,9 +623,6 @@
     "statisticsDisclaimer": {
         "message": "Betaflight Configurator recopila estadístiques d'ús anònimes. Per exemple, aquestes dades inclouen (però no es limiten a) el nombre de llançaments, la regió geogràfica dels usuaris, els tipus de controladors de vol, les versions del microprogramari, l'ús d'elements i pestanyes de la IU, etc. El resum d'aquestes dades es comparteix <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>. La recollida es fa per entendre millor com s'utilitza Betaflight Configurator, per entendre les tendències de la comunitat i per a possibles millores de la interfície d'usuari. Els usuaris poden desactivar la recollida de dades a la pestanya Opcions."
     },
-    "defaultChangelogHead": {
-        "message": "Configurador - Llista de canvis"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Flashejador de Firmware"
     },
@@ -742,8 +736,8 @@
         "message": "Restableix l'eix Z, offset: $1 graus"
     },
     "initialSetupHeading": {
-        "message": "Títol:",
-        "description": "Heading shown on Setup tab"
+        "message": "Eix de guinyada:",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "Tipus de Mixer"
@@ -787,12 +781,22 @@
     "initialSetupMagHead": {
         "message": "Magnetòmetre"
     },
+    "initialSetupMagDeclination": {
+        "message": "Declinació del Magnetómetre:"
+    },
     "initialSetupInfoHead": {
         "message": "Informació del sistema"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Mostra les banderes FC per al desarmament, la informació de la bateria, el nivell RSSI i el maquinari dels sensors",
+        "message": "Mostra les banderes FC per al desarmament, la informació de la bateria, el nivell RSSI.",
         "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "Informació de sensors"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "Mostra el maquinari dels sensors",
+        "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
         "message": "Voltatge de bateria:"
@@ -818,11 +822,40 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
+    "initialSetupNotInBuild": {
+        "message": "No inclòs a la compil-lació",
+        "description": "Message that pops up when hardware support not are supported in Build"
+    },
+    "initialSetupNotDetected": {
+        "message": "No detectat",
+        "description": "Message that pops up when hardware are not detected"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensors:"
     },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
+    "initialSetupSensorGyro": {
+        "message": "Gyro:"
+    },
+    "initialSetupSensorAcc": {
+        "message": "Accel:"
+    },
+    "initialSetupSensorMag": {
+        "message": "Mag:"
+    },
+    "initialSetupSensorBaro": {
+        "message": "Baro:"
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS:"
+    },
+    "initialSetupSensorSonar": {
+        "message": "Sonar:"
+    },
+    "initialSetupSensorRadar": {
+        "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Flags deshabilitant l'armat:"
@@ -924,6 +957,10 @@
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "El filtratge basat en RPM està habilitat, però un o més ESC no subministren telemetria vàlida DSHOT. Comproveu que els sistemes ESC siguin capaços i tinguin instal·lat el programari necessari per suportar la telemetria bidireccional DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "La telemetria DSHOT està activada, però un o més ESC no proporcionen telemetria DSHOT vàlida. Comproveu que els ESC són capaços i tenen el microprogramari necessari instal·lat per suportar la telemetria DSHOT bidireccional.",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "Un canvi de configuració requereix reiniciar",
@@ -1246,6 +1283,9 @@
     "configurationArmingHelp": {
         "message": "Algunes opcions d'armat requereixen l'acceleròmetre habilitat"
     },
+    "configurationMagDeclination": {
+        "message": "Declinació del magnetòmetre [graus]"
+    },
     "configurationReverseMotorSwitch": {
         "message": "La direcció dels motors és inversa"
     },
@@ -1278,6 +1318,10 @@
     "configurationMotorPolesHelp": {
         "message": "El nombre de pols és el nombre d’imants de la campana del motor. NO compteu els estators on es troben els bobinatges. Els motors de 5 \"solen tenir 14 imants, 3\" o més petits solen tenir 12 imants.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Aquest és el valor inactiu dinàmic del perfil PID actiu. Quan Dynamic Idle s'estableix a zero, només s'aplicarà el ralentí del motor estàtic. Canvieu la configuració de Dynamic Idle a la pestanya d'ajustament PID.",
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Throttle mínim (Valor mínim dels ESC quan està armat)"
@@ -2131,6 +2175,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Resetejar la tasa d'actualització"
     },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Throttle [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Desa"
     },
@@ -2656,10 +2716,6 @@
     "gpsMapHead": {
         "message": "Ubicació actual del GPS"
     },
-    "gpsMapHeadHelp": {
-        "message": "Mostra la ubicació GPS al mapa. Utilitzeu el botó de desplaçament per apropar i allunyar.<br>La icona d'ubicació mostra la direcció nord quan el magnetòmetre està en ús",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Si us plau, revisa la connexió a Internet"
     },
@@ -2687,8 +2743,8 @@
         "description": "Show GPS position - Latitude / Longitude"
     },
     "gpsHeading": {
-        "message": "Encapçalament Mag / GPS:",
-        "description": "Show GPS heading - Magnetic / GPS course over ground"
+        "message": "Mostra Mag / GPS:",
+        "description": "Show IMU / GPS heading - Attitude / GPS course over ground"
     },
     "gpsSpeed": {
         "message": "Velocitat:"
@@ -2898,7 +2954,7 @@
         "message": "<strong>Avis de seguretat</strong><br /><strong class=\"message-negative\">Retireu totes les hélices per evitar lesions!</strong><br />Els motors <strong>giraran!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Avís d'informació</strong><br />Els motors giraran un per un i podreu seleccionar el motor que gira. S'ha de connectar la bateria, s'ha de seleccionar el protocol ESC correcte. Aquesta utilitat només pot reorganitzar motors actualment actius. El re-mapeig més complex requereix la comanda de recursos CLI. Consulteu aquest <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Pàgina Wiki</a>."
+        "message": "<strong>Avís d'informació</strong><br />Els motors giraran un per un i podreu seleccionar el motor que gira. S'ha de connectar la bateria, s'ha de seleccionar el protocol ESC correcte. Aquesta utilitat només pot reorganitzar motors actualment actius. El re-mapeig més complex requereix la comanda de recursos CLI. Consulteu aquest <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Página Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Desa"
@@ -3021,7 +3077,7 @@
         "message": "Acceleròmetre - g (graus)"
     },
     "sensorsMagTitle": {
-        "message": "Magnetòmetre - Ga"
+        "message": "Magnetòmetre"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitud - metres"
@@ -3228,7 +3284,7 @@
         "message": "Estat desconegut $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Selecciona aplicar"
+        "message": "Seleccioneu Pull Request o Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Versió i informació de compilació"
@@ -3252,7 +3308,8 @@
         "message": "Model:"
     },
     "firmwareFlasherTargetWikiUrlInfo": {
-        "message": "Obteniu més informació sobre la controladora de vol a la wiki de Betaflight (l'url de la wiki es troba a la configuració de la FC unificada)"
+        "message": "Obteniu més informació sobre la plataforma a la wiki de Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3278,10 +3335,16 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "èxit"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancel·lat"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "s'ha esgotat el temps d'espera (torneu-ho a provar)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "error de sol·licitud de compilació (si us plau, comproveu la configuració de compilació, per exemple, definicions personalitzades)"
+    },
+    "firmwareFlasherCloudBuildFail": {
         "message": "ha fallat (comproveu el registre)"
     },
     "firmwareFlasherReleaseFileUrl": {
@@ -4449,7 +4512,7 @@
         "message": "Valor Dinàmic Idle [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. <br /><br />Visiteu <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki</a> per a més informació."
+        "message": "Dynamic Idle millora el control a baixes rpm i redueix el risc de desincronització del motor. <br /><br /> Millora l'autoritat PID, l'estabilitat de l'accelerador zero, el temps d'aturada invertit i el frenat del motor.<br /><br />Les rpm mínimes de ralentí dinàmic s'han d'establir entre 3000 i 3500 rpm. <br /><br />Visiteu <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki</a> per a més informació."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle està DESACTIVAT perquè la telemetria DSHOT està DESACTIVADA"
@@ -4464,7 +4527,7 @@
         "message": "Yaw Integrat"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATENCIÓ</span>: si activeu aquesta característica, heu d'ajustar el PID YAW en conseqüència. Més informació<a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\"target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
+        "message": "<span class=\"message-negative\">ATENCIÓ</span>: si activeu aquesta característica, heu d'ajustar el PID YAW en conseqüència. Més informació <a href=\"https://github.com/cleanflight/cleanflight/wiki/Integrated-Yaw\"target=\"blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integra els valors de guiñada P, I i D, la qual cosa permet que les guiñades P, I i D s'ajustin una mica com si sintonitzeu el pas i el gir.<br><br>Es requereix molt poca I, perquè la P integrada actua com I i la D integrada actuen com P.<br><br>NOTA: La guiada integrada requereix l'ús del control absolut, ja que no es necessita cap I amb la guiada integrada."
@@ -5370,8 +5433,8 @@
         "message": "Millor temps de 3 voltas GPS",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Millor temps de volta per GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "Millor temps de 3 voltas per GPS"
     },
     "osdTextElementCraftName": {
         "message": "Nom de l'aeronau",
@@ -6137,6 +6200,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Altitud",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Qualitat enllaç",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Armant des-habilitat",
@@ -7194,6 +7261,9 @@
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Seleccioneu el protocol de telemetria que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, però només es pot seleccionar un element.. També hi ha alguns protocols de telemetria que s'habilitaran, independentment de la vostra selecció aquí en funció del protocol de ràdio seleccionat, p. CRSF."
     },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Inclòs automàticament"
+    },
     "firmwareFlasherOptionsDescription": {
         "message": "Seleccioneu les opcions genèriques que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements. Elements com ara correccions, p. AKK VTX, s'inclouen aquí."
     },
@@ -7218,5 +7288,9 @@
     "showDevToolsOnStartup": {
         "message": "Obriu automàticament DevTools en mode de desenvolupament",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "Wiki",
+        "description": "Text for the button to open the support URL"
     }
 }

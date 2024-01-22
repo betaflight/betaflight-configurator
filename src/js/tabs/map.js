@@ -1,121 +1,137 @@
+import { View, Map, Feature } from "ol";
+import { fromLonLat } from "ol/proj";
+import { Tile, Vector as LayerVector } from "ol/layer";
+import { OSM, XYZ, Vector as SourceVector } from "ol/source";
+import { Icon, Style } from "ol/style";
+import { Point } from "ol/geom";
 
-const DEFAULT_ZOOM = 16,
-      DEFAULT_LON = 0,
-      DEFAULT_LAT = 0,
-      ICON_IMAGE_GPS = '/images/icons/cf_icon_position.png',
-      ICON_IMAGE_MAG = '/images/icons/cf_icon_position_mag.png',
-      ICON_IMAGE_NOFIX = '/images/icons/cf_icon_position_nofix.png';
+const DEFAULT_ZOOM = 17,
+    DEFAULT_LON = 0,
+    DEFAULT_LAT = 0,
+    ICON_IMAGE_GPS = "/images/icons/cf_icon_position.png",
+    ICON_IMAGE_MAG = "/images/icons/cf_icon_position_mag.png",
+    ICON_IMAGE_NOFIX = "/images/icons/cf_icon_position_nofix.png";
 
-let iconGeometry,
-    map,
-    mapView,
-    iconStyleGPS,
-    iconStyleMag,
-    iconStyleNoFix,
-    iconFeature;
+export function initMap() {
+    const lonLat = fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
 
-window.onload = initializeMap;
+    const mapView = new View({
+        center: lonLat,
+        zoom: DEFAULT_ZOOM,
+    });
 
-function initializeMap() {
+    const osmLayer = new Tile({
+        source: new OSM(),
+    });
 
-    const lonLat = ol.proj.fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
+    const googleSatLayer = new Tile({
+        source: new XYZ({
+            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+        }),
+    });
 
-    mapView = new ol.View({
-                        center: lonLat,
-                        zoom: DEFAULT_ZOOM,
-                      });
+    const googleHybridLayer = new Tile({
+        source: new XYZ({
+            url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+        }),
+    });
 
-    map = new ol.Map({
-        target: 'map-canvas',
+    const map = new Map({
+        target: "map",
         layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM(),
-          }),
+            osmLayer,
+            googleSatLayer,
+            googleHybridLayer,
         ],
         view: mapView,
         controls: [],
-      });
+    });
 
-      const iconGPS = new ol.style.Icon(({
+    const iconGPS = new Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_GPS,
-    }));
+    });
 
-    const iconMag = new ol.style.Icon(({
+    const iconMag = new Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_MAG,
-    }));
+    });
 
-    const iconNoFix = new ol.style.Icon(({
+    const iconNoFix = new Icon({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE_NOFIX,
-    }));
+    });
 
-    iconStyleGPS = new ol.style.Style({
+    const iconStyleGPS = new Style({
         image: iconGPS,
     });
 
-    iconStyleMag = new ol.style.Style({
+    const iconStyleMag = new Style({
         image: iconMag,
     });
 
-    iconStyleNoFix = new ol.style.Style({
+    const iconStyleNoFix = new Style({
         image: iconNoFix,
     });
 
-    iconGeometry = new ol.geom.Point(lonLat);
-    iconFeature = new ol.Feature({
+    const iconGeometry = new Point(lonLat);
+
+    const iconFeature = new Feature({
         geometry: iconGeometry,
     });
 
     iconFeature.setStyle(iconStyleGPS);
 
-    const vectorSource = new ol.source.Vector({
+    const vectorSource = new SourceVector({
         features: [iconFeature],
     });
 
-    const currentPositionLayer = new ol.layer.Vector({
+    const currentPositionLayer = new LayerVector({
         source: vectorSource,
     });
 
     map.addLayer(currentPositionLayer);
 
-    window.addEventListener('message', processMapEvents);
-}
+    // Start with Satellite layer
+    osmLayer.setVisible(false);
+    googleHybridLayer.setVisible(false);
 
-function processMapEvents(e) {
-    try {
-        switch (e.data.action) {
-            case 'zoom_in':
-                mapView.setZoom(mapView.getZoom() + 1);
-                break;
-
-            case 'zoom_out':
-                mapView.setZoom(mapView.getZoom() - 1);
-                break;
-
-            case 'center':
-            case 'centerMag':
-                const iconStyle = e.data.action == 'centerMag' ? iconStyleMag : iconStyleGPS;
-                iconFeature.setStyle(iconStyle);
-                const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
-                mapView.setCenter(center);
-                const heading = e.data.heading === undefined ? 0 : e.data.heading;
-                mapView.setRotation(heading);
-                iconGeometry.setCoordinates(center);
-                break;
-
-            case 'nofix':
-                iconFeature.setStyle(iconStyleNoFix);
-                break;
+    $('#Hybrid').on('click', function () {
+        if (!googleHybridLayer.isVisible()) {
+            osmLayer.setVisible(false);
+            googleSatLayer.setVisible(false);
+            googleHybridLayer.setVisible(true);
         }
-    } catch (err) {
-        console.error('Map error', err);
-    }
+    });
+
+    $('#Satellite').on('click', function () {
+        if (!googleSatLayer.isVisible()) {
+            osmLayer.setVisible(false);
+            googleSatLayer.setVisible(true);
+            googleHybridLayer.setVisible(false);
+        }
+    });
+
+    $('#Street').on('click', function () {
+        if (!osmLayer.isVisible()) {
+            osmLayer.setVisible(true);
+            googleSatLayer.setVisible(false);
+            googleHybridLayer.setVisible(false);
+        }
+    });
+
+    return {
+        mapView,
+        iconStyleMag,
+        iconStyleGPS,
+        iconStyleNoFix,
+        iconFeature,
+        iconGeometry,
+    };
 }

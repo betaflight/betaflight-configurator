@@ -199,9 +199,6 @@
     "tabLanding": {
         "message": "Welkom"
     },
-    "tabChangelog": {
-        "message": "Logboekwijzigingen"
-    },
     "tabPrivacyPolicy": {
         "message": "Privacy Beleid"
     },
@@ -571,9 +568,6 @@
     "defaultFacebookText": {
         "message": "We hebben ook een <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Groep</a>.<br />Sluit je aan bij ons om een plek te krijgen waar je over Betaflight kunt praten, stel vragen over configuratie of hang rond met je mede piloten."
     },
-    "defaultChangelogHead": {
-        "message": "Configurator - Wijzigingen"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Besturingssysteem Flasher"
     },
@@ -718,9 +712,6 @@
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
-    },
-    "initialSetupRSSIValue": {
-        "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
         "message": "Arming Uitgezet Kenmerken:"
@@ -2267,9 +2258,6 @@
     },
     "sensorsAccelTitle": {
         "message": "Versnellingsmeter - g (graden)"
-    },
-    "sensorsMagTitle": {
-        "message": "Magnetometer - Ga"
     },
     "sensorsAltitudeTitle": {
         "message": "Hoogte - meters"

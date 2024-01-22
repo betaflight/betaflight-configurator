@@ -56,7 +56,7 @@ const MSP = {
     packet_error:               0,
     unsupported:                0,
 
-    MIN_TIMEOUT:                50,
+    MIN_TIMEOUT:                100,
     MAX_TIMEOUT:                2000,
     timeout:                    200,
 
@@ -308,7 +308,8 @@ const MSP = {
         return bufferOut;
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        const connected = isWeb ? serial.connected : serial.connectionId;
+        const connected = isWeb() ? serial.connected : serial.connectionId;
+
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
@@ -324,12 +325,6 @@ const MSP = {
                 break;
             }
         }
-
-        if (isWeb() && (code === undefined || !serial.connectionInfo)) {
-          console.log('ERROR: code undefined or no connectionId');
-          return false;
-        }
-
 
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
 

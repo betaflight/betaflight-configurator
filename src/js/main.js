@@ -50,20 +50,23 @@ function useGlobalNodeFunctions() {
 }
 
 function readConfiguratorVersionMetadata() {
-    if (GUI.isNWJS()) {
+    if (GUI.isNWJS() || GUI.isCordova()) {
         const manifest = chrome.runtime.getManifest();
         CONFIGURATOR.productName = manifest.productName;
         CONFIGURATOR.version = manifest.version;
         CONFIGURATOR.gitRevision = manifest.gitRevision;
     } else {
-        CONFIGURATOR.productName = __APP_PRODUCTNAME__;
-        CONFIGURATOR.version = __APP_VERSION__;
-        CONFIGURATOR.gitRevision = __APP_REVISION__;
+        // These are injected by vite. If not checking
+        // for undefined occasionally there is a race
+        // condition where this fails the nwjs and cordova builds
+        CONFIGURATOR.productName = typeof __APP_PRODUCTNAME__ !== 'undefined' ? __APP_PRODUCTNAME__ : 'Betaflight Configurator';
+        CONFIGURATOR.version = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
+        CONFIGURATOR.gitRevision = typeof __APP_REVISION__ !== 'undefined' ? __APP_REVISION__ : 'unknown';
     }
 }
 
 function cleanupLocalStorage() {
-
+    // storage quota is 5MB, we need to clean up some stuff (more info see PR #2937)
     const cleanupLocalStorageList = [
         'cache',
         'firmware',
@@ -80,6 +83,8 @@ function cleanupLocalStorage() {
             }
         }
     }
+
+    setConfig({'erase_chip': true}); // force erase chip on first run
 }
 
 function appReady() {
@@ -228,7 +233,7 @@ function startProcess() {
     document.createElement('canvas');
 
     // log library versions in console to make version tracking easier
-    console.log(`Libraries: jQuery - ${$.fn.jquery}, d3 - ${d3.version}, three.js - ${THREE.REVISION}`);
+    console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
     // Tabs
     $("#tabs ul.mode-connected li").click(function() {
@@ -567,7 +572,7 @@ function startProcess() {
         const checked = expertModeCheckbox.is(':checked');
 
         checkSetupAnalytics(function (analyticsService) {
-            analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'ExpertMode', { status: checked ? 'On' : 'Off' });
         });
 
         if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {

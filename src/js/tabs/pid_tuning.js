@@ -1290,27 +1290,8 @@ pid_tuning.initialize = function (callback) {
             $('.acroTrainerAngleLimit').hide();
         }
 
-        const hideSensorPid = function(element, sensorReady) {
-            let isVisible = element.is(":visible");
-            if (!isVisible || !sensorReady) {
-                element.hide();
-                isVisible = false;
-            }
-
-            return isVisible;
-        };
-
-        let isVisibleBaroMagGps = false;
-
-        isVisibleBaroMagGps |= hideSensorPid($('#pid_baro'), have_sensor(FC.CONFIG.activeSensors, 'baro') || have_sensor(FC.CONFIG.activeSensors, 'sonar'));
-
-        isVisibleBaroMagGps |= hideSensorPid($('#pid_mag'), have_sensor(FC.CONFIG.activeSensors, 'mag'));
-
-        isVisibleBaroMagGps |= hideSensorPid($('#pid_gps'), have_sensor(FC.CONFIG.activeSensors, 'GPS'));
-
-        if (!isVisibleBaroMagGps) {
-            $('#pid_baro_mag_gps').hide();
-        }
+        // Hide all optional elements
+        $('#pid_baro_mag_gps').hide();
     }
 
     function drawAxes(curveContext, width, height) {
