@@ -4127,9 +4127,6 @@
         "message": "ESC temperatuur",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "Temperatuur gerapporteerd door ESC telemetry"
-    },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
         "description": "One of the elements of the OSD"

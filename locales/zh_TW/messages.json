@@ -3812,9 +3812,6 @@
         "message": "電調温度",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "電調回傳溫度"
-    },
     "osdTextElementEscRpm": {
         "message": "電調轉速",
         "description": "One of the elements of the OSD"

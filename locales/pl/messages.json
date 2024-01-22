@@ -5662,9 +5662,6 @@
         "message": "Temperatura ESC",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "Temperatura podana za pomocą telemetrii ESC"
-    },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
         "description": "One of the elements of the OSD"
@@ -6621,7 +6618,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "Przycisk '$t(vtxButtonSaveLua.message)' pozwoli Ci zapisać <i>msześcian</i>. ua plik zawierający konfigurację tabeli VTX, która może być użyta z <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">skryptami Betaflight TX Lua</a>.<br><br>Wersja 1.6. i powyżej może używać pliku w takiej postaci, ale dla starszych wersji skryptów powinna zostać zmieniona nazwa tak, aby pasowała do nazwy modelu na TX.",
+        "message": "Przycisk '$t(vtxButtonSaveLua.message)' pozwoli Ci zapisać plik <i>mcuid</i>.lua zawierające konfigurację tabeli VTX, której można używać z <a href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Skrypty Betaflight TX Lua</a>.<br><br>Wersja 1.6.0 i nowsze mogą korzystać z pliku tak jak jest, ale w przypadku starszych wersji skryptów należy zmienić jego nazwę, aby odpowiadała nazwie modelu w TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {

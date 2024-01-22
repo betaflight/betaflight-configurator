@@ -3885,9 +3885,6 @@
         "message": "ESC tenperatura",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "Tenperatura ESCren telemetriaren arabera"
-    },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
         "description": "One of the elements of the OSD"

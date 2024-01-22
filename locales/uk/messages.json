@@ -5662,7 +5662,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "Температура з телеметрії ESC"
+        "message": "Температура з телеметрії ESC, отримана або через послідовний порт, або через двонаправлений Dshot з EDT, якщо підтримується вашою прошивкою ESC."
     },
     "osdTextElementEscRpm": {
         "message": "ESC об/хв ",
