@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
@@ -168,7 +168,7 @@ gps.initialize = async function (callback) {
             const enableGalileoVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43);
             gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
 
-            const enableAnaVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
+            const enableAnaVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
             gpsUbloxAnaGroup.toggle(enableAnaVisible);
 
             const enableSbasVisible = checked && ubloxSelected;
