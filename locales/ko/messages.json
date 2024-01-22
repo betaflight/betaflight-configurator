@@ -5665,9 +5665,6 @@
         "message": "ESC 온도",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "ESC 텔레메트리에 의해 보고된 온도"
-    },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
         "description": "One of the elements of the OSD"

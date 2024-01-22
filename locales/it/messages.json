@@ -3275,6 +3275,9 @@
     "sdcardStatusUnknown": {
         "message": "Stato sconosciuto $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "Seleziona Pull Request o Commit"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Info di release e build"
     },
@@ -3323,6 +3326,18 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "successo"
+    },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancellato"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
+        "message": "timeout (riprova)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "errore di compilazione (controllare la configurazione, ad esempio le definizioni personalizzate)"
+    },
+    "firmwareFlasherCloudBuildFail": {
+        "message": "fallito (controllare il log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Scarica manualmente."
@@ -5646,9 +5661,6 @@
         "message": "Temperatura ESC",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "Temperatura rilevata dalla telemetria ESC"
-    },
     "osdTextElementEscRpm": {
         "message": "RPM ESC",
         "description": "One of the elements of the OSD"
@@ -7237,6 +7249,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Seleziona il protocollo telemetria che vuoi includere nella build. Della lista, puoi selezionare una sola voce. Ci sono anche alcuni protocolli per la telemetria che saranno abilitati, anche se la tua selezione è basata su un solo protocollo radio, es. CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Incluso automaticamente"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Selezionare le opzioni generiche che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi. Elementi come fix, es AKK VTX, sono inclusi qui."

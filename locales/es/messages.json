@@ -5661,9 +5661,6 @@
         "message": "ESC: temperatura",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "Temperatura reportada por la telemetría de los ESC"
-    },
     "osdTextElementEscRpm": {
         "message": "ESC: RPM",
         "description": "One of the elements of the OSD"

@@ -5666,7 +5666,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "Temperatur rapporteret af ESC telemetri"
+        "message": "Temperatur rapporteret af ESC telemetri. Kæver understøttelse af ESC firmware. Forbundet serielt (een ledning) eller DShot telemetri med EDT (to ledninger)."
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",

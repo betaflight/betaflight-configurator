@@ -3275,6 +3275,9 @@
     "sdcardStatusUnknown": {
         "message": "不明な状態 $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "プルリクエストまたはコミットを選択"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "リリースおよびビルド情報"
     },
@@ -3323,6 +3326,18 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "成功しました"
+    },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "キャンセルされました"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
+        "message": "タイムアウトしました (再試行してください)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "ビルド要求エラー (カスタム定義などのビルド設定を確認してください)"
+    },
+    "firmwareFlasherCloudBuildFail": {
+        "message": "失敗しました (ログを確認してください)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手動でダウンロードしてください。"
@@ -5647,7 +5662,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "温度レポート by ESCテレメトリー"
+        "message": "お使いのESCファームウェアが対応する場合、ESCテレメトリー (シリアル接続テレメトリー、またはEDTを用いたDShot双方向テレメトリー) により温度が報告されます。"
     },
     "osdTextElementEscRpm": {
         "message": "ESC 回転数",
