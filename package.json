@@ -117,7 +117,7 @@
     "temp": "^0.9.4",
     "through2": "^4.0.2",
     "vinyl-source-stream": "^2.0.0",
-    "vite": "^4.4.12",
+    "vite": "^4.5.2",
     "vitest": "^0.27.1",
     "vue-loader": "^15.9.8",
     "vue-template-compiler": "^2.7.10",
