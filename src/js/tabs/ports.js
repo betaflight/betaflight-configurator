@@ -18,6 +18,7 @@ ports.initialize = function (callback) {
     const self = this;
 
     let board_definition = {};
+    let useVtx = true;
 
     const functionRules = [
         { name: 'MSP',                  groups: ['configuration', 'msp'], maxPorts: 2 },
@@ -43,6 +44,17 @@ ports.initialize = function (callback) {
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         functionRules.push({ name: 'VTX_MSP', groups: ['peripherals'], sharableWith: ['msp'], maxPorts: 1 });
+
+        // Remove items not supported by the build
+
+        useVtx = FC.CONFIG.buildOptions.includes('USE_VTX');
+
+        if (!useVtx) {
+            // remove TBS_SMARTAUDIO and IRC_TRAMP from functionRules
+            functionRules.splice(functionRules.findIndex(i => i.name === 'TBS_SMARTAUDIO'), 1);
+            functionRules.splice(functionRules.findIndex(i => i.name === 'IRC_TRAMP'), 1);
+            $('.vtxTableNotSet').hide();
+        }
     }
 
     for (const rule of functionRules) {
@@ -100,7 +112,7 @@ ports.initialize = function (callback) {
 
     function load_configuration_from_fc() {
         let promise;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && useVtx) {
             promise = MSP.promise(MSPCodes.MSP_VTX_CONFIG);
         } else {
             promise = Promise.resolve();
@@ -285,13 +297,11 @@ ports.initialize = function (callback) {
         }
 
         let vtxTableNotConfigured = true;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && useVtx) {
             vtxTableNotConfigured = FC.VTX_CONFIG.vtx_table_available &&
                                         (FC.VTX_CONFIG.vtx_table_bands === 0 ||
                                         FC.VTX_CONFIG.vtx_table_channels === 0 ||
                                         FC.VTX_CONFIG.vtx_table_powerlevels === 0);
-        } else {
-            $('.vtxTableNotSet').hide();
         }
 
         const pheripheralsSelectElement = $('select[name="function-peripherals"]');
