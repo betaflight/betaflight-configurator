@@ -895,6 +895,9 @@
     "initialSetupCpuTemp": {
         "message": "CPU Temperature:"
     },
+    "initialSetupCpuTempNotSupported": {
+        "message": "No support from MSP API before 1.46"
+    },
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
@@ -1088,8 +1091,8 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
-    "initialSetupInfoFirmware": {
-        "message": "Shows information for firmware Build. If connected to Build Server, Log and Config links to cloud information found by Build key stored in firmware. Options defined, show with mouse over, defines used in Cloud Build.<br>Section are empty if local Build.",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Shows information for firmware Build. If connected to Build Server, Log and Config links to cloud information found by Build key stored in firmware. Options defined, show options used in Cloud Build.<br>Section are empty if local Build.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {

@@ -430,9 +430,14 @@ setup.initialize = function (callback) {
                     for (const buildOptionElement of FC.CONFIG.buildOptions) {
                         buildOptionList = `${buildOptionList} &nbsp ${buildOptionElement}`;
                     }
+                    /*
                     buildOptions = `<span class="buildInfoClassOptions"
                                    title="${i18n.getMessage('initialSetupInfoBuildOptions')}:${buildOptionList}">
                                    <strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></span>`;
+                    */
+                   const xxx = 'abc';
+                    buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptions')}: ${xxx}">
+                                    <a href="${xxx}" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</a></strong></span>`;
                 }
 
                 if (FC.CONFIG.buildKey.length === 32) {
@@ -481,6 +486,9 @@ setup.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
                 cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
+            }
+            else {
+                cputemp_e.text(i18n.getMessage('initialSetupCpuTempNotSupported'));
             }
 
             // GPS info is acquired in the background using update_live_status() in serial_backend.js
