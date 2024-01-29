@@ -60,7 +60,7 @@
     "lodash.debounce": "^4.0.8",
     "marked": "^4.1.1",
     "multicast-dns": "^7.2.5",
-    "multiple-select": "^1.6.0",
+    "multiple-select": "^1.7.0",
     "nw-vue-devtools-prebuilt": "^0.0.10",
     "ol": "^8.2.0",
     "select2": "^4.0.13",

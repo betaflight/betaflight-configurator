@@ -2,7 +2,7 @@ import '../../js/jqueryPlugins';
 import GUI, { TABS } from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
 import { generateFilename } from '../../js/utils/generate_filename';
-import { i18n, getCurrentLocaleISO } from "../localization";
+import { i18n, getCurrentLocaleISO } from "../../js/localization";
 import FC from '../../js/fc';
 import CONFIGURATOR from '../../js/data_storage';
 import UI_PHONES from '../../js/phones_ui';

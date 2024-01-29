@@ -1,5 +1,5 @@
 import GUI from "../../../js/gui";
-import { i18n, getCurrentLocaleISO } from "../localization";
+import { i18n, getCurrentLocaleISO } from "../../../js/localization";
 import PickedPreset from "../PickedPreset";
 import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
 import FC from "../../../js/fc";
