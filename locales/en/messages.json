@@ -2995,7 +2995,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br />Moving the sliders or arming your craft with the transmitter will cause the motors to <strong>spin up</strong>.<br />In order to prevent injury <strong class=\"message-negative\">remove ALL propellers</strong> before using this feature.<br />Enabling motor test mode will also temporarily disable Runaway Takeoff Prevention, to stop it from disarming the craft when bench testing without propellers.<br />"
+        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br /><br /><strong class=\"message-negative\">WARNING: Serious risk of injury! Remove all propellers!</strong><br /><br /><ul><li>&#x2022; Motors will spin up when armed or when sliders are raised</li><li>&#x2022; Motor test mode will remain active after moving to another Tab</li><li>&#x2022; Hitting any key will stop the motors, but only in the Motors Tab</li><li>&#x2022; Disconnecting the USB cable may not stop the motors!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>I understand the risks</strong>, the propellers are removed - enable motor control and arming, and disable Runaway Takeoff Prevention."
