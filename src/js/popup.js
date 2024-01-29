@@ -1,10 +1,5 @@
-import GUI from "../../../js/gui";
-import { i18n } from "../../../js/localization";
-import PickedPreset from "../PickedPreset";
-import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
-import FC from "../../../js/fc";
-import { marked } from "marked";
-import DOMPurify from "dompurify";
+import GUI from "gui";
+import { i18n } from "localization";
 import $ from 'jquery';
 
 $(document).ready(function () {
