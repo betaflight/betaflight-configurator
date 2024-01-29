@@ -4427,7 +4427,7 @@
         "message": "Vbat 처짐 보상"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br /><br />보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br /><br />더 많은 정보는 <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
+        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br /><br />보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br /><br />더 많은 정보는 <a href=\"https://betaflight.com/docs/wiki/tuning/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -5664,6 +5664,9 @@
     "osdTextElementEscTemperature": {
         "message": "ESC 온도",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementEscTemperature": {
+        "message": "ESC 텔레메트리, 시리얼 1선 텔레메트리 또는 EDT를 사용한 DShot 양방향 텔레메트리(ESC 펌웨어에서 지원되는 경우) 에 의해 보고되는 온도입니다."
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
