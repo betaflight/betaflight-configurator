@@ -2791,7 +2791,8 @@ osd.initialize = function(callback) {
                             }
                         }
                         const type = OSD.constants.VIDEO_TYPES[i];
-                        const videoFormatOptionText = i18n.getMessage(`osdSetupVideoFormatOption${inflection.camelize(type.toLowerCase())}`);
+                        let videoFormatOptionText = i18n.getMessage(`osdSetupVideoFormatOption${inflection.camelize(type.toLowerCase())}`);
+                        videoFormatOptionText = disabled ? `<span style="color:#AFAFAF">${videoFormatOptionText}</span>` : videoFormatOptionText;
                         const $checkbox = $('<label/>')
                             .append($(`<input name="video_system" ${disabled ? 'disabled' : ''} type="radio"/>${videoFormatOptionText}</label>`)
                             .prop('checked', i === OSD.data.video_system)
