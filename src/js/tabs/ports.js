@@ -7,7 +7,6 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
-import BOARD from '../boards';
 import $ from 'jquery';
 
 const ports = {
@@ -16,8 +15,6 @@ const ports = {
 
 ports.initialize = function (callback) {
     const self = this;
-
-    let board_definition = {};
 
     const functionRules = [
         { name: 'MSP',                  groups: ['configuration', 'msp'], maxPorts: 2 },
@@ -112,9 +109,6 @@ ports.initialize = function (callback) {
 
         function on_configuration_loaded_handler() {
             $('#content').load("./tabs/ports.html", on_tab_loaded_handler);
-
-            board_definition = BOARD.find_board_definition(FC.CONFIG.boardIdentifier);
-            console.log('Using board definition', board_definition);
         }
     }
 
