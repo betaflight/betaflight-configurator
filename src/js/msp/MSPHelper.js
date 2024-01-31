@@ -771,7 +771,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.flightControllerVersion = `${data.readU8()}.${data.readU8()}.${data.readU8()}`;
                 break;
 
-            case MSPCodes.MSP_BUILD_INFO:
+            case MSPCodes.MSP_BUILD_INFO: {
                 const dateLength = 11;
                 buff = [];
 
@@ -785,7 +785,26 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     buff.push(data.readU8());
                 }
                 FC.CONFIG.buildInfo = String.fromCharCode.apply(null, buff);
+
+                const gitRevisionLength = 7;
+                buff = [];
+                for (let i = 0; i < gitRevisionLength; i++) {
+                    buff.push(data.readU8());
+                }
+
+                FC.CONFIG.gitRevision = String.fromCharCode.apply(null, buff);
+                console.log("Fw git rev:", FC.CONFIG.gitRevision);
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    let option = data.readU16();
+                    while (option) {
+                        FC.CONFIG.buildOptions.push(option);
+                        option = data.readU16();
+                    }
+                }
+
                 break;
+            }
 
             case MSPCodes.MSP_BOARD_INFO:
                 FC.CONFIG.boardIdentifier = '';

@@ -10,6 +10,7 @@ const INITIAL_CONFIG = {
     buildInfo:                        '',
     buildKey:                         '',
     buildOptions:                     [],
+    gitRevision:                      '',
     multiType:                        0,
     msp_version:                      0, // not specified using semantic versioning
     capability:                       0,
@@ -65,6 +66,59 @@ const INITIAL_BATTERY_CONFIG = {
     capacity:                   0,
     voltageMeterSource:         0,
     currentMeterSource:         0,
+};
+
+const FIRMWARE_BUILD_OPTIONS = {
+    // Radio Protocols
+    USE_SERIALRX_CRSF:          4097,
+    USE_SERIALRX_FPORT:         4098,
+    USE_SERIALRX_GHST:          4099,
+    USE_SERIALRX_IBUS:          4100,
+    USE_SERIALRX_JETIEXBUS:     4101,
+    USE_RX_PPM:                 4102,
+    USE_SERIALRX_SBUS:          4103,
+    USE_SERIALRX_SPEKTRUM:      4104,
+    USE_SERIALRX_SRXL2:         4105,
+    USE_SERIALRX_SUMD:          4106,
+    USE_SERIALRX_SUMH:          4107,
+    USE_SERIALRX_XBUS:          4108,
+
+    // Motor Protocols
+    USE_BRUSHED:                8230,
+    USE_DSHOT:                  8231,
+    USE_MULTISHOT:              8232,
+    USE_ONESHOT:                8233,
+    USE_PROSHOT:                8234,
+    USE_PWM_OUTPUT:             8235,
+
+    // Telemetry Protocols
+    USE_TELEMETRY_FRSKY_HUB:    12301,
+    USE_TELEMETRY_HOTT:         12302,
+    USE_TELEMETRY_IBUS_EXTENDED:12303,
+    USE_TELEMETRY_LTM:          12304,
+    USE_TELEMETRY_MAVLINK:      12305,
+    USE_TELEMETRY_SMARTPORT:    12306,
+    USE_TELEMETRY_SRXL:         12307,
+
+    // General Options
+    USE_ACRO_TRAINER:           16404,
+    USE_AKK_SMARTAUDIO:         16405,
+    USE_BATTERY_CONTINUE:       16406,
+    USE_CAMERA_CONTROL:         16407,
+    USE_DASHBOARD:              16408,
+    USE_EMFAT_TOOLS:            16409,
+    USE_ESCSERIAL_SIMONK:       16410,
+    USE_FRSKYOSD:               16411,
+    USE_GPS:                    16412,
+    USE_LED_STRIP:              16413,
+    USE_LED_STRIP_64:           16414,
+    USE_MAG:                    16415,
+    USE_OSD_SD:                 16416,
+    USE_OSD_HD:                 16417,
+    USE_PINIO:                  16418,
+    USE_RACE_PRO:               16419,
+    USE_SERVOS:                 16420,
+    USE_VTX:                    16421,
 };
 
 const FC = {
@@ -830,6 +884,21 @@ const FC = {
     CONFIGURATION_PROBLEM_FLAGS: {
         ACC_NEEDS_CALIBRATION: 0,
         MOTOR_PROTOCOL_DISABLED: 1,
+    },
+
+    processBuildOptions() {
+        const buildOptions = [];
+
+        for (const [key, value] of Object.entries(FIRMWARE_BUILD_OPTIONS)) {
+            for (const option of this.CONFIG.buildOptions) {
+                if (option === value) {
+                    buildOptions.push(key);
+                    break;
+                }
+            }
+        }
+
+        this.CONFIG.buildOptions = buildOptions;
     },
 
     boardHasVcp() {
