@@ -1,37 +1,56 @@
+import 'jqueryPlugins';
 import GUI from "gui";
 import { i18n } from "localization";
 import $ from 'jquery';
 
-$(document).ready(function () {
-    // Create button dynamically
-    let button = $("<button>").text("Open Popup").click(function () {
-      openPopup();
-    });
+export default class PopupDialog {
+    constructor(domDialog) {
+        this._domDialog = domDialog;
+        this._sourceSelectedPromiseResolve = null;
+    }
 
-    // Append the button to the body
-    $("body").append(button);
-  });
+    load() {
+        return new Promise(resolve => {
+            this._domDialog.load("./tabs/popup.html",
+            () => {
+                this._setupDialog();
+                this._initializeSources();
+                resolve();
+            });
+        });
+    }
 
-  function openPopup() {
-    // Create popup content dynamically
-    let popupContent = $("<div>").html("<h2>Popup Content</h2><p>This is your custom popup content.</p>");
+    show() {
+        this._domDialog[0].showModal();
+        return new Promise(resolve => this._sourceSelectedPromiseResolve = resolve);
+    }
 
-    // Append the popup content to the body
-    $("body").append(popupContent);
+    _setupDialog() {
+        this._readDom();
+        this._setupEvents();
+        i18n.localizePage();
+    }
 
-    let popup = $(".popup-container");
-    let overlay = $(".overlay");
+    _scrollDown() {
+        this._domDivSourcesPanel.stop();
+        this._domDivSourcesPanel.animate({scrollTop: `${this._domDivSourcesPanel.prop('scrollHeight')}px`});
+    }
 
-    popup.show();
-    overlay.show();
+    _setupEvents() {
+        this._domButtonClose.on("click", () => this._onCloseButtonClick());
+        this._domDialog.on("close", () => this._onClose());
+    }
 
-    // Close the popup when clicking outside the content
-    overlay.click(function () {
-      closePopup();
-    });
-  }
+    _onCloseButtonClick() {
+        this._domDialog[0].close();
+    }
 
-  function closePopup() {
-    $(".popup-container").remove();
-    $(".overlay").hide();
-  }
+    _onClose() {
+        this._sourceSelectedPromiseResolve?.();
+    }
+
+    _readDom() {
+        this._domButtonClose = $("#popup_dialog_close");
+        this._domDivSourcesPanel = $(".popup_dialog_sources");
+    }
+}
