@@ -2780,10 +2780,21 @@ osd.initialize = function(callback) {
                     // video mode
                     const $videoTypes = $('.video-types').empty();
                     for (let i = 0; i < OSD.constants.VIDEO_TYPES.length; i++) {
+                        // Disable SD or HD option depending on the build
+                        let disabled = false;
+                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
+                            if (OSD.constants.VIDEO_TYPES[i] !== 'HD' && !FC.CONFIG.buildOptions.includes('USE_OSD_SD')) {
+                                disabled = true;
+                            }
+                            if (OSD.constants.VIDEO_TYPES[i] === 'HD' && !FC.CONFIG.buildOptions.includes('USE_OSD_HD')) {
+                                disabled = true;
+                            }
+                        }
                         const type = OSD.constants.VIDEO_TYPES[i];
-                        const videoFormatOptionText = i18n.getMessage(`osdSetupVideoFormatOption${inflection.camelize(type.toLowerCase())}`);
+                        let videoFormatOptionText = i18n.getMessage(`osdSetupVideoFormatOption${inflection.camelize(type.toLowerCase())}`);
+                        videoFormatOptionText = disabled ? `<span style="color:#AFAFAF">${videoFormatOptionText}</span>` : videoFormatOptionText;
                         const $checkbox = $('<label/>')
-                            .append($(`<input name="video_system" type="radio"/>${videoFormatOptionText}</label>`)
+                            .append($(`<input name="video_system" ${disabled ? 'disabled' : ''} type="radio"/>${videoFormatOptionText}</label>`)
                             .prop('checked', i === OSD.data.video_system)
                             .data('type', type)
                             .data('type', i),
