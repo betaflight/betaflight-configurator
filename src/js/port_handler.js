@@ -227,8 +227,9 @@ PortHandler.detectPort = function(currentPorts) {
         // Signal board verification
         if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
             TABS.firmware_flasher.boardNeedsVerification = true;
-            self.portPickerElement.trigger('change');
         }
+
+        self.portPickerElement.trigger('change');
 
         // auto-connect if enabled
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {
