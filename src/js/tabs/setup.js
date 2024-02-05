@@ -13,7 +13,7 @@ import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_46 } fr
 import { gui_log } from '../gui_log';
 import $ from 'jquery';
 
-import PopupDialog from 'popup';
+import PopupDialog from '../popupDialog';
 
 const setup = {
     yaw_fix: 0.0,
@@ -437,9 +437,13 @@ setup.initialize = function (callback) {
                                    title="${i18n.getMessage('initialSetupInfoBuildOptions')}:${buildOptionList}">
                                    <strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></span>`;
                     */
-                   const xxx = 'abc';
+                    const xxx = 'abc';
                     buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptions')}: ${xxx}">
                                     <dialog id="setup_popup_dialog"></dialog></strong></span>`;
+                    let popupDialog = new PopupDialog($('#popup_sources_dialog'), i18n.getMessage('initialSetupInfoBuildOptions'), buildOptionList);
+                    popupDialog.load();
+                    let buttonPopup = $('.popup_sources_dialog');
+                    buttonPopup.on("click", () => popupDialog.show());
                 }
 
                 if (FC.CONFIG.buildKey.length === 32) {
