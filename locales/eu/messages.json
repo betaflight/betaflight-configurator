@@ -2028,9 +2028,6 @@
     "motorsMaster": {
         "message": "Nagusia"
     },
-    "motorsNotice": {
-        "message": "<strong>Motorea probatzeko modua/armatua oharra:</strong><br/> Labainketak edo zure artisautza transmisorearekin batera armatzeak motorrak <strong>biraketa</strong> eragingo du.<br/> Lesioa ekiditeko <strong class=\"message-negative\">kendu helize GUZTIAK</strong> eginbide hau erabili aurretik.<br/> Motorearen proba modua gaituz gero, aldi baterako, desagerrarazteko aukera ere izango da, baina artisautza probatu gabe.<br/>"
-    },
     "motorsEnableControl": {
         "message": "<strong>Arriskuak ulertzen ditut</strong>, helizeak kendu-motore eta armatzearen kontrolak gaitu eta ihes egitea saihesteko prebentzioa desgaitu."
     },

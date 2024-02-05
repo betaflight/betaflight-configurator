@@ -2086,7 +2086,7 @@
         "message": "EEPROM <span class=\"message-positive\">zapisano</span>"
     },
     "tuningHelp": {
-        "message": "<b>Wskazówki</b><br /><span class=\"message-negative\">WAŻNE:</span> Ważne jest sprawdzanie temperatury silnika podczas pierwszych lotów. Im wyższa wartość filtra, tym lepiej(płynniej) może się latać, ale jednocześnie sygnał serujący silnikami będzie bardziej agresywny aby wynikowo maszyna była bardziej stabilizowana (silnik będzie się grzał ponieważ wirnik z śmigłem ma swoją masę i pęd - szybkie zmiany obrotów potrzebują dostarczenia dużej ilości energii aby zmienić pęd). <br>Domyślna wartość 100 Hz jest optymalna, ale dla platformy z drganiami (z śmigła/ z silnika) można spróbować obniżyć ustawienie filtru Dterm do 50Hz, a być może również ustawienie filtru żyroskopowego."
+        "message": "<b>Wskazówki</b><br /><span class=\"message-negative\">WAŻNE:</span> Ważne jest sprawdzanie temperatury silnika podczas pierwszych lotów. Im wyższa wartość filtra, tym lepiej (płynniej) może się latać, ale jednocześnie sygnał serujący silnikami będzie bardziej agresywny aby wynikowo maszyna była bardziej stabilizowana (silnik będzie się grzał ponieważ wirnik z śmigłem ma swoją masę i pęd - szybkie zmiany obrotów potrzebują dostarczenia dużej ilości energii aby zmienić pęd). <br>Domyślna wartość 100 Hz jest optymalna, ale dla platformy z drganiami (z śmigła/ z silnika) można spróbować obniżyć ustawienie filtru Dterm do 50Hz, a być może również ustawienie filtru żyroskopowego."
     },
     "tuningHelpSliders": {
         "message": "Użyj suwaków, aby dostosować filtry. Suwaki muszą być wyłączone, aby dokonywać ręcznych zmian.<br>Przesuwanie suwaków w prawo daje wyższe wartości odcięcia i może poprawić propwash, ale spowoduje więcej hałasu do silników, co sprawi, że będą cieplejsze.<br>Najbardziej czyste wersje z filtrowaniem obrotów będzie OK z żyroskopowym suwakiem dolnoprzepustowym mocno w prawo lub tylko z aktywnym dolnoprzepustowym 2 i suwakami pośrodku.<br><strong>OSTRZEŻENIE:</strong> Bądź BARDZO ostrożny podczas przesuwania suwaków D w prawo! Sprawdź temperaturę silnika po każdej zmianie!<br><strong>Uwaga:</strong> zmiana profili spowoduje zmianę tylko ustawień filtra D-term. Ustawienia filtra żyroskopowego są takie same dla wszystkich profili.",
@@ -2911,7 +2911,7 @@
         "message": "Główny"
     },
     "motorsNotice": {
-        "message": "<strong> Tryb Testowy Silników / Uwaga dotycząca uzbrojenia: </strong> <br /> Przesunięcie suwaków do góry lub uzbrojenie jednostki z nadajnika RC spowoduje włączenie się silników, a w następstwie tego silniki będą się obracać <strong> </strong>. <br /> W celu zapobiegnięcia obrażeniom <strong class = \"message-negative\"> USUŃ WSZYSTKIE ŚMIGŁA </strong> przed użyciem tej funkcji. <br /> Włączenie trybu testu silników spowoduje również tymczasowe wyłączenie funkcji Zabezpieczającej przed niekontrolowanym startem, aby uniemożliwić rozbrojenie jednostki podczas testowania na stanowisku testowym. <br />"
+        "message": "<strong>Tryb testowy silnika / Uwaga dotycząca uzbrojenia:</strong><br /><br /><strong class=\"message-negative\"> Poważne ryzyko obrażeń! Usuń wszystkie śmigła!</strong><br /><br /><ul><li>&#x2022; Przesunięcie suwaków do góry lub uzbrojenie jednostki latającej z nadajnika RC spowoduje włączenie się silników.</li><li>&#x2022; Tryb testu silnika pozostanie aktywny nawet po przejściu na inną zakładkę.</li><li>&#x2022; Naciśnięcie dowolnego klawisza zatrzyma silniki, ale tylko w zakładce Silniki.</li><li>&#x2022; Odłączenie kabla USB może nie zatrzymać silników!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong> ROZUMIEM ZAGROŻENIA </strong>"
@@ -2935,7 +2935,7 @@
         "message": "Kolejność silników"
     },
     "motorOutputReorderDialogOpen": {
-        "message": "Edytuj kolejność silników"
+        "message": "Kolejność silników"
     },
     "motorOutputReorderDialogSelectSpinningMotor": {
         "message": "Kliknij na wirujący silnik, aby przejść dalej"
@@ -2944,13 +2944,13 @@
         "message": "Gotowe! Sprawdź kolejność obracania silników, klikając na obraz."
     },
     "motorsRemapDialogUnderstandRisks": {
-        "message": "<strong>Rozumiem ryzyko </strong>a<br />śmigła zostały zdjęte."
+        "message": "<strong>Rozumiem ryzyko a śmigła zostały zdjęte.</strong><br />"
     },
     "motorsRemapDialogRiskNotice": {
-        "message": "<strong>Informacja bezpieczeństwa</strong><br /><strong class=\"message-negative\">zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br />Silniki <strong>będą włączane!</strong>"
+        "message": "<strong>Informacja bezpieczeństwa!</strong><br /><strong class=\"message-negative\">Zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br /><strong>Silniki będą włączane!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Notatka informacyjna</strong><br />Silniki będą włączane pojedyńczo i będziesz mógł wybrać, który silnik ma być włączony. Bateria powinna być podłączona, oraz należy wybrać poprawny protokół ESC. To narzędzie może zmienić tylko aktualnie aktywne silniki. Bardziej skomplikowane przemapowanie wymaga komendy CLI Resource. Przejdź do tej: <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">strony Wiki</a>."
+        "message": "<strong>Informacyjna:</strong><br />Silniki będą włączane pojedyńczo i będziesz mógł wybrać, który silnik ma być włączony. Bateria powinna być podłączona, oraz należy wybrać poprawny protokół ESC. To narzędzie może zmienić tylko aktualnie aktywne silniki. Bardziej skomplikowane przemapowanie wymaga komendy CLI Resource. Przejdź do tej strony: <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Zapisz"
@@ -2974,22 +2974,22 @@
         "message": "Silniki będą kręciły się po wybraniu!"
     },
     "escDshotDirectionDialog-RiskNotice": {
-        "message": "<strong>Informacja bezpieczeństwa</strong><br /><strong class=\"message-negative-italic\">zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br />Uwaga silniki <strong>będą włączane!</strong>!"
+        "message": "<strong>Informacja bezpieczeństwa!</strong><br /><strong class=\"message-negative\">Zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br /><strong>Silniki będą włączane!</strong>"
     },
     "escDshotDirectionDialog-UnderstandRisks": {
-        "message": "<strong>Rozumiem ryzyko</strong>,<br />śmigła zostały zdjęte."
+        "message": "<strong>Rozumiem ryzyko a śmigła zostały zdjęte.</strong><br />"
     },
     "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>Informacja</strong><br />Aby zmienić kierunek obrotu silnika podłącz baterie oraz wybierz prawidłowy protokół ESC. Możesz to zrobić w zakładce $t(tabMotorTesting.message). Pamiętaj, że nie wszystkie ESC z protokołem Dshot będą wspierały tę funkcje. Sprawdź czy twoje ESC obsługują funkcje zmiany kierunku obrotów."
+        "message": "<strong>Informacja:</strong><br />Aby zmienić kierunek obrotu silnika podłącz baterie oraz wybierz prawidłowy protokół ESC. Możesz to zrobić w zakładce $t(tabMotorTesting.message). Pamiętaj, że nie wszystkie ESC z protokołem Dshot będą wspierały tę funkcje. Sprawdź czy twoje ESC obsługują funkcje zmiany kierunku obrotów."
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
-        "message": "Ustaw kierunek obrotu dla każdego silnika osobno."
+        "message": "Sprawdź kierunek obrotów silnika, wybierając i obracając każdy silnik indywidualnie."
     },
     "escDshotDirectionDialog-WizardInformationNotice": {
         "message": "Resetuje kierunek obrotów silników, a następnie pozwala wybrać, które z nich odwrócić."
     },
     "escDshotDirectionDialog-Open": {
-        "message": "Edytuj kierunek obrotów silników"
+        "message": "Kierunek silników"
     },
     "escDshotDirectionDialog-CommandNormal": {
         "message": "Normalny"
@@ -3278,6 +3278,9 @@
     },
     "sdcardStatusUnknown": {
         "message": "Nieznany stan $1"
+    },
+    "firmwareFlasherBranch": {
+        "message": "Wybierz opcję Żądanie ściągnięcia lub Zatwierdź"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informacje o wydaniu i budowie"
@@ -4556,7 +4559,7 @@
         "message": "Ustawienia są stosowane do kanałów AUX w których wykryto błąd lub do wszystkich kanałów gdy jest aktywny etap pierwszy. <strong>Uwaga:</strong> czas opóźnienia jest zapisywany co 25 usec"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto</strong> ustawia Roll,Pitch oraz Yaw w pozcji neutralnej  a Throttle na poziomie minimalnym. <strong>Bez zmian</strong> to ostatnia poprawna odebranea wartość"
+        "message": "<strong>Auto</strong> ustawia Roll, Pitch oraz Yaw w pozcji neutralnej a Throttle na poziomie minimalnym. <strong>Bez zmian</strong> to ostatnia poprawna odebranea wartość. <strong>Ustaw</strong> oznacza, że zostanie użyta podana przez ciebie wartość."
     },
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Bez zmian</strong> oznacza utrzymanie ostatniej poprawnej wartości. <strong>Ustaw</strong> oznacza, że  zostanie użyta  podana przez ciebie wartość."
@@ -5661,6 +5664,9 @@
     "osdTextElementEscTemperature": {
         "message": "Temperatura ESC",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementEscTemperature": {
+        "message": "Temperatura raportowana za pomocą telemetrii ESC, telemetrii jednoprzewodowej szeregowej lub dwukierunkowej telemetrii DShot z EDT, jeśli jest obsługiwana przez oprogramowanie układowe ESC."
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",

@@ -2907,7 +2907,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Aviso sobre o modo de Teste de Motor / Armar:</strong><br />Mover os sliders ou armar o seu aparelho com o transmissor fará os motores <strong>girar</strong>.<br />De modo a evitar ferimentos, <strong class=\"message-negative\">remova TODAS as hélices</strong> antes de usar esta função.<br />Habilitar o modo de Teste de Motor também irá temporariamente desabilitar a Prevenção contra Descolagem Acidental, de forma a evitar o desarme do aparelho enquanto estiver a testá-lo na bancada sem as hélices.<br />"
+        "message": "<strong>Modo Teste de Motor / Notificação de Armar</strong><br /><br /><strong class=\"message-negative\">AVISO: Risco grave de lesão! Remova todas as hélices!</strong><br /><br /><ul><li>&#x2022; Motores irão girar quando armados ou quando os controlos deslizantes forem aumentados</li><li>&#x2022; Modo de teste Motor permanecerá ativo após mover para outro Tab</li><li>&#x2022; Pressionar qualquer tecla irá parar os motors, mas somente na Aba Motores</li><li>&#x2022; Desconectar o cabo USB pode não parar os motores!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>Entendo os riscos</strong>, as hélices foram removidas - habilitar o controle dos motores e armar, e desativar a Prevenção contra Descolagem Acidental."

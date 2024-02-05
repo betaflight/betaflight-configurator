@@ -2911,7 +2911,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motortest tilstand/Aktiverings note:</strong><br/>Bevæges skyderne eller aktiveres dit fartøj med senderen,<strong>forøges</strong> motoromdrejningerne.<br/>For at forhindre personskade, så <strong class=\"message-negative\">afmontér ALLE propeller</strong>, før brug af denne funktion.<br/>Aktivering af motortesttilstand vil også midlertidigt deaktivere Runaway Takeoff-beskyttelsen, for at hindre den i at afkoble fartøjet ved værkstedsaftestning uden propeller.<br/>"
+        "message": "<strong>Motor test tilstand / Motor aktiveret:</strong><br /><br /><strong class=\"message-negative\">ADVARSEL: Alvorlig risiko for skader! Fjern alle propeller fra fartøj !</strong><br /><br /><ul><li>&#x2022; Motorerne vil rotere, når FC er aktiveret eller når skyderne hæves / er hævet</li><li>&#x2022; Motor test tilstand vil forblive aktiv, selv hvis du skifter til anden menu</li><li>&#x2022; Motorerne standser hvis du trykker på en hilken somhelst test, men <strong>kun</strong> mens du er her i motor menu</li><li>&#x2022; Selv fjernelse af USB kabel standser ikke motorerne!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>Jeg forstår risikoen,</strong> propellerne er fjernet - aktivér motorkontrol og indkobling, og deaktivér Runaway Takeoff-beskyttelse."
@@ -3601,7 +3601,7 @@
         "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
-        "message": "Flight controlleren kan styre farver og effekter på individuelle LED'er på en strimmel.<br />Opsæt LED'er i gitteret, opsæt ledningsrækkefølge og forbnd så LED'erne på dit fly jf. gitterpositionerne. LED'er uden ledningsnummer vil ikke blive gemt.<br />Dobbeltklik på en farve for at redigere HSV-værdierne."
+        "message": "FC kan styre farver og effekter på individuelle LED'er på en strimmel.<br />Opsæt LED'er i gitteret, opsæt ledningsrækkefølge og forbnd så LED'erne på dit fartøj jf. gitterpositionerne. LED'er uden ledningsnummer vil ikke blive gemt.<br />Dobbeltklik på en farve for at redigere HSV-værdierne."
     },
     "ledStripButtonSave": {
         "message": "Gem"
