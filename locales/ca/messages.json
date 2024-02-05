@@ -2915,7 +2915,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Mode test de Motors / Avís d'armat:</strong><br />Moure els sliders o armar l'aeronau amb l'emisor farà que els motors <strong>girin</strong>.<br />Per prevenir lesions <strong class=\"message-negative\">treu TOTES les pales</strong> abans de fer servir aquesta funció.<br />Habilitar el test de motors també deshabilitarà temporalment el Runaway Takeoff Prevention, per evitar que es desarmi quan s'està provant l'aeronau sense pales.<br />"
+        "message": "<strong>Mode de prova del motor/Avís d'armament:</strong><br /><br /><strong class=\"message-negative\">ADVERTIMENT: Risc greu de lesions! Traieu totes les hèlixs!</strong><br /><br /><ul><li>&#x2022; Els motors giraran quan estiguin armats o quan s'aixequin els controls lliscants</li><li>&#x2022; El mode de prova del motor romandrà actiu després de passar a una altra pestanya</li><li>&#x2022; Premeu qualsevol tecla s'aturaran els motors, però només a la pestanya Motors</li><li>&#x2022; Desconnectar el cable USB pot no aturar els motors!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>Entenc els riscos</strong>, les pales estan tretes - habilita el control dels motors i armat i deshabilita el Runaway Takeoff Prevention."

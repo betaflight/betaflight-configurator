@@ -2364,9 +2364,6 @@
     "motorsMaster": {
         "message": "主控制"
     },
-    "motorsNotice": {
-        "message": "<strong>电机测试模式/解除锁定提示：</strong> <br/>移动滑块或用遥控器解锁飞机会导致电机 <strong> 旋转 </strong>！ <br/> 为了避免造成伤害，在使用此功能之前<strong class=\"message-negative\">卸下所有螺旋桨</strong>！ <br/> 启用电机测试模式还将暂时禁用[预防起飞失控]，以避免在工作台上无螺旋桨测试时自动锁定电机。 <br/>"
-    },
     "motorsEnableControl": {
         "message": "<strong>我已了解风险 </strong>， 螺旋桨已被拆除 - 启用电机控制和允许解锁，并禁用[预防起飞失控]。"
     },

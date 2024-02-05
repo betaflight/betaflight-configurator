@@ -2909,9 +2909,6 @@
     "motorsMaster": {
         "message": "Master"
     },
-    "motorsNotice": {
-        "message": "<strong>Modo proba de motor / Aviso de armado: </strong><br/> Mover os controis ou armar a aeronave coa emisora ​​fará que os motores <strong> xiren </strong>.<br/> Para previr lesións <strong class=\"message-negative\">retirar Tódalas hélices </strong> antes de empregar esta función. <br/> A habilitación do modo de proba do motor tamén desactivará temporalmente a prevención de despegue para evitar que desarme a nave cando o banco fai a proba sen hélices.<br/>"
-    },
     "motorsEnableControl": {
         "message": "<strong> Comprendo os riscos </strong>, as hélices están retiradas: permítese o control e armado do motor, e desactívase a prevención do despegue de Runaway."
     },

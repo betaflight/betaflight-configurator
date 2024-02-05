@@ -2907,7 +2907,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Avviso Modalità Test Motore / Armamento motore:</strong><br />Spostare i cursori o armare il modello con il radiocomando farà sì che i motori <strong>girino</strong>.<br />Al fine di evitare danni <strong class=\"message-negative\">rimuovere tutte le eliche</strong> prima di utilizzare questa funzionalità.<br />Attivare la modalità di prova del motore disattiverà temporaneamente anche la prevenzione del decollo fuori controllo, per impedirgli di disarmare il modello quando si sta eseguendo dei test senza eliche.<br />"
+        "message": "<strong>Modalità Test Motori / Avviso Armato:</strong><br /><br /><strong class=\"message-negative\">ATTENZIONE: Serio rischio di pericolo! Rimuovi tutte le eliche!</strong><br /><br /><ul><li>&#x2022; I motori gireranno quando saranno armati o quando i cursori saranno sollevati</li><li>&#x2022; La modalità di prova del motore rimarrà attiva dopo il passaggio ad un'altra scheda</li><li>&#x2022; Premendo qualsiasi tasto si fermeranno i motori, ma solo nella scheda Motori</li><li>&#x2022; Scollegare il cavo USB potrebbe non fermare i motori!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>Ho compreso i rischi</strong>, le eliche sono state rimosse - abilita il controllo motori e armamento motori e disabilita la prevenzione del decollo fuori controllo."
@@ -5660,6 +5660,9 @@
     "osdTextElementEscTemperature": {
         "message": "Temperatura ESC",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementEscTemperature": {
+        "message": "Temperatura riportata dalla telemetria ESC, tramite telemetria seriale a un filo, oppure mediante telemetria bidirezionale DShot con EDT, se supportata dal firmware ESC."
     },
     "osdTextElementEscRpm": {
         "message": "RPM ESC",

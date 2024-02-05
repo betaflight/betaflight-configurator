@@ -2483,9 +2483,6 @@
     "motorsMaster": {
         "message": "Maître"
     },
-    "motorsNotice": {
-        "message": "<strong>Mode test moteurs / Attention armement:</strong><br />Bouger les curseurs ou armer l'appareil avec la télécommande fait <<strong>tourner les moteurs</strong>.<br />Afin d'éviter de graves blessures <strong class=\"message-negative\">retirer TOUTES les hélices</strong> avant d'activer cette fonction.<br />Le mode test moteurs désactive temporairement la prévention de décollage intempestif, afin d’empêcher le désarmement pendant les essais sans hélices.<br />"
-    },
     "motorsEnableControl": {
         "message": "<strong>Je comprends les riques</strong>, les hélices sont retirées - autoriser l'armement et le contrôle des moteurs et désactiver le Runaway Takeoff Prevention."
     },

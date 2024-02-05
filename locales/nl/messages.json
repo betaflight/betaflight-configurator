@@ -2103,9 +2103,6 @@
     "motorsMaster": {
         "message": "Meester"
     },
-    "motorsNotice": {
-        "message": "<strong>Motor Test Modus / Arming Waarschuwing:</strong><br />Het verplaatsen van de schuifregelaren of het armen middels je zender zorgt ervoor dat de motoren <strong>gaan draaien</strong>.<br />Om letsel te voorkomen <strong class=\"message-negative\">dien je ALLE propellers te verwijderen</strong> alvorens je deze functie gaat gebruiken.<br />Het inschakelen van deze motor-test modus zal er voor zorgen dat Runaway Takeoff Preventie tijdelijk wordt uitgeschakeld.<br />"
-    },
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },

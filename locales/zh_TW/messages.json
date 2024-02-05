@@ -2007,9 +2007,6 @@
     "motorsMaster": {
         "message": "主控制"
     },
-    "motorsNotice": {
-        "message": "<strong>電機測試模式/解除鎖定提示：</strong><br />使用滑塊或用遙控器解鎖飛機會導致電機<strong> 旋轉 </strong>！<br />為了避免造成傷害，在使用此功能之前<strong class=\"message-negative\">卸下所有螺旋槳</strong>！<br />啟用電機測試模式還將暫時禁用[預防起飛失控]，以避免在工作台上無螺旋槳測試時自動鎖定電機。<br />"
-    },
     "motorsEnableControl": {
         "message": "<strong>我已了解風險</strong>，螺旋槳已被拆除 - 啟用電機控制和允許解鎖，並禁用[預防起飛失控]。"
     },

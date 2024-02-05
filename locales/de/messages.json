@@ -2556,9 +2556,6 @@
     "motorsMaster": {
         "message": "Master"
     },
-    "motorsNotice": {
-        "message": "<strong>Motor-Testmodus - Hinweis:</strong><br />Bewegen der Regler oder Arming des Copters über die Fernsteuerung wird die Motoren <strong>anlaufen</strong> lassen.<br />Um Verletzungen zu vermeiden <strong class=\"message-negative\"> bitte ALLE Propeller entfernen</strong>.<br />Der Testmodus wird auch den Abhebeschutz deakvieren, so dass sich das Gerät ohne Propeller nicht selbst abschaltet.<br />"
-    },
     "motorsEnableControl": {
         "message": "<strong>Ich weiß was ich tue</strong>, Propeller sind entfernt - Motorkontrolle und Arming aktivieren, Abhebeschutz deaktivieren."
     },

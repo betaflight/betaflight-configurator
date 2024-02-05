@@ -2907,7 +2907,7 @@
         "message": "Maestro"
     },
     "motorsNotice": {
-        "message": "<strong>Aviso Modo Prueba de Motor / Armado:</strong><br />Mover los controles deslizantes o armar la aeronave con el transmisor provocará que los motores <strong>giren</strong>.<br />Para evitar lesiones <strong class=\"message-negative\">quita TODAS las hélices</strong> antes de utilizar esta funcionalidad.<br />Activar el modo test de motor también desactivará temporalmente la Protección de Despegue Incontrolado, para evitar que desarme la aeronave mientras está en el banco de pruebas sin hélices.<br />"
+        "message": "<strong>Aviso Modo Prueba de Motor / Armado:</strong><br /><br /><strong class=\"message-negative\">ADVERTENCIA: ¡Riesgo de lesión grave! ¡Quita todas las hélices!</strong><br /><br /><ul><li>&#x2022; Los motores girarán al armar o cuando se suban los deslizadores</li><li>&#x2022; El modo de prueba de motor permanecerá activo aunque te vayas a otra pestaña</li><li>&#x2022; Pulsar cualquier tecla detendrá los motores, pero sólo en la pestaña Motores</li><li>&#x2022; ¡Desconectar el cable USB puede que no detenga los motores!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>Entiendo los riesgos</strong>, las hélices están quitadas - activar control de motor y armado y desactivar la Protección de Despegue Incontrolado."
