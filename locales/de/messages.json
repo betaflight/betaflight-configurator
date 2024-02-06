@@ -2710,7 +2710,7 @@
         "message": "Gyro - Grad / Sekunde"
     },
     "sensorsAccelTitle": {
-        "message": "Beschleungungssensor -g(Grad)"
+        "message": "Beschleungungssensor -g"
     },
     "sensorsAltitudeTitle": {
         "message": "Flughöhe - Meter"

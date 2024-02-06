@@ -3066,7 +3066,7 @@
         "message": "Giroscópio - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Acelerómetro - g (deg)"
+        "message": "Acelerómetro - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetómetro"

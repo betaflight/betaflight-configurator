@@ -3063,7 +3063,7 @@
         "message": "Xiroscopio - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Acelerómetro - g (grados)"
+        "message": "Acelerómetro - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetómetro"

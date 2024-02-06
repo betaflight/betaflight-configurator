@@ -2515,7 +2515,7 @@
         "message": "陀螺仪 - 度/秒"
     },
     "sensorsAccelTitle": {
-        "message": "加速度计 - g (°)"
+        "message": "加速度计 - g"
     },
     "sensorsAltitudeTitle": {
         "message": "高度 - 米"

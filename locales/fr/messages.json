@@ -2637,7 +2637,7 @@
         "message": "Gyroscope - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Accéléromètre - g (deg)"
+        "message": "Accéléromètre - g"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitude - mètres"
