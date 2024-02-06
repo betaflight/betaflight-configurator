@@ -2254,7 +2254,7 @@
         "message": "Gyroscope - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Versnellingsmeter - g (graden)"
+        "message": "Versnellingsmeter - g"
     },
     "sensorsAltitudeTitle": {
         "message": "Hoogte - meters"

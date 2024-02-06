@@ -3066,7 +3066,7 @@
         "message": "ジャイロセンサー - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "加速度センサー -g (度)"
+        "message": "加速度センサー -g"
     },
     "sensorsMagTitle": {
         "message": "コンパス"

@@ -3070,7 +3070,7 @@
         "message": "Żyroskop - stopnie/s"
     },
     "sensorsAccelTitle": {
-        "message": "Akcelerometr - g (deg)"
+        "message": "Akcelerometr - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetometr"

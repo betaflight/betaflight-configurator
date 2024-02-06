@@ -2864,7 +2864,7 @@
         "message": "Giroscópio - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Acelerômetro - g (graus)"
+        "message": "Acelerômetro - g"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitude - metros"

@@ -3154,7 +3154,7 @@
         "message": "Gyroscope - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Accelerometer - g (deg)"
+        "message": "Accelerometer - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetometer"

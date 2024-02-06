@@ -3070,7 +3070,7 @@
         "message": "자이로스코프 - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "가속도계 - g (도)"
+        "message": "가속도계 - g"
     },
     "sensorsMagTitle": {
         "message": "자력계"

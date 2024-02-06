@@ -3066,7 +3066,7 @@
         "message": "Гіроскоп - градуси/сек."
     },
     "sensorsAccelTitle": {
-        "message": "Акселерометр - градуси"
+        "message": "Акселерометр - g"
     },
     "sensorsMagTitle": {
         "message": "Магнітометр"

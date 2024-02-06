@@ -2092,7 +2092,7 @@
         "message": "Giroskopoa - grad/s"
     },
     "sensorsAccelTitle": {
-        "message": "Azelerometroa - g (deg)"
+        "message": "Azelerometroa - g"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitudea - metroak"
