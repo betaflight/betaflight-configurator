@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Upload messages file
       uses: crowdin/github-action@1.5.1
