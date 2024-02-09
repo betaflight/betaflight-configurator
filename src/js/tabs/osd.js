@@ -3495,13 +3495,6 @@ osd.initialize = function(callback) {
             });
         });
 
-        $(document).keypress(function(e) {
-            if (e.which === 13) { // enter
-                // Trigger regular Flashing sequence
-                $('a.flash_font').click();
-            }
-        });
-
         self.analyticsChanges = {};
 
         MSP.promise(MSPCodes.MSP_RX_CONFIG)
