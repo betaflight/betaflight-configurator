@@ -3392,7 +3392,9 @@ osd.initialize = function(callback) {
         const fontPreviewElement = $('.font-preview');
 
         // init structs once, also clears current font
-        FONT.initData();
+        if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] !== 'HD') {
+            FONT.initData();
+        }
 
         fontPresetsElement.change(function() {
             const $font = $('.fontpresets option:selected');
