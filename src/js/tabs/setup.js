@@ -341,6 +341,7 @@ setup.initialize = function (callback) {
                 'AK8975',
                 'AK8963',
                 'QMC5883',
+                'LIS2MDL',
                 'LIS3MDL',
                 'MPU925X_AK8963',
                 'IST8310',
