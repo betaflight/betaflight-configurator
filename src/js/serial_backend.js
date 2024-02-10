@@ -342,7 +342,9 @@ function onOpen(openInfo) {
                 return;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
+            const supported = semver.satisfies(FC.CONFIG.apiVersion, `${CONFIGURATOR.API_VERSION_ACCEPTED} - ${CONFIGURATOR.API_VERSION_MAX_SUPPORTED}`);
+
+            if (supported) {
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
                     if (FC.CONFIG.flightControllerIdentifier === 'BTFL') {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
@@ -376,7 +378,11 @@ function onOpen(openInfo) {
 
                 const dialog = $('.dialogConnectWarning')[0];
 
-                $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.API_VERSION_ACCEPTED]));
+                if (semver.lt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
+                    $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.API_VERSION_ACCEPTED]));
+                } else {
+                    $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupportedMax', [CONFIGURATOR.getDisplayVersion(), CONFIGURATOR.API_VERSION_MAX_SUPPORTED, FC.CONFIG.apiVersion]));
+                }
 
                 $('.dialogConnectWarning-closebtn').click(function() {
                     dialog.close();
