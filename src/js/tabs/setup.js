@@ -13,8 +13,6 @@ import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_46 } fr
 import { gui_log } from '../gui_log';
 import $ from 'jquery';
 
-import PopupDialog from '../popupDialog';
-
 const setup = {
     yaw_fix: 0.0,
 };
@@ -418,41 +416,50 @@ setup.initialize = function (callback) {
             }
         };
 
+        function showDialogBuildInfo(title, message) {
+            const dialog = $('.dialogBuildInfo')[0];
+
+            $('.dialogBuildInfo-title').html(title);
+            $('.dialogBuildInfo-content').html(message);
+
+            if (!dialog.hasAttribute('open')) {
+                dialog.showModal();
+                $('.dialogBuildInfo-closebtn').on('click', function() {
+                    dialog.close();
+                });
+            }
+        }
+
         const showFirmwareInfo = function() {
             // Firmware info
             msp_api_e.text([FC.CONFIG.apiVersion]);
             build_date_e.text([FC.CONFIG.buildInfo]);
 
             if (navigator.onLine) {
-                let buildOptions = "";
+                let buildOptionList = "";
 
                 if (FC.CONFIG.buildOptions.length) {
-                    let buildOptionList = "";
 
                     for (const buildOptionElement of FC.CONFIG.buildOptions) {
                         buildOptionList = `${buildOptionList} &nbsp ${buildOptionElement}`;
                     }
-                    /*
-                    buildOptions = `<span class="buildInfoClassOptions"
-                                   title="${i18n.getMessage('initialSetupInfoBuildOptions')}:${buildOptionList}">
-                                   <strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></span>`;
-                    */
-                    const xxx = 'abc';
-                    buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptions')}: ${xxx}">
-                                    <dialog id="setup_popup_dialog"></dialog></strong></span>`;
-                    let popupDialog = new PopupDialog($('#popup_sources_dialog'), i18n.getMessage('initialSetupInfoBuildOptions'), buildOptionList);
-                    popupDialog.load();
-                    let buttonPopup = $('.popup_sources_dialog');
-                    buttonPopup.on("click", () => popupDialog.show());
                 }
 
                 if (FC.CONFIG.buildKey.length === 32) {
                     const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
-                    const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
-                                         <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
-                    const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
-                                         <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></strong></span>`;
+                    const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildConfig')}: ${buildRoot}/json">
+                                         <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildConfig')}</strong></a></span>`;
+
+                    const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildLog')}: ${buildRoot}/log">
+                                         <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildLog')}</strong></a></span>`;
+
+                    const buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptionList')}">
+                                         <a class="buildOptions disabled" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></a></span>`;
+
                     build_info_e.html(`${buildConfig} ${buildLog} &nbsp &nbsp ${buildOptions}`);
+                    $('a.buildOptions').on('click', async function() {
+                        showDialogBuildInfo(`<h3>${i18n.getMessage('initialSetupInfoBuildOptionList')}</h3>`, buildOptionList);
+                    });
                     $('.build-info a').removeClass('disabled');
                 } else {
                     build_info_e.html(i18n.getMessage('initialSetupInfoBuildEmpty'));

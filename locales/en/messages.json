@@ -1104,14 +1104,17 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Build key"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Options defined"
+        "message": "Options"
+    },
+    "initialSetupInfoBuildOptionList": {
+        "message": "Options defined in firmware build"
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Local Build - no Cloud information"
