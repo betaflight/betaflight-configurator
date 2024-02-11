@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
@@ -62,13 +62,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cache NW.js
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: cache/
           key: nwjs-${{ inputs.debug_build && 'debug' || 'release' }}-${{ runner.os }}-${{ hashFiles('gulpfile.js') }}
 
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
@@ -86,7 +86,7 @@ jobs:
         if: ${{ matrix.name == 'macOs' }}
 
       - name: Install Java JDK 8
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         if: ${{ matrix.name == 'Android' }}
         with:
           distribution: temurin
@@ -104,7 +104,7 @@ jobs:
         if: ${{ inputs.debug_build || matrix.name == 'Android' }}
 
       - name: Publish build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Betaflight-Configurator${{ inputs.debug_build == 'true' && '-Debug' || '' }}-${{ matrix.name }}
           path: release/
