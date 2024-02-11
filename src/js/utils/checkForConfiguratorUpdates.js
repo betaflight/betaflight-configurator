@@ -35,6 +35,8 @@ function notifyOutdatedVersion(data) {
         });
 
         dialog.showModal();
+    } else {
+        CONFIGURATOR.latestVersion = data.version;
     }
 }
 

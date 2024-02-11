@@ -342,9 +342,7 @@ function onOpen(openInfo) {
                 return;
             }
 
-            const supported = semver.satisfies(FC.CONFIG.apiVersion, `${CONFIGURATOR.API_VERSION_ACCEPTED} - ${CONFIGURATOR.API_VERSION_MAX_SUPPORTED}`);
-
-            if (supported) {
+            if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
                     if (FC.CONFIG.flightControllerIdentifier === 'BTFL') {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
@@ -378,11 +376,7 @@ function onOpen(openInfo) {
 
                 const dialog = $('.dialogConnectWarning')[0];
 
-                if (semver.lt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
-                    $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.API_VERSION_ACCEPTED]));
-                } else {
-                    $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupportedMax'));
-                }
+                $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.API_VERSION_ACCEPTED]));
 
                 $('.dialogConnectWarning-closebtn').click(function() {
                     dialog.close();
@@ -493,18 +487,26 @@ function checkReportProblems() {
         problemDialogList.empty();
 
         let problems = [];
+        let abort = false;
 
         if (semver.gt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
             const problemName = 'API_VERSION_MAX_SUPPORTED';
             problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`,
                 [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.getDisplayVersion(), FC.CONFIG.flightControllerVersion])});
             needsProblemReportingDialog = true;
+
+            abort = true;
+            GUI.timeout_remove('connecting'); // kill connecting timer
+            $('div.connect_controls a.connect').click(); // disconnect
         }
 
-        needsProblemReportingDialog = checkReportProblem('MOTOR_PROTOCOL_DISABLED', problems) || needsProblemReportingDialog;
+        if (!abort) {
+            // only check for problems if we are not already aborting
+            needsProblemReportingDialog = checkReportProblem('MOTOR_PROTOCOL_DISABLED', problems) || needsProblemReportingDialog;
 
-        if (have_sensor(FC.CONFIG.activeSensors, 'acc')) {
-            needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problems) || needsProblemReportingDialog;
+            if (have_sensor(FC.CONFIG.activeSensors, 'acc')) {
+                needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problems) || needsProblemReportingDialog;
+            }
         }
 
         if (needsProblemReportingDialog) {
@@ -525,7 +527,10 @@ function checkReportProblems() {
             $('#dialogReportProblems-closebtn').focus();
         }
 
-        processUid();
+        if (!abort) {
+            // if we are not aborting, we can continue
+            processUid();
+        }
     });
 }
 
