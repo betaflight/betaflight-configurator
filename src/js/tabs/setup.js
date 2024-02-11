@@ -422,7 +422,7 @@ setup.initialize = function (callback) {
             $('.dialogBuildInfo-title').html(title);
             $('.dialogBuildInfo-content').html(message);
 
-            if (!dialog.hasAttribute('open')) {
+            if ( ! dialog.hasAttribute('open')) {
                 dialog.showModal();
                 $('.dialogBuildInfo-closebtn').on('click', function() {
                     dialog.close();
