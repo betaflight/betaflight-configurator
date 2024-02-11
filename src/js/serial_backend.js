@@ -381,7 +381,7 @@ function onOpen(openInfo) {
                 if (semver.lt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
                     $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.API_VERSION_ACCEPTED]));
                 } else {
-                    $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupportedMax', [CONFIGURATOR.getDisplayVersion(), CONFIGURATOR.API_VERSION_MAX_SUPPORTED, FC.CONFIG.apiVersion]));
+                    $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupportedMax'));
                 }
 
                 $('.dialogConnectWarning-closebtn').click(function() {

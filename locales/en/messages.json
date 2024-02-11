@@ -502,7 +502,7 @@
         "message": "This firmware version is <span class=\"message-negative\">not supported</span>. Please upgrade to firmware that supports api version <strong>$1</strong> or higher. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
     },
     "firmwareVersionNotSupportedMax": {
-        "message": "Configurator version <strong>$1</strong> supports firmware version up to version <strong>$2</strong>. Please upgrade the configurator to use api version <strong>$3</strong>."
+        "message": "This firmware version is <span class=\"message-negative\">not supported</span>. Please upgrade to a newer version of configurator. <br /><br /><a href=\"https://github.com/betaflight/betaflight-configurator/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight Configurator</a>"
     },
     "firmwareTypeNotSupported": {
         "message": "Non - Betaflight firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
