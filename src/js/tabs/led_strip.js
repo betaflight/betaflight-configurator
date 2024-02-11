@@ -19,7 +19,7 @@ led_strip.initialize = function (callback, scrollPosition) {
     const functionTag = '.function-';
 
     TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'y'];
-    TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'l', 's', 'g', 'r'];
+    TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'p', 'e', 'u', 'l', 's', 'g', 'r'];
     TABS.led_strip.overlays =  ['t', 'y', 'o', 'b', 'v', 'i', 'w'];
 
     if (semver.lt(FC.CONFIG.apiVersion,API_VERSION_1_46)) {
@@ -429,6 +429,7 @@ led_strip.initialize = function (callback, scrollPosition) {
             const that = this;
 
             const mode = Number($(that).val());
+   
             $('.mode_colors').find('button').each(function() {
                 for (let i = 0; i < 6; i++) {
                     for (let j = 0; j < 6; j++) {
@@ -439,7 +440,6 @@ led_strip.initialize = function (callback, scrollPosition) {
                     }
                 }
             });
-
             $('.mode_colors').each(function() { setModeBackgroundColor($(this)); });
         });
 
@@ -463,6 +463,9 @@ led_strip.initialize = function (callback, scrollPosition) {
                                     break;
                                 case 'b':
                                 case 'i':
+                                case 'p':
+                                case 'e':
+                                case 'u':
                                     if (areOverlaysActive(`function-${f}`))
                                         p.addClass(`function-${letter}`);
                                     break;
@@ -817,6 +820,9 @@ led_strip.initialize = function (callback, scrollPosition) {
             case "function-c":
             case "function-a":
             case "function-f":
+            case "function-p":
+            case "function-e":
+            case "function-u":
             case "function-s":
             case "function-l":
             case "function-r":
@@ -910,11 +916,14 @@ led_strip.initialize = function (callback, scrollPosition) {
         switch (activeFunction) {
             case "":           // none
             case "function-f": // Modes & Orientation
+                $('.modeSelect').show();
+                $('.special_colors').hide();
             case "function-l": // Battery
                 // $('.mode_color-6-3').show(); // background
                 $('.special_colors').hide();
                 break;
             case "function-g": // GPS
+                $('.modeSelect').show();
                 $('.mode_color-6-5').show(); // no sats
                 $('.mode_color-6-6').show(); // no lock
                 $('.mode_color-6-7').show(); // locked
@@ -924,6 +933,7 @@ led_strip.initialize = function (callback, scrollPosition) {
                 $('.mode_color-6-4').show(); // blink background
                 break;
             case "function-a": // Arm state
+                $('.modeSelect').hide();
                 $('.mode_color-6-0').show(); // disarmed
                 $('.mode_color-6-1').show(); // armed
                 break;
@@ -1034,7 +1044,7 @@ led_strip.initialize = function (callback, scrollPosition) {
 
     function drawColorBoxesInColorLedPoints() {
         $('.gPoint').each(function() {
-            if ($(this).is('.function-c') || $(this).is('.function-r') || $(this).is('.function-b')) {
+            if ($(this).is('.function-c') || $(this).is('.function-r') || $(this).is('.function-b') || $(this).is('.function-u')) {
                 $(this).find('.overlay-color').show();
 
                 for (let colorIndex = 0; colorIndex < 16; colorIndex++) {
