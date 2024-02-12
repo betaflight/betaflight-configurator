@@ -1,5 +1,26 @@
 .tab-setup {
-	.ui-grid-col {
+    .grid-container {
+        display: grid;
+        grid-template-columns: auto auto;
+        align-content: center;
+        padding: 10px;
+    }
+    .grid-item {
+        border: 1px solid black;  // border
+        background-color: #f0f0f0;
+        padding: 10px;              // padding around
+        margin: 2px;                // between boxes
+        text-align: center;
+        user-select: text;
+    }
+    .contentBuildInfo {
+        transition: all 0.2s;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: white;
+        width: calc(100% - 50px);
+    }
+    .ui-grid-col {
 		margin-bottom: 0;
 	}
 	.content_wrapper {

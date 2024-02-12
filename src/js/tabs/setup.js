@@ -430,6 +430,27 @@ setup.initialize = function (callback) {
             }
         }
 
+        function buildGrid(list, columns, classContainer, classItem) {
+            let rows = Math.ceil(list.length / columns);
+            let grid = `<div class='${classContainer}'><table>`;
+
+            for (let i = 0; i < rows; i++) {
+                grid += "<tr>";
+                for (let j = 0; j < columns; j++) {
+                    let index = i * columns + j;
+                    if (index < list.length) {
+                        grid += `<td><div class='${classItem}'>${list[index]}</div></td>`;
+                    } else {
+                        grid += "<td></td>"; // empty cell, to ajust
+                    }
+                }
+                grid += "</tr>";
+            }
+            grid += "</table></div>";
+
+            return grid;
+        }
+
         const showFirmwareInfo = function() {
             // Firmware info
             msp_api_e.text([FC.CONFIG.apiVersion]);
@@ -439,10 +460,7 @@ setup.initialize = function (callback) {
                 let buildOptionList = "";
 
                 if (FC.CONFIG.buildOptions.length) {
-
-                    for (const buildOptionElement of FC.CONFIG.buildOptions) {
-                        buildOptionList = `${buildOptionList} &nbsp ${buildOptionElement}`;
-                    }
+                    buildOptionList = buildGrid(FC.CONFIG.buildOptions, 2, 'grid-container', 'grid-item');  // grid with 2 columns
                 }
 
                 if (FC.CONFIG.buildKey.length === 32) {
