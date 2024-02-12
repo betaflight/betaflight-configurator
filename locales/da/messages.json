@@ -1335,10 +1335,10 @@
         "message": "Værdien, der sendes til ESC'erne, når fartøjet er deaktiveret. Sæt dette til en værdi, hvor motorene er standset (1.000 for de fleste ESC'ere)."
     },
     "configurationEscProtocolDisabled": {
-        "message": "Vælg venligst en protokol til motor kontrol som passer til dine ESC'er. $t(escProtocolDisabledMessage.message)"
+        "message": "Vælg motor kontrol protokol som passer til din ESC.<br>$t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Forsigtig:</strong> Valg af en protokol til motorstyring, der ikke understøttes af dine ESC'er, kan føre til, at <strong>ESC'er spinder op, så snart et batteri er tilsluttet</strong>. Af denne grund, <strong>sørg altid for at fjerne propellerne før du tilslutter et batteri for første gang efter ændring af protokol til motorstyring</strong>."
+        "message": "<strong>Forsigtig:</strong> Valg af motorstyrings protokol, som ikke understøttes af din ESC, kan betyde at <strong>ESC'er spinder motor op, så snart et batteri tilsluttes</strong>.<br>Derfor <strong>sørg altid for at fjerne propellerne før du tilslutter et batteri for første gang efter ændring af protokol til motorstyring</strong>."
     },
     "configurationDshotBeeper": {
         "message": "Opsætning af motor bip"

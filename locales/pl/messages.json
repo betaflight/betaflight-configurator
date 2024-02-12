@@ -602,13 +602,13 @@
         "message": "Sprzęt"
     },
     "defaultWelcomeText": {
-        "message": "Aplikacja obsługuje cały sprzęt, na którym można uruchomić Betaflight. Pełna lista sprzętu znajduje się w zakładce Wgraj oprogramowanie.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer \">Pobierz przeglądarkę logów Betaflight Blackbox</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Pobierz skrypty Betaflight TX Lua</a><br /><br />Kod źródłowy oprogramowania układowego można pobrać ze strony <a href=\"https://github.com/betaflight/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">tutaj</a><br /><br />Dla starszego sprzętu korzystającego z portu szeregowego USB CP210x:<br />Najnowsze <b>sterowniki CP210x</b> można pobrać ze strony <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj</a><br />Najnowszą instalację sterownika USB <b>Zadig</b> dla systemu Windows można pobrać ze strony <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel =\"noopener noreferrer\">tutaj</a><br /><b>Impul seRC Driver Fixer</b> można pobrać ze strony <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">tutaj</a>"
+        "message": "Aplikacja obsługuje cały sprzęt, na którym można uruchomić Betaflight. Pełna lista sprzętu znajduje się w zakładce Wgraj oprogramowanie.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer \">Pobierz przeglądarkę logów Betaflight Blackbox</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Pobierz skrypty Betaflight TX Lua</a><br /><br />Kod źródłowy oprogramowania układowego można pobrać ze strony <a href=\"https://github.com/betaflight/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">tutaj</a><br /><br />Dla starszego sprzętu korzystającego z portu szeregowego USB CP210x:<br />Najnowsze <b>sterowniki CP210x</b> można pobrać ze strony <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj</a><br />Najnowsze sterowniki USB <b>Zadig</b> dla systemu Windows można pobrać ze strony <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel =\"noopener noreferrer\">tutaj</a><br /><b>ImpulseRC Driver Fixer</b> można pobrać ze strony <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">tutaj</a>"
     },
     "defaultContributingHead": {
         "message": "Współtworzenie"
     },
     "defaultContributingText": {
-        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych.</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia.</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> oraz dostarczanie informacji zwrotnych.</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów</a> oraz w uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach.</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
+        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br /><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na naszej <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki</a>, lub odpowiadać na pytania innych użytkowników na forach internetowych.</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora</a> - nowe funkcje, poprawki, ulepszenia.</li><li>Poprzez testowanie <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek</a> oraz dostarczanie informacji zwrotnych.</li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów</a> oraz w uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach.</li><li><a href=\"https://crowdin.com/project/betaflight-configurator#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie</a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku</a>.<br />Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
@@ -4628,7 +4628,7 @@
         "message": "Początkowa wysokość (metry)"
     },
     "failsafeGpsRescueInitialClimbHelp": {
-        "message": "Wysokość, na jaką wzniesienie się jednostka latająca powyżej bieżącej wysokości, po rozpoczęciu procedury ratunkowej failsafe i ustawieniu trybu CURRENT Altitude. Dodano także w trybie MAX Altitude."
+        "message": "Wysokość, na jaką wzniesienie się jednostka latająca powyżej bieżącej wysokości, po rozpoczęciu procedury ratunkowej failsafe i ustawieniu trybu wysokości. Działa w trybie aktualnej wysokości oraz, maksymalnej wysokości."
     },
     "failsafeGpsRescueItemReturnAltitude": {
         "message": "Wysokość powrotna (w metrach) - <strong>ma zastosowanie tylko w trybie stałej wysokości</strong>"
@@ -6624,7 +6624,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "Przycisk '$t(vtxButtonSaveLua.message)' pozwoli Ci zapisać plik <i>mcuid</i>.lua zawierające konfigurację tabeli VTX, której można używać z <a href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Skrypty Betaflight TX Lua</a>.<br><br>Wersja 1.6.0 i nowsze mogą korzystać z pliku tak jak jest, ale w przypadku starszych wersji skryptów należy zmienić jego nazwę, aby odpowiadała nazwie modelu w TX.",
+        "message": "Przycisk '$t(vtxButtonSaveLua.message)' pozwoli Ci zapisać plik <i>mcuid</i>.lua zawierający konfigurację tabeli VTX, której można używać ze <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Skryptami Betaflight TX Lua</a>.<br><br>Wersja 1.6.0 i nowsze mogą korzystać z pliku taki jak jest, ale w przypadku starszych wersji skryptów należy zmienić jego nazwę, aby odpowiadała nazwie modelu w TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
@@ -6871,7 +6871,7 @@
         "message": "TRYB ZMIANY KAMERY"
     },
     "flashTab": {
-        "message": "Wgraj Firmware"
+        "message": "Aktualizuj Firmware"
     },
     "cliAutoComplete": {
         "message": "Zaawansowane autouzupełnianie wiersza poleceń"

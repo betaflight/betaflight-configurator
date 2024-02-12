@@ -2909,6 +2909,9 @@
     "motorsMaster": {
         "message": "Master"
     },
+    "motorsNotice": {
+        "message": "<strong>Modo proba do motor / Aviso de armado:</strong><br /><br /><strong class=\"message-negative\">ADVERTENCIA: Risco grave de lesións! Retire tódalas hélices!</strong><br /><br /><ul><li>&#x2022; Os motores xirarán cando estean armados ou cando se eleven os controles deslizantes</li><li>&#x2022; O modo de proba do motor permanecerá activo despois de pasar a outra pestana</li><li>&#x2022; Premendo calquera tecla parará os motores, pero só na pestana Motores</li><li>&#x2022; Desconectar o cable USB pode non deter os motores!</li></ul>"
+    },
     "motorsEnableControl": {
         "message": "<strong> Comprendo os riscos </strong>, as hélices están retiradas: permítese o control e armado do motor, e desactívase a prevención do despegue de Runaway."
     },
@@ -2944,6 +2947,9 @@
     },
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Aviso de seguridade</strong><br /><strong class=\"message-negative\"> Retire tódalas hélices para evitar lesións!</strong><br />Os motores<strong> xirarán</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Aviso informativo</strong><br />Os motores xirarán un por un e poderá seleccionar que motor está a xirar. A batería debe estar conectada, debe seleccionarse o protocolo ESC correcto. Esta utilidade só pode reorganizar os motores actualmente activos. A reasignación máis complexa require o comando CLI Resource. Consulte esta <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Gardar"
@@ -3272,6 +3278,9 @@
     "sdcardStatusUnknown": {
         "message": "Estado descoñecido $1"
     },
+    "firmwareFlasherBranch": {
+        "message": "Seleccione Pull Request ou Commit"
+    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Información do Lanzamento e da compilación"
     },
@@ -3320,6 +3329,18 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "éxito"
+    },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancelado"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
+        "message": "tempo esgotado (volva a intentalo)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "fallo de solicitude de compilación (comprobe a configuración de compilación, por exemplo, as definicións personalizadas)"
+    },
+    "firmwareFlasherCloudBuildFail": {
+        "message": "fallou (verifique o rexistro)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Descargar manualmente."
@@ -3467,6 +3488,9 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> Recuperación / comunicación perdida </strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Se perdeu a comunicación co seu taboleiro, segua estes pasos para restaurar a comunicación: <ul><li>Apagar</li><li>Active \"Sen secuencia de reinicio\", active \"Borrar completo do chip\".</li><li >Punte os pins de ARRANQUE ou manteña premido o botón de ARRANQUE.</li><li>Encender (o LED de actividade NON parpadeará se se fai correctamente).</li><li>Instale todos os controladores STM32 e Zadig se é necesario (consulta <a href =\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Parpadeo USB</a> do manual de Betaflight).</li> <li>Peche o configurador, reinicie o configurador.</li><li>Solte o botón BOOT se o seu FC ten un.</li><li>Flash co firmware correcto (usando a velocidade de transmisión manual se se especifica no manual do seu FC).< /li><li>Apagar.</li><li>Eliminar o puente de arranque.</li><li>Acender (o LED de actividade debería parpadear).</li><li>Conéctate normalmente.</li> </ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Abandoando o Instalador o Firmware"
@@ -4482,6 +4506,9 @@
     "pidTuningIdleMinRpm": {
         "message": "Valor Dinámico Idle [* 100 RPM]"
     },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamic Idle mellora o control a baixas revolucións e reduce o risco de desincronización do motor. <br /><br /> Mellora a autoridade PID, a estabilidade do acelerador cero, o tempo de suspensión invertido e o freado do motor.<br /><br />As rpm mínimas de ralentí dinámico deben establecerse entre 3000 e 3500 rpm. <br /><br />Visite <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki</a> para máis información."
+    },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle está DESACTIVADO porque a telemetría Dshot está DESACTIVADA"
     },
@@ -4493,6 +4520,9 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">PRECAUCIÓN</span>: se activa esta función, debe axustar o PID YAW en consecuencia. Máis información <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw integrado integra os valores de Yaw P, I e D, permitindo que estes se axusten do mesmo modo que pich e roll<br><br>Necesítase moi pouca I, porque o P integrado actua como I e a D integrada como P.<br><br>Nota: Yaw integrado require uso do control absoluto, xa que non é necesario I con Yaw integrado."
@@ -5634,6 +5664,9 @@
         "message": "Temperatura ESC",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementEscTemperature": {
+        "message": "Temperatura recollida pola telemetría ESC, xa sexa mediante telemetría en serie dun cable ou mediante telemetría bidireccional DShot con EDT, se é compatible co seu firmware ESC."
+    },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
         "description": "One of the elements of the OSD"
@@ -6328,6 +6361,10 @@
     },
     "osdButtonSaved": {
         "message": "Gardado"
+    },
+    "vtxHelp": {
+        "message": "Aquí pode configurar os valores para o seu transmisor de vídeo (VTX). Pode ver e cambiar os valores de transmisión, incluídas as táboas VTX, se o controlador de voo e o VTX o admiten.<br>Para configurar o seu VTX, faga os seguintes pasos:<br>1. Vaia a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">esta</a> páxina;<br>2. Busque o ficheiro de configuración VTX adecuado para o seu país e o seu modelo VTX e descárgueo;<br>3. Faga clic en \"$t(vtxButtonLoadFile.message)\" a continuación, seleccione o ficheiro de configuración VTX e cárgueo;<br>4. Verifique que a configuración é correcta;<br>5. Faga clic en \"$t(vtxButtonSave.message)\" para almacenar a configuración de VTX no controlador de voo.<br>6. Opcionalmente, faga clic en '$t(vtxButtonSaveLua.message)' para gardar un ficheiro de configuración lua que poda usar cos scripts lua de betaflight (Ver máis <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github. com/betaflight/betaflight-tx-lua-scripts/\">aquí</a>.)",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atención:</span>O seu VTX non está configurado ou non é compatible. Polo tanto, non pode modificar os valores VTX desde aquí. Isto só será posible se o controlador de voo está unido ó VTX usando algún protocolo como Tramp ou SmartAudio e está configurado correctamente na pestana $t(tabPorts.message) se fose necesario.",
@@ -7218,6 +7255,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Seleccione o protocolo de telemetría que desexa incluír nesta compilación. Teña en conta que este é un menú despregable, pero quizais só se seleccione un elemento. Tamén hai algúns protocolos de telemetría que se activarán, independentemente da súa selección aquí en función do protocolo de radio seleccionado, p. ex. CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Incluído automaticamente"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Seleccione as opcións xenéricas que desexa incluír nesta compilación. Teña en conta que este é un menú despregable e é posible que se seleccionen varios elementos. Elementos como correccións, p. ex. AKK VTX, están incluídos aquí."

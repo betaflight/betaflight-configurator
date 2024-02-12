@@ -3065,9 +3065,6 @@
     "sensorsGyroTitle": {
         "message": "Giroscopio - gradi/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Accelerometro - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetometro"
     },

@@ -2863,9 +2863,6 @@
     "sensorsGyroTitle": {
         "message": "Giroscópio - deg/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Acelerômetro - g"
-    },
     "sensorsAltitudeTitle": {
         "message": "Altitude - metros"
     },
