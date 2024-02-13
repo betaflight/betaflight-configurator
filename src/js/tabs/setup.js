@@ -430,23 +430,22 @@ setup.initialize = function (callback) {
             }
         }
 
-        function buildGrid(list, columns, classContainer, classItem) {
+        function buildGrid(list, columns, classContainer, classRow, classCol) {
             let rows = Math.ceil(list.length / columns);
-            let grid = `<div class='${classContainer}'><table>`;
+            let grid = `<div class='${classContainer}'>`;
 
             for (let i = 0; i < rows; i++) {
-                grid += "<tr>";
+                let gridRow = `<div class='${classRow}'>`;
                 for (let j = 0; j < columns; j++) {
                     let index = i * columns + j;
                     if (index < list.length) {
-                        grid += `<td><div class='${classItem}'>${list[index]}</div></td>`;
-                    } else {
-                        grid += "<td></td>"; // empty cell, to ajust
+                        gridRow += `<div class='${classCol}'>${list[index]}</div>`;
                     }
                 }
-                grid += "</tr>";
+                gridRow += "</div>";
+                grid += gridRow;
             }
-            grid += "</table></div>";
+            grid += "</div>";
 
             return grid;
         }
@@ -460,7 +459,8 @@ setup.initialize = function (callback) {
                 let buildOptionList = "";
 
                 if (FC.CONFIG.buildOptions.length) {
-                    buildOptionList = buildGrid(FC.CONFIG.buildOptions, 2, 'grid-container', 'grid-item');  // grid with 2 columns
+                    buildOptionList = buildGrid(FC.CONFIG.buildOptions, 2,          // grid with 2 columns
+                                                'dialogBuildInfoGrid-container', 'dialogBuildInfoGrid-row', 'dialogBuildInfoGrid-col');
                 }
 
                 if (FC.CONFIG.buildKey.length === 32) {
@@ -474,7 +474,7 @@ setup.initialize = function (callback) {
                     const buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptionList')}">
                                          <a class="buildOptions disabled" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></a></span>`;
 
-                    build_info_e.html(`${buildConfig} ${buildLog} &nbsp &nbsp ${buildOptions}`);
+                    build_info_e.html(`${buildConfig} ${buildLog} &nbsp; &nbsp; ${buildOptions}`);
                     $('a.buildOptions').on('click', async function() {
                         showDialogBuildInfo(`<h3>${i18n.getMessage('initialSetupInfoBuildOptionList')}</h3>`, buildOptionList);
                     });

@@ -171,25 +171,34 @@
 		float: left;
 	}
 }
-.grid-container {
-    display: grid;
-    grid-template-columns: auto;
-    align-content: center;
-    padding: 10px;
-}
-.grid-item {
-    border: 1px solid black;  // border
-    background-color: #f0f0f0;
-    padding: 10px;              // padding around
-    margin: 2px;                // between boxes
-    text-align: center;
-    user-select: text;
-}
 .dialogBuildInfo {
     transition: all 0.2s;
     overflow-x: hidden;
     overflow-y: auto;
     background-color: white;
+}
+.dialogBuildInfoGrid-container {
+    display: grid;
+    grid-template-columns: auto;
+    align-content: center;
+    padding: 5px;
+}
+.dialogBuildInfoGrid-col {
+    border: 1px solid black;  // border
+    background-color: #f0f0f0;
+    padding: 5px;              // padding around
+    margin: 5px;                // between boxes
+    text-align: center;
+    user-select: text;
+    width: calc(50% - 11px);    // width - (4 * border + 2 * margin + padding)
+    float: left;
+    box-sizing: border-box;
+}
+.dialogBuildInfoGrid-row {
+    // clear: both;
+    overflow: hidden;
+    margin-bottom: 5px;
+    user-select: text;
 }
 .dialogBuildInfo-closebtn {
     float: right;
