@@ -1,24 +1,4 @@
 .tab-setup {
-    .grid-container {
-        display: grid;
-        grid-template-columns: auto auto auto;
-        align-content: center;
-        padding: 10px;
-    }
-    .grid-item {
-        border: 1px solid black;  // border
-        background-color: #f0f0f0;
-        padding: 10px;              // padding around
-        margin: 2px;                // between boxes
-        text-align: center;
-        user-select: text;
-    }
-    .contentBuildInfo {
-        transition: all 0.2s;
-        overflow-x: hidden;
-        overflow-y: auto;
-        background-color: white;
-    }
     .ui-grid-col {
 		margin-bottom: 0;
 	}
@@ -190,6 +170,29 @@
 		width: 50%;
 		float: left;
 	}
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: auto;
+    align-content: center;
+    padding: 10px;
+}
+.grid-item {
+    border: 1px solid black;  // border
+    background-color: #f0f0f0;
+    padding: 10px;              // padding around
+    margin: 2px;                // between boxes
+    text-align: center;
+    user-select: text;
+}
+.dialogBuildInfo {
+    transition: all 0.2s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: white;
+}
+.dialogBuildInfo-closebtn {
+    float: right;
 }
 .block.info {
 	.fields {
