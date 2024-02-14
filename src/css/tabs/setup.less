@@ -98,7 +98,7 @@
 		opacity: 0.5;
 	}
 	dialog {
-		width: 40em;
+		width: min-content;
 		border-radius: 5px;
 		.buttons {
 			position: static;
@@ -170,6 +170,14 @@
 		width: 50%;
 		float: left;
 	}
+}
+.grid-container {
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-gap: 5px;
+}
+.grid-item {
+	padding: 5px 5px 3px 5px;
 }
 .block.info {
 	.fields {
