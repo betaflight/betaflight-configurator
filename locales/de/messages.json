@@ -2709,9 +2709,6 @@
     "sensorsGyroTitle": {
         "message": "Gyro - Grad / Sekunde"
     },
-    "sensorsAccelTitle": {
-        "message": "Beschleungungssensor -g"
-    },
     "sensorsAltitudeTitle": {
         "message": "Flughöhe - Meter"
     },

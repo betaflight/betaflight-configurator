@@ -2313,9 +2313,6 @@
     "sensorsGyroTitle": {
         "message": "Гироскоп - град/с"
     },
-    "sensorsAccelTitle": {
-        "message": "Акселерометр - g"
-    },
     "sensorsAltitudeTitle": {
         "message": "Высота - метры"
     },
