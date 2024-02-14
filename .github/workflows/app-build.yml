@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
@@ -50,13 +50,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cache Vite
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: cache/
           key: vite-${{ inputs.path }}-${{ hashFiles('vite.config.js') }}
 
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
