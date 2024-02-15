@@ -590,6 +590,7 @@ const DEBUG = {
             'debug[1]':'Late Tasks per second',
             'debug[2]':'Total delay in last second',
             'debug[3]':'Total Tasks per second',
+            'debug[4]':'Late Tasks per thousand',
         },
         'RX_EXPRESSLRS_SPI' : {
             'debug[all]':'ExpressLRS SPI Rx',
