@@ -204,7 +204,6 @@ firmware_flasher.initialize = function (callback) {
             const radioProtocol = $('select[name="radioProtocols"] option:selected').val();
             const hasTelemetryEnabledByDefault = [
                 'USE_SERIALRX_CRSF',
-                'USE_SERIALRX_FPORT',
                 'USE_SERIALRX_GHST',
             ].includes(radioProtocol);
 
