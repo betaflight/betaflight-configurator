@@ -487,18 +487,26 @@ function checkReportProblems() {
         problemDialogList.empty();
 
         let problems = [];
+        let abort = false;
 
         if (semver.gt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
             const problemName = 'API_VERSION_MAX_SUPPORTED';
             problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`,
                 [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.getDisplayVersion(), FC.CONFIG.flightControllerVersion])});
             needsProblemReportingDialog = true;
+
+            abort = true;
+            GUI.timeout_remove('connecting'); // kill connecting timer
+            $('div.connect_controls a.connect').click(); // disconnect
         }
 
-        needsProblemReportingDialog = checkReportProblem('MOTOR_PROTOCOL_DISABLED', problems) || needsProblemReportingDialog;
+        if (!abort) {
+            // only check for problems if we are not already aborting
+            needsProblemReportingDialog = checkReportProblem('MOTOR_PROTOCOL_DISABLED', problems) || needsProblemReportingDialog;
 
-        if (have_sensor(FC.CONFIG.activeSensors, 'acc')) {
-            needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problems) || needsProblemReportingDialog;
+            if (have_sensor(FC.CONFIG.activeSensors, 'acc')) {
+                needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problems) || needsProblemReportingDialog;
+            }
         }
 
         if (needsProblemReportingDialog) {
@@ -519,7 +527,10 @@ function checkReportProblems() {
             $('#dialogReportProblems-closebtn').focus();
         }
 
-        processUid();
+        if (!abort) {
+            // if we are not aborting, we can continue
+            processUid();
+        }
     });
 }
 
