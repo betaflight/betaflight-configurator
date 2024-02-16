@@ -1201,13 +1201,6 @@ firmware_flasher.initialize = function (callback) {
             }
         }).change();
 
-        $(document).keypress(function (e) {
-            if (e.which === 13) { // enter
-                // Trigger regular Flashing sequence
-                $('a.flash_firmware').click();
-            }
-        });
-
         self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
         GUI.content_ready(callback);
