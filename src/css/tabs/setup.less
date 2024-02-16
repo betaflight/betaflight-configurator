@@ -1,5 +1,5 @@
 .tab-setup {
-	.ui-grid-col {
+    .ui-grid-col {
 		margin-bottom: 0;
 	}
 	.content_wrapper {
@@ -98,7 +98,7 @@
 		opacity: 0.5;
 	}
 	dialog {
-		width: 40em;
+		width: min-content;
 		border-radius: 5px;
 		.buttons {
 			position: static;
@@ -170,6 +170,26 @@
 		width: 50%;
 		float: left;
 	}
+}
+.dialogBuildInfo {
+    transition: all 0.2s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: white;
+    width: min-content;
+    height: min-content;
+}
+.dialogBuildInfo-closebtn {
+    float: right;
+}
+.dialogBuildInfoGrid-container {
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-gap: 5px;
+}
+.dialogBuildInfoGrid-item {
+	padding: 5px 5px 3px 5px;
+    user-select: text;
 }
 .block.info {
 	.fields {

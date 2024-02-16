@@ -208,8 +208,7 @@ setup.initialize = function (callback) {
             // Firmware info
             msp_api_e = $('.api-version'),
             build_date_e = $('.build-date'),
-            build_info_e = $('.build-info'),
-            build_opt_e = $('.build-options');
+            build_info_e = $('.build-info');
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
@@ -417,35 +416,63 @@ setup.initialize = function (callback) {
             }
         };
 
+        function showDialogBuildInfo(title, message) {
+            const dialog = $('.dialogBuildInfo')[0];
+
+            $('.dialogBuildInfo-title').html(title);
+            $('.dialogBuildInfo-content').html(message);
+
+            if ( ! dialog.hasAttribute('open')) {
+                dialog.showModal();
+                $('.dialogBuildInfo-closebtn').on('click', function() {
+                    dialog.close();
+                });
+            }
+        }
+
         const showFirmwareInfo = function() {
             // Firmware info
             msp_api_e.text([FC.CONFIG.apiVersion]);
             build_date_e.text([FC.CONFIG.buildInfo]);
 
-            if (FC.CONFIG.buildKey.length === 32) {
-                const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
-                const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoConfig')}: ${buildRoot}/json">
-                                     <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoConfig')}</a></strong></span>`;
-                const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildInfoLog')}: ${buildRoot}/log">
-                                     <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildInfoLog')}</a></strong></span>`;
-                build_info_e.html(`${buildConfig} &nbsp &nbsp ${buildLog}`);
-                $('.build-info a').removeClass('disabled');
-            } else {
-                $('.build-info a').addClass('disabled');
-            }
+            if (navigator.onLine) {
+                let buildOptionList = "";
 
-            if (FC.CONFIG.buildOptions.length) {
-                let buildOptions = "";
-                build_opt_e.text = "";
-
-                for (const buildOption of FC.CONFIG.buildOptions) {
-                    buildOptions = `${buildOptions} &nbsp ${buildOption}`;
+                if (FC.CONFIG.buildOptions.length) {
+                    buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
+                    for (const buildOptionElement of FC.CONFIG.buildOptions) {
+                        buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
+                    }
+                    buildOptionList += `</div>`;
+                    build_info_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOption')}">
+                        <a class="buildOptions" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></a></span>`);
+                } else {
+                    build_info_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
                 }
-                build_opt_e.html(`<span class="buildInfoClassOptions" 
-                                  title="${i18n.getMessage('initialSetupInfoBuildOptions')}${buildOptions}">
-                                  <strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></span>`);
+
+                if (FC.CONFIG.buildKey.length === 32) {
+                    const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+                    const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildConfig')}: ${buildRoot}/json">
+                                         <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildConfig')}</strong></a></span>`;
+
+                    const buildLog =    `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildLog')}: ${buildRoot}/log">
+                                         <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildLog')}</strong></a></span>`;
+
+                    const buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptionList')}">
+                                         <a class="buildOptions disabled" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></a></span>`;
+
+                    build_info_e.html(`${buildConfig} ${buildLog} &nbsp; &nbsp; ${buildOptions}`);
+                    $('a.buildOptions').on('click', async function() {
+                                                    showDialogBuildInfo(`<h3>${i18n.getMessage('initialSetupInfoBuildOptionList')}</h3>`, buildOptionList);
+                                                    });
+                    $('.build-info a').removeClass('disabled');
+                } else {
+                    build_info_e.html(i18n.getMessage('initialSetupInfoBuildEmpty'));
+                    $('.build-info a').addClass('disabled');
+                }
             } else {
-                build_opt_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
+                build_info_e.html(i18n.getMessage('initialSetupNotOnline'));
+                $('.build-info a').addClass('disabled');
             }
         };
 
@@ -477,6 +504,8 @@ setup.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
                 cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
+            } else {
+                cputemp_e.text(i18n.getMessage('initialSetupCpuTempNotSupported'));
             }
 
             // GPS info is acquired in the background using update_live_status() in serial_backend.js

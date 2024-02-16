@@ -895,6 +895,9 @@
     "initialSetupCpuTemp": {
         "message": "CPU Temperature:"
     },
+    "initialSetupCpuTempNotSupported": {
+        "message": "No support from MSP API before 1.46"
+    },
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
@@ -1088,8 +1091,8 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Shows information regarding the build of firmware. The Build Config and Bulid Log links to the cloud information found by the Build key",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Shows information for firmware Build, require online to Build server.<br>Options show Defined options used in Cloud Build.<br>Log and Config links show cloud information by key stored in firmware.<br>At local Build, section are empty.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1101,20 +1104,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Build key"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Build Options:"
+        "message": "Options"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defines used"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Options defined in firmware build"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Local Build - no Defines used"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Local Build - no Cloud information"
     },
     "initialSetupNotOnline": {
         "message": "Server unavailable"
