@@ -10,7 +10,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
@@ -275,7 +275,11 @@ receiver.initialize = function (callback) {
 
         // Convert to select2 and order alphabetic
         if (!GUI.isCordova()) {
-            serialRxSelectElement.sortSelect().select2();
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                serialRxSelectElement.sortSelect("NONE").select2();
+            } else {
+                serialRxSelectElement.sortSelect().select2();
+            }
 
             $(document).on('select2:open', 'select.serialRX', () => {
                 const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
