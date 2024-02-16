@@ -395,7 +395,7 @@ gps.initialize = async function (callback) {
             // fill some data
             FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
             FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
-            FC.COMPASS_CONFIG.mag_declination = parseFloat($('input[name="mag_declination"]').val());
+            FC.COMPASS_CONFIG.mag_declination = $('input[name="mag_declination"]').val();
 
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             if (hasMag) {

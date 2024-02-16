@@ -1839,7 +1839,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             }
             break;
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
-            buffer.push16(Math.round(FC.COMPASS_CONFIG.mag_declination) * 10);
+            buffer.push16(Math.round(10.0 * parseFloat(FC.COMPASS_CONFIG.mag_declination)));
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
             buffer.push8(FC.RSSI_CONFIG.channel);
