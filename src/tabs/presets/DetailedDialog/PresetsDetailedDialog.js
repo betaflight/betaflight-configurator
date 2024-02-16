@@ -1,5 +1,5 @@
 import GUI from "../../../js/gui";
-import { i18n } from "../../../js/localization";
+import { i18n, getCurrentLocaleISO } from "../../../js/localization";
 import PickedPreset from "../PickedPreset";
 import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
 import FC from "../../../js/fc";
@@ -174,6 +174,7 @@ export default class PresetsDetailedDialog {
             onUncheckAll: () => this._optionsSelectionChanged(),
             onOpen: () => this._optionsOpened(),
             hideOptgroupCheckboxes: true,
+            locale: getCurrentLocaleISO(),
             singleRadio: true,
             selectAll: false,
             styler: function (row) {

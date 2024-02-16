@@ -2,7 +2,7 @@ import '../../js/jqueryPlugins';
 import GUI, { TABS } from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
 import { generateFilename } from '../../js/utils/generate_filename';
-import { i18n } from '../../js/localization';
+import { i18n, getCurrentLocaleISO } from "../../js/localization";
 import FC from '../../js/fc';
 import CONFIGURATOR from '../../js/data_storage';
 import UI_PHONES from '../../js/phones_ui';
@@ -442,6 +442,7 @@ presets.prepareFilterSelectField = function(domSelectElement, selectOptions, min
     domSelectElement.multipleSelect("destroy");
     domSelectElement.multipleSelect({
         data: selectOptions,
+        locale: getCurrentLocaleISO(),
         showClear: true,
         minimumCountSelected : minimumCountSelected,
         placeholder: i18n.getMessage("dropDownFilterDisabled"),

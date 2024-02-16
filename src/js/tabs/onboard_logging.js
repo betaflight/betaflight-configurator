@@ -1,4 +1,4 @@
-import { i18n } from "../localization";
+import { i18n, getCurrentLocaleISO } from "../localization";
 import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { mspHelper } from "../msp/MSPHelper";
@@ -270,8 +270,8 @@ onboard_logging.initialize = function (callback) {
                 debugFieldsSelect.append(new Option(DEBUG.enableFields[i].text, i, false, enabled));
             }
 
-            debugFieldsSelect.sortSelect().multipleSelect();
-
+            const currentLocale = getCurrentLocaleISO();
+            debugFieldsSelect.sortSelect().multipleSelect({locale: currentLocale});
         } else {
             $('.blackboxDebugFields').hide();
         }

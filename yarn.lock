@@ -11869,10 +11869,10 @@ multipipe@^0.1.2:
   dependencies:
     duplexer2 "0.0.2"
 
-multiple-select@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/multiple-select/-/multiple-select-1.6.0.tgz#7e2e7771f45671f014d15a662055c9ff72984a88"
-  integrity sha512-DnBvhl189r5NuLQa6bxsvl62ArMJVi7YDx7hjiW5ZX5agiZyiPZIzzanlsFtm4yLvR0KMwfG0TDrixJ8RNa8eg==
+multiple-select@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/multiple-select/-/multiple-select-1.7.0.tgz#415e069a071098fcb367ab27b51c70f7b15103d3"
+  integrity sha512-KlODxbDvsg/3M+xU5pmtJb89dJzK4G3oO2miWMwAbW8UaDHfXi4DoVSRiynqwfSa0znwrT0juKEsxJ2nux7k4A==
 
 "murmur-32@^0.1.0 || ^0.2.0":
   version "0.2.0"
