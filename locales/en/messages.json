@@ -779,7 +779,7 @@
         "message": "Reset Settings"
     },
     "initialSetupResetText": {
-        "message": "Restore settings to <strong>default</strong>"
+        "message": "Reset the flight controller to an <strong>unconfigured state.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
@@ -6943,7 +6943,7 @@
         "message": "Confirm"
     },
     "dialogConfirmResetNote": {
-        "message": "WARNING: Are you sure you want to reset <strong>ALL settings</strong> to default? This is <strong>not</strong> a \"factory reset\". It may cause unexpected issues, and it may be necessary to re-flash your firmware to be able to connect again."
+        "message": "WARNING: Are you sure you want to reset <strong>ALL settings</strong> to an unconfigured state? This is <strong>not</strong> a \"factory reset\". It may cause unexpected issues, and it may be necessary to re-flash your firmware to be able to connect again."
     },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
