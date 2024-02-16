@@ -779,7 +779,7 @@
         "message": "Reset Settings"
     },
     "initialSetupResetText": {
-        "message": "Restore settings to <strong>unconfigured defaults</strong>"
+        "message": "Reset the flight controller to an <strong>unconfigured state.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
