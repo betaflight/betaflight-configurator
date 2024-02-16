@@ -1092,7 +1092,7 @@
         "message": "Firmware info"
     },
     "initialSetupInfoFirmwareHelp": {
-        "message": "Shows information for firmware Build. If connected to Build Server, Log and Config links to cloud information found by Build key stored in firmware. Options defined, show options used in Cloud Build.<br>Section are empty if local Build.",
+        "message": "Shows information for firmware Build. If connected to Build Server, Log and Config links show cloud information by key stored in firmware. Options show Defined options used in Cloud Build.<br>At local Build, section are empty.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
