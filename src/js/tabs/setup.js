@@ -504,8 +504,7 @@ setup.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
                 cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
-            }
-            else {
+            } else {
                 cputemp_e.text(i18n.getMessage('initialSetupCpuTempNotSupported'));
             }
 
