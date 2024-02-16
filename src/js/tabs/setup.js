@@ -430,26 +430,6 @@ setup.initialize = function (callback) {
             }
         }
 
-        function buildGrid(list, columns, classContainer, classRow, classCol) {
-            let rows = Math.ceil(list.length / columns);
-            let grid = `<div class='${classContainer}'>`;
-
-            for (let i = 0; i < rows; i++) {
-                let gridRow = `<div class='${classRow}'>`;
-                for (let j = 0; j < columns; j++) {
-                    let index = i * columns + j;
-                    if (index < list.length) {
-                        gridRow += `<div class='${classCol}'>${list[index]}</div>`;
-                    }
-                }
-                gridRow += "</div>";
-                grid += gridRow;
-            }
-            grid += "</div>";
-
-            return grid;
-        }
-
         const showFirmwareInfo = function() {
             // Firmware info
             msp_api_e.text([FC.CONFIG.apiVersion]);
@@ -459,8 +439,15 @@ setup.initialize = function (callback) {
                 let buildOptionList = "";
 
                 if (FC.CONFIG.buildOptions.length) {
-                    buildOptionList = buildGrid(FC.CONFIG.buildOptions, 2,          // grid with 2 columns
-                                                'dialogBuildInfoGrid-container', 'dialogBuildInfoGrid-row', 'dialogBuildInfoGrid-col');
+                    buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
+                    for (const buildOptionElement of FC.CONFIG.buildOptions) {
+                        buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
+                    }
+                    buildOptionList += `</div>`;
+                    build_info_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOption')}">
+                        <a class="buildOptions" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></a></span>`);
+                } else {
+                    build_info_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
                 }
 
                 if (FC.CONFIG.buildKey.length === 32) {
@@ -476,8 +463,8 @@ setup.initialize = function (callback) {
 
                     build_info_e.html(`${buildConfig} ${buildLog} &nbsp; &nbsp; ${buildOptions}`);
                     $('a.buildOptions').on('click', async function() {
-                        showDialogBuildInfo(`<h3>${i18n.getMessage('initialSetupInfoBuildOptionList')}</h3>`, buildOptionList);
-                    });
+                                                    showDialogBuildInfo(`<h3>${i18n.getMessage('initialSetupInfoBuildOptionList')}</h3>`, buildOptionList);
+                                                    });
                     $('.build-info a').removeClass('disabled');
                 } else {
                     build_info_e.html(i18n.getMessage('initialSetupInfoBuildEmpty'));

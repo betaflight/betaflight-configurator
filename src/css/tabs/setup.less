@@ -98,7 +98,7 @@
 		opacity: 0.5;
 	}
 	dialog {
-		width: 40em;
+		width: min-content;
 		border-radius: 5px;
 		.buttons {
 			position: static;
@@ -176,31 +176,20 @@
     overflow-x: hidden;
     overflow-y: auto;
     background-color: white;
-}
-.dialogBuildInfoGrid-container {
-    display: grid;
-    grid-template-columns: auto;
-    align-content: center;
-    padding: 5px;
-}
-.dialogBuildInfoGrid-col {
-    border: 1px solid black;  // border
-    background-color: #f0f0f0;
-    padding: 5px;               // padding around
-    margin: 5px;                // between boxes
-    text-align: center;
-    user-select: text;
-    width: calc(50% - 11px);    // width - (4 * border + 2 * margin + padding)
-    float: left;
-    box-sizing: border-box;
-}
-.dialogBuildInfoGrid-row {
-    overflow: hidden;
-    margin-bottom: 5px;
-    user-select: text;
+    width: min-content;
+    height: min-content;
 }
 .dialogBuildInfo-closebtn {
     float: right;
+}
+.dialogBuildInfoGrid-container {
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-gap: 5px;
+}
+.dialogBuildInfoGrid-item {
+	padding: 5px 5px 3px 5px;
+    user-select: text;
 }
 .block.info {
 	.fields {
