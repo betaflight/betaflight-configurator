@@ -71,6 +71,7 @@ jobs:
       - run: yarn build
 
       - name: Push to AWS
+        if: github.repository_owner == 'betaflight'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
