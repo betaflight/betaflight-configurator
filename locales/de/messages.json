@@ -189,9 +189,6 @@
     "configuratorUpdateNotice": {
         "message": "Sie verwenden eine veraltete Version des <b>Betaflight Configurators</b>.\n<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Die Verwendung einer neueren Version der Firmware mit einer veralteten Version des Configurators bedeutet, dass das Ändern einiger Einstellungen zu einer <strong>beschädigten Firmware-Konfiguration und einem nicht funktionierenden Kopter</strong> führen wird. Außerdem sind einige Funktionen der Firmware nur per CLI konfigurierbar.<br><strong>Betaflight Configurator Version <b>$1</b> steht online zum Download bereit</strong>, besuchen Sie bitte <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">diese Seite</a>, um die neueste Version mit neuen Features herunterzuladen und zu installieren.<br>Bitte schließen Sie den Betaflight Configurator, bevor sie die neue Version installieren."
-    },
     "configuratorUpdateWebsite": {
         "message": "Webseite mit Downloadversionen aufrufen"
     },
@@ -434,12 +431,6 @@
     },
     "reportProblemsDialogHeader": {
         "message": "Die folgenden <strong>Probleme mit Ihrer Konfiguration</strong> wurden entdeckt:"
-    },
-    "reportProblemsDialogFooter": {
-        "message": "Bitte <strong>beheben Sie diese Probleme, bevor Sie versuchen, Ihren Kopter</strong> zu fliegen."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>Die Version des Konfigurators, die Sie verwenden ($3) ist älter als die Firmware, die Sie verwenden ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Es ist kein Motorausgabeprotokoll ausgewählt</strong>.<br>Bitte wähle ein für den ESCs geeignetes Motorausgabeprotokoll in '$t(configurationEscFeatures.message)' auf der Registerkarte '$t(tabMotorTesting.message)' aus.<br>$t(escProtocolDisabledMessage.message)"
@@ -697,9 +688,6 @@
     "initialSetupButtonReset": {
         "message": "Einstellungen zurücksetzen"
     },
-    "initialSetupResetText": {
-        "message": "Auf Werkseinstellungen <strong>zurücksetzen</strong>"
-    },
     "initialSetupButtonBackup": {
         "message": "JSON sichern (Backup)"
     },
@@ -925,10 +913,6 @@
     "initialSetupInfoBuild": {
         "message": "Firmware-Info"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Informationen zum Build der Firmware anzeigen. Die Build-Config und Build-Log verweisen zu den Cloud-Informationen des Build-Schlüssels",
-        "description": "Message that pops up to describe the Build / Firmware section"
-    },
     "initialSetupInfoBuildDate": {
         "message": "Erstellungsdatum (build date):"
     },
@@ -937,21 +921,6 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "Build Key"
-    },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "Konfiguration"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "Log"
-    },
-    "initialSetupInfoBuildOptions": {
-        "message": "Erstellungsoptionen (build options):"
-    },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Verwendete Definitionen"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Lokaler Build - keine Definitionen verwendet"
     },
     "initialSetupButtonSave": {
         "message": "Speichern"
@@ -6221,9 +6190,6 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Bestätigen"
-    },
-    "dialogConfirmResetNote": {
-        "message": "WARNUNG: Dies setzt <strong>ALLE Einstellungen</strong> zurück! Das bedeutet <strong>nicht</strong> \"Zurücksetzen auf Werkseinstellungen\". Es können unerwartete Problemen auftreten. Eventuell ist erneutes Flashen notwendig, um sich wieder verbinden zu können."
     },
     "dialogConfirmResetConfirm": {
         "message": "Zurücksetzen"

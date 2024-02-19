@@ -191,7 +191,7 @@
         "message": "Du bruger en forældet version af <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Brug af en nyere version af firmwaren med en ældre version af Configurator betyder, at ændring af indstillinger kan resultere i en <strong>beskadiget firmware konfiguration og en ikke-fungerende FC</strong>. Desuden vil nogle funktioner i firmwaren kun kunne konfigureres i CLI.<br><strong>Betaflight Configurator version <b>$1</b> er tilgængelig for download online</strong>, besøg <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">denne side</a> for at downloade og installere den nyeste version med rettelser og forbedringer.<br>Luk venligst konfiguratorvinduet før du opdaterer."
+        "message": "Brug af en nyere version af firmware med en ældre version af Betaflight Configurator, kan betyde at ændring af indstillinger giver en <strong>beskadiget firmware konfiguration og en ikke-fungerende FC</strong>. Desuden vil nogle funktioner i firmwaren kun kunne konfigureres i CLI.<br><strong>Betaflight Configurator version <b>$1</b> er tilgængelig for at hente online</strong>, besøg <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">denne side</a> for at hente og installere den nyeste Configurator version med rettelser og forbedringer.<br>Det er bedst, at du lukker Configurator før du opdaterer."
     },
     "configuratorUpdateWebsite": {
         "message": "Åbn udgivelseswebsted"
@@ -437,10 +437,10 @@
         "message": "Følgende <strong>problemer med din konfiguration</strong> blev opdaget:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Løs venligst <strong>disse problemer, før du forsøger at flyve med dit fartøj</strong>."
+        "message": "<span class=\"message-negative\">Du skal løse <strong>disse problemer i indstillinger, før du forsøger at flyve med dit fartøj</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>den version af konfigurator ($3) er ældre end den version af firmware image du bruger ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Din Betaflight configurator ($3) understøtter ikke den anvendte firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>der er ikke valgt en motor protokol</strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"
@@ -699,7 +699,7 @@
         "message": "Nulstil indstillinger"
     },
     "initialSetupResetText": {
-        "message": "Gendan til <strong>standardindstillinger</strong>"
+        "message": "Nulstil FC til en <strong>ukonfigureret tilstand.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Sikkerhedskopiering via JSON"
@@ -814,6 +814,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "CPU temperatur:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "Ingen understøttelse fra MSP API tidligere end 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1008,8 +1011,8 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Viser oplysninger om Build. Build Konfiguration og Build Log peger til links i skyen via Build ID",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Viser information om indhold i firmware, kræver online adgang.<br>Indstillinger viser valg defineret ved Cloud Build.<br>Log og Konfiguration har link til Cloud information via nøgle gemt i firmware.<br>Ved lokalt bygget firmware, er sektionen tom.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1021,20 +1024,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Release ID"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Konfiguration"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Release valg:"
+        "message": "Valg"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defines for release"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Valg defineret i firmware build"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Lokal release - ingen Defines anvendt"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Lokalt bygget - ingen Cloud Build information"
     },
     "initialSetupNotOnline": {
         "message": "Serveren kan ikke kontaktes"
@@ -6853,7 +6856,7 @@
         "message": "Bekræft"
     },
     "dialogConfirmResetNote": {
-        "message": "ADVARSEL: Er du sikker på du ønsker at nulstille <strong>ALLE indstillinger/strong> til standard værdier? Dette er <strong>ikke</strong> en \"nulstil til fabriks indstillinger\", men nulstil af alt. Det kan betyde uventede problemer, og det kan være nødvendigt af brænde firmware igen på FC, for at kunne forbinde til FC."
+        "message": "ADVARSEL: Er du sikker på, at du ønsker at nulstille <strong>ALLE indstillinger/strong> til standard værdier? Dette er <strong>ikke</strong> en \"nulstil til fabriks indstillinger\", men nulstil af alle indstillinger. Det kan betyde uventede problemer, og det kan være nødvendigt at skulle brænde FC med firmware igen, for igen at kunne forbinde til FC."
     },
     "dialogConfirmResetConfirm": {
         "message": "Nulstil"

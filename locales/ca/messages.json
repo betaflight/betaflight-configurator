@@ -195,7 +195,7 @@
         "message": "Esteu utilitzant una versió obsoleta del <b>Configurador Betaflight</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Si utilitzeu una versió més recent del firmware amb una versió obsoleta de configurador, significa que canviar algunes configuracions tindrà com a resultat una <strong>configuració del firmware corrompuda i un aeronau que no funciona</strong>. A més, algunes funcions del firmware només es podran configurar en CLI.<br><strong> La versió del configurador Betaflight<b>$1</b> està disponible per a la descàrrega en línia</strong>, visiteu <a href=\"$2\" target=\"_ blank\"rel=\"noopener noreferrer\">aquesta pàgina </a> per descarregar i instal·lar la versió més recent amb solucions i millores.<br>Tanqueu la finestra del configurador abans de l’actualització."
+        "message": "Si utilitzeu una versió més recent del firmware amb una versió obsoleta de configurador, significa que canviar alguns ajustos pot resultar una <strong>configuració del firmware corrompuda i un quad que no funciona</strong>.<br />A més, algunes funcions del firmware només es podran configurar en CLI.<br g/><br /><strong>La versió del configurador Betaflight <b>$1</b> està disponible per a la descàrrega en línia</strong>.<br />Visiteu <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br>per descarregar i instal·lar la versió més recent amb solucions i millores. Tanqueu la finestra del configurador abans de l’actualització."
     },
     "configuratorUpdateWebsite": {
         "message": "Ves a la pàgina de publicació"
@@ -441,10 +441,10 @@
         "message": "S'han detectat els següents <strong>problemes amb la vostra configuració</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Si us plau <strong>solucioneu aquests problemes abans d’intentar volar el vostre aeronau</strong>."
+        "message": "<span class=\"message-negative\"><strong>Cal que solucioneu aquests problemes abans d’intentar volar el vostre aeronau</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>la versió del configurador que utilitzeu ($3) és més antiga que el firmware que utilitzeu ($4)</strong>. <br> $t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>La versió de configurador feta servir ($3) no suporta aquest programari $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat</strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabMotorTesting.message)\".<br>$t(escProtocolDisabledMessage.message)"
@@ -703,7 +703,7 @@
         "message": "Resetejar Ajustos"
     },
     "initialSetupResetText": {
-        "message": "Restaurar ajustos per <strong>defecte</strong>"
+        "message": "Restableix el controlador de vol a un <strong>estat sense configurar</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Còpia de seguretat JSON"
@@ -818,6 +818,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura CPU:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "No hi ha suport de l'API MSP abans de l'1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1012,8 +1015,8 @@
     "initialSetupInfoBuild": {
         "message": "Informació del programari"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Mostra informació sobre la creació del microprogramari. La configuració de compilació i el registre de Bulid enllacen a la informació del núvol que troba la clau de compilació",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Mostra informació per a la compilació del microprogramari, requereix en línia per al servidor de compilació.<br>Les opcions mostren les opcions definides utilitzades a Cloud Build.<br>Els enllaços de registre i configuració mostren la informació del núvol per clau emmagatzemada al microprogramari.<br>A la compilació local, la secció està buida.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1025,20 +1028,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Clau de compilació"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Configuració"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Registre"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Opcions de compilació:"
+        "message": "Opcions"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defineix utilitzat"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Opcions definides a la construcció del firmware"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilació local - No es fa servir definició"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Construcció local: sense informació al núvol"
     },
     "initialSetupNotOnline": {
         "message": "Servidor no disponible"
@@ -3072,6 +3075,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroscopi - graus/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Acceleròmetre - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetòmetre"
@@ -6854,7 +6860,7 @@
         "message": "Confirmar"
     },
     "dialogConfirmResetNote": {
-        "message": "ADVERTIMENT: esteu segur que voleu restablir <strong>TOTA la configuració</strong> als valors predeterminats? Això <strong>no</strong> és un \"restabliment de fàbrica\". Pot causar problemes inesperats i pot ser necessari tornar a flashejar el microprogramari per poder connectar-se de nou."
+        "message": "ADVERTIMENT: esteu segur que voleu restablir <strong>TOTA la configuració</strong> a un estat sense configurar? Això <strong>no</strong> és un \"restabliment de fàbrica\". Pot causar problemes inesperats i pot ser necessari tornar a flashejar el microprogramari per poder connectar-se de nou."
     },
     "dialogConfirmResetConfirm": {
         "message": "Resetejar"

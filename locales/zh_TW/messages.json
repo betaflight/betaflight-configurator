@@ -148,9 +148,6 @@
     "configuratorUpdateNotice": {
         "message": "$ t（configuratorUpdateHelp.message）"
     },
-    "configuratorUpdateHelp": {
-        "message": "在舊版本的配置程式上使用新版本固件可能會使修改某些設置時導致 <strong>固件配置損壞且飛行器無法工作</strong>。此外，固件的某些功能將僅能在 CLI 中配置。 <br><strong>Betaflight 配置程式版本<b>$1</b> 可下載</strong>，請訪問<a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">這個頁面</ a>下載並安裝最新的配置程式，以獲取全部的修復與改進。 <br>更新前請關閉配置程式窗口。"
-    },
     "configuratorUpdateWebsite": {
         "message": "打開版本發佈網站"
     },
@@ -391,12 +388,6 @@
     "reportProblemsDialogHeader": {
         "message": "檢測到<strong>您的配置存在下列問題</strong>:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "請<strong>在試飛之前解決這些問題</strong>。"
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>您正在使用的配置程式版本 ($3) 落後於您正在使用的固件版本 ($4) </strong>。<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>加速度計已啟用，但未進行校準</strong>。<br>如果您計劃使用加速度計，請遵循 \"$t(tabSetup.message)\" 頁面中的 \"$t(initialSetupButtonCalibrateAccel.message)\" 操作指南。如果開啟了任何需要調用加速度計的功能 (例如自穩模式, GPS 救援, …)，在加速度計完成校準之间將無法解鎖。<br>如果您並不計劃使用加速度計，建議您在 \"$t(tabConfiguration.message)\" 頁面中通過 \"$t(configurationSystem.message)\" 禁用加速度計。"
     },
@@ -581,9 +572,6 @@
     },
     "initialSetupButtonReset": {
         "message": "恢復默認設置"
-    },
-    "initialSetupResetText": {
-        "message": "恢復<strong>默認</strong>設置"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "激活啟動引導程式/DFU"

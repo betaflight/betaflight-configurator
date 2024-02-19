@@ -175,9 +175,6 @@
     "configuratorUpdateNotice": {
         "message": "U gebruikt een verouderde versie van de <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Het gebruik van een nieuwere versie van de firmware met een verouderde versie van Configurator betekent dat het wijzigen van sommige instellingen zal resulteren in een <strong>corrupte firmware configuratie en een niet werkende drone</strong>. Bovendien zullen sommige functies van de firmware alleen configureerbaar zijn in de CLI.<br><strong>Betaflight Configurator versie <b>$1</b> is online te downloaden</strong>, bezoek <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">deze pagina</a> om de nieuwste versie te downloaden en te installeren.<br>Sluit het configuratorvenster voordat u deze bijwerkt."
-    },
     "configuratorUpdateWebsite": {
         "message": "Ga naar de Release Pagina"
     },
@@ -421,12 +418,6 @@
     "reportProblemsDialogHeader": {
         "message": "De volgende <strong>problemen met uw configuratie</strong> zijn ontdekt:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "Los alstublieft <strong>eerst</strong> deze problemen op alvorens te gaan vliegen."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>de versie van de configuratie die u gebruikt ($3) is ouder dan de firmware die u gebruikt ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>er is geen motoruitgangsprotocol geselecteerd</strong>.<br> Selecteer een motoruitgangsprotocol dat geschikt is voor uw ESC's in '$t(configurationEscFeatures.message)' op het tabblad '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -634,9 +625,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Instellingen Resetten"
-    },
-    "initialSetupResetText": {
-        "message": "Instellingen teruggezet naar <strong>standaard</strong>"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Zet Boot Loader / DFU aan"

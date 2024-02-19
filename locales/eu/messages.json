@@ -151,9 +151,6 @@
     "configuratorUpdateNotice": {
         "message": "<b>Betaflight Konfiguratzailearen</b> bertsio zaharkitua erabiltzen ari zara.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Firmwarearen bertsio berriak konfiguratzailearen bertsio zaharkituekin erabiltzen baduzu, ezarpen batzuk aldatzerakoan, <strong> firmware konfigurazio eta gailu hondatuak</strong> ekar daitezke. Gainera, firmwarearen zenbait ezaugarri CLI erabiltzen bakarrik konfiguratu daitezke.<br><strong> Betaflight Konfiguratzaile bertsioa <b>$1</b> sarean deskargatzeko erabilgarri dago </strong>. Mesedez bisitatu<a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">orri hau</a> azken bertsioa deskargatzeko, konponketak eta hobekuntzak jasotzen.<br>Mesedez, itxi konfiguratzaile leiho hau eguneratu aurretik."
-    },
     "configuratorUpdateWebsite": {
         "message": "Bertsio agirien webgunera joan"
     },
@@ -397,12 +394,6 @@
     "reportProblemsDialogHeader": {
         "message": "Zure konfigurazioarekin <strong>lotutako arazo hauek</strong> atzeman dira:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "Mesedez, <strong> konpondu arazo hauek gailua hegan egiten saiatu aurretik </strong>."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>Erabiltzen ari zaren konfiguratzaile bertsioa ($3) firmwarean erabilita baino zaharragoa da($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu</strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
     },
@@ -599,9 +590,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Ezarpenak berrezarri"
-    },
-    "initialSetupResetText": {
-        "message": "Ezarpenak <strong>lehenetsita</strong> ezarri"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Boot Loader / DFU aktibatu"

@@ -191,7 +191,7 @@
         "message": "Używasz przestarzałej wersji <b>Konfiguratora Betaflight</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Używanie nowszej wersji oprogramowania z przestarzałą wersją Konfiguratora oznacza, że zmiana niektórych ustawień spowoduje <strong>Uszkodzenie konfiguracji oprogramowania kontrolera i uziemienie maszyny</strong>. Ponadto niektóre funkcje oprogramowania będą konfigurowalne tylko przez konsolę (CLI).<br><strong>Wersja konfiguratora Betaflight <b>$1</b> jest dostępna do pobrania online</strong>, odwiedź <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">tę stronę</a>, aby pobrać i zainstalować najnowszą wersję z poprawkami i ulepszeniami.<br>Zamknij okno konfiguratora przed aktualizacją."
+        "message": "Używanie nowszej wersji oprogramowania układowego z przestarzałą wersją Konfiguratora oznacza, że zmiana niektórych ustawień spowoduje uszkodzenie konfiguracji kontrolera lotu <strong>i uziemienie jednostki latającej</strong>.<br />Ponadto niektóre funkcje oprogramowania będą konfigurowalne tylko w CLI.<br g/><br /><strong>Konfiguracja Betaflight wersja <b>$1</b> jest dostępna do pobrania online</strong>.<br />Pobierz i zainstaluj najnowszą wersję konfiguratora z poprawkami i ulepszeniami <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a><br>Przed aktualizacją należy zamknąć okno konfiguratora."
     },
     "configuratorUpdateWebsite": {
         "message": "Idź do strony z aktualizacjami"
@@ -437,10 +437,10 @@
         "message": "Wykryto następujące <strong>problemy z konfiguracją</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Napraw<strong> te problemy przed próbą latania swoją jednostką latającą</strong>."
+        "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać </span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>wersja konfiguratora, której używasz ($3) jest starsza niż oprogramowanie, którego używasz ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Użyta wersja konfiguratora ($3) nie obsługuje oprogramowania $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
@@ -617,7 +617,7 @@
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serwer Discord</a>.<br /> Podziel się doświadczeniami pilota, porozmawiaj o Betaflight i pomóż innym osobom lub uzyskaj pomoc dla siebie od społeczności."
     },
     "statisticsDisclaimer": {
-        "message": "Konfigurator Betaflight zbiera anonimowe statystyki użytkownika. Na przykład dane które obejmują: liczbę uruchomień, region geograficzny użytkowników, typy kontrolera lotu, wersje oprogramowania, korzystanie z elementów interfejsu użytkownika, zakładki itp. Podsumowanie tych danych jest dostępne <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a>. Statystyki te są wykorzystywane w celu lepszego zrozumienia, jak jest używany konfigurator Betaflight oraz poznania trendów jakie panują w społeczności. Użytkownicy mogą wyłączyć zbieranie danych w zakładce Opcje."
+        "message": "Konfigurator Betaflight zbiera anonimowe statystyki użytkownika. Na przykład dane które obejmują: liczbę uruchomień, region geograficzny użytkowników, typy kontrolera lotu, wersje oprogramowania, korzystanie z elementów interfejsu użytkownika, zakładki itp. Podsumowanie tych danych jest dostępne <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj</a>. Statystyki te są wykorzystywane w celu lepszego zrozumienia, jak jest używany konfigurator Betaflight oraz poznania trendów jakie panują w społeczności. Użytkownicy mogą wyłączyć zbieranie danych w zakładce Ustawienia."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Wgrywanie oprogramowania"
@@ -699,7 +699,7 @@
         "message": "Resetuj ustawienia"
     },
     "initialSetupResetText": {
-        "message": "Przywróć ustawienia <strong>fabryczne</strong>"
+        "message": "Zresetuj kontroler lotu do stanu <strong>nieskonfigurowanego.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Utwórz kopie"
@@ -814,6 +814,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura procesora:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "Brak wsparcia z MSP API przed 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1008,8 +1011,8 @@
     "initialSetupInfoBuild": {
         "message": "Informacje o firmware"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Wyświetla informacje dotyczące kompilacji oprogramowania układowego. Konfiguracja kompilacji i dziennik kompilacji pokrywają się  z informacjami znalezionymi w chmurze przez klucz kompilacji",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Pokazuje informacje dotyczące kompilacji oprogramowania układowego, wymaga połączenia online z serwerem.<br>Opcje pokazują zdefiniowane w chmurze ustawienia kompilacji.<br>Łącza dziennika i konfiguracji pokazują informacje o chmurze według klucza przechowywanego w oprogramowaniu układowym.<br> W lokalnej kompilacji sekcja jest pusta.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1021,20 +1024,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Budowa klucza"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Konfiguruj"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Opcje budowy:"
+        "message": "Opcje"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Użyte definicje"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Opcje zdefiniowane w kompilacji oprogramowania"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Budowa lokalna — brak definicji"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Lokalna kompilacja - brak informacji o chmurze"
     },
     "initialSetupNotOnline": {
         "message": "Serwer niedostępny"
@@ -1880,10 +1883,10 @@
         "message": "Feedforward Averaging bierze średnią z ostatnich 2 lub 3 kroków feedforward. To wygładza ślad sprzężenia zwrotnego, ale dodaje trochę opóźnienia.<br><br>Jest najbardziej efektywne, gdy w sygnale występuje sekwencyjny jitter w górę/w dół, co jest powszechne w przypadku szybszych łączy RC.<br><br>Uśrednianie 2 punktów jest potrzebny do łączy 500 Hz i hałaśliwych łączy 250 Hz lub do latania Cinematic / HD. Crossfire (przed CRSFShot) wymaga uśrednienia 3 punktów w trybie 150 Hz."
     },
     "pidTuningOptionOff": {
-        "message": "WYŁ"
+        "message": "Wył"
     },
     "pidTuningOptionOn": {
-        "message": "Włączone"
+        "message": "Wł"
     },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "2 Punkty"
@@ -3550,7 +3553,7 @@
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Konfigurator wykrył kontroler: <strong>{{boardName}}</strong>, lecz nie znaleziono oficjalnego pliku docelowego Betaflight",
+        "message": "Konfigurator wykrył kontroler lotu: <strong>{{boardName}}</strong>, lecz nie znaleziono oficjalnego oprogramowania układowego Betaflight",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
@@ -3573,7 +3576,7 @@
         "message": "Znajdź informacje na płytce kontrolera lotu, aby wstępnie wybrać odpowiednie oprogramowanie"
     },
     "unstableFirmwareAcknowledgementDialog": {
-        "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego</strong>. Ciągle trwają prace nad tą wersją, a każda z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie będzie działć;</li><li>oprogramowanie będzie miało problemy ze sterowaniem lotu;</li><li>wystąpią problemy z bezpieczeństwem, na przykład podczas lotu</li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieprzewidywalny, lub doprowadzi do uszkodzenia maszyny lub czyjegoś zdrowia</li></ul></strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji</strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami</strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
+        "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego</strong>. Ciągle trwają prace nad tą wersją oprogramowania, a każda z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie będzie działć</li><li>oprogramowanie będzie miało problemy ze sterowaniem lotem</li><li>wystąpią problemy z bezpieczeństwem, na przykład podczas lotu</li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieprzewidywalny i doprowadzi do uszkodzenia jednostki latającej lub czyjegoś zdrowia</li></ul></strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji</strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami</strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
     },
     "unstableFirmwareAcknowledgement": {
         "message": "Przeczytałem powyższe i <strong>biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
@@ -4508,7 +4511,7 @@
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki< /a>, aby uzyskać więcej informacji."
+        "message": "Dynamiczny bieg jałowy poprawia kontrolę przy niskich obrotach i zmniejsza ryzyko desynchronizacji silnika. <br /><br /> Poprawia autorytet PID, stabilność przepustnicy przy zerowej przepustnicy, odwrócony czas zawieszenia i hamowanie silnika.<br /><br />Minimalne obroty na dynamicznym biegu jałowym powinny być ustawione na około 3000 - 3500 obr./min. <br /><br />Odwiedź <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki</a>, aby uzyskać więcej informacji."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamiczny bieg jałowy jest WYŁĄCZONY, ponieważ telemetria Dshot jest wyłączona"
@@ -4977,7 +4980,7 @@
         "message": "Podłączone"
     },
     "powerBatteryConnectedValueYes": {
-        "message": "Tak (Ogniw: $1S)"
+        "message": "Tak (Ogniwo: $1S)"
     },
     "powerBatteryConnectedValueNo": {
         "message": "Nie"
@@ -6753,7 +6756,7 @@
         "message": "Profil"
     },
     "pidTuningProfileTip": {
-        "message": "W kontrolerze lotów można zapisać do 3 (a w niektórych kontrolerach 2) różnye profile Pid. Profile zawierają ustawienia Pid, wartości zadane i ustawienia Kąt/Horyzont. W terenie można przełączać się między profilami za pomocą aparatury Rc (patrz instrukcje online). Lub za pomocą Osd."
+        "message": "W kontrolerze lotu można zapisać do 3 (a w niektórych kontrolerach 2) różnych profili Pid. Profile zawierają ustawienia Pid, wartości zadane i ustawienia Kąt/Horyzont. W terenie można przełączać się między profilami za pomocą aparatury Rc (patrz instrukcje online). Lub za pomocą Osd."
     },
     "pidTuningRateProfile": {
         "message": "Profil Rate"
@@ -6853,7 +6856,7 @@
         "message": "Upewnij się, że wiesz co robisz."
     },
     "dialogConfirmResetNote": {
-        "message": "OSTRZEŻENIE: Czy na pewno chcesz zresetować <strong>WSZYSTKIE ustawienia</strong> do ustawień fabrycznych? To <strong>nie jest </strong> \"Przywrócenie ustawień domyślnych\". Może to spowodować nieoczekiwane problemy i konieczne może być ponowne wgranie oprogramowania w celu ponownego połączenia."
+        "message": "OSTRZEŻENIE: Czy na pewno chcesz zresetować <strong>WSZYSTKIE ustawienia</strong> do stanu nieskonfigurowanego? To <strong>nie jest </strong> \"Przywrócenie ustawień domyślnych\". Może to spowodować nieoczekiwane problemy i konieczne może być ponowne wgranie oprogramowania w celu ponownego połączenia."
     },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
@@ -7279,7 +7282,7 @@
         "message": "Tylko rdzeń"
     },
     "coreBuildModeDescription": {
-        "message": "Ta opcja tworzy oprogramowanie układowe zawierające sterowniki sprzętowe (i niektóre ograniczone funkcje). Jest dostępna, aby pomóc w wykryciu kontrolera lotu i jest udostępniona wyłącznie dla tej wygody. Może sie tak zdarzyć, że nie wszystkie funkcje będą dostępne (na wykrytym kontrolerze lotu) przy użyciu tej opcji."
+        "message": "Ta opcja tworzy oprogramowanie układowe zawierające sterowniki sprzętowe (i niektóre ograniczone funkcje). Jest dostępna, aby pomóc w wykryciu kontrolera lotu i jest udostępniona wyłącznie w tym celu. Może sie tak zdarzyć, że zostanie wykryty (tylko rodzaj podłączonego sprzętu) i nie wszystkie funkcje będą dostępne na kontrolerze lotu przy użyciu tej opcji."
     },
     "showDevToolsOnStartup": {
         "message": "Automatycznie otwórz DevTools w trybie deweloperskim",

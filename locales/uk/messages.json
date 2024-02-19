@@ -186,9 +186,6 @@
     "configuratorUpdateNotice": {
         "message": "Ви використовуєте застарілу версію <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Використання новішої версії прошивки із застарілою версією конфігуратора означає, що зміна деяких налаштувань призведе до <strong>пошкодження конфігурації прошивки та непрацездатності апарата</strong>. Крім того, деякі функції прошивки можна буде налаштувати лише в Командному Рядку.<br><strong>Betaflight Configurator версія <b>$1</b> доступна для онлайн завантаження</strong>, будь ласка, відвідайте <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">цю сторінку</a> для завантаження та встановлення крайньої версії з виправленнями та покращеннями.<br>Будь ласка, закрийте вікно конфігуратора перед оновленням."
-    },
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт з Релізами"
     },
@@ -431,12 +428,6 @@
     },
     "reportProblemsDialogHeader": {
         "message": "Виявлено наступні <strong>проблеми з конфігуратором</strong>:"
-    },
-    "reportProblemsDialogFooter": {
-        "message": "Будь ласка, <strong>виправте ці проблеми, перш ніж спробуєте злетіти своїм апаратом</strong>."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>Версія конфігуратора, який ви використовуєте ($3), старіша за прошивку, яку ви використовуєте ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Протокол вихідного сигналу мотора не вибрано</strong>.<br>Будь ласка, виберіть протокол виводу мотора, відповідний до вашого електронного контролера швидкості ESC '$t(configurationEscFeatures.message)' на '$t(tabMotorTesting.message)' вкладці.<br>$t(escProtocolDisabledMessage.message)"
@@ -693,9 +684,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Скинути налаштування"
-    },
-    "initialSetupResetText": {
-        "message": "Відновити налаштування до <strong>значень за замовчуванням</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Резервне копіювання JSON"
@@ -1004,10 +992,6 @@
     "initialSetupInfoBuild": {
         "message": "Інформація прошивки"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Показує інформацію про збірку прошивки. Конфігурація збірки та журнал збірки посилаються на інформацію з хмари, знайдену за допомогою ключа збірки",
-        "description": "Message that pops up to describe the Build / Firmware section"
-    },
     "initialSetupInfoBuildDate": {
         "message": "Дата збірки:"
     },
@@ -1016,21 +1000,6 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "Ключ збірки"
-    },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "Конфігурація"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "Журнал"
-    },
-    "initialSetupInfoBuildOptions": {
-        "message": "Параметри збірки:"
-    },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Використані директиви препроцесора"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Локальна збірка - без директив препроцесору"
     },
     "initialSetupNotOnline": {
         "message": "Сервер недоступний"
@@ -6847,9 +6816,6 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Підтвердити"
-    },
-    "dialogConfirmResetNote": {
-        "message": "УВАГА: Ви впевнені, що хочете скинути <strong>УСІ налаштування</strong> до налаштувань за замовчуванням? Це <strong>не</strong> є \"скидання до заводських налаштувань\". Це може призвести до непередбачуваних проблем, і, можливо, доведеться знову прошивати пристрій, щоб знову під'єднатися до нього."
     },
     "dialogConfirmResetConfirm": {
         "message": "Скинути"
