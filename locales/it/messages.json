@@ -187,7 +187,7 @@
         "message": "Stai utilizzando una versione obsoleta del <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Utilizzando una versione più recente del firmware con una versione obsoleta del Configuratore può significare che la modifica di alcune impostazioni porterà a una <strong>configurazione corrotta del firmware e a un modello non funzionante</strong>. Inoltre, alcune caratteristiche del firmware saranno configurabili solo via CLI.<br><strong>La versione <b>$1</b> del Betaflight Configurator è disponibile per il download</strong>, visita <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina</a> per scaricare e installare l'ultima versione con correzioni e miglioramenti.<br>Chiudere la finestra del configuratore prima dell'aggiornamento."
+        "message": "Utilizzando una versione più recente del firmware con una versione obsoleta del Configuratore significa che la modifica di alcune impostazioni porterà a una <strong>configurazione corrotta del firmware e a un modello non funzionante</strong><br/> Inoltre, alcune caratteristiche del firmware saranno configurabili solo via CLI..<br g/><br /><strong>La versione <b>$1</b> del Betaflight Configurator è disponibile per il download</strong>, visita <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina</a> per scaricare e installare l'ultima versione con correzioni e miglioramenti.<br>Chiudere la finestra del configuratore prima dell'aggiornamento."
     },
     "configuratorUpdateWebsite": {
         "message": "Pagina web degli aggiornamenti"
@@ -433,10 +433,10 @@
         "message": "Sono stati rilevati i seguenti <strong>problemi con la tua configurazione</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Per favore, <strong>risolvi questi problemi prima di far volare il tuo modello</strong>."
+        "message": "<span class=\"message-negative\"><strong>Risolvere questi problemi prima di mandare in volo il modello</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>La versione del configuratore che stai utilizzando ($3) è più vecchia del firmware che stai usando ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>La versione del configuratore ($3) non supporta il firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Non è stato selezionato alcun protocollo di output dei motori</strong>.<br>Si prega di selezionare un protocollo di output dei motori appropriato per i tuoi ESC in '$t(configurationEscFeatures.message)' nella scheda $t(tabMotorTesting.message).<br>$t(escProtocolDisabledMessage.message)"
@@ -695,7 +695,7 @@
         "message": "Azzera i Settaggi"
     },
     "initialSetupResetText": {
-        "message": "Ripristina i settaggi <strong>predefiniti</strong>"
+        "message": "Resetta il controllore di volo a uno stato <strong>non configurato.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
@@ -810,6 +810,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura CPU:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "Nessun supporto per MSP API prima di 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1004,8 +1007,8 @@
     "initialSetupInfoBuild": {
         "message": "Informazioni firmware"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Mostra informazioni sulla build del firmware. La Build Config e Build Log sono collegate alle informazioni cloud trovate dalla chiave Build",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Mostra le informazioni della build del firmware, richiede il server online.<br>Opzioni mostra le Definizioni utilizzate in Cloud Build. I link<br>Log e Configurazione mostrano le informazioni sul cloud tramite chiave memorizzata nel firmware.<br>In una build locale, la sezione è vuota.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1017,20 +1020,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Chiave Build"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Configurazione"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Opzioni Build:"
+        "message": "Opzioni"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Definizioni usate"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Opzioni definite nella build del firmware"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Build locale - Nessuna definizione usata"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Build locale - nessuna informazione Cloud"
     },
     "initialSetupNotOnline": {
         "message": "Server non disponibile"
@@ -3064,6 +3067,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroscopio - gradi/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Accelerometro - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetometro"
@@ -6846,7 +6852,7 @@
         "message": "Conferma"
     },
     "dialogConfirmResetNote": {
-        "message": "ATTENZIONE: Sei sicuro di voler resettare <strong>TUTTE le impostazioni</strong> a default? Questo <strong>non è</strong> un \"reset di fabbrica\". Potrebbe causare problemi inattesi e potrebbe essere necessario un re-flash del firmware per potersi connettersi di nuovo."
+        "message": "ATTENZIONE: Sei sicuro di voler resettare <strong>TUTTE le impostazioni</strong> a non configurato? Questo <strong>non è</strong> un \"reset di fabbrica\". Potrebbe causare problemi inattesi e potrebbe essere necessario un re-flash del firmware per potersi connettersi di nuovo."
     },
     "dialogConfirmResetConfirm": {
         "message": "Ripristina"

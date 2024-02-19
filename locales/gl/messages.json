@@ -190,7 +190,7 @@
         "message": "Está usando unha versión desactualizada do <b>Betaflight Configurator</b>. <br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Usar unha versión máis recente do firmware cunha versión obsoleta do Configurator pode ocasionar ó cambiar algunhas configuracións unha <strong> configuración do firmware corrompida e non funcionar</strong>. Ademais, algunhas funcións do firmware só se poderán configurar en CLI.<br><strong> A versión do configurador Betaflight <b>$1</b> está dispoñible para a descarga en liña</strong>, visite <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\"> esta páxina </a> para descargar e instalar a última versión con correccións e melloras. <br> Peche a xanela do configurador antes de actualizala."
+        "message": "Empregar unha versión máis recente do firmware cunha versión obsoleta de Configurator significa que o cambio dalgunhas opcións dará como resultado unha <strong>configuración do firmware danada e un drone que non funciona</strong>.<br />Ademais, algunhas funcións do firmware, só se poderán configurar no CLI.<br g/><br /><strong>A versión do configurador de Betaflight <b>$1</b> está dispoñible para descargar en liña</strong>.<br />Descargue e instale a última versión do configurador con correccións e melloras <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br>A xanela do configurador debe pecharse antes de actualizar."
     },
     "configuratorUpdateWebsite": {
         "message": "Ir a web de descargas"
@@ -436,10 +436,10 @@
         "message": "Os seguintes <strong> problemas coa súa configuración </strong> foron detectados:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Porfavor <strong>solucione estes problemas antes de intentar voar a súa aeronave</strong>."
+        "message": "<span class=\"message-negative\"><strong>Debe solucionar estes problemas antes de intentar voar o seu drone</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>A versión do configurador que está empregando ($3) é máis antigua que o firmware que está empregando ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>A versión do configurador utilizada ($3) non é compatible co firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Non hai ningún protocolo de saída do motor seleccionado</strong>.<br>Seleccione un protocolo de saída do motor adecuado para os seus ESC en '$t(configurationEscFeatures.message)' na pestana '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
@@ -698,7 +698,7 @@
         "message": "Reiniciar Axustes"
     },
     "initialSetupResetText": {
-        "message": "Reiniciar axustes a valores por <strong>defecto</strong>"
+        "message": "Restablece o controlador de voo a un <strong>estado sen configurar</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Copia de seguridade JSON"
@@ -813,6 +813,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura CPU:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "Non hai soporte da API de MSP antes da 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1007,8 +1010,8 @@
     "initialSetupInfoBuild": {
         "message": "Información do firmware"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Mostra información sobre a compilación do firmware. A configuración de compilación e o rexistro de Bulid enlazan coa información da nube atopada pola clave de compilación",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Mostra información para a compilación de firmware, require internet para o servidor de compilación.<br>As opcións mostran as opcións definidas utilizadas en Cloud Build.<br>As ligazóns de rexistro e configuración mostran a información da nube por clave almacenada no firmware.<br>Na compilación local, a sección está baleira.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1020,20 +1023,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Chave de compilación"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Configuración"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Rexistro"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Opcións da compilación:"
+        "message": "Opcións"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Definicións empregadas"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Opcións definidas na compilación do firmware"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilación local - non se empregan definicións"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Construción local: sen información sobre a nube"
     },
     "initialSetupNotOnline": {
         "message": "Servidor non dispoñible"
@@ -6852,7 +6855,7 @@
         "message": "Confirmar"
     },
     "dialogConfirmResetNote": {
-        "message": "AVISO: Está seguro de que quere restablecer <strong>TODAS as opcións</strong> á configuración predeterminada? Isto <strong>non</strong> é un \"restablecemento de fábrica\". Pode causar problemas inesperados e pode ser necesario volver a actualizar o firmware para poder conectarse de novo."
+        "message": "AVISO: Está seguro de que quere restablecer <strong>TÓDALAS opcións</strong> a un estado sen configurar? Isto <strong>non</strong> é un \"restablecemento de fábrica\". Pode causar problemas inesperados e pode ser necesario volver a actualizar o firmware para poder conectarse de novo."
     },
     "dialogConfirmResetConfirm": {
         "message": "Resetear"

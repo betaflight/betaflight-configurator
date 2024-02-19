@@ -187,7 +187,7 @@
         "message": "<b>Betaflight Configurator</b>の旧バージョンを使用しています。<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "旧バージョンのBetaflight Configuratorで新バージョンのファームウェアを使用した場合、一部の設定を変更すると<strong>ファームウェア設定が破損し機体が動作しない状態となります。</strong>さらに、ファームウェアの一部の機能はCLIでのみ設定が可能です。<br><strong>Betaflight Configurator <b>$1</b>バージョンはオンラインでダウンロードできます。</strong><a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">このページ</a>にアクセスし、修正および改善された最新バージョンをダウンロードしてインストールしてください。<br>更新する前にBetaflight Configuratorウィンドウを閉じてください。"
+        "message": "旧バージョンのBetaflight Configuratorで新しいバージョンのファームウェアを使用した場合、一部の設定を変更すると<strong>ファームウェア設定が破損し機体が動作しない状態となる場合があります。</strong><br />さらに、ファームウェアの一部の機能はCLIでしか設定できないものがあります。<br g/><br /><strong>Betaflight Configurator version <b>$1</b> はオンラインでダウンロード可能です。</strong><br />修正および改善された最新バージョンを <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a> からダウンロードし、インストールしてください。<br>アップデートの前にBetaflight Configuratorウィンドウを閉じる必要がありますのでご注意ください。"
     },
     "configuratorUpdateWebsite": {
         "message": "リリースサイトに移動"
@@ -433,10 +433,10 @@
         "message": "次の <strong>設定に関する問題</strong> が検出されました:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<strong>これらの問題を修正してから機体を飛行</strong>させてください。"
+        "message": "<span class=\"message-negative\"><strong>飛行を試みる前に、これらの問題を修正する必要があります。</span></strong>"
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>使用しているConfiguratorバージョン ($3) が、使用しているファームウェア ($4) よりも古いです。</strong><br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight Configurator version ($3) はファームウェア $4</strong></span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>モーター出力プロトコルが選択されていません。</strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
@@ -695,7 +695,7 @@
         "message": "設定をリセット"
     },
     "initialSetupResetText": {
-        "message": "<strong>デフォルト</strong>設定に戻します。"
+        "message": "フライトコントローラを<strong>未設定状態にリセット</strong>します。"
     },
     "initialSetupButtonBackup": {
         "message": "JSONのバックアップ"
@@ -810,6 +810,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "CPU温度:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "1.46 より以前の MSP API からのサポートはありません"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1004,8 +1007,8 @@
     "initialSetupInfoBuild": {
         "message": "ファームウェア情報"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "ファームウェアのビルドに関する情報を表示します。ビルド設定とビルドログは、Build keyで見つかったクラウド情報へのリンクです。",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "ファームウェアビルドの情報を表示します。ビルドサーバへのオンライン接続が必要です。<br>オプションには、クラウドビルドで使用される定義済みのオプションが表示されます。<br>ログと設定のリンクは、ファームウェアに保存されているキーによるクラウド情報を表示します。<br>ローカルビルドの場合は、このセクションは空となります。",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1017,20 +1020,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Build key"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "設定"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "ログ"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "ビルドオプション:"
+        "message": "オプション"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "使用するものを定義"
+    "initialSetupInfoBuildOptionList": {
+        "message": "ファームウェアビルドで定義されたオプション"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "ローカルビルド - 定義なし"
+    "initialSetupInfoBuildEmpty": {
+        "message": "ローカルビルド - クラウド情報なし"
     },
     "initialSetupNotOnline": {
         "message": "サーバーが利用できません"
@@ -3307,7 +3310,7 @@
         "message": "MCU:"
     },
     "firmwareFlasherCloudBuildDetails": {
-        "message": "クラウド ビルド詳細:"
+        "message": "クラウドビルド 詳細:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "ログ表示."
@@ -6849,7 +6852,7 @@
         "message": "確定"
     },
     "dialogConfirmResetNote": {
-        "message": "警告: 本当に<strong>すべての設定</strong>をデフォルト値にリセットしますか？これは『ファクトリーリセット (工場出荷時初期化) 』では<strong>ありません</strong>。予期せぬ問題が発生し、再び接続できるようにするために再度ファームウェアの書き込みが必要になる場合があります。"
+        "message": "警告: 本当に<strong>すべての設定</strong>を未設定状態にリセットしますか？これは『ファクトリーリセット (工場出荷時初期化) 』<strong>ではありません</strong>。予期せぬ問題が発生し、再び接続できるようにするために再度ファームウェアの書き込みが必要になる場合があります。"
     },
     "dialogConfirmResetConfirm": {
         "message": "リセット"

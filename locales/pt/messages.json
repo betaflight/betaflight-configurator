@@ -187,7 +187,7 @@
         "message": "Está a usar uma versão desatualizada do <b>Configurador Betaflight</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Usar uma versão mais recente do firmware com uma versão desatualizada do Configurador significa que a alteração de algumas definições resultará numa <strong>configuração de firmware corrompida e num aparelho sem funcionar</strong>. Além disso, algumas funcionalidades do firmware só serão configuráveis na CLI.<br><strong>Configurador de Betaflight <b>$1</b> está disponível para download online</strong>, por favor, visite <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">esta página</a> para download e instalação da versão mais recente com correções e melhorias.<br>Por favor, feche a janela do configurador antes de atualizar."
+        "message": "Usar uma versão mais recente do firmware com uma versão desatualizada do Configurador significa que a alteração de algumas configurações resultará numa configuração<strong>corrompida de firmware e um aparelho sem funcionar</strong>.<br />Além disso, algumas funcionalidades do firmware só serão configuráveis na CLI.<br g/><br /><strong>Versão do Configurador Betaflight <b>$1</b> está disponível online para download</strong>.<br />Baixe e instale a versão mais recente do configurador com correções e melhorias <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br>A janela de Configurador tem de ser fechada antes da atualização."
     },
     "configuratorUpdateWebsite": {
         "message": "Ir para a Página Web do lançamento"
@@ -433,10 +433,10 @@
         "message": "Foram detetados os seguintes <strong>problemas com a sua configuração</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Por favor, <strong>corrija estes problemas antes de tentar voar o seu aparelho</strong>."
+        "message": "<span class=\"message-negative\"><strong>Tem de corrigir estes problemas antes de tentar voar o seu aparelho</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>a versão do configurador que está a usar ($3) é mais antiga que o firmware que está a usar ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>A versão do Configurador em utilização ($3) não suporta o firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>não há nenhum protocolo de saída do motor selecionado</strong>.<br>Por favor, selecione um protocolo de saída de motor apropriado para os seus ESCs em '$t(configurationEscFeatures.message)' na aba '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
@@ -695,7 +695,7 @@
         "message": "Repor Definições"
     },
     "initialSetupResetText": {
-        "message": "Restaura as definições para <strong>padrão</strong>"
+        "message": "Redefina o controlador de voo para um estado <strong>não configurado.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
@@ -810,6 +810,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura da CPU:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "Não há suporte da API MSP antes da 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1004,8 +1007,8 @@
     "initialSetupInfoBuild": {
         "message": "Info. de Firmware"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Mostra informações sobre a compilação de firmware. A Configuração de Compilação e o Log de Compilação ligam-se às informações encontradas na nuvem através da chave de Compilação",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Mostra informação da compilação do firmware, necessita estar online para o servidor de Compilação.<br>As opções mostram as opções Definidas utilizadas na Compilação Cloud.<br>As ligações de Log e Config mostram informações da nuvem pela chave guardada no firmware.<br>Na compilação local, a chave está vazia.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1017,20 +1020,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Chave de compilação"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Opções de Compilação:"
+        "message": "Opções"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defines usadas"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Opções definidas na compilação de firmware"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Construção Local - nenhuma define usada"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Compilação local - sem informação da Nuvem"
     },
     "initialSetupNotOnline": {
         "message": "Servidor indisponível"

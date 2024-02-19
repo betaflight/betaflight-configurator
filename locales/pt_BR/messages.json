@@ -186,9 +186,6 @@
     "configuratorUpdateNotice": {
         "message": "Você está utilizando uma versão antiga do <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Utilizando uma versão do firmware recente com uma versão antiga do configurador fará com que, ao alterar algumas configurações, a <strong>configuração do firmware ficará corrompida e sua aeronave não irá funcionar</strong>. Além disso, só será possível configurar alguns recursos do firmware através da Linha de Comandos.<br><strong>O Betaflight Configurator versão <b>$1</b> está disponível para download online</strong>, visite <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">esta página</a> para fazer o download e instalar a nova versão com correções e melhorias.<br>Por favor feche a janela do configurador antes de atualizar."
-    },
     "configuratorUpdateWebsite": {
         "message": "Ir para a Página Web do lançamento"
     },
@@ -431,12 +428,6 @@
     },
     "reportProblemsDialogHeader": {
         "message": "Os seguintes <strong>problemas com sua configuração</strong>foram detectados:"
-    },
-    "reportProblemsDialogFooter": {
-        "message": "Por favor<strong>corrija estes problemas antes de tentar pilotar sua aeronave</strong>."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>a versão do configurador que você está utilizando ($3) é mais antiga do que o firmware utilizado ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Nenhum protocolo de saída para o motor foi selecionado</strong>.<br>Por favor selecione o protocolo do motor apropriado para o seu ESC no campo '$t(configurationEscFeatures.message)' na aba '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
@@ -694,9 +685,6 @@
     "initialSetupButtonReset": {
         "message": "Redefinir configurações"
     },
-    "initialSetupResetText": {
-        "message": "Restaura as configurações para o <strong>padrão</strong>"
-    },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
     },
@@ -950,10 +938,6 @@
     "initialSetupInfoBuild": {
         "message": "Informação de firmware"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Mostra informações sobre a compilação do firmware. A Configuração de compilação e o Log de compilação apontam as informações encontradas na nuvem através da chave de compilação",
-        "description": "Message that pops up to describe the Build / Firmware section"
-    },
     "initialSetupInfoBuildDate": {
         "message": "Data de compilação:"
     },
@@ -962,21 +946,6 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "Chave de compilação"
-    },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "Configuração"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "Log"
-    },
-    "initialSetupInfoBuildOptions": {
-        "message": "Opções de Compilação:"
-    },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defines usadas"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilação Local - nenhum define utilizado"
     },
     "initialSetupNotOnline": {
         "message": "Servidor indisponível"
@@ -6431,9 +6400,6 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Confirmar"
-    },
-    "dialogConfirmResetNote": {
-        "message": "AVISO: Tem certeza de que deseja redefinir <strong>TODAS as configurações</strong> para o padrão? Isto <strong>não é</strong> uma \"restauração de fábrica\". Pode causar problemas inesperados e pode ser necessário reinstalar o seu firmware para se conectar novamente."
     },
     "dialogConfirmResetConfirm": {
         "message": "Restaurar"

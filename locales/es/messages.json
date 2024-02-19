@@ -187,7 +187,7 @@
         "message": "Estás utilizando una versión desactualizada de <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Utilizar una versión más reciente del firmware con una versión desactualizada del Configurator implica que al cambiar algunos ajustes puede dar como resultado una <strong>configuración corrupta del firmware y una aeronave no funcional</strong>. Además, algunas características del firmware sólo serán configurables a través del CLI.<br><strong>Betaflight Configurator versión <b>$1</b> está disponible para descargar en línea</strong>, por favor visita <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">esta página</a> para descargar e instalar la última versión con correcciones y mejoras.<br>Por favor, cierra la ventana del configurador antes de actualizar."
+        "message": "Utilizar una versión más reciente del firmware con una versión desactualizada del Configurator implica que al cambiar algunos ajustes puede dar como resultado una <strong>configuración corrupta del firmware y una aeronave no funcional</strong>. <br />Además, algunas características del firmware sólo serán configurables a través del CLI.<br /><br /><strong>Betaflight Configurator versión <b>$1</b> está disponible para descargar en línea</strong>, por favor visita <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">esta página</a> para descargar e instalar la última versión del Configurator con correcciones y mejoras.<br>Por favor, cierra la ventana del configurador antes de actualizar."
     },
     "configuratorUpdateWebsite": {
         "message": "Ir a la Web de Versiones"
@@ -433,10 +433,10 @@
         "message": "Se detectaron los siguientes <strong>problemas con tu configuración</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Por favor, <strong>soluciona estos problemas antes de intentar volar tu aeronave</strong>."
+        "message": "<span class=\"message-negative\"><strong>Necesitas solucionar estos problemas antes de intentar volar tu aeronave</strong></span>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>la versión del configurador que estás utilizando ($3) es más antigua que el firmware que estás usando ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>La versión del configurador usada ($3) no soporta el firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>no hay ningún protocolo de salida de motor seleccionado</strong>.<br>Por favor, selecciona un protocolo de salida de motor apropiado para tus ESCs en '$t(configurationEscFeatures.message)' en la pestaña '$t(tabMotorTesting.message)'.<br> $t(escProtocolDisabledMessage.message)"
@@ -695,7 +695,7 @@
         "message": "Borrar Configuración"
     },
     "initialSetupResetText": {
-        "message": "Restaurar configuración por <strong>defecto</strong>"
+        "message": "Reinicia el controlador de vuelo a un <strong>estado sin configuración.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Copia de seguridad JSON"
@@ -810,6 +810,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Temperatura de la CPU:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "No hay soporte de la API MSP anterior a la versión 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1004,8 +1007,8 @@
     "initialSetupInfoBuild": {
         "message": "Información del firmware"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Muestra información sobre la compilación del firmware. Los enlaces del Registro de Configuración y de Compilación enlazan con la información en la nube encontrada para la clave de compilación",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Muestra información de la compilación del firmware, necesita conexión a internet con el servidor de compilación.<br>Opciones muestra las opciones definidas utilizadas en la compilación en la nube.<br>Los enlaces de Registro y Configuración muestran información de la nube almacenada por clave en el firmware.<br>Para compilaciones locales, la sección está vacía.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1017,20 +1020,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Clave de compilación"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Configuración"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Registro"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Opciones de compilación:"
+        "message": "Opciones"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "DEFINES usados"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Opciones definidas en la compilación del firmware"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilación local - sin DEFINES"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Compilación local - no hay información en la nube"
     },
     "initialSetupNotOnline": {
         "message": "Servidor no disponible"
@@ -3064,6 +3067,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroscopio - grad/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Acelerómetro - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetómetro"
@@ -6846,7 +6852,7 @@
         "message": "Confirmar"
     },
     "dialogConfirmResetNote": {
-        "message": "ATENCIÓN: ¿Estás seguro de que deseas restablecer <strong>TODOS los ajustes</strong> al valor por defecto? Esto <strong>no</strong> es un \"restablecimiento de fábrica\". Puede causar problemas inesperados, y puede ser necesario volver a instalar el firmware para poder conectar de nuevo."
+        "message": "ATENCIÓN: ¿Estás seguro de que deseas restablecer <strong>TODOS los ajustes</strong> a un estado no configurado? Esto <strong>no</strong> es un \"restablecimiento de fábrica\". Puede causar problemas inesperados, y puede ser necesario volver a instalar el firmware para poder conectar de nuevo."
     },
     "dialogConfirmResetConfirm": {
         "message": "Restaurar"

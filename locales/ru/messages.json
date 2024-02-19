@@ -176,9 +176,6 @@
     "configuratorUpdateNotice": {
         "message": "Вы используете устаревшую версию <b>конфигуратора Betaflight</b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Использование новой версии прошивки с устаревшей версией Configurator означает, что изменение некоторых настроек приведет к <strong>поврежденной конфигурации прошивки и неработающему продукту</strong>. Кроме того, некоторые функции микропрограммы будет можно настраивать только в CLI.<br><strong>Конфигуратор Betaflight <b>$1</b> доступен для скачивания в сети</strong>. пожалуйста, посетите <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">эту страницу</a> для загрузки и установки последней версии с исправлениями и улучшениями.<br>Перед обновлением закройте окно конфигуратора."
-    },
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт с релизами"
     },
@@ -422,12 +419,6 @@
     "reportProblemsDialogHeader": {
         "message": "Обнаружены следующие <strong>проблемы в вашей конфигурации</strong>:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "Пожалуйста, <strong>устраните эти проблемы, прежде чем взлетать</strong>."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>используемая вами версия конфигуратора ($3) старше используемой прошивки ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>не выбран протокол управления двигателями</strong>.<br>Пожалуйста, выберите протокол управления двигателями, соответствующий вашему ESC в '$t(configurationEscFeatures.message)' на вкладке '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -635,9 +626,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Сбросить Настройки"
-    },
-    "initialSetupResetText": {
-        "message": "Сбросить настройки <strong>до заводских</strong>"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Активировать загрузчик / DFU"

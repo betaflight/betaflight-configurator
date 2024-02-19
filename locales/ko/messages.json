@@ -191,7 +191,7 @@
         "message": "당신은 오래된 버전의 <b>베타플라이트 컨피규레이터</b>를 사용 중입니다.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "오래된 버전의 컨피규레이터가 장착된 펌웨어의 최신 버전을 사용하여 일부 설정을 변경하면 <strong>펌웨어 환경설정이 손상되고 작동하지 않는 기체가 발생</strong>할 수 있습니다. 또한 펌웨어의 일부 기능은 CLI에서만 설정할 수 있습니다.<br><strong>베타플라이트 컨피규레이터 버전 <b>$1</b>은 온라인으로 다운로드할 수 있으며</strong>, <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">이 페이지</a>를 방문하여 수정사항과 향상된 최신 버전을 다운로드 및 설치하십시오.<br>업데이트하기 전에 컨피규레이터 창을 닫으십시오."
+        "message": "오래된 버전의 컨피규레이터로 최신 버전의 펌웨어를 사용하면 <strong>손상된 펌웨어 환경설정과 작동하지 않는 기체의 결과를 초래할 수 있습니다</strong>.<br />또한 펌웨어의 일부 기능은 CLI에서만 설정할 수 있습니다.<br g/><br /><strong>베타플라이트 컨피규레이터 버전 <b>$1</b>은 온라인에서 다운로드할 수 있습니다</strong>.<br />수정 및 개선 사항이 있는 최신 버전의 컨피규레이터를 <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a>다운로드하여 설치하십시오.<br>컨피규레이터 창은 업데이트하기 전에 닫아야 합니다."
     },
     "configuratorUpdateWebsite": {
         "message": "릴리즈 웹사이트로 가기"
@@ -437,10 +437,10 @@
         "message": "다음의 <strong>컨피규레이터와 관련된 문제가</strong> 감지됨:"
     },
     "reportProblemsDialogFooter": {
-        "message": "당신의 <strong>기체를 날리기 전에 이 문제들을 해결하십시오</strong>."
+        "message": "<span class=\"message-negative\"><strong>당신의 기체를 날리기 전에 이 문제들을 해결할 필요가 있습니다</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>사용 중인 컨피규레이터의 버전 ($3)은 사용 중인 펌웨어 ($4)보다 오래되었습니다</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>사용된 컨피규레이터 버전 ($3)이 펌웨어 $4를 지원하지 않습니다</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>선택된 모터 출력 프로토콜이 없습니다</strong>.<br>'$t(tabMotorTesting.message)' 탭의 '$t(configurationEscFeatures.message)'에서 ESC에 적합한 모터 출력 프로토콜을 선택하십시오.<br> $t(escProtocolDisabledMessage.message)"
@@ -697,9 +697,6 @@
     },
     "initialSetupButtonReset": {
         "message": "설정 초기화"
-    },
-    "initialSetupResetText": {
-        "message": "설정을 <strong>기본값</strong>으로 복원"
     },
     "initialSetupButtonBackup": {
         "message": "JSON 백업"
@@ -1008,10 +1005,6 @@
     "initialSetupInfoBuild": {
         "message": "펌웨어 정보"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "펌웨어 빌드에 대한 정보를 표시합니다. 빌드 구성 및 빌드 로그는 빌드 키로 찾은 클라우드 정보에 연결됩니다",
-        "description": "Message that pops up to describe the Build / Firmware section"
-    },
     "initialSetupInfoBuildDate": {
         "message": "빌드 날짜:"
     },
@@ -1020,21 +1013,6 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "빌드 키"
-    },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "설정"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "로그"
-    },
-    "initialSetupInfoBuildOptions": {
-        "message": "빌드 옵션:"
-    },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "사용된 정의값"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "로컬 빌드 - 사용된 정의값 없음"
     },
     "initialSetupNotOnline": {
         "message": "서버를 이용할 수 없음"
@@ -6851,9 +6829,6 @@
     },
     "dialogConfirmResetTitle": {
         "message": "확인"
-    },
-    "dialogConfirmResetNote": {
-        "message": "경고: <strong>모든 설정을</strong> 기본값으로 설정하시겠습니까? 이것은 \"공장 초기화\"가 <strong>아닙니다</strong>. 이로 인해 예기치 않은 문제가 발생할 수 있으며, 다시 연결하려면 펌웨어를 다시 플래시해야 할 수도 있습니다."
     },
     "dialogConfirmResetConfirm": {
         "message": "초기화"

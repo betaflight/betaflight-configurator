@@ -182,9 +182,6 @@
     "configuratorUpdateNotice": {
         "message": "Votre version du <b>Configurateur Betaflight</b> est obsolète.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Utiliser une version récente du firmware avec une version obsolète du Configurator peut amener à une <strong>configuration corrompue du firmware et un engin qui ne fonctionne plus</strong>. Deplus, certaines fonctionnalités ne seront accessibles qu'en CLI.<br><strong>Betaflight Configurator version <b>$1</b> est disponible en téléchargement</strong>, <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">sur cette page</a> et permet de bénéficier des dernières corrections et améliorations.<br>Veuillez fermer la fenêtre du configurateur avant de procéder à la mise à jour."
-    },
     "configuratorUpdateWebsite": {
         "message": "Aller sur le site de publication"
     },
@@ -429,10 +426,10 @@
         "message": "Les <strong>problèmes suivants avec votre configuration</strong> ont été détectés :"
     },
     "reportProblemsDialogFooter": {
-        "message": "Veuillez <strong>résoudre ces problèmes avant d'essayer de faire voler votre engin</strong>."
+        "message": "<span class=\"message-negative\"><strong>Vous devez résoudre ces problèmes avant d'essayer de faire voler votre engin</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>la version de configurateur que vous utilisez ($3) est plus ancienne que le firmware que vous utilisez ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>La version du configurateur utilisée ($3) ne supporte pas le firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Aucun protocole de sortie vers les moteurs n'est sélectionné</strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' l'onglet '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
@@ -680,9 +677,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Réinitialiser les réglages"
-    },
-    "initialSetupResetText": {
-        "message": "Restaurer les réglages par <strong>défaut</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Sauvegarde JSON"
@@ -6131,9 +6125,6 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Confirmer"
-    },
-    "dialogConfirmResetNote": {
-        "message": "ATTENTION : Êtes-vous sûr de vouloir réinitialiser <strong>TOUS les paramètres</strong> par défaut ? C'est n'est <strong>pas</strong> une \"réinitialisation d'usine\". Cela peut causer des problèmes inattendus, et il peut être nécessaire de réinstaller votre firmware pour pouvoir se connecter à nouveau."
     },
     "dialogConfirmResetConfirm": {
         "message": "Réinitialiser"
