@@ -4115,6 +4115,9 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile independent Filter Settings"
     },
+    "pidTuningFilterUseDTermSlider": {
+        "message": "Use D Term Filter Slider"
+    },
     "pidTuningFilterSlidersHelp": {
         "message": "These sliders adjust the Gyro and D-term filters.<br /><br />For more filtering:<br /> - Sliders to left<br> - Lower cutoff frequencies.<br /><br /> Stronger filtering keeps motors cooler by removing more noise, but delays the gyro signal more and may worsen prop-wash or cause resonant oscillations. Less responsive quads eg X-Class do best with stronger filtering. <br><br>For less filtering:<br /> - Sliders to the right<br /> - Higher cutoff frequencies <br><br>Less filtering reduces gyro signal delay, and often improves propwash. Moving the gyro lowpass filter right is usually OK, but moving the D filter to the right is usually not required, and can easily result in very hot motors.",
         "description": "Overall helpicon message for filter tuning sliders"
@@ -4454,6 +4457,9 @@
     },
     "pidTuningFilterSettings": {
         "message": "Profile dependent Filter Settings"
+    },
+    "pidTuningFilterUseGyroSlider": {
+        "message": "Use Gyro Filter Slider"
     },
     "pidTuningDTermLowpass": {
         "message": "D Term Lowpass 1"
