@@ -110,7 +110,7 @@ function getCategoryNames(table, buildKey) {
 function createCategorySelect(table, map) {
     let categorySelect = $('select.auxiliary_category_select');
 
-    const categoryNameObj = getConfig('auxiliaryCategoryNameList');     // read user pre selected categories
+    const categoryNameObj = getConfig('auxiliaryCategoryNameList', ''); // read user pre selected categories
     let categoryNameList = categoryNameObj.auxiliaryCategoryNameList;
     if (categoryNameList.length == 0) {
         categoryNameList = getCategoryNames(table, 'all');              // empty choise -> select names from 'all' category
