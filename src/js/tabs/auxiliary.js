@@ -106,13 +106,22 @@ function getCategoryNames(table, buildKey) {
     return categoryChoise;
 }
 
+function generateDefaultList(categoryTable) {
+    let list = [];
+    for (const item of categoryTable) {
+        list.push(item.name);
+    }
+    return list;
+}
+
 function createCategorySelect(table, map) {
     let categorySelect = $('select.auxiliary_category_select');
+    const allCat = generateDefaultList(categoryTable);
 
-    const categoryNameObj = getConfig('auxiliaryCategoryNameList', ''); // read user pre selected categories
+    const categoryNameObj = getConfig('auxiliaryCategoryNameList', allCat); // read user pre selected categories, if empty default to complete list
     let categoryNameList = categoryNameObj.auxiliaryCategoryNameList;
     if (categoryNameList.length == 0) {
-        categoryNameList = getCategoryNames(table, 'all');              // empty choise -> select names from 'all' category
+        categoryNameList = getCategoryNames(table, 'all');                  // empty choise -> select names from 'all' category
         setConfig({ auxiliaryCategoryNameList: categoryNameList });
     }
 
@@ -126,11 +135,6 @@ function createCategorySelect(table, map) {
                 categorySelect.append(`<option value="${value.name}">${value.name}</option>`);
             }
         }
-/*
-        else {
-            categorySelect.append(`<option value="${value.name}" disabled="disabled">${value.name}</option>`);
-        }
-*/
     }
 
     const modeWidth = 125;
