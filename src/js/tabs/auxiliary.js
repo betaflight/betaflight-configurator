@@ -46,7 +46,6 @@ const categoryTable = [
     { name: 'VTX',            buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
 ];
 
-let notSorted = true;
 let hideUnusedModes = false;
 let modeList = [];
 
@@ -127,9 +126,11 @@ function createCategorySelect(table, map) {
                 categorySelect.append(`<option value="${value.name}">${value.name}</option>`);
             }
         }
+/*
         else {
             categorySelect.append(`<option value="${value.name}" disabled="disabled">${value.name}</option>`);
         }
+*/
     }
 
     const modeWidth = 125;

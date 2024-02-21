@@ -2311,10 +2311,6 @@
     "auxiliaryToggleUnused": {
         "message": "Hide unused modes"
     },
-    "auxiliaryFilterCategory": {
-        "message": "Category",
-        "descripton": "Category for Flight modes"
-    },
     "auxiliaryMin": {
         "message": "Min"
     },
