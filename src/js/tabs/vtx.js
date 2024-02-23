@@ -229,6 +229,11 @@ vtx.initialize = function (callback) {
             TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label = vtxConfig.vtx_table.powerlevels_list[i - 1].label;
         }
 
+        // Setting the latest vtx power to prevent out of bounds error
+        if (FC.VTX_CONFIG.vtx_power > TABS.vtx.VTXTABLE_POWERLEVEL_LIST.length) {
+            FC.VTX_CONFIG.vtx_power = TABS.vtx.VTXTABLE_POWERLEVEL_LIST.length;
+        }
+
         vtxcallback_after_read();
     }
 
