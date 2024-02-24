@@ -117,8 +117,8 @@ onboard_logging.initialize = function (callback) {
                     }
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                         FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
-                        FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     }
+                    FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
 
                     await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
