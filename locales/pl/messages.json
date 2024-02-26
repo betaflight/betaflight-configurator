@@ -437,7 +437,7 @@
         "message": "Wykryto następujące <strong>problemy z konfiguracją</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać </span></strong>."
+        "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać swoją jednostką latająca.</span></strong>"
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Użyta wersja konfiguratora ($3) nie obsługuje oprogramowania $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
@@ -446,7 +446,7 @@
         "message": "<strong>Nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>Akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
+        "message": "<strong>Akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz używać akcelerometr, proszę postąpić zgodnie z instrukcją która jest napisana obok przycisku '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}</strong>",
@@ -3181,7 +3181,7 @@
         "message": "Zapisz i zrestartuj"
     },
     "blackboxLoggingNone": {
-        "message": "Brak logowania"
+        "message": "Brak zapisu"
     },
     "blackboxLoggingFlash": {
         "message": "Wbudowany uklad pamięci"
@@ -4779,7 +4779,7 @@
         "message": "Menedżer Kalibracji"
     },
     "powerCalibrationManagerHelp": {
-        "message": "Aby skalibrować, użyj multimetru do pomiaru rzeczywistego napięcia / prądu pobieranego przez jednostkę (z podłączoną baterią) i wprowadź poniższe wartości. Następnie, gdy ta sama bateria jest nadal podłączona, kliknij [Calibrate]."
+        "message": "Aby skalibrować, użyj multimetru do pomiaru rzeczywistego napięcia / prądu pobieranego przez jednostkę latającą (z podłączoną baterią) i wprowadź poniższe wartości. Następnie, gdy ta sama bateria jest nadal podłączona, kliknij [Kalibracja]."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Uwaga:</strong> Przed kalibracją skali upewnij się, że dzielnik i mnożnik napięcia oraz przesunięcie dla amperażu są ustawione prawidłowo.<br>    Pozostawienie wartości na 0 nie spowoduje kalibracji.</br><strong> Pamiętaj, aby zdjąć śmigła przed podłączeniem  baterii!</strong>"
