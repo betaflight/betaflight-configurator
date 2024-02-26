@@ -186,6 +186,9 @@
     "configuratorUpdateNotice": {
         "message": "Ви використовуєте застарілу версію <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "configuratorUpdateHelp": {
+        "message": "Використання новішої версії прошивки із застарілою версією конфігуратора означає, що зміна деяких налаштувань призведе до <strong>пошкодження конфігурації прошивки та неробочого судна</strong>.<br />Більше того, деякі функції прошивки можна буде налаштувати лише в командному рядку.<br g/><br /><strong>Betaflight Configurator версії <b>$1</b> доступний для завантаження в мережі</strong>.<br />Завантажте і встановіть найновішу версію конфігуратора з виправленнями і покращеннями <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a><br>Вікно конфігуратора потрібно закрити перед оновленням."
+    },
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт з Релізами"
     },
@@ -428,6 +431,12 @@
     },
     "reportProblemsDialogHeader": {
         "message": "Виявлено наступні <strong>проблеми з конфігуратором</strong>:"
+    },
+    "reportProblemsDialogFooter": {
+        "message": "<span class=\"message-negative\"><strong>Вам потрібно виправити ці проблеми, перш ніж спробуєте злетіти своїм апаратом</span></strong>."
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>Використана версія конфігуратора ($3) не підтримує прошивку $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Протокол вихідного сигналу мотора не вибрано</strong>.<br>Будь ласка, виберіть протокол виводу мотора, відповідний до вашого електронного контролера швидкості ESC '$t(configurationEscFeatures.message)' на '$t(tabMotorTesting.message)' вкладці.<br>$t(escProtocolDisabledMessage.message)"
@@ -685,6 +694,9 @@
     "initialSetupButtonReset": {
         "message": "Скинути налаштування"
     },
+    "initialSetupResetText": {
+        "message": "Скинути польотний контролер до <strong>неналаштованого стану.</strong>"
+    },
     "initialSetupButtonBackup": {
         "message": "Резервне копіювання JSON"
     },
@@ -798,6 +810,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Температура процесора:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "Не підтримується версіями MSP API до 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI: "
@@ -992,6 +1007,10 @@
     "initialSetupInfoBuild": {
         "message": "Інформація прошивки"
     },
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Показує інформацію для збірки прошивки, потребує підключення до сервера збірки. <br> Опції показують визначені опції, що використовувались в хмарній збірці. <br> Посилання на журнал та налаштування показують хмарну інформацію за ключем, збереженим у прошивці. <br> Під час локальної збірки розділ порожній.",
+        "description": "Message that pops up to describe the Build / Firmware section"
+    },
     "initialSetupInfoBuildDate": {
         "message": "Дата збірки:"
     },
@@ -1000,6 +1019,21 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "Ключ збірки"
+    },
+    "initialSetupInfoBuildConfig": {
+        "message": "Конфігурація"
+    },
+    "initialSetupInfoBuildLog": {
+        "message": "Журнал"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "Опції"
+    },
+    "initialSetupInfoBuildOptionList": {
+        "message": "Опції, визначені в збірці прошивки"
+    },
+    "initialSetupInfoBuildEmpty": {
+        "message": "Локальна збірка - без хмарних даних"
     },
     "initialSetupNotOnline": {
         "message": "Сервер недоступний"
@@ -6816,6 +6850,9 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Підтвердити"
+    },
+    "dialogConfirmResetNote": {
+        "message": "УВАГА: Ви впевнені, що хочете скинути <strong>УСІ налаштування</strong> до неналаштованого стану? Це <strong>не</strong> є \"скидання до заводських налаштувань\". Це може призвести до непередбачуваних проблем, і, можливо, доведеться знову прошивати пристрій, щоб знову під'єднатися до нього."
     },
     "dialogConfirmResetConfirm": {
         "message": "Скинути"
