@@ -46,7 +46,7 @@ const Model = function (wrapper, canvas) {
     }
 
     // initialize render size for current canvas size
-    this.renderer.setSize(this.wrapper.width() * 2, this.wrapper.height() * 2);
+    this.renderer.setSize(this.wrapper.width(), this.wrapper.height());
 
     // load the model including materials
     let model_file = useWebGLRenderer ? mixerList[FC.MIXER_CONFIG.mixer - 1].model : 'fallback';
@@ -139,7 +139,7 @@ Model.prototype.render = function () {
 
 // handle canvas resize
 Model.prototype.resize = function () {
-    this.renderer.setSize(this.wrapper.width() * 2, this.wrapper.height() * 2);
+    this.renderer.setSize(this.wrapper.width(), this.wrapper.height());
 
     this.camera.aspect = this.wrapper.width() / this.wrapper.height();
     this.camera.updateProjectionMatrix();
@@ -148,9 +148,10 @@ Model.prototype.resize = function () {
 };
 
 Model.prototype.dispose = function () {
-    if (this.canUseWebGLRenderer()) {
-        this.renderer.forceContextLoss = null;
+    if (this.renderer) {
+        this.renderer.forceContextLoss();
         this.renderer.dispose();
+        this.renderer = null;
     }
 };
 

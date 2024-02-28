@@ -855,7 +855,10 @@ receiver.initModelPreview = function () {
 };
 
 receiver.renderModel = function () {
-    if (this.keepRendering) { requestAnimationFrame(this.renderModel.bind(this)); }
+    if (this.keepRendering) {
+        return;
+    }
+    requestAnimationFrame(this.renderModel.bind(this));
 
     if (!this.clock) { this.clock = new THREE.Clock(); }
 
@@ -874,13 +877,13 @@ receiver.renderModel = function () {
 };
 
 receiver.cleanup = function (callback) {
+    this.keepRendering = false;
+
     $(window).off('resize', this.resize);
     if (this.model) {
         $(window).off('resize', $.proxy(this.model.resize, this.model));
         this.model.dispose();
     }
-
-    this.keepRendering = false;
 
     if (callback) callback();
 };
