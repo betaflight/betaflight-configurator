@@ -427,9 +427,7 @@ led_strip.initialize = function (callback, scrollPosition) {
         $('.modeSelect').on('change', function() {
 
             const that = this;
-
             const mode = Number($(that).val());
-   
             $('.mode_colors').find('button').each(function() {
                 for (let i = 0; i < 6; i++) {
                     for (let j = 0; j < 6; j++) {
