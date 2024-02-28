@@ -198,7 +198,7 @@
                     <div style="width: 49%; float: left;">
                         <strong i18n="firmwareFlasherBuildCustomDefines"></strong>
                         <div id="customDefinesInfo" class="build-options-wrapper">
-                            <input id="customDefines" name="customDefines" />
+                            <input id="customDefines" name="customDefines">
                             <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherCustomDefinesDescription"></div>
                         </div>
                     </div>
@@ -254,6 +254,9 @@
                     <progress class="buildProgress" value="0" min="0" max="100"></progress>
                     <span id="cloudTargetStatus"></span>
                     <br />
+                    <div class="btn default_btn">
+                        <a class="cloud_build_cancel disabled" href="#" i18n="cancel"></a>
+                    </div>
                 </div>
             </div>
         </div>

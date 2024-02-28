@@ -187,7 +187,7 @@
         "message": "Ви використовуєте застарілу версію <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Використання новішої версії прошивки із застарілою версією конфігуратора означає, що зміна деяких налаштувань призведе до <strong>пошкодження конфігурації прошивки та непрацездатності апарата</strong>. Крім того, деякі функції прошивки можна буде налаштувати лише в Командному Рядку.<br><strong>Betaflight Configurator версія <b>$1</b> доступна для онлайн завантаження</strong>, будь ласка, відвідайте <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">цю сторінку</a> для завантаження та встановлення крайньої версії з виправленнями та покращеннями.<br>Будь ласка, закрийте вікно конфігуратора перед оновленням."
+        "message": "Використання новішої версії прошивки із застарілою версією конфігуратора означає, що зміна деяких налаштувань призведе до <strong>пошкодження конфігурації прошивки та неробочого судна</strong>.<br />Більше того, деякі функції прошивки можна буде налаштувати лише в командному рядку.<br g/><br /><strong>Betaflight Configurator версії <b>$1</b> доступний для завантаження в мережі</strong>.<br />Завантажте і встановіть найновішу версію конфігуратора з виправленнями і покращеннями <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a><br>Вікно конфігуратора потрібно закрити перед оновленням."
     },
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт з Релізами"
@@ -209,9 +209,6 @@
     },
     "tabLanding": {
         "message": "Вітальна сторінка"
-    },
-    "tabChangelog": {
-        "message": "Журнал змін"
     },
     "tabPrivacyPolicy": {
         "message": "Політика конфіденційності"
@@ -436,10 +433,10 @@
         "message": "Виявлено наступні <strong>проблеми з конфігуратором</strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Будь ласка, <strong>виправте ці проблеми, перш ніж спробуєте злетіти своїм апаратом</strong>."
+        "message": "<span class=\"message-negative\"><strong>Вам потрібно виправити ці проблеми, перш ніж спробуєте злетіти своїм апаратом</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>Версія конфігуратора, який ви використовуєте ($3), старіша за прошивку, яку ви використовуєте ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Використана версія конфігуратора ($3) не підтримує прошивку $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Протокол вихідного сигналу мотора не вибрано</strong>.<br>Будь ласка, виберіть протокол виводу мотора, відповідний до вашого електронного контролера швидкості ESC '$t(configurationEscFeatures.message)' на '$t(tabMotorTesting.message)' вкладці.<br>$t(escProtocolDisabledMessage.message)"
@@ -618,9 +615,6 @@
     "statisticsDisclaimer": {
         "message": "Конфігуратор Betaflight збирає анонімну статистику використання. Наприклад, ці дані включають (але не обмежуються) кількість запусків, географічний регіон користувачів, типи контролерів польоту, версії прошивок, використання елементів і вкладок інтерфейсу тощо. Зведена інформація про ці дані наведена <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a>. Збір інформації здійснюється для кращого розуміння того, як використовується конфігуратор Betaflight, а також для виявлення тенденцій у спільноті та можливого вдосконалення інтерфейсу. Користувачі можуть відмовитися від збору даних на вкладці \"Опції\"."
     },
-    "defaultChangelogHead": {
-        "message": "Конфігуратор - Список змін"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Програматор"
     },
@@ -701,7 +695,7 @@
         "message": "Скинути налаштування"
     },
     "initialSetupResetText": {
-        "message": "Відновити налаштування до <strong>значень за замовчуванням</strong>"
+        "message": "Скинути польотний контролер до <strong>неналаштованого стану.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Резервне копіювання JSON"
@@ -779,6 +773,9 @@
     "initialSetupMagHead": {
         "message": "Магнітометр"
     },
+    "initialSetupMagDeclination": {
+        "message": "Магнітне схилення:"
+    },
     "initialSetupInfoHead": {
         "message": "Інформація про систему"
     },
@@ -813,6 +810,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "Температура процесора:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "Не підтримується версіями MSP API до 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI: "
@@ -1007,8 +1007,8 @@
     "initialSetupInfoBuild": {
         "message": "Інформація прошивки"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Показує інформацію про збірку прошивки. Конфігурація збірки та журнал збірки посилаються на інформацію з хмари, знайдену за допомогою ключа збірки",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Показує інформацію для збірки прошивки, потребує підключення до сервера збірки. <br> Опції показують визначені опції, що використовувались в хмарній збірці. <br> Посилання на журнал та налаштування показують хмарну інформацію за ключем, збереженим у прошивці. <br> Під час локальної збірки розділ порожній.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1020,20 +1020,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Ключ збірки"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Конфігурація"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Журнал"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Параметри збірки:"
+        "message": "Опції"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Використані директиви препроцесора"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Опції, визначені в збірці прошивки"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Локальна збірка - без директив препроцесору"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Локальна збірка - без хмарних даних"
     },
     "initialSetupNotOnline": {
         "message": "Сервер недоступний"
@@ -1277,6 +1277,9 @@
     },
     "configurationArmingHelp": {
         "message": "Для деяких опцій взведення може знадобитися ввімкнений акселерометр"
+    },
+    "configurationMagDeclination": {
+        "message": "Схилення магнітометра [градуси]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Напрямок мотора змінено на протилежний"
@@ -2708,10 +2711,6 @@
     "gpsMapHead": {
         "message": "Поточне GPS-розташування"
     },
-    "gpsMapHeadHelp": {
-        "message": "Показати місцезнаходження GPS на мапі. Використовуйте колесо прокрутки миші для збільшення та зменшення масштабу.<br>Значок місцезнаходження показує напрямок на північ якщо використовується компас",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Перевірте інтернет-з'єднання"
     },
@@ -2911,7 +2910,7 @@
         "message": "Майстер"
     },
     "motorsNotice": {
-        "message": "<strong>Режим тестування мотору / Попередження про взведення:</strong><br />Переміщення повзунків або взведення дрона з передавача призведе до того, що мотори <strong>розкрутяться</strong>.<br />Щоб запобігти травмам <strong class=\"message-negative\">зніміть всі пропелери</strong> перед використанням цієї функції.<br />Увімкнення режиму тестування мотору також тимчасово вимкне функцію запобігання зльоту, щоб вона не забороняла взведення під час стендового випробування без пропелерів.<br />"
+        "message": "<strong>Режим тестування моторів / Попередження про взведення:</strong><br /><br /><strong class=\"message-negative\">ПОПЕРЕДЖЕННЯ: Серйозна загроза травм! Зніміть всі пропелери!</strong><br /><br /><ul><li>&#x2022; Мотори розкрутяться при взведенні або коли повзунки піднято</li><li>&#x2022; Режим тестування моторів залишиться активним після переходу на іншу вкладку</li><li>&#x2022; Натискання на будь-яку клавішу зупинить мотори, але тільки якщо ви знаходитесь на вкладці Мотори</li><li>&#x2022; Відключення USB кабелю може не зупинити мотори!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>Я розумію ризики</strong>, пропелери знято - активувати контроль над моторами та взведення, а також вимкнути запобіжник самовільних вильотів."
@@ -2950,7 +2949,7 @@
         "message": "<strong>Повідомлення про небезпеку</strong><br /><strong class=\"message-negative\">Зніміть усі пропелери, щоб запобігти травмам!</strong><br />Мотори будуть <strong>розкручуватися!</strong >"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Інформаційне повідомлення</strong><br />Мотори будуть запускатися по одному, і ви зможете вибрати, який саме мотор запускається. Акумулятор повинен бути підключений, та вибрано правильний протокол ESC. Ця утиліта може тільки переназначати активні в даний момент мотори. Для більш складного переназначення необхідно використовувати команду Resource в командному рядку. Зверніться до цієї <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">сторінки Wiki</a>."
+        "message": "<strong>Інформаційне повідомлення</strong><br />Мотори будуть запускатися по одному, і ви зможете вибрати, який саме мотор запускається. Акумулятор повинен бути підключений, та вибрано правильний протокол ESC. Ця утиліта може тільки переназначати активні в даний момент мотори. Для більш складного переназначення необхідно використовувати команду Resource в командному рядку. Зверніться до цієї <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">сторінки Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Зберегти"
@@ -3070,7 +3069,7 @@
         "message": "Гіроскоп - градуси/сек."
     },
     "sensorsAccelTitle": {
-        "message": "Акселерометр - градуси"
+        "message": "Акселерометр - g"
     },
     "sensorsMagTitle": {
         "message": "Магнітометр"
@@ -3280,7 +3279,7 @@
         "message": "Невідомий стан $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Виберіть коміт"
+        "message": "Оберіть запит на злиття або коміт"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Інформація про реліз і збірку"
@@ -3331,10 +3330,16 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "успішно"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "скасовано"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "час вийшов (спробуйте ще раз)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "помилка запиту збірки (будь ласка, перевірте конфігурацію збірки, наприклад користувацькі #define)"
+    },
+    "firmwareFlasherCloudBuildFail": {
         "message": "не вдалося (перевірте журнал)"
     },
     "firmwareFlasherReleaseFileUrl": {
@@ -3485,7 +3490,7 @@
         "message": "<strong>Відновлення / Втрата зв'язку</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Якщо зв’язок із платою втрачено, виконайте такі кроки, щоб відновити зв’язок: <ul><li>Вимкніть живлення.</li><li>Увімкніть «Польотник уже в режимі завантажувача», увімкніть «Повністю очистити мікроконтролер».</li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.</li><li>Увімкніть живлення (індикатор активності НЕ блимає, якщо все зроблено правильно).</li><li>Установіть усі драйвери STM32 і Zadig, якщо потрібно (див. <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB</a> у посібнику Betaflight).</li><li>Закрийте конфігуратор, перезапустіть конфігуратор.</li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотнику.</li><li>Прошийте правильною прошивкою (з використанням ручної швидкості передачі даних, якщо вказано у посібнику коритувача до вашого польотного контролера).</li><li>Вимкніть живлення.</li><li>Зніміть перемичку BOOT.</li><li>Увімкніть живлення (світлодіод активності має блимати).</li><li>Підключіться нормально.</li></ul>"
+        "message": "Якщо зв’язок із платою втрачено, виконайте такі кроки, щоб відновити зв’язок: <ul><li>Вимкніть живлення.</li><li>Увімкніть «Польотник уже в режимі завантажувача», увімкніть «Повністю очистити мікроконтролер».</li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.</li><li>Увімкніть живлення (індикатор активності НЕ блимає, якщо все зроблено правильно).</li><li>Установіть усі драйвери STM32 і Zadig, якщо потрібно (див. <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB</a> у посібнику Betaflight).</li><li>Закрийте конфігуратор, перезапустіть конфігуратор.</li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотнику.</li><li>Прошийте правильною прошивкою (з використанням ручної швидкості передачі даних, якщо вказано у посібнику коритувача до вашого польотного контролера).</li><li>Вимкніть живлення.</li><li>Зніміть перемичку BOOT.</li><li>Увімкніть живлення (світлодіод активності має блимати).</li><li>Підключіться нормально.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Вийти з програматора"
@@ -4502,7 +4507,7 @@
         "message": "Значення динамічного холостого ходу [* 100 об/хв]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Динамічний режим холостого ходу поліпшує керування при низьких оборотах та зменшує ризик десинхронізації моторів. <br /><br /> Він також покращує керованість дрона циклом ПІД, стабільність при нульовій тязі, час полоту дороги дриґом та гальмування моторів.<br /><br />\nМінімальні обороти динамічного холостого ходу повинні бути встановлені приблизно на рівні 3000 - 3500 об/хв. <br /><br />Відвідайте <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">цей запис вікі</a> для отримання додаткової інформації."
+        "message": "Динамічний режим холостого ходу поліпшує керування при низьких оборотах та зменшує ризик десинхронізації моторів. <br /><br /> Він також покращує керованість дрона циклом ПІД, стабільність при нульовій тязі, час польоту дороги дриґом та гальмування моторів.<br /><br />\nМінімальні обороти динамічного холостого ходу повинні бути встановлені приблизно на рівні 3000 - 3500 об/хв. <br /><br />Відвідайте <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">цей запис вікі</a> для отримання додаткової інформації."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Динамічний режим холостого ходу вимкнено, оскільки Dshot телеметрія вимкнена"
@@ -4517,7 +4522,7 @@
         "message": "Інтегроване рискання"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">УВАГА</span>: якщо ввімкнете цю функцію, необхідно налаштувати PID рискання відповідно. Більше інформації <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a>"
+        "message": "<span class=\"message-negative\">УВАГА</span>: якщо увімкнете цю функцію, ви повинні скорегувати ПІД рискання відповідно. Докладніше <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">тут</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Інтегроване рискання, інтегрує значення P, I та D рискання, дозволяючи налаштовувати значення P, I та D для рискання, подібно до того, як налаштовують тангаж та крен.<br><br>Потрібен дуже малий I, оскільки інтегрований P діє подібно до I, а інтегрований D - до P.<br><br>ПРИМІТКА: для застосування інтегрованого рискання потрібно використовувати Absolute Control, оскільки при інтегрованому рисканні не потрібний I."
@@ -5423,8 +5428,8 @@
         "message": "Час кращих 3 за GPS",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Найкращий час кола за GPS"
+    "osdDescElementLapTimeBest3": {
+        "message": "3 найкращі часи кола за GPS"
     },
     "osdTextElementCraftName": {
         "message": "Назва повітряного судна",
@@ -5660,7 +5665,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "Температура з телеметрії ESC"
+        "message": "Температура з телеметрії ESC, отримана або через послідовний порт, або через двонаправлений Dshot з EDT, якщо підтримується вашою прошивкою ESC."
     },
     "osdTextElementEscRpm": {
         "message": "ESC об/хв ",
@@ -6358,7 +6363,7 @@
         "message": "Збережено"
     },
     "vtxHelp": {
-        "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">цю сторінку;</a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації lua, який можна використовувати разом зі сценаріями betaflight lua (докладніше  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">тут</a>.)",
+        "message": "Тут ви можете налаштувати параметри свого відеопередавача (VTX). Ви можете переглядати та змінювати параметри відеопередачі, включаючи таблиці відеопередавача (VTX), якщо польотний контролер та відеопередавач це підтримують.<br>Щоб налаштувати відеопередавач, виконайте такі дії:<br>1. Перейдіть на <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">цю сторінку;</a> <br>2. Знайдіть відповідний файл конфігурації відеопередавача для вашої країни та моделі відеопередавача і завантажте його;<br>3. Натисніть '$t(vtxButtonLoadFile.message)' нижче, оберіть файл конфігурації відеопередавача та завантажте його в Betaflight;<br>4. Переконайтеся, що налаштування правильні;<br>5. Натисніть «$t(vtxButtonSave.message)», щоб зберегти налаштування відеопередавача в польотному контролері.<br>6. За бажанням, натисніть «$t(vtxButtonSaveLua.message)», щоб зберегти файл конфігурації lua, який можна використовувати разом зі сценаріями betaflight lua (докладніше <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">тут</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6847,7 +6852,7 @@
         "message": "Підтвердити"
     },
     "dialogConfirmResetNote": {
-        "message": "УВАГА: Ви впевнені, що хочете скинути <strong>УСІ налаштування</strong> до налаштувань за замовчуванням? Це <strong>не</strong> є \"скидання до заводських налаштувань\". Це може призвести до непередбачуваних проблем, і, можливо, доведеться знову прошивати пристрій, щоб знову під'єднатися до нього."
+        "message": "УВАГА: Ви впевнені, що хочете скинути <strong>УСІ налаштування</strong> до неналаштованого стану? Це <strong>не</strong> є \"скидання до заводських налаштувань\". Це може призвести до непередбачуваних проблем, і, можливо, доведеться знову прошивати пристрій, щоб знову під'єднатися до нього."
     },
     "dialogConfirmResetConfirm": {
         "message": "Скинути"
@@ -7250,6 +7255,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Виберіть протокол телеметрії, який ви хотіли б включити у цю збірку. Зауважте, що це випадаючий список, але можна вибрати лише один елемент. Також деякі протоколи телеметрії будуть увімкнені автоматично, незалежно від вашого вибору тут, якщо вони потрібні для радіообміну, наприклад, CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Автоматично включено"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Оберіть загальні опції, які б ви хотіли включили до цієї збірки. Зауважте, що це випадаючий список, і можна вибрати декілька елементів. Такі речі як виправлення, наприклад, відеопередавача AKK, знаходяться в цьому списку."

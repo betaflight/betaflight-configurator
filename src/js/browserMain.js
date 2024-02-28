@@ -50,3 +50,11 @@ import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
 
 import "./main";
+
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({
+    onOfflineReady() {
+        alert('App is ready for offline use.');
+    },
+});

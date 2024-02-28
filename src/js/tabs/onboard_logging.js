@@ -21,8 +21,6 @@ const onboard_logging = {
     writeError: false,
 
     BLOCK_SIZE: 4096,
-    VCP_BLOCK_SIZE_3_0: 512,
-    VCP_BLOCK_SIZE: 4096,
 };
 
 onboard_logging.initialize = function (callback) {
@@ -119,8 +117,8 @@ onboard_logging.initialize = function (callback) {
                     }
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                         FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
-                        FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     }
+                    FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
 
                     await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
@@ -372,9 +370,12 @@ onboard_logging.initialize = function (callback) {
 
         if (dataflashPresent && FC.SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
             loggingStatus = 'Dataflash';
-            tracking.setFlightControllerData(tracking.DATA.LOG_SIZE, FC.DATAFLASH.usedSize);
         }
-        tracking.setFlightControllerData(tracking.DATA.LOGGING_STATUS, loggingStatus);
+
+        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'DataLogging', {
+            logSize: FC.DATAFLASH.usedSize,
+            logStatus: loggingStatus,
+        });
 
         if (FC.SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status
@@ -431,11 +432,8 @@ onboard_logging.initialize = function (callback) {
 
     function flash_save_begin() {
         if (GUI.connected_to) {
-            if (FC.boardHasVcp()) {
-                self.blockSize = self.VCP_BLOCK_SIZE;
-            } else {
-                self.blockSize = self.BLOCK_SIZE;
-            }
+
+            self.blockSize = self.BLOCK_SIZE;
 
             // Begin by refreshing the occupied size in case it changed while the tab was open
             flash_update_summary(function() {
@@ -569,9 +567,6 @@ onboard_logging.initialize = function (callback) {
 };
 
 onboard_logging.cleanup = function (callback) {
-    tracking.setFlightControllerData(tracking.DATA.LOGGING_STATUS, undefined);
-    tracking.setFlightControllerData(tracking.DATA.LOG_SIZE, undefined);
-
     if (sdcardTimer) {
         clearTimeout(sdcardTimer);
         sdcardTimer = false;

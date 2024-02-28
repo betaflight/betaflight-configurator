@@ -24,16 +24,16 @@ jobs:
     name: Test
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -47,22 +47,22 @@ jobs:
     needs: test
     runs-on:  ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache Vite
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: cache/
           key: vite-${{ inputs.path }}-${{ hashFiles('vite.config.js') }}
 
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/
           key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -71,6 +71,7 @@ jobs:
       - run: yarn build
 
       - name: Push to AWS
+        if: github.repository_owner == 'betaflight'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete

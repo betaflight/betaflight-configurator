@@ -151,9 +151,6 @@
     "configuratorUpdateNotice": {
         "message": "<b>Betaflight Konfiguratzailearen</b> bertsio zaharkitua erabiltzen ari zara.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Firmwarearen bertsio berriak konfiguratzailearen bertsio zaharkituekin erabiltzen baduzu, ezarpen batzuk aldatzerakoan, <strong> firmware konfigurazio eta gailu hondatuak</strong> ekar daitezke. Gainera, firmwarearen zenbait ezaugarri CLI erabiltzen bakarrik konfiguratu daitezke.<br><strong> Betaflight Konfiguratzaile bertsioa <b>$1</b> sarean deskargatzeko erabilgarri dago </strong>. Mesedez bisitatu<a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">orri hau</a> azken bertsioa deskargatzeko, konponketak eta hobekuntzak jasotzen.<br>Mesedez, itxi konfiguratzaile leiho hau eguneratu aurretik."
-    },
     "configuratorUpdateWebsite": {
         "message": "Bertsio agirien webgunera joan"
     },
@@ -174,9 +171,6 @@
     },
     "tabLanding": {
         "message": "Ongi Etorri"
-    },
-    "tabChangelog": {
-        "message": "Aldaketak"
     },
     "tabPrivacyPolicy": {
         "message": "Pribautasun Agiriak"
@@ -400,12 +394,6 @@
     "reportProblemsDialogHeader": {
         "message": "Zure konfigurazioarekin <strong>lotutako arazo hauek</strong> atzeman dira:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "Mesedez, <strong> konpondu arazo hauek gailua hegan egiten saiatu aurretik </strong>."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>Erabiltzen ari zaren konfiguratzaile bertsioa ($3) firmwarean erabilita baino zaharragoa da($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu</strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
     },
@@ -536,9 +524,6 @@
     "defaultFacebookText": {
         "message": "<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Talde</a> bat badaukagu.<br />Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
     },
-    "defaultChangelogHead": {
-        "message": "Konfiguratzailea - Aldaketen zerrenda"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasheatzailea"
     },
@@ -605,9 +590,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Ezarpenak berrezarri"
-    },
-    "initialSetupResetText": {
-        "message": "Ezarpenak <strong>lehenetsita</strong> ezarri"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Boot Loader / DFU aktibatu"
@@ -2034,9 +2016,6 @@
     "motorsMaster": {
         "message": "Nagusia"
     },
-    "motorsNotice": {
-        "message": "<strong>Motorea probatzeko modua/armatua oharra:</strong><br/> Labainketak edo zure artisautza transmisorearekin batera armatzeak motorrak <strong>biraketa</strong> eragingo du.<br/> Lesioa ekiditeko <strong class=\"message-negative\">kendu helize GUZTIAK</strong> eginbide hau erabili aurretik.<br/> Motorearen proba modua gaituz gero, aldi baterako, desagerrarazteko aukera ere izango da, baina artisautza probatu gabe.<br/>"
-    },
     "motorsEnableControl": {
         "message": "<strong>Arriskuak ulertzen ditut</strong>, helizeak kendu-motore eta armatzearen kontrolak gaitu eta ihes egitea saihesteko prebentzioa desgaitu."
     },
@@ -2099,9 +2078,6 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroskopoa - grad/s"
-    },
-    "sensorsAccelTitle": {
-        "message": "Azelerometroa - g (deg)"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitudea - metroak"
@@ -3890,9 +3866,6 @@
     "osdTextElementEscTemperature": {
         "message": "ESC tenperatura",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementEscTemperature": {
-        "message": "Tenperatura ESCren telemetriaren arabera"
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",

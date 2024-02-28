@@ -189,9 +189,6 @@
     "configuratorUpdateNotice": {
         "message": "Sie verwenden eine veraltete Version des <b>Betaflight Configurators</b>.\n<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Die Verwendung einer neueren Version der Firmware mit einer veralteten Version des Configurators bedeutet, dass das Ändern einiger Einstellungen zu einer <strong>beschädigten Firmware-Konfiguration und einem nicht funktionierenden Kopter</strong> führen wird. Außerdem sind einige Funktionen der Firmware nur per CLI konfigurierbar.<br><strong>Betaflight Configurator Version <b>$1</b> steht online zum Download bereit</strong>, besuchen Sie bitte <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">diese Seite</a>, um die neueste Version mit neuen Features herunterzuladen und zu installieren.<br>Bitte schließen Sie den Betaflight Configurator, bevor sie die neue Version installieren."
-    },
     "configuratorUpdateWebsite": {
         "message": "Webseite mit Downloadversionen aufrufen"
     },
@@ -212,9 +209,6 @@
     },
     "tabLanding": {
         "message": "Willkommen"
-    },
-    "tabChangelog": {
-        "message": "Änderungen"
     },
     "tabPrivacyPolicy": {
         "message": "Datenschutzerklärung"
@@ -438,12 +432,6 @@
     "reportProblemsDialogHeader": {
         "message": "Die folgenden <strong>Probleme mit Ihrer Konfiguration</strong> wurden entdeckt:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "Bitte <strong>beheben Sie diese Probleme, bevor Sie versuchen, Ihren Kopter</strong> zu fliegen."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>Die Version des Konfigurators, die Sie verwenden ($3) ist älter als die Firmware, die Sie verwenden ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Es ist kein Motorausgabeprotokoll ausgewählt</strong>.<br>Bitte wähle ein für den ESCs geeignetes Motorausgabeprotokoll in '$t(configurationEscFeatures.message)' auf der Registerkarte '$t(tabMotorTesting.message)' aus.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -621,9 +609,6 @@
     "statisticsDisclaimer": {
         "message": "Betaflight Konfigurator sammelt anonyme Nutzungsdaten. Diese Daten umfassen zum Beispiel (aber nicht beschränkt) die Anzahl der Starts, die geographische Region der Nutzer, Typen von Flugsteuerungen, Firmware-Versionen, Verwendung von UI-Elementen und Tabs etc. Die Zusammenfassung dieser Daten ist hier <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">einsehbar.</a>. Die Erfassung wird durchgeführt, um besser zu verstehen, wie Betaflight Configurator verwendet wird, um Community-Trends zu verstehen und für mögliche UI-Verbesserungen. Benutzer können die Datenerfassung über die Registerkarte Optionen abstellen (Opt-out)."
     },
-    "defaultChangelogHead": {
-        "message": "Konfigurator - Changelog"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
@@ -702,9 +687,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Einstellungen zurücksetzen"
-    },
-    "initialSetupResetText": {
-        "message": "Auf Werkseinstellungen <strong>zurücksetzen</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "JSON sichern (Backup)"
@@ -931,10 +913,6 @@
     "initialSetupInfoBuild": {
         "message": "Firmware-Info"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Informationen zum Build der Firmware anzeigen. Die Build-Config und Build-Log verweisen zu den Cloud-Informationen des Build-Schlüssels",
-        "description": "Message that pops up to describe the Build / Firmware section"
-    },
     "initialSetupInfoBuildDate": {
         "message": "Erstellungsdatum (build date):"
     },
@@ -943,21 +921,6 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "Build Key"
-    },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "Konfiguration"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "Log"
-    },
-    "initialSetupInfoBuildOptions": {
-        "message": "Erstellungsoptionen (build options):"
-    },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Verwendete Definitionen"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Lokaler Build - keine Definitionen verwendet"
     },
     "initialSetupButtonSave": {
         "message": "Speichern"
@@ -2562,9 +2525,6 @@
     "motorsMaster": {
         "message": "Master"
     },
-    "motorsNotice": {
-        "message": "<strong>Motor-Testmodus - Hinweis:</strong><br />Bewegen der Regler oder Arming des Copters über die Fernsteuerung wird die Motoren <strong>anlaufen</strong> lassen.<br />Um Verletzungen zu vermeiden <strong class=\"message-negative\"> bitte ALLE Propeller entfernen</strong>.<br />Der Testmodus wird auch den Abhebeschutz deakvieren, so dass sich das Gerät ohne Propeller nicht selbst abschaltet.<br />"
-    },
     "motorsEnableControl": {
         "message": "<strong>Ich weiß was ich tue</strong>, Propeller sind entfernt - Motorkontrolle und Arming aktivieren, Abhebeschutz deaktivieren."
     },
@@ -2600,9 +2560,6 @@
     },
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Sicherheitshinweis</strong><br /><strong class=\"message-negative\">Entfernen alle Propeller um Verletzungen zu verhindern!</strong><br />Die Motoren werden sich <strong>drehen!</strong>"
-    },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Informationshinweis</strong><br />Die Motoren laufen einzeln und du kannst wählen, welcher Motor läuft. Der Akku sollte angeschlossen und das richtige ESC-Protokoll sollte ausgewählt werden. Diese Funktion kann nur aktive Motoren neu anordnen. Eine komplexere Neuzuordnung erfordert den CLI-Befehl \"Resource\". Siehe hierzu die <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki Seite</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Speichern"
@@ -2720,9 +2677,6 @@
     },
     "sensorsGyroTitle": {
         "message": "Gyro - Grad / Sekunde"
-    },
-    "sensorsAccelTitle": {
-        "message": "Beschleungungssensor -g(Grad)"
     },
     "sensorsAltitudeTitle": {
         "message": "Flughöhe - Meter"
@@ -2928,9 +2882,6 @@
     "sdcardStatusUnknown": {
         "message": "Unbekannter Status $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "Commit auswählen"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Versions- und Build-Info"
     },
@@ -2975,12 +2926,6 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "Erfolgreich"
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": "Zeitüberschreitung (bitte erneut versuchen)"
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": "Fehlgeschlagen (bitte Log prüfen)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Manuell herunterladen."
@@ -3128,9 +3073,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Wiederherstellung / abgebrochene Kommunikation</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Bei Verlust der Kommunikation mit Ihrem Board, folge diesen Schritten, um die Kommunikation wiederherzustellen: <ul><li>Spannungsversorgung trennen.</li><li>Aktiviere 'Keine Neustart-Sequenz', aktiviere 'Full Chip Löschung'.</li><li>Kontaktiere die BOOT-Pins per Jumper oder halte den BOOT-Button gedrückt.</li><li>Spannungsversorgung herstellen (Aktivitäts-LED blinkt NICHT, wenn korrekt).</li><li>Installiere bei Bedarf alle STM32-Treiber und Zadig (siehe <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB-Flashen</a>-Abschnitt des Betaflight-Handbuchs).</li><li>Konfigurator schließen, Konfigurator neu starten.</li><li>BOOT-Button loslassen, wenn auf dem FC vorhanden.</li><li>Flashen mit korrekter Firmware (Verwendung der manuellen Baudrate wenn im FC-Handbuch angegeben).</li><li>Spannungsversorgung trennen</li><li>BOOT-Jumper entfernen.</li><li>Spannungsversorgung anschließen (Aktivitäts-LED sollte blinken).</li><li>Normal verbinden.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware-Flasher verlassen"
@@ -4115,9 +4057,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ACHTUNG</span>: Bei Aktivierung dieser Funktion müssen die YAW PID-Werte entsprechend angepasst werden. Mehr Info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Der 'Integrierter Yaw' Wert integriert die Werte P, I und D und erlaubt Yaw den P, I, D etwas zu verändernt ähnlich wie wenn Du Pitch und Roll tunest.<br><br>I-Werte sind sehr wenig erforderlich, weil das integrierte P wie I wirkt und integrierte D-Werte wirken wie P.<br><br>HINWEIS: Integrierter Yaw erfordert die Verwendung von Absoluter Kontrolle, da I mit dem integrierten Yaw nicht benötigt wird."
@@ -5127,9 +5066,6 @@
         "message": "ESC-Temperatur",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementEscTemperature": {
-        "message": "Regler Temperatur (über Regler Telemetrie)"
-    },
     "osdTextElementEscRpm": {
         "message": "ESC Drehzahl",
         "description": "One of the elements of the OSD"
@@ -5786,10 +5722,6 @@
     "osdButtonSaved": {
         "message": "Gespeichert"
     },
-    "vtxHelp": {
-        "message": "Hier können die Werte des Video Transmitter (VTX) konfiguriert werden. Es können die Übertragungswerte, einschließlich der VTX-Tabelle, angezeigt und geändert werden, wenn der Flugcontroller und der VTX dies unterstützen.<br>Um den VTX einzurichten, folge diesen Schritten:<br>1. Gehe zu<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">dieser</a> Seite;<br>2. Finde die passende VTX-Konfigurationsdatei für das Land in dem der Copter betrieben wird und lade sie herunter;<br>3. Klicke unten auf '$t(vtxButtonLoadFile.message)', wähle die VTX-Konfigurationsdatei und lade sie;<br>4. Überprüfe, ob die Einstellungen korrekt sind;<br>5. Klicke auf '$t(vtxButtonSave.message)' um die VTX-Einstellungen auf dem Flugcontroller zu speichern.<br>6. Optional: klicke '$t(vtxButtonSaveLua.message)' um eine Lua-Konfigurationsdatei zu speichern, welche mit den Betaflight Lua-Scripten benutzt werden kann. (Mehr dazu <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hier</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Achtung:</span> Dein VTX ist nicht konfiguriert oder nicht unterstützt. Dadurch kannst du die VTX-Werte von hier aus nicht ändern. Dies ist nur möglich, wenn der Flugcontroller mit einem Protokoll wie Tramp oder SmartAudio verbunden ist und in der Registerkarte $t(tabPorts.message) korrekt konfiguriert ist.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6258,9 +6190,6 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Bestätigen"
-    },
-    "dialogConfirmResetNote": {
-        "message": "WARNUNG: Dies setzt <strong>ALLE Einstellungen</strong> zurück! Das bedeutet <strong>nicht</strong> \"Zurücksetzen auf Werkseinstellungen\". Es können unerwartete Problemen auftreten. Eventuell ist erneutes Flashen notwendig, um sich wieder verbinden zu können."
     },
     "dialogConfirmResetConfirm": {
         "message": "Zurücksetzen"

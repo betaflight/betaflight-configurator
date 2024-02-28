@@ -229,6 +229,11 @@ vtx.initialize = function (callback) {
             TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label = vtxConfig.vtx_table.powerlevels_list[i - 1].label;
         }
 
+        // Setting the latest vtx power to prevent out of bounds error
+        if (FC.VTX_CONFIG.vtx_power > TABS.vtx.VTXTABLE_POWERLEVEL_LIST.length) {
+            FC.VTX_CONFIG.vtx_power = TABS.vtx.VTXTABLE_POWERLEVEL_LIST.length;
+        }
+
         vtxcallback_after_read();
     }
 
@@ -658,7 +663,7 @@ vtx.initialize = function (callback) {
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', { length: text.length });
                         console.log('Write VTX table lua file end');
                         gui_log(i18n.getMessage('vtxSavedLuaFileOk'));
                     };
@@ -709,7 +714,7 @@ vtx.initialize = function (callback) {
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
+                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', { length: text.length });
                         console.log(vtxConfig);
                         console.log('Write VTX file end');
                         gui_log(i18n.getMessage('vtxSavedFileOk'));

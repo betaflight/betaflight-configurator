@@ -1,5 +1,5 @@
 import { bit_check } from "./bit";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
 import semver from "semver";
 
 const INITIAL_CONFIG = {
@@ -744,7 +744,7 @@ const FC = {
             'CRSF',
             'SPEKTRUM2048/SRXL',
             'TARGET_CUSTOM',
-            'FrSky FPort',
+            'FPORT',
         ];
 
         if (semver.gte(apiVersion, API_VERSION_1_42)) {
@@ -753,6 +753,12 @@ const FC = {
 
         if (semver.gte(apiVersion, API_VERSION_1_44)) {
             serialRxTypes.push('IRC GHOST');
+        }
+
+        if (semver.gte(apiVersion, API_VERSION_1_46)) {
+            // Default to NONE and move SPEKTRUM1024 to the end (firmware PR #12500)
+            serialRxTypes[0] = 'NONE';
+            serialRxTypes.push('SPEKTRUM1024');
         }
 
         return serialRxTypes;

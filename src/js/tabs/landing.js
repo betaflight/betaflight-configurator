@@ -38,11 +38,9 @@ landing.initialize = function (callback) {
             bottomSection.append(` <a href="#" lang="${element}" i18n="language_${element}"></a>`);
         });
 
-        bottomSection.find('a').each((index) => {
-            let element = $(this);
-            element.click(() => {
-                element = $(this);
-                const languageSelected = element.attr('lang');
+        bottomSection.find('a').each((index, element) => {
+            $(element).click(() => {
+                const languageSelected = $(element).attr('lang');
                 if (!languageSelected) { return; }
                 if (i18n.selectedLanguage != languageSelected) {
                     i18n.changeLanguage(languageSelected);

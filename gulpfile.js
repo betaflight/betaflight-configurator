@@ -102,7 +102,6 @@ const distCommon = gulp.series(
     dist_node_modules_css,
     dist_ol_css,
     dist_less,
-    dist_changelog,
     dist_locale,
     dist_libraries,
     dist_resources,
@@ -353,6 +352,9 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 }
 
 function dist_src() {
+    const platforms = getPlatforms();
+    const isAndroid = platforms.includes('android');
+
     const distSources = [
         './src/**/*',
         '!./src/**/*.js',
@@ -364,21 +366,39 @@ function dist_src() {
         './src/js/tabs/map.js',
     ];
 
-    return gulp.src(distSources, { base: 'src' })
-        .pipe(gulp.src('yarn.lock'))
+    const distSourcesCordova = [
+        './src/**/*',
+        '!./src/css/dropdown-lists/LICENSE',
+        '!./src/support/**',
+        '!./src/**/*.less',
+    ];
+
+    return gulp.src(isAndroid ? distSourcesCordova : distSources, { base: 'src' })
         .pipe(gulp.dest(DIST_DIR));
 }
 
 function dist_node_modules_css() {
-  return gulp
-    .src("./**/*.min.css")
-    .pipe(gulp.dest(DIST_DIR));
+    const platforms = getPlatforms();
+    const isAndroid = platforms.includes('android');
+
+    const cssSources = [
+        './node_modules/**/*.min.css',
+    ];
+
+    if (isAndroid) {
+        cssSources.push("./node_modules/**/*.woff2");
+        cssSources.push("./node_modules/**/*.ttf");
+    }
+
+    return gulp
+    .src(cssSources)
+    .pipe(gulp.dest(`${DIST_DIR}node_modules`));
 }
 
 function dist_ol_css() {
     return gulp
         .src("./node_modules/ol/ol.css", { base: "node_modules" })
-        .pipe(gulp.dest(DIST_DIR));
+        .pipe(gulp.dest(`${DIST_DIR}css/tabs/`));
 }
 
 function dist_less() {
@@ -387,11 +407,6 @@ function dist_less() {
     .pipe(less())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(DIST_DIR));
-}
-
-function dist_changelog() {
-    return gulp.src('changelog.html')
-        .pipe(gulp.dest(`${DIST_DIR}tabs/`));
 }
 
 function dist_locale() {
@@ -439,6 +454,7 @@ function dist_rollup() {
                 }),
                 rollupReplace({
                     'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+                    'preventAssignment': true,
                 }),
                 resolve(),
                 commonjs(),

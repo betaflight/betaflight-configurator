@@ -187,7 +187,7 @@
         "message": "<b>Betaflight Configurator</b>の旧バージョンを使用しています。<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "旧バージョンのBetaflight Configuratorで新バージョンのファームウェアを使用した場合、一部の設定を変更すると<strong>ファームウェア設定が破損し機体が動作しない状態となります。</strong>さらに、ファームウェアの一部の機能はCLIでのみ設定が可能です。<br><strong>Betaflight Configurator <b>$1</b>バージョンはオンラインでダウンロードできます。</strong><a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">このページ</a>にアクセスし、修正および改善された最新バージョンをダウンロードしてインストールしてください。<br>更新する前にBetaflight Configuratorウィンドウを閉じてください。"
+        "message": "旧バージョンのBetaflight Configuratorで新しいバージョンのファームウェアを使用した場合、一部の設定を変更すると<strong>ファームウェア設定が破損し機体が動作しない状態となる場合があります。</strong><br />さらに、ファームウェアの一部の機能はCLIでしか設定できないものがあります。<br g/><br /><strong>Betaflight Configurator version <b>$1</b> はオンラインでダウンロード可能です。</strong><br />修正および改善された最新バージョンを <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a> からダウンロードし、インストールしてください。<br>アップデートの前にBetaflight Configuratorウィンドウを閉じる必要がありますのでご注意ください。"
     },
     "configuratorUpdateWebsite": {
         "message": "リリースサイトに移動"
@@ -209,9 +209,6 @@
     },
     "tabLanding": {
         "message": "ようこそ"
-    },
-    "tabChangelog": {
-        "message": "変更履歴"
     },
     "tabPrivacyPolicy": {
         "message": "プライバシーポリシー"
@@ -436,10 +433,10 @@
         "message": "次の <strong>設定に関する問題</strong> が検出されました:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<strong>これらの問題を修正してから機体を飛行</strong>させてください。"
+        "message": "<span class=\"message-negative\"><strong>飛行を試みる前に、これらの問題を修正する必要があります。</span></strong>"
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>使用しているConfiguratorバージョン ($3) が、使用しているファームウェア ($4) よりも古いです。</strong><br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight Configurator version ($3) はファームウェア $4</strong></span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>モーター出力プロトコルが選択されていません。</strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
@@ -618,9 +615,6 @@
     "statisticsDisclaimer": {
         "message": "Betaflight Configuratorは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
     },
-    "defaultChangelogHead": {
-        "message": "Configurator - 変更履歴"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "ファームフラッシャー"
     },
@@ -701,7 +695,7 @@
         "message": "設定をリセット"
     },
     "initialSetupResetText": {
-        "message": "<strong>デフォルト</strong>設定に戻します。"
+        "message": "フライトコントローラを<strong>未設定状態にリセット</strong>します。"
     },
     "initialSetupButtonBackup": {
         "message": "JSONのバックアップ"
@@ -779,6 +773,9 @@
     "initialSetupMagHead": {
         "message": "コンパス"
     },
+    "initialSetupMagDeclination": {
+        "message": "コンパス偏角値:"
+    },
     "initialSetupInfoHead": {
         "message": "システム情報"
     },
@@ -813,6 +810,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "CPU温度:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "1.46 より以前の MSP API からのサポートはありません"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -950,8 +950,12 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "RPMベースのフィルタリングは有効ですが、1つ以上のESCが有効なDSHOTテレメトリー情報を提供していません。ESCがDSHOT双方向テレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
+        "message": "RPMベースのフィルタリングは有効ですが、1つ以上の有効なESCのDSHOTテレメトリー情報を提供していません。ESCが双方向DSHOTテレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "DSHOTテレメトリーは有効ですが、1つ以上の有効なESCのDSHOTテレメトリー情報を提供していません。ESCが双方向DSHOTテレメトリーをサポートするために必要なファームウェアがインストールされていることを確認してください。",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "設定を変更するには再起動が必要です",
@@ -1003,8 +1007,8 @@
     "initialSetupInfoBuild": {
         "message": "ファームウェア情報"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "ファームウェアのビルドに関する情報を表示します。ビルド設定とビルドログは、Build keyで見つかったクラウド情報へのリンクです。",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "ファームウェアビルドの情報を表示します。ビルドサーバへのオンライン接続が必要です。<br>オプションには、クラウドビルドで使用される定義済みのオプションが表示されます。<br>ログと設定のリンクは、ファームウェアに保存されているキーによるクラウド情報を表示します。<br>ローカルビルドの場合は、このセクションは空となります。",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1016,20 +1020,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Build key"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "設定"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "ログ"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "ビルドオプション:"
+        "message": "オプション"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "使用するものを定義"
+    "initialSetupInfoBuildOptionList": {
+        "message": "ファームウェアビルドで定義されたオプション"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "ローカルビルド - 定義なし"
+    "initialSetupInfoBuildEmpty": {
+        "message": "ローカルビルド - クラウド情報なし"
     },
     "initialSetupNotOnline": {
         "message": "サーバーが利用できません"
@@ -1273,6 +1277,9 @@
     },
     "configurationArmingHelp": {
         "message": "アーミングオプションによっては、加速度センサーを有効にする必要があります"
+    },
+    "configurationMagDeclination": {
+        "message": "コンパス偏角値 [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "モーター回転方向: リバース構成"
@@ -2704,10 +2711,6 @@
     "gpsMapHead": {
         "message": "現在のGPS測位"
     },
-    "gpsMapHeadHelp": {
-        "message": "地図上にGPS位置を表示します。マウスのスクロールボタンで拡大・縮小できます。<br>コンパスが使用されている場合、位置アイコンは北の方位を示します。",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
     },
@@ -2907,7 +2910,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>モーターテストモード / アーミングでの注意:</strong><br />スライダーを動かすか、又は送信機から機体をアームした場合、モーターが<strong>回転</strong>します。<br />事故防止のために、この機能を使用する前に<strong class=\"message-negative\">すべてのプロペラ</strong>を取り外してください。<br />モーターテストモードを有効にする事により一時的に離陸時暴走防止機能 [Runaway Takeoff Prevention] が無効になります。これはプロペラを外した状態でベンチテストする際に機体がディスアームするのを防止するためです。<br />"
+        "message": "<strong>モーターテストモード / アーミング通知:</strong><br /><br /><strong class=\"message-negative\">警告: 重大な人身事故の危険があります！すべてのプロペラを取り外してください！</strong><br /><br /><ul><li>&#x2022; アームまたはスライダーを上げるとモーターが回転します</li></li>&#x2022; 別のタブに画面遷移しても、モーターテストモードは有効のままとなります</li><li>&#x2022; どのキーを押してもモーターは停止しますが、モーターテストモードそのものは【モーター】タブでのみ停止となります</li><li>&#x2022; USBケーブルを外してもモーターが停止しない場合があります！</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>リスクを認識し</strong>、プロペラはすべて外しました - モーター制御とアーミングを可能にし、離陸時暴走防止機能を無効にします。"
@@ -2946,7 +2949,7 @@
         "message": "<strong>注意事項</strong><br /><strong class=\"message-negative\">怪我を防止するために、すべてのプロペラを取り外してください！</strong><br />モーターが<strong>回転します！</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくはこちらの<a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
+        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくはこちらの<a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
     },
     "motorsRemapDialogSave": {
         "message": "保存"
@@ -3066,7 +3069,7 @@
         "message": "ジャイロセンサー - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "加速度センサー -g (度)"
+        "message": "加速度センサー - g"
     },
     "sensorsMagTitle": {
         "message": "コンパス"
@@ -3276,7 +3279,7 @@
         "message": "不明な状態 $1"
     },
     "firmwareFlasherBranch": {
-        "message": "コミットを選択"
+        "message": "プルリクエストまたはコミットを選択"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "リリースおよびビルド情報"
@@ -3307,7 +3310,7 @@
         "message": "MCU:"
     },
     "firmwareFlasherCloudBuildDetails": {
-        "message": "クラウド ビルド詳細:"
+        "message": "クラウドビルド 詳細:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
         "message": "ログ表示."
@@ -3327,10 +3330,16 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "成功しました"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "キャンセルされました"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "タイムアウトしました (再試行してください)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "ビルド要求エラー (カスタム定義などのビルド設定を確認してください)"
+    },
+    "firmwareFlasherCloudBuildFail": {
         "message": "失敗しました (ログを確認してください)"
     },
     "firmwareFlasherReleaseFileUrl": {
@@ -4335,7 +4344,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br /><br /><b><span class=\"message-positive\">重要:</span> ESCは双方向DShotプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
+        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br /><br /><b><span class=\"message-positive\">重要:</span> ESCは双方向DSHOTプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -4498,7 +4507,7 @@
         "message": "動的アイドル値 [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
+        "message": "動的アイドルは、低回転時の制御を改善し、モーター非同期のリスクを低減します。<br /><br />PID制御、ゼロスロットルの安定性、反転時の滞空時間、モーターブレーキが改善されます。<br /><br />動的アイドルの最小回転数は、約3000～3500rpmに設定する必要があります。<br /><br />詳しくは<a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">こちらのWiki項目</a>をご覧ください。"
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dshotテレメトリーがオフのため動的アイドルは無効となります"
@@ -4513,7 +4522,7 @@
         "message": "統合ヨー制御"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">注意</span>: この機能を有効にした場合は、それに応じてヨーのPIDを調整する必要があります。詳しくは<a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>"
+        "message": "<span class=\"message-negative\">注意</span>: この機能を有効にした場合は、それに応じてヨーのPIDを調整する必要があります。詳しくは<a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">こちら</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "統合ヨー制御は、ヨーP、I、Dの値を統合し、ピッチとロールを調整するのと同じようにヨーのP、I、D値を調整することができます。<br><br>統合されたP値はI値のように、統合されたD値はP値のように作用するため、I値はほとんど必要がなくなります。<br><br>備考: 統合ヨー制御ではI値が必要ないため、アブソリュート コントロールを使用する必要があります。"
@@ -5419,8 +5428,8 @@
         "message": "GPSラップタイム ベスト3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "GPSラップタイム ベスト"
+    "osdDescElementLapTimeBest3": {
+        "message": "GPSラップタイム ベスト3"
     },
     "osdTextElementCraftName": {
         "message": "機体名",
@@ -5656,7 +5665,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "温度レポート by ESCテレメトリー"
+        "message": "お使いのESCファームウェアが対応する場合、ESCテレメトリー (シリアル接続テレメトリー、またはEDTを用いたDShot双方向テレメトリー) により温度が報告されます。"
     },
     "osdTextElementEscRpm": {
         "message": "ESC 回転数",
@@ -6354,7 +6363,7 @@
         "message": "保存しました"
     },
     "vtxHelp": {
-        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">こちらのページ</a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">こちら</a>を参照)",
+        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルの値を表示および変更できます。<br>VTXを設定するには、次の手順を使用します。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">こちらのページ</a>に進みます;<br>2. 地域およびVTXモデルに適したVTX設定ファイルを見つけダウンロードしてください。<br>3. 下の『$t(vtxButtonLoadFile.message)』をクリックし、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5. 『$t(vtxButtonSave.message)』をクリックし、フライトコントローラにVTXの設定を保存します。\n<br>6. オプションで『$t(vtxButtonSaveLua.message)』をクリックして、betaflight Luaスクリプトで使用できるLua設定ファイルを保存します。(<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">こちら</a>を参照)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6666,7 +6675,7 @@
         "message": "モーターPWM 周波数"
     },
     "configurationDshotBidir": {
-        "message": "双方向DShot (ESCファームウェアサポートが必要)",
+        "message": "双方向DSHOT (ESCファームウェアサポートが必要)",
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
@@ -6843,7 +6852,7 @@
         "message": "確定"
     },
     "dialogConfirmResetNote": {
-        "message": "警告: 本当に<strong>すべての設定</strong>をデフォルト値にリセットしますか？これは『ファクトリーリセット (工場出荷時初期化) 』では<strong>ありません</strong>。予期せぬ問題が発生し、再び接続できるようにするために再度ファームウェアの書き込みが必要になる場合があります。"
+        "message": "警告: 本当に<strong>すべての設定</strong>を未設定状態にリセットしますか？これは『ファクトリーリセット (工場出荷時初期化) 』<strong>ではありません</strong>。予期せぬ問題が発生し、再び接続できるようにするために再度ファームウェアの書き込みが必要になる場合があります。"
     },
     "dialogConfirmResetConfirm": {
         "message": "リセット"
@@ -7246,6 +7255,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "このビルドに含まれるテレメトリープロトコルを選択します。これはドロップダウン操作となりますが、1つの項目しか選択できませんのでご注意ください。またCRSFなど、選択した送信プロトコルに関係なく有効となるテレメトリープロトコルもあります。"
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "自動的に付帯"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "このビルドに含まれる一般的なオプションを選択します。ドロップダウンの操作により複数項目を選択できますのでご注意ください。AKK VTXのような修正項目はこちらに含まれます。"

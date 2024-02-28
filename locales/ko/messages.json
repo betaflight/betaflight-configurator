@@ -130,6 +130,10 @@
     "language_default_pretty": {
         "message": "시스템 기본 ($t(detectedLanguage))"
     },
+    "language_pl": {
+        "message": "Polski",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "데이터플래시 <br>칩이 발견되지 않음",
         "description": "Text of the dataflash image in the header of the page."
@@ -187,7 +191,7 @@
         "message": "당신은 오래된 버전의 <b>베타플라이트 컨피규레이터</b>를 사용 중입니다.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "오래된 버전의 컨피규레이터가 장착된 펌웨어의 최신 버전을 사용하여 일부 설정을 변경하면 <strong>펌웨어 환경설정이 손상되고 작동하지 않는 기체가 발생</strong>할 수 있습니다. 또한 펌웨어의 일부 기능은 CLI에서만 설정할 수 있습니다.<br><strong>베타플라이트 컨피규레이터 버전 <b>$1</b>은 온라인으로 다운로드할 수 있으며</strong>, <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">이 페이지</a>를 방문하여 수정사항과 향상된 최신 버전을 다운로드 및 설치하십시오.<br>업데이트하기 전에 컨피규레이터 창을 닫으십시오."
+        "message": "오래된 버전의 컨피규레이터로 최신 버전의 펌웨어를 사용하면 <strong>손상된 펌웨어 환경설정과 작동하지 않는 기체의 결과를 초래할 수 있습니다</strong>.<br />또한 펌웨어의 일부 기능은 CLI에서만 설정할 수 있습니다.<br g/><br /><strong>베타플라이트 컨피규레이터 버전 <b>$1</b>은 온라인에서 다운로드할 수 있습니다</strong>.<br />수정 및 개선 사항이 있는 최신 버전의 컨피규레이터를 <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">여기서</a>다운로드하여 설치하십시오.<br>컨피규레이터 창은 업데이트하기 전에 닫아야 합니다."
     },
     "configuratorUpdateWebsite": {
         "message": "릴리즈 웹사이트로 가기"
@@ -209,9 +213,6 @@
     },
     "tabLanding": {
         "message": "환영합니다"
-    },
-    "tabChangelog": {
-        "message": "변경이력"
     },
     "tabPrivacyPolicy": {
         "message": "개인정보 보호정책"
@@ -436,10 +437,10 @@
         "message": "다음의 <strong>컨피규레이터와 관련된 문제가</strong> 감지됨:"
     },
     "reportProblemsDialogFooter": {
-        "message": "당신의 <strong>기체를 날리기 전에 이 문제들을 해결하십시오</strong>."
+        "message": "<span class=\"message-negative\"><strong>당신의 기체를 날리기 전에 이 문제들을 해결할 필요가 있습니다</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>사용 중인 컨피규레이터의 버전 ($3)은 사용 중인 펌웨어 ($4)보다 오래되었습니다</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>사용된 컨피규레이터 버전 ($3)이 펌웨어 $4를 지원하지 않습니다</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>선택된 모터 출력 프로토콜이 없습니다</strong>.<br>'$t(tabMotorTesting.message)' 탭의 '$t(configurationEscFeatures.message)'에서 ESC에 적합한 모터 출력 프로토콜을 선택하십시오.<br> $t(escProtocolDisabledMessage.message)"
@@ -618,9 +619,6 @@
     "statisticsDisclaimer": {
         "message": "베타플라이트 컨피규레이터는 익명의 사용 통계를 수집합니다. 예를 들어, 이 데이터에는 실행 횟수, 사용자의 지리적 지역, 비행 컨트롤러 유형, 펌웨어 버전, UI 요소 및 탭 사용 등이 포함됩니다(이것들로 제한되지는 않습니다). 이 데이터의 요약은 <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에 공유됩니다. 베타플라이트 컨피규레이터가 어떻게 사용되고 있는지를 더 잘 이해하고 커뮤니티 추세를 이해하며 가능한 UI 개선을 위해 수집이 수행됩니다. 사용자는 옵션 탭에서 데이터 수집을 거부할 수 있습니다."
     },
-    "defaultChangelogHead": {
-        "message": "컨피규레이터 - 변경이력"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "펌웨어 플래시 도구"
     },
@@ -700,9 +698,6 @@
     "initialSetupButtonReset": {
         "message": "설정 초기화"
     },
-    "initialSetupResetText": {
-        "message": "설정을 <strong>기본값</strong>으로 복원"
-    },
     "initialSetupButtonBackup": {
         "message": "JSON 백업"
     },
@@ -778,6 +773,9 @@
     },
     "initialSetupMagHead": {
         "message": "자력계"
+    },
+    "initialSetupMagDeclination": {
+        "message": "자력계 기울기:"
     },
     "initialSetupInfoHead": {
         "message": "시스템 정보"
@@ -1007,10 +1005,6 @@
     "initialSetupInfoBuild": {
         "message": "펌웨어 정보"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "펌웨어 빌드에 대한 정보를 표시합니다. 빌드 구성 및 빌드 로그는 빌드 키로 찾은 클라우드 정보에 연결됩니다",
-        "description": "Message that pops up to describe the Build / Firmware section"
-    },
     "initialSetupInfoBuildDate": {
         "message": "빌드 날짜:"
     },
@@ -1019,21 +1013,6 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "빌드 키"
-    },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "설정"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "로그"
-    },
-    "initialSetupInfoBuildOptions": {
-        "message": "빌드 옵션:"
-    },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "사용된 정의값"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "로컬 빌드 - 사용된 정의값 없음"
     },
     "initialSetupNotOnline": {
         "message": "서버를 이용할 수 없음"
@@ -1277,6 +1256,9 @@
     },
     "configurationArmingHelp": {
         "message": "몇몇 아밍 옵션은 가속도계 사용이 필요할 수도 있습니다."
+    },
+    "configurationMagDeclination": {
+        "message": "자력계 기울기 [도]"
     },
     "configurationReverseMotorSwitch": {
         "message": "모터 방향이 반대로 됩니다."
@@ -2708,10 +2690,6 @@
     "gpsMapHead": {
         "message": "현재 GPS 위치"
     },
-    "gpsMapHeadHelp": {
-        "message": "지도에 GPS 위치를 표시합니다. 마우스를 스크롤하여 줌인과 아웃을 사용하세요.<br>위치 아이콘은 자기계가 사용중일 때 북쪽 방향을 표시합니다",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "인터넷 연결 상태를 확인하십시오."
     },
@@ -2911,7 +2889,7 @@
         "message": "마스터"
     },
     "motorsNotice": {
-        "message": "<strong>모터 테스트 모드 / 아밍 알림:</strong><br />슬라이더를 움직이거나 당신의 기체를 조종기와 아밍하면 모터의 <strong>회전을 유발합니다</strong>.<br />부상을 방지하기 위해 이 기능을 사용하기 전에 <strong class=\"message-negative\">모든 프로펠러를 제거</strong>하십시오.<br />또한 모터 테스트 모드를 활성화하면 프로펠러 없이 벤치 테스트를 할 때 기체를 디스아밍하는 것을 중단하기 위해 일시적으로 폭주 이륙 방지가 비활성됩니다.<br />"
+        "message": "<strong>모터 테스트 모드 / 아밍 공지:</strong><br /><br /><strong class=\"message-negative\">경고: 심각한 부상 위험이 있습니다! 모든 프로펠러를 제거하십시오!</strong><br /><br /><ul><li>&#x2022; 아밍시 또는 슬라이드를 올릴 때 모터가 회전합니다</li><li>&#x2022; 모터 테스트 모드는 다른 탭으로 이동한 후에도 활성화됩니다</li><li>&#x2022; 오직 모터 탭에서만 아무 키를 누르면 모터가 멈춥니다</li><li>&#x2022; USB 케이블을 제거하여도 모터가 멈추지 않습니다</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>나는 위험을 인지하고 있으며</strong>, 프로펠러가 제거되었음을 확인합니다 - 모터 제어, 아밍 및 폭주 이륙 방지 비활성."
@@ -2950,7 +2928,7 @@
         "message": "<strong>안전 공지</strong><br /><strong class=\"message-negative\">부상을 피하기 위해 모든 프로펠러를 제거하세요!</strong><br />모터가 <strong>회전합니다!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
+        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
     },
     "motorsRemapDialogSave": {
         "message": "저장"
@@ -3070,7 +3048,7 @@
         "message": "자이로스코프 - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "가속도계 - g (도)"
+        "message": "가속도계 - g"
     },
     "sensorsMagTitle": {
         "message": "자력계"
@@ -3280,7 +3258,7 @@
         "message": "알 수 없는 상태 $1"
     },
     "firmwareFlasherBranch": {
-        "message": "커밋 선택"
+        "message": "풀 리퀘스트 또는 커밋 선택"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "릴리즈와 빌드 정보"
@@ -3331,10 +3309,16 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "성공"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "취소됨"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "시간 초과됨 (재시도하세요)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "빌드 요청 오류 (빌드 구성을 확인하세요, 예. 사용자 정의)"
+    },
+    "firmwareFlasherCloudBuildFail": {
         "message": "실패 (로그기록을 확인하세요)"
     },
     "firmwareFlasherReleaseFileUrl": {
@@ -4421,7 +4405,7 @@
         "message": "Vbat 처짐 보상"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br /><br />보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br /><br />더 많은 정보는 <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
+        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br /><br />보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br /><br />더 많은 정보는 <a href=\"https://betaflight.com/docs/wiki/tuning/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4502,7 +4486,7 @@
         "message": "다이나믹 아이들 값 [× 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 항목</a>을 방문하십시오."
+        "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 줄여줍니다. <br /><br /> PID 권한, 제로 스로틀 안정성, 인버티드 행 타임, 모터 제동 등을 개선합니다.<br /><br />다이나믹 아이들 최소 rpm은 약 3000 - 3500 rpm으로 설정해야 합니다. <br /><br />자세한 내용은 <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 항목</a>을 방문하십시오."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "D샷 텔레메트리가 꺼져있어서 다이나믹 아이들이 비활성화됩니다."
@@ -4517,7 +4501,7 @@
         "message": "통합 요(Yaw)"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">주의</span>:이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 확인하세요."
+        "message": "<span class=\"message-negative\">주의</span>: 이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">여기</a>에서 확인하세요."
     },
     "pidTuningIntegratedYawHelp": {
         "message": "통합된 요는 요 P, I, D 값을 통합하여 요 P, I, D가 피치와 롤을 튜닝하는 것처럼 튜닝됩니다.<br><br>적분 P는 I처럼 작용하고, 적분 D는 P처럼 작용하기 때문에 I는 거의 필요하지 않습니다.<br><br>참고: 통합 요의 경우 I가 필요하지 않으므로, 통합 요의 경우 절대 제어를 사용해야 합니다."
@@ -5423,8 +5407,8 @@
         "message": "GPS 랩타임 베스트 3",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "베스트 GPS 랩타임"
+    "osdDescElementLapTimeBest3": {
+        "message": "베스트 3 GPS 랩타임"
     },
     "osdTextElementCraftName": {
         "message": "기체 이름",
@@ -5660,7 +5644,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "ESC 텔레메트리에 의해 보고된 온도"
+        "message": "ESC 텔레메트리, 시리얼 1선 텔레메트리 또는 EDT를 사용한 DShot 양방향 텔레메트리(ESC 펌웨어에서 지원되는 경우) 에 의해 보고되는 온도입니다."
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
@@ -6846,9 +6830,6 @@
     "dialogConfirmResetTitle": {
         "message": "확인"
     },
-    "dialogConfirmResetNote": {
-        "message": "경고: <strong>모든 설정을</strong> 기본값으로 설정하시겠습니까? 이것은 \"공장 초기화\"가 <strong>아닙니다</strong>. 이로 인해 예기치 않은 문제가 발생할 수 있으며, 다시 연결하려면 펌웨어를 다시 플래시해야 할 수도 있습니다."
-    },
     "dialogConfirmResetConfirm": {
         "message": "초기화"
     },
@@ -7250,6 +7231,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "이 빌드에 포함할 텔레메트리 프로토콜을 선택하십시오. 이것은 드롭다운으로 오직 하나의 항목을 선택할 수 있습니다. 선택한 무선 프로토콜(예: CRSF)에 따라 여기서 선택한 것과 관계없이 활성화되는 텔레메트리 프로토콜도 있습니다."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "자동으로 포함됨"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "이 빌드에 포함할 일반 옵션을 선택하십시오. 이것은 드롭다운으로 여러 항목을 선택할 수 있습니다. 수정 사항(예: AKK VTX)이 여기에 포함됩니다."

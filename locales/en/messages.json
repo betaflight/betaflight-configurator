@@ -190,7 +190,7 @@
         "description": "Don't translate!!!"
     },
     "language_pl": {
-        "message": "polski",
+        "message": "Polski",
         "description": "Don't translate!!!"
     },
     "language_ru": {
@@ -267,7 +267,7 @@
         "message": "You are using an outdated version of the <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Using a newer version of the firmware with an outdated version of Configurator means that changing some settings will result in a <strong>corrupted firmware configuration and a non-working craft</strong>. Furthermore, some features of the firmware will only be configurable in CLI.<br><strong>Betaflight Configurator version <b>$1</b> is available for download online</strong>, please visit <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> to download and install the latest version with fixes and improvements.<br>Please close the configurator window before updating."
+        "message": "Using a newer version of the firmware with an outdated version of Configurator means that changing some settings will result in a <strong>corrupted firmware configuration and a non-working craft</strong>.<br />Furthermore, some features of the firmware will only be configurable in CLI.<br g/><br /><strong>Betaflight Configurator version <b>$1</b> is available for download online</strong>.<br />Download and install the latest version of configurator with fixes and improvements <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br>Configurator window needs to be closed before updating."
     },
     "configuratorUpdateWebsite": {
         "message": "Go to Release Website"
@@ -289,9 +289,6 @@
     },
     "tabLanding": {
         "message": "Welcome"
-    },
-    "tabChangelog": {
-        "message": "Changelog"
     },
     "tabPrivacyPolicy": {
         "message": "Privacy Policy"
@@ -520,10 +517,10 @@
         "message": "The following <strong>problems with your configuration</strong> were detected:"
     },
     "reportProblemsDialogFooter": {
-        "message": "Please <strong>fix these problems before attempting to fly your craft</strong>."
+        "message": "<span class=\"message-negative\"><strong>You need to fix these problems before attempting to fly your craft</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>the version of configurator that you are using ($3) is older than the firmware you are using ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>The configurator version used ($3) does not support firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>there is no motor output protocol selected</strong>.<br>Please select a motor output protocol appropriate for your ESCs in '$t(configurationEscFeatures.message)' on the '$t(tabMotorTesting.message)' tab.<br>$t(escProtocolDisabledMessage.message)"
@@ -702,9 +699,6 @@
     "statisticsDisclaimer": {
         "message": "Betaflight Configurator collects anonymous usage statistics. For example, this data includes (but is not limited to) the number of launches, geographical region of the users, types of flight controllers, firmware versions, usage of UI elements and tabs, etc. The summary of this data is shared <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>. Collection is done in order to better understand how Betaflight Configurator is being used, to understand community trends, and for possible UI improvements. Users can opt-out of data collection in the Options tab."
     },
-    "defaultChangelogHead": {
-        "message": "Configurator - Changelog"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
@@ -785,7 +779,7 @@
         "message": "Reset Settings"
     },
     "initialSetupResetText": {
-        "message": "Restore settings to <strong>default</strong>"
+        "message": "Reset the flight controller to an <strong>unconfigured state.</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
@@ -900,6 +894,9 @@
     },
     "initialSetupCpuTemp": {
         "message": "CPU Temperature:"
+    },
+    "initialSetupCpuTempNotSupported": {
+        "message": "No support from MSP API before 1.46"
     },
     "initialSetupRSSI": {
         "message": "RSSI:"
@@ -1094,8 +1091,8 @@
     "initialSetupInfoBuild": {
         "message": "Firmware info"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Shows information regarding the build of firmware. The Build Config and Bulid Log links to the cloud information found by the Build key",
+    "initialSetupInfoFirmwareHelp": {
+        "message": "Shows information for firmware Build, require online to Build server.<br>Options show Defined options used in Cloud Build.<br>Log and Config links show cloud information by key stored in firmware.<br>At local Build, section are empty.",
         "description": "Message that pops up to describe the Build / Firmware section"
     },
     "initialSetupInfoBuildDate": {
@@ -1107,20 +1104,20 @@
     "initialSetupInfoBuildInfoKey": {
         "message": "Build key"
     },
-    "initialSetupInfoBuildInfoConfig": {
+    "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
-    "initialSetupInfoBuildInfoLog": {
+    "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
-        "message": "Build Options:"
+        "message": "Options"
     },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defines used"
+    "initialSetupInfoBuildOptionList": {
+        "message": "Options defined in firmware build"
     },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Local Build - no Defines used"
+    "initialSetupInfoBuildEmpty": {
+        "message": "Local Build - no Cloud information"
     },
     "initialSetupNotOnline": {
         "message": "Server unavailable"
@@ -1403,7 +1400,7 @@
     },
     "configurationMotorIdleRpmHelp" : {
         "message": "This is the dynamic idle value from the active PID profile. When Dynamic Idle is set to zero, only static motor idle will apply. Change the Dynamic Idle settings on the PID tuning tab.",
-        "description": "Help text for dynamic idle setting" 
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Minimum Throttle (Lowest ESC value when armed)"
@@ -3001,7 +2998,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br />Moving the sliders or arming your craft with the transmitter will cause the motors to <strong>spin up</strong>.<br />In order to prevent injury <strong class=\"message-negative\">remove ALL propellers</strong> before using this feature.<br />Enabling motor test mode will also temporarily disable Runaway Takeoff Prevention, to stop it from disarming the craft when bench testing without propellers.<br />"
+        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br /><br /><strong class=\"message-negative\">WARNING: Serious risk of injury! Remove all propellers!</strong><br /><br /><ul><li>&#x2022; Motors will spin up when armed or when sliders are raised</li><li>&#x2022; Motor test mode will remain active after moving to another Tab</li><li>&#x2022; Hitting any key will stop the motors, but only in the Motors Tab</li><li>&#x2022; Disconnecting the USB cable may not stop the motors!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>I understand the risks</strong>, the propellers are removed - enable motor control and arming, and disable Runaway Takeoff Prevention."
@@ -3040,7 +3037,7 @@
         "message": "<strong>Safety notice</strong><br /><strong class=\"message-negative\">Remove all propellers to prevent injury!</strong><br />The motors will <strong>spin up!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Information notice</strong><br />Motors will spin up one by one and you will be able to select which motor is spinning. The battery should be plugged in, correct ESC protocol should be selected. This utility can only re-arrange currently active motors. More complex re-mapping requires the CLI Resource command. Refer to this <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
+        "message": "<strong>Information notice</strong><br />Motors will spin up one by one and you will be able to select which motor is spinning. The battery should be plugged in, correct ESC protocol should be selected. This utility can only re-arrange currently active motors. More complex re-mapping requires the CLI Resource command. Refer to this <a href=\"https://betaflight.com/docs/wiki/guides/current/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Save"
@@ -3160,7 +3157,7 @@
         "message": "Gyroscope - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Accelerometer - g (deg)"
+        "message": "Accelerometer - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetometer"
@@ -3370,7 +3367,7 @@
         "message": "Unknown state $1"
     },
     "firmwareFlasherBranch": {
-        "message": "Select commit"
+        "message": "Select Pull Request or Commit"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release and Build info"
@@ -3421,10 +3418,16 @@
     "firmwareFlasherCloudBuildSuccess": {
         "message": "success"
     },
-    "firmwareFlasherCloudBuildTimedOut": {
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "cancelled"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
         "message": "timed out (please retry)"
     },
-    "firmwareFlasherCloudBuildFailed": {
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "build request error (please check build configuration, e.g. custom defines)"
+    },
+    "firmwareFlasherCloudBuildFail": {
         "message": "failed (please check log)"
     },
     "firmwareFlasherReleaseFileUrl": {
@@ -3575,7 +3578,7 @@
         "message": "<strong>Recovery / Lost communication</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/archive/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close configurator, Restart Configurator.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+        "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close configurator, Restart Configurator.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
@@ -4593,7 +4596,7 @@
         "message": "Dynamic Idle Value [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/archive/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/guides/current/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle is DISABLED because Dshot Telemetry is OFF"
@@ -4608,7 +4611,7 @@
         "message": "Integrated Yaw"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">CAUTION</span>: if you enable this feature, you must adjust the YAW PID accordingly. More info <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>"
+        "message": "<span class=\"message-negative\">CAUTION</span>: if you enable this feature, you must adjust the YAW PID accordingly. More info <a href=\"https://betaflight.com/docs/wiki/guides/current/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integrates yaw P, I and D values, allowing yaw P, I and D to be tuned a bit like you'd tune pitch and roll.<br><br>Very little I is required, because the integrated P acts like I, and integrated D acts like P.<br><br>NOTE: Integrated Yaw requires use of Absolute Control, since no I is needed with Integrated Yaw."
@@ -5752,7 +5755,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
-        "message": "Temperature reported by ESC telemetry"
+        "message": "Temperature reported by ESC telemetry, either by serial one wire telemetry, or by DShot bidirectional telemetry with EDT, if supported by your ESC firmware."
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
@@ -6451,7 +6454,7 @@
         "message": "Saved"
     },
     "vtxHelp": {
-        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/archive/VTX-tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
+        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and the VTX support it.<br>To set up your VTX use the following steps:<br>1. Go to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://betaflight.com/docs/wiki/guides/current/VTX-Tables\">this</a> page;<br>2. Find the appropriate VTX configuration file for your country and your VTX model and download it;<br>3. Click '$t(vtxButtonLoadFile.message)' below, select the VTX configuration file, load it;<br>4. Verify that the settings are correct;<br>5. Click '$t(vtxButtonSave.message)' to store the VTX settings on the flight controller.<br>6. Optionally click '$t(vtxButtonSaveLua.message)' to save a lua configuration file you can use with the betaflight lua scripts (See more <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">here</a>.)",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
@@ -6940,7 +6943,7 @@
         "message": "Confirm"
     },
     "dialogConfirmResetNote": {
-        "message": "WARNING: Are you sure you want to reset <strong>ALL settings</strong> to default? This is <strong>not</strong> a \"factory reset\". It may cause unexpected issues, and it may be necessary to re-flash your firmware to be able to connect again."
+        "message": "WARNING: Are you sure you want to reset <strong>ALL settings</strong> to an unconfigured state? This is <strong>not</strong> a \"factory reset\". It may cause unexpected issues, and it may be necessary to re-flash your firmware to be able to connect again."
     },
     "dialogConfirmResetConfirm": {
         "message": "Reset"
@@ -7343,6 +7346,9 @@
     },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Select the telemetry protocol you would like included in this build. Note this is a drop down, but only one item maybe selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Automatically Included"
     },
     "firmwareFlasherOptionsDescription": {
         "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items maybe selected. Such items as fixes, e.g. AKK VTX, are included here."

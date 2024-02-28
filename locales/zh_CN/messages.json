@@ -176,9 +176,6 @@
     "configuratorUpdateNotice": {
         "message": "您正在使用旧版本的 <b>Betaflight配置程序</b>。<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "在旧版本的配置程序上使用新版本固件可能会使修改某些设置时导致 <strong>固件配置损坏且飞行器无法工作</strong>。此外，固件的某些功能将仅能在 CLI 中配置。<br><strong>Betaflight 配置程序版本<b>$1</b> 可下载</strong>，请访问<a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">这个页面</a>下载并安装最新的配置程序，以获取全部的修复与改进。<br>更新前请关闭配置程序窗口。"
-    },
     "configuratorUpdateWebsite": {
         "message": "打开版本发布网站"
     },
@@ -199,9 +196,6 @@
     },
     "tabLanding": {
         "message": "欢迎"
-    },
-    "tabChangelog": {
-        "message": "更新日志"
     },
     "tabPrivacyPolicy": {
         "message": "隐私政策"
@@ -425,12 +419,6 @@
     "reportProblemsDialogHeader": {
         "message": "检测到<strong>您的配置存在下列问题</strong>:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "请<strong>在试飞之前解决这些问题</strong>。"
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>您正在使用的配置程序版本 ($3) 落后于您正在使用的固件版本 ($4) </strong>。<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>尚未选择任何电调协议</strong>。<br>请在 ‘$t(tabMotorTesting.message)’ 页面内 ‘$t(configurationEscFeatures.message)’ 中选择适合您电调的输出协议。<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -578,9 +566,6 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 服务器</a>。<br />分享您的飞行经验，讨论 Betaflight，帮助其他人或从社区中为自己获得一些帮助。"
     },
-    "defaultChangelogHead": {
-        "message": "配置程序 - 更新日志"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "固件烧写器"
     },
@@ -650,9 +635,6 @@
     },
     "initialSetupButtonReset": {
         "message": "恢复默认设置"
-    },
-    "initialSetupResetText": {
-        "message": "恢复<strong>默认</strong>设置"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "激活启动引导程序/DFU"
@@ -2370,9 +2352,6 @@
     "motorsMaster": {
         "message": "主控制"
     },
-    "motorsNotice": {
-        "message": "<strong>电机测试模式/解除锁定提示：</strong> <br/>移动滑块或用遥控器解锁飞机会导致电机 <strong> 旋转 </strong>！ <br/> 为了避免造成伤害，在使用此功能之前<strong class=\"message-negative\">卸下所有螺旋桨</strong>！ <br/> 启用电机测试模式还将暂时禁用[预防起飞失控]，以避免在工作台上无螺旋桨测试时自动锁定电机。 <br/>"
-    },
     "motorsEnableControl": {
         "message": "<strong>我已了解风险 </strong>， 螺旋桨已被拆除 - 启用电机控制和允许解锁，并禁用[预防起飞失控]。"
     },
@@ -2522,9 +2501,6 @@
     },
     "sensorsGyroTitle": {
         "message": "陀螺仪 - 度/秒"
-    },
-    "sensorsAccelTitle": {
-        "message": "加速度计 - g (°)"
     },
     "sensorsAltitudeTitle": {
         "message": "高度 - 米"
@@ -4697,9 +4673,6 @@
     "osdTextElementEscTemperature": {
         "message": "电调温度",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementEscTemperature": {
-        "message": "电调回传温度"
     },
     "osdTextElementEscRpm": {
         "message": "电调转速",

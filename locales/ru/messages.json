@@ -176,9 +176,6 @@
     "configuratorUpdateNotice": {
         "message": "Вы используете устаревшую версию <b>конфигуратора Betaflight</b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Использование новой версии прошивки с устаревшей версией Configurator означает, что изменение некоторых настроек приведет к <strong>поврежденной конфигурации прошивки и неработающему продукту</strong>. Кроме того, некоторые функции микропрограммы будет можно настраивать только в CLI.<br><strong>Конфигуратор Betaflight <b>$1</b> доступен для скачивания в сети</strong>. пожалуйста, посетите <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">эту страницу</a> для загрузки и установки последней версии с исправлениями и улучшениями.<br>Перед обновлением закройте окно конфигуратора."
-    },
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт с релизами"
     },
@@ -199,9 +196,6 @@
     },
     "tabLanding": {
         "message": "Приветствие"
-    },
-    "tabChangelog": {
-        "message": "Изменения"
     },
     "tabPrivacyPolicy": {
         "message": "Политика конфиденциальности"
@@ -425,12 +419,6 @@
     "reportProblemsDialogHeader": {
         "message": "Обнаружены следующие <strong>проблемы в вашей конфигурации</strong>:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "Пожалуйста, <strong>устраните эти проблемы, прежде чем взлетать</strong>."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>используемая вами версия конфигуратора ($3) старше используемой прошивки ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>не выбран протокол управления двигателями</strong>.<br>Пожалуйста, выберите протокол управления двигателями, соответствующий вашему ESC в '$t(configurationEscFeatures.message)' на вкладке '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -572,9 +560,6 @@
     "defaultFacebookText": {
         "message": "Также у нас есть группа на Facebook<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\"></a>.<br />Присоединяйтесь к нам, чтобы поговорить о Betaflight, задать вопросы о конфигурации или просто пообщаться с другими пилотами."
     },
-    "defaultChangelogHead": {
-        "message": "Список изменений конфигуратора"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Программатор"
     },
@@ -641,9 +626,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Сбросить Настройки"
-    },
-    "initialSetupResetText": {
-        "message": "Сбросить настройки <strong>до заводских</strong>"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Активировать загрузчик / DFU"
@@ -2172,9 +2154,6 @@
     "motorsMaster": {
         "message": "Мастер"
     },
-    "motorsNotice": {
-        "message": "<strong>Режим тестирования моторов / Предупреждение об арминге:</strong><br /> Перемещение ползунков или арминг вашего аппарата с помощью передающей аппаратуры может привести к <strong>вращению моторов</strong>.<br />Во избежание травм <strong class=\"message-negative\">снимите все пропеллеры</strong> перед использованием этого функционала.<br />Включение \"режима тестирования моторов\" также временно отключит режим \"Защиты От Неконтролируемого Полёта\" - всё это предотвратит дизарминг моторов во время стендового тестирования без пропеллеров.<br />"
-    },
     "motorsEnableControl": {
         "message": "<strong>Я понимаю всю опасность</strong>, пропеллеры сняты - включить управление моторами и арминг, и отключить \"Режим Защиты От Неконтролируемого Полёта\"."
     },
@@ -2321,9 +2300,6 @@
     },
     "sensorsGyroTitle": {
         "message": "Гироскоп - град/с"
-    },
-    "sensorsAccelTitle": {
-        "message": "Акселерометр - g"
     },
     "sensorsAltitudeTitle": {
         "message": "Высота - метры"
@@ -4255,9 +4231,6 @@
     "osdTextElementEscTemperature": {
         "message": "Температура ESC-и",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementEscTemperature": {
-        "message": "Температура, полученная с телеметрии от ESC"
     },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",

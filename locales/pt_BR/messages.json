@@ -186,9 +186,6 @@
     "configuratorUpdateNotice": {
         "message": "Você está utilizando uma versão antiga do <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Utilizando uma versão do firmware recente com uma versão antiga do configurador fará com que, ao alterar algumas configurações, a <strong>configuração do firmware ficará corrompida e sua aeronave não irá funcionar</strong>. Além disso, só será possível configurar alguns recursos do firmware através da Linha de Comandos.<br><strong>O Betaflight Configurator versão <b>$1</b> está disponível para download online</strong>, visite <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">esta página</a> para fazer o download e instalar a nova versão com correções e melhorias.<br>Por favor feche a janela do configurador antes de atualizar."
-    },
     "configuratorUpdateWebsite": {
         "message": "Ir para a Página Web do lançamento"
     },
@@ -209,9 +206,6 @@
     },
     "tabLanding": {
         "message": "Bem-vindo"
-    },
-    "tabChangelog": {
-        "message": "Histórico de alterações"
     },
     "tabPrivacyPolicy": {
         "message": "Política de Privacidade"
@@ -435,12 +429,6 @@
     "reportProblemsDialogHeader": {
         "message": "Os seguintes <strong>problemas com sua configuração</strong>foram detectados:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "Por favor<strong>corrija estes problemas antes de tentar pilotar sua aeronave</strong>."
-    },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<strong>a versão do configurador que você está utilizando ($3) é mais antiga do que o firmware utilizado ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Nenhum protocolo de saída para o motor foi selecionado</strong>.<br>Por favor selecione o protocolo do motor apropriado para o seu ESC no campo '$t(configurationEscFeatures.message)' na aba '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -618,9 +606,6 @@
     "statisticsDisclaimer": {
         "message": "O Configurador Betaflight coleta estatísticas de uso anônimas. Por exemplo, estes dados incluem (mas não estão limitados a) a quantidade de aberturas, região geográfica dos usuários, tipos de controladores de voo, versões de firmware, uso de elementos e guias de interface do usuário, etc. O resumo destes dados é aberto e compartilhado <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>. A coleta é feita para entender melhor como o Configurador Betaflight está sendo usado, para entender as tendências da comunidade e para possíveis melhorias na interface. Os usuários podem optar por não enviar os dados coletados na aba Opções."
     },
-    "defaultChangelogHead": {
-        "message": "Configurador - Novidades"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Atualizador de firmware"
     },
@@ -699,9 +684,6 @@
     },
     "initialSetupButtonReset": {
         "message": "Redefinir configurações"
-    },
-    "initialSetupResetText": {
-        "message": "Restaura as configurações para o <strong>padrão</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
@@ -956,10 +938,6 @@
     "initialSetupInfoBuild": {
         "message": "Informação de firmware"
     },
-    "initialSetupInfoBuildHelp": {
-        "message": "Mostra informações sobre a compilação do firmware. A Configuração de compilação e o Log de compilação apontam as informações encontradas na nuvem através da chave de compilação",
-        "description": "Message that pops up to describe the Build / Firmware section"
-    },
     "initialSetupInfoBuildDate": {
         "message": "Data de compilação:"
     },
@@ -968,21 +946,6 @@
     },
     "initialSetupInfoBuildInfoKey": {
         "message": "Chave de compilação"
-    },
-    "initialSetupInfoBuildInfoConfig": {
-        "message": "Configuração"
-    },
-    "initialSetupInfoBuildInfoLog": {
-        "message": "Log"
-    },
-    "initialSetupInfoBuildOptions": {
-        "message": "Opções de Compilação:"
-    },
-    "initialSetupInfoBuildOptionsList": {
-        "message": "Defines usadas"
-    },
-    "initialSetupInfoBuildOptionsEmpty": {
-        "message": "Compilação Local - nenhum define utilizado"
     },
     "initialSetupNotOnline": {
         "message": "Servidor indisponível"
@@ -2539,10 +2502,6 @@
     "gpsMapHead": {
         "message": "Localização GPS atual"
     },
-    "gpsMapHeadHelp": {
-        "message": "Mostra a localização do GPS no mapa. Use a roda do mouse para aumentar ou diminuir o zoom.<br>O ícone de localização mostra a direção norte quando o magnetômetro está em uso",
-        "description": "Help text for gpsHeadMap"
-    },
     "gpsMapMessage1": {
         "message": "Verifique sua conexão com a internet"
     },
@@ -2720,9 +2679,6 @@
     "motorsMaster": {
         "message": "Mestre"
     },
-    "motorsNotice": {
-        "message": "<strong>Aviso sobre o modo de Teste de Motor / Armar:</strong><br />Mover os sliders ou armar a sua aeronave com o transmissor irá fazer com que os motores <strong>girem</strong>.<br />Para evitar ferimentos, <strong class=\"message-negative\">remova TODAS as hélices</strong> antes de usar esta função.<br />Habilitar o modo de Teste de Motor também irá temporariamente desabilitar a Prevenção contra decolagem acidental, afim de evitar o desarme da aeronave enquanto estiver testando na sua bancada, sem as hélices.<br />"
-    },
     "motorsEnableControl": {
         "message": "<strong>Eu entendo os riscos</strong>, as hélices foram removidas - habilitar o controle do motor, armar e desativar a Prevenção contra decolagem acidental."
     },
@@ -2758,9 +2714,6 @@
     },
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Aviso de segurança</strong><br /><strong class=\"message-negative\">Remova todas as hélices para evitar ferimentos!</strong><br />Os motores irão <strong>girar!</strong>"
-    },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Aviso</strong><br />Os motores irão girar um a um e você poderá selecionar qual o motor que está girando. A bateria deve estar conectada, o protocolo ESC correto deve estar selecionado. Este utilitário só pode reordenar os motores atualmente ativos. Um mapeamento mais complexo requer configurações pela Linha de Comandos (CLI). Consulte esta <a href=\"https://betaflight.com/docs/wiki/archive/Resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Salvar"
@@ -2878,9 +2831,6 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroscópio - deg/s"
-    },
-    "sensorsAccelTitle": {
-        "message": "Acelerômetro - g (graus)"
     },
     "sensorsAltitudeTitle": {
         "message": "Altitude - metros"
@@ -3086,9 +3036,6 @@
     "sdcardStatusUnknown": {
         "message": "Estado desconhecido $1"
     },
-    "firmwareFlasherBranch": {
-        "message": "Selecionar commit"
-    },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informações de build e release"
     },
@@ -3133,12 +3080,6 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "sucesso"
-    },
-    "firmwareFlasherCloudBuildTimedOut": {
-        "message": "tempo esgotado (tente novamente)"
-    },
-    "firmwareFlasherCloudBuildFailed": {
-        "message": "falhou (por favor, verifique o log)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Baixar manualmente."
@@ -3286,9 +3227,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperação / Comunicação perdida</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Se você perdeu a comunicação com sua placa, siga estas instruções para restaurar a comunicação: <ul><li>Desligue a placa</li><li>Ative a opção 'Sem sequencia de reinicialização' e 'Formatar chip'.</li><li> Conecte os pinos BOOT ou segure o botão BOOT.</li><li>Ligue a placa (O LED de atividade NÃO irá piscar se realizado corretamente).</li><li>Instale todos os drivers STM32 e Zadig se necessário (veja a sessão <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> do manual do Betaflight).</li><li>Feche o Configurador, reinicie o Configurador.</li><li>Solte o botão BOOT se seu FC tem um.</li><li>Atualize o Firmware correto (usando o Baud rate manual se especificado no manual do seu FC).</li><li>Desligue a placa.</li><li>Desconecte os pinos do BOOT.</li><li>Ligue a placa (O LED de atividade deve piscar).</li><li>Conecte normalmente.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Sair do atualizador de Firmware"
@@ -4290,9 +4228,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">CUIDADO</span>: Ao habilitar esta função, você deve ajustar o PID do YAW de acordo. Mais informações <a href=\"https://betaflight.com/docs/wiki/archive/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a>"
-    },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra os valores dos termos P, I e D do yaw, permitindo que sejam configurados da mesma maneira de como se configura o PID do pitch e roll.<br><br>É necessário muito pouco I, porque o P integrado atua como I, e o D integrado atua como P.<br><br>NOTA: O Yaw Integrado requer o uso de Controle Absoluto, uma vez que nenhum I é necessário com Yaw Integrado."
     },
@@ -5086,9 +5021,6 @@
         "message": "Tempo GPS da melhor das 3 voltas",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementLapTimeBest": {
-        "message": "Melhor tempo de volta GPS"
-    },
     "osdTextElementCraftName": {
         "message": "Nome da aeronave",
         "description": "One of the elements of the OSD"
@@ -5321,9 +5253,6 @@
     "osdTextElementEscTemperature": {
         "message": "Temperatura do ESC",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementEscTemperature": {
-        "message": "Temperatura reportada pela telemetria do ESC"
     },
     "osdTextElementEscRpm": {
         "message": "RPM do ESC",
@@ -5995,10 +5924,6 @@
     "osdButtonSaved": {
         "message": "Salvo"
     },
-    "vtxHelp": {
-        "message": "Aqui é possível configurar os valores para o seu transmissor de vídeo (VTX). É possível visualizar e alterar os valores de transmissão, incluindo as tabelas do VTX, se o controlador e o VTX tiverem suporte.<br>Para configurar seu VTX, siga os seguintes passos:<br>1. Vá até <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">esta página</a><br>2. Encontre o arquivo de configuração apropriado para o seu país e modelo de VTX e faça o download.<br>3. Clique no botão '$t(vtxButtonLoadFile.message)' abaixo, selecione o arquivo de configuração do VTX e carregue<br>4. Verifique que as configurações estão corretas<br>5. Clique no botão '$t(vtxButtonSave.message)' para salvar as configurações do VTX em sua controladora de voo (FC).<br>6. Opcional: Clique em '$t(vtxButtonSaveLua.message)' para salvar as configurações em um arquivo lua que você pode utilizar com os scripts lua do betaflight (Veja mais informações <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aqui</a>.)",
-        "description": "Introduction message in the VTX tab"
-    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">Atenção:</span> O VTX não está configurado ou não é compatível. Não é possível modificar os valores por aqui. Isto somente é possível se o controlador de voo está conectado ao VTX utilizando um protocolo como Tramp ou SmartAudio e está corretamente configurado na aba $t(tabPorts.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -6475,9 +6400,6 @@
     },
     "dialogConfirmResetTitle": {
         "message": "Confirmar"
-    },
-    "dialogConfirmResetNote": {
-        "message": "AVISO: Tem certeza de que deseja redefinir <strong>TODAS as configurações</strong> para o padrão? Isto <strong>não é</strong> uma \"restauração de fábrica\". Pode causar problemas inesperados e pode ser necessário reinstalar o seu firmware para se conectar novamente."
     },
     "dialogConfirmResetConfirm": {
         "message": "Restaurar"
