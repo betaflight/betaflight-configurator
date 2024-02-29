@@ -444,8 +444,8 @@ setup.initialize = function (callback) {
                         buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
                     }
                     buildOptionList += `</div>`;
-                    build_info_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOption')}">
-                        <a class="buildOptions" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptionsList')}</strong></a></span>`);
+                    build_info_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptions')}">
+                        <a class="buildOptions" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptionList')}</strong></a></span>`);
                 } else {
                     build_info_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
                 }
@@ -461,7 +461,7 @@ setup.initialize = function (callback) {
                     const buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptionList')}">
                                          <a class="buildOptions disabled" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptions')}</strong></a></span>`;
 
-                    build_info_e.html(`${buildConfig} ${buildLog} &nbsp; &nbsp; ${buildOptions}`);
+                    build_info_e.html(`${buildConfig} ${buildLog} ${buildOptions}`);
                     $('a.buildOptions').on('click', async function() {
                                                     showDialogBuildInfo(`<h3>${i18n.getMessage('initialSetupInfoBuildOptionList')}</h3>`, buildOptionList);
                                                     });
