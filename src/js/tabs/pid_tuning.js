@@ -1560,17 +1560,21 @@ pid_tuning.initialize = function (callback) {
                 console.debug(`Invalid subtab name: "${subtabName}"`);
                 return;
             }
-            for (name of names) {
-                const el = $(`.tab-pid_tuning .subtab-${name}`);
-                el[name == subtabName ? 'show' : 'hide']();
+            for (const tabname of names) {
+                const el = $(`.tab-pid_tuning .subtab-${tabname}`);
+                el[tabname === subtabName ? 'show' : 'hide']();
             }
             $('.tab-pid_tuning .tab-container .tab').removeClass('active');
             $(`.tab-pid_tuning .tab-container .${subtabName}`).addClass('active');
             self.activeSubtab = subtabName;
-            if (subtabName == 'rates') {
+            if (subtabName === 'rates') {
                 // force drawing of throttle curve once the throttle curve container element is available
                 // deferring drawing like this is needed to acquire the exact pixel size of the canvas
                 redrawThrottleCurve(true);
+                self.throttleDrawInterval = setInterval(redrawThrottleCurve, 100);
+            } else if (self.throttleDrawInterval) {
+                clearInterval(self.throttleDrawInterval);
+                self.throttleDrawInterval = null;
             }
         }
 
@@ -1689,8 +1693,8 @@ pid_tuning.initialize = function (callback) {
 
         $('.pid_tuning').on('input change', updateRates).trigger('input');
 
-        function redrawThrottleCurve(forced) {
-            if (!forced && !TABS.pid_tuning.checkThrottle()) {
+        function redrawThrottleCurve(forced = false) {
+            if (!forced && !self.checkThrottle()) {
                 return;
             }
 
@@ -1780,8 +1784,6 @@ pid_tuning.initialize = function (callback) {
 
         $('.throttle input')
             .on('input change', () => setTimeout(() => redrawThrottleCurve(true), 0));
-
-        TABS.pid_tuning.throttleDrawInterval = setInterval(redrawThrottleCurve, 100);
 
         $('a.refresh').click(function () {
             self.refresh(function () {
@@ -2358,7 +2360,9 @@ pid_tuning.cleanup = function (callback) {
 
     $(window).off('resize', $.proxy(this.updateRatesLabels, this));
 
-    clearInterval(TABS.pid_tuning.throttleDrawInterval);
+    if (self.throttleDrawInterval) {
+        clearInterval(self.throttleDrawInterval);
+    }
 
     if (callback) callback();
 };
