@@ -2301,7 +2301,10 @@ pid_tuning.initRatesPreview = function () {
 };
 
 pid_tuning.renderModel = function () {
-    if (this.keepRendering) { requestAnimationFrame(this.renderModel.bind(this)); }
+    if (!this.keepRendering) {
+        return;
+    }
+    requestAnimationFrame(this.renderModel.bind(this));
 
     if (!this.clock) { this.clock = new THREE.Clock(); }
 
@@ -2346,6 +2349,8 @@ pid_tuning.renderModel = function () {
 pid_tuning.cleanup = function (callback) {
     const self = this;
 
+    self.keepRendering = false;
+
     if (self.model) {
         $(window).off('resize', $.proxy(self.model.resize, self.model));
         self.model.dispose();
@@ -2353,8 +2358,6 @@ pid_tuning.cleanup = function (callback) {
 
     $(window).off('resize', $.proxy(this.updateRatesLabels, this));
 
-
-    self.keepRendering = false;
     clearInterval(TABS.pid_tuning.throttleDrawInterval);
 
     if (callback) callback();
