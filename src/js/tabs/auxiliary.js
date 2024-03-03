@@ -95,10 +95,10 @@ function updateSearchResults() {
     updateModes();                                                      // update UI
 }
 
-function getCategoryNames(table, buildKey) {
+function getCategoryChoise(buildKey) {
     // return names for buildKey category
     let categoryChoise = [];
-    for (let value of table) {
+    for (let value of categoryTable) {
         if (value.name == buildKey) {
             categoryChoise.push(value.name);
         }
@@ -114,24 +114,23 @@ function generateDefaultList(categoryTable) {
     return list;
 }
 
-function createCategorySelect(table, map) {
+function createCategorySelect(map) {
     let categorySelect = $('select.auxiliary_category_select');
     const allCat = generateDefaultList(categoryTable);
 
     const categoryNameObj = getConfig('auxiliaryCategoryNameList', allCat); // read user pre selected categories, if empty default to complete list
     let categoryNameList = categoryNameObj.auxiliaryCategoryNameList;
     if (categoryNameList.length == 0) {
-        categoryNameList = getCategoryNames(table, 'all');                  // empty choise -> select names from 'all' category
+        categoryNameList = getCategoryChoise('all');                  // empty choise -> select names from 'all' category
         setConfig({ auxiliaryCategoryNameList: categoryNameList });
     }
 
-    for (let value of table) {
+    for (let value of categoryTable) {
         if (inBuildMap(map, value.buildKey) || FC.CONFIG.buildOptions.length == 0) {
             // selected build option or local build
             if (categoryNameList.includes(value.name)) {
                 categorySelect.append(`<option value="${value.name}" selected="selected">${value.name}</option>`);
-            }
-            else {
+            } else {
                 categorySelect.append(`<option value="${value.name}">${value.name}</option>`);
             }
         }
@@ -161,6 +160,7 @@ function createCategorySelect(table, map) {
         formatAllSelected() { return i18n.getMessage("dropDownAll"); },
     });
 }
+
 function updateModes() {
     let hasUsedMode = false;
 
@@ -181,7 +181,6 @@ function updateModes() {
                 $('.mode .name').eq(i).html(FC.AUX_CONFIG[i]);
             }
         } else {
-
             // ARM mode is a special case
             if (i == 0) {
                 let armSwitchActive = false;
@@ -216,11 +215,11 @@ function updateModes() {
     for (let i = 1; i < FC.AUX_CONFIG.length; i++) {    // ARM has index 0
         let modeElement = $(`#mode-${i}`);
 
-        if ( ! isSelectedMode(modeList, FC.AUX_CONFIG[i])) {
-            modeElement.toggle( false);
+        if (! isSelectedMode(modeList, FC.AUX_CONFIG[i])) {
+            modeElement.toggle(false);
         }
         else {
-            modeElement.toggle( true);
+            modeElement.toggle(true);
             if ( modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                 modeElement.toggle(!hideUnused);        // unused mode
             }
@@ -534,7 +533,7 @@ auxiliary.initialize = function (callback) {
         });
 
         // create category multiple select
-        createCategorySelect(categoryTable, buildMap);
+        createCategorySelect(buildMap);
 
         // UI Hooks
         $('a.save').click(function () {
