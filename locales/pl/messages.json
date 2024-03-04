@@ -4761,7 +4761,7 @@
         "message": "Sensor ESC"
     },
     "powerBatteryCurrentMeterTypeMsp": {
-        "message": "Czujnik MSP/OSD Slave"
+        "message": "Sensor MSP/ OSD"
     },
     "powerBatteryMinimum": {
         "message": "Minimalne napięcie Celi"
