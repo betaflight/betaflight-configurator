@@ -380,6 +380,8 @@ firmware_flasher.initialize = function (callback) {
                     }
 
                     $('div.expertOptions').toggle(expertMode);
+                    // Need to reset core build mode
+                    $('input.corebuild_mode').trigger('change');
                 }
 
                 if (response.configuration && !self.isConfigLocal) {
