@@ -90,6 +90,13 @@ const DEBUG = {
         {text: "MAG_CALIB"},
         {text: "MAG_TASK_RATE"},
         {text: "EZLANDING"},
+        {text: "DSHOT_STATUS_N_TEMPERATURE"},
+        {text: "DSHOT_STATUS_N_VOLTAGE"},
+        {text: "DSHOT_STATUS_N_CURRENT"},
+        {text: "DSHOT_STATUS_N_DEBUG1"},
+        {text: "DSHOT_STATUS_N_DEBUG2"},
+        {text: "DSHOT_STATUS_N_STRESS_LVL"},
+        {text: "DSHOT_STATUS_N_ERPM_FRACTION_18"},
     ],
 
     fieldNames : {
