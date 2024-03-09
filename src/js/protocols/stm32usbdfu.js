@@ -694,7 +694,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 }
             });
             break;
-        case 1:
+        case 1: {
             if (typeof self.chipInfo.option_bytes === "undefined") {
                 console.log('Failed to detect option bytes');
                 self.cleanup();
@@ -835,7 +835,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
             self.loadAddress(self.chipInfo.option_bytes.start_address, initReadOB, false);
             });
             break;
-        case 2:
+        }
+        case 2: {
             // erase
                 // find out which pages to erase
                 const erase_pages = [];
@@ -950,8 +951,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 // start
                 erase_page();
             break;
-
-        case 4:
+        }
+        case 4: {
             // upload
             // we dont need to clear the state as we are already using DFU_DNLOAD
             console.log('Writing data ...');
@@ -1024,7 +1025,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
             self.loadAddress(address, write);
 
             break;
-        case 5:
+        }
+        case 5: {
             // verify
             console.log('Verifying data ...');
             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Verifying'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
@@ -1111,6 +1113,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 }
             };
             break;
+        }
     }
 };
 
