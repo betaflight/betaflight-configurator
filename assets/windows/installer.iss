@@ -168,3 +168,9 @@ begin
         end;
     end;
 end;
+
+[Registry]
+Root: HKA; Subkey: "Software\Classes\btfltcp"; ValueType: "string"; ValueData: "URL:Custom Protocol"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\btfltcp"; ValueType: "string"; ValueName: "URL Protocol"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\btfltcp\DefaultIcon"; ValueType: "string"; ValueData: "{app}\{cm:AppName}.exe,0"
+Root: HKA; Subkey: "Software\Classes\btfltcp\shell\open\command"; ValueType: "string"; ValueData: """{app}\{cm:AppName}.exe"" ""%1"""

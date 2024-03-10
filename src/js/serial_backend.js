@@ -90,6 +90,7 @@ export function initializeSerialBackend() {
         let portName;
         if (selectedPort.data().isManual) {
             portName = $('#port-override').val();
+            $('#port-override-option').hide();
         } else {
             portName = String($('div#port-picker #port').val());
         }
@@ -150,7 +151,7 @@ export function initializeSerialBackend() {
                         finishClose(toggleStatus);
                     }
 
-                    mspHelper.setArmingEnabled(true, false, onFinishCallback);
+                    mspHelper?.setArmingEnabled(true, false, onFinishCallback);
                 }
             }
         }
@@ -237,6 +238,10 @@ function finishClose(finishedCallback) {
     // unlock port select & baud
     $('div#port-picker #port').prop('disabled', false);
     if (!GUI.auto_connect) $('div#port-picker #baud').prop('disabled', false);
+    const selectedPort = $('div#port-picker #port option:selected');
+    if (selectedPort?.data()?.isManual) {
+        $('#port-override-option').show();
+    }
 
     // reset connect / disconnect button
     $('div.connect_controls a.connect').removeClass('active');

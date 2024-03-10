@@ -17,6 +17,7 @@
     <preference name="AutoHideSplashScreen" value="false"/>
     <platform name="android">
         <allow-intent href="market:*"/>
+        <allow-intent href="btfltcp://*"/>
         <icon src="resources/android/icon/drawable-ldpi-icon.png" density="ldpi"/>
         <icon src="resources/android/icon/drawable-mdpi-icon.png" density="mdpi"/>
         <icon src="resources/android/icon/drawable-hdpi-icon.png" density="hdpi"/>
@@ -44,6 +45,12 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
             </intent-filter>
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/usb_device_filter"/>
+            <intent-filter>
+                <data android:scheme="btfltcp" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </config-file>
         <resource-file src="usb_device_filter.xml" target="app/src/main/res/xml/usb_device_filter.xml"/>
         <resource-file src="manifest.json" target="app/src/main/assets/www/manifest.json"/>

@@ -40,16 +40,24 @@ const CORDOVA_DIR = './cordova/';
 const CORDOVA_DIST_DIR = './dist_cordova/';
 
 const LINUX_INSTALL_DIR = '/opt/betaflight';
-
 const NODE_ENV = process.env.NODE_ENV || 'production';
 
 const NAME_REGEX = /-/g;
+
+const URI_SCHEME = 'btfltcp';
 
 const nwBuilderOptions = {
     version: '0.72.0',
     files: `${DIST_DIR}**/*`,
     macIcns: './src/images/bf_icon.icns',
-    macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
+    macPlist: {
+        'CFBundleDisplayName': 'Betaflight Configurator',
+        'CFBundleIdentifier': `com.protocol.registry.${URI_SCHEME}`,
+        'CFBundleURLTypes': [{
+            'CFBundleURLName': `URL : ${URI_SCHEME}`,
+            'CFBundleURLSchemes': [URI_SCHEME],
+        }],
+    },
     winIco: './src/images/bf_icon.ico',
     zip: false,
 };
@@ -793,6 +801,7 @@ function release_deb(arch, appDirectory, done) {
                 `chown root:root ${LINUX_INSTALL_DIR}`,
                 `chown -R root:root ${LINUX_INSTALL_DIR}/${metadata.name}`,
                 `xdg-desktop-menu install ${LINUX_INSTALL_DIR}/${metadata.name}/${metadata.name}.desktop`,
+                `xdg-mime default ${LINUX_INSTALL_DIR}/${metadata.name}/${metadata.name}.desktop x-scheme-handler/${URI_SCHEME}`,
                 `chmod +xr ${LINUX_INSTALL_DIR}/${metadata.name}/chrome_crashpad_handler`,
                 `chmod +xr ${LINUX_INSTALL_DIR}/${metadata.name}/${metadata.name}`,
                 `chmod -R +Xr ${LINUX_INSTALL_DIR}/${metadata.name}/`,
@@ -838,6 +847,7 @@ function release_rpm(arch, appDirectory, done) {
                 `chown root:root ${LINUX_INSTALL_DIR}`,
                 `chown -R root:root ${LINUX_INSTALL_DIR}/${metadata.name}`,
                 `xdg-desktop-menu install ${LINUX_INSTALL_DIR}/${metadata.name}/${metadata.name}.desktop`,
+                `xdg-mime default ${LINUX_INSTALL_DIR}/${metadata.name}/${metadata.name}.desktop x-scheme-handler/${URI_SCHEME}`,
                 `chmod +xr ${LINUX_INSTALL_DIR}/${metadata.name}/chrome_crashpad_handler`,
                 `chmod +xr ${LINUX_INSTALL_DIR}/${metadata.name}/${metadata.name}`,
                 `chmod -R +Xr ${LINUX_INSTALL_DIR}/${metadata.name}/`,
