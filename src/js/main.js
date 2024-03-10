@@ -10,6 +10,7 @@ import GUI, { TABS } from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
 import { tracking, checkSetupAnalytics } from './Analytics.js';
 import { initializeSerialBackend } from './serial_backend.js';
+import { handleURIScheme } from './uri_scheme.js';
 import FC from './fc.js';
 import CONFIGURATOR from './data_storage.js';
 import serial from './serial.js';
@@ -108,6 +109,8 @@ function appReady() {
         });
 
         initializeSerialBackend();
+
+        handleURIScheme(getConfig('enableURIScheme').enableURIScheme).catch(err => console.error(err));
     });
 }
 

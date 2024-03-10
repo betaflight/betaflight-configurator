@@ -52,7 +52,7 @@ function disconnectHandler(event) {
 export function initializeSerialBackend() {
     GUI.updateManualPortVisibility = function() {
         const selected_port = $('div#port-picker #port option:selected');
-        if (selected_port.data().isManual) {
+        if (selected_port.data().isManual && !isConnected) {
             $('#port-override-option').show();
         }
         else {
@@ -137,6 +137,7 @@ export function initializeSerialBackend() {
                         toggleStatus();
                     }
 
+                    GUI.updateManualPortVisibility();
                 } else {
                     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
                         $('div#flashbutton a.flash_state').removeClass('active');
@@ -148,9 +149,10 @@ export function initializeSerialBackend() {
 
                     function onFinishCallback() {
                         finishClose(toggleStatus);
+                        GUI.updateManualPortVisibility();
                     }
 
-                    mspHelper.setArmingEnabled(true, false, onFinishCallback);
+                    mspHelper?.setArmingEnabled(true, false, onFinishCallback);
                 }
             }
         }
@@ -284,6 +286,7 @@ function abortConnection() {
 
     // reset data
     isConnected = false;
+    GUI.updateManualPortVisibility();
 }
 
 /**

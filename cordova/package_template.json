@@ -17,6 +17,7 @@
     "cordova-plugin-chrome-apps-runtime": "^2.0.0",
     "cordova-plugin-chrome-apps-storage": "^1.0.4",
     "bf-cordova-plugin-chrome-apps-usb": "^2.0.1",
+    "cordova-plugin-customurlscheme": "^5.0.2",
     "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-filechooser": "^1.2.0",
@@ -41,6 +42,12 @@
       "cordova-plugin-chrome-apps-common": {},
       "cordova-plugin-chrome-apps-runtime": {},
       "cordova-plugin-chrome-apps-storage": {},
+      "cordova-plugin-customurlscheme": {
+        "URL_SCHEME": "btfltcp",
+        "ANDROID_SCHEME": " ",
+        "ANDROID_HOST": " ",
+        "ANDROID_PATHPREFIX": "/"
+      },
       "cordova-plugin-whitelist": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-permission": {},

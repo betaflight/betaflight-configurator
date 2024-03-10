@@ -7378,5 +7378,9 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "enableURIScheme": {
+        "message": "Enable the <strong>btfltcp://</strong> URI scheme handling (experimental)",
+        "description": "Handle the custom <strong>btfltcp://</strong> URI scheme by opening the configurator once the scheme is invoked and connecting to the referenced TCP address (experimental)"
     }
 }

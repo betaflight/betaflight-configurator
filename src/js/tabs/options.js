@@ -8,6 +8,7 @@ import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdate
 import { checkSetupAnalytics } from '../Analytics';
 import $ from 'jquery';
 import CONFIGURATOR from '../data_storage';
+import { handleURIScheme } from '../uri_scheme.js';
 
 const options = {};
 options.initialize = function (callback) {
@@ -24,6 +25,7 @@ options.initialize = function (callback) {
         TABS.options.initCliAutoComplete();
         TABS.options.initShowAllSerialDevices();
         TABS.options.initUseMdnsBrowser();
+        TABS.options.initEnableURIScheme();
         TABS.options.initShowVirtualMode();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
@@ -153,6 +155,18 @@ options.initUseMdnsBrowser = function() {
         .on('change', () => {
             setConfig({ useMdnsBrowser: useMdnsBrowserElement.is(':checked') });
             PortHandler.reinitialize();
+        });
+};
+
+options.initEnableURIScheme = function() {
+    const enableURISchemeElement = $('div.enableURIScheme input');
+    const result = getConfig('enableURIScheme');
+    enableURISchemeElement
+        .prop('checked', !!result.enableURIScheme)
+        .on('change', () => {
+            const enableURIScheme = enableURISchemeElement.is(':checked');
+            setConfig({ enableURIScheme });
+            handleURIScheme(enableURIScheme).catch(err => console.error(err));
         });
 };
 

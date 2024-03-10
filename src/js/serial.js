@@ -26,9 +26,11 @@ const serial = {
 
     serialDevices,
 
+    tcpUrlRegex: /^tcp:\/\/([A-Za-z0-9._-]+)(?::(\d+))?$/,
+
     connect: function (path, options, callback) {
         const self = this;
-        const testUrl = path.match(/^tcp:\/\/([A-Za-z0-9\.-]+)(?:\:(\d+))?$/);
+        const testUrl = path.match(self.tcpUrlRegex);
 
         if (testUrl) {
             self.connectTcp(testUrl[1], testUrl[2], options, callback);
