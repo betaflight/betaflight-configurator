@@ -2849,6 +2849,9 @@
     "gpsSignalStr": {
         "message": "Signal Strength"
     },
+    "gpsSignalLost": {
+        "message": "It takes a few seconds for the GNSS unit to be recognized by the flight controller. The GPS icon will appear in red color when it is recognized and in yellow color when we have established a GPS fix.<br>If the icon does not light up, please check your wiring and configuration. Some units must power the device using a battery and in that case the flight controller must be restarted after power is applied to be recognized."
+    },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
     },
