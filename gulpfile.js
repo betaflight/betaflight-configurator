@@ -98,6 +98,7 @@ function process_package_debug(done) {
 }
 
 const distCommon = gulp.series(
+    dist_vite,
     dist_src,
     dist_node_modules_css,
     dist_ol_css,
@@ -105,7 +106,7 @@ const distCommon = gulp.series(
     dist_locale,
     dist_libraries,
     dist_resources,
-    dist_rollup,
+    // dist_rollup,
     gulp.series(
         cordova_dist(),
     ),
@@ -424,6 +425,77 @@ function dist_resources() {
         .pipe(gulp.dest(DIST_DIR));
 }
 
+function dist_vite() {
+   const { build } = require('vite');
+   const vue = require('@vitejs/plugin-vue');
+   return build({
+    configFile: false,
+    plugins: [
+        vue({
+          template: {
+            compilerOptions: {
+              compatConfig: {
+                MODE: 2,
+              },
+            },
+          },
+        }),
+      ],
+      resolve: {
+        alias: {
+          vue: '@vue/compat',
+        },
+      },
+      build: {
+    
+        // lib: {
+        //     entry:  [
+        //         path.resolve(__dirname, 'src/js/main_cordova.js'),
+        //         path.resolve(__dirname, 'src/js/utils/common.js'),
+        //         path.resolve(__dirname, 'src/js/jquery.js'),
+        //         path.resolve(__dirname, 'src/js/main.js'),
+        //         path.resolve(__dirname, 'src/js/tabs/receiver_msp.js'),
+        //     ],
+        //     fileName: (format, entryName) => `js/${entryName}.${format}.js`,
+        //     name: 'BetaFlight',
+        // },
+        rollupOptions: {
+          input:{
+            app: './main.html',
+          },
+          output: {
+            entryFileNames: '[name].js',
+            chunkFileNames: '[name].js',
+            dir: path.resolve(__dirname, 'dist'),
+            sourcemap: true,
+            manualChunks(id) {
+                /**
+                 * This splits every npm module loaded in into it's own package
+                 * to preserve the loading order. This is to prevent issues
+                 * where after bundling some modules are loaded in the wrong order.
+                 */
+                if (id.includes('node_modules')) {
+                    const parts = id.split(/[\\/]/);
+                    const nodeModulesIndex = parts.indexOf('node_modules');
+                    const packageName = parts[nodeModulesIndex + 1];
+                    return packageName;
+                }
+            },
+          },
+        //   external: [], // Dependencies to exclude from your bundle
+        //   output: {
+        //       globals: {}, // Globals to use in UMD build for externalized dependencies
+        //   },
+          // Add any other Rollup options you need here
+        },
+      },
+   }).then(() => {
+    console.log('Build completed');
+   }).catch((err) => {
+    console.error(err);
+   });
+}
+
 function dist_rollup() {
     const commonjs = require('@rollup/plugin-commonjs');
     const resolve = require('@rollup/plugin-node-resolve').default;
@@ -449,7 +521,7 @@ function dist_rollup() {
             plugins: [
                 alias({
                     entries: {
-                        vue: require.resolve('vue/dist/vue.esm.js'),
+                        vue: require.resolve('@vue/compat'),
                     },
                 }),
                 rollupReplace({
@@ -458,7 +530,15 @@ function dist_rollup() {
                 }),
                 resolve(),
                 commonjs(),
-                vue(),
+                vue({
+                    template: {
+                        compilerOptions: {
+                            compatConfig: {
+                                MODE: 2,
+                            },
+                        },
+                    },
+                }),
             ],
         })
         .then(bundle =>

@@ -42,7 +42,8 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
     "@panter/vue-i18next": "^0.15.2",
-    "@vitejs/plugin-vue2": "^2.2.0",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vue/compat": "^3.4.15",
     "bonjour": "^3.5.0",
     "crypto-es": "^2.1.0",
     "d3": "^7.8.2",
@@ -69,7 +70,7 @@
     "switchery-latest": "^0.8.2",
     "three": "~0.97.0",
     "vite-plugin-pwa": "^0.17.4",
-    "vue": "^2.7.10"
+    "vue": "^3.4.15"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -82,6 +83,7 @@
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-links": "^6.5.12",
     "@storybook/vue": "^6.5.12",
+    "@vue/compiler-sfc": "^3.4.15",
     "babel-loader": "^8.2.5",
     "command-exists": "^1.2.9",
     "cordova-lib": "^11.0.0",
@@ -109,7 +111,7 @@
     "postcss": "^8.4.31",
     "rollup": "^3.29.4",
     "rollup-plugin-copy": "^3.5.0",
-    "rollup-plugin-vue": "^5.*.*",
+    "rollup-plugin-vue": "^6.0.0",
     "rpm-builder": "^1.2.1",
     "run-script-os": "^1.1.6",
     "simple-git": "^3.16.0",
@@ -120,7 +122,6 @@
     "vite": "^4.5.2",
     "vitest": "^0.27.1",
     "vue-loader": "^15.9.8",
-    "vue-template-compiler": "^2.7.10",
     "yarn": "^1.22.19"
   },
   "optionalDependencies": {
