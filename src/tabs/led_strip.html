@@ -44,6 +44,9 @@
                     <option value="function-c"  i18n="ledStripFunctionColorOption"></option>
                     <option value="function-f"  i18n="ledStripFunctionModesOption"></option>
                     <option value="function-a"  i18n="ledStripFunctionArmOption"></option>
+                    <option value="function-p"  i18n="ledStripFunctionGPSBarOption"></option>
+                    <option value="function-e"  i18n="ledStripFunctionBatteryBarOption"></option>
+                    <option value="function-u"  i18n="ledStripFunctionAltitudeOption"></option>
                     <option value="function-l"  i18n="ledStripFunctionBatteryOption"></option>
                     <option value="function-s"  i18n="ledStripFunctionRSSIOption"></option>
                     <option value="function-g"  i18n="ledStripFunctionGPSOption"></option>
@@ -124,7 +127,7 @@
             <div class="mode_colors">
                 <div class="section" i18n="ledStripModeColorsTitle"></div>
 
-                <select id="ledStripModeColorsModeSelect" class="modeSelect">
+                <select id="ledStripModeColorsModeSelect" class="modeSelect gps">
                     <option value="0" i18n="ledStripModeColorsModeOrientation"></option>
                     <option value="1" i18n="ledStripModeColorsModeHeadfree"></option>
                     <option value="2" i18n="ledStripModeColorsModeHorizon"></option>
@@ -190,6 +193,12 @@
 
             <div class="special_colors mode_colors">
                 <div class="section" i18n="ledStripModesSpecialColorsTitle"></div>
+
+                <select id="ledStripModeGpsModeSelect" class="modeSelect flightmode">
+                    <option value="0" i18n="ledStripModeGpsDefault"></option>
+                    <option value="1" i18n="ledStripModeGpsBar"></option>
+                </select>
+
                 <button class="mode_color-6-0" i18n_title="colorGreen" i18n="ledStripModeColorsModeDisarmed"></button>
                 <button class="mode_color-6-1" i18n_title="colorBlue" i18n="ledStripModeColorsModeArmed"></button>
                 <button class="mode_color-6-2" i18n_title="colorWhite" i18n="ledStripModeColorsModeAnimation"></button>
