@@ -39,7 +39,7 @@ jobs:
           path: release-assets/
 
       - name: Release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
+        uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ github.event.inputs.title }}
