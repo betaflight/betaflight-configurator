@@ -855,7 +855,7 @@ receiver.initModelPreview = function () {
 };
 
 receiver.renderModel = function () {
-    if (this.keepRendering) {
+    if (!this.keepRendering) {
         return;
     }
     requestAnimationFrame(this.renderModel.bind(this));
