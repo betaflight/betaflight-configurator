@@ -446,8 +446,6 @@ setup.initialize = function (callback) {
                     buildOptionList += `</div>`;
                     build_info_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildOptions')}">
                         <a class="buildOptions" href=#"><strong>${i18n.getMessage('initialSetupInfoBuildOptionList')}</strong></a></span>`);
-                } else {
-                    build_info_e.html(i18n.getMessage(navigator.onLine ? 'initialSetupInfoBuildOptionsEmpty' : 'initialSetupNotOnline'));
                 }
 
                 if (FC.CONFIG.buildKey.length === 32) {
