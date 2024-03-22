@@ -119,7 +119,7 @@ pid_tuning.initialize = function (callback) {
             // Moved tpa to profile
             $('select[id="tpaMode"]').val(FC.ADVANCED_TUNING.tpaMode);
             $('input[id="tpaRate"]').val(FC.ADVANCED_TUNING.tpaRate * 100);
-            $('input[id="tpaBreakpoint"]').val(FC.ADVANCED_TUNING.tpaBreakpoint);
+            $('input[id="tpaBreakpoint"]').val((FC.ADVANCED_TUNING.tpaBreakpoint - 1000) / 10);
         } else {
             $('.tpa-old input[name="tpa"]').val(FC.RC_TUNING.dynamic_THR_PID.toFixed(2));
             $('.tpa-old input[name="tpa-breakpoint"]').val(FC.RC_TUNING.dynamic_THR_breakpoint);
@@ -1109,7 +1109,7 @@ pid_tuning.initialize = function (callback) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             FC.ADVANCED_TUNING.tpaMode = $('select[id="tpaMode"]').val();
             FC.ADVANCED_TUNING.tpaRate = parseInt($('input[id="tpaRate"]').val()) / 100;
-            FC.ADVANCED_TUNING.tpaBreakpoint = parseInt($('input[id="tpaBreakpoint"]').val());
+            FC.ADVANCED_TUNING.tpaBreakpoint = (parseInt($('input[id="tpaBreakpoint"]').val()) * 10) + 1000;
         } else {
             FC.RC_TUNING.dynamic_THR_PID = parseFloat($('.tpa-old input[name="tpa"]').val());
             FC.RC_TUNING.dynamic_THR_breakpoint = parseInt($('.tpa-old input[name="tpa-breakpoint"]').val());

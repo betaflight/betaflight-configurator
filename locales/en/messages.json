@@ -2068,7 +2068,7 @@
         "message": "TPA Rate (%)"
     },
     "pidTuningTPABreakPoint": {
-        "message": "TPA Breakpoint (μs)"
+        "message": "TPA Breakpoint (%)"
     },
     "pidTuningTPAPD": {
         "message": "PD"
