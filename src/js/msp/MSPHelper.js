@@ -295,6 +295,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.GPS_DATA.alt = data.readU16();
                 FC.GPS_DATA.speed = data.readU16();
                 FC.GPS_DATA.ground_course = data.readU16();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.GPS_DATA.positionalDop = data.readU16();
+                }
                 break;
             case MSPCodes.MSP_COMP_GPS:
                 FC.GPS_DATA.distanceToHome = data.readU16();

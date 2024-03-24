@@ -242,6 +242,12 @@ gps.initialize = async function (callback) {
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                $('.GPS_info td.positionalDop').text(`${FC.GPS_DATA.positionalDop}`);
+            } else {
+                $('.GPS_info td.positionalDop').parent().hide();
+            }
+
             // Update GPS Signal Strengths
             const eSsTable = $('div.GPS_signal_strength table');
 

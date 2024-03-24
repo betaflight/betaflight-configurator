@@ -2839,6 +2839,9 @@
     "gpsDistToHome": {
         "message": "Dist to Home:"
     },
+    "gpsPositionalDop": {
+        "message": "Positional DOP:"
+    },
     "gpsSignalStrHead": {
         "message": "GPS Signal Strength"
     },

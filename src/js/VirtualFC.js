@@ -260,6 +260,7 @@ const sampleGpsData = {
     "alt": 0,
     "speed": 0,
     "ground_course": 1337,
+    "positionalDop": 0,
     "distanceToHome": 0,
     "directionToHome": 0,
     "update": 0,
