@@ -114,7 +114,7 @@ const distCommon = gulp.series(
 
 const distBuild = gulp.series(process_package_release, distCommon);
 
-const debugDistBuild = gulp.series(process_package_debug, distCommon);
+const debugDistBuild = gulp.series(distCommon, process_package_debug);
 
 const distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
@@ -291,11 +291,6 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 
     // remove gulp-appdmg from the package.json we're going to write
     delete pkg.optionalDependencies['gulp-appdmg'];
-    // keeping this package in `package.json` for some reason
-    // breaks the nwjs builds. This is not really needed for
-    // nwjs nor it's imported anywhere at runtime ¯\_(ツ)_/¯
-    // this probably can go away if we fully move to pwa.
-    delete pkg.dependencies['@vitejs/plugin-vue2'];
 
     pkg.gitRevision = gitRevision;
     if (!isReleaseBuild) {
@@ -428,6 +423,7 @@ function dist_resources() {
 function dist_vite() {
    const { build } = require('vite');
    const vue = require('@vitejs/plugin-vue');
+   const inject = require('@rollup/plugin-inject');
    return build({
     configFile: false,
     plugins: [
@@ -440,28 +436,21 @@ function dist_vite() {
             },
           },
         }),
+        inject({
+            $: 'jquery',
+            jQuery: 'jquery',
+        }),
       ],
       resolve: {
         alias: {
           vue: '@vue/compat',
         },
       },
+      mode: 'nwjs',
       build: {
-    
-        // lib: {
-        //     entry:  [
-        //         path.resolve(__dirname, 'src/js/main_cordova.js'),
-        //         path.resolve(__dirname, 'src/js/utils/common.js'),
-        //         path.resolve(__dirname, 'src/js/jquery.js'),
-        //         path.resolve(__dirname, 'src/js/main.js'),
-        //         path.resolve(__dirname, 'src/js/tabs/receiver_msp.js'),
-        //     ],
-        //     fileName: (format, entryName) => `js/${entryName}.${format}.js`,
-        //     name: 'BetaFlight',
-        // },
         rollupOptions: {
           input:{
-            app: './main.html',
+            main: 'main.html',
           },
           output: {
             entryFileNames: '[name].js',
