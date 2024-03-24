@@ -1014,6 +1014,7 @@ firmware_flasher.initialize = function (callback) {
 
         $('a.flash_firmware').on('click', function () {
             self.isFlashing = true;
+            const isFlashOnConnect = $('input.flash_on_connect').is(':checked');
 
             self.enableFlashButton(false);
             self.enableDfuExitButton(false);
@@ -1021,7 +1022,7 @@ firmware_flasher.initialize = function (callback) {
             self.enableLoadFileButton(false);
 
             function initiateFlashing() {
-                if (self.developmentFirmwareLoaded) {
+                if (self.developmentFirmwareLoaded && !isFlashOnConnect) {
                     checkShowAcknowledgementDialog();
                 } else {
                     startFlashing();
@@ -1029,7 +1030,8 @@ firmware_flasher.initialize = function (callback) {
             }
 
             // Backup not available in DFU, manual or virtual mode.
-            if (self.isSerialPortAvailable()) {
+            // When flash on connect is enabled, the backup dialog is not shown.
+            if (self.isSerialPortAvailable() && !isFlashOnConnect) {
                 GUI.showYesNoDialog(
                     {
                         title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
@@ -1119,6 +1121,8 @@ firmware_flasher.initialize = function (callback) {
                     } catch (e) {
                         console.log(`Flashing failed: ${e.message}`);
                     }
+                    // Disable flash on connect after flashing to prevent continuous flashing
+                    $('input.flash_on_connect').prop('checked', false).change();
                 } else {
                     $('span.progressLabel').attr('i18n','firmwareFlasherFirmwareNotLoaded').removeClass('i18n-replaced');
                     i18n.localizePage();
@@ -1199,6 +1203,9 @@ firmware_flasher.initialize = function (callback) {
 
                 catch_new_port();
             } else {
+                // Cancel the flash on connect
+                GUI.timeout_remove('initialization_timeout');
+
                 PortHandler.flush_callbacks();
             }
         }).change();
@@ -1237,7 +1244,9 @@ firmware_flasher.validateBuildKey = function() {
 firmware_flasher.verifyBoard = function() {
     const self = this;
 
-    if (!self.isSerialPortAvailable()) {
+    const isFlashOnConnect = $('input.flash_on_connect').is(':checked');
+
+    if (!self.isSerialPortAvailable() || isFlashOnConnect) {
         // return silently as port-picker will trigger again when port becomes available
         return;
     }
