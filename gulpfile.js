@@ -439,6 +439,12 @@ function dist_vite() {
         inject({
             $: 'jquery',
             jQuery: 'jquery',
+            'window.$': 'jquery',
+            'window.jQuery': 'jquery',
+            'global.$': 'jquery',
+            'global.jQuery': 'jquery',
+            'globalThis.$': 'jquery',
+            'globalThis.jQuery': 'jquery',
         }),
       ],
       resolve: {
@@ -449,6 +455,7 @@ function dist_vite() {
       mode: 'nwjs',
       build: {
         rollupOptions: {
+          treeshake: false,
           input:{
             main: 'main.html',
           },
