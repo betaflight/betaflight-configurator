@@ -1976,12 +1976,6 @@
     "pidTuningTPA": {
         "message": "TPA"
     },
-    "pidTuningTPARate": {
-        "message": "Taxa de TPA"
-    },
-    "pidTuningTPABreakPoint": {
-        "message": "TPA Breakpoint"
-    },
     "pidTuningTPAPD": {
         "message": "PD"
     },
@@ -2100,9 +2094,6 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modo do Slider de Ajuste dos PID<\/strong><br><br>O modos podem ser:<br><br>&bull; DESLIGADO - sem sliders, insira os valores manualmente<br>&bull; RP - os sliders ajustam somente o Roll e o Pitch, digite os valores do Yaw manualmente<br>&bull; RPY - os sliders ajustam todos os valores do PID<br><br><span class=\"message-negative\"><b>Aviso:<\/b><\/span>Alterar do modo RP para RPY irá substituir as configurações do Yaw com os padrões do firmware."
-    },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/docs\/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Verifique sempre se o Failsafe está funcionando corretamente!<\/a><\/strong><\/b> As definições estão na aba Failsafe, que requer o modo avançado.<br> &#8226; <b>Use o firmware do rádio mais recente!<\/b><br> &#8226; <strong><a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/docs\/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desative o filtro ADC no hardware<\/a><\/strong> do rádio se estiver usando OpenTx ou EdgeTx.<br>Configuração básica: Configure as definições do 'receptor' corretamente. Escolha o 'Mapa de canais' correto para o seu rádio. Verifique que o Roll, Pitch e as outras barras do gráfico se movem corretamente. Ajuste os pontos extremos dos canais no rádio de ~1000 até ~2000, com o ponto médio em 1500. Para mais informação, leia a <strong><a href=\"https:\/\/github.com\/betaflight\/betaflight\/blob\/master\/docs\/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentação<\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "MEIO do Acelerador"
