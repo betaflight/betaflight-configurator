@@ -243,7 +243,8 @@ gps.initialize = async function (callback) {
             $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome} m`);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                $('.GPS_info td.positionalDop').text(`${FC.GPS_DATA.positionalDop}`);
+                const positionalDop = FC.GPS_DATA.positionalDop / 100;
+                $('.GPS_info td.positionalDop').text(`${positionalDop.toFixed(2)}`);
             } else {
                 $('.GPS_info td.positionalDop').parent().hide();
             }
