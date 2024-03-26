@@ -136,7 +136,7 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusSonar": {
-        "message": "聲納 / 測距儀"
+        "message": "聲納 \/ 測距儀"
     },
     "sensorStatusSonarShort": {
         "message": "聲納",
@@ -152,16 +152,16 @@
         "message": "打開版本發佈網站"
     },
     "deviceRebooting": {
-        "message": "設備 - <span class=\"message-negative\">重啟中</span>"
+        "message": "設備 - <span class=\"message-negative\">重啟中<\/span>"
     },
     "deviceRebooting_flashBootloader": {
-        "message": "設備 - <span class=\"message-negative\">重啟並進入快閃記憶體Bootloader</span>"
+        "message": "設備 - <span class=\"message-negative\">重啟並進入快閃記憶體Bootloader<\/span>"
     },
     "deviceRebooting_romBootloader": {
-        "message": "設備 - <span class=\"message-negative\">重啟並進入記憶體Bootloader</span>"
+        "message": "設備 - <span class=\"message-negative\">重啟並進入記憶體Bootloader<\/span>"
     },
     "deviceReady": {
-        "message": "設備 - <span class=\"message-positive\">已就緒</span>"
+        "message": "設備 - <span class=\"message-positive\">已就緒<\/span>"
     },
     "tabFirmwareFlasher": {
         "message": "固件燒寫工具"
@@ -257,34 +257,34 @@
         "message": "串行連接錯誤：奇偶錯誤"
     },
     "serialPortOpened": {
-        "message": "打開串口 <span class=\"message-positive\">成功</span> ID: $1"
+        "message": "打開串口 <span class=\"message-positive\">成功<\/span> ID: $1"
     },
     "serialPortOpenFail": {
-        "message": "打開串口 <span class=\"message-negative\">失敗</span>"
+        "message": "打開串口 <span class=\"message-negative\">失敗<\/span>"
     },
     "serialPortClosedOk": {
-        "message": "關閉串口 <span class=\"message-positive\">成功</span>"
+        "message": "關閉串口 <span class=\"message-positive\">成功<\/span>"
     },
     "serialPortClosedFail": {
-        "message": "關閉串口 <span class=\"message-negative\">失敗</span>"
+        "message": "關閉串口 <span class=\"message-negative\">失敗<\/span>"
     },
     "serialUnrecoverable": {
-        "message": "串口連接 <span class=\"message-negative\">故障</span>且無法恢復，正在斷開連接……"
+        "message": "串口連接 <span class=\"message-negative\">故障<\/span>且無法恢復，正在斷開連接……"
     },
     "usbDeviceOpened": {
-        "message": "打開 USB 設備 <span class=\"message-positive\">成功</span> ID: $1"
+        "message": "打開 USB 設備 <span class=\"message-positive\">成功<\/span> ID: $1"
     },
     "usbDeviceOpenFail": {
-        "message": "打開 USB 設備 <span class=\"message-negative\">失敗</span>！"
+        "message": "打開 USB 設備 <span class=\"message-negative\">失敗<\/span>！"
     },
     "usbDeviceClosed": {
-        "message": "關閉 USB 設備 <span class=\"message-positive\">成功</span>"
+        "message": "關閉 USB 設備 <span class=\"message-positive\">成功<\/span>"
     },
     "usbDeviceCloseFail": {
-        "message": "關閉 USB 設備 <span class=\"message-negative\">失敗</span>"
+        "message": "關閉 USB 設備 <span class=\"message-negative\">失敗<\/span>"
     },
     "usbDeviceUdevNotice": {
-        "message": "<strong>udev rules</strong>沒有正確安裝？詳細訊息請查閱文檔。"
+        "message": "<strong>udev rules<\/strong>沒有正確安裝？詳細訊息請查閱文檔。"
     },
     "stm32UsbDfuNotFound": {
         "message": "未找到 USB DFU"
@@ -353,7 +353,7 @@
         "message": "讀取保護未啟用"
     },
     "stm32ReadProtected": {
-        "message": "飛控板似乎有讀取保護。正在接觸保護。不要斷開連接/拔出插頭！"
+        "message": "飛控板似乎有讀取保護。正在接觸保護。不要斷開連接\/拔出插頭！"
     },
     "stm32UnprotectSuccessful": {
         "message": "解除保護成功。"
@@ -368,28 +368,28 @@
         "message": "解除保護程式初始化失敗"
     },
     "noConfigurationReceived": {
-        "message": "<span class=\"message-negative\">10秒</span>內沒有接受到配置訊息，飛控通訊 <span class=\"message-negative\">失敗</span>"
+        "message": "<span class=\"message-negative\">10秒<\/span>內沒有接受到配置訊息，飛控通訊 <span class=\"message-negative\">失敗<\/span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "Betaflight 配置程式<span class=\"message-negative\">不支援</span>該固件版本。請更新固件以確保其API版本為<strong>$1</strong> 或更高。更新固件之前，使用 CLI 來備份設置。使用 CLI 進行備份/恢復的詳細操作流程請參考Betaflight文檔。<br />如果不想將固件更新到最新版本，可以下載使用支援該固件的舊版配置程式。"
+        "message": "Betaflight 配置程式<span class=\"message-negative\">不支援<\/span>該固件版本。請更新固件以確保其API版本為<strong>$1<\/strong> 或更高。更新固件之前，使用 CLI 來備份設置。使用 CLI 進行備份\/恢復的詳細操作流程請參考Betaflight文檔。<br \/>如果不想將固件更新到最新版本，可以下載使用支援該固件的舊版配置程式。"
     },
     "firmwareTypeNotSupported": {
-        "message": "<span class=\"message-negative\">不支持</span>非 Betaflight 固件，只能使用 CLI 模式"
+        "message": "<span class=\"message-negative\">不支持<\/span>非 Betaflight 固件，只能使用 CLI 模式"
     },
     "firmwareUpgradeRequired": {
-        "message": "需要將此設備上的固件更新到新版本。更新固件之前，使用 CLI 來備份設置。使用 CLI 進行備份/恢復的詳細操作流程請參考Betaflight文檔。<br />如果不想將固件更新到最新版本，可以下載使用支援該固件的舊版配置程式。"
+        "message": "需要將此設備上的固件更新到新版本。更新固件之前，使用 CLI 來備份設置。使用 CLI 進行備份\/恢復的詳細操作流程請參考Betaflight文檔。<br \/>如果不想將固件更新到最新版本，可以下載使用支援該固件的舊版配置程式。"
     },
     "resetToCustomDefaultsDialog": {
-        "message": "有適用于次飛控板的自定義默認設置，通常來說，還有在應用了自定義默認設置之後飛控板才能正常工作。<br />您是否要為此飛控板應用自定義默認設置？"
+        "message": "有適用于次飛控板的自定義默認設置，通常來說，還有在應用了自定義默認設置之後飛控板才能正常工作。<br \/>您是否要為此飛控板應用自定義默認設置？"
     },
     "resetToCustomDefaultsAccept": {
         "message": "應用自定義默認設置"
     },
     "reportProblemsDialogHeader": {
-        "message": "檢測到<strong>您的配置存在下列問題</strong>:"
+        "message": "檢測到<strong>您的配置存在下列問題<\/strong>:"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>加速度計已啟用，但未進行校準</strong>。<br>如果您計劃使用加速度計，請遵循 \"$t(tabSetup.message)\" 頁面中的 \"$t(initialSetupButtonCalibrateAccel.message)\" 操作指南。如果開啟了任何需要調用加速度計的功能 (例如自穩模式, GPS 救援, …)，在加速度計完成校準之间將無法解鎖。<br>如果您並不計劃使用加速度計，建議您在 \"$t(tabConfiguration.message)\" 頁面中通過 \"$t(configurationSystem.message)\" 禁用加速度計。"
+        "message": "<strong>加速度計已啟用，但未進行校準<\/strong>。<br>如果您計劃使用加速度計，請遵循 \"$t(tabSetup.message)\" 頁面中的 \"$t(initialSetupButtonCalibrateAccel.message)\" 操作指南。如果開啟了任何需要調用加速度計的功能 (例如自穩模式, GPS 救援, …)，在加速度計完成校準之间將無法解鎖。<br>如果您並不計劃使用加速度計，建議您在 \"$t(tabConfiguration.message)\" 頁面中通過 \"$t(configurationSystem.message)\" 禁用加速度計。"
     },
     "buildServerUsingCached": {
         "message": "使用已緩存的 $1 生成訊息。"
@@ -398,7 +398,7 @@
         "message": "從Github 載入 $1 發佈訊息"
     },
     "releaseCheckFailed": {
-        "message": "<b>從 GitHub 獲取 $1 發佈版本失敗，載入原版本訊息。 失敗原因：<code>$2</code></b>"
+        "message": "<b>從 GitHub 獲取 $1 發佈版本失敗，載入原版本訊息。 失敗原因：<code>$2<\/code><\/b>"
     },
     "releaseCheckCached": {
         "message": "使用已緩存的 $1 版本訊息"
@@ -407,46 +407,46 @@
         "message": "找不到 $1 發佈訊息"
     },
     "tabSwitchConnectionRequired": {
-        "message": "在查看任何頁面訊息之前，您需要先<strong>連接</strong>"
+        "message": "在查看任何頁面訊息之前，您需要先<strong>連接<\/strong>"
     },
     "tabSwitchWaitForOperation": {
-        "message": "<span class=\"message-negative\">不能</span>執行當前操作，請等待上一個操作完成…"
+        "message": "<span class=\"message-negative\">不能<\/span>執行當前操作，請等待上一個操作完成…"
     },
     "tabSwitchUpgradeRequired": {
-        "message": "需要<strong>更新</strong>到最新版本的 Betaflight 固件才能使用 $1 頁面"
+        "message": "需要<strong>更新<\/strong>到最新版本的 Betaflight 固件才能使用 $1 頁面"
     },
     "firmwareVersion": {
-        "message": "固件版本：<strong>$1</strong>"
+        "message": "固件版本：<strong>$1<\/strong>"
     },
     "apiVersionReceived": {
-        "message": "MultiWii API 版本：<strong>$1</strong>"
+        "message": "MultiWii API 版本：<strong>$1<\/strong>"
     },
     "uniqueDeviceIdReceived": {
-        "message": "唯一設備 ID: <strong>0x$1</strong>"
+        "message": "唯一設備 ID: <strong>0x$1<\/strong>"
     },
     "craftNameReceived": {
-        "message": "飛行器名稱：<strong>$1</strong>"
+        "message": "飛行器名稱：<strong>$1<\/strong>"
     },
     "armingDisabled": {
-        "message": "<strong>禁止解鎖</strong>"
+        "message": "<strong>禁止解鎖<\/strong>"
     },
     "armingEnabled": {
-        "message": "<strong>允許解鎖</strong>"
+        "message": "<strong>允許解鎖<\/strong>"
     },
     "runawayTakeoffPreventionDisabled": {
-        "message": "<strong> 預防起飛失控 已被臨時禁用</strong>"
+        "message": "<strong> 預防起飛失控 已被臨時禁用<\/strong>"
     },
     "runawayTakeoffPreventionEnabled": {
-        "message": "<strong> 預防起飛失控 已啟用</strong>"
+        "message": "<strong> 預防起飛失控 已啟用<\/strong>"
     },
     "boardInfoReceived": {
-        "message": "飛控：<strong>$1</strong>，版本：<strong>$2</strong>"
+        "message": "飛控：<strong>$1<\/strong>，版本：<strong>$2<\/strong>"
     },
     "buildInfoReceived": {
-        "message": "當前固件發佈時間：<strong>$1</strong>"
+        "message": "當前固件發佈時間：<strong>$1<\/strong>"
     },
     "fcInfoReceived": {
-        "message": "飛控訊息，識別名：<strong>$1</strong>，版本：<strong>$2</strong>"
+        "message": "飛控訊息，識別名：<strong>$1<\/strong>，版本：<strong>$2<\/strong>"
     },
     "versionLabelTarget": {
         "message": "飛控型號"
@@ -483,19 +483,19 @@
         "message": "請使用固件燒寫器來訪問 DFU 設備"
     },
     "dfu_erased_kilobytes": {
-        "message": "擦除$1 kB 快閃記憶體 <span class=\"message-positive\">成功</span>"
+        "message": "擦除$1 kB 快閃記憶體 <span class=\"message-positive\">成功<\/span>"
     },
     "dfu_device_flash_info": {
         "message": "檢測到快閃記憶體空間為 $1 KiB 的晶片"
     },
     "dfu_error_image_size": {
-        "message": "<span class=\"message-negative\">錯誤</span>：固件文件大於飛控晶片的快閃記憶體。固件大小: $1 KiB，上限 = $2 KiB"
+        "message": "<span class=\"message-negative\">錯誤<\/span>：固件文件大於飛控晶片的快閃記憶體。固件大小: $1 KiB，上限 = $2 KiB"
     },
     "eeprom_saved_ok": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "歡迎使用<strong> Betaflight - 配置程式</strong>，為簡化固件升級，設置和調校飛控而生的工具。"
+        "message": "歡迎使用<strong> Betaflight - 配置程式<\/strong>，為簡化固件升級，設置和調校飛控而生的工具。"
     },
     "defaultWelcomeHead": {
         "message": "硬體"
@@ -504,22 +504,22 @@
         "message": "參與開發"
     },
     "defaultFacebookText": {
-        "message": "我們還有一個<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\"> Facebook 小組</a>。<br />加入我們來一起討論 Betaflight，咨詢配置問題，或者只是和小夥伴們閒聊。"
+        "message": "我們還有一個<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\"> Facebook 小組<\/a>。<br \/>加入我們來一起討論 Betaflight，咨詢配置問題，或者只是和小夥伴們閒聊。"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "固件燒寫器"
     },
     "defaultDonateHead": {
-        "message": "開源/捐贈說明"
+        "message": "開源\/捐贈說明"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong>是一個<strong>開放源碼</strong>的飛行控制軟體，它可供所有用戶免費使用，但 <strong>不提供擔保</strong>。 </p><p>如果你覺得 Betaflight 或 Betaflight 配置程式對你有用，請考慮捐贈以 <strong>支援</strong> 它的開發工作</p>"
+        "message": "<p><strong>Betaflight<\/strong>是一個<strong>開放源碼<\/strong>的飛行控制軟體，它可供所有用戶免費使用，但 <strong>不提供擔保<\/strong>。 <\/p><p>如果你覺得 Betaflight 或 Betaflight 配置程式對你有用，請考慮捐贈以 <strong>支援<\/strong> 它的開發工作<\/p>"
     },
     "defaultDonateBottom": {
-        "message": "<p>如果你想持續捐助資金，請考慮在$t(patreonLink.message)上贊助我們。</p>"
+        "message": "<p>如果你想持續捐助資金，請考慮在$t(patreonLink.message)上贊助我們。<\/p>"
     },
     "patreonLink": {
-        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
+        "message": "<a href=\"https:\/\/www.patreon.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon<\/a>",
         "description": "Patreon is name, and should not require translation"
     },
     "defaultDonate": {
@@ -529,13 +529,13 @@
         "message": "贊助商"
     },
     "defaultDocumentationHead": {
-        "message": "文檔/手冊"
+        "message": "文檔\/手冊"
     },
     "defaultDocumentation": {
-        "message": "Betaflight 的文檔和發佈說明可以在 wiki 裡面找到。<br /><br />"
+        "message": "Betaflight 的文檔和發佈說明可以在 wiki 裡面找到。<br \/><br \/>"
     },
     "defaultDocumentation2": {
-        "message": "最新的固件發佈訊息可以在<a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">這裡</a>找到。"
+        "message": "最新的固件發佈訊息可以在<a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">這裡<\/a>找到。"
     },
     "defaultSupportHead": {
         "message": "支援"
@@ -547,25 +547,25 @@
         "message": "開發者"
     },
     "defaultSupport": {
-        "message": "需要幫助時請先檢索論壇或者咨詢飛控板的生產商。<br /><br />"
+        "message": "需要幫助時請先檢索論壇或者咨詢飛控板的生產商。<br \/><br \/>"
     },
     "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread</a>"
+        "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread<\/a>"
     },
     "defaultSupport4": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+        "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub<\/a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "校準加速度計"
     },
     "initialSetupCalibrateAccelText": {
-        "message": "把飛控或者飛機<strong>水平</strong>放置，再執行加速度計校準。校準過程中切勿移動飛控或者飛機。"
+        "message": "把飛控或者飛機<strong>水平<\/strong>放置，再執行加速度計校準。校準過程中切勿移動飛控或者飛機。"
     },
     "initialSetupButtonCalibrateMag": {
         "message": "校準磁力計"
     },
     "initialSetupCalibrateMagText": {
-        "message": "將飛行器在所有軸向上都移動至少<strong>360</strong>度，你有三十秒的時間可供進行這項操作。"
+        "message": "將飛行器在所有軸向上都移動至少<strong>360<\/strong>度，你有三十秒的時間可供進行這項操作。"
     },
     "initialSetupButtonCalibratingText": {
         "message": "正在校準…"
@@ -574,10 +574,10 @@
         "message": "恢復默認設置"
     },
     "initialSetupButtonRebootBootloader": {
-        "message": "激活啟動引導程式/DFU"
+        "message": "激活啟動引導程式\/DFU"
     },
     "initialSetupRebootBootloaderText": {
-        "message": "重新啟動到<strong>啟動引導程式/DFU</strong>模式"
+        "message": "重新啟動到<strong>啟動引導程式\/DFU<\/strong>模式"
     },
     "initialSetupButtonResetZaxis": {
         "message": "重置 Z 軸，補償：0 度"
@@ -760,19 +760,19 @@
         "message": "開始校準加速度計"
     },
     "initialSetupAccelCalibEnded": {
-        "message": "加速度計校準<span class=\"message-positive\">完成</span>"
+        "message": "加速度計校準<span class=\"message-positive\">完成<\/span>"
     },
     "initialSetupMagCalibStarted": {
         "message": "開始校準磁力計"
     },
     "initialSetupMagCalibEnded": {
-        "message": "磁力計校準<span class=\"message-positive\">完成</span>"
+        "message": "磁力計校準<span class=\"message-positive\">完成<\/span>"
     },
     "initialSetupSettingsRestored": {
-        "message": "恢復到<strong>默認</strong>設置"
+        "message": "恢復到<strong>默認<\/strong>設置"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "featureNone": {
         "message": "&lt;請選擇&gt;"
@@ -838,7 +838,7 @@
         "message": "永久啟用 Airmode"
     },
     "featureESC_SENSOR": {
-        "message": "使用<b>專線</b>回傳 KISS/BLHeli_32 電調遙測數據"
+        "message": "使用<b>專線<\/b>回傳 KISS\/BLHeli_32 電調遙測數據"
     },
     "featureANTI_GRAVITYTip": {
         "message": "如果禁用，那麼“反重力”模式可以由開關來啟用。"
@@ -874,16 +874,16 @@
         "message": "RSSI 是接收訊號的強度，對判斷飛機是否收到無線訊號干擾或者即將超出範圍很有用。"
     },
     "configurationEscFeatures": {
-        "message": "電調/點擊功能"
+        "message": "電調\/點擊功能"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>注意:</strong> 不是所有的功能都能被同時啟用。當飛控檢測到有衝突時會禁用響應的功能。<br /><strong>注意:</strong> <span class=\"message-negative\">先</span> 設置埠口，在啟用需要用到埠口的功能。"
+        "message": "<strong>注意:<\/strong> 不是所有的功能都能被同時啟用。當飛控檢測到有衝突時會禁用響應的功能。<br \/><strong>注意:<\/strong> <span class=\"message-negative\">先<\/span> 設置埠口，在啟用需要用到埠口的功能。"
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>注意:</strong> SPI 接收機只有通過 SPI 總線連接到飛控或板載了相應硬體時才能工作。"
+        "message": "<strong>注意:<\/strong> SPI 接收機只有通過 SPI 總線連接到飛控或板載了相應硬體時才能工作。"
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>注意:</strong> 不是所有所有飛控都能支援所有的功能。如果你啟用了某個功能，但在“保存並重啟”以後，該功能被禁用，則說明你的飛控不支援該功能。"
+        "message": "<strong>注意:<\/strong> 不是所有所有飛控都能支援所有的功能。如果你啟用了某個功能，但在“保存並重啟”以後，該功能被禁用，則說明你的飛控不支援該功能。"
     },
     "configurationBoardAlignment": {
         "message": "飛控和傳感器方向"
@@ -901,10 +901,10 @@
         "message": "陀螺儀反向"
     },
     "configurationSensorGyroToUse": {
-        "message": "陀螺儀/加速度計"
+        "message": "陀螺儀\/加速度計"
     },
     "configurationSensorGyroToUseNotFound": {
-        "message": "警告：未檢測到陀螺儀/加速度計"
+        "message": "警告：未檢測到陀螺儀\/加速度計"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "第一個"
@@ -949,7 +949,7 @@
         "message": "反轉電機轉向"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "此選項告知混控程式電機轉向已經被反轉，且螺旋槳也已對應安裝。<strong>警告：</strong>此選項並不能反轉電機實際轉向。要反轉電機實際轉向，請通過電調配置軟件進行設置，或者交換電調 - 電機的線序。同時在嘗試解鎖前務必確認螺旋槳是按照上面示意圖的轉向安裝的。"
+        "message": "此選項告知混控程式電機轉向已經被反轉，且螺旋槳也已對應安裝。<strong>警告：<\/strong>此選項並不能反轉電機實際轉向。要反轉電機實際轉向，請通過電調配置軟件進行設置，或者交換電調 - 電機的線序。同時在嘗試解鎖前務必確認螺旋槳是按照上面示意圖的轉向安裝的。"
     },
     "configurationAutoDisarmDelay": {
         "message": "[seconds] 秒後鎖定電機（需要啟用 MOTOR_STOP）"
@@ -962,15 +962,15 @@
     },
     "configurationMotorPoles": {
         "message": "電機極數",
-        "description": "One of the fields of the ESC/Motor configuration"
+        "description": "One of the fields of the ESC\/Motor configuration"
     },
     "configurationMotorPolesLong": {
         "message": "$t(configurationMotorPoles.message)(電機轉子上的磁鐵數量)",
-        "description": "One of the fields of the ESC/Motor configuration"
+        "description": "One of the fields of the ESC\/Motor configuration"
     },
     "configurationMotorPolesHelp": {
         "message": "磁極數是電機轉子上的磁鐵數量。不要計算繞組所在的定子數量。典型的5寸機的電機有14個磁鐵；較小的飛機，例如3寸或更小的飛機，電機通常有12個磁鐵。",
-        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+        "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
     },
     "configurationThrottleMinimum": {
         "message": "最小油門（解鎖時飛控輸出給電調的最低油門數值）"
@@ -991,7 +991,7 @@
         "message": "請選擇適合您的 ESC 的輸出協議。$t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>注意：</strong>若選擇不被您的電調所支援的電調協議將導致<strong>連接電池後電調會立刻驅動電機旋轉</strong>。出於這個原因，<strong>在更改電調協議之後，連接電池之前，請確保您的螺旋槳已被卸下</strong> ！"
+        "message": "<strong>注意：<\/strong>若選擇不被您的電調所支援的電調協議將導致<strong>連接電池後電調會立刻驅動電機旋轉<\/strong>。出於這個原因，<strong>在更改電調協議之後，連接電池之前，請確保您的螺旋槳已被卸下<\/strong> ！"
     },
     "configurationDshotBeeper": {
         "message": "Dshot 信標配置"
@@ -1003,7 +1003,7 @@
         "message": "信標音調"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Dshot 信標使用電調和電機產生聲音。這意味著當電機旋轉時，Dshot 信標無法工作。在 Betaflight 3.4 和以後的版本中，若在 Dshot 信標激活時嘗試解鎖，飛控會在發出最後一聲信標音後延遲2秒再解鎖。這是為了防止 Dshot 信標功能干擾在解鎖時發送的 Dshot 命令。<br/><strong>警告：</strong> 由於 Dshot 信標會有電流流過，如果信標鳴叫強度設置得太高，可能會噪聲電機/電調過熱甚至孫奎。建議使用 BLHeli 配置程式或 BLHeliSuite 來調整和測試信標的鳴叫強度。"
+        "message": "Dshot 信標使用電調和電機產生聲音。這意味著當電機旋轉時，Dshot 信標無法工作。在 Betaflight 3.4 和以後的版本中，若在 Dshot 信標激活時嘗試解鎖，飛控會在發出最後一聲信標音後延遲2秒再解鎖。這是為了防止 Dshot 信標功能干擾在解鎖時發送的 Dshot 命令。<br\/><strong>警告：<\/strong> 由於 Dshot 信標會有電流流過，如果信標鳴叫強度設置得太高，可能會噪聲電機\/電調過熱甚至孫奎。建議使用 BLHeli 配置程式或 BLHeliSuite 來調整和測試信標的鳴叫強度。"
     },
     "configurationBeeper": {
         "message": "蜂鳴器配置"
@@ -1015,7 +1015,7 @@
         "message": "遙控器關閉或訊號丟失時持續鳴叫直到訊號恢復"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "解鎖後遙控器關閉或訊號丟失（自動降落/自動鎖定）時鳴叫 SOS 訊號"
+        "message": "解鎖後遙控器關閉或訊號丟失（自動降落\/自動鎖定）時鳴叫 SOS 訊號"
     },
     "beeperDISARMING": {
         "message": "鎖定飛控時鳴叫"
@@ -1075,7 +1075,7 @@
         "message": "當已解鎖且 RC 平滑尚未完成濾波器初始化時發出警告"
     },
     "configuration3d": {
-        "message": "3D 電調/電機功能"
+        "message": "3D 電調\/電機功能"
     },
     "configuration3dDeadbandLow": {
         "message": "3D 通道死區低值"
@@ -1096,14 +1096,14 @@
         "message": "飛控循環時間"
     },
     "configurationCalculatedCyclesSec": {
-        "message": "循環/秒[Hz]"
+        "message": "循環\/秒[Hz]"
     },
     "configurationSpeedGyroNoGyro": {
         "message": "無陀螺儀",
         "description": "When no gyro is configured this appears in place of the speed of the gyro in kHz"
     },
     "configurationSpeedPidNoGyro": {
-        "message": "Gyro / {{value}}",
+        "message": "Gyro \/ {{value}}",
         "description": "When no gyro is configured this appears in place of the speed of the PID in kHz. Try to keep it short."
     },
     "configurationKHzUnitLabel": {
@@ -1111,7 +1111,7 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>注意：</strong>確保你的飛控有能力運行在這些頻率上！檢查CPU循環時間是否穩定。改變頻率可能需要重新調校PID。提示：關閉加速度計和其他傳感器可以節省運算資源以或許更高性能。"
+        "message": "<strong>注意：<\/strong>確保你的飛控有能力運行在這些頻率上！檢查CPU循環時間是否穩定。改變頻率可能需要重新調校PID。提示：關閉加速度計和其他傳感器可以節省運算資源以或許更高性能。"
     },
     "configurationGPSProtocol": {
         "message": "協議"
@@ -1147,7 +1147,7 @@
         "message": "SPI 總線接口接收機協議"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "configurationButtonSave": {
         "message": "保存並重啟"
@@ -1159,7 +1159,7 @@
         "message": "標識符"
     },
     "portsConfiguration": {
-        "message": "設置/MSP"
+        "message": "設置\/MSP"
     },
     "portsSerialRx": {
         "message": "串行數字接收機"
@@ -1174,16 +1174,16 @@
         "message": "週邊設備"
     },
     "portsHelp": {
-        "message": "<strong>注意：</strong> 不是所有的組合都是有效的，如果飛控檢查到某組合不能同時工作，對應串口的設置將會被重置。"
+        "message": "<strong>注意：<\/strong> 不是所有的組合都是有效的，如果飛控檢查到某組合不能同時工作，對應串口的設置將會被重置。"
     },
     "portsVtxTableNotSet": {
-        "message": "<span class=\"message-negative\">警告:</span> 圖傳表尚未正確設置，圖傳控制功能不可用。請在$t(tabVtx.message)選項卡內配置圖傳表。"
+        "message": "<span class=\"message-negative\">警告:<\/span> 圖傳表尚未正確設置，圖傳控制功能不可用。請在$t(tabVtx.message)選項卡內配置圖傳表。"
     },
     "portsMSPHelp": {
-        "message": "<strong>注意：</strong><span class=\"message-negative\">不要</span>關閉第一個串口的MSP選項。否則你可能要重新燒錄固件並清空（丟失）所有設置。"
+        "message": "<strong>注意：<\/strong><span class=\"message-negative\">不要<\/span>關閉第一個串口的MSP選項。否則你可能要重新燒錄固件並清空（丟失）所有設置。"
     },
     "portsFirmwareUpgradeRequired": {
-        "message": "<span class=\"message-negative\">需要</span>升級固件。固件版本 &lt;1.8.0 不支援串口設置。"
+        "message": "<span class=\"message-negative\">需要<\/span>升級固件。固件版本 &lt;1.8.0 不支援串口設置。"
     },
     "portsButtonSave": {
         "message": "保存並重啟"
@@ -1258,7 +1258,7 @@
         "message": "Benewake LIDAR"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">禁止切換 PID 控制器 - 你可以通過 CLI 來調整。</span>當前固件 API 版本為 <span class=\"message-negative\">$1</span>，而此功能需要版本 <span class=\"message-positive\">$2</span>。"
+        "message": "<span class=\"message-negative\">禁止切換 PID 控制器 - 你可以通過 CLI 來調整。<\/span>當前固件 API 版本為 <span class=\"message-negative\">$1<\/span>，而此功能需要版本 <span class=\"message-positive\">$2<\/span>。"
     },
     "pidTuningSubTabPid": {
         "message": "PID 配置文件設置"
@@ -1302,7 +1302,7 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningDMinDisabledNote": {
-        "message": "<strong>注意:</strong>D Min功能已被禁用，其參數已隱藏。要使用D Min，請在$t(pidTuningPidSettings.message)中啟用它。"
+        "message": "<strong>注意:<\/strong>D Min功能已被禁用，其參數已隱藏。要使用D Min，請在$t(pidTuningPidSettings.message)中啟用它。"
     },
     "pidTuningDMinGain": {
         "message": "增益",
@@ -1373,19 +1373,19 @@
         "message": "D 設定點權重"
     },
     "pidTuningDtermSetpointTransitionWarning": {
-        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 強烈不建議將D設定點轉換閾值設置為0到0.1之間的值。這樣做可能會導致不穩定，以及降低搖桿在穿過中點時的響應速度。</span>"
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 強烈不建議將D設定點轉換閾值設置為0到0.1之間的值。這樣做可能會導致不穩定，以及降低搖桿在穿過中點時的響應速度。<\/span>"
     },
     "pidTuningDerivative": {
         "message": "Derivative"
     },
     "pidTuningMaxRateWarning": {
-        "message": "<span class=\"message-negative\"><b>警告:</b></span> 非常高的 rate 可能會導致突然減速時發生電機失步。"
+        "message": "<span class=\"message-negative\"><b>警告:<\/b><\/span> 非常高的 rate 可能會導致突然減速時發生電機失步。"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
     },
     "pidTuningMaxVel": {
-        "message": "最大角速度 [度/秒]"
+        "message": "最大角速度 [度\/秒]"
     },
     "pidTuningRate": {
         "message": "Rate"
@@ -1397,16 +1397,13 @@
         "message": "Rates 預覽"
     },
     "pidTuningRatesTuningHelp": {
-        "message": "<b>Rage 與 Expo</b>: 根據這些參數來決定你的操控手感。使用圖形和實時3D模型 找到您最喜歡的 rate 設定。 "
+        "message": "<b>Rage 與 Expo<\/b>: 根據這些參數來決定你的操控手感。使用圖形和實時3D模型 找到您最喜歡的 rate 設定。 "
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
     "pidTuningTPA": {
         "message": "TPA"
-    },
-    "pidTuningTPABreakPoint": {
-        "message": "TPA 起始點"
     },
     "pidTuningThrottleCurvePreview": {
         "message": "油門曲線預覽"
@@ -1427,7 +1424,7 @@
         "message": "截斷"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "選擇油門限制的類型。<b>關閉</b> 將禁用此功能；<b>比例</b> 將使用全桿行程來映射從0到指定百分比的油門；<b>截斷</b> 將設置一個最大油門百分比，該百分比以上的桿位行程將不再起作用。"
+        "message": "選擇油門限制的類型。<b>關閉<\/b> 將禁用此功能；<b>比例<\/b> 將使用全桿行程來映射從0到指定百分比的油門；<b>截斷<\/b> 將設置一個最大油門百分比，該百分比以上的桿位行程將不再起作用。"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "設置所需的限制百分比。設置為100% 將禁用該功能。"
@@ -1475,25 +1472,25 @@
         "message": "取消"
     },
     "pidTuningReceivedProfile": {
-        "message": "當前飛控 PID 配置文件: <strong class=\"message-positive\">$1</strong>"
+        "message": "當前飛控 PID 配置文件: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "當前飛控 Rate 配置文件: <strong class=\"message-positive\">$1</strong>"
+        "message": "當前飛控 Rate 配置文件: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": "加載 PID 配置文件: <strong class=\"message-positive\">$1</strong>"
+        "message": "加載 PID 配置文件: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": "加載 Rate 配置文件: <strong class=\"message-positive\">$1</strong>"
+        "message": "加載 Rate 配置文件: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": "PID 數據<strong>已刷新</strong>"
+        "message": "PID 數據<strong>已刷新<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "tuningHelp": {
-        "message": "<b>調校技巧</b><br /><span class=\"message-negative\">重要：</span>調校後的初次飛行需注意電機溫度。濾波值越高，飛行效果可能越好，但也會導致更多的訊號“噪音”進入電機。<br>100Hz 是默認較佳的數值，但對震動較嚴重的情況，您可以嘗試把 Dterm 和 Gyro 濾波器降低到50Hz。"
+        "message": "<b>調校技巧<\/b><br \/><span class=\"message-negative\">重要：<\/span>調校後的初次飛行需注意電機溫度。濾波值越高，飛行效果可能越好，但也會導致更多的訊號“噪音”進入電機。<br>100Hz 是默認較佳的數值，但對震動較嚴重的情況，您可以嘗試把 Dterm 和 Gyro 濾波器降低到50Hz。"
     },
     "receiverThrottleMid": {
         "message": "油門中點"
@@ -1505,7 +1502,7 @@
         "message": "‘搖桿低位’ 閾值"
     },
     "receiverHelpStickMin": {
-        "message": "搖桿最小值(搖桿最低/最左) 的數值 (微秒) (大於這個值飛控認為遙控訊號正常)"
+        "message": "搖桿最小值(搖桿最低\/最左) 的數值 (微秒) (大於這個值飛控認為遙控訊號正常)"
     },
     "receiverStickCenter": {
         "message": "搖桿中點"
@@ -1517,7 +1514,7 @@
         "message": "‘搖桿高位’ 閾值"
     },
     "receiverHelpStickMax": {
-        "message": "搖桿最大值(搖桿最高/最右) 的數值 (微秒) (小於這個值飛控認為遙控訊號正常)"
+        "message": "搖桿最大值(搖桿最高\/最右) 的數值 (微秒) (小於這個值飛控認為遙控訊號正常)"
     },
     "receiverDeadband": {
         "message": "RC 死區區間"
@@ -1529,13 +1526,13 @@
         "message": "Yaw 死區區間"
     },
     "receiverHelpYawDeadband": {
-        "message": "遙控輸入變化大於多少us飛控才認為是有效輸入。對於靜止狀態下有抖動的遙控器，可以適當增加這個值。<strong>該設置僅對 Yaw 有效</strong>。"
+        "message": "遙控輸入變化大於多少us飛控才認為是有效輸入。對於靜止狀態下有抖動的遙控器，可以適當增加這個值。<strong>該設置僅對 Yaw 有效<\/strong>。"
     },
     "recevier3dDeadbandThrottle": {
         "message": "3D 油門死區"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": "增加這個值（us）會增加3D 油門中位寬度。<strong>該設置只對 3D 油門有效</strong>。"
+        "message": "增加這個值（us）會增加3D 油門中位寬度。<strong>該設置只對 3D 油門有效<\/strong>。"
     },
     "receiverChannelMap": {
         "message": "通道映射"
@@ -1568,10 +1565,10 @@
         "message": "對頻請求已發送到飛行控制器。"
     },
     "receiverDataRefreshed": {
-        "message": "RC 調整數據<strong>已刷新</strong>"
+        "message": "RC 調整數據<strong>已刷新<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "receiverModelPreview": {
         "message": "預覽"
@@ -1580,7 +1577,7 @@
         "message": "啟用控制"
     },
     "auxiliaryHelp": {
-        "message": "在此處通過使用範圍和/或鏈接到其他模式的組合配置飛行模式(BF4.0及更高版本支援鏈接) 。使用<strong>範圍</strong> 來定義遙控器上的開關和分配響應的模式。當接收機給出的通道值在最小/最大範圍內將激活該模式。當一個模式被激活時，使用<strong>鏈接</strong>來激活另一個模式。<strong>例外:</strong> 解鎖不能鏈接或被鏈接到其他的模式，當一個模式已被鏈接則無法被再次鏈接(多重連接) 。多個範圍/鏈接可以用於激活任何模式。如果為一個模式定義了多個範圍/鏈接，則可以將每個範圍/鏈接設置為<strong>和</strong> 或是 <strong>或</strong>。模式將在以下情況下被激活：<br />- 全部的<strong>和</strong> 範圍/鏈接都激活；或者是<br />- 至少有一個 <strong>或</strong> 範圍/鏈接激活。<br /><br />記得使用保存按鈕來保存你的設置。"
+        "message": "在此處通過使用範圍和\/或鏈接到其他模式的組合配置飛行模式(BF4.0及更高版本支援鏈接) 。使用<strong>範圍<\/strong> 來定義遙控器上的開關和分配響應的模式。當接收機給出的通道值在最小\/最大範圍內將激活該模式。當一個模式被激活時，使用<strong>鏈接<\/strong>來激活另一個模式。<strong>例外:<\/strong> 解鎖不能鏈接或被鏈接到其他的模式，當一個模式已被鏈接則無法被再次鏈接(多重連接) 。多個範圍\/鏈接可以用於激活任何模式。如果為一個模式定義了多個範圍\/鏈接，則可以將每個範圍\/鏈接設置為<strong>和<\/strong> 或是 <strong>或<\/strong>。模式將在以下情況下被激活：<br \/>- 全部的<strong>和<\/strong> 範圍\/鏈接都激活；或者是<br \/>- 至少有一個 <strong>或<\/strong> 範圍\/鏈接激活。<br \/><br \/>記得使用保存按鈕來保存你的設置。"
     },
     "auxiliaryToggleUnused": {
         "message": "隱藏未使用的模式"
@@ -1623,7 +1620,7 @@
         "message": "例如："
     },
     "adjustmentsExample1": {
-        "message": "使用AUX1通道上的三段開關在Pitch/Roll 的 P, I 和 D 之間選擇，使用AUX2通道的三段開關來上下增大和減小數值（撥高，或撥低）。"
+        "message": "使用AUX1通道上的三段開關在Pitch\/Roll 的 P, I 和 D 之間選擇，使用AUX2通道的三段開關來上下增大和減小數值（撥高，或撥低）。"
     },
     "adjustmentsExample2": {
         "message": "使用 AUX4 通道上的三段開關來選擇 Rate 配置文件"
@@ -1755,7 +1752,7 @@
         "message": "保存"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "transponderNotSupported": {
         "message": "該飛控不支援比賽收發器"
@@ -1800,16 +1797,16 @@
         "message": "仅十六進制數字，0-9， A-F"
     },
     "transponderHelp1": {
-        "message": "在此配置您的比賽收發器編號。注意：只有有效的編號才會被系統接收。有效的編號可以在這裡獲得：<a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro</a>。"
+        "message": "在此配置您的比賽收發器編號。注意：只有有效的編號才會被系統接收。有效的編號可以在這裡獲得：<a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro<\/a>。"
     },
     "transponderHelp2": {
-        "message": "更多訊息請訪問<a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站</a>"
+        "message": "更多訊息請訪問<a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站<\/a>"
     },
     "transponderDataHelp3": {
         "message": "選擇 ERLT ID 0-63"
     },
     "transponderHelp3": {
-        "message": "更多訊息請訪問<a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站</a>"
+        "message": "更多訊息請訪問<a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer 網站<\/a>"
     },
     "transponderButtonSave": {
         "message": "保存"
@@ -1818,7 +1815,7 @@
         "message": "保存並重啟"
     },
     "transponderDataInvalid": {
-        "message": "收發器數據 <span class=\"message-negative\">無效</span>"
+        "message": "收發器數據 <span class=\"message-negative\">無效<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "舵機功能要求固件版本大於1.10.0 且飛控支援"
@@ -1857,7 +1854,7 @@
         "message": "反向"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">已保存</span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -1996,10 +1993,10 @@
         "message": "主控制"
     },
     "motorsEnableControl": {
-        "message": "<strong>我已了解風險</strong>，螺旋槳已被拆除 - 啟用電機控制和允許解鎖，並禁用[預防起飛失控]。"
+        "message": "<strong>我已了解風險<\/strong>，螺旋槳已被拆除 - 啟用電機控制和允許解鎖，並禁用[預防起飛失控]。"
     },
     "sensorsInfo": {
-        "message": "請注意，設置過高的圖形刷新率會縮短尤其是筆記型電腦的電池使用時間。<br />建議只打開您感興趣的傳感器的圖形顯示並使用合理的刷新速率"
+        "message": "請注意，設置過高的圖形刷新率會縮短尤其是筆記型電腦的電池使用時間。<br \/>建議只打開您感興趣的傳感器的圖形顯示並使用合理的刷新速率"
     },
     "sensorsRefresh": {
         "message": "刷新："
@@ -2026,7 +2023,7 @@
         "message": "调试"
     },
     "sensorsGyroTitle": {
-        "message": "陀螺儀 - 度/秒"
+        "message": "陀螺儀 - 度\/秒"
     },
     "sensorsAltitudeTitle": {
         "message": "高度 -米"
@@ -2041,7 +2038,7 @@
         "message": "调试"
     },
     "cliInfo": {
-        "message": "<strong>注意：</strong>退出 CLI 頁面或者電機斷開連接將<strong>自動</strong>向飛控“<strong>退出</strong>”指令。在最新的固件中這將使飛控<strong>重啟</strong>並且未保存的設置將會<strong>丟失</strong>。<p><strong><span class=\"message-negative\">警告：</span></strong>CLI中的某些命令可能導致電機輸出引腳發出隨機指令。如果連接電池，這有可能導致電機旋轉。因此，強烈建議<strong>在 CLI 中輸入令之前確保未連接電池</strong>。"
+        "message": "<strong>注意：<\/strong>退出 CLI 頁面或者電機斷開連接將<strong>自動<\/strong>向飛控“<strong>退出<\/strong>”指令。在最新的固件中這將使飛控<strong>重啟<\/strong>並且未保存的設置將會<strong>丟失<\/strong>。<p><strong><span class=\"message-negative\">警告：<\/span><\/strong>CLI中的某些命令可能導致電機輸出引腳發出隨機指令。如果連接電池，這有可能導致電機旋轉。因此，強烈建議<strong>在 CLI 中輸入令之前確保未連接電池<\/strong>。"
     },
     "cliInputPlaceholder": {
         "message": "在這裡輸入你的命令。按 Tab 可以進行自動填充。"
@@ -2071,16 +2068,16 @@
         "message": "從文件加載"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "已加載文件<strong>{{fileName}}</strong>。查看已加載的命令"
+        "message": "已加載文件<strong>{{fileName}}<\/strong>。查看已加載的命令"
     },
     "cliConfirmSnippetNote": {
-        "message": "<strong>注意</strong>：你可以在執行前查看和編輯命令"
+        "message": "<strong>注意<\/strong>：你可以在執行前查看和編輯命令"
     },
     "cliConfirmSnippetBtn": {
         "message": "執行"
     },
     "loggingNote": {
-        "message": "數據<span class=\"message-negative\">僅會</span>在此頁面記錄，關閉此頁面將會 <span class=\"message-negative\">取消</span>數據記錄，並且應用將會返回<strong>“普通配置”</strong>狀態。<br />你可以選擇合適的全局刷新率，飛控出於性能考慮，只會每 <strong>1</strong> 秒寫入一次日誌。"
+        "message": "數據<span class=\"message-negative\">僅會<\/span>在此頁面記錄，關閉此頁面將會 <span class=\"message-negative\">取消<\/span>數據記錄，並且應用將會返回<strong>“普通配置”<\/strong>狀態。<br \/>你可以選擇合適的全局刷新率，飛控出於性能考慮，只會每 <strong>1<\/strong> 秒寫入一次日誌。"
     },
     "loggingSamplesSaved": {
         "message": "採樣已保存"
@@ -2098,10 +2095,10 @@
         "message": "停止記錄"
     },
     "loggingBack": {
-        "message": "退出記錄/斷開連接"
+        "message": "退出記錄\/斷開連接"
     },
     "loggingErrorNotConnected": {
-        "message": "請先<strong>連接</strong>"
+        "message": "請先<strong>連接<\/strong>"
     },
     "loggingErrorLogFile": {
         "message": "請選擇記錄文件"
@@ -2110,7 +2107,7 @@
         "message": "至少需要選擇一個數據集來記錄"
     },
     "loggingAutomaticallyRetained": {
-        "message": "已自動加載上一個記錄文件: <strong>$1</strong>"
+        "message": "已自動加載上一個記錄文件: <strong>$1<\/strong>"
     },
     "blackboxNotSupported": {
         "message": "該飛控固件不支援黑盒日誌記錄"
@@ -2239,7 +2236,7 @@
         "message": "手動下載"
     },
     "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">重要</span>：請選擇飛控對應的固件，如果燒寫錯誤的固件將會導致<span class=\"message-negative\">糟糕</span> 的事發生。"
+        "message": "<span class=\"message-negative\">重要<\/span>：請選擇飛控對應的固件，如果燒寫錯誤的固件將會導致<span class=\"message-negative\">糟糕<\/span> 的事發生。"
     },
     "firmwareFlasherPath": {
         "message": "路徑："
@@ -2296,7 +2293,7 @@
         "message": "手動設置鮑率"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "如果飛控不支援默認的鮑率，或者要通過藍芽模塊来烧录，可以手動設置鮑率。<br /><span class=\"message-negative\">注意：</span> USB DFU 燒錄時該選項無效。"
+        "message": "如果飛控不支援默認的鮑率，或者要通過藍芽模塊来烧录，可以手動設置鮑率。<br \/><span class=\"message-negative\">注意：<\/span> USB DFU 燒錄時該選項無效。"
     },
     "firmwareFlasherBaudRate": {
         "message": "鮑率"
@@ -2323,7 +2320,7 @@
         "message": "3.4 AKK & RDQ 圖傳 補丁"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": "選擇固件/飛控板"
+        "message": "選擇固件\/飛控板"
     },
     "firmwareFlasherOptionLabelSelectBoard": {
         "message": "選擇飛控板"
@@ -2368,7 +2365,7 @@
         "message": "訊息："
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong> 恢復/丟失通訊</strong>"
+        "message": "<strong> 恢復\/丟失通訊<\/strong>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "關閉固件燒寫"
@@ -2388,7 +2385,7 @@
         "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": "<span class=\"message-positive\">固件加載成功，可供燒錄</span>"
+        "message": "<span class=\"message-positive\">固件加載成功，可供燒錄<\/span>"
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "加載固件失敗"
@@ -2401,22 +2398,22 @@
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
     },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": "<b>沒有找到選擇的固件</b>"
+        "message": "<b>沒有找到選擇的固件<\/b>"
     },
     "firmwareFlasherNoValidPort": {
-        "message": "<span class=\"message-negative\">請選擇有效的串口</span>"
+        "message": "<span class=\"message-negative\">請選擇有效的串口<\/span>"
     },
     "firmwareFlasherWritePermissions": {
-        "message": "沒有該文件的<span class=\"message-negative\">寫入</span>權限"
+        "message": "沒有該文件的<span class=\"message-negative\">寫入<\/span>權限"
     },
     "firmwareFlasherFlashTrigger": {
-        "message": "檢測到飛控：<strong>$1</strong> - 正在觸發自動燒錄"
+        "message": "檢測到飛控：<strong>$1<\/strong> - 正在觸發自動燒錄"
     },
     "firmwareFlasherPreviousDevice": {
-        "message": "檢測到：<strong>$1</strong> - 仍在燒錄前一個設備，請稍後重新插入再試一次。"
+        "message": "檢測到：<strong>$1<\/strong> - 仍在燒錄前一個設備，請稍後重新插入再試一次。"
     },
     "ledStripHelp": {
-        "message": "飛控可以控制 LED 燈帶上的每一個燈珠的顏色和效果。 <br />配置燈珠的位置，連線的順序，然後按位置將燈帶接入。沒有設置過接線順序的燈珠設置不會被保存。 <br />在一個顏色上雙擊可編輯 HSV 值。"
+        "message": "飛控可以控制 LED 燈帶上的每一個燈珠的顏色和效果。 <br \/>配置燈珠的位置，連線的順序，然後按位置將燈帶接入。沒有設置過接線順序的燈珠設置不會被保存。 <br \/>在一個顏色上雙擊可編輯 HSV 值。"
     },
     "ledStripButtonSave": {
         "message": "保存"
@@ -2715,7 +2712,7 @@
         "message": "AUX 16"
     },
     "pidTuningBasic": {
-        "message": "基本/手動模式"
+        "message": "基本\/手動模式"
     },
     "pidTuningYawJumpPrevention": {
         "message": "抑制 Yaw Jump"
@@ -2730,13 +2727,13 @@
         "message": "該指數用以計算RC Expo。在 Betaflight 3.0版本之前，該值固定為3。"
     },
     "pidTuningLevel": {
-        "message": "自穩/半自穩"
+        "message": "自穩\/半自穩"
     },
     "pidTuningAltitude": {
-        "message": "氣壓計和聲納/高度"
+        "message": "氣壓計和聲納\/高度"
     },
     "pidTuningMag": {
-        "message": "磁力計/朝向"
+        "message": "磁力計\/朝向"
     },
     "pidTuningGps": {
         "message": "GPS 導航"
@@ -2792,11 +2789,11 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">小心</span>: 當前的滑塊位置可能導致起飛失控、電機損壞或飛行器出現其他不安全的行為。請謹慎行事。",
+        "message": "<span class=\"message-negative\">小心<\/span>: 當前的滑塊位置可能導致起飛失控、電機損壞或飛行器出現其他不安全的行為。請謹慎行事。",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
-        "message": "<strong>注意:</strong>滑塊已禁用，因為已手動更改數值。點擊$t(pidTuningSliderEnableButton.message)按鈕將再次激活它們。這將重置數值，任何未保存的更改都將丟失。",
+        "message": "<strong>注意:<\/strong>滑塊已禁用，因為已手動更改數值。點擊$t(pidTuningSliderEnableButton.message)按鈕將再次激活它們。這將重置數值，任何未保存的更改都將丟失。",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningSliderEnableButton": {
@@ -2804,7 +2801,7 @@
         "description": "Button label for enabling sliders"
     },
     "pidTuningSlidersNonExpertMode": {
-        "message": "<strong>注意:</strong> 滑塊範圍受限，因為未使用專家模式。此範圍應該適用於大多數飛行器以及初學者。",
+        "message": "<strong>注意:<\/strong> 滑塊範圍受限，因為未使用專家模式。此範圍應該適用於大多數飛行器以及初學者。",
         "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
@@ -2963,13 +2960,13 @@
         "message": "任意角度（直立，反轉，旋轉等）安裝飛控板。當使用外部傳感器時，請使用傳感器校正設置(陀螺，加速度計，磁場計)來決定獨立於飛控板的傳感器位置。"
     },
     "failsafeFeaturesHelpOld": {
-        "message": "失控保護功能被大量重做。請使用Betaflight <strong>v1.12.0+</strong> 來啟用增強的失控保護設置頁。"
+        "message": "失控保護功能被大量重做。請使用Betaflight <strong>v1.12.0+<\/strong> 來啟用增強的失控保護設置頁。"
     },
     "failsafePaneTitleOld": {
         "message": "接收器失控保護"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "失控保護有兩個階段。若飛控在任一接收通道收到無效的脈衝長度，或者接收機匯報已失控，或者徹底沒有收到接收機訊號，飛控將進入<strong>一階失控保護</strong>狀態。飛控將會在<span class=\"message-negative\">所有通道</span>使用預置通道設置，如果短時間內訊號恢復將可退出失控保護狀態。若飛機處於<span class=\"message-negative\">解鎖</span>狀態，並且一階失控保護模式持續時間超過了預設的時間，飛控將進入<strong>二價失控保護</strong>狀態，所有通道將會保持當前輸出。 <br /><strong>注意：</strong> 在飛控進入一階失控保護之前，如果AUX 通道出現無效的脈衝，該通道一樣會使用預置通道設置。"
+        "message": "失控保護有兩個階段。若飛控在任一接收通道收到無效的脈衝長度，或者接收機匯報已失控，或者徹底沒有收到接收機訊號，飛控將進入<strong>一階失控保護<\/strong>狀態。飛控將會在<span class=\"message-negative\">所有通道<\/span>使用預置通道設置，如果短時間內訊號恢復將可退出失控保護狀態。若飛機處於<span class=\"message-negative\">解鎖<\/span>狀態，並且一階失控保護模式持續時間超過了預設的時間，飛控將進入<strong>二價失控保護<\/strong>狀態，所有通道將會保持當前輸出。 <br \/><strong>注意：<\/strong> 在飛控進入一階失控保護之前，如果AUX 通道出現無效的脈衝，該通道一樣會使用預置通道設置。"
     },
     "failsafePulsrangeTitle": {
         "message": "有效脈衝範圍設置"
@@ -2984,13 +2981,13 @@
         "message": "最大長度"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "當進入一階失控保護時，這些設置將會應用於單獨無效的AUX 通道，或者是所有通道。 <strong>注意：</strong>數值應是25us的整數倍，小於25us的設置會被上下取整。"
+        "message": "當進入一階失控保護時，這些設置將會應用於單獨無效的AUX 通道，或者是所有通道。 <strong>注意：<\/strong>數值應是25us的整數倍，小於25us的設置會被上下取整。"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>自動</strong> 指的是 橫滾、俯仰、方向都回中，油門最低。 <strong>保持</strong> 指的是 所有通道保持最後從接收機接收到的有效的數值。"
+        "message": "<strong>自動<\/strong> 指的是 橫滾、俯仰、方向都回中，油門最低。 <strong>保持<\/strong> 指的是 所有通道保持最後從接收機接收到的有效的數值。"
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>保持</strong>指的是 所有通道保持最後接收到的有效的數值。 <strong>設置</strong> 指的是 通道使用在這裡設定的值。"
+        "message": "<strong>保持<\/strong>指的是 所有通道保持最後接收到的有效的數值。 <strong>設置<\/strong> 指的是 通道使用在這裡設定的值。"
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "二階失控保護 - 設置"
@@ -3029,13 +3026,13 @@
         "message": "當前高度"
     },
     "failsafeGpsRescueItemAscendRate": {
-        "message": "上升速率（米/秒）"
+        "message": "上升速率（米\/秒）"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "下降距離 (米)"
     },
     "failsafeGpsRescueItemDescendRate": {
-        "message": "下降速率（米/秒）"
+        "message": "下降速率（米\/秒）"
     },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "最低油門"
@@ -3062,7 +3059,7 @@
         "message": "失控保護開關 （在模式頁面設置失控保護模式）"
     },
     "failsafeKillSwitchHelp": {
-        "message": "設置這個選項會使失控保護開關(模式頁面設置)作為直接關閉開關，將會繞開所有的失控保護檢測程式。 <strong>注意:</strong> 當打開失控保護開關時，解鎖開關無效"
+        "message": "設置這個選項會使失控保護開關(模式頁面設置)作為直接關閉開關，將會繞開所有的失控保護檢測程式。 <strong>注意:<\/strong> 當打開失控保護開關時，解鎖開關無效"
     },
     "failsafeSwitchTitle": {
         "message": "失控保護開關"
@@ -3071,7 +3068,7 @@
         "message": "失控保護開關行為"
     },
     "failsafeSwitchModeHelp": {
-        "message": "此選項確定通過輔助開關激活失控保護時發生的情況:<br/><strong>階段 1</strong> 激活階段1失控保護。如果要模擬訊號丟失時的失控保護行為，此功能非常有用。 <br/><strong>階段 2</strong> 跳過階段1並立即激活階段2流程<br/><strong>終止</strong> 立即鎖定 （你的飛行器將會墜毀）"
+        "message": "此選項確定通過輔助開關激活失控保護時發生的情況:<br\/><strong>階段 1<\/strong> 激活階段1失控保護。如果要模擬訊號丟失時的失控保護行為，此功能非常有用。 <br\/><strong>階段 2<\/strong> 跳過階段1並立即激活階段2流程<br\/><strong>終止<\/strong> 立即鎖定 （你的飛行器將會墜毀）"
     },
     "failsafeSwitchOptionStage1": {
         "message": "階段 1"
@@ -3086,7 +3083,7 @@
         "message": "保存"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": "固件更新 <span class=\"message-negative\">要求</span>。電池/電流/電壓通過API &lt; 1.33.0 設置。（Betaflight 版本&lt;=3.17）不支援。"
+        "message": "固件更新 <span class=\"message-negative\">要求<\/span>。電池\/電流\/電壓通過API &lt; 1.33.0 設置。（Betaflight 版本&lt;=3.17）不支援。"
     },
     "powerBatteryVoltageMeterSource": {
         "message": "電壓計選擇"
@@ -3116,7 +3113,7 @@
         "message": "電調傳感器"
     },
     "powerBatteryCurrentMeterTypeMsp": {
-        "message": "MSP 傳感器/OSD 從機"
+        "message": "MSP 傳感器\/OSD 從機"
     },
     "powerBatteryMinimum": {
         "message": "最低單芯電壓"
@@ -3134,16 +3131,16 @@
         "message": "校準管理器"
     },
     "powerCalibrationManagerHelp": {
-        "message": "要校準，請使用萬用表測量你的飛行器上(接上電池) 的實際電壓/電流，然後在下方輸入值。然後，在同一塊電池仍然接入的情況下，點擊 [Calibrate] 按鈕。"
+        "message": "要校準，請使用萬用表測量你的飛行器上(接上電池) 的實際電壓\/電流，然後在下方輸入值。然後，在同一塊電池仍然接入的情況下，點擊 [Calibrate] 按鈕。"
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>注意：</strong>在校準縮放之前，請確保電壓和電流漂移的除數和乘數設置正確。 <br>將值設置為0將不會應用校準。 </br><strong>切記在插入電池之前移除螺旋槳！ </strong>"
+        "message": "<strong>注意：<\/strong>在校準縮放之前，請確保電壓和電流漂移的除數和乘數設置正確。 <br>將值設置為0將不會應用校準。 <\/br><strong>切記在插入電池之前移除螺旋槳！ <\/strong>"
     },
     "powerCalibrationManagerWarning": {
-        "message": "<span class=\"message-negative\">警告：</span>電池<span class=\"message-negative\">未接入</span>或電壓計源和電流計源<span class=\"message-negative \">沒有正確設置。 </span>請確保電壓計和/或電流計讀數超過0. 否則您將無法使用此工具進行校準。"
+        "message": "<span class=\"message-negative\">警告：<\/span>電池<span class=\"message-negative\">未接入<\/span>或電壓計源和電流計源<span class=\"message-negative \">沒有正確設置。 <\/span>請確保電壓計和\/或電流計讀數超過0. 否則您將無法使用此工具進行校準。"
     },
     "powerCalibrationManagerSourceNote": {
-        "message": "<span class=\"message-negative\">警告：</span>電壓計和/或電流計測量源<strong>已經更改，但未保存</strong>。請在校準之前設置並保存正確的測量源。"
+        "message": "<span class=\"message-negative\">警告：<\/span>電壓計和\/或電流計測量源<strong>已經更改，但未保存<\/strong>。請在校準之前設置並保存正確的測量源。"
     },
     "powerCalibrationManagerConfirmationTitle": {
         "message": "校準管理器確認訊息"
@@ -3158,13 +3155,13 @@
         "message": "放棄校準"
     },
     "powerCalibrationConfirmHelp": {
-        "message": "這裡顯示新的校準放縮表。 <br>應用它們將會設置縮放但<strong>並不會保存</strong>。 </br> <br>在保存之後，請確保新的電壓和電流讀數正確。 </br>"
+        "message": "這裡顯示新的校準放縮表。 <br>應用它們將會設置縮放但<strong>並不會保存<\/strong>。 <\/br> <br>在保存之後，請確保新的電壓和電流讀數正確。 <\/br>"
     },
     "powerVoltageHead": {
         "message": "電壓計"
     },
     "powerVoltageWarning": {
-        "message": "<span class=\"message-negative\">警告:</span> 此值已被限制為 25.5A"
+        "message": "<span class=\"message-negative\">警告:<\/span> 此值已被限制為 25.5A"
     },
     "powerVoltageValue": {
         "message": "$1 V"
@@ -3257,7 +3254,7 @@
         "message": "電流計"
     },
     "powerAmperageWarning": {
-        "message": "<span class=\"message-negative\">警告:</span> 此值已被限制為 63.5A"
+        "message": "<span class=\"message-negative\">警告:<\/span> 此值已被限制為 63.5A"
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -3314,7 +3311,7 @@
         "message": "$1 mAh"
     },
     "powerAmperageScale": {
-        "message": "比例 [1/10 mV/A]"
+        "message": "比例 [1\/10 mV\/A]"
     },
     "powerAmperageOffset": {
         "message": "偏移量 [mA]"
@@ -3356,16 +3353,16 @@
         "message": "OSD 熒幕疊加顯示"
     },
     "osdSetupNoOsdChipDetectWarning": {
-        "message": "<span class=\"message-negative\"><b>警告：</b></span>未檢測到OSD晶片。部分飛控在未接入電池的情況下無法給OSD晶片正常供電。請在連接 USB 之前接入電池 (務必卸下螺旋槳！)"
+        "message": "<span class=\"message-negative\"><b>警告：<\/b><\/span>未檢測到OSD晶片。部分飛控在未接入電池的情況下無法給OSD晶片正常供電。請在連接 USB 之前接入電池 (務必卸下螺旋槳！)"
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>注意:</strong>OSD 預覽可能無法顯示飛控實際安裝的字體。當使用舊版本的固件時，某些圖標的佈局位置可能會有所不同 - 請在飛行之前先通過視頻眼鏡檢查妥當。"
+        "message": "<strong>注意:<\/strong>OSD 預覽可能無法顯示飛控實際安裝的字體。當使用舊版本的固件時，某些圖標的佈局位置可能會有所不同 - 請在飛行之前先通過視頻眼鏡檢查妥當。"
     },
     "osdSetupUnsupportedNote1": {
         "message": "飛控對 OSD 命令無反應，有可能飛控不帶 OSD 功能。"
     },
     "osdSetupUnsupportedNote2": {
-        "message": "注意，有的飛控帶有 <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD</a>，可以通過<a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>來燒錄和設置，但是這樣的飛控不能通過此頁面來設置參數。"
+        "message": "注意，有的飛控帶有 <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD<\/a>，可以通過<a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>來燒錄和設置，但是這樣的飛控不能通過此頁面來設置參數。"
     },
     "osdSetupProfilesTitle": {
         "message": "OSD 配置文件編號",
@@ -3471,7 +3468,7 @@
         "message": "必須是綠色、黑色和白色像素"
     },
     "osdSetupCustomLogoInfoUploadHint": {
-        "message": "單擊 <b>$t(osdSetupUploadFont.message)</b> 以保存自定義徽標"
+        "message": "單擊 <b>$t(osdSetupUploadFont.message)<\/b> 以保存自定義徽標"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "圖像包含無效的像素： rgb ({{valueR}}, {{valueG}}, {{valueB}}) ，坐標 {{posX}}x{{posY}}"
@@ -3721,7 +3718,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementAvgCellVoltage": {
-        "message": "平均單芯電壓 （電池總電壓 / 芯數）"
+        "message": "平均單芯電壓 （電池總電壓 \/ 芯數）"
     },
     "osdTextElementPitchAngle": {
         "message": "角度: pitch",
@@ -3816,7 +3813,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRtcDateTime": {
-        "message": "日期/時間"
+        "message": "日期\/時間"
     },
     "osdTextElementAdjustmentRange": {
         "message": "調整範圍",
@@ -3961,7 +3958,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEfficiency": {
-        "message": "以 毫安時/距離 為單位的瞬時電池消耗量 (需要有效的 GPS 定位)"
+        "message": "以 毫安時\/距離 為單位的瞬時電池消耗量 (需要有效的 GPS 定位)"
     },
     "osdTextElementUnknown": {
         "message": "未知 $1",
@@ -4172,7 +4169,7 @@
         "message": "來源："
     },
     "osdTimerSourceTooltip": {
-        "message": "選擇時鐘源，這控制了計時器測量的持續時間/事件"
+        "message": "選擇時鐘源，這控制了計時器測量的持續時間\/事件"
     },
     "osdTimerSourceOptionOnTime": {
         "message": "總啟動時間",
@@ -4187,7 +4184,7 @@
         "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
-        "message": "啟動/解鎖時間",
+        "message": "啟動\/解鎖時間",
         "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
@@ -4273,7 +4270,7 @@
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningEscFail": {
-        "message": "列舉一個出現故障的電調/電機的列表 (RPM 或溫度超出配置的閾值)"
+        "message": "列舉一個出現故障的電調\/電機的列表 (RPM 或溫度超出配置的閾值)"
     },
     "osdWarningTextCoreTemperature": {
         "message": "核心溫度",
@@ -4376,25 +4373,25 @@
         "message": "OSD 設置已保存"
     },
     "osdWritePermissions": {
-        "message": "您沒有此文件的 <span class=\"message-negative\">寫入權限</span>"
+        "message": "您沒有此文件的 <span class=\"message-negative\">寫入權限<\/span>"
     },
     "osdButtonSaved": {
         "message": "已儲存"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class=\"message-negative\">注意:</span>您的圖傳未配置或不支援。所以您不能在此修改圖傳值。只有當圖傳使用Tramp或SmartAudio等協議，連接到飛行控制器，並在$t(tabPorts.message)頁面中正確配置後，才可以使用。",
+        "message": "<span class=\"message-negative\">注意:<\/span>您的圖傳未配置或不支援。所以您不能在此修改圖傳值。只有當圖傳使用Tramp或SmartAudio等協議，連接到飛行控制器，並在$t(tabPorts.message)頁面中正確配置後，才可以使用。",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
-        "message": "<span class=\"message-negative\">注意:</span>在使用$t(vtxSelectedMode.message)之前，必須先在下面配置並保存圖傳表",
+        "message": "<span class=\"message-negative\">注意:<\/span>在使用$t(vtxSelectedMode.message)之前，必須先在下面配置並保存圖傳表",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">注意：</span> 選定的圖傳不支援以“工廠模式”設置頻段，但您的部分頻段設置中使用了這個功能。點擊 '$t(vtxButtonSave.message)' 以修復這個問題。",
+        "message": "<span class=\"message-negative\">注意：<\/span> 選定的圖傳不支援以“工廠模式”設置頻段，但您的部分頻段設置中使用了這個功能。點擊 '$t(vtxButtonSave.message)' 以修復這個問題。",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
-        "message": "<span class=\"message-negative\">注意:</span>圖傳表內容已加載，但尚未存儲至飛行控制器。您必須驗證和修改部分數值，以確保其在您的國家有效且合法，然後點擊$t(vtxButtonSave.message)按鈕來將其儲存至飛行控制器上。",
+        "message": "<span class=\"message-negative\">注意:<\/span>圖傳表內容已加載，但尚未存儲至飛行控制器。您必須驗證和修改部分數值，以確保其在您的國家有效且合法，然後點擊$t(vtxButtonSave.message)按鈕來將其儲存至飛行控制器上。",
         "description": "Message to show when the VTX Table has been loaded from a external source"
     },
     "vtxFrequencyChannel": {
@@ -4402,7 +4399,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "如果您啟用此功能，配置器將會讓您直接選擇特定頻率而不是常見的頻段/頻道。為了使其工作，您的圖傳必須支援此功能。",
+        "message": "如果您啟用此功能，配置器將會讓您直接選擇特定頻率而不是常見的頻段\/頻道。為了使其工作，您的圖傳必須支援此功能。",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -4574,27 +4571,27 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxSavedFileOk": {
-        "message": "圖傳配置文件<span class=\"message-positive\">已保存</span>",
+        "message": "圖傳配置文件<span class=\"message-positive\">已保存<\/span>",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
     "vtxSavedFileKo": {
-        "message": "<span class=\"message-negative\">錯誤</span>加載圖傳配置文件",
+        "message": "<span class=\"message-negative\">錯誤<\/span>加載圖傳配置文件",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
     "vtxLoadFileOk": {
-        "message": "圖傳配置文件<span class=\"message-positive\">已加載</span>",
+        "message": "圖傳配置文件<span class=\"message-positive\">已加載<\/span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
     "vtxLoadFileKo": {
-        "message": "<span class=\"message-negative\">錯誤</span>加載圖傳配置文件",
+        "message": "<span class=\"message-negative\">錯誤<\/span>加載圖傳配置文件",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
     "vtxLoadClipboardOk": {
-        "message": "已從剪貼板 <span class=\"message-positive\">加載</span> 圖傳配置訊息",
+        "message": "已從剪貼板 <span class=\"message-positive\">加載<\/span> 圖傳配置訊息",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
     "vtxLoadClipboardKo": {
-        "message": "當從剪貼板加載圖傳配置訊息時發生<span class=\"message-negative\">錯誤</span>。內容可能不正確",
+        "message": "當從剪貼板加載圖傳配置訊息時發生<span class=\"message-negative\">錯誤<\/span>。內容可能不正確",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
     "vtxButtonSaveFile": {
@@ -4627,10 +4624,10 @@
         "message": "串口連接狀態"
     },
     "configurationEscProtocol": {
-        "message": "電調/電機協議"
+        "message": "電調\/電機協議"
     },
     "configurationEscProtocolHelp": {
-        "message": "選擇電調協議。 <br>請確認你的電調支援該協議，電調製造商應該有提供這些訊息。 <br> <b>選擇 DSHOT900 或 DSHOT1200 時請注意，目前沒有很多電調支援這個協議！ </b>"
+        "message": "選擇電調協議。 <br>請確認你的電調支援該協議，電調製造商應該有提供這些訊息。 <br> <b>選擇 DSHOT900 或 DSHOT1200 時請注意，目前沒有很多電調支援這個協議！ <\/b>"
     },
     "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "選擇您的電機協議。 <br>請驗證您的電調支援此協議，此訊息應在製造商的網站上。"
@@ -4643,11 +4640,11 @@
     },
     "configurationDshotBidir": {
         "message": "雙向 DSHOT (需要電調固件支援)",
-        "description": "Feature for the ESC/Motor"
+        "description": "Feature for the ESC\/Motor"
     },
     "configurationDshotBidirHelp": {
         "message": "向飛控板發送電調數據。 RPM 濾波器和動態怠速需要這個功能。 <br><br>注意：需要使用兼容的電調固件，例如JESC、JazzMac、BLHeli_32。",
-        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
+        "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
     "configurationGyroSyncDenom": {
         "message": "陀螺儀更新頻率"
@@ -4707,7 +4704,7 @@
         "message": "電流傳感器"
     },
     "configurationCurrentScale": {
-        "message": "按比例 [1/10 mV/A] 將電壓縮放到毫安"
+        "message": "按比例 [1\/10 mV\/A] 將電壓縮放到毫安"
     },
     "configurationCurrentOffset": {
         "message": "補償（單位毫伏）"
@@ -4719,7 +4716,7 @@
         "message": "PID 配置文件"
     },
     "pidTuningProfileTip": {
-        "message": "飛控可以保存最多3個（有的只能2個）PID 配置文件。 PID 配置文件包括：PID值， D 設置點，angle/horizo​​n 模式選擇設置。配置文件可以通過遙控搖桿命令來回切換(具體操作參閱網上教程)。"
+        "message": "飛控可以保存最多3個（有的只能2個）PID 配置文件。 PID 配置文件包括：PID值， D 設置點，angle\/horizo​​n 模式選擇設置。配置文件可以通過遙控搖桿命令來回切換(具體操作參閱網上教程)。"
     },
     "pidTuningRateProfile": {
         "message": "Rate 配置文件"
@@ -4728,7 +4725,7 @@
         "message": "飛控可以保存3個不同的Rate配置文件。 Rate配置文件包括：RC rate， Rate，RC expo，油門和TPA。配置文件可以通過遙控搖桿命令來回切換（具體操作參閱網上教程）。也可以通過一個3段的開關來選擇不同的配置文件。"
     },
     "pidTuningRateSetup": {
-        "message": "基本/手動 Rate"
+        "message": "基本\/手動 Rate"
     },
     "pidTuningRateSetupHelp": {
         "message": "調整這些值，以確定您的Rate。使用RC Rate以提高總角速度，使用Super Rate以在搖桿末端獲得更高的角速度，使用RC Expo以在杆位中央附近獲得平滑感。",
@@ -4744,10 +4741,10 @@
         "message": "測量模式"
     },
     "pidTuningPidControllerTip": {
-        "message": "<b>傳統 vs Betaflight (浮點數):</b> PID 比例和 PID 邏輯是完全一樣的。理論上，在兩者之間進行切換不需要重新調參。傳統的也是betaflight參與的重寫算法，使用整數進行計算。 Betaflight PID 控制器使用浮點數進行計算，並專門為多軸飛行器設計了許多新功能<br> <b>浮點vs 整數:</b> PID 比例和PID邏輯完全一樣的. 理論上，在兩者之間進行切換不需要重新調參。 F1晶片缺乏FPU，使用浮點運算將會增加CPU負荷，使用整數運算會得到更加好的運行效果。但是浮點運算會獲得稍高的精準度。"
+        "message": "<b>傳統 vs Betaflight (浮點數):<\/b> PID 比例和 PID 邏輯是完全一樣的。理論上，在兩者之間進行切換不需要重新調參。傳統的也是betaflight參與的重寫算法，使用整數進行計算。 Betaflight PID 控制器使用浮點數進行計算，並專門為多軸飛行器設計了許多新功能<br> <b>浮點vs 整數:<\/b> PID 比例和PID邏輯完全一樣的. 理論上，在兩者之間進行切換不需要重新調參。 F1晶片缺乏FPU，使用浮點運算將會增加CPU負荷，使用整數運算會得到更加好的運行效果。但是浮點運算會獲得稍高的精準度。"
     },
     "pidTuningFilterTip": {
-        "message": "<b>陀螺儀軟件濾波器：</b> 陀螺儀的低通濾波。更低的數字會提供更多的過濾效果。 <br><b>D Term 濾波器：</b>Dterm 低通濾波器。會影響D值的調參，更低的數字會提供更多的過濾效果。 <br><b>方向濾波器：</b> 對偏航輸出進行濾波。對偏航軸震動或者噪聲很嚴重的情況會有幫助。"
+        "message": "<b>陀螺儀軟件濾波器：<\/b> 陀螺儀的低通濾波。更低的數字會提供更多的過濾效果。 <br><b>D Term 濾波器：<\/b>Dterm 低通濾波器。會影響D值的調參，更低的數字會提供更多的過濾效果。 <br><b>方向濾波器：<\/b> 對偏航輸出進行濾波。對偏航軸震動或者噪聲很嚴重的情況會有幫助。"
     },
     "pidTuningRatesTip": {
         "message": "嘗試不同的 Rates 並觀察它如何影響搖桿曲線"
@@ -4792,7 +4789,7 @@
         "message": "大容量存儲模式"
     },
     "onboardLoggingMscNote": {
-        "message": "重新啟動進入 <strong>大容量存儲設備 (MSC)</strong> 模式。一旦激活, 您的飛行控制器上的板載快閃記憶體或 SD 卡將被計算機識別為存儲設備, 並允許您下載日誌文件。要退出此模式，請在電腦上執行彈出操作，並給飛控重新上電。"
+        "message": "重新啟動進入 <strong>大容量存儲設備 (MSC)<\/strong> 模式。一旦激活, 您的飛行控制器上的板載快閃記憶體或 SD 卡將被計算機識別為存儲設備, 並允許您下載日誌文件。要退出此模式，請在電腦上執行彈出操作，並給飛控重新上電。"
     },
     "onboardLoggingRebootMscText": {
         "message": "激活大容量存儲設備模式"
@@ -4855,7 +4852,7 @@
         "message": "更改 Rate 類型"
     },
     "dialogRatesTypeNote": {
-        "message": "<span class=\"message-negative\"><b>警告：您正在更改 Rate 類型。 </b></span>如果您更改 Rate 類型，您的 Rate 曲線將會重置為默認值。"
+        "message": "<span class=\"message-negative\"><b>警告：您正在更改 Rate 類型。 <\/b><\/span>如果您更改 Rate 類型，您的 Rate 曲線將會重置為默認值。"
     },
     "dialogRatesTypeConfirm": {
         "message": "更改"
@@ -4909,28 +4906,28 @@
         "message": "您設備上可用的 webview 應用程式"
     },
     "cordovaWebviewInstall": {
-        "message": "安裝對應的 <b>{{app}}</b> 程式可以解決兼容性問題"
+        "message": "安裝對應的 <b>{{app}}<\/b> 程式可以解決兼容性問題"
     },
     "cordovaWebviewInstallBtn": {
         "message": "從 Google Play 商店安裝"
     },
     "cordovaWebviewUninstall": {
-        "message": "卸載 <b>{{app}}</b> 應用程序可以解決此兼容性問題。如果您無法卸載它，請嘗試從應用程序設置中禁用它。"
+        "message": "卸載 <b>{{app}}<\/b> 應用程序可以解決此兼容性問題。如果您無法卸載它，請嘗試從應用程序設置中禁用它。"
     },
     "cordovaWebviewUninstallBtn1": {
         "message": "從 Google Play 商店解除安裝"
     },
     "cordovaWebviewUninstallBtn2": {
-        "message": "從設置中卸載 / 禁用"
+        "message": "從設置中卸載 \/ 禁用"
     },
     "cordovaWebviewUpdate": {
-        "message": "更新 <b>{{app}}</b> 應用程式可以解決此兼容性問題。"
+        "message": "更新 <b>{{app}}<\/b> 應用程式可以解決此兼容性問題。"
     },
     "cordovaWebviewUpdateBtn": {
         "message": "從 Google Play 商店更新"
     },
     "cordovaWebviewEnable": {
-        "message": "在設置中進入您的設備信息頁面，點擊構建版本數字10次以啟用“開發者選項”。在此之後，搜索並進入開發者選項，並選擇 <b>{{app}}</b> 作為 webview 提供者。"
+        "message": "在設置中進入您的設備信息頁面，點擊構建版本數字10次以啟用“開發者選項”。在此之後，搜索並進入開發者選項，並選擇 <b>{{app}}<\/b> 作為 webview 提供者。"
     },
     "cordovaWebviewEnableBtn": {
         "message": "開啟設定"
@@ -4939,7 +4936,7 @@
         "message": "您的設備似乎不兼容。請嘗試搜索其他方式來更新您的 webview"
     },
     "cordovaNoWebview": {
-        "message": "沒有安裝/啟用 webview"
+        "message": "沒有安裝\/啟用 webview"
     },
     "cordovaWebviewUsed": {
         "message": "已使用"

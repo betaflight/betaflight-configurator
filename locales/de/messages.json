@@ -1846,12 +1846,6 @@
     "pidTuningTPA": {
         "message": "TPA"
     },
-    "pidTuningTPARate": {
-        "message": "TPA-Rate"
-    },
-    "pidTuningTPABreakPoint": {
-        "message": "TPA Einstiegspunkt"
-    },
     "pidTuningTPAPD": {
         "message": "PD"
     },
@@ -1970,9 +1964,6 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>PID Tuning Slider Modus<\/strong><br><br>PID Tuning Slider Modus kann sein:<br><br>&bull; AUS - keine Slider, Werte manuell eingeben<br>&bull; RP - Schieberegler steuert Rollen und Neigung, Yaw Werte manuell eingeben<br>&bull; RPY - Schieberegler steuert alle PID Achsen<br><br><span class=\"message-negative\"><b>Warnung:<\/b><\/span>Wenn Du vom RP zum RPY Modus gehst, werden die Yaw Einstellungen mit Default-Firmware Werten überschrieben."
-    },
-    "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Überprüfe immer, daß Failsafe richtig funktioniert!<\/a><\/strong><\/b> Die Einstellungen dazu befinden sich im Failsafe-Reiter und benötigen aktivierten Expertenmodus.<br> &#8226; <b>Verwende die neueste Tx-Firmware!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Deaktiviere den Hardware-ADC-Filter<\/a><\/strong> im Sender, wenn Du OpenTx oder EdgeTx verwendest.<br>Grundlegende Einstellungen: Konfiguriere die Empfänger-Einstellungen richtig. Wähle die richtige „Kanalzuordnung“ für Deinen Sender. Prüfe, dass die Roll-, Pitch- und sonstigen Senderbefehle in den Balkengrafiken die korrekten Ausschläge erzeugen. Passe die Endpunkt- oder Bereichswerte des Senders auf ~1000 bis ~2000 an und setze den Mittelwert auf 1500. Weitere Informationen findest du in der <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">Dokumentation<\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "Gas Mittelwert"

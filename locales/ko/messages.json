@@ -1980,12 +1980,6 @@
     "pidTuningTPA": {
         "message": "TPA"
     },
-    "pidTuningTPARate": {
-        "message": "TPA 레이트"
-    },
-    "pidTuningTPABreakPoint": {
-        "message": "TPA 브레이크포인트"
-    },
     "pidTuningTPAPD": {
         "message": "PD"
     },
@@ -2104,9 +2098,6 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>PID 튜닝 슬라이더 모드<\/strong><br><br>PID 튜닝 슬라이더 모드는 다음과 같습니다:<br><br>&bull; 끄기 - 슬라이더 없음, 값을 수동으로 입력<br>&bull; RP - 슬라이더는 롤과 피치만 제어하며, 요 값은 수동으로 입력<br>&bull; RPY - 슬라이더가 모든 PID 값을 제어<br><br><span class=\"message-negative\"><b>경고:<\/b><\/span>RP에서 RPY 모드로 전환하면, Yaw 설정을 펌웨어 설정으로 덮어씁니다."
-    },
-    "receiverHelp": {
-        "message": "&#8226;<b><strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Failsafe가 제대로 작동하는지 항상 확인하십시오!<\/a><\/strong><\/b> 설정이 페일세이프 탭에 있으므로 전문가 모드가 필요합니다.<br> &#8226; <b>최신 Tx 펌웨어를 사용하세요!<\/b><br> &#8226; OpenTx 또는 EdgeTx를 사용하는 경우 조종기에서 <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">하드웨어 ADC 필터를 비활성화 하세요.<\/a><\/strong><br>기본 설정: '수신기' 설정을 올바르게 구성하십시오. 라디오에 적합한 '채널 맵'을 선택하십시오. 롤, 피치 및 기타 막대 그래프가 올바르게 이동하는지 점검합니다. 조종기의 채널 끝점 또는 범위 값을 ~1000 에서 ~2000으로 조정하고, 중간점을 1500으로 설정합니다. 자세한 내용은 <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">설명서<\/a><\/strong>를 참조하십시오."
     },
     "receiverThrottleMid": {
         "message": "스로틀 중간값"
