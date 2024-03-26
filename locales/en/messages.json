@@ -3479,7 +3479,7 @@
         "message": "Flash on connect"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Attempt to flash the board automatically (triggered by newly detected serial port)."
+        "message": "Attempt to flash the board automatically (triggered by newly detected serial port).<br /><br /><span class=\"message-negative\">WARNING</span>: this function disables the auto-detect and backup feature."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Full chip erase"
