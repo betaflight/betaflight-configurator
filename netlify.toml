@@ -1,0 +1,3 @@
+[build]
+  publish = "src/dist"
+  command = "yarn build"
