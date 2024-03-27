@@ -53,12 +53,10 @@
 
     <link type="text/css" rel="stylesheet" href="./css/dark-theme.css" media="all" disabled/>
 
-    <script type="module" src="./js/jquery.js"></script>
     <!-- TODO: probably won't need this here once everything is imported -->
-    <script type="module" src="./js/utils/common.js"></script>
     <!-- CORDOVA_INCLUDE js/cordova_chromeapi.js -->
     <!-- CORDOVA_INCLUDE js/cordova_startup.js -->
-    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./src/js/main.js"></script>
 
     <title></title>
 </head>
@@ -134,7 +132,7 @@
                     :batteryState="FC.BATTERY_STATE?.batteryState"
                 >
                 </battery-icon>
-                <battery-legend
+                <battery-legend 
                     :voltage="FC.ANALOG.voltage"
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
                 ></battery-legend>

@@ -98,6 +98,7 @@ function process_package_debug(done) {
 }
 
 const distCommon = gulp.series(
+    dist_vite,
     dist_src,
     dist_node_modules_css,
     dist_ol_css,
@@ -105,7 +106,7 @@ const distCommon = gulp.series(
     dist_locale,
     dist_libraries,
     dist_resources,
-    dist_rollup,
+    // dist_rollup,
     gulp.series(
         cordova_dist(),
     ),
@@ -113,7 +114,7 @@ const distCommon = gulp.series(
 
 const distBuild = gulp.series(process_package_release, distCommon);
 
-const debugDistBuild = gulp.series(process_package_debug, distCommon);
+const debugDistBuild = gulp.series(distCommon, process_package_debug);
 
 const distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
@@ -290,11 +291,6 @@ function processPackage(done, gitRevision, isReleaseBuild) {
 
     // remove gulp-appdmg from the package.json we're going to write
     delete pkg.optionalDependencies['gulp-appdmg'];
-    // keeping this package in `package.json` for some reason
-    // breaks the nwjs builds. This is not really needed for
-    // nwjs nor it's imported anywhere at runtime ¯\_(ツ)_/¯
-    // this probably can go away if we fully move to pwa.
-    delete pkg.dependencies['@vitejs/plugin-vue2'];
 
     pkg.gitRevision = gitRevision;
     if (!isReleaseBuild) {
@@ -424,6 +420,78 @@ function dist_resources() {
         .pipe(gulp.dest(DIST_DIR));
 }
 
+function dist_vite() {
+   const { build } = require('vite');
+   const vue = require('@vitejs/plugin-vue');
+   const inject = require('@rollup/plugin-inject');
+   return build({
+    configFile: false,
+    plugins: [
+        vue({
+          template: {
+            compilerOptions: {
+              compatConfig: {
+                MODE: 2,
+              },
+            },
+          },
+        }),
+        inject({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.$': 'jquery',
+            'window.jQuery': 'jquery',
+            'global.$': 'jquery',
+            'global.jQuery': 'jquery',
+            'globalThis.$': 'jquery',
+            'globalThis.jQuery': 'jquery',
+        }),
+      ],
+      resolve: {
+        alias: {
+          vue: '@vue/compat',
+        },
+      },
+      mode: 'nwjs',
+      build: {
+        rollupOptions: {
+          treeshake: false,
+          input:{
+            main: 'main.html',
+          },
+          output: {
+            entryFileNames: '[name].js',
+            chunkFileNames: '[name].js',
+            dir: path.resolve(__dirname, 'dist'),
+            sourcemap: true,
+            manualChunks(id) {
+                /**
+                 * This splits every npm module loaded in into it's own package
+                 * to preserve the loading order. This is to prevent issues
+                 * where after bundling some modules are loaded in the wrong order.
+                 */
+                if (id.includes('node_modules')) {
+                    const parts = id.split(/[\\/]/);
+                    const nodeModulesIndex = parts.indexOf('node_modules');
+                    const packageName = parts[nodeModulesIndex + 1];
+                    return packageName;
+                }
+            },
+          },
+        //   external: [], // Dependencies to exclude from your bundle
+        //   output: {
+        //       globals: {}, // Globals to use in UMD build for externalized dependencies
+        //   },
+          // Add any other Rollup options you need here
+        },
+      },
+   }).then(() => {
+    console.log('Build completed');
+   }).catch((err) => {
+    console.error(err);
+   });
+}
+
 function dist_rollup() {
     const commonjs = require('@rollup/plugin-commonjs');
     const resolve = require('@rollup/plugin-node-resolve').default;
@@ -449,7 +517,7 @@ function dist_rollup() {
             plugins: [
                 alias({
                     entries: {
-                        vue: require.resolve('vue/dist/vue.esm.js'),
+                        vue: require.resolve('@vue/compat'),
                     },
                 }),
                 rollupReplace({
@@ -458,7 +526,15 @@ function dist_rollup() {
                 }),
                 resolve(),
                 commonjs(),
-                vue(),
+                vue({
+                    template: {
+                        compilerOptions: {
+                            compatConfig: {
+                                MODE: 2,
+                            },
+                        },
+                    },
+                }),
             ],
         })
         .then(bundle =>
