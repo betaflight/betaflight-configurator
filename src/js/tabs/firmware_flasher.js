@@ -994,7 +994,7 @@ firmware_flasher.initialize = function (callback) {
 
         targetSupportInfo.on('click', function() {
             let urlSupport = 'https://betaflight.com/docs/wiki/boards/archive/Missing';                 // general board missing
-            const urlBoard = `https://betaflight.com/docs/wiki/boards/current/${self.selectedBoard}`;   // board description
+            const urlBoard = `https://betaflight.com/docs/wiki/boards/current/${self.selectedBoard}/${self.selectedBoard}`;   // board description
             if (urlExists(urlBoard)) {
                 urlSupport = urlBoard;
             }
