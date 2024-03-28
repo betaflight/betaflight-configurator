@@ -138,11 +138,7 @@ PortHandler.check_usb_devices = function (callback) {
                     data: {isDFU: true},
                 }));
 
-                self.portPickerElement.append($('<option/>', {
-                    value: 'manual',
-                    text: i18n.getMessage('portsSelectManual'),
-                    data: {isManual: true},
-                }));
+                self.addManualPortSelectOption();
 
                 self.portPickerElement.val('DFU').trigger('change');
                 self.setPortsInputWidth();
@@ -294,11 +290,7 @@ PortHandler.updatePortSelect = function (ports) {
         }));
     }
 
-    this.portPickerElement.append($("<option/>", {
-        value: 'manual',
-        text: i18n.getMessage('portsSelectManual'),
-        data: {isManual: true},
-    }));
+    this.addManualPortSelectOption();
 
     this.setPortsInputWidth();
     return ports;
@@ -321,6 +313,14 @@ PortHandler.selectPort = function(ports) {
             }
         }
     }
+};
+
+PortHandler.addManualPortSelectOption = function() {
+    this.portPickerElement.append($("<option/>", {
+        value: 'manual',
+        text: i18n.getMessage('portsSelectManual'),
+        data: {isManual: true},
+    }));
 };
 
 PortHandler.setPortsInputWidth = function() {

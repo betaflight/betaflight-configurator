@@ -669,6 +669,11 @@ cordova-plugin-chrome-apps-storage@^1.0.4:
   resolved "https://registry.yarnpkg.com/cordova-plugin-chrome-apps-storage/-/cordova-plugin-chrome-apps-storage-1.0.4.tgz#f83b1e16e54b774ba375f6ff5378fda829b161fd"
   integrity sha1-+DseFuVLd0ujdfb/U3j9qCmxYf0=
 
+cordova-plugin-customurlscheme@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-customurlscheme/-/cordova-plugin-customurlscheme-5.0.2.tgz#c6246e469a2c23772ebfb545138354cb0dc1a683"
+  integrity sha512-g139Av7iYD3xcSsCd5S6a7B7dp4GTqGYtvdhh44g4OS38+aX6XkC1lsCRmROuhLIs4fkwJqkrvxacH9H4U9Gsg==
+
 cordova-plugin-dialogs@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/cordova-plugin-dialogs/-/cordova-plugin-dialogs-2.0.2.tgz#ac3ce8b73bc885ff847078d5b533e7a4ed418a2f"
@@ -713,6 +718,11 @@ cordova-plugin-whitelist@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/cordova-plugin-whitelist/-/cordova-plugin-whitelist-1.3.4.tgz#31938545c7c3e7de35c20ab08c2c3afa06e8a3f9"
   integrity sha512-EYC5eQFVkoYXq39l7tYKE6lEjHJ04mvTmKXxGL7quHLdFPfJMNzru/UYpn92AOfpl3PQaZmou78C7EgmFOwFQQ==
+
+cordova-plugin-zeroconf@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-zeroconf/-/cordova-plugin-zeroconf-1.4.2.tgz#0d8a7de4b2d7932149a57fb9cd37dee8366ff450"
+  integrity sha512-l/ETv/oCq8mPQoYk+qIxFoMwRB7IFxpEQSjsU8V5PLAWQY/OnaFb1Th3IcqQhWMy8+63YfjhyElz1tEqwZUlxA==
 
 cordova-serve@^3.0.0:
   version "3.0.0"
