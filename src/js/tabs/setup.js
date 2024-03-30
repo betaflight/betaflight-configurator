@@ -145,12 +145,27 @@ setup.initialize = function (callback) {
                     $('#mag_calib_rest').hide();
                 });
 
-                GUI.timeout_add('button_reset', function () {
+                function magCalibResetButton() {
                     gui_log(i18n.getMessage('initialSetupMagCalibEnded'));
                     _self.removeClass('calibrating');
                     $('#mag_calib_running').hide();
                     $('#mag_calib_rest').show();
-                }, 30000);
+                }
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    let cycle = 0;
+                    const cycleMax = 45;
+                    const interval = 1000;
+                    const intervalId = setInterval(function () {
+                        if (cycle >= cycleMax || (FC.CONFIG.armingDisableFlags & (1 << 12)) === 0) {
+                            clearInterval(intervalId);
+                            magCalibResetButton();
+                        }
+                        cycle++;
+                    }, interval);
+                } else {
+                    GUI.timeout_add('button_reset', magCalibResetButton, 30000);
+                }
             }
         });
 
