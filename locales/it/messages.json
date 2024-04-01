@@ -3387,9 +3387,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Flash alla connessione"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Tenta di flashare automaticamente la scheda (attivata dalla porta seriale appena rilevata)."
-    },
     "firmwareFlasherFullChipErase": {
         "message": "Cancella completamente il chip"
     },

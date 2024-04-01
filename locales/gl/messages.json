@@ -3381,9 +3381,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Flashear ó conectar"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Intentar flashear a controladora automáticamente (tan pronto como se detecte un novo porto serie)."
-    },
     "firmwareFlasherFullChipErase": {
         "message": "Borrado completo do chip"
     },

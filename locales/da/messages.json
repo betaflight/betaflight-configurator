@@ -2755,6 +2755,9 @@
     "gpsDistToHome": {
         "message": "Hjem afstand:"
     },
+    "gpsPositionalDop": {
+        "message": "Position DOP:"
+    },
     "gpsSignalStrHead": {
         "message": "GPS signalstyrke"
     },
@@ -3392,7 +3395,7 @@
         "message": "Indlæs firmware image ved tilslutning"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Forsøg automatisk at indlæse firmware image (udløses når en seriel port bliver aktiv)."
+        "message": "Forsøg på automatisk at brænde FC (udløst af nyligt detekteret seriel port).<br \/><br \/><span class=\"message-negative\">ADVARSEL<\/span>: Denne funktion deaktiverer automatisk detektering og sikkerhedskopiering."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Slet alt på chip"

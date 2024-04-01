@@ -2759,6 +2759,9 @@
     "gpsDistToHome": {
         "message": "Dist a casa:"
     },
+    "gpsPositionalDop": {
+        "message": "DOP posicional:"
+    },
     "gpsSignalStrHead": {
         "message": "Potència senyal GPS"
     },
@@ -3396,7 +3399,7 @@
         "message": "Flasheja al connectar"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Provant de flashejar la controladora automàticament (llençat per la detecció d'un nou port de sèrie)"
+        "message": "Si intenteu flashejar el tauler automàticament (activat pel port sèrie recentment detectat).<br \/><br \/><span class=\"message-negative\">ADVERTIMENT<\/span>: aquesta funció desactiva la funció de detecció automàtica i còpia de seguretat."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Esborrat total del xip"

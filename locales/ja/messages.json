@@ -2751,6 +2751,9 @@
     "gpsDistToHome": {
         "message": "ホームまでの距離:"
     },
+    "gpsPositionalDop": {
+        "message": "位置精度低下率:"
+    },
     "gpsSignalStrHead": {
         "message": "GPS強度"
     },
@@ -3388,7 +3391,7 @@
         "message": "接続時に書き込み"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "FCボードへ自動的にフラッシュします。(新たに検出されたシリアルポートによって起動)"
+        "message": "FC基板の自動フラッシュを試みます。(新たに検出されたシリアルポートをトリガーにして実行されます。)<br \/><br \/><span class=\"message-negative\">警告<\/span>: この機能は自動検出とバックアップ機能を無効にします。"
     },
     "firmwareFlasherFullChipErase": {
         "message": "チップメモリの完全消去"

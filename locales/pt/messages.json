@@ -3388,7 +3388,7 @@
         "message": "Flashar ao conectar"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Tentar flashar a placa automaticamente (ativado quando uma nova porta serial é detectada)."
+        "message": "Tentativa de flashar a controladora automaticamente (acionada pela nova porta serial detetada).<br \/><br \/><span class=\"message-negative\">AVISO<\/span>: esta função desativa a funcionalidade de deteção automática e backup."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Apagar completo do chip"

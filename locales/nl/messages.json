@@ -2493,9 +2493,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Flash bij het maken van verbinding"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Probeer het bord automatisch te flashen (wordt uitgevoerd zodra een nieuwe seriële poort is gedetecteerd)."
-    },
     "firmwareFlasherFullChipErase": {
         "message": "Volledige chip wissen"
     },

@@ -2757,9 +2757,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "当飞控连接时自动烧录固件"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "当发现新的串口设备时尝试自动烧录固件"
-    },
     "firmwareFlasherFullChipErase": {
         "message": "全盘擦除（会丢失所有设置）"
     },

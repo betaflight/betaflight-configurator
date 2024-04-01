@@ -3378,9 +3378,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Atualizar ao conectar"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Tentar atualizar a placa automaticamente quando uma nova porta serial é detectada."
-    },
     "firmwareFlasherFullChipErase": {
         "message": "Formatar chip"
     },
