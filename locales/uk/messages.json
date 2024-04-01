@@ -3378,9 +3378,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Прошити при підключенні"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Намагатись прошити плату автоматично (сигналом виступає поява нового послідовного порту)."
-    },
     "firmwareFlasherFullChipErase": {
         "message": "Повністю очистити мікроконтролер"
     },

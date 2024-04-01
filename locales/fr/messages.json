@@ -2915,9 +2915,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Flasher une fois connecté"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Tentative de flashage auto de la carte (déclenchement par détection d'un nouveau port série)"
-    },
     "firmwareFlasherFullChipErase": {
         "message": "Effacement complet de la puce"
     },

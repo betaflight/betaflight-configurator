@@ -2749,6 +2749,9 @@
     "gpsDistToHome": {
         "message": "Dystans do Domu:"
     },
+    "gpsPositionalDop": {
+        "message": "Pozycja DOP:"
+    },
     "gpsSignalStrHead": {
         "message": "Siła sygnału GPS"
     },
@@ -3384,9 +3387,6 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Wgraj w momęcie połączenia"
-    },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Próba automatycznego flashowania kontrolera lotu (uruchamiana przez nowo wykryty port szeregowy)."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Wyczyść pamięć"

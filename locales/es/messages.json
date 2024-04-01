@@ -2751,6 +2751,9 @@
     "gpsDistToHome": {
         "message": "Dist. a Casa:"
     },
+    "gpsPositionalDop": {
+        "message": "DOP posicional:"
+    },
     "gpsSignalStrHead": {
         "message": "Fuerza Señal GPS"
     },
@@ -3388,7 +3391,7 @@
         "message": "Instalar al conectar"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Intentar instalar el firmware automáticamente (se ejecuta al detectar un nuevo puerto serie)."
+        "message": "Intenta instalar el firmware automáticamente (se activa al detectar un puerto serie nuevo).<br \/><br \/><span class=\"message-negative\">ADVERTENCIA<\/span>: esta función desactiva la función de auto-detección y copia de seguridad."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Borrado completo del chip"

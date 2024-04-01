@@ -2963,9 +2963,6 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Flashen nach Verbindung"
     },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "FC automatisch Flashen (Auslösung durch Erkennung eines neuen seriellen Portes)."
-    },
     "firmwareFlasherFullChipErase": {
         "message": "Chip vollständig Löschen"
     },
