@@ -302,6 +302,7 @@ pid_tuning.initialize = function (callback) {
         $('select[id="throttleLimitType"]').val(FC.RC_TUNING.throttleLimitType);
         $('.throttle_limit input[name="throttleLimitPercent"]').val(FC.RC_TUNING.throttleLimitPercent);
 
+
         $('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz);
         $('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz);
         $('.pid_filter select[name="gyroLowpassDynType"]').val(FC.FILTER_CONFIG.gyro_lowpass_type);
@@ -1715,13 +1716,26 @@ pid_tuning.initialize = function (callback) {
                 };
             }
 
+            function calculateThrottlePosition(thrPercent, canvasWidth, canvasHeight, mid, midx, midxl, midxr, midy, midyl, midyr) {
+                return thrPercent <= mid ? getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, thrPercent * (1.0 / mid)) : getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, 0, (thrPercent - mid) * (1.0 / (1.0 - mid)));
+            }
+
             /* --- */
+            const THROTTLE_LIMIT_TYPES = {
+                OFF: 0,
+                SCALE: 1,
+                CLIP: 2,
+            };
 
             // let global validation trigger and adjust the values first
             const throttleMidE = $('.throttle input[name="mid"]');
             const throttleExpoE = $('.throttle input[name="expo"]');
+            const throttleLimitPercentE = $('.throttle_limit input[name="throttleLimitPercent"]');
+            const throttleLimitTypeE = $('.throttle_limit select[id="throttleLimitType"]');
             const mid = parseFloat(throttleMidE.val());
             const expo = parseFloat(throttleExpoE.val());
+            const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100;
+            const throttleLimitType = parseInt(throttleLimitTypeE.val());
             const throttleCurve = $('.throttle .throttle_curve canvas').get(0);
             const context = throttleCurve.getContext("2d");
 
@@ -1735,11 +1749,13 @@ pid_tuning.initialize = function (callback) {
                 return;
             }
 
-            throttleCurve.width = throttleCurve.height *
-                (throttleCurve.clientWidth / throttleCurve.clientHeight);
+            throttleCurve.width = throttleCurve.height * (throttleCurve.clientWidth / throttleCurve.clientHeight);
 
-            const canvasHeight = throttleCurve.height;
             const canvasWidth = throttleCurve.width;
+            let canvasHeight = throttleCurve.height;
+            if (throttleLimitType === THROTTLE_LIMIT_TYPES.SCALE) {
+                canvasHeight = canvasHeight * throttleLimitPercent;
+            }
 
             // math magic by englishman
             const midx = canvasWidth * mid;
@@ -1749,13 +1765,13 @@ pid_tuning.initialize = function (callback) {
             const midyl = canvasHeight - ((canvasHeight - midy) * 0.5 *(expo + 1));
             const midyr = (midy / 2) * (expo + 1);
 
-            let thrPercent = (FC.RC.channels[3] - 1000) / 1000,
-                thrpos = thrPercent <= mid
-                    ? getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, thrPercent * (1.0 / mid))
-                    : getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, 0, (thrPercent - mid) * (1.0 / (1.0 - mid)));
+            const thrPercent = (FC.RC.channels[3] - 1000) / 1000;
+            const thrPosition = calculateThrottlePosition(thrPercent, canvasWidth, canvasHeight, mid, midx, midxl, midxr, midy, midyl, midyr);
 
             // draw
-            context.clearRect(0, 0, canvasWidth, canvasHeight);
+            context.clearRect(0, 0, throttleCurve.width, throttleCurve.height);
+            context.translate(0, throttleCurve.height - canvasHeight);
+
             context.beginPath();
             context.moveTo(0, canvasHeight);
             context.quadraticCurveTo(midxl, midyl, midx, midy);
@@ -1764,26 +1780,56 @@ pid_tuning.initialize = function (callback) {
             context.lineWidth = 2;
             context.strokeStyle = '#ffbb00';
             context.stroke();
+
+            let thrPositionLimit = {};
+            if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP) {
+
+                // FIXME Search into the canvas data to find the first non-zero pixel at the limited throttle position
+                // there must be a better way to do this, in a mathematically way
+                thrPositionLimit.y = canvasHeight - (throttleLimitPercent * canvasHeight);
+                const dataCanvas = context.getImageData(0, thrPositionLimit.y, canvasWidth, 1);
+                const RGBA_SIZE = 4;
+                for (let i = dataCanvas.data.length - 1; i >= 4; i -= RGBA_SIZE) {
+                    if (dataCanvas.data[i] !== 0 && dataCanvas.data[i - RGBA_SIZE] === 0) {
+                        thrPositionLimit.x = (i + (canvasWidth / 100) * 2) / RGBA_SIZE;
+                        break;
+                    }
+                }
+
+                thrPosition.y = Math.max(thrPosition.y, thrPositionLimit.y);
+
+                context.clearRect(0, 0, throttleCurve.width, thrPositionLimit.y - 1);
+
+                context.beginPath();
+                context.moveTo(thrPositionLimit.x, thrPositionLimit.y);
+                context.lineTo(canvasWidth, thrPositionLimit.y);
+                context.stroke();
+            }
+
             context.beginPath();
-            context.arc(thrpos.x, thrpos.y, 4, 0, 2 * Math.PI);
+            context.arc(thrPosition.x, thrPosition.y, 4, 0, 2 * Math.PI);
             context.fillStyle = context.strokeStyle;
             context.fill();
             context.save();
-            let fontSize = 10;
+
+            context.translate(0, -(throttleCurve.height - canvasHeight));
+            const fontSize = 10;
             context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
-            let realthr = thrPercent * 100.0,
-                expothr = 100 - (thrpos.y / canvasHeight) * 100.0,
-                thrlabel = `${Math.round(thrPercent <= 0 ? 0 : realthr)}%` +
-                    ` = ${Math.round(thrPercent <= 0 ? 0 : expothr)}%`,
-                textWidth = context.measureText(thrlabel);
+            const realthr = thrPercent <= 0 ? 0 : thrPercent * 100.0;
+            let expothr = thrPercent <= 0 ? 0 : 100 - (thrPosition.y / canvasHeight) * 100.0;
+            if (throttleLimitType === THROTTLE_LIMIT_TYPES.SCALE) {
+                expothr *= throttleLimitPercent;
+            }
+            const thrlabel = `${Math.round(realthr)}% = ${Math.round(expothr)}%`;
+            const textWidth = context.measureText(thrlabel);
             context.fillStyle = '#000';
             context.scale(textWidth / throttleCurve.clientWidth, 1);
             context.fillText(thrlabel, 5, 5 + fontSize);
             context.restore();
         }
 
-        $('.throttle input')
-            .on('input change', () => setTimeout(() => redrawThrottleCurve(true), 0));
+        $('.throttle input, .throttle_limit input, .throttle_limit select')
+            .on('change', () => setTimeout(() => redrawThrottleCurve(true), 0));
 
         $('a.refresh').click(function () {
             self.refresh(function () {
