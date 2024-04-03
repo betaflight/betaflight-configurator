@@ -993,8 +993,8 @@ firmware_flasher.initialize = function (callback) {
         const targetSupportInfo = $('#targetSupportInfoUrl');
 
         targetSupportInfo.on('click', function() {
-            let urlSupport = 'https://betaflight.com/docs/wiki/boards/missing';                 // general board missing
-            const urlBoard = `https://betaflight.com/docs/wiki/boards/${self.selectedBoard}`;   // board description
+            let urlSupport = 'https://betaflight.com/docs/wiki/boards/archive/Missing';                 // general board missing
+            const urlBoard = `https://betaflight.com/docs/wiki/boards/current/${self.selectedBoard}`;   // board description
             if (urlExists(urlBoard)) {
                 urlSupport = urlBoard;
             }
