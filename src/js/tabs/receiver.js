@@ -537,7 +537,7 @@ receiver.initialize = function (callback) {
             const windowWidth = 370;
             const windowHeight = 510;
 
-            chrome.app.window.create("/tabs/receiver_msp.html", {
+            chrome.app.window.create("src/tabs/receiver_msp.html", {
                 id: "receiver_msp",
                 innerBounds: {
                     minWidth: windowWidth, minHeight: windowHeight,

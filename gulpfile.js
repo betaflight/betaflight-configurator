@@ -455,16 +455,17 @@ function dist_vite() {
       },
       mode: 'nwjs',
       build: {
+        sourcemap: true,
         rollupOptions: {
           treeshake: false,
           input:{
             main: 'main.html',
+            receiver_msp: 'src/tabs/receiver_msp.html',
           },
           output: {
             entryFileNames: '[name].js',
             chunkFileNames: '[name].js',
             dir: path.resolve(__dirname, 'dist'),
-            sourcemap: true,
             manualChunks(id) {
                 /**
                  * This splits every npm module loaded in into it's own package

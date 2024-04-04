@@ -1,4 +1,4 @@
-import '../jqueryPlugins';
+import '../nw_jquery_plugins';
 import windowWatcherUtil from "../utils/window_watchers";
 import $ from 'jquery';
 
@@ -153,9 +153,9 @@ $(".button-enable .btn").on("click", function() {
     const shrinkHeight = $(".warning").height();
 
     $(".warning").slideUp("short", function() {
-        chrome.app.window.current().innerBounds.minHeight -= shrinkHeight;
-        chrome.app.window.current().innerBounds.height -= shrinkHeight;
-        chrome.app.window.current().innerBounds.maxHeight -= shrinkHeight;
+        chrome.app.window.current().innerBounds.minHeight -= Math.round(shrinkHeight);
+        chrome.app.window.current().innerBounds.height -= Math.round(shrinkHeight);
+        chrome.app.window.current().innerBounds.maxHeight -= Math.round(shrinkHeight);
     });
 
     enableTX = true;
