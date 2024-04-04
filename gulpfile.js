@@ -426,6 +426,7 @@ function dist_vite() {
    const inject = require('@rollup/plugin-inject');
    return build({
     configFile: false,
+    appType: 'mpa',
     plugins: [
         vue({
           template: {
@@ -490,84 +491,6 @@ function dist_vite() {
    }).catch((err) => {
     console.error(err);
    });
-}
-
-function dist_rollup() {
-    const commonjs = require('@rollup/plugin-commonjs');
-    const resolve = require('@rollup/plugin-node-resolve').default;
-    const alias = require('@rollup/plugin-alias');
-    const vue = require('rollup-plugin-vue');
-    const rollupReplace = require('@rollup/plugin-replace');
-
-    return rollup
-        .rollup({
-            strictDeprecations: true,
-            input: {
-                // For any new file migrated to modules add the output path
-                // in dist on the left, on the right it's input file path.
-                // If all the things used by other files are importing
-                // it with `import/export` file doesn't have to be here.
-                // I will be picked up by rollup and bundled accordingly.
-                'js/main_cordova': 'src/js/main_cordova.js',
-                'js/utils/common': 'src/js/utils/common.js',
-                'js/jquery': 'src/js/jquery.js',
-                'js/main': 'src/js/main.js',
-                'js/tabs/receiver_msp': 'src/js/tabs/receiver_msp.js',
-            },
-            plugins: [
-                alias({
-                    entries: {
-                        vue: require.resolve('@vue/compat'),
-                    },
-                }),
-                rollupReplace({
-                    'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-                    'preventAssignment': true,
-                }),
-                resolve(),
-                commonjs(),
-                vue({
-                    template: {
-                        compilerOptions: {
-                            compatConfig: {
-                                MODE: 2,
-                            },
-                        },
-                    },
-                }),
-            ],
-        })
-        .then(bundle =>
-            bundle.write({
-                format: 'esm',
-                // rollup is smart about how `name` is treated.
-                // so `input` you create file like `components/init`
-                // `[name]` will be replaced with it creating directories
-                // accordingly inside of `dist`
-                entryFileNames: '[name].js',
-                // anything what's not an entry will have the same name
-                // no hashing since we are not web app and don't care
-                // about cache busting
-                chunkFileNames: '[name].js',
-                // we want to see code in the same way as it
-                // is in the source files while debugging
-                sourcemap: true,
-                manualChunks(id) {
-                    /**
-                     * This splits every npm module loaded in into it's own package
-                     * to preserve the loading order. This is to prevent issues
-                     * where after bundling some modules are loaded in the wrong order.
-                     */
-                    if (id.includes('node_modules')) {
-                        const parts = id.split(/[\\/]/);
-                        const nodeModulesIndex = parts.indexOf('node_modules');
-                        const packageName = parts[nodeModulesIndex + 1];
-                        return packageName;
-                    }
-                },
-                dir: DIST_DIR,
-            }),
-        );
 }
 
 // Create runable app directories in ./apps

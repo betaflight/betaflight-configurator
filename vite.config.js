@@ -7,6 +7,7 @@ import copy from "rollup-plugin-copy";
 import pkg from './package.json';
 import * as child from 'child_process';
 import { VitePWA } from "vite-plugin-pwa";
+import inject from '@rollup/plugin-inject';
 
 const commitHash = child.execSync('git rev-parse --short HEAD').toString();
 
@@ -76,6 +77,16 @@ export default defineConfig({
             },
         }),
         serveLocalesPlugin(),
+        inject({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.$': 'jquery',
+            'window.jQuery': 'jquery',
+            'global.$': 'jquery',
+            'global.jQuery': 'jquery',
+            'globalThis.$': 'jquery',
+            'globalThis.jQuery': 'jquery',
+        }),
         copy({
             targets: [
                 { src: ["locales", "resources", "src/tabs", "src/images"], dest: "src/dist" },
@@ -123,4 +134,5 @@ export default defineConfig({
     preview: {
         port: 8080,
     },
+    appType: 'mpa',
 });

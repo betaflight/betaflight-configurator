@@ -1,4 +1,3 @@
-import './jqueryPlugins';
 import $ from 'jquery';
 import 'jbox';
 import '../components/init.js';

@@ -1,4 +1,4 @@
-import '../js/jqueryPlugins';
+import './browser_jquery_plugins';
 import "jbox/dist/jBox.min.css";
 import "../../libraries/jquery.nouislider.min.css";
 import "../../libraries/jquery.nouislider.pips.min.css";
