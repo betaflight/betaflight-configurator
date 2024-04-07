@@ -1725,7 +1725,7 @@ pid_tuning.initialize = function (callback) {
                 const a = startY + endY - 2 * cpY;
                 const b = 2 * (cpY - startY);
                 const c = startY - y;
-                return a == 0 ? -c / b : ( -b + Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+                return a == 0 ? -c / b : ( -b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
             }
 
             /* --- */
@@ -1794,7 +1794,7 @@ pid_tuning.initialize = function (callback) {
                     context.moveTo(midx, midy);
                     curveClip = getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, topy, clipPos);
                     ctrlX = midx + (curveClip.x - midx) /2;
-                    ctrlY = midyr + (midy - midyr) * (curveClip.x - midx) / (canvasWidth - midx);
+                    ctrlY = midyr + (midy - midyr) * (canvasWidth - curveClip.x) / (canvasWidth - midx);
                 }
                 context.quadraticCurveTo(ctrlX, ctrlY, curveClip.x, curveClip.y);
                 context.moveTo(curveClip.x, curveClip.y);
