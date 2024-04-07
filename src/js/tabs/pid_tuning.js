@@ -1783,12 +1783,12 @@ pid_tuning.initialize = function (callback) {
             context.moveTo(0, canvasHeight);
             if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP){
                 const throttle_CLIP = canvasHeight * (1 - throttleLimitPercent);
-                const clipPos = throttle_CLIP = midy
+                const clipPos = throttle_CLIP <= midy
                     ? getPosfromYBezier(throttle_CLIP,canvasHeight,midyl, midy)
                     : getPosfromYBezier(throttle_CLIP,midy, midyl, topy);
                 let lowerCtrl = getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, clipPos / 2);
                 let curveClip = getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, clipPos);
-                if (throttle_CLIP < midyl){
+                if (throttle_CLIP > midyl){
                     context.quadraticCurveTo(midxl, midyl, midx, midy);
                     context.moveTo(midx, midy);
                     lowerCtrl = getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, topy, clipPos / 2);
