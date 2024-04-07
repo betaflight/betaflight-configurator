@@ -1786,15 +1786,17 @@ pid_tuning.initialize = function (callback) {
                 const clipPos = throttleLimitPercent <= mid
                     ? getPosfromYBezier(throttle_CLIP,canvasHeight,midyl, midy)
                     : getPosfromYBezier(throttle_CLIP,midy, midyl, topy);
-                let lowerCtrl = getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, clipPos / 2);
                 let curveClip = getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, clipPos);
+                const ctrlX = curveClip.x / 2;
+                const ctrlY = midyl + (canvasHeight - midyl) * (midx - curveClip.x) / midx;
                 if (throttleLimitPercent > mid){
                     context.quadraticCurveTo(midxl, midyl, midx, midy);
                     context.moveTo(midx, midy);
-                    lowerCtrl = getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, topy, clipPos / 2);
                     curveClip = getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, topy, clipPos);
+                    ctrlX = midx + (curveClip.x - midx) /2;
+                    ctrlY = midyr + (midy - midyr) * (curveClip.x - midx) / (canvasWidth - midx);
                 }
-                context.quadraticCurveTo(lowerCtrl.x, lowerCtrl.y, curveClip.x, curveClip.y);
+                context.quadraticCurveTo(ctrlX, ctrlY, curveClip.x, curveClip.y);
                 context.moveTo(curveClip.x, curveClip.y);
                 context.lineTo(canvasWidth, curveClip.y);
             } else {
