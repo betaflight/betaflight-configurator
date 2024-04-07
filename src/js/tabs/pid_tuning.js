@@ -1725,7 +1725,7 @@ pid_tuning.initialize = function (callback) {
                 const a = startY + endY - 2 * cpY;
                 const b = 2 * (cpY - startY);
                 const c = startY - y;
-                return a == 0 ? -c / b : ( -b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+                return a == 0 ? -c / b : ( -b + Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
             }
 
             /* --- */
