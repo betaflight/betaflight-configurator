@@ -1788,7 +1788,7 @@ pid_tuning.initialize = function (callback) {
                     : getPosfromYBezier(throttle_CLIP,midy, midyl, topy);
                 let lowerCtrl = getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, clipPos / 2);
                 let curveClip = getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, clipPos);
-                if (throttle_CLIP < midyl){
+                if (throttle_CLIP < midy){
                     context.quadraticCurveTo(midxl, midyl, midx, midy);
                     context.moveTo(midx, midy);
                     lowerCtrl = getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, topy, clipPos / 2);
