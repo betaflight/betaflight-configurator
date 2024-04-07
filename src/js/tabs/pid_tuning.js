@@ -1796,13 +1796,15 @@ pid_tuning.initialize = function (callback) {
                     ctrlX = midx + (curveClip.x - midx) / 2;
                     ctrlY = midy - (midyr - midy) * (curveClip.x - midx) / (canvasWidth - midx);
                 }
-                context.lineTo(curveClip.x, curveClip.y);
+                context.quadraticCurveTo(curveClip.x, curveClip.y);
                 context.moveTo(curveClip.x, curveClip.y);
                 context.lineTo(canvasWidth, curveClip.y);
             } else {
             context.quadraticCurveTo(midxl, midyl, midx, midy);
             context.moveTo(midx, midy);
             context.quadraticCurveTo(midxr, midyr, canvasWidth, topy);
+            context.moveTo(curveClip.x, curveClip.y);
+            context.lineTo(canvasWidth, curveClip.y);
             }
             context.lineWidth = 2;
             context.strokeStyle = '#ffbb00';
