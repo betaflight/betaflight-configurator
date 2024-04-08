@@ -1728,7 +1728,6 @@ pid_tuning.initialize = function (callback) {
                 return a == 0 ? -c / b : ( -b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
             }
 
-            /* --- */
             const THROTTLE_LIMIT_TYPES = {
                 OFF: 0,
                 SCALE: 1,
