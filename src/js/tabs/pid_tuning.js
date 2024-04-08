@@ -1789,7 +1789,7 @@ pid_tuning.initialize = function (callback) {
                 let curveClip = getQuadraticCurvePoint(0, canvasHeight, midXl, midYl, midX, midY, clipPos);
                 let ctrlX = curveClip.x / 2;
                 let ctrlY = midYl + (canvasHeight - midYl) * (midX - curveClip.x) / midX;
-                if (throttleLimitPercent > mid){
+                if (throttleLimitPercent > mid) {
                     context.quadraticCurveTo(midXl, midYl, midX, midY);
                     context.moveTo(midX, midY);
                     curveClip = getQuadraticCurvePoint(midX, midY, midXr, midYr, canvasWidth, topY, clipPos);
