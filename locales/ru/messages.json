@@ -1746,8 +1746,14 @@
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Сглаживание каналов применяется к"
     },
+    "receiverRcSmoothingSetpointHz": {
+        "message": "Частота среза заданного значения"
+    },
     "receiverRcSetpointType": {
         "message": "Тип фильтра заданного значения"
+    },
+    "receiverRcFeedforwardType": {
+        "message": "Тип фильтра Feedforward"
     },
     "receiverRcSmoothingFeedforwardTypeOff": {
         "message": "Выкл"
@@ -2128,6 +2134,14 @@
     "auxiliaryModeLogicAND": {
         "message": "И"
     },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Запускает двигатели, и позволяет модели летать",
+        "description": "Help text to ARM mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Включает звуковой сигнал - полезно для определения местоположения упавшего воздушного судна",
+        "description": "Help text to BEEPER mode"
+    },
     "auxiliaryHelpMode_BEEPERON": {
         "message": "Включить режим BEEPER ON",
         "description": "Help text to BEEPER ON mode"
@@ -2156,13 +2170,65 @@
         "message": "Включает режим стабилизации камеры",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Включите 'GPS Rescue', чтобы вернуть летательный аппарат вместо, где он был запущен в последний раз",
+        "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HORIZON": {
+        "message": "Если стики крен и тангаж отцентрованы, этот гибридный режим работает точно как режим ANGLE (т.е. включено автовыравнивание), но по мере смещения стиков от центра, постепенно начинает вести себя как RATE (Акро) режим",
+        "description": "Help text to HORIZON mode"
+    },
     "auxiliaryHelpMode_LAUNCHCONTROL": {
         "message": "Система помощи старта на гонках",
         "description": "Help text to LAUNCH CONTROL mode"
     },
+    "auxiliaryHelpMode_LEDLOW": {
+        "message": "Отключает выход светодиодной подсветки",
+        "description": "Help text to LEDLOW mode"
+    },
+    "auxiliaryHelpMode_MAG": {
+        "message": "Направление зафиксировано в соответствие с указанием магнитометра (система управления компасом)",
+        "description": "Help text to MAG mode"
+    },
     "auxiliaryHelpMode_MSPOVERRIDE": {
         "message": "Включите режим MAP Override",
         "description": "Help text to MSP OVERRIDE mode"
+    },
+    "auxiliaryHelpMode_OSDDISABLE": {
+        "message": "Включить\/выключить экранное отображение",
+        "description": "Help text to OSD mode"
+    },
+    "auxiliaryHelpMode_PARALYZE": {
+        "message": "Отключает упавший летательный аппарат до тех пор, пока питание на нём не будет выключено и включено заново",
+        "description": "Help text to PARALYZE mode"
+    },
+    "auxiliaryHelpMode_PREARM": {
+        "message": "При включении двигателей, они не будут запущены пока не будет включен этот переключатель",
+        "description": "Help text to PREARM mode"
+    },
+    "auxiliaryHelpMode_READY": {
+        "message": "Добавлено в BF4.4, теперь вы можете показать в OSD что готовы ('READY'), используя переключатель. Это нишевое улучшение для ситуации на гонках, где видео от всех пилотов транслируется на одном экране. Пилот переключает свич чтобы показать готовность к старту, и слово READY загорается на экране. Глядя на экран,  организатор гонки может понять, что все пилоты готовы к старту. Во время арма, слово READY пропадает.",
+        "description": "Help text to READY mode"
+    },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Команда отключить\/включить стик",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
+    "auxiliaryHelpMode_SERVO1": {
+        "message": "Используйте для переключения SERVO1",
+        "description": "Help text to SERVO1 mode"
+    },
+    "auxiliaryHelpMode_SERVO2": {
+        "message": "Используйте для переключения SERVO2",
+        "description": "Help text to SERVO2 mode"
+    },
+    "auxiliaryHelpMode_SERVO3": {
+        "message": "Использовать для переключения SERVO3",
+        "description": "Help text to SERVO3 mode"
+    },
+    "auxiliaryHelpMode_TELEMETRY": {
+        "message": "Активируйте телеметрию при помощи переключателя",
+        "description": "Help text to TELEMETRY mode"
     },
     "adjustmentsHelp": {
         "message": "Установка настроечных переключателей. Смотри 'in-flight adjustments' главу руководства. Изменения, которые делают настроечные функции, автоматически не сохраняются."
@@ -2425,17 +2491,33 @@
     "gps3dFix": {
         "message": "3D фикс.:"
     },
+    "gpsPositionUnit": {
+        "message": "град.",
+        "description": "Unit for GPS position."
+    },
     "gpsAltitude": {
         "message": "Высота:"
     },
+    "gpsLatLon": {
+        "message": "Текущая широта \/ долгота:",
+        "description": "Show GPS position - Latitude \/ Longitude"
+    },
     "gpsSpeed": {
         "message": "Скорость:"
+    },
+    "gpsSats": {
+        "message": "Количество спутников:",
+        "description": "Show number of fixed GPS Satellites"
     },
     "gpsDistToHome": {
         "message": "Расст. до дома:"
     },
     "gpsSignalStrHead": {
         "message": "Мощность GPS сигнала"
+    },
+    "gpsSignalStrHeadHelp": {
+        "message": "Показывать уровень сигнала, качество и состояние каждого обнаруженного GPS источника",
+        "description": "Help text for gpsSignalStrHead"
     },
     "gpsSignalStr": {
         "message": "Мощность сигнала"
@@ -2445,6 +2527,12 @@
     },
     "gpsSignalSatId": {
         "message": "ID спут."
+    },
+    "gpsSignalStatus": {
+        "message": "Статус"
+    },
+    "gpsSignalQuality": {
+        "message": "Качество"
     },
     "gnssQualityNoSignal": {
         "message": "нет сигнала"
@@ -5080,6 +5168,13 @@
     "osdDescStatMinRssiDbm": {
         "message": "Мин. значение дБм RSSI"
     },
+    "osdTextStatBestLap": {
+        "message": "Лучший круг",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Лучший круг"
+    },
     "osdTextStatUnknown": {
         "message": "Неизвестно ($1)",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5153,6 +5248,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Высота",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Качество соединения",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Arming выключен",
@@ -5413,6 +5512,14 @@
         "message": "Здесь можете выбрать частоту для вашего VTX, если она поддерживается",
         "description": "Help text for the frequency field of the VTX tab"
     },
+    "vtxReadyTrue": {
+        "message": "Да",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Нет",
+        "description": "vtx device are not ready"
+    },
     "vtxDeviceReady": {
         "message": "Устройство готово",
         "description": "Text of one of the fields of the VTX tab"
@@ -5560,6 +5667,14 @@
     "vtxButtonSave": {
         "message": "Сохранить",
         "description": "Save button in the VTX tab"
+    },
+    "buttonSaving": {
+        "message": "Сохранение",
+        "description": "Show state of the Save button in the VTX\/LED tab"
+    },
+    "buttonSaved": {
+        "message": "Сохранено",
+        "description": "Saved action button in the VTX\/LED tab"
     },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} разблокировано",
@@ -6086,6 +6201,10 @@
         "message": "Сделать активным",
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "Отключить",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
+    },
     "presetsSourcesDialogDeleteSource": {
         "message": "Удалить",
         "description": "Presets tab, sources dialog, button to delete selected source"
@@ -6106,6 +6225,10 @@
         "message": "Выбранная предустановка требует версию прошивки $1<br\/> Текущая версия прошивки $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
+    "presetsNoPresetsFound": {
+        "message": "Для заданных параметров поиска предустановок не найдено",
+        "description": "Message that apprears on presets tab if no presets were found"
+    },
     "presetsTooManyPresetsFound": {
         "message": "Достигнуто максимальное количество отображаемых предустановок",
         "description": "Message that apprears on presets tab if too many presets found"
@@ -6118,6 +6241,24 @@
         "message": "Пожалуйста, ознакомьтесь с списком опций перед выбором этой предустановки.",
         "description": "Dialog text to prompt user to review options for the preset"
     },
+    "firmwareFlasherBuildOptions": {
+        "message": "Прочие настройки"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "Протокол радиосвязи"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "Протокол телеметрии"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "Протокол двигателей"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "Имя файла конфигурации:"
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "Для разработчиков. Вы можете добавить любые необходимые определения, разделенные пробелом `space`, но без префикса `USE_`, он будет добавлен автоматически."
+    },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Пользовательские настройки"
     },
@@ -6127,5 +6268,9 @@
     "showDevToolsOnStartup": {
         "message": "Автоматически открывать DevTools в режиме разработки",
         "description": "Text for the option to enable automatic opening of DevTools in debug mode"
+    },
+    "betaflightSupportButton": {
+        "message": "База знаний",
+        "description": "Text for the button to open the support URL"
     }
 }
