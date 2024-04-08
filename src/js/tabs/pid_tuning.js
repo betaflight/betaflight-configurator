@@ -1769,7 +1769,7 @@ pid_tuning.initialize = function (callback) {
             const midXl = midX * 0.5;
             const midXr = (((canvasWidth - midX) * 0.5) + midX);
             const midY = (canvasHeight - throttleScale * (midX * (canvasHeight / canvasWidth)));
-            const midYl = (canvasHeight - ((canvasHeight - midY) * 0.5 *(expo + 1)));
+            const midYl = (canvasHeight - ((canvasHeight - midY) * 0.5 * (expo + 1)));
             const midYr = (topY + ((midY - topY) * 0.5 *(expo + 1)));
 
             let thrPercent = (FC.RC.channels[3] - 1000) / 1000,
