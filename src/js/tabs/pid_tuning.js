@@ -1793,7 +1793,7 @@ pid_tuning.initialize = function (callback) {
                     context.quadraticCurveTo(midXl, midYl, midX, midY);
                     context.moveTo(midX, midY);
                     curveClip = getQuadraticCurvePoint(midX, midY, midXr, midYr, canvasWidth, topY, clipPos);
-                    ctrlX = midX + (curveClip.x - midX) /2;
+                    ctrlX = midX + (curveClip.x - midX) / 2;
                     ctrlY = midYr + (midY - midYr) * (canvasWidth - curveClip.x) / (canvasWidth - midX);
                 }
                 context.quadraticCurveTo(ctrlX, ctrlY, curveClip.x, curveClip.y);
