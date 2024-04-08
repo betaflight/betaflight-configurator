@@ -1718,7 +1718,7 @@ pid_tuning.initialize = function (callback) {
             /*
             Maths from: https://stackoverflow.com/questions/40918569/quadratic-bezier-curve-calculate-x-for-any-given-y
             */
-            function getPosfromYBezier(y, startY, cpY, endY){
+            function getPosfromYBezier(y, startY, cpY, endY) {
             // y = (1-t)^2 * p0 + 2 * (1-t)*t*p1 + t^2 * p2
             // y = (p2+p0-2p1)x^2 + 2(p1 - p0)x + p0
             // 0 = (p2+p0-2p1)x^2 + 2(p1 - p0)x + (p0 - y)
