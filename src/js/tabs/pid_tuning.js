@@ -1781,7 +1781,7 @@ pid_tuning.initialize = function (callback) {
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.beginPath();
             context.moveTo(0, canvasHeight);
-            if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP){
+            if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP) {
                 const throttleClipY = canvasHeight * (1 - throttleLimitPercent);
                 thrpos.y = thrpos.y < throttleClipY ? throttleClipY : thrpos.y;
                 const clipPos = throttleLimitPercent <= mid
