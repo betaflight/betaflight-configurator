@@ -1715,13 +1715,33 @@ pid_tuning.initialize = function (callback) {
                 };
             }
 
-            /* --- */
+            /*
+            Maths from: https://stackoverflow.com/questions/40918569/quadratic-bezier-curve-calculate-x-for-any-given-y
+            */
+            function getPosfromYBezier(y, startY, cpY, endY) {
+            // y = (1-t)^2 * p0 + 2 * (1-t)*t*p1 + t^2 * p2
+            // y = (p2+p0-2p1)x^2 + 2(p1 - p0)x + p0
+            // 0 = (p2+p0-2p1)x^2 + 2(p1 - p0)x + (p0 - y)
+                const a = startY + endY - 2 * cpY;
+                const b = 2 * (cpY - startY);
+                const c = startY - y;
+                return a == 0 ? -c / b : ( -b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+            }
 
+            const THROTTLE_LIMIT_TYPES = {
+                OFF: 0,
+                SCALE: 1,
+                CLIP: 2,
+            };
             // let global validation trigger and adjust the values first
             const throttleMidE = $('.throttle input[name="mid"]');
             const throttleExpoE = $('.throttle input[name="expo"]');
+            const throttleLimitPercentE = $('.throttle_limit input[name="throttleLimitPercent"]');
+            const throttleLimitTypeE = $('.throttle_limit select[id="throttleLimitType"]');
             const mid = parseFloat(throttleMidE.val());
             const expo = parseFloat(throttleExpoE.val());
+            const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100;
+            const throttleLimitType = parseInt(throttleLimitTypeE.val());
             const throttleCurve = $('.throttle .throttle_curve canvas').get(0);
             const context = throttleCurve.getContext("2d");
 
@@ -1738,29 +1758,52 @@ pid_tuning.initialize = function (callback) {
             throttleCurve.width = throttleCurve.height *
                 (throttleCurve.clientWidth / throttleCurve.clientHeight);
 
+            const throttleScale = throttleLimitType === THROTTLE_LIMIT_TYPES.SCALE ? throttleLimitPercent : 1;
             const canvasHeight = throttleCurve.height;
             const canvasWidth = throttleCurve.width;
 
             // math magic by englishman
-            const midx = canvasWidth * mid;
-            const midxl = midx * 0.5;
-            const midxr = (((canvasWidth - midx) * 0.5) + midx);
-            const midy = canvasHeight - (midx * (canvasHeight / canvasWidth));
-            const midyl = canvasHeight - ((canvasHeight - midy) * 0.5 *(expo + 1));
-            const midyr = (midy / 2) * (expo + 1);
+            const topY = canvasHeight * (1 - throttleScale);
+            const midX = canvasWidth * mid;
+            const midXl = midX * 0.5;
+            const midXr = (((canvasWidth - midX) * 0.5) + midX);
+            const midY = (canvasHeight - throttleScale * (midX * (canvasHeight / canvasWidth)));
+            const midYl = (canvasHeight - ((canvasHeight - midY) * 0.5 * (expo + 1)));
+            const midYr = (topY + ((midY - topY) * 0.5 *(expo + 1)));
 
             let thrPercent = (FC.RC.channels[3] - 1000) / 1000,
                 thrpos = thrPercent <= mid
-                    ? getQuadraticCurvePoint(0, canvasHeight, midxl, midyl, midx, midy, thrPercent * (1.0 / mid))
-                    : getQuadraticCurvePoint(midx, midy, midxr, midyr, canvasWidth, 0, (thrPercent - mid) * (1.0 / (1.0 - mid)));
+                    ? getQuadraticCurvePoint(0, canvasHeight, midXl, midYl, midX, midY, thrPercent * (1.0 / mid))
+                    : getQuadraticCurvePoint(midX, midY, midXr, midYr, canvasWidth, topY, (thrPercent - mid) * (1.0 / (1.0 - mid)));
 
             // draw
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.beginPath();
             context.moveTo(0, canvasHeight);
-            context.quadraticCurveTo(midxl, midyl, midx, midy);
-            context.moveTo(midx, midy);
-            context.quadraticCurveTo(midxr, midyr, canvasWidth, 0);
+            if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP) {
+                const throttleClipY = canvasHeight * (1 - throttleLimitPercent);
+                thrpos.y = thrpos.y < throttleClipY ? throttleClipY : thrpos.y;
+                const clipPos = throttleLimitPercent <= mid
+                    ? getPosfromYBezier(throttleClipY,canvasHeight,midYl, midY)
+                    : getPosfromYBezier(throttleClipY,midY, midYr, topY);
+                let curveClip = getQuadraticCurvePoint(0, canvasHeight, midXl, midYl, midX, midY, clipPos);
+                let ctrlX = curveClip.x / 2;
+                let ctrlY = midYl + (canvasHeight - midYl) * (midX - curveClip.x) / midX;
+                if (throttleLimitPercent > mid) {
+                    context.quadraticCurveTo(midXl, midYl, midX, midY);
+                    context.moveTo(midX, midY);
+                    curveClip = getQuadraticCurvePoint(midX, midY, midXr, midYr, canvasWidth, topY, clipPos);
+                    ctrlX = midX + (curveClip.x - midX) / 2;
+                    ctrlY = midYr + (midY - midYr) * (canvasWidth - curveClip.x) / (canvasWidth - midX);
+                }
+                context.quadraticCurveTo(ctrlX, ctrlY, curveClip.x, curveClip.y);
+                context.moveTo(curveClip.x, curveClip.y);
+                context.lineTo(canvasWidth, curveClip.y);
+            } else {
+                context.quadraticCurveTo(midXl, midYl, midX, midY);
+                context.moveTo(midX, midY);
+                context.quadraticCurveTo(midXr, midYr, canvasWidth, topY);
+            }
             context.lineWidth = 2;
             context.strokeStyle = '#ffbb00';
             context.stroke();
@@ -1782,8 +1825,8 @@ pid_tuning.initialize = function (callback) {
             context.restore();
         }
 
-        $('.throttle input')
-            .on('input change', () => setTimeout(() => redrawThrottleCurve(true), 0));
+        $('.throttle input, .throttle_limit input, .throttle_limit select')
+            .on('change', () => setTimeout(() => redrawThrottleCurve(true), 0));
 
         $('a.refresh').click(function () {
             self.refresh(function () {
