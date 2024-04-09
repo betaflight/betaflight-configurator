@@ -8,6 +8,8 @@
         id="port"
         class="dropdown-select"
         :title="$t('firmwareFlasherManualPort')"
+        @value="value"
+        @input="$emit('input', $event.target.value)"
       >
         <option value="virtual">
           {{ $t("portsSelectVirtual") }}
@@ -42,6 +44,13 @@
 
 <script>
 export default {
+    props: {
+      value: {
+        type: String,
+        // TODO: this should be loaded from config
+        default: 'virtual',
+      },
+    },
     data() {
         return {
             selectedBaudRate: "115200",

@@ -1,7 +1,7 @@
 <template>
   <div class="web-port-picker">
-    <FirmwareVirtualOption />
-    <PortsInput />
+    <FirmwareVirtualOption :is-virtual="port === 'virtual'" />
+    <PortsInput v-model="port" />
   </div>
 </template>
 
@@ -13,6 +13,11 @@ export default {
   components: {
     FirmwareVirtualOption,
     PortsInput,
+  },
+  data() {
+    return {
+      port: 'virtual',
+    };
   },
 };
 </script>
