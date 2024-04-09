@@ -11,11 +11,14 @@
         @value="value"
         @input="$emit('input', $event.target.value)"
       >
-        <option value="virtual">
-          {{ $t("portsSelectVirtual") }}
-        </option>
         <option value="manual">
           {{ $t("portsSelectManual") }}
+        </option>
+        <option
+          v-if="showVirtual"
+          value="virtual"
+        >
+          {{ $t("portsSelectVirtual") }}
         </option>
       </select>
     </div>
@@ -43,16 +46,20 @@
 </template>
 
 <script>
+import { get as getConfig } from '../../js/ConfigStorage';
+import { EventBus } from '../eventBus';
+
 export default {
     props: {
       value: {
         type: String,
-        // TODO: this should be loaded from config
-        default: 'virtual',
+        default: 'manual',
       },
     },
+
     data() {
         return {
+            showVirtual: false,
             selectedBaudRate: "115200",
             baudRates: [
                 { value: "1000000", label: "1000000" },
@@ -70,6 +77,17 @@ export default {
                 { value: "1200", label: "1200" },
             ],
         };
+    },
+    mounted() {
+      EventBus.$on('config-storage:set', this.setShowVirtual);
+    },
+    destroyed() {
+      EventBus.$off('config-storage:set', this.setShowVirtual);
+    },
+    methods: {
+      setShowVirtual() {
+        this.showVirtual = getConfig('showVirtualMode').showVirtualMode;
+      },
     },
 };
 </script>
