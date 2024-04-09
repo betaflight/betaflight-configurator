@@ -61,12 +61,12 @@ DarkTheme.setConfig = function (result) {
 };
 
 DarkTheme.applyDark = function () {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', false));
+    $('body').addClass('dark-theme');
     this.enabled = true;
 };
 
 DarkTheme.applyNormal = function () {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
+    $('body').removeClass('dark-theme');
     this.enabled = false;
 };
 
