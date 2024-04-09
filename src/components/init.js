@@ -14,6 +14,7 @@ import BatteryIcon from "./quad-status/BatteryIcon.vue";
 import FC from '../js/fc.js';
 import MSP from '../js/msp.js';
 import PortUsage from '../js/port_usage.js';
+import PortPicker from './port-picker/PortPicker.vue';
 import CONFIGURATOR from '../js/data_storage.js';
 
 // Most of the global objects can go here at first.
@@ -44,6 +45,7 @@ i18next.on('initialized', function() {
             BetaflightLogo,
             StatusBar,
             BatteryIcon,
+            PortPicker,
         },
         data: betaflightModel,
     });

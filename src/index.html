@@ -26,54 +26,7 @@
             :firmware-id="FC.CONFIG.flightControllerIdentifier"
             :hardware-id="FC.CONFIG.hardwareName"
         ></betaflight-logo>
-        <div id="port-picker">
-            <div id="port-override-option">
-                <label for="port-override">
-                    <span i18n="portOverrideText">Port:</span>
-                    <input id="port-override" type="text" value="/dev/rfcomm0"/>
-                </label>
-            </div>
-            <div id="firmware-virtual-option">
-                <div class="dropdown dropdown-dark">
-                    <select id="firmware-version-dropdown" class="dropdown-select" i18n_title="virtualMSPVersion"></select>
-                </div>
-            </div>
-            <div id="portsinput" style="display: none">
-                <div class="dropdown dropdown-dark">
-                    <select class="dropdown-select" id="port" i18n_title="firmwareFlasherManualPort">
-                        <option value="loading" i18n="serialPortLoading">Loading</option>
-                        <!-- port list gets generated here -->
-                    </select>
-                </div>
-                <div id="auto-connect-and-baud">
-                    <div id="auto-connect-switch">
-                        <label>
-                            <input class="auto_connect togglesmall" type="checkbox"/>
-                            <span class="auto_connect" i18n="autoConnect"></span>
-                        </label>
-                    </div>
-                    <div id="baudselect">
-                        <div class="dropdown dropdown-dark">
-                            <select class="dropdown-select" id="baud" i18n_title="firmwareFlasherBaudRate">
-                                <option value="1000000">1000000</option>
-                                <option value="500000">500000</option>
-                                <option value="250000">250000</option>
-                                <option value="115200" selected="selected">115200</option>
-                                <option value="57600">57600</option>
-                                <option value="38400">38400</option>
-                                <option value="28800">28800</option>
-                                <option value="19200">19200</option>
-                                <option value="14400">14400</option>
-                                <option value="9600">9600</option>
-                                <option value="4800">4800</option>
-                                <option value="2400">2400</option>
-                                <option value="1200">1200</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <port-picker></port-picker>
         <div class="header-wrapper">
             <div id="quad-status_wrapper">
                 <battery-icon
