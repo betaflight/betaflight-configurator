@@ -1,4 +1,5 @@
-&:root {
+body.dark-theme {
+
     --accent: #ffbb00;
     --subtleAccent: #9c9c9c;
     --quietHeader: #bf8606;
@@ -19,983 +20,987 @@
     --hoverButton-background: #ffcc3e;
     --superSubtleAccent: #595959;
     --accentBorder: #bf8606;
-}
-.background_paper {
-    background-image: url(../images/paper-dark.png);
-}
-body {
-    color: white;
-}
-&::backdrop {
-    background-image: none;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-#options-window {
-    background-color: #393b3a;
-}
-#content {
-    background-color: #393b3a;
-}
-#content.logopen {
-    background-color: #393b3a;
-}
 
-/* NOTE: need to think on how to load the dark theme with vue */
-#status-bar {
-    background-color: #414443 !important;
-    >* {
-        ~* {
-            border-left: 1px solid #9c9c9c;
+    color: white;
+
+    .background_paper {
+        background-image: url(../images/paper-dark.png);
+    }
+
+    &::backdrop {
+        background-image: none;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    #options-window {
+        background-color: #393b3a;
+    }
+    #content {
+        background-color: #393b3a;
+    }
+    #content.logopen {
+        background-color: #393b3a;
+    }
+
+    /* NOTE: need to think on how to load the dark theme with vue */
+    #status-bar {
+        background-color: #414443 !important;
+        >* {
+            ~* {
+                border-left: 1px solid #9c9c9c;
+            }
         }
     }
-}
-dialog {
-    background-color: #3a3d3c;
-    color: white;
-    border: 1px solid #ffbb2a;
-}
-.note {
-    background-color: #4e4e4e;
-    color: white;
-}
-.content_toolbar {
-    background-color: #555857;
-    .btn {
+    dialog {
+        background-color: #3a3d3c;
+        color: white;
+        border: 1px solid #ffbb2a;
+    }
+    .note {
+        background-color: #4e4e4e;
+        color: white;
+    }
+    .content_toolbar {
+        background-color: #555857;
+        .btn {
+            a {
+                border: 1px solid #ffbb2a;
+            }
+            a.disabled {
+                border: 1px solid #ffbb2a;
+            }
+        }
+    }
+    .gui_box {
+        border: 1px solid #4d4d4d;
+        background-color: #393b3a;
+    }
+    .gui_warning {
+        background: #393b3a;
+    }
+    .gui_note {
+        background: #393b3a;
+        .gui_box_titlebar {
+            color: black;
+        }
+    }
+    .grey {
+        background-color: #414443;
+    }
+    .gui_box_bottombar {
+        background-color: #393b3a;
+    }
+    .fixed_band {
+        background-color: #393b3a;
+    }
+    .default_btn {
+        a.disabled {
+            background-color: #393b3a;
+            border: 1px solid #ffbb2a;
+        }
+    }
+    .small {
         a {
             border: 1px solid #ffbb2a;
         }
-        a.disabled {
-            border: 1px solid #ffbb2a;
-        }
     }
-}
-.gui_box {
-    border: 1px solid #4d4d4d;
-    background-color: #393b3a;
-}
-.gui_warning {
-    background: #393b3a;
-}
-.gui_note {
-    background: #393b3a;
-    .gui_box_titlebar {
+    .standard_input {
+        background: var(--boxBackground);
+        color: white;
+    }
+    #quad-status_wrapper {
+        color: #393b3a;
+    }
+    button {
+        border: 1px solid #ffbb2a;
+        background-color: #ffbb2a;
         color: black;
     }
-}
-.grey {
-    background-color: #414443;
-}
-.gui_box_bottombar {
-    background-color: #393b3a;
-}
-.fixed_band {
-    background-color: #393b3a;
-}
-.default_btn {
-    a.disabled {
-        background-color: #393b3a;
-        border: 1px solid #ffbb2a;
-    }
-}
-.small {
-    a {
-        border: 1px solid #ffbb2a;
-    }
-}
-.standard_input {
-    background: var(--boxBackground);
-    color: white;
-}
-#quad-status_wrapper {
-    color: #393b3a;
-}
-button {
-    border: 1px solid #ffbb2a;
-    background-color: #ffbb2a;
-    color: black;
-}
-.helpicon {
-    background-image: url(../images/icons/cf_icon_info_white.svg);
-    opacity: 0.3;
-}
-.cf {
     .helpicon {
-        background-image: url(../images/icons/cf_icon_info_grey.svg);
-        opacity: 0.4;
-        &:hover {
+        background-image: url(../images/icons/cf_icon_info_white.svg);
+        opacity: 0.3;
+    }
+    .cf {
+        .helpicon {
             background-image: url(../images/icons/cf_icon_info_grey.svg);
-            opacity: 1;
-        }
-    }
-}
-.gui_box_titlebar {
-    .helpicon {
-        background-image: url(../images/icons/cf_icon_info_grey.svg);
-    }
-}
-.cf_table {
-    td {
-        border-style: solid;
-    }
-    tr {
-        &:last-child {
-            td {
-                border-style: unset;
-            }
-        }
-    }
-}
-.noUi-pips {
-    color: var(--mutedText);
-}
-.jBox-container {
-    background: #393b3a;
-    color: white;
-}
-.jBox-Modal {
-    .jBox-title {
-        background: #393b3a;
-        border-bottom: 1px solid #9c9c9c;
-        text-shadow: 0 1px 1px #ffffff;
-        color: white;
-    }
-}
-.jBox-Confirm {
-    .jBox-title {
-        background: #393b3a;
-        border-bottom: 1px solid #9c9c9c;
-        text-shadow: 0 1px 1px #ffffff;
-        color: white;
-    }
-}
-.jBox-pointer {
-    &:after {
-        background: #393b3a;
-    }
-}
-.tab-adjustments {
-    .adjustment {
-        &:nth-child(odd) {
-            background-color: #2f2f2f;
-        }
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .adjustments {
-        background-color: #393b3a;
-        td {
-            border-top: 1px solid #00000000;
-            border-bottom: 1px solid #00000000;
-        }
-    }
-}
-.tab-auxiliary {
-    .toolbox {
-        color: white;
-    }
-    .mode {
-        background-color: #393b3a;
-        .info {
-            background-color: #9e9e9e;
-            color: white;
-        }
-    }
-    .ranges {
-        border-bottom: 5px solid #8a8a8a;
-        background-color: #676767;
-    }
-    .range {
-        background-color: #484848;
-        .channel {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .link {
-        background-color: #484848;
-    }
-    .buttons {
-        a {
-            background-color: #333333;
-            color: white;
+            opacity: 0.4;
             &:hover {
-                background-color: var(--hoverButton-background);
+                background-image: url(../images/icons/cf_icon_info_grey.svg);
+                opacity: 1;
             }
         }
     }
-}
-.logic {
-    background-color: #3a3a3a;
-    color: white;
-}
-.linkedTo {
-    background-color: #3a3a3a;
-    color: white;
-}
-.tab-cli {
-    textarea[name='commands'] {
-        &::placeholder {
-            color: silver;
-        }
-        background: black;
-        color: white;
-    }
-}
-.cli-textcomplete-dropdown {
-    background-color: #393b3a;
-    a {
-        color: white;
-    }
-    .active {
-        background-color: var(--quietHeader);
-    }
-}
-.tab-configuration {
-    .gui_box {
-        span {
-            color: white;
-        }
-    }
-    input {
-        background-color: #3a3a3a;
-        color: white;
-    }
-    select {
-        background-color: #3a3a3a;
-        color: white;
-    }
-}
-.tab-failsafe {
-    .number {
-        input {
-            background-color: #3a3a3a;
-            color: white;
-            &:disabled {
-                background-color: #393b3a;
-                color: grey;
-            }
-        }
-    }
-    .radioarea {
-        background-color: #393b3a;
-    }
-    .gui_box {
-        span {
-            color: white;
-        }
-    }
-    .stage1 {
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .modename {
-        background-color: #393b3a;
-    }
-    .switchMode {
-        background-color: #3a3a3a;
-        color: white;
-    }
-    .pro1 {
-        background-image: url(../images/icons/cf_failsafe_procedure1-dark.svg);
-    }
-    .pro2 {
-        background-image: url(../images/icons/cf_failsafe_procedure2-dark.svg);
-    }
-    .pro4 {
-        background-image: url(../images/icons/cf_failsafe_procedure4-dark.svg);
-    }
-}
-.btn {
-    .disabled {
-        background-color: #393b3a;
-    }
-}
-.tab-firmware_flasher {
-    .build_configuration {
-        .select2 {
-            color: #424242;
-            .selection {
-                .select2-selection {
-                    background-color: #575757;
-                }
-            }
-        }
-        input {
-            background-color: #3a3a3a;
-            color: white;
-        }
-        select {
-            background-color: #424242;
-            color: white;
-        }
-    }
-    .options {
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-        .description {
-            color: #b9b9b9;
-        }
-        .manual_baud_rate {
-            select {
-                background-color: #3a3a3a;
-                color: white;
-            }
-        }
-    }
-    .release_info {
-        .target {
-            color: white;
-        }
-        .buildProgress {
-            border: 1px solid var(--subtleAccent);
-            border-radius: 2px;
+    .gui_box_titlebar {
+        .helpicon {
+            background-image: url(../images/icons/cf_icon_info_grey.svg);
         }
     }
     .cf_table {
         td {
-            border-bottom: solid 1px #4f4f4f;
+            border-style: solid;
         }
-    }
-}
-.tab-gps {
-    .GPS_info {
-        .head {
-            background-color: #393b3a;
-        }
-    }
-    .GPS_signal_strength {
-        .head {
-            background-color: #393b3a;
-        }
-    }
-    #loadmap {
-        .controls {
-            background-color: #393b3a;
-            a {
-                background-color: #393b3a;
-                &:hover {
-                    background-color: var(--hoverButton-background);
-                }
-                &:active {
-                    background-color: #393b3a;
-                }
-            }
-        }
-    }
-}
-progress[value] {
-    &::-webkit-progress-bar {
-        background-color: #393b3a;
-    }
-}
-.tab-landing {
-    background-color: #3e3e3e;
-    background-image: url(../../images/pattern_dark.png);
-    .content_mid {
-        background-color: #3e3e3e;
-        .text3 {
-            .wrap2 {
-                background: #5f5f5f;
-            }
-        }
-    }
-    .logowrapper {
-        img {
-            content: url(../images/bf_logo_black.svg);
-        }
-    }
-}
-.tab-led-strip {
-    .section {
-        color: #c4c4c4;
-    }
-    .mainGrid {
-        background-color: #4e4e4e;
-    }
-    button {
-        background-color: #6b6b6b;
-        color: white;
-        &:hover {
-            border: 1px solid #ffffff;
-            background-color: #393b3a;
-        }
-    }
-    .gridSections {
-        border: none;
-        .block {
-            border: none;
-        }
-    }
-}
-.tab-logging {
-    .speed {
-        background-color: #3a3a3a;
-        color: white;
-    }
-}
-.tab-motors {
-    .gui_box {
-        span {
-            color: white;
-        }
-    }
-    input {
-        background-color: #3a3a3a;
-        color: white;
-    }
-    select {
-        background-color: #3a3a3a;
-        color: white;
-    }
-    .plot_control {
-        background-color: #393b3a;
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-        .x {
-            background-color: #00A8F0;
-        }
-        .y {
-            background-color: #C0D800;
-        }
-        .z {
-            background-color: #CB4B4B;
-        }
-    }
-    .motorblock {
-        background-color: #393b3a;
-    }
-    .m-block {
-        background-color: #393b3a;
-        .label {
-            color: white;
-        }
-        .meter-bar {
-            background-color: #393b3a;
-        }
-    }
-    .motor_testing {
-        .notice {
-            background-color: #4e4e4e;
-        }
-    }
-    text {
-        fill: white;
-    }
-    .line {
-		&:nth-child(1) {
-			stroke: #00A8F0;
-		}
-		&:nth-child(2) {
-			stroke: #C0D800;
-		}
-		&:nth-child(3) {
-			stroke: #CB4B4B;
-		}
-	}
-}
-.tab-onboard_logging {
-    .regular-button.disabled {
-        background-color: #393b3a;
-    }
-    .dataflash-contents {
-        background-color: #393b3a;
-    }
-    .sdcard-contents {
-        background-color: #393b3a;
-    }
-    .dataflash-used {
-        background-color: #848484;
-    }
-    .sdcard-other {
-        background-color: #848484;
-    }
-    progress {
-        &::-webkit-progress-bar {
-            background-color: #393b3a;
-        }
-    }
-    .blackboxRate {
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .blackboxDebugMode {
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .blackboxDevice {
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .sdcard-icon {
-        background-color: #393b3a;
-    }
-}
-.tab-osd {
-    .display-layout {
-        input.position {
-            border-bottom: 1px solid red;
-        }
-    }
-    .preview {
-        background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../images/osd-bg-1.jpg);
-        background-size: cover;
-    }
-    input[type='checkbox'] {
-        &:after {
-            line-height: 1.5em;
-            content: none;
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin-top: -1px;
-            margin-left: -1px;
-            border: 1px solid #404040;
-            border-radius: 0.25em;
-            background: #4d4d4d;
-        }
-        &:checked {
-            &:after {
-                background: #ffbb00;
-                border: 1px solid #404040;
-            }
-        }
-    }
-}
-.tab-pid_tuning {
-    .profile {
-        .helpicon {
-            background-image: url(../images/icons/cf_icon_info_grey.svg);
-            opacity: 0.4;
-            &:hover {
-                opacity: 1;
-            }
-        }
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .rate_profile {
-        .helpicon {
-            background-image: url(../images/icons/cf_icon_info_grey.svg);
-            opacity: 0.4;
-            &:hover {
-                opacity: 1;
-            }
-        }
-        select {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .pid_titlebar {
-        .helpicon {
-            background-image: url(../images/icons/cf_icon_info_grey.svg);
-            opacity: 0.4;
-            &:hover {
-                opacity: 1;
-            }
-        }
-        .wide_header {
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
-        }
-    }
-    .throttle_limit {
-        th {
-            background-color: #393b3a;
-            border-bottom: 1px solid #5e5e5e;
-        }
-    }
-    .cf {
         tr {
-            background-color: #414443;
-        }
-        th {
-            background-color: var(--quietHeader);
-            color: white;
-        }
-        input {
-            background-color: #3a3a3a;
-            color: white;
-            &:disabled {
-                color: rgb(105, 105, 105);
-                background-color: #2d2d2d;
+            &:last-child {
+                td {
+                    border-style: unset;
+                }
             }
-        }
-        select {
-            background-color: #3a3a3a;
-            color: white;
-            &:disabled {
-                color: rgb(105, 105, 105);
-                background-color: #2d2d2d;
-            }
-        }
-        .rates_logo_bg {
-            background-color: #ffffff33;
         }
     }
-    table.compensation {
-        .suboption {
+    .noUi-pips {
+        color: var(--mutedText);
+    }
+    .jBox-container {
+        background: #393b3a;
+        color: white;
+    }
+    .jBox-Modal {
+        .jBox-title {
+            background: #393b3a;
+            border-bottom: 1px solid #9c9c9c;
+            text-shadow: 0 1px 1px #ffffff;
+            color: white;
+        }
+    }
+    .jBox-Confirm {
+        .jBox-title {
+            background: #393b3a;
+            border-bottom: 1px solid #9c9c9c;
+            text-shadow: 0 1px 1px #ffffff;
+            color: white;
+        }
+    }
+    .jBox-pointer {
+        &:after {
+            background: #393b3a;
+        }
+    }
+    .tab-adjustments {
+        .adjustment {
+            &:nth-child(odd) {
+                background-color: #2f2f2f;
+            }
             select {
                 background-color: #3a3a3a;
                 color: white;
             }
         }
-        tr {
-            border-bottom: 1px solid #6b6b6b;
-        }
-    }
-    table {
-        input {
-            background-color: #3a3a3a;
-            color: white;
-        }
-        select {
-            text-align-last: right;
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .tab-container {
-        >div {
-            background-color: #535655;
-            border-right: 1px solid #393b3a;
-        }
-    }
-    .number {
-        input {
-            background-color: #3a3a3a;
-            color: white;
-        }
-    }
-    .gui_box {
-        span {
-            color: white;
-        }
-    }
-    .bottomarea {
-        background-color: #393b3a;
-    }
-    .regular-button.disabled {
-        background-color: #393b3a;
-    }
-    .sliderLabels {
-        th {
-            background: #414443;
-            color: white;
-        }
-    }
-    input {
-        &:disabled {
-            color: rgb(105, 105, 105);
-            background-color: #2d2d2d;
-        }
-    }
-    select {
-        &:disabled {
-            color: rgb(105, 105, 105);
-            background-color: #2d2d2d;
-        }
-    }
-    .slidersWarning {
-        background: #542415;
-    }
-}
-.inputBackground {
-    background-color: #3a3a3a;
-    color: white;
-}
-.fancy.header {
-    background-color: #393b3a;
-}
-.pid_roll {
-    background-color: #A00000;
-}
-.pid_pitch {
-    background-color: #00A000;
-}
-.pid_yaw {
-    background-color: #0000A0;
-}
-.pid_mode {
-    background-color: #3c3c3c;
-    border-bottom: 1px solid #3c3c3c;
-    color: white;
-}
-.pid_titlebar {
-    background-color: #393b3a;
-}
-.tabarea {
-    background: #393b3a;
-}
-.tab-ports {
-    table {
-        td {
-            &:first-child {
-                border-left: none;
+        .adjustments {
+            background-color: #393b3a;
+            td {
+                border-top: 1px solid #00000000;
+                border-bottom: 1px solid #00000000;
             }
-            &:last-child {
-                border-right: none;
-            }
-            border-bottom: 1px solid #575757;
-            border-left: 1px solid #575757;
-            border-right: 1px solid #575757;
         }
     }
-    .ports {
-        tr {
-            &:last-child {
-                border-bottom: none;
-                td {
-                    border-bottom: none;
+    .tab-auxiliary {
+        .toolbox {
+            color: white;
+        }
+        .mode {
+            background-color: #393b3a;
+            .info {
+                background-color: #9e9e9e;
+                color: white;
+            }
+        }
+        .ranges {
+            border-bottom: 5px solid #8a8a8a;
+            background-color: #676767;
+        }
+        .range {
+            background-color: #484848;
+            .channel {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .link {
+            background-color: #484848;
+        }
+        .buttons {
+            a {
+                background-color: #333333;
+                color: white;
+                &:hover {
+                    background-color: var(--hoverButton-background);
                 }
             }
         }
     }
-}
-.tab-power {
-    .number {
+    .logic {
+        background-color: #3a3a3a;
+        color: white;
+    }
+    .linkedTo {
+        background-color: #3a3a3a;
+        color: white;
+    }
+    .tab-cli {
+        textarea[name='commands'] {
+            &::placeholder {
+                color: silver;
+            }
+            background: black;
+            color: white;
+        }
+    }
+    .cli-textcomplete-dropdown {
+        background-color: #393b3a;
+        a {
+            color: white;
+        }
+        .active {
+            background-color: var(--quietHeader);
+        }
+    }
+    .tab-configuration {
+        .gui_box {
+            span {
+                color: white;
+            }
+        }
         input {
             background-color: #3a3a3a;
             color: white;
         }
-    }
-    .battery-configuration {
         select {
             background-color: #3a3a3a;
             color: white;
         }
     }
-}
-.tab-receiver {
-    .gui_box {
-        span {
-            color: white;
+    .tab-failsafe {
+        .number {
+            input {
+                background-color: #3a3a3a;
+                color: white;
+                &:disabled {
+                    background-color: #393b3a;
+                    color: grey;
+                }
+            }
         }
-    }
-    input {
-        background-color: #3a3a3a;
-        color: white;
-    }
-    select {
-        background-color: #3a3a3a;
-        color: white;
-    }
-    .bars {
-        .meter-bar {
+        .radioarea {
             background-color: #393b3a;
-            .label {
+        }
+        .gui_box {
+            span {
                 color: white;
             }
         }
-    }
-    .tunings {
-        background-color: #393b3a;
-        table {
-            td {
-                background: #414443;
+        .stage1 {
+            select {
+                background-color: #3a3a3a;
+                color: white;
             }
-            tr {
-                &:nth-child(odd) {
-                    background-color: #393b3a;
+        }
+        .modename {
+            background-color: #393b3a;
+        }
+        .switchMode {
+            background-color: #3a3a3a;
+            color: white;
+        }
+        .pro1 {
+            background-image: url(../images/icons/cf_failsafe_procedure1-dark.svg);
+        }
+        .pro2 {
+            background-image: url(../images/icons/cf_failsafe_procedure2-dark.svg);
+        }
+        .pro4 {
+            background-image: url(../images/icons/cf_failsafe_procedure4-dark.svg);
+        }
+    }
+    .btn {
+        .disabled {
+            background-color: #393b3a;
+        }
+    }
+    .tab-firmware_flasher {
+        .build_configuration {
+            .select2 {
+                color: #424242;
+                .selection {
+                    .select2-selection {
+                        background-color: #575757;
+                    }
                 }
             }
             input {
                 background-color: #3a3a3a;
                 color: white;
             }
+            select {
+                background-color: #424242;
+                color: white;
+            }
+        }
+        .options {
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+            .description {
+                color: #b9b9b9;
+            }
+            .manual_baud_rate {
+                select {
+                    background-color: #3a3a3a;
+                    color: white;
+                }
+            }
+        }
+        .release_info {
+            .target {
+                color: white;
+            }
+            .buildProgress {
+                border: 1px solid var(--subtleAccent);
+                border-radius: 2px;
+            }
+        }
+        .cf_table {
+            td {
+                border-bottom: solid 1px #4f4f4f;
+            }
         }
     }
-    .rssi_channel_wrapper {
-        background-color: #414443;
-        border-bottom: 1px solid #4d4d4d;
-        border-right: 1px solid #4d4d4d;
+    .tab-gps {
+        .GPS_info {
+            .head {
+                background-color: #393b3a;
+            }
+        }
+        .GPS_signal_strength {
+            .head {
+                background-color: #393b3a;
+            }
+        }
+        #loadmap {
+            .controls {
+                background-color: #393b3a;
+                a {
+                    background-color: #393b3a;
+                    &:hover {
+                        background-color: var(--hoverButton-background);
+                    }
+                    &:active {
+                        background-color: #393b3a;
+                    }
+                }
+            }
+        }
     }
-    .rcmap_wrapper {
-        background-color: #414443;
-        border-left: 1px solid #4d4d4d;
-        border-bottom: 1px solid #4d4d4d;
+    progress[value] {
+        &::-webkit-progress-bar {
+            background-color: #393b3a;
+        }
     }
-    .hybrid_element {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
+    .tab-landing {
+        background-color: #3e3e3e;
+        background-image: url(../../images/pattern_dark.png);
+        .content_mid {
+            background-color: #3e3e3e;
+            .text3 {
+                .wrap2 {
+                    background: #5f5f5f;
+                }
+            }
+        }
+        .logowrapper {
+            img {
+                content: url(../images/bf_logo_black.svg);
+            }
+        }
+    }
+    .tab-led-strip {
+        .section {
+            color: #c4c4c4;
+        }
+        .mainGrid {
+            background-color: #4e4e4e;
+        }
+        button {
+            background-color: #6b6b6b;
+            color: white;
+            &:hover {
+                border: 1px solid #ffffff;
+                background-color: #393b3a;
+            }
+        }
+        .gridSections {
+            border: none;
+            .block {
+                border: none;
+            }
+        }
+    }
+    .tab-logging {
+        .speed {
+            background-color: #3a3a3a;
+            color: white;
+        }
+    }
+    .tab-motors {
+        .gui_box {
+            span {
+                color: white;
+            }
+        }
         input {
             background-color: #3a3a3a;
             color: white;
         }
-    }
-    .plot_control {
-        background-color: #2f2f2f;
-    }
-    text {
-        fill: white;
-    }
-}
-.tab-sensors {
-    .plot_control {
-        background-color: #2f2f2f;
         select {
             background-color: #3a3a3a;
             color: white;
         }
-        .x {
-            background-color: #00A8F0;
-        }
-        .y {
-            background-color: #C0D800;
-        }
-        .z {
-            background-color: #CB4B4B;
-        }
-    }
-    .line {
-		&:nth-child(1) {
-			stroke: #00A8F0;
-		}
-		&:nth-child(2) {
-			stroke: #C0D800;
-		}
-		&:nth-child(3) {
-			stroke: #CB4B4B;
-		}
-    }
-    .legend {
-		.item {
-			&:nth-child(1) {
-				fill: #00A8F0;
-			}
-			&:nth-child(2) {
-				fill: #C0D800;
-			}
-			&:nth-child(3) {
-				fill: #CB4B4B;
-			}
-        }
-    }
-    text {
-        fill: white;
-    }
-}
-.tab-servos {
-    table {
-        th {
-            background: #828885;
-        }
-        tr {
-            &:nth-child(even) {
-                background-color: #2f2f2f;
+        .plot_control {
+            background-color: #393b3a;
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+            .x {
+                background-color: #00A8F0;
+            }
+            .y {
+                background-color: #C0D800;
+            }
+            .z {
+                background-color: #CB4B4B;
             }
         }
-        .main {
+        .motorblock {
             background-color: #393b3a;
         }
-        input[type="number"] {
-            background-color: #3a3a3a;
-            color: white;
+        .m-block {
+            background-color: #393b3a;
+            .label {
+                color: white;
+            }
+            .meter-bar {
+                background-color: #393b3a;
+            }
+        }
+        .motor_testing {
+            .notice {
+                background-color: #4e4e4e;
+            }
+        }
+        text {
+            fill: white;
+        }
+        .line {
+            &:nth-child(1) {
+                stroke: #00A8F0;
+            }
+            &:nth-child(2) {
+                stroke: #C0D800;
+            }
+            &:nth-child(3) {
+                stroke: #CB4B4B;
+            }
         }
     }
-    .direction {
-        .rate {
-            background-color: #3a3a3a;
-            color: white;
+    .tab-onboard_logging {
+        .regular-button.disabled {
+            background-color: #393b3a;
+        }
+        .dataflash-contents {
+            background-color: #393b3a;
+        }
+        .sdcard-contents {
+            background-color: #393b3a;
+        }
+        .dataflash-used {
+            background-color: #848484;
+        }
+        .sdcard-other {
+            background-color: #848484;
+        }
+        progress {
+            &::-webkit-progress-bar {
+                background-color: #393b3a;
+            }
+        }
+        .blackboxRate {
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .blackboxDebugMode {
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .blackboxDevice {
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .sdcard-icon {
+            background-color: #393b3a;
         }
     }
-    .servoblock {
-        background-color: #393b3a;
+    .tab-osd {
+        .display-layout {
+            input.position {
+                border-bottom: 1px solid red;
+            }
+        }
+        .preview {
+            background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../images/osd-bg-1.jpg);
+            background-size: cover;
+        }
+        input[type='checkbox'] {
+            &:after {
+                line-height: 1.5em;
+                content: none;
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin-top: -1px;
+                margin-left: -1px;
+                border: 1px solid #404040;
+                border-radius: 0.25em;
+                background: #4d4d4d;
+            }
+            &:checked {
+                &:after {
+                    background: #ffbb00;
+                    border: 1px solid #404040;
+                }
+            }
+        }
+    }
+    .tab-pid_tuning {
+        .profile {
+            .helpicon {
+                background-image: url(../images/icons/cf_icon_info_grey.svg);
+                opacity: 0.4;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .rate_profile {
+            .helpicon {
+                background-image: url(../images/icons/cf_icon_info_grey.svg);
+                opacity: 0.4;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .pid_titlebar {
+            .helpicon {
+                background-image: url(../images/icons/cf_icon_info_grey.svg);
+                opacity: 0.4;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+            .wide_header {
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+        }
+        .throttle_limit {
+            th {
+                background-color: #393b3a;
+                border-bottom: 1px solid #5e5e5e;
+            }
+        }
+        .cf {
+            tr {
+                background-color: #414443;
+            }
+            th {
+                background-color: var(--quietHeader);
+                color: white;
+            }
+            input {
+                background-color: #3a3a3a;
+                color: white;
+                &:disabled {
+                    color: rgb(105, 105, 105);
+                    background-color: #2d2d2d;
+                }
+            }
+            select {
+                background-color: #3a3a3a;
+                color: white;
+                &:disabled {
+                    color: rgb(105, 105, 105);
+                    background-color: #2d2d2d;
+                }
+            }
+            .rates_logo_bg {
+                background-color: #ffffff33;
+            }
+        }
+        table.compensation {
+            .suboption {
+                select {
+                    background-color: #3a3a3a;
+                    color: white;
+                }
+            }
+            tr {
+                border-bottom: 1px solid #6b6b6b;
+            }
+        }
+        table {
+            input {
+                background-color: #3a3a3a;
+                color: white;
+            }
+            select {
+                text-align-last: right;
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .tab-container {
+            >div {
+                border-right: 1px solid #393b3a;
+
+                &:not(.active) {
+                    background-color: #535655;
+                }
+            }
+        }
+        .number {
+            input {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .gui_box {
+            span {
+                color: white;
+            }
+        }
+        .bottomarea {
+            background-color: #393b3a;
+        }
+        .regular-button.disabled {
+            background-color: #393b3a;
+        }
+        .sliderLabels {
+            th {
+                background: #414443;
+                color: white;
+            }
+        }
+        input {
+            &:disabled {
+                color: rgb(105, 105, 105);
+                background-color: #2d2d2d;
+            }
+        }
+        select {
+            &:disabled {
+                color: rgb(105, 105, 105);
+                background-color: #2d2d2d;
+            }
+        }
+        .slidersWarning {
+            background: #542415;
+        }
+    }
+    .inputBackground {
+        background-color: #3a3a3a;
         color: white;
     }
-    .m-block {
-        .label {
-            color: white;
+    .fancy.header {
+        background-color: #393b3a;
+    }
+    .pid_roll {
+        background-color: #A00000;
+    }
+    .pid_pitch {
+        background-color: #00A000;
+    }
+    .pid_yaw {
+        background-color: #0000A0;
+    }
+    .pid_mode {
+        background-color: #3c3c3c;
+        border-bottom: 1px solid #3c3c3c;
+        color: white;
+    }
+    .pid_titlebar {
+        background-color: #393b3a;
+    }
+    .tabarea {
+        background: #393b3a;
+    }
+    .tab-ports {
+        table {
+            td {
+                &:first-child {
+                    border-left: none;
+                }
+                &:last-child {
+                    border-right: none;
+                }
+                border-bottom: 1px solid #575757;
+                border-left: 1px solid #575757;
+                border-right: 1px solid #575757;
+            }
         }
-        .meter-bar {
-            background-color: #393b3a;
+        .ports {
+            tr {
+                &:last-child {
+                    border-bottom: none;
+                    td {
+                        border-bottom: none;
+                    }
+                }
+            }
         }
     }
-}
-.tab-setup {
-    #interactive_block {
-        background-color: #393b3a;
-        a.reset {
+    .tab-power {
+        .number {
+            input {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .battery-configuration {
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+    }
+    .tab-receiver {
+        .gui_box {
+            span {
+                color: white;
+            }
+        }
+        input {
+            background-color: #3a3a3a;
             color: white;
-            background-color: #575757;
-            &:hover {
+        }
+        select {
+            background-color: #3a3a3a;
+            color: white;
+        }
+        .bars {
+            .meter-bar {
+                background-color: #393b3a;
+                .label {
+                    color: white;
+                }
+            }
+        }
+        .tunings {
+            background-color: #393b3a;
+            table {
+                td {
+                    background: #414443;
+                }
+                tr {
+                    &:nth-child(odd) {
+                        background-color: #393b3a;
+                    }
+                }
+                input {
+                    background-color: #3a3a3a;
+                    color: white;
+                }
+            }
+        }
+        .rssi_channel_wrapper {
+            background-color: #414443;
+            border-bottom: 1px solid #4d4d4d;
+            border-right: 1px solid #4d4d4d;
+        }
+        .rcmap_wrapper {
+            background-color: #414443;
+            border-left: 1px solid #4d4d4d;
+            border-bottom: 1px solid #4d4d4d;
+        }
+        .hybrid_element {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            input {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .plot_control {
+            background-color: #2f2f2f;
+        }
+        text {
+            fill: white;
+        }
+    }
+    .tab-sensors {
+        .plot_control {
+            background-color: #2f2f2f;
+            select {
+                background-color: #3a3a3a;
+                color: white;
+            }
+            .x {
+                background-color: #00A8F0;
+            }
+            .y {
+                background-color: #C0D800;
+            }
+            .z {
+                background-color: #CB4B4B;
+            }
+        }
+        .line {
+            &:nth-child(1) {
+                stroke: #00A8F0;
+            }
+            &:nth-child(2) {
+                stroke: #C0D800;
+            }
+            &:nth-child(3) {
+                stroke: #CB4B4B;
+            }
+        }
+        .legend {
+            .item {
+                &:nth-child(1) {
+                    fill: #00A8F0;
+                }
+                &:nth-child(2) {
+                    fill: #C0D800;
+                }
+                &:nth-child(3) {
+                    fill: #CB4B4B;
+                }
+            }
+        }
+        text {
+            fill: white;
+        }
+    }
+    .tab-servos {
+        table {
+            th {
+                background: #828885;
+            }
+            tr {
+                &:nth-child(even) {
+                    background-color: #2f2f2f;
+                }
+            }
+            .main {
+                background-color: #393b3a;
+            }
+            input[type="number"] {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .direction {
+            .rate {
+                background-color: #3a3a3a;
+                color: white;
+            }
+        }
+        .servoblock {
+            background-color: #393b3a;
+            color: white;
+        }
+        .m-block {
+            .label {
+                color: white;
+            }
+            .meter-bar {
                 background-color: #393b3a;
             }
         }
     }
-    .attitude_info {
-        color: white;
-    }
-    .dialogBuildInfo {
-        background-color: #575757;
-    }
-}
-.tab-transponder {
-    .text {
-        .disabled {
+    .tab-setup {
+        #interactive_block {
             background-color: #393b3a;
+            a.reset {
+                color: white;
+                background-color: #575757;
+                &:hover {
+                    background-color: #393b3a;
+                }
+            }
         }
-    }
-    .gui_box {
-        span {
+        .attitude_info {
             color: white;
         }
+        .dialogBuildInfo {
+            background-color: #575757;
+        }
     }
-}
-.select2-container {
-    .select2-selection--single {
-        .select2-selection__rendered {
+    .tab-transponder {
+        .text {
+            .disabled {
+                background-color: #393b3a;
+            }
+        }
+        .gui_box {
+            span {
+                color: white;
+            }
+        }
+    }
+    .select2-container {
+        .select2-selection--single {
+            .select2-selection__rendered {
+                background-color: #3a3a3a !important;
+            }
+        }
+    }
+    .select2-selection__arrow {
+        b {
+            border-bottom: 1.5px solid white !important;
+            border-right: 1.5px solid white !important;
+        }
+    }
+    .select2-search--dropdown {
+        background-color: #3a3a3a !important;
+        .select2-search__field {
+            border: 1px solid var(--subtleAccent) !important;
+            background-color: #3a3a3a !important;
+            color: white !important;
+        }
+    }
+    .select2-results {
+        >.select2-results__options {
             background-color: #3a3a3a !important;
         }
     }
-}
-.select2-selection__arrow {
-    b {
-        border-bottom: 1.5px solid white !important;
-        border-right: 1.5px solid white !important;
-    }
-}
-.select2-search--dropdown {
-    background-color: #3a3a3a !important;
-    .select2-search__field {
-        border: 1px solid var(--subtleAccent) !important;
-        background-color: #3a3a3a !important;
-        color: white !important;
-    }
-}
-.select2-results {
-    >.select2-results__options {
-        background-color: #3a3a3a !important;
-    }
-}
-.ms-drop {
-    ul {
-        >li.hide-radio {
-            &:focus {
-                background-color: var(--subtleAccent);
-            }
-            &:hover {
-                background-color: var(--subtleAccent);
+    .ms-drop {
+        ul {
+            >li.hide-radio {
+                &:focus {
+                    background-color: var(--subtleAccent);
+                }
+                &:hover {
+                    background-color: var(--subtleAccent);
+                }
             }
         }
     }
-}
-.invertable {
-    filter: invert(1)
+    .invertable {
+        filter: invert(1)
+    }
 }
