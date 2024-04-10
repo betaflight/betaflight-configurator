@@ -57,6 +57,15 @@ The `libatomic` library must also be installed before installing Betaflight Conf
 sudo apt install libatomic1
 ```
 
+On Ubuntu 23.10 please follow these alternative steps for installation:
+
+```
+sudo echo "deb http://archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
+sudo apt update
+sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
+sudo apt-get -f install
+```
+
 #### Graphics Issues
 
 If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
