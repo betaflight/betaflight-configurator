@@ -65,7 +65,7 @@ If you experience graphics display problems or smudged/dithered fonts display is
 
 Unstable testing versions of the latest builds of the configurator for most platforms can be downloaded from [here](https://github.com/betaflight/betaflight-configurator-nightlies/releases/).
 
-The future of the Configurator is moving to a PWA (Progressive Web Application). In this way it will be easier to maintain specially to support different devices like phones, tables. etc. Is a work in progress but you can have access to the latest snapshot in PWA way without installing anything [here](https://configurator.betaflight.com/) (take into account that some things don't work and are in development).
+The future of the Configurator is moving to a PWA (Progressive Web Application). In this way it will be easier to maintain specially to support different devices like phones, tablets. etc. Is a work in progress but you can have access to the latest snapshot in PWA way without installing anything [here](https://configurator.betaflight.com/) (take into account that some things don't work and are in development).
 
 **Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
 
