@@ -58,6 +58,7 @@ sudo apt install libatomic1
 ```
 
 On Ubuntu 23.10 please follow these alternative steps for installation:
+_Replace `[COUNTRY_CODE]` with your [country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in ISO 3166 alpha 2 format_
 
 ```
 sudo echo "deb http://[COUNTRY CODE].archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
@@ -65,8 +66,6 @@ sudo apt update
 sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
 sudo apt-get -f install
 ```
-
-Replace `[COUNTRY_CODE]` with your [country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in ISO 3166 alpha 2 format.
 
 #### Graphics Issues
 
