@@ -60,7 +60,7 @@ sudo apt install libatomic1
 On Ubuntu 23.10 please follow these alternative steps for installation:
 
 ```
-sudo echo "deb http://$(echo "$LANG" | awk -F'_' '{print $2}' | awk -F'.' '{print $1}').archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
+sudo echo "deb http://archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
 sudo apt update
 sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
 sudo apt-get -f install
