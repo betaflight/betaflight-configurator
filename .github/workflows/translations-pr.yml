@@ -1,6 +1,6 @@
 name: Translations download and PR
 
-on: 
+on:
   workflow_dispatch:
   schedule:
   - cron: '00 3 * * 1'

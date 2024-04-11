@@ -49,4 +49,4 @@ jobs:
           files: release-assets/Betaflight-Configurator-*/**
           draft: true
           prerelease: false
-          fail_on_unmatched_files: true          
+          fail_on_unmatched_files: true
