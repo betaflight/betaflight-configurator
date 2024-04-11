@@ -1,11 +1,11 @@
 ## This is triggered by the publishing of a release, and will build the assets and attach them.
 
-name: On Release 
+name: On Release
 
 on:
   release:
     types: [published]
-        
+
 jobs:
   ci:
     name: CI

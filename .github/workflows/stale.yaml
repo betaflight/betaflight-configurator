@@ -20,7 +20,7 @@ jobs:
           This issue has been automatically marked as stale because it
           has not had recent activity. It will be closed if no further activity occurs
           within a week.
-        close-issue-message: 'Issue closed automatically as inactive.'        
+        close-issue-message: 'Issue closed automatically as inactive.'
         exempt-issue-labels: 'BUG,Feature Request,Pinned'
         stale-issue-label: 'Inactive'
         stale-pr-message: >
