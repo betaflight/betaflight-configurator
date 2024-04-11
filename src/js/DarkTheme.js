@@ -74,7 +74,7 @@ export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
 
     checkSetupAnalytics(function (analyticsService) {
-        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', enabled);
+        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', { enabled: enabled });
     });
 }
 

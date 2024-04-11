@@ -104,7 +104,7 @@ function appReady() {
         startProcess();
 
         checkSetupAnalytics(function (analyticsService) {
-            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', { language: i18n.selectedLanguage });
         });
 
         initializeSerialBackend();
