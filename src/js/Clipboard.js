@@ -87,30 +87,16 @@ Clipboard._configureClipboardAsWeb = function() {
     this.writeText = function(text, onSuccess, onError) {
 
         navigator.clipboard.writeText(text).then(
-            function() {
-                if (onSuccess) {
-                    onSuccess(text);
-                }
-            }, function(err) {
-                if (onError) {
-                    onError(err);
-                }
-            },
+            () => onSuccess?.(text),
+            onError,
         );
     };
 
     this.readText = function(onSuccess, onError) {
 
         navigator.clipboard.readText().then(
-            function(text) {
-                if (onSuccess) {
-                    onSuccess(text);
-                }
-            }, function(err) {
-                if (onError) {
-                    onError(err);
-                }
-            },
+            () => onSuccess?.(text),
+            onError,
         );
     };
 };
