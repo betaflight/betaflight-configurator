@@ -1,9 +1,9 @@
 {
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://example.com/root.json",
+  "$id": "http://betaflight.com/vtxconfig_schema-1.0.json",
   "type": "object",
-  "title": "The Root Schema",
+  "title": "Betaflight VTX Table JSON Schema",
   "required": [
     "description",
     "version",

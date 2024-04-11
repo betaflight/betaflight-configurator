@@ -95,7 +95,7 @@ Clipboard._configureClipboardAsWeb = function() {
     this.readText = function(onSuccess, onError) {
 
         navigator.clipboard.readText().then(
-            () => onSuccess?.(text),
+            (text) => onSuccess?.(text),
             onError,
         );
     };

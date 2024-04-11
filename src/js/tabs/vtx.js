@@ -14,6 +14,7 @@ import { API_VERSION_1_42, API_VERSION_1_44 } from '../data_storage';
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import { checkChromeRuntimeError } from "../utils/common";
+import { isWeb } from "../utils/isWeb";
 import $ from 'jquery';
 
 const vtx = {
@@ -171,30 +172,30 @@ vtx.initialize = function (callback) {
             callback_error();
         }
 
-        // Load schema
-        const urlVtxSchema = chrome.runtime.getURL(`resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`);
+        function validateAgainstSchema(schemaJson, vtxConfig) {
+            let valid = false;
+            if (schemaJson !== undefined) {
+                // Validate
+                valid = (TABS.vtx.env.validate(schemaJson, vtxConfig) === undefined);
+            }
 
+            console.log("Validation against schema result:", valid);
+            valid ? callback_valid() : callback_error();
+        }
+
+        const vtxJsonSchemaUrl = `../../resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`;
+
+        // Load schema depending on the system
         if (GUI.isCordova()) {
             // FIXME On android : Fetch API cannot load : URL scheme "file" is not supported
             callback_valid();
         } else {
-            fetch(urlVtxSchema)
+            let vtxJsonSchemaUrl2Fetch = isWeb() ? vtxJsonSchemaUrl : chrome.runtime.getURL(vtxJsonSchemaUrl);
+            fetch(vtxJsonSchemaUrl2Fetch)
                 .then(response => response.json())
                 .catch(error => console.error('Error fetching VTX Schema:', error))
-                .then(schemaJson => {
-
-                    let valid = false;
-                    if (schemaJson !== undefined) {
-                        // Validate
-                        valid = (TABS.vtx.env.validate(schemaJson, vtxConfig) === undefined);
-                    }
-
-                    console.log("Validation against schema result:", valid);
-                    valid ? callback_valid() : callback_error();
-                },
-            );
+                .then(schemaJson => validateAgainstSchema(schemaJson, vtxConfig));
         }
-
     }
 
     // Emulates the MSP read from a vtxConfig object (JSON)
