@@ -174,7 +174,13 @@ export default class BuildApi {
 
     loadSponsorTile(mode, page, onSuccess, onFailure) {
         const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
-        this.load(url, onSuccess, onFailure);
+        $.get(url, function (data) {
+            onSuccess(data);
+        }).fail(xhr => {
+            if (onFailure !== undefined) {
+                onFailure();
+            }
+        });
     }
 
     sendAnalytics(type, parcel) {
