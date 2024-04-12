@@ -2887,8 +2887,6 @@ osd.initialize = function(callback) {
                             const timerPrecisionOptionText = i18n.getMessage(`osdTimerPrecisionOption${inflection.camelize(e.toLowerCase())}`);
                             precision.append(`<option value="${i}">${timerPrecisionOptionText}</option>`);
                         });
-                        // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
-                        precision.sortSelect();
                         precision[0].selectedIndex = tim.precision;
                         precision.blur(function() {
                             const idx = $(this)[0].id.split("_")[1];
