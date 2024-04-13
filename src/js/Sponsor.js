@@ -20,7 +20,10 @@ export default class Sponsor {
         this._api.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light', this._name,
             (content) => {
                 if (content) {
-                    this._div.html(content);
+                    this._div.fadeOut(500, () => {
+                        this._div.html(content);
+                        this._div.fadeIn(500);
+                    });
                     this._div.show();
                 } else {
                     this._div.hide();
