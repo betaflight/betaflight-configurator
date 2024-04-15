@@ -2772,6 +2772,9 @@
     "gpsSignalStr": {
         "message": "Potència Senyal"
     },
+    "gpsSignalLost": {
+        "message": "La icona del GPS només s'il·lumina quan es confirma la connexió al mòdul GPS.<br \/><br \/>Al principi es mostrarà vermella i canviarà a groc quan s'aconsegueixi la correcció 3D.<br \/><br \/>Si la icona GPS no s'il·lumina, comproveu el cablejat i la configuració i confirmeu que el mòdul GPS està rebent alimentació.<br \/><br \/>L'ordre \"status\" de la CLI proporciona més informació sobre l'estat de la connexió GPS."
+    },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
     },

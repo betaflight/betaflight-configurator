@@ -2751,6 +2751,9 @@
     "gpsDistToHome": {
         "message": "Distância para Casa:"
     },
+    "gpsPositionalDop": {
+        "message": "DOP Posicional:"
+    },
     "gpsSignalStrHead": {
         "message": "Força do Sinal GPS"
     },
@@ -2760,6 +2763,9 @@
     },
     "gpsSignalStr": {
         "message": "Força do Sinal"
+    },
+    "gpsSignalLost": {
+        "message": "O ícone do GPS acende apenas quando a ligação ao módulo do GPS é confirmada.<br \/><br \/>Será vermelha no início, passando a amarela quando o fix 3D é obtido.<br \/><br \/>Se o ícone GPS não acender, verifique a ligação dos cabos e a configuração, e confirme que o módulo GPS está a receber energia.<br \/><br \/>O comando de \"estado\" CLI 'fornece mais informação sobre o estado da ligação GPS."
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"

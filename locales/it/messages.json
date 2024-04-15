@@ -2751,6 +2751,9 @@
     "gpsDistToHome": {
         "message": "Distanza dal punto di partenza:"
     },
+    "gpsPositionalDop": {
+        "message": "Posizionale DOP:"
+    },
     "gpsSignalStrHead": {
         "message": "Potenza del segnale GPS"
     },
@@ -2760,6 +2763,9 @@
     },
     "gpsSignalStr": {
         "message": "Potenza del segnale"
+    },
+    "gpsSignalLost": {
+        "message": "L'icona GPS si accende solo quando la connessione al modulo GPS è confermata.<br \/><br \/>Sarà rosso in un primo momento, cambiando a giallo quando si ottiene il 3D fix.<br \/><br \/>Se l'icona GPS non si illumina, controlla il cablaggio e la configurazione e conferma che il modulo GPS sia alimentato.<br \/><br \/>Il comando CLI 'status' fornisce maggiori informazioni sullo stato della connessione GPS."
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
@@ -3386,6 +3392,9 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Flash alla connessione"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Tentativo di flashare la scheda automaticamente (attivato dalla nuova porta seriale rilevata).<br \/><br \/><span class=\"message-negative\">ATTENZIONE<\/span>: questa funzione disabilita la funzione di rilevamento automatico e backup."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Cancella completamente il chip"
