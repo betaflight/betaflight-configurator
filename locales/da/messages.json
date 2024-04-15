@@ -2768,6 +2768,9 @@
     "gpsSignalStr": {
         "message": "Signalstyrke"
     },
+    "gpsSignalLost": {
+        "message": "Ikonet GPS tændes, når forbindelsen til GPS-modulet er bekræftet.<br \/><br \/>Det vil være rødt i starten, skifter til gul, når 3D niveau er nået.<br \/><br \/>Hvis GPS-ikonet ikke lyser op, så tjek dine ledninger og konfiguration, og kontroller at GPS-modulet modtager strøm.<br \/><br \/>CLI 'status' kommandoen giver mere information om GPS-forbindelsens tilstand."
+    },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
     },

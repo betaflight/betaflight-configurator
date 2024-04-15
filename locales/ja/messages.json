@@ -2764,6 +2764,9 @@
     "gpsSignalStr": {
         "message": "電波強度:"
     },
+    "gpsSignalLost": {
+        "message": "GPSアイコンは、GPSモジュールとの接続が確立されたときのみ点灯します。<br \/><br \/>最初は赤色で点灯し、3Dフィックスが達成されると黄色に変わります。<br \/><br \/>GPSアイコンが点灯しない場合は配線と設定を確認し、GPS モジュールに電源が供給されていることを確認してください。<br \/><br \/>CLIの【status】コマンドは、GPS接続状態に関する詳細情報が提供されます。"
+    },
     "gpsSignalGnssId": {
         "message": "GNSS ID"
     },

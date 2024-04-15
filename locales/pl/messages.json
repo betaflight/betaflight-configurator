@@ -2762,6 +2762,9 @@
     "gpsSignalStr": {
         "message": "Siła Sygnału"
     },
+    "gpsSignalLost": {
+        "message": "Ikona GPS zaświeci się dopiero po połączeniu z modułem GPS.<br \/><br \/>Na początku będzie czerwona, a po uzyskaniu poprawnego sygnału 3D zmieni kolor na żółty.<br \/><br \/>Jeśli ikona GPS nie świeci się, sprawdź okablowanie i konfigurację oraz potwierdź, że moduł GPS otrzymuje zasilanie.<br \/><br \/>Polecenie CLI „status” dostarcza więcej informacji o stanie połączenia GPS."
+    },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
     },

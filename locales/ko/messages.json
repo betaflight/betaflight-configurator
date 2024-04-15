@@ -2768,6 +2768,9 @@
     "gpsSignalStr": {
         "message": "신호 강도"
     },
+    "gpsSignalLost": {
+        "message": "GPS 모듈의 연결이 확인되면 GPS 아이콘이 켜집니다.<br \/><br \/>처음에는 적색이 켜지며 3D fix가 달성되면 노란색으로 변경됩니다.<br \/><br \/>만약 GPS 아이콘이 켜지지 않는다면, 연결과 환경설정을 점검하고, GPS 모듈에 전원이 공급되는지 확인하세요.<br \/><br \/>GPS 연결상태에 대한 더 많은 정보는 CLI 'status' 명령으로 확인이 가능합니다."
+    },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
     },

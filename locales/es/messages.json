@@ -2764,6 +2764,9 @@
     "gpsSignalStr": {
         "message": "Fuerza de la Señal"
     },
+    "gpsSignalLost": {
+        "message": "El icono de GPS se ilumina sólo cuando se confirma la conexión con el módulo GPS.<br \/><br \/>Al principio estará rojo, cambiando a amarillo cuando se obtenga un posicionamiento 3D.<br \/><br \/>Si el icono de GPS no se ilumina, verifica tu cableado y configuración, y confirma que el módulo GPS está recibiendo energía.<br \/><br \/>El comando CLI 'status' te dará más información sobre el estado de la conexión GPS."
+    },
     "gpsSignalGnssId": {
         "message": "ID Gnss"
     },
