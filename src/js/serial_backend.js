@@ -353,7 +353,7 @@ function onOpen(openInfo) {
                                 gui_log(i18n.getMessage('buildInfoReceived', [FC.CONFIG.buildInfo]));
 
                                 // retrieve build options from the flight controller
-                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                                     FC.processBuildOptions();
                                 }
 

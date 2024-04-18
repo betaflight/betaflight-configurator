@@ -12,7 +12,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import PortHandler, { usbDevices } from '../port_handler';
-import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_47 } from '../data_storage';
 import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
