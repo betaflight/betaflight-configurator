@@ -49,6 +49,16 @@ const Features = function (config) {
                 self._features.push(feature);
             }
         }
+
+        // Add TELEMETRY feature if any of the following build options are enabled
+        let enableTelemetry = false;
+        if (config.buildOptions.some(opt => opt.includes('CRSF') || opt.includes('GHST') || opt.includes('FPORT'))) {
+            enableTelemetry = true;
+        }
+
+        if (enableTelemetry) {
+            self._features.push({bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'});
+        }
     }
 
     self._features.sort((a, b) => a.name.localeCompare(b.name, window.navigator.language, { ignorePunctuation: true }));
