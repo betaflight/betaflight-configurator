@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -795,7 +795,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.gitRevision = String.fromCharCode.apply(null, buff);
                 console.log("Fw git rev:", FC.CONFIG.gitRevision);
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                     let option = data.readU16();
                     while (option) {
                         FC.CONFIG.buildOptions.push(option);

@@ -12,7 +12,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import PortHandler, { usbDevices } from '../port_handler';
-import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
@@ -1305,7 +1305,7 @@ firmware_flasher.verifyBoard = function() {
 
     function getBoardInfo() {
         MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 FC.processBuildOptions();
                 self.cloudBuildOptions = FC.CONFIG.buildOptions;
             }
@@ -1327,7 +1327,7 @@ firmware_flasher.verifyBoard = function() {
                     // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
                     self.cloudBuildKey = FC.CONFIG.buildKey;
 
-                    if (self.validateBuildKey() && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    if (self.validateBuildKey() && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                         self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
                     } else {
                         getBoardInfo();
