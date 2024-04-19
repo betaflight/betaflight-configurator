@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -771,7 +771,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.flightControllerVersion = `${data.readU8()}.${data.readU8()}.${data.readU8()}`;
                 break;
 
-            case MSPCodes.MSP_BUILD_INFO:
+            case MSPCodes.MSP_BUILD_INFO: {
                 const dateLength = 11;
                 buff = [];
 
@@ -785,7 +785,26 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     buff.push(data.readU8());
                 }
                 FC.CONFIG.buildInfo = String.fromCharCode.apply(null, buff);
+
+                const gitRevisionLength = 7;
+                buff = [];
+                for (let i = 0; i < gitRevisionLength; i++) {
+                    buff.push(data.readU8());
+                }
+
+                FC.CONFIG.gitRevision = String.fromCharCode.apply(null, buff);
+                console.log("Fw git rev:", FC.CONFIG.gitRevision);
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    let option = data.readU16();
+                    while (option) {
+                        FC.CONFIG.buildOptions.push(option);
+                        option = data.readU16();
+                    }
+                }
+
                 break;
+            }
 
             case MSPCodes.MSP_BOARD_INFO:
                 FC.CONFIG.boardIdentifier = '';

@@ -10,7 +10,7 @@ import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import UI_PHONES from "./phones_ui";
 import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
@@ -352,6 +352,11 @@ function onOpen(openInfo) {
 
                                 gui_log(i18n.getMessage('buildInfoReceived', [FC.CONFIG.buildInfo]));
 
+                                // retrieve build options from the flight controller
+                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                                    FC.processBuildOptions();
+                                }
+
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
                         });
@@ -534,22 +539,35 @@ function checkReportProblems() {
     });
 }
 
-async function processBuildConfiguration() {
-    const buildApi = new BuildApi();
+async function processBuildOptions() {
+    const supported = semver.satisfies(FC.CONFIG.apiVersion, `${API_VERSION_1_45} - ${API_VERSION_1_46}`);
 
-    function onLoadCloudBuild(options) {
-        FC.CONFIG.buildOptions = options.Request.Options;
-        processCraftName();
-    }
+    // firmware 1_45 or higher is required to support cloud build options
+    // firmware 1_46 or higher retrieves build options from the flight controller
+    if (supported && FC.CONFIG.buildKey.length === 32 && navigator.onLine) {
+        const buildApi = new BuildApi();
 
-    await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
+        function onLoadCloudBuild(options) {
+            FC.CONFIG.buildOptions = options.Request.Options;
+            processCraftName();
+        }
 
-    if (FC.CONFIG.buildKey.length === 32 && navigator.onLine) {
-        gui_log(i18n.getMessage('buildKey', FC.CONFIG.buildKey));
         buildApi.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, processCraftName);
     } else {
         processCraftName();
     }
+}
+
+async function processBuildConfiguration() {
+    const supported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+
+    if (supported) {
+        // get build key from firmware
+        await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
+        gui_log(i18n.getMessage('buildKey', FC.CONFIG.buildKey));
+    }
+
+    processBuildOptions();
 }
 
 async function processUid() {
@@ -559,11 +577,7 @@ async function processUid() {
 
     gui_log(i18n.getMessage('uniqueDeviceIdReceived', FC.CONFIG.deviceIdentifier));
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        processBuildConfiguration();
-    } else {
-        processCraftName();
-    }
+    processBuildConfiguration();
 
     tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected', {
         deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier),
