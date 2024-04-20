@@ -12,7 +12,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import PortHandler, { usbDevices } from '../port_handler';
-import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import serial from '../serial';
 import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
@@ -1305,7 +1305,7 @@ firmware_flasher.verifyBoard = function() {
 
     function getBoardInfo() {
         MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 FC.processBuildOptions();
                 self.cloudBuildOptions = FC.CONFIG.buildOptions;
             }
@@ -1320,20 +1320,24 @@ firmware_flasher.verifyBoard = function() {
         getBoardInfo();
     }
 
-    function getBuildInfo() {
+    async function getBuildInfo() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
-            MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
-                MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME), false, () => {
-                    // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
-                    self.cloudBuildKey = FC.CONFIG.buildKey;
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
+            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
+            await MSP.promise(MSPCodes.MSP_BUILD_INFO);
 
-                    if (self.validateBuildKey() && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
-                    } else {
-                        getBoardInfo();
-                    }
-                });
-            });
+            // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
+            self.cloudBuildKey = FC.CONFIG.buildKey;
+
+            // 3/21/2024 is the date when the build key was introduced
+            const supportedDate = new Date('3/21/2024');
+            const buildDate = new Date(FC.CONFIG.buildInfo);
+
+            if (self.validateBuildKey() && (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)) {
+                self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
+            } else {
+                getBoardInfo();
+            }
         } else {
             getBoardInfo();
         }

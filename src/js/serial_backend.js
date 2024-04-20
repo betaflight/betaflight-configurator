@@ -10,7 +10,7 @@ import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
 import UI_PHONES from "./phones_ui";
 import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
@@ -353,7 +353,7 @@ function onOpen(openInfo) {
                                 gui_log(i18n.getMessage('buildInfoReceived', [FC.CONFIG.buildInfo]));
 
                                 // retrieve build options from the flight controller
-                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                                     FC.processBuildOptions();
                                 }
 
@@ -540,7 +540,7 @@ function checkReportProblems() {
 }
 
 async function processBuildOptions() {
-    const supported = semver.satisfies(FC.CONFIG.apiVersion, `${API_VERSION_1_45} - ${API_VERSION_1_46}`);
+    const supported = semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
     // firmware 1_45 or higher is required to support cloud build options
     // firmware 1_46 or higher retrieves build options from the flight controller
