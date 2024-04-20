@@ -1,5 +1,5 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
+import { API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
 import $ from 'jquery';
@@ -49,8 +49,10 @@ const Features = function (config) {
                 self._features.push(feature);
             }
         }
+    }
 
-        // Add TELEMETRY feature if any of the following build options are enabled
+    // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT
+    if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
         let enableTelemetry = false;
         if (config.buildOptions.some(opt => opt.includes('CRSF') || opt.includes('GHST') || opt.includes('FPORT'))) {
             enableTelemetry = true;
