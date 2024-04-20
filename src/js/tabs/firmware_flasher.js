@@ -393,10 +393,12 @@ firmware_flasher.initialize = function (callback) {
 
             self.buildApi.loadTarget(target, release, onTargetDetail);
 
-            if (self.validateBuildKey() && navigator.onLine) {
-                self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions);
+            const OnInvalidBuildKey = () => self.buildApi.loadOptions(release, buildOptions);
+
+            if (self.validateBuildKey()) {
+                self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions, OnInvalidBuildKey);
             } else {
-                self.buildApi.loadOptions(release, buildOptions);
+                OnInvalidBuildKey();
             }
         }
 
@@ -1233,7 +1235,7 @@ firmware_flasher.updateDetectBoardButton = function() {
 };
 
 firmware_flasher.validateBuildKey = function() {
-    return this.cloudBuildKey?.length === 32;
+    return this.cloudBuildKey?.length === 32 && navigator.onLine;
 };
 
 /**
@@ -1319,7 +1321,7 @@ firmware_flasher.verifyBoard = function() {
     }
 
     function getBuildInfo() {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
             MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
                 MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME), false, () => {
                     // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
