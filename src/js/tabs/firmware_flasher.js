@@ -1324,14 +1324,21 @@ firmware_flasher.verifyBoard = function() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
             MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY), false, () => {
                 MSP.send_message(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME), false, () => {
-                    // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
-                    self.cloudBuildKey = FC.CONFIG.buildKey;
+                    MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, () => {
 
-                    if (self.validateBuildKey() && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                        self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
-                    } else {
-                        getBoardInfo();
-                    }
+                        // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
+                        self.cloudBuildKey = FC.CONFIG.buildKey;
+
+                        // 3/21/2024 is the date when the build key was introduced
+                        const supportedDate = new Date('3/21/2024');
+                        const buildDate = new Date(FC.CONFIG.buildInfo);
+
+                        if (self.validateBuildKey() && (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)) {
+                            self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
+                        } else {
+                            getBoardInfo();
+                        }
+                    });
                 });
             });
         } else {
