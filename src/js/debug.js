@@ -773,7 +773,7 @@ const DEBUG = {
         { text: "Motor" },
         { text: "GPS" },
         { text: "RPM" },
-        { text: "Unfiltered Gyro"},
+        { text: "Gyro (Unfiltered)"},
     ],
 };
 
