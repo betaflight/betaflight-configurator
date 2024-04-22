@@ -1980,6 +1980,12 @@
     "pidTuningTPA": {
         "message": "TPA(wsp. tłumienia PID w zleżności od gazu)"
     },
+    "pidTuningTPARate": {
+        "message": "Stawka TPA (%)"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "Punkt końcowy TPA (μs)"
+    },
     "pidTuningTPAPD": {
         "message": "PD"
     },
@@ -2100,7 +2106,7 @@
         "message": "<strong>Tryb suwaka Pid Tuning<\/strong><br><br>Tryb suwaka Pid Tuning może być:<br><br>&bull; WYŁĄCZONE - bez suwaków, wprowadź wartości ręcznie<br>&bull; RP – suwaki kontrolują tylko Roll i Pitch, wprowadź wartości Yaw ręcznie<br>&bull; RPY – suwaki kontrolują wszystkie wartości PID<br><br><span class=\"message-negative\"><b>Ostrzeżenie:<\/b><\/span>Przejście z trybu RP do trybu RPY spowoduje nadpisanie ustawień odchylenia z ustawieniami oprogramowania układowego."
     },
     "receiverHelp": {
-        "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">>Zawsze sprawdzaj, czy Twój Failsafe działa prawidłowo! <\/a><\/strong><\/b> Ustawienia znajdują się w zakładce Failsafe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego oprogramowania układowego Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz sprzętowy filtr ADC< \/a><\/strong> w nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz odpowiednią „Mapę kanałów” dla swojego radio nadajnika. Sprawdź czy zakres drążków w osi  Roll, Pitch oraz Yaw  jest prawidłowy. Ustaw zakresy kanałów  w nadajniku na ~1000 do ~2000, a punkt środkowy na 1500. Aby uzyskać więcej informacji, przeczytaj <strong><a <a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentacja<\/a><\/strong>."
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdź, czy Failsafe działa prawidłowo!<\/a><\/strong><\/b> Ustawienia znajdują się w zakładce Failsafe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego firmware dla twojego nadajnika Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz filtr ADC<\/a><\/strong> w Nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz poprawną „Mapę kanałów” dla swojego radia. Sprawdź, czy Roll, Pitch i inne wykresy słupkowe poruszają się poprawnie. Dostosuj wartości punktu końcowego lub zakresu kanału w nadajniku do ~1000 do ~2000 i ustaw punkt środkowy na 1500. Aby uzyskać więcej informacji przeczytaj dokumentację <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "Przepustnica MID"
@@ -2750,7 +2756,7 @@
         "message": "Dystans do Domu:"
     },
     "gpsPositionalDop": {
-        "message": "Pozycja DOP:"
+        "message": "Pozycjonowany DOP:"
     },
     "gpsSignalStrHead": {
         "message": "Siła sygnału GPS"
@@ -3390,6 +3396,9 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Wgraj w momęcie połączenia"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Próba automatycznego flashowania kontrolera lotu (uruchamiana przez nowo wykryty port szeregowy).<br \/><br \/><span class=\"message-negative\">UWAGA<\/span>: Ta funkcja wyłącza funkcję automatycznego wykrywania i tworzenia kopii zapasowych."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Wyczyść pamięć"

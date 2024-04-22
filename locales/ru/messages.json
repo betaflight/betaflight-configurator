@@ -1314,6 +1314,10 @@
         "message": "Эта настройка используется для некоторых функций, таких как RPM фильтр. Она означает количество магнитов, которые находятся на колоколе двигателя и НЕ включает статоры, на которых расположены обмотки. Обычно 5\" моторы имеют 14 магнитов, а меньшие, например 3\" или менее, 12 магнитов.",
         "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
     },
+    "configurationMotorIdleRpmHelp": {
+        "message": "Это динамическое значение холостого хода из активного PID профиля. При установке динамического холостого хода в ноль, будет применено только статическое значение холостого хода. Измените настройки динамического холостого хода на вкладке настройки PID.",
+        "description": "Help text for dynamic idle setting"
+    },
     "configurationThrottleMinimum": {
         "message": "Минимальное значение газа (Минимальное значение, посылаемое к ESC при арминге)"
     },
@@ -2389,6 +2393,9 @@
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
     },
+    "adjustmentsFunction23": {
+        "message": "Feedforward переход"
+    },
     "adjustmentsFunction24": {
         "message": "Регулировка Strength (в реж. Horizon)"
     },
@@ -2503,6 +2510,9 @@
     "servosAngleAtMax": {
         "message": "Угол на Макс"
     },
+    "servosRateAndDirection": {
+        "message": "Скорость и направление"
+    },
     "servosLiveMode": {
         "message": "Включить живой режим"
     },
@@ -2521,6 +2531,10 @@
     "gpsHead": {
         "message": "GPS"
     },
+    "gpsHeadHelp": {
+        "message": "Показать различную информацию, которая относится к GPS. Курс (Направление) отображается только при использовании Магнитометра",
+        "description": "Help text for gpsHead"
+    },
     "gpsMapHead": {
         "message": "Текущее местоположение"
     },
@@ -2533,6 +2547,12 @@
     "gps3dFix": {
         "message": "3D фикс.:"
     },
+    "gpsFixTrue": {
+        "message": "True (Истинный)"
+    },
+    "gpsFixFalse": {
+        "message": "False (Ложный)"
+    },
     "gpsPositionUnit": {
         "message": "град.",
         "description": "Unit for GPS position."
@@ -2544,6 +2564,10 @@
         "message": "Текущая широта \/ долгота:",
         "description": "Show GPS position - Latitude \/ Longitude"
     },
+    "gpsHeading": {
+        "message": "Направление IMU \/ GPS:",
+        "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"
+    },
     "gpsSpeed": {
         "message": "Скорость:"
     },
@@ -2554,6 +2578,9 @@
     "gpsDistToHome": {
         "message": "Расст. до дома:"
     },
+    "gpsPositionalDop": {
+        "message": "Позиционный DOP:"
+    },
     "gpsSignalStrHead": {
         "message": "Мощность GPS сигнала"
     },
@@ -2563,6 +2590,9 @@
     },
     "gpsSignalStr": {
         "message": "Мощность сигнала"
+    },
+    "gpsSignalLost": {
+        "message": "Значок GPS освещается только при подтверждении подключения к модулю GPS.<br \/><br \/>Сначала он будет красным и будет изменен на желтый, когда будет выполенена 3D фиксация сигнала.<br \/><br \/>Если значок GPS не горит, проверьте проводку и конфигурацию и подтвердите прием модуля GPS.<br \/><br \/>Команда CLI 'status' предоставляет более подробную информацию о состоянии GPS соединения."
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
@@ -2582,6 +2612,9 @@
     "gnssQualitySearching": {
         "message": "поиск"
     },
+    "gnssQualityAcquired": {
+        "message": "получено"
+    },
     "gnssQualityUnusable": {
         "message": "непригодный"
     },
@@ -2594,8 +2627,17 @@
     "gnssUsedUnused": {
         "message": "не используется"
     },
+    "gnssUsedUsed": {
+        "message": "ИСПОЛЬЗОВАНО"
+    },
     "gnssHealthyUnknown": {
         "message": "неизвестно"
+    },
+    "gnssHealthyHealthy": {
+        "message": "исправен"
+    },
+    "gnssHealthyUnhealthy": {
+        "message": "ненормальный"
     },
     "motorsVoltage": {
         "message": "Напряжение:"
@@ -2700,8 +2742,14 @@
     "motorsMaster": {
         "message": "Мастер"
     },
+    "motorsNotice": {
+        "message": "<strong>Режим тестирования моторов \/ Уведомление о включении <\/strong><br \/><br \/><strong class=\"message-negative\">ОПАСНО: Серьезный риск травм! Снимите все пропеллеры!<\/strong><br \/><br \/><ul><li>&#x2022; Моторы будут вращаться при включении или при поднятии ползунков<\/li><li>&#x2022; Режим тестирования моторов останется активным после перехода на другую вкладку <\/li><li>&#x2022; Нажатие любой клавиши остановит моторы, но только во вкладке “Моторы”<\/li><li>&#x2022; Отключение USB-кабеля может не остановить моторы!<\/li><\/ul>"
+    },
     "motorsEnableControl": {
         "message": "<strong>Я понимаю всю опасность<\/strong>, пропеллеры сняты - включить управление моторами и арминг, и отключить \"Режим Защиты От Неконтролируемого Полёта\"."
+    },
+    "motorsDialogMixerReset": {
+        "message": "<strong>Обнаружена проблема режима микшера<\/strong><br \/><br \/>Модель{{mixerName}} требует <strong class=\"message-positive\">{{mixerMotors}}<\/strong> моторных ресурсов и текущая конфигурация прошивки предоставляет <strong class=\"message-positive\">{{outputs}}<\/strong> доступные для использования Выводы для выбраного режима.<br \/><br \/>Если вы используете пользовательский режим микшера, вам необходимо определить пользовательскую mmix перед изменением режима микшера.<br \/><br \/>Пожалуйста, проверьте вашу конфигурацию и добавьте требуемые моторные ресурсы."
     },
     "motorsDialogSettingsChanged": {
         "message": "Обнаружены изменения конфигурации.<br \/><br \/><strong class=\"message-negative-italic\">Тестовый режим моторов отключен до тех пор, пока настройки не будут сохранены<\/strong>"
@@ -2732,6 +2780,9 @@
     },
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Уведомление о безопасности<\/strong><br \/><strong class=\"message-negative\">Для предотвращения травм, снимите все пропеллеры!<\/strong><br \/>Моторы будут <strong>вращаться!<\/strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Информационное уведомление<\/strong><br \/>Моторы будут вращаться по очереди, и вы сможете выбрать, какой из них будет вращаться. Необходимо, чтобы был подключен аккумулятор и правильно выбран протокол ESC. Эта утилита может изменять только активные в настоящий момент моторы. Для более сложных переназначений требуется введение команд CLI. Для справки обратитесь на <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki страницу<\/a>."
     },
     "motorsRemapDialogSave": {
         "message": "Сохранить"
@@ -2802,6 +2853,9 @@
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Функция работает только с DSHOT ESC.<br \/>Убедитесь, что ваш ESC (контроллер скорости) поддерживает протокол DSHOT и измените его на вкладке $t(tabMotorTesting.message)."
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Количество моторов равно 0.<br \/> Проверьте текущий Mixer на вкладке $t(tabMotorTesting.message) или настройте через CLI. Обратитесь к этой <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">странице<\/a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Обновите прошивку.<br \/> Убедитесь, что вы используете последнюю прошивку: Betaflight 4.3 или новее."
     },
@@ -2847,6 +2901,12 @@
     "sensorsGyroTitle": {
         "message": "Гироскоп - град\/с"
     },
+    "sensorsAccelTitle": {
+        "message": "Акселерометр - g"
+    },
+    "sensorsMagTitle": {
+        "message": "Магнитометр"
+    },
     "sensorsAltitudeTitle": {
         "message": "Высота - метры"
     },
@@ -2889,6 +2949,9 @@
     "cliLoadFromFileBtn": {
         "message": "Загрузить из файла"
     },
+    "cliSupportRequestBtn": {
+        "message": "Отправить данные поддержки"
+    },
     "cliConfirmSnippetDialogTitle": {
         "message": "Загружен файл <strong>{{fileName}}<\/strong>. Проверьте загруженные команды"
     },
@@ -2906,6 +2969,9 @@
     },
     "loggingLogSize": {
         "message": "Размер журнала:"
+    },
+    "loggingLogName": {
+        "message": "Имя журнала:"
     },
     "loggingButtonLogFile": {
         "message": "Выберите файл журнала"
@@ -3044,6 +3110,9 @@
     },
     "sdcardStatusUnknown": {
         "message": "Неизвестное состояние $1"
+    },
+    "firmwareFlasherBranch": {
+        "message": "Выберите Pull Request или коммит"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID производителя:"
@@ -3255,6 +3324,10 @@
     "firmwareFlasherFlashTrigger": {
         "message": "Обнаружено: <strong>$1<\/strong> - переключение памяти при соединении"
     },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "Конфигуратору <span class=\"message-negative\">не удалось<\/span> проверить плату, если это не работает, попробуйте медленно переключиться на другую вкладку, чтобы повторить попытку, создать новое Usb-соединение или подключиться сначала, если вы могли забыть применить пользовательские настройки по умолчанию",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
     "firmwareFlasherButtonAbort": {
         "message": "Отмена"
     },
@@ -3264,8 +3337,39 @@
     "firmwareFlasherDetectBoardButton": {
         "message": "Автоопределение"
     },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "Автоопределение работает только в случае, если плата не находится в режиме DFU, и когда работает обмен данными по протоколу MSP. Иногда вам придется повторить попытку несколько раз или даже переподключить USB. Попробуйте сначала подключиться обычным способом, так как вы могли забыть применить пользовательские настройки по умолчанию. Пожалуйста, перезагрузите после прошивки - переподключите USB."
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "Запросите информацию о плате, чтобы предварительно выбрать правильную прошивку"
+    },
+    "unstableFirmwareAcknowledgementDialog": {
+        "message": "Вы собираетесь загрузить <strong> сборку прошивки для разработчиков<\/strong>. Такие сборки находятся в процессе разработки, и могут иметь любые из следующих особенностей: <strong><ul><li>прошивка не работает вообще;<\/li><li>прошивка не пригодна для полётов;<\/li><li>Есть проблемы с безопасностью прошивки, например flyaways<\/li><li> прошивка может привести к \"зависанию\" контроллера, либо вовсе его испортить<\/li><\/ul><\/strong>Если вы всё таки решили использовать данную прошивку, вы согласны с тем, что <strong>вы берете на себя полную ответственность за любй из вышеперечисленных рисков<\/strong>. Кроме того, Вы понимаете, что перед любыми попытками взлететь с этой прошивкой необходимо выполнить <strong>тщательные стендовые проверки с установленными пропеллерами<\/strong>."
+    },
+    "unstableFirmwareAcknowledgement": {
+        "message": "Я прочитал вышеуказанное и <strong>я беру на себя полную ответственность<strong> за установку нестабильной версии прошивки"
+    },
+    "unstableFirmwareAcknowledgementFlash": {
+        "message": "Прошить"
+    },
     "firmwareFlasherPreviousDevice": {
         "message": "Обнаружено: <strong>$1<\/strong> - предыдущее устройство все еще подключено, пожалуйста переподключите чтобы попробовать еще"
+    },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Очистка настроек",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Установка новой прошивки удалит все настройки. Рекомендуем сохранить резервную копию, прежде чем продолжить.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Создать резервную копию",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Игнорировать риск",
+        "description": "Ignore creating a backup before actual flashing takes place"
     },
     "ledStripHelp": {
         "message": "Полетный контроллер может контролировать цвет и индивидуальные эффекты светодиодов на ленте.<br \/>Конфигурировать светодиоды на сетке, настроить порядок проводников затем установить светодиоды на ваш аппарат согласно позиции на сетке. Светодиоды без назначения номера цепи сохранены не будут.<br \/>Двойной щелчок на цвете меняет HSV значение."
@@ -3303,6 +3407,29 @@
     },
     "ledStripVtxOverlay": {
         "message": "VTX (использует vtx частоты для присвоения цвета)"
+    },
+    "ledStripBrightnessSliderTitle": {
+        "message": "Яркость",
+        "description": "Brightness of the LED Strip"
+    },
+    "ledStripBrightnessSliderHelp": {
+        "message": "Максимальная яркость светодиодов в %."
+    },
+    "ledStripRainbowDeltaSliderTitle": {
+        "message": "Дельта",
+        "description": "LED Strip rainbow effect delta"
+    },
+    "ledStripRainbowDeltaSliderHelp": {
+        "message": "Разница в оттенке между каждым Led.",
+        "description": "Hint on LED Strip tab for rainbow delta"
+    },
+    "ledStripRainbowFreqSliderTitle": {
+        "message": "Частота",
+        "description": "LED Strip rainbow effect frequency"
+    },
+    "ledStripRainbowFreqSliderHelp": {
+        "message": "Частота изменения цвета, другими словами, скорость эффекта.",
+        "description": "Hint on LED Strip tab for rainbow frequency"
     },
     "ledStripFunctionSection": {
         "message": "LED функции"
@@ -3452,8 +3579,16 @@
         "message": "LEDs без обозначения номера цепи не будут сохранены.",
         "description": "Message in the wiring modes in Led Strip"
     },
+    "ledStripLarsonOverlay": {
+        "message": "Сканер Larson",
+        "description": "Larson effect switch label on LED Strip tab"
+    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Мигания всегда"
+    },
+    "ledStripRainbowOverlay": {
+        "message": "Радуга",
+        "description": "Label of rainbow effect switch on LED Strip tab"
     },
     "ledStripOverlayTitle": {
         "message": "Оверлей"
@@ -3620,6 +3755,47 @@
     "pidTuningMotorLimit": {
         "message": "Коэффициент масштабирования [%]"
     },
+    "pidTuningMotorLimitHelp": {
+        "message": "Процентное уменьшение сигнала команд двигателей (в процентах). <br><br> Снижает ток ESC и нагрев моторов при использовании батарей с большим количеством ячеек на моторах с высоким KV.<br><br> При использовании батареи 6S на квадрокоптере с моторами, пропеллерами и настройкой для 4S попробуйте 66%; при использовании батареи 4S на квадрокоптере, предназначенном для 3S, попробуйте 75%.<br><br> Убедитесь, что все ваши компоненты могут поддерживать напряжение батареи, которую вы используете."
+    },
+    "pidTuningCellCount": {
+        "message": "Количество банок - для автоматического переключения Профиля"
+    },
+    "pidTuningCellCountHelp": {
+        "message": "Автоматически активирует первый профиль, у которого количество ячеек равно характеристикам подключенной батареи.<br><br><ul><li><b>Включить<\/b>: Всегда переключаться на профиль с соответствующим количеством ячеек.<\/li><li><b>Отключить<\/b>: Отключить автоматическое переключение профиля<\/li><b>1S-8S<\/b>: Выберите количество ячеек Профиля, используемых для данного Профиля<\/li><\/ul>"
+    },
+    "pidTuningCellCountChange": {
+        "message": "Переключатель",
+        "description": "Switch profile if there are no profiles matching cell count"
+    },
+    "pidTuningCellCountStay": {
+        "message": "Отключить",
+        "description": "Disable cell count for this profile"
+    },
+    "pidTuningCellCount1S": {
+        "message": "1S"
+    },
+    "pidTuningCellCount2S": {
+        "message": "2S"
+    },
+    "pidTuningCellCount3S": {
+        "message": "3S"
+    },
+    "pidTuningCellCount4S": {
+        "message": "4S"
+    },
+    "pidTuningCellCount5S": {
+        "message": "5S"
+    },
+    "pidTuningCellCount6S": {
+        "message": "6S"
+    },
+    "pidTuningCellCount7S": {
+        "message": "7S"
+    },
+    "pidTuningCellCount8S": {
+        "message": "8S"
+    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Настройки фильтра вне зависимости от выбранного профиля"
     },
@@ -3659,6 +3835,18 @@
         "message": "<strong>Примечание:<\/strong> Слайдеры отключены, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
+    "pidTuningGyroSliderDisabled": {
+        "message": "<strong>Примечание:<\/strong> Слайдеры отключены, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningGyroSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
+        "description": "Gyro Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningDTermSliderDisabled": {
+        "message": "<strong>Примечание:<\/strong> DTerm Слайдер отключен, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningDTermSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
+        "description": "DTerm Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningPidSlidersDisabled": {
+        "message": "<strong>Примечание:<\/strong> Ползунки отключены. Нажав на кнопку '$t(pidTuningSliderEnableButton.message)' изменит значения PID в соответствии с ранее сохраненной позицией ползунка.",
+        "description": "Tuning sliders disabled note"
+    },
     "pidTuningSliderEnableButton": {
         "message": "Включить слайдеры",
         "description": "Button label for enabling sliders"
@@ -3666,6 +3854,18 @@
     "pidTuningSlidersNonExpertMode": {
         "message": "<strong>Примечание:<\/strong> Диапазон слайдеров ограничен, потому что вы не в экспертном режиме. Этот диапазон подходит для большинства квадрокоптеров и для начинающих.",
         "description": "Sliders restricted message"
+    },
+    "pidTuningPidSlidersNonExpertMode": {
+        "message": "<strong>Примечание:<\/strong> Диапазон ползунков ограничен, потому что вы не в Expert режиме. Basic режим подходит для большинства квадрокоптеров (сборок) и для начинающих.",
+        "description": "Firmware Pid sliders restricted message"
+    },
+    "pidTuningFilterSlidersNonExpertMode": {
+        "message": "<strong>Примечание:<\/strong> Диапазон ползунков ограничен, потому что вы не в Expert режиме. Basic режим подходит для большинства квадрокоптеров (сборок) и для начинающих.",
+        "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<strong>Примечание:<\/strong> Ползунки отключены из-за того, что текущие значения находятся вне основного диапазона настроек режима Basic. Переключитесь в Режим Expert для внесения изменений",
+        "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Ниже",
@@ -3683,6 +3883,10 @@
         "message": "Главный множитель:",
         "description": "Master tuning slider label"
     },
+    "pidTuningMasterSliderHelp": {
+        "message": "Увеличивает все параметры PID равномерно. Не меняйте этот ползунок, если у вас закончились настройки на других ползунках. Обычно это требуется только для квадрокоптеров с низкой управляемостью или высоким моментом инерции (MoI), таких как X-Class или сборки для съемки. Слишком большой мастер-коэффициент может вызвать дрожание или перегрев моторов.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Баланс PD:",
         "description": "PD balance tuning slider label"
@@ -3694,6 +3898,38 @@
     "pidTuningPDGainSliderHelp": {
         "message": "Результатом понижения параметров P и D будут более холодные двигатели, но при этом будет больше пропвош.<br \/><br \/>Параметры P и D работают вместе для того чтобы снизить эффект пропвоша.<br \/><br \/>Более высокие значения усилят нагрев моторов и могут увеличить осцилляции во время плавного полета из-за повышения параметра D.",
         "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderLegacy": {
+        "message": "Коэфф. реакции на движения стиков:",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningDGainSlider": {
+        "message": "Дампинг:<br \/><i><small>D Gains<\/small><\/i>",
+        "description": "D Gain (Damping) tuning slider label"
+    },
+    "pidTuningPIGainSlider": {
+        "message": "Трекинг:<br \/><i><small>P & I Gains<\/small><\/i>",
+        "description": "P and I Gain (Stability) tuning slider label"
+    },
+    "pidTuningResponseSlider": {
+        "message": "Реакция стиков:<br \/><i><small>FF Gains<\/small><\/i>",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Дрейф - Колебание:<br \/><i><small>I Gains<\/small><\/i>",
+        "description": "I-term slider label"
+    },
+    "pidTuningDMaxGainSlider": {
+        "message": "Динамический дампинг:<br \/><i><small>D Max<\/small><\/i>",
+        "description": "D Min slider label"
+    },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Демпфирование по крену: <i><small>Тангаж:Крен D<\/small><\/i>",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "Демпфирование по крену:<br><i><small>Тангаж:Крен P, I & FF<\/small><\/i>",
+        "description": "Pitch P & I slider label"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro НЧ фильтры"
@@ -3719,6 +3955,12 @@
     "pidTuningGyroLowpassDyn": {
         "message": "Динамический фильтр низких частот гироскопа \"Lowpass\""
     },
+    "pidTuningMinCutoffFrequency": {
+        "message": "Мин. частота среза [Hz]"
+    },
+    "pidTuningMaxCutoffFrequency": {
+        "message": "Макс. частота среза [Hz]"
+    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro Lowpass 1 Dynamic, тип фильтра"
     },
@@ -3738,11 +3980,17 @@
     "pidTuningGyroNotchFilter2": {
         "message": "Режекторный фильтр гироскопа - 2 \"Notch\""
     },
+    "pidTuningCenterFrequency": {
+        "message": "Центральная частота [Гц]"
+    },
     "pidTuningCutoffFrequency": {
         "message": "Частота среза [Hz]"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Динамический Режекторный Фильтр"
+    },
+    "pidTuningDynamicNotchFilterNyquistWarning": {
+        "message": "Динамический фильтр выключен. Чтобы использовать его, убедитесь, что частота PID установлена не менее 2кГц во вкладке '$t(tabConfiguration.message)'."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Диапазон динамического режекторного фильтра"
@@ -3819,6 +4067,9 @@
     "pidTuningDTermLowpassType": {
         "message": "Тип фильтра"
     },
+    "pidTuningStaticCutoffFrequency": {
+        "message": "Статическая частота среза[Гц]"
+    },
     "pidTuningDTermLowpass2Type": {
         "message": "Тип фильтра"
     },
@@ -3827,6 +4078,15 @@
     },
     "pidTuningDTermLowpassDynType": {
         "message": "Тип динамического фильтра"
+    },
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "D Term режекторный фильтр"
+    },
+    "pidTuningYawLowpassFiltersGroup": {
+        "message": "НЧ фильтр по рысканию"
+    },
+    "pidTuningYawLowpassFiltersGroupHelp": {
+        "message": "Применяет фильтр PT1 с заданной частотой среза для данных гироскопа по оси yaw."
     },
     "pidTuningVbatPidCompensation": {
         "message": "Компенсация PID-ов при низком заряде батареи"
@@ -3842,6 +4102,9 @@
     },
     "pidTuningThrustLinearization": {
         "message": "Линейная тяга"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Улучшает управление и отзывчивость на малых оборотах.  <br><br>  Особенно полезно для вупов (whoops) и 48К ESC. Не оказывает влияния на высоких оборотах.  <br><br> Уровень компенсации можно варьировать от 0 до 150%. Обычно достаточно 30-40%."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -3900,11 +4163,20 @@
     "pidTuningIdleMinRpm": {
         "message": "Динамическое значение холостого хода [* 100 RPM]"
     },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "Динамический холостой ход (Idle) ОТКЛЮЧЕН, потому что телеметрия Dshot ВЫКЛЮЧЕНА"
+    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Акро тренер лимит угла"
     },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Помогает пилотам научиться летать в акро-режиме, ограничивая угол наклона квадрокоптера в движении. Допустимые ограничения 10-80 градусов. Режим должен быть активирован переключателем на вкладке $t(tabAuxiliary.message)."
+    },
     "pidTuningIntegratedYaw": {
         "message": "Интегрированный Yaw"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">ПРЕДУПРЕЖДЕНИЕ<\/span>: Если вы включите эту функцию, вы должны соответственно настроить YAW PID. Более подробная информация <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a>"
     },
     "configHelp2": {
         "message": "Произвольное вращение платы в градусах, для разрешения установки в другом направлении \/ вверх ногами \/ повернутое и т. д. При работе с внешними датчиками используется выравнивание датчиков (Gyro, Acc, Mag), чтобы определить положение датчика независимо от ориентации платы. "
