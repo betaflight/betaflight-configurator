@@ -2696,6 +2696,28 @@ pid_tuning.updateRatesLabels = function() {
                     {value: parseInt(currentValues[2]), balloon: function() {drawBalloonLabel(stickContext, currentValues[2], 10, 350, 'none', BALLOON_COLORS.yaw, balloonsDirty);}},
                 );
             }
+
+            // Add labels for angleCenterSensitivity
+            if (self.currentRatesType === FC.RATES_TYPE.ACTUAL) {
+                drawAxisLabel(stickContext, `Angle Mode`, (curveWidth - 10) / textScale, curveHeight - 250, 'right');
+
+                const centerSensitivityRoll = self.currentRates.rc_rate;
+                const centerSensitivityPitch = self.currentRates.rc_rate_pitch;
+
+                const maxAngleRollRate = parseInt(maxAngularVelRoll);
+                const maxAnglePitchRate = parseInt(maxAngularVelPitch);
+
+                const angleLimit = FC.ADVANCED_TUNING.levelAngleLimit;
+
+                const angleCenterSensitivityRoll = (centerSensitivityRoll / maxAngleRollRate * angleLimit).toFixed(1);
+                const angleCenterSensitivityPitch = (centerSensitivityPitch / maxAnglePitchRate * angleLimit).toFixed(1);
+
+                balloons.push(
+                    {value: parseInt(angleCenterSensitivityRoll), balloon: function() {drawBalloonLabel(stickContext, `${angleCenterSensitivityRoll}...${angleLimit}`, ((curveWidth / 2) - 10) / textScale, curveHeight - 150, 'none', BALLOON_COLORS.roll, balloonsDirty);}},
+                    {value: parseInt(angleCenterSensitivityPitch), balloon: function() {drawBalloonLabel(stickContext, `${angleCenterSensitivityPitch}...${angleLimit}`, ((curveWidth / 2) - 10) / textScale, curveHeight - 50, 'none', BALLOON_COLORS.pitch, balloonsDirty);}},
+                );
+            }
+
             // then display them on the chart
             for (const balloon of balloons) {
                 balloon.balloon();
