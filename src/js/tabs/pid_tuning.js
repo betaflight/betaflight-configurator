@@ -2696,6 +2696,47 @@ pid_tuning.updateRatesLabels = function() {
                     {value: parseInt(currentValues[2]), balloon: function() {drawBalloonLabel(stickContext, currentValues[2], 10, 350, 'none', BALLOON_COLORS.yaw, balloonsDirty);}},
                 );
             }
+
+            // Add labels for angleCenterSensitivity
+
+            const angleLimit = FC.ADVANCED_TUNING.levelAngleLimit;
+            const maxAngleRollRate = parseInt(maxAngularVelRoll);
+            const maxAnglePitchRate = parseInt(maxAngularVelPitch);
+            const rcRate = self.currentRates.rc_rate;
+            const rcRatePitch = self.currentRates.rc_rate_pitch;
+
+            if (self.currentRatesType === FC.RATES_TYPE.ACTUAL) {
+                drawAxisLabel(stickContext, `Angle Mode`, (curveWidth - 10) / textScale, curveHeight - 250, 'right');
+
+                const angleCenterSensitivityRoll = (rcRate / maxAngleRollRate * angleLimit).toFixed(1);
+                const angleCenterSensitivityPitch = (rcRatePitch / maxAnglePitchRate * angleLimit).toFixed(1);
+
+                balloons.push(
+                    {value: parseInt(angleCenterSensitivityRoll), balloon: function() {drawBalloonLabel(stickContext, `${angleCenterSensitivityRoll}...${angleLimit}`, ((curveWidth / 2) - 10) / textScale, curveHeight - 150, 'none', BALLOON_COLORS.roll, balloonsDirty);}},
+                    {value: parseInt(angleCenterSensitivityPitch), balloon: function() {drawBalloonLabel(stickContext, `${angleCenterSensitivityPitch}...${angleLimit}`, ((curveWidth / 2) - 10) / textScale, curveHeight - 50, 'none', BALLOON_COLORS.pitch, balloonsDirty);}},
+                );
+            }
+
+            if (self.currentRatesType === FC.RATES_TYPE.BETAFLIGHT) {
+                drawAxisLabel(stickContext, `Angle Mode`, (curveWidth - 10) / textScale, curveHeight - 250, 'right');
+
+                const RC_RATE_INCREMENTAL = 14.54;
+
+                // ROLL
+                const expo = self.currentRates.rc_expo;
+                const rcRateModified = rcRate > 2.0 ? (rcRate - 2.0) * RC_RATE_INCREMENTAL + 2.0: rcRate;
+                const sensitivityFractionRoll = (angleLimit * ((1 - expo) * rcRateModified * 200 / maxAngleRollRate)).toFixed(1);
+                // PITCH
+                const expoPitch = self.currentRates.rc_pitch_expo;
+                const rcRateModifiedPitch = rcRatePitch > 2.0 ? (rcRatePitch - 2.0) * RC_RATE_INCREMENTAL + 2.0: rcRatePitch;
+                const sensitivityFractionPitch = (angleLimit * ((1 - expoPitch) * rcRateModifiedPitch * 200 / maxAnglePitchRate)).toFixed(1);
+
+                balloons.push(
+                    {value: parseInt(sensitivityFractionRoll), balloon: function() {drawBalloonLabel(stickContext, `${sensitivityFractionRoll}...${angleLimit}`, ((curveWidth / 2) - 10) / textScale, curveHeight - 150, 'none', BALLOON_COLORS.roll, balloonsDirty);}},
+                    {value: parseInt(sensitivityFractionPitch), balloon: function() {drawBalloonLabel(stickContext, `${sensitivityFractionPitch}...${angleLimit}`, ((curveWidth / 2) - 10) / textScale, curveHeight - 50, 'none', BALLOON_COLORS.pitch, balloonsDirty);}},
+                );
+            }
+
             // then display them on the chart
             for (const balloon of balloons) {
                 balloon.balloon();
