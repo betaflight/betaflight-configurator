@@ -19,6 +19,7 @@ const VirtualFC = {
         virtualFC.CONFIG.cpuTemp = 48;
 
         virtualFC.CONFIG.buildInfo = "now";
+        virtualFC.CONFIG.buildOptions = [];
 
         virtualFC.CONFIG.craftName = "BetaFlight" ;
         virtualFC.CONFIG.pilotName = "BF pilot" ;
