@@ -1,3 +1,5 @@
+import { EventBus } from "../components/eventBus";
+
 /**
  * Gets one or more items from localStorage
  * @param {string | string[]} key string or array of strings
@@ -43,6 +45,7 @@ export function set(input) {
     tmpObj[element] = input[element];
     try {
       localStorage.setItem(element, JSON.stringify(tmpObj));
+      EventBus.$emit(`config-storage:set`, 'element');
     } catch (e) {
       console.error(e);
     }

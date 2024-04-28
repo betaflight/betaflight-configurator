@@ -5,6 +5,7 @@
   >
     <div class="dropdown dropdown-dark">
       <select
+        id="firmware-version-dropdown"
         class="dropdown-select"
         :title="$t('virtualMSPVersion')"
       >
@@ -43,12 +44,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #firmware-virtual-option {
     height: 76px;
     width: 180px;
     margin-right: 15px;
-    margin-top: 16px;
+    margin-top: 0px;
     display: none;
 }
 .dropdown {
@@ -146,19 +147,6 @@ export default {
     background: #f2f2f2;
     border-radius: 3px;
     cursor: pointer;
-}
-
-/* Fix for IE 8 putting the arrows behind the select element. */
-.lt-ie9 .dropdown {
-    z-index: 1;
-}
-
-.lt-ie9 .dropdown-select {
-    z-index: -1;
-}
-
-.lt-ie9 .dropdown-select:focus {
-    z-index: 3;
 }
 
 .dropdown-dark {

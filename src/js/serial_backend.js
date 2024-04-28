@@ -24,11 +24,10 @@ import CryptoES from "crypto-es";
 import $ from 'jquery';
 import BuildApi from "./BuildApi";
 
-import serialNWJS from "./serial.js";
-import serialWeb from "./webSerial.js";
 import { isWeb } from "./utils/isWeb";
+import { serialShim } from "./serial_shim.js";
 
-const serial = isWeb() ? serialWeb : serialNWJS;
+let serial = serialShim();
 
 let mspHelper;
 let connectionTimestamp;
@@ -51,21 +50,25 @@ function disconnectHandler(event) {
 
 export function initializeSerialBackend() {
     GUI.updateManualPortVisibility = function() {
-        const selected_port = $('div#port-picker #port option:selected');
-        if (selected_port.data().isManual) {
+        if(isWeb()) {
+            return;
+        }
+        const selected_port = $('#port').val();
+
+        if (selected_port === 'manual') {
             $('#port-override-option').show();
         }
         else {
             $('#port-override-option').hide();
         }
-        if (selected_port.data().isVirtual) {
+        if (selected_port === 'virtual') {
             $('#firmware-virtual-option').show();
         }
         else {
             $('#firmware-virtual-option').hide();
         }
 
-        $('#auto-connect-and-baud').toggle(!selected_port.data().isDFU);
+        $('#auto-connect-and-baud').toggle(selected_port !== 'DFU');
     };
 
     GUI.updateManualPortVisibility();
@@ -86,9 +89,9 @@ export function initializeSerialBackend() {
 
     $("div.connect_controls a.connect").on('click', function () {
 
-        const selectedPort = $('div#port-picker #port option:selected');
+        const selectedPort = $('#port').val();
         let portName;
-        if (selectedPort.data().isManual) {
+        if (selectedPort === 'manual') {
             portName = $('#port-override').val();
         } else {
             portName = String($('div#port-picker #port').val());
@@ -100,9 +103,9 @@ export function initializeSerialBackend() {
             GUI.configuration_loaded = false;
 
             const selected_baud = parseInt($('div#port-picker #baud').val());
-            const selectedPort = $('div#port-picker #port option:selected');
+            const selectedPort = $('#port').val();
 
-            if (selectedPort.data().isDFU) {
+            if (selectedPort === 'DFU') {
                 $('select#baud').hide();
             } else if (portName !== '0') {
                 if (!isConnected) {
@@ -113,13 +116,17 @@ export function initializeSerialBackend() {
                     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
                     $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-                    const baudRate = parseInt($('div#port-picker #baud').val());
-                    if (selectedPort.data().isVirtual) {
+                    const baudRate = parseInt($('#baud').val());
+                    if (selectedPort === 'virtual') {
                         CONFIGURATOR.virtualMode = true;
-                        CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown :selected').val();
+                        CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown').val();
 
+                        // Hack to get virtual working on the web
+                        serial = serialShim();
                         serial.connect('virtual', {}, onOpenVirtual);
                     } else if (isWeb()) {
+                        CONFIGURATOR.virtualMode = false;
+                        serial = serialShim();
                         // Explicitly disconnect the event listeners before attaching the new ones.
                         serial.removeEventListener('connect', connectHandler);
                         serial.addEventListener('connect', connectHandler);

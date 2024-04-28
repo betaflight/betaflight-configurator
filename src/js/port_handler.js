@@ -135,12 +135,18 @@ PortHandler.check_usb_devices = function (callback) {
                 self.portPickerElement.append($('<option/>', {
                     value: "DFU",
                     text: usbText,
+                    /**
+                     * @deprecated please avoid using `isDFU` and friends for new code.
+                     */
                     data: {isDFU: true},
                 }));
 
                 self.portPickerElement.append($('<option/>', {
                     value: 'manual',
                     text: i18n.getMessage('portsSelectManual'),
+                    /**
+                     * @deprecated please avoid using `isDFU` and friends for new code.
+                     */
                     data: {isManual: true},
                 }));
 
@@ -153,7 +159,7 @@ PortHandler.check_usb_devices = function (callback) {
             self.setPortsInputWidth();
             self.dfu_available = false;
         }
-        if (!$('option:selected', self.portPickerElement).data().isDFU) {
+        if ($('option:selected', self.portPickerElement).val() !== 'DFU') {
             if (!(GUI.connected_to || GUI.connect_lock)) {
                 FC.resetState();
             }
@@ -282,6 +288,9 @@ PortHandler.updatePortSelect = function (ports) {
         this.portPickerElement.append($("<option/>", {
             value: ports[i].path,
             text: portText,
+            /**
+             * @deprecated please avoid using `isDFU` and friends for new code.
+             */
             data: {isManual: false},
         }));
     }
@@ -290,6 +299,9 @@ PortHandler.updatePortSelect = function (ports) {
         this.portPickerElement.append($("<option/>", {
             value: 'virtual',
             text: i18n.getMessage('portsSelectVirtual'),
+            /**
+             * @deprecated please avoid using `isDFU` and friends for new code.
+             */
             data: {isVirtual: true},
         }));
     }
@@ -297,6 +309,9 @@ PortHandler.updatePortSelect = function (ports) {
     this.portPickerElement.append($("<option/>", {
         value: 'manual',
         text: i18n.getMessage('portsSelectManual'),
+        /**
+         * @deprecated please avoid using `isDFU` and friends for new code.
+         */
         data: {isManual: true},
     }));
 

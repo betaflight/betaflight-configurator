@@ -8,48 +8,21 @@
         id="port"
         class="dropdown-select"
         :title="$t('firmwareFlasherManualPort')"
+        @value="value"
+        @input="$emit('input', $event.target.value)"
       >
-        <option value="virtual">
-          {{ $t("portsSelectVirtual") }}
-        </option>
         <option value="manual">
           {{ $t("portsSelectManual") }}
+        </option>
+        <option
+          v-if="showVirtual"
+          value="virtual"
+        >
+          {{ $t("portsSelectVirtual") }}
         </option>
       </select>
     </div>
     <div id="auto-connect-and-baud">
-      <div id="auto-connect-switch">
-        <label style="display: flex; align-items: baseline">
-          <input
-            type="checkbox"
-            class="auto_connect"
-            title="Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
-            style="display: none"
-            data-switchery="true"
-          >
-          <span
-            class="switchery switchery-small"
-            :style="{
-              backgroundColor: isAutoConnect
-                ? '#ffbb00'
-                : '#858585',
-            }"
-          >
-            <small
-              :style="{
-                left: isAutoConnect ? '10px' : '0px',
-                transition: 'ease-in-out 0.2s',
-              }"
-              @click="isAutoConnect = !isAutoConnect"
-            /></span>
-          <span
-            i18n="autoConnect"
-            class="auto_connect"
-            title="Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
-          >{{ $t("autoConnect") }}
-          </span>
-        </label>
-      </div>
       <div id="baudselect">
         <div class="dropdown dropdown-dark">
           <select
@@ -57,7 +30,6 @@
             v-model="selectedBaudRate"
             class="dropdown-select"
             :title="$t('firmwareFlasherBaudRate')"
-            :disabled="isAutoConnect"
           >
             <option
               v-for="baudRate in baudRates"
@@ -74,10 +46,20 @@
 </template>
 
 <script>
+import { get as getConfig } from '../../js/ConfigStorage';
+import { EventBus } from '../eventBus';
+
 export default {
+    props: {
+      value: {
+        type: String,
+        default: 'manual',
+      },
+    },
+
     data() {
         return {
-            isAutoConnect: false,
+            showVirtual: false,
             selectedBaudRate: "115200",
             baudRates: [
                 { value: "1000000", label: "1000000" },
@@ -95,6 +77,17 @@ export default {
                 { value: "1200", label: "1200" },
             ],
         };
+    },
+    mounted() {
+      EventBus.$on('config-storage:set', this.setShowVirtual);
+    },
+    destroyed() {
+      EventBus.$off('config-storage:set', this.setShowVirtual);
+    },
+    methods: {
+      setShowVirtual() {
+        this.showVirtual = getConfig('showVirtualMode').showVirtualMode;
+      },
     },
 };
 </script>
@@ -173,55 +166,6 @@ export default {
     float: right;
 }
 
-#auto-connect-switch {
-    width: 110px;
-    float: left;
-    margin-top: 4px;
-    margin-right: 20px;
-}
-.auto_connect {
-    color: var(--subtleAccent);
-    font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
-    font-size: 12px;
-}
-
-.switchery {
-    height: 14px;
-    width: 45px;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    box-sizing: content-box;
-    background-clip: content-box;
-
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-    vertical-align: middle;
-}
-
-.switchery-small {
-    border-radius: 20px;
-    height: 10px;
-    width: 20px;
-    margin-right: 5px;
-
-    background-color: var(--switcherysecond);
-    transition: border 0.3s ease 0s, box-shadow 0.3s ease 0s,
-        background-color 0.5s ease 0s;
-}
-
-.switchery small {
-    background: #fff;
-    border-radius: 100%;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 40%);
-    height: 10px;
-    width: 10px;
-    position: absolute;
-    top: 0;
-}
 #baudselect {
     width: 80px;
     float: right;
