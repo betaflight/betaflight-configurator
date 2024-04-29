@@ -40,26 +40,28 @@ const Features = function (config) {
 
     self._features = features;
 
-    // Filter features based on build options
-    if (semver.gte(config.apiVersion, API_VERSION_1_45) && config.buildOptions.length) {
-        self._features = [];
+    if (config.buildOptions?.length) {
+        // Filter features based on build options
+        if (semver.gte(config.apiVersion, API_VERSION_1_45)) {
+            self._features = [];
 
-        for (const feature of features) {
-            if (config.buildOptions.some(opt => opt.includes(feature.dependsOn)) || feature.dependsOn === undefined) {
-                self._features.push(feature);
+            for (const feature of features) {
+                if (config.buildOptions.some(opt => opt.includes(feature.dependsOn)) || feature.dependsOn === undefined) {
+                    self._features.push(feature);
+                }
             }
         }
-    }
 
-    // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT
-    if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
-        let enableTelemetry = false;
-        if (config.buildOptions.some(opt => opt.includes('CRSF') || opt.includes('GHST') || opt.includes('FPORT'))) {
-            enableTelemetry = true;
-        }
+        // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT
+        if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
+            let enableTelemetry = false;
+            if (config.buildOptions.some(opt => opt.includes('CRSF') || opt.includes('GHST') || opt.includes('FPORT'))) {
+                enableTelemetry = true;
+            }
 
-        if (enableTelemetry) {
-            self._features.push({bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'});
+            if (enableTelemetry) {
+                self._features.push({bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'});
+            }
         }
     }
 
