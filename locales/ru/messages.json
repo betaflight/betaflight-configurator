@@ -1744,6 +1744,10 @@
         "message": "Автоматический коэффициент",
         "description": "Auto Factor parameter for RC smoothing"
     },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Регулирует расчет автофактора 10, является коэффициентом задержки по умолчанию. Увеличение числа позволяет сгладить RC ввод еще, при это задержка станет больше. Может быть полезно для ненадежных RC соединений или для видеосъемки.<br>Будьте осторожны с числами, близки к 50, задержка ввода станет заметной.<br>Используйте команду CLI rc_smoothing_info когда TX и RX включены, чтобы увидеть автоматически рассчитанные диапазоны сглаживания.",
+        "description": "Auto Factor parameter help message"
+    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Тип отсечки Feedforward"
     },

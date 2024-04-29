@@ -1976,6 +1976,12 @@
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Коефіцієнт TPA (%)"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "Точка зупину TPA (μs)"
+    },
     "pidTuningTPAPD": {
         "message": "ПД"
     },
@@ -2094,6 +2100,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Режим налаштування повзунків PID<\/strong><br><br>Режим налаштування повзунків PID може бути:<br><br>&bull; ВИМК - без повзунків, введення значення вручну<br>&bull; RP - повзунки керують лише Креном та Тангажем, значення Рискання вводиться вручну<br>&bull; RPY - повзунки керують усіма значеннями PID<br><br><span class=\"message-negative\"><b>Увага:<\/b><\/span> Перехід з режиму RP до режиму RPY перезаписує налаштування Рискання на налаштування прошивки."
+    },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Завжди перевіряйте, чи працює Безварійність належним чином!<\/a><\/strong><\/b> Налаштування знаходяться на вкладці Безаварійність, яка вимагає експертного режиму.<br> &#8226; <b>Використовуйте останню версію прошивки Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Вимкніть апаратний фільтр АЦП<\/a><\/strong> у передавачі, якщо ви використовуєте OpenTx або EdgeTx.<br>Базові налаштування: Правильно налаштуйте параметри \"Приймача\". Виберіть правильну \"Схему каналів\" для вашого пульта. Перевірте, чи правильно рухаються гістограми крену, тангажу та інші. Налаштуйте значення кінцевої точки каналу або діапазону в передавачі на ~1000 - ~2000 і встановіть середню точку на 1500. Для отримання додаткової інформації прочитайте <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">документацію<\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "Середня точка тяги"
@@ -2742,6 +2751,9 @@
     "gpsDistToHome": {
         "message": "Відс. до точки зльоту:"
     },
+    "gpsPositionalDop": {
+        "message": "Погіршення точності позиції:"
+    },
     "gpsSignalStrHead": {
         "message": "Рівень сигналу GPS"
     },
@@ -2751,6 +2763,9 @@
     },
     "gpsSignalStr": {
         "message": "Рівень сигналу"
+    },
+    "gpsSignalLost": {
+        "message": "Значок GPS світиться лише коли підключення до модуля GPS підтверджене.<br \/><br \/>Спочатку буде червоним, змінюючись на жовтий, коли досягнуто 3D місцезнаходження.<br \/><br \/>Якщо значок GPS не світиться, перевірте дроти та налаштування, і переконайтесь, що модуль GPS заживлений.<br \/><br \/>Команда 'status' командного рядка надає більше інформації про стан GPS підключення."
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
@@ -3377,6 +3392,9 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Прошити при підключенні"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Спробувати прошити плату автоматично (у випадку виявлення нового послідовного порту).<br \/><br \/><span class=\"message-negative\">УВАГА<\/span>: ця функція вимикає автовиявлення і резервне копіювання."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Повністю очистити мікроконтролер"
