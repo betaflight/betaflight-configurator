@@ -59,7 +59,8 @@ const Features = function (config) {
                 enableTelemetry = true;
             }
 
-            if (enableTelemetry) {
+            const telemetryFeature = self._features.filter(f => f.name === 'TELEMETRY')?.[0];
+            if (enableTelemetry && !telemetryFeature) {
                 self._features.push({bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'});
             }
         }
