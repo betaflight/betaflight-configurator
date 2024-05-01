@@ -73,6 +73,16 @@
 				background: var(--primary-500);
 			}
 		}
+        .buttons {
+            a {
+                background-color: var(--primary-300);
+                color: black;
+                &:hover {
+                    background-color: var(--primary-200);
+                    color: black;
+                }
+            }
+        }
 	}
 	.mode.off {
 		.info {
@@ -202,18 +212,6 @@
 			}
 		}
 	}
-    .mode.on {
-        .buttons {
-            a {
-                background-color: var(--primary-300);
-                color: black;
-                &:hover {
-                    background-color: var(--primary-200);
-                    color: black;
-                }
-            }
-        }
-    }
 	.delete {
 		a {
 			height: 15px;
