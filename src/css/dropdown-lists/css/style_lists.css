@@ -20,7 +20,6 @@
     color: var(--text);
     width:99%;
     margin-bottom:7px;
-    border: 1px solid;
     border-color: var(--surface-500);
     border-radius: 3px;
 }

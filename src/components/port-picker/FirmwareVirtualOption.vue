@@ -73,13 +73,6 @@ export default {
     border-top-color: var(--surface-700);
 }
 
-.dropdown-dark .dropdown-select {
-    color: var(--text);
-    width: calc(100% - 10px);
-    /* Fallback for IE 8 */
-    background: #444;
-}
-
 .dropdown-dark .dropdown-select > option {
     background: var(--surface-300);
 }
