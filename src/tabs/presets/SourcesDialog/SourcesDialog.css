@@ -1,7 +1,7 @@
 
 .presets_sources_dialog_title_panel {
     padding-bottom: .5ex;
-    border-bottom: 1px solid var(--accent);
+    border-bottom: 1px solid var(--primary-500);
     margin-bottom: 2ex;
     font-size: 1.5em;
     font-weight: bold;

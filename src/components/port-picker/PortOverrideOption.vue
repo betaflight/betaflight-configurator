@@ -35,7 +35,7 @@ export default {
         background-color: #2b2b2b;
         border-radius: 3px;
         padding: 3px;
-        color: var(--subtleAccent);
+        color: var(--surface-500);
     }
 }
 
@@ -44,7 +44,7 @@ export default {
     border-radius: 3px;
     /* might be less */
     padding: 2px;
-    color: var(--subtleAccent);
+    color: var(--surface-500);
 }
 
 #port-override {

@@ -7,15 +7,16 @@
 .select2-selection__rendered {
     line-height: 18px !important;
     padding-left: 4px !important;
-    color: var(--defaultText) !important;
+    color: var(--text) !important;
     border-radius: 2px !important;
 }
 .select2-container {
     .select2-selection--single {
         height: 20px !important;
         border-radius: 3px !important;
-        border: 1px solid var(--subtleAccent) !important;
+        border: 1px solid var(--surface-500) !important;
         cursor: default !important;
+        background-color: var(--surface-300) !important;
     }
 }
 .select2-selection__arrow {
@@ -27,13 +28,45 @@
         margin-left: -2px !important;
         margin-top: -5px !important;
         border: none !important;
-        border-bottom: 1.5px solid black !important;
-        border-right: 1.5px solid black !important;
+        border-bottom: 1.5px solid var(--text) !important;
+        border-right: 1.5px solid var(--text) !important;
         transform: rotateZ(45deg);
     }
 }
 .select2-dropdown {
-    border: 0.5px solid var(--subtleAccent) !important;
+    border: 0.5px solid var(--surface-500) !important;
     border-top: none !important;
     border-radius: 2px !important;
+}
+
+.select2-results {
+    background-color: var(--surface-300) !important;
+}
+
+.select2-search {
+    background-color: var(--surface-300);
+}
+
+.select2-results__option--highlighted {
+    background-color: var(--surface-400) !important;
+}
+
+// aria selected
+.select2-results__option[aria-selected=true] {
+    background-color: var(--primary-500) !important;
+    color: var(--surface-100) !important;
+}
+
+// .select2-container--default .select2-selection--multiple .select2-selection__choice
+
+.select2-container--default {
+    .select2-selection--multiple {
+        background-color: var(--surface-300) !important;
+        border: 1px solid var(--surface-500) !important;
+    }
+    .select2-selection__choice {
+        background-color: var(--surface-500) !important;
+        border: 1px solid var(--surface-500) !important;
+        color: var(--text) !important;
+    }
 }

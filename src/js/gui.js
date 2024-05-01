@@ -268,7 +268,7 @@ class GuiControl {
     }
     switchery() {
 
-        const COLOR_ACCENT = 'var(--accent)';
+        const COLOR_ACCENT = 'var(--primary-500)';
         const COLOR_SWITCHERY_SECOND = 'var(--switcherysecond)';
 
         $('.togglesmall').each(function (index, elem) {

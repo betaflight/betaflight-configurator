@@ -65,13 +65,13 @@ button {
     border-radius: 4px;
     background-color: #ccc;
     color: #666;
-    border: 1px solid var(--subtleAccent);
+    border: 1px solid var(--surface-500);
     font-weight: 600;
     font-size: 10pt;
     cursor: pointer;
 }
 button.active {
-    background-color: var(--accent);
+    background-color: var(--primary-500);
     border: 1px solid #dba718;
     color: #000;
 }

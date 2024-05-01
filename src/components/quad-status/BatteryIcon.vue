@@ -90,7 +90,7 @@ export default {
 
 .quad-status-contents progress::-webkit-progress-bar {
   height: 12px;
-  background-color: #eee;
+  background-color: var(--surface-300);
 }
 
 .quad-status-contents progress::-webkit-progress-value {
