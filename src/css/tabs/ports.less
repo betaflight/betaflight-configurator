@@ -14,9 +14,9 @@
 		}
 		td {
 			border-top: 0;
-			border-bottom: 1px solid var(--subtleAccent);
-			border-left: 1px solid var(--subtleAccent);
-			border-right: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
+			border-left: 1px solid var(--surface-500);
+			border-right: 1px solid var(--surface-500);
 			padding: 3px 3px 3px 5px;
 		}
 		tr {
@@ -27,15 +27,15 @@
 			}
 			&:nth-child(even) {
 				select {
-					background-color: var(--alternativeBackground);
+					background-color: var(--surface-300);
 				}
-				background-color: var(--alternativeBackground);
+				background-color: var(--surface-200);
 			}
 		}
 		thead {
 			tr {
 				&:first-child {
-					background-color: var(--alternativeBackground);
+					background-color: var(--surface-200);
 					font-size: 12px;
 					height: 25px;
 					border-top: 0;
@@ -54,11 +54,11 @@
 		}
 	}
 	select {
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		border-radius: 3px;
 		margin-right: 3px;
-		background: var(--boxBackground);
-		color: var(--defaultText);
+		background: var(--surface-200);
+		color: var(--text);
 	}
 	.require-support {
 		display: none;
@@ -84,8 +84,8 @@
 			td {
 				white-space: nowrap;
 				padding: 5px 7px;
-				background-color: var(--quietHeader);
-				color: var(--quietText);
+				background-color: var(--surface-300);
+				color: var(var(--text));
 				&:first-child {
 					text-align: left;
 					border-top-left-radius: 5px;
@@ -159,13 +159,13 @@
 				border-radius: unset;
 			}
 			select[name=function-peripherals] {
-				border-bottom: 1px solid var(--subtleAccent);
+				border-bottom: 1px solid var(--surface-500);
 			}
 			select[name=function-telemetry] {
-				border-bottom: 1px solid var(--subtleAccent);
+				border-bottom: 1px solid var(--surface-500);
 			}
 			select[name=function-sensors] {
-				border-bottom: 1px solid var(--subtleAccent);
+				border-bottom: 1px solid var(--surface-500);
 			}
 			thead {
 				td {

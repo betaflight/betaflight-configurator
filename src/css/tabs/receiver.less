@@ -120,8 +120,8 @@
 			margin-top: 2px;
 			width: calc(100% - 2px);
 			height: 15px;
-			border: 1px solid var(--subtleAccent);
-			background-color: #f4f4f4;
+			border: 1px solid var(--surface-500);
+			background-color: var(--surface-300);
 			border-radius: 3px;
 			.label {
 				position: absolute;
@@ -129,7 +129,7 @@
 				height: 15px;
 				line-height: 15px;
 				text-align: center;
-				color: #474747;
+				color: var(--text);
 			}
 			.fill {
 				position: relative;
@@ -156,10 +156,10 @@
 			text-align: left;
 			padding: 4px 4px 4px 6px;
 			font-weight: normal;
-			background: #828885;
+			background: var(--surface-300);
 			color: white;
 			border-top-left-radius: 3px;
-			border-right: 1px solid var(--subtleAccent);
+			border-right: 1px solid var(--surface-500);
 		}
 		table {
 			width: 100%;
@@ -169,9 +169,9 @@
 			th {
 				text-align: left;
 				padding: 4px 4px 4px 6px;
-				background: var(--quietHeader);
-				color: var(--quietText);
-				border-right: 1px solid var(--subtleAccent);
+				background: var(--surface-300);
+				color: var(var(--text));
+				border-right: 1px solid var(--surface-500);
 				font-weight: normal;
 				&:first-child {
 					border-top-left-radius: 3px;
@@ -183,7 +183,7 @@
 			}
 			td {
 				text-align: left;
-				border-right: 1px solid var(--subtleAccent);
+				border-right: 1px solid var(--surface-500);
 				padding: 1px;
 				&:first-child {
 					border-bottom-left-radius: 3px;
@@ -195,7 +195,7 @@
 			}
 			input {
 				width: calc(100% - 8px);
-				border: 1px solid var(--subtleAccent);
+				border: 1px solid var(--surface-500);
 				border-radius: 3px;
 				height: 22px;
 				margin: 4px;
@@ -231,15 +231,15 @@
 		box-sizing: border-box;
 		border-top-right-radius: 5px;
 		border-bottom-right-radius: 5px;
-		border-right: 1px solid var(--subtleAccent);
-		border-bottom: 1px solid var(--subtleAccent);
+		border-right: 1px solid var(--surface-500);
+		border-bottom: 1px solid var(--surface-500);
 		.head {
 			height: 15px;
 			padding: 4px;
 			text-align: left;
 			font-weight: normal;
-			background: var(--quietHeader);
-			color: var(--quietText);
+			background: var(--surface-300);
+			color: var(var(--text));
 			border-top-right-radius: 3px;
 		}
 		select {
@@ -254,22 +254,22 @@
 		box-sizing: border-box;
 		border-top-left-radius: 5px;
 		border-bottom-left-radius: 5px;
-		border-left: 1px solid var(--subtleAccent);
-		border-bottom: 1px solid var(--subtleAccent);
+		border-left: 1px solid var(--surface-500);
+		border-bottom: 1px solid var(--surface-500);
 		.head {
 			height: 15px;
 			padding: 4px;
 			text-align: left;
 			font-weight: normal;
-			background: var(--quietHeader);
-			color: var(--quietText);
-			border-right: 1px solid var(--subtleAccent);
+			background: var(--surface-300);
+			color: var(var(--text));
+			border-right: 1px solid var(--surface-500);
 			border-top-left-radius: 3px;
 			padding-left: 6px;
 		}
 	}
 	.hybrid_element {
-		border-right: 1px solid var(--subtleAccent);
+		border-right: 1px solid var(--surface-500);
 		select {
 			height: 22px;
 			z-index: 1;
@@ -282,7 +282,7 @@
 			width: calc(100% - 36px);
 			height: 20px;
 			z-index: 2;
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			margin: 4px;
 			border-radius: 3px 0 0 3px;
 		}
@@ -290,7 +290,7 @@
 	select {
 		height: 22px;
 		padding-left: 5px;
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		border-radius: 3px;
 		margin: 4px;
 	}
@@ -304,7 +304,7 @@
 		margin-bottom: 5px;
 		clear: left;
 		padding-bottom: 5px;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 		width: 100%;
 	}
 	.rcSmoothing {
@@ -344,7 +344,7 @@
 		width: 181px;
 		height: 203px;
 		margin: 0;
-		background-color: #ECECEC;
+		background-color: var(--surface-400);
 		border-top-right-radius: 3px;
 		border-bottom-right-radius: 3px;
 		.table {
@@ -361,7 +361,7 @@
 		}
 		.receiver-button {
 			a {
-				background-color: var(--accent);
+				background-color: var(--primary-500);
 				border-radius: 3px;
 				border: 1px solid #e8b423;
 				color: #000;
@@ -391,7 +391,7 @@
 		}
 		select {
 			width: 100%;
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 		}
 		.value {
@@ -501,7 +501,7 @@
 	}
 	text {
 		stroke: none;
-		fill: #828885;
+		fill: var(--surface-300);
 		font-size: 10px;
 	}
 	.pid_titlebar {
@@ -524,7 +524,7 @@
 	}
 	.rssi {
 		input {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			width: 230px;
 			height: 20px;
 			float: left;
@@ -534,7 +534,7 @@
 	}
 	.receiver {
 		select {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			width: 230px;
 			height: 20px;
 			float: left;
@@ -551,12 +551,12 @@
 		th {
 			text-align: left;
 			padding: 3px;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 		}
 		td {
 			padding: 0;
 			text-align: left;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 		}
 		tr {
 			td {
@@ -569,7 +569,7 @@
 		thead {
 			tr {
 				&:first-child {
-					background-color: #ececec;
+					background-color: var(--surface-400);
 				}
 			}
 		}
@@ -602,7 +602,7 @@
 		margin-bottom: 5px;
 		clear: left;
 		padding-bottom: 5px;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 		width: 100%;
 		float: left;
 		&:last-child {
@@ -615,7 +615,7 @@
 		input {
 			width: 220px;
 			margin-right: 11px;
-			border: solid 1px var(--subtleAccent);
+			border: solid 1px var(--surface-500);
 			border-radius: 3px;
 			min-height: 20px;
 			padding: 2px 4px 2px 4px;
@@ -632,7 +632,7 @@
 		float: left;
 		width: 223px;
 		margin: 10px 0 0 6px;
-		border: solid 1px var(--subtleAccent);
+		border: solid 1px var(--surface-500);
 		padding-left: 4px;
 	}
 	.gui_box_titlebar {
@@ -646,7 +646,7 @@
 			font-style: normal;
 			font-weight: normal;
 			line-height: 19px;
-			color: #4f4f4f;
+			color: var(--text);
 			font-size: 11px;
 		}
 	}
@@ -674,7 +674,7 @@
 			float: left;
 			margin-left: 4px;
 			margin-right: 15px;
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
             color: #3f4241;
         }

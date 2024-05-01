@@ -18,8 +18,8 @@ body {
     height: 100%;
     font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif;
     font-size: 12px;
-    color: #303030;
-    background-color: #3d3f3e;
+    color: var(--text);
+    background-color: var(--surface-200);
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -30,7 +30,7 @@ body {
 }
 a {
     text-decoration: none;
-    color: var(--linkText);
+    color: var(--primary-500);
     font-weight: bold;
     &:hover {
         text-decoration: none;
@@ -42,9 +42,14 @@ a.disabled {
     color: #999;
 }
 .background_paper {
-    background-size: 100%;
-    background-image: url(../images/paper.png);
-    background-position: center;
+    background-color: var(--surface-200);
+    background-image:
+        linear-gradient(var(--surface-300) 2px, transparent 2px),
+        linear-gradient(90deg, var(--surface-300) 2px, transparent 2px),
+        linear-gradient(var(--surface-300) 1px, transparent 1px),
+        linear-gradient(90deg, var(--surface-300) 1px, rgba(0, 0, 0, 0) 1px);
+    background-size: 75px 75px, 75px 75px, 15px 15px, 15px 15px;
+    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
 }
 .standard_input {
     padding-left: 3px;
@@ -54,8 +59,8 @@ a.disabled {
     border-radius: 3px;
     font-size: 12px;
     font-weight: normal;
-    border: 1px solid var(--subtleAccent);
-    background: var(--boxBackground);
+    border: 1px solid var(--surface-400);
+    background: var(--surface-200);
 }
 .helpicon {
     float: right;
@@ -79,10 +84,10 @@ a.disabled {
     a {
         padding: 1px 9px 1px 9px;
         margin-top: -45px;
-        background-color: var(--accent);
+        background-color: var(--primary-500);
         border-radius: 3px;
-        border: 1px solid #e8b423;
-        color: #000;
+        border: 1px solid var(--primary-600);
+        color: var(--text);
         float: right;
         font-weight: bold;
         font-size: 10px;
@@ -92,10 +97,15 @@ a.disabled {
         letter-spacing: 0.03em;
         display: block;
         &:hover {
-            background-color: #fecb3f;
+            background-color: var(--primary-400);
             transition: all ease 0.2s;
         }
     }
+}
+input {
+    background-color: var(--surface-300);
+    border: 1px solid var(--surface-400) !important;
+    color: var(--text);
 }
 input[type="number"] {
     &::-webkit-inner-spin-button {
@@ -108,6 +118,11 @@ input[type="number"] {
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
     }
+}
+select {
+    background-color: var(--surface-300);
+    border: 1px solid var(--surface-400);
+    color: var(--text);
 }
 .clear-both {
     clear: both;
@@ -125,14 +140,14 @@ input[type="number"] {
     margin-bottom: 20px;
 }
 .message-positive {
-    color: var(--accent) !important;
+    color: var(--primary-500) !important;
 }
 .message-negative {
-    color: var(--error) !important;
+    color: var(--error-500) !important;
     font-weight: bold !important;
 }
 .message-negative-italic {
-    color: var(--error) !important;
+    color: var(--error-500) !important;
     font-weight: bold !important;
     font-style: italic;
 }
@@ -161,7 +176,7 @@ input[type="number"] {
 }
 .headerbar {
     height: 115px;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
+    // background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
     display: flex;
     align-items: center;
     padding: 0 15px;
@@ -171,7 +186,7 @@ input[type="number"] {
     width: 24px;
     height: 24px;
     font-size: 20px;
-    color: #ffffff;
+    color: var(--surface-100);
     line-height: 24px;
     text-align: center;
     margin-right: 15px;
@@ -181,7 +196,7 @@ input[type="number"] {
     width: 24px;
     height: 24px;
     font-size: 20px;
-    color: #ffffff;
+    color: var(--surface-100);
     line-height: 24px;
     text-align: center;
     margin-left: 15px;
@@ -191,7 +206,7 @@ input[type="number"] {
     align-items: center;
     margin-left: auto;
     .auto_connect {
-        color: var(--subtleAccent);
+        color: var(--surface-950);
     }
 }
 #portsinput {
@@ -217,7 +232,7 @@ input[type="number"] {
     margin-right: 2px;
 }
 .gray {
-    color: var(--subtleAccent);
+    color: var(--surface-500);
 }
 #firmware-virtual-option {
     height: 76px;
@@ -234,7 +249,7 @@ input[type="number"] {
         background-color: #2b2b2b;
         border-radius: 3px;
         padding: 3px;
-        color: var(--subtleAccent);
+        color: var(--surface-400);
     }
 }
 #port-override {
@@ -268,8 +283,8 @@ input[type="number"] {
     margin: 0 14px;
     height: 52px;
     a.flash {
-        background-color: var(--accent);
-        border: 1px solid #dba718;
+        background-color: var(--primary-500);
+        border: 1px solid var(--primary-600);
         background-repeat: no-repeat;
         height: 50px;
         width: 50px;
@@ -281,21 +296,21 @@ input[type="number"] {
         background-size: 30px;
         background-position: center 10px;
         &:hover {
-            background-color: #ffcc3f;
+            background-color: var(--primary-400);
         }
     }
     a.flash.disabled {
-        background-color: #808080;
+        background-color: var(--surface-500);
         pointer-events: none;
         cursor: default;
     }
     a.flash.active {
-        background-color: #e60000;
-        border: 1px solid #fe0000;
+        background-color: var(--error-500);
+        border: 1px solid var(--error-600);
         transition: none;
         background-image: url(../images/icons/cf_icon_flasher_white.svg);
         &:hover {
-            background-color: #f21212;
+            background-color: var(--error-400);
         }
     }
 }
@@ -304,8 +319,8 @@ input[type="number"] {
     margin: 0 14px;
     height: 52px;
     a.connect {
-        background-color: var(--accent);
-        border: 1px solid #dba718;
+        background-color: var(--primary-500);
+        border: 1px solid var(--primary-600);
         background-repeat: no-repeat;
         height: 50px;
         width: 50px;
@@ -317,33 +332,33 @@ input[type="number"] {
         background-size: 44px;
         background-position: center 6px;
         &:hover {
-            background-color: #ffcc3f;
+            background-color: var(--primary-400);
         }
     }
     a.connect.disabled {
-        background-color: #808080;
+        background-color: var(--surface-500);
         pointer-events: none;
         cursor: default;
     }
     a.connect.active {
-        background-color: #e60000;
-        border: 1px solid #fe0000;
+        background-color: var(--error-500);
+        border: 1px solid var(--error-600);
         transition: none;
         background-image: url(../images/icons/cf_icon_usb1_white.svg);
         &:hover {
-            background-color: #f21212;
+            background-color: var(--error-400);
         }
     }
 }
 .flash_state {
-    color: #fff;
+    color: var(--text);
     font-size: 12px;
     font-weight: normal;
     text-shadow: 0 1px rgba(0, 0, 0, 0.25);
     padding: 0 10px;
 }
 .connect_state {
-    color: #fff;
+    color: var(--text);
     font-size: 12px;
     font-weight: normal;
     text-shadow: 0 1px rgba(0, 0, 0, 0.25);
@@ -360,10 +375,9 @@ input[type="number"] {
     line-height: 2px;
     height: 67px;
     border-radius: 5px;
-    border: 1px solid #272727;
-    box-shadow: 0 2px 0 rgba(92, 92, 92, 0.5);
-    background-color: #434343;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
+    border: 1px solid var(--surface-500);
+    box-shadow: 0 2px 0 var(--surface-400);
+    background-color: var(--surface-300);
     >ul {
         display: flex;
     }
@@ -373,22 +387,18 @@ input[type="number"] {
         width: 33px;
         line-height: 18px;
         text-align: center;
-        border-top: 1px solid #373737;
-        border-bottom: 1px solid #1a1a1a;
-        border-left: 1px solid #373737;
-        border-right: 1px solid #222222;
-        background-color: #434343;
-        background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.45));
+        border: 1px solid var(--surface-300);
+        background-color: var(--surface-200);
         padding-left: 5px;
         padding-right: 5px;
         text-shadow: 0 1px rgba(0, 0, 0, 1.0);
         &:last-child {
-            border-right: 0 solid #c0c0c0;
+            border-right: 0;
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
         }
         &:first-child {
-            border-left: 0 solid #c0c0c0;
+            border-left: 0;
             border-top-left-radius: 5px;
             border-bottom-left-radius: 5px;
         }
@@ -398,8 +408,7 @@ input[type="number"] {
         overflow: hidden;
     }
     .on {
-        background-color: #434343;
-        background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.45));
+        background-color: var(--surface-200);
     }
 }
 .gyroicon {
@@ -408,7 +417,7 @@ input[type="number"] {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--surface-950);
     text-align: center;
     background-image: url(../images/icons/sensor_gyro_off.png);
     background-size: 43px;
@@ -420,7 +429,7 @@ input[type="number"] {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--surface-950);
     text-align: center;
     background-image: url(../images/icons/sensor_acc_off.png);
     background-size: 40px;
@@ -432,7 +441,7 @@ input[type="number"] {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--surface-950);
     text-align: center;
     background-image: url(../images/icons/sensor_mag_off.png);
     background-size: 42px;
@@ -444,7 +453,7 @@ input[type="number"] {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--surface-950);
     text-align: center;
     background-image: url(../images/icons/sensor_sat_off.png);
     background-size: 42px;
@@ -456,7 +465,7 @@ input[type="number"] {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--surface-950);
     text-align: center;
     background-image: url(../images/icons/sensor_baro_off.png);
     background-size: 40px;
@@ -468,38 +477,38 @@ input[type="number"] {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--surface-950);
     text-align: center;
     background-image: url(../images/icons/sensor_sonar_off.png);
     background-size: 41px;
     background-position: -4px 1px;
 }
 .gyroicon.active {
-    color: #818181;
+    color: var(--surface-900);
     background-image: url(../images/icons/sensor_gyro_on.png);
 }
 .accicon.active {
-    color: #818181;
+    color: var(--surface-900);
     background-image: url(../images/icons/sensor_acc_on.png);
 }
 .magicon.active {
-    color: #818181;
+    color: var(--surface-900);
     background-image: url(../images/icons/sensor_mag_on.png);
 }
 .gpsicon.active {
-    color: #818181;
+    color: var(--surface-900);
     background-image: url(../images/icons/sensor_sat_on_no_fix.png);
 }
 .gpsicon.active_fix {
-    color: #818181;
+    color: var(--surface-900);
     background-image: url(../images/icons/sensor_sat_on_with_fix.png);
 }
 .baroicon.active {
-    color: #818181;
+    color: var(--surface-900);
     background-image: url(../images/icons/sensor_baro_on.png);
 }
 .sonaricon.active {
-    color: #818181;
+    color: var(--surface-900);
     background-image: url(../images/icons/sensor_sonar_on.png);
 }
 #dataflash_wrapper_global {
@@ -510,18 +519,17 @@ input[type="number"] {
     line-height: 12px;
     height: 33px;
     border-radius: 5px;
-    border: 1px solid #272727;
-    box-shadow: 0 1px 0 rgba(92, 92, 92, 0.5);
-    background-color: #434343;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
+    border: 1px solid var(--surface-300);
+    box-shadow: 0 1px 0 var(--surface-300);
+    background-color: var(--surface-300);
     padding-top: 5px;
     display: none;
     text-shadow: 0 1px rgba(0, 0, 0, 1.0);
 }
 .dataflash-contents_global {
     margin-top: 18px;
-    border: 1px solid #4A4A4A;
-    background-color: #4A4A4A;
+    border: 1px solid var(--surface-600);
+    background-color: var(--surface-600);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -545,18 +553,18 @@ input[type="number"] {
             right: 0;
             width: 120px;
             text-align: left;
-            color: silver;
+            color: var(--surface-800);
         }
     }
     progress {
         &::-webkit-progress-bar {
             height: 8px;
-            background-color: #eee;
+            background-color: var(--surface-300);
         }
     }
 }
 .dataflash-free_global {
-    background-color: var(--accent);
+    background-color: var(--primary-500);
     border-radius: 4px;
 }
 .dataflash-contents {
@@ -574,7 +582,7 @@ input[type="number"] {
     margin-top: 2px;
 }
 #expertMode {
-    color: var(--subtleAccent);
+    color: var(--surface-800);
     margin-top: 27px;
     width: 125px;
     float: right;
@@ -590,10 +598,9 @@ input[type="number"] {
     line-height: 12px;
     height: 67px;
     border-radius: 5px;
-    border: 1px solid #272727;
-    box-shadow: 0 1px 0 rgba(92, 92, 92, 0.5);
-    background-color: #434343;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
+    border: 1px solid var(--surface-300);
+    box-shadow: 0 1px 0 var(--surface-300);
+    background-color: var(--surface-200);
     text-shadow: 0 1px rgba(0, 0, 0, 1.0);
     white-space: nowrap;
 }
@@ -644,8 +651,8 @@ input[type="number"] {
     background-image: url(../images/icons/cf_icon_link_active.svg);
 }
 #log {
-    background-color: #242424;
-    color: rgba(255, 255, 255, 0.60);
+    background-color: var(--surface-300);
+    color: var(--text);
     line-height: 21px;
     height: 27px;
     overflow-y: hidden;
@@ -663,7 +670,7 @@ input[type="number"] {
     }
     a {
         font-weight: normal;
-        color: #ffbb00;
+        color: var(--primary-500);
         &:hover {
             text-decoration: underline;
         }
@@ -671,7 +678,7 @@ input[type="number"] {
 }
 #log.active {
     overflow-y: auto;
-    box-shadow: inset 0 0 15px #000000;
+    box-shadow: inset 0 0 15px var(--surface-500);
     height: 111px;
 }
 #scrollicon {
@@ -698,10 +705,10 @@ input[type="number"] {
     padding: 2px;
     z-index: 10;
     a {
-        color: #656565 !important;
+        color: var(--surface-700) !important;
         transition: all 0.2s;
         &:hover {
-            color: #959595 !important;
+            color: var(--surface-900) !important;
             text-decoration: none !important;
         }
     }
@@ -718,15 +725,15 @@ input[type="number"] {
 .tab_container {
     transition: all 0.2s;
     width: 200px;
-    border-right: 4px solid var(--accent);
-    background-color: #2e2e2e;
+    border-right: 4px solid var(--primary-500);
+    background-color: var(--surface-200);
     overflow: auto;
 }
 #content {
     transition: all 0.2s;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: white;
+    background-color: var(--surface-100);
     -webkit-transform: rotateX(0deg);
     width: calc(100% - 202px);
 }
@@ -756,7 +763,7 @@ input[type="number"] {
             padding-top: 5px;
             padding-bottom: 3px;
             background-color: transparent;
-            color: #999999;
+            color: var(--text);
             height: 23px;
             display: block;
             text-shadow: 0 1px rgba(0, 0, 0, 0.45);
@@ -776,13 +783,13 @@ input[type="number"] {
         color: #fff;
         transition: none;
         a {
-            background-color: var(--accent);
+            background-color: var(--primary-500);
             color: #000;
             transition: none;
             text-shadow: 0 1px rgba(255, 255, 255, 0.45);
             &:hover {
                 cursor: default;
-                background-color: var(--accent);
+                background-color: var(--primary-500);
             }
         }
     }
@@ -1057,23 +1064,24 @@ li.active {
     }
 }
 dialog {
-    background-color: white;
+    background-color: var(--surface-100);
+    color: var(--text);
     padding: 1em;
     height: fit-content;
     margin: auto auto;
     position: absolute;
     width: 50%;
     border-radius: 3px;
-    border: 1px solid silver;
+    border: 1px solid var(--surface-600);
     .dialog_toolbar {
         .btn {
             a {
                 margin-top: 0;
                 margin-bottom: 0;
                 margin-right: 20px;
-                background-color: var(--accent);
+                background-color: var(--primary-500);
                 border-radius: 3px;
-                border: 1px solid #dba718;
+                border: 1px solid var(--primary-600);
                 color: #000;
                 float: left;
                 font-weight: bold;
@@ -1085,23 +1093,23 @@ dialog {
                 padding: 0 9px;
                 line-height: 28px;
                 &:hover {
-                    background-color: var(--hoverButton-background);
+                    background-color: var(--primary-400);
                     transition: all ease 0.2s;
                 }
                 &:active {
-                    background-color: var(--accent);
+                    background-color: var(--primary-500);
                     transition: all ease 0.0s;
                     box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
                 }
             }
             a.disabled {
                 cursor: default;
-                color: #fff;
-                background-color: #AFAFAF;
-                border: 1px solid #AFAFAF;
+                color: var(--surface-900);
+                background-color: var(--surface-500);
+                border: 1px solid var(--surface-500);
                 pointer-events: none;
                 text-shadow: none;
-                opacity: 0.5;
+                opacity: 1;
             }
         }
     }
@@ -1154,7 +1162,7 @@ dialog {
     max-width: 400px;
 }
 .tab_title {
-    border-bottom: 1px solid var(--accent);
+    border-bottom: 1px solid var(--primary-500);
     font-size: 20px;
     line-height: 24px;
     height: 30px;
@@ -1170,8 +1178,8 @@ dialog {
     margin: 5px 15px;
 }
 .note {
-    background-color: #fff7cd;
-    border: 1px solid #ffe55f;
+    background-color: var(--primary-transparent-2);
+    border: 1px solid var(--primary-500);
     margin-bottom: 10px;
     margin-top: 0;
     border-radius: 3px;
@@ -1189,19 +1197,19 @@ dialog {
 .content_toolbar {
     width: 100%;
     height: 30px;
-    background-color: #EFEFEF;
+    background-color: var(--surface-200);
     box-shadow: rgba(0, 0, 0, 0.10) 0 -3px 8px;
     padding: 10px 0;
     overflow: hidden;
-    border-top: 1px solid var(--subtleAccent);
+    border-top: 1px solid var(--surface-400);
     .btn {
         a {
             margin-top: 0;
             margin-bottom: 0;
             margin-right: 20px;
-            background-color: var(--accent);
+            background-color: var(--primary-500);
             border-radius: 3px;
-            border: 1px solid #dba718;
+            border: 1px solid var(--primary-600);
             color: #000;
             float: right;
             font-weight: bold;
@@ -1214,23 +1222,23 @@ dialog {
             line-height: 28px;
             user-select: none;
             &:hover {
-                background-color: var(--hoverButton-background);
+                background-color: var(--primary-400);
                 transition: all ease 0.2s;
             }
             &:active {
-                background-color: var(--accent);
+                background-color: var(--primary-500);
                 transition: all ease 0.0s;
                 box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
             }
         }
         a.disabled {
             cursor: default;
-            color: #fff;
-            background-color: #AFAFAF;
-            border: 1px solid #AFAFAF;
+            color: var(--surface-900);
+            background-color: var(--surface-500);
+            border: 1px solid var(--surface-500);
             pointer-events: none;
             text-shadow: none;
-            opacity: 0.5;
+            opacity: 1;
         }
     }
 }
@@ -1347,35 +1355,35 @@ dialog {
     float: left;
 }
 .gui_box {
-    border: 1px solid #ccc;
+    border: 1px solid var(--surface-400);
     border-radius: 4px;
-    background-color: #FFFFFF;
+    background-color: var(--surface-100);
     float: left;
     width: calc(100% - 2px);
     margin-bottom: 10px;
 }
 .gui_warning {
-    background: #ffdddd;
+    background: var(--error-transparent-1);
     .gui_box_titlebar {
         background-color: #dc0000;
         background-image: linear-gradient(-45deg, rgba(255, 255, 255, .3) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .3) 20%, rgba(255, 255, 255, .3) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .3) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .3) 60%, rgba(255, 255, 255, .3) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .3) 80%, rgba(255, 255, 255, .3) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .4) 100%, transparent);
-        color: white;
+        color: var(--text);
     }
 }
 .gui_note {
-    background: #fff6de;
+    background: var(--primary-transparent-1);
     .gui_box_titlebar {
-        background-color: var(--accent);
+        background-color: var(--primary-500);
         background-image: linear-gradient(-45deg, rgba(255, 255, 255, .3) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .3) 20%, rgba(255, 255, 255, .3) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .3) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .3) 60%, rgba(255, 255, 255, .3) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .3) 80%, rgba(255, 255, 255, .3) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .4) 100%, transparent);
-        color: white;
+        color: var(--text);
     }
 }
 .grey {
-    background-color: #f9f9f9;
+    background-color: var(--surface-200);
 }
 .gui_box_titlebar {
-    background-color: var(--quietHeader);
-    color: var(--quietText);
+    background-color: var(--primary-500);
+    color: var(--surface-100);
     border-radius: 3px 3px 0 0;
     font-size: 13px;
     width: 100%;
@@ -1389,7 +1397,8 @@ dialog {
     }
 }
 .gui_box_bottombar {
-    background-color: #e4e4e4;
+    background-color: var(--surface-400);
+    color: var(--text);
     border-radius: 0 0 3px 3px;
     font-size: 13px;
     width: 100%;
@@ -1423,9 +1432,9 @@ dialog {
             margin-top: 9px;
             margin-bottom: 0;
             margin-right: 20px;
-            background-color: var(--accent);
+            background-color: var(--primary-500);
             border-radius: 3px;
-            border: 1px solid #dba718;
+            border: 1px solid var(--primary-600);
             color: #000;
             float: right;
             font-weight: bold;
@@ -1437,7 +1446,7 @@ dialog {
             padding: 0 9px;
             line-height: 28px;
             &:hover {
-                background-color: var(--hoverButton-background);
+                background-color: var(--primary-400);
                 transition: all ease 0.2s;
             }
         }
@@ -1452,9 +1461,9 @@ dialog {
     a {
         padding: 5px 0 5px 0;
         text-align: center;
-        background-color: var(--accent);
+        background-color: var(--primary-500);
         border-radius: 4px;
-        border: 1px solid #dba718;
+        border: 1px solid var(--primary-600);
         color: #000;
         font-weight: 600;
         font-size: 12px;
@@ -1464,22 +1473,22 @@ dialog {
         text-decoration: none;
         cursor: pointer;
         &:hover {
-            background-color: var(--hoverButton-background);
+            background-color: var(--primary-400);
             color: #000;
             text-shadow: 0 1px rgba(255, 255, 255, 0.25);
             transition: all ease 0.2s;
             text-decoration: none;
         }
         &:active {
-            background-color: var(--hoverButton-background);
+            background-color: var(--primary-400);
             transition: all ease 0.0s;
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
     }
     a.disabled {
-        background-color: #f1f1f1;
-        border: 1px solid var(--subtleAccent);
-        color: #ccc;
+        background-color: var(--surface-500);
+        border: 1px solid var(--surface-400);
+        color: var(--surface-900);
     }
 }
 .margin-top5 {
@@ -1490,9 +1499,9 @@ dialog {
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 10px;
-    background-color: var(--accent);
+    background-color: var(--primary-500);
     border-radius: 3px;
-    border: 1px solid #dba718;
+    border: 1px solid var(--primary-600);
     color: #000;
     font-weight: bold;
     font-size: 12px;
@@ -1504,11 +1513,11 @@ dialog {
     line-height: 28px;
     user-select: none;
     &:hover {
-        background-color: var(--hoverButton-background);
+        background-color: var(--primary-400);
     }
 }
 .regular-button.pushed {
-    background-color: var(--pushedButton-background);
+    background-color: var(--primary-400);
     color: var(--pushedButton-fontColor);
     border-radius: 3px;
 }
@@ -1517,9 +1526,9 @@ dialog {
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 10px;
-    background-color: #e60000;
+    background-color: var(--error-500);
     border-radius: 3px;
-    border: 1px solid #fe0000;
+    border: 1px solid var(--error-600);
     color: #fff;
     font-weight: bold;
     font-size: 12px;
@@ -1531,11 +1540,11 @@ dialog {
     line-height: 28px;
     user-select: none;
     &:hover {
-        background-color: #f21212;
+        background-color: var(--error-400);
     }
 }
 .danger-button.pushed {
-    background-color: #ff1b1b;
+    background-color: var(--error-400);
     color: #fff;
     border-radius: 3px;
 }
@@ -1550,9 +1559,9 @@ dialog {
         padding: 3px 4px 4px 4px;
         text-align: center;
         text-shadow: 0 1px rgba(0, 0, 0, 0.25);
-        background-color: #acacac;
+        background-color: var(--surface-500);
         border-radius: 3px;
-        border: 1px solid #949494;
+        color: var(--surface-900);
         color: #fff;
         font-weight: 600;
         font-size: 11px;
@@ -1560,14 +1569,14 @@ dialog {
         display: block;
         transition: all ease 0.2s;
         &:hover {
-            background-color: var(--accent);
+            background-color: var(--primary-600);
             color: #000;
             text-shadow: 0 1px rgba(255, 255, 255, 0.25);
-            border: 1px solid var(--accent);
+            border: 1px solid var(--primary-500);
             transition: all ease 0.2s;
         }
         &:active {
-            background-color: #878787;
+            background-color: var(--primary-600);
             transition: all ease 0.0s;
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
@@ -1575,14 +1584,14 @@ dialog {
 }
 .green {
     a {
-        background-color: var(--accent);
+        background-color: var(--primary-500);
         text-shadow: 0 1px rgba(255, 255, 255, 0.25);
         color: #000;
-        border: 1px solid #dba718;
+        border: 1px solid var(--primary-600);
         transition: all ease 0.2s;
         &:hover {
-            background-color: #ffcc3f;
-            border: 1px solid #dba718;
+            background-color: var(--primary-400);
+            border: 1px solid var(--primary-600);
             text-shadow: 0 1px rgba(255, 255, 255, 0.25);
             color: #000;
             transition: all ease 0.2s;
@@ -1606,7 +1615,7 @@ dialog {
     tr {
         &:not(:last-child) {
             td {
-                border-bottom: dotted 1px var(--subtleAccent);
+                border-bottom: dotted 1px var(--surface-400);
             }
         }
         &:last-child {
@@ -1620,7 +1629,7 @@ dialog {
     width: 33%;
 }
 .gps_false {
-    background-color: #FF0004;
+    background-color: var(--error-500);
     padding: 1px 7px 2px 7px;
     border-radius: 3px;
     color: #FFFFFF;
@@ -1628,7 +1637,7 @@ dialog {
     margin-left: 3px;
 }
 .gps_true {
-    background-color: var(--accent);
+    background-color: var(--primary-500);
     padding: 1px 7px 2px 7px;
     border-radius: 3px;
     color: #FFFFFF;
@@ -1730,22 +1739,22 @@ dialog {
     }
 }
 .colorToggle {
-    background-color: #ff0000;
+    background-color: var(--error-500);
     padding: 2px 5px;
     border-radius: 3px;
     color: #fff;
     font-size: 10px;
     &.low {
-        background-color: #808080;
+        background-color: var(--surface-500);
     }
     &.notReady {
-        background-color: #ffcc3f;
+        background-color: var(--primary-400);
     }
     &.locked {
-        background-color: #ff9500;
+        background-color: var(--warning-500);
     }
     &.ready {
-        background-color: #008000;
+        background-color: var(--success-500);
     }
 }
 .buildInfoBtn {
@@ -1755,9 +1764,9 @@ dialog {
     a {
         padding: 2px 5px 2px 5px;
         text-align: center;
-        background-color: var(--accent);
+        background-color: var(--primary-500);
         border-radius: 4px;
-        border: 1px solid #dba718;
+        border: 1px solid var(--primary-600);
         color: #000;
         font-weight: 600;
         font-size: 10px;
@@ -1767,22 +1776,22 @@ dialog {
         text-decoration: none;
         cursor: pointer;
         &:hover {
-            background-color: var(--hoverButton-background);
+            background-color: var(--primary-400);
             color: #000;
             text-shadow: 0 1px rgba(255, 255, 255, 0.25);
             transition: all ease 0.2s;
             text-decoration: none;
         }
         &:active {
-            background-color: var(--hoverButton-background);
+            background-color: var(--primary-400);
             transition: all ease 0.0s;
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
     }
     a.disabled {
-        background-color: #f1f1f1;
-        border: 1px solid var(--subtleAccent);
-        color: #ccc;
+        background-color: var(--surface-500);
+        border: 1px solid var(--surface-400);
+        color: var(--surface-900);
     }
 }
 .buildInfoClassOptions {
@@ -1801,7 +1810,7 @@ dialog {
 .bottomStatusIcons {
     display: flex;
     justify-content: space-between;
-    background-color: #272727;
+    background-color: var(--surface-300);
     height: 31px;
     margin-top: 2px;
     border-bottom-left-radius: 5px;
@@ -1812,14 +1821,14 @@ button {
     border-radius: 4px;
     background-color: #ccc;
     color: #666;
-    border: 1px solid var(--subtleAccent);
+    border: 1px solid var(--surface-400);
     font-weight: 600;
     font-size: 10pt;
     cursor: pointer;
 }
 button.active {
-    background-color: var(--accent);
-    border: 1px solid #dba718;
+    background-color: var(--primary-500);
+    border: 1px solid var(--primary-600);
     color: #000;
 }
 .jBox-Tooltip {
@@ -1836,12 +1845,12 @@ button.active {
     color: white;
 }
 .topBorderLine {
-    border-top: 1px solid var(--subtleAccent);
+    border-top: 1px solid var(--surface-400);
     padding-top: 5px;
 }
 .jBox-container {
     background: #fff;
-    border: 1px solid var(--accent);
+    border: 1px solid var(--primary-500);
     font-size: 11px;
     line-height: 13px;
     color: #525352;
@@ -1874,7 +1883,7 @@ button.active {
     &:after {
         width: 10px;
         height: 9px;
-        border: 1px solid var(--accent);
+        border: 1px solid var(--primary-500);
     }
 }
 #dialogResetToCustomDefaults-content {
@@ -1894,23 +1903,23 @@ button.active {
     margin-bottom: 10px;
 }
 .noUi-target {
-    background: var(--alternativeBackground);
-    border-color: var(--subtleAccent);
+    background: var(--surface-300);
+    border-color: var(--surface-400);
     box-shadow: none;
 }
 .noUi-handle {
-    background: var(--sideBackground);
-    border-color: var(--subtleAccent);
+    background: var(--surface-400);
+    border-color: var(--surface-400);
     box-shadow: none;
     &:before {
-        background-color: var(--subtleAccent);
+        background-color: var(--surface-600);
     }
     &:after {
-        background-color: var(--subtleAccent);
+        background-color: var(--surface-600);
     }
 }
 .noUi-background {
-    background: var(--alternativeBackground);
+    background: var(--surface-300);
     box-shadow: none;
 }
 .noUi-connect {

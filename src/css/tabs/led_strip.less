@@ -10,7 +10,7 @@
 	.section {
 		color: #565656;
 		margin: 20px 0 5px 0;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 	}
 	.mainGrid {
 		width: calc((24px + 7px) * 16);
@@ -18,16 +18,16 @@
 		float: left;
 		margin-right: 10px;
 		border-radius: 3px;
-		background-color: #dcdcdc;
-		border: var(--subtleAccent);
+		background-color: var(--surface-200);
+		border: 1px solid var(--surface-500);
 		.gPoint {
 			float: left;
-			border: solid 1px var(--ledAccent);
+			border: solid 1px var(--surface-500);
 			width: 23px;
 			height: 23px;
 			margin: 3px;
 			border-radius: 7px;
-			background: var(--ledBackground);
+			background: var(--surface-300);
 			cursor: pointer;
 		}
 	}
@@ -205,8 +205,8 @@
 	button {
 		text-align: center;
 		font-weight: bold;
-		border: 1px solid var(--subtleAccent);
-		background-color: #ececec;
+		border: 1px solid var(--surface-500);
+		background-color: var(--surface-400);
 		border-radius: 3px;
 		padding: 7px 6px;
 		margin: 3px 0;
@@ -249,10 +249,10 @@
 			background: #acacac;
 		}
 		.functionSelect {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
-			background: var(--boxBackground);
-			color: var(--defaultText);
+			background: var(--surface-200);
+			color: var(--text);
 		}
 	}
 	.header {
@@ -271,10 +271,10 @@
 			margin-top: 1px;
 		}
 		.auxSelect {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
-			background: var(--boxBackground);
-			color: var(--defaultText);
+			background: var(--surface-200);
+			color: var(--text);
 		}
 		.rainbowSlidersDiv {
 			display: none;
@@ -315,7 +315,7 @@
 		display: inline-block;
 		position: absolute;
 		z-index: 10000;
-		background: var(--boxBackground);
+		background: var(--surface-200);
 		padding: 5px;
 		border-color: #565656;
 		border-style: solid;
@@ -432,10 +432,10 @@
 			border-color: #000;
 		}
 		.modeSelect {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
-			background: var(--boxBackground);
-			color: var(--defaultText);
+			background: var(--surface-200);
+			color: var(--text);
 		}
 	}
 	.indicators {
@@ -527,7 +527,7 @@
 		font-size: 14px;
 		div {
 			font-size: 40px;
-			color: var(--accent);
+			color: var(--primary-500);
 			margin-bottom: -5px;
 			margin-top: -10px;
 		}
@@ -544,7 +544,7 @@
 		position: absolute;
 		z-index: -1;
 		width: 496px;
-		border: 1px solid rgb(236, 236, 236);
+		border: 1px solid var(--surface-500);
 		margin-top: -1px;
 		margin-left: -1px;
 		border-radius: 3px;
@@ -552,7 +552,7 @@
 			width: 122px;
 			height: 122px;
 			float: left;
-			border: solid 1px rgb(236, 236, 236);
+		    border: 1px solid var(--surface-500);
 		}
 	}
 	.ui-selected {

@@ -13,7 +13,7 @@
 	}
 	.range {
 		.marker {
-			background: var(--accent);
+			background: var(--primary-500);
 			border-radius: 3px;
 			position: absolute;
 			left: 50%;
@@ -28,8 +28,8 @@
 		padding-top: 15px;
 		padding-left: 0;
 		border-top: 1px solid #fff;
-		border-bottom: 1px solid var(--subtleAccent);
-		background-color: #ececec;
+		border-bottom: 1px solid var(--surface-500);
+		background-color: var(--surface-200);
 		padding-bottom: 5px;
 		&:first-child {
 			border-top: 0;
@@ -46,7 +46,7 @@
 			}
 		}
 		.channel {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 			margin-bottom: 3px;
 		}
@@ -59,51 +59,51 @@
 	}
 	.channel-slider {
 		.noUi-connect {
-			background: var(--accent);
+			background: var(--primary-500);
 			border-radius: 3px;
+		}
+	}
+	.mode.on {
+		.info {
+			background: var(--primary-500);
+			color: black;
+		}
+		&:nth-child(odd) {
+			.info {
+				background: var(--primary-500);
+			}
+		}
+	}
+	.mode.off {
+		.info {
+			background: var(--surface-400);
+			color: var(--surface-950);
+		}
+		&:nth-child(odd) {
+			.info {
+				background: var(--surface-400);
+			}
+		}
+	}
+	.mode.disabled {
+		.info {
+			background: var(--error);
+			color: var(var(--text));
+		}
+		&:nth-child(odd) {
+			.info {
+				background: var(--error);
+			}
 		}
 	}
 	.modes {
 		width: 100%;
 	}
 	.mode {
-		background-color: #f9f9f9;
+		background-color: var(--surface-200);
 		vertical-align: top;
 		display: flex;
-
-		&.on {
-			.info {
-				background: var(--accent) !important;
-				color: black;
-			}
-			&:nth-child(odd) {
-				.info {
-					background: var(--accent) !important;
-				}
-			}
-		}
-		&.off {
-			.info {
-				background: #828885 !important;
-				color: white;
-			}
-			&:nth-child(odd) {
-				.info {
-					background: #828885 !important;
-				}
-			}
-		}
-		&.disabled {
-			.info {
-				background: var(--error) !important;
-				color: var(--quietText);
-			}
-			&:nth-child(odd) {
-				.info {
-					background: var(--error) !important;
-				}
-			}
-		}	
+        margin-bottom: 5px;
 		.name {
 			min-height: 80px;
 			padding: 5px 0;
@@ -113,8 +113,7 @@
 			width: 10%;
 			white-space: nowrap;
 			position: relative;
-			background-color: #e4e4e4;
-			border-bottom: 5px solid white;
+			background-color: var(--surface-300);
 			color: grey;
 			.name {
 				font-weight: bold;
@@ -130,9 +129,6 @@
 					cursor: pointer;
 					margin: 3px;
 					display: block;
-					&:hover {
-						background-color: darkgrey;
-					}
 				}
 			}
 		}
@@ -153,7 +149,6 @@
 	}
 	.ranges {
 		padding-right: 0;
-		border-bottom: 5px solid white;
 		width: 90%;
 		max-width: calc(100% - 140px);
 	}
@@ -163,8 +158,8 @@
 		padding-top: 15px;
 		padding-left: 15px;
 		border-top: 1px solid #fff;
-		border-bottom: 1px solid var(--subtleAccent);
-		background-color: #ececec;
+		border-bottom: 1px solid var(--surface-500);
+		background-color: var(--surface-400);
 		padding-bottom: 5px;
 		&:first-child {
 			border-top: 0;
@@ -173,13 +168,13 @@
 			border-bottom: 0;
 		}
 		.linkedTo {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 			margin-bottom: 3px;
 		}
 	}
 	.logic {
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		border-radius: 3px;
 	}
 	>.buttons {
@@ -197,18 +192,28 @@
 		a {
 			text-align: center;
 			font-weight: bold;
-			background-color: #fff;
-			color: black;
-			opacity: 0.8;
+			background-color: var(--surface-600);
+			color: var(--text);
 			transition: all ease 0.3s;
 			&:hover {
-				background-color: #fff;
+				background-color: var(--surface-700);
 				opacity: 1.0;
-				color: black;
 				transition: all ease 0.3s;
 			}
 		}
 	}
+    .mode.on {
+        .buttons {
+            a {
+                background-color: var(--primary-300);
+                color: black;
+                &:hover {
+                    background-color: var(--primary-200);
+                    color: black;
+                }
+            }
+        }
+    }
 	.delete {
 		a {
 			height: 15px;

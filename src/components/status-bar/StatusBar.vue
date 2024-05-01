@@ -98,13 +98,13 @@ export default {
   height: 20px;
   line-height: 20px;
   padding: 0 10px 0 10px;
-  border-top: 1px solid #7d7d79;
-  background-color: #bfbeb5;
+  border-top: 1px solid var(--surface-400);
+  background-color: var(--surface-300);
 }
 
 #status-bar > * ~ * {
   padding-left: 10px;
-  border-left: 1px solid #7d7d79;
+  border-left: 1px solid var(--surface-400);
 }
 
 /** Status bar (phones) **/

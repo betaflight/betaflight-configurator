@@ -91,7 +91,7 @@ export default {
     },
 };
 </script>
-<style scoped>
+<style scoped lang="less">
 #portsinput {
     width: 220px;
     margin-right: 15px;
@@ -104,63 +104,34 @@ export default {
 }
 
 .dropdown-dark .dropdown-select {
-    color: #a6a6a6;
-    text-shadow: 0 1px black;
+    color: var(--text);
     width: calc(100% - 10px);
     background: #444;
 }
 
 .dropdown-dark {
-    background: #636363; /* NEW2 */
-    background: #3e403f; /* NEW */
-    border-color: #111 #0a0a0a black;
-    background-image: -webkit-linear-gradient(
-        top,
-        transparent,
-        rgba(0, 0, 0, 0.4)
-    );
-    background-image: -moz-linear-gradient(
-        top,
-        transparent,
-        rgba(0, 0, 0, 0.4)
-    );
-    background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-    background-image: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(0, 0, 0, 0.4)
-    );
-    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1),
-        0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px rgba(255, 255, 255, 0.1),
-        0 1px 1px rgba(0, 0, 0, 0.2);
-    color: #a6a6a6;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
+    background-color: var(--surface-300);
+    border: 1px solid var(--surface-500);
+    color: var(--text);
 }
 
 .dropdown-dark:before {
-    border-bottom-color: #aaa;
+    border-bottom-color: var(--surface-700);
 }
 
 .dropdown-dark:after {
-    border-top-color: #aaa;
+    border-top-color: var(--surface-700);
 }
 
 .dropdown-dark .dropdown-select {
-    color: #a6a6a6;
-    text-shadow: 0 1px black;
+    color: var(--text);
     width: calc(100% - 10px);
     /* Fallback for IE 8 */
     background: #444;
 }
 
-.dropdown-dark .dropdown-select:focus {
-    color: #fff;
-}
-
 .dropdown-dark .dropdown-select > option {
-    background: #56ab1a;
-    text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+    background: var(--surface-300);
 }
 #auto-connect-and-baud {
     float: right;

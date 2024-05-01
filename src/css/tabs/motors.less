@@ -3,7 +3,7 @@
 		margin-bottom: 0;
 	}
 	select {
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		width: fit-content;
 		height: 20px;
 		margin-right: 80px;
@@ -21,14 +21,14 @@
 			text-align: left;
 			border-collapse: collapse;
 			padding: 3px;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 		}
 		td {
 			text-align: left;
 			border-collapse: collapse;
 			padding: 5px 3px;
 			margin-right: 20px;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 		}
 		tr {
 			td {
@@ -41,7 +41,7 @@
 		thead {
 			tr {
 				&:first-child {
-					background-color: #ececec;
+					background-color: var(--surface-400);
 				}
 			}
 		}
@@ -51,7 +51,7 @@
 		padding: 0 0 5px 0;
 		margin: 0 0 10px 0;
 		font-size: 16px;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 	}
 	.mixerPreview {
 		svg {
@@ -100,7 +100,7 @@
 		.disabled {
 			width: 48px;
 			padding: 0 5px;
-			background-color: #ececec;
+			background-color: var(--surface-400);
 		}
 		input[readonly] {
 			background-color: #AFAFAF;
@@ -115,7 +115,7 @@
 		margin-bottom: 5px;
 		clear: left;
 		padding-bottom: 5px;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 		width: 100%;
 		float: left;
 		&:last-child {
@@ -146,12 +146,12 @@
 			margin-top: -5px;
 			margin-right: 5px;
 			padding-bottom: 5px;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 			width: 100%;
 		}
 		margin-bottom: 5px;
 		float: left;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 		width: 100%;
 	}
 	.freelabel {
@@ -179,13 +179,13 @@
 		margin-top: 5px;
 		float: left;
 		width: 100%;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 	}
 	.select {
 		margin-bottom: 5px;
 		clear: left;
 		padding-bottom: 5px;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 		width: 100%;
 		float: left;
 		&:last-child {
@@ -198,7 +198,7 @@
 		margin-bottom: 5px;
 		clear: left;
 		padding-bottom: 5px;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 		width: 100%;
 		float: left;
 	}
@@ -220,7 +220,7 @@
 			font-style: normal;
 			font-weight: normal;
 			line-height: 19px;
-			color: #4f4f4f;
+			color: var(--text);
 			font-size: 11px;
 		}
 	}
@@ -345,7 +345,7 @@
 		width: 160px;
 		height: 178px;
 		margin: 0;
-		background-color: #ECECEC;
+		background-color: var(--surface-400);
 		border-top-right-radius: 3px;
 		border-bottom-right-radius: 3px;
 		.table {
@@ -361,7 +361,7 @@
 		}
 		.motor-button {
 			a {
-				background-color: var(--accent);
+				background-color: var(--primary-500);
 				border-radius: 3px;
 				border: 1px solid #e8b423;
 				color: #000;
@@ -390,7 +390,7 @@
 		}
 		select {
 			width: 100%;
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 		}
 		.value {
@@ -464,7 +464,7 @@
 	}
 	text {
 		stroke: none;
-		fill: #828885;
+		fill: var(--surface-300);
 		font-size: 10px;
 	}
 	.line {
@@ -480,7 +480,7 @@
 	}
 	.motorblock {
 		margin-bottom: 0;
-		background-color: #ECECEC;
+		background-color: var(--surface-200);
 	}
 	.left.motors {
 		float: left;
@@ -515,7 +515,7 @@
 		height: 100px;
 		margin-right: 10px;
 		text-align: center;
-		background-color: #f4f4f4;
+		background-color: var(--surface-300);
 		border-radius: 3px;
 		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 		.meter-bar {
@@ -523,9 +523,9 @@
 			width: 100%;
 			height: 100px;
 			box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-			background-color: #E0E0E0;
+			background-color: var(--surface-300);
 			border-radius: 3px;
-			border: 1px solid #F5F5F5;
+			border: 1px solid var(--surface-500);
 		}
 		.label {
 			position: absolute;
@@ -534,7 +534,7 @@
 			text-align: center;
 			font-weight: bold;
 			font-size: 10px;
-			color: #474747;
+			color: var(--surface-950);
 		}
 		.label.rpm_info {
 			bottom: 28px;
@@ -607,9 +607,9 @@
 		.notice {
 			float: left;
 			padding: 5px;
-			border: 2px solid var(--subtleAccent);
+			border: 2px solid var(--primary-500);
 			border-radius: 3px;
-			background-color: #fff7cd;
+			background-color: var(--primary-transparent-1);
 			font-size: 11px;
 			margin-top: 10px;
 			p {
