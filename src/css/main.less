@@ -2049,11 +2049,11 @@ button.active {
         display: none !important;
     }
     .headerbar {
-        height: 56px;
+        height: fit-content;
         background: rgba(0, 0, 0, 0.15);
         flex-wrap: wrap;
         align-content: flex-start;
-        padding-top: 12px;
+        padding-top: 6px;
         box-sizing: border-box;
         transition: all 0.2s;
     }
@@ -2093,6 +2093,10 @@ button.active {
         margin: 0;
         zoom: 0.6;
     }
+    .web-port-picker {
+        order: 5;
+        padding-top: 5px;
+    }
     #port-picker {
         display: none !important;
         order: 5;
@@ -2121,6 +2125,8 @@ button.active {
         flex-grow: 1;
     }
     #portsinput {
+        display: flex;
+        gap: 5px;
         flex-grow: 1;
         margin-right: 0;
     }
