@@ -1119,6 +1119,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Local Build - no Cloud information"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Build type"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Local Build"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Cloud Build"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "No build information available"
+    },
     "initialSetupNotOnline": {
         "message": "Server unavailable"
     },
