@@ -2707,8 +2707,6 @@ pid_tuning.updateRatesLabels = function() {
 
             const isBetaflightRates = self.currentRatesType === FC.RATES_TYPE.BETAFLIGHT;
 
-            $('#pid-tuning .pid_titlebar .name').text(isBetaflightRates ? 'Acro' : '').css("text-align", "center");
-
             centerSensitivyLabel.toggle(isBetaflightRates);
 
             self.acroCenterSensitivityRollElement.toggle(isBetaflightRates);
