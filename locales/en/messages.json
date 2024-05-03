@@ -55,6 +55,9 @@
     "portsSelectManual": {
         "message": "Manual Selection"
     },
+    "portsSelectNone": {
+        "message": "No connection available"
+    },
     "portsSelectVirtual": {
         "message": "Virtual Mode (Experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."

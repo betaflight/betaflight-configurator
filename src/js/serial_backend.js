@@ -55,24 +55,11 @@ export function initializeSerialBackend() {
         }
         const selected_port = $('#port').val();
 
-        if (selected_port === 'manual') {
-        // const portSelect = document.querySelector('#port');
+        $('#port-override-option').toggle(selected_port === 'manual');
 
-        // console.log(`Port select value: ${portSelect.value}`);
-        // if (portSelect.value.startsWith("manual")) {
-            $('#port-override-option').show();
-        } else {
-            $('#port-override-option').hide();
-        }
-        if (selected_port === 'virtual') {
-        // if (portSelect.value.startsWith("virtual")) {
-            $('#firmware-virtual-option').show();
-        } else {
-            $('#firmware-virtual-option').hide();
-        }
+        $('#firmware-virtual-option').toggle(selected_port === 'virtual');
 
         $('#auto-connect-and-baud').toggle(selected_port !== 'DFU');
-        // $('#auto-connect-and-baud').toggle(!portSelect.value.startsWith("DFU"));
     };
 
     GUI.updateManualPortVisibility();
@@ -96,22 +83,12 @@ export function initializeSerialBackend() {
         const selectedPort = $('#port').val();
         let portName;
         if (selectedPort === 'manual') {
-    // $("div.connect_controls a.connect").on('click', function (e) {
-    //     const portSelect = document.querySelector('#port');
-    //     let portName;
-
-    //     if (portSelect.value.startsWith('none')) {
-    //         e.preventDefault();
-    //         return;
-    //     }
-
-    //     if (portSelect.value.startsWith("manual")) {
             portName = $('#port-override').val();
         } else {
             portName = String($('div#port-picker #port').val());
         }
 
-        if (!GUI.connect_lock) {
+        if (!GUI.connect_lock && selectedPort !== 'none') {
             // GUI control overrides the user control
 
             GUI.configuration_loaded = false;
@@ -120,12 +97,7 @@ export function initializeSerialBackend() {
             const selectedPort = $('#port').val();
 
             if (selectedPort === 'DFU') {
-
-            // const portSelect = document.querySelector('#port');
-
-            // if (portSelect.value.startsWith('DFU')) {
                 $('select#baud').hide();
-                e.preventDefault();
                 return;
             }
 
@@ -133,75 +105,48 @@ export function initializeSerialBackend() {
                 console.log(`Connecting to: ${portName}`);
                 GUI.connecting_to = portName;
 
-                    const baudRate = parseInt($('#baud').val());
-                    if (selectedPort === 'virtual') {
-                        CONFIGURATOR.virtualMode = true;
-                        CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown').val();
+                // lock port select & baud while we are connecting / connected
+                $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
+                $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-                        // Hack to get virtual working on the web
-                        serial = serialShim();
-                        serial.connect('virtual', {}, onOpenVirtual);
-                    } else if (isWeb()) {
-                        CONFIGURATOR.virtualMode = false;
-                        serial = serialShim();
-                        // Explicitly disconnect the event listeners before attaching the new ones.
-                        serial.removeEventListener('connect', connectHandler);
-                        serial.addEventListener('connect', connectHandler);
-                // // lock port select & baud while we are connecting / connected
-                // $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
-                // $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
-                // const baudRate = document.querySelector('div#port-picker #baud').value;
-                // console.log(`Baud rate: ${baudRate}`);
-                // if (portSelect.value.startsWith('virtual')) {
-                //     CONFIGURATOR.virtualMode = true;
-                //     CONFIGURATOR.virtualApiVersion = document.querySelector('#firmware-version-dropdown').value;
+                const baudRate = parseInt($('#baud').val());
+                if (selectedPort === 'virtual') {
+                    CONFIGURATOR.virtualMode = true;
+                    CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown').val();
 
-                //     serial.connect('virtual', {}, onOpenVirtual);
-                // } else if (isWeb()) {
-                //     // Explicitly disconnect the event listeners before attaching the new ones.
-                //     serial.removeEventListener('connect', connectHandler);
-                //     serial.addEventListener('connect', connectHandler);
+                    // Hack to get virtual working on the web
+                    serial = serialShim();
+                    serial.connect('virtual', {}, onOpenVirtual);
+                } else if (isWeb()) {
+                    CONFIGURATOR.virtualMode = false;
+                    serial = serialShim();
+                    // Explicitly disconnect the event listeners before attaching the new ones.
+                    serial.removeEventListener('connect', connectHandler);
+                    serial.addEventListener('connect', connectHandler);
 
                     serial.removeEventListener('disconnect', disconnectHandler);
                     serial.addEventListener('disconnect', disconnectHandler);
 
                     serial.connect({ baudRate });
                 } else {
-                    if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
-                        $('div#flashbutton a.flash_state').removeClass('active');
-                        $('div#flashbutton a.flash').removeClass('active');
-                    }
-                    GUI.timeout_kill_all();
-                    GUI.interval_kill_all();
-                    GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
-
-                    function onFinishCallback() {
-                        finishClose(toggleStatus);
-                    }
-
-                    mspHelper?.setArmingEnabled(true, false, onFinishCallback);
-                    serial.connect(
-                        portName,
-                        { bitrate: selected_baud },
-                        onOpen,
-                    );
+                    serial.connect(portName, { bitrate: selected_baud }, onOpen);
                     toggleStatus();
                 }
 
-            // } else {
-            //     if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
-            //         $('div#flashbutton a.flash_state').removeClass('active');
-            //         $('div#flashbutton a.flash').removeClass('active');
-            //     }
-            //     GUI.timeout_kill_all();
-            //     GUI.interval_kill_all();
-            //     GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
+            } else {
+                if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+                    $('div#flashbutton a.flash_state').removeClass('active');
+                    $('div#flashbutton a.flash').removeClass('active');
+                }
+                GUI.timeout_kill_all();
+                GUI.interval_kill_all();
+                GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
 
-            //     function onFinishCallback() {
-            //         finishClose(toggleStatus);
-            //     }
+                function onFinishCallback() {
+                    finishClose(toggleStatus);
+                }
 
-            //     mspHelper.setArmingEnabled(true, false, onFinishCallback);
+                mspHelper?.setArmingEnabled(true, false, onFinishCallback);
             }
         }
     });
