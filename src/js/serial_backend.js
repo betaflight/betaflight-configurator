@@ -817,7 +817,7 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(callback) {
-    const isVirtual = CONFIGURATOR.virtualMode && GUI.connected_to === 'virtual' && CONFIGURATOR.connectionValid && serial.connectionId === 'virtual';
+    const isVirtual = CONFIGURATOR.virtualMode && GUI.connected_to == 'virtual' && CONFIGURATOR.connectionValid && serial.connectionId === 'virtual';
 
     gui_log(i18n.getMessage('deviceRebooting'));
 
