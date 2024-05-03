@@ -817,6 +817,9 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(callback) {
+    const isVirtual = CONFIGURATOR.virtualMode && GUI.connected_to === 'virtual' && CONFIGURATOR.connectionValid && serial.connectionId === 'virtual';
+
+    gui_log(i18n.getMessage('deviceRebooting'));
 
     // Close connection gracefully if it still exists.
     const previousTimeStamp = connectionTimestamp;
@@ -829,8 +832,19 @@ export function reinitializeConnection(callback) {
         }
     }
 
-    gui_log(i18n.getMessage('deviceRebooting'));
+    // In virtual mode reconnect when autoconnect is enabled
+    if (isVirtual) {
+        return setTimeout(() => {
+            if (GUI.auto_connect) {
+                $('a.connect').trigger('click');
+            }
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }, 500);
+    }
 
+    // Wait for serial or tcp connection to be available
     let attempts = 0;
     const reconnect = setInterval(waitforSerial, 100);
 

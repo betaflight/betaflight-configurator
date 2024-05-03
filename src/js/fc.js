@@ -630,7 +630,7 @@ const FC = {
             rcSmoothingAutoFactor:        0,
             usbCdcHidType:                0,
             rcSmoothingMode:              0,
-            elrsUid:                      0,
+            elrsUid:                      [0, 0, 0, 0, 0, 0],
         };
 
         this.FAILSAFE_CONFIG = {
