@@ -19,7 +19,7 @@ led_strip.initialize = function (callback, scrollPosition) {
     const functionTag = '.function-';
 
     TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'y'];
-    TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'p', 'e', 'u', 'l', 's', 'g', 'r'];
+    TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'l', 's', 'g', 'r', 'p', 'e', 'u'];
     TABS.led_strip.overlays =  ['t', 'y', 'o', 'b', 'v', 'i', 'w'];
 
     if (semver.lt(FC.CONFIG.apiVersion,API_VERSION_1_46)) {
