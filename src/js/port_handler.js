@@ -327,7 +327,8 @@ PortHandler.selectPort = function(ports) {
             const pathSelect = ports[i].path;
             const isWindows = (OS === 'Windows');
             const isTty = pathSelect.includes('tty');
-            const deviceRecognized = portName.includes('STM') || portName.includes('CP210') || portName.startsWith('SPR');
+            const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM32'];
+            const deviceRecognized = deviceFilter.some(device => portName.includes(device));
             const legacyDeviceRecognized = portName.includes('usb');
             if (isWindows && deviceRecognized || isTty && (deviceRecognized || legacyDeviceRecognized)) {
                 this.portPickerElement.val(pathSelect);
