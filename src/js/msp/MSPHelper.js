@@ -466,7 +466,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_ARMING_CONFIG:
                 FC.ARMING_CONFIG.auto_disarm_delay = data.readU8();
-                FC.ARMING_CONFIG.gyro_cal_on_first_arm = 0; //data.readU8();
+                FC.ARMING_CONFIG.gyro_cal_on_first_arm = data.readU8();
                 FC.ARMING_CONFIG.small_angle = data.readU8();
                 break;
             case MSPCodes.MSP_LOOP_TIME:
