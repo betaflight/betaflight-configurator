@@ -104,7 +104,7 @@
                         <div class="helpicon cf_tip" i18n_title="configurationArmingHelp"></div>
                     </div>
                     <div class="spacer_box">
-                        <div class="_smallAngle">
+                        <!-- <div class="_smallAngle"> -->
                             <div class="number">
                                 <label>
                                     <input type="number" id="configurationSmallAngle" step="1" min="1" max="180" />
@@ -112,6 +112,19 @@
                                     <div class="helpicon cf_tip" i18n_title="configurationSmallAngleHelp"></div>
                                 </label>
                             </div>
+                        <!-- </div> -->
+                        <div class="number">
+                            <label>
+                                <input type="number" id="configurationAutoDisarmDelay" step="1" min="0" max="60" />
+                                <span i18n="configurationAutoDisarmDelay"></span>
+                                <div class="helpicon cf_tip" i18n_title="configurationAutoDisarmDelayHelp"></div>
+                            </label>
+                        </div>
+                        <div class="select">
+                            <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                                <input type="checkbox" id="configurationGyroCalOnFirstArm" class="toggle" />
+                            </div>
+                            <span class="freelabel" i18n="configurationGyroCalOnFirstArm"></span>
                         </div>
                     </div>
                 </div>

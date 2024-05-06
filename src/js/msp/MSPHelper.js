@@ -466,7 +466,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_ARMING_CONFIG:
                 FC.ARMING_CONFIG.auto_disarm_delay = data.readU8();
-                FC.ARMING_CONFIG.disarm_kill_switch = data.readU8();
+                FC.ARMING_CONFIG.gyro_cal_on_first_arm = 0; //data.readU8();
                 FC.ARMING_CONFIG.small_angle = data.readU8();
                 break;
             case MSPCodes.MSP_LOOP_TIME:
@@ -1792,7 +1792,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_SET_ARMING_CONFIG:
             buffer.push8(FC.ARMING_CONFIG.auto_disarm_delay)
-                .push8(FC.ARMING_CONFIG.disarm_kill_switch)
+                .push8(FC.ARMING_CONFIG.gyro_cal_on_first_arm)
                 .push8(FC.ARMING_CONFIG.small_angle);
             break;
         case MSPCodes.MSP_SET_LOOP_TIME:

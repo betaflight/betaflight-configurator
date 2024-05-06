@@ -491,8 +491,8 @@ export function configuration_restore(callback) {
 
             if (configuration.ARMING_CONFIG == undefined) {
                 configuration.ARMING_CONFIG = {
-                    auto_disarm_delay:      5,
-                    disarm_kill_switch:     1,
+                    auto_disarm_delay:     5,
+                    gyro_cal_on_first_arm: 0,
                 };
             }
 

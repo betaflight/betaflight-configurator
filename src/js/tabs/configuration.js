@@ -343,8 +343,14 @@ configuration.initialize = function (callback) {
         $('input[name="roll"]').val(FC.CONFIG.accelerometerTrims[1]);
         $('input[name="pitch"]').val(FC.CONFIG.accelerometerTrims[0]);
 
-        $('._smallAngle').show();
         $('input[id="configurationSmallAngle"]').val(FC.ARMING_CONFIG.small_angle);
+        $('input[id="configurationGyroCalOnFirstArm"]').prop('checked', FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1);
+
+        if (FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP')) {
+            $('input[id="configurationAutoDisarmDelay"]').val(FC.ARMING_CONFIG.auto_disarm_delay);
+        } else {
+            $('input[id="configurationAutoDisarmDelay"]').parent().hide();
+        }
 
         // UI hooks
 
@@ -395,7 +401,8 @@ configuration.initialize = function (callback) {
             FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
 
-            // small angle configuration
+            FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
+            FC.ARMING_CONFIG.gyro_cal_on_first_arm = $('input[id="configurationGyroCalOnFirstArm"]').is(':checked') ? 1 : 0;
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
 
             FC.SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());
