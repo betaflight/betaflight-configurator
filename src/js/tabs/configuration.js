@@ -6,7 +6,7 @@ import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45, API_VERSION_1_47 } from '../data_storage';
 import { updateTabList } from '../utils/updateTabList';
 import $ from 'jquery';
 
@@ -344,11 +344,17 @@ configuration.initialize = function (callback) {
         $('input[name="pitch"]').val(FC.CONFIG.accelerometerTrims[0]);
 
         $('input[id="configurationSmallAngle"]').val(FC.ARMING_CONFIG.small_angle);
-        $('input[id="configurationGyroCalOnFirstArm"]').prop('checked', FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1);
 
-        if (FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP')) {
-            $('input[id="configurationAutoDisarmDelay"]').val(FC.ARMING_CONFIG.auto_disarm_delay);
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[id="configurationGyroCalOnFirstArm"]').prop('checked', FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1);
+
+            if (FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP')) {
+                $('input[id="configurationAutoDisarmDelay"]').val(FC.ARMING_CONFIG.auto_disarm_delay);
+            } else {
+                $('input[id="configurationAutoDisarmDelay"]').parent().hide();
+            }
         } else {
+            $('input[id="configurationGyroCalOnFirstArm"]').parent().hide();
             $('input[id="configurationAutoDisarmDelay"]').parent().hide();
         }
 
