@@ -796,7 +796,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log("Fw git rev:", FC.CONFIG.gitRevision);
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                    FC.CONFIG.buildOptions = [];
                     let option = data.readU16();
                     while (option) {
                         FC.CONFIG.buildOptions.push(option);
