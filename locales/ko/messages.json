@@ -1039,6 +1039,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "로컬 빌드 - 클라우드 정보 없음"
     },
+    "initialSetupInfoBuildType": {
+        "message": "빌드 형식"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "로컬 빌드"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "클라우드 빌드"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "사용 가능한 빌드 정보가 없습니다"
+    },
     "initialSetupNotOnline": {
         "message": "서버를 이용할 수 없음"
     },
@@ -3703,6 +3715,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "GPS 막대",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "배터리 막대",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "고도",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "링",
         "description": "One of the modes of the Led Strip"
@@ -3796,6 +3820,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: 고정됨",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "기본값",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "막대형",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "LED 스트립 배선",

@@ -1039,6 +1039,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Lokalt bygget - ingen Cloud Build information"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Byg type"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Byg lokalt"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Byg i skyen"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "Byg oplysninger mangler"
+    },
     "initialSetupNotOnline": {
         "message": "Serveren kan ikke kontaktes"
     },
@@ -3703,6 +3715,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Gps bjælke",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Batteri bjælke",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Højde",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Led ring",
         "description": "One of the modes of the Led Strip"
@@ -3796,6 +3820,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: låst",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Standard",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Bjælke",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "LED ledningsføring",
