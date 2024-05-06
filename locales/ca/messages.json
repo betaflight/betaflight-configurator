@@ -1043,6 +1043,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Construcció local: sense informació al núvol"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Tipus de compilació"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Compilació local"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Compilació al Cloud"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "Sense informació de la compilació"
+    },
     "initialSetupNotOnline": {
         "message": "Servidor no disponible"
     },
@@ -3707,6 +3719,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Barra GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Barra de bateria",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitud",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Anell",
         "description": "One of the modes of the Led Strip"
@@ -3800,6 +3824,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: ubicat",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Per defecte",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Barra",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Cablejat de la Tira LED",

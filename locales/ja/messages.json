@@ -1035,6 +1035,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "ローカルビルド - クラウド情報なし"
     },
+    "initialSetupInfoBuildType": {
+        "message": "ビルドタイプ"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "ローカルビルド"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "クラウドビルド"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "利用可能なビルド情報はありません。"
+    },
     "initialSetupNotOnline": {
         "message": "サーバーが利用できません"
     },
@@ -3699,6 +3711,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "GPS バー",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "バッテリー バー",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "高度",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "リング",
         "description": "One of the modes of the Led Strip"
@@ -3792,6 +3816,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: 捕捉",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "デフォルト値",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "バー",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "LEDストリップ配線",
@@ -5050,7 +5082,7 @@
         "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupFontTypeDefault": {
-        "message": "Default",
+        "message": "デフォルト値",
         "description": "Font Default"
     },
     "osdSetupFontTypeBold": {

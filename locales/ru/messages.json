@@ -1910,6 +1910,12 @@
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Процент TPA (%)"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "TPA-порог (μs)"
+    },
     "pidTuningTPAPD": {
         "message": "ПД"
     },
@@ -2219,6 +2225,18 @@
     "auxiliaryHelpMode_CAMSTAB": {
         "message": "Включает режим стабилизации камеры",
         "description": "Help text to CAMSTAB mode"
+    },
+    "auxiliaryHelpMode_FAILSAFE": {
+        "message": "Ввести вручную Этап 2 FailSafe",
+        "description": "Help text to FAILSAFE mode"
+    },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Реверс моторов для переворачивания аппарата после аварийной посадки вверх дном (требуется DShot)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
+    "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
+        "message": "Используйте, чтобы указать количество найденых спутников GPS,  путем подачи звукового сигнала равному количеству найденых спутников",
+        "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
         "message": "Включите 'GPS Rescue', чтобы вернуть летательный аппарат вместо, где он был запущен в последний раз",
@@ -3136,6 +3154,15 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Объект:"
     },
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU:"
+    },
+    "firmwareFlasherCloudBuildDetails": {
+        "message": "Информация о сборке в облаке:"
+    },
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Показать журнал."
+    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Статус:"
     },
@@ -3150,6 +3177,18 @@
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "успех"
+    },
+    "firmwareFlasherCloudBuildFailCancel": {
+        "message": "отменен"
+    },
+    "firmwareFlasherCloudBuildFailTimeOut": {
+        "message": "истекло время ожидания (повторите попытку)"
+    },
+    "firmwareFlasherCloudBuildFailRequest": {
+        "message": "ошибка запроса сборки (пожалуйста, проверьте конфигурацию сборки, например пользовательские определения)"
+    },
+    "firmwareFlasherCloudBuildFail": {
+        "message": "не удалось (пожалуйста, проверьте журнал)"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Скачать самостоятельно."

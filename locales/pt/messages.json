@@ -1035,6 +1035,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Compilação local - sem informação da Nuvem"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Tipo de compilação"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Compilação local"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Compilação na nuvem"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "Nenhuma informação de compilação disponível"
+    },
     "initialSetupNotOnline": {
         "message": "Servidor indisponível"
     },
@@ -3699,6 +3711,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Barra GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Barra Bateria",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitude",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Ring",
         "description": "One of the modes of the Led Strip"
@@ -3792,6 +3816,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: com lock",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Padrão",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Barra",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Ligações da Fita de LED",
