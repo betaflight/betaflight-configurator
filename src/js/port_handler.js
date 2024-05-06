@@ -158,14 +158,15 @@ PortHandler.check_usb_devices = function (callback) {
             dfuElement.remove();
             self.setPortsInputWidth();
             self.dfu_available = false;
-        }
-        if ($('option:selected', self.portPickerElement).val() !== 'DFU') {
-            if (!(GUI.connected_to || GUI.connect_lock)) {
-                FC.resetState();
-            }
 
-            if (self.dfu_available) {
-                self.portPickerElement.trigger('change');
+            if ($('option:selected', self.portPickerElement).val() !== 'DFU') {
+                if (!(GUI.connected_to || GUI.connect_lock)) {
+                    FC.resetState();
+                }
+
+                if (self.dfu_available) {
+                    self.portPickerElement.trigger('change');
+                }
             }
         }
 
