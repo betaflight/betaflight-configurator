@@ -1,5 +1,7 @@
 import '../jqueryPlugins';
 import windowWatcherUtil from "../utils/window_watchers";
+import DarkTheme from '../DarkTheme.js';
+import { isWeb } from "../utils/isWeb";
 import $ from 'jquery';
 
 // This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
@@ -50,11 +52,7 @@ let enableTX = false;
 
 const watchers = {
     darkTheme: (val) => {
-        if (val) {
-            applyDarkTheme();
-        } else {
-            applyNormalTheme();
-        }
+        val ? DarkTheme.applyDark() : DarkTheme.applyNormal();
     },
 };
 
@@ -72,7 +70,7 @@ function transmitChannels() {
     // Callback given to us by the window creator so we can have it send data over MSP for us:
     if (!window.setRawRx(channelValues)) {
         // MSP connection has gone away
-        chrome.app.window.current().close();
+        isWeb() ? close() : chrome.app.window.current().close();
     }
 }
 
@@ -141,21 +139,17 @@ function localizeAxisNames() {
     }
 }
 
-function applyDarkTheme() {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', false));
-}
-
-function applyNormalTheme() {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
-}
-
 $(".button-enable .btn").on("click", function() {
     const shrinkHeight = $(".warning").height();
 
     $(".warning").slideUp("short", function() {
-        chrome.app.window.current().innerBounds.minHeight -= shrinkHeight;
-        chrome.app.window.current().innerBounds.height -= shrinkHeight;
-        chrome.app.window.current().innerBounds.maxHeight -= shrinkHeight;
+        if (isWeb()) {
+            resizeTo(outerWidth, outerHeight - shrinkHeight);
+        } else {
+            chrome.app.window.current().innerBounds.minHeight -= shrinkHeight;
+            chrome.app.window.current().innerBounds.height -= shrinkHeight;
+            chrome.app.window.current().innerBounds.maxHeight -= shrinkHeight;
+        }
     });
 
     enableTX = true;

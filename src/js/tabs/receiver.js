@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import GUI, { TABS } from '../gui';
+import { isWeb } from "../utils/isWeb";
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { tracking } from "../Analytics";
 import { bit_check } from "../bit";
@@ -533,34 +534,46 @@ receiver.initialize = function (callback) {
             tab.needReboot = false;
         });
 
-        $("a.sticks").click(function() {
+        $("a.sticks").on("click", function() {
             const windowWidth = 370;
             const windowHeight = 510;
 
-            chrome.app.window.create("/tabs/receiver_msp.html", {
-                id: "receiver_msp",
-                innerBounds: {
-                    minWidth: windowWidth, minHeight: windowHeight,
-                    width: windowWidth, height: windowHeight,
-                    maxWidth: windowWidth, maxHeight: windowHeight,
-                },
-                alwaysOnTop: true,
-            }, function(createdWindow) {
-                // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
-                createdWindow.contentWindow.setRawRx = function(channels) {
-                    if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {
-                        mspHelper.setRawRx(channels);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                };
+            const rxFunction = function(channels) {
+                if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {
+                    mspHelper.setRawRx(channels);
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            if (isWeb()) {
+                const createdWindow = open("./receiver_msp/", "receiver_msp", `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`);
+                createdWindow.setRawRx = rxFunction;
 
                 DarkTheme.isDarkThemeEnabled(function(isEnabled) {
                     windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
                 });
 
-            });
+            } else {
+                chrome.app.window.create("/receiver_msp/index.html", {
+                    id: "receiver_msp",
+                    innerBounds: {
+                        minWidth: windowWidth, minHeight: windowHeight,
+                        width: windowWidth, height: windowHeight,
+                        maxWidth: windowWidth, maxHeight: windowHeight,
+                    },
+                    alwaysOnTop: true,
+                }, function(createdWindow) {
+                    // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
+                    createdWindow.contentWindow.setRawRx = rxFunction;
+
+                    DarkTheme.isDarkThemeEnabled(function(isEnabled) {
+                        windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
+                    });
+
+                });
+            }
         });
 
         let showBindButton = false;
