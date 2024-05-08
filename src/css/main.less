@@ -102,10 +102,16 @@ a.disabled {
         }
     }
 }
-input {
-    background-color: var(--surface-300);
-    border: 1px solid var(--surface-400) !important;
+input, select, .select2-selection--single {
+    background-color: var(--surface-300) !important;
+    border: 1px solid var(--surface-500) !important;
     color: var(--text);
+    padding: 0.25rem;
+    border-radius: 0.5rem !important;
+    &.small {
+        font-size: 13px;
+        padding: 0.15rem;
+    }
 }
 input[type="number"] {
     &::-webkit-inner-spin-button {
@@ -118,11 +124,6 @@ input[type="number"] {
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
     }
-}
-select {
-    background-color: var(--surface-300);
-    border: 1px solid var(--surface-400);
-    color: var(--text);
 }
 .clear-both {
     clear: both;
@@ -154,6 +155,7 @@ select {
 #main-wrapper {
     padding: 0;
     height: 100%;
+    background-color: var(--surface-100);
 }
 #background {
     background: rgba(0, 0, 0, 0.5);
@@ -175,10 +177,11 @@ select {
     z-index: 1999;
 }
 .headerbar {
-    height: 115px;
+    height: 7.5rem;
     display: flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 0 1rem;
+    background-color: var(--surface-200);
 }
 #menu_btn {
     display: none;
@@ -650,12 +653,17 @@ select {
     background-image: url(../images/icons/cf_icon_link_active.svg);
 }
 #log {
-    background-color: var(--surface-300);
+    background-color: var(--surface-200);
     color: var(--text);
     line-height: 21px;
     height: 27px;
     overflow-y: hidden;
     transition: all 0.2s;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+    padding: 0.5rem;
+    padding-top: 0.15rem;
     .wrapper {
         padding: 5px 5px 4px 10px;
         position: relative;
@@ -714,7 +722,7 @@ select {
 }
 #tab-content-container {
     display: flex;
-    height: calc(100% - 162px);
+    height: calc(100% - 12rem);
     align-items: stretch;
     transition: all 0.2s;
 }
@@ -723,10 +731,11 @@ select {
 }
 .tab_container {
     transition: all 0.2s;
-    width: 200px;
-    border-right: 4px solid var(--primary-500);
-    background-color: var(--surface-200);
+    width: 13rem;
     overflow: auto;
+    padding: 1rem;
+    padding-right: 0;
+    background-color: var(--surface-100);
 }
 #content {
     transition: all 0.2s;
@@ -734,14 +743,17 @@ select {
     overflow-y: auto;
     background-color: var(--surface-100);
     -webkit-transform: rotateX(0deg);
-    width: calc(100% - 202px);
+    width: 100%;
 }
 .tab_container.logopen {
     overflow-x: hidden;
     overflow-y: auto;
 }
 #tabs {
+    background-color: var(--surface-200);
+    border-radius: 1rem;
     font-size: 13px;
+    padding: 0.5rem;
     ul.mode-connected {
         display: none;
     }
@@ -749,7 +761,6 @@ select {
         display: none;
     }
     li {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.30);
         &:first-child {
             border-top: 0;
         }
@@ -758,22 +769,26 @@ select {
         }
         a {
             font-weight: normal;
-            padding-left: 33px;
-            padding-top: 5px;
-            padding-bottom: 3px;
+            // padding-left: 33px;
+            // padding-top: 5px;
+            // padding-bottom: 3px;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            padding-left: 2rem;
             background-color: transparent;
             color: var(--text);
-            height: 23px;
-            display: block;
-            text-shadow: 0 1px rgba(0, 0, 0, 0.45);
+            border-radius: 999px;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
             transition: none;
-            border-top: solid 1px rgba(255, 255, 255, 0.05);
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+            margin-bottom: 0.25rem;
             &:hover {
                 text-decoration: none;
-                background-color: rgba(128, 128, 128, 0.50);
+                background-color: var(--primary-transparent-1);
                 color: #fff;
             }
         }
@@ -782,13 +797,12 @@ select {
         color: #fff;
         transition: none;
         a {
-            background-color: var(--primary-500);
-            color: #000;
+            background-color: var(--primary-transparent-2);
+            color: var(--primary-500);
             transition: none;
-            text-shadow: 0 1px rgba(255, 255, 255, 0.45);
             &:hover {
                 cursor: default;
-                background-color: var(--primary-500);
+                background-color: var(--primary-transparent-2);
             }
         }
     }
@@ -1063,15 +1077,15 @@ li.active {
     }
 }
 dialog {
-    background-color: var(--surface-100);
+    background-color: var(--surface-200);
     color: var(--text);
-    padding: 1em;
+    padding: 1rem;
     height: fit-content;
     margin: auto auto;
     position: absolute;
     width: 50%;
-    border-radius: 3px;
-    border: 1px solid var(--surface-600);
+    border-radius: 0.75rem;
+    border: 2px solid var(--surface-500);
     .dialog_toolbar {
         .btn {
             a {
@@ -1111,6 +1125,9 @@ dialog {
                 opacity: 1;
             }
         }
+    }
+    &::backdrop {
+        backdrop-filter: blur(0.5rem);
     }
 }
 .dialogYesNo {
@@ -1161,12 +1178,11 @@ dialog {
     max-width: 400px;
 }
 .tab_title {
-    border-bottom: 1px solid var(--primary-500);
-    font-size: 20px;
-    line-height: 24px;
-    height: 30px;
+    border-bottom: 2px solid var(--primary-500);
+    font-size: 2rem;
     font-weight: 300;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.25rem;
 }
 .tab_sponsor {
     min-height: 65px;
@@ -1179,33 +1195,53 @@ dialog {
 .note {
     background-color: var(--primary-transparent-2);
     border: 1px solid var(--primary-500);
-    margin-bottom: 10px;
-    margin-top: 0;
-    border-radius: 3px;
-    font-size: 11px;
-    font-weight: normal;
-    padding: 5px 7px 5px 7px;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+.danger {
+    background-color: var(--error-transparent-2);
+    border: 1px solid var(--error-600);
+    color: #fff;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+
 }
 .tab_wrapper {
     padding: 20px 15px 15px 15px;
 }
 .content_wrapper {
-    padding: 20px 20px 20px 19px;
+    padding: 1.25rem;
+    height: 100%;
     position: relative;
+    >.note {
+        margin-bottom: 1rem;
+    }
 }
 .content_toolbar {
-    width: 100%;
-    height: 30px;
-    background-color: var(--surface-200);
-    box-shadow: rgba(0, 0, 0, 0.10) 0 -3px 8px;
-    padding: 10px 0;
-    overflow: hidden;
-    border-top: 1px solid var(--surface-400);
+    width: fit-content;
+    background-color: var(--surface-300);
+    box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    border-top-left-radius: 1.5rem;
+    &::before {
+        width: 1.5rem;
+        aspect-ratio: 1;
+        content: '';
+        mask: url(../images/corner.svg);
+        background-color: var(--surface-300);
+        position: absolute;
+        left: -1.5rem;
+        bottom: 0;
+    }
     .btn {
         a {
             margin-top: 0;
             margin-bottom: 0;
-            margin-right: 20px;
             background-color: var(--primary-500);
             border-radius: 3px;
             border: 1px solid var(--primary-600);
@@ -1249,17 +1285,12 @@ dialog {
 }
 
 .toolbar_fixed_bottom {
-    .content_wrapper {
-        height: calc(100% - 90px);
-        overflow-y: auto;
-        position: initial;
-    }
     .content_toolbar {
         display: flex;
         flex-wrap: wrap;
-        position: absolute;
+        position: sticky;
         bottom: 0;
-        left: 0;
+        left: 100%;
         z-index: 2000;
         div {
             &:first-child {
@@ -1273,17 +1304,17 @@ dialog {
             }
         }
     }
-    .content_toolbar.xs-compressed {
-        flex-direction: row-reverse;
-        div {
-            &:first-child {
-                margin-left: 0;
-            }
-            &:last-child {
-                margin-left: auto;
-            }
-        }
-    }
+    // .content_toolbar.xs-compressed {
+    //     flex-direction: row-reverse;
+    //     div {
+    //         &:first-child {
+    //             margin-left: 0;
+    //         }
+    //         &:last-child {
+    //             margin-left: auto;
+    //         }
+    //     }
+    // }
 }
 .toolbar_expand_btn {
     display: none;
@@ -1338,10 +1369,7 @@ dialog {
     width: 67%;
 }
 .spacer {
-    padding-left: 7px;
-    padding-right: 7px;
-    width: calc(100% - 14px);
-    float: left;
+    width: 100%;
 }
 .spacer_left {
     padding-left: 15px;
@@ -1354,12 +1382,47 @@ dialog {
     float: left;
 }
 .gui_box {
-    border: 1px solid var(--surface-400);
-    border-radius: 4px;
+    border: 2px solid var(--surface-400);
+    border-radius: 0.75rem;
     background-color: var(--surface-100);
-    float: left;
-    width: calc(100% - 2px);
-    margin-bottom: 10px;
+    height: fit-content;
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    padding-top: 1.5rem;
+    position: relative;
+}
+.gui_box_titlebar {
+    color: var(--surface-100);
+    background-color: var(--primary-500);
+    position: absolute;
+    font-size: 13px;
+    height: 1.75rem;
+    top: calc(1.75rem / -2);
+    left: 1rem;
+    padding: 0 0.75rem;
+    font-weight: 600;
+    display: flex;
+    gap: 0.5rem;
+    white-space: nowrap;
+    align-items: center;
+    overflow-x: hidden;
+    border-radius: 999px;
+    .switchery {
+        margin-top: -3px;
+    }
+    .helpicon {
+        margin-top: 0px;
+    }
+}
+.gui_box_bottombar {
+    background-color: var(--surface-400);
+    color: var(--text);
+    border-radius: 0 0 3px 3px;
+    font-size: 13px;
+    width: 100%;
+    height: 27px;
+    padding-top: 0;
+    font-weight: 600;
 }
 .gui_warning {
     background: var(--error-transparent-1);
@@ -1380,42 +1443,16 @@ dialog {
 .grey {
     background-color: var(--surface-200);
 }
-.gui_box_titlebar {
-    background-color: var(--primary-500);
-    color: var(--surface-100);
-    border-radius: 3px 3px 0 0;
-    font-size: 13px;
-    width: 100%;
-    height: 27px;
-    padding-bottom: 0;
-    float: left;
-    margin-bottom: 7px;
-    font-weight: 600;
-    .switchery {
-        margin-top: -3px;
-    }
-}
-.gui_box_bottombar {
-    background-color: var(--surface-400);
-    color: var(--text);
-    border-radius: 0 0 3px 3px;
-    font-size: 13px;
-    width: 100%;
-    height: 27px;
-    padding-top: 0;
-    float: left;
-    font-weight: 600;
-}
 .spacer_box {
-    padding: 10px;
-    margin-bottom: 3px;
-}
-.spacer_box_title {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 4px;
-    margin-bottom: 0;
-    float: left;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    .select {
+        display: flex;
+        gap: 1rem;
+    }
 }
 .fixed_band {
     position: relative;
@@ -1458,10 +1495,10 @@ dialog {
     margin-top: 0;
     float: left;
     a {
-        padding: 5px 0 5px 0;
+        padding: 0.35rem 0 0.35rem 0;
         text-align: center;
         background-color: var(--primary-500);
-        border-radius: 4px;
+        border-radius: 0.5rem;
         border: 1px solid var(--primary-600);
         color: #000;
         font-weight: 600;
@@ -1550,10 +1587,6 @@ dialog {
 .small {
     width: auto;
     position: relative;
-    margin-bottom: 7px;
-    margin-top: 0;
-    margin-right: 5px;
-    float: left;
     a {
         padding: 3px 4px 4px 4px;
         text-align: center;
@@ -1597,26 +1630,10 @@ dialog {
         }
     }
 }
-.cf_table {
-    margin-bottom: 5px;
-    float: left;
-    margin-top: -5px;
-    font-size: 11px;
+table {
     width: 100%;
-    td {
-        border: 0;
-        padding-top: 2px;
-        padding-bottom: 5px;
-        &:last-child {
-            text-align: right;
-        }
-    }
     tr {
-        &:not(:last-child) {
-            td {
-                border-bottom: dotted 1px var(--surface-400);
-            }
-        }
+        height: 1.75rem;
         &:last-child {
             td {
                 border: none;
@@ -1644,87 +1661,87 @@ dialog {
     margin-left: 3px;
 }
 .tab-setup {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-landing {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-adjustments {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-auxiliary {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-cli {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-configuration {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-failsafe {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-firmware_flasher {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-gps {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-help {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-led-strip {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-logging {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-modes {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-motors {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-pid_tuning {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-ports {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-receiver {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-sensors {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-servos {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-osd {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .tab-power {
-    height: 100%;
+    height: fit-content;
     position: relative;
 }
 .properties {
@@ -1848,14 +1865,13 @@ button.active {
     padding-top: 5px;
 }
 .jBox-container {
-    background: #fff;
-    border: 1px solid var(--primary-500);
-    font-size: 11px;
-    line-height: 13px;
-    color: #525352;
+    background: var(--surface-400);
+    border: 2px solid var(--primary-500);
+    color: var(--text);
+    border-radius: 0.5rem !important;
 }
 .jBox-content {
-    padding: 4px 5px;
+    padding: 0.5rem;
 }
 .jBox-Modal {
     .jBox-content {
@@ -1882,7 +1898,8 @@ button.active {
     &:after {
         width: 10px;
         height: 9px;
-        border: 1px solid var(--primary-500);
+        border: 2px solid var(--primary-500);
+        background-color: var(--primary-500);
     }
 }
 #dialogResetToCustomDefaults-content {
@@ -1905,6 +1922,8 @@ button.active {
     background: var(--surface-300);
     border-color: var(--surface-400);
     box-shadow: none;
+    border-radius: 0.5rem !important;
+    height: 1.5rem;
 }
 .noUi-handle {
     background: var(--surface-400);
@@ -1912,10 +1931,14 @@ button.active {
     box-shadow: none;
     &:before {
         background-color: var(--surface-600);
+        top: 0.55rem;
     }
     &:after {
         background-color: var(--surface-600);
+        top: 0.55rem;
     }
+    height: 2.2rem !important;
+    cursor: pointer;
 }
 .noUi-background {
     background: var(--surface-300);
@@ -1923,6 +1946,10 @@ button.active {
 }
 .noUi-connect {
     box-shadow: none;
+}
+.noUi-pips-horizontal {
+    padding: 1rem 0 !important;
+    height: 4rem;
 }
 .grid-row {
     width: 100%;
@@ -2047,6 +2074,89 @@ button.active {
     }
     &:last-child {
         width: calc(100% - 7px);
+    }
+}
+.grid-box {
+    display: grid;
+    gap: 1rem;
+    // templates for 1-12 columns
+    &.col1 {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    &.col2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    &.col3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    &.col4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    &.col5 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    &.col6 {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    &.col7 {
+        grid-template-columns: repeat(7, 1fr);
+    }
+    &.col8 {
+        grid-template-columns: repeat(8, 1fr);
+    }
+    &.col9 {
+        grid-template-columns: repeat(9, 1fr);
+    }
+    &.col10 {
+        grid-template-columns: repeat(10, 1fr);
+    }
+    &.col11 {
+        grid-template-columns: repeat(11, 1fr);
+    }
+    &.col12 {
+        grid-template-columns: repeat(12, 1fr);
+    }
+    // templates for individual columns
+    .col-span-1 {
+        grid-column: span 1;
+    }
+    .col-span-2 {
+        grid-column: span 2;
+    }
+    .col-span-3 {
+        grid-column: span 3;
+    }
+    .col-span-4 {
+        grid-column: span 4;
+    }
+    .col-span-5 {
+        grid-column: span 5;
+    }
+    .col-span-6 {
+        grid-column: span 6;
+    }
+    .col-span-7 {
+        grid-column: span 7;
+    }
+    .col-span-8 {
+        grid-column: span 8;
+    }
+    .col-span-9 {
+        grid-column: span 9;
+    }
+    .col-span-10 {
+        grid-column: span 10;
+    }
+    .col-span-11 {
+        grid-column: span 11;
+    }
+    .col-span-12 {
+        grid-column: span 12;
+    }
+    [class^="col-span-"] {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 }
 @media all and (max-width: 575px) {
@@ -2209,25 +2319,25 @@ button.active {
         overflow: auto;
     }
     .toolbar_fixed_bottom {
-        .content_toolbar.xs-compressed {
-            padding-left: 60px;
-            box-sizing: border-box;
-            height: 50px;
-            div {
-                margin-bottom: 10px;
-            }
-        }
-        .content_toolbar.xs-compressed.expanded {
-            padding-left: 15px;
-            padding-bottom: 0;
-            height: auto;
-        }
-        .content_toolbar {
-            justify-content: flex-end;
-            div {
-                padding-bottom: 8px;
-            }
-        }
+        // .content_toolbar.xs-compressed {
+        //     padding-left: 60px;
+        //     box-sizing: border-box;
+        //     height: 50px;
+        //     div {
+        //         margin-bottom: 10px;
+        //     }
+        // }
+        // .content_toolbar.xs-compressed.expanded {
+        //     padding-left: 15px;
+        //     padding-bottom: 0;
+        //     height: auto;
+        // }
+        // .content_toolbar {
+        //     justify-content: flex-end;
+        //     div {
+        //         padding-bottom: 8px;
+        //     }
+        // }
     }
     .toolbar_expand_btn {
         display: block;
@@ -2353,25 +2463,16 @@ button.active {
     #tabs {
         li {
             a {
-                font-weight: normal;
-                font-size: 12px;
-                padding-left: 60px;
-                padding-top: 6px;
-                padding-bottom: 2px;
-                content: "";
-                text-shadow: none;
-                transition: none;
-                text-overflow: clip;
-                white-space: nowrap;
-                overflow: hidden;
+                font-size: 0;
+                padding: 0.1rem 0.5rem;
             }
         }
     }
     .tab_container {
-        width: 42px;
+        width: 3.5rem;
     }
     #content {
-        width: calc(100% - 42px);
+        width: calc(100% - 3.5rem);
     }
     .content_wrapper {
         padding: 15px 15px 15px 14px;

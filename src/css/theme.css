@@ -64,8 +64,8 @@ body {
 body.dark-theme {
     --surface-50: hsl(0, 0%, 4%);
     --surface-100: #181818;
-    --surface-200: hsl(0, 0%, 12%);
-    --surface-300: hsl(0, 0%, 14%);
+    --surface-200: hsl(0, 0%, 13%);
+    --surface-300: hsl(0, 0%, 15%);
     --surface-400: hsl(0, 0%, 20%);
     --surface-500: hsl(0, 0%, 24%);
     --surface-600: hsl(0, 0%, 35%);

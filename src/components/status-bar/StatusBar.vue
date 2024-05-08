@@ -92,13 +92,13 @@ export default {
 #status-bar {
   position: fixed;
   display: flex;
+  white-space: nowrap;
   gap: 10px;
   bottom: 0;
   width: calc(100% - 20px);
   height: 20px;
   line-height: 20px;
-  padding: 0 10px 0 10px;
-  border-top: 1px solid var(--surface-400);
+  padding: 0.5rem 1rem;
   background-color: var(--surface-300);
 }
 
