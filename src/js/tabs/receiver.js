@@ -548,7 +548,7 @@ receiver.initialize = function (callback) {
             };
 
             if (isWeb()) {
-                const createdWindow = open("./receiver_msp/", "receiver_msp", `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`);
+                const createdWindow = open("/receiver_msp/receiver_msp.html", "receiver_msp", `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`);
                 createdWindow.setRawRx = rxFunction;
 
                 DarkTheme.isDarkThemeEnabled(function(isEnabled) {
@@ -556,7 +556,7 @@ receiver.initialize = function (callback) {
                 });
 
             } else {
-                chrome.app.window.create("/receiver_msp/index.html", {
+                chrome.app.window.create("/receiver_msp/receiver_msp.html", {
                     id: "receiver_msp",
                     innerBounds: {
                         minWidth: windowWidth, minHeight: windowHeight,

@@ -1,7 +1,7 @@
-import '../jqueryPlugins';
-import windowWatcherUtil from "../utils/window_watchers";
+import '../jqueryPlugins.js';
+import windowWatcherUtil from "../utils/window_watchers.js";
 import DarkTheme from '../DarkTheme.js';
-import { isWeb } from "../utils/isWeb";
+import { isWeb } from "../utils/isWeb.js";
 import $ from 'jquery';
 
 // This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
