@@ -173,6 +173,7 @@ export default class PresetsDetailedDialog {
             onCheckAll: () => this._optionsSelectionChanged(),
             onUncheckAll: () => this._optionsSelectionChanged(),
             onOpen: () => this._optionsOpened(),
+            onBeforeClick: (view) => this._ensureMutuallyExclusiveOptions(view),
             hideOptgroupCheckboxes: true,
             singleRadio: true,
             selectAll: false,
@@ -192,11 +193,36 @@ export default class PresetsDetailedDialog {
         this._optionsShowedAtLeastOnce = true;
     }
 
+    _ensureMutuallyExclusiveOptions(view) {
+        // In this form: option_0_1 where 0_1 is the group and the index within that group.
+        const selectedOptionKey = view._key;
+        const firstUnderscoreIndex = selectedOptionKey.indexOf('_');
+        const lastUnderscoreIndex = selectedOptionKey.lastIndexOf('_');
+        const groupIndex = selectedOptionKey.slice(firstUnderscoreIndex + 1, lastUnderscoreIndex);
+        const optionIndex = selectedOptionKey.slice(lastUnderscoreIndex + 1);
+
+        const group = this._preset.options[groupIndex];
+        if(group.isExclusive) {
+            // clear all options within group
+            const valuesWithinGroup = this._domOptionsSelect.find(`optgroup[label="${group.name}"]`)
+                .children()
+                .map(function() {
+                    return $(this).attr('value');
+                })
+                .get();
+
+            const existingCheckedValues = this._domOptionsSelect.multipleSelect('getSelects');
+
+            const optionsBesidesTheGroupsOptions = existingCheckedValues.filter((v) => !valuesWithinGroup.includes(v));
+            this._domOptionsSelect.multipleSelect('setSelects', optionsBesidesTheGroupsOptions);
+        }
+    }
+
     _addOptionGroup(parentElement, optionGroup) {
         const optionGroupElement = $(`<optgroup label="${optionGroup.name}"></optgroup>`);
 
         optionGroup.childs.forEach(option => {
-            this._addOption(optionGroupElement, option, true);
+            this._addOption(optionGroupElement, option, true, optionGroup.isExclusive);
         });
 
         parentElement.append(optionGroupElement);
