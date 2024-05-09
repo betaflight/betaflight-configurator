@@ -92,7 +92,7 @@ export default defineConfig({
             },
             includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
             manifest: {
-                name: pkg.productName,
+                name: pkg.displayName,
                 short_name: pkg.productName,
                 description: pkg.description,
                 theme_color: '#ffffff',
