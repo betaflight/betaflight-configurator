@@ -1,4 +1,5 @@
 import { webSerialDevices } from "./serial_devices";
+import { serial as serialPolyfill } from 'web-serial-polyfill';
 
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
@@ -35,6 +36,8 @@ class WebSerial extends EventTarget {
         this.writer = null;
         this.reading = false;
 
+        this.serial = "serial" in navigator ? navigator.serial : serialPolyfill;
+
         this.connect = this.connect.bind(this);
     }
 
@@ -49,7 +52,7 @@ class WebSerial extends EventTarget {
 
     async connect(options) {
         this.openRequested = true;
-        this.port = await navigator.serial.requestPort({
+        this.port = await this.serial.requestPort({
             filters: webSerialDevices,
         });
 
