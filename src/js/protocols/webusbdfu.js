@@ -727,7 +727,7 @@ class WEBUSBDFU_protocol {
                                 self.clearStatus(function () {
                                     self.upload_procedure(2);
                                 });
-                                /* // this snippet is to protect the flash memory (only for the brave)
+                                // protect the flash memory
                                 ob_data[1] = 0x0;
                                 const writeOB = function() {
                                     self.controlTransfer('out', self.request.DNLOAD, 2, 0, 0, ob_data, function () {
@@ -752,12 +752,12 @@ class WEBUSBDFU_protocol {
                                             }
                                         });
                                     });
-                                }
+                                };
                                 self.clearStatus(function () {
                                     self.loadAddress(self.chipInfo.option_bytes.start_address, function () {
                                         self.clearStatus(writeOB);
                                     });
-                                }); // */
+                                });
                             } else {
                                 console.log('Option bytes could not be read. Quite possibly read protected.');
                                 self.clearStatus(unprotect);
