@@ -6,13 +6,15 @@ import BuildApi from '../BuildApi';
 import { tracking } from '../Analytics';
 import { reinitializeConnection } from "../serial_backend";
 import CONFIGURATOR from "../data_storage";
-import serial from "../serial";
 import CliAutoComplete from "../CliAutoComplete";
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import jBox from "jbox";
 import { checkChromeRuntimeError } from "../utils/common";
 import $ from 'jquery';
+import { serialShim } from "../serial_shim";
+
+const serial =  serialShim();
 
 const cli = {
     lineDelayMs: 15,
@@ -446,7 +448,7 @@ cli.read = function (readInfo) {
         Windows understands (both) CRLF
         Chrome OS currently unknown
     */
-    const data = new Uint8Array(readInfo.data);
+    const data = new Uint8Array(readInfo.data ?? readInfo);
     let validateText = "";
     let sequenceCharsToSkip = 0;
 
