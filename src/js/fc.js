@@ -226,9 +226,9 @@ const FC = {
     resetState () {
         // Using `Object.assign` instead of reassigning to
         // trigger the updates on the Vue side
-        Object.assign(this.CONFIG, INITIAL_CONFIG);
-        Object.assign(this.ANALOG, INITIAL_ANALOG);
-        Object.assign(this.BATTERY_CONFIG, INITIAL_BATTERY_CONFIG);
+        this.CONFIG = JSON.parse(JSON.stringify(INITIAL_CONFIG));
+        this.ANALOG = JSON.parse(JSON.stringify(INITIAL_ANALOG));
+        this.BATTERY_CONFIG = JSON.parse(JSON.stringify(INITIAL_BATTERY_CONFIG));
 
         this.BF_CONFIG = {
             currentscale:               0,
@@ -630,7 +630,7 @@ const FC = {
             rcSmoothingAutoFactor:        0,
             usbCdcHidType:                0,
             rcSmoothingMode:              0,
-            elrsUid:                      0,
+            elrsUid:                      [0, 0, 0, 0, 0, 0],
         };
 
         this.FAILSAFE_CONFIG = {

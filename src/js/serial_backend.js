@@ -55,18 +55,9 @@ export function initializeSerialBackend() {
         }
         const selected_port = $('#port').val();
 
-        if (selected_port === 'manual') {
-            $('#port-override-option').show();
-        }
-        else {
-            $('#port-override-option').hide();
-        }
-        if (selected_port === 'virtual') {
-            $('#firmware-virtual-option').show();
-        }
-        else {
-            $('#firmware-virtual-option').hide();
-        }
+        $('#port-override-option').toggle(selected_port === 'manual');
+
+        $('#firmware-virtual-option').toggle(selected_port === 'virtual');
 
         $('#auto-connect-and-baud').toggle(selected_port !== 'DFU');
     };
@@ -97,7 +88,7 @@ export function initializeSerialBackend() {
             portName = String($('div#port-picker #port').val());
         }
 
-        if (!GUI.connect_lock) {
+        if (!GUI.connect_lock && selectedPort !== 'none') {
             // GUI control overrides the user control
 
             GUI.configuration_loaded = false;
@@ -107,58 +98,55 @@ export function initializeSerialBackend() {
 
             if (selectedPort === 'DFU') {
                 $('select#baud').hide();
-            } else if (portName !== '0') {
-                if (!isConnected) {
-                    console.log(`Connecting to: ${portName}`);
-                    GUI.connecting_to = portName;
+                return;
+            }
 
-                    // lock port select & baud while we are connecting / connected
-                    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
-                    $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
+            if (!isConnected) {
+                console.log(`Connecting to: ${portName}`);
+                GUI.connecting_to = portName;
 
-                    const baudRate = parseInt($('#baud').val());
-                    if (selectedPort === 'virtual') {
-                        CONFIGURATOR.virtualMode = true;
-                        CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown').val();
+                // lock port select & baud while we are connecting / connected
+                $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
+                $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-                        // Hack to get virtual working on the web
-                        serial = serialShim();
-                        serial.connect('virtual', {}, onOpenVirtual);
-                    } else if (isWeb()) {
-                        CONFIGURATOR.virtualMode = false;
-                        serial = serialShim();
-                        // Explicitly disconnect the event listeners before attaching the new ones.
-                        serial.removeEventListener('connect', connectHandler);
-                        serial.addEventListener('connect', connectHandler);
+                const baudRate = parseInt($('#baud').val());
+                if (selectedPort === 'virtual') {
+                    CONFIGURATOR.virtualMode = true;
+                    CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown').val();
 
-                        serial.removeEventListener('disconnect', disconnectHandler);
-                        serial.addEventListener('disconnect', disconnectHandler);
+                    // Hack to get virtual working on the web
+                    serial = serialShim();
+                    serial.connect('virtual', {}, onOpenVirtual);
+                } else if (isWeb()) {
+                    CONFIGURATOR.virtualMode = false;
+                    serial = serialShim();
+                    // Explicitly disconnect the event listeners before attaching the new ones.
+                    serial.removeEventListener('connect', connectHandler);
+                    serial.addEventListener('connect', connectHandler);
 
-                        serial.connect({ baudRate });
-                    } else {
-                        serial.connect(
-                            portName,
-                            { bitrate: selected_baud },
-                            onOpen,
-                        );
-                        toggleStatus();
-                    }
+                    serial.removeEventListener('disconnect', disconnectHandler);
+                    serial.addEventListener('disconnect', disconnectHandler);
 
+                    serial.connect({ baudRate });
                 } else {
-                    if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
-                        $('div#flashbutton a.flash_state').removeClass('active');
-                        $('div#flashbutton a.flash').removeClass('active');
-                    }
-                    GUI.timeout_kill_all();
-                    GUI.interval_kill_all();
-                    GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
-
-                    function onFinishCallback() {
-                        finishClose(toggleStatus);
-                    }
-
-                    mspHelper?.setArmingEnabled(true, false, onFinishCallback);
+                    serial.connect(portName, { bitrate: selected_baud }, onOpen);
+                    toggleStatus();
                 }
+
+            } else {
+                if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+                    $('div#flashbutton a.flash_state').removeClass('active');
+                    $('div#flashbutton a.flash').removeClass('active');
+                }
+                GUI.timeout_kill_all();
+                GUI.interval_kill_all();
+                GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
+
+                function onFinishCallback() {
+                    finishClose(toggleStatus);
+                }
+
+                mspHelper?.setArmingEnabled(true, false, onFinishCallback);
             }
         }
     });
@@ -817,6 +805,9 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(callback) {
+    const isVirtual = CONFIGURATOR.virtualMode && GUI.connected_to == 'virtual' && CONFIGURATOR.connectionValid && serial.connectionId === 'virtual';
+
+    gui_log(i18n.getMessage('deviceRebooting'));
 
     // Close connection gracefully if it still exists.
     const previousTimeStamp = connectionTimestamp;
@@ -829,8 +820,19 @@ export function reinitializeConnection(callback) {
         }
     }
 
-    gui_log(i18n.getMessage('deviceRebooting'));
+    // In virtual mode reconnect when autoconnect is enabled
+    if (isVirtual) {
+        return setTimeout(() => {
+            if (GUI.auto_connect) {
+                $('a.connect').trigger('click');
+            }
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }, 500);
+    }
 
+    // Wait for serial or tcp connection to be available
     let attempts = 0;
     const reconnect = setInterval(waitforSerial, 100);
 

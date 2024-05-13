@@ -55,6 +55,9 @@
     "portsSelectManual": {
         "message": "Manual Selection"
     },
+    "portsSelectNone": {
+        "message": "No connection available"
+    },
     "portsSelectVirtual": {
         "message": "Virtual Mode (Experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
@@ -112,6 +115,10 @@
     "useMdnsBrowser": {
         "message": "Use mDNS Browser Device discovery on network (experimental)",
         "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
+    "showManualMode": {
+        "message": "Enable manual connection mode",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Enable virtual connection mode",
@@ -1118,6 +1125,18 @@
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Local Build - no Cloud information"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "Build type"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Local Build"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Cloud Build"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "No build information available"
     },
     "initialSetupNotOnline": {
         "message": "Server unavailable"
@@ -3787,6 +3806,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "GPS Bar",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Battery Bar",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitude",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Ring",
         "description": "One of the modes of the Led Strip"
@@ -3880,6 +3911,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: locked",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Default",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Bar",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "LED Strip Wiring",

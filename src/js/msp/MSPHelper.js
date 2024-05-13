@@ -20,7 +20,7 @@ import { reinitializeConnection } from "../serial_backend";
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
-const ledBaseFunctionLetters = ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
+const ledBaseFunctionLetters = ['c', 'f', 'a', 'l', 's', 'g', 'r', 'p', 'e', 'u']; // in LSB bit
 let ledOverlayLetters        = ['t', 'y', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
 
 function MspHelper() {

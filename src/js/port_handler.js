@@ -5,7 +5,6 @@ import { generateVirtualApiVersions, getTextWidth } from './utils/common';
 import { get as getConfig } from "./ConfigStorage";
 import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
-import $ from 'jquery';
 import { isWeb } from "./utils/isWeb";
 
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
@@ -18,6 +17,7 @@ export const usbDevices = { filters: [
 ] };
 
 const PortHandler = new function () {
+    this.currentPorts = [];
     this.initialPorts = false;
     this.port_detected_callbacks = [];
     this.port_removed_callbacks = [];
@@ -26,6 +26,7 @@ const PortHandler = new function () {
     this.showAllSerialDevices = false;
     this.useMdnsBrowser = false;
     this.showVirtualMode = false;
+    this.showManualMode = false;
 };
 
 PortHandler.initialize = function () {
@@ -56,6 +57,7 @@ PortHandler.reinitialize = function () {
     }
 
     this.showVirtualMode = getConfig('showVirtualMode').showVirtualMode;
+    this.showManualMode = getConfig('showManualMode').showManualMode;
     this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
     this.useMdnsBrowser = getConfig('useMdnsBrowser').useMdnsBrowser;
 
@@ -86,10 +88,10 @@ PortHandler.check_serial_devices = function () {
     const self = this;
 
     serial.getDevices(function(cp) {
-        let currentPorts = [];
+        self.currentPorts = [];
 
         if (self.useMdnsBrowser) {
-            currentPorts = [
+            self.currentPorts = [
                 ...cp,
                 ...(MdnsDiscovery.mdnsBrowser.services?.filter(s => s.txt?.vendor === 'elrs' && s.txt?.type === 'rx' && s.ready === true)
                     .map(s => s.addresses.map(a => ({
@@ -101,36 +103,35 @@ PortHandler.check_serial_devices = function () {
                     }))).flat() ?? []),
             ].filter(Boolean);
         } else {
-            currentPorts = cp;
+            self.currentPorts = cp;
         }
 
         // auto-select port (only during initialization)
         if (!self.initialPorts) {
-            currentPorts = self.updatePortSelect(currentPorts);
-            self.selectPort(currentPorts);
-            self.initialPorts = currentPorts;
+            self.updatePortSelect(self.currentPorts);
+            self.selectActivePort();
+            self.initialPorts = self.currentPorts;
             GUI.updateManualPortVisibility();
         } else {
-            self.removePort(currentPorts);
-            self.detectPort(currentPorts);
+            self.removePort();
+            self.detectPort();
         }
     });
 };
 
 PortHandler.check_usb_devices = function (callback) {
     const self = this;
+
     chrome.usb.getDevices(usbDevices, function (result) {
 
         const dfuElement = self.portPickerElement.children("[value='DFU']");
         if (result.length) {
+            // Found device in DFU mode, add it to the list
             if (!dfuElement.length) {
                 self.portPickerElement.empty();
-                let usbText;
-                if (result[0].productName) {
-                    usbText = (`DFU - ${result[0].productName}`);
-                } else {
-                    usbText = "DFU";
-                }
+
+                const productName = result[0].productName;
+                const usbText = productName ? `DFU - ${productName}` : 'DFU';
 
                 self.portPickerElement.append($('<option/>', {
                     value: "DFU",
@@ -158,14 +159,15 @@ PortHandler.check_usb_devices = function (callback) {
             dfuElement.remove();
             self.setPortsInputWidth();
             self.dfu_available = false;
-        }
-        if ($('option:selected', self.portPickerElement).val() !== 'DFU') {
-            if (!(GUI.connected_to || GUI.connect_lock)) {
-                FC.resetState();
-            }
 
-            if (self.dfu_available) {
-                self.portPickerElement.trigger('change');
+            if ($('option:selected', self.portPickerElement).val() !== 'DFU') {
+                if (!(GUI.connected_to || GUI.connect_lock)) {
+                    FC.resetState();
+                }
+
+                if (self.dfu_available) {
+                    self.portPickerElement.trigger('change');
+                }
             }
         }
 
@@ -175,21 +177,17 @@ PortHandler.check_usb_devices = function (callback) {
     });
 };
 
-PortHandler.removePort = function(currentPorts) {
+PortHandler.removePort = function() {
     const self = this;
-    const removePorts = self.array_difference(self.initialPorts, currentPorts);
+    const removePorts = self.array_difference(self.initialPorts, self.currentPorts);
 
     if (removePorts.length) {
         console.log(`PortHandler - Removed: ${JSON.stringify(removePorts)}`);
         self.port_available = false;
         // disconnect "UI" - routine can't fire during atmega32u4 reboot procedure !!!
-        if (GUI.connected_to) {
-            for (let i = 0; i < removePorts.length; i++) {
-                if (removePorts[i].path === GUI.connected_to) {
-                    $('div.connect_controls a.connect').click();
-                    $('div.connect_controls a.connect.active').click();
-                }
-            }
+        if (removePorts.some(port => port.path === GUI.connected_to)) {
+            $('div.connect_controls a.connect').click();
+            $('div.connect_controls a.connect.active').click();
         }
         // trigger callbacks (only after initialization)
         for (let i = (self.port_removed_callbacks.length - 1); i >= 0; i--) {
@@ -207,26 +205,26 @@ PortHandler.removePort = function(currentPorts) {
                 self.port_removed_callbacks.splice(index, 1);
             }
         }
-        for (let i = 0; i < removePorts.length; i++) {
-            self.initialPorts.splice(self.initialPorts.indexOf(removePorts[i]), 1);
+        for (const port of removePorts) {
+            self.initialPorts.splice(self.initialPorts.indexOf(port, 1));
         }
         self.updatePortSelect(self.initialPorts);
         self.portPickerElement.trigger('change');
     }
 };
 
-PortHandler.detectPort = function(currentPorts) {
+PortHandler.detectPort = function() {
     const self = this;
-    const newPorts = self.array_difference(currentPorts, self.initialPorts);
+    const newPorts = self.array_difference(self.currentPorts, self.initialPorts);
 
     if (newPorts.length) {
-        currentPorts = self.updatePortSelect(currentPorts);
+        self.updatePortSelect(self.currentPorts);
         console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
 
         if (newPorts.length === 1) {
             self.portPickerElement.val(newPorts[0].path);
         } else if (newPorts.length > 1) {
-            self.selectPort(currentPorts);
+            self.selectActivePort();
         }
 
         self.port_available = true;
@@ -238,11 +236,9 @@ PortHandler.detectPort = function(currentPorts) {
         self.portPickerElement.trigger('change');
 
         // auto-connect if enabled
-        if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {
+        if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to && GUI.active_tab !== 'firmware_flasher') {
             // start connect procedure. We need firmware flasher protection over here
-            if (GUI.active_tab !== 'firmware_flasher') {
-                $('div.connect_controls a.connect').click();
-            }
+            $('div.connect_controls a.connect').click();
         }
         // trigger callbacks
         for (let i = (self.port_detected_callbacks.length - 1); i >= 0; i--) {
@@ -260,7 +256,7 @@ PortHandler.detectPort = function(currentPorts) {
                 self.port_detected_callbacks.splice(index, 1);
             }
         }
-        self.initialPorts = currentPorts;
+        self.initialPorts = self.currentPorts;
     }
 };
 
@@ -273,20 +269,24 @@ PortHandler.sortPorts = function(ports) {
     });
 };
 
+PortHandler.addNoPortSelection = function() {
+    if (!this.showVirtualMode && !this.showManualMode) {
+        this.portPickerElement.append($("<option/>", {
+            value: 'none',
+            text: i18n.getMessage('portsSelectNone'),
+        }));
+    }
+};
+
 PortHandler.updatePortSelect = function (ports) {
     ports = this.sortPorts(ports);
     this.portPickerElement.empty();
 
-    for (let i = 0; i < ports.length; i++) {
-        let portText;
-        if (ports[i].displayName) {
-            portText = (`${ports[i].path} - ${ports[i].displayName}`);
-        } else {
-            portText = ports[i].path;
-        }
+    for (const port of ports) {
+        const portText = port.displayName ? `${port.path} - ${port.displayName}` : port.path;
 
         this.portPickerElement.append($("<option/>", {
-            value: ports[i].path,
+            value: port.path,
             text: portText,
             /**
              * @deprecated please avoid using `isDFU` and friends for new code.
@@ -306,20 +306,27 @@ PortHandler.updatePortSelect = function (ports) {
         }));
     }
 
-    this.portPickerElement.append($("<option/>", {
-        value: 'manual',
-        text: i18n.getMessage('portsSelectManual'),
-        /**
-         * @deprecated please avoid using `isDFU` and friends for new code.
-         */
-        data: {isManual: true},
-    }));
+    if (this.showManualMode) {
+        this.portPickerElement.append($("<option/>", {
+            value: 'manual',
+            text: i18n.getMessage('portsSelectManual'),
+            /**
+             * @deprecated please avoid using `isDFU` and friends for new code.
+             */
+            data: {isManual: true},
+        }));
+    }
+
+    if (!ports.length) {
+        this.addNoPortSelection();
+    }
 
     this.setPortsInputWidth();
-    return ports;
+    this.currentPorts = ports;
 };
 
-PortHandler.selectPort = function(ports) {
+PortHandler.selectActivePort = function() {
+    const ports = this.currentPorts;
     const OS = GUI.operating_system;
     for (let i = 0; i < ports.length; i++) {
         const portName = ports[i].displayName;
@@ -327,7 +334,8 @@ PortHandler.selectPort = function(ports) {
             const pathSelect = ports[i].path;
             const isWindows = (OS === 'Windows');
             const isTty = pathSelect.includes('tty');
-            const deviceRecognized = portName.includes('STM') || portName.includes('CP210') || portName.startsWith('SPR');
+            const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM32'];
+            const deviceRecognized = deviceFilter.some(device => portName.includes(device));
             const legacyDeviceRecognized = portName.includes('usb');
             if (isWindows && deviceRecognized || isTty && (deviceRecognized || legacyDeviceRecognized)) {
                 this.portPickerElement.val(pathSelect);
