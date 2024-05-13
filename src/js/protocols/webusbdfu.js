@@ -202,30 +202,28 @@ class WEBUSBDFU_protocol {
         });
     }
     getInterfaceDescriptors(interfaceNum, callback) {
-        const self = this;
-
         let interfaceID = 0;
         const descriptorStringArray = [];
-        const interfaceCount = self.usbDevice.configuration.interfaces.length;
+        const interfaceCount = this.usbDevice.configuration.interfaces.length;
         let descriptorCount = 0;
 
         if (interfaceCount === 0) {
             callback(0, 1); // no interfaces
         } else if (interfaceCount === 1) {
-            descriptorCount = self.usbDevice.configuration.interfaces[0].alternates.length;
+            descriptorCount = this.usbDevice.configuration.interfaces[0].alternates.length;
         } else if (interfaceCount > 1) {
             descriptorCount = interfaceCount;
         }
 
-        const getDescriptorString = function () {
+        const getDescriptorString = () => {
             if (interfaceID < descriptorCount) {
-                self.getInterfaceDescriptor(interfaceID, function (descriptor, resultCode) {
+                this.getInterfaceDescriptor(interfaceID, (descriptor, resultCode) => {
                     if (resultCode) {
                         callback([], resultCode);
                         return;
                     }
                     interfaceID++;
-                    self.getString(descriptor.iInterface, function (descriptorString, resultCode) {
+                    this.getString(descriptor.iInterface, (descriptorString, resultCode) => {
                         if (resultCode) {
                             callback([], resultCode);
                             return;
@@ -478,13 +476,11 @@ class WEBUSBDFU_protocol {
     }
     // routine calling DFU_CLRSTATUS until device is in dfuIDLE state
     clearStatus(callback) {
-        const self = this;
-
-        function check_status() {
-            self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
+        const check_status = () => {
+            this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
                 let delay = 0;
 
-                if (data[4] === self.state.dfuIDLE) {
+                if (data[4] === this.state.dfuIDLE) {
                     callback(data);
                 } else {
                     if (data.length) {
@@ -493,30 +489,26 @@ class WEBUSBDFU_protocol {
                     setTimeout(clear_status, delay);
                 }
             });
-        }
+        };
 
-        function clear_status() {
-            self.controlTransfer('out', self.request.CLRSTATUS, 0, 0, 0, 0, check_status);
-        }
+        const clear_status = () => this.controlTransfer('out', this.request.CLRSTATUS, 0, 0, 0, 0, check_status);
 
         check_status();
     }
     loadAddress(address, callback, abort) {
-        const self = this;
-
-        self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x21, address & 0xff, (address >> 8) & 0xff, (address >> 16) & 0xff, (address >> 24) & 0xff], function () {
-            self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                if (data[4] === self.state.dfuDNBUSY) {
+        this.controlTransfer('out', this.request.DNLOAD, 0, 0, 0, [0x21, address & 0xff, (address >> 8) & 0xff, (address >> 16) & 0xff, (address >> 24) & 0xff], () => {
+            this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                if (data[4] === this.state.dfuDNBUSY) {
                     const delay = data[1] | (data[2] << 8) | (data[3] << 16);
 
-                    setTimeout(function () {
-                        self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                            if (data[4] === self.state.dfuDNLOAD_IDLE) {
+                    setTimeout(() => {
+                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                            if (data[4] === this.state.dfuDNLOAD_IDLE) {
                                 callback(data);
                             } else {
                                 console.log('Failed to execute address load');
                                 if (typeof abort === "undefined" || abort) {
-                                    self.cleanup();
+                                    this.cleanup();
                                 } else {
                                     callback(data);
                                 }
@@ -525,7 +517,7 @@ class WEBUSBDFU_protocol {
                     }, delay);
                 } else {
                     console.log('Failed to request address load');
-                    self.cleanup();
+                    this.cleanup();
                 }
             });
         });
@@ -1078,16 +1070,14 @@ class WEBUSBDFU_protocol {
     }
     leave() {
         // leave DFU
-        const self = this;
+        const address = this.hex ? this.hex.data[0].address : 0x08000000;
 
-        const address = self.hex ? self.hex.data[0].address : 0x08000000;
-
-        self.clearStatus(function () {
-            self.loadAddress(address, function () {
+        this.clearStatus(() => {
+            this.loadAddress(address, () => {
                 // 'downloading' 0 bytes to the program start address followed by a GETSTATUS is used to trigger DFU exit on STM32
-                self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, 0, function () {
-                    self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                        self.cleanup();
+                this.controlTransfer('out', this.request.DNLOAD, 0, 0, 0, 0, () => {
+                    this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                        this.cleanup();
                     });
                 });
             });
