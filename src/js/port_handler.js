@@ -3,10 +3,12 @@ import FC from "./fc";
 import { i18n } from "./localization";
 import { generateVirtualApiVersions, getTextWidth } from './utils/common';
 import { get as getConfig } from "./ConfigStorage";
-import serial from "./serial";
 import MdnsDiscovery from "./mdns_discovery";
 import { isWeb } from "./utils/isWeb";
 import { usbDevices } from "./usb_devices";
+import { serialShim } from "./serial_shim.js";
+
+const serial = serialShim();
 
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
@@ -26,13 +28,7 @@ const PortHandler = new function () {
 PortHandler.initialize = function () {
     const self = this;
 
-    // currently web build doesn't need port handler,
-    // so just bail out.
-    if (isWeb()) {
-        return 'not implemented';
-    }
-
-    const portPickerElementSelector = "div#port-picker #port";
+    const portPickerElementSelector = "div#port-picker #port, div.web-port-picker #port";
     self.portPickerElement = $(portPickerElementSelector);
     self.selectList = document.querySelector(portPickerElementSelector);
     self.initialWidth = self.selectList.offsetWidth + 12;
@@ -73,15 +69,29 @@ PortHandler.check = function () {
         self.check_serial_devices();
     }
 
-    self.usbCheckLoop = setTimeout(() => {
-        self.check();
-    }, TIMEOUT_CHECK);
+    if (isWeb()) {
+        serial.addEventListener("addedDevice", (e) => {
+            this.check_serial_devices();
+        });
+
+        serial.addEventListener("removedDevice", (e) => {
+            this.check_serial_devices();
+        });
+
+        this.check_serial_devices();
+
+    } else {
+        self.usbCheckLoop = setTimeout(() => {
+            self.check();
+        }, TIMEOUT_CHECK);
+    }
+
 };
 
 PortHandler.check_serial_devices = function () {
     const self = this;
 
-    serial.getDevices(function(cp) {
+    const updatePorts = function(cp) {
         self.currentPorts = [];
 
         if (self.useMdnsBrowser) {
@@ -110,10 +120,21 @@ PortHandler.check_serial_devices = function () {
             self.removePort();
             self.detectPort();
         }
-    });
+    };
+
+    if (isWeb()) {
+        serial.getDevices().then(updatePorts);
+    } else {
+        serial.getDevices(updatePorts);
+    }
 };
 
 PortHandler.check_usb_devices = function (callback) {
+
+    if (isWeb()) {
+        return;
+    }
+
     const self = this;
 
     chrome.usb.getDevices(usbDevices, function (result) {
@@ -315,9 +336,34 @@ PortHandler.updatePortSelect = function (ports) {
         this.addNoPortSelection();
     }
 
+    if (isWeb()) {
+        const askpermission = 'askpermission';
+        this.portPickerElement.append($("<option/>", {
+            value: askpermission,
+            text: i18n.getMessage('portsSelectPermission'),
+            /**
+             * @deprecated please avoid using `isDFU` and friends for new code.
+             */
+            //data: {isShowPermission: true},
+        }));
+
+        this.portPickerElement.on("change", e => {
+            if (e.target.value === askpermission) {
+                this.askPermissionPort();
+            }
+            e.target.value = e.target.options[0].value;
+        });
+    }
+
     this.setPortsInputWidth();
     this.currentPorts = ports;
 };
+
+PortHandler.askPermissionPort = function() {
+    serial.requestPermissionDevice().then(() => {
+        this.check_serial_devices();
+    });
+}
 
 PortHandler.selectActivePort = function() {
     const ports = this.currentPorts;
@@ -360,7 +406,7 @@ PortHandler.setPortsInputWidth = function() {
 
     width = (width > this.initialWidth) ? width : this.initialWidth;
 
-    const portsInput = document.querySelector("div#port-picker #portsinput");
+    const portsInput = document.querySelector("div#port-picker #portsinput, div.web-port-picker #portsinput");
     portsInput.style.width = `${width}px`;
 };
 

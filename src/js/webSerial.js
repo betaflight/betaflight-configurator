@@ -30,12 +30,22 @@ class WebSerial extends EventTarget {
 
         this.logHead = "SERIAL: ";
 
+        this.port_counter = 0;
+        this.ports = null;
         this.port = null;
         this.reader = null;
         this.writer = null;
         this.reading = false;
 
         this.connect = this.connect.bind(this);
+
+        navigator.serial.addEventListener("connect", device => {
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: device.target }));
+        });
+
+        navigator.serial.addEventListener("disconnect", device => {
+            this.dispatchEvent(new CustomEvent("removedDevice", { detail: device.target }));
+        });
     }
 
     handleReceiveBytes(info) {
@@ -47,13 +57,41 @@ class WebSerial extends EventTarget {
         this.removeEventListener('disconnect', this.handleDisconnect);
     }
 
-    async connect(options) {
-        this.openRequested = true;
-        this.port = await navigator.serial.requestPort({
+    async requestPermissionDevice() {
+        const permissionPort = await navigator.serial.requestPort({
             filters: webSerialDevices,
         });
 
+        return permissionPort;
+    }; 
+
+    async getDevices() {
+
+        const ports = await navigator.serial.getPorts({
+            filters: webSerialDevices,
+        });
+
+        this.port_counter = 0;
+        this.ports = ports.map(function (port, index) {
+            return {
+                path: `${this.port_counter++}`,
+                displayName: `Betaflight Flight Controller`,
+                vendorId: port.vendorId,
+                productId: port.productId,
+                port: port,
+            };
+        }, this);
+
+        return this.ports;
+    }
+
+    async connect(path, options) {
+        this.openRequested = true;
+
+        this.port = this.ports.find(device => device.path === path).port;
+
         await this.port.open(options);
+
         const connectionInfo = this.port.getInfo();
         this.connectionInfo = connectionInfo;
         this.writer = this.port.writable.getWriter();

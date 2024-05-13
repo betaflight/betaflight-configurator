@@ -73,7 +73,7 @@ export function initializeSerialBackend() {
         $('#port-override').val(data.portOverride);
     }
 
-    $('div#port-picker #port').change(function (target) {
+    $('div#port-picker #port, div.web-port-picker #port').change(function (target) {
         GUI.updateManualPortVisibility();
     });
 
@@ -85,7 +85,7 @@ export function initializeSerialBackend() {
         if (selectedPort === 'manual') {
             portName = $('#port-override').val();
         } else {
-            portName = String($('div#port-picker #port').val());
+            portName = String($('div.web-port-picker #port').val());
         }
 
         if (!GUI.connect_lock && selectedPort !== 'none') {
@@ -93,7 +93,7 @@ export function initializeSerialBackend() {
 
             GUI.configuration_loaded = false;
 
-            const selected_baud = parseInt($('div#port-picker #baud').val());
+            const selected_baud = parseInt($('div#port-picker #baud, div.web-port-picker #baud').val());
             const selectedPort = $('#port').val();
 
             if (selectedPort === 'DFU') {
@@ -106,7 +106,7 @@ export function initializeSerialBackend() {
                 GUI.connecting_to = portName;
 
                 // lock port select & baud while we are connecting / connected
-                $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
+                $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay, div.web-port-picker #port, div.web-port-picker #baud, div.web-port-picker #delay').prop('disabled', true);
                 $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
                 const baudRate = parseInt($('#baud').val());
@@ -127,7 +127,7 @@ export function initializeSerialBackend() {
                     serial.removeEventListener('disconnect', disconnectHandler);
                     serial.addEventListener('disconnect', disconnectHandler);
 
-                    serial.connect({ baudRate });
+                    serial.connect(portName, { baudRate });
                 } else {
                     serial.connect(portName, { bitrate: selected_baud }, onOpen);
                     toggleStatus();
@@ -230,8 +230,8 @@ function finishClose(finishedCallback) {
     $('#dialogReportProblems-closebtn').click();
 
     // unlock port select & baud
-    $('div#port-picker #port').prop('disabled', false);
-    if (!GUI.auto_connect) $('div#port-picker #baud').prop('disabled', false);
+    $('div#port-picker #port, div.web-port-picker #port').prop('disabled', false);
+    if (!GUI.auto_connect) $('div#port-picker #baud, div.web-port-picker #baud').prop('disabled', false);
 
     // reset connect / disconnect button
     $('div.connect_controls a.connect').removeClass('active');
@@ -275,7 +275,7 @@ function abortConnection() {
     $('div#connectbutton a.connect').removeClass('active');
 
     // unlock port select & baud
-    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
+    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay, div.web-port-picker #port, div.web-port-picker #baud, div.web-port-picker #delay').prop('disabled', false);
 
     // reset data
     isConnected = false;
