@@ -18,9 +18,6 @@ import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import { usbDevices } from "../usb_devices";
 
-// Task for the brave ones. There are quite a few shadow variables which clash when
-// const or let are used. So need to run thorough tests when chaning `var`
-/* eslint-disable no-var */
 class WEBUSBDFU_protocol {
     constructor() {
         this.callback = null;
@@ -107,6 +104,7 @@ class WEBUSBDFU_protocol {
         })
         .catch((e) => {
             console.error(`There is no device. ${e}`);
+            gui_log(i18n.getMessage('stm32UsbDfuNotFound'));
         });
     }
     openDevice() {
@@ -137,22 +135,19 @@ class WEBUSBDFU_protocol {
         this.usbDevice = null;
     }
     claimInterface(interfaceNumber) {
-        const self = this;
-
-        self.usbDevice
+        this.usbDevice
         .claimInterface(interfaceNumber)
         .then(() => {
             console.log(`Claimed interface: ${interfaceNumber}`);
-
-            if (self.options.exitDfu) {
-                self.leave();
+            if (this.options.exitDfu) {
+                this.leave();
             } else {
-                self.upload_procedure(0);
+                this.upload_procedure(0);
             }
         })
         .catch(error => {
             console.log('Failed to claim USB device', error);
-            self.cleanup();
+            this.cleanup();
         });
     }
     releaseInterface(interfaceNumber) {
