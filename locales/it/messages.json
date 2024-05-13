@@ -1,6 +1,6 @@
 {
     "yes": {
-        "message": "Sì",
+        "message": "Si",
         "description": "General Yes message to be used across the application"
     },
     "no": {
@@ -51,6 +51,9 @@
     },
     "portsSelectManual": {
         "message": "Selezione manuale"
+    },
+    "portsSelectNone": {
+        "message": "Nessuna connessione disponibile"
     },
     "portsSelectVirtual": {
         "message": "Modalità Virtuale (Sperimentale)",
@@ -109,6 +112,10 @@
     "useMdnsBrowser": {
         "message": "Usa la ricerca in rete del dispositivo con mDNS del browser (sperimentale)",
         "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
+    "showManualMode": {
+        "message": "Abilita la modalità di connessione manuale",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Abilita modalità di connessione virtuale",
@@ -3711,6 +3718,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Barra GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Barra batteria",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitudine",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Anello",
         "description": "One of the modes of the Led Strip"
@@ -3804,6 +3823,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: bloccato",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Predefinito",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Barra",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Cablaggio Striscia LED",

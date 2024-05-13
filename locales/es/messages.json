@@ -52,6 +52,9 @@
     "portsSelectManual": {
         "message": "Selección Manual"
     },
+    "portsSelectNone": {
+        "message": "No hay conexión disponible"
+    },
     "portsSelectVirtual": {
         "message": "Modo Virtual (experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
@@ -109,6 +112,10 @@
     "useMdnsBrowser": {
         "message": "Usar descubrimiento en la red de dispositivos mDNS (experimental)",
         "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
+    "showManualMode": {
+        "message": "Activar modo de conexión manual",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Activar modo de conexión virtual",

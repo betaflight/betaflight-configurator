@@ -52,6 +52,9 @@
     "portsSelectManual": {
         "message": "Выбрать вручную"
     },
+    "portsSelectNone": {
+        "message": "Нет доступного подключения"
+    },
     "portsSelectVirtual": {
         "message": "Виртуальный режим (экспериментальный)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
@@ -109,6 +112,10 @@
     "useMdnsBrowser": {
         "message": "Использовать mDNS Browser Device Discovery (экспериментально)",
         "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
+    "showManualMode": {
+        "message": "Включить режим ручного подключения",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Включить режим виртуального подключения",
@@ -1035,6 +1042,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Локальная сборка - в облаке нет информации"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Тип сборки"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Локальная сборка"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Cборка из облака"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "Информация о сборке отсутствует"
+    },
     "initialSetupNotOnline": {
         "message": "Сервер недоступен"
     },
@@ -1781,6 +1800,9 @@
     "receiverRcSmoothingSetpointHz": {
         "message": "Частота среза заданного значения"
     },
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "Частота среза Feedforward"
+    },
     "receiverRcSetpointType": {
         "message": "Тип фильтра заданного значения"
     },
@@ -1871,14 +1893,26 @@
     "pidTuningFeedforwardBoost": {
         "message": "Буст"
     },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "Максимальный предел Рейтов (скорости)"
+    },
     "pidTuningFeedforwardTransition": {
         "message": "Переход"
     },
     "pidTuningProportional": {
         "message": "<b>П<\/b>ропорциональный"
     },
+    "pidTuningIntegral": {
+        "message": "<b>I<\/b>ntegral"
+    },
     "pidTuningDerivative": {
         "message": "Derivative"
+    },
+    "pidTuningDMax": {
+        "message": "<b>D<\/b> Макс"
+    },
+    "pidTuningFeedforward": {
+        "message": "<b>F<\/b>eedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Предупреждение:<\/b><\/span> очень высокие коэфициенты могут привести к рассинхронизации двигателей при быстрых замедлениях."
@@ -2270,6 +2304,10 @@
         "message": "Отключает упавший летательный аппарат до тех пор, пока питание на нём не будет выключено и включено заново",
         "description": "Help text to PARALYZE mode"
     },
+    "auxiliaryHelpMode_PIDAUDIO": {
+        "message": "Используйте для переключения PIDAUDIO",
+        "description": "Help text to PIDAUDIO mode"
+    },
     "auxiliaryHelpMode_PREARM": {
         "message": "При включении двигателей, они не будут запущены пока не будет включен этот переключатель",
         "description": "Help text to PREARM mode"
@@ -2415,6 +2453,9 @@
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
     },
+    "adjustmentsFunction22": {
+        "message": "Тангаж и Крен F настройка"
+    },
     "adjustmentsFunction23": {
         "message": "Feedforward переход"
     },
@@ -2534,6 +2575,10 @@
     },
     "servosRateAndDirection": {
         "message": "Скорость и направление"
+    },
+    "servosRate": {
+        "message": "Диапазон:",
+        "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
         "message": "Включить живой режим"
@@ -3136,6 +3181,9 @@
     "firmwareFlasherBranch": {
         "message": "Выберите Pull Request или коммит"
     },
+    "firmwareFlasherReleaseSummaryHead": {
+        "message": "Информация о релизе и сборке"
+    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID производителя:"
     },
@@ -3153,6 +3201,10 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "Объект:"
+    },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Получить больше информации о цели в вики Betaflight",
+        "description": "Link to Betaflight support for target"
     },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
@@ -3220,6 +3272,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Выберите тип сборки, чтобы увидеть доступные платы полетных контроллеров."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Выберите вашу плату или используйте автоопределение, чтобы увидеть доступные онлайн версии прошивки. Выберите правильную прошивку, соответствующую вашей плате."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Выберите версию прошивки для Вашей платы."
     },
@@ -3252,6 +3307,9 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Скорость передачи"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Показать кандидаты в релизы"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
         "message": "Показать предварительные релизы в дополнение к стабильным релизам"
@@ -3508,6 +3566,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Индикаторы GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Индикатор аккумулятора",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Высота",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Кольцо",
         "description": "One of the modes of the Led Strip"
@@ -3601,6 +3671,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: закрыто",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "По умолчанию",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Индикаторы",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Светодиодная лента",
@@ -4011,7 +4089,7 @@
         "message": "Фильтр низких частот гироскопа - 2 \"Lowpass\""
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Фильтры нижних частот гироскопа сглаживают высокочастотный шум, чтобы не допустить его попадания в ПИД контур. Существуют два независимо настраиваемых фильтра гироскопа; по умолчанию оба активны.<br \/><br \/>При включенном Gyro RPM фильтре, ползунок \\\"Множитель фильтра Gyro\\\" обычно можно переместить вправо, или в качестве альтернативы, достаточно оставить включенным только один статический фильтр нижних частот гироскопа \\\"Lowpass\\\" на 500 Гц.<br \/><br \/>Эффект propwash будет иметь меньше воздействия на квадрокоптер, если задержка возникающая в процессе работы фильтра гироскопа будет минимальной.<br \/><br \/>Всегда проверяйте нагрев двигателей при перемещении ползунков вправо. При минимальной фильтрации гироскопа очень важно иметь достаточный уровень D-фильтрации! Будьте осторожны!",
+        "message": "Фильтры нижних частот гироскопа сглаживают высокочастотный шум, чтобы не допустить его попадания в ПИД контур. Существуют два независимо настраиваемых фильтра гироскопа; по умолчанию оба активны.<br \/><br \/>При включенном Gyro RPM фильтре, ползунок \"Множитель фильтра Gyro\" обычно можно переместить вправо, или в качестве альтернативы, достаточно оставить включенным только один статический фильтр нижних частот гироскопа \"Lowpass\" на 500 Гц.<br \/><br \/>Эффект propwash будет иметь меньше воздействия на квадрокоптер, если задержка возникающая в процессе работы фильтра гироскопа будет минимальной.<br \/><br \/>Всегда проверяйте нагрев двигателей при перемещении ползунков вправо. При минимальной фильтрации гироскопа очень важно иметь достаточный уровень D-фильтрации! Будьте осторожны!",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
@@ -4049,6 +4127,9 @@
     },
     "pidTuningDynamicNotchMaxHz": {
         "message": "Макс. частота [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Количество режекторных фильтров"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамический режекторный фильтр имеет три частотных диапазона, в которых он может работать: LOW(80-330гц) для более низкооборотных квадрокоптеров, таких как 6+ дюймов, MEDIUM(140-550гц) для \"нормальных\" 5 дюймовых квадрокоптеров и HIGH(230-800гц) для сверхвысокооборотных 2-3 дюймовых квадрокоптеров. AUTO выбирает диапазон в зависимости от значения максимальной (cutoff) частоты динамического фильтра нижних частот Gyro."
@@ -4118,6 +4199,9 @@
     },
     "pidTuningDTermLowpassDyn": {
         "message": "Динамический D-Term фильтр низких частот \"Lowpass\""
+    },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "Динамическая expo-кривая"
     },
     "pidTuningDTermLowpassDynType": {
         "message": "Тип динамического фильтра"
@@ -4245,6 +4329,9 @@
     "failsafeRxMaxUsecItem": {
         "message": "Максимальная длительность"
     },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "Этап 1 - Значения каналов при отсутствии сигнала"
+    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Эти настройки применятся во время сценария 1. <strong>Примечание:\n <\/strong> значения сохраняются шагами в 25 мкс, поэтому небольшие изменения исчезают"
     },
@@ -4254,8 +4341,26 @@
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold<\/strong> означает оставить последнее значение принятого сигнала.<strong>Set<\/strong> означает использовать указанное здесь значение"
     },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Авто",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Удержание",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Установить",
+        "description": "Text for Set option"
+    },
     "failsafeStageTwoSettingsTitle": {
         "message": "Этап 2 - Настройки"
+    },
+    "failsafeDelayItem": {
+        "message": "Длительность 1го этапа спасения, после потери сигнала [сек.]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Установите период времени для 1го этапа Фейлсейфа после потери сигнала. Если время задержки истекает без восстановления сигнала, запускается Этап 2 настроек Фейлсейф "
     },
     "failsafeThrottleLowHelp": {
         "message": "Задизармить аппарат вместо выполнения выбранной процедуры failsafe, если значение газа будет низким в течение указанного времени"
@@ -4290,8 +4395,17 @@
     "failsafeGpsRescueItemAltitudeModeCurrentAlt": {
         "message": "Текущая высота"
     },
+    "failsafeGpsRescueInitialClimb": {
+        "message": "Первоначальный подъем (метры)"
+    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Скорость подъёма (м\/сек)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Скорость возврата относительно земли (метров\/секунд)"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Максимальный угол по тангажу"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Пройденное расстояние (м)"
@@ -4666,6 +4780,54 @@
         "message": "OSD Profile {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
+    "osdSetupPreviewSelectFont": {
+        "message": "Шрифт",
+        "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "По умолчанию",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Жирный",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Большой",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Большой Экстра",
+        "description": "Font Large Extra"
+    },
+    "osdSetupFontTypeBetaflight": {
+        "message": "Betaflight",
+        "description": "Font Betaflight"
+    },
+    "osdSetupFontTypeDigital": {
+        "message": "Цифровой",
+        "description": "Font Digital"
+    },
+    "osdSetupFontTypeClarity": {
+        "message": "Чёткость",
+        "description": "Font Clarity"
+    },
+    "osdSetupFontTypeVision": {
+        "message": "Видимость",
+        "description": "Font Vision"
+    },
+    "osdSetupFontTypeImpact": {
+        "message": "Impact",
+        "description": "Font Impact"
+    },
+    "osdSetupFontTypeImpactMini": {
+        "message": "Impact Min",
+        "description": "Font Impact Mini"
+    },
+    "osdSetupPreviewCheckZoom": {
+        "message": "Увеличение",
+        "description": "Check to select a bigger display of the OSD preview in small screens"
+    },
     "osdSetupVideoFormatTitle": {
         "message": "Формат видео"
     },
@@ -4679,6 +4841,10 @@
     },
     "osdSetupVideoFormatOptionNtsc": {
         "message": "NTSC",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionHd": {
+        "message": "HD",
         "description": "Option for the video format in the OSD"
     },
     "osdSetupUnitsTitle": {
@@ -4739,11 +4905,17 @@
     "osdSetupCustomLogoInfoTitle": {
         "message": "Свое изображение"
     },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Размер должен быть $t(logoWidthPx)x$t(logoHeightPx) пикселей"
+    },
     "osdSetupCustomLogoInfoColorMap": {
         "message": "Должен содержать зеленые, черные и белые пиксели"
     },
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Нажмите <b>$t(osdSetupUploadFont.message)<\/b> для установки собственного логотипа"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Недопустимый размер: {{width}}x{{height}} (ожидается $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Изображение содержит недопустимый пиксель: rgb ({{valueR}}, {{valueG}}, {{valueB}}) в координаты {{posX}}×{{posY}}"
@@ -4823,6 +4995,14 @@
     "osdDescElementVtxChannel": {
         "message": "Текущие канал и мощность VTX"
     },
+    "osdTextElementVTXchannelVariantPower": {
+        "message": "Мощность VTX",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
+    "osdTextElementVTXchannelVariantFull": {
+        "message": "Сетка:Канал:Мощность:Pit",
+        "description": "One of the variants of the VTX channel element of the OSD"
+    },
     "osdTextElementVoltageWarning": {
         "message": "Предупреждения о напряжении батареи",
         "description": "One of the elements of the OSD"
@@ -4886,12 +5066,111 @@
     "osdDescElementWhDrawn": {
         "message": "Общая использованная емкость батареи в Ватт-часах"
     },
+    "osdDescElementAuxValue": {
+        "message": "Aux значение",
+        "description": "Displays a receiver AUX channel see PR 10789"
+    },
+    "osdTextElementAuxValue": {
+        "message": "Aux значение",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementSysGoggleVoltage": {
+        "message": "Напряжение на очках",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleVoltage": {
+        "message": "Напряжение на очках, отображаемое очками"
+    },
+    "osdTextElementSysVtxVoltage": {
+        "message": "Напряжение VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxVoltage": {
+        "message": "Напряжение VTX отображаемое очками"
+    },
+    "osdTextElementSysBitrate": {
+        "message": "Битрейт VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysBitrate": {
+        "message": "Битрейт видео отображаемый очками"
+    },
+    "osdTextElementSysDelay": {
+        "message": "Задержка VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDelay": {
+        "message": "Задержка видеосвязи отображаемая очками"
+    },
+    "osdTextElementSysDistance": {
+        "message": "Расстояние VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysDistance": {
+        "message": "Расстояние передачи видео отображаемое очками"
+    },
+    "osdTextElementSysLQ": {
+        "message": "Качество связи с очками",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysLQ": {
+        "message": "Качество видео связи отображаемое очками"
+    },
+    "osdTextElementSysGoggleDVR": {
+        "message": "Статус DVR Очков",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysGoggleDVR": {
+        "message": "Статус DVR в очках"
+    },
+    "osdTextElementSysVtxDVR": {
+        "message": "Статус VTX DVR",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxDVR": {
+        "message": "Статус VTX DVR в очках"
+    },
+    "osdTextElementSysWarnings": {
+        "message": "Предупреждения системы очков",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysWarnings": {
+        "message": "Предупреждения видео системы в очках"
+    },
+    "osdTextElementSysVtxTemp": {
+        "message": "Температура VTX",
+        "description": "One of the system elements of the OSD"
+    },
+    "osdDescElementSysVtxTemp": {
+        "message": "VTX температура в очках"
+    },
     "osdTextElementSysFanSpeed": {
         "message": "Скорость вентилятора очков",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysFanSpeed": {
         "message": "Скорость вентилятора очков отображаемая в очках"
+    },
+    "osdTextElementLapTimeCurrent": {
+        "message": "Текущее время круга (GPS)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeCurrent": {
+        "message": "Текущее время круга по GPS"
+    },
+    "osdTextElementLapTimePrevious": {
+        "message": "Предыдущее время круга (GPS)",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimePrevious": {
+        "message": "Предыдущее время круга по GPS"
+    },
+    "osdTextElementLapTimeBest3": {
+        "message": "Лучшее время за 3 последних круга по GPS",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLapTimeBest3": {
+        "message": "Лучшие 3 времени круга по GPS"
     },
     "osdTextElementCraftName": {
         "message": "Название сборки",
@@ -5329,6 +5608,17 @@
     "osdDescTxUplinkPower": {
         "message": "Показывает значение мощности Tx (mW или W). Полезно, когда <i>динамическая мощность<\/i> включена для поддерживаемых радиоконтроллеров"
     },
+    "osdTextElementReadyMode": {
+        "message": "Режим Ready (Готов)",
+        "description": "When active READY will be displayed until flying"
+    },
+    "osdTextElementRSNRValue": {
+        "message": "Значение RSNR",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRSNRValue": {
+        "message": "Значение RSNR"
+    },
     "osdTextElementUnknown": {
         "message": "Неизвестно ($1)",
         "description": "One of the elements of the OSD"
@@ -5525,12 +5815,26 @@
     "osdDescStatMinRssiDbm": {
         "message": "Мин. значение дБм RSSI"
     },
+    "osdTextStatMinRSNR": {
+        "message": "Минимальное значение RSNR",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRSNR": {
+        "message": "Минимальное значение RSNR"
+    },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "3 лучших последовательных круга",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdTextStatBestLap": {
         "message": "Лучший круг",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBestLap": {
         "message": "Лучший круг"
+    },
+    "osdDescStatAvgThrottle": {
+        "message": "Среднее значение газа"
     },
     "osdTextStatUnknown": {
         "message": "Неизвестно ($1)",
@@ -5729,6 +6033,13 @@
     "osdWarningOverCap": {
         "message": "Предупреждает, когда использованные mAh превышают установленный лимит ёмкости"
     },
+    "osdWarningTextRSNR": {
+        "message": "RSNR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSNR": {
+        "message": "Предупреждение, если значение RSNR ниже заданного уровня тревоги"
+    },
     "osdWarningTextUnknown": {
         "message": "Неизвестно ($1)"
     },
@@ -5819,6 +6130,10 @@
     },
     "vtxType_4": {
         "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_5": {
+        "message": "MSP",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
     "vtxType_255": {
@@ -6577,6 +6892,10 @@
         "message": "<span class=\"message-negative\">ВНИМАНИЕ!<\/span> Выбран источник предустановок от сторонних разработчиков.",
         "description": "Warning message that shows up when a third party preset source is selected"
     },
+    "presetsFailedToLoadRepositories": {
+        "message": "<span class=\"message-negative\">ВНИМАНИЕ!<\/span> Не удалось загрузить следующие репозитории: <b>{{repos}}<\/b>",
+        "description": "Warning message that shows up when we fail to load some repositories"
+    },
     "presetsWarningBackup": {
         "message": "Пожалуйста, убедитесь, что вы сделали резервную копию текущей конфигурации (нажатием на кнопку '$t(presetsBackupSave.message)' или через CLI, если кнопка не активна) <strong>перед<\/strong> выбором и применением предустановок. В противном случае будет невозможно вернуться к предыдущей конфигурации после применения предустановок.",
         "description": "Warning message that shows up at the top of the presets tab"
@@ -6601,9 +6920,16 @@
         "message": "ВНИМАНИЕ! Просмотрите список вариантов",
         "description": "Placeholder for the options list dropdown"
     },
+    "presetsVersionMismatch": {
+        "message": "Соответствие версии источника пресета не совпадает.<br\/>Требуемая версия: {{versionRequired}}<br\/>Версия источника пресета: {{versionSource}}<br\/>Использование этого источника пресета может быть опасным.<br\/>Вы хотите продолжить?",
+        "description": "Placeholder for the options list dropdown"
+    },
     "presetsReviewOptionsWarning": {
         "message": "Пожалуйста, ознакомьтесь с списком опций перед выбором этой предустановки.",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "Конфигурация сборки"
     },
     "firmwareFlasherBuildOptions": {
         "message": "Прочие настройки"
@@ -6620,8 +6946,23 @@
     "firmwareFlasherConfigurationFile": {
         "message": "Имя файла конфигурации:"
     },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Выберите радиопротокол, который вы хотите включить в эту сборку. Обратите внимание, что это выпадающий список, но может быть выбран только один элемент."
+    },
     "firmwareFlasherTelemetryProtocolDescription": {
         "message": "Выберите протокол телеметрии, который вы хотите включить в эту сборку. Обратите внимание, что это выпадающий список, в котором может быть выбран только один пункт. Некоторые протоколы телеметрии будут включены, независимо от выбранного вами здесь протокола, на основе выбранного протокола радиосвязи, например CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Автоматически включено"
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Выберите общие параметры, которые вы хотели бы включить в эту сборку. Обратите внимание, что это выпадающий список, и несколько элементов могут быть выбраны. Сюда включены такие элементы, как фиксы, например VTX AKK."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Выберите (ESC) протокол мотора, который вы хотите включить в эту сборку. Обратите внимание, что это представлен выпадающий список, но может быть выбран только один пункт."
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "Особенно полезно для разработчиков, вы можете выбрать смерженный PR, указать коммит или указать 'еще несмерженный' PR путем ввода # за которым следует номер PR, например #1234 (сокращение для ветки 'pull\/1234\/head')."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Для разработчиков. Вы можете добавить любые необходимые определения, разделенные пробелом `space`, но без префикса `USE_`, он будет добавлен автоматически."

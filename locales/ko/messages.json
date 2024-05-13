@@ -52,6 +52,9 @@
     "portsSelectManual": {
         "message": "수동 선택"
     },
+    "portsSelectNone": {
+        "message": "접속 불가"
+    },
     "portsSelectVirtual": {
         "message": "가상 모드 (실험적인)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
@@ -109,6 +112,10 @@
     "useMdnsBrowser": {
         "message": "네트워크에서 mDNS 브라우저 기기 디스커버리를 사용하세오 (실험적인)",
         "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
+    "showManualMode": {
+        "message": "수동 연결 모드 활성화",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "가상 연결 모드 활성화",
