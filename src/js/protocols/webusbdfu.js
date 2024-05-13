@@ -152,7 +152,7 @@ class WEBUSBDFU_protocol {
     }
     releaseInterface(interfaceNumber) {
         this.usbDevice
-        .releaseInterface(interfaceNumber, function released() {
+        .releaseInterface(interfaceNumber, () => {
             console.log(`Released interface: ${interfaceNumber}`);
             this.closeDevice();
         })
@@ -313,7 +313,7 @@ class WEBUSBDFU_protocol {
         });
     }
     getChipInfo(_interface, callback) {
-        this.getInterfaceDescriptors(0, function (descriptors, resultCode) {
+        this.getInterfaceDescriptors(0, (descriptors, resultCode) => {
             if (resultCode) {
                 callback({}, resultCode);
                 return;
@@ -321,7 +321,7 @@ class WEBUSBDFU_protocol {
 
             // Keep this for new MCU debugging
             // console.log('Descriptors: ' + descriptors);
-            const parseDescriptor = function (str) {
+            const parseDescriptor = (str) => {
                 // F303: "@Internal Flash  /0x08000000/128*0002Kg"
                 // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
                 // F72x: "@Internal Flash  /0x08000000/04*016Kg,01*64Kg,03*128Kg"
@@ -416,7 +416,7 @@ class WEBUSBDFU_protocol {
                 };
                 return memory;
             };
-            const chipInfo = descriptors.map(parseDescriptor).reduce(function (o, v, i) {
+            const chipInfo = descriptors.map(parseDescriptor).reduce((o, v, i) => {
                 o[v.type.toLowerCase().replace(' ', '_')] = v;
                 return o;
             }, {});
@@ -577,18 +577,16 @@ class WEBUSBDFU_protocol {
         return result;
     }
     upload_procedure(step) {
-        const self = this;
-
         let blocks;
         let address;
         let wBlockNum;
 
         switch (step) {
             case 0:
-                self.getChipInfo(0, function (chipInfo, resultCode) {
+                this.getChipInfo(0, (chipInfo, resultCode) => {
                     if (resultCode !== 0 || typeof chipInfo === "undefined") {
                         console.log(`Failed to detect chip info, resultCode: ${resultCode}`);
-                        self.cleanup();
+                        this.cleanup();
                     } else {
                         let nextAction;
 
@@ -596,8 +594,8 @@ class WEBUSBDFU_protocol {
                             // internal flash
                             nextAction = 1;
 
-                            self.chipInfo = chipInfo;
-                            self.flash_layout = chipInfo.internal_flash;
+                            this.chipInfo = chipInfo;
+                            this.flash_layout = chipInfo.internal_flash;
 
                             if (TABS.firmware_flasher.parsed_hex.bytes_total > chipInfo.internal_flash.total_size) {
                                 const firmwareSize = TABS.firmware_flasher.parsed_hex.bytes_total;
@@ -610,21 +608,21 @@ class WEBUSBDFU_protocol {
                             // external flash
                             nextAction = 2; // no option bytes
 
-                            self.chipInfo = chipInfo;
-                            self.flash_layout = chipInfo.external_flash;
+                            this.chipInfo = chipInfo;
+                            this.flash_layout = chipInfo.external_flash;
                         } else {
                             console.log('Failed to detect internal or external flash');
-                            self.cleanup();
+                            this.cleanup();
                         }
 
                         if (typeof nextAction !== "undefined") {
-                            gui_log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
+                            gui_log(i18n.getMessage('dfu_device_flash_info', (this.flash_layout.total_size / 1024).toString()));
 
                             // verify all addresses in the hex are writable.
                             const unusableBlocks = [];
 
-                            for (const block of self.hex.data) {
-                                const usable = self.isBlockUsable(block.address, block.bytes);
+                            for (const block of this.hex.data) {
+                                const usable = this.isBlockUsable(block.address, block.bytes);
                                 if (!usable) {
                                     unusableBlocks.push(block);
                                 }
@@ -633,13 +631,13 @@ class WEBUSBDFU_protocol {
                             if (unusableBlocks.length > 0) {
                                 gui_log(i18n.getMessage('dfu_hex_address_errors'));
                                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('dfu_hex_address_errors'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
-                                self.leave();
+                                this.leave();
                             } else {
-                                self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
-                                    self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
-                                    console.log(`Using transfer size: ${self.transferSize}`);
-                                    self.clearStatus(function () {
-                                        self.upload_procedure(nextAction);
+                                this.getFunctionalDescriptor(0, (descriptor, resultCode) => {
+                                    this.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                                    console.log(`Using transfer size: ${this.transferSize}`);
+                                    this.clearStatus(() => {
+                                        this.upload_procedure(nextAction);
                                     });
                                 });
                             }
@@ -648,25 +646,25 @@ class WEBUSBDFU_protocol {
                 });
                 break;
             case 1: {
-                if (typeof self.chipInfo.option_bytes === "undefined") {
+                if (typeof this.chipInfo.option_bytes === "undefined") {
                     console.log('Failed to detect option bytes');
-                    self.cleanup();
+                    this.cleanup();
                 }
 
-                const unprotect = function () {
+                const unprotect = () => {
                     console.log('Initiate read unprotect');
                     const messageReadProtected = i18n.getMessage('stm32ReadProtected');
                     gui_log(messageReadProtected);
                     TABS.firmware_flasher.flashingMessage(messageReadProtected, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION);
 
-                    self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x92], function () {
-                        self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                            if (data[4] === self.state.dfuDNBUSY) { // completely normal
+                    this.controlTransfer('out', this.request.DNLOAD, 0, 0, 0, [0x92], () => {
+                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                            if (data[4] === this.state.dfuDNBUSY) { // completely normal
                                 const delay = data[1] | (data[2] << 8) | (data[3] << 16);
                                 const total_delay = delay + 20000; // wait at least 20 seconds to make sure the user does not disconnect the board while erasing the memory
                                 let timeSpentWaiting = 0;
                                 const incr = 1000; // one sec increments
-                                const waitForErase = setInterval(function () {
+                                const waitForErase = setInterval(() => {
 
                                     TABS.firmware_flasher.flashProgress(Math.min(timeSpentWaiting / total_delay, 1) * 100);
 
@@ -675,7 +673,7 @@ class WEBUSBDFU_protocol {
                                         return;
                                     }
                                     clearInterval(waitForErase);
-                                    self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data, error) {
+                                    this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data, error) => {
                                         if (error) { // we encounter an error, but this is expected. should be a stall.
                                             console.log('Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.');
                                             gui_log(i18n.getMessage('stm32UnprotectSuccessful'));
@@ -692,7 +690,7 @@ class WEBUSBDFU_protocol {
                                             gui_log(i18n.getMessage('stm32UnprotectFailed'));
                                             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32UnprotectFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
                                             console.log(data);
-                                            self.cleanup();
+                                            this.cleanup();
                                         }
                                     }, 2000); // this should stall/disconnect anyways. so we only wait 2 sec max.
                                 }, incr);
@@ -701,91 +699,91 @@ class WEBUSBDFU_protocol {
                                 let messageUnprotectInitFailed = i18n.getMessage('stm32UnprotectInitFailed');
                                 gui_log(messageUnprotectInitFailed);
                                 TABS.firmware_flasher.flashingMessage(messageUnprotectInitFailed, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
-                                self.cleanup();
+                                this.cleanup();
                             }
                         });
                     });
                 };
 
-                const tryReadOB = function () {
+                const tryReadOB = () => {
                     // the following should fail if read protection is active
-                    self.controlTransfer('in', self.request.UPLOAD, 2, 0, self.chipInfo.option_bytes.total_size, 0, function (ob_data, errcode) {
+                    this.controlTransfer('in', this.request.UPLOAD, 2, 0, this.chipInfo.option_bytes.total_size, 0, (ob_data, errcode) => {
                         if (errcode) {
                             // TODO: this was undefined, guessing with how it usually works it should be 1
                             const errcode1 = 1;
                             console.log(`USB transfer error while reading option bytes: ${errcode1}`);
-                            self.cleanup();
+                            this.cleanup();
                             return;
                         }
 
-                        self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                            if (data[4] === self.state.dfuUPLOAD_IDLE && ob_data.length === self.chipInfo.option_bytes.total_size) {
+                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                            if (data[4] === this.state.dfuUPLOAD_IDLE && ob_data.length === this.chipInfo.option_bytes.total_size) {
                                 console.log('Option bytes read successfully');
                                 console.log('Chip does not appear read protected');
                                 gui_log(i18n.getMessage('stm32NotReadProtected'));
                                 // it is pretty safe to continue to erase flash
-                                self.clearStatus(function () {
-                                    self.upload_procedure(2);
+                                this.clearStatus(() => {
+                                    this.upload_procedure(2);
                                 });
                                 // protect the flash memory
                                 ob_data[1] = 0x0;
-                                const writeOB = function() {
-                                    self.controlTransfer('out', self.request.DNLOAD, 2, 0, 0, ob_data, function () {
-                                        self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                                            if (data[4] == self.state.dfuDNBUSY) {
+                                const writeOB = () => {
+                                    this.controlTransfer('out', this.request.DNLOAD, 2, 0, 0, ob_data, () => {
+                                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                                            if (data[4] == this.state.dfuDNBUSY) {
                                                 const delay = data[1] | (data[2] << 8) | (data[3] << 16);
 
-                                                setTimeout(function () {
-                                                    self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                                                        if (data[4] == self.state.dfuDNLOAD_IDLE) {
+                                                setTimeout(() => {
+                                                    this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                                                        if (data[4] == this.state.dfuDNLOAD_IDLE) {
                                                             console.log('Failed to write ob');
-                                                            self.cleanup();
+                                                            this.cleanup();
                                                         } else {
                                                             console.log('Success writing ob');
-                                                            self.cleanup();
+                                                            this.cleanup();
                                                         }
                                                     });
                                                 }, delay);
                                             } else {
                                                 console.log('Failed to initiate write ob');
-                                                self.cleanup();
+                                                this.cleanup();
                                             }
                                         });
                                     });
                                 };
-                                self.clearStatus(function () {
-                                    self.loadAddress(self.chipInfo.option_bytes.start_address, function () {
-                                        self.clearStatus(writeOB);
+                                this.clearStatus(() => {
+                                    this.loadAddress(this.chipInfo.option_bytes.start_address, () => {
+                                        this.clearStatus(writeOB);
                                     });
                                 });
                             } else {
                                 console.log('Option bytes could not be read. Quite possibly read protected.');
-                                self.clearStatus(unprotect);
+                                this.clearStatus(unprotect);
                             }
                         });
                     });
                 };
 
-                const initReadOB = function (loadAddressResponse) {
+                const initReadOB = (loadAddressResponse) => {
                     // contrary to what is in the docs. Address load should in theory work even if read protection is active
                     // if address load fails with this specific error though, it is very likely bc of read protection
-                    if (loadAddressResponse[4] === self.state.dfuERROR && loadAddressResponse[0] === self.status.errVENDOR) {
+                    if (loadAddressResponse[4] === this.state.dfuERROR && loadAddressResponse[0] === this.status.errVENDOR) {
                         // read protected
                         gui_log(i18n.getMessage('stm32AddressLoadFailed'));
-                        self.clearStatus(unprotect);
+                        this.clearStatus(unprotect);
                         return;
-                    } else if (loadAddressResponse[4] === self.state.dfuDNLOAD_IDLE) {
+                    } else if (loadAddressResponse[4] === this.state.dfuDNLOAD_IDLE) {
                         console.log('Address load for option bytes sector succeeded.');
-                        self.clearStatus(tryReadOB);
+                        this.clearStatus(tryReadOB);
                     } else {
                         gui_log(i18n.getMessage('stm32AddressLoadUnknown'));
-                        self.cleanup();
+                        this.cleanup();
                     }
                 };
 
-                self.clearStatus(function () {
+                this.clearStatus(() => {
                     // load address fails if read protection is active unlike as stated in the docs
-                    self.loadAddress(self.chipInfo.option_bytes.start_address, initReadOB, false);
+                    this.loadAddress(this.chipInfo.option_bytes.start_address, initReadOB, false);
                 });
                 break;
             }
@@ -793,23 +791,23 @@ class WEBUSBDFU_protocol {
                 // erase
                 // find out which pages to erase
                 const erase_pages = [];
-                for (let i = 0; i < self.flash_layout.sectors.length; i++) {
-                    for (let j = 0; j < self.flash_layout.sectors[i].num_pages; j++) {
-                        if (self.options.erase_chip) {
+                for (let i = 0; i < this.flash_layout.sectors.length; i++) {
+                    for (let j = 0; j < this.flash_layout.sectors[i].num_pages; j++) {
+                        if (this.options.erase_chip) {
                             // full chip erase
                             erase_pages.push({ 'sector': i, 'page': j });
                         } else {
                             // local erase
-                            const page_start = self.flash_layout.sectors[i].start_address + j * self.flash_layout.sectors[i].page_size;
-                            const page_end = page_start + self.flash_layout.sectors[i].page_size - 1;
-                            for (const hexData of self.hex.data) {
+                            const page_start = this.flash_layout.sectors[i].start_address + j * this.flash_layout.sectors[i].page_size;
+                            const page_end = page_start + this.flash_layout.sectors[i].page_size - 1;
+                            for (const hexData of this.hex.data) {
                                 const starts_in_page = hexData.address >= page_start && hexData.address <= page_end;
                                 const end_address = hexData.address + hexData.bytes - 1;
                                 const ends_in_page = end_address >= page_start && end_address <= page_end;
                                 const spans_page = hexData.address < page_start && end_address > page_end;
 
                                 if (starts_in_page || ends_in_page || spans_page) {
-                                    const idx = erase_pages.findIndex(function (element, index, array) {
+                                    const idx = erase_pages.findIndex((element, index, array) => {
                                         return element.sector === i && element.page === j;
                                     });
                                     if (idx === -1)
@@ -823,7 +821,7 @@ class WEBUSBDFU_protocol {
                 if (erase_pages.length === 0) {
                     console.log('Aborting, No flash pages to erase');
                     TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32InvalidHex'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
-                    self.cleanup();
+                    this.cleanup();
                     break;
                 }
 
@@ -833,36 +831,36 @@ class WEBUSBDFU_protocol {
                 let page = 0;
                 let total_erased = 0; // bytes
 
-                const erase_page_next = function () {
+                const erase_page_next = () =>{
                     TABS.firmware_flasher.flashProgress((page + 1) / erase_pages.length * 100);
                     page++;
 
                     if (page === erase_pages.length) {
                         console.log("Erase: complete");
                         gui_log(i18n.getMessage('dfu_erased_kilobytes', (total_erased / 1024).toString()));
-                        self.upload_procedure(4);
+                        this.upload_procedure(4);
                     } else {
                         erase_page();
                     }
                 };
 
-                const erase_page = function () {
+                const erase_page = () => {
                     const page_addr = erase_pages[page].page
-                        * self.flash_layout.sectors[erase_pages[page].sector].page_size
-                        + self.flash_layout.sectors[erase_pages[page].sector].start_address;
+                        * this.flash_layout.sectors[erase_pages[page].sector].page_size
+                        + this.flash_layout.sectors[erase_pages[page].sector].start_address;
                     const cmd = [0x41, page_addr & 0xff, (page_addr >> 8) & 0xff, (page_addr >> 16) & 0xff, (page_addr >> 24) & 0xff];
-                    total_erased += self.flash_layout.sectors[erase_pages[page].sector].page_size;
+                    total_erased += this.flash_layout.sectors[erase_pages[page].sector].page_size;
                     console.log(`Erasing. sector ${erase_pages[page].sector}, page ${erase_pages[page].page} @ 0x${page_addr.toString(16)}`);
 
-                    self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, cmd, function () {
-                        self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                            if (data[4] === self.state.dfuDNBUSY) { // completely normal
+                    this.controlTransfer('out', this.request.DNLOAD, 0, 0, 0, cmd, () => {
+                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                            if (data[4] === this.state.dfuDNBUSY) { // completely normal
                                 const delay = data[1] | (data[2] << 8) | (data[3] << 16);
 
-                                setTimeout(function () {
-                                    self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
+                                setTimeout(() => {
+                                    this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
 
-                                        if (data[4] === self.state.dfuDNBUSY) {
+                                        if (data[4] === this.state.dfuDNBUSY) {
 
                                             //
                                             // H743 Rev.V (probably other H7 Rev.Vs also) remains in dfuDNBUSY state after the specified delay time.
@@ -874,27 +872,27 @@ class WEBUSBDFU_protocol {
                                             //
                                             console.log('erase_page: dfuDNBUSY after timeout, clearing');
 
-                                            self.clearStatus(function () {
-                                                self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                                                    if (data[4] === self.state.dfuIDLE) {
+                                            this.clearStatus(() => {
+                                                this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                                                    if (data[4] === this.state.dfuIDLE) {
                                                         erase_page_next();
                                                     } else {
                                                         console.log(`Failed to erase page 0x${page_addr.toString(16)} (did not reach dfuIDLE after clearing`);
-                                                        self.cleanup();
+                                                        this.cleanup();
                                                     }
                                                 });
                                             });
-                                        } else if (data[4] === self.state.dfuDNLOAD_IDLE) {
+                                        } else if (data[4] === this.state.dfuDNLOAD_IDLE) {
                                             erase_page_next();
                                         } else {
                                             console.log(`Failed to erase page 0x${page_addr.toString(16)}`);
-                                            self.cleanup();
+                                            this.cleanup();
                                         }
                                     });
                                 }, delay);
                             } else {
                                 console.log(`Failed to initiate page erase, page 0x${page_addr.toString(16)}`);
-                                self.cleanup();
+                                this.cleanup();
                             }
                         });
                     });
@@ -910,46 +908,46 @@ class WEBUSBDFU_protocol {
                 console.log('Writing data ...');
                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Flashing'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
-                blocks = self.hex.data.length - 1;
+                blocks = this.hex.data.length - 1;
                 let flashing_block = 0;
-                address = self.hex.data[flashing_block].address;
+                address = this.hex.data[flashing_block].address;
 
                 let bytes_flashed = 0;
                 let bytes_flashed_total = 0; // used for progress bar
                 wBlockNum = 2; // required by DFU
 
-                const write = function () {
-                    if (bytes_flashed < self.hex.data[flashing_block].bytes) {
-                        const bytes_to_write = ((bytes_flashed + self.transferSize) <= self.hex.data[flashing_block].bytes) ? self.transferSize : (self.hex.data[flashing_block].bytes - bytes_flashed);
+                const write = () => {
+                    if (bytes_flashed < this.hex.data[flashing_block].bytes) {
+                        const bytes_to_write = ((bytes_flashed + this.transferSize) <= this.hex.data[flashing_block].bytes) ? this.transferSize : (this.hex.data[flashing_block].bytes - bytes_flashed);
 
-                        const data_to_flash = self.hex.data[flashing_block].data.slice(bytes_flashed, bytes_flashed + bytes_to_write);
+                        const data_to_flash = this.hex.data[flashing_block].data.slice(bytes_flashed, bytes_flashed + bytes_to_write);
 
                         address += bytes_to_write;
                         bytes_flashed += bytes_to_write;
                         bytes_flashed_total += bytes_to_write;
 
-                        self.controlTransfer('out', self.request.DNLOAD, wBlockNum++, 0, 0, data_to_flash, function () {
-                            self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                                if (data[4] === self.state.dfuDNBUSY) {
+                        this.controlTransfer('out', this.request.DNLOAD, wBlockNum++, 0, 0, data_to_flash, () => {
+                            this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                                if (data[4] === this.state.dfuDNBUSY) {
                                     const delay = data[1] | (data[2] << 8) | (data[3] << 16);
 
-                                    setTimeout(function () {
-                                        self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                                            if (data[4] === self.state.dfuDNLOAD_IDLE) {
+                                    setTimeout(() => {
+                                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                                            if (data[4] === this.state.dfuDNLOAD_IDLE) {
                                                 // update progress bar
-                                                TABS.firmware_flasher.flashProgress(bytes_flashed_total / (self.hex.bytes_total * 2) * 100);
+                                                TABS.firmware_flasher.flashProgress(bytes_flashed_total / (this.hex.bytes_total * 2) * 100);
 
                                                 // flash another page
                                                 write();
                                             } else {
                                                 console.log(`Failed to write ${bytes_to_write}bytes to 0x${address.toString(16)}`);
-                                                self.cleanup();
+                                                this.cleanup();
                                             }
                                         });
                                     }, delay);
                                 } else {
                                     console.log(`Failed to initiate write ${bytes_to_write}bytes to 0x${address.toString(16)}`);
-                                    self.cleanup();
+                                    this.cleanup();
                                 }
                             });
                         });
@@ -958,23 +956,23 @@ class WEBUSBDFU_protocol {
                             // move to another block
                             flashing_block++;
 
-                            address = self.hex.data[flashing_block].address;
+                            address = this.hex.data[flashing_block].address;
                             bytes_flashed = 0;
                             wBlockNum = 2;
 
-                            self.loadAddress(address, write);
+                            this.loadAddress(address, write);
                         } else {
                             // all blocks flashed
                             console.log('Writing: done');
 
                             // proceed to next step
-                            self.upload_procedure(5);
+                            this.upload_procedure(5);
                         }
                     }
                 };
 
                 // start
-                self.loadAddress(address, write);
+                this.loadAddress(address, write);
 
                 break;
             }
@@ -983,9 +981,9 @@ class WEBUSBDFU_protocol {
                 console.log('Verifying data ...');
                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Verifying'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
-                blocks = self.hex.data.length - 1;
+                blocks = this.hex.data.length - 1;
                 let reading_block = 0;
-                address = self.hex.data[reading_block].address;
+                address = this.hex.data[reading_block].address;
 
                 let bytes_verified = 0;
                 let bytes_verified_total = 0; // used for progress bar
@@ -994,23 +992,23 @@ class WEBUSBDFU_protocol {
 
                 // initialize arrays
                 for (let i = 0; i <= blocks; i++) {
-                    self.verify_hex.push([]);
+                    this.verify_hex.push([]);
                 }
 
                 // start
-                self.clearStatus(function () {
-                    self.loadAddress(address, function () {
-                        self.clearStatus(read);
+                this.clearStatus(() => {
+                    this.loadAddress(address, () => {
+                        this.clearStatus(read);
                     });
                 });
 
-                const read = function () {
-                    if (bytes_verified < self.hex.data[reading_block].bytes) {
-                        const bytes_to_read = ((bytes_verified + self.transferSize) <= self.hex.data[reading_block].bytes) ? self.transferSize : (self.hex.data[reading_block].bytes - bytes_verified);
+                const read = () => {
+                    if (bytes_verified < this.hex.data[reading_block].bytes) {
+                        const bytes_to_read = ((bytes_verified + this.transferSize) <= this.hex.data[reading_block].bytes) ? this.transferSize : (this.hex.data[reading_block].bytes - bytes_verified);
 
-                        self.controlTransfer('in', self.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, function (data, code) {
+                        this.controlTransfer('in', this.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, (data, code) => {
                             for (const piece of data) {
-                                self.verify_hex[reading_block].push(piece);
+                                this.verify_hex[reading_block].push(piece);
                             }
 
                             address += bytes_to_read;
@@ -1018,7 +1016,7 @@ class WEBUSBDFU_protocol {
                             bytes_verified_total += bytes_to_read;
 
                             // update progress bar
-                            TABS.firmware_flasher.flashProgress((self.hex.bytes_total + bytes_verified_total) / (self.hex.bytes_total * 2) * 100);
+                            TABS.firmware_flasher.flashProgress((this.hex.bytes_total + bytes_verified_total) / (this.hex.bytes_total * 2) * 100);
 
                             // verify another page
                             read();
@@ -1028,20 +1026,20 @@ class WEBUSBDFU_protocol {
                             // move to another block
                             reading_block++;
 
-                            address = self.hex.data[reading_block].address;
+                            address = this.hex.data[reading_block].address;
                             bytes_verified = 0;
                             wBlockNum = 2;
 
-                            self.clearStatus(function () {
-                                self.loadAddress(address, function () {
-                                    self.clearStatus(read);
+                            this.clearStatus(() => {
+                                this.loadAddress(address, () => {
+                                    this.clearStatus(read);
                                 });
                             });
                         } else {
                             // all blocks read, verify
                             let verify = true;
                             for (let i = 0; i <= blocks; i++) {
-                                verify = self.verify_flash(self.hex.data[i].data, self.verify_hex[i]);
+                                verify = this.verify_flash(this.hex.data[i].data, this.verify_hex[i]);
 
                                 if (!verify) break;
                             }
@@ -1052,14 +1050,14 @@ class WEBUSBDFU_protocol {
                                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingSuccessful'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID);
 
                                 // proceed to next step
-                                self.leave();
+                                this.leave();
                             } else {
                                 console.log('Programming: FAILED');
                                 // update progress bar
                                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
                                 // disconnect
-                                self.cleanup();
+                                this.cleanup();
                             }
                         }
                     }
