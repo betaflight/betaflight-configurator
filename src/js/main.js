@@ -249,9 +249,19 @@ function startProcess() {
         }
     });
 
-    if (GUI.isCordova()) {
-        UI_PHONES.init();
-    }
+    // break into mobile UI at the same breakpoint as the CSS, not only for Cordova
+    // use window.matchMedia
+    const mediaQuery = window.matchMedia('(max-width: 576px)');
+    const handleMediaChange = function(e) {
+        if (e.matches) {
+            console.log('Using mobile UI');
+            UI_PHONES.init();
+        } else {
+            console.log('Using desktop UI');
+        }
+    };
+    mediaQuery.addListener(handleMediaChange);
+    handleMediaChange(mediaQuery);
 
     const ui_tabs = $('#tabs > ul');
     $('a', ui_tabs).click(function () {

@@ -92,9 +92,14 @@ vtx.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        if (GUI.isCordova()) {
-            UI_PHONES.initToolbar();
-        }
+        const mediaQuery = window.matchMedia('(max-width: 576px)');
+        const handleMediaChange = function(e) {
+            if (e.matches) {
+                UI_PHONES.initToolbar();
+            }
+        };
+        mediaQuery.addListener(handleMediaChange);
+        handleMediaChange(mediaQuery);
 
         self.updating = false;
         GUI.content_ready(callback);

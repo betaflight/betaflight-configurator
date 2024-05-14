@@ -204,9 +204,14 @@ export function initializeSerialBackend() {
 }
 
 function finishClose(finishedCallback) {
-    if (GUI.isCordova()) {
-        UI_PHONES.reset();
-    }
+    const mediaQuery = window.matchMedia('(max-width: 576px)');
+    const handleMediaChange = function(e) {
+        if (e.matches) {
+            UI_PHONES.reset();
+        }
+    };
+    mediaQuery.addListener(handleMediaChange);
+    handleMediaChange(mediaQuery);
 
     const wasConnected = CONFIGURATOR.connectionValid;
     tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Disconnected', { time: connectionTimestamp ? Date.now() - connectionTimestamp : undefined});
@@ -617,7 +622,7 @@ function finishOpen() {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
     }
 
-    if (GUI.isCordova()) {
+    if (window.matchMedia('(max-width: 575px)').matches) {
         UI_PHONES.reset();
     }
 
