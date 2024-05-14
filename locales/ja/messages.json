@@ -52,6 +52,9 @@
     "portsSelectManual": {
         "message": "手動選択"
     },
+    "portsSelectNone": {
+        "message": "ネットワーク接続不可"
+    },
     "portsSelectVirtual": {
         "message": "バーチャル接続モード (テスト中)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
@@ -109,6 +112,10 @@
     "useMdnsBrowser": {
         "message": "mDNSブラウザを使用したネットワーク上でのデバイス検出 (試験運用)",
         "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
+    "showManualMode": {
+        "message": "手動接続モード 有効",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "バーチャル接続モード 有効",
