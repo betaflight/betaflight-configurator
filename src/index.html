@@ -26,7 +26,11 @@
             :firmware-id="FC.CONFIG.flightControllerIdentifier"
             :hardware-id="FC.CONFIG.hardwareName"
         ></betaflight-logo>
-        <port-picker></port-picker>
+        <port-picker
+            v-model="PortHandler.portPicker"
+            :connected-devices="PortHandler.currentPorts"
+            :read-only="PortHandler.readOnly"
+        ></port-picker>
         <div class="header-wrapper">
             <div id="quad-status_wrapper">
                 <battery-icon

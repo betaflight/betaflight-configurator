@@ -8,8 +8,9 @@
         id="port"
         class="dropdown-select"
         :title="$t('firmwareFlasherManualPort')"
-        @value="value"
-        @input="$emit('input', $event.target.value)"
+        :disabled="readOnly"
+        v-model="value.selectedPort"
+        @change="onChange"
       >
         <option value="manual">
           {{ $t("portsSelectManual") }}
@@ -20,6 +21,16 @@
         >
           {{ $t("portsSelectVirtual") }}
         </option>
+        <option
+          v-for="connectedDevice in connectedDevices"
+          :key="connectedDevice.path"
+          :value="connectedDevice.path"
+        >
+          {{ connectedDevice.displayName }}
+        </option>
+        <option value="requestpermission">
+          {{ $t("portsSelectPermission") }}
+        </option>
       </select>
     </div>
     <div id="auto-connect-and-baud">
@@ -27,9 +38,10 @@
         <div class="dropdown dropdown-dark">
           <select
             id="baud"
-            v-model="selectedBaudRate"
+            v-model="value.selectedBauds"
             class="dropdown-select"
             :title="$t('firmwareFlasherBaudRate')"
+            :disabled="readOnly"
           >
             <option
               v-for="baudRate in baudRates"
@@ -52,15 +64,25 @@ import { EventBus } from '../eventBus';
 export default {
     props: {
       value: {
-        type: String,
-        default: 'manual',
+        type: Object,
+        default: {
+          selectedPort: 'manual', 
+          selectedBaud: 115200,
+        },
+      },
+      connectedDevices: {
+        type: Array,
+        default: () => [],
+      },
+      readOnly: {
+        type: Boolean,
+        default: false,
       },
     },
 
     data() {
         return {
             showVirtual: false,
-            selectedBaudRate: "115200",
             baudRates: [
                 { value: "1000000", label: "1000000" },
                 { value: "500000", label: "500000" },
@@ -87,6 +109,14 @@ export default {
     methods: {
       setShowVirtual() {
         this.showVirtual = getConfig('showVirtualMode').showVirtualMode;
+      },
+      onChange(event) {
+        if (event.target.value === 'requestpermission') {
+          event.target.value = 'manual';
+          EventBus.$emit('ports-input:request-permission');
+        } else {
+          EventBus.$emit('ports-input:change', event.target.value);
+        }
       },
     },
 };

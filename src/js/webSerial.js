@@ -1,4 +1,4 @@
-import { webSerialDevices } from "./serial_devices";
+import { webSerialDevices, vendorIdNames } from "./serial_devices";
 
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
@@ -39,13 +39,23 @@ class WebSerial extends EventTarget {
 
         this.connect = this.connect.bind(this);
 
-        navigator.serial.addEventListener("connect", device => {
-            this.dispatchEvent(new CustomEvent("addedDevice", { detail: device.target }));
-        });
+        navigator.serial.addEventListener("connect", e => this.handleNewDevice(e.target).bind(this));
+        navigator.serial.addEventListener("disconnect", e => this.handleRemovedDevice(e.target).bind(this));
+    }
 
-        navigator.serial.addEventListener("disconnect", device => {
-            this.dispatchEvent(new CustomEvent("removedDevice", { detail: device.target }));
-        });
+    handleNewDevice(device) {
+        const added = this.createPort(device);
+        if (this.ports === null) {
+            this.ports = [];
+        }
+        this.ports.push(added);
+        this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+    }
+
+    handleRemovedDevice(device) {
+        const removed = this.ports.find(port => port.port === device);
+        this.ports = this.ports.filter(port => port.port !== device);
+        this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
 
     handleReceiveBytes(info) {
@@ -54,34 +64,44 @@ class WebSerial extends EventTarget {
 
     handleDisconnect() {
         this.removeEventListener('receive', this.handleReceiveBytes);
-        this.removeEventListener('disconnect', this.handleDisconnect);
+        this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+    }
+
+    getConnectedPort() {
+        return this.port;
+    }
+
+    createPort(port) {
+        return {
+            path: `D${this.port_counter}`,
+            displayName: `Betaflight ${vendorIdNames[port.getInfo().usbVendorId]}`,
+            vendorId: port.getInfo().usbVendorId,
+            productId: port.getInfo().usbProductId,
+            port: port,
+        };
     }
 
     async requestPermissionDevice() {
         const permissionPort = await navigator.serial.requestPort({
             filters: webSerialDevices,
         });
-
+        this.handleNewDevice(permissionPort);
         return permissionPort;
     }; 
 
     async getDevices() {
 
-        const ports = await navigator.serial.getPorts({
-            filters: webSerialDevices,
-        });
+        if (!this.ports) {
 
-        this.port_counter = 0;
-        this.ports = ports.map(function (port, index) {
-            return {
-                path: `${this.port_counter++}`,
-                displayName: `Betaflight Flight Controller`,
-                vendorId: port.vendorId,
-                productId: port.productId,
-                port: port,
-            };
-        }, this);
+            const ports = await navigator.serial.getPorts({
+                filters: webSerialDevices,
+            });
 
+            this.port_counter = 1;
+            this.ports = ports.map(function (port) {
+                return this.createPort(port);
+            }, this);
+        }
         return this.ports;
     }
 
@@ -107,7 +127,6 @@ class WebSerial extends EventTarget {
             this.openRequested = false;
 
             this.addEventListener("receive", this.handleReceiveBytes);
-            this.addEventListener('disconnect', this.handleDisconnect);
 
             console.log(
                 `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, Baud: ${options.baudRate}`,

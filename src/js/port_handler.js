@@ -1,20 +1,26 @@
 import GUI, { TABS } from "./gui";
 import FC from "./fc";
 import { i18n } from "./localization";
-import { generateVirtualApiVersions, getTextWidth } from './utils/common';
 import { get as getConfig } from "./ConfigStorage";
 import MdnsDiscovery from "./mdns_discovery";
 import { isWeb } from "./utils/isWeb";
 import { usbDevices } from "./usb_devices";
 import { serialShim } from "./serial_shim.js";
+import { EventBus } from "../components/eventBus";
 
 const serial = serialShim();
 
-const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
+const DEFAULT_PORT = 'manual';
+const DEFAULT_BAUDS = 115200;
 
 const PortHandler = new function () {
     this.currentPorts = [];
     this.initialPorts = false;
+    this.portPicker = {
+        selectedPort: DEFAULT_PORT,
+        selectedBauds: DEFAULT_BAUDS,
+    };
+    this.portPickerReadOnly = false;
     this.port_detected_callbacks = [];
     this.port_removed_callbacks = [];
     this.dfu_available = false;
@@ -26,15 +32,13 @@ const PortHandler = new function () {
 };
 
 PortHandler.initialize = function () {
-    const self = this;
 
-    const portPickerElementSelector = "div#port-picker #port, div.web-port-picker #port";
-    self.portPickerElement = $(portPickerElementSelector);
-    self.selectList = document.querySelector(portPickerElementSelector);
-    self.initialWidth = self.selectList.offsetWidth + 12;
+    EventBus.$on('ports-input:request-permission', this.askPermissionPort.bind(this));
+    EventBus.$on('ports-input:change', this.onChangeSelectedPort.bind(this));
 
-    // fill dropdown with version numbers
-    generateVirtualApiVersions();
+    serial.addEventListener("addedDevice", this.check_serial_devices.bind(this));
+
+    serial.addEventListener("removedDevice", this.check_serial_devices.bind(this));
 
     this.reinitialize();    // just to prevent code redundancy
 };
@@ -69,22 +73,8 @@ PortHandler.check = function () {
         self.check_serial_devices();
     }
 
-    if (isWeb()) {
-        serial.addEventListener("addedDevice", (e) => {
-            this.check_serial_devices();
-        });
 
-        serial.addEventListener("removedDevice", (e) => {
-            this.check_serial_devices();
-        });
-
-        this.check_serial_devices();
-
-    } else {
-        self.usbCheckLoop = setTimeout(() => {
-            self.check();
-        }, TIMEOUT_CHECK);
-    }
+    this.check_serial_devices();
 
 };
 
@@ -119,18 +109,21 @@ PortHandler.check_serial_devices = function () {
         } else {
             self.removePort();
             self.detectPort();
+            self.selectActivePort();
         }
     };
 
-    if (isWeb()) {
-        serial.getDevices().then(updatePorts);
-    } else {
-        serial.getDevices(updatePorts);
-    }
+
+    serial.getDevices().then(updatePorts);
+};
+
+PortHandler.onChangeSelectedPort = function(port) {
+    this.portPicker.selectedPort = port;
 };
 
 PortHandler.check_usb_devices = function (callback) {
 
+    // TODO needs USB code refactor for web
     if (isWeb()) {
         return;
     }
@@ -158,7 +151,7 @@ PortHandler.check_usb_devices = function (callback) {
                 }));
 
                 self.portPickerElement.append($('<option/>', {
-                    value: 'manual',
+                    value: DEFAULT_PORT,
                     text: i18n.getMessage('portsSelectManual'),
                     /**
                      * @deprecated please avoid using `isDFU` and friends for new code.
@@ -224,7 +217,6 @@ PortHandler.removePort = function() {
             self.initialPorts.splice(self.initialPorts.indexOf(port, 1));
         }
         self.updatePortSelect(self.initialPorts);
-        self.portPickerElement.trigger('change');
     }
 };
 
@@ -237,8 +229,8 @@ PortHandler.detectPort = function() {
         console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
 
         if (newPorts.length === 1) {
-            self.portPickerElement.val(newPorts[0].path);
-        } else if (newPorts.length > 1) {
+            this.portPicker.selectedPort = newPorts[0].path;
+        } else {
             self.selectActivePort();
         }
 
@@ -247,8 +239,6 @@ PortHandler.detectPort = function() {
         if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
             TABS.firmware_flasher.boardNeedsVerification = true;
         }
-
-        self.portPickerElement.trigger('change');
 
         // auto-connect if enabled
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to && GUI.active_tab !== 'firmware_flasher') {
@@ -284,130 +274,38 @@ PortHandler.sortPorts = function(ports) {
     });
 };
 
-PortHandler.addNoPortSelection = function() {
-    if (!this.showVirtualMode && !this.showManualMode) {
-        this.portPickerElement.append($("<option/>", {
-            value: 'none',
-            text: i18n.getMessage('portsSelectNone'),
-        }));
-    }
-};
-
 PortHandler.updatePortSelect = function (ports) {
     ports = this.sortPorts(ports);
-    this.portPickerElement.empty();
-
-    for (const port of ports) {
-        const portText = port.displayName ? `${port.path} - ${port.displayName}` : port.path;
-
-        this.portPickerElement.append($("<option/>", {
-            value: port.path,
-            text: portText,
-            /**
-             * @deprecated please avoid using `isDFU` and friends for new code.
-             */
-            data: {isManual: false},
-        }));
-    }
-
-    if (this.showVirtualMode) {
-        this.portPickerElement.append($("<option/>", {
-            value: 'virtual',
-            text: i18n.getMessage('portsSelectVirtual'),
-            /**
-             * @deprecated please avoid using `isDFU` and friends for new code.
-             */
-            data: {isVirtual: true},
-        }));
-    }
-
-    if (this.showManualMode) {
-        this.portPickerElement.append($("<option/>", {
-            value: 'manual',
-            text: i18n.getMessage('portsSelectManual'),
-            /**
-             * @deprecated please avoid using `isDFU` and friends for new code.
-             */
-            data: {isManual: true},
-        }));
-    }
-
-    if (!ports.length) {
-        this.addNoPortSelection();
-    }
-
-    if (isWeb()) {
-        const askpermission = 'askpermission';
-        this.portPickerElement.append($("<option/>", {
-            value: askpermission,
-            text: i18n.getMessage('portsSelectPermission'),
-            /**
-             * @deprecated please avoid using `isDFU` and friends for new code.
-             */
-            //data: {isShowPermission: true},
-        }));
-
-        this.portPickerElement.on("change", e => {
-            if (e.target.value === askpermission) {
-                this.askPermissionPort();
-            }
-            e.target.value = e.target.options[0].value;
-        });
-    }
-
-    this.setPortsInputWidth();
-    this.currentPorts = ports;
+    this.currentPorts = ports;    
 };
 
 PortHandler.askPermissionPort = function() {
     serial.requestPermissionDevice().then(() => {
         this.check_serial_devices();
     });
-}
+};
 
 PortHandler.selectActivePort = function() {
     const ports = this.currentPorts;
     const OS = GUI.operating_system;
+    let selectedPort;
     for (let i = 0; i < ports.length; i++) {
         const portName = ports[i].displayName;
         if (portName) {
             const pathSelect = ports[i].path;
             const isWindows = (OS === 'Windows');
             const isTty = pathSelect.includes('tty');
-            const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM32'];
+            const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM'];
             const deviceRecognized = deviceFilter.some(device => portName.includes(device));
             const legacyDeviceRecognized = portName.includes('usb');
             if (isWindows && deviceRecognized || isTty && (deviceRecognized || legacyDeviceRecognized)) {
-                this.portPickerElement.val(pathSelect);
+                selectedPort = pathSelect;
                 this.port_available = true;
                 console.log(`Porthandler detected device ${portName} on port: ${pathSelect}`);
             }
         }
     }
-};
-
-PortHandler.setPortsInputWidth = function() {
-
-    function findMaxLengthOption(selectEl) {
-        let max = 0;
-
-        $(selectEl.options).each(function () {
-            const textSize = getTextWidth(this.textContent);
-            if (textSize > max) {
-                max = textSize;
-            }
-        });
-
-        return max;
-    }
-
-    const correction = 32; // account for up/down button and spacing
-    let width = findMaxLengthOption(this.selectList) + correction;
-
-    width = (width > this.initialWidth) ? width : this.initialWidth;
-
-    const portsInput = document.querySelector("div#port-picker #portsinput, div.web-port-picker #portsinput");
-    portsInput.style.width = `${width}px`;
+    this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
 };
 
 PortHandler.port_detected = function(name, code, timeout, ignore_timeout) {

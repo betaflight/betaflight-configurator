@@ -13,6 +13,7 @@ import StatusBar from "./status-bar/StatusBar.vue";
 import BatteryIcon from "./quad-status/BatteryIcon.vue";
 import FC from '../js/fc.js';
 import MSP from '../js/msp.js';
+import PortHandler from '../js/port_handler.js';
 import PortUsage from '../js/port_usage.js';
 import PortPicker from './port-picker/PortPicker.vue';
 import CONFIGURATOR from '../js/data_storage.js';
@@ -26,6 +27,7 @@ const betaflightModel = {
     FC,
     MSP,
     PortUsage,
+    PortHandler,
 };
 
 i18next.on('initialized', function() {
