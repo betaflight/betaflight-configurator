@@ -112,6 +112,17 @@ input, select, .select2-selection--single {
         font-size: 13px;
         padding: 0.15rem;
     }
+    &[type="text"] {
+        &[readonly] {
+            cursor: auto;
+        }
+    }
+}
+input {
+    cursor: text;
+}
+select {
+    cursor: pointer;
 }
 input[type="number"] {
     &::-webkit-inner-spin-button {
