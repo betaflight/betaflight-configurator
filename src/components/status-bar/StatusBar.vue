@@ -87,19 +87,21 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 /** Status bar **/
 #status-bar {
-  position: fixed;
   display: flex;
   white-space: nowrap;
-  gap: 10px;
+  gap: 0.5rem;
   bottom: 0;
   width: calc(100% - 20px);
   height: 20px;
   line-height: 20px;
   padding: 0.5rem 1rem;
   background-color: var(--surface-300);
+  .message {
+    margin-right: 0.25rem;
+  }
 }
 
 #status-bar > * ~ * {
