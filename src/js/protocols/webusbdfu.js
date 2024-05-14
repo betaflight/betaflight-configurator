@@ -673,25 +673,27 @@ class WEBUSBDFU_protocol {
                                         return;
                                     }
                                     clearInterval(waitForErase);
-                                    this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data, error) => {
-                                        if (error) { // we encounter an error, but this is expected. should be a stall.
-                                            console.log('Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.');
-                                            gui_log(i18n.getMessage('stm32UnprotectSuccessful'));
+                                    setTimeout(() => {
+                                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data, error) => {
+                                            if (error) { // we encounter an error, but this is expected. should be a stall.
+                                                console.log('Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.');
+                                                gui_log(i18n.getMessage('stm32UnprotectSuccessful'));
 
-                                            const messageUnprotectUnplug = i18n.getMessage('stm32UnprotectUnplug');
-                                            gui_log(messageUnprotectUnplug);
+                                                const messageUnprotectUnplug = i18n.getMessage('stm32UnprotectUnplug');
+                                                gui_log(messageUnprotectUnplug);
 
-                                            TABS.firmware_flasher.flashingMessage(messageUnprotectUnplug, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION)
-                                                .flashProgress(0);
+                                                TABS.firmware_flasher.flashingMessage(messageUnprotectUnplug, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION)
+                                                    .flashProgress(0);
 
-                                        } else { // unprotecting the flight controller did not work. It did not reboot.
-                                            console.log('Failed to execute unprotect memory command');
+                                            } else { // unprotecting the flight controller did not work. It did not reboot.
+                                                console.log('Failed to execute unprotect memory command');
 
-                                            gui_log(i18n.getMessage('stm32UnprotectFailed'));
-                                            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32UnprotectFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
-                                            console.log(data);
-                                            this.cleanup();
-                                        }
+                                                gui_log(i18n.getMessage('stm32UnprotectFailed'));
+                                                TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32UnprotectFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
+                                                console.log(data);
+                                                this.cleanup();
+                                            }
+                                        });
                                     }, 2000); // this should stall/disconnect anyways. so we only wait 2 sec max.
                                 }, incr);
                             } else {
@@ -724,37 +726,6 @@ class WEBUSBDFU_protocol {
                                 // it is pretty safe to continue to erase flash
                                 this.clearStatus(() => {
                                     this.upload_procedure(2);
-                                });
-                                // protect the flash memory
-                                ob_data[1] = 0x0;
-                                const writeOB = () => {
-                                    this.controlTransfer('out', this.request.DNLOAD, 2, 0, 0, ob_data, () => {
-                                        this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                            if (data[4] == this.state.dfuDNBUSY) {
-                                                const delay = data[1] | (data[2] << 8) | (data[3] << 16);
-
-                                                setTimeout(() => {
-                                                    this.controlTransfer('in', this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
-                                                        if (data[4] == this.state.dfuDNLOAD_IDLE) {
-                                                            console.log('Failed to write ob');
-                                                            this.cleanup();
-                                                        } else {
-                                                            console.log('Success writing ob');
-                                                            this.cleanup();
-                                                        }
-                                                    });
-                                                }, delay);
-                                            } else {
-                                                console.log('Failed to initiate write ob');
-                                                this.cleanup();
-                                            }
-                                        });
-                                    });
-                                };
-                                this.clearStatus(() => {
-                                    this.loadAddress(this.chipInfo.option_bytes.start_address, () => {
-                                        this.clearStatus(writeOB);
-                                    });
                                 });
                             } else {
                                 console.log('Option bytes could not be read. Quite possibly read protected.');
