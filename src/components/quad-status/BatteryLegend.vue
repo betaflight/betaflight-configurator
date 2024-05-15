@@ -16,17 +16,15 @@ export default {
       type: Number,
       default: 1,
     },
+    vbatcellcount: {
+      type: Number,
+      default: 1,
+    },
   },
   computed: {
     reading() {
-      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
-
-      if (this.voltage === 0) {
-        nbCells = 1;
-      }
-
-      const cellsText =
-        this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : "USB";
+      const nbCells = this.voltage === 0 || this.vbatcellcount === 0 ? 1 : this.vbatcellcount;
+      const cellsText = this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : "USB";
       return `${this.voltage.toFixed(2)}V (${cellsText})`;
     },
   },

@@ -30,14 +30,14 @@ export default {
       type: Number,
       default: 1,
     },
+    vbatcellcount: {
+      type: Number,
+      default: 1,
+    },
   },
   computed: {
     nbCells() {
-      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
-      if (this.voltage === 0) {
-        nbCells = 1;
-      }
-      return nbCells;
+      return this.voltage === 0 || this.vbatcellcount === 0 ? 1 : this.vbatcellcount;
     },
     min() {
       return this.vbatmincellvoltage * this.nbCells;
@@ -49,9 +49,7 @@ export default {
       return this.vbatwarningcellvoltage * this.nbCells;
     },
     isEmpty() {
-      return (
-        this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM
-      );
+      return this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
     },
     classes() {
       if (this.batteryState) {
