@@ -10,8 +10,6 @@
   </div>
 </template>
 <script>
-const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
-
 export default {
   props: {
     voltage: {
@@ -49,7 +47,7 @@ export default {
       return this.vbatwarningcellvoltage * this.nbCells;
     },
     isEmpty() {
-      return this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
+      return this.voltage < this.min && !this.voltage.vbatcellcount;
     },
     classes() {
       if (this.batteryState) {
