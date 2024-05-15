@@ -282,6 +282,9 @@ PortHandler.updatePortSelect = function (ports) {
 PortHandler.askPermissionPort = function() {
     serial.requestPermissionDevice().then(() => {
         this.check_serial_devices();
+    }).catch(() => {
+        // In the catch we call the check_serial_devices too to change the request permission option from the select for other
+        this.check_serial_devices();
     });
 };
 

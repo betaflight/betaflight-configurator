@@ -112,7 +112,6 @@ export default {
       },
       onChange(event) {
         if (event.target.value === 'requestpermission') {
-          event.target.value = 'manual';
           EventBus.$emit('ports-input:request-permission');
         } else {
           EventBus.$emit('ports-input:change', event.target.value);
