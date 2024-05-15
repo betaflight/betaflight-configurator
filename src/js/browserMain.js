@@ -38,7 +38,6 @@ import "../css/tabs/transponder.less";
 import "../css/tabs/privacy_policy.less";
 import "../css/tabs/options.less";
 import "../css/opensans_webfontkit/fonts.css";
-import "../css/dropdown-lists/css/style_lists.css";
 import "switchery-latest/dist/switchery.min.css";
 import "../css/switchery_custom.less";
 import "@fortawesome/fontawesome-free/css/all.css";
