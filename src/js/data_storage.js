@@ -13,7 +13,7 @@ const CONFIGURATOR = {
     // all versions are specified and compared using semantic versioning http://semver.org/
     API_VERSION_ACCEPTED: API_VERSION_1_41,
     API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE: API_VERSION_1_41,
-    API_VERSION_MAX_SUPPORTED: API_VERSION_1_47,
+    API_VERSION_MAX_SUPPORTED: API_VERSION_1_46,
 
     connectionValid: false,
     connectionValidCliOnly: false,
