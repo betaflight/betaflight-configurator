@@ -43,37 +43,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-#firmware-virtual-option {
-    height: 76px;
-    width: 180px;
-    margin-right: 15px;
-    margin-top: 0px;
-    display: none;
-}
-
-.dropdown-dark .dropdown-select {
-    color: var(--text);
-    width: calc(100% - 10px);
-    background: #444;
-}
-
-.dropdown-dark {
-    background-color: var(--surface-300);
-    border: 1px solid var(--surface-500);
-    color: var(--text);
-}
-
-.dropdown-dark:before {
-    border-bottom-color: var(--surface-700);
-}
-
-.dropdown-dark:after {
-    border-top-color: var(--surface-700);
-}
-
-.dropdown-dark .dropdown-select > option {
-    background: var(--surface-300);
-}
-</style>

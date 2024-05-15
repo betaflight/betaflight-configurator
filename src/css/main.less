@@ -106,6 +106,7 @@ input, select, .select2-selection--single {
     border: 1px solid var(--surface-500) !important;
     color: var(--text);
     padding: 0.25rem;
+    padding-right: 0.5rem;
     border-radius: 0.5rem !important;
     &.small {
         font-size: 13px;
@@ -224,14 +225,17 @@ input[type="number"] {
     }
 }
 #portsinput {
-    width: 220px;
-    margin-right: 15px;
-    .dropdown {
-        margin-bottom: 5px;
-    }
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 0.5rem;
 }
-#auto-connect-and-baud {
-    float: right;
+.dropdown {
+    width: 100%;
+    select {
+        width: 100%;
+    }
 }
 #auto-connect-switch {
     width: 110px;
@@ -242,7 +246,6 @@ input[type="number"] {
 }
 #baudselect {
     width: 80px;
-    float: right;
     margin-right: 2px;
 }
 .gray {
@@ -250,9 +253,8 @@ input[type="number"] {
 }
 #firmware-virtual-option {
     height: 76px;
-    width: 180px;
-    margin-right: 15px;
-    margin-top: 16px;
+    width: fit-content;
+    margin-right: 1rem;
     display: none;
 }
 #port-override-option {
