@@ -20,7 +20,7 @@ const PortHandler = new function () {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
     };
-    this.portPickerReadOnly = false;
+    this.portPickerDisabled = false;
     this.port_detected_callbacks = [];
     this.port_removed_callbacks = [];
     this.dfu_available = false;

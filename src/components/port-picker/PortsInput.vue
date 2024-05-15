@@ -8,7 +8,7 @@
         id="port"
         class="dropdown-select"
         :title="$t('firmwareFlasherManualPort')"
-        :disabled="readOnly"
+        :disabled="disabled"
         v-model="value.selectedPort"
         @change="onChange"
       >
@@ -41,7 +41,7 @@
             v-model="value.selectedBauds"
             class="dropdown-select"
             :title="$t('firmwareFlasherBaudRate')"
-            :disabled="readOnly"
+            :disabled="disabled"
           >
             <option
               v-for="baudRate in baudRates"
@@ -74,7 +74,7 @@ export default {
         type: Array,
         default: () => [],
       },
-      readOnly: {
+      disabled: {
         type: Boolean,
         default: false,
       },

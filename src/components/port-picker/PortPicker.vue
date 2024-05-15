@@ -4,7 +4,7 @@
     <PortsInput 
       v-model="value" 
       :connected-devices="connectedDevices"
-      :read-only="readOnly" />
+      :disabled="disabled" />
   </div>
 </template>
 
@@ -25,7 +25,7 @@ export default {
         type: Array,
         default: () => [],
       },
-      readOnly: {
+      disabled: {
         type: Boolean,
         default: false,
       },

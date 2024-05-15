@@ -104,7 +104,7 @@ export function initializeSerialBackend() {
                 GUI.connecting_to = portName;
 
                 // lock port select & baud while we are connecting / connected
-                PortHandler.portPickerReadOnly = true;
+                PortHandler.portPickerDisabled = true;
                 $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
                 const baudRate = selected_baud;
@@ -225,7 +225,7 @@ function finishClose(finishedCallback) {
     $('#dialogReportProblems-closebtn').click();
 
     // unlock port select & baud
-    PortHandler.portPickerReadOnly = false;
+    PortHandler.portPickerDisabled = false;
 
     // reset connect / disconnect button
     $('div.connect_controls a.connect').removeClass('active');
@@ -269,7 +269,7 @@ function abortConnection() {
     $('div#connectbutton a.connect').removeClass('active');
 
     // unlock port select & baud
-    PortHandler.portPickerReadOnly = false;
+    PortHandler.portPickerDisabled = false;
 
     // reset data
     isConnected = false;

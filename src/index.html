@@ -29,7 +29,7 @@
         <port-picker
             v-model="PortHandler.portPicker"
             :connected-devices="PortHandler.currentPorts"
-            :read-only="PortHandler.readOnly"
+            :disabled="PortHandler.portPickerDisabled"
         ></port-picker>
         <div class="header-wrapper">
             <div id="quad-status_wrapper">

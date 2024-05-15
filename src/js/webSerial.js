@@ -31,7 +31,7 @@ class WebSerial extends EventTarget {
         this.logHead = "SERIAL: ";
 
         this.port_counter = 0;
-        this.ports = null;
+        this.ports = [];
         this.port = null;
         this.reader = null;
         this.writer = null;
@@ -39,15 +39,14 @@ class WebSerial extends EventTarget {
 
         this.connect = this.connect.bind(this);
 
-        navigator.serial.addEventListener("connect", e => this.handleNewDevice(e.target).bind(this));
-        navigator.serial.addEventListener("disconnect", e => this.handleRemovedDevice(e.target).bind(this));
+        navigator.serial.addEventListener("connect", e => this.handleNewDevice(e.target));
+        navigator.serial.addEventListener("disconnect", e => this.handleRemovedDevice(e.target));
+
+        this.loadDevices();
     }
 
     handleNewDevice(device) {
         const added = this.createPort(device);
-        if (this.ports === null) {
-            this.ports = [];
-        }
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
     }
@@ -81,6 +80,17 @@ class WebSerial extends EventTarget {
         };
     }
 
+    async loadDevices() {
+        const ports = await navigator.serial.getPorts({
+            filters: webSerialDevices,
+        });
+
+        this.port_counter = 1;
+        this.ports = ports.map(function (port) {
+            return this.createPort(port);
+        }, this);
+    };
+
     async requestPermissionDevice() {
         const permissionPort = await navigator.serial.requestPort({
             filters: webSerialDevices,
@@ -90,18 +100,6 @@ class WebSerial extends EventTarget {
     }; 
 
     async getDevices() {
-
-        if (!this.ports) {
-
-            const ports = await navigator.serial.getPorts({
-                filters: webSerialDevices,
-            });
-
-            this.port_counter = 1;
-            this.ports = ports.map(function (port) {
-                return this.createPort(port);
-            }, this);
-        }
         return this.ports;
     }
 
