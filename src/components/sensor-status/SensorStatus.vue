@@ -143,7 +143,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 #sensor-status ul {
     font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
     font-size: 12px;
@@ -168,7 +168,6 @@ li {
     );
     padding-left: 5px;
     padding-right: 5px;
-    text-shadow: 0 1px rgba(0, 0, 0, 1);
     &:last-child {
         border-right: 0 solid #c0c0c0;
         border-top-right-radius: 5px;
