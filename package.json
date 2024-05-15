@@ -12,8 +12,8 @@
     "review": "vite build && vite preview",
     "pretest": "yarn run lint",
     "test": "vitest",
-    "lint": "eslint --ext .js,.vue src gulpfile.js gulp-appdmg.js",
-    "lint:fix": "eslint --fix src gulpfile.js gulp-appdmg.js",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "eslint --fix src",
     "storybook": "start-storybook -p 6006"
   },
   "repository": {
