@@ -7,19 +7,25 @@ import BuildApi from '../BuildApi';
 import ConfigInserter from "../ConfigInserter.js";
 import { tracking } from "../Analytics";
 import MspHelper from '../msp/MSPHelper';
-import STM32 from '../protocols/stm32';
 import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
-import PortHandler, { usbDevices } from '../port_handler';
+import PortHandler from '../port_handler';
 import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
-import serial from '../serial';
-import STM32DFU from '../protocols/stm32usbdfu';
 import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { checkChromeRuntimeError, urlExists } from '../utils/common';
 import { generateFilename } from '../utils/generate_filename';
 import Sponsor from '../Sponsor';
+
+import { usbDevices } from '../usb_devices.js';
+import { serialShim } from "../serial_shim.js";
+import { usbShim } from "../usb_shim.js";
+import STM32 from '../protocols/stm32';
+import { isWeb } from '../utils/isWeb.js';
+
+let serial = serialShim();
+let dfu = usbShim();
 
 const firmware_flasher = {
     targets: null,
@@ -585,6 +591,12 @@ firmware_flasher.initialize = function (callback) {
                 eraseAll = true;
             }
 
+            if (isWeb()) {
+                // TODO: Currently only web dfu is supported - add support for web serial
+                self.isFlashing = false;
+                return dfu.connect(firmware, options);
+            }
+
             if (!$('option:selected', portPickerElement).data().isDFU) {
                 if (String(portPickerElement.val()) !== '0') {
                     const port = String(portPickerElement.val());
@@ -609,8 +621,7 @@ firmware_flasher.initialize = function (callback) {
                 }
             } else {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'DFU Flashing', { filename: self.filename || null });
-
-                STM32DFU.connect(usbDevices, firmware, options);
+                dfu.connect(firmware, options);
             }
 
             self.isFlashing = false;
@@ -960,7 +971,7 @@ firmware_flasher.initialize = function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
                 try {
                     console.log('Closing DFU');
-                    STM32DFU.connect(usbDevices, self.parsed_hex, { exitDfu: true });
+                    dfu.connect(usbDevices, self.parsed_hex, { exitDfu: true });
                 } catch (e) {
                     console.log(`Exiting DFU failed: ${e.message}`);
                 }
