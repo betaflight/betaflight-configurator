@@ -34,7 +34,9 @@
       </select>
     </div>
     <div id="auto-connect-and-baud">
-      <div id="baudselect">
+      <div id="baudselect"
+        v-if="value.selectedPort !== 'virtual'"
+      >
         <div class="dropdown dropdown-dark">
           <select
             id="baud"
