@@ -1,12 +1,12 @@
-<div class="tab-motors toolbar_fixed_bottom">
+<div class="tab-motors">
     <div class="content_wrapper">
         <div class="tab_title" i18n="tabMotorTesting">Motors</div>
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="" target="_blank" rel="noopener noreferrer"></a>
         </div>
 
-        <div class="grid-row">
-            <div class="grid-col col6">
+        <div class="grid-row grid-box col2">
+            <div class="col-span-1">
 
                 <div class="configuration">
 
@@ -195,7 +195,7 @@
                 <!-- END CONFIGURATION -->
 
             </div>
-            <div class="grid-col col6">
+            <div class="col-span-1">
 
                 <!-- MOTOR TEST SECTION -->
                 <div class="gui_box motorblock">
@@ -203,123 +203,112 @@
 
                     <!-- SENSOR GRAPH SECTION -->
                     <div class="gui_box grey">
-                        <div class="wrapper modelAndGraph">
-                            <svg id="graph">
-                            <g class="grid x" transform="translate(40, 120)"></g>
-                            <g class="grid y" transform="translate(40, 10)"></g>
-                            <g class="data" transform="translate(41, 10)"></g>
-                            <g class="axis x" transform="translate(40, 120)"></g>
-                            <g class="axis y" transform="translate(40, 10)"></g>
-                        </svg>
-
-                        <div class="plot_control">
-                            <div class="table">
-                                <div class="sensor row">
-                                    <div class="left-cell motor-button">
-                                        <a class="reset_max" href="#" i18n="motorsResetMaximumButton" i18n_title="motorsResetMaximum"></a>
-                                    </div>
-                                    <div class="right-cell">
-                                        <select name="sensor_choice">
-                                            <option value="gyro" selected="selected" i18n="motorsSensorGyroSelect"></option>
-                                            <option value="accel" i18n="motorsSensorAccelSelect"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row-container">
-                                    <div class="row">
-                                        <div class="left-cell">
-                                            <div i18n="sensorsRefresh"></div>
+                        <div class="wrapper modelAndGraph grid-box col4">
+                            <svg id="graph" class="col-span-3">
+                                <g class="grid x" transform="translate(40, 120)"></g>
+                                <g class="grid y" transform="translate(40, 10)"></g>
+                                <g class="data" transform="translate(41, 10)"></g>
+                                <g class="axis x" transform="translate(40, 120)"></g>
+                                <g class="axis y" transform="translate(40, 10)"></g>
+                            </svg>
+                            <div class="plot_control col-span-1">
+                                <div class="table">
+                                    <div class="sensor row">
+                                        <div class="left-cell motor-button">
+                                            <a class="reset_max" href="#" i18n="motorsResetMaximumButton" i18n_title="motorsResetMaximum"></a>
                                         </div>
-                                        <div class="rate right-cell">
-                                            <select name="rate">
-                                                <option value="10">10 ms</option>
-                                                <option value="20">20 ms</option>
-                                                <option value="30">30 ms</option>
-                                                <option value="40">40 ms</option>
-                                                <option value="50">50 ms</option>
-                                                <option value="100">100 ms</option>
-                                                <option value="250">250 ms</option>
-                                                <option value="500">500 ms</option>
-                                                <option value="1000">1000 ms</option>
+                                        <div class="right-cell">
+                                            <select name="sensor_choice">
+                                                <option value="gyro" selected="selected" i18n="motorsSensorGyroSelect"></option>
+                                                <option value="accel" i18n="motorsSensorAccelSelect"></option>
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="left-cell">
-                                            <div i18n="sensorsScale"></div>
+                                    <div class="row-container">
+                                        <div class="row">
+                                            <div class="left-cell">
+                                                <div i18n="sensorsRefresh"></div>
+                                            </div>
+                                            <div class="rate right-cell">
+                                                <select name="rate">
+                                                    <option value="10">10 ms</option>
+                                                    <option value="20">20 ms</option>
+                                                    <option value="30">30 ms</option>
+                                                    <option value="40">40 ms</option>
+                                                    <option value="50">50 ms</option>
+                                                    <option value="100">100 ms</option>
+                                                    <option value="250">250 ms</option>
+                                                    <option value="500">500 ms</option>
+                                                    <option value="1000">1000 ms</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="scale right-cell">
-                                            <select name="scale">
-                                            </select>
+                                        <div class="row">
+                                            <div class="left-cell">
+                                                <div i18n="sensorsScale"></div>
+                                            </div>
+                                            <div class="scale right-cell">
+                                                <select name="scale">
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="left-cell">
-                                            X:
+                                        <div class="row">
+                                            <div class="left-cell">
+                                                X:
+                                            </div>
+                                            <div class="x value right-cell">
+                                                0
+                                            </div>
                                         </div>
-                                        <div class="x value right-cell">
-                                            0
+                                        <div class="row">
+                                            <div class="left-cell">
+                                                Y:
+                                            </div>
+                                            <div class="y value right-cell">
+                                                0
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="left-cell">
-                                            Y:
+                                        <div class="row">
+                                            <div class="left-cell">
+                                                Z:
+                                            </div>
+                                            <div class="z value right-cell">
+                                                0
+                                            </div>
                                         </div>
-                                        <div class="y value right-cell">
-                                            0
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="left-cell">
-                                            Z:
-                                        </div>
-                                        <div class="z value right-cell">
-                                            0
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="left-cell">
-                                            RMS:
-                                        </div>
-                                        <div class="rms value right-cell">
-                                            0
+                                        <div class="row">
+                                            <div class="left-cell">
+                                                RMS:
+                                            </div>
+                                            <div class="rms value right-cell">
+                                                0
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="power_info">
                             <span i18n="motorsVoltage" class="power_text"></span><span class="motors-bat-voltage power_value"></span>
                             <span i18n="motorsADrawing" class="power_text"></span><span class="motors-bat-mah-drawing power_value"></span>
                             <span i18n="motorsmAhDrawn" class="power_text"></span><span class="motors-bat-mah-drawn power_value"></span>
                         </div>
-
                     </div>
-                </div>
-                <!-- END SENSOR GRAPH -->
-                <!-- MOTOR TESTING -->
-                <div class="left motors">
-                    <div class="title2" i18n="motorsText"></div>
-                        <ul class="titles">
-                        <li i18n_title="motorNumber1">1</li>
-                        <li i18n_title="motorNumber2">2</li>
-                        <li i18n_title="motorNumber3">3</li>
-                        <li i18n_title="motorNumber4">4</li>
-                        <li i18n_title="motorNumber5">5</li>
-                        <li i18n_title="motorNumber6">6</li>
-                        <li i18n_title="motorNumber7">7</li>
-                        <li i18n_title="motorNumber8">8</li>
-                    </ul>
-                    <div class="bar-wrapper"></div>
-                </div>
-                <div class="clear-both"></div>
-                <!-- MOTOR TESTING -->
-                <div class="motor_testing">
-                    <div class="left">
-                        <div class="telemetry">
-                            <ul>
+                        <div class="motors">
+                            <ul class="grid-box col9 titles">
+                                <li i18n_title="motorNumber1">1</li>
+                                <li i18n_title="motorNumber2">2</li>
+                                <li i18n_title="motorNumber3">3</li>
+                                <li i18n_title="motorNumber4">4</li>
+                                <li i18n_title="motorNumber5">5</li>
+                                <li i18n_title="motorNumber6">6</li>
+                                <li i18n_title="motorNumber7">7</li>
+                                <li i18n_title="motorNumber8">8</li>
+                            </ul>
+                            <div class="bar-wrapper grid-box col9"></div>
+                        </div>
+                        <div class="motor_testing">
+                            <ul class="grid-box col9 telemetry">
                                 <li><span class="motor-0 cf_tip" i18n_title="motorsTelemetryHelp">&nbsp;</span></li>
                                 <li><span class="motor-1 cf_tip" i18n_title="motorsTelemetryHelp">&nbsp;</span></li>
                                 <li><span class="motor-2 cf_tip" i18n_title="motorsTelemetryHelp">&nbsp;</span></li>
@@ -330,20 +319,20 @@
                                 <li><span class="motor-7 cf_tip" i18n_title="motorsTelemetryHelp">&nbsp;</span></li>
                                 <li><span class="motor-master cf_tip" i18n_title="motorsTelemetryHelp">&nbsp;</span></li>
                             </ul>
-                        </div>
-                        <div class="sliders">
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
-                            <input type="range" min="1000" max="2000" value="1000" disabled="disabled" class="master"/>
-                        </div>
-                        <div class="values">
-                            <ul>
+                            <div class="sliders">
+                                <ul class="grid-box col9">
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled"/>
+                                    <input type="range" min="1000" max="2000" value="1000" disabled="disabled" class="master"/>
+                                </ul>
+                            </div>
+                            <ul class="grid-box col9 values">
                                 <li>1000</li>
                                 <li>1000</li>
                                 <li>1000</li>
@@ -355,8 +344,7 @@
                                 <li style="font-weight: bold" i18n="motorsMaster"></li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="notice">
+                    <div class="danger">
                         <p i18n="motorsNotice"></p>
                         <input id="motorsEnableTestMode" type="checkbox" class="togglesmall"/>
                         <span class="motorsEnableTestMode" i18n="motorsEnableControl"></span>
@@ -371,14 +359,17 @@
 
         <div class="clear-both"></div>
 
-        <div class="content_toolbar">
-            <div class="btn">
-                <a class="save disabled" href="#" i18n="motorsButtonSave"></a>
-                <a class="stop disabled" href="#" i18n="escDshotDirectionDialog-StopWizard"></a>
-            </div>
-        </div>
 
     </div> <!-- END CONTENT_WRAPPER -->
+
+    <div class="content_toolbar toolbar_fixed_bottom">
+        <div class="btn">
+            <a class="save disabled" href="#" i18n="motorsButtonSave"></a>
+        </div>
+        <div class="btn">
+            <a class="stop disabled" href="#" i18n="escDshotDirectionDialog-StopWizard"></a>
+        </div>
+    </div>
 
     <dialog id="dialog-mixer-reset">
         <div id="dialog-mixer-reset-content-wrapper">
