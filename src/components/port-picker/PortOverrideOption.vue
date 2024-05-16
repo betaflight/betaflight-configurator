@@ -1,42 +1,43 @@
 <template>
-  <div
-    id="port-override-option"
-    style="display: none"
-    :style="{ display: isManual ? 'flex' : 'none' }"
-  >
+  <div id="port-override-option">
     <label
       for="port-override"
     ><span>{{ $t("portOverrideText") }}</span>
       <input
         id="port-override"
         type="text"
-        value="/dev/rfcomm0"
+        v-model="value"
       ></label>
   </div>
 </template>
 
 <script>
 export default {
-    props: {
-        isManual: {
-            type: Boolean,
-            default: true,
-        },
+  props: {
+    value: {
+      type: String,
+      default: "/dev/rfcomm0",
     },
+    isManual: {
+        type: Boolean,
+        default: true,
+    },
+  },
 };
 </script>
 <style scoped>
 #port-override-option {
     font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
     font-size: 12px;
-    margin-top: 16px;
+    margin-top: 4px;
     margin-right: 15px;
     label {
         background-color: #2b2b2b;
         border-radius: 3px;
         padding: 3px;
         color: var(--subtleAccent);
-    }
+    };
+    display: block;
 }
 
 #port-override-option label {

@@ -19,6 +19,8 @@ const PortHandler = new function () {
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
+        portOverride: "/dev/rfcomm0",
+        virtualMspVersion: "1.46.0",
     };
     this.portPickerDisabled = false;
     this.port_detected_callbacks = [];
