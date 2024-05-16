@@ -104,13 +104,16 @@ export default {
     },
     mounted() {
       EventBus.$on('config-storage:set', this.setShowVirtual);
+      this.setShowVirtual('showVirtualMode');
     },
     destroyed() {
       EventBus.$off('config-storage:set', this.setShowVirtual);
     },
     methods: {
-      setShowVirtual() {
-        this.showVirtual = getConfig('showVirtualMode').showVirtualMode;
+      setShowVirtual(element) {
+        if (element === 'showVirtualMode') {
+          this.showVirtual = getConfig('showVirtualMode').showVirtualMode;
+        }
       },
       onChange(event) {
         if (event.target.value === 'requestpermission') {
