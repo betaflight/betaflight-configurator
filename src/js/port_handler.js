@@ -298,12 +298,10 @@ PortHandler.selectActivePort = function() {
         const portName = ports[i].displayName;
         if (portName) {
             const pathSelect = ports[i].path;
-            const isWindows = (OS === 'Windows');
-            const isTty = pathSelect.includes('tty');
             const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM'];
             const deviceRecognized = deviceFilter.some(device => portName.includes(device));
             const legacyDeviceRecognized = portName.includes('usb');
-            if (isWindows && deviceRecognized || isTty && (deviceRecognized || legacyDeviceRecognized)) {
+            if (deviceRecognized || legacyDeviceRecognized) {
                 selectedPort = pathSelect;
                 this.port_available = true;
                 console.log(`Porthandler detected device ${portName} on port: ${pathSelect}`);
