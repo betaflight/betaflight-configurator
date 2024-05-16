@@ -46,9 +46,12 @@ class WebSerial extends EventTarget {
     }
 
     handleNewDevice(device) {
+
         const added = this.createPort(device);
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+
+        return added;
     }
 
     handleRemovedDevice(device) {
@@ -95,8 +98,11 @@ class WebSerial extends EventTarget {
         const permissionPort = await navigator.serial.requestPort({
             filters: webSerialDevices,
         });
-        this.handleNewDevice(permissionPort);
-        return permissionPort;
+        const found = this.ports.find(port => port.port === device);
+        if (!found) {
+            return this.handleNewDevice(permissionPort);
+        }
+        return null;
     }; 
 
     async getDevices() {
