@@ -349,216 +349,193 @@
 			font-weight: normal;
 		}
 	}
-	.grid-row {
-		justify-content: flex-start;
-		gap: 7px;
-		.elements {
-			flex: 1 1 auto;
-			width: 210px;
-			max-width: 700px;
-		}
-		.osd-preview {
-			flex: 2 0 auto;
-			max-width: 1480px;
-		}
-		.osd-profile {
-			flex: 1 1 auto;
-			width: 230px;
-			max-width: 700px;
-		}
-	}
 	.grid-col {
 		margin: 0px;
 	}
-}
-.info {
-	.progressLabel {
-		color: white;
-		a {
-			color: white;
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-	}
-	.progress {
-		width: 100%;
-		height: 26px;
-		border-radius: 5px;
-		border: 1px solid var(--surface-500);
-		-webkit-appearance: none;
-		&::-webkit-progress-bar {
-			background-color: var(--text);
-			border-radius: 4px;
-			box-shadow: inset 0 0 5px #2f2f2f;
-		}
-		&::-webkit-progress-value {
-			background-color: #F86008;
-			border-radius: 4px;
-		}
-	}
-	.progress.valid {
-		&::-webkit-progress-bar {
-			background-color: #56ac1d;
-			border-radius: 4px;
-		}
-		&::-webkit-progress-value {
-			background-color: #56ac1d;
-			border-radius: 4px;
-		}
-	}
-	.progress.invalid {
-		&::-webkit-progress-bar {
-			background-color: #A62E32;
-			border-radius: 4px;
-		}
-		&::-webkit-progress-value {
-			background-color: #A62E32;
-			border-radius: 4px;
-		}
-	}
-}
-#font-logo-preview-container {
-	background: rgba(0, 255, 0, 0.4);
-	margin-bottom: 10px;
-	box-sizing: border-box;
-}
-#font-logo-preview {
-	background: rgba(0, 255, 0, 1);
-	line-height: 0;
-	margin: auto;
-}
-#font-logo-info {
-	font-size: 125%;
-	line-height: 150%;
-	h3 {
-		margin-bottom: 0.2em;
-	}
-	ul {
-		li {
-			&:before {
-				content: '\2022\20';
-			}
-		}
-		li.valid {
-			color: #00a011;
-			&:before {
-				content: '\2714\20';
-			}
-		}
-		li.invalid {
-			color: #a01100;
-			&:before {
-				content: '\2715\20';
-			}
-		}
-	}
-	#font-logo-info-upload-hint {
-		margin-top: 1em;
-		display: none;
-	}
-}
-button {
-	padding: 4px 10px !important;
-	font-weight: 600;
-	font-size: 9pt !important;
-	cursor: pointer;
-}
-.fontpresets_wrapper {
-	display: inline-block;
-	position: absolute;
-	right: 1.2em;
-	top: .8em;
-}
-.fontpresets {
-	background: var(--surface-200);
-	color: var(--text);
-	border: 1px solid var(--surface-500);
-	border-radius: 3px;
-}
-.spacer_box_title {
-	span {
-		font-size: 11px;
-		font-weight: normal;
-	}
-}
-.spacer_box {
-	div {
-		input {
-			margin-right: 5px;
-		}
-		label {
-			margin-right: 10px;
-		}
-	}
-}
-.timer-option {
-	float: none !important;
-	padding: 2px;
-	display: inline !important;
-}
-.timers-container {
-	.timer-detail {
-		padding-left: 15px;
-		padding-top: 3px;
-		padding-bottom: 3px;
-	}
-	label {
-		margin-right: 5px !important;
-		display: inline-block;
-		width: 80px;
-	}
-	input {
-		width: 150px;
-	}
-	select {
-		width: 150px;
-	}
-}
-@media all and (max-width: 1455px) {
-	.tab-osd {
-		.osd-preview {
-			order: 1;
-			min-width: 100%;
-		}
-		.osd-feature {
-			order: 2;
-		}
-		.osd-profile {
-			order: 3;
-		}
-	}
-}
-@media all and (max-width: 575px) {
-	.tab-osd {
-		.osd-preview {
-			min-width: 100%;
-			order: 1;
-			width: fit-content;
-		}
-		.osd-feature {
-			order: 2;
-			max-width: 100%;
-		}
-		.osd-profile {
-			order: 3;
-			max-width: 100%;
-		}
-	}
-	#fontmanagercontent {
-		max-width: 100%;
-		.grid-row {
-			margin-bottom: 15px;
-		}
-	}
-	.content_wrapper.font-preview {
-		padding: 15px 0;
-	}
-	.fontpresets_wrapper {
-		display: block;
-		position: relative;
-		right: 0;
-		top: 0;
-		margin-bottom: 15px;
-	}
+
+    .info {
+        .progressLabel {
+            color: white;
+            a {
+                color: white;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        .progress {
+            width: 100%;
+            height: 26px;
+            border-radius: 5px;
+            border: 1px solid var(--surface-500);
+            -webkit-appearance: none;
+            &::-webkit-progress-bar {
+                background-color: var(--text);
+                border-radius: 4px;
+                box-shadow: inset 0 0 5px #2f2f2f;
+            }
+            &::-webkit-progress-value {
+                background-color: #F86008;
+                border-radius: 4px;
+            }
+        }
+        .progress.valid {
+            &::-webkit-progress-bar {
+                background-color: #56ac1d;
+                border-radius: 4px;
+            }
+            &::-webkit-progress-value {
+                background-color: #56ac1d;
+                border-radius: 4px;
+            }
+        }
+        .progress.invalid {
+            &::-webkit-progress-bar {
+                background-color: #A62E32;
+                border-radius: 4px;
+            }
+            &::-webkit-progress-value {
+                background-color: #A62E32;
+                border-radius: 4px;
+            }
+        }
+    }
+    #font-logo-preview-container {
+        background: rgba(0, 255, 0, 0.4);
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    #font-logo-preview {
+        background: rgba(0, 255, 0, 1);
+        line-height: 0;
+        margin: auto;
+    }
+    #font-logo-info {
+        font-size: 125%;
+        line-height: 150%;
+        h3 {
+            margin-bottom: 0.2em;
+        }
+        ul {
+            li {
+                &:before {
+                    content: '\2022\20';
+                }
+            }
+            li.valid {
+                color: #00a011;
+                &:before {
+                    content: '\2714\20';
+                }
+            }
+            li.invalid {
+                color: #a01100;
+                &:before {
+                    content: '\2715\20';
+                }
+            }
+        }
+        #font-logo-info-upload-hint {
+            margin-top: 1em;
+            display: none;
+        }
+    }
+    button {
+        padding: 4px 10px !important;
+        font-weight: 600;
+        font-size: 9pt !important;
+        cursor: pointer;
+    }
+    .fontpresets_wrapper {
+        display: inline-block;
+        position: absolute;
+        right: 1.2em;
+        top: .8em;
+    }
+    .fontpresets {
+        background: var(--surface-200);
+        color: var(--text);
+        border: 1px solid var(--surface-500);
+        border-radius: 3px;
+    }
+    .spacer_box {
+        div {
+            input {
+                margin-right: 5px;
+            }
+            label {
+                margin-right: 10px;
+            }
+        }
+    }
+    .timer-option {
+        padding: 2px;
+        display: inline !important;
+    }
+    .timers-container {
+        .timer-detail {
+            padding-left: 15px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+        label {
+            margin-right: 5px !important;
+            display: inline-block;
+            width: 80px;
+        }
+        input {
+            width: 150px;
+        }
+        select {
+            width: 150px;
+        }
+    }
+    @media all and (max-width: 1455px) {
+        .tab-osd {
+            .osd-preview {
+                order: 1;
+                min-width: 100%;
+            }
+            .osd-feature {
+                order: 2;
+            }
+            .osd-profile {
+                order: 3;
+            }
+        }
+    }
+    @media all and (max-width: 575px) {
+        .tab-osd {
+            .osd-preview {
+                min-width: 100%;
+                order: 1;
+                width: fit-content;
+            }
+            .osd-feature {
+                order: 2;
+                max-width: 100%;
+            }
+            .osd-profile {
+                order: 3;
+                max-width: 100%;
+            }
+        }
+        #fontmanagercontent {
+            max-width: 100%;
+            .grid-row {
+                margin-bottom: 15px;
+            }
+        }
+        .content_wrapper.font-preview {
+            padding: 15px 0;
+        }
+        .fontpresets_wrapper {
+            display: block;
+            position: relative;
+            right: 0;
+            top: 0;
+            margin-bottom: 15px;
+        }
+    }
+
 }
