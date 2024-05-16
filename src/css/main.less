@@ -108,6 +108,7 @@ input, select, .select2-selection--single {
     padding: 0.25rem;
     padding-right: 0.5rem;
     border-radius: 0.5rem !important;
+    min-width: 4rem;
     &.small {
         font-size: 13px;
         padding: 0.15rem;
@@ -116,6 +117,17 @@ input, select, .select2-selection--single {
         &[readonly] {
             cursor: auto;
         }
+    }
+    &[type="radio"] {
+        min-width: fit-content;
+    }
+    &:disabled {
+        background-color: var(--surface-400) !important;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+    &[type="range"] {
+        min-width: 0;
     }
 }
 input {
@@ -130,10 +142,28 @@ input[type="number"] {
         margin-left: 5px;
     }
 }
+
 .noarrows {
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
+    }
+}
+.number {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--surface-500);
+    width: 100%;
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    .helpicon, label {
+        margin: 0 !important;
     }
 }
 .clear-both {
@@ -155,11 +185,11 @@ input[type="number"] {
     color: var(--primary-500) !important;
 }
 .message-negative {
-    color: var(--error-500) !important;
+    color: var(--error-400) !important;
     font-weight: bold !important;
 }
 .message-negative-italic {
-    color: var(--error-500) !important;
+    color: var(--error-400) !important;
     font-weight: bold !important;
     font-style: italic;
 }
@@ -204,7 +234,11 @@ input[type="number"] {
     color: var(--surface-700);
     line-height: 24px;
     text-align: center;
-    margin-right: 15px;
+    margin-right: 1rem;
+    cursor: pointer;
+    &:hover {
+        color: var(--surface-800);
+    }
 }
 #reveal_btn {
     display: none;
@@ -1208,7 +1242,7 @@ dialog {
     padding: 0.5rem;
 }
 .danger {
-    background-color: var(--error-transparent-2);
+    background-color: var(--error-transparent-1);
     border: 1px solid var(--error-600);
     color: #fff;
     margin-bottom: 0.5rem;
@@ -1631,7 +1665,6 @@ dialog {
 table {
     width: 100%;
     tr {
-        height: 1.75rem;
         &:last-child {
             td {
                 border: none;
@@ -2251,16 +2284,6 @@ button.active {
             margin-top: 1px;
         }
     }
-    .spacer_box_title {
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-top: 3px;
-        margin-bottom: 0;
-        float: left;
-    }
-    input {
-        font-size: 11px !important;
-    }
     .helpicon {
         float: right;
         margin-top: 5px;
@@ -2358,9 +2381,6 @@ button.active {
         padding-top: 3px;
         margin-bottom: 0;
         float: left;
-    }
-    input {
-        font-size: 11px !important;
     }
     .helpicon {
         float: right;
@@ -2543,10 +2563,6 @@ button.active {
     .toolbar_expand_btn {
         display: block;
     }
-    .content_toolbar {
-        height: auto;
-        padding: 8px 0 0;
-    }
     .sm {
         display: none !important;
     }
@@ -2701,7 +2717,7 @@ button.active {
         display: none !important;
     }
 }
-@media all and (max-width: 767px) {
+@media all and (max-width: 575px) {
     .sm-min {
         display: none !important;
     }
