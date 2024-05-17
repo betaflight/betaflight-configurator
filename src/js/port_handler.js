@@ -278,7 +278,7 @@ PortHandler.sortPorts = function(ports) {
 
 PortHandler.updatePortSelect = function (ports) {
     ports = this.sortPorts(ports);
-    this.currentPorts = ports;    
+    this.currentPorts = ports;
 };
 
 PortHandler.askPermissionPort = function() {

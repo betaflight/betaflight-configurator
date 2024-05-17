@@ -75,7 +75,7 @@ class WebSerial extends EventTarget {
 
     createPort(port) {
         return {
-            path: `D${this.port_counter}`,
+            path: `D${this.port_counter++}`,
             displayName: `Betaflight ${vendorIdNames[port.getInfo().usbVendorId]}`,
             vendorId: port.getInfo().usbVendorId,
             productId: port.getInfo().usbProductId,
@@ -92,18 +92,18 @@ class WebSerial extends EventTarget {
         this.ports = ports.map(function (port) {
             return this.createPort(port);
         }, this);
-    };
+    }
 
     async requestPermissionDevice() {
         const permissionPort = await navigator.serial.requestPort({
             filters: webSerialDevices,
         });
-        const found = this.ports.find(port => port.port === device);
+        const found = this.ports.find(port => port.port === permissionPort);
         if (!found) {
             return this.handleNewDevice(permissionPort);
         }
         return null;
-    }; 
+    }
 
     async getDevices() {
         return this.ports;
