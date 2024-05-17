@@ -716,6 +716,10 @@ function onClosed(result) {
 
     MSP.clearListeners();
 
+    serial.removeEventListener('receive', read_serial_adapter);
+    serial.removeEventListener('connect', connectHandler);
+    serial.removeEventListener('disconnect', disconnectHandler);
+
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;

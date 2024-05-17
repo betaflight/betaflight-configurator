@@ -111,7 +111,8 @@ PortHandler.check_serial_devices = function () {
         } else {
             self.removePort();
             self.detectPort();
-            self.selectActivePort();
+            // already done in detectPort
+            // self.selectActivePort();
         }
     };
 
@@ -237,10 +238,6 @@ PortHandler.detectPort = function() {
         }
 
         self.port_available = true;
-        // Signal board verification
-        if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
-            TABS.firmware_flasher.boardNeedsVerification = true;
-        }
 
         // auto-connect if enabled
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to && GUI.active_tab !== 'firmware_flasher') {
@@ -278,7 +275,7 @@ PortHandler.sortPorts = function(ports) {
 
 PortHandler.updatePortSelect = function (ports) {
     ports = this.sortPorts(ports);
-    this.currentPorts = ports;    
+    this.currentPorts = ports;
 };
 
 PortHandler.askPermissionPort = function() {

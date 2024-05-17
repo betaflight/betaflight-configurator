@@ -92,7 +92,7 @@ class WebSerial extends EventTarget {
         this.ports = ports.map(function (port) {
             return this.createPort(port);
         }, this);
-    };
+    }
 
     async requestPermissionDevice() {
         const permissionPort = await navigator.serial.requestPort({
@@ -103,7 +103,7 @@ class WebSerial extends EventTarget {
             return this.handleNewDevice(permissionPort);
         }
         return null;
-    }; 
+    }
 
     async getDevices() {
         return this.ports;
@@ -187,6 +187,7 @@ class WebSerial extends EventTarget {
 
         const doCleanup = async () => {
             if (this.reader) {
+                // TODO: sove error when switching from connected to firmware flasher: this.reader.cancel();
                 this.reader.releaseLock();
                 this.reader = null;
             }
