@@ -975,31 +975,6 @@ firmware_flasher.initialize = function (callback) {
             }
         });
 
-        // portPickerElement.on('change', function () {
-        //     if (GUI.active_tab === 'firmware_flasher') {
-        //         if (!GUI.connect_lock) {
-        //             if ($('option:selected', this).data().isDFU) {
-        //                 self.enableDfuExitButton(true);
-        //             } else {
-        //                 if (!self.isFlashing) {
-        //                     // Porthandler resets board on port detect
-        //                     if (self.allowBoardDetection && self.boardNeedsVerification) {
-        //                         // reset to prevent multiple calls
-        //                         self.boardNeedsVerification = false;
-        //                         self.verifyBoard();
-        //                     }
-        //                     if (self.selectedBoard) {
-        //                         self.enableLoadRemoteFileButton(true);
-        //                         self.enableLoadFileButton(true);
-        //                     }
-        //                 }
-        //                 self.enableDfuExitButton(false);
-        //                 self.updateDetectBoardButton();
-        //             }
-        //         }
-        //     }
-        // }).trigger('change');
-
         const targetSupportInfo = $('#targetSupportInfoUrl');
 
         targetSupportInfo.on('click', function() {
@@ -1274,12 +1249,15 @@ firmware_flasher.verifyBoard = function() {
         onClosed(event.detail);
     }
 
-    function onClosed() {
+    function onClosed(result) {
+        if (result) { // All went as expected
+            gui_log(i18n.getMessage('serialPortClosedOk'));
+        } else { // Something went wrong
+            gui_log(i18n.getMessage('serialPortClosedFail'));
+        }
         if (!targetAvailable) {
             gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
         }
-
-        console.log('Serial port closed');
 
         MSP.clearListeners();
 
@@ -1351,7 +1329,6 @@ firmware_flasher.verifyBoard = function() {
             // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
             self.cloudBuildKey = FC.CONFIG.buildKey;
 
-            // TODO: Remove this check for 11.0.0
             // 3/21/2024 is the date when the build key was introduced
             const supportedDate = new Date('3/21/2024');
             const buildDate = new Date(FC.CONFIG.buildInfo);

@@ -187,7 +187,6 @@ class WebSerial extends EventTarget {
 
         const doCleanup = async () => {
             if (this.reader) {
-                // TODO: sove error when switching from connected to firmware flasher: this.reader.cancel();
                 this.reader.releaseLock();
                 this.reader = null;
             }

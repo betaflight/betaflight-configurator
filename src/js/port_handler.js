@@ -1,4 +1,4 @@
-import GUI, { TABS } from "./gui";
+import GUI from "./gui";
 import FC from "./fc";
 import { i18n } from "./localization";
 import { get as getConfig } from "./ConfigStorage";
