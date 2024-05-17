@@ -1,3 +1,10 @@
+export const vendorIdNames = {
+    1027: "FTDI",
+    1155: "STM Electronics",
+    4292: "Silicon Labs",
+    0x2e3c: "AT32",
+};
+
 export const serialDevices = [
     { vendorId: 1027, productId: 24577 }, // FT232R USB UART
     { vendorId: 1155, productId: 22336 }, // STM Electronics Virtual COM Port

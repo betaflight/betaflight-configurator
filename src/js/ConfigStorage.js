@@ -45,7 +45,7 @@ export function set(input) {
     tmpObj[element] = input[element];
     try {
       localStorage.setItem(element, JSON.stringify(tmpObj));
-      EventBus.$emit(`config-storage:set`, 'element');
+      EventBus.$emit('config-storage:set', element);
     } catch (e) {
       console.error(e);
     }

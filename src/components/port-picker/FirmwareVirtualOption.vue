@@ -1,13 +1,13 @@
 <template>
   <div
     id="firmware-virtual-option"
-    :style="{ display: isVirtual ? 'block' : 'none' }"
   >
     <div class="dropdown dropdown-dark">
       <select
         id="firmware-version-dropdown"
         class="dropdown-select"
         :title="$t('virtualMSPVersion')"
+        v-model="value"
       >
         <option
           v-for="(version, index) in firmwareVersions"
@@ -24,9 +24,9 @@
 <script>
 export default {
     props: {
-        isVirtual: {
-            type: Boolean,
-            default: true,
+        value: {
+            type: String,
+            default: "1.46.0",
         },
     },
     data() {
@@ -50,7 +50,7 @@ export default {
     width: 180px;
     margin-right: 15px;
     margin-top: 0px;
-    display: none;
+    display: block;
 }
 .dropdown {
     display: inline-block;
