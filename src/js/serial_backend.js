@@ -159,40 +159,18 @@ export function initializeSerialBackend() {
     });
 
     // auto-connect
-    const result = getConfig('auto_connect');
-    if (result.auto_connect === undefined || result.auto_connect) {
-        // default or enabled by user
-        GUI.auto_connect = true;
+    const result = PortHandler.portPicker.autoConnect;
+    if (result === undefined || result) {
 
         $('input.auto_connect').prop('checked', true);
         $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectEnabled'));
 
         $('select#baud').val(115200).prop('disabled', true);
     } else {
-        // disabled by user
-        GUI.auto_connect = false;
 
         $('input.auto_connect').prop('checked', false);
         $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
     }
-
-    // bind UI hook to auto-connect checkbos
-    $('input.auto_connect').change(function () {
-        GUI.auto_connect = $(this).is(':checked');
-
-        // update title/tooltip
-        if (GUI.auto_connect) {
-            $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectEnabled'));
-
-            $('select#baud').val(115200).prop('disabled', true);
-        } else {
-            $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
-
-            if (!GUI.connected_to && !GUI.connecting_to) $('select#baud').prop('disabled', false);
-        }
-
-        setConfig({'auto_connect': GUI.auto_connect});
-    });
 
     PortHandler.initialize();
     PortUsage.initialize();
@@ -817,7 +795,7 @@ export function reinitializeConnection(callback) {
     // In virtual mode reconnect when autoconnect is enabled
     if (isVirtual) {
         return setTimeout(() => {
-            if (GUI.auto_connect) {
+            if (PortHandler.portPicker.autoConnect) {
                 $('a.connect').trigger('click');
             }
             if (typeof callback === 'function') {
