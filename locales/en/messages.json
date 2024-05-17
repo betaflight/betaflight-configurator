@@ -52,6 +52,10 @@
     "disconnect": {
         "message": "Disconnect"
     },
+    "portsSelectNoSelection": {
+        "message": "Select your device",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Manual Selection"
     },

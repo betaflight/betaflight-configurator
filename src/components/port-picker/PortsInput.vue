@@ -13,11 +13,20 @@
         :disabled="disabled"
         @change="onChangePort"
       >
-        <option value="manual">
+        <option
+          value="noselection"
+          disabled
+        >
+          {{ $t("portsSelectNoSelection") }}
+        </option>
+        <option
+          v-show="showManualOption"
+          value="manual"
+        >
           {{ $t("portsSelectManual") }}
         </option>
         <option
-          v-if="showVirtual"
+          v-show="showVirtualOption"
           value="virtual"
         >
           {{ $t("portsSelectVirtual") }}
@@ -84,7 +93,7 @@ export default {
     value: {
       type: Object,
       default: () => ({
-        selectedPort: 'manual',
+        selectedPort: 'noselection',
         selectedBauds: 115200,
         autoConnect: true,
       }),
@@ -96,7 +105,15 @@ export default {
     disabled: {
         type: Boolean,
         default: false,
-      },
+    },
+    showVirtualOption: {
+      type: Boolean,
+      default: true,
+    },
+    showManualOption: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
       return {
@@ -118,21 +135,9 @@ export default {
           ],
       };
   },
-  mounted() {
-    EventBus.$on('config-storage:set', this.setShowVirtual);
-    this.setShowVirtual('showVirtualMode');
-  },
-  destroyed() {
-    EventBus.$off('config-storage:set', this.setShowVirtual);
-  },
   methods: {
     updateValue(key, value) {
       this.$emit('input', { ...this.value, [key]: value });
-    },
-    setShowVirtual(element) {
-      if (element === 'showVirtualMode') {
-        this.showVirtual = getConfig('showVirtualMode').showVirtualMode;
-      }
     },
     onChangePort(event) {
       if (event.target.value === 'requestpermission') {

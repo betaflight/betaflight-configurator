@@ -10,7 +10,7 @@ import { EventBus } from "../components/eventBus";
 
 const serial = serialShim();
 
-const DEFAULT_PORT = 'manual';
+const DEFAULT_PORT = 'noselection';
 const DEFAULT_BAUDS = 115200;
 
 const PortHandler = new function () {
@@ -30,8 +30,8 @@ const PortHandler = new function () {
     this.port_available = false;
     this.showAllSerialDevices = false;
     this.useMdnsBrowser = false;
-    this.showVirtualMode = false;
-    this.showManualMode = false;
+    this.showVirtualMode = getConfig('showVirtualMode').showVirtualMode;
+    this.showManualMode = getConfig('showManualMode').showManualMode;
 };
 
 PortHandler.initialize = function () {
@@ -40,21 +40,29 @@ PortHandler.initialize = function () {
     EventBus.$on('ports-input:change', this.onChangeSelectedPort.bind(this));
 
     serial.addEventListener("addedDevice", this.check_serial_devices.bind(this));
-
     serial.addEventListener("removedDevice", this.check_serial_devices.bind(this));
 
     this.reinitialize();    // just to prevent code redundancy
 };
 
+PortHandler.setShowVirtualMode = function (showVirtualMode) {
+    this.showVirtualMode = showVirtualMode;
+    this.selectActivePort();
+};
+
+PortHandler.setShowManualMode = function (showManualMode) {
+    this.showManualMode = showManualMode;
+    this.selectActivePort();
+};
+
 PortHandler.reinitialize = function () {
     this.initialPorts = false;
+
 
     if (this.usbCheckLoop) {
         clearTimeout(this.usbCheckLoop);
     }
 
-    this.showVirtualMode = getConfig('showVirtualMode').showVirtualMode;
-    this.showManualMode = getConfig('showManualMode').showManualMode;
     this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
     this.useMdnsBrowser = getConfig('useMdnsBrowser').useMdnsBrowser;
 
@@ -286,14 +294,14 @@ PortHandler.askPermissionPort = function() {
 };
 
 PortHandler.selectActivePort = function() {
-    const ports = this.currentPorts;
-    const OS = GUI.operating_system;
+
     let selectedPort;
-    for (let i = 0; i < ports.length; i++) {
-        const portName = ports[i].displayName;
+
+    const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM'];
+    for (let port of this.currentPorts) {
+        const portName = port.displayName;
         if (portName) {
-            const pathSelect = ports[i].path;
-            const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM'];
+            const pathSelect = port.path;
             const deviceRecognized = deviceFilter.some(device => portName.includes(device));
             const legacyDeviceRecognized = portName.includes('usb');
             if (deviceRecognized || legacyDeviceRecognized) {
@@ -303,7 +311,17 @@ PortHandler.selectActivePort = function() {
             }
         }
     }
+
+    if (!selectedPort)  {
+        if (this.showVirtualMode) {
+            selectedPort = "virtual";
+        } else if (this.showManualMode) {
+            selectedPort = "manual";
+        }
+    }
+
     this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
+    console.log(`Porthandler default device is '${this.portPicker.selectedPort}'`);
 };
 
 PortHandler.port_detected = function(name, code, timeout, ignore_timeout) {

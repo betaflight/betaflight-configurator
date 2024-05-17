@@ -141,8 +141,9 @@ options.initShowVirtualMode = function() {
     showVirtualModeElement
         .prop('checked', !!result.showVirtualMode)
         .on('change', () => {
-            setConfig({ showVirtualMode: showVirtualModeElement.is(':checked') });
-            PortHandler.reinitialize();
+            const checked = showVirtualModeElement.is(':checked');
+            setConfig({ showVirtualMode: checked });
+            PortHandler.setShowVirtualMode(checked);
         });
 };
 
@@ -152,8 +153,9 @@ options.initUseManualConnection = function() {
     showManualModeElement
         .prop('checked', !!result.showManualMode)
         .on('change', () => {
-            setConfig({ showManualMode: showManualModeElement.is(':checked') });
-            PortHandler.reinitialize();
+            const checked = showManualModeElement.is(':checked');
+            setConfig({ showManualMode: checked });
+            PortHandler.setShowManualMode(checked);
         });
 };
 
