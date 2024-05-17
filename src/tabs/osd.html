@@ -1,215 +1,213 @@
-<div class="tab-osd toolbar_fixed_bottom">
-        <div class="content_wrapper">
-            <h1 class="tab_title">
-                <span i18n="osdSetupTitle"></span>
-            </h1>
-            <div class="cf_doc_version_bt">
-                <a id="button-documentation" href="" target="_blank"></a>
+<div class="tab-osd">
+    <div class="content_wrapper">
+        <h1 class="tab_title">
+            <span i18n="osdSetupTitle"></span>
+        </h1>
+        <div class="cf_doc_version_bt">
+            <a id="button-documentation" href="" target="_blank"></a>
+        </div>
+        <div class="noOsdChipDetect hide">
+            <p class="note" i18n="osdSetupNoOsdChipDetectWarning"></p>
+        </div>
+        <div class="unsupported hide">
+            <p class="note" i18n="osdSetupUnsupportedNote1"></p>
+            <p class="note" i18n="osdSetupUnsupportedNote2"></p>
+        </div>
+        <div class="supported hide">
+            <div style="margin-bottom: 10px;">
+                <p class="note" i18n="osdSetupPreviewHelp"></p>
             </div>
-            <div class="noOsdChipDetect hide">
-                <p class="note" i18n="osdSetupNoOsdChipDetectWarning"></p>
-            </div>
-            <div class="unsupported hide">
-                <p class="note" i18n="osdSetupUnsupportedNote1"></p>
-                <p class="note" i18n="osdSetupUnsupportedNote2"></p>
-            </div>
-            <div class="supported hide">
-                <div style="margin-bottom: 10px;">
-                    <p class="note" i18n="osdSetupPreviewHelp"></p>
+            <div class="grid-row grid-box col4">
+                <div class="col-span-1 elements requires-osd-feature osd-feature">
+                    <div class="gui_box grey">
+                        <div class="gui_box_titlebar" style="margin-bottom: 0px;">
+                            <div class="spacer_box_title">
+                                <span class="osd-profiles-header cf_tip" i18n_title="osdSetupProfilesTitle" >
+                                    <!--  Generated profiles header here -->
+                                </span>
+                                <span i18n="osdSetupElementsTitle"></span>
+                            </div>
+                        </div>
+                        <div class="spacer_box">
+                            <div id="element-fields" class="switchable-fields"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid-row">
-                    <div class="grid-col elements requires-osd-feature osd-feature">
-                        <div class="gui_box grey">
-                            <div class="gui_box_titlebar" style="margin-bottom: 0px;">
-                                <div class="spacer_box_title">
-                                    <span class="osd-profiles-header cf_tip" i18n_title="osdSetupProfilesTitle" >
-                                        <!--  Generated profiles header here -->
+                <div class="col-span-2 osd-preview">
+                    <div class="gui_box grey preview-parent requires-osd-feature">
+
+                        <div class="gui_box_titlebar image">
+                            <div class="spacer_box_title">
+                                <span class="cf_tip" i18n_title="osdSetupPreviewForTitle">
+                                    <label id="osdprofile-selector-label" i18n="osdSetupPreviewSelectProfileTitle"></label>
+                                    <select class="osdprofile-selector small">
+                                        <!--  Populated at runtime -->
+                                    </select>
+                                    <label id="osdprofile-selector-font" i18n="osdSetupPreviewSelectFont"></label>
+                                    <select class="osdfont-selector small">
+                                        <!-- Populated at runtime -->
+                                    </select>
+                                    <span class="osd-preview-zoom-group">
+                                        <input type="checkbox" id="osd-preview-zoom-selector" class="osd-preview-zoom-selector"/>
+                                        <label for="osd-preview-zoom-selector" i18n="osdSetupPreviewCheckZoom" />
                                     </span>
-                                    <span i18n="osdSetupElementsTitle"></span>
-                                </div>
-                            </div>
-                            <div class="spacer_box">
-                                <div id="element-fields" class="switchable-fields"></div>
+                                </span>
                             </div>
                         </div>
-                    </div>
-                    <div class="grid-col osd-preview">
-                        <div class="gui_box grey preview requires-osd-feature">
 
-                            <div class="gui_box_titlebar image">
-                                <div class="spacer_box_title">
-                               <span class="cf_tip" i18n_title="osdSetupPreviewForTitle">
-                                   <label id="osdprofile-selector-label" i18n="osdSetupPreviewSelectProfileTitle"></label>
-                                   <select class="osdprofile-selector">
-                                       <!--  Populated at runtime -->
-                                   </select>
-                                   <label id="osdprofile-selector-font" i18n="osdSetupPreviewSelectFont"></label>
-                                   <select class="osdfont-selector">
-                                       <!-- Populated at runtime -->
-                                   </select>
-                                   <span class="osd-preview-zoom-group">
-                                       <input type="checkbox" id="osd-preview-zoom-selector" class="osd-preview-zoom-selector"/>
-                                       <label for="osd-preview-zoom-selector" i18n="osdSetupPreviewCheckZoom" />
-                                   </span>
-                               </span>
-                                </div>
+                        <div class="display-layout">
+                            <div class="preview">
                             </div>
+                        </div>
 
-                            <div class="display-layout">
-                                <div class="preview">
-                                </div>
+                        <div class="gui_box_bottombar">
+                            <div class="spacer_box_title">
+                                <span i18n="osdSetupPreviewTitle"></span>
                             </div>
+                        </div>
 
-                            <div class="gui_box_bottombar">
-                                <div class="spacer_box_title">
-                                    <span i18n="osdSetupPreviewTitle"></span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="grid-col osd-profile">
-                        <div class="gui_box osdprofile-selected-container grey">
-                            <div class="gui_box_titlebar cf_tip">
-                                <div class="spacer_box_title" i18n="osdSetupSelectedProfileTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <label i18n="osdSetupSelectedProfileLabel"></label>
-                                <select class="osdprofile-active">
-                                    <!--  Populated at runtime -->
-                                </select>
-                            </div>
-                        </div>
-                        <div class="gui_box videomode-container grey requires-max7456">
-                            <div class="gui_box_titlebar cf_tip">
-                                <div class="spacer_box_title" i18n="osdSetupVideoFormatTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="video-types"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey units-container requires-osd-feature" style="display:none;">
-                            <div class="gui_box_titlebar cf_tip">
-                                <div class="spacer_box_title" i18n="osdSetupUnitsTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="units"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey timers-container requires-osd-feature" style="display:none;">
-                            <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px;">
-                                <div class="spacer_box_title" i18n="osdSetupTimersTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div id="timer-fields" class="switchable-fields"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey alarms-container requires-osd-feature" style="display:none;">
-                            <div class="gui_box_titlebar cf_tip">
-                                <div class="spacer_box_title" i18n="osdSetupAlarmsTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="alarms"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey warnings-container requires-osd-feature" style="display:none;">
-                            <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px;">
-                                <div class="spacer_box_title">
-                                    <div class="spacer_box_title" i18n="osdSetupWarningsTitle"></div>
-                                </div>
-                            </div>
-                            <div class="spacer_box">
-                                <div id="warnings-fields" class="switchable-fields"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey stats-container requires-osd-feature" style="display:none;">
-                            <div class="gui_box_titlebar"
-                                 style="margin-bottom: 0px;">
-                                <div class="spacer_box_title" i18n="osdSetupStatsTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div id="post-flight-stat-fields" class="switchable-fields"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey" style="display:none;">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" i18n="osdSetupVtxTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="vtx-settings"></div>
-                            </div>
-                        </div>
-                        <div class="gui_box grey" style="display:none;">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" i18n="osdSetupCraftNameTitle"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="callsign"></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
-                <!-- Font Manager dialog -->
-                <div id="fontmanagercontent" style="display:none; width:720px;">
-                    <div class="font-picker" style="margin-bottom: 10px;">
-                        <h1 class="tab_title" i18n="osdSetupFontPresets"></h1>
-                        <!-- Font preview and list -->
-                        <label class="font-manager-version-info"></label>
-                        <div class="content_wrapper font-preview"></div>
-                        <div class="fontpresets_wrapper">
-                            <label id="font-selector-label" i18n="osdSetupFontPresetsSelector"></label>
-                            <select class="fontpresets">
-                                <option value="-1" disabled i18n="osdSetupFontPresetsSelectorCustomOption"></option>
-                                <!-- Other values populated at runtime -->
+                <div class="col-span-1 osd-profile">
+                    <div class="gui_box osdprofile-selected-container grey">
+                        <div class="gui_box_titlebar cf_tip">
+                            <div class="spacer_box_title" i18n="osdSetupSelectedProfileTitle"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <label i18n="osdSetupSelectedProfileLabel"></label>
+                            <select class="osdprofile-active">
+                                <!--  Populated at runtime -->
                             </select>
-                            <span id="font-selector-span" i18n="osdSetupFontPresetsSelectorOr"> Or </span>
-                        </div>
-                        <!-- Boot logo setup -->
-                        <h1 class="tab_title" i18n="osdSetupCustomLogoTitle"></h1>
-                        <div class="grid-row">
-                            <div id="font-logo-preview-container" class="content_wrapper grid-col col6">
-                                <div id="font-logo-preview">
-                                    <!-- this will be resized at runtime -->
-                                </div>
-                            </div>
-                            <div id="font-logo-info grid-col col6">
-                                <h3 i18n="osdSetupCustomLogoInfoTitle"></h3>
-                                <ul>
-                                    <li id="font-logo-info-size" i18n="osdSetupCustomLogoInfoImageSize"></li>
-                                    <li id="font-logo-info-colors" i18n="osdSetupCustomLogoInfoColorMap"></li>
-                                </ul>
-                                <p id="font-logo-info-upload-hint" i18n="osdSetupCustomLogoInfoUploadHint"></p>
-                            </div>
-                        </div>
-                        <!-- Replace logo button -->
-                        <div class="default_btn" style="width:100%; float:left;">
-                            <a class="replace_logo" i18n="osdSetupCustomLogoOpenImageButton"></a>
-                        </div>
-                        <!-- Upload progress bar -->
-                        <div class="info">
-                            <a name="progressbar"></a>
-                            <progress class="progress" value="0" min="0" max="100"></progress>
-                            <div class="progressLabel" style="margin-top: -21px; width: 95%; text-align: center; position: absolute;"></div>
                         </div>
                     </div>
-                    <!-- Upload button -->
-                    <div class="default_btn green" style="width:100%; float:left;
-                        ">
-                        <a class="flash_font active" i18n="osdSetupUploadFont"></a>
-                    </div>
-                </div>
-
-                <div class="supported hide">
-                    <div class="content_toolbar" style="left:0;">
-                        <div class="btn">
-                            <a class="requires-max7456-font-device-detected fonts" id="fontmanager" href="#" i18n="osdSetupFontManager"></a>
+                    <div class="gui_box videomode-container grey requires-max7456">
+                        <div class="gui_box_titlebar cf_tip">
+                            <div class="spacer_box_title" i18n="osdSetupVideoFormatTitle"></div>
                         </div>
-                        <div class="btn save">
-                            <a class="active save" href="#" i18n="osdSetupSave"></a>
+                        <div class="spacer_box">
+                            <div class="video-types"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey units-container requires-osd-feature" style="display:none;">
+                        <div class="gui_box_titlebar cf_tip">
+                            <div class="spacer_box_title" i18n="osdSetupUnitsTitle"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="units"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey timers-container requires-osd-feature" style="display:none;">
+                        <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px;">
+                            <div class="spacer_box_title" i18n="osdSetupTimersTitle"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div id="timer-fields" class="switchable-fields"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey alarms-container requires-osd-feature" style="display:none;">
+                        <div class="gui_box_titlebar cf_tip">
+                            <div class="spacer_box_title" i18n="osdSetupAlarmsTitle"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="alarms"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey warnings-container requires-osd-feature" style="display:none;">
+                        <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px;">
+                            <div class="spacer_box_title">
+                                <div class="spacer_box_title" i18n="osdSetupWarningsTitle"></div>
+                            </div>
+                        </div>
+                        <div class="spacer_box">
+                            <div id="warnings-fields" class="switchable-fields"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey stats-container requires-osd-feature" style="display:none;">
+                        <div class="gui_box_titlebar"
+                                style="margin-bottom: 0px;">
+                            <div class="spacer_box_title" i18n="osdSetupStatsTitle"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div id="post-flight-stat-fields" class="switchable-fields"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey" style="display:none;">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="osdSetupVtxTitle"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="vtx-settings"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey" style="display:none;">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="osdSetupCraftNameTitle"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="callsign"></div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Font Manager dialog -->
+            <div id="fontmanagercontent" style="display:none; width:720px;">
+                <div class="font-picker" style="margin-bottom: 10px;">
+                    <h1 class="tab_title" i18n="osdSetupFontPresets"></h1>
+                    <!-- Font preview and list -->
+                    <label class="font-manager-version-info"></label>
+                    <div class="content_wrapper font-preview"></div>
+                    <div class="fontpresets_wrapper">
+                        <label id="font-selector-label" i18n="osdSetupFontPresetsSelector"></label>
+                        <select class="fontpresets">
+                            <option value="-1" disabled i18n="osdSetupFontPresetsSelectorCustomOption"></option>
+                            <!-- Other values populated at runtime -->
+                        </select>
+                        <span id="font-selector-span" i18n="osdSetupFontPresetsSelectorOr"> Or </span>
+                    </div>
+                    <!-- Boot logo setup -->
+                    <h1 class="tab_title" i18n="osdSetupCustomLogoTitle"></h1>
+                    <div class="grid-row">
+                        <div id="font-logo-preview-container" class="content_wrapper grid-col col6">
+                            <div id="font-logo-preview">
+                                <!-- this will be resized at runtime -->
+                            </div>
+                        </div>
+                        <div id="font-logo-info grid-col col6">
+                            <h3 i18n="osdSetupCustomLogoInfoTitle"></h3>
+                            <ul>
+                                <li id="font-logo-info-size" i18n="osdSetupCustomLogoInfoImageSize"></li>
+                                <li id="font-logo-info-colors" i18n="osdSetupCustomLogoInfoColorMap"></li>
+                            </ul>
+                            <p id="font-logo-info-upload-hint" i18n="osdSetupCustomLogoInfoUploadHint"></p>
+                        </div>
+                    </div>
+                    <!-- Replace logo button -->
+                    <div class="default_btn" style="width:100%; float:left;">
+                        <a class="replace_logo" i18n="osdSetupCustomLogoOpenImageButton"></a>
+                    </div>
+                    <!-- Upload progress bar -->
+                    <div class="info">
+                        <a name="progressbar"></a>
+                        <progress class="progress" value="0" min="0" max="100"></progress>
+                        <div class="progressLabel" style="margin-top: -21px; width: 95%; text-align: center; position: absolute;"></div>
+                    </div>
+                </div>
+                <!-- Upload button -->
+                <div class="default_btn green" style="width:100%; float:left;
+                    ">
+                    <a class="flash_font active" i18n="osdSetupUploadFont"></a>
+                </div>
+            </div>
+
         </div>
     </div>
+</div>
+<div class="content_toolbar supported toolbar_fixed_bottom">
+    <div class="btn">
+        <a class="requires-max7456-font-device-detected fonts" id="fontmanager" href="#" i18n="osdSetupFontManager"></a>
+    </div>
+    <div class="btn save">
+        <a class="active save" href="#" i18n="osdSetupSave"></a>
+    </div>
+</div>
