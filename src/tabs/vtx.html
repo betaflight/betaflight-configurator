@@ -1,4 +1,4 @@
-<div class="tab-vtx toolbar_fixed_bottom">
+<div class="tab-vtx">
     <div class="content_wrapper">
         <!-- should be the first DIV on each tab -->
         <div class="cf_column">
@@ -25,256 +25,245 @@
         </div>
 
 
-        <div class="columnsWrapper">
-          <div class="gui_box grey select_mode vtx_supported leftColumn">
+        <div class="grid-box col4">
+            <div class="gui_box grey select_mode vtx_supported col-span-3">
 
-              <div class="gui_box_titlebar">
-                  <div class="spacer_box_title" i18n="vtxSelectedMode"></div>
-              </div>
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="vtxSelectedMode"></div>
+                </div>
 
-              <div class="spacer_box">
+                <div class="spacer_box">
 
-                  <div class="field checkbox vtx_frequency_channel">
-                      <span class="checkboxspacer">
-                          <input type="checkbox" id="vtx_frequency_channel" class="toggle" />
-                      </span>
-                      <label>
-                          <span class="freelabel" i18n="vtxFrequencyChannel"></span>
-                          <div class="helpicon cf_tip" i18n_title="vtxFrequencyChannelHelp"></div>
-                      </label>
-                  </div>
-
-                  <div class="field number vtx_band">
-                      <span class="numberspacer">
-                          <select id="vtx_band">
-                              <!-- Band options generated here from the js -->
-                          </select>
-                      </span>
-                      <label>
-                          <span i18n="vtxBand"></span>
-                          <div class="helpicon cf_tip" i18n_title="vtxBandHelp"></div>
-                      </label>
-                  </div>
-
-                  <div class="field number vtx_channel">
-                      <span class="numberspacer">
-                          <select id="vtx_channel">
-                              <!-- Channel options generated here from the js -->
-                          </select>
-                      </span>
-                      <label>
-                          <span i18n="vtxChannel"></span>
-                          <div class="helpicon cf_tip" i18n_title="vtxChannelHelp"></div>
-                      </label>
-                  </div>
-
-                  <div class="field number vtx_frequency">
-                      <span class="numberspacer">
-                          <input class="frequency_input" type="number" id="vtx_frequency" min="64" max="5999" />
-                      </span>
-                      <label>
-                          <span i18n="vtxFrequency"></span>
-                          <div class="helpicon cf_tip" i18n_title="vtxFrequencyHelp"></div>
-                      </label>
-                  </div>
-
-                  <div class="field number vtx_power">
-                      <span class="numberspacer">
-                          <select id="vtx_power">
-                              <!-- Power options generated here from the js -->
-                          </select>
-                      </span>
-                      <span i18n="vtxPower"></span>
-                      <div class="helpicon cf_tip" i18n_title="vtxPowerHelp"></div>
-                  </div>
-
-                  <div class="field checkbox vtx_pit_mode">
-                      <span class="checkboxspacer">
-                          <input type="checkbox" id="vtx_pit_mode" class="toggle" />
-                      </span>
-                      <span class="freelabel" i18n="vtxPitMode"></span>
-                      <div class="helpicon cf_tip" i18n_title="vtxPitModeHelp"></div>
-                  </div>
-
-                  <div class="field number vtx_pit_mode_frequency">
-                      <span class="numberspacer">
-                          <input class="frequency_input" type="number" id="vtx_pit_mode_frequency" min="0" max="5999">
-                      </span>
-                      <span i18n="vtxPitModeFrequency"></span>
-                      <div class="helpicon cf_tip" i18n_title="vtxPitModeFrequencyHelp"></div>
-                  </div>
-
-                  <div class="field select vtx_low_power_disarm">
-                      <span class="selectspacer">
-                          <select id="vtx_low_power_disarm">
-                              <option value="0" i18n="vtxLowPowerDisarmOption_0"></option>
-                              <option value="1" i18n="vtxLowPowerDisarmOption_1"></option>
-                              <option value="2" i18n="vtxLowPowerDisarmOption_2"></option>
-                          </select>
-                      </span>
-                      <span class="freelabel" i18n="vtxLowPowerDisarm"></span>
-                      <div class="helpicon cf_tip" i18n_title="vtxLowPowerDisarmHelp"></div>
-                  </div>
-              </div>
-
-          </div>
-
-          <div class="gui_box grey vtx_supported rightColumn">
-
-              <div class="gui_box_titlebar">
-                  <div class="spacer_box_title" i18n="vtxActualState"></div>
-              </div>
-
-              <div class="spacer_box VTX_info">
-                <table class="cf_table">
-                  <tbody>
-                    <tr>
-                        <td class="description_text" i18n="vtxDeviceReady"></td>
-                        <td><span class="colorToggle"></span></td>
-                    </tr>
-                    <tr class="description vtx_type">
-                        <td class="description_text" i18n="vtxType"></td>
-                        <td class="description_value" id="vtx_type_description"></td>
-                    </tr>
-                    <tr class="description vtx_band">
-                          <td class="description_text" i18n="vtxBand"></td>
-                          <td class="description_value" id="vtx_band_description"></td>
-                    </tr>
-                    <tr class="description vtx_channel">
-                          <td class="description_text" i18n="vtxChannel"></td>
-                          <td class="description_value" id="vtx_channel_description"></td>
-                    </tr>
-                    <tr class="description vtx_frequency">
-                          <td class="description_text" i18n="vtxFrequency"></td>
-                          <td class="description_value" id="vtx_frequency_description"></td>
-                    </tr>
-                    <tr class="description vtx_power">
-                          <td class="description_text" i18n="vtxPower"></td>
-                          <td class="description_value" id="vtx_power_description"></td>
-                    </tr>
-                    <tr class="description pit_mode">
-                          <td class="description_text" i18n="vtxPitMode"></td>
-                          <td class="description_value" id="vtx_pit_mode_description"></td>
-                    </tr>
-                    <tr class="description vtx_pit_mode">
-                          <td class="description_text" i18n="vtxPitModeFrequency"></td>
-                          <td class="description_value" id="vtx_pit_mode_frequency_description"></td>
-                    </tr>
-                    <tr class="description vtx_low_power_disarm">
-                          <td class="description_text" i18n="vtxLowPowerDisarm"></td>
-                          <td class="description_value" id="vtx_low_power_disarm_description"></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-          </div>
-        </div>
-
-                    <div class="leftWrapper">
-
-                        <div class="note vtx_table_save_pending">
-                            <div i18n="vtxMessageVerifyTable"></div>
-                        </div>
-
-                        <div id="vtx_table" class="gui_box grey vtx_table_box vtx_table_available">
-
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" i18n="vtxTable"></div>
-                            </div>
-
-                            <div class="spacer_box">
-
-                                <div class="field number vtx_table_bands_channels">
-                                    <span class="numberspacer">
-                                        <input class="one_digit_input" type="number" id="vtx_table_bands" min="0" max="8">
-                                    </span>
-                                    <label>
-                                        <span i18n="vtxTableBands"></span>
-                                    </label>
-                                    <span class="numberspacer">
-                                        <input class="one_digit_input" type="number" id="vtx_table_channels" min="0" max="8">
-                                    </span>
-                                    <label>
-                                        <span i18n="vtxTableChannels"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" i18n_title="vtxTableBandsChannelsHelp"></div>
-                                </div>
-
-                                <div class="field number table vtx_table_bands_table">
-                                    <span>
-	                                    <table class="table_vtx_bands">
-	                                        <tbody>
-	                                            <!--  Bands generated here from the templates at the bottom -->
-	                                        </tbody>
-	                                    </table>
-                                    </span>
-                                    <span>
-                                        <div class="helpicon cf_tip" i18n_title="vtxTableBandsChannelsTableHelp"></div>
-                                    </span>
-                                </div>
-
-                                <div class="field number vtx_table_powerlevels">
-                                    <span class="numberspacer">
-                                        <input class="one_digit_input" type="number" id="vtx_table_powerlevels" min="0" max="8">
-                                    </span>
-                                    <label>
-                                        <span i18n="vtxTablePowerLevels"></span>
-                                        <div class="helpicon cf_tip" i18n_title="vtxTablePowerLevelsHelp"></div>
-                                    </label>
-                                </div>
-
-                                <div class="field number table vtx_table_powerlevels_table">
-                                    <span>
-                                        <table class="table_vtx_powerlevels">
-                                            <tbody>
-                                                <tr class="vtx_table_powerlevels_title">
-                                                    <!--  Title values generated here dinamically -->
-                                                </tr>
-                                                <tr class="vtx_table_powerlevels_values">
-                                                    <!--  Powerlevels values generated here from the templates at the bottom -->
-                                                </tr>
-                                                <tr class="vtx_table_powerlevels_labels">
-                                                    <!--  Powerlevels labels generated here from the templates at the bottom -->
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </span>
-                                    <span>
-                                        <div class="helpicon cf_tip" i18n_title="vtxTablePowerLevelsTableHelp"></div>
-                                    </span>
-                                </div>
-
-                            </div>
-                        </div>
-
+                    <div class="field checkbox vtx_frequency_channel">
+                        <span class="checkboxspacer">
+                            <input type="checkbox" id="vtx_frequency_channel" class="toggle" />
+                        </span>
+                        <label>
+                            <span class="freelabel" i18n="vtxFrequencyChannel"></span>
+                            <div class="helpicon cf_tip" i18n_title="vtxFrequencyChannelHelp"></div>
+                        </label>
                     </div>
 
+                    <div class="field number vtx_band">
+                        <span class="numberspacer">
+                            <select id="vtx_band">
+                                <!-- Band options generated here from the js -->
+                            </select>
+                        </span>
+                        <label>
+                            <span i18n="vtxBand"></span>
+                            <div class="helpicon cf_tip" i18n_title="vtxBandHelp"></div>
+                        </label>
+                    </div>
 
+                    <div class="field number vtx_channel">
+                        <span class="numberspacer">
+                            <select id="vtx_channel">
+                                <!-- Channel options generated here from the js -->
+                            </select>
+                        </span>
+                        <label>
+                            <span i18n="vtxChannel"></span>
+                            <div class="helpicon cf_tip" i18n_title="vtxChannelHelp"></div>
+                        </label>
+                    </div>
+
+                    <div class="field number vtx_frequency">
+                        <span class="numberspacer">
+                            <input class="frequency_input" type="number" id="vtx_frequency" min="64" max="5999" />
+                        </span>
+                        <label>
+                            <span i18n="vtxFrequency"></span>
+                            <div class="helpicon cf_tip" i18n_title="vtxFrequencyHelp"></div>
+                        </label>
+                    </div>
+
+                    <div class="field number vtx_power">
+                        <span class="numberspacer">
+                            <select id="vtx_power">
+                                <!-- Power options generated here from the js -->
+                            </select>
+                        </span>
+                        <span i18n="vtxPower"></span>
+                        <div class="helpicon cf_tip" i18n_title="vtxPowerHelp"></div>
+                    </div>
+
+                    <div class="field checkbox vtx_pit_mode">
+                        <span class="checkboxspacer">
+                            <input type="checkbox" id="vtx_pit_mode" class="toggle" />
+                        </span>
+                        <span class="freelabel" i18n="vtxPitMode"></span>
+                        <div class="helpicon cf_tip" i18n_title="vtxPitModeHelp"></div>
+                    </div>
+
+                    <div class="field number vtx_pit_mode_frequency">
+                        <span class="numberspacer">
+                            <input class="frequency_input" type="number" id="vtx_pit_mode_frequency" min="0" max="5999">
+                        </span>
+                        <span i18n="vtxPitModeFrequency"></span>
+                        <div class="helpicon cf_tip" i18n_title="vtxPitModeFrequencyHelp"></div>
+                    </div>
+
+                    <div class="field select vtx_low_power_disarm">
+                        <span class="selectspacer">
+                            <select id="vtx_low_power_disarm">
+                                <option value="0" i18n="vtxLowPowerDisarmOption_0"></option>
+                                <option value="1" i18n="vtxLowPowerDisarmOption_1"></option>
+                                <option value="2" i18n="vtxLowPowerDisarmOption_2"></option>
+                            </select>
+                        </span>
+                        <span class="freelabel" i18n="vtxLowPowerDisarm"></span>
+                        <div class="helpicon cf_tip" i18n_title="vtxLowPowerDisarmHelp"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="gui_box grey vtx_supported col-span-1">
+
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="vtxActualState"></div>
+                </div>
+
+                <div class="spacer_box VTX_info">
+                    <table class="cf_table">
+                    <tbody>
+                        <tr>
+                            <td class="description_text" i18n="vtxDeviceReady"></td>
+                            <td><span class="colorToggle"></span></td>
+                        </tr>
+                        <tr class="description vtx_type">
+                            <td class="description_text" i18n="vtxType"></td>
+                            <td class="description_value" id="vtx_type_description"></td>
+                        </tr>
+                        <tr class="description vtx_band">
+                            <td class="description_text" i18n="vtxBand"></td>
+                            <td class="description_value" id="vtx_band_description"></td>
+                        </tr>
+                        <tr class="description vtx_channel">
+                            <td class="description_text" i18n="vtxChannel"></td>
+                            <td class="description_value" id="vtx_channel_description"></td>
+                        </tr>
+                        <tr class="description vtx_frequency">
+                            <td class="description_text" i18n="vtxFrequency"></td>
+                            <td class="description_value" id="vtx_frequency_description"></td>
+                        </tr>
+                        <tr class="description vtx_power">
+                            <td class="description_text" i18n="vtxPower"></td>
+                            <td class="description_value" id="vtx_power_description"></td>
+                        </tr>
+                        <tr class="description pit_mode">
+                            <td class="description_text" i18n="vtxPitMode"></td>
+                            <td class="description_value" id="vtx_pit_mode_description"></td>
+                        </tr>
+                        <tr class="description vtx_pit_mode">
+                            <td class="description_text" i18n="vtxPitModeFrequency"></td>
+                            <td class="description_value" id="vtx_pit_mode_frequency_description"></td>
+                        </tr>
+                        <tr class="description vtx_low_power_disarm">
+                            <td class="description_text" i18n="vtxLowPowerDisarm"></td>
+                            <td class="description_value" id="vtx_low_power_disarm_description"></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="x-scroll-wrapper col-span-4">
+                <div id="vtx_table" class="gui_box grey vtx_table_box">
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="vtxTable"></div>
+                    </div>
+                    <div class="spacer_box">
+                        <div class="field number vtx_table_bands_channels">
+                            <span class="numberspacer">
+                                <input class="one_digit_input" type="number" id="vtx_table_bands" min="0" max="8">
+                            </span>
+                            <label>
+                                <span i18n="vtxTableBands"></span>
+                            </label>
+                            <span class="numberspacer">
+                                <input class="one_digit_input" type="number" id="vtx_table_channels" min="0" max="8">
+                            </span>
+                            <label>
+                                <span i18n="vtxTableChannels"></span>
+                            </label>
+                            <div class="helpicon cf_tip" i18n_title="vtxTableBandsChannelsHelp"></div>
+                        </div>
+                        <div class="field number table vtx_table_bands_table">
+                            <span>
+                                <table class="table_vtx_bands">
+                                    <tbody>
+                                        <!--  Bands generated here from the templates at the bottom -->
+                                    </tbody>
+                                </table>
+                            </span>
+                            <span>
+                                <div class="helpicon cf_tip" i18n_title="vtxTableBandsChannelsTableHelp"></div>
+                            </span>
+                        </div>
+                        <div class="field number vtx_table_powerlevels">
+                            <span class="numberspacer">
+                                <input class="one_digit_input" type="number" id="vtx_table_powerlevels" min="0" max="8">
+                            </span>
+                            <label>
+                                <span i18n="vtxTablePowerLevels"></span>
+                                <div class="helpicon cf_tip" i18n_title="vtxTablePowerLevelsHelp"></div>
+                            </label>
+                        </div>
+                        <div class="field number table vtx_table_powerlevels_table">
+                            <span>
+                                <table class="table_vtx_powerlevels">
+                                    <tbody>
+                                        <tr class="vtx_table_powerlevels_title">
+                                            <!--  Title values generated here dinamically -->
+                                        </tr>
+                                        <tr class="vtx_table_powerlevels_values">
+                                            <!--  Powerlevels values generated here from the templates at the bottom -->
+                                        </tr>
+                                        <tr class="vtx_table_powerlevels_labels">
+                                            <!--  Powerlevels labels generated here from the templates at the bottom -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </span>
+                            <span>
+                                <div class="helpicon cf_tip" i18n_title="vtxTablePowerLevelsTableHelp"></div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="note vtx_table_save_pending">
+            <div i18n="vtxMessageVerifyTable"></div>
+        </div>
     </div>
 
-    <div class="content_toolbar xs-compressed">
 
-        <div class="btn save_btn">
-            <a class="save" id="save_button" href="#" i18n="vtxButtonSave"></a>
-        </div>
-        <div class="btn load_cliboard_btn clipboard_available">
-            <a class="load_clipboard" id="load_clipboard_button" href="#" i18n="vtxButtonLoadClipboard"></a>
-        </div>
-        <div class="btn load_file_btn">
-            <a class="load_file" id="load_file_button" href="#" i18n="vtxButtonLoadFile"></a>
-        </div>
-        <div class="btn save_file_btn">
-            <a class="save_file" id="save_file_button" href="#" i18n="vtxButtonSaveFile"></a>
-        </div>
-        <div class="btn save_lua_btn">
-            <a class="save_lua" id="save_lua_button" href="#" i18n="vtxButtonSaveLua"></a>
-            <div id="vtxLuaFileTooltip" class="helpicon cf_tip" i18n_title="vtxLuaFileHelp"></div>
-        </div>
+</div>
 
-    </div>
+<div class="content_toolbar xs-compressed toolbar_fixed_bottom">
 
     <div class="toolbar_expand_btn" nbrow="2">
         <em class="fas fa-ellipsis-h"></em>
+    </div>
+
+    <div class="btn save_btn">
+        <a class="save" id="save_button" href="#" i18n="vtxButtonSave"></a>
+    </div>
+    <div class="btn load_cliboard_btn clipboard_available">
+        <a class="load_clipboard" id="load_clipboard_button" href="#" i18n="vtxButtonLoadClipboard"></a>
+    </div>
+    <div class="btn load_file_btn">
+        <a class="load_file" id="load_file_button" href="#" i18n="vtxButtonLoadFile"></a>
+    </div>
+    <div class="btn save_file_btn">
+        <a class="save_file" id="save_file_button" href="#" i18n="vtxButtonSaveFile"></a>
+    </div>
+    <div class="btn save_lua_btn">
+        <a class="save_lua" id="save_lua_button" href="#" i18n="vtxButtonSaveLua"></a>
+        <div id="vtxLuaFileTooltip" class="helpicon cf_tip" i18n_title="vtxLuaFileHelp"></div>
     </div>
 
 </div>
