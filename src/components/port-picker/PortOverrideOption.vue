@@ -5,23 +5,18 @@
     ><span>{{ $t("portOverrideText") }}</span>
       <input
         id="port-override"
-        type="text"
         v-model="value"
+        type="text"
       ></label>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    value: {
-      type: String,
-      default: "/dev/rfcomm0",
-    },
-    isManual: {
-        type: Boolean,
-        default: true,
-    },
+  data() {
+    return {
+      value: "/dev/rfcomm0",
+    };
   },
 };
 </script>

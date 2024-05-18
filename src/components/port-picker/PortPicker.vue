@@ -1,17 +1,21 @@
 <template>
   <div class="web-port-picker">
-    <PortOverrideOption 
+    <PortOverrideOption
       v-if="value.selectedPort === 'manual'"
-      v-model="value.portOverride"
+      :value="value.portOverride"
+      @input="updateValue('portOverride', $event)"
     />
-    <FirmwareVirtualOption 
-      v-if="value.selectedPort === 'virtual'" 
-      v-model="value.virtualMspVersion"
+    <FirmwareVirtualOption
+      v-if="value.selectedPort === 'virtual'"
+      :value="value.virtualMspVersion"
+      @input="updateValue('virtualMspVersion', $event)"
     />
-    <PortsInput 
-      v-model="value" 
+    <PortsInput
+      :value="value"
       :connected-devices="connectedDevices"
-      :disabled="disabled" />
+      :disabled="disabled"
+      @input="updateValue(null, $event)"
+    />
   </div>
 </template>
 
@@ -21,29 +25,38 @@ import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
 import PortsInput from "./PortsInput.vue";
 
 export default {
-  props: {
-      value: {
-        type: Object,
-        default: {
-          selectedPort: "manual", 
-          selectedBaud: 115200,
-          portOverride: "/dev/rfcomm0",
-          virtualMspVersion: "1.46.0",
-        },
-      },
-      connectedDevices: {
-        type: Array,
-        default: () => [],
-      },
-      disabled: {
-        type: Boolean,
-        default: false,
-      },
-  },
   components: {
     PortOverrideOption,
     FirmwareVirtualOption,
     PortsInput,
+  },
+  props: {
+    value: {
+      type: Object,
+      default: () => ({
+        selectedPort: "manual",
+        selectedBaud: 115200,
+        portOverride: "/dev/rfcomm0",
+        virtualMspVersion: "1.46.0",
+      }),
+    },
+    connectedDevices: {
+      type: Array,
+      default: () => [],
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
+    updateValue(key, value) {
+      if (key != null) {
+        this.$emit("input", { ...this.value, [key]: value });
+      } else {
+        this.$emit("input", { ...this.value, ...value});
+      }
+    },
   },
 };
 </script>
