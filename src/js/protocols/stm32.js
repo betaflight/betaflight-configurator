@@ -14,12 +14,17 @@ import { bit_check } from "../bit";
 import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
-import PortHandler, { usbDevices } from "../port_handler";
+import PortHandler from "../port_handler";
 import { API_VERSION_1_42 } from "../data_storage";
-import serial from "../serial";
-import STM32DFU from "./stm32usbdfu";
 import semver from "semver";
 import $ from 'jquery';
+
+import { usbDevices } from "../usb_devices";
+import { serialShim } from "../serial_shim";
+import { usbShim } from "../usb_shim";
+
+let serial = serialShim();
+let dfu = usbShim();
 
 const STM32_protocol = function () {
     this.baud = null;
@@ -112,7 +117,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
             // refresh device list
             PortHandler.check_usb_devices(function(dfu_available) {
                 if (dfu_available) {
-                    STM32DFU.connect(usbDevices, hex, options);
+                    dfu.connect(usbDevices, hex, options);
                 } else {
                     serial.connect(self.port, {bitrate: self.baud, parityBit: 'even', stopBits: 'one'}, function (openInfo) {
                         if (openInfo) {

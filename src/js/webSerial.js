@@ -1,4 +1,4 @@
-import { webSerialDevices } from "./serial_devices";
+import { webSerialDevices, vendorIdNames } from "./serial_devices";
 
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
@@ -30,12 +30,34 @@ class WebSerial extends EventTarget {
 
         this.logHead = "SERIAL: ";
 
+        this.port_counter = 0;
+        this.ports = [];
         this.port = null;
         this.reader = null;
         this.writer = null;
         this.reading = false;
 
         this.connect = this.connect.bind(this);
+
+        navigator.serial.addEventListener("connect", e => this.handleNewDevice(e.target));
+        navigator.serial.addEventListener("disconnect", e => this.handleRemovedDevice(e.target));
+
+        this.loadDevices();
+    }
+
+    handleNewDevice(device) {
+
+        const added = this.createPort(device);
+        this.ports.push(added);
+        this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+
+        return added;
+    }
+
+    handleRemovedDevice(device) {
+        const removed = this.ports.find(port => port.port === device);
+        this.ports = this.ports.filter(port => port.port !== device);
+        this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
 
     handleReceiveBytes(info) {
@@ -44,16 +66,56 @@ class WebSerial extends EventTarget {
 
     handleDisconnect() {
         this.removeEventListener('receive', this.handleReceiveBytes);
-        this.removeEventListener('disconnect', this.handleDisconnect);
+        this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
     }
 
-    async connect(options) {
-        this.openRequested = true;
-        this.port = await navigator.serial.requestPort({
+    getConnectedPort() {
+        return this.port;
+    }
+
+    createPort(port) {
+        return {
+            path: `D${this.port_counter++}`,
+            displayName: `Betaflight ${vendorIdNames[port.getInfo().usbVendorId]}`,
+            vendorId: port.getInfo().usbVendorId,
+            productId: port.getInfo().usbProductId,
+            port: port,
+        };
+    }
+
+    async loadDevices() {
+        const ports = await navigator.serial.getPorts({
             filters: webSerialDevices,
         });
 
+        this.port_counter = 1;
+        this.ports = ports.map(function (port) {
+            return this.createPort(port);
+        }, this);
+    }
+
+    async requestPermissionDevice() {
+        const permissionPort = await navigator.serial.requestPort({
+            filters: webSerialDevices,
+        });
+        const found = this.ports.find(port => port.port === permissionPort);
+        if (!found) {
+            return this.handleNewDevice(permissionPort);
+        }
+        return null;
+    }
+
+    async getDevices() {
+        return this.ports;
+    }
+
+    async connect(path, options) {
+        this.openRequested = true;
+
+        this.port = this.ports.find(device => device.path === path).port;
+
         await this.port.open(options);
+
         const connectionInfo = this.port.getInfo();
         this.connectionInfo = connectionInfo;
         this.writer = this.port.writable.getWriter();
@@ -69,7 +131,6 @@ class WebSerial extends EventTarget {
             this.openRequested = false;
 
             this.addEventListener("receive", this.handleReceiveBytes);
-            this.addEventListener('disconnect', this.handleDisconnect);
 
             console.log(
                 `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, Baud: ${options.baudRate}`,

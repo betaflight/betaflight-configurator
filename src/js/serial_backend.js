@@ -26,6 +26,7 @@ import BuildApi from "./BuildApi";
 
 import { isWeb } from "./utils/isWeb";
 import { serialShim } from "./serial_shim.js";
+import { EventBus } from "../components/eventBus";
 
 let serial = serialShim();
 
@@ -73,19 +74,16 @@ export function initializeSerialBackend() {
         $('#port-override').val(data.portOverride);
     }
 
-    $('div#port-picker #port').change(function (target) {
-        GUI.updateManualPortVisibility();
-    });
-
+    EventBus.$on('ports-input:change', () => GUI.updateManualPortVisibility());
 
     $("div.connect_controls a.connect").on('click', function () {
 
-        const selectedPort = $('#port').val();
+        const selectedPort = PortHandler.portPicker.selectedPort;
         let portName;
         if (selectedPort === 'manual') {
             portName = $('#port-override').val();
         } else {
-            portName = String($('div#port-picker #port').val());
+            portName = selectedPort;
         }
 
         if (!GUI.connect_lock && selectedPort !== 'none') {
@@ -93,8 +91,8 @@ export function initializeSerialBackend() {
 
             GUI.configuration_loaded = false;
 
-            const selected_baud = parseInt($('div#port-picker #baud').val());
-            const selectedPort = $('#port').val();
+            const selected_baud = PortHandler.portPicker.selectedBauds;
+            const selectedPort = portName;
 
             if (selectedPort === 'DFU') {
                 $('select#baud').hide();
@@ -106,10 +104,10 @@ export function initializeSerialBackend() {
                 GUI.connecting_to = portName;
 
                 // lock port select & baud while we are connecting / connected
-                $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
+                PortHandler.portPickerDisabled = true;
                 $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-                const baudRate = parseInt($('#baud').val());
+                const baudRate = selected_baud;
                 if (selectedPort === 'virtual') {
                     CONFIGURATOR.virtualMode = true;
                     CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown').val();
@@ -117,7 +115,7 @@ export function initializeSerialBackend() {
                     // Hack to get virtual working on the web
                     serial = serialShim();
                     serial.connect('virtual', {}, onOpenVirtual);
-                } else if (isWeb()) {
+                } else {
                     CONFIGURATOR.virtualMode = false;
                     serial = serialShim();
                     // Explicitly disconnect the event listeners before attaching the new ones.
@@ -127,10 +125,7 @@ export function initializeSerialBackend() {
                     serial.removeEventListener('disconnect', disconnectHandler);
                     serial.addEventListener('disconnect', disconnectHandler);
 
-                    serial.connect({ baudRate });
-                } else {
-                    serial.connect(portName, { bitrate: selected_baud }, onOpen);
-                    toggleStatus();
+                    serial.connect(portName, { baudRate });
                 }
 
             } else {
@@ -204,14 +199,9 @@ export function initializeSerialBackend() {
 }
 
 function finishClose(finishedCallback) {
-    const mediaQuery = window.matchMedia('(max-width: 576px)');
-    const handleMediaChange = function(e) {
-        if (e.matches) {
-            UI_PHONES.reset();
-        }
-    };
-    mediaQuery.addEventListener('change', handleMediaChange);
-    handleMediaChange(mediaQuery);
+    if (GUI.isCordova()) {
+        UI_PHONES.reset();
+    }
 
     const wasConnected = CONFIGURATOR.connectionValid;
     tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Disconnected', { time: connectionTimestamp ? Date.now() - connectionTimestamp : undefined});
@@ -235,8 +225,7 @@ function finishClose(finishedCallback) {
     $('#dialogReportProblems-closebtn').click();
 
     // unlock port select & baud
-    $('div#port-picker #port').prop('disabled', false);
-    if (!GUI.auto_connect) {$('div#port-picker #baud').prop('disabled', false);}
+    PortHandler.portPickerDisabled = false;
 
     // reset connect / disconnect button
     $('div.connect_controls a.connect').removeClass('active');
@@ -280,7 +269,7 @@ function abortConnection() {
     $('div#connectbutton a.connect').removeClass('active');
 
     // unlock port select & baud
-    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
+    PortHandler.portPickerDisabled = false;
 
     // reset data
     isConnected = false;
@@ -622,7 +611,7 @@ function finishOpen() {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
     }
 
-    if (window.matchMedia('(max-width: 575px)').matches) {
+    if (GUI.isCordova()) {
         UI_PHONES.reset();
     }
 
