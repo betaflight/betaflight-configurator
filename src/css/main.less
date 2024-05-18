@@ -813,9 +813,6 @@ input[type="number"] {
         }
         a {
             font-weight: normal;
-            // padding-left: 33px;
-            // padding-top: 5px;
-            // padding-bottom: 3px;
             padding-top: 0.25rem;
             padding-bottom: 0.25rem;
             padding-left: 2rem;
@@ -1344,21 +1341,12 @@ dialog {
             }
         }
     }
-    // .content_toolbar.xs-compressed {
-    //     flex-direction: row-reverse;
-    //     div {
-    //         &:first-child {
-    //             margin-left: 0;
-    //         }
-    //         &:last-child {
-    //             margin-left: auto;
-    //         }
-    //     }
-    // }
+}
+.content_toolbar.xs-compressed {
+    max-width: 75%;
 }
 .toolbar_expand_btn {
     display: none;
-    position: absolute;
     bottom: 15px;
     left: 15px;
     width: 20px;
@@ -2484,7 +2472,6 @@ button.active {
     .header-wrapper {
         display: none !important;
         order: 5;
-        // zoom: 62%;
         justify-content: space-around;
     }
     .flash_state {

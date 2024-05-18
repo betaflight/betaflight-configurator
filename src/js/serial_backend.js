@@ -236,7 +236,7 @@ function finishClose(finishedCallback) {
 
     // unlock port select & baud
     $('div#port-picker #port').prop('disabled', false);
-    if (!GUI.auto_connect) $('div#port-picker #baud').prop('disabled', false);
+    if (!GUI.auto_connect) {$('div#port-picker #baud').prop('disabled', false);}
 
     // reset connect / disconnect button
     $('div.connect_controls a.connect').removeClass('active');
