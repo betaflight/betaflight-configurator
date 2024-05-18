@@ -260,7 +260,7 @@ function startProcess() {
             console.log('Using desktop UI');
         }
     };
-    mediaQuery.addListener(handleMediaChange);
+    mediaQuery.addEventListener('change', handleMediaChange);
     handleMediaChange(mediaQuery);
 
     const ui_tabs = $('#tabs > ul');

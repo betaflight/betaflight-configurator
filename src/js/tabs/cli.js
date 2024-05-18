@@ -387,7 +387,7 @@ cli.adaptPhones = function() {
             UI_PHONES.initToolbar();
         }
     };
-    mediaQuery.addListener(handleMediaChange);
+    mediaQuery.addEventListener('change', handleMediaChange);
     handleMediaChange(mediaQuery);
 };
 

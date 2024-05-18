@@ -210,7 +210,7 @@ function finishClose(finishedCallback) {
             UI_PHONES.reset();
         }
     };
-    mediaQuery.addListener(handleMediaChange);
+    mediaQuery.addEventListener('change', handleMediaChange);
     handleMediaChange(mediaQuery);
 
     const wasConnected = CONFIGURATOR.connectionValid;
