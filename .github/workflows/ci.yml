@@ -39,6 +39,7 @@ jobs:
   build:
     name: Build (${{ matrix.name }})
     needs: test
+    if: ${{ endsWith(github.ref, 'maintenance') }}
     runs-on:  ${{ matrix.os }}
     strategy:
       matrix:

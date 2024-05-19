@@ -1,7 +1,5 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
-import serialNWJS from "./serial.js";
-import serialWeb from "./webSerial.js";
 import { isWeb } from "./utils/isWeb.js";
 import { serialShim } from "./serial_shim.js";
 
