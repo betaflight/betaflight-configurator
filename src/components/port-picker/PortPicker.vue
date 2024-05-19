@@ -65,5 +65,9 @@ export default {
 .web-port-picker {
     display: flex;
     margin-left: auto;
+    align-items: start;
+    gap: 0.5rem;
+    height: auto;
+    padding-top: 1rem;
 }
 </style>

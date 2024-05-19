@@ -47,7 +47,6 @@ export default {
   background-position: left center;
   background-size: contain;
   position: relative;
-  margin-top: -25px;
 }
 
 .dark-theme .logo {
@@ -60,7 +59,6 @@ export default {
   top: 49px;
   color: var(--text);
   font-size: 10px;
-  min-width: 210px;
   display: flex;
   flex-direction: column;
 }

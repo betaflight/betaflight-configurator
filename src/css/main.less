@@ -220,10 +220,10 @@ input[type="number"] {
     z-index: 1999;
 }
 .headerbar {
-    height: 7.5rem;
     display: flex;
-    align-items: center;
-    padding: 0 1rem;
+    align-items: start;
+    padding: 1rem;
+    gap: 0.5rem;
     background-color: var(--surface-200);
 }
 #menu_btn {
@@ -259,7 +259,6 @@ input[type="number"] {
     }
 }
 #portsinput {
-    margin-right: 1rem;
     display: flex;
     flex-direction: column;
     align-items: end;
@@ -286,51 +285,22 @@ input[type="number"] {
     color: var(--surface-500);
 }
 #firmware-virtual-option {
-    height: 76px;
     width: fit-content;
     margin-right: 1rem;
     display: none;
 }
-#port-override-option {
-    height: 76px;
-    margin-top: 24px;
-    margin-right: 15px;
-    label {
-        background-color: #2b2b2b;
-        border-radius: 3px;
-        padding: 3px;
-        color: var(--surface-400);
-    }
-}
-#port-override {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #888888;
-    width: 140px;
-    margin-left: 2px;
-    padding: 1px;
-    border-radius: 3px;
-    height: 15px;
-    font-size: 12px;
-}
 #header_btns {
     display: flex;
     align-items: center;
+    gap: 2rem;
 }
-.open_firmware_flasher {
-    position: relative;
-    width: 80px;
-    text-align: center;
-    height: 84px;
-}
-.connect_controls {
-    position: relative;
-    width: 80px;
-    text-align: center;
-    height: 84px;
+.open_firmware_flasher, .connect_controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .firmware_b {
     width: 52px;
-    margin: 0 14px;
     height: 52px;
     a.flash {
         background-color: var(--primary-500);
@@ -366,7 +336,6 @@ input[type="number"] {
 }
 .connect_b {
     width: 52px;
-    margin: 0 14px;
     height: 52px;
     a.connect {
         background-color: var(--primary-500);
@@ -399,18 +368,6 @@ input[type="number"] {
             background-color: var(--error-400);
         }
     }
-}
-.flash_state {
-    color: var(--text);
-    font-size: 12px;
-    font-weight: normal;
-    padding: 0 10px;
-}
-.connect_state {
-    color: var(--text);
-    font-size: 12px;
-    font-weight: normal;
-    padding: 0 10px;
 }
 .header-wrapper {
     display: flex;
@@ -2178,18 +2135,6 @@ button.active {
     }
 }
 @media all and (min-width: 1125px) {
-    .open_firmware_flasher {
-        width: 100px;
-    }
-    .connect_controls {
-        width: 100px;
-    }
-    .firmware_b {
-        margin: 0 24px;
-    }
-    .connect_b {
-        margin: 0 24px;
-    }
     #sensor-status {
         margin-right: 20px;
     }
@@ -2418,7 +2363,6 @@ button.active {
         height: fit-content;
         flex-wrap: wrap;
         align-content: flex-start;
-        padding-top: 6px;
         box-sizing: border-box;
         transition: all 0.2s;
     }
@@ -2440,27 +2384,16 @@ button.active {
         margin-left: auto;
         order: 3;
     }
-    .open_firmware_flasher {
-        width: 31px;
-        height: 31px;
-        margin-left: 15px;
-    }
-    .connect_controls {
-        width: 31px;
-        height: 31px;
-        margin-left: 15px;
-    }
     .firmware_b {
         margin: 0;
-        zoom: 0.6;
+        zoom: 0.8;
     }
     .connect_b {
         margin: 0;
-        zoom: 0.6;
+        zoom: 0.8;
     }
     .web-port-picker {
         order: 5;
-        padding-top: 5px;
     }
     #port-picker {
         display: none !important;
