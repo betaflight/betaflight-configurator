@@ -38,6 +38,7 @@ export default {
         selectedBaud: 115200,
         portOverride: "/dev/rfcomm0",
         virtualMspVersion: "1.46.0",
+        autoConnect: true,
       }),
     },
     connectedDevices: {
