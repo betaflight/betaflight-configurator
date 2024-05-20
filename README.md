@@ -72,11 +72,11 @@ If you experience graphics display problems or smudged/dithered fonts display is
 
 ### Unstable Testing Versions
 
-Unstable testing versions of the latest builds of the configurator for most platforms can be downloaded from [here](https://github.com/betaflight/betaflight-configurator-nightlies/releases/).
+The future of the Configurator is moving to a PWA (Progressive Web Application). In this way it will be easier to maintain specially to support different devices like phones, tablets. etc. Is a work in progress but you can have access to the latest snapshot in PWA way without installing anything (take into account that some things don't work and are in development).
 
-The future of the Configurator is moving to a PWA (Progressive Web Application). In this way it will be easier to maintain specially to support different devices like phones, tablets. etc. Is a work in progress but you can have access to the latest snapshot in PWA way without installing anything [here](https://configurator.betaflight.com/) (take into account that some things don't work and are in development).
+- Latest PWA master snapshot of the Configurator: https://master.dev.app.betaflight.com/
 
-**Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
+**Be aware that this version is intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using this version.**
 
 ## Languages
 
@@ -86,48 +86,36 @@ Betaflight Configurator has been translated into several languages. The applicat
 
 If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
 
-## App build via Vite (web)
+## Build and Development
 
-### Development
+### Technical details
 
-1. Install node.js (refer to [.nvmrc](./.nvmrc) for required version)
+The next versions of the Configurator will be a modern tool that uses principally Node, Yarn, Vite and Vue for development and building. To build and develop over it, follow the instructions below.
+
+### Prepare your environment
+
+1. Install [node.js](https://nodejs.org/) (refer to [.nvmrc](./.nvmrc) for minimum required version)
 2. Install yarn: `npm install yarn -g`
-3. Change to project folder and run `yarn install`.
-4. Run `yarn dev`.
+
+### Run development version
+
+1. Change to project folder and run `yarn install`.
+2. Run `yarn dev`.
 
 The web app will be available at http://localhost:8000 with full HMR.
 
-### Build Preview
+### Run production version
 
-1. Run `yarn build`.
-2. Run `yarn preview` after build has finished.
-3. Alternatively run `yarn review` to build and preview in one step.
+1. Change to project folder and run `yarn install`.
+2. Run `yarn build`.
+3. Run `yarn preview` after build has finished.
+4. Alternatively run `yarn review` to build and preview in one step.
 
 The web app should behave directly as in production, available at http://localhost:8080.
-
-## App build via NW.js (windows/linux/macos) or Cordova (android)
-
-### Development
-
-1. Install node.js (refer to [.nvmrc](./.nvmrc) for required version)
-2. Install yarn: `npm install yarn -g`
-3. (For Android platform only) Install Java JDK 8, Gradle and Android Studio (Android SDK at least level 19). On Windows you have to extract Gradle binaries to C:\Gradle and set up some environmental variables.
-
-| Variable Name | Value |
-|---|---|
-| ANDROID_HOME | %LOCALAPPDATA%\Android\sdk |
-| ANDROID_SDK_ROOT | %LOCALAPPDATA%\Android\sdk |
-| Path | %ANDROID_HOME%\tools<br>%ANDROID_HOME%\platform-tools<br>C:\Gradle\bin |
-4. Change to project folder and run `yarn install`.
-5. Run `yarn start`.
 
 ### Running tests
 
 `yarn test`
-
-#### Leverage GitHub-Actions to build binaries
-
-You can use the GitHub `Actions` tab in your fork to build binaries as well. Select `Actions`>`Manual Build`>`Run Workflow`. Choose your custom branch and click `Run workflow`. The workflow will dispatch in a few moments and upon completion, the build "Artifacts" will be available for download from within the workflow run.
 
 ## Support and Developers Channel
 
@@ -150,10 +138,6 @@ https://github.com/betaflight/betaflight-configurator/issues
 For Betaflight firmware issues raise them here
 
 https://github.com/betaflight/betaflight/issues
-
-## Technical details
-
-The configurator is based on chrome.serial API running on Google Chrome/Chromium core.
 
 ## Developers
 
