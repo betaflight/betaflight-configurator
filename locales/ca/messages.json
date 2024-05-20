@@ -59,6 +59,10 @@
         "message": "Mode virtual (experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
+    "portsSelectPermission": {
+        "message": "--- No trobo el meu dispositiu ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
     "virtualMSPVersion": {
         "message": "Versió de microprogramari virtual"
     },
