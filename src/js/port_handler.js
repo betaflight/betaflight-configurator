@@ -1,4 +1,4 @@
-import GUI, { TABS } from "./gui";
+import GUI from "./gui";
 import FC from "./fc";
 import { i18n } from "./localization";
 import { get as getConfig } from "./ConfigStorage";
@@ -109,7 +109,8 @@ PortHandler.check_serial_devices = function () {
         } else {
             self.removePort();
             self.detectPort();
-            self.selectActivePort();
+            // already done in detectPort
+            // self.selectActivePort();
         }
     };
 
@@ -235,10 +236,6 @@ PortHandler.detectPort = function() {
         }
 
         self.port_available = true;
-        // Signal board verification
-        if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
-            TABS.firmware_flasher.boardNeedsVerification = true;
-        }
 
         // auto-connect if enabled
         if (this.portPicker.autoConnect && !GUI.connecting_to && !GUI.connected_to && GUI.active_tab !== 'firmware_flasher') {
