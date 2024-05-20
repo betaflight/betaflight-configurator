@@ -470,6 +470,8 @@ pid_tuning.initialize = function (callback) {
                 ratesTypeListElement.append(`<option value="${i}">${ratesList[i].name}</option>`);
             }
 
+            ratesTypeListElement.sortSelect();
+
             self.currentRatesType = FC.RC_TUNING.rates_type;
             self.previousRatesType = null;
             ratesTypeListElement.val(self.currentRatesType);
