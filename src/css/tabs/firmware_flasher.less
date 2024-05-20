@@ -72,6 +72,7 @@
         position: relative;
         width: calc(100% - 2rem) !important;
         max-width: 24rem !important;
+        height: 1.5rem;
         display: inline-block;
         box-sizing: border-box;
         .select2-container {
@@ -80,8 +81,7 @@
         .detect-board {
             position: absolute;
             top: 0;
-            height: 100%;
-            aspect-ratio: 1;
+            height: 1.5rem;
             right: 1.25rem;
             z-index: 10;
             pointer-events: all;
@@ -90,6 +90,23 @@
             align-items: center;
             .fa-search::before {
                 font-size: 11px;
+            }
+            span {
+                padding: 0 0.5rem;
+                background-color: var(--primary-500);
+                cursor: pointer;
+                color: var(--surface-50);
+                font-size: 10px;
+                border-radius: 999px;
+                transition: color 200ms, background-color 200ms;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            &.disabled span {
+                background-color: var(--surface-500);
+                color: var(--text);
+                cursor: default;
             }
         }
     }
@@ -138,6 +155,22 @@
     }
     &+.content_toolbar {
         width: calc(100% - 3.5rem) !important;
+    }
+    @media all and (max-width: 575px) {
+        .grid-box {
+            &.col2 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .detect-board {
+            span {
+                height: 18px;
+                padding: 0 1rem !important;
+                &>div {
+                    display: none;
+                }
+            }
+        }
     }
 }
 #customDefines {
