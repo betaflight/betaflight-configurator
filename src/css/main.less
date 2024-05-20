@@ -105,10 +105,12 @@ input, select, .select2-selection--single {
     background-color: var(--surface-300) !important;
     border: 1px solid var(--surface-500) !important;
     color: var(--text);
-    padding: 0.25rem;
-    padding-right: 0.5rem;
+    padding: 0.25rem 0.5rem !important;
     border-radius: 0.5rem !important;
     min-width: 4rem;
+    display: inline-block;
+    box-sizing: border-box;
+    height: 1.5rem !important;
     &.small {
         font-size: 13px;
         padding: 0.15rem;
@@ -126,14 +128,24 @@ input, select, .select2-selection--single {
         cursor: not-allowed;
         pointer-events: none;
     }
-    &[type="range"] {
+    &[type="range"], &[type="checkbox"] {
         min-width: 0;
     }
+}
+.ms-choice {
+    background-color: var(--surface-300) !important;
+    border: 1px solid var(--surface-500) !important;
+    color: var(--text) !important;
+    padding: 0.25rem !important;
+    padding-right: 0.5rem !important;
+    border-radius: 0.5rem !important;
+    min-width: 4rem !important;
+    font-weight: normal !important;
 }
 input {
     cursor: text;
 }
-select {
+select, input[type="checkbox"] {
     cursor: pointer;
 }
 input[type="number"] {
@@ -264,22 +276,12 @@ input[type="number"] {
     align-items: end;
     gap: 0.5rem;
 }
-.dropdown {
-    width: 100%;
-    select {
-        width: 100%;
-    }
-}
 #auto-connect-switch {
     width: 110px;
     float: left;
     margin-top: 4px;
     margin-left: 5px;
     margin-right: 20px;
-}
-#baudselect {
-    width: 80px;
-    margin-right: 2px;
 }
 .gray {
     color: var(--surface-500);
@@ -1221,8 +1223,9 @@ dialog {
     box-shadow: rgba(0, 0, 0, 0.1) 0 -0.5rem 0.5rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    justify-content: end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 0.75rem 1rem;
     border-top-left-radius: 1.5rem;
     &::before {
         width: 1.5rem;
@@ -1233,6 +1236,28 @@ dialog {
         position: absolute;
         left: -1.5rem;
         bottom: 0;
+    }
+    .info {
+        flex: 100;
+        position: relative;
+        .progress {
+            width: 100%;
+            height: 30px;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            &::-webkit-progress-bar {
+                background-color: var(--surface-400);
+            }
+        }
+        .progressLabel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            line-height: 1.75rem;
+        }
     }
     .btn {
         a {
@@ -1248,9 +1273,10 @@ dialog {
             display: block;
             cursor: pointer;
             transition: all ease 0.2s;
-            padding: 0 9px;
+            padding: 0 0.5rem;
             line-height: 28px;
             user-select: none;
+            white-space: nowrap;
             &:hover {
                 background-color: var(--primary-400);
                 transition: all ease 0.2s;
@@ -1286,11 +1312,6 @@ dialog {
         bottom: 0;
         left: 100%;
         z-index: 2000;
-        div {
-            &:first-child {
-                margin-left: auto;
-            }
-        }
         div[style='display: none;'] {
             &:first-child {
                 visibility: hidden;
@@ -1411,6 +1432,7 @@ dialog {
 }
 .gui_warning {
     background: var(--error-transparent-1);
+    border: 1px solid var(--error-500);
     .gui_box_titlebar {
         background-color: #dc0000;
         background-image: linear-gradient(-45deg, rgba(255, 255, 255, .3) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .3) 20%, rgba(255, 255, 255, .3) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .3) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .3) 60%, rgba(255, 255, 255, .3) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .3) 80%, rgba(255, 255, 255, .3) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .4) 100%, transparent);
@@ -1419,10 +1441,11 @@ dialog {
 }
 .gui_note {
     background: var(--primary-transparent-1);
+    border: 1px solid var(--primary-500);
     .gui_box_titlebar {
         background-color: var(--primary-500);
         background-image: linear-gradient(-45deg, rgba(255, 255, 255, .3) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .3) 20%, rgba(255, 255, 255, .3) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .3) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .3) 60%, rgba(255, 255, 255, .3) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .3) 80%, rgba(255, 255, 255, .3) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .4) 100%, transparent);
-        color: var(--text);
+        color: black;
     }
 }
 .grey {
@@ -2233,13 +2256,6 @@ button.active {
         padding: 0 3px 0 3px;
         font-size: 10px;
     }
-    .content_toolbar {
-        .btn {
-            a {
-                margin-right: 15px;
-            }
-        }
-    }
     .toolbar_fixed_bottom {
         .content_wrapper {
             height: fit-content;
@@ -2468,6 +2484,10 @@ button.active {
     }
     #content {
         width: 100% !important;
+    }
+    .info {
+        width: 100%;
+        flex: unset !important;
     }
     dialog {
         position: fixed;
