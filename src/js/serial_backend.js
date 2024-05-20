@@ -740,8 +740,9 @@ async function update_live_status() {
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         await MSP.promise(MSPCodes.MSP_ANALOG);
+        await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
 
-        const nbCells = FC.ANALOG.voltage === 0 ? 1 : Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
+        const nbCells = FC.ANALOG.voltage === 0 || FC.BATTERY_STATE.cellCount === 0 ? 1 : FC.BATTERY_STATE.cellCount;
         const min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
         const max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
         const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
