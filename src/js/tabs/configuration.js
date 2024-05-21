@@ -9,6 +9,7 @@ import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45, API_VERSION_1_47 } from '../data_storage';
 import { updateTabList } from '../utils/updateTabList';
 import $ from 'jquery';
+import { s } from 'vitest/dist/index-2dd51af4.js';
 
 const configuration = {
     analyticsChanges: {},
@@ -407,8 +408,10 @@ configuration.initialize = function (callback) {
             FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
 
-            FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
-            FC.ARMING_CONFIG.gyro_cal_on_first_arm = $('input[id="configurationGyroCalOnFirstArm"]').is(':checked') ? 1 : 0;
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                FC.ARMING_CONFIG.gyro_cal_on_first_arm = $('input[id="configurationGyroCalOnFirstArm"]').is(':checked') ? 1 : 0;
+                FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
+            }
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
 
             FC.SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());

@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -17,6 +17,7 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../tabs/osd";
 import { reinitializeConnection } from "../serial_backend";
+import { s } from 'vitest/dist/index-2dd51af4.js';
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
@@ -466,8 +467,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_ARMING_CONFIG:
                 FC.ARMING_CONFIG.auto_disarm_delay = data.readU8();
-                FC.ARMING_CONFIG.gyro_cal_on_first_arm = data.readU8();
+                FC.ARMING_CONFIG.disarm_kill_switch = data.readU8();
                 FC.ARMING_CONFIG.small_angle = data.readU8();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.ARMING_CONFIG.gyro_cal_on_first_arm = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_LOOP_TIME:
                 FC.FC_CONFIG.loopTime = data.readU16();
@@ -1792,8 +1796,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             break;
         case MSPCodes.MSP_SET_ARMING_CONFIG:
             buffer.push8(FC.ARMING_CONFIG.auto_disarm_delay)
-                .push8(FC.ARMING_CONFIG.gyro_cal_on_first_arm)
+                .push8(FC.ARMING_CONFIG.disarm_kill_switch)
                 .push8(FC.ARMING_CONFIG.small_angle);
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    buffer.push8(FC.ARMING_CONFIG.gyro_cal_on_first_arm);
+                }
             break;
         case MSPCodes.MSP_SET_LOOP_TIME:
             buffer.push16(FC.FC_CONFIG.loopTime);
