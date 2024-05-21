@@ -17,7 +17,6 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../tabs/osd";
 import { reinitializeConnection } from "../serial_backend";
-import { s } from 'vitest/dist/index-2dd51af4.js';
 
 // Used for LED_STRIP
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
