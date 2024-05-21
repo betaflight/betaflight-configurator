@@ -1,4 +1,4 @@
-import GUI, { TABS } from "./gui";
+import GUI from "./gui";
 import FC from "./fc";
 import { i18n } from "./localization";
 import { get as getConfig } from "./ConfigStorage";
@@ -21,6 +21,7 @@ const PortHandler = new function () {
         selectedBauds: DEFAULT_BAUDS,
         portOverride: "/dev/rfcomm0",
         virtualMspVersion: "1.46.0",
+        autoConnect: getConfig('autoConnect').autoConnect,
     };
     this.portPickerDisabled = false;
     this.port_detected_callbacks = [];
@@ -75,9 +76,6 @@ PortHandler.check = function () {
         self.check_serial_devices();
     }
 
-
-    this.check_serial_devices();
-
 };
 
 PortHandler.check_serial_devices = function () {
@@ -106,12 +104,13 @@ PortHandler.check_serial_devices = function () {
         if (!self.initialPorts) {
             self.updatePortSelect(self.currentPorts);
             self.selectActivePort();
-            self.initialPorts = self.currentPorts;
+            self.initialPorts = {...self.currentPorts};
             GUI.updateManualPortVisibility();
         } else {
             self.removePort();
             self.detectPort();
-            self.selectActivePort();
+            // already done in detectPort
+            // self.selectActivePort();
         }
     };
 
@@ -237,13 +236,9 @@ PortHandler.detectPort = function() {
         }
 
         self.port_available = true;
-        // Signal board verification
-        if (GUI.active_tab === 'firmware_flasher' && TABS.firmware_flasher.allowBoardDetection) {
-            TABS.firmware_flasher.boardNeedsVerification = true;
-        }
 
         // auto-connect if enabled
-        if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to && GUI.active_tab !== 'firmware_flasher') {
+        if (this.portPicker.autoConnect && !GUI.connecting_to && !GUI.connected_to && GUI.active_tab !== 'firmware_flasher') {
             // start connect procedure. We need firmware flasher protection over here
             $('div.connect_controls a.connect').click();
         }

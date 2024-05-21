@@ -10,8 +10,7 @@
         class="dropdown-select"
         :title="$t('firmwareFlasherManualPort')"
         :disabled="disabled"
-        @change="onChange"
-        @input="updateValue('selectedPort', $event.target.value)"
+        @change="onChangePort"
       >
         <option value="manual">
           {{ $t("portsSelectManual") }}
@@ -35,6 +34,19 @@
       </select>
     </div>
     <div id="auto-connect-and-baud">
+      <div id="auto-connect-switch">
+        <input
+          id="auto-connect"
+          class="auto_connect togglesmall"
+          type="checkbox"
+          :value="value.autoConnect"
+          :title="value.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
+          @change="onChangeAutoConnect"
+        >
+        <span class="auto_connect">
+          {{ $t("autoConnect") }}
+        </span>
+      </div>
       <div
         v-if="value.selectedPort !== 'virtual'"
         id="baudselect"
@@ -63,7 +75,7 @@
 </template>
 
 <script>
-import { get as getConfig } from '../../js/ConfigStorage';
+import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
 import { EventBus } from '../eventBus';
 
 export default {
@@ -73,6 +85,7 @@ export default {
       default: () => ({
         selectedPort: 'manual',
         selectedBauds: 115200,
+        autoConnect: true,
       }),
     },
     connectedDevices: {
@@ -80,9 +93,9 @@ export default {
       default: () => [],
     },
     disabled: {
-      type: Boolean,
-      default: false,
-    },
+        type: Boolean,
+        default: false,
+      },
   },
   data() {
       return {
@@ -120,13 +133,20 @@ export default {
         this.showVirtual = getConfig('showVirtualMode').showVirtualMode;
       }
     },
-    onChange(event) {
+    onChangePort(event) {
       if (event.target.value === 'requestpermission') {
         EventBus.$emit('ports-input:request-permission');
       } else {
         EventBus.$emit('ports-input:change', event.target.value);
       }
+      this.updateValue('selectedPort', event.target.value);
+    },
+    onChangeAutoConnect(event) {
+      setConfig({'autoConnect': event.target.checked});
+      this.updateValue('autoConnect', event.target.checked);
+      return event;
     },
   },
 };
+
 </script>

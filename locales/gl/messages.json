@@ -55,9 +55,16 @@
     "portsSelectManual": {
         "message": "Selección Manual"
     },
+    "portsSelectNone": {
+        "message": "Non hai conexión dispoñible"
+    },
     "portsSelectVirtual": {
         "message": "Modo Virtual (experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- Non atopo o meu dispositivo ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "virtualMSPVersion": {
         "message": "Versión virtual do firmware"
@@ -112,6 +119,10 @@
     "useMdnsBrowser": {
         "message": "Empregar descubrimento na rede de dispositivos mDNS (experimental)",
         "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    },
+    "showManualMode": {
+        "message": "Activar o modo de conexión manual",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Activar o modo de conexión virtual",
@@ -1037,6 +1048,18 @@
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Construción local: sen información sobre a nube"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "Tipo de compilación"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Compilación local"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Compilación na nube"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "Sen información da compilación dispoñible"
     },
     "initialSetupNotOnline": {
         "message": "Servidor non dispoñible"
@@ -1979,6 +2002,12 @@
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Tasa TPA (%)"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "TPA Breakpoint (μs)"
+    },
     "pidTuningTPAPD": {
         "message": "PD"
     },
@@ -2097,6 +2126,9 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modo control deslizante de sintonía de PID<\/strong><br><br>Control deslizante modo Pidtuning pode ser:<br><br>&bull; OFF - sen controis deslizantes, meter valores manualmente<br>&bull; RP - Controis deslizantes so para Roll e Pitch, meter valores manualmente para Yaw<br>&bull; RPY - Controis deslizantes para tódolos valores de PID<br><br><span class=\"message-negative\"><b>AVISO:<\/b><\/span> Pasar de RP a RPY sobreescribirase a configuración de Yaw con configuracións do firmware."
+    },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comprobe sempre que o seu Failsafe funcione correctamente.<\/a><\/strong><\/b> A configuración está na pestana Failsafe, que require o modo experto.<br> &#8226; <b>Empregue o último firmware de Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactive o filtro ADC<\/a><\/strong> no transmisor se emprega OpenTx ou EdgeTx.<br>Configuración básica: configure o Receptor correctamente. Escolla o \"Mapa de canles\" correcto para a súa radio. Comprobe que o Roll, Pitch e outros gráficos de barras se moven correctamente. Axuste o punto final da canle ou os valores do intervalo no transmisor entre ~1000 e ~2000 e configure o punto medio en 1500. Para obter máis información, lea o <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentación<\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -2745,6 +2777,9 @@
     "gpsDistToHome": {
         "message": "Distancia a casa:"
     },
+    "gpsPositionalDop": {
+        "message": "DOP posicional:"
+    },
     "gpsSignalStrHead": {
         "message": "Forza de sinal GPS"
     },
@@ -2754,6 +2789,9 @@
     },
     "gpsSignalStr": {
         "message": "Forza de sinal"
+    },
+    "gpsSignalLost": {
+        "message": "O icono GPS só se ilumina cando se confirma a conexión co módulo GPS.<br \/><br \/>Ao principio será vermella, cambiando a amarela cando se consiga a corrección 3D.<br \/><br \/>Se a icona GPS non se acende, comprobe a súa conexión e a súa configuración e confirme que o módulo GPS está a recibir enerxía.<br \/><br \/>O comando \"estado\" da CLI ofrece máis información sobre o estado da conexión GPS."
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
@@ -3381,6 +3419,9 @@
     "firmwareFlasherFlashOnConnect": {
         "message": "Flashear ó conectar"
     },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Intenta flashear o taboleiro automaticamente (actívase ó detectar un porto serie novo).<br \/><br \/><span class=\"message-negative\">ADVERTENCIA<\/span>: esta función desactiva a función de detección automática e de copia de seguridade."
+    },
     "firmwareFlasherFullChipErase": {
         "message": "Borrado completo do chip"
     },
@@ -3684,6 +3725,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Barra do GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Barra da batería",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitude",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Sonido",
         "description": "One of the modes of the Led Strip"
@@ -3777,6 +3830,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: Rexistrado",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Por defecto",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Barra",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Tira LED",

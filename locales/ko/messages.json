@@ -59,6 +59,10 @@
         "message": "가상 모드 (실험적인)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
+    "portsSelectPermission": {
+        "message": "--- 내 디바이스를 찾을 수 없습니다 ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
     "virtualMSPVersion": {
         "message": "가상 펌웨어 버전"
     },

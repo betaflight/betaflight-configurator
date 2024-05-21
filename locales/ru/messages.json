@@ -5826,12 +5826,33 @@
         "message": "3 лучших последовательных круга",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "3 лучших последовательных круга"
+    },
     "osdTextStatBestLap": {
         "message": "Лучший круг",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBestLap": {
         "message": "Лучший круг"
+    },
+    "osdTextStatFullThrottleTime": {
+        "message": "Таймер полного газа",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleTime": {
+        "message": "Таймер полного газа"
+    },
+    "osdTextStatFullThrottleCounter": {
+        "message": "Счетчик полного газа",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFullThrottleCounter": {
+        "message": "Счетчик полного газа"
+    },
+    "osdTextStatAvgThrottle": {
+        "message": "Среднее значение газа",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatAvgThrottle": {
         "message": "Среднее значение газа"
@@ -6304,6 +6325,10 @@
         "message": "<span class=\"message-negative\">Ошибка<\/span> во время сохранения конфиг файла видеопередатчика",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileKo": {
+        "message": "<span class=\"message-negative\">Ошибка<\/span> при сохранении lua VTX конфиг файла видеопередатчика",
+        "description": "Message in the GUI log when the lua VTX Config file saving has failed"
+    },
     "vtxLoadFileOk": {
         "message": "Конфиг файл для видеопередатчика <span class=\"message-positive\">загружен<\/span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
@@ -6521,6 +6546,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Частота записи в Blackbox"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Включенные данные"
+    },
     "onboardLoggingDebugMode": {
         "message": "Режим отладки черного ящика"
     },
@@ -6731,6 +6759,10 @@
     "presetsKeywords": {
         "message": "Ключевые слова:",
         "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsSourceRepository": {
+        "message": "Источник:",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
     },
     "presetsVersions": {
         "message": "Версия прошивки:",
