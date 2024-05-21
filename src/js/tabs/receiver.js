@@ -536,7 +536,7 @@ receiver.initialize = function (callback) {
 
         $("a.sticks").on("click", function() {
             const windowWidth = 370;
-            const windowHeight = 510;
+            const windowHeight = 550;
 
             const rxFunction = function(channels) {
                 if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {

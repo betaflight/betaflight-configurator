@@ -99,11 +99,16 @@ a {
 		text-decoration: none;
 	}
 }
+.warning {
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    align-items: center;
+}
 .button-enable {
+    width: fit-content;
 	a {
-		position: absolute;
-		left: 50%;
-		transform: translate(-50%);
+        width: fit-content;
 		margin-top: 20px;
 		margin-bottom: 0px;
 		margin-left: 0px;
@@ -111,7 +116,6 @@ a {
 		border-radius: 3px;
 		border: 1px solid var(--primary-600);
 		color: var(--surface-50);
-		float: left;
 		font-size: 12px;
 		display: block;
 		cursor: pointer;
