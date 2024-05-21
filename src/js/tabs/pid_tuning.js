@@ -1613,6 +1613,11 @@ pid_tuning.initialize = function (callback) {
         self.maxAngularVelPitchElement   = $('.pid_tuning .maxAngularVelPitch');
         self.maxAngularVelYawElement     = $('.pid_tuning .maxAngularVelYaw');
 
+        // Only used with Betaflight Rates
+        self.acroCenterSensitivityRollElement = $('.pid_tuning .acroCenterSensitivityRoll');
+        self.acroCenterSensitivityPitchElement = $('.pid_tuning .acroCenterSensitivityPitch');
+        self.acroCenterSensitivityYawElement = $('.pid_tuning .acroCenterSensitivityYaw');
+
         rcCurveElement.width = 1000;
         rcCurveElement.height = 1000;
 
@@ -2697,13 +2702,31 @@ pid_tuning.updateRatesLabels = function() {
                 );
             }
 
-            // Add labels for angleCenterSensitivity
+            // Only show Acro Center - Max Sensitivity for betaflight rates
+            const centerSensitivyLabel = $('#pid-tuning .pid_titlebar .centerSensitivity');
 
+            const isBetaflightRates = self.currentRatesType === FC.RATES_TYPE.BETAFLIGHT;
+
+            centerSensitivyLabel.toggle(isBetaflightRates);
+
+            self.acroCenterSensitivityRollElement.toggle(isBetaflightRates);
+            self.acroCenterSensitivityPitchElement.toggle(isBetaflightRates);
+            self.acroCenterSensitivityYawElement.toggle(isBetaflightRates);
+
+            $('#pid-tuning .pid_titlebar .maxVel').toggle(!isBetaflightRates);
+            self.maxAngularVelRollElement.toggle(!isBetaflightRates);
+            self.maxAngularVelPitchElement.toggle(!isBetaflightRates);
+            self.maxAngularVelYawElement.toggle(!isBetaflightRates);
+
+            // Add labels for Angle Center Sensitivity
             const angleLimit = FC.ADVANCED_TUNING.levelAngleLimit;
             const maxAngleRollRate = parseInt(maxAngularVelRoll);
             const maxAnglePitchRate = parseInt(maxAngularVelPitch);
+            const maxAngleYawRate = parseInt(maxAngularVelYaw);
+
             const rcRate = self.currentRates.rc_rate;
             const rcRatePitch = self.currentRates.rc_rate_pitch;
+            const rcRateYaw = self.currentRates.rc_rate_yaw;
 
             function getOffsetForBalloon(value) {
                 return curveWidth - (Math.ceil(stickContext.measureText(value).width) / (stickContext.canvas.clientWidth / stickContext.canvas.clientHeight)) - 40;
@@ -2734,24 +2757,32 @@ pid_tuning.updateRatesLabels = function() {
 
                 const RC_RATE_INCREMENTAL = 14.54;
 
+                const getRcRateModified = rate => rate > 2.0 ? (rate - 2.0) * RC_RATE_INCREMENTAL + 2.0: rate;
+                const getAcroSensitivityFraction = (exponent, rate) => ((1 - exponent) * getRcRateModified(rate) * 200).toFixed(0);
+                const getAngleSensitivityFraction = (exponent, rate) => (angleLimit * ((1 - exponent) * getRcRateModified(rate) * 200 / maxAngleRollRate)).toFixed(1);
+
                 // ROLL
                 const expo = self.currentRates.rc_expo;
-                const rcRateModified = rcRate > 2.0 ? (rcRate - 2.0) * RC_RATE_INCREMENTAL + 2.0: rcRate;
-                const sensitivityFractionRoll = (angleLimit * ((1 - expo) * rcRateModified * 200 / maxAngleRollRate)).toFixed(1);
-
-                const sensitivityFractionRollText = `${sensitivityFractionRoll}...${angleLimit}`;
-                const sensitivityFractionRollOffset = getOffsetForBalloon(sensitivityFractionRollText);
+                const angleCenterSensitivityFractionRoll = getAngleSensitivityFraction(expo, rcRate);
+                const angleCenterSensitivityFractionRollText = `${angleCenterSensitivityFractionRoll} - ${angleLimit}`;
+                const angleCenterSensitivityFractionRollOffset = getOffsetForBalloon(angleCenterSensitivityFractionRollText);
+                const acroCenterSensitivityFractionRoll = getAcroSensitivityFraction(expo, rcRate);
+                self.acroCenterSensitivityRollElement.text(`${acroCenterSensitivityFractionRoll} - ${maxAngleRollRate}`);
                 // PITCH
                 const expoPitch = self.currentRates.rc_pitch_expo;
-                const rcRateModifiedPitch = rcRatePitch > 2.0 ? (rcRatePitch - 2.0) * RC_RATE_INCREMENTAL + 2.0: rcRatePitch;
-                const sensitivityFractionPitch = (angleLimit * ((1 - expoPitch) * rcRateModifiedPitch * 200 / maxAnglePitchRate)).toFixed(1);
-
-                const sensitivityFractionPitchText = `${sensitivityFractionPitch}...${angleLimit}`;
-                const sensitivityFractionPitchOffset = getOffsetForBalloon(sensitivityFractionPitchText);
+                const angleCenterSensitivityFractionPitch = getAngleSensitivityFraction(expoPitch, rcRatePitch);
+                const angleCenterSensitivityFractionPitchText = `${angleCenterSensitivityFractionPitch} - ${angleLimit}`;
+                const angleCenterSensitivityFractionPitchOffset = getOffsetForBalloon(angleCenterSensitivityFractionPitchText);
+                const acroCenterSensitivityFractionPitch = getAcroSensitivityFraction(expoPitch, rcRatePitch);
+                self.acroCenterSensitivityPitchElement.text(`${acroCenterSensitivityFractionPitch} - ${maxAnglePitchRate}`);
+                // YAW
+                const expoYaw = self.currentRates.rc_yaw_expo;
+                const acroCenterSensitivityFractionYaw = getAcroSensitivityFraction(expoYaw, rcRateYaw);
+                self.acroCenterSensitivityYawElement.text(`${acroCenterSensitivityFractionYaw} - ${maxAngleYawRate}`);
 
                 balloons.push(
-                    {value: parseInt(sensitivityFractionRoll), balloon: function() {drawBalloonLabel(stickContext, sensitivityFractionRollText, sensitivityFractionRollOffset, curveHeight - 150, 'none', BALLOON_COLORS.roll, balloonsDirty);}},
-                    {value: parseInt(sensitivityFractionPitch), balloon: function() {drawBalloonLabel(stickContext, sensitivityFractionPitchText, sensitivityFractionPitchOffset, curveHeight - 50, 'none', BALLOON_COLORS.pitch, balloonsDirty);}},
+                    {value: parseInt(angleCenterSensitivityFractionRoll), balloon: function() {drawBalloonLabel(stickContext, angleCenterSensitivityFractionRollText, angleCenterSensitivityFractionRollOffset, curveHeight - 150, 'none', BALLOON_COLORS.roll, balloonsDirty);}},
+                    {value: parseInt(angleCenterSensitivityFractionPitch), balloon: function() {drawBalloonLabel(stickContext, angleCenterSensitivityFractionPitchText, angleCenterSensitivityFractionPitchOffset, curveHeight - 50, 'none', BALLOON_COLORS.pitch, balloonsDirty);}},
                 );
             }
 
@@ -2894,6 +2925,7 @@ pid_tuning.changeRatesSystem = function(sameType) {
     const rcRateLabel = $('#pid-tuning .pid_titlebar .rc_rate');
     const rateLabel = $('#pid-tuning .pid_titlebar .rate');
     const rcExpoLabel = $('#pid-tuning .pid_titlebar .rc_expo');
+    const centerSensitivyLabel = $('#pid-tuning .pid_titlebar .centerSensitivity');
 
     // default values for betaflight curve. all the default values produce the same betaflight default curve (or at least near enough)
     let rcRateDefault = (1).toFixed(2), rateDefault = (0.7).toFixed(2), expoDefault = (0).toFixed(2);
@@ -3006,7 +3038,7 @@ pid_tuning.changeRatesSystem = function(sameType) {
             rcRateLabel.text(i18n.getMessage("pidTuningRcRate"));
             rateLabel.text(i18n.getMessage("pidTuningRate"));
             rcExpoLabel.text(i18n.getMessage("pidTuningRcExpo"));
-
+            centerSensitivyLabel.text(i18n.getMessage("pidTuningAcroCenterSensitiviy"));
             break;
     }
 

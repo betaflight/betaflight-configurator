@@ -7042,6 +7042,9 @@
     "pidTuningRcRateActual": {
         "message": "Center Sensitivity"
     },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Center-Max Sensitivity"
+    },
     "dialogRatesTypeTitle": {
         "message": "Rates type change"
     },
