@@ -9,7 +9,6 @@ import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45, API_VERSION_1_47 } from '../data_storage';
 import { updateTabList } from '../utils/updateTabList';
 import $ from 'jquery';
-import { s } from 'vitest/dist/index-2dd51af4.js';
 
 const configuration = {
     analyticsChanges: {},
