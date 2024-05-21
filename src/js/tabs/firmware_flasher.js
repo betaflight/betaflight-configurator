@@ -1273,7 +1273,7 @@ firmware_flasher.verifyBoard = function() {
             const boardSelect = $('select[name="board"]');
             const boardSelectOptions = $('select[name="board"] option');
             const target = boardSelect.val();
-    
+
             boardSelectOptions.each((_, e) => {
                 if ($(e).text() === board) {
                     targetAvailable = true;
