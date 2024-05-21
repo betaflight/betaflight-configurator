@@ -113,24 +113,27 @@ cli.initialize = function (callback) {
         self.history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-
-        outputArray.forEach((command, index) => {
-            let line = command.trim();
-            let processingDelay = self.lineDelayMs;
-            if (line.toLowerCase().startsWith('profile')) {
-                processingDelay = self.profileSwitchDelayMs;
-            }
-            const isLastCommand = outputArray.length === index + 1;
-            if (isLastCommand && self.cliBuffer) {
-                line = getCliCommand(line, self.cliBuffer);
-            }
-
-            GUI.timeout_add('CLI_send_slowly', function () {
-                self.sendLine(line, function () {
-                    console.log('line sent', line);
-                });
-            }, processingDelay);
-        });
+        return outputArray.reduce((p, line, index) =>
+            p.then((delay) =>
+                new Promise((resolve) => {
+                    GUI.timeout_add('CLI_send_slowly', function () {
+                        let processingDelay = self.lineDelayMs;
+                        line = line.trim();
+                        if (line.toLowerCase().startsWith('profile')) {
+                            processingDelay = self.profileSwitchDelayMs;
+                        }
+                        const isLastCommand = outputArray.length === index + 1;
+                        if (isLastCommand && self.cliBuffer) {
+                            line = getCliCommand(line, self.cliBuffer);
+                        }
+                        self.sendLine(line, function () {
+                            resolve(processingDelay);
+                        });
+                    }, delay);
+                }),
+            ),
+            Promise.resolve(0),
+        );
     }
 
     async function loadFile() {
@@ -142,12 +145,36 @@ cli.initialize = function (callback) {
         };
         const previewArea = $("#snippetpreviewcontent textarea#preview");
 
+        function runCommands(outString) {
+            self.history.add(outString.trim());
+
+            const outputArray = outString.split("\n");
+
+            outputArray.forEach((command, index) => {
+                let line = command.trim();
+                let processingDelay = self.lineDelayMs;
+                if (line.toLowerCase().startsWith('profile')) {
+                    processingDelay = self.profileSwitchDelayMs;
+                }
+                const isLastCommand = outputArray.length === index + 1;
+                if (isLastCommand && self.cliBuffer) {
+                    line = getCliCommand(line, self.cliBuffer);
+                }
+
+                GUI.timeout_add('CLI_send_slowly', function () {
+                    self.sendLine(line, function () {
+                        console.log('line sent', line);
+                    });
+                }, processingDelay);
+            });
+        }
+
         function executeSnippet(fileName) {
             const commands = previewArea.val();
 
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliExecuteFromFile', { filename: fileName });
 
-            executeCommands(commands);
+            runCommands(commands);
             self.GUI.snippetPreviewWindow.close();
         }
 
