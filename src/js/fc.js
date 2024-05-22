@@ -392,6 +392,7 @@ const FC = {
             auto_disarm_delay:          0,
             disarm_kill_switch:         0,
             small_angle:                0,
+            gyro_cal_on_first_arm:      0,
         };
 
         this.FC_CONFIG = {

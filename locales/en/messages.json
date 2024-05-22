@@ -1395,13 +1395,13 @@
         "message": "This option configures the mixer to expect the motor direction to be reversed and the propellers to be on accordingly. <strong>Warning:</strong> This does not reverse the motor direction. Use the configuration tool for your ESCs or switch the ESC - motor wiring order to achieve this. Also, make sure to check with propellers off that your motors are rotating in the directions shown in the diagram above before attempting to arm."
     },
     "configurationAutoDisarmDelay": {
+        "message": "Disarm motors after delay [seconds]"
+    },
+    "configurationAutoDisarmDelayHelp": {
         "message": "Disarm motors after set delay [seconds] (Requires MOTOR_STOP feature)"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Disarm motors regardless of throttle value (When ARM is configured in Modes tab via AUX channel)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Arming is always disabled when the throttle is not low. Be careful as you could disarm accidentally with a switch while flying with this option active."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibrate Gyro on first arm"
     },
     "configurationDigitalIdlePercent": {
         "message": "Motor Idle ( %, static)"
