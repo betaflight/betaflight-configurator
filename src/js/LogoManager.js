@@ -1,7 +1,7 @@
 import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
-import { checkChromeRuntimeError } from "./utils/common";
 import $ from 'jquery';
+import FileSystem from "./FileSystem";
 
 /**
  * Takes an ImageData object and returns an MCM symbol as an array of strings.
@@ -229,23 +229,26 @@ LogoManager.hideUploadHint = function () {
  */
 LogoManager.openImage = function () {
     return new Promise((resolveOpenImage, rejectOpenImage) => {
-        const dialogOptions = {
-            type: 'openFile',
-            accepts: this.acceptFileTypes,
-        };
-        chrome.fileSystem.chooseEntry(dialogOptions, fileEntry => {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
-            // load and validate selected image
-            const img = new Image();
-            img.onload = () => {
-                validateImage.apply(this, [img])
-                    .then(() => resolveOpenImage(img))
-                    .catch(error => rejectOpenImage(error));
-            };
-            img.onerror = error => rejectOpenImage(error);
-            fileEntry.file(file => img.src = `file://${file.path}`);
+        //FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: this.acceptFileTypes[0].description.toUpperCase()}), `.${this.acceptFileTypes[0].extensions.join('.,')}`)
+        FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: this.acceptFileTypes[0].description.toUpperCase()}), ['.bmp', '.png'])
+        .then((file) => {
+            FileSystem.readFileAsBlob(file)
+            .then((data) => {
+                // load and validate selected image
+                const img = new Image();
+                img.onload = () => {
+                    validateImage.apply(this, [img])
+                        .then(() => resolveOpenImage(img))
+                        .catch(error => rejectOpenImage(error));
+                };
+                img.onerror = error => rejectOpenImage(error);
+
+                const blobUrl = URL.createObjectURL(data);
+                img.src = blobUrl;
+            });
+        })
+        .catch((error) => {
+            console.error('could not load logo file:', error);
         });
     });
 };

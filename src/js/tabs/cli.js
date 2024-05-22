@@ -12,6 +12,7 @@ import { gui_log } from "../gui_log";
 import jBox from "jbox";
 import $ from 'jquery';
 import { serialShim } from "../serial_shim";
+import FileSystem from "../FileSystem";
 
 const serial =  serialShim();
 
@@ -134,12 +135,6 @@ cli.initialize = function (callback) {
     }
 
     async function loadFile() {
-        const accept = {
-            types: [{
-                description: 'Text file',
-                accept: {'text/plain': ['.txt']},
-            }],
-        };
         const previewArea = $("#snippetpreviewcontent textarea#preview");
 
         function executeSnippet(fileName) {
@@ -171,31 +166,14 @@ cli.initialize = function (callback) {
             self.GUI.snippetPreviewWindow.open();
         }
 
-        const [fileHandle] = await window.showOpenFilePicker(accept);
-        const file = await fileHandle.getFile();
-        const contents = await file.text();
+        const file = await FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: 'TXT'}), '.txt');
+        const contents = await FileSystem.readFile(file);
         previewCommands(contents, file.name);
     }
 
     async function saveFile(filename, content) {
-        const options = {
-            id: GUI.active_tab,
-            startIn: 'documents',
-            suggestedName: filename,
-            types: [
-                {
-                    description: 'Text file',
-                    accept: {
-                        'text/plain': ['.txt'],
-                    },
-                },
-            ],
-        };
-
-        const fileHandle = await window.showSaveFilePicker(options);
-        const writable = await fileHandle.createWritable();
-        await writable.write(content);
-        await writable.close();
+        const file = await FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: 'TXT'}), '.txt');
+        await FileSystem.writeFile(file, content);
     }
 
     $('#content').load("./tabs/cli.html", function () {

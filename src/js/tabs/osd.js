@@ -16,6 +16,7 @@ import inflection from "inflection";
 import { checkChromeRuntimeError } from "../utils/common";
 import debounce from "lodash.debounce";
 import $ from 'jquery';
+import FileSystem from "../FileSystem";
 
 const FONT = {};
 const SYM = {};
@@ -191,24 +192,18 @@ FONT.parseMCMFontFile = function(dataFontFile) {
 
 FONT.openFontFile = function() {
     return new Promise(function(resolve) {
-        chrome.fileSystem.chooseEntry({ type: 'openFile', accepts: [{ description: 'MCM files', extensions: ['mcm'] }] }, function(fileEntry) {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
-
-            FONT.data.loaded_font_file = fileEntry.name;
-            fileEntry.file(function(file) {
-                const reader = new FileReader();
-                reader.onloadend = function(e) {
-                    if (e.total !== 0 && e.total === e.loaded) {
-                        FONT.parseMCMFontFile(e.target.result);
-                        resolve();
-                    } else {
-                        console.error('could not load whole font file');
-                    }
-                };
-                reader.readAsText(file);
+        const suffix = 'mcm';
+        FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+        .then((file) => {
+            FONT.data.loaded_font_file = file.name;
+            FileSystem.readFile(file)
+            .then((contents) => {
+                FONT.parseMCMFontFile(contents);
+                resolve();
             });
+        })
+        .catch((error) => {
+            console.error('could not load whole font file:', error);
         });
     });
 };
@@ -3448,48 +3443,16 @@ osd.initialize = function(callback) {
         });
 
         $(document).on('click', 'span.progressLabel a.save_font', function() {
-            chrome.fileSystem.chooseEntry({ type: 'saveFile', suggestedName: 'baseflight', accepts: [{ description: 'MCM files', extensions: ['mcm'] }] }, function(fileEntry) {
-                if (checkChromeRuntimeError()) {
-                    return;
-                }
 
-                chrome.fileSystem.getDisplayPath(fileEntry, function(path) {
-                    console.log(`Saving firmware to: ${path}`);
+            const suffix = 'mcm';
 
-                    // check if file is writable
-                    chrome.fileSystem.isWritableEntry(fileEntry, function(isWritable) {
-                        if (isWritable) {
-                            // TODO: is this coming from firmware_flasher? seems a bit random
-                            // eslint-disable-next-line no-undef
-                            const blob = new Blob([intel_hex], { type: 'text/plain' });
-
-                            fileEntry.createWriter(function(writer) {
-                                let truncated = false;
-
-                                writer.onerror = function(e) {
-                                    console.error(e);
-                                };
-
-                                writer.onwriteend = function() {
-                                    if (!truncated) {
-                                        // onwriteend will be fired again when truncation is finished
-                                        truncated = true;
-                                        writer.truncate(blob.size);
-
-                                        return;
-                                    }
-                                };
-
-                                writer.write(blob);
-                            }, function(e) {
-                                console.error(e);
-                            });
-                        } else {
-                            console.log('You don\'t have write permissions for this file, sorry.');
-                            gui_log(i18n.getMessage('osdWritePermissions'));
-                        }
-                    });
-                });
+            FileSystem.pickSaveFile('betaflight_font', i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+            .then((file) => {
+                console.log("Saving font to:", file.name);
+                FileSystem.writeFile(file, FONT.data.characters_bytes);
+            })
+            .catch((error) => {
+                console.error("Error saving font file:", error);
             });
         });
 
