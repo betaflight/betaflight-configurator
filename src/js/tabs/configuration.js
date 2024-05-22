@@ -6,7 +6,7 @@ import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import { updateTabList } from '../utils/updateTabList';
 import $ from 'jquery';
 
@@ -345,7 +345,7 @@ configuration.initialize = function (callback) {
 
         $('input[id="configurationSmallAngle"]').val(FC.ARMING_CONFIG.small_angle);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             $('input[id="configurationGyroCalOnFirstArm"]').prop('checked', FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1);
 
             if (FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP')) {
@@ -354,8 +354,8 @@ configuration.initialize = function (callback) {
                 $('input[id="configurationAutoDisarmDelay"]').parent().hide();
             }
         } else {
-            $('input[id="configurationGyroCalOnFirstArm"]').parent().hide();
-            $('input[id="configurationAutoDisarmDelay"]').parent().hide();
+            $('input[id="configurationGyroCalOnFirstArm"]').parent().parent().hide();
+            $('input[id="configurationAutoDisarmDelay"]').parent().parent().hide();
         }
 
         // UI hooks
@@ -407,7 +407,7 @@ configuration.initialize = function (callback) {
             FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 FC.ARMING_CONFIG.gyro_cal_on_first_arm = $('input[id="configurationGyroCalOnFirstArm"]').is(':checked') ? 1 : 0;
                 FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
             }
