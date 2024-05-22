@@ -12,6 +12,13 @@
         :disabled="disabled"
         @change="onChangePort"
       >
+        <option
+          v-for="connectedDevice in connectedDevices"
+          :key="connectedDevice.path"
+          :value="connectedDevice.path"
+        >
+          {{ connectedDevice.displayName }}
+        </option>
         <option value="manual">
           {{ $t("portsSelectManual") }}
         </option>
@@ -20,13 +27,6 @@
           value="virtual"
         >
           {{ $t("portsSelectVirtual") }}
-        </option>
-        <option
-          v-for="connectedDevice in connectedDevices"
-          :key="connectedDevice.path"
-          :value="connectedDevice.path"
-        >
-          {{ connectedDevice.displayName }}
         </option>
         <option value="requestpermission">
           {{ $t("portsSelectPermission") }}
