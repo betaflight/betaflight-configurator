@@ -120,10 +120,6 @@
         "message": "Show all serial devices (for manufacturers or development)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "Use mDNS Browser Device discovery on network (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
-    },
     "showManualMode": {
         "message": "Enable manual connection mode",
         "description": "Text for the option to enable or disable manual connection mode"

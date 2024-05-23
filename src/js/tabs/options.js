@@ -23,7 +23,6 @@ options.initialize = function (callback) {
         TABS.options.initAnalyticsOptOut();
         TABS.options.initCliAutoComplete();
         TABS.options.initShowAllSerialDevices();
-        TABS.options.initUseMdnsBrowser();
         TABS.options.initShowVirtualMode();
         TABS.options.initUseManualConnection();
         TABS.options.initCordovaForceComputerUI();
@@ -156,17 +155,6 @@ options.initUseManualConnection = function() {
             const checked = showManualModeElement.is(':checked');
             setConfig({ showManualMode: checked });
             PortHandler.setShowManualMode(checked);
-        });
-};
-
-options.initUseMdnsBrowser = function() {
-    const useMdnsBrowserElement = $('div.useMdnsBrowser input');
-    const result = getConfig('useMdnsBrowser');
-    useMdnsBrowserElement
-        .prop('checked', !!result.useMdnsBrowser)
-        .on('change', () => {
-            setConfig({ useMdnsBrowser: useMdnsBrowserElement.is(':checked') });
-            PortHandler.reinitialize();
         });
 };
 
