@@ -230,7 +230,7 @@ LogoManager.hideUploadHint = function () {
 LogoManager.openImage = function () {
     return new Promise((resolveOpenImage, rejectOpenImage) => {
         //FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: this.acceptFileTypes[0].description.toUpperCase()}), `.${this.acceptFileTypes[0].extensions.join('.,')}`)
-        FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: this.acceptFileTypes[0].description.toUpperCase()}), ['.bmp', '.png'])
+        FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: this.acceptFileTypes[0].description.toUpperCase()}), this.acceptFileTypes[0].extensions.map((ext)=> {return `.${ext}`;}))
         .then((file) => {
             FileSystem.readFileAsBlob(file)
             .then((data) => {

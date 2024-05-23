@@ -496,8 +496,6 @@ onboard_logging.initialize = function (callback) {
                     then((file) => {
                         openedFile = file;
                         mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
-                    }).then(() => {
-                        //return FileSystem.closeFile(openedFile);
                     });
                 });
             });

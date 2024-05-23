@@ -653,7 +653,7 @@ vtx.initialize = function (callback) {
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', { length: text.length });
         })
         .catch((error) => {
-            console.error("FAiled to write lua file:", error);
+            console.error("Failed to write lua file:", error);
             gui_log(i18n.getMessage('vtxSavedLuaFileKo'));
         });
     }
