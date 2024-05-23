@@ -388,7 +388,10 @@
     "logActionShow": {
         "message": "Show Log"
     },
-
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} files",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
     "serialErrorFrameError": {
         "message": "Serial connection error: bad framing"
     },
