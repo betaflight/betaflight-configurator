@@ -6,6 +6,7 @@
     <div class="dropdown dropdown-dark">
       <select
         id="port"
+        :key="value.selectedPort"
         :value="value.selectedPort"
         class="dropdown-select"
         :title="$t('firmwareFlasherManualPort')"
