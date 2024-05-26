@@ -35,6 +35,7 @@ let connectionTimestamp;
 let liveDataRefreshTimerId = false;
 
 let isConnected = false;
+let firstReconnect = true;
 
 const toggleStatus = function () {
     isConnected = !isConnected;
@@ -694,9 +695,11 @@ function onClosed(result) {
 
     MSP.clearListeners();
 
-    serial.removeEventListener('receive', read_serial_adapter);
-    serial.removeEventListener('connect', connectHandler);
-    serial.removeEventListener('disconnect', disconnectHandler);
+    if (PortHandler.portPicker.selectedPort !== 'virtual') {
+        serial.removeEventListener('receive', read_serial_adapter);
+        serial.removeEventListener('connect', connectHandler);
+        serial.removeEventListener('disconnect', disconnectHandler);
+    }
 
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
@@ -781,54 +784,48 @@ function startLiveDataRefreshTimer() {
     liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
 
-export function reinitializeConnection(callback) {
-    const isVirtual = CONFIGURATOR.virtualMode && GUI.connected_to == 'virtual' && CONFIGURATOR.connectionValid && serial.connectionId === 'virtual';
-
+export function reinitializeConnection() {
+    const previousTimeStamp = connectionTimestamp;
     gui_log(i18n.getMessage('deviceRebooting'));
 
-    // Close connection gracefully if it still exists.
-    const previousTimeStamp = connectionTimestamp;
-
-    if (serial.connectionId) {
-        if (GUI.connected_to || GUI.connecting_to) {
-            $('a.connect').trigger('click');
-        } else {
-            serial.disconnect();
-        }
-    }
-
     // In virtual mode reconnect when autoconnect is enabled
-    if (isVirtual) {
-        return setTimeout(() => {
-            if (PortHandler.portPicker.autoConnect) {
-                $('a.connect').trigger('click');
-            }
-            if (typeof callback === 'function') {
-                callback();
-            }
+    if (PortHandler.portPicker.selectedPort === 'virtual' && PortHandler.portPicker.autoConnect) {
+        return setTimeout(function() {
+            $('a.connect').trigger('click');
         }, 500);
     }
 
-    // Wait for serial or tcp connection to be available
-    let attempts = 0;
-    const reconnect = setInterval(waitforSerial, 100);
-
-    function waitforSerial() {
-        if ((connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) || GUI.active_tab === 'firmware_flasher') {
-            console.log(`Serial connection available after ${attempts / 10} seconds`);
-            clearInterval(reconnect);
-            gui_log(i18n.getMessage('deviceReady'));
-
-            if (typeof callback === 'function') {
-                callback();
-            }
-        } else {
-            attempts++;
-            if (attempts > 100) {
-                clearInterval(reconnect);
-                console.log(`failed to get serial connection, gave up after 10 seconds`);
-                gui_log(i18n.getMessage('serialPortOpenFail'));
-            }
-        }
+    if (firstReconnect) {
+        firstReconnect = false;
+    } else {
+        return;
     }
+
+    finishClose(() => {
+        setTimeout(() => {
+            if (PortHandler.portPicker.selectedPort && PortHandler.portPicker.autoConnect) {
+                $('a.connect').trigger('click');
+            }
+
+            // Wait for serial or tcp connection to be available
+            let attempts = 0;
+            const reconnect = setInterval(waitforSerial, 100);
+
+            function waitforSerial() {
+                if ((connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) || GUI.active_tab === 'firmware_flasher') {
+                    console.log(`Serial connection available after ${(attempts / 10) + 2} seconds`);
+                    clearInterval(reconnect);
+                    gui_log(i18n.getMessage('deviceReady'));
+                } else {
+                    attempts++;
+                    console.log(`Attempt ${attempts} to get serial connection`);
+                    if (attempts > 100) {
+                        clearInterval(reconnect);
+                        console.log(`failed to get serial connection, gave up after 10 seconds`);
+                        gui_log(i18n.getMessage('serialPortOpenFail'));
+                    }
+                }
+            }
+        }, 2000);
+    });
 }
