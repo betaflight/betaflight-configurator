@@ -124,7 +124,7 @@ class WebSerial extends EventTarget {
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
             this.connectionId = connectionInfo.connectionId;
-            this.bitrate = options.baudrate;
+            this.bitrate = options.baudRate;
             this.bytesReceived = 0;
             this.bytesSent = 0;
             this.failed = 0;
