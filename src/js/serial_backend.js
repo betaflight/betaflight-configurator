@@ -823,8 +823,6 @@ export function reinitializeConnection(callback) {
     }
 
     finishClose(() => {
-        setTimeout(() => {
-            validateConnection();
-        }, 2000);
+        setTimeout(validateConnection, 2000);
     });
 }
