@@ -29,7 +29,6 @@
     "@fortawesome/fontawesome-free": "^6.5.1",
     "@panter/vue-i18next": "^0.15.2",
     "@vitejs/plugin-vue2": "^2.2.0",
-    "bonjour": "^3.5.0",
     "crypto-es": "^2.1.0",
     "d3": "^7.8.2",
     "djv": "^2.1.4",

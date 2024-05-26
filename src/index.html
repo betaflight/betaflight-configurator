@@ -29,6 +29,8 @@
         <port-picker
             v-model="PortHandler.portPicker"
             :connected-devices="PortHandler.currentPorts"
+            :show-virtual-option="PortHandler.showVirtualMode"
+            :show-manual-option="PortHandler.showManualMode"
             :disabled="PortHandler.portPickerDisabled"
         ></port-picker>
         <div class="header-wrapper">

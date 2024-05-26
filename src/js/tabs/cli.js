@@ -10,9 +10,9 @@ import CliAutoComplete from "../CliAutoComplete";
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import jBox from "jbox";
-import { checkChromeRuntimeError } from "../utils/common";
 import $ from 'jquery';
 import { serialShim } from "../serial_shim";
+import FileSystem from "../FileSystem";
 
 const serial =  serialShim();
 
@@ -110,31 +110,70 @@ cli.initialize = function (callback) {
         self.GUI.windowWrapper.empty();
     }
 
-    function executeCommands(outString) {
+    async function executeCommands(outString) {
         self.history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-        return outputArray.reduce((p, line, index) =>
-            p.then((delay) =>
-                new Promise((resolve) => {
-                    GUI.timeout_add('CLI_send_slowly', function () {
-                        let processingDelay = self.lineDelayMs;
-                        line = line.trim();
-                        if (line.toLowerCase().startsWith('profile')) {
-                            processingDelay = self.profileSwitchDelayMs;
-                        }
-                        const isLastCommand = outputArray.length === index + 1;
-                        if (isLastCommand && self.cliBuffer) {
-                            line = getCliCommand(line, self.cliBuffer);
-                        }
-                        self.sendLine(line, function () {
-                            resolve(processingDelay);
-                        });
-                    }, delay);
-                }),
-            ),
-            Promise.resolve(0),
-        );
+
+        outputArray.forEach((command, index) => {
+            let line = command.trim();
+            let processingDelay = self.lineDelayMs;
+            if (line.toLowerCase().startsWith('profile')) {
+                processingDelay = self.profileSwitchDelayMs;
+            }
+            const isLastCommand = outputArray.length === index + 1;
+            if (isLastCommand && self.cliBuffer) {
+                line = getCliCommand(line, self.cliBuffer);
+            }
+
+            GUI.timeout_add('CLI_send_slowly', function () {
+                self.sendLine(line, function () {
+                    console.log('line sent', line);
+                });
+            }, processingDelay);
+        });
+    }
+
+    async function loadFile() {
+        const previewArea = $("#snippetpreviewcontent textarea#preview");
+
+        function executeSnippet(fileName) {
+            const commands = previewArea.val();
+
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliExecuteFromFile', { filename: fileName });
+
+            executeCommands(commands);
+            self.GUI.snippetPreviewWindow.close();
+        }
+
+        function previewCommands(result, fileName) {
+            if (!self.GUI.snippetPreviewWindow) {
+                self.GUI.snippetPreviewWindow = new jBox("Modal", {
+                    id: "snippetPreviewWindow",
+                    width: 'auto',
+                    height: 'auto',
+                    closeButton: 'title',
+                    animation: false,
+                    isolateScroll: false,
+                    title: i18n.getMessage("cliConfirmSnippetDialogTitle", { fileName: fileName }),
+                    content: $('#snippetpreviewcontent'),
+                    onCreated: () =>
+                        $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName))
+                    ,
+                });
+            }
+            previewArea.val(result);
+            self.GUI.snippetPreviewWindow.open();
+        }
+
+        const file = await FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: 'TXT'}), '.txt');
+        const contents = await FileSystem.readFile(file);
+        previewCommands(contents, file.name);
+    }
+
+    async function saveFile(filename, content) {
+        const file = await FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: 'TXT'}), '.txt');
+        await FileSystem.writeFile(file, content);
     }
 
     $('#content').load("./tabs/cli.html", function () {
@@ -164,46 +203,10 @@ cli.initialize = function (callback) {
                 .focus();
         });
 
-        $('.tab-cli .save').click(function() {
-            const prefix = 'cli';
-            const suffix = 'txt';
+        $('.tab-cli .save').on('click', function() {
+            const filename = generateFilename('cli', 'txt');
 
-            const filename = generateFilename(prefix, suffix);
-
-            const accepts = [{
-                description: `${suffix.toUpperCase()} files`, extensions: [suffix],
-            }];
-
-            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
-                if (checkChromeRuntimeError()) {
-                    return;
-                }
-
-                if (!entry) {
-                    console.log('No file selected');
-                    return;
-                }
-
-                entry.createWriter(function (writer) {
-                    writer.onerror = function (){
-                        console.error('Failed to write file');
-                    };
-
-                    writer.onwriteend = function () {
-                        if (self.outputHistory.length > 0 && writer.length === 0) {
-                            writer.write(new Blob([self.outputHistory], {type: 'text/plain'}));
-                        } else {
-                            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliSave', { length: self.outputHistory.length });
-
-                            console.log('write complete');
-                        }
-                    };
-
-                    writer.truncate(0);
-                }, function (){
-                    console.error('Failed to get file writer');
-                });
-            });
+            saveFile(filename, self.outputHistory);
         });
 
         $('.tab-cli .clear').click(function() {
@@ -218,60 +221,8 @@ cli.initialize = function (callback) {
             self.GUI.copyButton.hide();
         }
 
-        $('.tab-cli .load').click(function() {
-            const accepts = [
-                {
-                    description: 'Config files', extensions: ["txt", "config"],
-                },
-                {
-                    description: 'All files',
-                },
-            ];
-
-            chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(entry) {
-                if (checkChromeRuntimeError()) {
-                    return;
-                }
-
-                const previewArea = $("#snippetpreviewcontent textarea#preview");
-
-                function executeSnippet(fileName) {
-                    const commands = previewArea.val();
-
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliExecuteFromFile', { filename: fileName });
-
-                    executeCommands(commands);
-                    self.GUI.snippetPreviewWindow.close();
-                }
-
-                function previewCommands(result, fileName) {
-                    if (!self.GUI.snippetPreviewWindow) {
-                        self.GUI.snippetPreviewWindow = new jBox("Modal", {
-                            id: "snippetPreviewWindow",
-                            width: 'auto',
-                            height: 'auto',
-                            closeButton: 'title',
-                            animation: false,
-                            isolateScroll: false,
-                            title: i18n.getMessage("cliConfirmSnippetDialogTitle", { fileName: fileName }),
-                            content: $('#snippetpreviewcontent'),
-                            onCreated: () =>
-                                $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName))
-                            ,
-                        });
-                    }
-                    previewArea.val(result);
-                    self.GUI.snippetPreviewWindow.open();
-                }
-
-                entry.file((file) => {
-                    const reader = new FileReader();
-                    reader.onload =
-                        () => previewCommands(reader.result, file.name);
-                    reader.onerror = () => console.error(reader.error);
-                    reader.readAsText(file);
-                });
-            });
+        $('.tab-cli .load').on('click', function() {
+            loadFile();
         });
 
         $('.tab-cli .support')
@@ -282,20 +233,19 @@ cli.initialize = function (callback) {
                 clearHistory();
                 const api = new BuildApi();
 
-                api.getSupportCommands(commands => {
+                api.getSupportCommands(async commands => {
                     commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
-                    executeCommands(commands.join('\n')).then(() => {
-                        const delay = setInterval(() => {
-                            const time = new Date().getTime();
-                            if (self.lastArrival < time - 250) {
-                                clearInterval(delay);
-                                const text = self.outputHistory;
-                                api.submitSupportData(text, key => {
-                                    writeToOutput(i18n.getMessage('buildServerSupportRequestSubmission', [key]));
-                                });
-                            }
-                        }, 250);
-                    });
+                    await executeCommands(commands.join('\n'));
+                    const delay = setInterval(() => {
+                        const time = new Date().getTime();
+                        if (self.lastArrival < time - 250) {
+                            clearInterval(delay);
+                            const text = self.outputHistory;
+                            api.submitSupportData(text, key => {
+                                writeToOutput(i18n.getMessage('buildServerSupportRequestSubmission', [key]));
+                            });
+                        }
+                    }, 250);
                 });
             }
 

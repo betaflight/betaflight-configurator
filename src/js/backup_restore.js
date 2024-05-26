@@ -14,7 +14,7 @@ import { gui_log } from './gui_log';
 import { generateFilename } from "./utils/generate_filename";
 import semver from "semver";
 import { tracking } from "./Analytics";
-import { checkChromeRuntimeError } from "./utils/common";
+import FileSystem from "./FileSystem.js";
 
 // code below is highly experimental, although it runs fine on latest firmware
 // the data inside nested objects needs to be verified if deep copy works properly
@@ -199,69 +199,18 @@ export function configuration_backup(callback) {
 
         const filename = generateFilename(prefix, suffix);
 
-        const accepts = [{
-            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
-        }];
-
         // create or load the file
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function (fileEntry) {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
+        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+        .then((file) => {
+            const serializedConfigObject = JSON.stringify(configuration, null, '\t');
 
-            if (!fileEntry) {
-                console.log('No file selected, backup aborted.');
-                return;
-            }
+            console.log("Saving backup to:", file.name);
+            FileSystem.writeFile(file, serializedConfigObject);
 
-            chosenFileEntry = fileEntry;
-
-            // echo/console log path specified
-            chrome.fileSystem.getDisplayPath(chosenFileEntry, function (path) {
-                console.log(`Backup file path: ${path}`);
-            });
-
-            // change file entry from read only to read/write
-            chrome.fileSystem.getWritableEntry(chosenFileEntry, function (fileEntryWritable) {
-                // check if file is writable
-                chrome.fileSystem.isWritableEntry(fileEntryWritable, function (isWritable) {
-                    if (isWritable) {
-                        chosenFileEntry = fileEntryWritable;
-
-                        // crunch the config object
-                        const serializedConfigObject = JSON.stringify(configuration, null, '\t');
-                        const blob = new Blob([serializedConfigObject], {type: 'text/plain'}); // first parameter for Blob needs to be an array
-
-                        chosenFileEntry.createWriter(function (writer) {
-                            writer.onerror = function (e) {
-                                console.error(e);
-                            };
-
-                            let truncated = false;
-                            writer.onwriteend = function () {
-                                if (!truncated) {
-                                    // onwriteend will be fired again when truncation is finished
-                                    truncated = true;
-                                    writer.truncate(blob.size);
-
-                                    return;
-                                }
-
-                                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Backup');
-                                console.log('Write SUCCESSFUL');
-                                if (callback) callback();
-                            };
-
-                            writer.write(blob);
-                        }, function (e) {
-                            console.error(e);
-                        });
-                    } else {
-                        // Something went wrong or file is set to read only and cannot be changed
-                        console.log('File appears to be read only, sorry.');
-                    }
-                });
-            });
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Backup');
+        })
+        .catch((error) => {
+            console.log('Error in backup process: ', error);
         });
     }
 
@@ -270,77 +219,46 @@ export function configuration_backup(callback) {
 export function configuration_restore(callback) {
     let chosenFileEntry = null;
 
-    const accepts = [{
-        description: 'JSON files', extensions: ['json'],
-    }];
+    const suffix = 'json';
 
-    // load up the file
-    chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function (fileEntry) {
-        if (checkChromeRuntimeError()) {
-            return;
-        }
+    FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+    .then((file) => {
+        console.log("Reading VTX config from:", file.name);
+        FileSystem.readFile(file)
+        .then((text) => {
+            console.log('Read backup SUCCESSFUL');
+            let configuration;
+            try { // check if string provided is a valid JSON
+                configuration = JSON.parse(text);
+            } catch (err) {
+                // data provided != valid json object
+                console.log(`Data provided != valid JSON string, restore aborted: ${err}`);
 
-        if (!fileEntry) {
-            console.log('No file selected, restore aborted.');
-            return;
-        }
+                return;
+            }
 
-        chosenFileEntry = fileEntry;
-
-        // echo/console log path specified
-        chrome.fileSystem.getDisplayPath(chosenFileEntry, function (path) {
-            console.log(`Restore file path: ${path}`);
-        });
-
-        // read contents into variable
-        chosenFileEntry.file(function (file) {
-            const reader = new FileReader();
-
-            reader.onprogress = function (e) {
-                if (e.total > 1048576) { // 1 MB
-                    // dont allow reading files bigger then 1 MB
-                    console.log('File limit (1 MB) exceeded, aborting');
-                    reader.abort();
+            // validate
+            if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.BACKUP_FILE_VERSION_MIN_SUPPORTED)) {
+                if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
+                    gui_log(i18n.getMessage('backupFileUnmigratable'));
+                    return;
                 }
-            };
-
-            reader.onloadend = function (e) {
-                if ((e.total != 0 && e.total == e.loaded) || GUI.isCordova()) {
-                    // Cordova: Ignore verification : seem to have a bug with progressEvent returned
-                    console.log('Read SUCCESSFUL');
-                    let configuration;
-                    try { // check if string provided is a valid JSON
-                        configuration = JSON.parse(e.target.result);
-                    } catch (err) {
-                        // data provided != valid json object
-                        console.log(`Data provided != valid JSON string, restore aborted: ${err}`);
-
-                        return;
-                    }
-
-                    // validate
-                    if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.BACKUP_FILE_VERSION_MIN_SUPPORTED)) {
-                        if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
-                            gui_log(i18n.getMessage('backupFileUnmigratable'));
-                            return;
-                        }
-                        if (configuration.FEATURE_CONFIG.features._featureMask) {
-                            const features = new Features(FC.CONFIG);
-                            features.setMask(configuration.FEATURE_CONFIG.features._featureMask);
-                            configuration.FEATURE_CONFIG.features = features;
-                        }
-
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Restore');
-
-                        configuration_upload(configuration, callback);
-                    } else {
-                        gui_log(i18n.getMessage('backupFileIncompatible'));
-                    }
+                if (configuration.FEATURE_CONFIG.features._featureMask) {
+                    const features = new Features(FC.CONFIG);
+                    features.setMask(configuration.FEATURE_CONFIG.features._featureMask);
+                    configuration.FEATURE_CONFIG.features = features;
                 }
-            };
 
-            reader.readAsText(file);
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Restore');
+
+                configuration_upload(configuration, callback);
+            } else {
+                gui_log(i18n.getMessage('backupFileIncompatible'));
+            }
         });
+    })
+    .catch((error) => {
+        console.log('Error in restore process: ', error);
     });
 
     function compareVersions(generated, required) {
