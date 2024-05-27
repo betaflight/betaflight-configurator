@@ -951,15 +951,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "此選項告知混控程式電機轉向已經被反轉，且螺旋槳也已對應安裝。<strong>警告：<\/strong>此選項並不能反轉電機實際轉向。要反轉電機實際轉向，請通過電調配置軟件進行設置，或者交換電調 - 電機的線序。同時在嘗試解鎖前務必確認螺旋槳是按照上面示意圖的轉向安裝的。"
     },
-    "configurationAutoDisarmDelay": {
-        "message": "[seconds] 秒後鎖定電機（需要啟用 MOTOR_STOP）"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "忽略油門位置直接鎖定電機（當在模式頁裡設定為通過 Aux 開關解鎖時生效）"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "油門未在最低位時禁止解鎖電機。注意該選項啟動時有可能在飛行中通過開關意外觸發而上鎖。"
-    },
     "configurationMotorPoles": {
         "message": "電機極數",
         "description": "One of the fields of the ESC\/Motor configuration"

@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Desconectar"
     },
+    "portsSelectNoSelection": {
+        "message": "Selecione o seu dispositivo",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Seleção manual"
     },
@@ -112,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "Mostrar todos os dispositivos serial (para fabricantes ou desenvolvimento)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Usar a descoberta de Dispositivo mDNS Browser na rede (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Ativar modo de ligação manual",
@@ -301,6 +301,10 @@
     },
     "logActionShow": {
         "message": "Exibir Histórico"
+    },
+    "fileSystemPickerFiles": {
+        "message": "Ficheiros {{typeof}}",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Erro na conexão serial: erro no encapsulamento de dados"
@@ -1311,13 +1315,13 @@
         "message": "Esta opção configura o mixer para esperar que a direção do motor seja invertida e que as hélices estejam de acordo com isso. <strong>Aviso:<\/strong> Isto não inverte a direção do motor. Use a ferramenta de configuração dos seus ESCs ou mude a ordem dos cabos dos motores para conseguir isto. Ainda, certifique-se de verificar sem hélices que os motores estão a girar nas direções mostradas no diagrama acima antes de tentar armar."
     },
     "configurationAutoDisarmDelay": {
-        "message": "Desarmar os motores após definir [seconds] de espera (Requer a funcionalidade MOTOR_STOP)"
+        "message": "Desarmar motores após espera [segundos]"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmar motores independentemente do valor do acelerador (Quando o ARMAR está configurado na aba Modos através do canal AUX)"
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Desarmar os motores após definir [segundos] de espera (Requer a funcionalidade MOTOR_STOP)"
     },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Armar está sempre desativado quando o acelerador não está no mínimo. Tenha cuidado porque pode desarmar acidentalmente com um interruptor enquanto estiver a voar se esta opção estiver ativa."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibrar Gyro no primeiro armar"
     },
     "configurationDigitalIdlePercent": {
         "message": "Idle do Motor ( %, estático)"
@@ -6950,6 +6954,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Sensibilidade central"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Sensibilidade Máx-Central"
     },
     "dialogRatesTypeTitle": {
         "message": "Alteração do tipo de Rates"

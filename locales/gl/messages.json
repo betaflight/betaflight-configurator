@@ -116,10 +116,6 @@
         "message": "Amosar tódolos dispositivos serie (para fabricantes ou desenvolvemento)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "Empregar descubrimento na rede de dispositivos mDNS (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
-    },
     "showManualMode": {
         "message": "Activar o modo de conexión manual",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -1312,15 +1308,6 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Esta opción configura o mesturador para esperar que a dirección do motor se invirta e que as hélices estean en consecuencia.<strong>Aviso:<\/strong> isto non inverte a dirección do motor. Use a ferramenta de configuración para os seus ESCs ou cambie a orde do cableado do motor para lograr isto. Ademais, asegúrese de verificar con hélices que os seus motores están rotando nas direccións que se mostran no diagrama anterior antes de intentar armalo."
-    },
-    "configurationAutoDisarmDelay": {
-        "message": "Desarmar motores despóis de [segundos] (Require a característica de MOTOR_STOP)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmar motores sin ter en conta o valor do acelerador (Cando ARM é configurado no menú Modos cun canale AUX)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "O armado está sempre desactivado cando o acelerador está baixo. Teña coidado xa que pode desarmar accidentalmente co conmutador cando este voando con esta opción activada."
     },
     "configurationDigitalIdlePercent": {
         "message": "Ralentí Motor (%, estático)"

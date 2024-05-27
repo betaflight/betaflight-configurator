@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Disconnetti"
     },
+    "portsSelectNoSelection": {
+        "message": "Seleziona il dispositivo",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Selezione manuale"
     },
@@ -112,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "Mostra tutti i dispositivi seriali (per produttori o sviluppatori)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Usa la ricerca in rete del dispositivo con mDNS del browser (sperimentale)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Abilita la modalità di connessione manuale",
@@ -301,6 +301,10 @@
     },
     "logActionShow": {
         "message": "Mostra Log"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} files",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Errore di connessione seriale: frame errato"
@@ -609,16 +613,16 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "L'applicazione supporta tutto l'hardware che può eseguire Betaflight. Controlla la scheda per il flash per una lista completa dell'hardware.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica il Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica gli script LUA di Betaflight per la trasmittente<\/a><br \/><br \/>Il codice sorgente del firmware può essere scaricato da <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/><br \/>Per hardware obsoleti che usano un chip USB-seriale CP210x:<br \/>gli ultimi <b>driver CP210x<\/b> possono essere scaricati da <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/>L'ultima versione di <b>Zadig<\/b> per l'installazione dei driver Windows USB può essere scaricata da <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> può essere scaricato da <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">qui<\/a>"
+        "message": "L'applicazione supporta tutto l'hardware eseguibile da Betaflight. Controlla la scheda flash per una lista completa dell'hardware.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica il Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scarica gli script LUA di Betaflight per la trasmittente<\/a><br \/><br \/>Il codice sorgente del firmware può essere scaricato da <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/><br \/>Per hardware obsoleti che usano un chip USB-seriale CP210x:<br \/>gli ultimi <b>driver CP210x<\/b> possono essere scaricati da <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/>L'ultima versione di <b>Zadig<\/b> per l'installazione dei driver Windows USB può essere scaricata da <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> può essere scaricato da <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">qui<\/a>"
     },
     "defaultContributingHead": {
         "message": "Contribuisci"
     },
     "defaultContributingText": {
-        "message": "Se vuoi aiutare a migliorare Betaflight puoi aiutare in diversi modi, tra cui:<br \/><ul><li>Utilizzare la tua conoscenza di Betaflight per creare o aggiornare contenuti sulla <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki<\/a>, o rispondere alle domande degli altri utenti nei forum online;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Contribuire al codice<\/a> del firmware e del Configuratore - nuove funzionalità, correzioni, miglioramenti;<\/li><li>Testare <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuove funzioni e correzioni<\/a> e fornire feedback;<\/li><li>Aiutando altri utenti a risolvere i problemi segnalati nei <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nostri issue tracker<\/a>, e partecipare alle discussioni sulle richieste di funzioni;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Traducendo<\/a> il Betaflight Configurator in una nuova lingua o aggiornando le traduzioni esistenti.<\/li><\/ul>"
+        "message": "Per migliorare Betaflight puoi aiutare in diversi modi, tra cui:<br \/><ul><li>Utilizzare la tua conoscenza di Betaflight per creare o aggiornare contenuti sulla <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki<\/a>, o rispondere alle domande degli altri utenti nei forum online;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Contribuire al codice<\/a> del firmware e del Configuratore - nuove funzionalità, correzioni, miglioramenti;<\/li><li>Testare <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuove funzioni e correzioni<\/a> e fornire feedback;<\/li><li>Aiutando altri utenti a risolvere i problemi segnalati nei <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nostri issue tracker<\/a>, e partecipare alle discussioni sulle richieste di funzioni;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Traducendo<\/a> il Betaflight Configurator in una nuova lingua o aggiornando le traduzioni esistenti.<\/li><\/ul>"
     },
     "defaultFacebookText": {
-        "message": "Abbiamo anche un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">gruppo Facebook<\/a>.<br \/> Unisciti a noi per discutere di Betaflight, fare domande riguardo la configurazione, o semplicemente ritrovarti con altri piloti."
+        "message": "Visita il <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">gruppo Facebook<\/a>.<br \/> Unisciti a noi per discutere di Betaflight, per domande sulla configurazione, o semplicemente per discutere con altri piloti."
     },
     "defaultDiscordText": {
         "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Server Discord<\/a> di Betaflight.<br \/>Condividi la tua esperienza di volo, parla di Betaflight, aiuta altre persone o ottieni aiuto dalla community."
@@ -652,7 +656,7 @@
         "message": "Documentazione \/ Manuale"
     },
     "defaultDocumentation": {
-        "message": "La documentazione Betaflight è disponibile come note di rilascio e wiki.<br \/><br \/>"
+        "message": "La documentazione Betaflight è disponibile nelle note di pubblicazione e wiki.<br \/><br \/>"
     },
     "defaultDocumentation1": {
         "message": "Betaflight wiki è una grande risorsa di informazioni, lo trovi <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a>."
@@ -864,10 +868,10 @@
         "message": "Radar:"
     },
     "initialSetupArmingDisableFlags": {
-        "message": "Flag Armato Disabilitato:"
+        "message": "Flag Armamento Disabilitato:"
     },
     "initialSetupArmingAllowed": {
-        "message": "Armato consentito"
+        "message": "Armamento Abilitato"
     },
     "initialSetupArmingDisableFlagsTooltip": {
         "message": "Lista dei flag che indicano perché non è permesso l'armamento. Passa il mouse sul flag o fai riferimento alla Wiki (pagina 'Arming Sequence & Safety') per ulteriori informazioni."
@@ -1101,7 +1105,7 @@
         "message": "Seriale (via UART)"
     },
     "featureMOTOR_STOP": {
-        "message": "Non far girare i motori quando armato"
+        "message": "Non far girare i motori se armato"
     },
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
@@ -1311,13 +1315,13 @@
         "message": "Questa opzione configura il mixer per aspettarsi l'inversione di direzione dei motori con le eliche montate di conseguenza. <strong>Attenzione:<\/strong> Ciò non inverte la direzione del motore. Utilizza lo strumento di configurazione dei tuoi ESC o cambia l'ordine dei cavi fra motore e ESC per ottenere questo. Inoltre, assicurati di controllare con le eliche smontate che i motori girino nelle direzioni indicate nel diagramma qui sopra prima di armare."
     },
     "configurationAutoDisarmDelay": {
-        "message": "Disarma i motori dopo un ritardo di [secondi] (richiede MOTOR_STOP)"
+        "message": "Disarma i motori con ritardo [secondi]"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Disarma i motori indipendentemente dal valore del gas (quando ARM è configurato nella scheda Modalità di Volo su un canale AUX)"
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Disarma i motori con un ritardo di [secondi] (richiede funzione MOTOR_STOP)"
     },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "L'armamento dei motori è sempre disabilitato quando lo stick del gas non è abbassato. Fai attenzione in quanto potresti disarmare accidentalmente con un interruttore quando voli con questa opzione attiva."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibra il giroscopio al primo armamento"
     },
     "configurationDigitalIdlePercent": {
         "message": "Motore Minimo (%, statico)"
@@ -1334,7 +1338,7 @@
         "description": "One of the fields of the ESC\/Motor configuration"
     },
     "configurationMotorPolesHelp": {
-        "message": "Il numero di poli è il numero di magneti che si trovano sulla campana del motore. NON contare gli statori dove si trovano gli avvolgimenti. I tipici motori di un 5\" hanno 14 magneti, quelli più piccoli, come un 3\" o più piccoli, hanno 12 magneti.",
+        "message": "Il numero di poli è il numero di magneti che si trovano nella campana del motore. NON contare gli statori dove si trovano gli avvolgimenti. I tipici motori di un 5\" hanno 14 magneti, quelli più piccoli, come un 3\" o più piccoli, hanno 12 magneti.",
         "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
     },
     "configurationMotorIdleRpmHelp": {
@@ -1517,7 +1521,7 @@
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Se abilitato, al primo armamento dopo la connessione della batteria verrà usato come punto di partenza. Se non abilitato, ogni volta che il quad viene armato il punto di partenza verrà aggiornato.",
+        "message": "Se abilitato, verrà usato come punto di partenza solo al primo armamento dopo la connessione della batteria. Se non abilitato, ogni volta che il quad viene armato il punto di partenza verrà aggiornato.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -2775,7 +2779,7 @@
         "message": "Distanza dal punto di partenza:"
     },
     "gpsPositionalDop": {
-        "message": "Posizionale DOP:"
+        "message": "Posizione DOP:"
     },
     "gpsSignalStrHead": {
         "message": "Potenza del segnale GPS"
@@ -3146,7 +3150,7 @@
         "message": "Carica da file"
     },
     "cliSupportRequestBtn": {
-        "message": "Invia Dati Di Assistenza"
+        "message": "Invia Dati per Assistenza"
     },
     "cliConfirmSnippetDialogTitle": {
         "message": "File <strong>{{fileName}}<\/strong> caricato. Controlla i comandi caricati"
@@ -4719,7 +4723,7 @@
         "message": "Acceleratore per l'hover - <span class=\"message-negative\">IMPORTANTE: imposta bene questo valore<\/span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "Per trovare il giusto valore, imposta l'interruttore di Failsafe sullo Stadio 2, imposta la procedura di Failsafe Stadio 2 per atterrare, e regola il valore dell'acceleratore mentre si atterra, fino a quando il quad e' in hover o scende lentamente. Imposta poi l'acceleratore in hover nel GPS Rescue e il valore per l'acceleratore nello Stadio 1 del CanaleFallback su questo valore."
+        "message": "Per trovare il giusto valore, imposta l'interruttore di Failsafe sullo Stadio 2, imposta la procedura di Failsafe Stadio 2 per atterrare, e regola il valore dell'acceleratore mentre si atterra, fino a quando il quad e' in hover o scende lentamente. Imposta poi l'acceleratore in hover nel GPS Rescue e il valore per l'acceleratore nello Stadio 1 del Canale Fallback su questo valore."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Distanza minima da home (metri)"
@@ -4737,7 +4741,7 @@
         "message": "Non consigliato. Permette di armare senza un punto Home impostato, ma il quad disarmerà e va in crash con perdita totale di Rx failsafe. Se testato con un interruttore, c'è un breve periodo nullo prima del disarmo."
     },
     "failsafeGpsRescueItemSanityChecks": {
-        "message": "Controlli di salute"
+        "message": "Controlli di verifica"
     },
     "failsafeGpsRescueItemSanityChecksOff": {
         "message": "Spento"
@@ -6950,6 +6954,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Sensibilità centro"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Centro-Max Sensibilità"
     },
     "dialogRatesTypeTitle": {
         "message": "Cambio tipo di rates"

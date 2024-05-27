@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "切断"
     },
+    "portsSelectNoSelection": {
+        "message": "デバイスを選択",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "手動選択"
     },
@@ -58,6 +62,10 @@
     "portsSelectVirtual": {
         "message": "バーチャル接続モード (テスト中)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- デバイスが見つかりません ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "virtualMSPVersion": {
         "message": "バーチャルファームウェアバージョン"
@@ -108,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "すべてのシリアルデバイスを表示 (ベンダーまたはデベロッパー向け)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "mDNSブラウザを使用したネットワーク上でのデバイス検出 (試験運用)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "手動接続モード 有効",
@@ -297,6 +301,10 @@
     },
     "logActionShow": {
         "message": "ログ表示"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} ファイル",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "シリアル接続エラー: フレーム長 不良"
@@ -1307,13 +1315,13 @@
         "message": "このオプションは、モーター回転方向の構成を逆転 (リバース) させプロペラを回すよう、ミキサー設定を行います。\n<strong>警告:<\/strong> これはモーターそのもののの回転方向を逆転させるわけでありません。ESC設定ツールを使用するか、ESCモーターの配線順序を切り替えて構成変更してください。また、プロペラを用いモーターが上図に示す方向に回転していることを確認してから、アームを解除してください。"
     },
     "configurationAutoDisarmDelay": {
-        "message": "設定後にモーターをディスアーム [seconds] (MOTOR_STOP機能必須)"
+        "message": "指定秒数経過後にモーターをディスアーム [seconds]"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "スロットル値に関係なくモーターをディスアーム<br \/> (ARMが [モード] タブのAUXチャンネルで設定されている場合)"
+    "configurationAutoDisarmDelayHelp": {
+        "message": "遅延時間設定後にモーターをディスアーム [seconds] (MOTOR_STOP機能必須)"
     },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "スロットルが低位置でない場合、アーミングは常に無効となります。 飛行中にオプション有効スイッチを、誤って解除する可能性がありますので注意してください。"
+    "configurationGyroCalOnFirstArm": {
+        "message": "初回アーム時にジャイロキャリブレーションを実施"
     },
     "configurationDigitalIdlePercent": {
         "message": "モーターアイドル ( %, static)"
@@ -4630,7 +4638,7 @@
         "message": "検索\nシグナル消失後のステージ 1 フェイルセーフ時間を設定します。信号が回復せず期限の時間が経過した場合、ステージ 2 フェイルセーフが開始されます。"
     },
     "failsafeThrottleLowItem": {
-        "message": "フェイルセーフ スロットル低遅延 [seconds]"
+        "message": "フェイルセーフ時にスロットル低とする遅延時間 [seconds]"
     },
     "failsafeThrottleLowHelp": {
         "message": "選択しているフェイルセーフを実行する代わりに、この時間の間スロットルが低かったとき機体をディスアームします。"
@@ -4639,7 +4647,7 @@
         "message": "着陸時に使用されるスロットル値"
     },
     "failsafeOffDelayItem": {
-        "message": "フェイルセーフ時のモーターOFF遅延時間 [seconds]"
+        "message": "フェイルセーフ時にモーターOFFとする遅延時間 [seconds]"
     },
     "failsafeOffDelayHelp": {
         "message": "モーターがオフになり、機体がディスアームされるまで着陸モードに留まる時間"
@@ -6946,6 +6954,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "中央値の感度"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "中央～最大値の感度"
     },
     "dialogRatesTypeTitle": {
         "message": "レートタイプ変更"

@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Desconectar"
     },
+    "portsSelectNoSelection": {
+        "message": "Selecciona tu dispositivo",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Selección Manual"
     },
@@ -112,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "Mostrar todos los dispositivos serie (para fabricantes o desarrollo)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Usar descubrimiento en la red de dispositivos mDNS (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Activar modo de conexión manual",
@@ -301,6 +301,10 @@
     },
     "logActionShow": {
         "message": "Mostrar registro"
+    },
+    "fileSystemPickerFiles": {
+        "message": "Archivos {{typeof}}",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Error en conexión serie: framing incorrecto"
@@ -1311,13 +1315,13 @@
         "message": "Esta opción configura el mezclador para esperar que la dirección de los motores esté invertida y las hélices estén colocadas en consecuencia. <strong>AVISO:<\/strong> esto no invierte la dirección del motor. Usa la herramienta de configuración para tus ESCs o modifica el orden del cableado entre los ESC y los motores para lograrlo. Además, verifica sin las hélices que los motores giran en la dirección que se muestra en el diagrama de arriba antes de intentar armar."
     },
     "configurationAutoDisarmDelay": {
-        "message": "Desarmar motores después del tiempo configurado [segundos] (Requiere funcionalidad MOTOR_STOP)"
+        "message": "Tiempo para desarmar los motores automáticamente [segundos]"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmar motores ignorando el valor del acelerador (Cuando ARM está configurado en el apartado Modos vía canal AUX)"
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Desarma los motores después del tiempo configurado [segundos] (requiere funcionalidad MOTOR_STOP)"
     },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "El armado está siempre desactivado cuando el acelerador no está abajo. Ten cuidado ya que puedes desactivarlo accidentalmente mientras estás volando si esta opción está activada."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibrar Giro en el primer armado"
     },
     "configurationDigitalIdlePercent": {
         "message": "Ralentí Motor (%, estático)"
@@ -6950,6 +6954,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Sensibilidad Central"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Sensibilidad Centro-Max"
     },
     "dialogRatesTypeTitle": {
         "message": "Cambiar tipo de tasas"

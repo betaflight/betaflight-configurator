@@ -1041,15 +1041,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "此选项告知混控程序电机转向已经被反转，且螺旋桨也已对应安装。<strong>警告：<\/strong>此选项并不反转电机实际转向。要反转电机实际转向，请通过电调配置软件进行设置，或者交换电调 - 电机的线序。同时在尝试解锁前务必确认螺旋桨是按照上面示意图的转向安装的。"
     },
-    "configurationAutoDisarmDelay": {
-        "message": "[seconds] 秒后锁定电机（需要启用 MOTOR_STOP）"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "忽略油门位置直接锁定电机（当在模式页里设定为通过 Aux 开关解锁时生效）"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "油门未在最低位时禁止解锁电机。注意该选项启动时有可能在飞行中通过开关意外触发上锁。"
-    },
     "configurationDigitalIdlePercent": {
         "message": "电机怠速 ( %, 静态)"
     },

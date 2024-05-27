@@ -109,10 +109,6 @@
         "message": "Alle seriellen Geräte anzeigen (für Hersteller oder Entwicklung)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "mDNS Browser Geräteerkennung im Netzwerk verwenden (experimentell)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
-    },
     "showVirtualMode": {
         "message": "Virtuellen Verbindungsmodus aktivieren",
         "description": "Text for the option to enable or disable the virtual FC"
@@ -1167,15 +1163,6 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Diese Option weist den Mixer an, eine umgekehrte Motordrehrichtung zu erwarten. <strong>Warnung:<\/strong> Dies ändert nicht die reale Drehrichtung der Motoren. Das muss in der ESC-Konfiguration geändert oder die Motorverkabelung angepasst werden. Prüfe mit demontierten Propellern, ob die Motoren in die im Diagramm gezeigte Richtung drehen."
-    },
-    "configurationAutoDisarmDelay": {
-        "message": "Motoren disarmen nach gesetzer Wartezeit [seconds] (Benötigt Motor Stop Funktion)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Motoren unabhängig von der Gas Position disarmen (geht nur mit Arming auf einem Schalter wieder Aux)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Arming is immer abgeschaltet falls das Gas nicht niedrig ist. Aufpassen weil du aus versehen im Flug disarmen könntest falls diese Option aktiviert ist."
     },
     "configurationDigitalIdlePercent": {
         "message": "Motor Leerlauf (%, statisch)"

@@ -1004,15 +1004,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Deze optie configureert de mixer zodat hij om kan gaan met een omgekeerde motordraairichting.\n<strong>Waarschuwing:<\/strong> als je dit instelt dan veranderd de motordraairichting niet! Om dat te bereiken dien je een configuratietool zoals BLHeli of JESC te gebruiken. Een andere optie is om 2 van de 3 draden die naar de motor gaan om te wisselen. Raad de online documentatie alvorens je dit doet.\nControleer voor het vliegen of de motoren de richting op draaien die aangeven staat in het bovenstaande diagram. Verwijder de propellers alvorens u deze controle doet."
     },
-    "configurationAutoDisarmDelay": {
-        "message": "Disarm motoren na een ingestelde vertraging [seconds] (Vereist MOTOR_STOP functie)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Motoren uitschakelen ongeacht de gaswaarde (wanneer ARM is geconfigureerd in het tabblad Modussen via AUX-kanaal)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Arming wordt altijd uitgeschakeld wanneer het gas niet laag is. Wees voorzichtig omdat je per ongeluk kan disarmen met een schakelaar tijdens het vliegen met deze optie actief."
-    },
     "configurationMotorPoles": {
         "message": "Motorpolen",
         "description": "One of the fields of the ESC\/Motor configuration"
