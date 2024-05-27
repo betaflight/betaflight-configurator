@@ -1126,15 +1126,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Cette option informe le contrôleur que le sens de rotation des moteurs et des hélices est inversé. <strong>Attention: <\/strong> l'option n'inverse pas le sens de rotation des moteurs. Pour cela il faut utiliser l'utilitaire de configuration des ESCs ou interchanger 2 des fils moteurs. Enfin, retirez les hélices et vérifiez que le sens de rotation des moteurs est conforme au schéma ci-dessus."
     },
-    "configurationAutoDisarmDelay": {
-        "message": "Désarme les moteurs après un délais de [seconds] (nécessite MOTOR_STOP)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Désarme les moteurs peu importe le niveau des gaz (quand l'armement est attribué à une voie AUX)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "L'armement n'est possible que lorsque les gaz sont au minimum. Attention au désarmement accidentel lors du vol."
-    },
     "configurationDigitalIdlePercent": {
         "message": "Ralenti moteurs (%, statique)"
     },

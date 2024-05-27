@@ -106,9 +106,9 @@
         "message": "Показати всі послідовні пристрої (для виробників або розробки)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "Використовувати виявлення пристроїв mDNS у мережі (експериментально)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    "showManualMode": {
+        "message": "Увімкнути режим ручного з'єднання",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Включити режим віртуального з'єднання",
@@ -1035,6 +1035,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Локальна збірка - без хмарних даних"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Тип збірки"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Локальна збірка"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Хмарна збірка"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "Інформація про збірку відсутня"
+    },
     "initialSetupNotOnline": {
         "message": "Сервер недоступний"
     },
@@ -1286,15 +1298,6 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Ця опція налаштовує мікшер очікувати, що мотор буде обертатись в протилежний бік і пропелери будуть орієнтовані відповідно. <strong>Попередження:<\/strong> Це не змінює напрямок руху мотора. Для цього скористайтеся інструментом конфігурації для вашого електронного контролера швидкості (анг. - ESC) або переключіть дроти між ESC та двигуном. Також переконайтеся, що з вимкненими пропелерами ваші мотори обертаються у напрямках, показаних на схемі вище, перш ніж намагатися взвести."
-    },
-    "configurationAutoDisarmDelay": {
-        "message": "Охолостити мотори після заданої затримки [seconds] (Потребує функцію MOTOR_STOP)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Охолощувати мотори незалежно від значення тяги (Коли взведення \/ ARM налаштовано на вкладці Режими через AUX-канал)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Взведення завжди заборонено, коли тага не мінімальна. Будьте обережні, оскільки ви можете випадково охолостити перемикачем під час польоту, коли ця опція увімкнена."
     },
     "configurationDigitalIdlePercent": {
         "message": "% тяги на холостому ходу (статичний)"
@@ -3699,6 +3702,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Індикатор стану GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Індикатор батареї",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Висота",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Кільце",
         "description": "One of the modes of the Led Strip"
@@ -3792,6 +3807,10 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: координати отримано",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "За замовчуванням",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Схема підключення стрічки",

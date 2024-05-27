@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "연결 끊기"
     },
+    "portsSelectNoSelection": {
+        "message": "디바이스 선택",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "수동 선택"
     },
@@ -112,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "모든 시리얼 기기 보기 (제조사 또는 개발용)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "네트워크에서 mDNS 브라우저 기기 디스커버리를 사용하세오 (실험적인)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "수동 연결 모드 활성화",
@@ -305,6 +305,10 @@
     },
     "logActionShow": {
         "message": "로그 보기"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} 파일",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "시리얼 연결 오류: 나쁜 구조"
@@ -1315,13 +1319,13 @@
         "message": "이 옵션은 모터 방향을 반대로 되게 믹서를 구성하며, 그에 따라 프로펠러가 장착되어야 합니다. <strong>경고:<\/strong> 이것은 모터 방향을 반대로 바꾸지는 않습니다. 당신의 ESC를 위한 컨피규레이터를 사용하거나 ESC를 변경 - 모터 배선 순서를 전환하여 이를 적용할 수 있습니다. 또한, 아밍을 시도하기 전에 당신의 모터가 위의 다이어그램에서 보여지는 방향으로 회전하는지 프로펠러를 제거한 상태로 반드시 확인하세요."
     },
     "configurationAutoDisarmDelay": {
+        "message": "지연 [초] 후 모터 해제"
+    },
+    "configurationAutoDisarmDelayHelp": {
         "message": "설정 지연 후 모터 해제 [초] (모터_정지 기능 필요)"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "스로틀 값에 관계없이 모터 해제 (모드 탭에서 AUX 채널을 통해 아밍이 설정된 경우)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "스로틀이 낮지 않으면 아밍은 항상 비활성화됩니다. 이 옵션을 활성화 한 상태로 비행하는 동안 스위치로 실수로 아밍을 해제 할 수 있으므로 주의하십시오."
+    "configurationGyroCalOnFirstArm": {
+        "message": "첫번째 아밍시 자이로 교정"
     },
     "configurationDigitalIdlePercent": {
         "message": "모터 공회전 ( %, 정적)"
@@ -6954,6 +6958,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "중심 민감도"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "중심-최대 민감도"
     },
     "dialogRatesTypeTitle": {
         "message": "레이트 형식 변경"

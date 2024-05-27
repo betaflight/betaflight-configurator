@@ -969,15 +969,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Aukera honek nahasgailua motorraren norabidea alderantzikatu eta helizeen arabera egon dadin konfiguratzen du. <strong>Oharra:<\/strong> Horrek ez du motorraren norabidea alderantzikatzen. Erabili zure ESCetarako konfigurazio-tresna edo aldatu ESC - motorren kableatua hori lortzeko. Era berean, ziurtatu zure motorrak goiko diagraman agertzen diren norabideetan biratzen ari direla egiaztatzen armatzen saiatu aurretik."
     },
-    "configurationAutoDisarmDelay": {
-        "message": "Desarmatu motorrak ezarritako atzerapenaren ondoren [seconds] (MOTOR_STOP funtzioa behar du)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmatu motorrak throttle balioa edozein dela ere (ARM moduen fitxan konfiguratuta dagoenean AUX kanalaren bidez)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Armagintza beti ezgaitzen da throttle txikia ez denean. Kontuz ibili hegan egitean etengailu batekin nahi gabe desarmatu baitaiteke aukera hau aktibatua badago."
-    },
     "configurationMotorPoles": {
         "message": "Motorren zutoinak",
         "description": "One of the fields of the ESC\/Motor configuration"

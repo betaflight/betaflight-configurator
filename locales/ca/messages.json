@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Desconnectar"
     },
+    "portsSelectNoSelection": {
+        "message": "Selecciona el dispositiu",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Selecció Manual"
     },
@@ -112,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "Mostra tots els dispositius sèrie (per a fabricants o desenvolupament)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Utilitzeu el descobriment de dispositius del navegador mDNS a la xarxa (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Activa el mode de connexió manual",
@@ -309,6 +309,10 @@
     },
     "logActionShow": {
         "message": "Mostrar Log"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} arxius",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Error de connexió de port sèrie: trames dolentes"
@@ -1319,13 +1323,13 @@
         "message": "Aquesta opció configura el mesclador per a que la direcció de motor estigui revertida i, en conseqüència, les seves hèlix. <strong>Advertència:<\/strong> això no vol dir que la direcció de motor s'inverteixi. Per aconseguir-ho, cal utilitzar l'eina de configuració per als seus ESCs o canviar l'ordre del cablejat del motor. A més, assegureu-vos de consultar que les direccions dels motors coincideixen amb les del diagrama abans d'armar."
     },
     "configurationAutoDisarmDelay": {
-        "message": "Desarma els motors després de [segons] (Requereix de la característica de MOTOR_STOP)"
+        "message": "Desarma els motors després del retard [segons]"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmeu els motors independentment del valor de l'accelerador (quan ARM està configurat a la pestanya Modes a través del canal AUX)"
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Desarma els motors després del retard establert [segons] (requereix la funció MOTOR_STOP)"
     },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "L'armat sempre està desactivat quan l'accelerador no és a baix del tot. Aneu amb compte ja que podríeu desarmar accidentalment amb un interruptor mentre voleu amb aquesta opció activa."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibra el Gyro al primer braç"
     },
     "configurationDigitalIdlePercent": {
         "message": "Motor inactiu (%, estàtic)"
@@ -6958,6 +6962,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Sensibilitat del centre"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Sensibilitat del centre máxima"
     },
     "dialogRatesTypeTitle": {
         "message": "Canvi de tipus de Rates"

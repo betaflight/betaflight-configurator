@@ -106,10 +106,6 @@
         "message": "Mostrar todos os dispositivos de comunicação serial (para fabricantes ou desenvolvimento)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "Usar a descoberta de dispositivo mDNS no navegador (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
-    },
     "showVirtualMode": {
         "message": "Ativar modo de conexão virtual",
         "description": "Text for the option to enable or disable the virtual FC"
@@ -1286,15 +1282,6 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Esta opção indica à controladora de voo que a rotação dos motores é invertida e que as hélices serão montadas de acordo com isso. <strong>Atenção:<\/strong> Esta opção não inverte o sentido do motor; Para isto, use a ferramenta de configuração de seu ESC ou altere a ordem dos cabos ESC-motor. Além disso, com as hélices removidas, certifique-se que os motores estão girando nas direções mostradas no diagrama acima antes de tentar armar."
-    },
-    "configurationAutoDisarmDelay": {
-        "message": "Desarmar os motores após definir [seconds] de espera (Requer a funcionalidade MOTOR_STOP)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmar os motores independente do valor do acelerador (quando ARMAR é configurado na aba Modos em um canal AUX)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Armar está sempre desativado quando o acelerador não está no mínimo. Tenha cuidado porque pode desarmar acidentalmente com um botão enquanto estiver voando se esta opção estiver ativa."
     },
     "configurationDigitalIdlePercent": {
         "message": "Motor Ocioso (em %, estático)"

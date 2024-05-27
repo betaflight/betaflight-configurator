@@ -109,10 +109,6 @@
         "message": "Показать все последовательные устройства (для производителей или разработки)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "Использовать mDNS Browser Device Discovery (экспериментально)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
-    },
     "showManualMode": {
         "message": "Включить режим ручного подключения",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -1305,15 +1301,6 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Этот параметр настраивает миксер, ожидая что направление вращение двигателя будет реверсивным и пропеллеры будут установлены соответственно. <strong>Внимание:<\/strong> это не реверс двигателя. Используйте инструменты настройки для вашего ESC или переключите ESC - подключением электропроводки. Кроме того, не забудьте проверить со снятыми пропеллерами, что ваши двигатели вращаются в направлениях, показанных на диаграмме выше, прежде чем попытаетесь включить ARM."
-    },
-    "configurationAutoDisarmDelay": {
-        "message": "Отключать моторы после заданной задержки [в секундах] (Требуется включить функцию MOTOR_STOP)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Разрешить отключать моторы при любом значении газа. (При помощи режима ARM во вкладке \"Режимы\" через AUX-канал)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Arming всегда запрещён, если значение газа не низкое. Но будьте осторожны с этой включенной опцией, т.к. вы можете тумблером случайно задизармиться прямо в полёте, отключив тем самым моторы."
     },
     "configurationDigitalIdlePercent": {
         "message": "Режим холостого хода (% статический)"

@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Rozłącz"
     },
+    "portsSelectNoSelection": {
+        "message": "Wybierz swoje urządzenie",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Wybór ręczny"
     },
@@ -112,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "Pokaż wszystkie urządzenia szeregowe (dla producentów lub deweloperów)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Użyj wykrywania urządzeń w przeglądarce mDNS w sieci (eksperymentalne)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Włącz tryb ręczny połączenia",
@@ -1313,15 +1313,6 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Opcja ta jest używana aby kamera FPV podczas lotów nie brudziła się oraz żeby kurz i inne zanieczyszczenia nie były wdmuchiwane na kontroler lotu. Należy zadbać aby kierunek obrotów silników został odpowiednio odwrócony a śmigła odpowiednio założone.<strong>Ostrzeżenie:<\/strong> Nie zmienia to kierunku obrotów silnika. Użyj narzędzia do konfiguracji swoich ESC lub zamień kolejność przewodów silnika aby to osiągnąć. Upewnij się również bez założonych śmigieł że silniki kręcą się w kierunku jak na grafice powyżej przed próbą uzbrajania."
-    },
-    "configurationAutoDisarmDelay": {
-        "message": "Rozbrojenie silników po ustawionym czasie [sekundy] (Wymaga uruchomienia MOTOR_STOP)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Rozbrojenie silników niezależnie od wartości przepustnicy (Gdy ARM jest skonfigurowane w zakładce Tryby przez kanał AUX)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Uzbrojenie jest zawsze wyłączone, gdy przepustnica nie jest nisko. Bądź ostrożny, ponieważ możesz przypadkowo rozbroić przez przełącznik podczas lotu, gdy ta opcja jest aktywna."
     },
     "configurationDigitalIdlePercent": {
         "message": "Dynamiczny bieg jałowy( %)"
@@ -6954,6 +6945,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Czułość środkowa"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Centralna-Max Czułość"
     },
     "dialogRatesTypeTitle": {
         "message": "Zmiana profilu szybkości(rates)"

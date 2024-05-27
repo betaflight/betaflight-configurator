@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Afbryd konfigurering"
     },
+    "portsSelectNoSelection": {
+        "message": "Vælg enhed",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Manuelt valg"
     },
@@ -108,10 +112,6 @@
     "showAllSerialDevices": {
         "message": "Vis alle serielle enheder (for producenter eller ved udvikling)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Brug mDNS Browser Device opdagelse på netværk (eksperimentel)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Aktiver forbindelse manuelt",
@@ -301,6 +301,10 @@
     },
     "logActionShow": {
         "message": "Vis log"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} filer",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Seriel kommunikation fejl: forkert framing"
@@ -1310,14 +1314,8 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Denne mulighed opsætter mixeren til at forvente, at motorretningen skal vendes, og at propellerne er tilsvarende monteret. <strong>Advarsel:<\/strong> Dette vender ikke motorretningen. Brug opsætningssværktøjet til dine ESC'er eller skift rækkefølge på ledninger til ESC for at vende motorretning. Tjek også, uden propeller, at dine motorer roterer i retningerne vist i diagrammet ovenfor, inden du forsøger at aktivere FC\/motor."
     },
-    "configurationAutoDisarmDelay": {
-        "message": "Afkobl motorer jf. opsat forsinkelse [seconds] (Kræver MOTOR_STOP-funktion)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Deaktiver motorer uanset gas værdi (når Aktiveret (ARM) er opsat på fanebladet Tilstande via AUX-kanal)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Deaktivering er altid gældende, når gas ikke er lav. Vær forsigtig, med denne indstilling aktiv, kan du ved et uheld under flyvning deaktivere via en kontakt."
+    "configurationGyroCalOnFirstArm": {
+        "message": " Gyro kalibreres ved første aktivering"
     },
     "configurationDigitalIdlePercent": {
         "message": "Motor tomgang ( %, statisk)"
@@ -6950,6 +6948,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Centrer følsomhed"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Center maximal følsomhed"
     },
     "dialogRatesTypeTitle": {
         "message": "Ændring af hastigheds type"
