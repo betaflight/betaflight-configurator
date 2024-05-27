@@ -784,8 +784,6 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(callback) {
-    const previousTimeStamp = connectionTimestamp;
-    gui_log(i18n.getMessage('deviceRebooting'));
 
     // In virtual mode reconnect when autoconnect is enabled
     if (PortHandler.portPicker.selectedPort === 'virtual' && PortHandler.portPicker.autoConnect) {
@@ -794,35 +792,11 @@ export function reinitializeConnection(callback) {
         }, 500);
     }
 
-    function validateConnection() {
-        if (PortHandler.portPicker.selectedPort && PortHandler.portPicker.autoConnect) {
-            $('a.connect').trigger('click');
-        }
+    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-        // Wait for serial or tcp connection to be available
-        let attempts = 0;
-        const reconnect = setInterval(waitforSerial, 100);
+    gui_log(i18n.getMessage('deviceRebooting'));
 
-        function waitforSerial() {
-            if ((connectionTimestamp !== previousTimeStamp && CONFIGURATOR.connectionValid) || GUI.active_tab === 'firmware_flasher') {
-                console.log(`Serial connection available after ${(attempts / 10) + 2} seconds`);
-                clearInterval(reconnect);
-                gui_log(i18n.getMessage('deviceReady'));
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            } else {
-                attempts++;
-                if (attempts > 100) {
-                    clearInterval(reconnect);
-                    console.log(`failed to get serial connection, gave up after 10 seconds`);
-                    gui_log(i18n.getMessage('serialPortOpenFail'));
-                }
-            }
-        }
+    if (callback) {
+        callback();
     }
-
-    finishClose(() => {
-        setTimeout(validateConnection, 2000);
-    });
 }

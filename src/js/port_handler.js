@@ -56,11 +56,6 @@ PortHandler.setShowManualMode = function (showManualMode) {
 PortHandler.reinitialize = function () {
     this.initialPorts = false;
 
-
-    if (this.usbCheckLoop) {
-        clearTimeout(this.usbCheckLoop);
-    }
-
     this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
 
     this.check();   // start listening, check after TIMEOUT_CHECK ms
@@ -92,6 +87,7 @@ PortHandler.check_serial_devices = function () {
             self.selectActivePort();
             self.initialPorts = {...self.currentPorts};
             GUI.updateManualPortVisibility();
+            self.detectPort();
         } else {
             self.removePort();
             self.detectPort();
