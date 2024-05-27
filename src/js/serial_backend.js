@@ -796,6 +796,11 @@ export function reinitializeConnection(callback) {
 
     gui_log(i18n.getMessage('deviceRebooting'));
 
+    // wait for the device to reboot
+    setTimeout(function() {
+        gui_log(i18n.getMessage('deviceReady'));
+    }, 2000);
+
     if (callback) {
         callback();
     }
