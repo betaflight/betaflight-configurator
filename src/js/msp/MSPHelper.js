@@ -2801,7 +2801,7 @@ MspHelper.prototype.writeConfiguration = function(reboot, callback) {
             console.log('Configuration saved to EEPROM');
             if (reboot) {
                 GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
+                    return reinitializeConnection(callback);
                 });
             }
             if (callback) {
