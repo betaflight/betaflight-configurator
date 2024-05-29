@@ -38,10 +38,6 @@ PortHandler.initialize = function () {
     serial.addEventListener("addedDevice", (event) => this.addedSerialDevice(event.detail));
     serial.addEventListener("removedDevice", (event) => this.removedSerialDevice(event.detail));
 
-    if (this.usbCheckLoop) {
-        clearTimeout(this.usbCheckLoop);
-    }
-
     if (!this.portAvailable) {
         this.check_usb_devices();
     }
@@ -53,18 +49,18 @@ PortHandler.initialize = function () {
 
 PortHandler.setShowVirtualMode = function (showVirtualMode) {
     this.showVirtualMode = showVirtualMode;
-    this.selectBestActivePort();
+    this.selectActivePort();
 };
 
 PortHandler.setShowManualMode = function (showManualMode) {
     this.showManualMode = showManualMode;
-    this.selectBestActivePort();
+    this.selectActivePort();
 };
 
 PortHandler.addedSerialDevice = function (device) {
     this.updateCurrentPortsList()
     .then(() => {
-        const selectedPort = this.selectBestActivePort(device);
+        const selectedPort = this.selectActivePort(device);
         if (!device || selectedPort === device.path) {
             // Send this event when the port handler auto selects a new device
             EventBus.$emit('port-handler:auto-select-device', selectedPort);
@@ -76,7 +72,7 @@ PortHandler.removedSerialDevice = function (device) {
     this.updateCurrentPortsList()
     .then(() => {
         if (this.portPicker.selectedPort === device.path) {
-            this.selectBestActivePort();
+            this.selectActivePort();
         }
     });
 };
@@ -106,7 +102,7 @@ PortHandler.askSerialPermissionPort = function() {
     serial.requestPermissionDevice();
 };
 
-PortHandler.selectBestActivePort = function(suggestedDevice) {
+PortHandler.selectActivePort = function(suggestedDevice) {
 
     // Return the same that is connected
     if (serial.connected) {
@@ -219,7 +215,7 @@ PortHandler.check_usb_devices = function (callback) {
 PortHandler.flush_callbacks = function () {
     let killed = 0;
 
-    for (let i = this.port_detected_callbacks.length - 1; i >= 0; i--) {
+    for (let i = this.port_detected_callbacks?.length - 1; i >= 0; i--) {
         if (this.port_detected_callbacks[i].timer) {
             clearTimeout(this.port_detected_callbacks[i].timer);
         }
@@ -228,7 +224,7 @@ PortHandler.flush_callbacks = function () {
         killed++;
     }
 
-    for (let i = this.port_removed_callbacks.length - 1; i >= 0; i--) {
+    for (let i = this.port_removed_callbacks?.length - 1; i >= 0; i--) {
         if (this.port_removed_callbacks[i].timer) {
             clearTimeout(this.port_removed_callbacks[i].timer);
         }
