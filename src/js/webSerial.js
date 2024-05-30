@@ -20,6 +20,7 @@ class WebSerial extends EventTarget {
         this.connected = false;
         this.openRequested = false;
         this.openCanceled = false;
+        this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
 
@@ -66,6 +67,7 @@ class WebSerial extends EventTarget {
 
     handleDisconnect() {
         this.disconnect();
+        this.closeRequested = true;
     }
 
     getConnectedPort() {
@@ -116,6 +118,7 @@ class WebSerial extends EventTarget {
 
     async connect(path, options) {
         this.openRequested = true;
+        this.closeRequested = false;
 
         this.port = this.ports.find(device => device.path === path).port;
 
@@ -190,6 +193,11 @@ class WebSerial extends EventTarget {
         this.reading = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
+
+        // if we are already closing, don't do it again
+        if (this.closeRequested) {
+            return;
+        }
 
         const doCleanup = async () => {
             this.removeEventListener('receive', this.handleReceiveBytes);
