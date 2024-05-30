@@ -44,13 +44,15 @@
       </select>
     </div>
     <div id="auto-connect-and-baud">
-      <div id="auto-connect-switch">
+      <div
+        id="auto-connect-switch"
+        :title="value.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
+      >
         <input
           id="auto-connect"
           class="auto_connect togglesmall"
           type="checkbox"
-          :value="value.autoConnect"
-          :title="value.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
+          :checked="value.autoConnect"
           @change="onChangeAutoConnect"
         >
         <span class="auto_connect">

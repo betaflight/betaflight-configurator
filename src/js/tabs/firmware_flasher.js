@@ -1112,6 +1112,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (status) {
                 const catch_new_port = function () {
+                    // TODO modify by listen to a new event
                     PortHandler.port_detected('flash_detected_device', function (resultPort) {
                         const port = resultPort[0];
 
@@ -1156,7 +1157,7 @@ firmware_flasher.initialize = function (callback) {
 
 
 firmware_flasher.isSerialPortAvailable = function() {
-    return PortHandler.port_available && !GUI.connect_lock;
+    return PortHandler.portAvailable && !GUI.connect_lock;
 };
 
 firmware_flasher.updateDetectBoardButton = function() {
@@ -1437,7 +1438,7 @@ firmware_flasher.backupConfig = function (callback) {
         // Allow reboot after CLI exit
         const waitOnReboot = () => {
             const disconnect = setInterval(function() {
-                if (PortHandler.port_available) {
+                if (PortHandler.portAvailable) {
                     console.log(`Connection ready for flashing in ${count / 10} seconds`);
                     clearInterval(disconnect);
                     if (callback) {

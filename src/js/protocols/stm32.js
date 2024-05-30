@@ -136,7 +136,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                 // wait until board boots into bootloader mode
                 // MacOs may need 5 seconds delay
                 function waitForDfu() {
-                    if (PortHandler.dfu_available) {
+                    if (PortHandler.dfuAvailable) {
                         console.log(`DFU available after ${failedAttempts / 10} seconds`);
                         clearInterval(dfuWaitInterval);
                         startFlashing();
