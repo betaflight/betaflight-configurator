@@ -49,7 +49,7 @@
           id="auto-connect"
           class="auto_connect togglesmall"
           type="checkbox"
-          :value="value.autoConnect"
+          :checked="value.autoConnect"
           :title="value.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
           @change="onChangeAutoConnect"
         >
