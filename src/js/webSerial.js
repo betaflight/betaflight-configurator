@@ -94,14 +94,20 @@ class WebSerial extends EventTarget {
     }
 
     async requestPermissionDevice() {
-        const permissionPort = await navigator.serial.requestPort({
-            filters: webSerialDevices,
-        });
-        const found = this.ports.find(port => port.port === permissionPort);
-        if (!found) {
-            return this.handleNewDevice(permissionPort);
+        let newPermissionPort = null;
+        try {
+            const permissionPort = await navigator.serial.requestPort({
+                filters: webSerialDevices,
+            });
+            const newPort = this.ports.find(port => port.port === permissionPort);
+            if (!newPort) {
+                newPort = this.handleNewDevice(permissionPort);
+            }
+            console.info("User selected device from permissions:", newPort.path);
+        } catch (error) {
+            console.error("User didn't select any device when requesting permission:", error);
         }
-        return null;
+        return newPermissionPort;
     }
 
     async getDevices() {

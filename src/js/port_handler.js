@@ -99,7 +99,13 @@ PortHandler.sortPorts = function(ports) {
 };
 
 PortHandler.askSerialPermissionPort = function() {
-    serial.requestPermissionDevice();
+    serial.requestPermissionDevice()
+    .then((port) => {
+        // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
+        // selects a device that had already permission, or cancels the permission request, we need to select the port
+        // so do it here too
+        this.selectActivePort(port);
+    });
 };
 
 PortHandler.selectActivePort = function(suggestedDevice) {
