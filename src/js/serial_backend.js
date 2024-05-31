@@ -103,7 +103,7 @@ function connectDisconnect() {
         const selected_baud = PortHandler.portPicker.selectedBauds;
         const selectedPort = portName;
 
-        if (selectedPort === 'DFU') {
+        if (['DFU', 'noselection'].includes(selectedPort)) {
             $('select#baud').hide();
             return;
         }
