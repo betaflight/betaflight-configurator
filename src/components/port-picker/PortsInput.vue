@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
+import { set as setConfig } from '../../js/ConfigStorage';
 import { EventBus } from '../eventBus';
 
 export default {

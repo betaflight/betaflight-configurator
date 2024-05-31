@@ -54,17 +54,6 @@ function disconnectHandler(event) {
 
 export function initializeSerialBackend() {
 
-    // TODO move to Vue
-    $('#port-override').change(function () {
-        setConfig({'portOverride': $('#port-override').val()});
-    });
-
-    // TODO move to Vue
-    const data = getConfig('portOverride');
-    if (data.portOverride) {
-        $('#port-override').val(data.portOverride);
-    }
-
     $("div.connect_controls a.connect").on('click', connectDisconnect);
 
     EventBus.$on('port-handler:auto-select-device', function(device) {
