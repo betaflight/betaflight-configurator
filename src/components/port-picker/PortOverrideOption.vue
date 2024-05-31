@@ -5,18 +5,28 @@
     ><span>{{ $t("portOverrideText") }}</span>
       <input
         id="port-override"
-        v-model="value"
+        :value="value"
         type="text"
+        @change="inputValue($event)"
       ></label>
   </div>
 </template>
 
 <script>
+import { set as setConfig } from '../../js/ConfigStorage';
+
 export default {
-  data() {
-    return {
-      value: "/dev/rfcomm0",
-    };
+  props: {
+    value: {
+      type: String,
+      default: "/dev/rfcomm0",
+    },
+  },
+  methods: {
+    inputValue(event) {
+      setConfig({'portOverride': event.target.value});
+      this.$emit("input", event.target.value);
+    },
   },
 };
 </script>
