@@ -104,7 +104,7 @@ function connectDisconnect() {
         const selected_baud = PortHandler.portPicker.selectedBauds;
         const selectedPort = portName;
 
-        if (selectedPort === 'noselection' || selectedPort.path.startsWith('usb_')) {
+        if (selectedPort === 'noselection' || selectedPort.path?.startsWith('usb_')) {
             return;
         }
 
