@@ -104,7 +104,6 @@ function connectDisconnect() {
         const selectedPort = portName;
 
         if (['DFU', 'noselection'].includes(selectedPort)) {
-            $('select#baud').hide();
             return;
         }
 

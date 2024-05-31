@@ -67,7 +67,7 @@
         </span>
       </div>
       <div
-        v-if="value.selectedPort !== 'virtual'"
+        v-if="value.selectedPort !== 'virtual' && value.selectedPort !== 'noselection' && value.selectedPort !== 'virtual'"
         id="baudselect"
       >
         <div class="dropdown dropdown-dark">
