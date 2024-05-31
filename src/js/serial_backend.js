@@ -104,7 +104,7 @@ function connectDisconnect() {
         const selected_baud = PortHandler.portPicker.selectedBauds;
         const selectedPort = portName;
 
-        if (['DFU', 'noselection'].includes(selectedPort)) {
+        if (selectedPort === 'noselection' || selectedPort.includes('DFU')) {
             return;
         }
 
