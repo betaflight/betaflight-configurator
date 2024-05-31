@@ -105,9 +105,9 @@ class WebSerial extends EventTarget {
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
             }
-            console.info("User selected device from permissions:", newPermissionPort.path);
+            console.info(`${this.logHead}User selected SERIAL device from permissions:`, newPermissionPort.path);
         } catch (error) {
-            console.error("User didn't select any device when requesting permission:", error);
+            console.error(`${this.logHead}User didn't select any SERIAL device when requesting permission:`, error);
         }
         return newPermissionPort;
     }

@@ -32,11 +32,18 @@
           {{ $t("portsSelectVirtual") }}
         </option>
         <option
-          v-for="connectedDevice in connectedDevices"
-          :key="connectedDevice.path"
-          :value="connectedDevice.path"
+          v-for="connectedSerialDevice in connectedSerialDevices"
+          :key="connectedSerialDevice.path"
+          :value="connectedSerialDevice.path"
         >
-          {{ connectedDevice.displayName }}
+          {{ connectedSerialDevice.displayName }}
+        </option>
+        <option
+          v-for="connectedUsbDevice in connectedUsbDevices"
+          :key="connectedUsbDevice.path"
+          :value="connectedUsbDevice.path"
+        >
+          {{ connectedUsbDevice.displayName }}
         </option>
         <option value="requestpermission">
           {{ $t("portsSelectPermission") }}
@@ -100,7 +107,11 @@ export default {
         autoConnect: true,
       }),
     },
-    connectedDevices: {
+    connectedSerialDevices: {
+      type: Array,
+      default: () => [],
+    },
+    connectedUsbDevices: {
       type: Array,
       default: () => [],
     },

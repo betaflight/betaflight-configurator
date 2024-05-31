@@ -5,15 +5,18 @@ import { get as getConfig } from "./ConfigStorage";
 import { isWeb } from "./utils/isWeb";
 import { usbDevices } from "./usb_devices";
 import { serialShim } from "./serial_shim.js";
+import { usbShim } from "./usb_shim.js";
 import { EventBus } from "../components/eventBus";
 
 const serial = serialShim();
+const usb = usbShim();
 
 const DEFAULT_PORT = 'noselection';
 const DEFAULT_BAUDS = 115200;
 
 const PortHandler = new function () {
-    this.currentPorts = [];
+    this.currentSerialPorts = [];
+    this.currentUsbPorts = [];
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
@@ -38,13 +41,10 @@ PortHandler.initialize = function () {
     serial.addEventListener("addedDevice", (event) => this.addedSerialDevice(event.detail));
     serial.addEventListener("removedDevice", (event) => this.removedSerialDevice(event.detail));
 
-    if (!this.portAvailable) {
-        this.check_usb_devices();
-    }
+    usb.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
 
-    if (!this.dfuAvailable) {
-        this.addedSerialDevice();
-    }
+    this.addedUsbDevice();
+    this.addedSerialDevice();
 };
 
 PortHandler.setShowVirtualMode = function (showVirtualMode) {
@@ -58,21 +58,32 @@ PortHandler.setShowManualMode = function (showManualMode) {
 };
 
 PortHandler.addedSerialDevice = function (device) {
-    this.updateCurrentPortsList()
+    this.updateCurrentSerialPortsList()
     .then(() => {
         const selectedPort = this.selectActivePort(device);
         if (!device || selectedPort === device.path) {
             // Send this event when the port handler auto selects a new device
-            EventBus.$emit('port-handler:auto-select-device', selectedPort);
+            EventBus.$emit('port-handler:auto-select-serial-device', selectedPort);
         }
     });
 };
 
 PortHandler.removedSerialDevice = function (device) {
-    this.updateCurrentPortsList()
+    this.updateCurrentSerialPortsList()
     .then(() => {
         if (this.portPicker.selectedPort === device.path) {
             this.selectActivePort();
+        }
+    });
+};
+
+PortHandler.addedUsbDevice = function (device) {
+    this.updateCurrentUsbPortsList()
+    .then(() => {
+        const selectedPort = this.selectActivePort(device);
+        if (!device || selectedPort === device.path) {
+            // Send this event when the port handler auto selects a new device
+            EventBus.$emit('port-handler:auto-select-usb-device', selectedPort);
         }
     });
 };
@@ -81,11 +92,21 @@ PortHandler.onChangeSelectedPort = function(port) {
     this.portPicker.selectedPort = port;
 };
 
-PortHandler.updateCurrentPortsList = function () {
+PortHandler.updateCurrentSerialPortsList = function () {
     return serial.getDevices()
     .then((ports) => {
-        ports = this.sortPorts(ports);
-        this.currentPorts = ports;
+        const orderedPorts = this.sortPorts(ports);
+        this.portAvailable = orderedPorts.length > 0;
+        this.currentSerialPorts = orderedPorts;
+    });
+};
+
+PortHandler.updateCurrentUsbPortsList = function () {
+    return usb.getDevices()
+    .then((ports) => {
+        const orderedPorts = this.sortPorts(ports);
+        this.dfuAvailable = orderedPorts.length > 0;
+        this.currentUsbPorts = orderedPorts;
     });
 };
 
@@ -110,43 +131,54 @@ PortHandler.askSerialPermissionPort = function() {
 
 PortHandler.selectActivePort = function(suggestedDevice) {
 
-    // Return the same that is connected
-    if (serial.connected) {
-        return serial.getConnectedPort();
-    }
-
-    let selectedPort;
     const deviceFilter = ['AT32', 'CP210', 'SPR', 'STM'];
+    let selectedPort;
 
-    if (suggestedDevice) {
+    // Return the same that is connected to serial
+    if (serial.connected) {
+        selectedPort = serial.getConnectedPort();
+    }
+
+    // Return the same that is connected to usb (dfu mode)
+    if (usb.usbDevice) {
+        selectedPort = usb.getConnectedPort();
+    }
+
+    // Return the suggested device (the new device that has been detected)
+    if (!selectedPort && suggestedDevice) {
         selectedPort = suggestedDevice.path;
-        this.portAvailable = true;
-    } else {
-        for (let port of this.currentPorts) {
-            const portName = port.displayName;
-            const pathSelect = port.path;
-            const deviceRecognized = deviceFilter.some(device => portName.includes(device));
-            const legacyDeviceRecognized = portName.includes('usb');
-            if (deviceRecognized || legacyDeviceRecognized) {
-                selectedPort = pathSelect;
-                this.portAvailable = true;
-                console.log(`Porthandler detected device ${portName} on port: ${pathSelect}`);
-                break;
-            }
-        }
+    }
 
-        if (!selectedPort)  {
-            this.portAvailable = false;
-            if (this.showVirtualMode) {
-                selectedPort = "virtual";
-            } else if (this.showManualMode) {
-                selectedPort = "manual";
-            }
+    // Return some serial port that is recognized by the filter
+    if (!selectedPort) {
+        selectedPort = this.currentUsbPorts.find(device => deviceFilter.some(filter => device.displayName.includes(filter)));
+        if (selectedPort) {
+            selectedPort = selectedPort.path;
         }
     }
 
+    // Return some usb port that is recognized by the filter
+    if (!selectedPort) {
+        selectedPort = this.currentSerialPorts.find(device => deviceFilter.some(filter => device.displayName.includes(filter)));
+        if (selectedPort) {
+            selectedPort = selectedPort.path;
+        }
+    }
+
+    // Return the virtual port
+    if (!selectedPort && this.showVirtualMode) {
+        selectedPort = "virtual";
+    }
+
+    // Return the manual port
+    if (!selectedPort && this.showManualMode) {
+        selectedPort = "manual";
+    }
+
+    // Return the default port if no other port was selected
     this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
-    console.log(`Porthandler default device is '${this.portPicker.selectedPort}'`);
+
+    console.log(`Porthandler automatically selected device is '${this.portPicker.selectedPort}'`);
     return selectedPort;
 };
 
