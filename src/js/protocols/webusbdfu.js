@@ -88,7 +88,7 @@ class WEBUSBDFU_protocol extends EventTarget {
     createPort(port) {
         return {
             path: `usb_${port.serialNumber}`,
-            displayName: `Betaflight DFU ${port.productName}`,
+            displayName: `Betaflight ${port.productName}`,
             vendorId: port.manufacturerName,
             productId: port.productName,
             port: port,
