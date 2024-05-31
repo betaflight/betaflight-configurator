@@ -18,8 +18,9 @@ import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import { usbDevices } from "../usb_devices";
 
-class WEBUSBDFU_protocol {
+class WEBUSBDFU_protocol extends EventTarget {
     constructor() {
+        super();
         this.callback = null;
         this.hex = null;
         this.verify_hex = [];
@@ -70,6 +71,53 @@ class WEBUSBDFU_protocol {
         this.chipInfo = null; // information about chip's memory
         this.flash_layout = { 'start_address': 0, 'total_size': 0, 'sectors': [] };
         this.transferSize = 2048; // Default USB DFU transfer size for F3,F4 and F7
+
+        navigator.usb.addEventListener("connect", e => this.handleNewDevice(e.device));
+        navigator.usb.addEventListener("disconnect", e => this.handleNewDevice(e.device));
+    }
+    handleNewDevice(device) {
+        const added = this.createPort(device);
+        this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+
+        return added;
+    }
+    handleRemovedDevice(device) {
+        const removed = this.createPort(device);
+        this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+    }
+    createPort(port) {
+        return {
+            path: `usb_${port.serialNumber}`,
+            displayName: `Betaflight ${port.productName}`,
+            vendorId: port.manufacturerName,
+            productId: port.productName,
+            port: port,
+        };
+    }
+    async getDevices() {
+        const ports = await navigator.usb.getDevices(usbDevices);
+        const customPorts = ports.map(function (port) {
+            return this.createPort(port);
+        }, this);
+
+        return customPorts;
+    }
+    async requestPermission() {
+        let newPermissionPort = null;
+        try {
+            const userSelectedPort = await navigator.usb.requestDevice(usbDevices);
+            console.info("User selected USB device from permissions:", userSelectedPort);
+            console.log(`WebUSB Version: ${userSelectedPort.deviceVersionMajor}.${userSelectedPort.deviceVersionMinor}.${userSelectedPort.deviceVersionSubminor}`);
+
+            newPermissionPort = this.handleNewDevice(userSelectedPort);
+        } catch (error) {
+            console.error("User didn't select any USB device when requesting permission:", error);
+        }
+        return newPermissionPort;
+
+    }
+    getConnectedPort() {
+        return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
     }
     connect(hex, options, callback) {
         this.hex = hex;

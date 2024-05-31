@@ -12,7 +12,8 @@
     />
     <PortsInput
       :value="value"
-      :connected-devices="connectedDevices"
+      :connected-serial-devices="connectedSerialDevices"
+      :connected-usb-devices="connectedUsbDevices"
       :disabled="disabled"
       :show-virtual-option="showVirtualOption"
       :show-manual-option="showManualOption"
@@ -43,7 +44,11 @@ export default {
           autoConnect: true,
         }),
       },
-      connectedDevices: {
+      connectedUsbDevices: {
+        type: Array,
+        default: () => [],
+      },
+      connectedSerialDevices: {
         type: Array,
         default: () => [],
       },
