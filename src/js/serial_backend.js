@@ -95,17 +95,13 @@ function connectDisconnect() {
         portName = selectedPort;
     }
 
-    if (!GUI.connect_lock && selectedPort !== 'none') {
+    if (!GUI.connect_lock && selectedPort !== 'noselection' && !selectedPort.path?.startsWith('usb_')) {
         // GUI control overrides the user control
 
         GUI.configuration_loaded = false;
 
         const selected_baud = PortHandler.portPicker.selectedBauds;
         const selectedPort = portName;
-
-        if (selectedPort === 'noselection' || selectedPort.path?.startsWith('usb_')) {
-            return;
-        }
 
         if (!isConnected) {
             console.log(`Connecting to: ${portName}`);
