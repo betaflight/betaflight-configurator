@@ -5,7 +5,6 @@ import { have_sensor } from "../sensor_helpers";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import serial from "../serial";
 import * as d3 from 'd3';
 import $ from 'jquery';
 import semver from 'semver';
@@ -517,8 +516,6 @@ sensors.initialize = function (callback) {
 };
 
 sensors.cleanup = function (callback) {
-    serial.emptyOutputBuffer();
-
     if (callback) callback();
 };
 

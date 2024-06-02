@@ -1,8 +1,5 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
-import serialNWJS from "./serial.js";
-import serialWeb from "./webSerial.js";
-import { isWeb } from "./utils/isWeb.js";
 import { serialShim } from "./serial_shim.js";
 
 const serial = serialShim();
@@ -309,7 +306,7 @@ const MSP = {
         return bufferOut;
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        const connected = isWeb() ? serial.connected : serial.connectionId;
+        const connected = serial.connected;
 
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {

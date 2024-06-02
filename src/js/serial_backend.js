@@ -25,8 +25,8 @@ import $ from 'jquery';
 import BuildApi from "./BuildApi";
 
 import { isWeb } from "./utils/isWeb";
-import { serialShim } from "./serial_shim.js";
 import { EventBus } from "../components/eventBus";
+import { serialShim } from "./serial_shim.js";
 
 let serial = serialShim();
 
@@ -123,10 +123,9 @@ function connectDisconnect() {
 
                 // Hack to get virtual working on the web
                 serial = serialShim();
-                serial.connect('virtual', {}, onOpenVirtual);
+                serial.connect(onOpenVirtual);
             } else {
                 CONFIGURATOR.virtualMode = false;
-                serial = serialShim();
                 // Explicitly disconnect the event listeners before attaching the new ones.
                 serial.removeEventListener('connect', connectHandler);
                 serial.addEventListener('connect', connectHandler);

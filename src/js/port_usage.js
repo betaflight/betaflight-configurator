@@ -1,4 +1,6 @@
-import serial from "./serial";
+import { serialShim } from "./serial_shim";
+
+const serial = serialShim();
 
 const PortUsage = {
     previous_received:  0,
