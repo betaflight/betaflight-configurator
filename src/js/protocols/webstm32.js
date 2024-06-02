@@ -22,20 +22,20 @@ import serial from "../webSerial";
 import DFU from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
 
-function serialConnectHandler(event) {
-    console.log('Connected to serial port', event.detail, event);
-    if (event) {
-        // we are connected, disabling connect button in the UI
-        GUI.connect_lock = true;
-
-        this.initialize();
-    } else {
-        gui_log(i18n.getMessage('serialPortOpenFail'));
-    }
+function readSerialAdapter(event) {
+    read_serial(event.detail.buffer);
 }
 
-function read_serial_adapter(event) {
-    read_serial(event.detail.buffer);
+function onTimeoutHandler() {
+    GUI.connect_lock = false;
+    console.log('Looking for capabilities via MSP failed');
+
+    TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
+}
+
+function onFailureHandler() {
+    GUI.connect_lock = false;
+    TABS.firmware_flasher.refresh();
 }
 
 class STM32Protocol {
@@ -54,7 +54,7 @@ class STM32Protocol {
         this.upload_time_start = 0;
         this.upload_process_alive = false;
 
-        this.msp_connector = new MSPConnectorImpl();
+        this.mspConnector = new MSPConnectorImpl();
 
         this.status = {
             ACK: 0x79, // y
@@ -80,237 +80,241 @@ class STM32Protocol {
         this.available_flash_size = 0;
         this.page_size = 0;
         this.useExtendedErase = false;
-
+        this.rebootMode = 0;
+        this.handleMSPConnect = this.handleMSPConnect.bind(this);
     }
+
+    startFlashing() {
+        if (this.rebootMode === 0) {
+            return;
+        }
+
+        // refresh device list
+        if (PortHandler.dfuAvailable) {
+            DFU.connect(this.hex, this.serialOptions);
+        } else {
+            // TODO: update to use web serial / USB API
+            this.prepareSerialPort();
+            console.log('Connecting to serial port', this.port, this.baud);
+            serial.connect(this.port, { bitrate: this.baud, parityBit: 'even', stopBits: 'one' }, (openInfo) => {
+                if (openInfo) {
+                    this.initialize();
+                } else {
+                    GUI.connect_lock = false;
+                    gui_log(i18n.getMessage('serialPortOpenFail'));
+                }
+            });
+        }
+    }
+
+    handleConnect(event) {
+        console.log('Connected to serial port', event.detail, event);
+        if (event) {
+            // we are connected, disabling connect button in the UI
+            GUI.connect_lock = true;
+
+            this.initialize();
+        } else {
+            gui_log(i18n.getMessage('serialPortOpenFail'));
+        }
+    }
+
+    handleDisconnect(disconnectionResult) {
+        console.log('Waiting for DFU connection', disconnectionResult);
+
+        serial.removeEventListener('connect', (event) => this.handleConnect(event.detail));
+        serial.removeEventListener('disconnect', (event) => this.handleDisconnect(event.detail));
+
+        if (disconnectionResult) {
+            // wait until board boots into bootloader mode
+            // MacOs may need 5 seconds delay
+            let failedAttempts = 0;
+            let dfuWaitInterval = null;
+
+            function waitForDfu() {
+                if (PortHandler.dfuAvailable) {
+                    console.log(`DFU available after ${failedAttempts} seconds`);
+                    clearInterval(dfuWaitInterval);
+                    this.startFlashing();
+                } else {
+                    failedAttempts++;
+                    if (failedAttempts > 10) {
+                        clearInterval(dfuWaitInterval);
+                        console.log(`failed to get DFU connection, gave up after 10 seconds`);
+                        gui_log(i18n.getMessage('serialPortOpenFail'));
+                        GUI.connect_lock = false;
+                    }
+                }
+            }
+
+            if (PortHandler.dfuAvailable) {
+                console.log('DFU device found');
+                this.startFlashing();
+            } else {
+                DFU.requestPermission().then(port => {
+                    if (port) {
+                        console.log('DFU device found on port', port);
+                        this.startFlashing();
+                    } else {
+                        console.log('No DFU device found');
+                        dfuWaitInterval = setInterval(() => {
+                            console.log('Checking for DFU connection');
+                            waitForDfu();
+                        }, 1000);
+                    }
+                });
+            }
+        } else {
+            GUI.connect_lock = false;
+        }
+    }
+
+    prepareSerialPort() {
+        serial.removeEventListener('connect', (event) => this.handleConnect(event.detail));
+        serial.addEventListener('connect', (event) => this.handleConnect(event.detail), { once: true });
+
+        serial.removeEventListener('disconnect', (event) => this.handleDisconnect(event.detail));
+        serial.addEventListener('disconnect', (event) => this.handleDisconnect(event.detail) , { once: true });
+    }
+
+    // TODO: remove this method once all devices are updated to use the new method
+    legacyRebootAndFlash() {
+        this.prepareSerialPort();
+        serial.connect(this.port, { bitrate: this.options.reboot_baud }, (openInfo) => {
+            if (!openInfo) {
+                GUI.connect_lock = false;
+                gui_log(i18n.getMessage('serialPortOpenFail'));
+                return;
+            }
+
+            console.log('Using legacy reboot method');
+
+            console.log('Sending ascii "R" to reboot');
+            const bufferOut = new ArrayBuffer(1);
+            const bufferView = new Uint8Array(bufferOut);
+
+            bufferView[0] = 0x52;
+
+            serial.send(bufferOut, () => {
+                serial.disconnect(disconnectionResult => this.handleDisconnect(disconnectionResult));
+            });
+        });
+    }
+
+    reboot() {
+        const buffer = [];
+        buffer.push8(this.rebootMode);
+        setTimeout(() => {
+            MSP.promise(MSPCodes.MSP_SET_REBOOT, buffer)
+            .then(() => {
+                // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
+                this.mspConnector.disconnect(disconnectionResult => {
+                    console.log('Disconnecting from MSP', disconnectionResult);
+                    this.handleDisconnect(disconnectionResult);
+                });
+            });
+            console.log('Reboot request received by device');
+        }, 100);
+    }
+
+    onAbort() {
+        GUI.connect_lock = false;
+        this.rebootMode = 0;
+        console.log('User cancelled because selected target does not match verified board');
+        this.reboot();
+        TABS.firmware_flasher.refresh();
+    }
+
+    lookingForCapabilitiesViaMSP() {
+        console.log('Looking for capabilities via MSP');
+
+        MSP.promise(MSPCodes.MSP_BOARD_INFO)
+        .then(() => {
+            if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
+                // Board has flash bootloader
+                gui_log(i18n.getMessage('deviceRebooting_flashBootloader'));
+                console.log('flash bootloader detected');
+                this.rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
+            } else {
+                gui_log(i18n.getMessage('deviceRebooting_romBootloader'));
+                console.log('no flash bootloader detected');
+                this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
+            }
+
+            const selectedBoard = TABS.firmware_flasher.selectedBoard !== '0' ? TABS.firmware_flasher.selectedBoard : 'NONE';
+            const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : 'UNKNOWN';
+
+            try {
+                if (selectedBoard !== connectedBoard && !TABS.firmware_flasher.localFirmwareLoaded) {
+                    TABS.firmware_flasher.showDialogVerifyBoard(selectedBoard, connectedBoard, this.onAbort, this.reboot);
+                } else {
+                    this.reboot();
+                }
+            } catch (e) {
+                console.error(e);
+                this.reboot();
+            }
+        });
+    }
+
+    handleMSPConnect() {
+        gui_log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
+
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+            this.mspConnector.disconnect((disconnectionResult) => {
+                // need some time for the port to be closed, serial port does not open if tried immediately
+                setTimeout(this.legacyRebootAndFlash, 500);
+            });
+        } else {
+            this.lookingForCapabilitiesViaMSP();
+        }
+    }
+
     // no input parameters
     connect(port, baud, hex, options, callback) {
         this.hex = hex;
         this.port = port;
         this.baud = baud;
         this.callback = callback;
+        this.serialOptions = options;
 
         // we will crunch the options here since doing it inside initialization routine would be too late
-        this.options = {
+        this.mspOptions = {
             no_reboot: false,
             reboot_baud: false,
             erase_chip: false,
         };
 
         if (options.no_reboot) {
-            this.options.no_reboot = true;
+            this.mspOptions.no_reboot = true;
         } else {
-            this.options.reboot_baud = options.reboot_baud;
+            this.mspOptions.reboot_baud = options.reboot_baud;
         }
 
         if (options.erase_chip) {
-            this.options.erase_chip = true;
+            this.mspOptions.erase_chip = true;
         }
 
         if (this.options.no_reboot) {
             // TODO: update to use web serial / USB API
+            this.prepareSerialPort();
             serial.connect(port, { baudRate: this.baud, parityBit: 'even', stopBits: 'one' });
         } else {
-
-            let rebootMode = 0; // FIRMWARE
-
-            const startFlashing = () => {
-                if (rebootMode === 0) {
-                    return;
-                }
-
-                // refresh device list
-                if (PortHandler.dfuAvailable) {
-                    DFU.connect(hex, options);
-                } else {
-                    // TODO: update to use web serial / USB API
-                    prepareSerialPort();
-                    console.log('Connecting to serial port', this.port, this.baud);
-                    serial.connect(this.port, { bitrate: this.baud, parityBit: 'even', stopBits: 'one' }, function (openInfo) {
-                        if (openInfo) {
-                            this.initialize();
-                        } else {
-                            GUI.connect_lock = false;
-                            gui_log(i18n.getMessage('serialPortOpenFail'));
-                        }
-                    });
-                }
-            };
-
-            function prepareSerialPort() {
-                serial.removeEventListener('connect', (event) => serialConnectHandler(event.detail));
-                serial.addEventListener('connect', (event) => serialConnectHandler(event.detail));
-
-                serial.removeEventListener('disconnect', (event) => onDisconnect(event.detail));
-                serial.addEventListener('disconnect', (event) => onDisconnect(event.detail));
-            }
-
-            function onDisconnect(disconnectionResult) {
-                console.log('Waiting for DFU connection', disconnectionResult);
-
-                serial.removeEventListener('connect', (event) => serialConnectHandler(event.detail));
-                serial.removeEventListener('disconnect', (event) => onDisconnect(event.detail));
-
-                if (disconnectionResult) {
-                    // wait until board boots into bootloader mode
-                    // MacOs may need 5 seconds delay
-                    let failedAttempts = 0;
-                    let dfuWaitInterval = null;
-
-                    function waitForDfu() {
-                        if (PortHandler.dfuAvailable) {
-                            console.log(`DFU available after ${failedAttempts} seconds`);
-                            clearInterval(dfuWaitInterval);
-                            startFlashing();
-                        } else {
-                            failedAttempts++;
-                            if (failedAttempts > 10) {
-                                clearInterval(dfuWaitInterval);
-                                console.log(`failed to get DFU connection, gave up after 10 seconds`);
-                                gui_log(i18n.getMessage('serialPortOpenFail'));
-                                GUI.connect_lock = false;
-                            }
-                        }
-                    }
-
-                    if (PortHandler.dfuAvailable) {
-                        console.log('DFU device found');
-                        startFlashing();
-                    } else {
-
-                    DFU.requestPermission().then(port => {
-                        if (port) {
-                            console.log('DFU device found on port', port);
-                            startFlashing();
-                        } else {
-                            console.log('No DFU device found');
-                            dfuWaitInterval = setInterval(() => {
-                                console.log('Checking for DFU connection');
-                                waitForDfu();
-                            }, 1000);
-                        }
-                    });
-                    }
-                } else {
-                    GUI.connect_lock = false;
-                }
-            }
-
-            // TODO: remove this method once all devices are updated to use the new method
-            function legacyRebootAndFlash() {
-                prepareSerialPort();
-                serial.connect(this.port, { bitrate: this.options.reboot_baud }, function (openInfo) {
-                    if (!openInfo) {
-                        GUI.connect_lock = false;
-                        gui_log(i18n.getMessage('serialPortOpenFail'));
-                        return;
-                    }
-
-                    console.log('Using legacy reboot method');
-
-                    console.log('Sending ascii "R" to reboot');
-                    const bufferOut = new ArrayBuffer(1);
-                    const bufferView = new Uint8Array(bufferOut);
-
-                    bufferView[0] = 0x52;
-
-                    serial.send(bufferOut, function () {
-                        serial.disconnect(disconnectionResult => onDisconnect(disconnectionResult));
-                    });
-                });
-            }
-
-            function onConnectHandler() {
-
-                gui_log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
-
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    this.msp_connector.disconnect(function (disconnectionResult) {
-
-                        // need some time for the port to be closed, serial port does not open if tried immediately
-                        setTimeout(legacyRebootAndFlash, 500);
-                    });
-                } else {
-                    console.log('Looking for capabilities via MSP');
-
-                    MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, () => {
-                        if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
-                            // Board has flash bootloader
-                            gui_log(i18n.getMessage('deviceRebooting_flashBootloader'));
-                            console.log('flash bootloader detected');
-                            rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
-                        } else {
-                            gui_log(i18n.getMessage('deviceRebooting_romBootloader'));
-                            console.log('no flash bootloader detected');
-                            rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
-                        }
-
-                        const selectedBoard = TABS.firmware_flasher.selectedBoard !== '0' ? TABS.firmware_flasher.selectedBoard : 'NONE';
-                        const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : 'UNKNOWN';
-
-                        const reboot = () => {
-                            const buffer = [];
-                            buffer.push8(rebootMode);
-                            setTimeout(() => {
-                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, () => {
-                                    // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
-                                    this.msp_connector.disconnect(disconnectionResult => {
-                                        console.log('Disconnecting from MSP', disconnectionResult);
-                                        onDisconnect(disconnectionResult);
-                                    });
-                                });
-                                console.log('Reboot request received by device');
-
-                                // Using onDisconnect to handle the case where the device doesn't respond to the reboot request fixes the callback not being called
-                                onDisconnect(true);
-                            }, 100);
-                        };
-
-                        function onAbort() {
-                            GUI.connect_lock = false;
-                            rebootMode = 0;
-                            console.log('User cancelled because selected target does not match verified board');
-                            reboot();
-                            TABS.firmware_flasher.refresh();
-                        }
-                        try {
-                            if (selectedBoard !== connectedBoard && !TABS.firmware_flasher.localFirmwareLoaded) {
-                                TABS.firmware_flasher.showDialogVerifyBoard(selectedBoard, connectedBoard, onAbort, reboot);
-                            } else {
-                                reboot();
-                            }
-                        } catch (e) {
-                            console.error(e);
-                            reboot();
-                        }
-                    });
-                }
-            }
-
-            const onTimeoutHandler = function () {
-                GUI.connect_lock = false;
-                console.log('Looking for capabilities via MSP failed');
-
-                TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
-            };
-
-            const onFailureHandler = function () {
-                GUI.connect_lock = false;
-                TABS.firmware_flasher.refresh();
-            };
+            this.rebootMode = 0; // FIRMWARE
 
             GUI.connect_lock = true;
             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloader'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
-            this.msp_connector.connect(this.port, this.options.reboot_baud, onConnectHandler, onTimeoutHandler, onFailureHandler);
+            serial.addEventListener('disconnect', (event) => this.handleDisconnect(event.detail), { once: true });
+
+            this.mspConnector.connect(this.port, this.mspOptions.reboot_baud, this.handleMSPConnect, onTimeoutHandler, onFailureHandler);
         }
     }
+
     // initialize certain variables and start timers that oversee the communication
     initialize() {
 
         console.log(":exploding_head:");
-
-        serial.removeEventListener('receive', read_serial_adapter);
-        serial.addEventListener('receive', read_serial_adapter);
 
         // reset and set some variables before we start
         this.receive_buffer = [];
@@ -326,10 +330,8 @@ class STM32Protocol {
         // lock some UI elements TODO needs rework
         $('select[name="release"]').prop('disabled', true);
 
-        // TODO: update to use web serial / USB API
-        serial.onReceive.addListener((info) => {
-            this.read(info);
-        });
+        serial.removeEventListener('receive', readSerialAdapter);
+        serial.addEventListener('receive', readSerialAdapter);
 
         GUI.interval_add('STM32_timeout', () => {
             if (this.upload_process_alive) { // process is running
@@ -487,6 +489,9 @@ class STM32Protocol {
                 this.available_flash_size = 0x40000;
                 this.page_size = 2048;
                 break;
+            default:
+                console.log(`Chip NOT recognized: ${signature}`);
+                break;
         }
 
         if (this.available_flash_size > 0) {
@@ -521,7 +526,7 @@ class STM32Protocol {
     upload_procedure(step) {
 
         switch (step) {
-            case 1:
+            case 1: {
                 // initialize serial interface on the MCU side, auto baud rate settings
                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ContactingBootloader'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
@@ -559,7 +564,8 @@ class STM32Protocol {
                 }, 250, true);
 
                 break;
-            case 2:
+            }
+            case 2: {
                 // get version of the bootloader and supported commands
                 this.send([this.command.get, 0xFF], 2, (data) => {
                     if (this.verify_response(this.status.ACK, data)) {
@@ -575,6 +581,7 @@ class STM32Protocol {
                 });
 
                 break;
+            }
             case 3:
                 // get ID (device signature)
                 this.send([this.command.get_ID, 0xFD], 2, (data) => {
@@ -595,7 +602,7 @@ class STM32Protocol {
                 });
 
                 break;
-            case 4:
+            case 4: {
                 // erase memory
                 if (this.useExtendedErase) {
                     if (this.options.erase_chip) {
@@ -716,7 +723,8 @@ class STM32Protocol {
                 }
 
                 break;
-            case 5:
+            }
+            case 5: {
                 // upload
                 console.log('Writing data ...');
                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Flashing'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
@@ -727,7 +735,7 @@ class STM32Protocol {
                     if (bytes_flashed < this.hex.data[flashing_block].bytes) {
                         const bytesToWrite = ((bytes_flashed + 256) <= this.hex.data[flashing_block].bytes) ? 256 : (this.hex.data[flashing_block].bytes - bytes_flashed);
 
-                        // console.log('STM32 - Writing to: 0x' + address.toString(16) + ', ' + bytesToWrite + ' bytes');
+                        // DEBUG - console.log('STM32 - Writing to: 0x' + address.toString(16) + ', ' + bytesToWrite + ' bytes');
                         this.send([this.command.write_memory, 0xCE], 1, (reply) => {
                             if (this.verify_response(this.status.ACK, reply)) {
                                 // address needs to be transmitted as 32 bit integer, we need to bit shift each byte out and then calculate address checksum
@@ -785,14 +793,15 @@ class STM32Protocol {
                 write();
 
                 break;
-            case 6:
+            }
+            case 6: {
                 // verify
                 console.log('Verifying data ...');
                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Verifying'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
-                blocks = this.hex.data.length - 1;
+                const blocks = this.hex.data.length - 1;
                 let readingBlock = 0;
-                address = this.hex.data[readingBlock].address;
+                let address = this.hex.data[readingBlock].address;
                 let bytesVerified = 0;
                 let bytesVerifiedTotal = 0; // used for progress bar
 
@@ -880,7 +889,8 @@ class STM32Protocol {
                 reading();
 
                 break;
-            case 7:
+            }
+            case 7: {
                 // go
                 // memory address = 4 bytes, 1st high byte, 4th low byte, 5th byte = checksum XOR(byte 1, byte 2, byte 3, byte 4)
                 console.log('Sending GO command: 0x8000000');
@@ -888,7 +898,7 @@ class STM32Protocol {
                 this.send([this.command.go, 0xDE], 1, (reply) => {
                     if (this.verify_response(this.status.ACK, reply)) {
                         const gtAddress = 0x8000000;
-                        address = [(gtAddress >> 24), (gtAddress >> 16), (gtAddress >> 8), gtAddress];
+                        const address = [(gtAddress >> 24), (gtAddress >> 16), (gtAddress >> 8), gtAddress];
                         const addressChecksum = address[0] ^ address[1] ^ address[2] ^ address[3];
 
                         this.send([address[0], address[1], address[2], address[3], addressChecksum], 1, (response) => {
@@ -901,7 +911,8 @@ class STM32Protocol {
                 });
 
                 break;
-            case 99:
+            }
+            case 99: {
                 // disconnect
                 GUI.interval_remove('STM32_timeout'); // stop STM32 timeout timer (everything is finished now)
 
@@ -914,6 +925,7 @@ class STM32Protocol {
                 }
 
                 break;
+            }
         }
     }
     cleanup() {

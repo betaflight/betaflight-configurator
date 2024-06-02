@@ -12,6 +12,23 @@ import { gui_log } from "../gui_log";
 /**
  * This seems to be mainly used in firmware flasher parts.
  */
+
+function readSerialAdapter(e) {
+    read_serial(e.detail.buffer);
+}
+
+function disconnectAndCleanup() {
+    serial.disconnect((result) => {
+        console.log('Disconnected', result);
+
+        MSP.clearListeners();
+
+        this.onTimeoutCallback();
+    });
+
+    MSP.disconnect_cleanup();
+}
+
 class MSPConnectorImpl {
     constructor() {
         this.baud = undefined;
@@ -19,6 +36,52 @@ class MSPConnectorImpl {
         this.onConnectCallback = undefined;
         this.onTimeoutCallback = undefined;
         this.onDisconnectCallback = undefined;
+    }
+
+    handleConnect(openInfo) {
+        if (openInfo) {
+            FC.resetState();
+
+            // disconnect after 10 seconds with error if we don't get IDENT data
+            GUI.timeout_add('msp_connector', function () {
+                if (!CONFIGURATOR.connectionValid) {
+                    gui_log(i18n.getMessage('noConfigurationReceived'));
+
+                    disconnectAndCleanup();
+                }
+            }, 10000);
+
+            serial.removeEventListener('receive', readSerialAdapter);
+            serial.addEventListener('receive', readSerialAdapter);
+
+            const mspHelper = new MspHelper();
+            MSP.listen(mspHelper.process_data.bind(mspHelper));
+
+            MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
+                CONFIGURATOR.connectionValid = true;
+
+                GUI.timeout_remove('msp_connector');
+                console.log('Connected');
+
+                this.onConnectCallback();
+            });
+        } else {
+            gui_log(i18n.getMessage('serialPortOpenFail'));
+            this.onFailureCallback();
+        }
+    }
+
+    handleDisconnect (detail) {
+        console.log('Disconnected', detail);
+
+        serial.removeEventListener('receive', readSerialAdapter);
+
+        // Calling in case event listeners were not removed
+        serial.removeEventListener('connect', (e) => this.handleConnect(e.detail));
+        serial.removeEventListener('disconnect', (e) => this.handleDisconnect(e));
+
+        MSP.clearListeners();
+        MSP.disconnect_cleanup();
     }
 
     connect(port, baud, onConnectCallback, onTimeoutCallback, onFailureCallback) {
@@ -29,66 +92,11 @@ class MSPConnectorImpl {
         this.onTimeoutCallback = onTimeoutCallback;
         this.onFailureCallback = onFailureCallback;
 
-        this.connectHandler = (openInfo) => {
-            if (openInfo) {
-                const disconnectAndCleanup = () => {
-                    serial.disconnect((result) => {
-                        console.log('Disconnected', result);
+        serial.removeEventListener('connect', (e) => this.handleConnect(e.detail));
+        serial.addEventListener('connect', (e) => this.handleConnect(e.detail), { once: true });
 
-                        MSP.clearListeners();
-
-                        this.onTimeoutCallback();
-                    });
-
-                    MSP.disconnect_cleanup();
-                };
-
-                FC.resetState();
-
-                // disconnect after 10 seconds with error if we don't get IDENT data
-                GUI.timeout_add('msp_connector', function () {
-                    if (!CONFIGURATOR.connectionValid) {
-                        gui_log(i18n.getMessage('noConfigurationReceived'));
-
-                        disconnectAndCleanup();
-                    }
-                }, 10000);
-
-                function read_serial_adapter(e) {
-                    read_serial(e.detail.buffer);
-                }
-
-                serial.removeEventListener('receive', read_serial_adapter);
-                serial.addEventListener('receive', read_serial_adapter);
-
-                const mspHelper = new MspHelper();
-                MSP.listen(mspHelper.process_data.bind(mspHelper));
-
-                MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
-                    CONFIGURATOR.connectionValid = true;
-
-                    GUI.timeout_remove('msp_connector');
-                    console.log('Connected');
-
-                    this.onConnectCallback();
-                });
-            } else {
-                gui_log(i18n.getMessage('serialPortOpenFail'));
-                this.onFailureCallback();
-            }
-        };
-
-        this.disconnectHandler = (detail) => {
-            console.log('Disconnected', detail);
-            MSP.clearListeners();
-            MSP.disconnect_cleanup();
-        };
-
-        serial.removeEventListener('connect', (e) => this.connectHandler(e.detail));
-        serial.addEventListener('connect', (e) => this.connectHandler(e.detail));
-
-        serial.removeEventListener('disconnect', (e) => this.disconnectHandler(e));
-        serial.addEventListener('disconnect', (e) => this.disconnectHandler(e));
+        serial.removeEventListener('disconnect', (e) => this.handleDisconnect(e));
+        serial.addEventListener('disconnect', (e) => this.handleDisconnect(e), { once: true });
 
         serial.connect(this.port, { baudRate: this.baud });
     }
