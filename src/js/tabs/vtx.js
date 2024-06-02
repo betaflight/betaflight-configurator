@@ -9,7 +9,6 @@ import FC from '../fc';
 import { VtxDeviceTypes } from '../utils/VtxDeviceStatus/VtxDeviceStatus';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import $ from 'jquery';
 import FileSystem from "../FileSystem";
@@ -81,15 +80,6 @@ vtx.initialize = function (callback) {
 
         // translate to user-selected language
         i18n.localizePage();
-
-        const mediaQuery = window.matchMedia('(max-width: 576px)');
-        const handleMediaChange = function(e) {
-            if (e.matches) {
-                UI_PHONES.initToolbar();
-            }
-        };
-        mediaQuery.addEventListener('change', handleMediaChange);
-        handleMediaChange(mediaQuery);
 
         self.updating = false;
         GUI.content_ready(callback);
@@ -178,9 +168,9 @@ vtx.initialize = function (callback) {
         const vtxJsonSchemaUrl = `../../resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`;
 
         fetch(vtxJsonSchemaUrl)
-        .then(response => response.json())
-        .catch(error => console.error('Error fetching VTX Schema:', error))
-        .then(schemaJson => validateAgainstSchema(schemaJson, vtxConfig));
+            .then(response => response.json())
+            .catch(error => console.error('Error fetching VTX Schema:', error))
+            .then(schemaJson => validateAgainstSchema(schemaJson, vtxConfig));
     }
 
     // Emulates the MSP read from a vtxConfig object (JSON)

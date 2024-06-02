@@ -11,7 +11,6 @@ import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
-import UI_PHONES from "./phones_ui";
 import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
 import { update_dataflash_global } from "./update_dataflash_global";
@@ -163,10 +162,6 @@ function connectDisconnect() {
 }
 
 function finishClose(finishedCallback) {
-    if (GUI.isCordova()) {
-        UI_PHONES.reset();
-    }
-
     const wasConnected = CONFIGURATOR.connectionValid;
     tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Disconnected', { time: connectionTimestamp ? Date.now() - connectionTimestamp : undefined});
 
@@ -572,10 +567,6 @@ function finishOpen() {
 
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
-    }
-
-    if (GUI.isCordova()) {
-        UI_PHONES.reset();
     }
 
     onConnect();
