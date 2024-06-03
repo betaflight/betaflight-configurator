@@ -14,15 +14,15 @@ const PortHandler = new function () {
         selectedBauds: DEFAULT_BAUDS,
         portOverride: getConfig('portOverride', '/dev/rfcomm0').portOverride,
         virtualMspVersion: "1.46.0",
-        autoConnect: getConfig('autoConnect').autoConnect,
+        autoConnect: getConfig('autoConnect', false).autoConnect,
     };
     this.portPickerDisabled = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
     this.showAllSerialDevices = false;
-    this.showVirtualMode = getConfig('showVirtualMode').showVirtualMode;
-    this.showManualMode = getConfig('showManualMode').showManualMode;
-    this.showAllSerialDevices = getConfig('showAllSerialDevices').showAllSerialDevices;
+    this.showVirtualMode = getConfig('showVirtualMode', false).showVirtualMode;
+    this.showManualMode = getConfig('showManualMode', false).showManualMode;
+    this.showAllSerialDevices = getConfig('showAllSerialDevices', false).showAllSerialDevices;
 };
 
 PortHandler.initialize = function () {
