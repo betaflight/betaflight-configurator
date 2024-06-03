@@ -6821,8 +6821,12 @@
         "message": "Bidirectional DShot (requires supported ESC firmware)",
         "description": "Feature for the ESC/Motor"
     },
+    "configurationDshotEdt": {
+        "message": "Built-in sensors",
+        "description": "ESC/Motor feature"
+    },
     "configurationDshotBidirHelp": {
-        "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg JESC, Jazzmac, BLHeli-32.",
+        "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg Bluejay, AM32, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {

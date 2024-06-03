@@ -52,6 +52,7 @@ const VirtualFC = {
             motor_count: 4,
             motor_poles: 14,
             use_dshot_telemetry: true,
+            use_dshot_edt: true,
             use_esc_sensor: false,
         };
 

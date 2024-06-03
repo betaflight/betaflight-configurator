@@ -503,6 +503,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
                     FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
                 }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.MOTOR_CONFIG.use_dshot_edt = data.readU8() != 0;
+                }
                 break;
             case MSPCodes.MSP_COMPASS_CONFIG:
                 FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
@@ -1829,6 +1832,9 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 buffer.push8(FC.MOTOR_CONFIG.motor_poles);
                 buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                buffer.push8(FC.MOTOR_CONFIG.use_dshot_edt ? 1 : 0);
             }
             break;
         case MSPCodes.MSP_SET_GPS_CONFIG:
