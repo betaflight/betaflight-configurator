@@ -84,22 +84,18 @@ PortHandler.onChangeSelectedPort = function(port) {
     this.portPicker.selectedPort = port;
 };
 
-PortHandler.updateCurrentSerialPortsList = function () {
-    return serial.getDevices()
-    .then((ports) => {
-        const orderedPorts = this.sortPorts(ports);
-        this.portAvailable = orderedPorts.length > 0;
-        this.currentSerialPorts = orderedPorts;
-    });
+PortHandler.updateCurrentSerialPortsList = async function () {
+    const ports = await serial.getDevices();
+    const orderedPorts = this.sortPorts(ports);
+    this.portAvailable = orderedPorts.length > 0;
+    this.currentSerialPorts = orderedPorts;
 };
 
-PortHandler.updateCurrentUsbPortsList = function () {
-    return usb.getDevices()
-    .then((ports) => {
-        const orderedPorts = this.sortPorts(ports);
-        this.dfuAvailable = orderedPorts.length > 0;
-        this.currentUsbPorts = orderedPorts;
-    });
+PortHandler.updateCurrentUsbPortsList = async function () {
+    const ports = await usb.getDevices();
+    const orderedPorts = this.sortPorts(ports);
+    this.dfuAvailable = orderedPorts.length > 0;
+    this.currentUsbPorts = orderedPorts;
 };
 
 PortHandler.sortPorts = function(ports) {
