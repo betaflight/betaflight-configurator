@@ -16,17 +16,12 @@ import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { urlExists } from '../utils/common';
 import { generateFilename } from '../utils/generate_filename';
+import read_hex_file from '../workers/hex_parser.js';
 import Sponsor from '../Sponsor';
 import FileSystem from '../FileSystem';
-import { usbDevices } from '../usb_devices.js';
-import { serialShim } from "../serial_shim.js";
-import { usbShim } from "../usb_shim.js";
-import STM32 from '../protocols/stm32';
-import { isWeb } from '../utils/isWeb.js';
-import read_hex_file from '../workers/hex_parser.js';
-
-let serial = serialShim();
-let dfu = usbShim();
+import STM32 from '../protocols/webstm32';
+import DFU from '../protocols/webusbdfu';
+import serial from '../webSerial';
 
 const firmware_flasher = {
     targets: null,
@@ -570,8 +565,6 @@ firmware_flasher.initialize = function (callback) {
             return output.join('').split('\n');
         }
 
-        const portPickerElement = $('div#port-picker #port');
-
         function flashFirmware(firmware) {
             const options = {};
 
@@ -582,37 +575,33 @@ firmware_flasher.initialize = function (callback) {
                 eraseAll = true;
             }
 
-            if (isWeb()) {
-                // TODO: Currently only web dfu is supported - add support for web serial
-                self.isFlashing = false;
-                return dfu.connect(firmware, options);
-            }
+            const port = PortHandler.portPicker.selectedPort;
+            const isSerial = port.startsWith('serial_');
+            const isDFU = port.startsWith('usb_');
 
-            if (!$('option:selected', portPickerElement).data().isDFU) {
-                if (String(portPickerElement.val()) !== '0') {
-                    const port = String(portPickerElement.val());
+            console.log('Selected port:', port);
 
-                    if ($('input.updating').is(':checked')) {
-                        options.no_reboot = true;
-                    } else {
-                        options.reboot_baud = parseInt($('div#port-picker #baud').val());
-                    }
-
-                    let baud = 115200;
-                    if ($('input.flash_manual_baud').is(':checked')) {
-                        baud = parseInt($('#flash_manual_baud_rate').val());
-                    }
-
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', { filename: self.filename || null });
-
-                    STM32.connect(port, baud, firmware, options);
-                } else {
-                    console.log('Please select valid serial port');
-                    gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
-                }
-            } else {
+            if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'DFU Flashing', { filename: self.filename || null });
-                dfu.connect(firmware, options);
+                DFU.connect(firmware, options);
+            } else if (isSerial) {
+                if ($('input.updating').is(':checked')) {
+                    options.no_reboot = true;
+                } else {
+                    options.reboot_baud = PortHandler.portPicker.selectedBauds;
+                }
+
+                let baud = 115200;
+                if ($('input.flash_manual_baud').is(':checked')) {
+                    baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
+                }
+
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', { filename: self.filename || null });
+
+                STM32.connect(port, baud, firmware, options);
+            } else {
+                console.log('Please select valid serial port');
+                gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
             }
 
             self.isFlashing = false;
@@ -939,7 +928,7 @@ firmware_flasher.initialize = function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
                 try {
                     console.log('Closing DFU');
-                    dfu.connect(usbDevices, self.parsed_hex, { exitDfu: true });
+                    DFU.connect(self.parsed_hex, { exitDfu: true });
                 } catch (e) {
                     console.log(`Exiting DFU failed: ${e.message}`);
                 }
@@ -1137,6 +1126,10 @@ firmware_flasher.initialize = function (callback) {
         }).change();
 
         self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+
+        if (PortHandler.dfuAvailable) {
+            $('a.exit_dfu').removeClass('disabled');
+        }
 
         GUI.content_ready(callback);
     }

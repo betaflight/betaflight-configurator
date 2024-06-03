@@ -1,15 +1,7 @@
-import GUI from "./gui";
-import FC from "./fc";
-import { i18n } from "./localization";
 import { get as getConfig } from "./ConfigStorage";
-import { isWeb } from "./utils/isWeb";
-import { usbDevices } from "./usb_devices";
-import { serialShim } from "./serial_shim.js";
-import { usbShim } from "./usb_shim.js";
 import { EventBus } from "../components/eventBus";
-
-const serial = serialShim();
-const usb = usbShim();
+import serial from "./webSerial";
+import usb from "./protocols/webusbdfu";
 
 const DEFAULT_PORT = 'noselection';
 const DEFAULT_BAUDS = 115200;
@@ -92,22 +84,18 @@ PortHandler.onChangeSelectedPort = function(port) {
     this.portPicker.selectedPort = port;
 };
 
-PortHandler.updateCurrentSerialPortsList = function () {
-    return serial.getDevices()
-    .then((ports) => {
-        const orderedPorts = this.sortPorts(ports);
-        this.portAvailable = orderedPorts.length > 0;
-        this.currentSerialPorts = orderedPorts;
-    });
+PortHandler.updateCurrentSerialPortsList = async function () {
+    const ports = await serial.getDevices();
+    const orderedPorts = this.sortPorts(ports);
+    this.portAvailable = orderedPorts.length > 0;
+    this.currentSerialPorts = orderedPorts;
 };
 
-PortHandler.updateCurrentUsbPortsList = function () {
-    return usb.getDevices()
-    .then((ports) => {
-        const orderedPorts = this.sortPorts(ports);
-        this.dfuAvailable = orderedPorts.length > 0;
-        this.currentUsbPorts = orderedPorts;
-    });
+PortHandler.updateCurrentUsbPortsList = async function () {
+    const ports = await usb.getDevices();
+    const orderedPorts = this.sortPorts(ports);
+    this.dfuAvailable = orderedPorts.length > 0;
+    this.currentUsbPorts = orderedPorts;
 };
 
 PortHandler.sortPorts = function(ports) {
@@ -149,7 +137,7 @@ PortHandler.selectActivePort = function(suggestedDevice) {
         selectedPort = suggestedDevice.path;
     }
 
-    // Return some serial port that is recognized by the filter
+    // Return some usb port that is recognized by the filter
     if (!selectedPort) {
         selectedPort = this.currentUsbPorts.find(device => deviceFilter.some(filter => device.displayName.includes(filter)));
         if (selectedPort) {
@@ -157,7 +145,7 @@ PortHandler.selectActivePort = function(suggestedDevice) {
         }
     }
 
-    // Return some usb port that is recognized by the filter
+    // Return some serial port that is recognized by the filter
     if (!selectedPort) {
         selectedPort = this.currentSerialPorts.find(device => deviceFilter.some(filter => device.displayName.includes(filter)));
         if (selectedPort) {
@@ -185,70 +173,6 @@ PortHandler.selectActivePort = function(suggestedDevice) {
 /************************************
 // TODO all the methods from here need to be refactored or removed
 ************************************/
-
-PortHandler.check_usb_devices = function (callback) {
-
-    // TODO needs USB code refactor for web
-    if (isWeb()) {
-        return;
-    }
-
-    const self = this;
-
-    chrome.usb.getDevices(usbDevices, function (result) {
-
-        const dfuElement = self.portPickerElement.children("[value='DFU']");
-        if (result.length) {
-            // Found device in DFU mode, add it to the list
-            if (!dfuElement.length) {
-                self.portPickerElement.empty();
-
-                const productName = result[0].productName;
-                const usbText = productName ? `DFU - ${productName}` : 'DFU';
-
-                self.portPickerElement.append($('<option/>', {
-                    value: "DFU",
-                    text: usbText,
-                    /**
-                     * @deprecated please avoid using `isDFU` and friends for new code.
-                     */
-                    data: {isDFU: true},
-                }));
-
-                self.portPickerElement.append($('<option/>', {
-                    value: DEFAULT_PORT,
-                    text: i18n.getMessage('portsSelectManual'),
-                    /**
-                     * @deprecated please avoid using `isDFU` and friends for new code.
-                     */
-                    data: {isManual: true},
-                }));
-
-                self.portPickerElement.val('DFU').trigger('change');
-                self.setPortsInputWidth();
-                self.dfuAvailable = true;
-            }
-        } else if (dfuElement.length) {
-            dfuElement.remove();
-            self.setPortsInputWidth();
-            self.dfuAvailable = false;
-
-            if ($('option:selected', self.portPickerElement).val() !== 'DFU') {
-                if (!(GUI.connected_to || GUI.connect_lock)) {
-                    FC.resetState();
-                }
-
-                if (self.dfuAvailable) {
-                    self.portPickerElement.trigger('change');
-                }
-            }
-        }
-
-        if (callback) {
-            callback(self.dfuAvailable);
-        }
-    });
-};
 
 PortHandler.flush_callbacks = function () {
     let killed = 0;
