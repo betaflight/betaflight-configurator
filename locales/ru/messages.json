@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Отключить"
     },
+    "portsSelectNoSelection": {
+        "message": "Выберите ваше устройство",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Выбрать вручную"
     },
@@ -58,6 +62,10 @@
     "portsSelectVirtual": {
         "message": "Виртуальный режим (экспериментальный)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- Я не могу найти свое устройство ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "virtualMSPVersion": {
         "message": "Версия виртуальной прошивки"
@@ -293,6 +301,10 @@
     },
     "logActionShow": {
         "message": "Показать недавние действия"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} файлов",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Ошибка последовательного соединения: неверный кадр"
@@ -1302,6 +1314,15 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Этот параметр настраивает миксер, ожидая что направление вращение двигателя будет реверсивным и пропеллеры будут установлены соответственно. <strong>Внимание:<\/strong> это не реверс двигателя. Используйте инструменты настройки для вашего ESC или переключите ESC - подключением электропроводки. Кроме того, не забудьте проверить со снятыми пропеллерами, что ваши двигатели вращаются в направлениях, показанных на диаграмме выше, прежде чем попытаетесь включить ARM."
     },
+    "configurationAutoDisarmDelay": {
+        "message": "Остановить моторы после задержки [сек]"
+    },
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Отключать моторы после заданной задержки [в секундах] (Требуется включить функцию MOTOR_STOP)"
+    },
+    "configurationGyroCalOnFirstArm": {
+        "message": "Калибровка Gyro на первом арме"
+    },
     "configurationDigitalIdlePercent": {
         "message": "Режим холостого хода (% статический)"
     },
@@ -1751,7 +1772,11 @@
         "description": "Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Регулирует расчет автофактора 10, является коэффициентом задержки по умолчанию. Увеличение числа позволяет сгладить RC ввод еще, при это задержка станет больше. Может быть полезно для ненадежных RC соединений или для видеосъемки.<br>Будьте осторожны с числами, близки к 50, задержка ввода станет заметной.<br>Используйте команду CLI rc_smoothing_info когда TX и RX включены, чтобы увидеть автоматически рассчитанные диапазоны сглаживания.",
+        "message": "Регулирует расчет автофактора ,10 является коэффициентом задержки по умолчанию. Увеличение коэфицента позволяет больше сгладить RC команды, при этом задержка станет больше. Может быть полезно для ненадежных RC соединений, либо для видеосъемки.<br>Будьте осторожны с числами, близки к 50, задержка ввода станет заметной.<br>Используйте команду CLI rc_smoothing_info когда TX и RX включены, чтобы увидеть автоматически рассчитанные диапазоны сглаживания.",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "Данный параметр регулирует автоматическое сглаживание сигнала с пульта управления RC. Значение по умолчанию - 30. Более высокие значения сильнее сглаживают поступающие сигналы с пульта управления: например, 60 для HD freestyle или 90-120 для кинематографической съемки. ПРИМЕЧАНИЕ: Значения выше 50 вызовут заметную задержку команд управления от стиков.\nПри более низких значениях, например 20-25, часть харктерной ступенчатой формы сигнала управления с пульта, приобразуется в сигналы управления двигателями, что незначительно увеличит нагрев двигателей, но немного уменьшит задержку сигнала с пульта управления. Может быть полезно для гонок.",
         "description": "Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
@@ -1783,6 +1808,12 @@
     },
     "rcSmoothingSetpointTypeHelp": {
         "message": "Тип фильтрации используемой для значения Setpoint. Большинству пользователей следует использовать значение по умолчанию \"BIQUAD\", поскольку оно обеспечивает хороший баланс между плавностью и задержкой. \"PT1\" немного уменьшает задержку, но обеспечивает меньшее сглаживание."
+    },
+    "receiverRcSmoothingSetpointManual": {
+        "message": "Выбор, будет ли частота среза фильтра setpoint рассчитана автоматически (рекомендуется) или выбрана вручную пользователем. Использовать \"Ручной\" не рекомендуется для протоколов приемников типа Crossfire, которые могут изменятся в полете."
+    },
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "Выбор, будет ли частота среза фильтра feedforward рассчитана автоматически (рекомендуется) или выбрана пользователем. Выбор \"Ручной\" не рекомендуется для протоколов приемника типа Crossfire, которые могут меняться в полете."
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Частота среза заданного значения"
@@ -2049,6 +2080,9 @@
         "message": "Режим:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Всегда проверяйте правильность работы сценариев спасения Failsafe!<\/a><\/strong><\/b> Настройки находятся на вкладке Failsafe, которая требует включения  режима эксперта.<br> &#8226; <b>Используйте последнюю прошивку приемника!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Отключите аппаратный фильтр ADC<\/a><\/strong> на пульте при использовании OpenTx или EdgeTx.<br>Базовая установка: Укажите настройки приемника. Выберите правильную карту каналов для вашего радиоканала. Проверьте, что Крен, Тангаж и другие линии диаграммы корректно реагируют на изменения положения элементов управления. Установите крание  значения канала или диапазона передатчика от ~1000 до ~2000 и установите среднюю точку на 1500. Для получения дополнительной информации прочтите <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">документацию<\/a><\/strong>."
+    },
     "receiverThrottleMid": {
         "message": "Газ, средняя точка"
     },
@@ -2092,7 +2126,7 @@
         "message": "Значение (в микросекундах). Для расширения нейтральной зоны увеличьте это значение.<strong>Этот параметр только для газа в режиме 3D.<\/strong>"
     },
     "receiverChannelMap": {
-        "message": "Таблица каналов"
+        "message": "Карта каналов"
     },
     "receiverChannelDefaultOption": {
         "message": "По умолчанию"
@@ -2322,6 +2356,14 @@
     "auxiliaryHelpMode_TELEMETRY": {
         "message": "Активируйте телеметрию при помощи переключателя",
         "description": "Help text to TELEMETRY mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Отключить управление настройками VTX через OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Переключить VTX в режим PitMode (низкая выходная мощность, если поддерживается)",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "Установка настроечных переключателей. Смотри 'in-flight adjustments' главу руководства. Изменения, которые делают настроечные функции, автоматически не сохраняются."
@@ -3370,11 +3412,20 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи \/ Восстановление связи<\/strong>"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Если возникла потеря связи с вашим устройством, то выполните следующие действия, чтобы восстановить связь:<ul><li>Отключите питание<\/li><li>Включите \"Без перезагрузки\", включите \"Полное стирание чипа\".<\/li><li>Замкните контакты \"BOOT\" или удерживайте кнопку BOOT нажатой.<\/li><li>Включите питание (светодиод НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите STM32 драйверы и Zadig, если это необходимо (см. раздел <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> в инструкции Betaflight).<\/li><li>Закройте Конфигуратор, закройте все Chrome приложения и завершите все Chrome процессы, перезапустите Конфигуратор.<\/li><li>Отпустите кнопку \"BOOT\", если на вашем FC она есть.<\/li><li>Залейте нужную прошивку (укажите вручную битрейт, если он указан в инструкции вашего полётного контроллера).<\/li><li>Отключите питание<\/li><li> Снимите \"BOOT\" джампер.<\/li><li>Включите питание (светодиод должен мигать).<\/li><li>Пробуйте подключиться.<\/li><\/ul>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Прошивка не загружена"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Загружена локальная прошивка: {{filename}} ({{bytes}} байт)"
+    },
+    "firmwareFlasherFirmwareOnlineLoaded": {
+        "message": "Прошивка загружена по сети: {{filename}} ({{bytes}} байт)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX-файл поврежден"
@@ -3411,6 +3462,18 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Обнаружено: <strong>$1<\/strong> - переключение памяти при соединении"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>Несоответствие прошивки<\/h3><br \/>Подключена плата <strong>{{verified_board}}<\/strong> но вы выбрали <strong>{{selected_board}}<\/strong>.<br \/><br \/> Уверены, что хотите продолжить прошивку?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Конфигуратор <span class=\"message-positive\">успешно<\/span> обнаружил и определил плату: <strong>{{boardName}}<\/strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "Конфигуратор обнаружил плату: <strong>{{boardName}}<\/strong> но официальной целевой Betaflight прошивки не найдено",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Конфигуратору <span class=\"message-negative\">не удалось<\/span> проверить плату, если это не работает, попробуйте медленно переключиться на другую вкладку, чтобы повторить попытку, создать новое Usb-соединение или подключиться сначала, если вы могли забыть применить пользовательские настройки по умолчанию",
@@ -3750,16 +3813,16 @@
         "message": "темно-розовый"
     },
     "controlAxisRoll": {
-        "message": "Roll [A]"
+        "message": "Крен [A]"
     },
     "controlAxisPitch": {
-        "message": "Pitch [E]"
+        "message": "Тангаж [E]"
     },
     "controlAxisYaw": {
-        "message": "Yaw [R]"
+        "message": "Рыскание [R]"
     },
     "controlAxisThrottle": {
-        "message": "Throttle [T]"
+        "message": "Газ [T]"
     },
     "controlAxisAux1": {
         "message": "AUX 1"
@@ -5392,6 +5455,9 @@
         "message": "Температура ESC-и",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementEscTemperature": {
+        "message": "Температура, отображаемая телеметрией ESC, либо по serial one wire телеметрии, либо по двунаправленной телеметрии DShot с EDT, если поддерживается вашей прошивкой ESC."
+    },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
         "description": "One of the elements of the OSD"
@@ -5598,6 +5664,9 @@
     "osdTextElementReadyMode": {
         "message": "Режим Ready (Готов)",
         "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "Когда активен, будет отображаться READY до момента полета"
     },
     "osdTextElementRSNRValue": {
         "message": "Значение RSNR",
@@ -6312,6 +6381,10 @@
         "message": "<span class=\"message-negative\">Ошибка<\/span> во время сохранения конфиг файла видеопередатчика",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileOk": {
+        "message": "lua конфиг. файл VTX <span class=\"message-positive\">сохранено<\/span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
     "vtxSavedLuaFileKo": {
         "message": "<span class=\"message-negative\">Ошибка<\/span> при сохранении lua VTX конфиг файла видеопередатчика",
         "description": "Message in the GUI log when the lua VTX Config file saving has failed"
@@ -6569,6 +6642,9 @@
     "dialogConfirmResetTitle": {
         "message": "Подтвердить"
     },
+    "dialogConfirmResetNote": {
+        "message": "ВНИМАНИЕ: Вы уверены, что хотите сбросить <strong>ВСЕ настройки<\/strong> на не сконфигурированное состояние? Это <strong>не<\/strong> «сброс до заводских настроек». Это может привести к непредвиденным проблемам, и возможно потребуется перезаписать прошивку, чтобы снова подключиться."
+    },
     "dialogConfirmResetConfirm": {
         "message": "Сброс"
     },
@@ -6616,6 +6692,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Чувствительность по центру"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Максимальная чувствительность по центру"
     },
     "dialogRatesTypeTitle": {
         "message": "Изменение типа коэффициентов"
@@ -6991,6 +7070,9 @@
     },
     "coreBuild": {
         "message": "Только ядро"
+    },
+    "coreBuildModeDescription": {
+        "message": "Эта опция создает прошивку, содержащую драйверы (и некоторые ограниченные функции). Она может помочь в обнаружении оборудования на борту полетного контроллера и предоставляется только для этого удобства. Не все функции будут доступны (только аппаратное обеспечение) с помощью этой опции."
     },
     "showDevToolsOnStartup": {
         "message": "Автоматически открывать DevTools в режиме разработки",
