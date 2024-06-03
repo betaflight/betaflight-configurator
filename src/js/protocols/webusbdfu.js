@@ -202,10 +202,13 @@ class WEBUSBDFU_protocol extends EventTarget {
         this.usbDevice
         .releaseInterface(interfaceNumber, () => {
             console.log(`Released interface: ${interfaceNumber}`);
-            this.closeDevice();
         })
         .catch(error => {
             console.log(`Could not release interface: ${interfaceNumber} (${error})`);
+        })
+        .finally(() => {
+            // releaseInterface does not work on some devices, so we close the device anyways
+            this.closeDevice();
         });
     }
     resetDevice(callback) {

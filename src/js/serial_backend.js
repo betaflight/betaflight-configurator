@@ -57,7 +57,7 @@ export function initializeSerialBackend() {
     $("div.connect_controls a.connect").on('click', connectDisconnect);
 
     EventBus.$on('port-handler:auto-select-serial-device', function(device) {
-        if (!GUI.connected_to && !GUI.connecting_to
+        if (!GUI.connected_to && !GUI.connecting_to && GUI.active_tab !== 'firmware_flasher'
             && ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device))
                 || Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)) {
             connectDisconnect();
@@ -95,18 +95,13 @@ function connectDisconnect() {
         portName = selectedPort;
     }
 
-    if (!GUI.connect_lock && selectedPort !== 'none') {
+    if (!GUI.connect_lock && selectedPort !== 'noselection' && !selectedPort.path?.startsWith('usb_')) {
         // GUI control overrides the user control
 
         GUI.configuration_loaded = false;
 
         const selected_baud = PortHandler.portPicker.selectedBauds;
         const selectedPort = portName;
-
-        if (selectedPort === 'DFU') {
-            $('select#baud').hide();
-            return;
-        }
 
         if (!isConnected) {
             console.log(`Connecting to: ${portName}`);
