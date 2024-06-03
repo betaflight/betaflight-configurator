@@ -23,6 +23,7 @@ import { serialShim } from "../serial_shim.js";
 import { usbShim } from "../usb_shim.js";
 import STM32 from '../protocols/stm32';
 import { isWeb } from '../utils/isWeb.js';
+import read_hex_file from '../workers/hex_parser.js';
 
 let serial = serialShim();
 let dfu = usbShim();
@@ -67,16 +68,9 @@ firmware_flasher.initialize = function (callback) {
     function onDocumentLoad() {
 
         function parseHex(str, callback) {
-            // parsing hex in different thread
-            const worker = new Worker('./js/workers/hex_parser.js');
-
-            // "callback"
-            worker.onmessage = function (event) {
-                callback(event.data);
-            };
-
-            // send data/string over for processing
-            worker.postMessage(str);
+            read_hex_file(str).then((data) => {
+                callback(data);
+            });
         }
 
         function showLoadedHex(filename) {

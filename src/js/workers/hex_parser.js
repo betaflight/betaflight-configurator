@@ -1,9 +1,12 @@
-'use strict';
+const TIME_LABEL = 'HEX_PARSER - File parsed in';
 
 // input = string
 // result = if hex file is valid, result is an object
 //          if hex file wasn't valid (crc check failed on any of the lines), result will be false
-function read_hex_file(data) {
+export default async function read_hex_file(data) {
+
+    console.time(TIME_LABEL);
+
     data = data.split("\n");
 
     // check if there is an empty line in the end of hex file, if there is, remove it
@@ -86,21 +89,11 @@ function read_hex_file(data) {
         }
     }
 
-    if (result.end_of_file && hexfile_valid) {
-        postMessage(result);
-    } else {
-        postMessage(null);
-    }
-}
-
-const TIME_LABEL = 'HEX_PARSER - File parsed in';
-
-onmessage = function(event) {
-    console.time(TIME_LABEL);
-
-    read_hex_file(event.data);
-
-    // terminate worker
     console.timeEnd(TIME_LABEL);
-    close();
-};
+
+    if (result.end_of_file && hexfile_valid) {
+        return result;
+    }
+
+    return null;
+}
