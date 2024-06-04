@@ -15,13 +15,13 @@ import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46 } from '../data_st
 import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { urlExists } from '../utils/common';
-import { generateFilename } from '../utils/generate_filename';
 import read_hex_file from '../workers/hex_parser.js';
 import Sponsor from '../Sponsor';
 import FileSystem from '../FileSystem';
 import STM32 from '../protocols/webstm32';
 import DFU from '../protocols/webusbdfu';
 import serial from '../webSerial';
+import AutoBackup from '../utils/AutoBackup.js';
 
 const firmware_flasher = {
     targets: null,
@@ -984,7 +984,8 @@ firmware_flasher.initialize = function (callback) {
                         text: i18n.getMessage('firmwareFlasherRemindBackup'),
                         buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
                         buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
-                        buttonYesCallback: () => firmware_flasher.backupConfig(initiateFlashing),
+                        // buttonYesCallback: () => firmware_flasher.backupConfig(initiateFlashing),
+                        buttonYesCallback: AutoBackup.execute(initiateFlashing),
                         buttonNoCallback: initiateFlashing,
                     },
                 );
@@ -1312,188 +1313,6 @@ firmware_flasher.verifyBoard = function() {
 
     serial.connect(port, { baudRate: 115200 });
 };
-
-firmware_flasher.getPort = function () {
-    return String($('div#port-picker #port').val());
-};
-
-/**
- *
- * Bacup the current configuration to a file before flashing in serial mode
- */
-
-firmware_flasher.backupConfig = function (callback) {
-    let mspHelper;
-    let cliBuffer = '';
-    let catchOutputCallback = null;
-
-    function readOutput(callback) {
-        catchOutputCallback = callback;
-    }
-
-    function writeOutput(text) {
-        if (catchOutputCallback) {
-            catchOutputCallback(text);
-        }
-    }
-
-    function readSerial(readInfo) {
-        const data = new Uint8Array(readInfo.data);
-
-        for (const charCode of data) {
-            const currentChar = String.fromCharCode(charCode);
-
-            switch (charCode) {
-                case 10:
-                    if (GUI.operating_system === "Windows") {
-                        writeOutput(cliBuffer);
-                        cliBuffer = '';
-                    }
-                    break;
-                case 13:
-                    if (GUI.operating_system !== "Windows") {
-                        writeOutput(cliBuffer);
-                        cliBuffer = '';
-                    }
-                    break;
-                default:
-                    cliBuffer += currentChar;
-            }
-        }
-    }
-
-    function activateCliMode() {
-        return new Promise(resolve => {
-            const bufferOut = new ArrayBuffer(1);
-            const bufView = new Uint8Array(bufferOut);
-
-            cliBuffer = '';
-            bufView[0] = 0x23;
-
-            serial.send(bufferOut);
-
-            GUI.timeout_add('enter_cli_mode_done', () => {
-                resolve();
-            }, 500);
-        });
-    }
-
-    function sendSerial(line, callback) {
-        const bufferOut = new ArrayBuffer(line.length);
-        const bufView = new Uint8Array(bufferOut);
-
-        for (let cKey = 0; cKey < line.length; cKey++) {
-            bufView[cKey] = line.charCodeAt(cKey);
-        }
-
-        serial.send(bufferOut, callback);
-    }
-
-    function sendCommand(line, callback) {
-        sendSerial(`${line}\n`, callback);
-    }
-
-    function readCommand() {
-        let timeStamp = performance.now();
-        const output = [];
-        const commandInterval = "COMMAND_INTERVAL";
-
-        readOutput(str => {
-            timeStamp = performance.now();
-            output.push(str);
-        });
-
-        sendCommand("diff all defaults");
-
-        return new Promise(resolve => {
-            GUI.interval_add(commandInterval, () => {
-                const currentTime = performance.now();
-                if (currentTime - timeStamp > 500) {
-                    catchOutputCallback = null;
-                    GUI.interval_remove(commandInterval);
-                    resolve(output);
-                }
-            }, 500, false);
-        });
-    }
-
-    function onFinishClose() {
-        MSP.clearListeners();
-
-        // Include timeout in count
-        let count = 15;
-        // Allow reboot after CLI exit
-        const waitOnReboot = () => {
-            const disconnect = setInterval(function() {
-                if (PortHandler.portAvailable) {
-                    console.log(`Connection ready for flashing in ${count / 10} seconds`);
-                    clearInterval(disconnect);
-                    if (callback) {
-                        callback();
-                    }
-                }
-                count++;
-            }, 100);
-        };
-
-        // PortHandler has a 500ms timer - so triple for safety
-        setTimeout(waitOnReboot, 1500);
-    }
-
-    function onClose() {
-        serial.disconnect(onFinishClose);
-        MSP.disconnect_cleanup();
-    }
-
-    function onSaveConfig() {
-
-        activateCliMode()
-        .then(readCommand)
-        .then(output => {
-            const prefix = 'cli_backup';
-            const suffix = 'txt';
-            const text = output.join("\n");
-            const filename = generateFilename(prefix, suffix);
-
-            FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
-            .then((file) => {
-                console.log("Saving config to:", file.name);
-                FileSystem.writeFile(file, text);
-            })
-            .catch((error) => {
-                console.error("Error saving config:", error);
-            });
-        })
-        .then(() => sendCommand("exit", onClose));
-    }
-
-    function onConnect(openInfo) {
-        if (openInfo) {
-            mspHelper = new MspHelper();
-            serial.onReceive.addListener(readSerial);
-            MSP.listen(mspHelper.process_data.bind(mspHelper));
-
-            onSaveConfig();
-        } else {
-            gui_log(i18n.getMessage('serialPortOpenFail'));
-
-            if (callback) {
-                callback();
-            }
-        }
-    }
-
-    const port = this.getPort();
-
-    if (port !== '0') {
-        const baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
-        serial.connect(port, {bitrate: baud}, onConnect);
-    } else {
-        gui_log(i18n.getMessage('firmwareFlasherNoPortSelected'));
-    }
-};
-
-
 
 firmware_flasher.cleanup = function (callback) {
     PortHandler.flush_callbacks();
