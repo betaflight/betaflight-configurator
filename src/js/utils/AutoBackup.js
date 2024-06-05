@@ -8,6 +8,7 @@ import serial from '../webSerial';
 /**
  *
  * Bacup the current configuration to a file before flashing in serial mode
+ *
  */
 
 class AutoBackup {
@@ -29,11 +30,7 @@ class AutoBackup {
     }
 
     handleDisconnect(event) {
-        if (event.detail) {
-            gui_log(i18n.getMessage('serialPortClosedOk'));
-        } else {
-            gui_log(i18n.getMessage('serialPortClosedFail'));
-        }
+        gui_log(i18n.getMessage(event.detail ? 'serialPortClosedOk' : 'serialPortClosedFail'));
 
         serial.removeEventListener('receive', this.readSerialAdapter);
         serial.removeEventListener('connect', this.handleConnect);
@@ -123,9 +120,9 @@ class AutoBackup {
         this.callback = callback;
 
         const port = PortHandler.portPicker.selectedPort;
+        const baud = PortHandler.portPicker.selectedBauds;
 
         if (port.startsWith('serial')) {
-            const baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
             serial.addEventListener('connect', this.handleConnect.bind(this), { once: true });
             serial.connect(port, { baudRate: baud });
         } else {
