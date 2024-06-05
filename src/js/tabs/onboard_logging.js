@@ -5,7 +5,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { generateFilename } from "../utils/generate_filename";
 import semver from 'semver';
@@ -123,11 +123,9 @@ onboard_logging.initialize = function (callback) {
 
                     await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
 
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                        FC.PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
+                    FC.PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
 
-                        await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
-                    }
+                    await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
                     mspHelper.writeConfiguration(true);
                 });
@@ -192,16 +190,7 @@ onboard_logging.initialize = function (callback) {
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
         let loggingRates = [];
 
-        let pidRate;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
-
-        } else {
-
-            let pidRateBase = 8000;
-
-            pidRate = pidRateBase / FC.PID_ADVANCED_CONFIG.gyro_sync_denom / FC.PID_ADVANCED_CONFIG.pid_process_denom;
-        }
+        const pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             const sampleRateNum=5;
@@ -239,24 +228,20 @@ onboard_logging.initialize = function (callback) {
     }
 
     function populateDebugModes(debugModeSelect) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('.blackboxDebugMode').show();
+        $('.blackboxDebugMode').show();
 
-            for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
-                if (i < DEBUG.modes.length) {
-                    debugModeSelect.append(new Option(DEBUG.modes[i].text, i));
-                } else {
-                    debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
-                }
+        for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
+            if (i < DEBUG.modes.length) {
+                debugModeSelect.append(new Option(DEBUG.modes[i].text, i));
+            } else {
+                debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
             }
-
-            debugModeSelect
-            .val(FC.PID_ADVANCED_CONFIG.debugMode)
-            .select2()
-            .sortSelect("NONE");
-        } else {
-            $('.blackboxDebugMode').hide();
         }
+
+        debugModeSelect
+        .val(FC.PID_ADVANCED_CONFIG.debugMode)
+        .select2()
+        .sortSelect("NONE");
     }
 
     function populateDebugFields(debugFieldsSelect) {

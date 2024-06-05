@@ -11,7 +11,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
@@ -309,13 +309,8 @@ receiver.initialize = function (callback) {
             'SFHSS',
             'SPEKTRUM',
             'FRSKY_X_LBT',
+            'REDPINE',
         ];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            spiRxTypes.push(
-                'REDPINE',
-            );
-        }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             spiRxTypes.push(
@@ -480,10 +475,7 @@ receiver.initialize = function (callback) {
             FC.RX_CONFIG.rcSmoothingDerivativeType = parseInt($('select[name="rcSmoothingFeedforwardType-select"]').val());
             FC.RX_CONFIG.rcInterpolationChannels = parseInt($('select[name="rcSmoothingChannels-select"]').val());
             FC.RX_CONFIG.rcSmoothingInputType = parseInt($('select[name="rcSmoothingSetpointType-select"]').val());
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
-            }
+            FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
 
             if (tab.elrsBindingPhraseEnabled) {
                 const elrsUidChars = $('span.elrsUid')[0].innerText.split(',').map(uidChar => parseInt(uidChar, 10));
@@ -577,15 +569,14 @@ receiver.initialize = function (callback) {
         });
 
         let showBindButton = false;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            showBindButton = bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
+        showBindButton = bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
 
-            $("a.bind").click(function() {
-                MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
+        $("a.bind").click(function() {
+            MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
 
-                gui_log(i18n.getMessage('receiverButtonBindMessage'));
-            });
-        }
+            gui_log(i18n.getMessage('receiverButtonBindMessage'));
+        });
+
         $(".bind_btn").toggle(showBindButton);
 
         // RC Smoothing
@@ -643,31 +634,26 @@ receiver.initialize = function (callback) {
         }).change();
 
         const rcSmoothingFeedforwardType = $('select[name="rcSmoothingFeedforwardType-select"]');
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            rcSmoothingFeedforwardType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`));
-        }
-
+        rcSmoothingFeedforwardType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`));
         rcSmoothingFeedforwardType.val(FC.RX_CONFIG.rcSmoothingDerivativeType);
+
         const rcSmoothingChannels = $('select[name="rcSmoothingChannels-select"]');
         rcSmoothingChannels.val(FC.RX_CONFIG.rcInterpolationChannels);
+
         const rcSmoothingSetpointType = $('select[name="rcSmoothingSetpointType-select"]');
         rcSmoothingSetpointType.val(FC.RX_CONFIG.rcSmoothingInputType);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
-                if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
-                    $('.tab-receiver .rcSmoothing-auto-factor').show();
-                } else {
-                    $('.tab-receiver .rcSmoothing-auto-factor').hide();
-                }
-            });
-            $('select[name="rcSmoothing-setpoint-manual-select"]').change();
+        $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
+            if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
+                $('.tab-receiver .rcSmoothing-auto-factor').show();
+            } else {
+                $('.tab-receiver .rcSmoothing-auto-factor').hide();
+            }
+        });
+        $('select[name="rcSmoothing-setpoint-manual-select"]').change();
 
-            const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
-            rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
-        } else {
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        }
+        const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
+        rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
@@ -932,10 +918,9 @@ function updateInterpolationView() {
     $('.tab-receiver .rcSmoothing-setpoint-type').show();
     $('.tab-receiver .rcSmoothing-feedforward-manual').show();
     $('.tab-receiver .rcSmoothing-setpoint-manual').show();
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
-            $('.tab-receiver .rcSmoothing-auto-factor').show();
-        }
+
+    if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
+        $('.tab-receiver .rcSmoothing-auto-factor').show();
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
