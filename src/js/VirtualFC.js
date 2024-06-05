@@ -208,6 +208,7 @@ const VirtualFC = {
             auto_baud: 0,
             home_point_once: 1,
             ublox_use_galileo: 1,
+            ublox_enable_ana: 1,
         };
 
         virtualFC.GPS_DATA = sampleGpsData;

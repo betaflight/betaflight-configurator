@@ -1602,6 +1602,14 @@
         "message": "When enabled, the GPS module will also track the Galileo satellite system, usually resulting in more locked satellites. On Betaflight 4.2.x or earlier, it also disables the QZSS augmentation system.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
+    "configurationGPSAna": {
+        "message": "Use AssistNow Autonomous feature",
+        "description": "Option to use AssistNow Autonomous feature in the GPS configuration"
+    },
+    "configurationGPSAnaHelp": {
+        "message": "It enables the AssistNow Autonomous feature, which greatly improves in building the almanac. It will speed up getting satelites and getting a lock.",
+        "description": "Help text for the option to use AssistNow Autonomous in the GPS configuration"
+    },
     "configurationGPSHomeOnce": {
         "message": "Set Home Point Once",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"

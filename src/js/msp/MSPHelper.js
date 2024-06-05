@@ -517,6 +517,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.GPS_CONFIG.home_point_once = data.readU8();
                     FC.GPS_CONFIG.ublox_use_galileo = data.readU8();
                 }
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    FC.GPS_CONFIG.ublox_enable_ana = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
                 FC.GPS_RESCUE.angle             = data.readU16();
@@ -1841,6 +1845,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 buffer.push8(FC.GPS_CONFIG.home_point_once)
                     .push8(FC.GPS_CONFIG.ublox_use_galileo);
             }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                buffer.push8(FC.GPS_CONFIG.ublox_enable_ana);
+            }
+
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
             buffer.push16(FC.GPS_RESCUE.angle)
