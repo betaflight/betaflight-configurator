@@ -202,7 +202,7 @@ class WebSerial extends EventTarget {
         const doCleanup = async () => {
             this.removeEventListener('receive', this.handleReceiveBytes);
             if (this.reader) {
-                // this.reader.cancel();
+                this.reader.cancel();
                 this.reader.releaseLock();
                 this.reader = null;
             }

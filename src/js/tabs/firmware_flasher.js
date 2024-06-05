@@ -6,12 +6,7 @@ import { get as getStorage, set as setStorage } from '../SessionStorage';
 import BuildApi from '../BuildApi';
 import ConfigInserter from "../ConfigInserter.js";
 import { tracking } from "../Analytics";
-import MspHelper from '../msp/MSPHelper';
-import FC from '../fc';
-import MSP from '../msp';
-import MSPCodes from '../msp/MSPCodes';
 import PortHandler from '../port_handler';
-import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { urlExists } from '../utils/common';
@@ -20,8 +15,8 @@ import Sponsor from '../Sponsor';
 import FileSystem from '../FileSystem';
 import STM32 from '../protocols/webstm32';
 import DFU from '../protocols/webusbdfu';
-import serial from '../webSerial';
 import AutoBackup from '../utils/AutoBackup.js';
+import AutoDetect from '../utils/AutoDetect.js';
 
 const firmware_flasher = {
     targets: null,
@@ -951,7 +946,13 @@ firmware_flasher.initialize = function (callback) {
         detectBoardElement.on('click', () => {
             detectBoardElement.toggleClass('disabled', true);
 
-            self.verifyBoard();
+            /**
+             *
+             *    Auto-detect board and set the dropdown to the correct value
+             */
+
+            AutoDetect.verifyBoard();
+
             // prevent spamming the button
             setTimeout(() => detectBoardElement.toggleClass('disabled', false), 2000);
         });
@@ -1153,164 +1154,6 @@ firmware_flasher.updateDetectBoardButton = function() {
 
 firmware_flasher.validateBuildKey = function() {
     return this.cloudBuildKey?.length === 32 && navigator.onLine;
-};
-
-/**
- *
- *    Auto-detect board and set the dropdown to the correct value
- */
-
-firmware_flasher.verifyBoard = function() {
-    const self = this;
-    const isFlashOnConnect = $('input.flash_on_connect').is(':checked');
-    let targetAvailable = false;
-
-    if (!self.isSerialPortAvailable() || isFlashOnConnect) {
-        // return silently as port-picker will trigger again when port becomes available
-        return;
-    }
-
-    function read_serial_adapter(event) {
-        MSP.read(event.detail.buffer);
-    }
-
-    function connectHandler(event) {
-        onConnect(event.detail);
-    }
-
-    function disconnectHandler(event) {
-        onClosed(event.detail);
-    }
-
-    function onClosed(result) {
-        if (result) { // All went as expected
-            gui_log(i18n.getMessage('serialPortClosedOk'));
-        } else { // Something went wrong
-            gui_log(i18n.getMessage('serialPortClosedFail'));
-        }
-        if (!targetAvailable) {
-            gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
-        }
-
-        MSP.clearListeners();
-
-        serial.removeEventListener('receive', read_serial_adapter);
-        serial.removeEventListener('connect', connectHandler);
-        serial.removeEventListener('disconnect', disconnectHandler);
-    }
-
-    function onFinishClose() {
-        const board = FC.CONFIG.boardName;
-
-        if (board) {
-            const boardSelect = $('select[name="board"]');
-            const boardSelectOptions = $('select[name="board"] option');
-            const target = boardSelect.val();
-
-            boardSelectOptions.each((_, e) => {
-                if ($(e).text() === board) {
-                    targetAvailable = true;
-                }
-            });
-
-            if (board !== target) {
-                boardSelect.val(board).trigger('change');
-            }
-
-            gui_log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable', { boardName: board }));
-        }
-
-        serial.disconnect(onClosed);
-        MSP.disconnect_cleanup();
-    }
-
-    function requestBoardInformation(onSucces, onFail) {
-        MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
-            gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
-
-            if (FC.CONFIG.apiVersion.includes('null') || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                onFail(); // not supported
-            } else {
-                MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, onSucces);
-            }
-        });
-    }
-
-    function getBoardInfo() {
-        MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                FC.processBuildOptions();
-                self.cloudBuildOptions = FC.CONFIG.buildOptions;
-            }
-            onFinishClose();
-        });
-    }
-
-    function getCloudBuildOptions(options) {
-        // Do not use FC.CONFIG.buildOptions here as the object gets destroyed.
-        self.cloudBuildOptions = options.Request.Options;
-
-        getBoardInfo();
-    }
-
-    async function getBuildInfo() {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
-            await MSP.promise(MSPCodes.MSP_BUILD_INFO);
-
-            // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
-            self.cloudBuildKey = FC.CONFIG.buildKey;
-
-            // 3/21/2024 is the date when the build key was introduced
-            const supportedDate = new Date('3/21/2024');
-            const buildDate = new Date(FC.CONFIG.buildInfo);
-
-            if (self.validateBuildKey() && (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)) {
-                self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
-            } else {
-                getBoardInfo();
-            }
-        } else {
-            getBoardInfo();
-        }
-    }
-
-    function onConnect(openInfo) {
-        if (openInfo) {
-            serial.removeEventListener('receive', read_serial_adapter);
-            serial.addEventListener('receive', read_serial_adapter);
-
-            mspHelper = new MspHelper();
-            MSP.listen(mspHelper.process_data.bind(mspHelper));
-            requestBoardInformation(getBuildInfo, onFinishClose);
-        } else {
-            gui_log(i18n.getMessage('serialPortOpenFail'));
-        }
-    }
-
-    let mspHelper;
-    const port = PortHandler.portPicker.selectedPort;
-    const isLoaded = self.targets ? Object.keys(self.targets).length > 0 : false;
-
-    if (!isLoaded) {
-        console.log('Releases not loaded yet');
-        gui_log(i18n.getMessage('firmwareFlasherNoTargetsLoaded'));
-        return;
-    }
-
-    if (serial.connected || serial.connectionId) {
-        console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId, serial.openCanceled);
-        serial.disconnect();
-        return;
-    }
-
-    gui_log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
-
-    serial.addEventListener('connect', connectHandler);
-    serial.addEventListener('disconnect', disconnectHandler);
-
-    serial.connect(port, { baudRate: 115200 });
 };
 
 firmware_flasher.cleanup = function (callback) {
