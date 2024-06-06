@@ -3652,7 +3652,7 @@
         "message": "<b>No firmware selected to load</b>"
     },
     "firmwareFlasherNoTargetsLoaded": {
-        "message": "<b>No targets loaded</b>"
+        "message": "No targets loaded"
     },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Please select valid serial port</span>"
