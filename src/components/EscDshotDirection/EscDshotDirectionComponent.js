@@ -41,20 +41,12 @@ class EscDshotDirectionComponent
 
     static get _BUTTON_PUSH_DOWN_EVENT_TYPE()
     {
-        if (GUI.isCordova()) {
-            return "touchstart";
-        } else {
-            return "mousedown";
-        }
+        return "mousedown";
     }
 
     static get _BUTTON_RELEASE_EVENT_TYPE()
     {
-        if (GUI.isCordova()) {
-            return "touchend";
-        } else {
-            return "mouseup mouseout";
-        }
+        return "mouseup mouseout";
     }
 
     _readDom()

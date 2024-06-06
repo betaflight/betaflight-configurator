@@ -5,7 +5,6 @@ import { generateFilename } from '../../js/utils/generate_filename';
 import { i18n } from '../../js/localization';
 import FC from '../../js/fc';
 import CONFIGURATOR from '../../js/data_storage';
-import UI_PHONES from '../../js/phones_ui';
 import $ from 'jquery';
 import FileSystem from '../../js/FileSystem';
 
@@ -294,7 +293,6 @@ presets.onLoadConfigClick = function() {
 
 presets.onHtmlLoad = function(callback) {
     i18n.localizePage();
-    TABS.presets.adaptPhones();
     this.readDom();
     this.setupMenuButtons();
     this.setupBackupWarning();
@@ -661,12 +659,6 @@ presets.isPresetFitSearch = function(preset, searchParams) {
     }
 
     return true;
-};
-
-presets.adaptPhones = function() {
-    if (GUI.isCordova()) {
-        UI_PHONES.initToolbar();
-    }
 };
 
 presets.read = function(readInfo) {

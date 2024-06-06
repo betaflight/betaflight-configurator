@@ -274,23 +274,20 @@ receiver.initialize = function (callback) {
         // select current serial RX type
         serialRxSelectElement.val(FC.RX_CONFIG.serialrx_provider);
 
-        // Convert to select2 and order alphabetic
-        if (!GUI.isCordova()) {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                serialRxSelectElement.sortSelect("NONE").select2();
-            } else {
-                serialRxSelectElement.sortSelect().select2();
-            }
-
-            $(document).on('select2:open', 'select.serialRX', () => {
-                const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
-                $(this).one('mouseup keyup',()=>{
-                    setTimeout(()=>{
-                        allFound[allFound.length - 1].focus();
-                    },0);
-                });
-            });
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            serialRxSelectElement.sortSelect("NONE").select2();
+        } else {
+            serialRxSelectElement.sortSelect().select2();
         }
+
+        $(document).on('select2:open', 'select.serialRX', () => {
+            const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+            $(this).one('mouseup keyup',()=>{
+                setTimeout(()=>{
+                    allFound[allFound.length - 1].focus();
+                },0);
+            });
+        });
 
         const spiRxTypes = [
             'NRF24_V202_250K',
@@ -346,19 +343,17 @@ receiver.initialize = function (callback) {
         // select current serial RX type
         spiRxElement.val(FC.RX_CONFIG.rxSpiProtocol);
 
-        if (!GUI.isCordova()) {
-            // Convert to select2 and order alphabetic
-            spiRxElement.sortSelect().select2();
+        // Convert to select2 and order alphabetic
+        spiRxElement.sortSelect().select2();
 
-            $(document).on('select2:open', 'select.spiRx', () => {
-                const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
-                $(this).one('mouseup keyup',()=>{
-                    setTimeout(()=>{
-                        allFound[allFound.length - 1].focus();
-                    },0);
-                });
+        $(document).on('select2:open', 'select.spiRx', () => {
+            const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+            $(this).one('mouseup keyup',()=>{
+                setTimeout(()=>{
+                    allFound[allFound.length - 1].focus();
+                },0);
             });
-        }
+        });
 
         if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') && FC.RX_CONFIG.rxSpiProtocol == 19 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             tab.elrsBindingPhraseEnabled = true;

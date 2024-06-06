@@ -16,17 +16,8 @@ DarkTheme.isDarkThemeEnabled = function (callback) {
     if (this.configSetting === 0) {
         callback(true);
     } else if (this.configSetting === 2) {
-        if (GUI.isCordova()) {
-            cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
-                callback(success.value);
-            }, function(error) {
-                console.log(`cordova-plugin-theme-detection: ${error}`);
-                callback(false);
-            });
-        } else {
-            const isEnabled = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            callback(isEnabled);
-        }
+        const isEnabled = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        callback(isEnabled);
     } else {
         callback(false);
     }

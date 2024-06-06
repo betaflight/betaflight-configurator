@@ -358,12 +358,6 @@ class GuiControl {
 
         $(`#tabs ul.mode-connected .${tab} a`).trigger('click');
     }
-    isNWJS() {
-        return this.Mode === GUI_MODES.NWJS;
-    }
-    isCordova() {
-        return this.Mode === GUI_MODES.Cordova;
-    }
     isOther() {
         return this.Mode === GUI_MODES.Other;
     }

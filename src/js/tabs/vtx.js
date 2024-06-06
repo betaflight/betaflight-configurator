@@ -11,9 +11,7 @@ import { VtxDeviceTypes } from '../utils/VtxDeviceStatus/VtxDeviceStatus';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_42, API_VERSION_1_44 } from '../data_storage';
-import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
-import { isWeb } from "../utils/isWeb";
 import $ from 'jquery';
 import FileSystem from "../FileSystem";
 
@@ -91,10 +89,6 @@ vtx.initialize = function (callback) {
 
         // translate to user-selected language
         i18n.localizePage();
-
-        if (GUI.isCordova()) {
-            UI_PHONES.initToolbar();
-        }
 
         self.updating = false;
         GUI.content_ready(callback);
@@ -186,16 +180,11 @@ vtx.initialize = function (callback) {
         const vtxJsonSchemaUrl = `../../resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`;
 
         // Load schema depending on the system
-        if (GUI.isCordova()) {
-            // FIXME On android : Fetch API cannot load : URL scheme "file" is not supported
-            callback_valid();
-        } else {
-            let vtxJsonSchemaUrl2Fetch = isWeb() ? vtxJsonSchemaUrl : chrome.runtime.getURL(vtxJsonSchemaUrl);
-            fetch(vtxJsonSchemaUrl2Fetch)
-                .then(response => response.json())
-                .catch(error => console.error('Error fetching VTX Schema:', error))
-                .then(schemaJson => validateAgainstSchema(schemaJson, vtxConfig));
-        }
+        let vtxJsonSchemaUrl2Fetch = vtxJsonSchemaUrl;
+        fetch(vtxJsonSchemaUrl2Fetch)
+            .then(response => response.json())
+            .catch(error => console.error('Error fetching VTX Schema:', error))
+            .then(schemaJson => validateAgainstSchema(schemaJson, vtxConfig));
     }
 
     // Emulates the MSP read from a vtxConfig object (JSON)

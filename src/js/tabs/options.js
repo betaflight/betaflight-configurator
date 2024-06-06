@@ -159,24 +159,7 @@ options.initUseManualConnection = function() {
 };
 
 options.initCordovaForceComputerUI = function () {
-    if (GUI.isCordova() && cordovaUI.canChangeUI) {
-        const result = getConfig('cordovaForceComputerUI');
-        if (result.cordovaForceComputerUI) {
-            $('div.cordovaForceComputerUI input').prop('checked', true);
-        }
-
-        $('div.cordovaForceComputerUI input').change(function () {
-            const checked = $(this).is(':checked');
-
-            setConfig({'cordovaForceComputerUI': checked});
-
-            if (typeof cordovaUI.set === 'function') {
-                cordovaUI.set();
-            }
-        });
-    } else {
-        $('div.cordovaForceComputerUI').hide();
-    }
+    $('div.cordovaForceComputerUI').hide();
 };
 
 options.initDarkTheme = function () {
@@ -191,10 +174,6 @@ options.initDarkTheme = function () {
 };
 
 options.initShowDevToolsOnStartup = function () {
-    if (!(CONFIGURATOR.isDevVersion() && GUI.isNWJS())) {
-        $('div.showDevToolsOnStartup').hide();
-        return;
-    }
     const result = getConfig('showDevToolsOnStartup');
     $('div.showDevToolsOnStartup input')
         .prop('checked', !!result.showDevToolsOnStartup)

@@ -7,7 +7,6 @@ import { tracking } from '../Analytics';
 import { reinitializeConnection } from "../serial_backend";
 import CONFIGURATOR from "../data_storage";
 import CliAutoComplete from "../CliAutoComplete";
-import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import jBox from "jbox";
 import $ from 'jquery';
@@ -329,10 +328,6 @@ cli.adaptPhones = function() {
     if ($(window).width() < 575) {
         const backdropHeight = $('.note').height() + 22 + 38;
         $('.backdrop').css('height', `calc(100% - ${backdropHeight}px)`);
-    }
-
-    if (GUI.isCordova()) {
-        UI_PHONES.initToolbar();
     }
 };
 
