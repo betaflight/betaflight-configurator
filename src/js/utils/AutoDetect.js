@@ -18,7 +18,7 @@ import serial from '../webSerial';
 
 let mspHelper = null;
 
-function ReadSerialAdapter(event) {
+function readSerialAdapter(event) {
     MSP.read(event.detail.buffer);
 }
 
@@ -79,7 +79,7 @@ class AutoDetect {
 
         MSP.clearListeners();
 
-        serial.removeEventListener('receive', ReadSerialAdapter);
+        serial.removeEventListener('receive', readSerialAdapter);
         serial.removeEventListener('connect', this.handleConnect.bind(this));
         serial.removeEventListener('disconnect', this.handleDisconnect.bind(this));
     }
@@ -161,8 +161,8 @@ class AutoDetect {
 
     onConnect(openInfo) {
         if (openInfo) {
-            serial.removeEventListener('receive', ReadSerialAdapter);
-            serial.addEventListener('receive', ReadSerialAdapter);
+            serial.removeEventListener('receive', readSerialAdapter);
+            serial.addEventListener('receive', readSerialAdapter);
 
             mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
