@@ -12,7 +12,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_44 } from "../data_storage";
+import { API_VERSION_1_44 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
@@ -92,9 +92,7 @@ motors.initialize = async function (callback) {
     await MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG);
     await MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING);
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
-    }
+    await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
 
     load_html();
@@ -261,7 +259,7 @@ motors.initialize = async function (callback) {
 
         motorsEnableTestModeElement.prop('checked', self.armed);
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42) || !(FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
+        if (!(FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
             $(".motor_testing .telemetry").hide();
         }
 
@@ -341,7 +339,7 @@ motors.initialize = async function (callback) {
         }
 
         // Add EventListener for configuration changes
-        document.querySelectorAll('.configuration').forEach(elem => elem.addEventListener('change', disableHandler));
+        document.querySelector('.configuration').addEventListener('change', disableHandler);
 
         /*
         *  MIXER
@@ -696,57 +694,52 @@ motors.initialize = async function (callback) {
         $('input[name="digitalIdlePercent"]').val(FC.PID_ADVANCED_CONFIG.digitalIdlePercent);
         $('input[name="idleMinRpm"]').val(FC.ADVANCED_TUNING.idleMinRpm);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            dshotBidirElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_telemetry).trigger("change");
+        dshotBidirElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_telemetry).trigger("change");
 
-            self.previousDshotBidir = FC.MOTOR_CONFIG.use_dshot_telemetry;
-            self.previousFilterDynQ = FC.FILTER_CONFIG.dyn_notch_q;
-            self.previousFilterDynCount = FC.FILTER_CONFIG.dyn_notch_count;
+        self.previousDshotBidir = FC.MOTOR_CONFIG.use_dshot_telemetry;
+        self.previousFilterDynQ = FC.FILTER_CONFIG.dyn_notch_q;
+        self.previousFilterDynCount = FC.FILTER_CONFIG.dyn_notch_count;
 
-            dshotBidirElement.on("change", function () {
-                const value = dshotBidirElement.is(':checked');
-                const newValue = (value !== FC.MOTOR_CONFIG.use_dshot_telemetry) ? 'On' : 'Off';
-                self.analyticsChanges['BidirectionalDshot'] = newValue;
-                FC.MOTOR_CONFIG.use_dshot_telemetry = value;
+        dshotBidirElement.on("change", function () {
+            const value = dshotBidirElement.is(':checked');
+            const newValue = (value !== FC.MOTOR_CONFIG.use_dshot_telemetry) ? 'On' : 'Off';
+            self.analyticsChanges['BidirectionalDshot'] = newValue;
+            FC.MOTOR_CONFIG.use_dshot_telemetry = value;
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
+                FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
+                FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
+
+                const dialogDynFilterSettings = {
+                    title: i18n.getMessage("dialogDynFiltersChangeTitle"),
+                    text: i18n.getMessage("dialogDynFiltersChangeNote"),
+                    buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
+                    buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
+                    buttonYesCallback: () => _dynFilterChange(),
+                    buttonNoCallback: null,
+                };
+
+                const _dynFilterChange = function() {
+                    if (FC.MOTOR_CONFIG.use_dshot_telemetry && !self.previousDshotBidir) {
+                        FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
+                        FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q_rpm;
+                    } else if (!FC.MOTOR_CONFIG.use_dshot_telemetry && self.previousDshotBidir) {
+                        FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count;
+                        FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q;
+                    }
+                };
+
+                if ((FC.MOTOR_CONFIG.use_dshot_telemetry !== self.previousDshotBidir) && !(rpmFilterIsDisabled)) {
+                    GUI.showYesNoDialog(dialogDynFilterSettings);
+                } else {
                     FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
                     FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
-
-                    const dialogDynFilterSettings = {
-                        title: i18n.getMessage("dialogDynFiltersChangeTitle"),
-                        text: i18n.getMessage("dialogDynFiltersChangeNote"),
-                        buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
-                        buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
-                        buttonYesCallback: () => _dynFilterChange(),
-                        buttonNoCallback: null,
-                    };
-
-                    const _dynFilterChange = function() {
-                        if (FC.MOTOR_CONFIG.use_dshot_telemetry && !self.previousDshotBidir) {
-                            FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
-                            FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q_rpm;
-                        } else if (!FC.MOTOR_CONFIG.use_dshot_telemetry && self.previousDshotBidir) {
-                            FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count;
-                            FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q;
-                        }
-                    };
-
-                    if ((FC.MOTOR_CONFIG.use_dshot_telemetry !== self.previousDshotBidir) && !(rpmFilterIsDisabled)) {
-                        GUI.showYesNoDialog(dialogDynFilterSettings);
-                    } else {
-                        FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
-                        FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
-                    }
                 }
-            });
+            }
+        });
 
-            $('input[name="motorPoles"]').val(FC.MOTOR_CONFIG.motor_poles);
-        }
-
-        $('#escProtocolTooltip').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42));
-        $('#escProtocolTooltipNoDSHOT1200').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42));
+        $('input[name="motorPoles"]').val(FC.MOTOR_CONFIG.motor_poles);
 
         function updateVisibility() {
             // Hide unused settings
@@ -757,7 +750,6 @@ motors.initialize = async function (callback) {
                 case 'DSHOT150':
                 case 'DSHOT300':
                 case 'DSHOT600':
-                case 'DSHOT1200':
                 case 'PROSHOT1000':
                     digitalProtocol = true;
 
@@ -782,8 +774,8 @@ motors.initialize = async function (callback) {
 
             $('.escSensor').toggle(protocolConfigured && digitalProtocol);
 
-            $('div.checkboxDshotBidir').toggle(protocolConfigured && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && digitalProtocol);
-            $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42));
+            $('div.checkboxDshotBidir').toggle(protocolConfigured && digitalProtocol);
+            $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible);
 
             $('.escMotorStop').toggle(protocolConfigured);
 
@@ -1151,9 +1143,7 @@ motors.initialize = async function (callback) {
             FC.MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
             FC.MOTOR_CONFIG.mincommand = parseInt($('input[name="mincommand"]').val());
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                FC.MOTOR_CONFIG.motor_poles = parseInt($('input[name="motorPoles"]').val());
-            }
+            FC.MOTOR_CONFIG.motor_poles = parseInt($('input[name="motorPoles"]').val());
 
             FC.MOTOR_3D_CONFIG.deadband3d_low = parseInt($('input[name="_3ddeadbandlow"]').val());
             FC.MOTOR_3D_CONFIG.deadband3d_high = parseInt($('input[name="_3ddeadbandhigh"]').val());
@@ -1171,9 +1161,7 @@ motors.initialize = async function (callback) {
             await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-            }
+            await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
 
             tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};
