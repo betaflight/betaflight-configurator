@@ -11,7 +11,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
@@ -309,21 +309,11 @@ receiver.initialize = function (callback) {
             'SFHSS',
             'SPEKTRUM',
             'FRSKY_X_LBT',
+            'REDPINE',
+            'FRSKY_X_V2',
+            'FRSKY_X_LBT_V2',
+            'EXPRESSLRS',
         ];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            spiRxTypes.push(
-                'REDPINE',
-            );
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            spiRxTypes.push(
-                'FRSKY_X_V2',
-                'FRSKY_X_LBT_V2',
-                'EXPRESSLRS',
-            );
-        }
 
         const spiRxElement = $('select.spiRx');
         for (let i = 0; i < spiRxTypes.length; i++) {
@@ -480,10 +470,7 @@ receiver.initialize = function (callback) {
             FC.RX_CONFIG.rcSmoothingDerivativeType = parseInt($('select[name="rcSmoothingFeedforwardType-select"]').val());
             FC.RX_CONFIG.rcInterpolationChannels = parseInt($('select[name="rcSmoothingChannels-select"]').val());
             FC.RX_CONFIG.rcSmoothingInputType = parseInt($('select[name="rcSmoothingSetpointType-select"]').val());
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
-            }
+            FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
 
             if (tab.elrsBindingPhraseEnabled) {
                 const elrsUidChars = $('span.elrsUid')[0].innerText.split(',').map(uidChar => parseInt(uidChar, 10));
@@ -577,29 +564,24 @@ receiver.initialize = function (callback) {
         });
 
         let showBindButton = false;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            showBindButton = bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
+        showBindButton = bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
 
-            $("a.bind").click(function() {
-                MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
+        $("a.bind").click(function() {
+            MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
 
-                gui_log(i18n.getMessage('receiverButtonBindMessage'));
-            });
-        }
+            gui_log(i18n.getMessage('receiverButtonBindMessage'));
+        });
+
         $(".bind_btn").toggle(showBindButton);
 
         // RC Smoothing
-        const smoothingOnOff = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType;
+        const smoothingOnOff = FC.RX_CONFIG.rcSmoothingMode;
 
         $('.tab-receiver .rcSmoothing').show();
 
         const rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
         rc_smoothing_protocol_e.change(function () {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                FC.RX_CONFIG.rcSmoothingMode = parseFloat($(this).val());
-            } else {
-                FC.RX_CONFIG.rcSmoothingType = parseFloat($(this).val());
-            }
+            FC.RX_CONFIG.rcSmoothingMode = parseFloat($(this).val());
             updateInterpolationView();
         });
         rc_smoothing_protocol_e.val(smoothingOnOff);
@@ -643,35 +625,28 @@ receiver.initialize = function (callback) {
         }).change();
 
         const rcSmoothingFeedforwardType = $('select[name="rcSmoothingFeedforwardType-select"]');
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            rcSmoothingFeedforwardType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`));
-        }
-
+        rcSmoothingFeedforwardType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`));
         rcSmoothingFeedforwardType.val(FC.RX_CONFIG.rcSmoothingDerivativeType);
+
         const rcSmoothingChannels = $('select[name="rcSmoothingChannels-select"]');
         rcSmoothingChannels.val(FC.RX_CONFIG.rcInterpolationChannels);
+
         const rcSmoothingSetpointType = $('select[name="rcSmoothingSetpointType-select"]');
         rcSmoothingSetpointType.val(FC.RX_CONFIG.rcSmoothingInputType);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
-                if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
-                    $('.tab-receiver .rcSmoothing-auto-factor').show();
-                } else {
-                    $('.tab-receiver .rcSmoothing-auto-factor').hide();
-                }
-            });
-            $('select[name="rcSmoothing-setpoint-manual-select"]').change();
+        $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
+            if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
+                $('.tab-receiver .rcSmoothing-auto-factor').show();
+            } else {
+                $('.tab-receiver .rcSmoothing-auto-factor').hide();
+            }
+        });
+        $('select[name="rcSmoothing-setpoint-manual-select"]').change();
 
-            const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
-            rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
-        } else {
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        }
+        const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
+        rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
-        }
+        $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
 
         updateInterpolationView();
 
@@ -922,55 +897,37 @@ receiver.updateRcInterpolationParameters = function () {
 };
 
 function updateInterpolationView() {
-    const smoothingOnOff = ((semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) ?
-        FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType);
+    const smoothingOnOff = FC.RX_CONFIG.rcSmoothingMode;
 
-    $('.tab-receiver .rcInterpolation').hide();
     $('.tab-receiver .rcSmoothing-feedforward-cutoff').show();
     $('.tab-receiver .rcSmoothing-setpoint-cutoff').show();
-    $('.tab-receiver .rcSmoothing-feedforward-type').show();
-    $('.tab-receiver .rcSmoothing-setpoint-type').show();
     $('.tab-receiver .rcSmoothing-feedforward-manual').show();
     $('.tab-receiver .rcSmoothing-setpoint-manual').show();
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
-            $('.tab-receiver .rcSmoothing-auto-factor').show();
-        }
+
+    if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
+        $('.tab-receiver .rcSmoothing-auto-factor').show();
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-        $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-        $('.tab-receiver .rc-smoothing-channels').hide();
-        $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
-        $('.tab-receiver .rcSmoothingType').hide();
-        $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
-        $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
-    } else {
-        $('.tab-receiver .rcSmoothingMode').hide();
-    }
+    $('.tab-receiver .rcSmoothing-feedforward-type').hide();
+    $('.tab-receiver .rcSmoothing-setpoint-type').hide();
+    $('.tab-receiver .rc-smoothing-channels').hide();
+    $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
+    $('.tab-receiver .rcSmoothingType').hide();
+    $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
+    $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
 
     if (smoothingOnOff === 0) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        } else {
-            $('.tab-receiver .rcInterpolation').show();
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        }
+        $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
+        $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
+        $('.tab-receiver .rcSmoothing-auto-factor').hide();
     }
+
     if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0) {
         $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
     }
+
     if (FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
         $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
     }

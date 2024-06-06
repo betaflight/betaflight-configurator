@@ -4,9 +4,7 @@ import { mspHelper } from '../msp/MSPHelper';
 import MSP from '../msp';
 import FC from '../fc';
 import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_42 } from '../data_storage';
 import { gui_log } from '../gui_log';
-import semver from 'semver';
 import $ from 'jquery';
 
 const adjustments = {};
@@ -43,15 +41,6 @@ adjustments.initialize = function (callback) {
         $(newAdjustment).data('index', adjustmentIndex);
 
         //
-        // update selected slot
-        //
-
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            const adjustmentList = $(newAdjustment).find('.adjustmentSlot .slot');
-            adjustmentList.val(adjustmentRange.slotIndex);
-        }
-
-        //
         // populate source channel select box
         //
 
@@ -71,6 +60,7 @@ adjustments.initialize = function (callback) {
         //
 
         const functionList = $(newAdjustment).find('.functionSelection .function');
+
         // update list of selected functions
 
         functionList.val(adjustmentRange.adjustmentFunction);
@@ -173,13 +163,6 @@ adjustments.initialize = function (callback) {
             modeTableBodyElement.append(newAdjustment);
         }
 
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('.tab-adjustments .adjustmentSlotsHelp').hide();
-            $('.tab-adjustments .adjustmentSlotHeader').hide();
-            $('.tab-adjustments .adjustmentSlot').hide();
-        }
-
         // translate to user-selected language
         i18n.localizePage();
 
@@ -207,10 +190,7 @@ adjustments.initialize = function (callback) {
 
                 if ($(adjustmentElement).find('.enable').prop("checked")) {
                     const rangeValues = $(this).find('.range .channel-slider').val();
-                    let slotIndex = 0;
-                    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                        slotIndex = parseInt($(this).find('.adjustmentSlot .slot').val());
-                    }
+                    const slotIndex = 0;
 
                     const adjustmentRange = {
                         slotIndex: slotIndex,

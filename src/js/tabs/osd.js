@@ -7,13 +7,12 @@ import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import PortHandler from "../port_handler";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
 import jBox from "jbox";
 import inflection from "inflection";
-import { checkChromeRuntimeError } from "../utils/common";
 import debounce from "lodash.debounce";
 import $ from 'jquery';
 import FileSystem from "../FileSystem";
@@ -85,19 +84,6 @@ SYM.loadSymbols = function() {
     SYM.ROLL = 0x14;
     SYM.KM = 0x7d;
     SYM.MILES = 0x7e;
-
-    /* Versions before Betaflight 4.1 use font V1
-     * To maintain this list at minimum, we only add here:
-     * - Symbols used in this versions
-     * - That were moved or didn't exist in the font file
-     */
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        SYM.AH_CENTER_LINE = 0x26;
-        SYM.AH_CENTER = 0x7E;
-        SYM.AH_CENTER_LINE_RIGHT = 0x27;
-        SYM.SPEED = null;
-        SYM.LINK_QUALITY = null;
-    }
 };
 
 FONT.initData = function() {
@@ -568,11 +554,7 @@ OSD.formatPidsPreview = function(axis) {
     const i = pidDefaults[axis * 5 + 1].toString().padStart(3);
     const d = pidDefaults[axis * 5 + 2].toString().padStart(3);
     const f = pidDefaults[axis * 5 + 4].toString().padStart(3);
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        return `${p} ${i} ${d}`;
-    } else {
-        return `${p} ${i} ${d} ${f}`;
-    }
+    return `${p} ${i} ${d} ${f}`;
 };
 
 OSD.loadDisplayFields = function() {
@@ -1928,32 +1910,17 @@ OSD.chooseFields = function() {
         // show either DISPLAY_NAME or PILOT_NAME depending on the MSP version
         (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME),
         F.ESC_RPM_FREQ,
+        F.RATE_PROFILE_NAME,
+        F.PID_PROFILE_NAME,
+        F.OSD_PROFILE_NAME,
+        F.RSSI_DBM_VALUE,
+        F.RC_CHANNELS,
+        F.CAMERA_FRAME,
+        F.OSD_EFFICIENCY,
+        F.TOTAL_FLIGHTS,
+        F.OSD_UP_DOWN_REFERENCE,
+        F.OSD_TX_UPLINK_POWER,
     ];
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-            F.RATE_PROFILE_NAME,
-            F.PID_PROFILE_NAME,
-            F.OSD_PROFILE_NAME,
-            F.RSSI_DBM_VALUE,
-        ]);
-    }
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-            F.RC_CHANNELS,
-            F.CAMERA_FRAME,
-            F.OSD_EFFICIENCY,
-        ]);
-    }
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-            F.TOTAL_FLIGHTS,
-            F.OSD_UP_DOWN_REFERENCE,
-            F.OSD_TX_UPLINK_POWER,
-        ]);
-    }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
@@ -2017,16 +1984,11 @@ OSD.chooseFields = function() {
         F.MIN_LINK_QUALITY,
         F.FLIGHT_DISTANCE,
         F.MAX_FFT,
+        F.STAT_TOTAL_FLIGHTS,
+        F.STAT_TOTAL_FLIGHT_TIME,
+        F.STAT_TOTAL_FLIGHT_DIST,
+        F.MIN_RSSI_DBM,
     ];
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-            F.STAT_TOTAL_FLIGHTS,
-            F.STAT_TOTAL_FLIGHT_TIME,
-            F.STAT_TOTAL_FLIGHT_DIST,
-            F.MIN_RSSI_DBM,
-        ]);
-    }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
@@ -2063,29 +2025,19 @@ OSD.chooseFields = function() {
         F.LAUNCH_CONTROL,
         F.GPS_RESCUE_UNAVAILABLE,
         F.GPS_RESCUE_DISABLED,
+        F.RSSI,
+        F.LINK_QUALITY,
+        F.RSSI_DBM,
+        F.OVER_CAP,
     ];
 
     OSD.constants.TIMER_TYPES = [
         'ON_TIME',
         'TOTAL_ARMED_TIME',
         'LAST_ARMED_TIME',
+        'ON_ARM_TIME',
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        OSD.constants.TIMER_TYPES = OSD.constants.TIMER_TYPES.concat([
-            'ON_ARM_TIME',
-        ]);
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
-            F.RSSI,
-            F.LINK_QUALITY,
-            F.RSSI_DBM,
-        ]);
-    }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
-            F.OVER_CAP,
-        ]);
-    }
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.RSNR,
@@ -2221,10 +2173,8 @@ OSD.msp = {
 
             result.push8(OSD.data.parameters.overlayRadioMode);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                result.push8(OSD.data.parameters.cameraFrameWidth);
-                result.push8(OSD.data.parameters.cameraFrameHeight);
-            }
+            result.push8(OSD.data.parameters.cameraFrameWidth);
+            result.push8(OSD.data.parameters.cameraFrameHeight);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 result.push16(OSD.data.alarms.link_quality.value);
@@ -2325,9 +2275,9 @@ OSD.msp = {
         d.state = {};
         d.state.haveSomeOsd = (d.flags !== 0);
         d.state.haveMax7456Configured = bit_check(d.flags, 4);
-        d.state.haveFrSkyOSDConfigured = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) && bit_check(d.flags, 3);
+        d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
-        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5) || (d.state.haveMax7456FontDeviceConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_43));
+        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5);
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
         d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
@@ -2436,10 +2386,8 @@ OSD.msp = {
         d.parameters.overlayRadioMode = view.readU8();
 
         // Camera frame size
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            d.parameters.cameraFrameWidth = view.readU8();
-            d.parameters.cameraFrameHeight = view.readU8();
-        }
+        d.parameters.cameraFrameWidth = view.readU8();
+        d.parameters.cameraFrameHeight = view.readU8();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             d.alarms['link_quality'] = { display_name: i18n.getMessage('osdTimerAlarmOptionLinkQuality'), value: view.readU16() };
@@ -3138,7 +3086,7 @@ osd.initialize = function(callback) {
 
 
 
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && field.variants && field.variants.length > 0) {
+                        if (field.variants && field.variants.length > 0) {
 
                             const selectVariant = $('<select class="osd-variant" />')
                                 .data('field', field)
@@ -3389,10 +3337,8 @@ osd.initialize = function(callback) {
 
         fontPresetsElement.change(function() {
             const $font = $('.fontpresets option:selected');
-            let fontver = 1;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                fontver = 2;
-            }
+            const fontver = 2;
+
             $('.font-manager-version-info').text(i18n.getMessage(`osdDescribeFontVersion${fontver}`));
             $.get(`./resources/osd/${fontver}/${$font.data('font-file')}.mcm`, function(data) {
                 FONT.parseMCMFontFile(data);
