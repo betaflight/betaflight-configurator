@@ -1,6 +1,3 @@
-import semver from 'semver';
-import { API_VERSION_1_42, API_VERSION_1_43 } from '../data_storage';
-
 class EscProtocols
 {
     static get PROTOCOL_PWM()          { return "PWM"; }
@@ -11,7 +8,6 @@ class EscProtocols
     static get PROTOCOL_DSHOT150()     { return "DSHOT150"; }
     static get PROTOCOL_DSHOT300()     { return "DSHOT300"; }
     static get PROTOCOL_DSHOT600()     { return "DSHOT600"; }
-    static get PROTOCOL_DSHOT1200()    { return "DSHOT1200"; }
     static get PROTOCOL_PROSHOT1000()  { return "PROSHOT1000"; }
     static get PROTOCOL_DISABLED()     { return "DISABLED"; }
 
@@ -21,7 +17,6 @@ class EscProtocols
             EscProtocols.PROTOCOL_DSHOT150,
             EscProtocols.PROTOCOL_DSHOT300,
             EscProtocols.PROTOCOL_DSHOT600,
-            EscProtocols.PROTOCOL_DSHOT1200,
             EscProtocols.PROTOCOL_PROSHOT1000,
         ];
     }
@@ -49,18 +44,9 @@ class EscProtocols
             EscProtocols.PROTOCOL_DSHOT150,
             EscProtocols.PROTOCOL_DSHOT300,
             EscProtocols.PROTOCOL_DSHOT600,
+            EscProtocols.PROTOCOL_PROSHOT1000,
+            EscProtocols.PROTOCOL_DISABLED,
         ];
-
-
-        if (semver.lt(apiVersion, API_VERSION_1_42)) {
-            escProtocols.push(EscProtocols.PROTOCOL_DSHOT1200);
-        }
-
-        escProtocols.push(EscProtocols.PROTOCOL_PROSHOT1000);
-
-        if (semver.gte(apiVersion, API_VERSION_1_43)) {
-            escProtocols.push(EscProtocols.PROTOCOL_DISABLED);
-        }
 
         return escProtocols;
     }
@@ -69,8 +55,6 @@ class EscProtocols
     {
         return protocolIndex;
     }
-
-
 }
 
 export default EscProtocols;

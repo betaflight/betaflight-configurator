@@ -1,9 +1,4 @@
 export const API_VERSION_1_39 = '1.39.0';
-export const API_VERSION_1_40 = '1.40.0';
-
-export const API_VERSION_1_41 = '1.41.0';
-export const API_VERSION_1_42 = '1.42.0';
-export const API_VERSION_1_43 = '1.43.0';
 export const API_VERSION_1_44 = '1.44.0';
 export const API_VERSION_1_45 = '1.45.0';
 export const API_VERSION_1_46 = '1.46.0';
