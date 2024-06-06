@@ -1923,33 +1923,6 @@
     "receiverRcSmoothingChannel": {
         "message": "Channels Smoothed"
     },
-    "receiverRcInterpolation": {
-        "message": "RC Interpolation"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC TX/RX systems are not as fast as PID loops. That means that PID loop has gaps in the information stream from RC systems. This option enables interpolation of the RC input during the times when no RC frames are received. The option also offers cleaner P and D behaviour as there are no ramps in control input."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interpolation interval for manual RC interpolation mode in milliseconds"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Off"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Smoothing Type"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Preset"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manual"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC Interpolation Interval [ms]"
-    },
     "receiverRcSmoothingMode": {
         "message": "Smoothing Mode"
     },

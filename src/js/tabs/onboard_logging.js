@@ -5,7 +5,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { generateFilename } from "../utils/generate_filename";
 import semver from 'semver';
@@ -115,9 +115,7 @@ onboard_logging.initialize = function (callback) {
 
                         FC.BLACKBOX.blackboxDisabledMask = fieldsMask;
                     }
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                        FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
-                    }
+                    FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
 
@@ -188,43 +186,19 @@ onboard_logging.initialize = function (callback) {
     function populateLoggingRates(loggingRatesSelect) {
 
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
-        let loggingRates = [];
-
         const pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
+        const sampleRateNum = 5;
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            const sampleRateNum=5;
-            for (let i = 0; i < sampleRateNum; i++) {
-                let loggingFrequency = Math.round(pidRate / (2**i));
-                let loggingFrequencyUnit = "Hz";
-                if (gcd(loggingFrequency, 1000) === 1000) {
-                    loggingFrequency /= 1000;
-                    loggingFrequencyUnit = "kHz";
-                }
-                loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
+        for (let i = 0; i < sampleRateNum; i++) {
+            let loggingFrequency = Math.round(pidRate / (2 ** i));
+            let loggingFrequencyUnit = "Hz";
+            if (gcd(loggingFrequency, 1000) === 1000) {
+                loggingFrequency /= 1000;
+                loggingFrequencyUnit = "kHz";
             }
-            loggingRatesSelect.val(FC.BLACKBOX.blackboxSampleRate);
-        } else {
-            loggingRates = [
-                {text: "Disabled", hz: 0,     p_denom: 0},
-                {text: "500 Hz",   hz: 500,   p_denom: 16},
-                {text: "1 kHz",    hz: 1000,  p_denom: 32},
-                {text: "1.5 kHz",  hz: 1500,  p_denom: 48},
-                {text: "2 kHz",    hz: 2000,  p_denom: 64},
-                {text: "4 kHz",    hz: 4000,  p_denom: 128},
-                {text: "8 kHz",    hz: 8000,  p_denom: 256},
-                {text: "16 kHz",   hz: 16000, p_denom: 512},
-                {text: "32 kHz",   hz: 32000, p_denom: 1024},
-            ];
-
-            $.each(loggingRates, function(index, item) {
-                if (pidRate >= item.hz || item.hz == 0) {
-                    loggingRatesSelect.append(new Option(item.text, item.p_denom));
-                }
-            });
-
-            loggingRatesSelect.val(FC.BLACKBOX.blackboxPDenom);
+            loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
         }
+        loggingRatesSelect.val(FC.BLACKBOX.blackboxSampleRate);
     }
 
     function populateDebugModes(debugModeSelect) {

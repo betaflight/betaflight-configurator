@@ -2,7 +2,6 @@ import { i18n } from "../localization";
 import djv from "djv";
 import { generateFilename } from "../utils/generate_filename";
 import Clipboard from "../Clipboard";
-import semver from "semver";
 import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { mspHelper } from "../msp/MSPHelper";
@@ -10,7 +9,6 @@ import FC from '../fc';
 import { VtxDeviceTypes } from '../utils/VtxDeviceStatus/VtxDeviceStatus';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_44 } from '../data_storage';
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import { isWeb } from "../utils/isWeb";
@@ -103,10 +101,7 @@ vtx.initialize = function (callback) {
         }
 
         function vtxConfigReceived() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                vtx.intervalId = setInterval(vtx.updateVtxDeviceStatus, 1000);
-            }
-
+            vtx.intervalId = setInterval(vtx.updateVtxDeviceStatus, 1000);
             vtxtable_bands();
         }
 

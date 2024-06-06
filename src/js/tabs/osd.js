@@ -7,7 +7,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import PortHandler from "../port_handler";
-import CONFIGURATOR, { API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
@@ -554,11 +554,7 @@ OSD.formatPidsPreview = function(axis) {
     const i = pidDefaults[axis * 5 + 1].toString().padStart(3);
     const d = pidDefaults[axis * 5 + 2].toString().padStart(3);
     const f = pidDefaults[axis * 5 + 4].toString().padStart(3);
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        return `${p} ${i} ${d}`;
-    } else {
-        return `${p} ${i} ${d} ${f}`;
-    }
+    return `${p} ${i} ${d} ${f}`;
 };
 
 OSD.loadDisplayFields = function() {
@@ -1921,15 +1917,10 @@ OSD.chooseFields = function() {
         F.RC_CHANNELS,
         F.CAMERA_FRAME,
         F.OSD_EFFICIENCY,
+        F.TOTAL_FLIGHTS,
+        F.OSD_UP_DOWN_REFERENCE,
+        F.OSD_TX_UPLINK_POWER,
     ];
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-            F.TOTAL_FLIGHTS,
-            F.OSD_UP_DOWN_REFERENCE,
-            F.OSD_TX_UPLINK_POWER,
-        ]);
-    }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
@@ -2182,10 +2173,8 @@ OSD.msp = {
 
             result.push8(OSD.data.parameters.overlayRadioMode);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                result.push8(OSD.data.parameters.cameraFrameWidth);
-                result.push8(OSD.data.parameters.cameraFrameHeight);
-            }
+            result.push8(OSD.data.parameters.cameraFrameWidth);
+            result.push8(OSD.data.parameters.cameraFrameHeight);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 result.push16(OSD.data.alarms.link_quality.value);
@@ -2286,9 +2275,9 @@ OSD.msp = {
         d.state = {};
         d.state.haveSomeOsd = (d.flags !== 0);
         d.state.haveMax7456Configured = bit_check(d.flags, 4);
-        d.state.haveFrSkyOSDConfigured = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) && bit_check(d.flags, 3);
+        d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
-        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5) || (d.state.haveMax7456FontDeviceConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_43));
+        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5);
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
         d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
@@ -2397,10 +2386,8 @@ OSD.msp = {
         d.parameters.overlayRadioMode = view.readU8();
 
         // Camera frame size
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            d.parameters.cameraFrameWidth = view.readU8();
-            d.parameters.cameraFrameHeight = view.readU8();
-        }
+        d.parameters.cameraFrameWidth = view.readU8();
+        d.parameters.cameraFrameHeight = view.readU8();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             d.alarms['link_quality'] = { display_name: i18n.getMessage('osdTimerAlarmOptionLinkQuality'), value: view.readU16() };
@@ -3099,7 +3086,7 @@ osd.initialize = function(callback) {
 
 
 
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && field.variants && field.variants.length > 0) {
+                        if (field.variants && field.variants.length > 0) {
 
                             const selectVariant = $('<select class="osd-variant" />')
                                 .data('field', field)
