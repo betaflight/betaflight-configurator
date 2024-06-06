@@ -12,11 +12,9 @@ import FC from "../fc";
 import MSP from "../msp";
 import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_44 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
-import semver from 'semver';
 import * as d3 from 'd3';
 import $ from 'jquery';
 
@@ -706,36 +704,34 @@ motors.initialize = async function (callback) {
             self.analyticsChanges['BidirectionalDshot'] = newValue;
             FC.MOTOR_CONFIG.use_dshot_telemetry = value;
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
+            const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
+            FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
+            FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
+
+            const dialogDynFilterSettings = {
+                title: i18n.getMessage("dialogDynFiltersChangeTitle"),
+                text: i18n.getMessage("dialogDynFiltersChangeNote"),
+                buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
+                buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
+                buttonYesCallback: () => _dynFilterChange(),
+                buttonNoCallback: null,
+            };
+
+            const _dynFilterChange = function() {
+                if (FC.MOTOR_CONFIG.use_dshot_telemetry && !self.previousDshotBidir) {
+                    FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
+                    FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q_rpm;
+                } else if (!FC.MOTOR_CONFIG.use_dshot_telemetry && self.previousDshotBidir) {
+                    FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count;
+                    FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q;
+                }
+            };
+
+            if ((FC.MOTOR_CONFIG.use_dshot_telemetry !== self.previousDshotBidir) && !(rpmFilterIsDisabled)) {
+                GUI.showYesNoDialog(dialogDynFilterSettings);
+            } else {
                 FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
                 FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
-
-                const dialogDynFilterSettings = {
-                    title: i18n.getMessage("dialogDynFiltersChangeTitle"),
-                    text: i18n.getMessage("dialogDynFiltersChangeNote"),
-                    buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
-                    buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
-                    buttonYesCallback: () => _dynFilterChange(),
-                    buttonNoCallback: null,
-                };
-
-                const _dynFilterChange = function() {
-                    if (FC.MOTOR_CONFIG.use_dshot_telemetry && !self.previousDshotBidir) {
-                        FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
-                        FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q_rpm;
-                    } else if (!FC.MOTOR_CONFIG.use_dshot_telemetry && self.previousDshotBidir) {
-                        FC.FILTER_CONFIG.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count;
-                        FC.FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q;
-                    }
-                };
-
-                if ((FC.MOTOR_CONFIG.use_dshot_telemetry !== self.previousDshotBidir) && !(rpmFilterIsDisabled)) {
-                    GUI.showYesNoDialog(dialogDynFilterSettings);
-                } else {
-                    FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
-                    FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
-                }
             }
         });
 
