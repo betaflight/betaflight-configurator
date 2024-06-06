@@ -11,7 +11,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
@@ -310,15 +310,10 @@ receiver.initialize = function (callback) {
             'SPEKTRUM',
             'FRSKY_X_LBT',
             'REDPINE',
+            'FRSKY_X_V2',
+            'FRSKY_X_LBT_V2',
+            'EXPRESSLRS',
         ];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            spiRxTypes.push(
-                'FRSKY_X_V2',
-                'FRSKY_X_LBT_V2',
-                'EXPRESSLRS',
-            );
-        }
 
         const spiRxElement = $('select.spiRx');
         for (let i = 0; i < spiRxTypes.length; i++) {
@@ -580,17 +575,13 @@ receiver.initialize = function (callback) {
         $(".bind_btn").toggle(showBindButton);
 
         // RC Smoothing
-        const smoothingOnOff = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType;
+        const smoothingOnOff = FC.RX_CONFIG.rcSmoothingMode;
 
         $('.tab-receiver .rcSmoothing').show();
 
         const rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
         rc_smoothing_protocol_e.change(function () {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                FC.RX_CONFIG.rcSmoothingMode = parseFloat($(this).val());
-            } else {
-                FC.RX_CONFIG.rcSmoothingType = parseFloat($(this).val());
-            }
+            FC.RX_CONFIG.rcSmoothingMode = parseFloat($(this).val());
             updateInterpolationView();
         });
         rc_smoothing_protocol_e.val(smoothingOnOff);
@@ -655,9 +646,7 @@ receiver.initialize = function (callback) {
         const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
         rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
-        }
+        $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
 
         updateInterpolationView();
 
@@ -908,14 +897,10 @@ receiver.updateRcInterpolationParameters = function () {
 };
 
 function updateInterpolationView() {
-    const smoothingOnOff = ((semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) ?
-        FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType);
+    const smoothingOnOff = FC.RX_CONFIG.rcSmoothingMode;
 
-    $('.tab-receiver .rcInterpolation').hide();
     $('.tab-receiver .rcSmoothing-feedforward-cutoff').show();
     $('.tab-receiver .rcSmoothing-setpoint-cutoff').show();
-    $('.tab-receiver .rcSmoothing-feedforward-type').show();
-    $('.tab-receiver .rcSmoothing-setpoint-type').show();
     $('.tab-receiver .rcSmoothing-feedforward-manual').show();
     $('.tab-receiver .rcSmoothing-setpoint-manual').show();
 
@@ -923,39 +908,26 @@ function updateInterpolationView() {
         $('.tab-receiver .rcSmoothing-auto-factor').show();
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-        $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-        $('.tab-receiver .rc-smoothing-channels').hide();
-        $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
-        $('.tab-receiver .rcSmoothingType').hide();
-        $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
-        $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
-    } else {
-        $('.tab-receiver .rcSmoothingMode').hide();
-    }
+    $('.tab-receiver .rcSmoothing-feedforward-type').hide();
+    $('.tab-receiver .rcSmoothing-setpoint-type').hide();
+    $('.tab-receiver .rc-smoothing-channels').hide();
+    $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
+    $('.tab-receiver .rcSmoothingType').hide();
+    $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
+    $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
 
     if (smoothingOnOff === 0) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        } else {
-            $('.tab-receiver .rcInterpolation').show();
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        }
+        $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
+        $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
+        $('.tab-receiver .rcSmoothing-auto-factor').hide();
     }
+
     if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0) {
         $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
     }
+
     if (FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
         $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
     }

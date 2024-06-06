@@ -11,7 +11,6 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
-import { isWeb } from "../utils/isWeb";
 import $ from 'jquery';
 import FileSystem from "../FileSystem";
 
@@ -173,8 +172,7 @@ vtx.initialize = function (callback) {
 
         const vtxJsonSchemaUrl = `../../resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`;
 
-        let vtxJsonSchemaUrl2Fetch = isWeb() ? vtxJsonSchemaUrl : chrome.runtime.getURL(vtxJsonSchemaUrl);
-        fetch(vtxJsonSchemaUrl2Fetch)
+        fetch(vtxJsonSchemaUrl)
         .then(response => response.json())
         .catch(error => console.error('Error fetching VTX Schema:', error))
         .then(schemaJson => validateAgainstSchema(schemaJson, vtxConfig));
