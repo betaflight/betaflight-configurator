@@ -63,9 +63,6 @@
             <div class="subtab-pid">
                 <div class="clear-both"></div>
                 <div class="cf_column">
-                    <div class="note dMinDisabledNote">
-                        <p i18n="pidTuningDMinDisabledNote"></p>
-                    </div>
                     <div class="profile_name">
                         <div class="number">
                             <label> <input type="text" name="pidProfileName" maxlength="8" style="width:100px;"/> <span
@@ -166,11 +163,8 @@
                         </table>
                     </div>
 
-                    <div class="gui_box topspacer legacyNonExpertModeSlidersNote">
-                        <p i18n="pidTuningSlidersNonExpertMode"></p>
-                    </div>
-
                     <!-- TUNING SLIDERS-->
+
                     <div id="slidersPidsBox" class="gui_box grey topspacer tuningPIDSliders">
                         <table class="pid_titlebar">
                             <tr>
@@ -195,64 +189,9 @@
                                 </th>
                             </tr>
                         </table>
+    
                         <table class="sliderLabels">
-                            <tr class="legacySlider">
-                                <td>
-                                    <span i18n="pidTuningMasterSlider"></span>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderMasterMultiplierLegacy-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderMasterMultiplierLegacy" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningMasterSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="legacySlider">
-                                <td>
-                                    <span i18n="pidTuningPDRatioSlider"></span>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderPDRatio-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPDRatio" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningPDRatioSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="legacySlider">
-                                <td>
-                                    <span i18n="pidTuningPDGainSlider"></span>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderPDGain-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPDGain" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningPDGainSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="legacySlider">
-                                <td>
-                                    <span i18n="pidTuningResponseSliderLegacy"></span>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderFeedforwardGainLegacy-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderFeedforwardGainLegacy" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningResponseSliderLegacyHelp"></div>
-                                </td>
-                            </tr>
-
+    
                             <tr class="baseSlider baseSliderDGain">
                                 <td>
                                     <span i18n="pidTuningDGainSlider"></span>
@@ -659,7 +598,7 @@
                                     </span>
                                     
                                     <span class="itermRelaxCutoff suboption">
-                                        <input type="number" name="itermRelaxCutoff" step="1" min="1" max="100" />
+                                        <input type="number" name="itermRelaxCutoff" step="1" min="1" max="50" />
                                         <label for="itermRelaxCutoff">
                                             <span i18n="pidTuningItermRelaxCutoff"></span>
                                         </label>
@@ -692,7 +631,7 @@
                                     </span>
 
                                     <span class="suboption">
-                                        <input type="number" name="itermAcceleratorGain" step="0.1" min="1.1" max="30" />
+                                        <input type="number" name="itermAcceleratorGain" step="0.1" min="0.1" max="30" />
                                         <label for="antiGravityGain">
                                             <span i18n="pidTuningAntiGravityGain"></span>
                                         </label>
@@ -716,26 +655,6 @@
                                 </td>
                             </tr>
 
-                            <tr class="dminGroup">
-                                <td class="dMinGroupCheckbox"><input type="checkbox" id="dMinSwitch" class="toggle" /><span i18n="pidTuningDMaxSettingTitle"></span></td>
-                                <td colspan="3">
-                                    <span class="suboption">
-                                        <input type="number" name="dMinGain" step="1" min="0" max="100" />
-                                        <label for="dMinGain">
-                                            <span i18n="pidTuningDMinGain"></span>
-                                        </label>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMaxGainHelp"></div>
-                                    </span>
-
-                                    <span class="suboption">
-                                        <input type="number" name="dMinAdvance" step="1" min="0" max="200" />
-                                        <label for="dMinAdvance">
-                                            <span i18n="pidTuningDMinAdvance"></span>
-                                        </label>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMaxAdvanceHelp"></div>
-                                    </span>
-                                </td>
-                            </tr>
                         </table>
                     </div>
 
@@ -1185,9 +1104,6 @@
                 <div class="note filterWarning">
                     <p i18n="filterWarning"></p>
                 </div>
-                <div class="note dynamicNotchWarning">
-                    <p i18n="pidTuningDynamicNotchFilterDisabledWarning"></p>
-                </div>
                 <div class="gui_box slidersDisabled">
                     <table class="note-button">
                         <td i18n="pidTuningSlidersDisabled"></td>
@@ -1195,9 +1111,6 @@
                             <a href="#" class="buttonFilterTuningSliders regular-button" i18n="pidTuningSliderEnableButton"></a>
                         </td>
                     </table>
-                </div>
-                <div class="gui_box topspacer legacyNonExpertModeSlidersNote">
-                    <p i18n="pidTuningSlidersNonExpertMode"></p>
                 </div>
 
                 <!-- Filter Slider -->
@@ -1293,66 +1206,6 @@
                                     </div>
                                 </th>
                             </tr>
-
-                            <!-- legacy filter switches -->
-
-                            <tr class="gyroLowpassDynLegacy">
-                                <td>
-	                                <span class="inputSwitch"><input type="checkbox" id="gyroLowpassDynEnabled" class="toggle" /></span>
-                                </td>
-                                <td colspan="2">
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningGyroLowpassDyn"></div>
-                                    <span i18n="pidTuningGyroLowpassDyn"></span>
-
-                                    <span class="suboption">
-                                        <input type="number" name="gyroLowpassDynMinFrequency" step="1" min="1" max="1000"/>
-                                        <label>
-                                            <span i18n="pidTuningCutoffFrequency"></span>
-                                        </label>
-									</span>
-									<span class="suboption">
-                                        <input type="number" name="gyroLowpassDynMaxFrequency" step="1" min="1" max="1000"/>
-                                        <label>
-                                            <span i18n="pidTuningCutoffFrequency"></span>
-                                        </label>
-                                    </span>
-									<span class="suboption">
-										<select name="gyroLowpassDynType">
-											<!--  Populated on execution -->
-										</select>
-										<label>
-											<span i18n="pidTuningGyroLowpassDynType"></span>
-										</label>
-									</span>
-                                </td>
-                            </tr>
-
-                            <tr class="gyroLowpassLegacy">
-                                <td>
-	                                <span class="inputSwitch"><input type="checkbox" id="gyroLowpassEnabled" class="toggle" /></span>
-                                </td>
-                                <td colspan="2">
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningGyroLowpass"></div>
-                                    <span i18n="pidTuningGyroLowpass"></span>
-
-                                    <span class="suboption">
-                                        <input type="number" class="nonProfile" name="gyroLowpassFrequency" step="1" min="1" max="255"/>
-                                        <label>
-                                            <span i18n="pidTuningCutoffFrequency"></span>
-                                        </label>
-                                    </span>
-                                    <span class="suboption">
-                                        <select name="gyroLowpassType">
-                                            <!--  Populated on execution -->
-                                        </select>
-                                        <label>
-                                            <span i18n="pidTuningGyroLowpassType"></span>
-                                        </label>
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <!-- firmware filter switches -->
 
                             <tr class="gyroLowpass">
                                 <td>
@@ -1540,20 +1393,6 @@
                                 <td colspan="2">
                                     <span i18n="pidTuningDynamicNotchFilterGroup"></span>
 
-                                    <span class="suboption dynamicNotchRange">
-                                        <select name="dynamicNotchRange">
-                                            <!--  Populated on execution -->
-                                        </select>
-                                        <label><span i18n="pidTuningDynamicNotchRange"></span></label>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchRangeHelp"></div>
-                                    </span>
-
-                                    <span class="suboption dynamicNotchWidthPercent">
-                                        <input type="number" name="dynamicNotchWidthPercent" step="1" min="0" max="20"/>
-                                        <label><span i18n="pidTuningDynamicNotchWidthPercent"></span></label>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchWidthPercentHelp"></div>
-                                    </span>
-
                                     <span class="suboption dynamicNotchCount">
                                         <input type="number" name="dynamicNotchCount" step="1" min="1" max="5"/>
                                         <label><span i18n="pidTuningDynamicNotchCount"></span></label>
@@ -1567,7 +1406,7 @@
                                     </span>
 
                                     <span class="suboption dynamicNotchMinHz">
-                                        <input type="number" name="dynamicNotchMinHz" step="1" min="60" max="1000"/>
+                                        <input type="number" name="dynamicNotchMinHz" step="1" min="60" max="250"/>
                                         <label><span i18n="pidTuningDynamicNotchMinHz"></span></label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchMinHzHelp"></div>
                                     </span>
@@ -1604,68 +1443,6 @@
                                     </div>
                                 </th>
                             </tr>
-
-                            <!-- Legacy filter switches -->
-                            <tr class="dtermLowpassDynLegacy">
-                                <td>
-                                    <span class="inputSwitch"><input type="checkbox" id="dtermLowpassDynEnabled" class="toggle" /></span>
-                                </td>
-                                <td colspan="3">
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningDTermLowpassDyn"></div>
-                                    <span i18n="pidTuningDTermLowpassDyn"></span>
-
-                                    <span class="suboption">
-                                        <span class="inputValue"><input type="number" name="dtermLowpassDynMinFrequency" step="1" min="1" max="1000"/></span>
-                                        <label>
-                                            <span i18n="pidTuningMinCutoffFrequency"></span>
-                                        </label>
-                                    </span>
-
-                                    <span class="suboption">
-                                        <span class="inputValue"><input type="number" name="dtermLowpassDynMaxFrequency" step="1" min="1" max="1000"/></span>
-                                        <label>
-                                            <span i18n="pidTuningMaxCutoffFrequency"></span>
-                                        </label>
-                                    </span>
-
-                                    <span class="suboption">
-                                        <select name="dtermLowpassDynType">
-                                            <!--  Populated on execution -->
-                                        </select>
-                                        <label>
-                                            <span i18n="pidTuningDTermLowpassDynType"></span>
-                                        </label>
-									</span>
-									
-                                </td>
-                            </tr>
-                            
-                            <tr class="dtermLowpassLegacy">
-                                <td>
-	                                <span class="inputSwitch"><input type="checkbox" id="dtermLowpassEnabled" class="toggle" /></span>
-                                </td>
-                                <td colspan="3">
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningDTermLowpass"></div>
-                                    <span i18n="pidTuningDTermLowpass"></span>
-
-                                    <span class="suboption">
-                                        <span class="inputValue"><input type="number" name="dtermLowpassFrequency" step="1" min="1" max="16000"/></span>
-                                        <label>
-                                            <span i18n="pidTuningStaticCutoffFrequency"></span>
-                                        </label>
-									</span>
-                                    <span class="suboption">
-                                        <select name="dtermLowpassType">
-                                            <!--  Populated on execution -->
-                                        </select>
-                                        <label>
-                                            <span i18n="pidTuningDTermLowpassType"></span>
-                                        </label>
-									</span>
-                                </td>
-                            </tr>
-
-                            <!-- firmware filter switches -->
 
                             <tr class="dtermLowpass">
                                 <td>
