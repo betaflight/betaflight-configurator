@@ -1893,17 +1893,17 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.RX_CONFIG.rcSmoothingInputType)
                 .push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
 
-                // Introduced in 1.42
-                buffer.push8(FC.RX_CONFIG.usbCdcHidType)
-                .push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
+            // Introduced in 1.42
+            buffer.push8(FC.RX_CONFIG.usbCdcHidType)
+            .push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
-                // Introduced in 1.44
-                buffer.push8(FC.RX_CONFIG.rcSmoothingMode);
+            // Introduced in 1.44
+            buffer.push8(FC.RX_CONFIG.rcSmoothingMode);
 
-                // Introduced in 1.45
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    FC.RX_CONFIG.elrsUid.forEach(b => buffer.push8(b));
-                }
+            // Introduced in 1.45
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                FC.RX_CONFIG.elrsUid.forEach(b => buffer.push8(b));
+            }
 
             break;
 
@@ -1995,16 +1995,17 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push16(FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 100)
                 .push8(0); // gyroUse32kHz not used
 
-                // Introduced in 1.42
-                buffer.push8(FC.PID_ADVANCED_CONFIG.motorPwmInversion)
-                    .push8(FC.SENSOR_ALIGNMENT.gyro_to_use) // We don't want to double up on storing this state
-                    .push8(FC.PID_ADVANCED_CONFIG.gyroHighFsr)
-                    .push8(FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold)
-                    .push16(FC.PID_ADVANCED_CONFIG.gyroCalibDuration)
-                    .push16(FC.PID_ADVANCED_CONFIG.gyroOffsetYaw)
-                    .push8(FC.PID_ADVANCED_CONFIG.gyroCheckOverflow)
-                    .push8(FC.PID_ADVANCED_CONFIG.debugMode);
-               break;
+            // Introduced in 1.42
+            buffer.push8(FC.PID_ADVANCED_CONFIG.motorPwmInversion)
+                .push8(FC.SENSOR_ALIGNMENT.gyro_to_use) // We don't want to double up on storing this state
+                .push8(FC.PID_ADVANCED_CONFIG.gyroHighFsr)
+                .push8(FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold)
+                .push16(FC.PID_ADVANCED_CONFIG.gyroCalibDuration)
+                .push16(FC.PID_ADVANCED_CONFIG.gyroOffsetYaw)
+                .push8(FC.PID_ADVANCED_CONFIG.gyroCheckOverflow)
+                .push8(FC.PID_ADVANCED_CONFIG.debugMode);
+
+            break;
         case MSPCodes.MSP_SET_FILTER_CONFIG:
             buffer.push8(FC.FILTER_CONFIG.gyro_lowpass_hz)
                 .push16(FC.FILTER_CONFIG.dterm_lowpass_hz)
@@ -2028,17 +2029,20 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push16(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz)
                 .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz)
                 .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
-                // Introduced in 1.42
-                buffer.push8(FC.FILTER_CONFIG.dyn_notch_range)
-                    .push8(FC.FILTER_CONFIG.dyn_notch_width_percent)
-                    .push16(FC.FILTER_CONFIG.dyn_notch_q)
-                    .push16(FC.FILTER_CONFIG.dyn_notch_min_hz)
-                    .push8(FC.FILTER_CONFIG.gyro_rpm_notch_harmonics)
-                    .push8(FC.FILTER_CONFIG.gyro_rpm_notch_min_hz);
-                // Introduced in 1.43
-                buffer.push16(FC.FILTER_CONFIG.dyn_notch_max_hz);
-                // Introduced in 1.44
-                buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo)
+
+            // Introduced in 1.42
+            buffer.push8(FC.FILTER_CONFIG.dyn_notch_range)
+                .push8(FC.FILTER_CONFIG.dyn_notch_width_percent)
+                .push16(FC.FILTER_CONFIG.dyn_notch_q)
+                .push16(FC.FILTER_CONFIG.dyn_notch_min_hz)
+                .push8(FC.FILTER_CONFIG.gyro_rpm_notch_harmonics)
+                .push8(FC.FILTER_CONFIG.gyro_rpm_notch_min_hz);
+
+            // Introduced in 1.43
+            buffer.push16(FC.FILTER_CONFIG.dyn_notch_max_hz);
+
+            // Introduced in 1.44
+            buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo)
                     .push8(FC.FILTER_CONFIG.dyn_notch_count);
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:
@@ -2084,27 +2088,27 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
                 .push8(FC.ADVANCED_TUNING.integratedYawRelax);
 
-                // Introduced in 1.42
-                buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
+            // Introduced in 1.42
+            buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
 
-                // Introduced in 1.43
-                buffer.push8(FC.ADVANCED_TUNING.motorOutputLimit)
-                    .push8(FC.ADVANCED_TUNING.autoProfileCellCount)
-                    .push8(FC.ADVANCED_TUNING.idleMinRpm);
+            // Introduced in 1.43
+            buffer.push8(FC.ADVANCED_TUNING.motorOutputLimit)
+                .push8(FC.ADVANCED_TUNING.autoProfileCellCount)
+                .push8(FC.ADVANCED_TUNING.idleMinRpm);
 
-                // Introduced in 1.44
-                buffer.push8(FC.ADVANCED_TUNING.feedforward_averaging)
-                    .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
-                    .push8(FC.ADVANCED_TUNING.feedforward_boost)
-                    .push8(FC.ADVANCED_TUNING.feedforward_max_rate_limit)
-                    .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
-                    .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
-                    .push8(FC.ADVANCED_TUNING.thrustLinearization);
+            // Introduced in 1.44
+            buffer.push8(FC.ADVANCED_TUNING.feedforward_averaging)
+                .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
+                .push8(FC.ADVANCED_TUNING.feedforward_boost)
+                .push8(FC.ADVANCED_TUNING.feedforward_max_rate_limit)
+                .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
+                .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
+                .push8(FC.ADVANCED_TUNING.thrustLinearization);
 
-                // Introduced in 1.45
-                buffer.push8(FC.ADVANCED_TUNING.tpaMode);
-                buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
-                buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
+            // Introduced in 1.45
+            buffer.push8(FC.ADVANCED_TUNING.tpaMode);
+            buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
+            buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
             buffer.push8(FC.SENSOR_CONFIG.acc_hardware)
@@ -2193,6 +2197,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             const millis = timestamp % 1000;
             buffer.push32(secs);
             buffer.push16(millis);
+
             break;
 
         case MSPCodes.MSP_SET_VTX_CONFIG:
