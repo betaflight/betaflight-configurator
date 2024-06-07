@@ -1869,9 +1869,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filter"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Type of RC smoothing used"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "The cutoff frequency in Hz used by the setpoint filter. Using lower values will result in smoother inputs and are more appropriate for slower receiver protocols. Most users should leave this at 0 corresponding to \"Auto\"."
     },
@@ -1880,12 +1877,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "The channels smoothing applies to"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "The type of filtering method used for the feedforward. Starting with 4.2 the default value of \"Auto\" is recommended. For 4.1 and earlier most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "The type of filtering method used for the setpoint. Most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Selects whether the setpoint filter cutoff frequency is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
@@ -1899,20 +1890,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Cutoff Frequency"
     },
-    "receiverRcSetpointType": {
-        "message": "Setpoint Filter Type"
-    },
     "receiverRcFeedforwardType": {
         "message": "Feedforward Filter Type"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Off"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Channels Smoothed"
     },
     "receiverRcSmoothingMode": {
         "message": "Smoothing Mode"

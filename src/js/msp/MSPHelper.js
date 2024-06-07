@@ -988,19 +988,19 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.RX_CONFIG.spektrum_sat_bind = data.readU8();
                 FC.RX_CONFIG.rx_min_usec = data.readU16();
                 FC.RX_CONFIG.rx_max_usec = data.readU16();
-                FC.RX_CONFIG.rcInterpolation = data.readU8();
-                FC.RX_CONFIG.rcInterpolationInterval = data.readU8();
+                data.readU8(); // was FC.RX_CONFIG.rcInterpolation
+                data.readU8(); // was FC.RX_CONFIG.rcInterpolationInterval
                 FC.RX_CONFIG.airModeActivateThreshold = data.readU16();
                 FC.RX_CONFIG.rxSpiProtocol = data.readU8();
                 FC.RX_CONFIG.rxSpiId = data.readU32();
                 FC.RX_CONFIG.rxSpiRfChannelCount = data.readU8();
                 FC.RX_CONFIG.fpvCamAngleDegrees = data.readU8();
-                FC.RX_CONFIG.rcInterpolationChannels = data.readU8();
-                FC.RX_CONFIG.rcSmoothingType = data.readU8();
+                data.readU8(); // was FC.RX_CONFIG.rcInterpolationChannels
+                data.readU8(); // was FC.RX_CONFIG.rcSmoothingType
                 FC.RX_CONFIG.rcSmoothingSetpointCutoff = data.readU8();
                 FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8();
-                FC.RX_CONFIG.rcSmoothingInputType = data.readU8();
-                FC.RX_CONFIG.rcSmoothingDerivativeType = data.readU8();
+                data.readU8(); // was FC.RX_CONFIG.rcSmoothingInputType
+                data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeType
                 FC.RX_CONFIG.usbCdcHidType = data.readU8();
                 FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
                 FC.RX_CONFIG.rcSmoothingMode = data.readU8();

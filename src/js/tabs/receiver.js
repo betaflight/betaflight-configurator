@@ -111,13 +111,6 @@ receiver.initialize = function (callback) {
         $('.sticks input[name="stick_center"]').val(FC.RX_CONFIG.stick_center);
         $('.sticks input[name="stick_max"]').val(FC.RX_CONFIG.stick_max);
 
-        $('select[name="rcInterpolation-select"]').val(FC.RX_CONFIG.rcInterpolation);
-        $('input[name="rcInterpolationInterval-number"]').val(FC.RX_CONFIG.rcInterpolationInterval);
-
-        $('select[name="rcInterpolation-select"]').change(function () {
-            tab.updateRcInterpolationParameters();
-        }).change();
-
         // generate bars
         const bar_names = [
             i18n.getMessage('controlAxisRoll'),
@@ -462,14 +455,9 @@ receiver.initialize = function (callback) {
             // catch rssi aux
             FC.RSSI_CONFIG.channel = parseInt($('select[name="rssi_channel"]').val());
 
-            FC.RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
-            FC.RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
-
             FC.RX_CONFIG.rcSmoothingSetpointCutoff = parseInt($('input[name="rcSmoothingSetpointHz-number"]').val());
             FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt($('input[name="rcSmoothingFeedforwardCutoff-number"]').val());
-            FC.RX_CONFIG.rcSmoothingDerivativeType = parseInt($('select[name="rcSmoothingFeedforwardType-select"]').val());
-            FC.RX_CONFIG.rcInterpolationChannels = parseInt($('select[name="rcSmoothingChannels-select"]').val());
-            FC.RX_CONFIG.rcSmoothingInputType = parseInt($('select[name="rcSmoothingSetpointType-select"]').val());
+
             FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
 
             if (tab.elrsBindingPhraseEnabled) {
@@ -623,16 +611,6 @@ receiver.initialize = function (callback) {
                 rcSmoothingFeedforwardNumberElement.val(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);
             }
         }).change();
-
-        const rcSmoothingFeedforwardType = $('select[name="rcSmoothingFeedforwardType-select"]');
-        rcSmoothingFeedforwardType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`));
-        rcSmoothingFeedforwardType.val(FC.RX_CONFIG.rcSmoothingDerivativeType);
-
-        const rcSmoothingChannels = $('select[name="rcSmoothingChannels-select"]');
-        rcSmoothingChannels.val(FC.RX_CONFIG.rcInterpolationChannels);
-
-        const rcSmoothingSetpointType = $('select[name="rcSmoothingSetpointType-select"]');
-        rcSmoothingSetpointType.val(FC.RX_CONFIG.rcSmoothingInputType);
 
         $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
             if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
@@ -888,14 +866,6 @@ receiver.refresh = function (callback) {
     });
 };
 
-receiver.updateRcInterpolationParameters = function () {
-    if ($('select[name="rcInterpolation-select"]').val() === '3') {
-        $('.tab-receiver .rc-interpolation-manual').show();
-    } else {
-        $('.tab-receiver .rc-interpolation-manual').hide();
-    }
-};
-
 function updateInterpolationView() {
     const smoothingOnOff = FC.RX_CONFIG.rcSmoothingMode;
 
@@ -908,11 +878,6 @@ function updateInterpolationView() {
         $('.tab-receiver .rcSmoothing-auto-factor').show();
     }
 
-    $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-    $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-    $('.tab-receiver .rc-smoothing-channels').hide();
-    $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
-    $('.tab-receiver .rcSmoothingType').hide();
     $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
     $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
 
