@@ -211,7 +211,7 @@ setup.initialize = function (callback) {
                 'BAD_RX_RECOVERY',
                 'BOXFAILSAFE',
                 'RUNAWAY_TAKEOFF',
-                'CRASH_DETECTED',
+                'CRASH_DETECTED', // THROTTLE before 1.42
                 'ANGLE',
                 'BOOT_GRACE_TIME',
                 'NOPREARM',
@@ -225,11 +225,13 @@ setup.initialize = function (callback) {
                 'GPS',
                 'RESC',
                 'RPMFILTER',
+                // Introduced in 1.42
                 'REBOOT_REQUIRED',
                 'DSHOT_BITBANG',
+                // Introduced in 1.43
                 'ACC_CALIBRATION',
                 'MOTOR_PROTOCOL',
-                'ARM_SWITCH',           // Needs to be the last element, since it's always activated if one of the others is active when arming
+                // 'ARM_SWITCH',           // Needs to be the last element, since it's always activated if one of the others is active when arming
             ];
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {

@@ -15,8 +15,6 @@ import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import PortHandler from "../port_handler";
-import { API_VERSION_1_42 } from "../data_storage";
-import semver from "semver";
 import $ from 'jquery';
 import serial from "../webSerial";
 import DFU from "../protocols/webusbdfu";
@@ -177,30 +175,6 @@ class STM32Protocol {
         serial.addEventListener('disconnect', (event) => this.handleDisconnect(event.detail) , { once: true });
     }
 
-    // TODO: remove this method once all devices are updated to use the new method
-    legacyRebootAndFlash() {
-        this.prepareSerialPort();
-        serial.connect(this.port, { bitrate: this.options.reboot_baud }, (openInfo) => {
-            if (!openInfo) {
-                GUI.connect_lock = false;
-                gui_log(i18n.getMessage('serialPortOpenFail'));
-                return;
-            }
-
-            console.log('Using legacy reboot method');
-
-            console.log('Sending ascii "R" to reboot');
-            const bufferOut = new ArrayBuffer(1);
-            const bufferView = new Uint8Array(bufferOut);
-
-            bufferView[0] = 0x52;
-
-            serial.send(bufferOut, () => {
-                serial.disconnect(disconnectionResult => this.handleDisconnect(disconnectionResult));
-            });
-        });
-    }
-
     reboot() {
         const buffer = [];
         buffer.push8(this.rebootMode);
@@ -260,14 +234,7 @@ class STM32Protocol {
     handleMSPConnect() {
         gui_log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            this.mspConnector.disconnect((disconnectionResult) => {
-                // need some time for the port to be closed, serial port does not open if tried immediately
-                setTimeout(this.legacyRebootAndFlash, 500);
-            });
-        } else {
-            this.lookingForCapabilitiesViaMSP();
-        }
+        this.lookingForCapabilitiesViaMSP();
     }
 
     // no input parameters
