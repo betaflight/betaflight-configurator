@@ -1810,7 +1810,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             buffer.push16(FC.MOTOR_CONFIG.minthrottle)
                 .push16(FC.MOTOR_CONFIG.maxthrottle)
                 .push16(FC.MOTOR_CONFIG.mincommand);
-            
+
             // Introduced in 1.42
             buffer.push8(FC.MOTOR_CONFIG.motor_poles);
             buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);

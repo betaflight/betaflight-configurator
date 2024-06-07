@@ -7,7 +7,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
 import semver from 'semver';
-import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import serial from '../webSerial';
 
 /**
@@ -150,7 +150,7 @@ class AutoDetect {
         await MSP.promise(MSPCodes.MSP_API_VERSION);
         gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
 
-        if (FC.CONFIG.apiVersion.includes('null') || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
+        if (FC.CONFIG.apiVersion.includes('null') || semver.lt(FC.CONFIG.apiVersion, "1.39.0")) {
             // auto-detect is not supported
             this.onFinishClose();
         } else {
