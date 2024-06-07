@@ -813,12 +813,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Reboot into <strong>boot loader / DFU</strong> mode."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Backup saved <span class=\"message-positive\">successfully</span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuration restored <span class=\"message-positive\">successfully</span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Reset Z axis, offset: 0 deg"
     },
