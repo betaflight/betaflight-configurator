@@ -1801,9 +1801,6 @@
         "message": "<b>D</b>erivative",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Note:</strong> D Max feature is disabled and its parameters are hidden. To use D Max please enable it in $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Dynamic Damping / D Max settings",
         "description": "Title for the options panel for the D Max feature"
@@ -4235,31 +4232,6 @@
         "message": "Increases all PID parameters equally. Don't change this slider unless you run out of adjustment on the other sliders. Typically this is only needed for low authority or high moment of inertia (MoI) quads like X-Class or cinelifter builds. Too much master gain may cause trilling oscillations or hot motors.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD Balance:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Changes D and D max. Relatively high D will dampen stick responsiveness and may make motors hot, but should help control P-term oscillations and will improve prop-wash oscillation.<br /><br />Relatively low D-term gives quicker stick responsiveness, but will weaken prop-wash performance and reacting to external forces (wind).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P and D Gain:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp":{
-        "message": "Lower P and D Gain will result in cooler motors but also in more prop-wash oscillation. Too low value may cause the quad to be unstable.<br /><br />P and D terms work together to reduce prop-wash.<br /><br />Higher values will increase motor heat and could increase oscillations during smooth forward flight due to higher D term gains.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Stick Response Gain:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Lower FF values will worsen the stick response and may result in slow bounceback at the end of a flip or roll due to the quad lagging the sticks too much and I-term winding up and cousing 'I-term Bounceback'.<br /><br />Higher FF values will give snappier stick responses in sharp moves. Excessively high FF values can cause overshoots and fast bounceback at the end of a flip or roll.<br /><br />Note:<br />The feature I-term Relax can stop the I-term from winding up on stick move for a low authority quads or if low Stick Response Gains are used.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
-
     "pidTuningDGainSlider": {
         "message": "Damping:<br /><i><small>D Gains</small></i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4341,17 +4313,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Filter Type"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Gyro Lowpass Dynamic Filter"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Min Cutoff Frequency [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Max Cutoff Frequency [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro Lowpass 1 Dynamic Filter Type"
     },
     "pidTuningGyroLowpass2": {
         "message": "Gyro Lowpass 2"
@@ -4411,9 +4377,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Range"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Dynamic Notch Width Percent"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q factor"
     },
@@ -4428,9 +4391,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving quads like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch quad, HIGH(230-800hz) for very high revving 2.5-3 inch quads. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "This sets the width between two dynamic notch filters. Setting it at 0 will disable the second dynamic notch filter and will reduce filter delay, however it may make motor temperatures higher."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q factor adjust how narrow or wide the dynamic notch filters are. Higher value makes it narrower and more precise and lower value makes it wider and broader. Having a really low value will greatly increase filter delay."
@@ -4500,14 +4460,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Filter Type"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "D Term Lowpass Dynamic Filter"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Dynamic Curve Expo"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Dynamic Filter Type"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filter"
