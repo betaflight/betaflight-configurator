@@ -145,6 +145,22 @@ class STM32Protocol {
                 }
             };
 
+            // Need to request permission [pairing] per USB device once [after clearing browser data]
+            setTimeout(async () => {
+                if (!PortHandler.dfuAvailable) {
+                    console.log('Checking for paired devices');
+                    const pairedDevices = await DFU.getDevices();
+
+                    if (!pairedDevices.length) {
+                        console.log('Requesting permission as no paired DFU device was found');
+                        const port = await DFU.requestPermission();
+                        if (port) {
+                            console.log('DFU device found on port', port);
+                        }
+                    }
+                }
+            }, 1000);
+
             const dfuWaitInterval = setInterval(waitForDfu, 1000);
         } else {
             GUI.connect_lock = false;
