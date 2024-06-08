@@ -118,7 +118,7 @@ class STM32Protocol {
     }
 
     handleDisconnect(disconnectionResult) {
-        console.log('Waiting for DFU connection', disconnectionResult);
+        console.log('Waiting for DFU connection');
 
         serial.removeEventListener('connect', (event) => this.handleConnect(event.detail));
         serial.removeEventListener('disconnect', (event) => this.handleDisconnect(event.detail));
@@ -126,12 +126,12 @@ class STM32Protocol {
         if (disconnectionResult) {
             // wait until board boots into bootloader mode
             // MacOs may need 5 seconds delay
-            let failedAttempts = 0;
-            let dfuWaitInterval = null;
+            let failedAttempts = 1; // take into account interval delay
 
-            function waitForDfu() {
+            const waitForDfu = () => {
                 if (PortHandler.dfuAvailable) {
                     console.log(`DFU available after ${failedAttempts} seconds`);
+
                     clearInterval(dfuWaitInterval);
                     this.startFlashing();
                 } else {
@@ -143,25 +143,9 @@ class STM32Protocol {
                         GUI.connect_lock = false;
                     }
                 }
-            }
+            };
 
-            if (PortHandler.dfuAvailable) {
-                console.log('DFU device found');
-                this.startFlashing();
-            } else {
-                DFU.requestPermission().then(port => {
-                    if (port) {
-                        console.log('DFU device found on port', port);
-                        this.startFlashing();
-                    } else {
-                        console.log('No DFU device found');
-                        dfuWaitInterval = setInterval(() => {
-                            console.log('Checking for DFU connection');
-                            waitForDfu();
-                        }, 1000);
-                    }
-                });
-            }
+            const dfuWaitInterval = setInterval(waitForDfu, 1000);
         } else {
             GUI.connect_lock = false;
         }
