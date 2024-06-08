@@ -159,7 +159,7 @@ class STM32Protocol {
 
             try {
                 if (selectedBoard !== connectedBoard && !TABS.firmware_flasher.localFirmwareLoaded) {
-                    TABS.firmware_flasher.showDialogVerifyBoard(selectedBoard, connectedBoard, this.onAbort, this.reboot);
+                    TABS.firmware_flasher.showDialogVerifyBoard(selectedBoard, connectedBoard, this.reboot.bind(this), this.onAbort.bind(this));
                 } else {
                     this.reboot();
                 }

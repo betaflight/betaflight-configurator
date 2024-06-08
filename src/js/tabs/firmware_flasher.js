@@ -1199,20 +1199,22 @@ firmware_flasher.refresh = function (callback) {
     });
 };
 
-firmware_flasher.showDialogVerifyBoard = function (selected, verified, onAbort, onAccept) {
+firmware_flasher.showDialogVerifyBoard = function (selected, verified, onAccept, onAbort) {
     const dialogVerifyBoard = $('#dialog-verify-board')[0];
 
     $('#dialog-verify-board-content').html(i18n.getMessage('firmwareFlasherVerifyBoard', {selected_board: selected, verified_board: verified}));
 
     if (!dialogVerifyBoard.hasAttribute('open')) {
         dialogVerifyBoard.showModal();
-        $('#dialog-verify-board-abort-confirmbtn').click(function() {
-            dialogVerifyBoard.close();
-            onAbort();
-        });
-        $('#dialog-verify-board-continue-confirmbtn').click(function() {
+
+        $('#dialog-verify-board-continue-confirmbtn').on('click', function() {
             dialogVerifyBoard.close();
             onAccept();
+        });
+
+        $('#dialog-verify-board-abort-confirmbtn').on('click', function() {
+            dialogVerifyBoard.close();
+            onAbort();
         });
     }
 };
