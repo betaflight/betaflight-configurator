@@ -14,7 +14,6 @@ import { bit_check } from "../bit";
 import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
-import PortHandler from "../port_handler";
 import $ from 'jquery';
 import serial from "../webSerial";
 import DFU from "../protocols/webusbdfu";
@@ -82,29 +81,6 @@ class STM32Protocol {
         this.handleMSPConnect = this.handleMSPConnect.bind(this);
     }
 
-    startFlashing() {
-        if (this.rebootMode === 0) {
-            return;
-        }
-
-        // refresh device list
-        if (PortHandler.dfuAvailable) {
-            DFU.connect(this.hex, this.serialOptions);
-        } else {
-            // TODO: update to use web serial / USB API
-            this.prepareSerialPort();
-            console.log('Connecting to serial port', this.port, this.baud);
-            serial.connect(this.port, { bitrate: this.baud, parityBit: 'even', stopBits: 'one' }, (openInfo) => {
-                if (openInfo) {
-                    this.initialize();
-                } else {
-                    GUI.connect_lock = false;
-                    gui_log(i18n.getMessage('serialPortOpenFail'));
-                }
-            });
-        }
-    }
-
     handleConnect(event) {
         console.log('Connected to serial port', event.detail, event);
         if (event) {
@@ -124,44 +100,7 @@ class STM32Protocol {
         serial.removeEventListener('disconnect', (event) => this.handleDisconnect(event.detail));
 
         if (disconnectionResult) {
-            // wait until board boots into bootloader mode
-            // MacOs may need 5 seconds delay
-            let failedAttempts = 1; // take into account interval delay
-
-            const waitForDfu = () => {
-                if (PortHandler.dfuAvailable) {
-                    console.log(`DFU available after ${failedAttempts} seconds`);
-
-                    clearInterval(dfuWaitInterval);
-                    this.startFlashing();
-                } else {
-                    failedAttempts++;
-                    if (failedAttempts > 10) {
-                        clearInterval(dfuWaitInterval);
-                        console.log(`failed to get DFU connection, gave up after 10 seconds`);
-                        gui_log(i18n.getMessage('serialPortOpenFail'));
-                        GUI.connect_lock = false;
-                    }
-                }
-            };
-
-            // Need to request permission [pairing] per USB device once [after clearing browser data]
-            setTimeout(async () => {
-                if (!PortHandler.dfuAvailable) {
-                    console.log('Checking for paired devices');
-                    const pairedDevices = await DFU.getDevices();
-
-                    if (!pairedDevices.length) {
-                        console.log('Requesting permission as no paired DFU device was found');
-                        const port = await DFU.requestPermission();
-                        if (port) {
-                            console.log('DFU device found on port', port);
-                        }
-                    }
-                }
-            }, 1000);
-
-            const dfuWaitInterval = setInterval(waitForDfu, 1000);
+            DFU.connect(this.hex, this.serialOptions);
         } else {
             GUI.connect_lock = false;
         }
