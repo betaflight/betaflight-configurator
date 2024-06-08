@@ -99,7 +99,7 @@ class STM32Protocol {
         serial.removeEventListener('connect', (event) => this.handleConnect(event.detail));
         serial.removeEventListener('disconnect', (event) => this.handleDisconnect(event.detail));
 
-        if (disconnectionResult) {
+        if (disconnectionResult && this.rebootMode) {
             DFU.connect(this.hex, this.serialOptions);
         } else {
             GUI.connect_lock = false;
