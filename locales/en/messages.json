@@ -4569,7 +4569,7 @@
         "message": "Acro Trainer Angle Limit"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Helps pilots learn to fly in acro mode by limiting the angle that the quad can attaion. Valid limits are 10-80 degrees.  The mode must be activated with a switch in the $t(tabAuxiliary.message) tab."
+        "message": "Helps pilots learn to fly in acro mode by limiting the angle that the quad can attain. Valid limits are 10-80 degrees.  The mode must be activated with a switch in the $t(tabAuxiliary.message) tab."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integrated Yaw"
