@@ -6,7 +6,6 @@ import VirtualFC from "../VirtualFC";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import PortHandler from "../port_handler";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
@@ -3412,8 +3411,6 @@ osd.initialize = function(callback) {
 };
 
 osd.cleanup = function(callback) {
-    PortHandler.flush_callbacks();
-
     if (OSD.GUI.fontManager) {
         OSD.GUI.fontManager.destroy();
     }

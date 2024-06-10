@@ -170,32 +170,4 @@ PortHandler.selectActivePort = function(suggestedDevice) {
     return selectedPort;
 };
 
-/************************************
-// TODO all the methods from here need to be refactored or removed
-************************************/
-
-PortHandler.flush_callbacks = function () {
-    let killed = 0;
-
-    for (let i = this.port_detected_callbacks?.length - 1; i >= 0; i--) {
-        if (this.port_detected_callbacks[i].timer) {
-            clearTimeout(this.port_detected_callbacks[i].timer);
-        }
-        this.port_detected_callbacks.splice(i, 1);
-
-        killed++;
-    }
-
-    for (let i = this.port_removed_callbacks?.length - 1; i >= 0; i--) {
-        if (this.port_removed_callbacks[i].timer) {
-            clearTimeout(this.port_removed_callbacks[i].timer);
-        }
-        this.port_removed_callbacks.splice(i, 1);
-
-        killed++;
-    }
-
-    return killed;
-};
-
 export default PortHandler;

@@ -951,13 +951,13 @@ firmware_flasher.initialize = function (callback) {
              *    Auto-detect board and set the dropdown to the correct value
              */
 
-            AutoDetect.verifyBoard();
+            if (!GUI.connect_lock) {
+                AutoDetect.verifyBoard(PortHandler.portPicker.selectedPort);
+            }
 
             // prevent spamming the button
             setTimeout(() => detectBoardElement.toggleClass('disabled', false), 2000);
         });
-
-        self.updateDetectBoardButton();
 
         $('a.flash_firmware').on('click', function () {
             self.isFlashing = true;
@@ -978,7 +978,9 @@ firmware_flasher.initialize = function (callback) {
 
             // Backup not available in DFU, manual or virtual mode.
             // When flash on connect is enabled, the backup dialog is not shown.
-            if (self.isSerialPortAvailable() && !isFlashOnConnect) {
+            if (isFlashOnConnect || !(PortHandler.portAvailable || GUI.connect_lock)) {
+                initiateFlashing();
+            } else {
                 GUI.showYesNoDialog(
                     {
                         title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
@@ -989,8 +991,6 @@ firmware_flasher.initialize = function (callback) {
                         buttonNoCallback: initiateFlashing,
                     },
                 );
-            } else {
-                initiateFlashing();
             }
         });
 
@@ -1121,8 +1121,6 @@ firmware_flasher.initialize = function (callback) {
             } else {
                 // Cancel the flash on connect
                 GUI.timeout_remove('initialization_timeout');
-
-                PortHandler.flush_callbacks();
             }
         }).change();
 
@@ -1144,21 +1142,11 @@ firmware_flasher.initialize = function (callback) {
 // Helper functions
 
 
-firmware_flasher.isSerialPortAvailable = function() {
-    return PortHandler.portAvailable && !GUI.connect_lock;
-};
-
-firmware_flasher.updateDetectBoardButton = function() {
-    $('a.detect-board').toggleClass('disabled', !this.isSerialPortAvailable());
-};
-
 firmware_flasher.validateBuildKey = function() {
     return this.cloudBuildKey?.length === 32 && navigator.onLine;
 };
 
 firmware_flasher.cleanup = function (callback) {
-    PortHandler.flush_callbacks();
-
     // unbind "global" events
     $(document).unbind('keypress');
     $(document).off('click', 'span.progressLabel a');

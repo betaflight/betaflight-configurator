@@ -1,6 +1,5 @@
 import { i18n } from "../localization";
 import GUI, { TABS } from '../gui';
-import { isWeb } from "../utils/isWeb";
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { tracking } from "../Analytics";
 import { bit_check } from "../bit";
@@ -522,33 +521,12 @@ receiver.initialize = function (callback) {
                 }
             };
 
-            if (isWeb()) {
-                const createdWindow = open("/receiver_msp/receiver_msp.html", "receiver_msp", `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`);
-                createdWindow.setRawRx = rxFunction;
+            const createdWindow = open("/receiver_msp/receiver_msp.html", "receiver_msp", `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`);
+            createdWindow.setRawRx = rxFunction;
 
-                DarkTheme.isDarkThemeEnabled(function(isEnabled) {
-                    windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
-                });
-
-            } else {
-                chrome.app.window.create("/receiver_msp/receiver_msp.html", {
-                    id: "receiver_msp",
-                    innerBounds: {
-                        minWidth: windowWidth, minHeight: windowHeight,
-                        width: windowWidth, height: windowHeight,
-                        maxWidth: windowWidth, maxHeight: windowHeight,
-                    },
-                    alwaysOnTop: true,
-                }, function(createdWindow) {
-                    // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
-                    createdWindow.contentWindow.setRawRx = rxFunction;
-
-                    DarkTheme.isDarkThemeEnabled(function(isEnabled) {
-                        windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
-                    });
-
-                });
-            }
+            DarkTheme.isDarkThemeEnabled(function(isEnabled) {
+                windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
+            });
         });
 
         let showBindButton = false;
