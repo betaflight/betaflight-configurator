@@ -730,12 +730,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Reboot til <strong>boot loader-\/DFU-tilstand<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Sikkerhedskopi er <span class=\"message-positive\">gemt<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Sikkerhedskopi er <span class=\"message-positive\">indlæst og konfiguration er gendannnet<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Nulstil Z-akse, forskydn.: 0 gr"
     },
@@ -1708,9 +1702,6 @@
         "message": "<b>D<\/b>erivativ (afledt)",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Bemærk:<\/strong> D max funktion er deaktiveret og dens parametre er skjult. For at bruge D max skal du aktivere den i $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Dynamisk dæmpning \/ D Maks. indstillinger",
         "description": "Title for the options panel for the D Max feature"
@@ -1829,33 +1820,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanaler udjævnet"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC interpolation"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC TX-\/RX-systemer er ikke så hurtige som PID loops. Det betyder, at en PID loop har huller i informationsstrømmen fra RC systemer. Denne indstilling muliggør interpolering af RC input på de tidspunkter, hvor der ikke modtages RC frames. Muligheden giver også renere P- og D-adfærd, da kontrolinput ikke sker rykvist."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interpoleringsinterval i millisekunder ved manuel RC interpolationstilstand"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Fra"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Udjævnings type"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Forvalgt"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manuel"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC-interpoleringsinterval [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Anvend udjævning"
@@ -2465,18 +2429,6 @@
     },
     "adjustmentsHelp": {
         "message": "Opsætning af kanal justeringer. Se 'in-flight adjustments' delen af manualen for detaljer. Ændringer gemmes Ikke automatisk."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Der er 4 ind\/udgangs porte, der ved brug til løbende justeringer kræver eksklusivitet dvs ikke delt funktionalitet - een funktion per port."
-    },
-    "adjustmentsExamples": {
-        "message": "Eksempler:"
-    },
-    "adjustmentsExample1": {
-        "message": "Brug en 3-positions kontakt på AUX1 for at vælge mellem højderor\/krængror P, I og D. Brug en anden 3-positionskontakt på AUX2 for plus og minus."
-    },
-    "adjustmentsExample2": {
-        "message": "Brug en 3- positions kontakt på AUX4 for at skifte 'Profilvalg Rate' på den samme kanal."
     },
     "adjustmentsColumnEnable": {
         "message": "Hvis aktiveret"
@@ -3558,6 +3510,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Ingen firmware image er valgt<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "Ingen firmware er brændt"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Vælg venligst gyldig seriel port<\/span>"
     },
@@ -4178,30 +4133,6 @@
         "message": "Øger alle PID parametre ens. Undlad at ændre denne skyder medmindre du løber tør for justering på de andre skydere. Typisk er dette kun nødvendigt for langsomme fartøjer eller ved højt inerti (MoI) fartøjer som X-Class eller cinelifter fartøjer. For meget generel forstærkning kan forårsage rullende svingninger eller varme motorer.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD balance:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Ændringer D og D maks. Relativt høj D vil dæmpe pind respons og kan gøre motorerne varme, men bør hjælpe med at kontrollere P-term svingninger og vil forbedre mod svinginger fra propel turbulens.<br \/><br \/>Relativt lav D-term giver hurtigere pind respons, men vil svække ydelse mod propel turbulens og reagere på eksterne kræfter (vind).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P og D forstærkning:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Lavere P og D forstærkning vil resultere i mere kølig motor, men også i mere svingning fra propel turbulens. For lav værdi kan forårsage at fartøjet er  ustabilt.<br \/><br \/>P og D vilkår arbejder sammen for at reducere propel turbulens.<br \/><br \/>Højere værdier vil øge motorvarme og kan øge svingninger under glat fremadgående flyvning på grund af højere D term forstærkning.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Pin respons forstærkning:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Lavere FF værdier vil forværre svar fra pind og kan resultere i langsom bounceback i slutningen af en flip eller krænging på grund af fartøjet sløver svar fra pind for meget og I-term hobes op og forårsager 'I-term Bounceback'.<br \/><br \/>Højere FF-værdier vil give kvikke pind svar i skarpe bevægelser. Overdreven høje FF-værdier kan forårsage overskridelser og hurtig bounceback i slutningen af en flip eller krænging.<br \/><br \/>Bemærk:<br \/>Funktionen I-term Relax kan forhindre I-term fra ophobning af pind bevægelser fra langsomt fartøj eller hvis pind giver svage svar værdier.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Dæmpning:<br \/><i><small>D forstærkning<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4283,17 +4214,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Filtertype"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "D Term Lowpass Dynamic filter"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Min. afskæringsfrekvens [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Maks. afskæringsfrekvens [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro Lowpass 1 Dynamisk filtertype"
     },
     "pidTuningGyroLowpass2": {
         "message": "Gyro Lowpass 2"
@@ -4353,9 +4278,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamisk Notch filter område"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Dynamisk Notch bredde i pct"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q faktor"
     },
@@ -4370,9 +4292,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Den dynamiske hak har tre frekvensområder, hvor det kan betjene: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2. -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro Dynamic Lowpass 1 Filters max cutoff frekvens."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Dette indstiller bredden mellem to dynamiske hak filtre. Indstilling af det på 0 vil deaktivere det andet dynamiske hak filter og vil reducere filter forsinkelse, men det kan gøre motortemperaturer højere."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q faktor justerer, hvor smalle eller brede de dynamiske hak filtre er. Højere værdi gør det smallere og mere præcis og lavere værdi gør det bredere og bredere. At have en virkelig lav værdi vil i høj grad øge filter forsinkelse."
@@ -4442,14 +4361,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Filtertype"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "D Term Lowpass Dynamic filter"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Dynamisk Kurve Expo"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Dynamisk Filtertype"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch filter"
@@ -4563,7 +4476,7 @@
         "message": "Acro træner, maksimal vinkel"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Arco tilstand kan hjælpe piloten med at flyve, ved at begrænse den vinkel fartøjet placers i. Gyldige grænser mellem 10-80 grader. Tilstanden skal aktiveres med en kanal tilstand i fanen $t(tabAuxiliary.message)."
+        "message": "Arco tilstand begrænser den vinkel fartøjet placeres i, og kan hjælpe piloten med at flyve. Gyldige grænser mellem 10-80 grader. Tilstanden skal aktiveres med en kanal i fanen $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integreret sideror"
@@ -6710,10 +6623,7 @@
         "message": "ESC\/Motor protocol"
     },
     "configurationEscProtocolHelp": {
-        "message": "Vælg din motorprotokol. <br>Sørg for at verificere, at protokollen er understøttet af din ESC, denne information skal i dokumentation på leverandørs hjemmeside. <br> <b>Vær forsigtig med at bruge DSHOT900 og DSHOT1200 som ikke understøttes af særligt mange ESC !<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Vælg din motorprotokol. <br>Sørg for at verificere, at protokollen er understøttet af din ESC, denne information skal være i dokumentation på leverandørs hjemmeside."
+        "message": "Vælg din motorprotokol. <br>Sørg for at verificere, at din ESC understøtter protokollen, hvilken bør kunne findes i dokumentationen på leverandørs hjemmeside."
     },
     "configurationunsyndePwm": {
         "message": "Motor PWM hastighed adskilt fra PID hastighed"

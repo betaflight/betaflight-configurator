@@ -1292,9 +1292,6 @@
         "message": "閾值",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>注意:<\/strong>D Min功能已被禁用，其參數已隱藏。要使用D Min，請在$t(pidTuningPidSettings.message)中啟用它。"
-    },
     "pidTuningDMinGain": {
         "message": "增益",
         "description": "Gain of the D Max feature"
@@ -1329,33 +1326,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "平滑通道"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC 插值"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC 系統的運行速率沒有飛控 PID 運行速率那么快。這意味著 RC 訊號流傳入 PID 環路時會存在訊號真空期。開啟 RC 插值會在無 RC 訊號的的真空期內對其進行插值處理，這會使 P 和 D 表現得更加順滑。"
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "手動設置 RC 訊號插值間隔 [毫秒]"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "關閉"
-    },
-    "receiverRcSmoothingType": {
-        "message": "平滑類型"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "預設"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "自動"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "手動"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC 插值間隙 [毫秒]"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D 設定點轉換閥值"
@@ -1603,18 +1573,6 @@
     },
     "adjustmentsHelp": {
         "message": "配置調整開關。詳細訊息請參閱手冊中的“飛行中調整”章節。通過該調整功能所進行的更改將不會被自動保存。"
-    },
-    "adjustmentSlotsHelp": {
-        "message": "共有四個滑槽。同時進行調整時每個開關都需要配置專用滑槽。"
-    },
-    "adjustmentsExamples": {
-        "message": "例如："
-    },
-    "adjustmentsExample1": {
-        "message": "使用AUX1通道上的三段開關在Pitch\/Roll 的 P, I 和 D 之間選擇，使用AUX2通道的三段開關來上下增大和減小數值（撥高，或撥低）。"
-    },
-    "adjustmentsExample2": {
-        "message": "使用 AUX4 通道上的三段開關來選擇 Rate 配置文件"
     },
     "adjustmentsColumnEnable": {
         "message": "如果激活"
@@ -2808,22 +2766,11 @@
         "message": "主乘數:",
         "description": "Master tuning slider label"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD 平衡:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P 和 D 增益:",
-        "description": "P and D Gain tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "陀螺儀低通濾波器"
     },
     "pidTuningGyroLowpassType": {
         "message": "陀螺儀低通濾波器1類型"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "陀螺儀低通濾波器1動態濾波器類型"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "陀螺儀陷波濾波器"
@@ -2834,14 +2781,8 @@
     "pidTuningDynamicNotchRange": {
         "message": "動態陷波濾波器範圍"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "動態陷波濾波器寬度百分比"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "動態陷波濾波器有三個頻率範圍可供運行：LOW(80-330hz) 用於6英寸及以上的低速巡航機，MEDIU(140-550hz) 用於常見的5英寸飛行器，HIGH(230-800hz)用於電機轉速較高的2.5-3英寸的飛行器。 AUTO 選項將會使用陀螺儀低通濾波器1最高截止頻率範圍來決定頻率範圍。"
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "這設置了兩個動態陷波濾波器之間的寬度。設置為0將禁用第二個動態陷波濾波器，並減少濾波延遲，但是它可能會使電機溫度更高。"
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q調整了動態陷波濾波器的寬度。更高的值將使其變得更窄、更精準，較低的值將使其變得更寬、更寬泛。將Q調到很低將會帶來很大的濾波器延遲。"
@@ -4613,12 +4554,6 @@
     },
     "configurationEscProtocol": {
         "message": "電調\/電機協議"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "選擇電調協議。 <br>請確認你的電調支援該協議，電調製造商應該有提供這些訊息。 <br> <b>選擇 DSHOT900 或 DSHOT1200 時請注意，目前沒有很多電調支援這個協議！ <\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "選擇您的電機協議。 <br>請驗證您的電調支援此協議，此訊息應在製造商的網站上。"
     },
     "configurationunsyndePwm": {
         "message": "電機PWM速度獨立於PID速度"

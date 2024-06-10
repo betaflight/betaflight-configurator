@@ -696,12 +696,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Redémarrer en mode <strong>boot loader \/ DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Sauvegarde <span class=\"message-positive\">réussie<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuration restaurée <span class=\"message-positive\">avec succès<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Réinitialiser l'axe Z, écart: 0 deg"
     },
@@ -1506,9 +1500,6 @@
         "message": "<b>D<\/b>érivée",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Note:<\/strong> La fonctionnalité D Max est désactivée et ses paramètres sont cachés. Pour utiliser D Max, veuillez l'activer dans $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Atténuation dynamique \/ réglages D Max",
         "description": "Title for the options panel for the D Max feature"
@@ -1627,33 +1618,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Canaux lissés"
-    },
-    "receiverRcInterpolation": {
-        "message": "Interpolation RC"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Les systèmes RC TX\/RX ne sont pas aussi rapides que les boucles PIDs. Des boucles PIDs se retrouvent donc sans information RC. Cette option permet une interpolation des entrées RC pour chaque boucle où elles sont absentes. Avec cette option, les P et les D sont moins brusques puisque la courbe des entrées RC est lissée."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Intervalle (en millisecondes) d'interpolation pour le mode d'interpolation RC manuel"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Désactivé"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Type de lissage"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Preset"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manuel"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Intervalle d'interpolation RC [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Type de lissage"
@@ -2043,18 +2007,6 @@
     },
     "adjustmentsHelp": {
         "message": "Configurer les commutateurs d'ajustement. Voir la section \"ajustements en vol\" du manuel pour plus de détails. Les modifications que les fonctions d'ajustement effectuent ne sont pas enregistrées automatiquement."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Il y a 4 emplacements. Chaque commutateur utilisé pour effectuer des ajustements nécessite l'utilisation exclusive d'une position."
-    },
-    "adjustmentsExamples": {
-        "message": "Exemples:"
-    },
-    "adjustmentsExample1": {
-        "message": "Utilisez un commutateur à trois positions sur AUX1 pour sélectionner entre Pitch\/Roll P, I et D et un autre commutateur à trois positions sur AUX2 pour augmenter ou diminuer la valeur lorsqu'elle est maintenue vers le haut ou vers le bas."
-    },
-    "adjustmentsExample2": {
-        "message": "Utilisez un commutateur à trois positions sur AUX4 pour sélectionner Activer la Sélection de \"Profil Rate\" via le même commutateur à trois positions sur le même canal."
     },
     "adjustmentsColumnEnable": {
         "message": "Si activé"
@@ -3044,6 +2996,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Aucun Firmware choisi<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "Aucune cible chargée"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Merci de choisir un port valide<\/span>"
     },
@@ -3597,30 +3552,6 @@
         "message": "Augmente tous les paramètres PID de la même façon. Ne modifiez pas ce curseur à moins que vous ne soyez à court d'ajustement sur les autres curseurs. Typiquement, ce n'est nécessaire que pour les quads à faible autorité ou de haut niveau d'inertie (MoI) comme les construction de la classe X ou des cinelifter. Un trop grand gain maître peut causer des oscillations ou des moteurs chauds.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Balance PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Changements D et D max. Un D relativement élevé réduira la réactivité des sticks et fera chauffer les moteurs, mais devrait aider à contrôler les oscillations P-term et améliorera l'oscillation du prop-wash.<br \/><br \/>D-term relativement bas donne une réactivité des sticks plus rapide, mais affaiblira les performances de prop-wash et la réaction aux forces extérieures (vent).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Gain P et D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Des valeurs de gains P et D faibles permettent de garder les moteurs froids au détriment d'oscillation de prop-wash. Des valeurs trop basses peuvent rendre le drone instable. <br \/><br \/> Les valeurs du P et du D fonctionnent ensemble pour réduire ces oscillations de prop-wash. <br \/><br \/>Des valeurs élevés augmenteront la température des moteurs ainsi que les oscillations lors de vols doux si le D est trop élevé.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Gain réponse aux sticks:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Des valeurs faibles de FF diminueront la réactivité des commandes et provoqueront également des rebonds lents à la fin de flip ou de roll venant du fait que le mouvement du drone sera en retard par rapport aux commandes et que la montée du I-term se traduira en un rebond du I-term..<br \/><br \/> Des valeurs plus élevées favoriseront une plus grande réactivité du drone face aux commandes imposées en particulier dans les mouvements brusques. En revanche, des valeurs trop importantes causeront des dépassements et des rebonds rapides à la fin de flip ou roll..<br \/><br \/> Note:.<br \/> le i-term relax peut aider à maintenir le I-term lors de mouvement du stick en particulier pour les drones peu réactifs ou si les gains de la réponse des sticks est faibles.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Atténuation:<br \/><i><small>D Gains<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -3702,17 +3633,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Type de filtre"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Filtre passe-bas dynamique du gyro"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Fréquence de coupure min [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Fréquence de coupure max [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Type de filtre dynamique Gyro passe-bas 1"
     },
     "pidTuningGyroLowpass2": {
         "message": "Gyro passe-bas 2"
@@ -3772,9 +3697,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Étendue du filtre coupe bande dynamique"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Largeur de la coupure dynamique en pourcent"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Facteur Q"
     },
@@ -3789,9 +3711,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Le Notch (filtre coupe bande) dynamique peut fonctionner sur trois plages de fréquences : BAS(80-330hz) pour des quads à vitesse de rotation faible comme les 6 pouces et +, MEDIUM(140-550hz) pour un quad normal de 5 pouces, HIGH(230-800hz) pour des vitesses de rotation élevées comme les 2,5-3 pouces. AUTO choisit la plage selon les valeurs de coupure du filtre Dynamique Gyro passe-bas 1."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Définit l'écart entre deux filtres coupe bande (notch) dynamiques. 0 désactive le second filtre coupe bande dynamique et réduit la latence liée au filtrage, mais peut engendrer des températures moteurs plus élevées."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q ajuste la largeur de plage du filtre coupe bande Dynamique. Une valeur élevée rétrécie la plage et le rend plus précis, une valeur élevée élargit la plage. Une valeur vraiment basse augmente significativement la latence liée au filtrage."
@@ -3861,14 +3780,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Type de filtre"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Filtre dynamique passe-bas du D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo à courbe Dynamique"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Type de filtre dynamique"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtre coupe bande du terme D"
@@ -3974,9 +3887,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limite d'angle Acro Trainer"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Aide les pilotes à apprendre à voler en mode acro en limitant l'angle que le quad peut atteindre. Les limites valides sont de 10-80 degrés. Le mode doit être activé avec un commutateur dans l'onglet $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw intégré"
@@ -5921,12 +5831,6 @@
     },
     "configurationEscProtocol": {
         "message": "Protocole ESC\/moteur"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Sélectionnez votre protocole ESC. <br> Assurez-vous de vérifier que le protocole est pris en charge par votre ESC, cette information devrait être sur le site Web des fabricants. <br> <b> Soyez prudent en utilisant DSHOT900 et DSHOT1200 car peu d'ESC le supportent!<\/ b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Sélectionnez votre protocole moteur. <br>Vérifiez bien que le protocole est pris en charge par votre ESC. Cette information devrait se trouver sur le site web du fabricant."
     },
     "configurationunsyndePwm": {
         "message": "Vitesse du moteur PWM séparée de la vitesse PID"

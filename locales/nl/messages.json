@@ -1396,33 +1396,6 @@
     "receiverRcSmoothingChannel": {
         "message": "Kanalen Smoothed"
     },
-    "receiverRcInterpolation": {
-        "message": "RC interpolatie"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC TX\/RX systemen zijn niet zo snel als de PID loops. Dat betekent dat de PID loop gaten heeft in de informatie stroom van de RC systemen. Deze optie zet interpolatie van de RC aan wanneer er geen RC frames worden ontvangen. Deze optie zorgt voor een beter P en D gedrag omdat er geen schokkende invoer is."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interpolatie interval voor handmatige RC interpolatie modus in milliseconden"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Uit"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Smoothing Type"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Voorinstelling"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Handmatig"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC interpolatie interval [ms]"
-    },
     "receiverRcSmoothingMode": {
         "message": "Vloeiende Modus"
     },
@@ -1699,18 +1672,6 @@
     },
     "adjustmentsHelp": {
         "message": "Configureer de aanpassingsschakelaars. Zie het gedeelte 'aanpassingen tijdens de vlucht' in de handleiding voor details. De wijzigingen die de aanpassingsfuncties aanbrengen worden niet automatisch opgeslagen."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Er zijn 4 slots. Elke schakelaar, die wordt gebruikt om tegelijkertijd aanpassingen uit te voeren, vereist exclusief gebruik van een slot."
-    },
-    "adjustmentsExamples": {
-        "message": "Voorbeelden:"
-    },
-    "adjustmentsExample1": {
-        "message": "Gebruik een 3 positie schakelaar op AUX1 om te schakelen tussen de P, I en D waarde van Pitch en Roll. En gebruik nog een drie positieschakelaar op AUX2 om de waarde van de geselecteerde instelling te verhogen of te verlagen wanneer deze in de omhoog of omlaag positie wordt geplaatst."
-    },
-    "adjustmentsExample2": {
-        "message": "Gebruik een schakelaar met drie standen op AUX4 om Rate Profiel Selectie in te schakelen. Met behulp van deze schakelaar kan je schakelen tussen de drie Rate profielen."
     },
     "adjustmentsColumnEnable": {
         "message": "Indien ingeschakeld"
@@ -3057,22 +3018,11 @@
         "message": "Hoofd Vermenigvuldiger:",
         "description": "Master tuning slider label"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD Balans:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P and D Gain:",
-        "description": "P and D Gain tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filters"
     },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 Filtertype"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro Lowpass 1 Dynamisch Filtertype"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filters"
@@ -3083,14 +3033,8 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Bereik"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Dynamic Notch Breedte Percentage"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "De dynamische notch heeft drie frequentiebereiken waarin hij kan werken: LOW (80-330Hz) voor quads met een lager toerental zoals 6+ inch, MEDIUM (140-550Hz) voor een normale 5 inch quad, HIGH (230-800Hz) 2 tot 3 inch quads met hoge RPMs. De AUTO-optie selecteert het bereik afhankelijk van de waarde die is ingesteld bij de maximale afsnijfrequentie van de Gyro Dynamic Lowpass 1 Filter."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Dit stelt de breedte in tussen de twee dynamische notch-filters. Als u deze op 0 instelt wordt het tweede dynamische notch-filter uitgeschakeld en wordt de filtervertraging verkort. Maar dit kan wel de motortemperaturen verhogen."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q-factor bepaalt hoe smal of breed de dynamische notch-filters zijn. Een hogere waarde maakt het smaller en nauwkeuriger en een lagere waarde maakt het breder en minder nauwkeurig. Een erg lage waarde zal de filtervertraging enorm vergroten."
@@ -4961,12 +4905,6 @@
     },
     "configurationEscProtocol": {
         "message": "ESC\/Motor protocol"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Selecteer uw motor-protocol. <br>Controleert of het protocol wordt ondersteund door uw ESC, deze informatie moet op de website van ESC makers staan. <br> <b>Wees voorzichtig met DSHOT900 en DSHOT1200. Niet veel ESCs ondersteunen dit!<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Selecteer uw motor-protocol. <br>Controleert of het protocol wordt ondersteund door uw ESC, deze informatie is terug te vinden op de website van de fabrikant."
     },
     "configurationunsyndePwm": {
         "message": "Motor PWM speed gescheiden van PID snelheid"

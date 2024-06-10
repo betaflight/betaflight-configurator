@@ -730,12 +730,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "<strong>ブートローダー \/ DFU<\/strong> モードで再起動します。"
     },
-    "initialSetupBackupSuccess": {
-        "message": "バックアップが<span class=\"message-positive\">正常<\/span>に保存されました"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "設定のリストアが<span class=\"message-positive\">成功<\/span>しました"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "リセット Z 軸、オフセット: 0 度"
     },
@@ -1714,9 +1708,6 @@
         "message": "<b>D<\/b>erivative",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>注:<\/strong> D Max機能は無効になり、そのパラメーターは非表示になります。D Max機能を使用するには $t(pidTuningPidSettings.message) で有効にしてください。"
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "動的ダンピング \/ D Max 設定",
         "description": "Title for the options panel for the D Max feature"
@@ -1835,33 +1826,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "スムージングチャンネル"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC補間"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC送受信システムはPIDループほど高速ではありません。そのためRCシステムからの情報ではPIDループの中に信号の隙間が発生します。このオプションではRCフレームが受信されない間のRC入力の補間を行います。このオプションを使うと制御信号の荒れがなくなり、より明瞭なP値、D値の機体制御が可能となります。"
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "ミリ秒単位での手動RC補間モードにおける補間間隔"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "OFF"
-    },
-    "receiverRcSmoothingType": {
-        "message": "スムージングタイプ"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "プリセット"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "自動"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "手動"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC補間間隔 [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "スムージングモード"
@@ -2471,18 +2435,6 @@
     },
     "adjustmentsHelp": {
         "message": "調整スイッチを設定します。詳細については、マニュアルの『in-flight adjustment(飛行調整)』の項目を参照してください。『調整』機能による変更は自動的には保存されません。"
-    },
-    "adjustmentSlotsHelp": {
-        "message": "4スロットありますが、同時に調整を行うために使用される各スイッチは、スロットの排他的な利用を必須とします。"
-    },
-    "adjustmentsExamples": {
-        "message": "例:"
-    },
-    "adjustmentsExample1": {
-        "message": "AUX1の3POSスイッチを使ってPitch\/RollのP、I、Dを選択し、AUX2のもう1つの3POSスイッチを押したままにすると値が増減します。"
-    },
-    "adjustmentsExample2": {
-        "message": "AUX4の3POSスイッチを使用し、同じチャンネルの同じ3POSスイッチでRateprofile選択を有効にします。"
     },
     "adjustmentsColumnEnable": {
         "message": "有効 \/ 無効"
@@ -3564,6 +3516,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>ロードするファームウェア 未選択<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "ターゲットが読み込まれていません"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">有効なシリアルポートを選択してください<\/span>"
     },
@@ -4184,30 +4139,6 @@
         "message": "すべてのPIDパラメータを均等に増加させます。他のスライダーで調整しきれない場合は、このスライダーを変更しないでください。通常、これはX-ClassやCineLifterのような制御の弱い機体、または高慣性モーメント (MoI) の機体にのみ必要です。基準値の強度を上げすぎると、振動やモーター発熱を引き起こす可能性があります。",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD値 バランス:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "D値とD Max値を変更します。D値を比較的高くすると、スティック応答性が鈍くなり、モーターが高温になりますが、P値の振動を抑え、プロップウォッシュの振動を改善します。<br \/><br \/>D値が比較的低いとスティック応答性は速くなりますが、プロップウォッシュの処理や外力 (風) への反応が弱くなります。",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P&D値 強度:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "P値とD値の強度[ゲイン] が低いと、モーターは冷却されますが、プロップウォッシュによる振動が大きくなります。値が低すぎると機体が不安定になる場合があります。<br \/><br \/>P値とD値は連動してプロップウォッシュを減少させます。<br \/><br \/>値を高くするとモーターは高温となり、D値強度が高くなるため、スムーズな直進飛行中に振動が増加する場合があります。",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "スティックレスポンス 強度:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "FF値を低くするとスティックのレスポンスが悪くなり、フリップやロールの最後のバウンスバックが遅くなることがあります。これは機体がスティックに追従し過ぎてI値が終いには『I値 バウンスバック』現象が発生する場合があります。<br \/><br \/>FF値を高くすると、シャープな動きとなりスティックのレスポンスが良くなります。FF値が高過ぎるとフリップやロールの最後にオーバーシュートや素早いバウンスバックが発生する場合があります。<br \/><br \/>注: <br \/>I値リラックス機能は、制御の弱い機体や、スティックレスポンス強度が低い場合に、スティック動作での最後の揺らぎを止めることができます。",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "ダンピング:<br \/><i><small>D 強度<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4289,17 +4220,11 @@
     "pidTuningLowpassFilterType": {
         "message": "フィルタータイプ"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "ジャイロ ローパス動的フィルタ"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "最小カットオフ周波数 [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "最大カットオフ周波数 [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "ジャイロ ローパス1 動的フィルタータイプ"
     },
     "pidTuningGyroLowpass2": {
         "message": "ジャイロ ローパス2"
@@ -4359,9 +4284,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "動的ノッチフィルター範囲"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "動的ノッチ 幅%"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q 係数"
     },
@@ -4376,9 +4298,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "動的ノッチには、設定可能な3つの周波数範囲があります。6インチ以上の低回転型クワッドコプターの場合はLOW(80-330hz)、通常の5インチの場合はMEDIUM(140-550hz)、2.5～3インチのような非常に高回転の場合はHIGH(230-800hz) となります。AUTOオプションは、動的ジャイロローパスフィルター1の最大カットオフ周波数の値に応じて範囲を選択します。"
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "これにより、2つの動的ノッチフィルター間の幅が設定されます。0に設定すると、動的ノッチフィルター2が無効となり、フィルター遅延が減少しますが、モーターの温度が高くなる場合があります。"
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q 係数は動的ノッチフィルターの幅を調整します。値を大きくすると幅が狭くなり、より正確となり、値を低くすると幅が広くなります。本当に低い値を設定すると、フィルター遅延が大幅に増加します。"
@@ -4448,14 +4367,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "フィルタータイプ"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "D値 ローパス 動的フィルター"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "動的カーブ Expo"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "動的フィルタータイプ"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D値ノッチフィルター"
@@ -6716,9 +6629,6 @@
         "message": "ESC \/ モータープロトコル"
     },
     "configurationEscProtocolHelp": {
-        "message": "モータープロトコルを選択してください。<br>プロトコルがESCによってサポートされていることを確認してください。この情報はメーカーのWebサイトを確認してください。<br> <b>DSHOT900とDSHOT1200は、現在それほど多くのESCをサポートしていないため、使用の際はご注意ください！<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "モータープロトコルを選択してください。<br>そのプロトコルがESC側でサポートされているかを確認してください。サポート情報はメーカーのWebサイトをご覧ください。"
     },
     "configurationunsyndePwm": {

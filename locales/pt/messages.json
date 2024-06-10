@@ -730,12 +730,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Reiniciar no modo <strong>boot loader \/ DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Backup gravado com <span class=\"message-positive\">sucesso<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuração restaurada <span class=\"message-positive\"> com sucesso<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Repor eixo Z, offset: 0 graus"
     },
@@ -1714,9 +1708,6 @@
         "message": "<b>D<\/b>erivativo",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Nota:<\/strong> A funcionalidade D Max está desativada e os seus parâmetros escondidos. Para usar D Max por favor ative-o em $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Amortecimento dinâmico \/ Definições D Max",
         "description": "Title for the options panel for the D Max feature"
@@ -1835,33 +1826,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Canais suavizados"
-    },
-    "receiverRcInterpolation": {
-        "message": "Interpolação RC"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Sistemas RC TX\/RX não são tão rápidos quanto loops PID, isto significa que o loop do PID tem falhas no fluxo de informação vindo dos sistemas RC. Esta opção habilita a interpolação da entrada do RC enquanto não são recebidos frames RC. Esta opção também oferece um comportamento mais limpo de P e D, uma vez que não há picos na entrada do controle."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Intervalo de interpolação para o modo manual de interpolação RC (em milisegundos)"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Desligado"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Tipo de suavização"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Predefinição"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manual"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Intervalo de Interpolação RC [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Modo de Suavização"
@@ -2471,18 +2435,6 @@
     },
     "adjustmentsHelp": {
         "message": "Configure os switches de ajuste. Veja a secção 'in-flight adjustments' do manual para detalhes. As alterações que as funções de ajuste fazem não são gravadas automaticamente."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Há 4 slots. Cada switch utilizado para fazer ajustes simultaneamente requer o uso exclusivo de um slot."
-    },
-    "adjustmentsExamples": {
-        "message": "Exemplos:"
-    },
-    "adjustmentsExample1": {
-        "message": "Use um switch de três posições no canal AUX1 para selecionar entre Pitch\/Roll P, I e D e outro switch de três posições no canal AUX2 para aumentar ou diminuir o valor quando mantido para cima ou para baixo."
-    },
-    "adjustmentsExample2": {
-        "message": "Use um switch de três posições no canal AUX4 para selecionar e ativar a Seleção Perfil Rate através do mesmo switch de 3 posições no mesmo canal."
     },
     "adjustmentsColumnEnable": {
         "message": "Se ativo"
@@ -3564,6 +3516,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Nenhum firmware selecionado para carregar<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "Nenhum alvo carregado"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Por favor selecione uma porta serial válida<\/span>"
     },
@@ -4184,30 +4139,6 @@
         "message": "Aumenta igualmente todos os parâmetros PID. Não altere este slider a menos que fique sem ajuste nos outros sliders. Normalmente isto só é necessário para quads com baixa autoridade ou alto momento de inércia (Mol), como são os de classe X ou cinelifter. Demasiados ganhos no master podem causar oscilações rápidas ou motores quentes.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Balanço PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Altera o D e D max. Um D relativamente alto vai amortecer a capacidade de resposta e pode fazer os motores quentes, mas deve ajudar a controlar oscilações P-term e melhorar a oscilação de \"propwash\".<br \/><br \/>Termo D relativamente baixo dá resposta mais rápida de stick, mas enfraquecerá o desempenho de propwash e de reação a forças externas (vento).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Ganho de P e D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Ganhos de P e D inferiores resultarão em motores mais frios, mas também em mais oscilação propwash. Valores muito baixos podem tornar o quad instável.<br \/><br \/>Os termos P e D trabalham juntos para reduzir o propwash.<br \/><br \/>Valores mais altos aumentarão a temperatura dos motores e poderão aumentar as oscilações durante um voo suave para a frente devido a ganhos mais elevados do termo D.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Ganho na Resposta do Stick:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Valores baixos do FF pioram a resposta dos sticks e poderão resultar em retornos lentos no final de um flip ou roll devido ao quad fazer lag demasiado nos sticks e o I-term esgotar e causar retornos (\"I-term Bounceback\").<br \/><br \/>Valores mais altos de FF darão respostas mais rápidas em movimentos rápidos. Valores excessivamente altos de FF podem causar 'overshoots' e saltos rápidos no final de um flip ou roll.<br \/><br \/>Nota:<br \/>A funcionalidade de Relaxamento do termo I pode impedir que o termo I esgote nos movimentos dos sticks para quads de baixa autoridade ou se forem usados baixos ganhos de resposta dos sticks.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Amortecimento:<br \/><i><small>Ganhos D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4289,17 +4220,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Tipo de Filtro"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Filtro Dinâmico Gyro Lowpass"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Frequência de Corte Min [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Frequência de Corte Max [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Tipo de Filtro Gyro Lowpass 1 Dinâmico"
     },
     "pidTuningGyroLowpass2": {
         "message": "Gyro Lowpass 2"
@@ -4359,9 +4284,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Filtro Notch dinâmico - Alcance"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Filtro Notch dinâmico - Percentagem de Largura"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Fator Q"
     },
@@ -4376,9 +4298,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O filtro Notch dinâmico tem três faixas de frequência em que pode operar: BAIXO (80-330hz) para aeronaves lentas de 6\" ou mais, MÉDIO (140-550hz) para aeronaves convencionais de 5\", ALTO (230-800hz) para aeronaves rápidas de 2.5\" a 3\". a opção AUTO seleciona a faixa de acordo com a frequência de corte máxima do filtro Lowpass 1 Dinâmico do Gyro."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Ajusta a largura entre os dois filtros Notch. Colocar a 0 irá desativar o segundo filtro Notch dinâmico e irá reduzir o atraso dos filtros, contudo, pode causar temperaturas elevadas nos motores."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Fator Q ajusta quão curto ou amplo são os filtros Notch Dinâmicos. Um valor maior fá-lo mais estreito e mais preciso e um valor menor fazem fá-lo largo e amplo. Utilizar um valor muito baixo vai aumentar muito o atraso do filtro."
@@ -4448,14 +4367,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Tipo de Filtro"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Filtro Dinâmico D Term Lowpass"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo Curva Dinâmica"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipo de Filtro Dinâmico"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtro D Term Notch"
@@ -4567,9 +4480,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limite de Ângulo Treinador Acro"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Ajuda os pilotos a aprenderem a voar no modo acro limitando o ângulo que o quad pode atingir. Limites válidos são 10-80 graus. O modo deve ser ativado com um interruptor na aba $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
@@ -6716,9 +6626,6 @@
         "message": "Protocolo do ESC\/Motor"
     },
     "configurationEscProtocolHelp": {
-        "message": "Selecione o protocolo do seu motor. <br>Tenha a certeza de que o protocolo é suportado pelo seu ESC, esta informação deve estar disponível no site do fabricante. <br><b>Tenha cuidado ao usar DSHOT900 e DSHOT1200, uma vez que muitos ESCs não os suportam!<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "Selecione o protocolo do seu motor. <br>Tenha a certeza de que o protocolo é suportado pelo seu ESC, esta informação deve estar disponível no site do fabricante."
     },
     "configurationunsyndePwm": {
