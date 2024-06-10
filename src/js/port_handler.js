@@ -35,8 +35,8 @@ PortHandler.initialize = function () {
 
     usb.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
 
-    this.addedUsbDevice();
     this.addedSerialDevice();
+    this.addedUsbDevice();
 };
 
 PortHandler.setShowVirtualMode = function (showVirtualMode) {
