@@ -730,12 +730,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Reinicia en modo <strong>gestor de arranque \/ DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Copia de seguridad guardada <span class=\"message-positive\">correctamente<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuración restaurada <span class=\"message-positive\">correctamente<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Reiniciar eje Z, desplazamiento: 0 grad"
     },
@@ -1714,9 +1708,6 @@
         "message": "Derivativo (D)",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Nota:<\/strong> La funcionalidad D Max está deshabilitada y sus parámetros están ocultos. Para usar D Max, por favor, actívalo en $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Amortiguación Dinámica \/ Ajustes D Max",
         "description": "Title for the options panel for the D Max feature"
@@ -1835,33 +1826,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Canales Suavizados"
-    },
-    "receiverRcInterpolation": {
-        "message": "Interpolación de RC"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Los sistema de TX\/RX de RC no son tan rápidos como los ciclos PID. Esto significa que el ciclo del PID tiene huecos en el flujo de información desde los sistemas de RC. Esta opción activa la interpolación de la entrada de RC durante los tiempos en los que no se reciben datos de RC. Esta opción además ofrece un comportamiento de P y D más limpio ya que no hay rampas en la entrada de control."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Intervalo de interpolación para modo de interpolación manual de RC en milisegundos"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Apagada"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Tipo de Suavizado"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Predefinida"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manual"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Intervalo de Interpolación RC [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Modo de Suavizado"
@@ -2471,18 +2435,6 @@
     },
     "adjustmentsHelp": {
         "message": "Configura interruptores para correcciones. Mira el apartado 'in-flight adjustments' del manual para detalles. Las correcciones realizadas no se guardan automáticamente."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Hay 4 ranuras. Cada interruptor usado para hacer correcciones concurrentemente requiere el uso exclusivo de una ranura."
-    },
-    "adjustmentsExamples": {
-        "message": "Ejemplos:"
-    },
-    "adjustmentsExample1": {
-        "message": "Usa un interruptor de tres posiciones en AUX1 para elegir entre Pitch\/Roll de P, I y D y otro interruptor de tres posiciones en AUX2 para incrementar o decrementar el valor al mover arriba o abajo."
-    },
-    "adjustmentsExample2": {
-        "message": "Usa un interruptor de tres posiciones en AUX4 para activar la Selección de Perfil de Tasas a través del mismo interruptor de tres posiciones en el mismo canal."
     },
     "adjustmentsColumnEnable": {
         "message": "Si activado"
@@ -4184,30 +4136,6 @@
         "message": "Aumenta todos los parámetros del PID por igual. No modifiques este deslizador a menos que te quedes sin ajuste en los otros deslizadores. Normalmente, esto sólo es necesario para aeronaves con baja autoridad o alto momento de inercia (MoI) como la clase X o con carga cinematográfica. Demasiada ganancia maestra puede causar oscilaciones rápidas o motores calientes.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Balance PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Cambia D y D max. Un valor relativamente alto del término D amortiguará la respuesta del mando y puede hacer que los motores se calienten, pero debería ayudar a controlar oscilaciones del término P y puede mejorar las oscilaciones por turbulencias.<br \/><br \/>Un valor relativamente bajo del término D produce una respuesta más rápida a los mandos, pero debilitará la respuesta a las turbulencias y la reacción ante fuerzas externas (viento).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Ganancia P y D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Valores bajos de P y D producen motores más fríos pero producirán más oscilaciones por turbulencias. Valores muy bajos pueden causar que la aeronave sea inestable.<br \/><br \/>P y D trabajan juntos para reducir las turbulencias.<br \/><br \/>Valores altos incrementarán la temperatura de los motores y pueden crear oscilaciones durante vuelos suaves rectos debido a valores muy altos del término D.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Ganancia de respuesta del mando:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Valores de FF bajos empeorarán la respuesta del mando y pueden producir un rebote lento al final de un flip o roll debido a que la aeronave va muy retrasada respecto a los mandos y acumula mucho término I provoca un \"rebote del término I.\".<br \/><br \/>Valores de FF altos producen respuestas a los mandos más rápidas en movimientos bruscos. Valores de FF excesivamente altos pueden causar sobregiro y rebotes rápidos al final de un giro o un roll.<br \/><br \/>Nota:<br \/>La funcionalidad de Relajar Término I puede detener la acumulación del término I por movimientos del mando en aeronaves con poca autoridad o si se utiliza una Sensibilidad del Mando baja.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Amortiguación:<br \/><i><small>Ganancia de D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4289,17 +4217,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Tipo de filtro"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Filtro Paso Bajo Dinámico"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Frecuencia mínima de corte [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Frecuencia máxima de corte [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Giro Paso Bajo 1 Dinámico Tipo de Filtro"
     },
     "pidTuningGyroLowpass2": {
         "message": "Giro Paso Bajo 2"
@@ -4359,9 +4281,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Giro Filtro Notch Dinámico Rango"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Giro Filtro Notch Dinámico Ancho [Porcentaje]"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Factor Q"
     },
@@ -4376,9 +4295,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Filtro Notch Dinámico tiene tres rangos de frecuencias en las que puede operar: LOW (80-300Hz) para quads con pocas revoluciones como 6\" o más, MEDIUM (140-550Hz) para un quad normal de 5\", HIGH (230-800Hz) para quads de altas revoluciones como por ejemplo 2,5\"-3\". La opción AUTO selecciona el rango dependiendo del valor de la frecuencia de corte máxima del filtro Giro Paso Bajo 1 Dinámico."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Este valor establece el ancho entre dos Filtros Notch Dinámicos. Un valor de 0 desactiva el segundo Filtro Notch Dinámico y reduce el retardo producido por el filtro, sin embargo puede producir que la temperatura de los motores sea más alta."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "El factor Q ajusta como de estrechos o anchos son los Filtros Notch Dinámicos. Valores más altos lo hacen estrecho y más preciso y valores más bajos lo hacen más ancho y extenso. Un valor muy bajo aumenta considerablemente el retraso producido por el filtro."
@@ -4448,14 +4364,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Tipo de filtro"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Filtro Paso Bajo Dinámico del D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo de curva dinámica"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipo de filtro dinámico"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtro Notch del D Term"
@@ -4567,9 +4477,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Ángulo Límite para Entrenador Acro"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Ayuda a los pilotos a aprender a volar en modo acro limitando el ángulo que la aeronave puede usar. Los límites válidos son de 10-80 grados. El modo debe activarse con un interruptor en la pestaña $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
@@ -6714,12 +6621,6 @@
     },
     "configurationEscProtocol": {
         "message": "Protocolo ESC\/Motor"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Elige tu protocolo para el motor.<br>Asegúrate de verificar en las características de tu ESC que protocolos soporta. <br><b>¡Cuidado si seleccionas DSHOT900 o DSHOT1200 ya que la mayoría de ESCs no lo soportan!<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Elige tu protocolo para el motor.<br>Asegúrate de verificar que el protocolo está soportado por tu ESC, esta información la podrás encontrar en la web del fabricante."
     },
     "configurationunsyndePwm": {
         "message": "Velocidad PWM del motor independiente de velocidad PID"

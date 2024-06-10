@@ -730,12 +730,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Перезагрузить в режим <strong>загрузчика \/ DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Резервная копия <span class=\"message-positive\">успешно сохранена <\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Резервная копия <span class=\"message-positive\">успешно восстановлена<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Сбросить ось Z (ось вращения), смещение: 0 град"
     },
@@ -1367,16 +1361,16 @@
         "message": "<strong>Внимание:<\/strong> Выбор протокола двигателей, который не поддерживается ESC, может привести к тому, что <strong>ESC начнут вращение, как только аккумулятор будет подключен<\/strong>. По этой причине <strong>всегда нужно удалять пропеллеры перед подключением аккумулятора в первый раз, после изменения протокола двигателей<\/strong>."
     },
     "configurationDshotBeeper": {
-        "message": "Настройка Dshot пискa"
+        "message": "Настройка звуковых сигналов Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Применить Dshot писк (пищит моторами, если долгое время находится в режиме дизарма)"
+        "message": "Применить звуковые сигналы Dshot (издает звуковые сигналы моторами, если долгое время находится в режиме дизарма)"
     },
     "configurationDshotBeaconTone": {
-        "message": "Тон писка моторами"
+        "message": "Тон звуковых сигналов моторов"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Dshot маяк используется для того чтобы ESC и двигатели производили звук. Это значит, что Dshot маяк не может быть использован когда двигатели вращаются. В Betaflight 3.4 и новее, когда происходит попытка арминга пока Dshot маяк активен, тогда аппарат заармится спустя 2 секунды после последнего Dshot маяка. Это должно помешать функциям маяка Dshot мешать командам Dshot, отправленным при арминге.<br\/><strong>Внимание:<\/strong> Поскольку маяк Dshot пропускает ток через ваши двигатели, когда он активен, то это может привести к чрезмерному перегреву и повреждению ваших двигателей и \/ или ESC, если мощность маяка слишком высока. Используете BLHeli Configurator или BLHeli Suite для регулировки и проверки силы маяка."
+        "message": "Звуковые сигналы Dshot используют ESC и двигатели для воспроизведения звуков. Это значит, что Dshot сигналы не могут быть использованы когда двигатели вращаются. В Betaflight 3.4 и новее, если попытка арминга происходит во время работающих звуковых сигналов Dshot, то аппарат заармится спустя 2 секунды после последнего Dshot сигнала. Это сделано для того, чтобы функция звуковых сигналов Dshot не мешала командам Dshot, отправляемым при постановке на охрану. <br\/><strong>Внимание:<\/strong> Поскольку звуковые сигналы Dshot пускают напряжение через ваши двигатели, когда они активены, это может привести к чрезмерному перегреву и повреждению ваших двигателей и\/или ESC, если мощность сигнала слишком высока. Используете BLHeli Configurator или BLHeli Suite для регулировки и проверки уровня звуковых сигналов."
     },
     "configurationBeeper": {
         "message": "Настройка пищалки"
@@ -1714,9 +1708,6 @@
         "message": "<b>D<\/b>erivative",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Примечание:<\/strong> Функция D Max отключена и его параметры скрыты. Чтобы использовать D Max, включите его в $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Динамическое демпфирование \/ D Max настройки",
         "description": "Title for the options panel for the D Max feature"
@@ -1835,33 +1826,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Сглажеваемые каналы"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC интерполяция"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Скорость приёма\/передачи в системах радиоуправления не так высока, как скорость обработки PID-ов. Это означает, что при обработке PID-ов существуют пробелы информации, поступающей от радиоаппаратуры. Эта опция выполняет сглаживание сигналов управления в моменты их отсутствия. Она также делает поведение параметров P и D более чистыми, т.к. сглаживаются скачки входящего сигнала."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Интервал интерполяции [в секундах] в режиме \"ручной\" настройки интерполяции"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Выкл."
-    },
-    "receiverRcSmoothingType": {
-        "message": "Тип сглаживания"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Предустановка"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Авто"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Ручная"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Интервал RC-интерполяции [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Режим сглаживания"
@@ -2367,18 +2331,6 @@
     },
     "adjustmentsHelp": {
         "message": "Установка настроечных переключателей. Смотри 'in-flight adjustments' главу руководства. Изменения, которые делают настроечные функции, автоматически не сохраняются."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Каждый переключатель, используемый для одновременной настройки, требует эксклюзивного использования слота."
-    },
-    "adjustmentsExamples": {
-        "message": "Примеры:"
-    },
-    "adjustmentsExample1": {
-        "message": "Используйте 3-х позиционный переключатель AUX1 для выбора между Pitch\/Roll P, I и D, а 3-х позиционный переключатель AUX2 для увеличения или уменьшения значения при удержании или снижении."
-    },
-    "adjustmentsExample2": {
-        "message": "Используйте 3-х позиционный переключатель AUX4 чтобы выбрать включение выбора профиля Рейтов при помощи того же 3-х позиционного переключателя на том же канале."
     },
     "adjustmentsColumnEnable": {
         "message": "Если включено"
@@ -4058,22 +4010,6 @@
         "message": "Увеличивает все параметры PID равномерно. Не меняйте этот ползунок, если у вас закончились настройки на других ползунках. Обычно это требуется только для квадрокоптеров с низкой управляемостью или высоким моментом инерции (MoI), таких как X-Class или сборки для съемки. Слишком большой мастер-коэффициент может вызвать дрожание или перегрев моторов.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Баланс PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Коэфф. усиления P и D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Результатом понижения параметров P и D будут более холодные двигатели, но при этом будет больше пропвош.<br \/><br \/>Параметры P и D работают вместе для того чтобы снизить эффект пропвоша.<br \/><br \/>Более высокие значения усилят нагрев моторов и могут увеличить осцилляции во время плавного полета из-за повышения параметра D.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Коэфф. реакции на движения стиков:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningDGainSlider": {
         "message": "Дампинг:<br \/><i><small>D Gains<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4123,17 +4059,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Тип фильтра"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Динамический фильтр низких частот гироскопа \"Lowpass\""
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Мин. частота среза [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Макс. частота среза [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro Lowpass 1 Dynamic, тип фильтра"
     },
     "pidTuningGyroLowpass2": {
         "message": "Фильтр низких частот гироскопа - 2 \"Lowpass\""
@@ -4166,9 +4096,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Диапазон динамического режекторного фильтра"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Ширина динамического режекторного фильтра в процентах"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q фактор"
     },
@@ -4183,9 +4110,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамический режекторный фильтр имеет три частотных диапазона, в которых он может работать: LOW(80-330гц) для более низкооборотных квадрокоптеров, таких как 6+ дюймов, MEDIUM(140-550гц) для \"нормальных\" 5 дюймовых квадрокоптеров и HIGH(230-800гц) для сверхвысокооборотных 2-3 дюймовых квадрокоптеров. AUTO выбирает диапазон в зависимости от значения максимальной (cutoff) частоты динамического фильтра нижних частот Gyro."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Настройка расстояния между двумя динамическими режекторными фильтрами. Установка этого параметра в 0 отключит второй динамический режекторный фильтр и уменьшит задержку фильтрации, однако это может привести к перегреву двигателей."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Коэффициент Q регулирует, на сколько узкими или широкими будут динамические режекторные фильтры. Более высокое значение делает их более точным и узким, а более низкие - шире и менее точным. При достаточно низком значении значительно увеличится задержка фильтра."
@@ -4247,14 +4171,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Тип фильтра"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Динамический D-Term фильтр низких частот \"Lowpass\""
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Динамическая expo-кривая"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Тип динамического фильтра"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term режекторный фильтр"
@@ -4346,9 +4264,6 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Акро тренер лимит угла"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Помогает пилотам научиться летать в акро-режиме, ограничивая угол наклона квадрокоптера в движении. Допустимые ограничения 10-80 градусов. Режим должен быть активирован переключателем на вкладке $t(tabAuxiliary.message)."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Интегрированный Yaw"
     },
@@ -4411,6 +4326,9 @@
     },
     "failsafeDelayHelp": {
         "message": "Установите период времени для 1го этапа Фейлсейфа после потери сигнала. Если время задержки истекает без восстановления сигнала, запускается Этап 2 настроек Фейлсейф "
+    },
+    "failsafeThrottleLowItem": {
+        "message": "Лимит длительности низкого уровня газа [секунды]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Задизармить аппарат вместо выполнения выбранной процедуры failsafe, если значение газа будет низким в течение указанного времени"
@@ -6452,12 +6370,6 @@
     },
     "configurationEscProtocol": {
         "message": "Протокол ESC \/ Мотора"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Выберите ESC-протокол.<br>Убедитесь, что выбранный протокол поддерживается вашим ESC, информация об этом указана на сайте производителя.<br><b>Обратите внимание, при выборе протоколов DSHOT900 и DSHOT1200, не так много ESC поддерживают эти протоколы"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Выберите протокол для моторов. <br>Удостоверьтесь, что этот протокол поддерживается вашими ESC. Эта информация должна быть на сайте производителя."
     },
     "configurationunsyndePwm": {
         "message": "Скорость двигателя PWM отделенного от PID скорость"

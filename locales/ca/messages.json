@@ -738,12 +738,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Torna a iniciar en mode <strong>carregador d'arrencada\/DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Còpia de seguretat desada <span class=\"message-positive\">correctament<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuració restaurada <span class=\"message-positive\">correctament<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Resetejar eix Z, offset: 0 graus"
     },
@@ -1722,9 +1716,6 @@
         "message": "<b>D<\/b>erivada",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Nota:<\/strong>La funció D Max està desactivada i els seus paràmetres estan ocults. Per utilitzar D Max, activa-la a $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Configuració d'amortiment dinàmic \/ D Max",
         "description": "Title for the options panel for the D Max feature"
@@ -1843,33 +1834,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Canals suavitzats"
-    },
-    "receiverRcInterpolation": {
-        "message": "Interpolació RC"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Els sistemes TX\/RX no són tan ràpids com els PID loops. Això vol dir que el PID loop té buits d'informació en els sistemes RC. Aquesta opció activa la interpolació de l'entrada RC mentre no es reben RC frames. Aquesta opció també ofereix una P i una D més netes ja que no hi ha rampes en l'entrada de control."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interval del mode d'interpolació manual RC en miŀlisegons."
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Off"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Tipus de suavització"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Preset"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manual"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Interval d'Interpolació RC [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Tipus de suavització"
@@ -2479,18 +2443,6 @@
     },
     "adjustmentsHelp": {
         "message": "Configureu els interruptors d'ajust. Consulteu la secció \"Ajustaments de vol\" del manual per obtenir-ne més detalls. Els canvis que realitzen les funcions d'ajust no es guarden automàticament. Hi ha 4 ranures (slots). Cada interruptor utilitzat per fer ajustaments simultanis requereix l'ús exclusiu d'una ranura."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Hi ha 4 ranures. Cada commutador usat per fer ajustaments simultàniament requereix un ús exclusiu d’una ranura."
-    },
-    "adjustmentsExamples": {
-        "message": "Exemples:"
-    },
-    "adjustmentsExample1": {
-        "message": "Utilitza la ranura 1 i un switch de tres posicions a l'AUX1 per seleccionar entre Pitch\/Roll P, I i D i un altre switch de tres posicions a l'AUX2 per incrementar o disminuir el valor mantenint amunt o avall."
-    },
-    "adjustmentsExample2": {
-        "message": "Utilitza la ranura 2 i un switch de 3 posicions a l'AUX4 per a habilitat la selecció de perfil de rate al mateix switch de 3 posicions del mateix canal."
     },
     "adjustmentsColumnEnable": {
         "message": "si habilitat"
@@ -3572,6 +3524,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>No s'ha seleccionat  un firmware per carregar<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "No s'ha carregat cap plataforma"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Selecciona un port sèrie vàlid<\/span>"
     },
@@ -4192,30 +4147,6 @@
         "message": "Augmenta tots els paràmetres PID per igual. No canvieu aquest control lliscant tret que us quedeu sense ajustar en els altres lliscadors. Normalment, això només es necessita per a quads amb baixa autoritat o moment d’inèrcia elevat (MoI) com les versions X-Class o cinelifter. Un excés de guany mestre pot provocar oscil·lacions trillants o motors calents.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Balanç PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Una D relativament alta amortirà la resposta del stick i pot fer que els motors estiguin calents, però haurien d’ajudar a controlar les oscil·lacions P i poden millorar el propwash.<br \/><br \/>Relativament una D baixa proporciona una resposta més ràpida al stick, però pot debilitar la gestió del propwash i la seva reacció devant de forçes externes (vent).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Guany P i D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Valors baixos de P i D donarà lloc a motors més frescos, però també provocará una oscil·lació de propwash. Un valor massa baix pot fer que el quad sigui inestable.<br \/><br \/>els terms de P i D treballen junts per reduir el propwash.<br \/><br \/>Valors més alts augmentaran la calor del motor i podrien augmentar les oscil·lacions durant un vol cap endavant suau per un major augment del guany de D term.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Guany de resposta del stick:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Valors més baixos de FF empitjoraran la resposta del stick i poden provocar un rebot lent al final d'un flip o roll a causa que el quad retarda massa els sticks i el I-term puja donan lloc a un \"Rebot de I-term\".<br \/><br \/>Valors de FF més alts donaran respostes del stick més ràpides en moviments forts. Els valors de FF excessivament alts poden provocar desbordaments i rebots ràpids al final d'una flip o roll.<br \/><br \/>Nota:<br \/>La característica I-term Relax pot evitar el I-term I acabi amunt en el moviment del stick per quads amb baixa autoritat o si s'utilitzen guanys de resposta de stick baixos.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Amortiment:<br \/><i><small>Guany D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4297,17 +4228,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Tipus de filtre"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Filtre Passa-baixos dinàmic del Giro"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Freqüència de tall Minima [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Freqüència de tall Máxima [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Tipus filtre Passa-baixos dinàmic 1 del Giro"
     },
     "pidTuningGyroLowpass2": {
         "message": "Passa-baix 2 Giro"
@@ -4367,9 +4292,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Rang del filtre dinàmic de banda eliminada (Notch)"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Percentatge de l'amplada del filtre Notch (banda eliminada) dinàmic"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Factor Q"
     },
@@ -4384,9 +4306,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Notch (banda eliminada) dinàmic té tres rangs de freqüència en els quals pot funcionar: BAIX (80-330hz) per a quads revolucionats de 6 o més polzades, MITJA (140-550hz) per a un quad normal de 5 polzades, ALT (230-800Hz) per quads molt revolucionats de 2,5-3 polzades. L'opció AUTO selecciona l'abast en funció del valor de la freqüència màxima de tall del filtre dinàmic passa-baixos de Giro 1."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Estableix l'amplada entre dos filtres de banda eliminada (Notch) dinàmics. Si es situa a 0, es desactivarà el segon filtre Notch i es reduirà el retard del filtre, però pot augmentar la temperatura del motor."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "El factor Q ajusta quan ample o estret es son els filtres dinàmics Notch. Valors elevats els fan més estrets i acurats, valors baixos els fa més amples y alts. Tenir un valor molt baix augmentarà considerablement el retard del filtre."
@@ -4456,14 +4375,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Tipus de filtre"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Filtre Passa-baixos dinàmic del D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo de la corba dinàmica"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipus de filtre dinàmic"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtres Notch D Term"
@@ -6724,9 +6637,6 @@
         "message": "Protocol ESC\/Motor"
     },
     "configurationEscProtocolHelp": {
-        "message": "Seleccioneu el vostre protocol de motor.<br>Assegureu-vos de verificar que el protocol és compatible amb el vostre ESC, aquesta informació ha de trobar-se al lloc web del fabricant. <br><b> Tingueu cura de fer servir DSHOT900 i DSHOT1200, ja que no són molts els ESC que ho admeten!<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "Seleccioneu el vostre protocol de motor.<br>Assegureu-vos de verificar que el protocol és compatible amb el vostre ESC, aquesta informació ha de trobar-se al lloc web dels fabricants."
     },
     "configurationunsyndePwm": {

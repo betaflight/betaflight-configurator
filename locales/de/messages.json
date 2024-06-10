@@ -702,12 +702,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Starte im <strong>Boot-Loader\/DFU Modus<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Backup <span class=\"message-positive\">erfolgreich<\/span> gesichert"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Konfiguration <span class=\"message-positive\">erfolgreich<\/span> wiederhergestellt"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Z Achse zurücksetzen, Abweichung: 0 Grad"
     },
@@ -1544,9 +1538,6 @@
         "message": "<b>D<\/b>erivativ",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Hinweis:<\/strong> Die D Min Funktion ist deaktiviert und seine Parameter sind versteckt. Um D Min zu verwenden, aktiviere es bitte in $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Dynamische Dämpfung \/ D Max Einstellungen",
         "description": "Title for the options panel for the D Max feature"
@@ -1665,33 +1656,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanäle geglättet"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC Interpolation"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Fernsteuerungen \/ Empfänger sind nicht so schnell wie Moderne PID Controller. Dadurch entstehen \"Löcher\" im Informationsfluss. Diese Option erlaubt eine Interpolation des Signals und somit einen sauberen Verlauf der P und D Werte, durch weniger sprunghafte Eingaben."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interpolation in Millisekunden für die manuelle Einstellung"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Aus"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Glättungstyp"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Voreinstellung"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manuell"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC Interpolationsinterval (ms)"
     },
     "receiverRcSmoothingMode": {
         "message": "Glättungsmodus"
@@ -2084,18 +2048,6 @@
     },
     "adjustmentsHelp": {
         "message": "Konfiguriere Schalter für Anpassungen. Für Details siehe den Abschnitt 'in-flight adjustments' im Handbuch. Die Änderungen durch die Anpassungsfunktionen werden nicht automatisch gespeichert."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Es gibt 4 Slots. Jeder Schalter, der zur gleichzeitigen Anpassung verwendet wird, erfordert eine exklusive Verwendung eines Slots."
-    },
-    "adjustmentsExamples": {
-        "message": "Beispiele:"
-    },
-    "adjustmentsExample1": {
-        "message": "Verwende einen 3-Positionsschalter auf AUX1, um zwischen Pitch\/Roll P, I und D umzuschalten, und einen weiteren 3-Positionsschalter auf AUX2 um den Wert zu erhöhen oder zu verringern."
-    },
-    "adjustmentsExample2": {
-        "message": "Verwende einen 3-Positionsschalter auf AUX4, um die Auswahl des Ratenprofils über den gleichen 3-Positionsschalter auf dem gleichen Kanal zu aktivieren."
     },
     "adjustmentsColumnEnable": {
         "message": "falls aktiviert"
@@ -3649,30 +3601,6 @@
         "message": "Erhöht alle PID-Parameter gleichermaßen. Ändere diesen Schieberegler nicht, es sei denn, du hast keine Anpassung auf den anderen Schieberegler. In der Regel wird dies nur für schwere oder Copter mit hohen Trägheitsmomente (MoI)-Quads, wie X-Klasse oder Cinelifter benötigt. Zu viel Verstärkung kann zu höhrbaren Oszillationen oder heißen Motoren führen.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD Balance:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Ein relativ hoher D-Wert dämpft die Reaktion der Sticks und kann die Motoren heiß werden lassen, sollte jedoch helfen Oszillation zu dämpfen, die von hohen P-Werten oder Propwash erzeugt werden.<br \/><br \/>Ein relativ niedriger D-Wert erzeugt eine schnellere Stick Reaktion, kann aber mehr Probleme mit Propwash erzeugen).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P und D Verstärkung:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Niedrige P- und D Verstärkung sorgt für kühlere Motoren, kann aber zu mehr Propwash-Oszillation führen. Ein zu niedriger Wert kann dazu führen, dass der Quadcopter instabil wird.<br \/><br \/>P- und D-Werte arbeiten zusammen, um Propwash zu reduzieren.<br \/><br \/>Höhere Werte erhöhen die Motortemperatur und können, aufgrund der höheren D-Term Verstärkung, das Oszillieren während des sanften Vorwärts-Fluges erhöhen.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Verstärkung der Stick-Empfindlichkeit:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Niedrigere FF-Werte verschlechtern die Stick-Empfindlichkeit und führen zum langsamen Bounceback am Ende von Flips und Rolls, da das Quad der Stickbewegung hinter her hinkt und I-Term sich vergrößert. Daher heißt es \"I-Term Bounceback\".<br \/><br \/>Höhere FF-Werte geben kürzere Stick-Reaktionen in scharfen Bewegungen. Übermäßig hohe FF-Werte können zum Überschießen(Overshoot) und zum schnellen Bounceback am Ende eines Flips oder einer Rolle führen.<br \/><br \/>Hinweis:<br \/>Das Feature I-term Relax kann das Aufsummieren des I-Terms beim Stick-Bewegungen stoppen oder wenn niedrige Stick-Verstärkung verwendet wird.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Dämpfung:<br \/><i><small>D Verstärkung(Gain)<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -3754,17 +3682,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Filter Typ"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Dynamischer Gyro Tiefpass Filter"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Min Grenzfrequenz [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Max Grenzfrequenz [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro Lowpass 1 Dynamic Filter Type"
     },
     "pidTuningGyroLowpass2": {
         "message": "Gyro Tiefpass 2"
@@ -3824,9 +3746,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Filterbereich des Dynamischen Notch-Filters"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "prozentuale Breite des dynamischen Notch-Filters"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q Faktor"
     },
@@ -3841,9 +3760,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Der dynamische Notchfilter hat drei Frequenzbereiche, in denen er funktionieren kann: LOW(80-330hz) für langsam drehende Quads wie 6+ Zoll, MEDIUM(140-550hz) für einen normalen 5 Zoll Quad, HIGH(230-800hz) für sehr hoch drehende 2,5-3 Zoll Quads."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Dies setzt die Breite zwischen zwei dynamischen Notch-Filtern. Wenn sie auf 0 gesetzt ist, wird der zweite dynamische Notch-Filter deaktiviert und die Filterverzögerung verringert, was die Motortemperatur erhöhen kann."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Der Q-Faktor passt an, wie eng oder breit die dynamischen Notch-Filter sind. Höhere Werte machen ihn schmaler und präziser, niedrige Werte machen ihn weiter und breiter. Durch einen wirklich niedrigen Wert wird die Filterverzögerung erheblich erhöht."
@@ -3913,14 +3829,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Filter-Typ"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Dynamischer D-Term Tiefpassfilter"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Dynamische Expo-Kurve"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Dynamischer Filter-Typ"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Kerb(Notch)-Filter"
@@ -4026,9 +3936,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Winkelbegrenzung"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Hilft Piloten im Acro-Modus fliegen zu lernen, indem der Drehwinkel begrenzt wird, den das Copter erreichen kann. Gültige Limits sind 10-80 Grad. Der Modus muss mit einem Schalter im $t(tabAuxiliary.message) Tab aktiviert werden."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
@@ -5976,12 +5883,6 @@
     },
     "configurationEscProtocol": {
         "message": "ESC\/Motor Protokoll"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Auswahl des Motor-Protokolls.<br>Bitte sicherstellen dass die Regler dies auch unterstützen. Im Zweifelsfall Dokumentation der Regler heranziehen.<br><b>Achtung bei Dshot900 oder Dshot1200, noch nicht viele Regler unterstützen diese Protokolle.<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Wählen ein Motorprotokoll. <br>Stelle sicher, dass das Protokoll vom ESC unterstützt wird. Diese Information sollte auf der Website des Herstellers zu finden sein."
     },
     "configurationunsyndePwm": {
         "message": "Motor PWM Geschwindigkeit unabhängig vom PID Controller"

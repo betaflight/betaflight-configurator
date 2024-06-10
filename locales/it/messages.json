@@ -730,12 +730,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Riavvia in modalità <strong>boot loader \/ DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Backup salvato <span class=\"message-positive\">con successo<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configurazione ripristinata <span class=\"message-positive\">con successo<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Reset asse Z, offset: 0 gradi"
     },
@@ -1714,9 +1708,6 @@
         "message": "<b>D<\/b>erivativo",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Nota:<\/strong> La funzione D Max è disabilitata ed i parametri sono nascosti. Per usare il D Max, abilitalo in $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Impostazioni Damping dinamico\/D Max",
         "description": "Title for the options panel for the D Max feature"
@@ -1835,33 +1826,6 @@
     },
     "receiverRcSmoothingChannel": {
         "message": "Canali con smoothing"
-    },
-    "receiverRcInterpolation": {
-        "message": "Interpolazione RC"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "I sistemi RC TX\/RX non sono veloci come i loop PID. Ciò significa che il loop PID presenta lacune nel flusso di informazioni dai sistemi RC. Questa opzione abilita l'interpolazione dell'ingresso RC durante i tempi in cui non vengono ricevuti frame RC. L'opzione offre anche un comportamento P e D più pulito in quanto non ci sono rampe nell'ingresso del controllo."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Intervallo di interpolazione per la modalità di interpolazione RC manuale in millisecondi"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Spento"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Tipo smoothing"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Preimpostato"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Automatico"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manuale"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Intervallo di interpolazione RC [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Modalità smoothing"
@@ -2471,18 +2435,6 @@
     },
     "adjustmentsHelp": {
         "message": "Configura gli interruttori di regolazione. Vedi la sezione 'regolazioni in volo' del manuale per i dettagli. Le modifiche apportate dalle funzioni di regolazione non vengono salvate automaticamente. Ci sono 4 slot. Ogni interruttore utilizzato per apportare modifiche simultanee richiede l'uso esclusivo di uno slot."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Ci sono 4 slot. Ogni interruttore utilizzato per apportare modifiche richiede l'uso esclusivo di uno slot."
-    },
-    "adjustmentsExamples": {
-        "message": "Esempi:"
-    },
-    "adjustmentsExample1": {
-        "message": "Usare un interruttore a 3 posizioni su AUX1 per selezionare tra Pitch\/Roll P, I e D e un altro interruttore 3 posizioni su AUX2 per aumentare o diminuire il valore quando si tiene premuto su o giù."
-    },
-    "adjustmentsExample2": {
-        "message": "Usare un interruttore a 3 posizioni su AUX4 per selezionare e abilitare la selezione del profilo rate tramite lo stesso interruttore 3 posizioni sullo stesso canale."
     },
     "adjustmentsColumnEnable": {
         "message": "Se abilitato"
@@ -4184,30 +4136,6 @@
         "message": "Aumenta tutti i parametri PID allo stesso modo. Non cambiare questo slider a meno che non sia stata eseguita la regolazione sugli altri slider. Tipicamente questo è necessario solo per quad a bassa potenza o con alto momento d'inerzia (MoI) come i quad X-class o le build cinelifter. Troppo guadagno sul master può causare oscillazioni o motori caldi.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Bilanciamento PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Cambia D e il D massimo. Un D relativamente alto smorzerà la risposta agli stick e potrebbe far riscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni del P-term e migliorerà la gestione del propwash.<br \/><br \/>Un D-term relativamente basso dà una risposta agli stick più veloce ma peggiorerà la gestione del propwash e la reazione a forze esterne (vento).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Guadagno P e D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Un minor guadagno di P e D si tradurrà in motori più freddi, ma aumenterà l'oscillazione del propwash. Un valore troppo basso potrebbe rendere il quad instabile.<br \/><br \/>I term P e D lavorano insieme per ridurre il propwash.<br \/><br \/>Valori più alti aumenteranno la temperatura dei motori e potrebbero aumentare le oscillazioni durante il volo in avanti a causa di guadagni D-term superiori.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Guadagno risposta stick:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Valori di FF bassi peggioreranno la risposta agli stick e potrebbero causare un rimbalzo lento alla fine di un flip o un roll a causa del ritardo di risposta del quad e dell'accumulo dell'I-term che causa un 'I-term Bounceback'.<br \/><br \/>Valori di FF più alti daranno risposte agli stick più nette. Valori di FF eccessivamente alti possono causare overshoot e rimbalzo veloce alla fine di un flip o un roll.<br \/><br \/>Nota:<br \/>La funzione I-term Relax può impedire all'I-term di accumularsi con movimenti degli stick su quad a bassa potenza o se vengono utilizzati guadagni di risposta agli stick bassi.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Damping:<br \/><i><small>Guadagni D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4289,17 +4217,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Tipo di filtro"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Tipo filtro passabasso dinamico Gyro"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Frequenza minima di taglio [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Frequenza massima di taglio [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Tipo filtro passabasso dinamico 1 del giroscopio"
     },
     "pidTuningGyroLowpass2": {
         "message": "Passabasso Gyro 2"
@@ -4359,9 +4281,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Range Filtro Notch dinamico"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Percentuale larghezza Notch dinamico"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Fattore Q"
     },
@@ -4376,9 +4295,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Il notch dinamico ha tre intervalli di frequenze in cui può funzionare: Basso (80-330Hz) per quad con giri del motore bassi come 6\" (e più grandi), Medio (140-550Hz) per un normale quad da 5\", Alto (230-800Hz) per quad 2.5-3\" con giri del motore alti. L'opzione AUTO seleziona l'intervallo in base al valore della frequenza massima del passabasso dinamico 1 del giroscopio."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Questo imposta la larghezza tra due filtri notch dinamici. Impostandolo a 0 disattiverà il secondo filtro notch dinamico e ridurrà il ritardo del filtro, tuttavia potrebbe aumentare la temperatura dei motori."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Il fattore Q regola la larghezza del filtro notch dinamico. Un valore più alto lo rende più stretto e preciso e un valore inferiore lo rende sempre più ampio. Impostando un valore molto basso si aumenterà notevolmente il ritardo del filtro."
@@ -4448,14 +4364,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Tipo di filtro"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Filtro passabasso dinamico D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo Curva Dinamica"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipo di Filtro Dinamico"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtro Notch del D Term"
@@ -4567,9 +4477,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angolo limite per l'Acro Trainer"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Aiuta i piloti ad imparare a volare in modalità acro limitando l'angolo che il quad può assumere. L'intervallo valido è di 10-80 gradi. La modalità deve essere attivata con uno switch nella scheda $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw integrato"
@@ -6714,12 +6621,6 @@
     },
     "configurationEscProtocol": {
         "message": "Protocollo ESC\/Motori"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Seleziona il protocollo per i tuoi motori. <br>Assicurati che il protocollo sia supportato dai tuoi ESC, puoi trovare quest'informazione sul sito web del produttore. <br> <b>Fai attenzione usando DSHOT900 e DSHOT1200, non tutti gli  ESC li supportano!<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Seleziona il protocollo per i tuoi motori.<br>Assicurati che il protocollo sia supportato dal tuo ESC (dovrebbe essere specificato sul sito del produttore)."
     },
     "configurationunsyndePwm": {
         "message": "Velocità PWM dei motori separata dalla velocità del PID"
