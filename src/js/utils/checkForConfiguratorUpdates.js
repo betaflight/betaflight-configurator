@@ -4,6 +4,7 @@ import CONFIGURATOR from "../data_storage";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import $ from 'jquery';
+import semver from "semver-min";
 
 function notifyOutdatedVersion(data) {
 
@@ -12,7 +13,7 @@ function notifyOutdatedVersion(data) {
         return false;
     }
 
-    if (data.isCurrent === false && data.updatedVersion !== undefined) {
+    if (data.isCurrent === false && data.updatedVersion !== undefined && semver.gt(data.updatedVersion.version, CONFIGURATOR.version)) {
 
         CONFIGURATOR.latestVersion = data.updatedVersion.version;
         CONFIGURATOR.latestVersionReleaseUrl = data.updatedVersion.url;
