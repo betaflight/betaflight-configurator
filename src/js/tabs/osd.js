@@ -6,7 +6,7 @@ import VirtualFC from "../VirtualFC";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
@@ -2178,6 +2178,11 @@ OSD.msp = {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 result.push16(OSD.data.alarms.link_quality.value);
             }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                result.push16(OSD.data.alarms.rssi_dbm.value);
+            }
+
         }
         return result;
     },
@@ -2390,6 +2395,10 @@ OSD.msp = {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             d.alarms['link_quality'] = { display_name: i18n.getMessage('osdTimerAlarmOptionLinkQuality'), value: view.readU16() };
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            d.alarms['rssi_dbm'] = { display_name: i18n.getMessage('osdTimerAlarmOptionRssiDbm'), value: view.read16() };
         }
 
         this.processOsdElements(d, itemsPositionsRead);
