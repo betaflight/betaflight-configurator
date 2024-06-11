@@ -2,7 +2,6 @@ import { get as getConfig } from './ConfigStorage';
 import MSP from './msp';
 import Switchery from 'switchery-latest';
 import jBox from 'jbox';
-import { checkChromeRuntimeError } from './utils/common';
 import $ from 'jquery';
 
 const TABS = {};

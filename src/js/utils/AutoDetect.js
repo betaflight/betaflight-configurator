@@ -30,13 +30,6 @@ class AutoDetect {
     }
 
     verifyBoard() {
-        const isFlashOnConnect = $('input.flash_on_connect').is(':checked');
-
-        if (!TABS.firmware_flasher.isSerialPortAvailable() || isFlashOnConnect) {
-            // return silently as port-picker will trigger again when port becomes available
-            return;
-        }
-
         const port = PortHandler.portPicker.selectedPort;
         const isLoaded = TABS.firmware_flasher.targets ? Object.keys(TABS.firmware_flasher.targets).length > 0 : false;
 
