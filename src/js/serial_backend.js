@@ -394,7 +394,7 @@ function processCustomDefaults() {
 
 function processBoardInfo() {
 
-    gui_log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
+    gui_log(i18n.getMessage('boardInfoReceived', [FC.CONFIG.hardwareName, FC.CONFIG.boardVersion]));
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         checkReportProblems();
@@ -405,7 +405,7 @@ function processBoardInfo() {
         boardIdentifier: FC.CONFIG.boardIdentifier,
         targetName: FC.CONFIG.targetName,
         boardName: FC.CONFIG.boardName,
-        hardware: FC.getHardwareName(),
+        hardware: FC.CONFIG.hardwareName,
         manufacturerId: FC.CONFIG.manufacturerId,
         apiVersion: FC.CONFIG.apiVersion,
         flightControllerVersion: FC.CONFIG.flightControllerVersion,
