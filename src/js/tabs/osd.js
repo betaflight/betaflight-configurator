@@ -1822,6 +1822,11 @@ OSD.constants = {
             text: 'osdWarningTextRSNR',
             desc: 'osdWarningRSNR',
         },
+        LOAD: {
+            name: 'LOAD',
+            text: 'osdWarningTextLoad',
+            desc: 'osdWarningLoad',
+        },
 
     },
     FONT_TYPES: [
@@ -2089,6 +2094,11 @@ OSD.chooseFields = function() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.RSNR,
+        ]);
+    }
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+            F.LOAD,
         ]);
     }
 };

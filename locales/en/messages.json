@@ -6468,6 +6468,15 @@
     "osdWarningRSNR": {
         "message": "Warns when RSNR value is below alarm setting"
     },
+    "osdWarningTextLoad": {
+        "message": "LOAD",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Warns if the CPU LOAD of the flight controller is too high",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
+    },
+
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
     },
