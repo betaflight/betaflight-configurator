@@ -68,17 +68,7 @@ class GuiControl {
         this.operating_system = GUI_checkOperatingSystem();
 
         // Check the method of execution
-        this.nwGui = null;
-        try {
-            this.nwGui = require('nw.gui');
-            this.Mode = GUI_MODES.NWJS;
-        } catch (ex) {
-            if (typeof cordovaApp !== 'undefined') {
-                this.Mode = GUI_MODES.Cordova;
-            } else {
-                this.Mode = GUI_MODES.Other;
-            }
-        }
+        this.nwGui = GUI_MODES.Other;
     }
     // Timer managing methods
     // name = string
