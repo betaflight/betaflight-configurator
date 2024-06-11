@@ -833,6 +833,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.CONFIG.sampleRateHz = data.readU16();
                 FC.CONFIG.configurationProblems = data.readU32();
 
+                // Refresh the hardware name (it's a calculated field)
+                FC.calculateHardwareName();
+
                 break;
 
             case MSPCodes.MSP_NAME:

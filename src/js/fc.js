@@ -143,27 +143,6 @@ const FC = {
     // and bridges the vue and rest of the code
     CONFIG: {
         ...INITIAL_CONFIG,
-        get hardwareName() {
-            let name;
-            if (this.targetName) {
-                name = this.targetName;
-            } else {
-                name = this.boardIdentifier;
-            }
-
-            if (this.boardName && this.boardName !== name) {
-                name = `${this.boardName}(${name})`;
-            }
-
-            if (this.manufacturerId) {
-                name = `${this.manufacturerId}/${name}`;
-            }
-
-            return name;
-        },
-        set hardwareName(name) {
-            // NOOP, can't really be set. Maybe implement some logic?
-        },
     },
     COPY_PROFILE: null,
     CURRENT_METERS: null,
@@ -816,7 +795,7 @@ const FC = {
         return serialRxTypes;
     },
 
-    getHardwareName() {
+    calculateHardwareName() {
         let name;
         if (this.CONFIG.targetName) {
             name = this.CONFIG.targetName;
@@ -832,7 +811,7 @@ const FC = {
             name = `${this.CONFIG.manufacturerId}/${name}`;
         }
 
-        return name;
+        this.CONFIG.hardwareName = name;
     },
 
     MCU_TYPES: {
