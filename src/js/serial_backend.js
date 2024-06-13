@@ -27,6 +27,7 @@ import BuildApi from "./BuildApi";
 import { isWeb } from "./utils/isWeb";
 import { serialShim } from "./serial_shim.js";
 import { EventBus } from "../components/eventBus";
+import BT from "./protocols/bluetooth.js";
 
 let serial = serialShim();
 
@@ -44,6 +45,7 @@ const toggleStatus = function () {
 };
 
 function connectHandler(event) {
+    console.log(`Connected to: ${event.detail.path}`);
     onOpen(event.detail);
     toggleStatus();
 }
@@ -64,7 +66,21 @@ export function initializeSerialBackend() {
         }
     });
 
+    EventBus.$on('port-handler:auto-select-bluetooth-device', function(device) {
+        if (!GUI.connected_to && !GUI.connecting_to && GUI.active_tab !== 'firmware_flasher'
+            && ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device))
+                || Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)) {
+            connectDisconnect();
+        }
+    });
+
     serial.addEventListener("removedDevice", (event) => {
+        if (event.detail.path === GUI.connected_to) {
+            connectDisconnect();
+        }
+    });
+
+    BT.addEventListener("removedDevice", (event) => {
         if (event.detail.path === GUI.connected_to) {
             connectDisconnect();
         }
@@ -100,7 +116,7 @@ function connectDisconnect() {
 
         GUI.configuration_loaded = false;
 
-        const selected_baud = PortHandler.portPicker.selectedBauds;
+        const baudRate = PortHandler.portPicker.selectedBauds;
         const selectedPort = portName;
 
         if (!isConnected) {
@@ -111,7 +127,8 @@ function connectDisconnect() {
             PortHandler.portPickerDisabled = true;
             $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-            const baudRate = selected_baud;
+            CONFIGURATOR.virtualMode = false;
+
             if (selectedPort === 'virtual') {
                 CONFIGURATOR.virtualMode = true;
                 CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
@@ -119,8 +136,14 @@ function connectDisconnect() {
                 // Hack to get virtual working on the web
                 serial = serialShim();
                 serial.connect('virtual', {}, onOpenVirtual);
+            } else if (selectedPort.startsWith('bluetooth')) {
+
+                BT.addEventListener('connect', connectHandler);
+                BT.addEventListener('disconnect', disconnectHandler);
+
+                BT.connect();
+
             } else {
-                CONFIGURATOR.virtualMode = false;
                 serial = serialShim();
                 // Explicitly disconnect the event listeners before attaching the new ones.
                 serial.removeEventListener('connect', connectHandler);
@@ -262,7 +285,9 @@ function onOpen(openInfo) {
         result = getConfig('expertMode')?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
-        if(isWeb()) {
+        if (PortHandler.portPicker.selectedPort.startsWith('bluetooth')) {
+            BT.addEventListener('receive', read_serial_adapter);
+        } else if (isWeb()) {
             serial.removeEventListener('receive', read_serial_adapter);
             serial.addEventListener('receive', read_serial_adapter);
         } else {

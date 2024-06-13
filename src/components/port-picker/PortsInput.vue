@@ -31,6 +31,13 @@
           {{ $t("portsSelectVirtual") }}
         </option>
         <option
+          v-for="connectedBluetoothDevice in connectedBluetoothDevices"
+          :key="connectedBluetoothDevice.path"
+          :value="connectedBluetoothDevice.path"
+        >
+          {{ connectedBluetoothDevice.displayName }}
+        </option>
+        <option
           v-for="connectedSerialDevice in connectedSerialDevices"
           :key="connectedSerialDevice.path"
           :value="connectedSerialDevice.path"
@@ -46,6 +53,9 @@
         </option>
         <option value="requestpermission">
           {{ $t("portsSelectPermission") }}
+        </option>
+        <option value="requestpermissionbluetooth">
+          {{ $t("portsSelectPermissionBluetooth") }}
         </option>
       </select>
     </div>
@@ -114,6 +124,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    connectedBluetoothDevices: {
+      type: Array,
+      default: () => [],
+    },
     disabled: {
         type: Boolean,
         default: false,
@@ -154,6 +168,8 @@ export default {
     onChangePort(event) {
       if (event.target.value === 'requestpermission') {
         EventBus.$emit('ports-input:request-permission');
+      } else if (event.target.value === 'requestpermissionbluetooth') {
+        EventBus.$emit('ports-input:request-permission-bluetooth');
       } else {
         EventBus.$emit('ports-input:change', event.target.value);
       }

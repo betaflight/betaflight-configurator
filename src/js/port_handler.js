@@ -2,6 +2,7 @@ import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
 import serial from "./webSerial";
 import usb from "./protocols/webusbdfu";
+import BT from "./protocols/bluetooth";
 
 const DEFAULT_PORT = 'noselection';
 const DEFAULT_BAUDS = 115200;
@@ -9,6 +10,8 @@ const DEFAULT_BAUDS = 115200;
 const PortHandler = new function () {
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
+    this.currentBluetoothPorts = [];
+
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
@@ -16,9 +19,13 @@ const PortHandler = new function () {
         virtualMspVersion: "1.46.0",
         autoConnect: getConfig('autoConnect', false).autoConnect,
     };
+
     this.portPickerDisabled = false;
+
+    this.bluetoothAvailable = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
+
     this.showAllSerialDevices = false;
     this.showVirtualMode = getConfig('showVirtualMode', false).showVirtualMode;
     this.showManualMode = getConfig('showManualMode', false).showManualMode;
@@ -27,14 +34,19 @@ const PortHandler = new function () {
 
 PortHandler.initialize = function () {
 
+    EventBus.$on('ports-input:request-permission-bluetooth', this.askBluetoothPermissionPort.bind(this));
     EventBus.$on('ports-input:request-permission', this.askSerialPermissionPort.bind(this));
     EventBus.$on('ports-input:change', this.onChangeSelectedPort.bind(this));
+
+    BT.addEventListener("addedDevice", (event) => this.addedBluetoothDevice(event.detail));
+    BT.addEventListener("removedDevice", (event) => this.addedBluetoothDevice(event.detail));
 
     serial.addEventListener("addedDevice", (event) => this.addedSerialDevice(event.detail));
     serial.addEventListener("removedDevice", (event) => this.removedSerialDevice(event.detail));
 
     usb.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
 
+    this.addedBluetoothDevice();
     this.addedSerialDevice();
     this.addedUsbDevice();
 };
@@ -73,6 +85,25 @@ PortHandler.removedSerialDevice = function (device) {
     });
 };
 
+PortHandler.addedBluetoothDevice = function (device) {
+    this.updateCurrentBluetoothPortsList()
+    .then(() => {
+        const selectedPort = this.selectActivePort();
+        if (!device || selectedPort === device.path) {
+            // Send this event when the port handler auto selects a new device
+            EventBus.$emit('port-handler:auto-select-bluetooth-device', selectedPort);
+        }
+    });
+};
+PortHandler.removedBluetoothDevice = function (device) {
+    this.updateCurrentBluetoothPortsList()
+    .then(() => {
+        if (this.portPicker.selectedPort === device.path) {
+            this.selectActivePort();
+        }
+    });
+};
+
 PortHandler.addedUsbDevice = function (device) {
     this.updateCurrentUsbPortsList()
     .then(() => {
@@ -102,12 +133,31 @@ PortHandler.updateCurrentUsbPortsList = async function () {
     this.currentUsbPorts = orderedPorts;
 };
 
+PortHandler.updateCurrentBluetoothPortsList = async function () {
+    const ports = await BT.getDevices();
+    const orderedPorts = this.sortPorts(ports);
+    this.bluetoothAvailable = orderedPorts.length > 0;
+    this.currentBluetoothPorts = orderedPorts;
+};
+
 PortHandler.sortPorts = function(ports) {
     return ports.sort(function(a, b) {
         return a.path.localeCompare(b.path, window.navigator.language, {
             numeric: true,
             sensitivity: 'base',
         });
+    });
+};
+
+PortHandler.askBluetoothPermissionPort = function() {
+    BT.requestPermissionDevice()
+    .then((port) => {
+        // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
+        // selects a device that had already permission, or cancels the permission request, we need to select the port
+        // so do it here too
+        console.log("BT permission granted", port);
+        console.log("Port picker selected port", this.portPicker.selectedPort);
+        this.selectActivePort(port);
     });
 };
 
@@ -136,6 +186,12 @@ PortHandler.selectActivePort = function(suggestedDevice) {
         selectedPort = this.currentUsbPorts.find(device => device === usb.getConnectedPort());
     }
 
+    // Return the same that is connected to bluetooth
+    if (BT.bluetoothDevice) {
+        console.log("BT connected port", BT.bluetoothDevice, BT.getConnectedPort());
+        selectedPort = BT.getConnectedPort();
+    }
+
     // Return the suggested device (the new device that has been detected)
     if (!selectedPort && suggestedDevice) {
         selectedPort = suggestedDevice.path;
@@ -152,6 +208,15 @@ PortHandler.selectActivePort = function(suggestedDevice) {
     // Return some serial port that is recognized by the filter
     if (!selectedPort) {
         selectedPort = this.currentSerialPorts.find(device => deviceFilter.some(filter => device.displayName.includes(filter)));
+        if (selectedPort) {
+            selectedPort = selectedPort.path;
+        }
+    }
+
+    // Return some bluetooth port that is recognized by the filter
+    if (!selectedPort) {
+        console.log("BT ports recognized by the filter", this.currentBluetoothPorts);
+        selectedPort = this.currentBluetoothPorts.find(device => deviceFilter.some(filter => device.displayName.includes(filter)));
         if (selectedPort) {
             selectedPort = selectedPort.path;
         }

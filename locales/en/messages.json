@@ -87,6 +87,19 @@
         "message": "--- I can't find my device ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- find my Bluetooth device ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Connected to Bluetooth device: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Bluetooth connection type: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Bluetooth error: $1"
+    },
     "virtualMSPVersion": {
         "message": "Virtual Firmware Version"
     },
