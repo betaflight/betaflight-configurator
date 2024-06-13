@@ -448,8 +448,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.RC_TUNING.pitch_rate_limit = data.readU16();
                 FC.RC_TUNING.yaw_rate_limit = data.readU16();
                 FC.RC_TUNING.rates_type = data.readU8();
-                FC.RC_TUNING.rates_type = data.readU8();
-                FC.RC_TUNING.rates_type = data.readU8();
                 break;
             case MSPCodes.MSP_PID:
                 // PID data arrived, we need to scale it and save to appropriate bank / array
