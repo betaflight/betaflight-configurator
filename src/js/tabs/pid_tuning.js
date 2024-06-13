@@ -448,7 +448,8 @@ pid_tuning.initialize = function (callback) {
         $('input[name="feedforwardJitterFactor"]').val(FC.ADVANCED_TUNING.feedforward_jitter_factor);
 
         // Vbat Sag Compensation
-        const vbatSagCompensationCheck = $('input[id="vbatSagCompensation"]');
+        const enableVbatSagCompensation = FC.BATTERY_CONFIG.voltageMeterSource !== 1;
+        const vbatSagCompensationCheck = $('input[id="vbatSagCompensation"]').attr('disabled', enableVbatSagCompensation).change();
 
         vbatSagCompensationCheck.prop('checked', FC.ADVANCED_TUNING.vbat_sag_compensation !== 0);
         $('input[name="vbatSagValue"]').val(FC.ADVANCED_TUNING.vbat_sag_compensation > 0 ? FC.ADVANCED_TUNING.vbat_sag_compensation : 100);
