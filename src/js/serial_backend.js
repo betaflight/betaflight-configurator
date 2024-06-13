@@ -141,7 +141,7 @@ function connectDisconnect() {
                 BT.addEventListener('connect', connectHandler);
                 BT.addEventListener('disconnect', disconnectHandler);
 
-                BT.connect();
+                BT.connect(portName, { baudRate });
 
             } else {
                 serial = serialShim();
@@ -186,7 +186,12 @@ function finishClose(finishedCallback) {
         $('#dialogResetToCustomDefaults')[0].close();
     }
 
-    serial.disconnect(onClosed);
+    if (PortHandler.portPicker.selectedPort.startsWith('bluetooth')) {
+        // BT.removeEventListener('receive', read_serial_adapter);
+        BT.disconnect();
+    } else {
+        serial.disconnect(onClosed);
+    }
 
     MSP.disconnect_cleanup();
     PortUsage.reset();
@@ -286,6 +291,7 @@ function onOpen(openInfo) {
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
         if (PortHandler.portPicker.selectedPort.startsWith('bluetooth')) {
+            serial = BT;
             BT.addEventListener('receive', read_serial_adapter);
         } else if (isWeb()) {
             serial.removeEventListener('receive', read_serial_adapter);
@@ -667,11 +673,7 @@ function onConnect() {
 }
 
 function onClosed(result) {
-    if (result) { // All went as expected
-        gui_log(i18n.getMessage('serialPortClosedOk'));
-    } else { // Something went wrong
-        gui_log(i18n.getMessage('serialPortClosedFail'));
-    }
+    gui_log(i18n.getMessage(result ? 'serialPortClosedOk' : 'serialPortClosedFail'));
 
     $('#tabs ul.mode-connected').hide();
     $('#tabs ul.mode-connected-cli').hide();

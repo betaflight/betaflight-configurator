@@ -155,8 +155,6 @@ PortHandler.askBluetoothPermissionPort = function() {
         // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
         // selects a device that had already permission, or cancels the permission request, we need to select the port
         // so do it here too
-        console.log("BT permission granted", port);
-        console.log("Port picker selected port", this.portPicker.selectedPort);
         this.selectActivePort(port);
     });
 };
@@ -187,9 +185,8 @@ PortHandler.selectActivePort = function(suggestedDevice) {
     }
 
     // Return the same that is connected to bluetooth
-    if (BT.bluetoothDevice) {
-        console.log("BT connected port", BT.bluetoothDevice, BT.getConnectedPort());
-        selectedPort = BT.getConnectedPort();
+    if (BT.connected) {
+        selectedPort = this.currentBluetoothPorts.find(device => device === BT.getConnectedPort());
     }
 
     // Return the suggested device (the new device that has been detected)
