@@ -124,12 +124,12 @@ PortHandler.selectActivePort = function(suggestedDevice) {
 
     // Return the same that is connected to serial
     if (serial.connected) {
-        selectedPort = serial.getConnectedPort();
+        selectedPort = this.currentSerialPorts.find(device => device === serial.getConnectedPort());
     }
 
     // Return the same that is connected to usb (dfu mode)
     if (usb.usbDevice) {
-        selectedPort = usb.getConnectedPort();
+        selectedPort = this.currentUsbPorts.find(device => device === usb.getConnectedPort());
     }
 
     // Return the suggested device (the new device that has been detected)
