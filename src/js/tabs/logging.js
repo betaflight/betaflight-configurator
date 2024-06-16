@@ -4,14 +4,20 @@ import { generateFilename } from '../utils/generate_filename.js';
 import { i18n } from '../localization';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import FC from '../fc.js';
+import FileSystem from '../FileSystem';
 import MSP from '../msp.js';
 import MSPCodes from '../msp/MSPCodes.js';
 import CONFIGURATOR from '../data_storage.js';
 import { gui_log } from '../gui_log.js';
 import $ from 'jquery';
 
-const logging = {};
+const logging = {
+    fileEntry: null,
+    fileWriter: null,
+};
+
 logging.initialize = function (callback) {
+
 
     if (GUI.active_tab != 'logging') {
         GUI.active_tab = 'logging';
@@ -43,7 +49,7 @@ logging.initialize = function (callback) {
 
         $('a.logging').click(function () {
             if (GUI.connected_to) {
-                if (fileEntry != null) {
+                if (logging.fileEntry != null) {
                     const clicks = $(this).data('clicks');
 
                     if (!clicks) {
@@ -58,8 +64,6 @@ logging.initialize = function (callback) {
                         });
 
                         if (requestedProperties.length) {
-                            // print header for the csv file
-                            print_head();
 
                             const logDataPoll = function () {
                                 if (requests) {
@@ -73,29 +77,39 @@ logging.initialize = function (callback) {
                                 }
                             };
 
-                            GUI.interval_add('log_data_poll', logDataPoll, parseInt($('select.speed').val()), true); // refresh rate goes here
-                            GUI.interval_add('write_data', function write_data() {
-                                if (logBuffer.length) { // only execute when there is actual data to write
-                                    if (fileWriter.readyState == 0 || fileWriter.readyState == 2) {
+                            console.log("Opening file: ", logging.fileEntry.name);
+                            FileSystem.openFile(logging.fileEntry).then((writer) => {
+                                logging.fileWriter = writer;
+
+                                // print header for the csv file
+                                print_head();
+
+                                GUI.interval_add('log_data_poll', logDataPoll, parseInt($('select.speed').val()), true); // refresh rate goes here
+                                GUI.interval_add('write_data', function write_data() {
+                                    if (logBuffer.length) { // only execute when there is actual data to write
                                         append_to_file(logBuffer.join('\n'));
 
                                         $('.samples').text(samples += logBuffer.length);
 
                                         logBuffer = [];
-                                    } else {
-                                        console.log('IO having trouble keeping up with the data flow');
                                     }
-                                }
-                            }, 1000);
+                                }, 1000);
 
-                            $('.speed').prop('disabled', true);
-                            $(this).text(i18n.getMessage('loggingStop'));
-                            $(this).data("clicks", clicks !== true);
+                                $('.speed').prop('disabled', true);
+                                $(this).text(i18n.getMessage('loggingStop'));
+                                $(this).data("clicks", clicks !== true);
+                            });
                         } else {
                             gui_log(i18n.getMessage('loggingErrorOneProperty'));
                         }
                     } else {
                         GUI.interval_kill_all();
+
+                        console.log("Closing file: ", logging.fileEntry.name);
+                        FileSystem.closeFile(logging.fileWriter)
+                        .catch((error) => {
+                            console.error("Error closing file: ", error);
+                        });
 
                         $('.speed').prop('disabled', false);
                         $(this).text(i18n.getMessage('loggingStart'));
@@ -108,18 +122,6 @@ logging.initialize = function (callback) {
                 gui_log(i18n.getMessage('loggingErrorNotConnected'));
             }
         });
-
-        const result = getConfig('logging_file_entry');
-        if (result.logging_file_entry) {
-            chrome.fileSystem.restoreEntry(result.logging_file_entry, function (entry) {
-                if (checkChromeRuntimeError()) {
-                    return;
-                }
-
-                fileEntry = entry;
-                prepare_writer(true);
-            });
-        }
 
         GUI.content_ready(callback);
     }
@@ -238,98 +240,27 @@ logging.initialize = function (callback) {
 
 
     // IO related methods
-    let fileEntry = null;
-    let fileWriter = null;
-
     function prepare_file() {
         const prefix = 'log';
         const suffix = 'csv';
 
         const filename = generateFilename(prefix, suffix);
 
-        const accepts = [{
-            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
-        }];
-
         // create or load the file
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
+        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase}), `.${suffix}`).then((file) => {
+            logging.fileEntry = file;
+            console.log("Log file path: ", file.name);
 
-            fileEntry = entry;
-
-            // echo/console log path specified
-            chrome.fileSystem.getDisplayPath(fileEntry, function(path) {
-                console.log(`Log file path: ${path}`);
-            });
-
-            // change file entry from read only to read/write
-            chrome.fileSystem.getWritableEntry(fileEntry, function(fileEntryWritable) {
-                // check if file is writable
-                chrome.fileSystem.isWritableEntry(fileEntryWritable, function(isWritable) {
-                    if (isWritable) {
-                        fileEntry = fileEntryWritable;
-
-                        // save entry for next use
-                        setConfig({'logging_file_entry': chrome.fileSystem.retainEntry(fileEntry)});
-
-                        // reset sample counter in UI
-                        $('.samples').text(0);
-
-                        prepare_writer();
-                    } else {
-                        console.log('File appears to be read only, sorry.');
-                    }
-                });
-            });
-        });
-    }
-
-    function prepare_writer(retaining) {
-        fileEntry.createWriter(function (writer) {
-            fileWriter = writer;
-
-            fileWriter.onerror = function (e) {
-                console.error(e);
-
-                // stop logging if the procedure was/is still running
-                if ($('a.logging').data('clicks')) $('a.logging').click();
-            };
-
-            fileWriter.onwriteend = function () {
-                $('.size').text(bytesToSize(fileWriter.length));
-            };
-
-            if (retaining) {
-                chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
-                    gui_log(i18n.getMessage('loggingAutomaticallyRetained', [path]));
-                });
-            }
-
-            // update log size in UI on fileWriter creation
-            $('.size').text(bytesToSize(fileWriter.length));
-            // update log name in UI
-            chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
-               $('.name').text(path);
-            });
-
-        }, function (e) {
-            // File is not readable or does not exist!
-            console.error(e);
-
-            if (retaining) {
-                fileEntry = null;
-            }
+            $('a.logging').removeClass('disabled');
         });
     }
 
     function append_to_file(data) {
-        if (fileWriter.position < fileWriter.length) {
-            fileWriter.seek(fileWriter.length);
-        }
 
-        fileWriter.write(new Blob([`${data}\n`], {type: 'text/plain'}));
+        FileSystem.writeChunck(logging.fileWriter, new Blob([data], {type: 'text/plain'}))
+        .catch((error) => {
+            console.error("Error appending to file: ", error);
+        });
     }
 };
 
