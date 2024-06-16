@@ -208,10 +208,11 @@ setup.initialize = function (callback) {
                 'NO_GYRO',
                 'FAILSAFE',
                 'RX_FAILSAFE',
-                'BAD_RX_RECOVERY',
+                'NOT_DISARMED',
                 'BOXFAILSAFE',
                 'RUNAWAY_TAKEOFF',
-                'CRASH_DETECTED', // THROTTLE before 1.42
+                'CRASH_DETECTED',
+                'THROTTLE',
                 'ANGLE',
                 'BOOT_GRACE_TIME',
                 'NOPREARM',
