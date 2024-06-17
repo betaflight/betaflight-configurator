@@ -115,7 +115,7 @@ export default {
     background-color: transparent;
   }
   50% {
-    background-color: var(--error);
+    background-color: var(--error-500);
   }
 }
 
@@ -123,7 +123,7 @@ export default {
   background-color: #59aa29;
 }
 .battery-status.state-warning {
-  background-color: var(--error);
+  background-color: var(--error-500);
 }
 
 .battery-status.state-empty {

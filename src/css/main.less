@@ -232,13 +232,14 @@ input[type="number"] {
     z-index: 1999;
 }
 .headerbar {
+    height: 5rem;
     display: flex;
     align-items: start;
     padding: 1rem;
-    gap: 0.5rem;
+    gap: 1rem;
     background-color: var(--surface-200);
 }
-#menu_btn {
+#menu_btn, #reveal_btn {
     display: none;
     width: 24px;
     height: 24px;
@@ -246,21 +247,10 @@ input[type="number"] {
     color: var(--surface-700);
     line-height: 24px;
     text-align: center;
-    margin-right: 1rem;
     cursor: pointer;
     &:hover {
         color: var(--surface-800);
     }
-}
-#reveal_btn {
-    display: none;
-    width: 24px;
-    height: 24px;
-    font-size: 20px;
-    color: var(--surface-100);
-    line-height: 24px;
-    text-align: center;
-    margin-left: 15px;
 }
 #port-picker {
     display: flex;
@@ -276,19 +266,16 @@ input[type="number"] {
     align-items: end;
     gap: 0.5rem;
 }
-#auto-connect-switch {
-    width: 110px;
-    float: left;
-    margin-top: 4px;
-    margin-left: 5px;
-    margin-right: 20px;
+#auto-connect-and-baud {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 .gray {
     color: var(--surface-500);
 }
 #firmware-virtual-option {
     width: fit-content;
-    margin-right: 1rem;
     display: none;
 }
 #header_btns {
@@ -371,195 +358,112 @@ input[type="number"] {
         }
     }
 }
+.flash_state {
+    white-space: nowrap;
+}
 .header-wrapper {
     display: flex;
+    gap: 1rem;
+    justify-content: space-between;
     .mode-connected {
         display: none;
     }
 }
 #sensor-status {
-    margin-right: 10px;
-    line-height: 2px;
-    height: 67px;
-    border-radius: 5px;
-    border: 1px solid var(--surface-500);
-    box-shadow: 0 2px 0 var(--surface-400);
+    border-radius: 0.5rem;
     background-color: var(--surface-300);
     >ul {
         display: flex;
     }
     li {
-        float: left;
-        height: 67px;
-        width: 33px;
-        line-height: 18px;
-        text-align: center;
-        border: 1px solid var(--surface-300);
-        background-color: var(--surface-200);
-        padding-left: 5px;
-        padding-right: 5px;
-        &:last-child {
-            border-right: 0;
-            border-top-right-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }
-        &:first-child {
-            border-left: 0;
-            border-top-left-radius: 5px;
-            border-bottom-left-radius: 5px;
-        }
-    }
-    div {
-        white-space: nowrap;
-        overflow: hidden;
+        width: 3.5rem;
+        display: flex;
     }
     .on {
         background-color: var(--surface-200);
     }
 }
 .gyroicon {
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: var(--surface-950);
-    text-align: center;
     background-image: url(../images/icons/sensor_gyro_off.png);
-    background-size: 43px;
-    background-position: top;
 }
 .accicon {
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: var(--surface-950);
-    text-align: center;
     background-image: url(../images/icons/sensor_acc_off.png);
-    background-size: 40px;
-    background-position: -5px 2px;
 }
 .magicon {
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: var(--surface-950);
-    text-align: center;
     background-image: url(../images/icons/sensor_mag_off.png);
-    background-size: 42px;
-    background-position: -5px 2px;
 }
 .gpsicon {
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: var(--surface-950);
-    text-align: center;
     background-image: url(../images/icons/sensor_sat_off.png);
-    background-size: 42px;
-    background-position: -5px 2px;
 }
 .baroicon {
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: var(--surface-950);
-    text-align: center;
     background-image: url(../images/icons/sensor_baro_off.png);
-    background-size: 40px;
-    background-position: -5px 2px;
+
 }
 .sonaricon {
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: var(--surface-950);
-    text-align: center;
     background-image: url(../images/icons/sensor_sonar_off.png);
-    background-size: 41px;
-    background-position: -4px 1px;
 }
 .gyroicon.active {
-    color: var(--surface-900);
+    color: var(--text);
     background-image: url(../images/icons/sensor_gyro_on.png);
 }
 .accicon.active {
-    color: var(--surface-900);
+    color: var(--text);
     background-image: url(../images/icons/sensor_acc_on.png);
 }
 .magicon.active {
-    color: var(--surface-900);
+    color: var(--text);
     background-image: url(../images/icons/sensor_mag_on.png);
 }
 .gpsicon.active {
-    color: var(--surface-900);
+    color: var(--text);
     background-image: url(../images/icons/sensor_sat_on_no_fix.png);
 }
 .gpsicon.active_fix {
-    color: var(--surface-900);
+    color: var(--text);
     background-image: url(../images/icons/sensor_sat_on_with_fix.png);
 }
 .baroicon.active {
-    color: var(--surface-900);
+    color: var(--text);
     background-image: url(../images/icons/sensor_baro_on.png);
 }
 .sonaricon.active {
-    color: var(--surface-900);
+    color: var(--text);
     background-image: url(../images/icons/sensor_sonar_on.png);
 }
+.gyroicon, .accicon, .magicon, .gpsicon, .baroicon, .sonaricon {
+    background-repeat: no-repeat;
+    height: 30px;
+    // margin-top: 3px;
+    width: 100%;
+    padding-top: 3rem;
+    color: var(--surface-700);
+    text-align: center;
+    background-size: 41px;
+    background-position-x: center;
+    background-position-y: 4px;
+}
 #dataflash_wrapper_global {
-    color: white;
-    font-size: 10px;
-    width: 125px;
-    margin-right: 5px;
-    line-height: 12px;
-    height: 33px;
-    border-radius: 5px;
-    border: 1px solid var(--surface-300);
-    box-shadow: 0 1px 0 var(--surface-300);
-    background-color: var(--surface-300);
-    padding-top: 5px;
+    color: var(--text);
+    // width: 8rem;
+    height: fit-content;
     display: none;
 }
 .dataflash-contents_global {
-    margin-top: 18px;
-    border: 1px solid var(--surface-600);
-    background-color: var(--surface-600);
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    border-radius: 3px;
-    margin-left: 5px;
-    margin-right: 5px;
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--surface-300);
+    border-radius: 0.5rem;
+    li {
+        background-color: var(--surface-600);
+        height: 0.35rem;
+        position: relative;
+        border-radius: 999px;
+        width: 100% !important;
+    }
     .notsupported_global {
         display: none;
-    }
-    li {
-        height: 5px;
-        position: relative;
-        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.20);
-        border-radius: 2px;
-        div {
-            position: absolute;
-            top: -18px;
-            margin-top: 0;
-            left: 0;
-            right: 0;
-            width: 120px;
-            text-align: left;
-            color: var(--surface-800);
-        }
     }
     progress {
         &::-webkit-progress-bar {
@@ -587,25 +491,23 @@ input[type="number"] {
 }
 #expertMode {
     color: var(--surface-800);
-    margin-top: 27px;
-    width: 125px;
-    float: right;
-    margin-right: 0;
-    line-height: 12px;
+    width: 100%;
+    margin-top: 1rem;
+    label {
+        display: flex;
+        align-items: baseline;
+        .expertModeText {
+            white-space: nowrap;
+        }
+    }
 }
 #quad-status_wrapper {
     display: none;
-    color: white;
     font-size: 10px;
-    min-width: 90px;
-    margin-right: 10px;
-    line-height: 12px;
-    height: 67px;
-    border-radius: 5px;
-    border: 1px solid var(--surface-300);
-    box-shadow: 0 1px 0 var(--surface-300);
-    background-color: var(--surface-200);
+    border-radius: 0.5rem;
+    background-color: var(--surface-300);
     white-space: nowrap;
+    padding: 0.25rem 0.5rem;
 }
 
 .armedicon {
@@ -2159,17 +2061,6 @@ button.active {
         gap: 1rem;
     }
 }
-@media all and (min-width: 1125px) {
-    #sensor-status {
-        margin-right: 20px;
-    }
-    #dataflash_wrapper_global {
-        margin-right: 10px;
-    }
-    #quad-status_wrapper {
-        margin-right: 20px;
-    }
-}
 @media not all and (max-width: 575px) {
     .visible-on-phone-only {
         display: none !important;
@@ -2378,17 +2269,48 @@ button.active {
         display: none !important;
     }
     .headerbar {
-        height: fit-content;
+        // max-height: 10rem;
+        height: unset;
         flex-wrap: wrap;
-        align-content: flex-start;
+        align-items: center;
         box-sizing: border-box;
-        transition: all 0.2s;
+        transition: all 0.3s;
+        padding-top: 0.5rem;
+        padding-bottom: 0;
+        .web-port-picker {
+            transition: all 0.2s;
+            // min-height: 0;
+            max-height: 0;
+            overflow-y: hidden;
+            padding-top: 0 !important;
+            margin-left: 0 !important;
+            width: 100%;
+            justify-content: end;
+        }
     }
     .headerbar.expand {
-        height: 154px;
+        .web-port-picker {
+            max-height: 4.5rem;
+            #portsinput {
+                height: 4.5rem;
+            }
+        }
     }
     .headerbar.expand2 {
         height: fit-content;
+    }
+    #firmware-virtual-option {
+        margin-right: 0;
+        max-width: calc(100% - 13rem);
+        #firmware-version-dropdown {
+            width: 100%;
+        }
+    }
+    #port-override-option {
+        label {
+            flex-direction: column;
+            align-items: start !important;
+        }
     }
     #menu_btn {
         display: block;
@@ -2401,14 +2323,17 @@ button.active {
     #header_btns {
         margin-left: auto;
         order: 3;
+        gap: 1rem;
     }
-    .firmware_b {
-        margin: 0;
-        zoom: 0.8;
-    }
-    .connect_b {
-        margin: 0;
-        zoom: 0.8;
+    .firmware_b, .connect_b {
+        height: fit-content !important;
+        width: fit-content !important;
+        a {
+            height: 2rem !important;
+            width: 2rem !important;
+            background-size: 1.5rem !important;
+            background-position: center !important;
+        }
     }
     .web-port-picker {
         order: 5;
@@ -2436,17 +2361,10 @@ button.active {
         width: 100%;
         margin-left: 0;
     }
-    #port-override-option {
-        flex-grow: 1;
-    }
     #portsinput {
         display: flex;
         gap: 5px;
-        flex-grow: 1;
         margin-right: 0;
-    }
-    #port-override {
-        width: calc(100% - 40px);
     }
     .header-wrapper.reveal {
         display: flex !important;
@@ -2466,7 +2384,8 @@ button.active {
         box-shadow: none;
     }
     .logswitch {
-        background-color: #242424;
+        background-color: var(--surface-200);
+        padding: 0.25rem;
     }
     #scrollicon {
         display: none;

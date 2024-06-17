@@ -1,7 +1,6 @@
 <template>
   <div
     id="portsinput"
-    style="width: 220px"
   >
     <div class="dropdown dropdown-dark">
       <select

@@ -80,10 +80,10 @@ export default {
 <style scoped>
 .web-port-picker {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     margin-left: auto;
     align-items: start;
     gap: 0.5rem;
-    height: auto;
-    padding-top: 1rem;
 }
 </style>
