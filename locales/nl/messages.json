@@ -1375,26 +1375,14 @@
     "receiverRcSmoothingFilter": {
         "message": "Filter"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Type RC smoothing gebruikt"
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "De kanalen waarop de afvlakking invloed op heeft"
-    },
-    "receiverRcSetpointType": {
-        "message": "Setpoint filtertype"
     },
     "receiverRcFeedforwardType": {
         "message": "Feedforward filtertype"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Uit"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Automatisch"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Kanalen Smoothed"
     },
     "receiverRcSmoothingMode": {
         "message": "Vloeiende Modus"

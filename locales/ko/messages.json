@@ -1786,9 +1786,6 @@
     "receiverRcSmoothingFilter": {
         "message": "필터"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "사용된 RC 스무딩 형식"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "셋포인트 필터에 의해 사용되는 컷오프 주파수 (Hz)입니다. 낮은 값을 사용하면 입력이 부드러워지고 느린 수신기 프로토콜에 더 적합합니다. 대부분의 사용자는 이 값을 \"자동\"에 해당하는 0에 두어야합니다."
     },
@@ -1797,12 +1794,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "채널 스무딩은 다음에 적용됩니다"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "피드포워드에 사용되는 필터링 방법의 형식입니다. 4.2로 시작하는 사용자는 기본 \"자동\"을 추천합니다. 4.1과 그 이전의 대부분의 사용자는 부드러움과 지연 간의 적절한 균형을 제공하는 기본 \"BIQUAD\" 값을 사용해야합니다. \"PT1\"은 약간 지연을 줄이지만 덜 부드럽게 만듭니다."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "셋포인트에 사용되는 필터링 방법의 형식입니다. 대부분의 사용자는 부드러움과 지연 간의 적절한 균형을 제공하는 기본 \"BIQUAD\" 값을 사용해야합니다. \"PT1\"은 약간 지연을 줄이지만 덜 부드럽게 만듭니다."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "셋포인트 필터 컷오프 주파수를 자동으로 계산할지(권장) 사용자가 수동으로 선택할지 선택합니다. \"수동\"을 사용하는 것은 Crossfire와 같은 비행 중 변경될 수 있는 수신 프로토콜에 권장되지 않습니다."
@@ -1816,20 +1807,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "피드포워드 컷오프 주파수"
     },
-    "receiverRcSetpointType": {
-        "message": "셋포인트 필터 형식"
-    },
     "receiverRcFeedforwardType": {
         "message": "피드포워드 필터 형식"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "끄기"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "자동"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "채널 평활화"
     },
     "receiverRcSmoothingMode": {
         "message": "스무딩 모드"
@@ -6170,6 +6152,10 @@
         "message": "링크 품질",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "아밍이 비활성화됨",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6295,6 +6281,14 @@
     },
     "osdWarningRSNR": {
         "message": "RSNR 수치가 알람 설정값 아래일 때 경고합니다"
+    },
+    "osdWarningTextLoad": {
+        "message": "부하",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "비행 컨트롤러의 CPU 부하가 매우 높을 때 경고합니다",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "알 수 없음 $1"

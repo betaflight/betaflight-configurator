@@ -1612,9 +1612,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filter"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Art der verwendeten RC-Glättung"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Die genutzte Grenzfrequenz in Hz durch den Setpoint Filter. Nutze kleinere Werte für sanftere Eingangswerte und besser geeignt für langsamere Empfängerprotokollen. Für die meisten Anwender ist 0 (oder Auto) der korrekte Wert."
     },
@@ -1623,12 +1620,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Die Kanalglättung gilt für"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "Der Typ der Filtermethode der für \"Setpoint Derivative\" verwendet wird. Ab Version 4.2 wird der Standardwert \"Auto\" empfohlen. Die meisten Benutzer sollten den Standardwert \"BIQUAD\" verwenden, da er eine gute Balance zwischen Glättung und Verzögerung bietet. \"PT1\" bietet weniger Glättung aber die Verzögerung ist etwas reduziert."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "Der Typ der Filtermethode welcher für \"Input\" verwendet wird. Die meisten Benutzer sollten den Standardwert \"BIQUAD\" verwenden, da er eine gute Balance zwischen Glättung und Verzögerung bietet. \"PT1\" bietet weniger Glättung aber die Verzögerung (Delay) ist etwas reduziert."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Wähle für die Grenzfrequenz des Setpoint Filters automatische Kalkultion (empfohlen) oder manuelle Einstellung durch den Anweder. Manuelle Konfiguration wird nicht bei Empferprotokollen wie z. B. Crsf (Crossfire) empfohlen."
@@ -1642,20 +1633,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Grenzfrequenz"
     },
-    "receiverRcSetpointType": {
-        "message": "Setpoint Filter Typ"
-    },
     "receiverRcFeedforwardType": {
         "message": "Feedforward Filter Typ"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Aus"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Kanäle geglättet"
     },
     "receiverRcSmoothingMode": {
         "message": "Glättungsmodus"

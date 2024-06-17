@@ -1786,9 +1786,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtr"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Typ wykorzystywanego wygładzania RC"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Częstotliwość odcięcia w Hz używana przez filtr wejściowy. Stosowanie niższych wartości spowoduje płynniejsze wejście i jest bardziej odpowiednie dla protokołów wolniejszego odbiornika. Większość użytkowników powinna zostawić to na 0 co odpowiada \"Auto\"."
     },
@@ -1797,12 +1794,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanały do których odnosi się wygładzanie"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "Rodzaj metody filtrowania stosowanej do pochodnej wartości zadanej. Począwszy od Cleanflight 4.2 zalecana jest domyślna wartość „Auto”. W wersji 4.1 i wcześniejszych większość użytkowników powinna używać domyślnej wartości „BIQUAD”, ponieważ zapewnia ona dobrą równowagę między płynnością a opóźnieniem. „PT1” nieznacznie zmniejsza opóźnienie, ale zapewnia mniej wygładzania."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "Rodzaj metody filtrowania zastosowany dla danych wejściowych. Większość użytkowników powinna używać domyślnej wartości „BIQUAD”, ponieważ zapewnia ona równowagę między płynnością a opóźnieniem. „PT1” nieznacznie zmniejsza opóźnienie, ale zapewnia mniej wygładzania."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Wybiera, czy częstotliwość odcięcia filtra wejściowego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, takich jak Crossfire które mogą zmieniać się w locie."
@@ -1816,20 +1807,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Częstotliwość odcięcia kanału"
     },
-    "receiverRcSetpointType": {
-        "message": "Typ filtra wejściowego"
-    },
     "receiverRcFeedforwardType": {
         "message": "Typ filtru Feedforward"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Wyłączony"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Kanały wygładzone"
     },
     "receiverRcSmoothingMode": {
         "message": "Typ wygładzania"

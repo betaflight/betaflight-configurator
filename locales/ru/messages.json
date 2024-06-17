@@ -1782,9 +1782,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Фильтр"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Тип RC сглаживания используется"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Частота среза в Гц, используемая при фильтрации значения Setpoint. Использование более низких значений приведет к сглаживанию входных данных и является более приемлемым для медленных протоколов радиоуправления. Большинству пользователей следует оставить это значение в нуле, что соответствует \"Авто\"."
     },
@@ -1793,12 +1790,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Сглаживание каналов применяется к"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "Тип фильтрации используемой для значения Feedforward. Начиная с версии 4.2 рекомендуется использовать значение по умолчанию \"Auto\". Для версии 4.1 и более ранних версий большинству пользователей следует использовать значение по умолчанию \"BIQUAD\", поскольку оно обеспечивает хороший баланс между плавностью и задержкой. \"PT1\" немного уменьшает задержку, но обеспечивает меньшее сглаживание."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "Тип фильтрации используемой для значения Setpoint. Большинству пользователей следует использовать значение по умолчанию \"BIQUAD\", поскольку оно обеспечивает хороший баланс между плавностью и задержкой. \"PT1\" немного уменьшает задержку, но обеспечивает меньшее сглаживание."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Выбор, будет ли частота среза фильтра setpoint рассчитана автоматически (рекомендуется) или выбрана вручную пользователем. Использовать \"Ручной\" не рекомендуется для протоколов приемников типа Crossfire, которые могут изменятся в полете."
@@ -1812,20 +1803,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Частота среза Feedforward"
     },
-    "receiverRcSetpointType": {
-        "message": "Тип фильтра заданного значения"
-    },
     "receiverRcFeedforwardType": {
         "message": "Тип фильтра Feedforward"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Выкл"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Авто"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Сглажеваемые каналы"
     },
     "receiverRcSmoothingMode": {
         "message": "Режим сглаживания"
@@ -1885,7 +1867,7 @@
         "message": "<b>П<\/b>ропорциональный"
     },
     "pidTuningIntegral": {
-        "message": "<b>I<\/b>ntegral"
+        "message": "<b>И<\/b>нтегральный"
     },
     "pidTuningDerivative": {
         "message": "Derivative"

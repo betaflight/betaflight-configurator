@@ -1782,9 +1782,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtro"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Tipo de suavizado RC usado"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "La frecuencia de corte en Hz utilizada por el filtro del valor objetivo. Utilizando valores más bajos se obtienen entradas más suavizadas y es más apropiado para receptores con protocolos más lentos. La mayoría de usuarios debería dejar esto en 0 que corresponde a \"Auto\"."
     },
@@ -1793,12 +1790,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Los canales sobre los que se aplica el suavizado"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "El tipo de filtro utilizado para la prealimentación. Empezando en 4.2 se recomienda el valor por defecto de \"Auto\". Para 4.1 y anterior la mayoría de usuarios deberían dejar el valor por defecto \"BIQUAD\" ya que proporciona un buen balance entre suavidad y retardo. \"PT1\" reduce ligeramente el retraso pero proporciona menos suavizado."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "El tipo de filtro utilizado para el valor objetivo. La mayoría de usuarios deberían dejar el valor por defecto \"BIQUAD\" ya que proporciona un buen balance entre suavidad y retardo. \"PT1\" reduce ligeramente el retraso pero proporciona menos suavizado."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Selecciona si la frecuencia de corte del filtro de valor objetivo se calcula automáticamente (recomendado) o se selecciona manualmente por el usuario. El uso de \"manual\" no se recomienda para receptores con protocolos como Crossfire que pueden cambiar durante el vuelo."
@@ -1812,20 +1803,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Frecuencia de Corte de Prealimentación"
     },
-    "receiverRcSetpointType": {
-        "message": "Tipo de Filtro del Valor Objetivo"
-    },
     "receiverRcFeedforwardType": {
         "message": "Tipo de Filtro de Prealimentación"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Apagado"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Automático"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Canales Suavizados"
     },
     "receiverRcSmoothingMode": {
         "message": "Modo de Suavizado"
@@ -3516,6 +3498,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>No se ha seleccionado ningún firmware para cargar<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "No hay placas cargadas"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Por favor selecciona un puerto serie válido<\/span>"
     },
@@ -4477,6 +4462,9 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Ángulo Límite para Entrenador Acro"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Ayuda a los pilotos a aprender a volar en modo acro limitando el ángulo que la aeronave puede alcanzar. Los límites válidos son de 10-80 grados. El modo debe activarse con un interruptor en la pestaña $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
@@ -6160,6 +6148,10 @@
         "message": "Calidad del enlace",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Armado desactivado",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6285,6 +6277,14 @@
     },
     "osdWarningRSNR": {
         "message": "Avisa cuando el valor del RSNR está por debajo del valor de alarma configurado"
+    },
+    "osdWarningTextLoad": {
+        "message": "CPU: carga",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Avisa si la carga de la CPU del controlador de vuelo es demasiado alta",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "Desconocido $1"
@@ -6621,6 +6621,9 @@
     },
     "configurationEscProtocol": {
         "message": "Protocolo ESC\/Motor"
+    },
+    "configurationEscProtocolHelp": {
+        "message": "Elige tu protocolo para el motor.<br>Asegúrate de verificar que el protocolo está soportado por tu ESC, esta información la podrás encontrar en la web del fabricante."
     },
     "configurationunsyndePwm": {
         "message": "Velocidad PWM del motor independiente de velocidad PID"

@@ -1742,9 +1742,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtro"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Tipo de suavização de RC usado"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "A frequência de corte em Hz usado pelo filtro de entrada. Usar valores mais baixos resultará em entradas mais suaves e são mais adequadas para protocolos de receptores mais lentos. A maioria dos usuários deve deixar em 0 correspondente a \"Automático\"."
     },
@@ -1753,12 +1750,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Os canais de suavização aplicam-se a"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "O método de filtro utilizado para o Feedforward. A partir da versão 4.2 o valor padrão \"Auto\" é o recomendado. Para versões 4.1 ou anterior, a maioria dos usuários deve usar a predefinição \"BIQUAD\" pois é um bom balanço entre suavização e atraso. \"PT1\" reduz um pouco o atraso, mas é menos suave."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "O tipo de filtro usado para a entrada. A maioria dos usuários deve usar a predefinição \"BIQUAD\" que é um bom balanço entre suavização e atraso. \"PT1\" reduz um pouco o atraso, mas é menos suave."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Seleciona se a frequência de corte do filtro de entrada é calculada automaticamente (recomendado) ou manualmente selecionada pelo usuário. O modo \"Manual\" não é recomendado para protocolos do receptor como Crossfire que podem mudar durante o voo."
@@ -1772,20 +1763,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Frequência de corte Feedforward"
     },
-    "receiverRcSetpointType": {
-        "message": "Tipo do filtro de entrada"
-    },
     "receiverRcFeedforwardType": {
         "message": "Tipo do filtro do Feedforward"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Desligado"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Canais suavizados"
     },
     "receiverRcSmoothingMode": {
         "message": "Modo Suave"
