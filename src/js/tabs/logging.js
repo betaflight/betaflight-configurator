@@ -78,7 +78,7 @@ logging.initialize = function (callback) {
 
                             function writeData() {
                                 if (logBuffer.length) { // only execute when there is actual data to write
-                                    append_to_file(logBuffer.join('\n'));
+                                    append_to_file(logBuffer.join('\n').concat('\n'));
 
                                     $('.samples').text(samples += logBuffer.length);
 
@@ -184,6 +184,7 @@ logging.initialize = function (callback) {
                     break;
             }
         }
+        head += '\n';
 
         append_to_file(head);
     }
