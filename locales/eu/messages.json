@@ -969,15 +969,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Aukera honek nahasgailua motorraren norabidea alderantzikatu eta helizeen arabera egon dadin konfiguratzen du. <strong>Oharra:<\/strong> Horrek ez du motorraren norabidea alderantzikatzen. Erabili zure ESCetarako konfigurazio-tresna edo aldatu ESC - motorren kableatua hori lortzeko. Era berean, ziurtatu zure motorrak goiko diagraman agertzen diren norabideetan biratzen ari direla egiaztatzen armatzen saiatu aurretik."
     },
-    "configurationAutoDisarmDelay": {
-        "message": "Desarmatu motorrak ezarritako atzerapenaren ondoren [seconds] (MOTOR_STOP funtzioa behar du)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmatu motorrak throttle balioa edozein dela ere (ARM moduen fitxan konfiguratuta dagoenean AUX kanalaren bidez)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Armagintza beti ezgaitzen da throttle txikia ez denean. Kontuz ibili hegan egitean etengailu batekin nahi gabe desarmatu baitaiteke aukera hau aktibatua badago."
-    },
     "configurationMotorPoles": {
         "message": "Motorren zutoinak",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -1345,41 +1336,8 @@
     "receiverRcSmoothingFilter": {
         "message": "Iragazkia"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Erabilitako RC leuntze mota"
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Leuntzea aplikatzeko kanalak"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Kanalak leundu"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC Interpolazioa"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC TX \/ RX sistemak ez dira PID begiztak bezain azkarrak. Horrek esan nahi du PID begiak RC sistemetatik informazio korrontearen hutsuneak dituela. Aukera honek RC sarrera interpolatzea ahalbidetzen du RC markoak jasotzen ez diren garaietan. Baita ere P eta D portaera garbiagoa eskaintzen du, kontrol sarreran arrapalak ez daudelako."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interpolazio-tartea eskuzko RC interpolazio moduarako milisegundotan"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Desgaitua"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Leuntzeko Mota"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Aurrez ezarrita"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manuala"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC Interpolazio Interbaloa [ms]"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D setpoint trantsizioa"
@@ -1633,18 +1591,6 @@
     },
     "adjustmentsHelp": {
         "message": "Konfiguratu etengailuak zuzenketak egiteko. Informazio gehiago nahi izanez gero, ikusi eskuliburuko \"hegaldiaren ezarpenak\" atala. Egindako zuzenketak ez dira automatikoki gordetzen."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "4 erretenak daude. Zuzenketak egiteko erabiltzen den etengailu bakoitzak zirrikitu baten erabilera esklusiboa eskatzen du."
-    },
-    "adjustmentsExamples": {
-        "message": "Adibideak:"
-    },
-    "adjustmentsExample1": {
-        "message": "Erabili AUX1 hiru posizio etengailua Pitch\/Roll P, I eta D artean eta AUX2 beste hiru posizio etengailuen artean hautatzeko, balioa handitzeko edo txikitzeko, gora eta behera mugitzean."
-    },
-    "adjustmentsExample2": {
-        "message": "Erabili AUX4 hiru posizio etengailua, kanal berean hiru posizio etengailuaren bidez, Tasaren Profila gaitzeko."
     },
     "adjustmentsColumnEnable": {
         "message": "Gaituta badago"
@@ -2877,22 +2823,11 @@
         "message": "Nagusi Biderkatzailea:",
         "description": "Master tuning slider label"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD Balantzea:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P eta D Irabazia:",
-        "description": "P and D Gain tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Giro Behe-paseko Iragazkiak"
     },
     "pidTuningGyroLowpassType": {
         "message": "1. Giro Behe-paseko Iragazki Mota"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "1. Giro Behe-paseko Iragazki Dinamikoa Mota"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giro Notch Iragazkiak"
@@ -2903,14 +2838,8 @@
     "pidTuningDynamicNotchRange": {
         "message": "Notch Dinamikoa Iragazkiaren Barrutia"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Notch Dinamikoa Zabaleraren Ehunekoa"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Notch dinamikoak hiru frekuentzian funtziona dezake: BAXUA (80-330hz) 6+ hazbeteko bezalako birakatze txikiagoetarako, ERDIA (140-550hz) 5 hazbeteko quad normal, ALTUA (230-800hz) oso altuerako 2,5-3 hazbeteko quad-ak berpiztea AUTO aukerak barrutia hautatzen du 1. Giro Behe-paseko Dinamiko Iragazkiaren ebakidura frekuentzia maximoaren balioaren arabera."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Honek bi iragazki dinamikoen arteko zabalera ezartzen du. 0 balio batek bigarren notch iragazki dinamikoa desaktibatuko du eta iragazkiaren atzerapena murriztuko da, baina motorren tenperatura altuagoa izan daiteke."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q faktorea Notch Iragazki Dinamikoak estu edo zabal egokitzeko erabiltzen da. Balio altuagoak estuagoak eta zehatzagoak dira eta balio baxuagoak zabalagoak eta zabalagoak egiten ditu. Benetan balio txikia izateak asko handituko du iragazkien atzerapena."
@@ -4699,12 +4628,6 @@
     },
     "configurationEscProtocol": {
         "message": "ESC\/Motor protokoloa"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Aukeratu motorraren protokoloa. <br>Ziurtatu zure ESC protokoloa onartzen dutela, informazio hau fabrikatzailearen web-orrian hautatu ahal duzu. <br><b>Kontuz DSHOT900 edo DSHOT1200 hautatzen baduzu, ESC gehienek ez dute onartzen!<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Aukeratu zure motor protokoloa. <br>Egiaztatu zure protokoloa zure ESCrekin bateragarria dela, informazio hori fabrikatzailearen webgunean aurki daiteke."
     },
     "configurationunsyndePwm": {
         "message": "PWM motorren abiadura PID abiadurarekiko independentea da"

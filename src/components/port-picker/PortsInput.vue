@@ -32,11 +32,18 @@
           {{ $t("portsSelectVirtual") }}
         </option>
         <option
-          v-for="connectedDevice in connectedDevices"
-          :key="connectedDevice.path"
-          :value="connectedDevice.path"
+          v-for="connectedSerialDevice in connectedSerialDevices"
+          :key="connectedSerialDevice.path"
+          :value="connectedSerialDevice.path"
         >
-          {{ connectedDevice.displayName }}
+          {{ connectedSerialDevice.displayName }}
+        </option>
+        <option
+          v-for="connectedUsbDevice in connectedUsbDevices"
+          :key="connectedUsbDevice.path"
+          :value="connectedUsbDevice.path"
+        >
+          {{ connectedUsbDevice.displayName }}
         </option>
         <option value="requestpermission">
           {{ $t("portsSelectPermission") }}
@@ -44,13 +51,15 @@
       </select>
     </div>
     <div id="auto-connect-and-baud">
-      <div id="auto-connect-switch">
+      <div
+        id="auto-connect-switch"
+        :title="value.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
+      >
         <input
           id="auto-connect"
           class="auto_connect togglesmall"
           type="checkbox"
-          :value="value.autoConnect"
-          :title="value.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
+          :checked="value.autoConnect"
           @change="onChangeAutoConnect"
         >
         <span class="auto_connect">
@@ -58,7 +67,7 @@
         </span>
       </div>
       <div
-        v-if="value.selectedPort !== 'virtual'"
+        v-if="value.selectedPort !== 'virtual' && value.selectedPort !== 'noselection'"
         id="baudselect"
       >
         <div class="dropdown dropdown-dark">
@@ -85,7 +94,7 @@
 </template>
 
 <script>
-import { get as getConfig, set as setConfig } from '../../js/ConfigStorage';
+import { set as setConfig } from '../../js/ConfigStorage';
 import { EventBus } from '../eventBus';
 
 export default {
@@ -98,7 +107,11 @@ export default {
         autoConnect: true,
       }),
     },
-    connectedDevices: {
+    connectedSerialDevices: {
+      type: Array,
+      default: () => [],
+    },
+    connectedUsbDevices: {
       type: Array,
       default: () => [],
     },

@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -444,14 +444,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.RC_TUNING.RC_PITCH_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
                 FC.RC_TUNING.throttleLimitType = data.readU8();
                 FC.RC_TUNING.throttleLimitPercent = data.readU8();
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.RC_TUNING.roll_rate_limit = data.readU16();
-                    FC.RC_TUNING.pitch_rate_limit = data.readU16();
-                    FC.RC_TUNING.yaw_rate_limit = data.readU16();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    FC.RC_TUNING.rates_type = data.readU8();
-                }
+                FC.RC_TUNING.roll_rate_limit = data.readU16();
+                FC.RC_TUNING.pitch_rate_limit = data.readU16();
+                FC.RC_TUNING.yaw_rate_limit = data.readU16();
+                FC.RC_TUNING.rates_type = data.readU8();
                 break;
             case MSPCodes.MSP_PID:
                 // PID data arrived, we need to scale it and save to appropriate bank / array
@@ -497,12 +493,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
                 FC.MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
                 FC.MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.MOTOR_CONFIG.motor_count = data.readU8();
-                    FC.MOTOR_CONFIG.motor_poles = data.readU8();
-                    FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
-                    FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
-                }
+                FC.MOTOR_CONFIG.motor_count = data.readU8();
+                FC.MOTOR_CONFIG.motor_poles = data.readU8();
+                FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
+                FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
                 break;
             case MSPCodes.MSP_COMPASS_CONFIG:
                 FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
@@ -513,10 +507,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.GPS_CONFIG.auto_config = data.readU8();
                 FC.GPS_CONFIG.auto_baud = data.readU8();
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    FC.GPS_CONFIG.home_point_once = data.readU8();
-                    FC.GPS_CONFIG.ublox_use_galileo = data.readU8();
-                }
+                // Introduced in API version 1.43
+                FC.GPS_CONFIG.home_point_once = data.readU8();
+                FC.GPS_CONFIG.ublox_use_galileo = data.readU8();
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
                 FC.GPS_RESCUE.angle             = data.readU16();
@@ -528,18 +521,18 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.GPS_RESCUE.throttleHover     = data.readU16();
                 FC.GPS_RESCUE.sanityChecks      = data.readU8();
                 FC.GPS_RESCUE.minSats           = data.readU8();
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    FC.GPS_RESCUE.ascendRate            = data.readU16();
-                    FC.GPS_RESCUE.descendRate           = data.readU16();
-                    FC.GPS_RESCUE.allowArmingWithoutFix = data.readU8();
-                    FC.GPS_RESCUE.altitudeMode          = data.readU8();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.GPS_RESCUE.minStartDistM = data.readU16();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                    FC.GPS_RESCUE.initialClimbM = data.readU16();
-                }
+
+                // Introduced in API version 1.43
+                FC.GPS_RESCUE.ascendRate            = data.readU16();
+                FC.GPS_RESCUE.descendRate           = data.readU16();
+                FC.GPS_RESCUE.allowArmingWithoutFix = data.readU8();
+                FC.GPS_RESCUE.altitudeMode          = data.readU8();
+
+                // Introduced in API version 1.44
+                FC.GPS_RESCUE.minStartDistM = data.readU16();
+
+                // Introduced in API version 1.46
+                FC.GPS_RESCUE.initialClimbM = data.readU16();
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
                 FC.RSSI_CONFIG.channel = data.readU8();
@@ -831,17 +824,15 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
 
                 FC.CONFIG.mcuTypeId = data.readU8();
+                // Introduced in API version 1.42
+                FC.CONFIG.configurationState = data.readU8();
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.CONFIG.configurationState = data.readU8();
-                }
+                // Introduced in API version 1.43
+                FC.CONFIG.sampleRateHz = data.readU16();
+                FC.CONFIG.configurationProblems = data.readU32();
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    FC.CONFIG.sampleRateHz = data.readU16();
-                    FC.CONFIG.configurationProblems = data.readU32();
-                } else {
-                    FC.CONFIG.configurationProblems = 0;
-                }
+                // Refresh the hardware name (it's a calculated field)
+                FC.calculateHardwareName();
 
                 break;
 
@@ -998,26 +989,23 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.RX_CONFIG.spektrum_sat_bind = data.readU8();
                 FC.RX_CONFIG.rx_min_usec = data.readU16();
                 FC.RX_CONFIG.rx_max_usec = data.readU16();
-                FC.RX_CONFIG.rcInterpolation = data.readU8();
-                FC.RX_CONFIG.rcInterpolationInterval = data.readU8();
+                data.readU8(); // was FC.RX_CONFIG.rcInterpolation
+                data.readU8(); // was FC.RX_CONFIG.rcInterpolationInterval
                 FC.RX_CONFIG.airModeActivateThreshold = data.readU16();
                 FC.RX_CONFIG.rxSpiProtocol = data.readU8();
                 FC.RX_CONFIG.rxSpiId = data.readU32();
                 FC.RX_CONFIG.rxSpiRfChannelCount = data.readU8();
                 FC.RX_CONFIG.fpvCamAngleDegrees = data.readU8();
-                FC.RX_CONFIG.rcInterpolationChannels = data.readU8();
-                FC.RX_CONFIG.rcSmoothingType = data.readU8();
+                data.readU8(); // was FC.RX_CONFIG.rcInterpolationChannels
+                data.readU8(); // was FC.RX_CONFIG.rcSmoothingType
                 FC.RX_CONFIG.rcSmoothingSetpointCutoff = data.readU8();
                 FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8();
-                FC.RX_CONFIG.rcSmoothingInputType = data.readU8();
-                FC.RX_CONFIG.rcSmoothingDerivativeType = data.readU8();
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.RX_CONFIG.usbCdcHidType = data.readU8();
-                    FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.RX_CONFIG.rcSmoothingMode = data.readU8();
-                }
+                data.readU8(); // was FC.RX_CONFIG.rcSmoothingInputType
+                data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeType
+                FC.RX_CONFIG.usbCdcHidType = data.readU8();
+                FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
+                FC.RX_CONFIG.rcSmoothingMode = data.readU8();
+
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                     const elrsUidLength = 6;
                     FC.RX_CONFIG.elrsUid = [];
@@ -1058,17 +1046,16 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.PID_ADVANCED_CONFIG.motor_pwm_rate = data.readU16();
                 FC.PID_ADVANCED_CONFIG.digitalIdlePercent = data.readU16() / 100;
                 data.readU8(); // gyroUse32Khz is not supported
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.PID_ADVANCED_CONFIG.motorPwmInversion = data.readU8();
-                    FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8(); // We don't want to double up on storing this state
-                    FC.PID_ADVANCED_CONFIG.gyroHighFsr = data.readU8();
-                    FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold = data.readU8();
-                    FC.PID_ADVANCED_CONFIG.gyroCalibDuration = data.readU16();
-                    FC.PID_ADVANCED_CONFIG.gyroOffsetYaw = data.readU16();
-                    FC.PID_ADVANCED_CONFIG.gyroCheckOverflow = data.readU8();
-                    FC.PID_ADVANCED_CONFIG.debugMode = data.readU8();
-                    FC.PID_ADVANCED_CONFIG.debugModeCount = data.readU8();
-                }
+                // Introduced in 1.42
+                FC.PID_ADVANCED_CONFIG.motorPwmInversion = data.readU8();
+                FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8(); // We don't want to double up on storing this state
+                FC.PID_ADVANCED_CONFIG.gyroHighFsr = data.readU8();
+                FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold = data.readU8();
+                FC.PID_ADVANCED_CONFIG.gyroCalibDuration = data.readU16();
+                FC.PID_ADVANCED_CONFIG.gyroOffsetYaw = data.readU16();
+                FC.PID_ADVANCED_CONFIG.gyroCheckOverflow = data.readU8();
+                FC.PID_ADVANCED_CONFIG.debugMode = data.readU8();
+                FC.PID_ADVANCED_CONFIG.debugModeCount = data.readU8();
                 break;
             case MSPCodes.MSP_FILTER_CONFIG:
                 FC.FILTER_CONFIG.gyro_lowpass_hz = data.readU8();
@@ -1094,22 +1081,19 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = data.readU16();
                 FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = data.readU16();
                 FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = data.readU16();
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.FILTER_CONFIG.dyn_notch_range = data.readU8();
-                    FC.FILTER_CONFIG.dyn_notch_width_percent = data.readU8();
-                    FC.FILTER_CONFIG.dyn_notch_q = data.readU16();
-                    FC.FILTER_CONFIG.dyn_notch_min_hz = data.readU16();
+                // Introduced in 1.42
+                FC.FILTER_CONFIG.dyn_notch_range = data.readU8();
+                FC.FILTER_CONFIG.dyn_notch_width_percent = data.readU8();
+                FC.FILTER_CONFIG.dyn_notch_q = data.readU16();
+                FC.FILTER_CONFIG.dyn_notch_min_hz = data.readU16();
 
-                    FC.FILTER_CONFIG.gyro_rpm_notch_harmonics = data.readU8();
-                    FC.FILTER_CONFIG.gyro_rpm_notch_min_hz = data.readU8();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    FC.FILTER_CONFIG.dyn_notch_max_hz = data.readU16();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.FILTER_CONFIG.dyn_lpf_curve_expo = data.readU8();
-                    FC.FILTER_CONFIG.dyn_notch_count = data.readU8();
-                }
+                FC.FILTER_CONFIG.gyro_rpm_notch_harmonics = data.readU8();
+                FC.FILTER_CONFIG.gyro_rpm_notch_min_hz = data.readU8();
+                // Introduced in 1.43
+                FC.FILTER_CONFIG.dyn_notch_max_hz = data.readU16();
+                // Introduced in 1.44
+                FC.FILTER_CONFIG.dyn_lpf_curve_expo = data.readU8();
+                FC.FILTER_CONFIG.dyn_notch_count = data.readU8();
                 break;
             case MSPCodes.MSP_SET_PID_ADVANCED:
                 console.log("Advanced PID settings saved");
@@ -1158,28 +1142,28 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
                 FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    FC.ADVANCED_TUNING.motorOutputLimit = data.readU8();
-                    FC.ADVANCED_TUNING.autoProfileCellCount = data.read8();
-                    FC.ADVANCED_TUNING.idleMinRpm = data.readU8();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.ADVANCED_TUNING.feedforward_averaging = data.readU8();
-                    FC.ADVANCED_TUNING.feedforward_smooth_factor = data.readU8();
-                    FC.ADVANCED_TUNING.feedforward_boost = data.readU8();
-                    FC.ADVANCED_TUNING.feedforward_max_rate_limit = data.readU8();
-                    FC.ADVANCED_TUNING.feedforward_jitter_factor = data.readU8();
-                    FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
-                    FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    FC.ADVANCED_TUNING.tpaMode = data.readU8();
-                    FC.ADVANCED_TUNING.tpaRate = parseFloat((data.readU8() / 100).toFixed(2));
-                    FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
-                }
+                // Introduced in 1.42
+                FC.ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
+
+                // Introduced in 1.43
+                FC.ADVANCED_TUNING.motorOutputLimit = data.readU8();
+                FC.ADVANCED_TUNING.autoProfileCellCount = data.read8();
+                FC.ADVANCED_TUNING.idleMinRpm = data.readU8();
+
+                // Introduced in 1.44
+                FC.ADVANCED_TUNING.feedforward_averaging = data.readU8();
+                FC.ADVANCED_TUNING.feedforward_smooth_factor = data.readU8();
+                FC.ADVANCED_TUNING.feedforward_boost = data.readU8();
+                FC.ADVANCED_TUNING.feedforward_max_rate_limit = data.readU8();
+                FC.ADVANCED_TUNING.feedforward_jitter_factor = data.readU8();
+                FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
+                FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
+
+                // Introduced in 1.45
+                FC.ADVANCED_TUNING.tpaMode = data.readU8();
+                FC.ADVANCED_TUNING.tpaRate = parseFloat((data.readU8() / 100).toFixed(2));
+                FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
+
                 FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
                 break;
             case MSPCodes.MSP_SENSOR_CONFIG:
@@ -1380,9 +1364,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.BLACKBOX.blackboxRateNum = data.readU8();
                 FC.BLACKBOX.blackboxRateDenom = data.readU8();
                 FC.BLACKBOX.blackboxPDenom = data.readU16();
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    FC.BLACKBOX.blackboxSampleRate = data.readU8();
-                }
+
+                // Introduced in API version 1.44
+                FC.BLACKBOX.blackboxSampleRate = data.readU8();
+
+                // Introduced in API version 1.45
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                     FC.BLACKBOX.blackboxDisabledMask = data.readU32();
                 }
@@ -1432,14 +1418,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.VTX_CONFIG.vtx_device_ready = data.readU8() != 0;
                 FC.VTX_CONFIG.vtx_low_power_disarm = data.readU8();
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    FC.VTX_CONFIG.vtx_pit_mode_frequency = data.readU16();
-                    FC.VTX_CONFIG.vtx_table_available = data.readU8() != 0;
-                    FC.VTX_CONFIG.vtx_table_bands = data.readU8();
-                    FC.VTX_CONFIG.vtx_table_channels = data.readU8();
-                    FC.VTX_CONFIG.vtx_table_powerlevels = data.readU8();
-                    FC.VTX_CONFIG.vtx_table_clear = false;
-                }
+                // Introduced in API version 1.42
+                FC.VTX_CONFIG.vtx_pit_mode_frequency = data.readU16();
+                FC.VTX_CONFIG.vtx_table_available = data.readU8() != 0;
+                FC.VTX_CONFIG.vtx_table_bands = data.readU8();
+                FC.VTX_CONFIG.vtx_table_channels = data.readU8();
+                FC.VTX_CONFIG.vtx_table_powerlevels = data.readU8();
+                FC.VTX_CONFIG.vtx_table_clear = false;
                 break;
 
             case MSPCodes.MSP_SET_VTX_CONFIG:
@@ -1775,14 +1760,14 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             buffer.push8(Math.round(FC.RC_TUNING.RC_PITCH_EXPO * 100));
             buffer.push8(FC.RC_TUNING.throttleLimitType);
             buffer.push8(FC.RC_TUNING.throttleLimitPercent);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                buffer.push16(FC.RC_TUNING.roll_rate_limit);
-                buffer.push16(FC.RC_TUNING.pitch_rate_limit);
-                buffer.push16(FC.RC_TUNING.yaw_rate_limit);
-            }
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                buffer.push8(FC.RC_TUNING.rates_type);
-            }
+
+            // Introduced in 1.42
+            buffer.push16(FC.RC_TUNING.roll_rate_limit);
+            buffer.push16(FC.RC_TUNING.pitch_rate_limit);
+            buffer.push16(FC.RC_TUNING.yaw_rate_limit);
+
+            // Introduced in 1.43
+            buffer.push8(FC.RC_TUNING.rates_type);
             break;
         case MSPCodes.MSP_SET_RX_MAP:
             for (let i = 0; i < FC.RC_MAP.length; i++) {
@@ -1826,10 +1811,10 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             buffer.push16(FC.MOTOR_CONFIG.minthrottle)
                 .push16(FC.MOTOR_CONFIG.maxthrottle)
                 .push16(FC.MOTOR_CONFIG.mincommand);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                buffer.push8(FC.MOTOR_CONFIG.motor_poles);
-                buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
-            }
+
+            // Introduced in 1.42
+            buffer.push8(FC.MOTOR_CONFIG.motor_poles);
+            buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
             break;
         case MSPCodes.MSP_SET_GPS_CONFIG:
             buffer.push8(FC.GPS_CONFIG.provider)
@@ -1837,34 +1822,32 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.GPS_CONFIG.auto_config)
                 .push8(FC.GPS_CONFIG.auto_baud);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                buffer.push8(FC.GPS_CONFIG.home_point_once)
-                    .push8(FC.GPS_CONFIG.ublox_use_galileo);
-            }
+            // Introduced in 1.43
+            buffer.push8(FC.GPS_CONFIG.home_point_once)
+                .push8(FC.GPS_CONFIG.ublox_use_galileo);
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
             buffer.push16(FC.GPS_RESCUE.angle)
-                  .push16(FC.GPS_RESCUE.returnAltitudeM)
-                  .push16(FC.GPS_RESCUE.descentDistanceM)
-                  .push16(FC.GPS_RESCUE.groundSpeed)
-                  .push16(FC.GPS_RESCUE.throttleMin)
-                  .push16(FC.GPS_RESCUE.throttleMax)
-                  .push16(FC.GPS_RESCUE.throttleHover)
-                  .push8(FC.GPS_RESCUE.sanityChecks)
-                  .push8(FC.GPS_RESCUE.minSats);
+                .push16(FC.GPS_RESCUE.returnAltitudeM)
+                .push16(FC.GPS_RESCUE.descentDistanceM)
+                .push16(FC.GPS_RESCUE.groundSpeed)
+                .push16(FC.GPS_RESCUE.throttleMin)
+                .push16(FC.GPS_RESCUE.throttleMax)
+                .push16(FC.GPS_RESCUE.throttleHover)
+                .push8(FC.GPS_RESCUE.sanityChecks)
+                .push8(FC.GPS_RESCUE.minSats);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                buffer.push16(FC.GPS_RESCUE.ascendRate)
-                    .push16(FC.GPS_RESCUE.descendRate)
-                    .push8(FC.GPS_RESCUE.allowArmingWithoutFix)
-                    .push8(FC.GPS_RESCUE.altitudeMode);
-            }
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                buffer.push16(FC.GPS_RESCUE.minStartDistM);
-            }
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                buffer.push16(FC.GPS_RESCUE.initialClimbM);
-            }
+            // Introduced in 1.43
+            buffer.push16(FC.GPS_RESCUE.ascendRate)
+                .push16(FC.GPS_RESCUE.descendRate)
+                .push8(FC.GPS_RESCUE.allowArmingWithoutFix)
+                .push8(FC.GPS_RESCUE.altitudeMode);
+
+            // Introduced in 1.44
+            buffer.push16(FC.GPS_RESCUE.minStartDistM);
+
+            // Introduced in 1.46
+            buffer.push16(FC.GPS_RESCUE.initialClimbM);
             break;
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
             buffer.push16(Math.round(10.0 * parseFloat(FC.COMPASS_CONFIG.mag_declination)));
@@ -1911,16 +1894,17 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.RX_CONFIG.rcSmoothingInputType)
                 .push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    buffer.push8(FC.RX_CONFIG.usbCdcHidType)
-                        .push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                        buffer.push8(FC.RX_CONFIG.rcSmoothingMode);
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    FC.RX_CONFIG.elrsUid.forEach(b => buffer.push8(b));
-                }
+            // Introduced in 1.42
+            buffer.push8(FC.RX_CONFIG.usbCdcHidType)
+            .push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
+
+            // Introduced in 1.44
+            buffer.push8(FC.RX_CONFIG.rcSmoothingMode);
+
+            // Introduced in 1.45
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                FC.RX_CONFIG.elrsUid.forEach(b => buffer.push8(b));
+            }
 
             break;
 
@@ -2011,17 +1995,18 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push16(FC.PID_ADVANCED_CONFIG.motor_pwm_rate)
                 .push16(FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 100)
                 .push8(0); // gyroUse32kHz not used
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    buffer.push8(FC.PID_ADVANCED_CONFIG.motorPwmInversion)
-                            .push8(FC.SENSOR_ALIGNMENT.gyro_to_use) // We don't want to double up on storing this state
-                            .push8(FC.PID_ADVANCED_CONFIG.gyroHighFsr)
-                            .push8(FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold)
-                            .push16(FC.PID_ADVANCED_CONFIG.gyroCalibDuration)
-                            .push16(FC.PID_ADVANCED_CONFIG.gyroOffsetYaw)
-                            .push8(FC.PID_ADVANCED_CONFIG.gyroCheckOverflow)
-                            .push8(FC.PID_ADVANCED_CONFIG.debugMode);
-                }
-               break;
+
+            // Introduced in 1.42
+            buffer.push8(FC.PID_ADVANCED_CONFIG.motorPwmInversion)
+                .push8(FC.SENSOR_ALIGNMENT.gyro_to_use) // We don't want to double up on storing this state
+                .push8(FC.PID_ADVANCED_CONFIG.gyroHighFsr)
+                .push8(FC.PID_ADVANCED_CONFIG.gyroMovementCalibThreshold)
+                .push16(FC.PID_ADVANCED_CONFIG.gyroCalibDuration)
+                .push16(FC.PID_ADVANCED_CONFIG.gyroOffsetYaw)
+                .push8(FC.PID_ADVANCED_CONFIG.gyroCheckOverflow)
+                .push8(FC.PID_ADVANCED_CONFIG.debugMode);
+
+            break;
         case MSPCodes.MSP_SET_FILTER_CONFIG:
             buffer.push8(FC.FILTER_CONFIG.gyro_lowpass_hz)
                 .push16(FC.FILTER_CONFIG.dterm_lowpass_hz)
@@ -2045,21 +2030,21 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push16(FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz)
                 .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz)
                 .push16(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                buffer.push8(FC.FILTER_CONFIG.dyn_notch_range)
-                    .push8(FC.FILTER_CONFIG.dyn_notch_width_percent)
-                    .push16(FC.FILTER_CONFIG.dyn_notch_q)
-                    .push16(FC.FILTER_CONFIG.dyn_notch_min_hz)
-                    .push8(FC.FILTER_CONFIG.gyro_rpm_notch_harmonics)
-                    .push8(FC.FILTER_CONFIG.gyro_rpm_notch_min_hz);
-            }
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                buffer.push16(FC.FILTER_CONFIG.dyn_notch_max_hz);
-            }
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo)
+
+            // Introduced in 1.42
+            buffer.push8(FC.FILTER_CONFIG.dyn_notch_range)
+                .push8(FC.FILTER_CONFIG.dyn_notch_width_percent)
+                .push16(FC.FILTER_CONFIG.dyn_notch_q)
+                .push16(FC.FILTER_CONFIG.dyn_notch_min_hz)
+                .push8(FC.FILTER_CONFIG.gyro_rpm_notch_harmonics)
+                .push8(FC.FILTER_CONFIG.gyro_rpm_notch_min_hz);
+
+            // Introduced in 1.43
+            buffer.push16(FC.FILTER_CONFIG.dyn_notch_max_hz);
+
+            // Introduced in 1.44
+            buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo)
                     .push8(FC.FILTER_CONFIG.dyn_notch_count);
-            }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:
             buffer.push16(FC.ADVANCED_TUNING.rollPitchItermIgnoreRate)
@@ -2104,28 +2089,27 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
                 .push8(FC.ADVANCED_TUNING.integratedYawRelax);
 
-                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                    buffer.push8(FC.ADVANCED_TUNING.motorOutputLimit)
-                        .push8(FC.ADVANCED_TUNING.autoProfileCellCount)
-                        .push8(FC.ADVANCED_TUNING.idleMinRpm);
-                }
-                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    buffer.push8(FC.ADVANCED_TUNING.feedforward_averaging)
-                        .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
-                        .push8(FC.ADVANCED_TUNING.feedforward_boost)
-                        .push8(FC.ADVANCED_TUNING.feedforward_max_rate_limit)
-                        .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
-                        .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
-                        .push8(FC.ADVANCED_TUNING.thrustLinearization);
-                }
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    buffer.push8(FC.ADVANCED_TUNING.tpaMode);
-                    buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
-                    buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
-                }
+            // Introduced in 1.42
+            buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
+
+            // Introduced in 1.43
+            buffer.push8(FC.ADVANCED_TUNING.motorOutputLimit)
+                .push8(FC.ADVANCED_TUNING.autoProfileCellCount)
+                .push8(FC.ADVANCED_TUNING.idleMinRpm);
+
+            // Introduced in 1.44
+            buffer.push8(FC.ADVANCED_TUNING.feedforward_averaging)
+                .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
+                .push8(FC.ADVANCED_TUNING.feedforward_boost)
+                .push8(FC.ADVANCED_TUNING.feedforward_max_rate_limit)
+                .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
+                .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
+                .push8(FC.ADVANCED_TUNING.thrustLinearization);
+
+            // Introduced in 1.45
+            buffer.push8(FC.ADVANCED_TUNING.tpaMode);
+            buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
+            buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
             buffer.push8(FC.SENSOR_CONFIG.acc_hardware)
@@ -2172,9 +2156,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.BLACKBOX.blackboxRateNum)
                 .push8(FC.BLACKBOX.blackboxRateDenom)
                 .push16(FC.BLACKBOX.blackboxPDenom);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                buffer.push8(FC.BLACKBOX.blackboxSampleRate);
-            }
+
+            // Introduced in 1.44
+            buffer.push8(FC.BLACKBOX.blackboxSampleRate);
+
+            // Introduced in 1.45
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 buffer.push32(FC.BLACKBOX.blackboxDisabledMask);
             }
@@ -2212,6 +2198,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             const millis = timestamp % 1000;
             buffer.push32(secs);
             buffer.push16(millis);
+
             break;
 
         case MSPCodes.MSP_SET_VTX_CONFIG:
@@ -2221,25 +2208,24 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.VTX_CONFIG.vtx_pit_mode ? 1 : 0)
                 .push8(FC.VTX_CONFIG.vtx_low_power_disarm);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                buffer.push16(FC.VTX_CONFIG.vtx_pit_mode_frequency)
-                    .push8(FC.VTX_CONFIG.vtx_band)
-                    .push8(FC.VTX_CONFIG.vtx_channel)
-                    .push16(FC.VTX_CONFIG.vtx_frequency)
-                    .push8(FC.VTX_CONFIG.vtx_table_bands)
-                    .push8(FC.VTX_CONFIG.vtx_table_channels)
-                    .push8(FC.VTX_CONFIG.vtx_table_powerlevels)
-                    .push8(FC.VTX_CONFIG.vtx_table_clear ? 1 : 0);
-            }
+            // Introduced in 1.42
+            buffer.push16(FC.VTX_CONFIG.vtx_pit_mode_frequency)
+                .push8(FC.VTX_CONFIG.vtx_band)
+                .push8(FC.VTX_CONFIG.vtx_channel)
+                .push16(FC.VTX_CONFIG.vtx_frequency)
+                .push8(FC.VTX_CONFIG.vtx_table_bands)
+                .push8(FC.VTX_CONFIG.vtx_table_channels)
+                .push8(FC.VTX_CONFIG.vtx_table_powerlevels)
+                .push8(FC.VTX_CONFIG.vtx_table_clear ? 1 : 0);
 
             break;
 
         case MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL:
 
             buffer.push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_number)
-                  .push16(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_value);
+                .push16(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_value)
+                .push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.length);
 
-            buffer.push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.length);
             for (let i = 0; i < FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.length; i++) {
                 buffer.push8(FC.VTXTABLE_POWERLEVEL.vtxtable_powerlevel_label.charCodeAt(i));
             }
@@ -2785,12 +2771,12 @@ MspHelper.prototype.setArmingEnabled = function(doEnable, disableRunawayTakeoffP
 };
 
 MspHelper.prototype.loadSerialConfig = function(callback) {
-    const mspCode = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? MSPCodes.MSP2_COMMON_SERIAL_CONFIG : MSPCodes.MSP_CF_SERIAL_CONFIG;
+    const mspCode = MSPCodes.MSP2_COMMON_SERIAL_CONFIG;
     MSP.send_message(mspCode, false, false, callback);
 };
 
 MspHelper.prototype.sendSerialConfig = function(callback) {
-    const mspCode = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG : MSPCodes.MSP_SET_CF_SERIAL_CONFIG;
+    const mspCode = MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG;
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 
@@ -2801,7 +2787,7 @@ MspHelper.prototype.writeConfiguration = function(reboot, callback) {
             console.log('Configuration saved to EEPROM');
             if (reboot) {
                 GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection);
+                    return reinitializeConnection(callback);
                 });
             }
             if (callback) {

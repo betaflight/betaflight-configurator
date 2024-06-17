@@ -89,15 +89,16 @@ class FileSystem {
     async openFile(file) {
         const fileHandle = file._fileHandle;
 
-        return await fileHandle.createWritable();
+        const options = { keepExistingData: false };
+        return await fileHandle.createWritable(options);
     }
 
     async writeChunck(writable, chunk) {
-        return await writable.write(chunk);
+        await writable.write(chunk);
     }
 
     async closeFile(writable) {
-        return await writable.close();
+        await writable.close();
     }
 }
 

@@ -1,5 +1,5 @@
 import { bit_check } from "./bit";
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
 import semver from "semver";
 
 const INITIAL_CONFIG = {
@@ -143,27 +143,6 @@ const FC = {
     // and bridges the vue and rest of the code
     CONFIG: {
         ...INITIAL_CONFIG,
-        get hardwareName() {
-            let name;
-            if (this.targetName) {
-                name = this.targetName;
-            } else {
-                name = this.boardIdentifier;
-            }
-
-            if (this.boardName && this.boardName !== name) {
-                name = `${this.boardName}(${name})`;
-            }
-
-            if (this.manufacturerId) {
-                name = `${this.manufacturerId}/${name}`;
-            }
-
-            return name;
-        },
-        set hardwareName(name) {
-            // NOOP, can't really be set. Maybe implement some logic?
-        },
     },
     COPY_PROFILE: null,
     CURRENT_METERS: null,
@@ -803,15 +782,9 @@ const FC = {
             'SPEKTRUM2048/SRXL',
             'TARGET_CUSTOM',
             'FPORT',
+            'SPEKTRUM SRXL2',
+            'IRC GHOST',
         ];
-
-        if (semver.gte(apiVersion, API_VERSION_1_42)) {
-            serialRxTypes.push('SPEKTRUM SRXL2');
-        }
-
-        if (semver.gte(apiVersion, API_VERSION_1_44)) {
-            serialRxTypes.push('IRC GHOST');
-        }
 
         if (semver.gte(apiVersion, API_VERSION_1_46)) {
             // Default to NONE and move SPEKTRUM1024 to the end (firmware PR #12500)
@@ -822,7 +795,7 @@ const FC = {
         return serialRxTypes;
     },
 
-    getHardwareName() {
+    calculateHardwareName() {
         let name;
         if (this.CONFIG.targetName) {
             name = this.CONFIG.targetName;
@@ -838,7 +811,7 @@ const FC = {
             name = `${this.CONFIG.manufacturerId}/${name}`;
         }
 
-        return name;
+        this.CONFIG.hardwareName = name;
     },
 
     MCU_TYPES: {
@@ -907,12 +880,7 @@ const FC = {
     },
 
     boardHasFlashBootloader() {
-        let hasFlashBootloader = false;
-        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_42)) {
-            hasFlashBootloader = bit_check(this.CONFIG.targetCapabilities, this.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER);
-        }
-
-        return hasFlashBootloader;
+        return bit_check(this.CONFIG.targetCapabilities, this.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER);
     },
 
     FILTER_TYPE_FLAGS: {
@@ -932,31 +900,30 @@ const FC = {
         versionFilterDefaults.dterm_lowpass2_hz = 150;
         versionFilterDefaults.dterm_lowpass2_type = this.FILTER_TYPE_FLAGS.BIQUAD;
 
-        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_42)) {
-            versionFilterDefaults.gyro_lowpass_hz = 200;
-            versionFilterDefaults.gyro_lowpass_dyn_min_hz = 200;
-            versionFilterDefaults.gyro_lowpass_dyn_max_hz = 500;
-            versionFilterDefaults.gyro_lowpass_type = this.FILTER_TYPE_FLAGS.PT1;
-            versionFilterDefaults.gyro_lowpass2_hz = 250;
-            versionFilterDefaults.gyro_lowpass2_type = this.FILTER_TYPE_FLAGS.PT1;
-            versionFilterDefaults.dterm_lowpass_hz = 150;
-            versionFilterDefaults.dterm_lowpass_dyn_min_hz = 70;
-            versionFilterDefaults.dterm_lowpass_dyn_max_hz = 170;
-            versionFilterDefaults.dterm_lowpass_type = this.FILTER_TYPE_FLAGS.PT1;
-            versionFilterDefaults.dterm_lowpass2_hz = 150;
-            versionFilterDefaults.dterm_lowpass2_type = this.FILTER_TYPE_FLAGS.PT1;
-        }
+        // Introduced in 1.42
+        versionFilterDefaults.gyro_lowpass_hz = 200;
+        versionFilterDefaults.gyro_lowpass_dyn_min_hz = 200;
+        versionFilterDefaults.gyro_lowpass_dyn_max_hz = 500;
+        versionFilterDefaults.gyro_lowpass_type = this.FILTER_TYPE_FLAGS.PT1;
+        versionFilterDefaults.gyro_lowpass2_hz = 250;
+        versionFilterDefaults.gyro_lowpass2_type = this.FILTER_TYPE_FLAGS.PT1;
+        versionFilterDefaults.dterm_lowpass_hz = 150;
+        versionFilterDefaults.dterm_lowpass_dyn_min_hz = 70;
+        versionFilterDefaults.dterm_lowpass_dyn_max_hz = 170;
+        versionFilterDefaults.dterm_lowpass_type = this.FILTER_TYPE_FLAGS.PT1;
+        versionFilterDefaults.dterm_lowpass2_hz = 150;
+        versionFilterDefaults.dterm_lowpass2_type = this.FILTER_TYPE_FLAGS.PT1;
 
-        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_44)) {
-            versionFilterDefaults.dyn_notch_q = 300;
-            versionFilterDefaults.gyro_lowpass_hz = 250;
-            versionFilterDefaults.gyro_lowpass_dyn_min_hz = 250;
-            versionFilterDefaults.gyro_lowpass2_hz = 500;
-            versionFilterDefaults.dterm_lowpass_hz = 75;
-            versionFilterDefaults.dterm_lowpass_dyn_min_hz = 75;
-            versionFilterDefaults.dterm_lowpass_dyn_max_hz = 150;
-        }
+        // Introduced in 1.44
+        versionFilterDefaults.dyn_notch_q = 300;
+        versionFilterDefaults.gyro_lowpass_hz = 250;
+        versionFilterDefaults.gyro_lowpass_dyn_min_hz = 250;
+        versionFilterDefaults.gyro_lowpass2_hz = 500;
+        versionFilterDefaults.dterm_lowpass_hz = 75;
+        versionFilterDefaults.dterm_lowpass_dyn_min_hz = 75;
+        versionFilterDefaults.dterm_lowpass_dyn_max_hz = 150;
 
+        // Introduced in 1.45
         if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_45)) {
             versionFilterDefaults.dyn_notch_min_hz = 100;
         }
@@ -965,22 +932,14 @@ const FC = {
     },
 
     getPidDefaults() {
-        let versionPidDefaults = this.DEFAULT_PIDS;
         // if defaults change they should go here
-        if (semver.eq(this.CONFIG.apiVersion, API_VERSION_1_43)) {
-            versionPidDefaults = [
-                42, 85, 35, 23, 90,
-                46, 90, 38, 25, 95,
-                45, 90,  0,  0, 90,
-            ];
-        }
-        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_44)) {
-            versionPidDefaults = [
-                45, 80, 40, 30, 120,
-                47, 84, 46, 34, 125,
-                45, 80,  0,  0, 120,
-            ];
-        }
+        // Introduced in 1.44
+        const versionPidDefaults = [
+            45, 80, 40, 30, 120,
+            47, 84, 46, 34, 125,
+            45, 80,  0,  0, 120,
+        ];
+
         return versionPidDefaults;
     },
 

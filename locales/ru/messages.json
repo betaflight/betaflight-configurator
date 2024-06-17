@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Отключить"
     },
+    "portsSelectNoSelection": {
+        "message": "Выберите ваше устройство",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Выбрать вручную"
     },
@@ -58,6 +62,10 @@
     "portsSelectVirtual": {
         "message": "Виртуальный режим (экспериментальный)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- Я не могу найти свое устройство ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "virtualMSPVersion": {
         "message": "Версия виртуальной прошивки"
@@ -108,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "Показать все последовательные устройства (для производителей или разработки)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Использовать mDNS Browser Device Discovery (экспериментально)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Включить режим ручного подключения",
@@ -297,6 +301,10 @@
     },
     "logActionShow": {
         "message": "Показать недавние действия"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} файлов",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Ошибка последовательного соединения: неверный кадр"
@@ -721,12 +729,6 @@
     },
     "initialSetupRebootBootloaderText": {
         "message": "Перезагрузить в режим <strong>загрузчика \/ DFU<\/strong>."
-    },
-    "initialSetupBackupSuccess": {
-        "message": "Резервная копия <span class=\"message-positive\">успешно сохранена <\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Резервная копия <span class=\"message-positive\">успешно восстановлена<\/span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Сбросить ось Z (ось вращения), смещение: 0 град"
@@ -1307,13 +1309,13 @@
         "message": "Этот параметр настраивает миксер, ожидая что направление вращение двигателя будет реверсивным и пропеллеры будут установлены соответственно. <strong>Внимание:<\/strong> это не реверс двигателя. Используйте инструменты настройки для вашего ESC или переключите ESC - подключением электропроводки. Кроме того, не забудьте проверить со снятыми пропеллерами, что ваши двигатели вращаются в направлениях, показанных на диаграмме выше, прежде чем попытаетесь включить ARM."
     },
     "configurationAutoDisarmDelay": {
+        "message": "Остановить моторы после задержки [сек]"
+    },
+    "configurationAutoDisarmDelayHelp": {
         "message": "Отключать моторы после заданной задержки [в секундах] (Требуется включить функцию MOTOR_STOP)"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Разрешить отключать моторы при любом значении газа. (При помощи режима ARM во вкладке \"Режимы\" через AUX-канал)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Arming всегда запрещён, если значение газа не низкое. Но будьте осторожны с этой включенной опцией, т.к. вы можете тумблером случайно задизармиться прямо в полёте, отключив тем самым моторы."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Калибровка Gyro на первом арме"
     },
     "configurationDigitalIdlePercent": {
         "message": "Режим холостого хода (% статический)"
@@ -1359,16 +1361,16 @@
         "message": "<strong>Внимание:<\/strong> Выбор протокола двигателей, который не поддерживается ESC, может привести к тому, что <strong>ESC начнут вращение, как только аккумулятор будет подключен<\/strong>. По этой причине <strong>всегда нужно удалять пропеллеры перед подключением аккумулятора в первый раз, после изменения протокола двигателей<\/strong>."
     },
     "configurationDshotBeeper": {
-        "message": "Настройка Dshot пискa"
+        "message": "Настройка звуковых сигналов Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Применить Dshot писк (пищит моторами, если долгое время находится в режиме дизарма)"
+        "message": "Применить звуковые сигналы Dshot (издает звуковые сигналы моторами, если долгое время находится в режиме дизарма)"
     },
     "configurationDshotBeaconTone": {
-        "message": "Тон писка моторами"
+        "message": "Тон звуковых сигналов моторов"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Dshot маяк используется для того чтобы ESC и двигатели производили звук. Это значит, что Dshot маяк не может быть использован когда двигатели вращаются. В Betaflight 3.4 и новее, когда происходит попытка арминга пока Dshot маяк активен, тогда аппарат заармится спустя 2 секунды после последнего Dshot маяка. Это должно помешать функциям маяка Dshot мешать командам Dshot, отправленным при арминге.<br\/><strong>Внимание:<\/strong> Поскольку маяк Dshot пропускает ток через ваши двигатели, когда он активен, то это может привести к чрезмерному перегреву и повреждению ваших двигателей и \/ или ESC, если мощность маяка слишком высока. Используете BLHeli Configurator или BLHeli Suite для регулировки и проверки силы маяка."
+        "message": "Звуковые сигналы Dshot используют ESC и двигатели для воспроизведения звуков. Это значит, что Dshot сигналы не могут быть использованы когда двигатели вращаются. В Betaflight 3.4 и новее, если попытка арминга происходит во время работающих звуковых сигналов Dshot, то аппарат заармится спустя 2 секунды после последнего Dshot сигнала. Это сделано для того, чтобы функция звуковых сигналов Dshot не мешала командам Dshot, отправляемым при постановке на охрану. <br\/><strong>Внимание:<\/strong> Поскольку звуковые сигналы Dshot пускают напряжение через ваши двигатели, когда они активены, это может привести к чрезмерному перегреву и повреждению ваших двигателей и\/или ESC, если мощность сигнала слишком высока. Используете BLHeli Configurator или BLHeli Suite для регулировки и проверки уровня звуковых сигналов."
     },
     "configurationBeeper": {
         "message": "Настройка пищалки"
@@ -1706,9 +1708,6 @@
         "message": "<b>D<\/b>erivative",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Примечание:<\/strong> Функция D Max отключена и его параметры скрыты. Чтобы использовать D Max, включите его в $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Динамическое демпфирование \/ D Max настройки",
         "description": "Title for the options panel for the D Max feature"
@@ -1764,7 +1763,11 @@
         "description": "Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Регулирует расчет автофактора 10, является коэффициентом задержки по умолчанию. Увеличение числа позволяет сгладить RC ввод еще, при это задержка станет больше. Может быть полезно для ненадежных RC соединений или для видеосъемки.<br>Будьте осторожны с числами, близки к 50, задержка ввода станет заметной.<br>Используйте команду CLI rc_smoothing_info когда TX и RX включены, чтобы увидеть автоматически рассчитанные диапазоны сглаживания.",
+        "message": "Регулирует расчет автофактора ,10 является коэффициентом задержки по умолчанию. Увеличение коэфицента позволяет больше сгладить RC команды, при этом задержка станет больше. Может быть полезно для ненадежных RC соединений, либо для видеосъемки.<br>Будьте осторожны с числами, близки к 50, задержка ввода станет заметной.<br>Используйте команду CLI rc_smoothing_info когда TX и RX включены, чтобы увидеть автоматически рассчитанные диапазоны сглаживания.",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "Данный параметр регулирует автоматическое сглаживание сигнала с пульта управления RC. Значение по умолчанию - 30. Более высокие значения сильнее сглаживают поступающие сигналы с пульта управления: например, 60 для HD freestyle или 90-120 для кинематографической съемки. ПРИМЕЧАНИЕ: Значения выше 50 вызовут заметную задержку команд управления от стиков.\nПри более низких значениях, например 20-25, часть харктерной ступенчатой формы сигнала управления с пульта, приобразуется в сигналы управления двигателями, что незначительно увеличит нагрев двигателей, но немного уменьшит задержку сигнала с пульта управления. Может быть полезно для гонок.",
         "description": "Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
@@ -1779,9 +1782,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Фильтр"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Тип RC сглаживания используется"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Частота среза в Гц, используемая при фильтрации значения Setpoint. Использование более низких значений приведет к сглаживанию входных данных и является более приемлемым для медленных протоколов радиоуправления. Большинству пользователей следует оставить это значение в нуле, что соответствует \"Авто\"."
     },
@@ -1791,11 +1791,11 @@
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Сглаживание каналов применяется к"
     },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "Тип фильтрации используемой для значения Feedforward. Начиная с версии 4.2 рекомендуется использовать значение по умолчанию \"Auto\". Для версии 4.1 и более ранних версий большинству пользователей следует использовать значение по умолчанию \"BIQUAD\", поскольку оно обеспечивает хороший баланс между плавностью и задержкой. \"PT1\" немного уменьшает задержку, но обеспечивает меньшее сглаживание."
+    "receiverRcSmoothingSetpointManual": {
+        "message": "Выбор, будет ли частота среза фильтра setpoint рассчитана автоматически (рекомендуется) или выбрана вручную пользователем. Использовать \"Ручной\" не рекомендуется для протоколов приемников типа Crossfire, которые могут изменятся в полете."
     },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "Тип фильтрации используемой для значения Setpoint. Большинству пользователей следует использовать значение по умолчанию \"BIQUAD\", поскольку оно обеспечивает хороший баланс между плавностью и задержкой. \"PT1\" немного уменьшает задержку, но обеспечивает меньшее сглаживание."
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "Выбор, будет ли частота среза фильтра feedforward рассчитана автоматически (рекомендуется) или выбрана пользователем. Выбор \"Ручной\" не рекомендуется для протоколов приемника типа Crossfire, которые могут меняться в полете."
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Частота среза заданного значения"
@@ -1803,47 +1803,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Частота среза Feedforward"
     },
-    "receiverRcSetpointType": {
-        "message": "Тип фильтра заданного значения"
-    },
     "receiverRcFeedforwardType": {
         "message": "Тип фильтра Feedforward"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Выкл"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Авто"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Сглажеваемые каналы"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC интерполяция"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Скорость приёма\/передачи в системах радиоуправления не так высока, как скорость обработки PID-ов. Это означает, что при обработке PID-ов существуют пробелы информации, поступающей от радиоаппаратуры. Эта опция выполняет сглаживание сигналов управления в моменты их отсутствия. Она также делает поведение параметров P и D более чистыми, т.к. сглаживаются скачки входящего сигнала."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Интервал интерполяции [в секундах] в режиме \"ручной\" настройки интерполяции"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Выкл."
-    },
-    "receiverRcSmoothingType": {
-        "message": "Тип сглаживания"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Предустановка"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Авто"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Ручная"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Интервал RC-интерполяции [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Режим сглаживания"
@@ -1903,7 +1867,7 @@
         "message": "<b>П<\/b>ропорциональный"
     },
     "pidTuningIntegral": {
-        "message": "<b>I<\/b>ntegral"
+        "message": "<b>И<\/b>нтегральный"
     },
     "pidTuningDerivative": {
         "message": "Derivative"
@@ -2062,6 +2026,9 @@
         "message": "Режим:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Всегда проверяйте правильность работы сценариев спасения Failsafe!<\/a><\/strong><\/b> Настройки находятся на вкладке Failsafe, которая требует включения  режима эксперта.<br> &#8226; <b>Используйте последнюю прошивку приемника!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Отключите аппаратный фильтр ADC<\/a><\/strong> на пульте при использовании OpenTx или EdgeTx.<br>Базовая установка: Укажите настройки приемника. Выберите правильную карту каналов для вашего радиоканала. Проверьте, что Крен, Тангаж и другие линии диаграммы корректно реагируют на изменения положения элементов управления. Установите крание  значения канала или диапазона передатчика от ~1000 до ~2000 и установите среднюю точку на 1500. Для получения дополнительной информации прочтите <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">документацию<\/a><\/strong>."
+    },
     "receiverThrottleMid": {
         "message": "Газ, средняя точка"
     },
@@ -2105,7 +2072,7 @@
         "message": "Значение (в микросекундах). Для расширения нейтральной зоны увеличьте это значение.<strong>Этот параметр только для газа в режиме 3D.<\/strong>"
     },
     "receiverChannelMap": {
-        "message": "Таблица каналов"
+        "message": "Карта каналов"
     },
     "receiverChannelDefaultOption": {
         "message": "По умолчанию"
@@ -2336,20 +2303,16 @@
         "message": "Активируйте телеметрию при помощи переключателя",
         "description": "Help text to TELEMETRY mode"
     },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Отключить управление настройками VTX через OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Переключить VTX в режим PitMode (низкая выходная мощность, если поддерживается)",
+        "description": "Help text to VTX PIT MODE mode"
+    },
     "adjustmentsHelp": {
         "message": "Установка настроечных переключателей. Смотри 'in-flight adjustments' главу руководства. Изменения, которые делают настроечные функции, автоматически не сохраняются."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Каждый переключатель, используемый для одновременной настройки, требует эксклюзивного использования слота."
-    },
-    "adjustmentsExamples": {
-        "message": "Примеры:"
-    },
-    "adjustmentsExample1": {
-        "message": "Используйте 3-х позиционный переключатель AUX1 для выбора между Pitch\/Roll P, I и D, а 3-х позиционный переключатель AUX2 для увеличения или уменьшения значения при удержании или снижении."
-    },
-    "adjustmentsExample2": {
-        "message": "Используйте 3-х позиционный переключатель AUX4 чтобы выбрать включение выбора профиля Рейтов при помощи того же 3-х позиционного переключателя на том же канале."
     },
     "adjustmentsColumnEnable": {
         "message": "Если включено"
@@ -3383,11 +3346,20 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи \/ Восстановление связи<\/strong>"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Если возникла потеря связи с вашим устройством, то выполните следующие действия, чтобы восстановить связь:<ul><li>Отключите питание<\/li><li>Включите \"Без перезагрузки\", включите \"Полное стирание чипа\".<\/li><li>Замкните контакты \"BOOT\" или удерживайте кнопку BOOT нажатой.<\/li><li>Включите питание (светодиод НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите STM32 драйверы и Zadig, если это необходимо (см. раздел <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> в инструкции Betaflight).<\/li><li>Закройте Конфигуратор, закройте все Chrome приложения и завершите все Chrome процессы, перезапустите Конфигуратор.<\/li><li>Отпустите кнопку \"BOOT\", если на вашем FC она есть.<\/li><li>Залейте нужную прошивку (укажите вручную битрейт, если он указан в инструкции вашего полётного контроллера).<\/li><li>Отключите питание<\/li><li> Снимите \"BOOT\" джампер.<\/li><li>Включите питание (светодиод должен мигать).<\/li><li>Пробуйте подключиться.<\/li><\/ul>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Прошивка не загружена"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Загружена локальная прошивка: {{filename}} ({{bytes}} байт)"
+    },
+    "firmwareFlasherFirmwareOnlineLoaded": {
+        "message": "Прошивка загружена по сети: {{filename}} ({{bytes}} байт)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX-файл поврежден"
@@ -3424,6 +3396,18 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Обнаружено: <strong>$1<\/strong> - переключение памяти при соединении"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>Несоответствие прошивки<\/h3><br \/>Подключена плата <strong>{{verified_board}}<\/strong> но вы выбрали <strong>{{selected_board}}<\/strong>.<br \/><br \/> Уверены, что хотите продолжить прошивку?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Конфигуратор <span class=\"message-positive\">успешно<\/span> обнаружил и определил плату: <strong>{{boardName}}<\/strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "Конфигуратор обнаружил плату: <strong>{{boardName}}<\/strong> но официальной целевой Betaflight прошивки не найдено",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Конфигуратору <span class=\"message-negative\">не удалось<\/span> проверить плату, если это не работает, попробуйте медленно переключиться на другую вкладку, чтобы повторить попытку, создать новое Usb-соединение или подключиться сначала, если вы могли забыть применить пользовательские настройки по умолчанию",
@@ -3763,16 +3747,16 @@
         "message": "темно-розовый"
     },
     "controlAxisRoll": {
-        "message": "Roll [A]"
+        "message": "Крен [A]"
     },
     "controlAxisPitch": {
-        "message": "Pitch [E]"
+        "message": "Тангаж [E]"
     },
     "controlAxisYaw": {
-        "message": "Yaw [R]"
+        "message": "Рыскание [R]"
     },
     "controlAxisThrottle": {
-        "message": "Throttle [T]"
+        "message": "Газ [T]"
     },
     "controlAxisAux1": {
         "message": "AUX 1"
@@ -4008,22 +3992,6 @@
         "message": "Увеличивает все параметры PID равномерно. Не меняйте этот ползунок, если у вас закончились настройки на других ползунках. Обычно это требуется только для квадрокоптеров с низкой управляемостью или высоким моментом инерции (MoI), таких как X-Class или сборки для съемки. Слишком большой мастер-коэффициент может вызвать дрожание или перегрев моторов.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Баланс PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Коэфф. усиления P и D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Результатом понижения параметров P и D будут более холодные двигатели, но при этом будет больше пропвош.<br \/><br \/>Параметры P и D работают вместе для того чтобы снизить эффект пропвоша.<br \/><br \/>Более высокие значения усилят нагрев моторов и могут увеличить осцилляции во время плавного полета из-за повышения параметра D.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Коэфф. реакции на движения стиков:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningDGainSlider": {
         "message": "Дампинг:<br \/><i><small>D Gains<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4073,17 +4041,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Тип фильтра"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Динамический фильтр низких частот гироскопа \"Lowpass\""
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Мин. частота среза [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Макс. частота среза [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro Lowpass 1 Dynamic, тип фильтра"
     },
     "pidTuningGyroLowpass2": {
         "message": "Фильтр низких частот гироскопа - 2 \"Lowpass\""
@@ -4116,9 +4078,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Диапазон динамического режекторного фильтра"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Ширина динамического режекторного фильтра в процентах"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q фактор"
     },
@@ -4133,9 +4092,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамический режекторный фильтр имеет три частотных диапазона, в которых он может работать: LOW(80-330гц) для более низкооборотных квадрокоптеров, таких как 6+ дюймов, MEDIUM(140-550гц) для \"нормальных\" 5 дюймовых квадрокоптеров и HIGH(230-800гц) для сверхвысокооборотных 2-3 дюймовых квадрокоптеров. AUTO выбирает диапазон в зависимости от значения максимальной (cutoff) частоты динамического фильтра нижних частот Gyro."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Настройка расстояния между двумя динамическими режекторными фильтрами. Установка этого параметра в 0 отключит второй динамический режекторный фильтр и уменьшит задержку фильтрации, однако это может привести к перегреву двигателей."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Коэффициент Q регулирует, на сколько узкими или широкими будут динамические режекторные фильтры. Более высокое значение делает их более точным и узким, а более низкие - шире и менее точным. При достаточно низком значении значительно увеличится задержка фильтра."
@@ -4197,14 +4153,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Тип фильтра"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Динамический D-Term фильтр низких частот \"Lowpass\""
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Динамическая expo-кривая"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Тип динамического фильтра"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term режекторный фильтр"
@@ -4296,9 +4246,6 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Акро тренер лимит угла"
     },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Помогает пилотам научиться летать в акро-режиме, ограничивая угол наклона квадрокоптера в движении. Допустимые ограничения 10-80 градусов. Режим должен быть активирован переключателем на вкладке $t(tabAuxiliary.message)."
-    },
     "pidTuningIntegratedYaw": {
         "message": "Интегрированный Yaw"
     },
@@ -4361,6 +4308,9 @@
     },
     "failsafeDelayHelp": {
         "message": "Установите период времени для 1го этапа Фейлсейфа после потери сигнала. Если время задержки истекает без восстановления сигнала, запускается Этап 2 настроек Фейлсейф "
+    },
+    "failsafeThrottleLowItem": {
+        "message": "Лимит длительности низкого уровня газа [секунды]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Задизармить аппарат вместо выполнения выбранной процедуры failsafe, если значение газа будет низким в течение указанного времени"
@@ -5405,6 +5355,9 @@
         "message": "Температура ESC-и",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementEscTemperature": {
+        "message": "Температура, отображаемая телеметрией ESC, либо по serial one wire телеметрии, либо по двунаправленной телеметрии DShot с EDT, если поддерживается вашей прошивкой ESC."
+    },
     "osdTextElementEscRpm": {
         "message": "ESC RPM",
         "description": "One of the elements of the OSD"
@@ -5611,6 +5564,9 @@
     "osdTextElementReadyMode": {
         "message": "Режим Ready (Готов)",
         "description": "When active READY will be displayed until flying"
+    },
+    "osdDescElementReadyMode": {
+        "message": "Когда активен, будет отображаться READY до момента полета"
     },
     "osdTextElementRSNRValue": {
         "message": "Значение RSNR",
@@ -6325,6 +6281,10 @@
         "message": "<span class=\"message-negative\">Ошибка<\/span> во время сохранения конфиг файла видеопередатчика",
         "description": "Message in the GUI log when the VTX Config file is saved"
     },
+    "vtxSavedLuaFileOk": {
+        "message": "lua конфиг. файл VTX <span class=\"message-positive\">сохранено<\/span>",
+        "description": "Message in the GUI log when the lua VTX Config file is saved"
+    },
     "vtxSavedLuaFileKo": {
         "message": "<span class=\"message-negative\">Ошибка<\/span> при сохранении lua VTX конфиг файла видеопередатчика",
         "description": "Message in the GUI log when the lua VTX Config file saving has failed"
@@ -6392,12 +6352,6 @@
     },
     "configurationEscProtocol": {
         "message": "Протокол ESC \/ Мотора"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Выберите ESC-протокол.<br>Убедитесь, что выбранный протокол поддерживается вашим ESC, информация об этом указана на сайте производителя.<br><b>Обратите внимание, при выборе протоколов DSHOT900 и DSHOT1200, не так много ESC поддерживают эти протоколы"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Выберите протокол для моторов. <br>Удостоверьтесь, что этот протокол поддерживается вашими ESC. Эта информация должна быть на сайте производителя."
     },
     "configurationunsyndePwm": {
         "message": "Скорость двигателя PWM отделенного от PID скорость"
@@ -6582,6 +6536,9 @@
     "dialogConfirmResetTitle": {
         "message": "Подтвердить"
     },
+    "dialogConfirmResetNote": {
+        "message": "ВНИМАНИЕ: Вы уверены, что хотите сбросить <strong>ВСЕ настройки<\/strong> на не сконфигурированное состояние? Это <strong>не<\/strong> «сброс до заводских настроек». Это может привести к непредвиденным проблемам, и возможно потребуется перезаписать прошивку, чтобы снова подключиться."
+    },
     "dialogConfirmResetConfirm": {
         "message": "Сброс"
     },
@@ -6629,6 +6586,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Чувствительность по центру"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Максимальная чувствительность по центру"
     },
     "dialogRatesTypeTitle": {
         "message": "Изменение типа коэффициентов"
@@ -7004,6 +6964,9 @@
     },
     "coreBuild": {
         "message": "Только ядро"
+    },
+    "coreBuildModeDescription": {
+        "message": "Эта опция создает прошивку, содержащую драйверы (и некоторые ограниченные функции). Она может помочь в обнаружении оборудования на борту полетного контроллера и предоставляется только для этого удобства. Не все функции будут доступны (только аппаратное обеспечение) с помощью этой опции."
     },
     "showDevToolsOnStartup": {
         "message": "Автоматически открывать DevTools в режиме разработки",

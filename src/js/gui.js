@@ -2,7 +2,6 @@ import { get as getConfig } from './ConfigStorage';
 import MSP from './msp';
 import Switchery from 'switchery-latest';
 import jBox from 'jbox';
-import { checkChromeRuntimeError } from './utils/common';
 import $ from 'jquery';
 
 const TABS = {};
@@ -15,7 +14,6 @@ const GUI_MODES = {
 
 class GuiControl {
     constructor() {
-        this.auto_connect = false;
         this.connecting_to = false;
         this.connected_to = false;
         this.connect_lock = false;
@@ -70,17 +68,7 @@ class GuiControl {
         this.operating_system = GUI_checkOperatingSystem();
 
         // Check the method of execution
-        this.nwGui = null;
-        try {
-            this.nwGui = require('nw.gui');
-            this.Mode = GUI_MODES.NWJS;
-        } catch (ex) {
-            if (typeof cordovaApp !== 'undefined') {
-                this.Mode = GUI_MODES.Cordova;
-            } else {
-                this.Mode = GUI_MODES.Other;
-            }
-        }
+        this.nwGui = GUI_MODES.Other;
     }
     // Timer managing methods
     // name = string

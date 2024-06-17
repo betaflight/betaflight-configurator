@@ -1,5 +1,5 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
 import $ from 'jquery';
@@ -31,12 +31,6 @@ const Features = function (config) {
         {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
         {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
     ];
-
-    if (semver.lt(config.apiVersion, API_VERSION_1_44)) { // DYNAMIC_FILTER got removed from FEATURES in BF 4.3 / API 1.44
-        features.push(
-            {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'},
-        );
-    }
 
     self._features = features;
 

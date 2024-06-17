@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_43, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_46 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
@@ -122,9 +122,8 @@ gps.initialize = async function (callback) {
             i18n.getMessage('gpsSbasIndianGAGAN'),
         ];
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            gpsSbas.push(i18n.getMessage('gpsSbasNone'));
-        }
+        // Introduced in API 1.43
+        gpsSbas.push(i18n.getMessage('gpsSbasNone'));
 
         const gpsProtocolElement = $('select.gps_protocol');
         const gpsAutoBaudElement = $('input[name="gps_auto_baud"]');
@@ -161,7 +160,7 @@ gps.initialize = async function (callback) {
             const ubloxSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
             const mspSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf('MSP');
 
-            const enableGalileoVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43);
+            const enableGalileoVisible = checked && ubloxSelected;
             gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
 
             const enableSbasVisible = checked && ubloxSelected;
@@ -184,7 +183,6 @@ gps.initialize = async function (callback) {
             FC.GPS_CONFIG.ublox_sbas = parseInt($(this).val());
         }).val(FC.GPS_CONFIG.ublox_sbas);
 
-        $('.gps_home_once').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43));
         gpsHomeOnceElement.change(function() {
             FC.GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', FC.GPS_CONFIG.home_point_once > 0).change();

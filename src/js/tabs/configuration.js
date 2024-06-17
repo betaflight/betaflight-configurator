@@ -6,7 +6,7 @@ import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import { updateTabList } from '../utils/updateTabList';
 import $ from 'jquery';
 
@@ -107,11 +107,8 @@ configuration.initialize = function (callback) {
             'CW 90° flip',
             'CW 180° flip',
             'CW 270° flip',
+            'Custom',
         ];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            alignments.push('Custom');
-        }
 
         const gyro_align_content_e = $('.tab-configuration .gyro_align_content');
         const legacy_gyro_alignment_e = $('.tab-configuration .legacy_gyro_alignment');
@@ -251,25 +248,6 @@ configuration.initialize = function (callback) {
             element.append(`<option value="${denom}">${denomDescription}</option>`);
         }
 
-        const updateGyroDenom = function (gyroBaseFreq) {
-
-            gyroTextElement.hide();
-
-            const originalGyroDenom = gyroSelectElement.val();
-
-            gyroSelectElement.empty();
-
-            const MAX_DENOM = 8;
-
-            for (let denom = 1; denom <= MAX_DENOM; denom++) {
-                addDenomOption(gyroSelectElement, denom, gyroBaseFreq);
-            }
-
-            gyroSelectElement.val(originalGyroDenom);
-
-            gyroSelectElement.change();
-         };
-
          const updateGyroDenomReadOnly = function (gyroFrequency) {
              gyroSelectElement.hide();
 
@@ -284,11 +262,7 @@ configuration.initialize = function (callback) {
 
         $('div.gyroUse32kHz').hide();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            updateGyroDenomReadOnly(FC.CONFIG.sampleRateHz);
-        } else {
-            updateGyroDenom(8);
-        }
+        updateGyroDenomReadOnly(FC.CONFIG.sampleRateHz);
 
         gyroSelectElement.val(FC.PID_ADVANCED_CONFIG.gyro_sync_denom);
 
@@ -296,18 +270,10 @@ configuration.initialize = function (callback) {
 
         gyroSelectElement.change(function () {
             const originalPidDenom = parseInt(pidSelectElement.val());
-
-            let pidBaseFreq;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
-            } else {
-                pidBaseFreq = 8;
-                pidBaseFreq /= parseInt($(this).val());
-            }
+            const pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
+            const MAX_DENOM = 8;
 
             pidSelectElement.empty();
-
-            const MAX_DENOM = 8;
 
             for (let denom = 1; denom <= MAX_DENOM; denom++) {
                 addDenomOption(pidSelectElement, denom, pidBaseFreq);

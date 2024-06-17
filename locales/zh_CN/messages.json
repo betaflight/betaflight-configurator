@@ -1041,15 +1041,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "此选项告知混控程序电机转向已经被反转，且螺旋桨也已对应安装。<strong>警告：<\/strong>此选项并不反转电机实际转向。要反转电机实际转向，请通过电调配置软件进行设置，或者交换电调 - 电机的线序。同时在尝试解锁前务必确认螺旋桨是按照上面示意图的转向安装的。"
     },
-    "configurationAutoDisarmDelay": {
-        "message": "[seconds] 秒后锁定电机（需要启用 MOTOR_STOP）"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "忽略油门位置直接锁定电机（当在模式页里设定为通过 Aux 开关解锁时生效）"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "油门未在最低位时禁止解锁电机。注意该选项启动时有可能在飞行中通过开关意外触发上锁。"
-    },
     "configurationDigitalIdlePercent": {
         "message": "电机怠速 ( %, 静态)"
     },
@@ -1408,9 +1399,6 @@
         "message": "<b>D<\/b>erivative",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>注意:<\/strong>D Max功能已被禁用，其参数已隐藏。要使用D Min, 请在$t(pidTuningPidSettings.message)中启用它。"
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "动态阻尼 \/ D Max 设置",
         "description": "Title for the options panel for the D Max feature"
@@ -1485,9 +1473,6 @@
     "receiverRcSmoothingFilter": {
         "message": "滤波器"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "使用 RC 平滑的类型"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "设定点滤波器截止频率，单位为 Hz。较低的值将得到更平滑的输入，适用于较慢的接收器协议。大多数情况应该将其保持为 0，对应\"自动\"。"
     },
@@ -1496,12 +1481,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "适用平滑的通道"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "用于过滤前馈信号的滤波方式。从 4.2 起，推荐使用默认的 \"Auto\"。对于使用 4.1 及早期版本的用户应该使用默认的 \"BIQUAD\" ，因为它在平滑和延迟之间提供了良好的平衡。\"PT1\" 稍微减少了延迟，但提供的平滑程度也较低。"
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "用于过滤设定点信号的滤波方式。大多数用户应该使用默认的 \"BIQUAD\" ，因为它在平滑和延迟之间提供了良好的平衡。\"PT1\" 稍微减少了延迟，但提供的平滑程度也较低。"
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "设置设定点滤波器的截止频率是由系统自动计算的 (推荐) 还是由用户手动设置。如果使用的接收机协议在飞行中可能发生变化，比如Crossfire，则不建议使用 \"手动\"。"
@@ -1515,47 +1494,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "前馈截止频率"
     },
-    "receiverRcSetpointType": {
-        "message": "设定点滤波器类型"
-    },
     "receiverRcFeedforwardType": {
         "message": "前馈滤波器类型"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "关闭"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "自动"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "平滑通道"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC 插值"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC 系统的运行速率没有飞控 PID 运行速率那么快。这意味着 RC 信号流传入 PID 环路时会存在信号真空期。开启 RC 插值会在无 RC 信号的真空期内对其进行插值处理，这会使 P 和 D 表现得更加顺滑。"
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "手动设置 RC 插值间隔 [毫秒]"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "关闭"
-    },
-    "receiverRcSmoothingType": {
-        "message": "平滑类型"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "预设"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "自动"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "手动"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC 插值间隙 [毫秒]"
     },
     "receiverRcSmoothingMode": {
         "message": "平滑模式"
@@ -1936,18 +1879,6 @@
     },
     "adjustmentsHelp": {
         "message": "配置调整开关。详细信息请参阅手册中的“飞行中调整”章节。通过该调整功能所进行的更改将不会被自动保存。"
-    },
-    "adjustmentSlotsHelp": {
-        "message": "共有4个滑槽。同时进行调整时每个开关都需要配置专用滑槽。"
-    },
-    "adjustmentsExamples": {
-        "message": "例如："
-    },
-    "adjustmentsExample1": {
-        "message": "使用AUX1通道上的三段开关在Pitch\/Roll的 P, I 和 D 之间选择，使用AUX2通道的三段开关来上下增大和减小数值（拨高，或拨低）。"
-    },
-    "adjustmentsExample2": {
-        "message": "使用 AUX4 通道上的三段开关来选择 Rate 配置文件"
     },
     "adjustmentsColumnEnable": {
         "message": "如果激活"
@@ -3401,30 +3332,6 @@
         "message": "同等增加所有 PID 参数。除非您已经将其他滑块调到极限范围，否则请不要调整该滑块。一般来说，只有弱动力飞机或大动量 (Mol) 飞机如 X-Class 或电影机才需要调整该项。过高的主增益将会导致高频震动或者电机过热。",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD 平衡:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "改变 D 与 D max。相对较高的 D 值将削弱摇杆响应力，并且可能会使电机变热，但有助于抑制由 P 造成的晃动，并且会改善洗桨。<br \/><br \/>相对较低的 D 值将会提供较快的摇杆响应力，但可能会削弱抑制洗桨的能力。",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P 和 D 增益:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "较低的 P 和 D 值有助于电机保持凉爽，但会导致更多的洗桨震动。太低值可能导致飞机不稳定。<br \/><br \/>P 和 D 值配合才能减少洗桨。<br \/><br \/>更高的值会增加电机温度，并且较高的 D 值可能会增加平飞时的抖动。",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "摇杆响应增益:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "较低的前馈值将会恶化摇杆响应，并可能会导致在翻滚结束时，由于响应过于滞后实际运动导致 I 值溢出，并发生较慢的回弹，即 “I 值回弹”。<br \/><br \/>较高的前馈值会使得飞机在快速机动时对摇杆响应更为灵敏。过高的前馈值则可能引起过冲和在翻转结束时产生较快的回弹。<br \/><br \/>注意:<br \/>I 值释放功能可以避免在弱动力飞机上移动摇杆时或 “摇杆响应增益” 较低的情况下发生 I 值溢出的情况。",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "阻尼: <br \/><i><small>D 增益<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -3498,17 +3405,11 @@
     "pidTuningLowpassFilterType": {
         "message": "滤波器类型"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "陀螺仪低通滤波器动态滤波器"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "最低截止频率 [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "最高截止频率 [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "陀螺仪低通滤波器1动态滤波器类型"
     },
     "pidTuningGyroLowpass2": {
         "message": "陀螺仪低通滤波器 2"
@@ -3565,9 +3466,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "动态陷波滤波器范围"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "动态陷波滤波器宽度百分比"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q 因子"
     },
@@ -3582,9 +3480,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "动态陷波滤波器有三个频率范围可供运行：LOW(80-330hz) 用于6英寸及以上的低速巡航机，MEDIU(140-550hz) 用于常见的5英寸飞行器，HIGH(230-800hz) 用于电机转速较高的2.5-3英寸的飞行器。AUTO 选项将会使用陀螺仪低通滤波器1最高截止频率范围来决定频率范围。"
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "这设置了两个动态陷波滤波器之间的宽度。设置为0将禁用第二个动态陷波滤波器，并减少滤波延迟，但是它可能会使电机温度更高。"
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q调整了动态陷波滤波器的宽度。更高的值将使其变得更窄、更精准，较低的值将使其变得更宽、更宽泛。将Q调到很低将会带来很大的滤波器延迟。"
@@ -3654,14 +3549,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "滤波器类型"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "D Term 动态低通滤波器"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "动态曲线 Expo"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "动态滤波器类型"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term 陷波滤波器"
@@ -3764,9 +3653,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "训练模式角度限制"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "通过限制飞机可以到达的角度，来帮助飞行员学习手动模式飞行。有效的限制值为 10-80 度。该模式必须在 $t(tabAuxiliary.message) 选项卡中设置一个开关来激活。"
     },
     "pidTuningIntegratedYaw": {
         "message": "整合式偏航"
@@ -5543,12 +5429,6 @@
     },
     "configurationEscProtocol": {
         "message": "电调\/电机协议"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "选择电调协议。<br>请确认你的电调支持该协议，电调制造商应该有提供这些信息。<br> <b>选择 DSHOT900 或 DSHOT1200 时请注意，目前没有很多电调支持这个协议！<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "选择您的电机协议。<br>请验证您的电调支持此协议，此信息应在制造商的网站上。"
     },
     "configurationunsyndePwm": {
         "message": "电机PWM速度独立于PID速度"

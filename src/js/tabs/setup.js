@@ -2,14 +2,13 @@ import { i18n } from '../localization';
 import semver from 'semver';
 import { isExpertModeEnabled } from '../utils/isExportModeEnabled';
 import GUI, { TABS } from '../gui';
-import { configuration_backup, configuration_restore } from '../backup_restore';
 import { have_sensor } from '../sensor_helpers';
 import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
 import MSP from '../msp';
 import Model from '../model';
 import MSPCodes from '../msp/MSPCodes';
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
 import $ from 'jquery';
 
@@ -38,36 +37,9 @@ setup.initialize = function (callback) {
 
     MSP.send_message(MSPCodes.MSP_ACC_TRIM, false, false, load_status);
 
-    function experimentalBackupRestore() {
-        const backupButton = $('#content .backup');
-        const restoreButton = $('#content .restore');
-
-        backupButton.on('click', () => configuration_backup(() => gui_log(i18n.getMessage('initialSetupBackupSuccess'))));
-
-        restoreButton.on('click', () => configuration_restore(() => {
-            // get latest settings
-            TABS.setup.initialize();
-
-            gui_log(i18n.getMessage('initialSetupRestoreSuccess'));
-        }));
-
-        if (CONFIGURATOR.virtualMode) {
-            // saving and uploading an imaginary config to hardware is a bad idea
-            backupButton.addClass('disabled');
-        } else {
-            restoreButton.addClass('disabled');
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                $('.backupRestore').hide();
-            }
-        }
-    }
-
     function process_html() {
         // translate to user-selected language
         i18n.localizePage();
-
-        experimentalBackupRestore();
 
         // initialize 3D Model
         self.initModel();
@@ -236,10 +208,10 @@ setup.initialize = function (callback) {
                 'NO_GYRO',
                 'FAILSAFE',
                 'RX_FAILSAFE',
-                'BAD_RX_RECOVERY',
+                'NOT_DISARMED',
                 'BOXFAILSAFE',
                 'RUNAWAY_TAKEOFF',
-                // 'CRASH_DETECTED', only from API 1.42
+                'CRASH_DETECTED',
                 'THROTTLE',
                 'ANGLE',
                 'BOOT_GRACE_TIME',
@@ -254,29 +226,18 @@ setup.initialize = function (callback) {
                 'GPS',
                 'RESC',
                 'RPMFILTER',
-                // 'REBOOT_REQUIRED', only from API 1.42
-                // 'DSHOT_BITBANG',   only from API 1.42
-                // 'ACC_CALIBRATION', only from API 1.43
-                // 'MOTOR_PROTOCOL',  only from API 1.43
+                // Introduced in 1.42
+                'REBOOT_REQUIRED',
+                'DSHOT_BITBANG',
+                // Introduced in 1.43
+                'ACC_CALIBRATION',
+                'MOTOR_PROTOCOL',
                 // 'ARM_SWITCH',           // Needs to be the last element, since it's always activated if one of the others is active when arming
             ];
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH_DETECTED');
-                disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQUIRED',
-                                                                'DSHOT_BITBANG']);
-            }
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                disarmFlagElements = disarmFlagElements.concat(['ACC_CALIBRATION', 'MOTOR_PROTOCOL']);
-            }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('RPMFILTER'), 0, 'DSHOT_TELEM');
             }
-
-            // Always the latest element
-            disarmFlagElements = disarmFlagElements.concat(['ARM_SWITCH']);
 
             // Arming allowed flag
             arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"></span>');

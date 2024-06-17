@@ -106,10 +106,6 @@
         "message": "Mostrar todos os dispositivos de comunicação serial (para fabricantes ou desenvolvimento)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "Usar a descoberta de dispositivo mDNS no navegador (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
-    },
     "showVirtualMode": {
         "message": "Ativar modo de conexão virtual",
         "description": "Text for the option to enable or disable the virtual FC"
@@ -715,12 +711,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Reiniciar no modo <strong>boot loader \/ DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Backup salvo <span class=\"message-positive\">com sucesso<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuração restaurada <span class=\"message-positive\">com sucesso<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Redefinir eixo Z, offset: 0 graus"
     },
@@ -1287,15 +1277,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Esta opção indica à controladora de voo que a rotação dos motores é invertida e que as hélices serão montadas de acordo com isso. <strong>Atenção:<\/strong> Esta opção não inverte o sentido do motor; Para isto, use a ferramenta de configuração de seu ESC ou altere a ordem dos cabos ESC-motor. Além disso, com as hélices removidas, certifique-se que os motores estão girando nas direções mostradas no diagrama acima antes de tentar armar."
     },
-    "configurationAutoDisarmDelay": {
-        "message": "Desarmar os motores após definir [seconds] de espera (Requer a funcionalidade MOTOR_STOP)"
-    },
-    "configurationDisarmKillSwitch": {
-        "message": "Desarmar os motores independente do valor do acelerador (quando ARMAR é configurado na aba Modos em um canal AUX)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Armar está sempre desativado quando o acelerador não está no mínimo. Tenha cuidado porque pode desarmar acidentalmente com um botão enquanto estiver voando se esta opção estiver ativa."
-    },
     "configurationDigitalIdlePercent": {
         "message": "Motor Ocioso (em %, estático)"
     },
@@ -1687,9 +1668,6 @@
         "message": "<b>D<\/b>erivativo",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Nota:<\/strong> A função D Max está desabilitada e seus parâmetros estão ocultos. Para usar o D Max, por favor o habilite em $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Amortecedor Dinâmico \/ Configurações de D Máximo",
         "description": "Title for the options panel for the D Max feature"
@@ -1764,9 +1742,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtro"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Tipo de suavização de RC usado"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "A frequência de corte em Hz usado pelo filtro de entrada. Usar valores mais baixos resultará em entradas mais suaves e são mais adequadas para protocolos de receptores mais lentos. A maioria dos usuários deve deixar em 0 correspondente a \"Automático\"."
     },
@@ -1775,12 +1750,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Os canais de suavização aplicam-se a"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "O método de filtro utilizado para o Feedforward. A partir da versão 4.2 o valor padrão \"Auto\" é o recomendado. Para versões 4.1 ou anterior, a maioria dos usuários deve usar a predefinição \"BIQUAD\" pois é um bom balanço entre suavização e atraso. \"PT1\" reduz um pouco o atraso, mas é menos suave."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "O tipo de filtro usado para a entrada. A maioria dos usuários deve usar a predefinição \"BIQUAD\" que é um bom balanço entre suavização e atraso. \"PT1\" reduz um pouco o atraso, mas é menos suave."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Seleciona se a frequência de corte do filtro de entrada é calculada automaticamente (recomendado) ou manualmente selecionada pelo usuário. O modo \"Manual\" não é recomendado para protocolos do receptor como Crossfire que podem mudar durante o voo."
@@ -1794,47 +1763,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Frequência de corte Feedforward"
     },
-    "receiverRcSetpointType": {
-        "message": "Tipo do filtro de entrada"
-    },
     "receiverRcFeedforwardType": {
         "message": "Tipo do filtro do Feedforward"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Desligado"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Canais suavizados"
-    },
-    "receiverRcInterpolation": {
-        "message": "Interpolação RC"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Sistemas RC TX\/RX não são tão rápidos quanto loops PID, isso significa que o loop PID fica sem dados do sistema RC em alguns momentos. Esta opção habilita a interpolação da entrada do RC enquanto dados não são recebidos. Esta opção também oferece um comportamento mais limpo de P e D, uma vez que não há picos na entrada do controle."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Intervalo de interpolação para o modo manual de interpolação RC (em milisegundos)"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Desligado"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Tipo de suavização"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Predefinição"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manual"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Intervalo de Interpolação RC [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Modo Suave"
@@ -2435,18 +2368,6 @@
     },
     "adjustmentsHelp": {
         "message": "Configure os switches de ajuste. Veja a seção 'in-flight adjustments' do manual para detalhes. As alterações que as funções de ajuste fazem não são salvas automaticamente."
-    },
-    "adjustmentSlotsHelp": {
-        "message": "Há 4 slots. Cada switch utilizado para fazer ajustes simultaneamente requer o uso exclusivo de um slot."
-    },
-    "adjustmentsExamples": {
-        "message": "Exemplos:"
-    },
-    "adjustmentsExample1": {
-        "message": "Use um switch de três posições no canal AUX1 para selecionar entre Pitch\/Roll P, I e D e outro switch de três posições no canal AUX2 para aumentar ou diminuir o valor quando pressionado para cima ou para baixo."
-    },
-    "adjustmentsExample2": {
-        "message": "Use um switch de três posições no canal AUX4 para selecionar e ativar o Perfil de taxa através de um único canal."
     },
     "adjustmentsColumnEnable": {
         "message": "Ativar"
@@ -4119,30 +4040,6 @@
         "message": "Aumenta igualmente todos os parâmetros PID. Não altere este slider a menos que fique sem ajuste nos outros sliders. Normalmente isto só é necessário para aeronaves com pouca autoridade ou alto momento de inércia (Mol), como as de classe X ou cinelifter. Ganhos no master muito elevados podem causar oscilações rápidas ou motores quentes.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Balanço PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Altera o D e D max. Um D relativamente alto vai amortecer a capacidade de resposta e pode causar motores quentes, mas deve ajudar a controlar oscilações do Termo P e melhorar a oscilação devido a turbulência nas hélices.<br \/><br \/>Um Termo D relativamente baixo dá resposta mais rápida ao comandos do stick, mas diminui o desempenho contra turbulência e de reação a forças externas (vento).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Ganho de P e D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Ganhos P e D menores diminuem a temperatura dos motores, mas causam mais oscilações durante turbulências. Valores muito baixos podem fazer com que a aeronave fique instável.<br \/><br \/> Os Termos P e D trabalham juntos para reduzir os efeitos da turbulência.<br \/><br \/>Valores maiores aumentam a temperatura dos motores e, devido ao alto ganho do Termo D, podem aumentar as oscilações durante voos simples.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Ganho na Resposta do Stick:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Valores FF menores pioram a resposta dos sticks e podem causar oscilações lentas no final de um giro (flip ou roll) devido ao atraso entre a aeronave e os sticks e também devido a sobrecarga do Termo I.<br \/><br \/> Valores FF maiores melhoram a velocidade de resposta aos sticks para movimentos rápidos. Contudo, valores FF muito altos podem fazer com que a aeronave ultrapasse o ponto desejado e cause oscilações rápidas no final de um giro (flip ou roll). <br \/><br \/>Nota:<br \/> A função Relaxar Termo I pode prevenir a sobrecarga do Termo I para aeronaves com pouca autoridade ou se um ganho baixo for usado para a resposta dos sticks.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Amortecedor:<br \/><i><small>Ganho D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4224,17 +4121,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Tipo de filtro"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Giroscópio - Lowpass Dinâmico - Filtro"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Frequência Mínima de Corte [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Frequência Máxima de Corte [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro - Lowpass 1 Dinâmico - Tipo do filtro"
     },
     "pidTuningGyroLowpass2": {
         "message": "Lowpass 2 do Giroscópio"
@@ -4294,9 +4185,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Filtro Notch dinâmico - Alcance"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Filtro Notch dinâmico - Porcentagem da largura"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Fator Q"
     },
@@ -4311,9 +4199,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O filtro Notch (Rejeita Faixa) dinâmico possui três faixas de frequência em que pode operar: BAIXO (80-330hz) para aeronaves lentas de 6\" ou mais, MÉDIO (140-550hz) para aeronaves convencionais de 5\", ALTO (230-800hz) para aeronaves rápidas de 2.5\" a 3\". a opção AUTO seleciona a faixa de acordo com a frequência de corte máxima do fitro Lowpass 1 Dinâmico do Gyro."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Ajusta a largura entre os dois filtros Notch. Configurar em 0 irá desativar o segundo filtro Notch dinâmico e irá reduzir o atraso dos filtros, contudo, pode causar temperaturas elevadas nos motores."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Fator Q ajusta quão curto ou amplo são os filtros Notch Dinâmicos. Valores maiores fazem com que fiquem mais curtos e mais precisos e valores menores fazem com que fiquem mais largos e amplos. Utilizar um valor muito baixo irá aumentar o atraso do filtro consideravelmente."
@@ -4383,14 +4268,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Tipo de filtro"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "Termo D - Lowpass Dinâmico - Filtro"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Curva Dinâmica Exponencial"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipo do Filtro Dinâmico"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtros Notch (Rejeita Faixa) do TERMO D"
@@ -4502,9 +4381,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angulo máximo do Treinador Acro"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Ajuda os pilotos a aprenderem a voar no modo acro, limitando o ângulo que a aeronave pode atingir. Valores válidos são entre 10 e 80 graus. O modo deve ser configurado para ser ativado com um interruptor na aba $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
@@ -6649,12 +6525,6 @@
     },
     "configurationEscProtocol": {
         "message": "Protocolo do ESC\/Motor"
-    },
-    "configurationEscProtocolHelp": {
-        "message": "Selecione o protocolo do seu motor. <br>Tenha a certeza de que o protocolo é suportado pelo seu ESC, esta informação deve estar disponível no site do fabricante. <br><b>Tenha cuidado ao usar DSHOT900 e DSHOT1200, uma vez que muitos ESCs não os suportam!<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
-        "message": "Selecione o protocolo do seu motor. <br>Tenha a certeza de que o protocolo é suportado pelo seu ESC, esta informação deve estar disponível no site do fabricante."
     },
     "configurationunsyndePwm": {
         "message": "Velocidade do PWM do Motor independente da velocidade do PID"

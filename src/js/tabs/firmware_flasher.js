@@ -6,26 +6,17 @@ import { get as getStorage, set as setStorage } from '../SessionStorage';
 import BuildApi from '../BuildApi';
 import ConfigInserter from "../ConfigInserter.js";
 import { tracking } from "../Analytics";
-import MspHelper from '../msp/MSPHelper';
-import FC from '../fc';
-import MSP from '../msp';
-import MSPCodes from '../msp/MSPCodes';
 import PortHandler from '../port_handler';
-import { API_VERSION_1_39, API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
 import semver from 'semver';
 import { urlExists } from '../utils/common';
-import { generateFilename } from '../utils/generate_filename';
+import read_hex_file from '../workers/hex_parser.js';
 import Sponsor from '../Sponsor';
 import FileSystem from '../FileSystem';
-import { usbDevices } from '../usb_devices.js';
-import { serialShim } from "../serial_shim.js";
-import { usbShim } from "../usb_shim.js";
-import STM32 from '../protocols/stm32';
-import { isWeb } from '../utils/isWeb.js';
-
-let serial = serialShim();
-let dfu = usbShim();
+import STM32 from '../protocols/webstm32';
+import DFU from '../protocols/webusbdfu';
+import AutoBackup from '../utils/AutoBackup.js';
+import AutoDetect from '../utils/AutoDetect.js';
 
 const firmware_flasher = {
     targets: null,
@@ -67,16 +58,9 @@ firmware_flasher.initialize = function (callback) {
     function onDocumentLoad() {
 
         function parseHex(str, callback) {
-            // parsing hex in different thread
-            const worker = new Worker('./js/workers/hex_parser.js');
-
-            // "callback"
-            worker.onmessage = function (event) {
-                callback(event.data);
-            };
-
-            // send data/string over for processing
-            worker.postMessage(str);
+            read_hex_file(str).then((data) => {
+                callback(data);
+            });
         }
 
         function showLoadedHex(filename) {
@@ -576,8 +560,6 @@ firmware_flasher.initialize = function (callback) {
             return output.join('').split('\n');
         }
 
-        const portPickerElement = $('div#port-picker #port');
-
         function flashFirmware(firmware) {
             const options = {};
 
@@ -588,37 +570,33 @@ firmware_flasher.initialize = function (callback) {
                 eraseAll = true;
             }
 
-            if (isWeb()) {
-                // TODO: Currently only web dfu is supported - add support for web serial
-                self.isFlashing = false;
-                return dfu.connect(firmware, options);
-            }
+            const port = PortHandler.portPicker.selectedPort;
+            const isSerial = port.startsWith('serial_');
+            const isDFU = port.startsWith('usb_');
 
-            if (!$('option:selected', portPickerElement).data().isDFU) {
-                if (String(portPickerElement.val()) !== '0') {
-                    const port = String(portPickerElement.val());
+            console.log('Selected port:', port);
 
-                    if ($('input.updating').is(':checked')) {
-                        options.no_reboot = true;
-                    } else {
-                        options.reboot_baud = parseInt($('div#port-picker #baud').val());
-                    }
-
-                    let baud = 115200;
-                    if ($('input.flash_manual_baud').is(':checked')) {
-                        baud = parseInt($('#flash_manual_baud_rate').val());
-                    }
-
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', { filename: self.filename || null });
-
-                    STM32.connect(port, baud, firmware, options);
-                } else {
-                    console.log('Please select valid serial port');
-                    gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
-                }
-            } else {
+            if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'DFU Flashing', { filename: self.filename || null });
-                dfu.connect(firmware, options);
+                DFU.connect(firmware, options);
+            } else if (isSerial) {
+                if ($('input.updating').is(':checked')) {
+                    options.no_reboot = true;
+                } else {
+                    options.reboot_baud = PortHandler.portPicker.selectedBauds;
+                }
+
+                let baud = 115200;
+                if ($('input.flash_manual_baud').is(':checked')) {
+                    baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
+                }
+
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'Flashing', { filename: self.filename || null });
+
+                STM32.connect(port, baud, firmware, options);
+            } else {
+                console.log('Please select valid serial port');
+                gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
             }
 
             self.isFlashing = false;
@@ -945,7 +923,7 @@ firmware_flasher.initialize = function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
                 try {
                     console.log('Closing DFU');
-                    dfu.connect(usbDevices, self.parsed_hex, { exitDfu: true });
+                    DFU.connect(self.parsed_hex, { exitDfu: true });
                 } catch (e) {
                     console.log(`Exiting DFU failed: ${e.message}`);
                 }
@@ -968,12 +946,18 @@ firmware_flasher.initialize = function (callback) {
         detectBoardElement.on('click', () => {
             detectBoardElement.toggleClass('disabled', true);
 
-            self.verifyBoard();
+            /**
+             *
+             *    Auto-detect board and set the dropdown to the correct value
+             */
+
+            if (!GUI.connect_lock) {
+                AutoDetect.verifyBoard(PortHandler.portPicker.selectedPort);
+            }
+
             // prevent spamming the button
             setTimeout(() => detectBoardElement.toggleClass('disabled', false), 2000);
         });
-
-        self.updateDetectBoardButton();
 
         $('a.flash_firmware').on('click', function () {
             self.isFlashing = true;
@@ -994,19 +978,19 @@ firmware_flasher.initialize = function (callback) {
 
             // Backup not available in DFU, manual or virtual mode.
             // When flash on connect is enabled, the backup dialog is not shown.
-            if (self.isSerialPortAvailable() && !isFlashOnConnect) {
+            if (isFlashOnConnect || !(PortHandler.portAvailable || GUI.connect_lock)) {
+                initiateFlashing();
+            } else {
                 GUI.showYesNoDialog(
                     {
                         title: i18n.getMessage('firmwareFlasherRemindBackupTitle'),
                         text: i18n.getMessage('firmwareFlasherRemindBackup'),
                         buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
                         buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
-                        buttonYesCallback: () => firmware_flasher.backupConfig(initiateFlashing),
+                        buttonYesCallback: () => AutoBackup.execute(initiateFlashing),
                         buttonNoCallback: initiateFlashing,
                     },
                 );
-            } else {
-                initiateFlashing();
             }
         });
 
@@ -1112,6 +1096,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (status) {
                 const catch_new_port = function () {
+                    // TODO modify by listen to a new event
                     PortHandler.port_detected('flash_detected_device', function (resultPort) {
                         const port = resultPort[0];
 
@@ -1136,12 +1121,14 @@ firmware_flasher.initialize = function (callback) {
             } else {
                 // Cancel the flash on connect
                 GUI.timeout_remove('initialization_timeout');
-
-                PortHandler.flush_callbacks();
             }
         }).change();
 
         self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+
+        if (PortHandler.dfuAvailable) {
+            $('a.exit_dfu').removeClass('disabled');
+        }
 
         GUI.content_ready(callback);
     }
@@ -1155,361 +1142,11 @@ firmware_flasher.initialize = function (callback) {
 // Helper functions
 
 
-firmware_flasher.isSerialPortAvailable = function() {
-    return PortHandler.port_available && !GUI.connect_lock;
-};
-
-firmware_flasher.updateDetectBoardButton = function() {
-    $('a.detect-board').toggleClass('disabled', !this.isSerialPortAvailable());
-};
-
 firmware_flasher.validateBuildKey = function() {
     return this.cloudBuildKey?.length === 32 && navigator.onLine;
 };
 
-/**
- *
- *    Auto-detect board and set the dropdown to the correct value
- */
-
-firmware_flasher.verifyBoard = function() {
-    const self = this;
-    const isFlashOnConnect = $('input.flash_on_connect').is(':checked');
-    let targetAvailable = false;
-
-    if (!self.isSerialPortAvailable() || isFlashOnConnect) {
-        // return silently as port-picker will trigger again when port becomes available
-        return;
-    }
-
-    function read_serial_adapter(event) {
-        MSP.read(event.detail.buffer);
-    }
-
-    function connectHandler(event) {
-        onConnect(event.detail);
-    }
-
-    function disconnectHandler(event) {
-        onClosed(event.detail);
-    }
-
-    function onClosed(result) {
-        if (result) { // All went as expected
-            gui_log(i18n.getMessage('serialPortClosedOk'));
-        } else { // Something went wrong
-            gui_log(i18n.getMessage('serialPortClosedFail'));
-        }
-        if (!targetAvailable) {
-            gui_log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
-        }
-
-        MSP.clearListeners();
-
-        serial.removeEventListener('receive', read_serial_adapter);
-        serial.removeEventListener('connect', connectHandler);
-        serial.removeEventListener('disconnect', disconnectHandler);
-    }
-
-    function onFinishClose() {
-        const board = FC.CONFIG.boardName;
-
-        if (board) {
-            const boardSelect = $('select[name="board"]');
-            const boardSelectOptions = $('select[name="board"] option');
-            const target = boardSelect.val();
-
-            boardSelectOptions.each((_, e) => {
-                if ($(e).text() === board) {
-                    targetAvailable = true;
-                }
-            });
-
-            if (board !== target) {
-                boardSelect.val(board).trigger('change');
-            }
-
-            gui_log(i18n.getMessage(targetAvailable ? 'firmwareFlasherBoardVerificationSuccess' : 'firmwareFlasherBoardVerficationTargetNotAvailable', { boardName: board }));
-        }
-
-        serial.disconnect(onClosed);
-        MSP.disconnect_cleanup();
-    }
-
-    function requestBoardInformation(onSucces, onFail) {
-        MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
-            gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
-
-            if (FC.CONFIG.apiVersion.includes('null') || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                onFail(); // not supported
-            } else {
-                MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, onSucces);
-            }
-        });
-    }
-
-    function getBoardInfo() {
-        MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                FC.processBuildOptions();
-                self.cloudBuildOptions = FC.CONFIG.buildOptions;
-            }
-            onFinishClose();
-        });
-    }
-
-    function getCloudBuildOptions(options) {
-        // Do not use FC.CONFIG.buildOptions here as the object gets destroyed.
-        self.cloudBuildOptions = options.Request.Options;
-
-        getBoardInfo();
-    }
-
-    async function getBuildInfo() {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === 'BTFL') {
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
-            await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
-            await MSP.promise(MSPCodes.MSP_BUILD_INFO);
-
-            // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
-            self.cloudBuildKey = FC.CONFIG.buildKey;
-
-            // 3/21/2024 is the date when the build key was introduced
-            const supportedDate = new Date('3/21/2024');
-            const buildDate = new Date(FC.CONFIG.buildInfo);
-
-            if (self.validateBuildKey() && (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)) {
-                self.buildApi.requestBuildOptions(self.cloudBuildKey, getCloudBuildOptions, getBoardInfo);
-            } else {
-                getBoardInfo();
-            }
-        } else {
-            getBoardInfo();
-        }
-    }
-
-    function onConnect(openInfo) {
-        if (openInfo) {
-            serial.removeEventListener('receive', read_serial_adapter);
-            serial.addEventListener('receive', read_serial_adapter);
-
-            mspHelper = new MspHelper();
-            MSP.listen(mspHelper.process_data.bind(mspHelper));
-            requestBoardInformation(getBuildInfo, onFinishClose);
-        } else {
-            gui_log(i18n.getMessage('serialPortOpenFail'));
-        }
-    }
-
-    let mspHelper;
-    const port = PortHandler.portPicker.selectedPort;
-    const isLoaded = self.targets ? Object.keys(self.targets).length > 0 : false;
-
-    if (!isLoaded) {
-        console.log('Releases not loaded yet');
-        gui_log(i18n.getMessage('firmwareFlasherNoTargetsLoaded'));
-        return;
-    }
-
-    if (serial.connected || serial.connectionId) {
-        console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId, serial.openCanceled);
-        serial.disconnect();
-        return;
-    }
-
-    gui_log(i18n.getMessage('firmwareFlasherDetectBoardQuery'));
-
-    serial.addEventListener('connect', connectHandler);
-    serial.addEventListener('disconnect', disconnectHandler);
-
-    serial.connect(port, { baudRate: 115200 });
-};
-
-firmware_flasher.getPort = function () {
-    return String($('div#port-picker #port').val());
-};
-
-/**
- *
- * Bacup the current configuration to a file before flashing in serial mode
- */
-
-firmware_flasher.backupConfig = function (callback) {
-    let mspHelper;
-    let cliBuffer = '';
-    let catchOutputCallback = null;
-
-    function readOutput(callback) {
-        catchOutputCallback = callback;
-    }
-
-    function writeOutput(text) {
-        if (catchOutputCallback) {
-            catchOutputCallback(text);
-        }
-    }
-
-    function readSerial(readInfo) {
-        const data = new Uint8Array(readInfo.data);
-
-        for (const charCode of data) {
-            const currentChar = String.fromCharCode(charCode);
-
-            switch (charCode) {
-                case 10:
-                    if (GUI.operating_system === "Windows") {
-                        writeOutput(cliBuffer);
-                        cliBuffer = '';
-                    }
-                    break;
-                case 13:
-                    if (GUI.operating_system !== "Windows") {
-                        writeOutput(cliBuffer);
-                        cliBuffer = '';
-                    }
-                    break;
-                default:
-                    cliBuffer += currentChar;
-            }
-        }
-    }
-
-    function activateCliMode() {
-        return new Promise(resolve => {
-            const bufferOut = new ArrayBuffer(1);
-            const bufView = new Uint8Array(bufferOut);
-
-            cliBuffer = '';
-            bufView[0] = 0x23;
-
-            serial.send(bufferOut);
-
-            GUI.timeout_add('enter_cli_mode_done', () => {
-                resolve();
-            }, 500);
-        });
-    }
-
-    function sendSerial(line, callback) {
-        const bufferOut = new ArrayBuffer(line.length);
-        const bufView = new Uint8Array(bufferOut);
-
-        for (let cKey = 0; cKey < line.length; cKey++) {
-            bufView[cKey] = line.charCodeAt(cKey);
-        }
-
-        serial.send(bufferOut, callback);
-    }
-
-    function sendCommand(line, callback) {
-        sendSerial(`${line}\n`, callback);
-    }
-
-    function readCommand() {
-        let timeStamp = performance.now();
-        const output = [];
-        const commandInterval = "COMMAND_INTERVAL";
-
-        readOutput(str => {
-            timeStamp = performance.now();
-            output.push(str);
-        });
-
-        sendCommand("diff all defaults");
-
-        return new Promise(resolve => {
-            GUI.interval_add(commandInterval, () => {
-                const currentTime = performance.now();
-                if (currentTime - timeStamp > 500) {
-                    catchOutputCallback = null;
-                    GUI.interval_remove(commandInterval);
-                    resolve(output);
-                }
-            }, 500, false);
-        });
-    }
-
-    function onFinishClose() {
-        MSP.clearListeners();
-
-        // Include timeout in count
-        let count = 15;
-        // Allow reboot after CLI exit
-        const waitOnReboot = () => {
-            const disconnect = setInterval(function() {
-                if (PortHandler.port_available) {
-                    console.log(`Connection ready for flashing in ${count / 10} seconds`);
-                    clearInterval(disconnect);
-                    if (callback) {
-                        callback();
-                    }
-                }
-                count++;
-            }, 100);
-        };
-
-        // PortHandler has a 500ms timer - so triple for safety
-        setTimeout(waitOnReboot, 1500);
-    }
-
-    function onClose() {
-        serial.disconnect(onFinishClose);
-        MSP.disconnect_cleanup();
-    }
-
-    function onSaveConfig() {
-
-        activateCliMode()
-        .then(readCommand)
-        .then(output => {
-            const prefix = 'cli_backup';
-            const suffix = 'txt';
-            const text = output.join("\n");
-            const filename = generateFilename(prefix, suffix);
-
-            FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
-            .then((file) => {
-                console.log("Saving config to:", file.name);
-                FileSystem.writeFile(file, text);
-            })
-            .catch((error) => {
-                console.error("Error saving config:", error);
-            });
-        })
-        .then(() => sendCommand("exit", onClose));
-    }
-
-    function onConnect(openInfo) {
-        if (openInfo) {
-            mspHelper = new MspHelper();
-            serial.onReceive.addListener(readSerial);
-            MSP.listen(mspHelper.process_data.bind(mspHelper));
-
-            onSaveConfig();
-        } else {
-            gui_log(i18n.getMessage('serialPortOpenFail'));
-
-            if (callback) {
-                callback();
-            }
-        }
-    }
-
-    const port = this.getPort();
-
-    if (port !== '0') {
-        const baud = parseInt($('#flash_manual_baud_rate').val()) || 115200;
-        serial.connect(port, {bitrate: baud}, onConnect);
-    } else {
-        gui_log(i18n.getMessage('firmwareFlasherNoPortSelected'));
-    }
-};
-
-
-
 firmware_flasher.cleanup = function (callback) {
-    PortHandler.flush_callbacks();
-
     // unbind "global" events
     $(document).unbind('keypress');
     $(document).off('click', 'span.progressLabel a');
@@ -1550,20 +1187,22 @@ firmware_flasher.refresh = function (callback) {
     });
 };
 
-firmware_flasher.showDialogVerifyBoard = function (selected, verified, onAbort, onAccept) {
+firmware_flasher.showDialogVerifyBoard = function (selected, verified, onAccept, onAbort) {
     const dialogVerifyBoard = $('#dialog-verify-board')[0];
 
     $('#dialog-verify-board-content').html(i18n.getMessage('firmwareFlasherVerifyBoard', {selected_board: selected, verified_board: verified}));
 
     if (!dialogVerifyBoard.hasAttribute('open')) {
         dialogVerifyBoard.showModal();
-        $('#dialog-verify-board-abort-confirmbtn').click(function() {
-            dialogVerifyBoard.close();
-            onAbort();
-        });
-        $('#dialog-verify-board-continue-confirmbtn').click(function() {
+
+        $('#dialog-verify-board-continue-confirmbtn').on('click', function() {
             dialogVerifyBoard.close();
             onAccept();
+        });
+
+        $('#dialog-verify-board-abort-confirmbtn').on('click', function() {
+            dialogVerifyBoard.close();
+            onAbort();
         });
     }
 };

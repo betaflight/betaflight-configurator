@@ -28,7 +28,8 @@
         ></betaflight-logo>
         <port-picker
             v-model="PortHandler.portPicker"
-            :connected-devices="PortHandler.currentPorts"
+            :connected-serial-devices="PortHandler.currentSerialPorts"
+            :connected-usb-devices="PortHandler.currentUsbPorts"
             :show-virtual-option="PortHandler.showVirtualMode"
             :show-manual-option="PortHandler.showManualMode"
             :disabled="PortHandler.portPickerDisabled"

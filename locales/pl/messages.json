@@ -49,6 +49,10 @@
     "disconnect": {
         "message": "Rozłącz"
     },
+    "portsSelectNoSelection": {
+        "message": "Wybierz swoje urządzenie",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Wybór ręczny"
     },
@@ -112,10 +116,6 @@
     "showAllSerialDevices": {
         "message": "Pokaż wszystkie urządzenia szeregowe (dla producentów lub deweloperów)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
-    },
-    "useMdnsBrowser": {
-        "message": "Użyj wykrywania urządzeń w przeglądarce mDNS w sieci (eksperymentalne)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
     },
     "showManualMode": {
         "message": "Włącz tryb ręczny połączenia",
@@ -305,6 +305,10 @@
     },
     "logActionShow": {
         "message": "Pokaż logi"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} pliki",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Błąd połączenia szeregowego: zła ramka"
@@ -730,12 +734,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Uruchomienie <strong>boot loadera \/ DFU<\/strong>."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Kopia zapasowa została <span class=\"message-positive\">zapisana<\/span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Kopia zapasowa została <span class=\"message-positive\">przywrócona<\/span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Resetuj oś Z, położenie: 0 stopni"
     },
@@ -977,7 +975,7 @@
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
-        "message": "Protokół DSHOT nie działa prawidłowo i nie można sterować silnikami. Prawdopodobnie jest to spowodowane konfliktem z innymi funkcjami włączonymi na kontrolerze lotu.",
+        "message": "Protokół DSHOT nie działa prawidłowo i nie można sterować silnikami. Prawdopodobnie jest to spowodowane konfliktem z innymi funkcjami włączonymi w kontrolerze lotu.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
@@ -1192,7 +1190,7 @@
         "message": "Wyłącz na stałe"
     },
     "featureANTI_GRAVITYTip": {
-        "message": "Jeśli ta opcja jest wyłączona, tryb anty-grawitacja może być włączany za pomocą przełącznika."
+        "message": "Jeśli ta opcja jest wyłączona, tryb ANTI GRAVITY może być włączany za pomocą przełącznika."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamiczny filtr Notch dla żyroskopu"
@@ -1315,13 +1313,13 @@
         "message": "Opcja ta jest używana aby kamera FPV podczas lotów nie brudziła się oraz żeby kurz i inne zanieczyszczenia nie były wdmuchiwane na kontroler lotu. Należy zadbać aby kierunek obrotów silników został odpowiednio odwrócony a śmigła odpowiednio założone.<strong>Ostrzeżenie:<\/strong> Nie zmienia to kierunku obrotów silnika. Użyj narzędzia do konfiguracji swoich ESC lub zamień kolejność przewodów silnika aby to osiągnąć. Upewnij się również bez założonych śmigieł że silniki kręcą się w kierunku jak na grafice powyżej przed próbą uzbrajania."
     },
     "configurationAutoDisarmDelay": {
-        "message": "Rozbrojenie silników po ustawionym czasie [sekundy] (Wymaga uruchomienia MOTOR_STOP)"
+        "message": "Rozbrojenie silników po opóźnieniu [sekundy]"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Rozbrojenie silników niezależnie od wartości przepustnicy (Gdy ARM jest skonfigurowane w zakładce Tryby przez kanał AUX)"
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Rozbrojenie silników po ustawionym czasie [sekundy] (Wymaga funkcji MOTOR_STOP)"
     },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Uzbrojenie jest zawsze wyłączone, gdy przepustnica nie jest nisko. Bądź ostrożny, ponieważ możesz przypadkowo rozbroić przez przełącznik podczas lotu, gdy ta opcja jest aktywna."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Skalibruj żyroskop przy pierwszym uzbrojeniu"
     },
     "configurationDigitalIdlePercent": {
         "message": "Dynamiczny bieg jałowy( %)"
@@ -1708,14 +1706,11 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "Przeciw grawitacja zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w maszynach o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
+        "message": "Anti Gravity zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w jednostkach latających o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
     },
     "pidTuningDMin": {
         "message": "<b>D<\/b>pochodna",
         "description": "Table header of the D Min feature in the PIDs tab"
-    },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Uwaga:<\/strong> funkcja D Min jest wyłączona, a jej parametry są ukryte. Aby użyć funkcji D Min, włącz ją w $t(pidTuningPidSettings.message)."
     },
     "pidTuningDMinFeatureTitle": {
         "message": "Ustawienia dynamicznego tłumienia \/ D Max",
@@ -1791,9 +1786,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtr"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Typ wykorzystywanego wygładzania RC"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Częstotliwość odcięcia w Hz używana przez filtr wejściowy. Stosowanie niższych wartości spowoduje płynniejsze wejście i jest bardziej odpowiednie dla protokołów wolniejszego odbiornika. Większość użytkowników powinna zostawić to na 0 co odpowiada \"Auto\"."
     },
@@ -1802,12 +1794,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanały do których odnosi się wygładzanie"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "Rodzaj metody filtrowania stosowanej do pochodnej wartości zadanej. Począwszy od Cleanflight 4.2 zalecana jest domyślna wartość „Auto”. W wersji 4.1 i wcześniejszych większość użytkowników powinna używać domyślnej wartości „BIQUAD”, ponieważ zapewnia ona dobrą równowagę między płynnością a opóźnieniem. „PT1” nieznacznie zmniejsza opóźnienie, ale zapewnia mniej wygładzania."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "Rodzaj metody filtrowania zastosowany dla danych wejściowych. Większość użytkowników powinna używać domyślnej wartości „BIQUAD”, ponieważ zapewnia ona równowagę między płynnością a opóźnieniem. „PT1” nieznacznie zmniejsza opóźnienie, ale zapewnia mniej wygładzania."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Wybiera, czy częstotliwość odcięcia filtra wejściowego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, takich jak Crossfire które mogą zmieniać się w locie."
@@ -1821,47 +1807,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Częstotliwość odcięcia kanału"
     },
-    "receiverRcSetpointType": {
-        "message": "Typ filtra wejściowego"
-    },
     "receiverRcFeedforwardType": {
         "message": "Typ filtru Feedforward"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Wyłączony"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Kanały wygładzone"
-    },
-    "receiverRcInterpolation": {
-        "message": "Interpolacja RC"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "Systemy RC TX\/RX nie są nie szybkie jak pętle PID. Oznacza to, że pętla PID ma luki w strumieniu informacji z systemów RC. Opcja ta umożliwia interpolację danych wejścowych z odbiornika w czasie, gdy nie odebrano danych. Opcja ta zapewnia również bardziej płynne zachowanie P i D, ponieważ nie ma skoków wartości w danych wejściowych dzięki interpolacji."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interwał interpolacji w milisekundach (dla ręcznych ustawień interpolacji)"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Wyłączony"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Typ wygładzania"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Wstępne"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Automatycznie"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Ręcznie"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "Interwał interpolacji RC [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Typ wygładzania"
@@ -2472,18 +2422,6 @@
     "adjustmentsHelp": {
         "message": "Skonfiguruj przełączniki regulacji. Szczegółowe informacje można znaleźć w sekcji „Korekty podczas lotu”. Zmiany wprowadzone przez funkcje regulacji nie są zapisywane automatycznie."
     },
-    "adjustmentSlotsHelp": {
-        "message": "Istnieją 4 automaty. Użycie przełącznika podczas gdy inny jest w użyciu wymaga wyłączenia automatu."
-    },
-    "adjustmentsExamples": {
-        "message": "Przykłady:"
-    },
-    "adjustmentsExample1": {
-        "message": "Użyj trzypozycyjnego przełącznika na AUX1, aby wybrać pomiędzy Pitch\/Roll P, I i D oraz innego trzypozycyjnego przełącznika na AUX2, aby zwiększyć lub zmniejszyć wartość, gdy jest ustawiony w górę lub w dół."
-    },
-    "adjustmentsExample2": {
-        "message": "Użyj przełącznika trójpozycyjnego na AUX4, aby wybrać opcję włączenia Rate profilu za pomocą tego samego przełącznika trójpozycyjnego na tym samym kanale."
-    },
     "adjustmentsColumnEnable": {
         "message": "Jeśli włączone"
     },
@@ -2943,7 +2881,7 @@
         "message": "Główny"
     },
     "motorsNotice": {
-        "message": "<strong>Tryb testowy silnika \/ Uwaga dotycząca uzbrojenia:<\/strong><br \/><br \/><strong class=\"message-negative\"> Poważne ryzyko obrażeń! Usuń wszystkie śmigła!<\/strong><br \/><br \/><ul><li>&#x2022; Przesunięcie suwaków do góry lub uzbrojenie jednostki latającej z nadajnika RC spowoduje włączenie się silników.<\/li><li>&#x2022; Tryb testu silnika pozostanie aktywny nawet po przejściu na inną zakładkę.<\/li><li>&#x2022; Naciśnięcie dowolnego klawisza zatrzyma silniki, ale tylko w zakładce Silniki.<\/li><li>&#x2022; Odłączenie kabla USB może nie zatrzymać silników!<\/li><\/ul>"
+        "message": "<strong>Tryb testowy silnika \/ Uwaga dotycząca uzbrojenia:<\/strong><br \/><br \/><strong class=\"message-negative\"> Poważne ryzyko obrażeń! Usuń wszystkie śmigła!<\/strong><br \/><br \/><ul><li>&#x2022; Przesunięcie suwaków do góry lub uzbrojenie jednostki latającej z nadajnika RC spowoduje włączenie się silników.<\/li><li>&#x2022; Tryb testu silnika pozostanie aktywny nawet po przejściu na inną zakładkę.<\/li><li>&#x2022; Naciśnięcie dowolnego klawisza zatrzyma silniki, ale tylko gdy znajdujesz się w zakładce Silniki.<\/li><li>&#x2022; Odłączenie kabla USB może nie zatrzymać silników!<\/li><\/ul>"
     },
     "motorsEnableControl": {
         "message": "<strong> ROZUMIEM ZAGROŻENIA <\/strong>"
@@ -3563,6 +3501,9 @@
     },
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Nie wybrano oprogramowaniedo załadowania<\/b>"
+    },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "Nie załadowano"
     },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Wybierz prawidłowy port szeregowy<\/span>"
@@ -4184,30 +4125,6 @@
         "message": "Równomiernie zwiększa wszystkie parametry PID. Nie zmieniaj tego suwaka, chyba że zabraknie regulacji na innych suwakach. Zazwyczaj jest to potrzebne tylko w przypadku quadów o niskim autorytecie lub wysokim momencie bezwładności (MoI), takich jak konstrukcje klasy X lub cinelifter. Zbyt duże wzmocnienie mastera może powodować oscylacje trylujące lub gorące silniki.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "Balans PD:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Relatywnie wysokie D-term tłumi reakcje drążka i może powodować grzanie się silników, ale powinno pomóc kontrolować oscylacje P-term oraz poprawić stabilizacje. <br \/> <br \/> Relatywnie niske D-term zapewnia szybszą reakcję drążka, ale może powodować pogorszenie stabilizacji i reagowanie na siły zewnętrzne (wiatr).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "Wzmocnienie P i D:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Niskie wzmocnienie P i D może powodować większe oscylacje typu \"propwash\" w silnikach. Zbyt niska wartość wzmocnienia tych parametrów może powodować niestabilność quada. <br\/><br\/> Parametry P i D działają w parze w celu minimalizacji \"propwash\".<br\/><br\/> Wysokie wartości tych parametrów mogą powodować grzanie się silników poprzez duże oscylacje wysterowania silnika które mogą wystąpić podczas lotu na wprost co jest powodowane wysokim parametrem D.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Wzmocnienie reakcji na drążek:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Niższe wartości FF pogorszą reakcję drążka i mogą skutkować powolnym odbiciem pod koniec przewrotu lub przewrotu z powodu zbyt dużego opóźnienia quada w stosunku do drążków i zakończenia I-termu i wywołania „odbicia I-termu”.<br \/> <br \/>Wyższe wartości FF dadzą szybszą reakcję drążka w ostrych ruchach. Zbyt wysokie wartości FF mogą powodować przeregulowanie i szybkie odbicie na końcu przewrotu lub rzutu.<br \/><br \/>Uwaga:<br \/>Funkcja I-term Relax może powstrzymać I-term przed zwijaniem się na drążku ruch dla quadów o niskim autorytecie lub jeśli używane są niskie przyrosty reakcji drążka.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Tłumienie:<br \/><i><small>Wzmocnienia D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4289,17 +4206,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Rodzaj filtru"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Filtr dynamiczny żyroskopowy dolnoprzepustowy"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Min. częstotliwość odcięcia [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Maks. częstotl. odcięcia [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Typ Dynamicznego dolnoprzepustowego filtru 1 dla żyroskopu"
     },
     "pidTuningGyroLowpass2": {
         "message": "Dolna granica żyroskopu 2"
@@ -4359,9 +4270,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Zakres filtra dynamicznego:"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Procent szerokości dynamicznego wycięcia"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Współczynnik Q"
     },
@@ -4376,9 +4284,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Równanie dynamiczne ma trzy zakresy częstotliwości, w których może działać: NISKIE (80-330hz) dla gorzej odwołujących się quadów na śmigłach 6 cali i eięcej, ŚREDNIE (140-550hz) dla normalnego qada o długości śmigieł 5 cali, WYSOKIE (230-800hz) dla bardzo małych 2-3 calowych quadów. Opcja AUTO wybiera zakres w zależności od wartości maksymalnej częstotliwości dolnoprzepustowego filtra żyroskopu."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Ustawia szerokość między dwoma dynamicznymi filtrami wycinającymi. Ustawienie go na 0 spowoduje wyłączenie drugiego filtra z wycięciem dynamicznym i skróci opóźnienie filtra, jednak może spowodować wzrost temperatury silników."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Współczynnik Q dostosowuje szerokość charakterystyki filtra dynamicznego. Wyższa wartość sprawia, że pasmo aktywne filtra jest wąskie i dokładniejsze, a niższa wartość daje szerszą strefę aktywną. Używanie naprawdę niskiej wartości znacznie zwiększy opóźnienie filtra (więcej obliczeń)."
@@ -4448,14 +4353,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Typ filtra"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "D Term filtr dolnoprzepustowy dynamiczny"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Ekspres Krzywej Dynamicznej"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Typ filtru dynamicznego"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtr wycinający D term"
@@ -4476,7 +4375,7 @@
         "message": "Zwiększa wartości PID, aby zrekompensować spadek Vbat. Zapewni to bardziej stałą charakterystykę podczas całego lotu. Zastosowana rekompensata jest obliczana na podstawie wartości $t(powerBatteryMaximum.message) ustawionej na stronie $t(tabPower.message), więc upewnij się, że jest ustawiona tak jak byś tego chciał."
     },
     "pidTuningVbatSagCompensation": {
-        "message": "Kompensacja opadania napięcia baterii"
+        "message": "Kompensacja spadku napięcia baterii"
     },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br \/><br \/>Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br \/><br \/>Odwiedź <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/4.2-Tuning-Notes#dynamic-battery-sag-compensation \"target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki<\/a>, aby uzyskać więcej informacji."
@@ -4569,7 +4468,7 @@
         "message": "Limit kąta trybu treningowego akrobatycznego"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Pomaga pilotom nauczyć się latać w trybie acro, ograniczając kąt, pod jakim quad może się poruszać. Dopuszczalne wartości graniczne to 10-80 stopni. Tryb musi być aktywowany za pomocą przełącznika w zakładce $t(tabAuxiliary.message)."
+        "message": "Pomaga nauczyć się latać w trybie acro, ograniczając kąt, pod jakim jednostka latająca  może się poruszać. Dopuszczalne wartości graniczne to 10-80 stopni. Tryb musi być aktywowany za pomocą przełącznika w zakładce $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Zintegrowane odchylenie Yaw"
@@ -4686,7 +4585,7 @@
         "message": "Wysokość powrotna (w metrach) - <strong>ma zastosowanie tylko w trybie stałej wysokości<\/strong>"
     },
     "failsafeGpsRescueItemAscendRate": {
-        "message": "Prędkość wznoszenia (metry\/sekundę)"
+        "message": "Prędkość wznoszenia (metry\/sekunde)"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Prędkość względem ziemi (metry\/sekunde)"
@@ -4701,7 +4600,7 @@
         "message": "Długość zniżania (metry)"
     },
     "failsafeGpsRescueItemDescendRate": {
-        "message": "Prędkość opadania (metry\/sekundę)"
+        "message": "Prędkość opadania (metry\/sekunde)"
     },
     "failsafeGpsRescueDescendRateHelp": {
         "message": "Początkowa prędkość opadania jest ustawiana na 3-krotność tej wartości i zmniejsza się do ustawionej wartości na wysokości lądowania."
@@ -5077,7 +4976,7 @@
         "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
     },
     "osdSetupPreviewForTitle": {
-        "message": "Zmiana profilu lub czcionki w tym oknie NIE zmieni profilu lub czcionki w kontrolerze lotu, zmiana ma wpływ tylko na okno podglądu. Jeśli chcesz zmienić te ustawienia w kontrolerze, musisz użyć opcji$t(osdSetupSelectedProfileTitle.message)' lub przycisku '$t(osdSetupFontManager.message)'.",
+        "message": "Zmiana profilu lub czcionki w tym oknie NIE zmieni profilu ani czcionki w kontrolerze lotu, zmiana ma wpływ tylko na okno podglądu. Jeśli chcesz zmienić te ustawienia w kontrolerze, musisz użyć opcji$t(osdSetupSelectedProfileTitle.message)' lub przycisku '$t(osdSetupFontManager.message)'.",
         "description": "Help content for the OSD profile and font PREVIEW"
     },
     "osdSetupSelectedProfileTitle": {
@@ -6716,9 +6615,6 @@
         "message": "Protokół ESC \/Silnika"
     },
     "configurationEscProtocolHelp": {
-        "message": "Wybierz protokół dla silników<br>Upewnij się że dany protokół jest wspierany przez twoje ESC, informacja o tym powinna być dostępna na stronie twórcy.<br><b>Bądź ostrożny używając DSHOT900 i DSHOT1200 ponieważ nie jest wspierany przez wszystkie ESC<\/b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "Wybierz protokół silnika. <br> Upewnij się, że protokół jest obsługiwany przez ESC które używasz, informacja ta powinna znajdować się na stronie producenta."
     },
     "configurationunsyndePwm": {
@@ -6805,13 +6701,13 @@
         "message": "Profil"
     },
     "pidTuningProfileTip": {
-        "message": "W kontrolerze lotu można zapisać do 3 (a w niektórych kontrolerach 2) różnych profili Pid. Profile zawierają ustawienia Pid, wartości zadane i ustawienia Kąt\/Horyzont. W terenie można przełączać się między profilami za pomocą aparatury Rc (patrz instrukcje online). Lub za pomocą Osd."
+        "message": "W kontrolerze lotu można zapisać do 3 (a w niektórych kontrolerach 2) różnych profili Pid. Profile zawierają ustawienia Pid, wartości zadane i ustawienia Kąt\/Horyzont. Będąc w terenie, można używać prostych poleceń drążka i przełączać się między profilami za pomocą aparatury Rc (patrz instrukcje online)."
     },
     "pidTuningRateProfile": {
         "message": "Profil Rate"
     },
     "pidTuningRateProfileTip": {
-        "message": "W kontrolerze lotu można przechowywać do 3 różnych profili. Zawierają one ustawienia RC Rate, Rate, RC Expo, Throle oraz TPA. Przełączanie między profilami jest możliwe podczas lotu, poprzez ustawienie 3-pozycyjnego przełącznika w zakładce „Korekty”."
+        "message": "W kontrolerze lotu można przechowywać do 3 różnych profili. Zawierają one ustawienia RC Rate, Rate, RC Expo, Throle oraz TPA. Przełączanie między profilami jest możliwe podczas lotu, poprzez ustawienie 3-pozycyjnego przełącznika w zakładce „Regulacja”."
     },
     "pidTuningRateSetup": {
         "message": "Podstawowy\/Acro Rates"
@@ -6932,7 +6828,7 @@
         "message": "Włącz ciemny motyw"
     },
     "pidTuningRatesType": {
-        "message": "Profil szybkości(rates)"
+        "message": "Profil szybkości (Rates)"
     },
     "pidTuningRatesTypeTip": {
         "message": "Zmiana typu szybkości zmieni krzywą szybkości i sposób jej ustawienia"
@@ -6955,11 +6851,14 @@
     "pidTuningRcRateActual": {
         "message": "Czułość środkowa"
     },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Centralna-Max Czułość"
+    },
     "dialogRatesTypeTitle": {
-        "message": "Zmiana profilu szybkości(rates)"
+        "message": "Zmiana profilu szybkości (Rates)"
     },
     "dialogRatesTypeNote": {
-        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Zmieniasz profil szybkości(rates).<\/b><\/span> Jeśli zmienisz profil szybkości, twoje aktualne profile zostaną zastąpione domyślną charakterystyką."
+        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Zmieniasz profil szybkości (Rates).<\/b><\/span> Jeśli zmienisz profil szybkości, twoje aktualne profile zostaną zastąpione domyślną charakterystyką."
     },
     "dialogRatesTypeConfirm": {
         "message": "Zmień"

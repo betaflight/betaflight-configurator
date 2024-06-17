@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { set as setConfig } from '../../js/ConfigStorage';
+
 export default {
     props: {
         isManual: {
