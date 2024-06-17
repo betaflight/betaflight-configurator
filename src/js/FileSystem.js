@@ -77,28 +77,28 @@ class FileSystem {
         const fileHandle = file._fileHandle;
 
         const fileReader = await fileHandle.getFile();
-        return fileReader.text();
+        return await fileReader.text();
     }
 
     async readFileAsBlob(file) {
         const fileHandle = file._fileHandle;
 
-        return fileHandle.getFile();
+        return await fileHandle.getFile();
     }
 
     async openFile(file) {
         const fileHandle = file._fileHandle;
 
         const options = { keepExistingData: false };
-        return fileHandle.createWritable(options);
+        return await fileHandle.createWritable(options);
     }
 
     async writeChunck(writable, chunk) {
-        return writable.write(chunk);
+        await writable.write(chunk);
     }
 
     async closeFile(writable) {
-        return writable.close();
+        await writable.close();
     }
 }
 
