@@ -987,7 +987,15 @@ firmware_flasher.initialize = function (callback) {
                         text: i18n.getMessage('firmwareFlasherRemindBackup'),
                         buttonYesText: i18n.getMessage('firmwareFlasherBackup'),
                         buttonNoText: i18n.getMessage('firmwareFlasherBackupIgnore'),
-                        buttonYesCallback: () => AutoBackup.execute(initiateFlashing),
+                        buttonYesCallback: () => {
+                            // prevent connection while backup is in progress
+                            GUI.connect_lock = true;
+                            AutoBackup.execute(() => {
+                                GUI.connect_lock = false;
+                                initiateFlashing();
+                            });
+                        },
+
                         buttonNoCallback: initiateFlashing,
                     },
                 );

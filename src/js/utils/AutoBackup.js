@@ -51,17 +51,16 @@ class AutoBackup {
         serial.disconnect();
     }
 
-    async save() {
+    async save(data) {
         console.log('Saving backup');
         const prefix = 'cli_backup';
         const suffix = 'txt';
-        const text = this.outputHistory;
         const filename = generateFilename(prefix, suffix);
 
         FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', { types: suffix.toUpperCase() }), `.${suffix}`)
         .then((file) => {
             console.log("Saving config to:", file.name);
-            FileSystem.writeFile(file, text);
+            FileSystem.writeFile(file, data);
         })
         .catch((error) => {
             console.error("Error saving config:", error);
@@ -81,7 +80,9 @@ class AutoBackup {
 
         setTimeout(async () => {
             this.sendCommand("exit", this.onClose);
-            await this.save(this.outputHistory);
+            // remove the command from the output
+            const data = this.outputHistory.split("\n").slice(1).join("\n");
+            await this.save(data);
         }, 1500);
     }
 
