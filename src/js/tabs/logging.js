@@ -1,8 +1,7 @@
-import { millitime, bytesToSize, checkChromeRuntimeError } from '../utils/common.js';
+import { millitime } from '../utils/common.js';
 import GUI, { TABS } from '../gui';
 import { generateFilename } from '../utils/generate_filename.js';
 import { i18n } from '../localization';
-import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import FC from '../fc.js';
 import FileSystem from '../FileSystem';
 import MSP from '../msp.js';
@@ -77,6 +76,15 @@ logging.initialize = function (callback) {
                                 }
                             };
 
+                            function writeData() {
+                                if (logBuffer.length) { // only execute when there is actual data to write
+                                    append_to_file(logBuffer.join('\n'));
+
+                                    $('.samples').text(samples += logBuffer.length);
+
+                                    logBuffer = [];
+                                }
+                            }
                             console.log("Opening file: ", logging.fileEntry.name);
                             FileSystem.openFile(logging.fileEntry).then((writer) => {
                                 logging.fileWriter = writer;
@@ -85,15 +93,7 @@ logging.initialize = function (callback) {
                                 print_head();
 
                                 GUI.interval_add('log_data_poll', logDataPoll, parseInt($('select.speed').val()), true); // refresh rate goes here
-                                GUI.interval_add('write_data', function write_data() {
-                                    if (logBuffer.length) { // only execute when there is actual data to write
-                                        append_to_file(logBuffer.join('\n'));
-
-                                        $('.samples').text(samples += logBuffer.length);
-
-                                        logBuffer = [];
-                                    }
-                                }, 1000);
+                                GUI.interval_add('write_data', writeData, 1000);
 
                                 $('.speed').prop('disabled', true);
                                 $(this).text(i18n.getMessage('loggingStop'));

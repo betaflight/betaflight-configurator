@@ -86,10 +86,10 @@ class FileSystem {
         return fileHandle.getFile();
     }
 
-    async openFile(file, append) {
+    async openFile(file) {
         const fileHandle = file._fileHandle;
 
-        const options = { keepExistingData: append || false };
+        const options = { keepExistingData: false };
         return fileHandle.createWritable(options);
     }
 
