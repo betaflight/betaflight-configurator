@@ -1318,14 +1318,8 @@
     "receiverRcSmoothingFilter": {
         "message": "濾波器"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "使用 RC 平滑的類型"
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "適用平滑的通道"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "平滑通道"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D 設定點轉換閥值"

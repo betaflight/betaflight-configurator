@@ -1782,9 +1782,6 @@
     "receiverRcSmoothingFilter": {
         "message": "フィルター"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "使用するRCスムージングタイプ"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "セットポイントフィルターで使用されるカットオフ周波数(Hz)。値を小さくすると入力信号がスムーズとなり、受信機プロトコルの通信が遅延する際に適切に設定できます。ほとんどのユーザーは、「自動」となる0としてください。"
     },
@@ -1793,12 +1790,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "適用するスムージングチャンネル"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "フィードフォワードに使用されるフィルタリング方法のタイプ。BF4.2以降、デフォルト値の『自動』が推奨されます。BF4.1以前の場合、ほとんどのユーザはスムーズさと遅延のバランスが良いため、デフォルト値の『BIQUAD』の使用してください。『PT1』は遅延をわずかに減少させますが、スムーズさは弱くなります。"
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "セットポイントで使用されるフィルタリング方法のタイプ。ほとんどのユーザは、スムーズさと遅延のバランスが良いため、デフォルト値の『BIQUAD』を使用してください。『PT1』は遅延をわずかに減少させますが、スムーズさは弱くなります。"
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "セットポイントフィルターカットオフ周波数を自動計算する(推奨)か、ユーザ手動選択するかを設定します。「手動」を使用する場合、飛行中にパラメータを変更できるCrossfireのような受信プロトコルにはお勧めできません。"
@@ -1812,20 +1803,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "フィードフォワード カットオフ 周波数"
     },
-    "receiverRcSetpointType": {
-        "message": "セットポイント フィルタータイプ"
-    },
     "receiverRcFeedforwardType": {
         "message": "フィードフォワード フィルタータイプ"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "OFF"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "自動"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "スムージングチャンネル"
     },
     "receiverRcSmoothingMode": {
         "message": "スムージングモード"

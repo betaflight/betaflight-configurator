@@ -1782,9 +1782,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtro"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Tipo de suavização de RC usada"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Frequência de corte em Hz usada pelo filtro setpoint. Utilizar valores mais baixos resultará em inputs mais suaves e são mais apropriados para protocolos de recetor mais lentos. A maioria dos utilizadores deve deixar isto a 0, correspondendo ao \"Auto\"."
     },
@@ -1793,12 +1790,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Os canais de suavização aplicam-se a"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "O tipo de método de filtragem usado para o feedforward. Começando com a 4.2 o valor padrão de \"Auto\" é recomendado. Para a 4.1 e anteriores a maioria dos utilizadores devem usar o valor padrão \"BIQUAD\", pois fornece um bom equilíbrio entre suavidade e atraso. \"PT1\" reduz ligeiramente o atraso, mas fornece menos suavidade."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "O tipo de método de filtragem usado para o setpoint. A maioria dos utilizadores deve usar o valor padrão \"BIQUAD\", pois fornece um bom equilíbrio entre suavidade e atraso. \"PT1\" reduz ligeiramente o atraso, mas fornece menos suavidade."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Seleciona se a frequência de corte do filtro de setpoint é calculada automaticamente (recomendado) ou manualmente selecionada pelo utilizador. Usar \"Manual\" não é recomendado para protocolos de recetor como Crossfire que podem mudar durante o voo."
@@ -1812,20 +1803,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Frequência de corte Feedforward"
     },
-    "receiverRcSetpointType": {
-        "message": "Tipo do filtro Setpoint"
-    },
     "receiverRcFeedforwardType": {
         "message": "Tipo de filtro Feedforward"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Desligado"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Canais suavizados"
     },
     "receiverRcSmoothingMode": {
         "message": "Modo de Suavização"
@@ -4481,6 +4463,9 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limite de Ângulo Treinador Acro"
     },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Ajuda os pilotos a aprenderem a voar no modo acro limitando o ângulo que o quad pode atingir. Limites válidos são entre 10-80 graus. O modo deve ser ativado com um interruptor na aba $t(tabAuxiliary.message)."
+    },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
     },
@@ -6163,6 +6148,10 @@
         "message": "Qualidade da Ligação",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Armar desativado",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6288,6 +6277,14 @@
     },
     "osdWarningRSNR": {
         "message": "Alerta quando o valor RSNR está abaixo da definição do alarme"
+    },
+    "osdWarningTextLoad": {
+        "message": "CARREGAR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Avisa se a CARGA de CPU do controlador de voo é muito alta",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"

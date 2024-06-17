@@ -1776,9 +1776,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filter"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Anvendt RC udjævningstype"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtagerprotokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
     },
@@ -1787,12 +1784,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanaludjævningen gælder for"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "Filtreringsmetoden, der benyttes til det afledte setpoint. De fleste brugere bør bruge standardværdien \"BIQUAD\", da den giver en god balance mellem jævnhed og forsinkelse. \"PT1\" reducerer forsinkelsen lidt, men giver mindre udjævning."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "Filtreringsmetoden, der benyttes til indput. De fleste brugere bør bruge standardværdien \"BIQUAD\", da den giver en god balance mellem jævnhed og forsinkelse. \"PT1\" reducerer forsinkelsen lidt, men giver mindre udjævning."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Vælger, om inputfilter afskæringsfrekvensen beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, da den kan ændre sig under flyvning."
@@ -1806,20 +1797,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Cutoff frekvens"
     },
-    "receiverRcSetpointType": {
-        "message": "Setpoint filtertype"
-    },
     "receiverRcFeedforwardType": {
         "message": "Feedforward filtertype"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Fra"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Kanaler udjævnet"
     },
     "receiverRcSmoothingMode": {
         "message": "Anvend udjævning"
@@ -6160,6 +6142,10 @@
         "message": "Link kvalitet",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Aktivering slået fra",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6285,6 +6271,10 @@
     },
     "osdWarningRSNR": {
         "message": "Advar når RSNR værdi kommer under grænseværdi"
+    },
+    "osdWarningLoad": {
+        "message": "Advarelse hvis FC CPU LOAD er for højt",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "Ukendt $1"

@@ -1336,14 +1336,8 @@
     "receiverRcSmoothingFilter": {
         "message": "Iragazkia"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Erabilitako RC leuntze mota"
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Leuntzea aplikatzeko kanalak"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Kanalak leundu"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D setpoint trantsizioa"

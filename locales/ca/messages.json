@@ -1790,9 +1790,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtre"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Tipus de suavitzat RC utilitzat"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "La freqüència de tall en Hz utilitzada pel filtre d’entrada. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
     },
@@ -1801,12 +1798,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "El suavitzat de canals s’aplica a"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "El tipus de mètode de filtratge utilitzat per l'entrada derivada. A partir del 4.2 es recomana el valor predeterminat de \"Auto\". Per a 4.1 i versions anteriors, la majoria d'usuaris han d'utilitzar el valor predeterminat de \"BIQUAD\", ja que proporciona un bon equilibri entre suavitat i retard. \"PT1\" redueix lleugerament el retard però proporciona menys suavitat."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "El tipus de mètode de filtratge utilitzat per l'entrada. La majoria dels usuaris han d'utilitzar el valor predeterminat de \"BIQUAD\" ja que proporciona un bon equilibri entre suavitat i retard. \"PT1\" redueix lleugerament el retard però proporciona menys suavitat."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Selecciona si la freqüència de tall del filtre d’entrada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
@@ -1820,20 +1811,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "FeedForward Cutoff Frequëncia"
     },
-    "receiverRcSetpointType": {
-        "message": "Escull tipus de filtre"
-    },
     "receiverRcFeedforwardType": {
         "message": "Feedforward Filter Tipus"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Desactivat"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Canals suavitzats"
     },
     "receiverRcSmoothingMode": {
         "message": "Tipus de suavització"
@@ -6174,6 +6156,10 @@
         "message": "Qualitat enllaç",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Armant des-habilitat",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6299,6 +6285,14 @@
     },
     "osdWarningRSNR": {
         "message": "Avisa quan el RSNR està per sota del ajust d'alarma"
+    },
+    "osdWarningTextLoad": {
+        "message": "CARREGAR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Avisa si la càrrega de CPU del controlador de vol és massa alta",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "Desconegut $1"

@@ -1473,9 +1473,6 @@
     "receiverRcSmoothingFilter": {
         "message": "滤波器"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "使用 RC 平滑的类型"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "设定点滤波器截止频率，单位为 Hz。较低的值将得到更平滑的输入，适用于较慢的接收器协议。大多数情况应该将其保持为 0，对应\"自动\"。"
     },
@@ -1484,12 +1481,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "适用平滑的通道"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "用于过滤前馈信号的滤波方式。从 4.2 起，推荐使用默认的 \"Auto\"。对于使用 4.1 及早期版本的用户应该使用默认的 \"BIQUAD\" ，因为它在平滑和延迟之间提供了良好的平衡。\"PT1\" 稍微减少了延迟，但提供的平滑程度也较低。"
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "用于过滤设定点信号的滤波方式。大多数用户应该使用默认的 \"BIQUAD\" ，因为它在平滑和延迟之间提供了良好的平衡。\"PT1\" 稍微减少了延迟，但提供的平滑程度也较低。"
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "设置设定点滤波器的截止频率是由系统自动计算的 (推荐) 还是由用户手动设置。如果使用的接收机协议在飞行中可能发生变化，比如Crossfire，则不建议使用 \"手动\"。"
@@ -1503,20 +1494,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "前馈截止频率"
     },
-    "receiverRcSetpointType": {
-        "message": "设定点滤波器类型"
-    },
     "receiverRcFeedforwardType": {
         "message": "前馈滤波器类型"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "关闭"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "自动"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "平滑通道"
     },
     "receiverRcSmoothingMode": {
         "message": "平滑模式"
