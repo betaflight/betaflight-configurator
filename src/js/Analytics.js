@@ -1,5 +1,4 @@
 import ShortUniqueId from 'short-unique-id';
-import BuildApi from './BuildApi';
 import { set as setConfig, get as getConfig } from './ConfigStorage';
 import GUI from './gui';
 import CONFIGURATOR from './data_storage';
@@ -74,7 +73,7 @@ class Analytics {
         this.setOptOut(settings.optOut);
 
         this._settings = settings;
-        this._api = new BuildApi();
+        this._url = 'https://analytics.betaflight.com';
 
         this.EVENT_CATEGORIES = {
             APPLICATION: 'Application',
@@ -90,11 +89,19 @@ class Analytics {
             return;
         }
 
-        this._api.sendAnalytics(name, {
-            sessionId: this._settings.sessionId,
-            userId: this._settings.userId,
-            [name]: properties,
+        const url = `${this._url}/analytics/${name}`;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify({
+                sessionId: this._settings.sessionId,
+                userId: this._settings.userId,
+                [name]: properties,
+            }),
+            contentType: "application/json",
+            dataType: "json",
         });
+
     }
 
     sendSettings() {

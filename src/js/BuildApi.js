@@ -182,15 +182,4 @@ export default class BuildApi {
             }
         });
     }
-
-    sendAnalytics(type, parcel) {
-        const url = `${this._url}/analytics/${type}`;
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: JSON.stringify(parcel),
-            contentType: "application/json",
-            dataType: "json",
-        });
-    }
 }
