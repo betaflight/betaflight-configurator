@@ -420,7 +420,8 @@
 		.sliders {
 			input {
 				-webkit-appearance: slider-vertical;
-				height: 6rem;
+				height: 6rem !important;
+                padding: 0 !important;
 			}
 		}
 		.values {
@@ -430,19 +431,13 @@
 			}
 		}
 		.telemetry {
-			display: flow-root;
+            margin-bottom: 0.5rem;
 			.warning {
 				color: var(--error-500);
 			}
 			li {
-				&:first-child {
-					margin-left: 0;
-				}
-				width: calc((100% / 9) - 10px);
-				margin-left: 10px;
 				text-align: center;
 				font-size: 10px;
-				white-space: pre;
 			}
 		}
 	}
