@@ -10,13 +10,14 @@ import { gui_log } from "../gui_log";
  */
 
 const bluetoothDevices = [
-    { name: "CC2541 based",             serviceUuid: '0000ffe0-0000-1000-8000-00805f9b34fb', writeCharateristic: '0000ffe1-0000-1000-8000-00805f9b34fb', readCharateristic: '0000ffe1-0000-1000-8000-00805f9b34fb', delay: 30 },
-    { name: "Nordic Semiconductor NRF", serviceUuid: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', writeCharateristic: '6e400003-b5a3-f393-e0a9-e50e24dcca9e', readCharateristic: '6e400002-b5a3-f393-e0a9-e50e24dcca9e', delay: 30 },
-    { name: "SpeedyBee Type 2",         serviceUuid: '0000abf0-0000-1000-8000-00805f9b34fb', writeCharateristic: '0000abf1-0000-1000-8000-00805f9b34fb', readCharateristic: '0000abf2-0000-1000-8000-00805f9b34fb', delay:  0 },
-    { name: "SpeedyBee Type 1",         serviceUuid: '00001000-0000-1000-8000-00805f9b34fb', writeCharateristic: '00001001-0000-1000-8000-00805f9b34fb', readCharateristic: '00001002-0000-1000-8000-00805f9b34fb', delay:  0 },
+    { name: "CC2541",       serviceUuid: '0000ffe0-0000-1000-8000-00805f9b34fb', writeCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb', readCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb' },
+    { name: "HC-05",        serviceUuid: '00001101-0000-1000-8000-00805f9b34fb', writeCharacteristic: '00001101-0000-1000-8000-00805f9b34fb', readCharacteristic: '00001101-0000-1000-8000-00805f9b34fb' },
+    { name: "HM-10",        serviceUuid: '0000ffe1-0000-1000-8000-00805f9b34fb', writeCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb', readCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb' },
+    { name: "HM-11",        serviceUuid: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', writeCharacteristic: '6e400003-b5a3-f393-e0a9-e50e24dcca9e', readCharacteristic: '6e400002-b5a3-f393-e0a9-e50e24dcca9e' },
+    { name: "Nordic NRF",   serviceUuid: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', writeCharacteristic: '6e400003-b5a3-f393-e0a9-e50e24dcca9e', readCharacteristic: '6e400002-b5a3-f393-e0a9-e50e24dcca9e' },
+    { name: "SpeedyBee V1", serviceUuid: '00001000-0000-1000-8000-00805f9b34fb', writeCharacteristic: '00001001-0000-1000-8000-00805f9b34fb', readCharacteristic: '00001002-0000-1000-8000-00805f9b34fb' },
+    { name: "SpeedyBee V2", serviceUuid: '0000abf0-0000-1000-8000-00805f9b34fb', writeCharacteristic: '0000abf1-0000-1000-8000-00805f9b34fb', readCharacteristic: '0000abf2-0000-1000-8000-00805f9b34fb' },
 ];
-
-const BT_WRITE_BUFFER_LENGTH = 20;
 
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
@@ -261,47 +262,36 @@ class BT extends EventTarget {
         return this.service;
     }
 
-    async getCharacteristic (char) {
-        this.characteristic = await this.selectedService.getCharacteristic(char);
-        return this.characteristic;
-    }
-
-    async getCharacteristics(connectedService) {
-        const characteristics = await connectedService.getCharacteristics();
-
-        console.info(`${this.logHead} Found characteristics: ${characteristics}`);
+    async getCharacteristics() {
+        const characteristics = await this.service.getCharacteristics();
 
         characteristics.forEach(characteristic => {
             console.log("Characteristic: ", characteristic);
-            if (characteristic.uuid == this.deviceDescription.writeCharateristic) {
+            if (characteristic.uuid == this.deviceDescription.writeCharacteristic) {
                 this.writeCharacteristic = characteristic;
             }
 
-            if (characteristic.uuid == this.deviceDescription.readCharateristic) {
+            if (characteristic.uuid == this.deviceDescription.readCharacteristic) {
                 this.readCharacteristic = characteristic;
             }
-            console.log("Characteristic found: ", characteristic.uuid, this.deviceDescription.writeCharateristic, this.deviceDescription.readCharateristic);
+            console.log("Characteristic found: ", characteristic.uuid, this.deviceDescription.writeCharacteristic, this.deviceDescription.readCharacteristic);
             return this.writeCharacteristic && this.readCharacteristic;
         });
 
         if (!this.writeCharacteristic) {
-            throw new Error("Unexpected write charateristic found - should be", this.deviceDescription.writeCharateristic);
+            throw new Error("Unexpected write characteristic found - should be", this.deviceDescription.writeCharacteristic);
         }
 
         if (!this.readCharacteristic) {
-            throw new Error("Unexpected read charateristic found - should be", this.deviceDescription.readCharateristic);
+            throw new Error("Unexpected read characteristic found - should be", this.deviceDescription.readCharacteristic);
         }
 
-        this.readCharacteristic.addEventListener('characteristicvaluechanged', this.handleOnCharateristicValueChanged.bind(this));
+        this.readCharacteristic.addEventListener('characteristicvaluechanged', this.onCharacteristicValueChanged.bind(this));
 
         return await this.readCharacteristic.readValue();
     }
 
-    async handleDisconnect() {
-        this.disconnect();
-    }
-
-    handleOnCharateristicValueChanged(event) {
+    onCharacteristicValueChanged(event) {
         console.info(`${this.logHead} data bytes received: ${event.target.value.byteLength}`);
 
         const buffer = new Uint8Array(event.target.value.byteLength);
@@ -311,15 +301,17 @@ class BT extends EventTarget {
         }
 
         console.info(`${this.logHead} data received: ${buffer}`);
+
+        this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
     }
 
     startNotifications() {
         if (!this.readCharacteristic) {
-            throw new Error("No read charateristic");
+            throw new Error("No read characteristic");
         }
 
         if (!this.readCharacteristic.properties.notify) {
-            throw new Error("Read charateristic unable to notify.");
+            throw new Error("Read characteristic unable to notify.");
         }
 
         return this.readCharacteristic.startNotifications();
@@ -350,9 +342,8 @@ class BT extends EventTarget {
             }
             if (this.port) {
                 this.port.removeEventListener("disconnect", this.handleDisconnect.bind(this));
-                // await this.port.close();
                 this.port.removeEventListener('gattserverdisconnected', this.handleDisconnect);
-                this.readCharacteristic.removeEventListener('characteristicvaluechanged', this.handleOnCharateristicValueChanged.bind(this));
+                this.readCharacteristic.removeEventListener('characteristicvaluechanged', this.onCharacteristicValueChanged.bind(this));
 
                 if (this.port.gatt.connected) {
                     this.port.gatt.disconnect();
@@ -388,54 +379,20 @@ class BT extends EventTarget {
         }
     }
 
-    async send(data) {
-        if (this.writer) {
-            await this.writer.write(data);
-            this.bytesSent += data.byteLength;
-        } else {
-            console.error(
-                `${this.logHead} Failed to send data, bluetooth port not open`,
-            );
-        }
-        return {
-            bytesSent: data.byteLength,
-        };
-    }
-
-    async getValue () {
-        this.currentValue = await this.characteristic.readValue();
-        return this.currentValue;
-      }
-
-    async writeValue(data) {
-        await this.characteristic.writeValue(data);
-    }
-
-    async ___send (data) {
+    async send (data) {
         if (!this.writeCharacteristic) {
             return;
         }
 
-        let sent = 0;
+        // There is no writable stream in the bluetooth API
+        this.bytesSent += data.byteLength;
+
         const dataBuffer = new Uint8Array(data);
 
-        for (let i = 0; i < dataBuffer.length; i += BT_WRITE_BUFFER_LENGTH) {
-            let length = BT_WRITE_BUFFER_LENGTH;
-
-            if (i + BT_WRITE_BUFFER_LENGTH > dataBuffer.length) {
-                length = dataBuffer.length % BT_WRITE_BUFFER_LENGTH;
-            }
-
-            const outBuffer = dataBuffer.subarray(i, i + length);
-            sent += outBuffer.length;
-
-            console.log(`${this.logHead} Sending data: ${outBuffer}`);
-
-            await this.writeCharacteristic.writeValue(outBuffer);
-        }
+        await this.writeCharacteristic.writeValue(dataBuffer);
 
         return {
-            bytesSent: sent,
+            bytesSent: data.byteLength,
             resultCode: 0,
         };
     }

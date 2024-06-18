@@ -24,7 +24,6 @@ import CryptoES from "crypto-es";
 import $ from 'jquery';
 import BuildApi from "./BuildApi";
 
-import { isWeb } from "./utils/isWeb";
 import { serialShim } from "./serial_shim.js";
 import { EventBus } from "../components/eventBus";
 import BT from "./protocols/bluetooth.js";
@@ -45,7 +44,7 @@ const toggleStatus = function () {
 };
 
 function connectHandler(event) {
-    console.log(`Connected to: ${event.detail.path}`);
+    console.log(`[BACKEND] Connected to: ${event.detail}`);
     onOpen(event.detail);
     toggleStatus();
 }
@@ -74,17 +73,20 @@ export function initializeSerialBackend() {
         }
     });
 
+    // Using serialShim for serial and bluetooth we don't know which event we need before we connect
+    // Perhaps we should implement a Connection class that handles the connection and events for bluetooth, serial and sockets
+
     serial.addEventListener("removedDevice", (event) => {
         if (event.detail.path === GUI.connected_to) {
             connectDisconnect();
         }
     });
 
-    BT.addEventListener("removedDevice", (event) => {
-        if (event.detail.path === GUI.connected_to) {
-            connectDisconnect();
-        }
-    });
+    // BT.addEventListener("removedDevice", (event) => {
+    //     if (event.detail.path === GUI.connected_to) {
+    //         connectDisconnect();
+    //     }
+    // });
 
     $('div.open_firmware_flasher a.flash').click(function () {
         if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
@@ -129,6 +131,10 @@ function connectDisconnect() {
 
             CONFIGURATOR.virtualMode = false;
 
+            if (selectedPort.startsWith('bluetooth')) {
+                CONFIGURATOR.bluetoothMode = true;
+            }
+
             if (selectedPort === 'virtual') {
                 CONFIGURATOR.virtualMode = true;
                 CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
@@ -136,13 +142,6 @@ function connectDisconnect() {
                 // Hack to get virtual working on the web
                 serial = serialShim();
                 serial.connect('virtual', {}, onOpenVirtual);
-            } else if (selectedPort.startsWith('bluetooth')) {
-
-                BT.addEventListener('connect', connectHandler);
-                BT.addEventListener('disconnect', disconnectHandler);
-
-                BT.connect(portName, { baudRate });
-
             } else {
                 serial = serialShim();
                 // Explicitly disconnect the event listeners before attaching the new ones.
@@ -186,12 +185,8 @@ function finishClose(finishedCallback) {
         $('#dialogResetToCustomDefaults')[0].close();
     }
 
-    if (PortHandler.portPicker.selectedPort.startsWith('bluetooth')) {
-        // BT.removeEventListener('receive', read_serial_adapter);
-        BT.disconnect();
-    } else {
-        serial.disconnect(onClosed);
-    }
+    // serialShim calls the disconnect method for selected connection type.
+    serial.disconnect(onClosed);
 
     MSP.disconnect_cleanup();
     PortUsage.reset();
@@ -290,15 +285,10 @@ function onOpen(openInfo) {
         result = getConfig('expertMode')?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
-        if (PortHandler.portPicker.selectedPort.startsWith('bluetooth')) {
-            serial = BT;
-            BT.addEventListener('receive', read_serial_adapter);
-        } else if (isWeb()) {
-            serial.removeEventListener('receive', read_serial_adapter);
-            serial.addEventListener('receive', read_serial_adapter);
-        } else {
-            serial.onReceive.addListener(read_serial);
-        }
+        // serialShim adds event listener for selected connection type
+        serial.removeEventListener('receive', read_serial_adapter);
+        serial.addEventListener('receive', read_serial_adapter);
+
         setConnectionTimeout();
         FC.resetState();
         mspHelper = new MspHelper();
@@ -701,6 +691,10 @@ function onClosed(result) {
         serial.removeEventListener('disconnect', disconnectHandler);
     }
 
+    // Reset serialShim for next connection
+    CONFIGURATOR.bluetoothMode = false;
+    serial = serialShim();
+
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;
@@ -709,6 +703,7 @@ function onClosed(result) {
 }
 
 export function read_serial(info) {
+    // console.log(`[READ_SERIAL]`, new Uint8Array(info));
     if (CONFIGURATOR.cliActive) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
