@@ -98,6 +98,51 @@
             min-width: 5rem;
         }
 	}
+    @media all and (max-width: 575px) {
+        .tab-vtx {
+            .columnsWrapper {
+                flex-wrap: wrap;
+                .leftColumn {
+                    width: 100%;
+                }
+                .rightColumn {
+                    width: 100%;
+                    flex-basis: auto;
+                }
+            }
+            .x-scroll-wrapper {
+                overflow-x: auto;
+                .gui_box {
+                    min-width: fit-content;
+                }
+            }
+            .leftWrapper {
+                width: 100%;
+                overflow: auto;
+            }
+        }
+        .grid-box {
+            &.col4 {
+                grid-template-columns: 1fr;
+                .col-span-3 {
+                    grid-column: span 1;
+                }
+                .col-span-4 {
+                    grid-column: span 1;
+                }
+            }
+        }
+        .content_toolbar{
+            .save_lua_btn, .save_file_btn {
+                display: none;
+            }
+            &.expanded {
+                .save_lua_btn, .save_file_btn {
+                    display: block;
+                }
+            }
+        }
+    }
 }
 .tab-vtx.supported {
 	.require-support {
@@ -109,49 +154,4 @@
 }
 #tab-vtx-templates {
 	display: none;
-}
-@media all and (max-width: 575px) {
-	.tab-vtx {
-		.columnsWrapper {
-			flex-wrap: wrap;
-			.leftColumn {
-				width: 100%;
-			}
-			.rightColumn {
-				width: 100%;
-				flex-basis: auto;
-			}
-		}
-        .x-scroll-wrapper {
-            overflow-x: auto;
-            .gui_box {
-                min-width: fit-content;
-            }
-        }
-		.leftWrapper {
-			width: 100%;
-			overflow: auto;
-		}
-	}
-    .grid-box {
-        &.col4 {
-            grid-template-columns: 1fr;
-            .col-span-3 {
-                grid-column: span 1;
-            }
-            .col-span-4 {
-                grid-column: span 1;
-            }
-        }
-    }
-    .content_toolbar{
-        .save_lua_btn, .save_file_btn {
-            display: none;
-        }
-        &.expanded {
-            .save_lua_btn, .save_file_btn {
-                display: block;
-            }
-        }
-    }
 }
