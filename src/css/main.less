@@ -102,18 +102,19 @@ a.disabled {
     }
 }
 input, select, .select2-selection--single {
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif !important;
+    font-size: unset !important;
     background-color: var(--surface-300) !important;
     border: 1px solid var(--surface-500) !important;
     color: var(--text);
-    padding: 0.25rem 0.5rem !important;
+    padding: 0.25rem 0.5rem 0.25rem 0.25rem !important;
     border-radius: 0.5rem !important;
     min-width: 4rem;
     display: inline-block;
     box-sizing: border-box;
-    height: 1.5rem !important;
     &.small {
-        font-size: 13px;
-        padding: 0.15rem;
+        padding: 0.15rem !important;
+        font-size: 12px !important;
     }
     &[type="text"] {
         &[readonly] {
@@ -130,6 +131,7 @@ input, select, .select2-selection--single {
     }
     &[type="range"], &[type="checkbox"] {
         min-width: 0;
+        height: unset !important;
     }
 }
 .ms-choice {
@@ -153,6 +155,9 @@ input[type="number"] {
         opacity: 1;
         margin-left: 5px;
     }
+}
+.select2-selection--single {
+    padding-left: 0.5rem !important;
 }
 
 .noarrows {
