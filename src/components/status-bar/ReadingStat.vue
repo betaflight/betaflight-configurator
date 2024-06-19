@@ -2,7 +2,12 @@
   <span>
     <span class="message">{{ $t(message) }}</span>
     <span class="value">{{ value }}</span>
-    <span class="unit" v-if="unit">{{ unit }}</span>
+    <span
+      v-if="unit"
+      class="unit"
+    >
+      {{ unit }}
+    </span>
   </span>
 </template>
 
