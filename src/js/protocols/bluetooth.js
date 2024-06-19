@@ -90,9 +90,7 @@ class BT extends EventTarget {
         const ports = await navigator.bluetooth.getDevices();
 
         this.portCounter = 1;
-        this.ports = ports.map(function (port) {
-            return this.createPort(port);
-        }, this);
+        this.ports = ports.map(port => this.createPort(port));
     }
 
     async requestPermissionDevice() {
@@ -130,7 +128,7 @@ class BT extends EventTarget {
 
         console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`, this.port, options);
 
-        this.port.addEventListener('gattserverdisconnected', this.handleDisconnect);
+        this.port.addEventListener('gattserverdisconnected', this.handleDisconnect.bind(this));
 
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);

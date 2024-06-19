@@ -95,6 +95,7 @@ PortHandler.addedBluetoothDevice = function (device) {
         }
     });
 };
+
 PortHandler.removedBluetoothDevice = function (device) {
     this.updateCurrentBluetoothPortsList()
     .then(() => {

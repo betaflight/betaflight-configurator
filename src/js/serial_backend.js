@@ -106,7 +106,7 @@ export function initializeSerialBackend() {
 
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
-    let portName = selectedPort === 'manual' ? PortHandler.portPicker.portOverride : selectedPort;
+    const portName = selectedPort === 'manual' ? PortHandler.portPicker.portOverride : selectedPort;
 
     if (!GUI.connect_lock && selectedPort !== 'noselection' && !selectedPort.path?.startsWith('usb_')) {
         // GUI control overrides the user control
@@ -694,7 +694,6 @@ function onClosed(result) {
 }
 
 export function read_serial(info) {
-    // console.log(`[READ_SERIAL]`, new Uint8Array(info));
     if (CONFIGURATOR.cliActive) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
