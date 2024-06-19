@@ -75,9 +75,10 @@ class WebSerial extends EventTarget {
     }
 
     createPort(port) {
+        const displayName = vendorIdNames[port.getInfo().usbVendorId] ? vendorIdNames[port.getInfo().usbVendorId] : `VID:${port.getInfo().usbVendorId} PID:${port.getInfo().usbProductId}`;
         return {
             path: `serial_${this.portCounter++}`,
-            displayName: `Betaflight ${vendorIdNames[port.getInfo().usbVendorId]}`,
+            displayName: `Betaflight ${displayName}`,
             vendorId: port.getInfo().usbVendorId,
             productId: port.getInfo().usbProductId,
             port: port,
@@ -85,9 +86,7 @@ class WebSerial extends EventTarget {
     }
 
     async loadDevices() {
-        const ports = await navigator.serial.getPorts({
-            filters: webSerialDevices,
-        });
+        const ports = await navigator.serial.getPorts();
 
         this.portCounter = 1;
         this.ports = ports.map(function (port) {
@@ -95,12 +94,11 @@ class WebSerial extends EventTarget {
         }, this);
     }
 
-    async requestPermissionDevice() {
+    async requestPermissionDevice(showAllSerialDevices = false) {
         let newPermissionPort = null;
         try {
-            const userSelectedPort = await navigator.serial.requestPort({
-                filters: webSerialDevices,
-            });
+            const options = showAllSerialDevices ? {} : { filters: webSerialDevices };
+            const userSelectedPort = await navigator.serial.requestPort(options);
             newPermissionPort = this.ports.find(port => port.port === userSelectedPort);
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);

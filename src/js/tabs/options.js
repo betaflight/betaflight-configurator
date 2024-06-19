@@ -129,8 +129,9 @@ options.initShowAllSerialDevices = function() {
     showAllSerialDevicesElement
         .prop('checked', !!result.showAllSerialDevices)
         .on('change', () => {
-            setConfig({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') });
-            PortHandler.reinitialize();
+            const checked = showAllSerialDevicesElement.is(':checked');
+            setConfig({ showAllSerialDevices: checked });
+            PortHandler.setShowAllSerialDevices(checked);
         });
 };
 
