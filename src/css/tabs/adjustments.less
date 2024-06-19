@@ -4,7 +4,7 @@
 .tab-adjustments {
 	.range {
 		.marker {
-			background: var(--accent);
+			background: var(--primary-200);
 		}
 		&:first-child {
 			border-top: 0px;
@@ -15,63 +15,55 @@
 	}
 	.channel-slider {
 		.noUi-connect {
-			background: var(--accent);
+			background: var(--primary-500);
 		}
 	}
+    table {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
 	.adjustments {
 		width: 100%;
 		border-spacing: 0px;
-		background-color: #e4e4e4;
 		thead {
 			td {
 				text-align: center;
 				white-space: nowrap;
 				padding: 10px 10px;
-				background-color: var(--quietHeader);
-				color: var(--quietText);
-				&:first-child {
-					border-top-left-radius: 5px;
-				}
-				&:last-child {
-					border-top-right-radius: 5px;
-				}
+				background-color: var(--surface-300);
+				color: var(--text);
 			}
 		}
 	}
 	td {
-		border-top: 1px solid #fff;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-top: 1px solid var(--surface-500);
+		border-bottom: 1px solid var(--surface-500);
+        padding: 0 0.5rem;
 	}
 	.adjustment {
+        background-color: var(--surface-300);
 		&:nth-child(odd) {
-			background-color: #f4f4f4;
-		}
-		select {
-			border-radius: 3px;
-			border: 1px solid var(--subtleAccent);
+			background-color: var(--surface-200);
 		}
 		td {
 			text-align: center;
 		}
 		.info {
-			width: 5%;
-			height: 80px;
+			height: 6.5rem;
 			.enabling {
 				white-space: nowrap;
 			}
 		}
 		.channelInfo {
-			width: 5%;
-			padding: 0px 10px;
 			.limits {
-				padding: 5px 0px;
+				padding: 0.5rem 0;
 			}
 		}
 		.range {
-			width: 65%;
-			padding: 0px 20px;
+			width: 100%;
+			padding: 0 1rem;
 			.channel-slider {
-				margin-top: -28px;
+				margin-top: -2rem;
 			}
 			.marker {
 				position: absolute;
@@ -84,19 +76,10 @@
 				z-index: 1000;
 			}
 		}
-		.functionSelection {
-			width: 5%;
-		}
-		.adjustmentSlot {
-			width: 5%;
-		}
-		.functionSwitchChannel {
-			width: 5%;
-		}
 	}
 }
 .noUi-target {
-	border-radius: 4px;
+	border-radius: 0.5rem;
 }
 @media all and (max-width: 575px) {
 	.tab-adjustments {

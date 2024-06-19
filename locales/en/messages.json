@@ -3427,7 +3427,7 @@
         "message": "Select build type to see available boards."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Select or auto-detect your board to see available online firmware releases - Select the correct firmware appropriate for your board."
+        "message": "Select or detect your board to see available online firmware releases - Select the correct firmware appropriate for your board."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight configurator supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Betaflight 4.4 introduces <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, please consider joining Discord or open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>."
@@ -3442,7 +3442,7 @@
         "message": "Flash on connect"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Attempt to flash the board automatically (triggered by newly detected serial port).<br /><br /><span class=\"message-negative\">WARNING</span>: this function disables the auto-detect and backup feature."
+        "message": "Attempt to flash the board automatically (triggered by newly detected serial port).<br /><br /><span class=\"message-negative\">WARNING</span>: this function disables the detect and backup features."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Full chip erase"
@@ -3620,10 +3620,10 @@
         "message": "Continue"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "Auto-detect"
+        "message": "Detect"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "Auto-detect only works when not in DFU mode and when MSP communication is working. Sometimes you have to retry a few times or even reconnect USB. Try connecting as normal first as you could have forgotten to apply custom defaults. Please reboot after flashing - replug your USB."
+        "message": "Detect only works when not in DFU mode and when MSP communication is working. Sometimes you have to retry a few times or even reconnect USB. Try connecting as normal first as you could have forgotten to apply custom defaults. Please reboot after flashing - replug your USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Query board information to preselect right firmware"

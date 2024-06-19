@@ -1,16 +1,16 @@
 .tab-pid_tuning {
 	.cf {
 		tr {
-			background-color: #DEDEDE;
+			background-color: var(--surface-400);
 		}
 		th {
-			border-right: solid 1px var(--subtleAccent);
+			border-right: solid 1px var(--surface-500);
 			height: 19px;
 			font-weight: normal;
 			padding: 4px;
-			color: white;
+			color: var(--text);
 			text-align: left;
-			background: var(--quietHeader);
+			background: var(--surface-300);
 			&:first-child {
 				border-top-left-radius: 3px;
 			}
@@ -32,13 +32,13 @@
 		input {
 			margin: 4px;
 			width: calc(100% - 10px);
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 		}
 		select {
 			margin: 4px;
 			width: calc(100% - 10px);
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 		}
 		.throttleCurvePreview {
 			padding: 0;
@@ -75,14 +75,14 @@
 		width: 100%;
 		table-layout: fixed;
 		padding: 1px;
-		border-bottom: 0 solid var(--subtleAccent);
+		border-bottom: 0 solid var(--surface-500);
 		.inputBackground {
 			background: white;
 		}
 		td {
-			border-bottom: 0 solid var(--subtleAccent);
+			border-bottom: 0 solid var(--surface-500);
 			padding: 1px 1px 1px 5px;
-			border-right: 1px solid var(--subtleAccent);
+			border-right: 1px solid var(--surface-500);
 		}
 		th {
 			padding: 0;
@@ -99,7 +99,7 @@
 					padding-left: 5px;
 				}
 				&:last-child {
-					border-right: 0 solid var(--subtleAccent);
+					border-right: 0 solid var(--surface-500);
 				}
 				text-align: left;
 				padding-left: 5px;
@@ -118,13 +118,13 @@
 			height: 20px;
 			line-height: 20px;
 			text-align: right;
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 		}
 		select {
 			text-align-last: right;
 			border-radius: 3px;
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 		}
 	}
 	.gui_box {
@@ -175,14 +175,14 @@
 	}
 	.sliderDivider {
 		padding: 3px;
-		border-top: 1px solid var(--subtleAccent);
-		border-bottom: 1px solid var(--subtleAccent);
+		border-top: 1px solid var(--surface-500);
+		border-bottom: 1px solid var(--surface-500);
 	}
 	.pid_titlebar {
 		th {
 			padding: 5px;
 			text-align: center;
-			border-right: 1px solid var(--subtleAccent);
+			border-right: 1px solid var(--surface-500);
 			&:first-child {
 				text-align: left;
 				border-top-left-radius: 3px;
@@ -193,7 +193,7 @@
 			}
 		}
 		color: #fff;
-		background-color: var(--quietHeader);
+		background-color: var(--surface-300);
 		border-top-left-radius: 3px;
 		border-top-right-radius: 3px;
 		height: 20px;
@@ -234,7 +234,7 @@
 	table.compensation {
 		tr {
 			height: 30px;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 			&:last-child {
 				border-bottom: none;
 			}
@@ -318,7 +318,7 @@
 		}
 	}
 	.tab-container {
-		border-bottom: 3px solid var(--accent);
+		border-bottom: 3px solid var(--primary-500);
 		border-right-width: 0;
 		display: flex;
 		flex-direction: row;
@@ -326,9 +326,9 @@
 		justify-content: start;
 		width: 100%;
 		>div {
-			background-color: #2e2e2e;
+			background-color: var(--surface-200);
 			padding: 6px 12px;
-			border-right: 1px solid white;
+			border-right: 1px solid var(--surface-500);
 			box-sizing: border-box;
 			text-align: center;
 			&:first-child {
@@ -339,15 +339,15 @@
 			}
 			a {
 				display: block;
-				color: #999999;
+				color: var(--text);
 			}
 		}
 		>div.active {
-			background-color: var(--accent);
+			background-color: var(--primary-500);
 			color: #000;
 			transition: none;
 			a {
-				background-color: var(--accent);
+				background-color: var(--primary-500);
 				color: #000;
 				transition: none;
 			}
@@ -359,9 +359,9 @@
 		margin-right: 5px;
 		.head {
 			text-align: left;
-			border-bottom: 1px solid var(--subtleAccent);
-			background-color: var(--quietHeader);
-			color: var(--quietText);
+			border-bottom: 1px solid var(--surface-500);
+			background-color: var(--surface-300);
+			color: var(--text);
 			height: 19px;
 			font-weight: normal;
 			padding: 2px 2px 2px 6px;
@@ -408,7 +408,7 @@
 		margin-bottom: 5px;
 		clear: left;
 		padding-bottom: 5px;
-		border-bottom: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
 		width: 100%;
 		float: left;
 		&:last-child {
@@ -421,7 +421,7 @@
 			height: 20px;
 			line-height: 20px;
 			text-align: left;
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 			margin-right: 11px;
 			font-weight: normal;
@@ -483,20 +483,20 @@
 	.bottomarea {
 		float: left;
 		width: calc(100% - 2px);
-		border-bottom: 1px solid var(--subtleAccent);
-		border-left: 1px solid var(--subtleAccent);
-		border-right: 1px solid var(--subtleAccent);
+		border-bottom: 1px solid var(--surface-500);
+		border-left: 1px solid var(--surface-500);
+		border-right: 1px solid var(--surface-500);
 		border-bottom-right-radius: 3px;
 		border-bottom-left-radius: 3px;
 		padding-top: 5px;
 		padding-bottom: 5px;
-		background-color: #f9f9f9;
+		background-color: var(--surface-200);
 		height: 20px;
 	}
 	.profile {
 		min-width: 130px;
 		select {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 			margin-left: 5px;
 			margin-right: 5px;
@@ -506,7 +506,7 @@
 	.rate_profile {
 		min-width: 130px;
 		select {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 			margin-left: 5px;
 			margin-right: 5px;
@@ -516,7 +516,7 @@
 	.controller {
 		width: 150px;
 		select {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			margin-left: 5px;
 			width: calc(100% - 10px);
 		}
@@ -524,7 +524,7 @@
 	.delta {
 		width: 150px;
 		select {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			margin-left: 5px;
 			width: calc(100% - 10px);
 		}
@@ -565,7 +565,7 @@
 		}
 		tr {
 			width: 100%;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 			padding: 0;
 		}
 	}
@@ -598,7 +598,7 @@
 			margin-bottom: 0.5em;
 		}
 		select {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			margin-left: 5px;
 			width: 120px;
 		}
@@ -612,15 +612,15 @@
 		opacity: 0.8;
 		transition: opacity .2s;
 		margin: 7px;
-		background: var(--boxBackground);
+		background: var(--surface-200);
 		&:hover {
 			opacity: 1;
 		}
 		&::-webkit-slider-runnable-track {
 			-webkit-appearance: none;
-			border: solid 1px var(--subtleAccent);
+			border: solid 1px var(--surface-500);
 			border-radius: 4px;
-			background: linear-gradient(90deg, rgb(197, 197, 197) 0%, rgb(241, 241, 241) 50%, rgb(255, 84, 14) 100%);
+			background: linear-gradient(90deg, var(--surface-300) 0%, var(--surface-400) 50%, var(--error-500) 100%);
 			height: 15px;
 		}
 		&::-webkit-slider-thumb {
@@ -629,7 +629,7 @@
 			height: 23px;
 			border-radius: 50%;
 			background: #ffbb2a;
-			border: solid 1px #828885;
+			border: solid 1px var(--surface-300);
 			cursor: pointer;
 			position: relative;
 			bottom: 5px;
@@ -639,7 +639,7 @@
 	.nonExpertModeSliders {
 		.tuningSlider {
 			&::-webkit-slider-runnable-track {
-				background: linear-gradient(90deg, rgb(197, 197, 197) -50%, rgb(241, 241, 241) 50%, rgb(255, 84, 14) 150%);
+				background: linear-gradient(90deg, var(--surface-300) 0%, var(--surface-400) 50%, var(--error-500) 100%);
 				background-size: 55%;
 				background-position: 44%;
 				background-repeat: no-repeat;
@@ -649,7 +649,7 @@
 	.disabledSliders {
 		.tuningSlider {
 			&::-webkit-slider-runnable-track {
-				background: linear-gradient(90deg, rgb(197, 197, 197) -50%, rgb(241, 241, 241) 50%, rgb(197, 197, 197) 150%);
+				background: linear-gradient(90deg, var(--surface-300) -50%, var(--surface-400) 50%, var(--surface-300) 150%);
 				background-repeat: no-repeat;
 			}
 			&::-webkit-slider-thumb {
@@ -658,7 +658,7 @@
 				height: 23px;
 				border-radius: 50%;
 				background: transparent;
-				border: solid 1px #828885;
+				border: solid 1px var(--surface-300);
 				cursor: pointer;
 				position: relative;
 				bottom: 5px;
@@ -668,7 +668,7 @@
 	}
 	.sliderLabels {
 		tr {
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 			&:last-child {
 				border-bottom: none;
 			}
@@ -687,7 +687,7 @@
 			}
 		}
 		span {
-			color: black;
+			color: var(--text);
 			font-size: 12px;
 		}
 	}
@@ -825,7 +825,7 @@
 	background-color: #D6D6D6;
 	padding-top: 8px;
 	font-size: 12px;
-	border-bottom: 1px solid var(--subtleAccent);
+	border-bottom: 1px solid var(--surface-500);
 	color: #828282;
 	background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .2) 100%, transparent);
 	th {
@@ -837,15 +837,15 @@
 .pid_mode {
 	width: calc(100% - 5px);
 	height: 18px;
-	background-color: #D6D6D6;
+	background-color: var(--surface-400);
 	float: left;
 	margin: 0;
 	text-align: left;
 	line-height: 13px;
 	padding: 5px 0 0 5px;
 	font-size: 12px;
-	border-bottom: 1px solid var(--subtleAccent);
-	color: #828282;
+	border-bottom: 1px solid var(--surface-500);
+	color: var(--text);
 	font-weight: normal;
 	background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .2) 100%, transparent);
 	>div {
@@ -895,11 +895,11 @@
 	width: calc(100% - 22px);
 	position: relative;
 	padding: 10px;
-	border: 1px solid var(--subtleAccent);
+	border: 1px solid var(--surface-500);
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;
-	border-top: 0 solid var(--subtleAccent);
-	background: #f9f9f9;
+	border-top: 0 solid var(--surface-500);
+	background: var(--surface-200);
 }
 @media all and (max-width: 575px) {
 	.tab-pid_tuning {
@@ -976,7 +976,7 @@
 			background-color: #D6D6D6;
 			line-height: 13px;
 			font-size: 12px;
-			border-bottom: 1px solid var(--subtleAccent);
+			border-bottom: 1px solid var(--surface-500);
 			color: #828282;
 			font-weight: normal;
 			background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .2) 100%, transparent);

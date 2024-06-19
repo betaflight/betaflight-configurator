@@ -1,11 +1,11 @@
 .preset_title_panel {
-    color: var(--defaultText);
+    color: var(--text);
     position: relative;
 }
 
 .preset_title_panel_border {
-    background-color: var(--boxBackground);
-    border: 1px solid var(--subtleAccent);
+    background-color: var(--surface-200);
+    border: 1px solid var(--surface-500);
     cursor: pointer;
     padding: 1.5ex;
     box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.25);
@@ -52,7 +52,7 @@
 }
 
 .preset_title_panel_category {
-    color: var(--mutedText);
+    color: var(--surface-950);
     font-weight: bold;
 }
 
@@ -68,15 +68,15 @@
 }
 
 .preset_title_panel_status_official {
-    background-color: green;
+    background-color: var(--success-500);
 }
 
 .preset_title_panel_status_community {
-    background-color: var(--accent);
+    background-color: var(--primary-500);
 }
 
 .preset_title_panel_status_experimental {
-    background-color: red;
+    background-color: var(--error-500);
 }
 
 .preset_title_panel_versions_text {
@@ -114,5 +114,5 @@
 }
 
 .preset_title_panel_label {
-    color: var(--quietHeader);
+    color: var(--surface-800);
 }

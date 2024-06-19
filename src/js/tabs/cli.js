@@ -331,9 +331,14 @@ cli.adaptPhones = function() {
         $('.backdrop').css('height', `calc(100% - ${backdropHeight}px)`);
     }
 
-    if (GUI.isCordova()) {
-        UI_PHONES.initToolbar();
-    }
+    const mediaQuery = window.matchMedia('(max-width: 576px)');
+    const handleMediaChange = function(e) {
+        if (e.matches) {
+            UI_PHONES.initToolbar();
+        }
+    };
+    mediaQuery.addEventListener('change', handleMediaChange);
+    handleMediaChange(mediaQuery);
 };
 
 cli.history = {

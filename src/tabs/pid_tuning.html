@@ -1,4 +1,4 @@
-<div class="tab-pid_tuning toolbar_fixed_bottom">
+<div class="tab-pid_tuning">
     <div class="content_wrapper">
         <div class="tab_title" i18n="tabPidTuning"></div>
         <div class="cf_doc_version_bt">
@@ -39,7 +39,7 @@
                 <div class="default_btn copyrateprofilebtn">
                     <a href="#" id="copyRateProfile" i18n="pidTuningCopyRateProfile"></a>
                 </div>
-                <div class="default_btn resetbt">                    
+                <div class="default_btn resetbt">
                     <a href="#" id="resetPidProfile" i18n="pidTuningResetPidProfile"></a>
                 </div>
                 <div class="default_btn show showAllPids">
@@ -189,9 +189,9 @@
                                 </th>
                             </tr>
                         </table>
-    
+
                         <table class="sliderLabels">
-    
+
                             <tr class="baseSlider baseSliderDGain">
                                 <td>
                                     <span i18n="pidTuningDGainSlider"></span>
@@ -310,7 +310,7 @@
 
                          </table>
                     </div>
-                    
+
                     <div class="gui_box topspacer slidersWarning">
                         <p i18n="pidTuningSliderWarning"></p>
                     </div>
@@ -596,7 +596,7 @@
                                             <span i18n="pidTuningItermRelaxType"></span>
                                         </label>
                                     </span>
-                                    
+
                                     <span class="itermRelaxCutoff suboption">
                                         <input type="number" name="itermRelaxCutoff" step="1" min="1" max="50" />
                                         <label for="itermRelaxCutoff">
@@ -884,7 +884,7 @@
                             </tbody>
                         </table>
                     </div>
-                
+
                     <div class="note rates-tab-warning maxRateWarning">
                         <p i18n="pidTuningMaxRateWarning"></p>
                     </div>
@@ -1192,7 +1192,7 @@
                                     <select id="sliderGyroFilterModeSelect" class="sliderMode">
                                         <option value="0" i18n="pidTuningOptionOff"></option>
                                         <option value="1" i18n="pidTuningOptionOn"></option>
-                                    </select>    
+                                    </select>
                                 </td>
                             </tr>
                         </table>
@@ -1429,7 +1429,7 @@
                                     <select id="sliderDTermFilterModeSelect" class="sliderMode">
                                         <option value="0" i18n="pidTuningOptionOff"></option>
                                         <option value="1" i18n="pidTuningOptionOn"></option>
-                                    </select>    
+                                    </select>
                                 </td>
                             </tr>
                         </table>
@@ -1469,8 +1469,8 @@
                                         <span class="inputValue"><input type="number" name="dtermLowpassFrequency" step="1" min="1" max="16000"/></span>
                                         <label>
                                             <span i18n="pidTuningStaticCutoffFrequency"></span>
-                                        </label>    
-                                    </span>    
+                                        </label>
+                                    </span>
 
                                     <span class="suboption dynamic">
                                         <span class="inputValue"><input type="number" name="dtermLowpassDynMinFrequency" step="1" min="1" max="1000"/></span>
@@ -1478,14 +1478,14 @@
                                             <span i18n="pidTuningMinCutoffFrequency"></span>
                                         </label>
                                     </span>
- 
+
                                     <span class="suboption dynamic">
                                         <span class="inputValue"><input type="number" name="dtermLowpassDynMaxFrequency" step="1" min="1" max="1000"/></span>
                                         <label>
                                             <span i18n="pidTuningMaxCutoffFrequency"></span>
                                         </label>
                                     </span>
-                    
+
                                     <span class="suboption dynamic">
                                         <span class="inputValue"><input type="number" name="dtermLowpassExpo" step="1" min="1" max="10"/></span>
                                         <label>
@@ -1585,15 +1585,6 @@
         </div>
         <div class="clear-both"></div>
     </div>
-    <div class="content_toolbar">
-        <div class="btn refresh_btn">
-            <a class="refresh" href="#" i18n="pidTuningButtonRefresh"></a>
-        </div>
-        <div class="btn save_btn">
-            <a class="update" href="#" i18n="pidTuningButtonSave"></a>
-        </div>
-    </div>
-
     <dialog class="dialogCopyProfile">
         <h3 i18n="dialogCopyProfileTitle"></h3>
         <div class="content">
@@ -1629,4 +1620,12 @@
             <a href="#" class="dialogRatesType-cancelbtn regular-button" i18n="cancel"></a>
         </div>
     </dialog>
+</div>
+<div class="content_toolbar toolbar_fixed_bottom">
+    <div class="btn refresh_btn">
+        <a class="refresh" href="#" i18n="pidTuningButtonRefresh"></a>
+    </div>
+    <div class="btn save_btn">
+        <a class="update" href="#" i18n="pidTuningButtonSave"></a>
+    </div>
 </div>

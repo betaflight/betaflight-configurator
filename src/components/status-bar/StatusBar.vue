@@ -87,24 +87,26 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 /** Status bar **/
 #status-bar {
-  position: fixed;
   display: flex;
-  gap: 10px;
+  white-space: nowrap;
+  gap: 0.5rem;
   bottom: 0;
   width: calc(100% - 20px);
   height: 20px;
   line-height: 20px;
-  padding: 0 10px 0 10px;
-  border-top: 1px solid #7d7d79;
-  background-color: #bfbeb5;
+  padding: 0.5rem 1rem;
+  background-color: var(--surface-300);
+  .message {
+    margin-right: 0.25rem;
+  }
 }
 
 #status-bar > * ~ * {
   padding-left: 10px;
-  border-left: 1px solid #7d7d79;
+  border-left: 1px solid var(--surface-400);
 }
 
 /** Status bar (phones) **/
