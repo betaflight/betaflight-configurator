@@ -106,12 +106,7 @@ export function initializeSerialBackend() {
 
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
-    let portName;
-    if (selectedPort === 'manual') {
-        portName = PortHandler.portPicker.portOverride;
-    } else {
-        portName = selectedPort;
-    }
+    let portName = selectedPort === 'manual' ? PortHandler.portPicker.portOverride : selectedPort;
 
     if (!GUI.connect_lock && selectedPort !== 'noselection' && !selectedPort.path?.startsWith('usb_')) {
         // GUI control overrides the user control
@@ -129,14 +124,10 @@ function connectDisconnect() {
             PortHandler.portPickerDisabled = true;
             $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-            CONFIGURATOR.virtualMode = false;
+            CONFIGURATOR.virtualMode = selectedPort === 'virtual';
+            CONFIGURATOR.bluetoothMode = selectedPort.startsWith('bluetooth');
 
-            if (selectedPort.startsWith('bluetooth')) {
-                CONFIGURATOR.bluetoothMode = true;
-            }
-
-            if (selectedPort === 'virtual') {
-                CONFIGURATOR.virtualMode = true;
+            if (CONFIGURATOR.virtualMode) {
                 CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
 
                 // Hack to get virtual working on the web
