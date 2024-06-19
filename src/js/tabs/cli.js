@@ -17,8 +17,8 @@ import FileSystem from "../FileSystem";
 const serial =  serialShim();
 
 const cli = {
-    lineDelayMs: 50,
-    profileSwitchDelayMs: 150,
+    lineDelayMs: 15,
+    profileSwitchDelayMs: 100,
     outputHistory: "",
     cliBuffer: "",
     startProcessing: false,
@@ -114,27 +114,24 @@ cli.initialize = function (callback) {
         self.history.add(outString.trim());
 
         const outputArray = outString.split("\n");
-        outputArray.reduce((delay, line, index) => {
-            return new Promise(function (resolve) {
-                GUI.timeout_add('CLI_send_slowly', async function () {
-                    let processingDelay = self.lineDelayMs;
-                    line = line.trim();
 
-                    if (line.toLowerCase().startsWith('profile')) {
-                        processingDelay = self.profileSwitchDelayMs;
-                    }
+        outputArray.forEach((command, index) => {
+            let line = command.trim();
+            let processingDelay = self.lineDelayMs;
+            if (line.toLowerCase().startsWith('profile')) {
+                processingDelay = self.profileSwitchDelayMs;
+            }
+            const isLastCommand = outputArray.length === index + 1;
+            if (isLastCommand && self.cliBuffer) {
+                line = getCliCommand(line, self.cliBuffer);
+            }
 
-                    const isLastCommand = outputArray.length === index + 1;
-                    if (isLastCommand && self.cliBuffer) {
-                        line = getCliCommand(line, self.cliBuffer);
-                    }
-
-                    await self.sendLine(line);
-                    resolve(processingDelay);
-
-                }, delay);
-            });
-        }, 0);
+            GUI.timeout_add('CLI_send_slowly', function () {
+                self.sendLine(line, function () {
+                    console.log('line sent', line);
+                });
+            }, processingDelay);
+        });
     }
 
     async function loadFile() {
@@ -499,15 +496,15 @@ cli.read = function (readInfo) {
     }
 };
 
-cli.sendLine = async function (line) {
-    await this.send(`${line}\n`);
+cli.sendLine = function (line, callback) {
+    this.send(`${line}\n`, callback);
 };
 
-cli.sendNativeAutoComplete = function (line) {
-    this.send(`${line}\t`);
+cli.sendNativeAutoComplete = function (line, callback) {
+    this.send(`${line}\t`, callback);
 };
 
-cli.send = async function (line) {
+cli.send = function (line, callback) {
     const bufferOut = new ArrayBuffer(line.length);
     const bufView = new Uint8Array(bufferOut);
 
@@ -515,7 +512,7 @@ cli.send = async function (line) {
         bufView[cKey] = line.charCodeAt(cKey);
     }
 
-    await serial.send(bufferOut);
+    serial.send(bufferOut, callback);
 };
 
 cli.supportWarningDialog = function (onAccept) {
@@ -550,14 +547,14 @@ cli.cleanup = function (callback) {
         return;
     }
 
-    this.send(getCliCommand('exit\r', this.cliBuffer));
-    // we could handle this "nicely", but this will do for now
-    // (another approach is however much more complicated):
-    // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
-    // we could probably implement this someday
-
-    reinitializeConnection(function () {
-        GUI.timeout_add('tab_change_callback', callback, 500);
+    this.send(getCliCommand('exit\r', this.cliBuffer), function () {
+        // we could handle this "nicely", but this will do for now
+        // (another approach is however much more complicated):
+        // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
+        // we could probably implement this someday
+        reinitializeConnection(function () {
+            GUI.timeout_add('tab_change_callback', callback, 500);
+        });
     });
 
     CONFIGURATOR.cliActive = false;
