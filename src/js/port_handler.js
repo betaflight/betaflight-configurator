@@ -49,6 +49,10 @@ PortHandler.setShowManualMode = function (showManualMode) {
     this.selectActivePort();
 };
 
+PortHandler.setShowAllSerialDevices = function (showAllSerialDevices) {
+    this.showAllSerialDevices = showAllSerialDevices;
+};
+
 PortHandler.addedSerialDevice = function (device) {
     this.updateCurrentSerialPortsList()
     .then(() => {
@@ -108,7 +112,7 @@ PortHandler.sortPorts = function(ports) {
 };
 
 PortHandler.askSerialPermissionPort = function() {
-    serial.requestPermissionDevice()
+    serial.requestPermissionDevice(this.showAllSerialDevices)
     .then((port) => {
         // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
         // selects a device that had already permission, or cancels the permission request, we need to select the port
