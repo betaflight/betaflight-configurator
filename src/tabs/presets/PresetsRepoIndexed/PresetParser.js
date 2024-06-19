@@ -90,7 +90,7 @@ export default class PresetParser {
         let directiveRemoved;
         if(isExclusiveGroup) {
             const exclusiveDirectiveLength = exlusiveDirective.length;
-            directiveRemoved = line.slice(lowercaseLine.lastIndexOf(exlusiveDirective) + exclusiveDirectiveLength).trim();
+            directiveRemoved = line.slice(lowercaseLine.lastIndexOf(exlusiveDirective) + exclusiveDirectiveLength - 1).trim();
         } else {
             directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_GROUP_DIRECTIVE.length).trim();
         }
