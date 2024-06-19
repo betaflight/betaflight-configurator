@@ -19,20 +19,6 @@ const bluetoothDevices = [
     { name: "SpeedyBee V2", serviceUuid: '0000abf0-0000-1000-8000-00805f9b34fb', writeCharacteristic: '0000abf1-0000-1000-8000-00805f9b34fb', readCharacteristic: '0000abf2-0000-1000-8000-00805f9b34fb' },
 ];
 
-async function* streamAsyncIterable(reader, keepReadingFlag) {
-    try {
-        while (keepReadingFlag()) {
-            const { done, value } = await reader.read();
-            if (done) {
-                return;
-            }
-            yield value;
-        }
-    } finally {
-        reader.releaseLock();
-    }
-}
-
 class BT extends EventTarget {
     constructor() {
         super();
@@ -53,9 +39,6 @@ class BT extends EventTarget {
         this.portCounter = 0;
         this.ports = [];
         this.port = null;
-        this.reader = null;
-        this.writer = null;
-        this.reading = false;
 
         this.connect = this.connect.bind(this);
 
@@ -164,13 +147,7 @@ class BT extends EventTarget {
         }
 
         // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info
-        // const connectionInfo = this.port.getInfo();
-
-        // console.log(`${this.logHead}Connection info:`, connectionInfo);
-
-        const connectionInfo = true;
-        // this.writer = this.port.writable.getWriter();
-        // this.reader = this.port.readable.getReader();
+        const connectionInfo = this.port.gatt.connected;
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
@@ -191,17 +168,6 @@ class BT extends EventTarget {
             this.dispatchEvent(
                 new CustomEvent("connect", { detail: connectionInfo }),
             );
-            // Check if we need the helper function or could polyfill
-            // the stream async iterable interface:
-            // https://web.dev/streams/#asynchronous-iteration
-
-
-            this.reading = true;
-            for await (let value of streamAsyncIterable(this.reader, () => this.reading)) {
-                this.dispatchEvent(
-                    new CustomEvent("receive", { detail: value }),
-                );
-            }
         } else if (connectionInfo && this.openCanceled) {
             this.connectionId = connectionInfo.connectionId;
 
@@ -316,7 +282,6 @@ class BT extends EventTarget {
     async disconnect() {
         this.connected = false;
         this.transmitting = false;
-        this.reading = false;
         this.bytesReceived = 0;
         this.bytesSent = 0;
 
@@ -327,15 +292,7 @@ class BT extends EventTarget {
 
         const doCleanup = async () => {
             this.removeEventListener('receive', this.handleReceiveBytes);
-            if (this.reader) {
-                this.reader.cancel();
-                this.reader.releaseLock();
-                this.reader = null;
-            }
-            if (this.writer) {
-                await this.writer.releaseLock();
-                this.writer = null;
-            }
+
             if (this.port) {
                 this.port.removeEventListener("disconnect", this.handleDisconnect.bind(this));
                 this.port.removeEventListener('gattserverdisconnected', this.handleDisconnect);

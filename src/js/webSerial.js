@@ -29,7 +29,7 @@ class WebSerial extends EventTarget {
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.logHead = "SERIAL: ";
+        this.logHead = "[SERIAL] ";
 
         this.portCounter = 0;
         this.ports = [];
