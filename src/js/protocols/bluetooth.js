@@ -292,15 +292,11 @@ class BT extends EventTarget {
     }
 
     onCharacteristicValueChanged(event) {
-        console.info(`${this.logHead} data bytes received: ${event.target.value.byteLength}`);
-
         const buffer = new Uint8Array(event.target.value.byteLength);
 
         for (let i = 0; i < event.target.value.byteLength; i++) {
             buffer[i] = event.target.value.getUint8(i);
         }
-
-        console.info(`${this.logHead} data received: ${buffer}`);
 
         this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
     }

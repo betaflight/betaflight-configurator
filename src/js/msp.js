@@ -5,7 +5,7 @@ import serialWeb from "./webSerial.js";
 import { isWeb } from "./utils/isWeb.js";
 import { serialShim } from "./serial_shim.js";
 
-const serial = serialShim();
+let serial = serialShim();
 
 const MSP = {
     symbols: {
@@ -309,6 +309,9 @@ const MSP = {
         return bufferOut;
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
+        // Hack to make BT work
+        serial = serialShim();
+
         const connected = isWeb() ? serial.connected : serial.connectionId;
 
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
