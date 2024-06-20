@@ -767,15 +767,13 @@ export function reinitializeConnection(callback) {
         }, 500);
     }
 
-    if (CONFIGURATOR.bluetoothMode) {
-        // TODO: find the right event to trigger the reconnection
-        return setTimeout(function() {
-            $('a.connect').trigger('click');
-        }, 500);
-    }
-
     rebootTimestamp = Date.now();
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+
+    if (CONFIGURATOR.bluetoothMode) {
+        // Bluetooth devices are not disconnected when rebooting
+        connectDisconnect();
+    }
 
     gui_log(i18n.getMessage('deviceRebooting'));
 
