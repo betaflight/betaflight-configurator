@@ -22,6 +22,14 @@ const bluetoothDevices = [
 class BT extends EventTarget {
     constructor() {
         super();
+
+        if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
+            this.bluetooth = navigator.bluetooth;
+        } else {
+            console.error(`${this.logHead} Bluetooth API not available`);
+            return;
+        }
+
         this.connected = false;
         this.openRequested = false;
         this.openCanceled = false;

@@ -110,6 +110,11 @@ function connectDisconnect() {
         const selectedPort = portName;
 
         if (!isConnected) {
+            // prevent connection when we do not have permission
+            if (selectedPort.startsWith('requestpermission')) {
+                return;
+            }
+
             console.log(`Connecting to: ${portName}`);
             GUI.connecting_to = portName;
 

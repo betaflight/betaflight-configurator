@@ -135,10 +135,12 @@ PortHandler.updateCurrentUsbPortsList = async function () {
 };
 
 PortHandler.updateCurrentBluetoothPortsList = async function () {
-    const ports = await BT.getDevices();
-    const orderedPorts = this.sortPorts(ports);
-    this.bluetoothAvailable = orderedPorts.length > 0;
-    this.currentBluetoothPorts = orderedPorts;
+    if (BT.bluetooth) {
+        const ports = await BT.getDevices();
+        const orderedPorts = this.sortPorts(ports);
+        this.bluetoothAvailable = orderedPorts.length > 0;
+        this.currentBluetoothPorts = orderedPorts;
+    }
 };
 
 PortHandler.sortPorts = function(ports) {
@@ -151,13 +153,15 @@ PortHandler.sortPorts = function(ports) {
 };
 
 PortHandler.askBluetoothPermissionPort = function() {
-    BT.requestPermissionDevice()
-    .then((port) => {
-        // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
-        // selects a device that had already permission, or cancels the permission request, we need to select the port
-        // so do it here too
-        this.selectActivePort(port);
-    });
+    if (BT.bluetooth) {
+        BT.requestPermissionDevice()
+        .then((port) => {
+            // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
+            // selects a device that had already permission, or cancels the permission request, we need to select the port
+            // so do it here too
+            this.selectActivePort(port);
+        });
+    }
 };
 
 PortHandler.askSerialPermissionPort = function() {
