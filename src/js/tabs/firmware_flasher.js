@@ -578,7 +578,10 @@ firmware_flasher.initialize = function (callback) {
 
             if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'DFU Flashing', { filename: self.filename || null });
-                DFU.connect(firmware, options);
+                DFU.requestPermission()
+                .then((device) => {
+                    DFU.connect(device.path, firmware, options);
+                });
             } else if (isSerial) {
                 if ($('input.updating').is(':checked')) {
                     options.no_reboot = true;
@@ -923,7 +926,10 @@ firmware_flasher.initialize = function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
                 try {
                     console.log('Closing DFU');
-                    DFU.connect(self.parsed_hex, { exitDfu: true });
+                    DFU.requestPermission()
+                    .then((device) => {
+                        DFU.connect(device.path, self.parsed_hex, { exitDfu: true });
+                    });
                 } catch (e) {
                     console.log(`Exiting DFU failed: ${e.message}`);
                 }
