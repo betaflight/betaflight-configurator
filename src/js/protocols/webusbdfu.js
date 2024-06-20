@@ -119,7 +119,7 @@ class WEBUSBDFU_protocol extends EventTarget {
     getConnectedPort() {
         return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
     }
-    connect(hex, options, callback) {
+    async connect(devicePath, hex, options, callback) {
         this.hex = hex;
         this.callback = callback;
 
@@ -141,19 +141,10 @@ class WEBUSBDFU_protocol extends EventTarget {
         // reset progress bar to initial state
         TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
 
-        navigator.usb
-        .requestDevice(usbDevices)
-        .then(selectedDevice => {
-            console.log(`Product name: ${selectedDevice.productName}`);
-            console.log(`USB DFU detected with ID: ${selectedDevice}`);
-            this.usbDevice = selectedDevice;
-            console.log(`WebUSB Version: ${this.usbDevice.deviceVersionMajor}.${this.usbDevice.deviceVersionMinor}.${this.usbDevice.deviceVersionSubminor}`);
-            return this.openDevice();
-        })
-        .catch((e) => {
-            console.error(`There is no device. ${e}`);
-            gui_log(i18n.getMessage('stm32UsbDfuNotFound'));
-        });
+        const devices = await this.getDevices();
+        const deviceFound = devices.find(device => device.path === devicePath);
+        this.usbDevice = deviceFound.port;
+        return this.openDevice();
     }
     openDevice() {
         this.usbDevice
@@ -161,7 +152,9 @@ class WEBUSBDFU_protocol extends EventTarget {
         .then(async () => {
             // show key values for the device
             console.log(`USB Device opened: ${this.usbDevice.productName}`);
-            if (this.usbDevice.configuration === null) await this.usbDevice.selectConfiguration(1);
+            if (this.usbDevice.configuration === null) {
+                await this.usbDevice.selectConfiguration(1);
+            }
             this.claimInterface(0);
         })
         .catch(error => {
