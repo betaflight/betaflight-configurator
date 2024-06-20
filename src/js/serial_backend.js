@@ -26,7 +26,6 @@ import BuildApi from "./BuildApi";
 
 import { serialShim } from "./serial_shim.js";
 import { EventBus } from "../components/eventBus";
-import BT from "./protocols/bluetooth.js";
 
 let serial = serialShim();
 
@@ -44,7 +43,6 @@ const toggleStatus = function () {
 };
 
 function connectHandler(event) {
-    console.log(`[BACKEND] Connected to: ${event.detail}`);
     onOpen(event.detail);
     toggleStatus();
 }
@@ -75,18 +73,13 @@ export function initializeSerialBackend() {
 
     // Using serialShim for serial and bluetooth we don't know which event we need before we connect
     // Perhaps we should implement a Connection class that handles the connection and events for bluetooth, serial and sockets
+    // TODO: use event gattserverdisconnected for save and reboot and device removal.
 
     serial.addEventListener("removedDevice", (event) => {
         if (event.detail.path === GUI.connected_to) {
             connectDisconnect();
         }
     });
-
-    // BT.addEventListener("removedDevice", (event) => {
-    //     if (event.detail.path === GUI.connected_to) {
-    //         connectDisconnect();
-    //     }
-    // });
 
     $('div.open_firmware_flasher a.flash').click(function () {
         if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
@@ -682,10 +675,6 @@ function onClosed(result) {
         serial.removeEventListener('disconnect', disconnectHandler);
     }
 
-    // Reset serialShim for next connection
-    CONFIGURATOR.bluetoothMode = false;
-    serial = serialShim();
-
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;
@@ -772,7 +761,14 @@ function startLiveDataRefreshTimer() {
 export function reinitializeConnection(callback) {
 
     // In virtual mode reconnect when autoconnect is enabled
-    if (PortHandler.portPicker.selectedPort === 'virtual' && PortHandler.portPicker.autoConnect) {
+    if (CONFIGURATOR.virtualMode && PortHandler.portPicker.autoConnect) {
+        return setTimeout(function() {
+            $('a.connect').trigger('click');
+        }, 500);
+    }
+
+    if (CONFIGURATOR.bluetoothMode) {
+        // TODO: find the right event to trigger the reconnection
         return setTimeout(function() {
             $('a.connect').trigger('click');
         }, 500);

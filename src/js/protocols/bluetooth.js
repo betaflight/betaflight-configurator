@@ -44,6 +44,7 @@ class BT extends EventTarget {
 
         navigator.bluetooth.addEventListener("connect", e => this.handleNewDevice(e.target));
         navigator.bluetooth.addEventListener("disconnect", e => this.handleRemovedDevice(e.target));
+        navigator.bluetooth.addEventListener("gatserverdisconnected", e => this.handleRemovedDevice(e.target));
 
         this.loadDevices();
     }
