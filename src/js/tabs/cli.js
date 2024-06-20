@@ -546,6 +546,7 @@ cli.cleanup = function (callback) {
 
         return;
     }
+
     this.send(getCliCommand('exit\r', this.cliBuffer), function () {
         // we could handle this "nicely", but this will do for now
         // (another approach is however much more complicated):
