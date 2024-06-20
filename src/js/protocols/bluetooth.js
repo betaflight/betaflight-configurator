@@ -142,7 +142,7 @@ class BT extends EventTarget {
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);
 
-            await this.connectServer();
+            await this.gattConnect();
 
             gui_log(i18n.getMessage('bluetoothConnected', [this.device.name]));
 
@@ -203,13 +203,8 @@ class BT extends EventTarget {
         }
     }
 
-    async connectServer() {
+    async gattConnect() {
         this.server = await this.device.gatt?.connect();
-    }
-
-    async getService (service) {
-        this.selectedService = await this.server.getPrimaryService(service);
-        return this.selectedService;
     }
 
     async getServices() {
@@ -259,12 +254,12 @@ class BT extends EventTarget {
             throw new Error("Unexpected read characteristic found - should be", this.deviceDescription.readCharacteristic);
         }
 
-        this.readCharacteristic.addEventListener('characteristicvaluechanged', this.onCharacteristicValueChanged.bind(this));
+        this.readCharacteristic.addEventListener('characteristicvaluechanged', this.handleNotification.bind(this));
 
         return await this.readCharacteristic.readValue();
     }
 
-    onCharacteristicValueChanged(event) {
+    handleNotification(event) {
         const buffer = new Uint8Array(event.target.value.byteLength);
 
         for (let i = 0; i < event.target.value.byteLength; i++) {
@@ -303,7 +298,7 @@ class BT extends EventTarget {
             if (this.device) {
                 this.device.removeEventListener("disconnect", this.handleDisconnect.bind(this));
                 this.device.removeEventListener('gattserverdisconnected', this.handleDisconnect);
-                this.readCharacteristic.removeEventListener('characteristicvaluechanged', this.onCharacteristicValueChanged.bind(this));
+                this.readCharacteristic.removeEventListener('characteristicvaluechanged', this.handleNotification.bind(this));
 
                 if (this.device.gatt.connected) {
                     this.device.gatt.disconnect();
