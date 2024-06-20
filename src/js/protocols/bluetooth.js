@@ -143,7 +143,7 @@ class BT extends EventTarget {
 
         this.device = this.devices.find(device => device.path === path).port;
 
-        console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`, this.device, options);
+        console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`);
 
         this.device.addEventListener('gattserverdisconnected', this.handleDisconnect.bind(this));
 
@@ -166,7 +166,7 @@ class BT extends EventTarget {
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
-            this.connectionId = path;
+            this.connectionId = this.device.port;
             this.bitrate = options.baudRate;
             this.bytesReceived = 0;
             this.bytesSent = 0;
@@ -177,7 +177,7 @@ class BT extends EventTarget {
             this.addEventListener("receive", this.handleReceiveBytes);
 
             console.log(
-                `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, Baud: ${options.baudRate}`,
+                `${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`,
             );
 
             this.dispatchEvent(
@@ -222,7 +222,6 @@ class BT extends EventTarget {
 
         this.service = this.services.find(service => {
             this.deviceDescription = bluetoothDevices.find(device => device.serviceUuid == service.uuid);
-            console.log(`${this.logHead} Device description`, this.deviceDescription);
             return this.deviceDescription;
         });
 
@@ -232,7 +231,6 @@ class BT extends EventTarget {
 
         gui_log(i18n.getMessage('bluetoothConnectionType', [this.deviceDescription.name]));
 
-        console.log(`${this.logHead} Connected to service:`, this.deviceDescription.name);
         console.log(`${this.logHead} Connected to service:`, this.service.uuid);
 
         return this.service;
@@ -242,7 +240,7 @@ class BT extends EventTarget {
         const characteristics = await this.service.getCharacteristics();
 
         characteristics.forEach(characteristic => {
-            console.log("Characteristic: ", characteristic);
+            // console.log("Characteristic: ", characteristic);
             if (characteristic.uuid == this.deviceDescription.writeCharacteristic) {
                 this.writeCharacteristic = characteristic;
             }
@@ -250,7 +248,7 @@ class BT extends EventTarget {
             if (characteristic.uuid == this.deviceDescription.readCharacteristic) {
                 this.readCharacteristic = characteristic;
             }
-            console.log("Characteristic found: ", characteristic.uuid, this.deviceDescription.writeCharacteristic, this.deviceDescription.readCharacteristic);
+            // console.log("Characteristic found: ", characteristic.uuid, this.deviceDescription.writeCharacteristic, this.deviceDescription.readCharacteristic);
             return this.writeCharacteristic && this.readCharacteristic;
         });
 

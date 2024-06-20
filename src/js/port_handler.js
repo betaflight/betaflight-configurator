@@ -237,7 +237,7 @@ PortHandler.selectActivePort = function(suggestedDevice) {
     // Return the default port if no other port was selected
     this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
 
-    console.log(`Porthandler automatically selected device is '${this.portPicker.selectedPort}'`);
+    console.log(`[PORTHANDLER] automatically selected device is '${this.portPicker.selectedPort}'`);
     return selectedPort;
 };
 
