@@ -88,7 +88,7 @@ PortHandler.removedSerialDevice = function (device) {
 PortHandler.addedBluetoothDevice = function (device) {
     this.updateCurrentBluetoothPortsList()
     .then(() => {
-        const selectedPort = this.selectActivePort();
+        const selectedPort = this.selectActivePort(device);
         if (!device || selectedPort === device.path) {
             // Send this event when the port handler auto selects a new device
             EventBus.$emit('port-handler:auto-select-bluetooth-device', selectedPort);
@@ -186,7 +186,7 @@ PortHandler.selectActivePort = function(suggestedDevice) {
     }
 
     // Return the same that is connected to bluetooth
-    if (BT.connected) {
+    if (BT.device) {
         selectedPort = this.currentBluetoothPorts.find(device => device === BT.getConnectedPort());
     }
 

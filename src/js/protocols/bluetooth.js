@@ -121,6 +121,14 @@ class BT extends EventTarget {
         return this.devices;
     }
 
+    getAvailability() {
+        navigator.bluetooth.getAvailability().then((available) => {
+            console.log(`${this.logHead} Bluetooth available:`, available);
+            this.available = available;
+            return available;
+        });
+    }
+
     async connect(path, options) {
         this.openRequested = true;
         this.closeRequested = false;
