@@ -50,9 +50,9 @@ class BT extends EventTarget {
 
         this.connect = this.connect.bind(this);
 
-        navigator.bluetooth.addEventListener("connect", e => this.handleNewDevice(e.target));
-        navigator.bluetooth.addEventListener("disconnect", e => this.handleRemovedDevice(e.target));
-        navigator.bluetooth.addEventListener("gatserverdisconnected", e => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("connect", e => this.handleNewDevice(e.target));
+        this.bluetooth.addEventListener("disconnect", e => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("gatserverdisconnected", e => this.handleRemovedDevice(e.target));
 
         this.loadDevices();
     }
@@ -96,7 +96,7 @@ class BT extends EventTarget {
     }
 
     async loadDevices() {
-        const devices = await navigator.bluetooth.getDevices();
+        const devices = await this.bluetooth.getDevices();
 
         this.portCounter = 1;
         this.devices = devices.map(device => this.createPort(device));
@@ -113,7 +113,7 @@ class BT extends EventTarget {
         const options = { acceptAllDevices: true, optionalServices: uuids };
 
         try {
-            const userSelectedPort = await navigator.bluetooth.requestDevice(options);
+            const userSelectedPort = await this.bluetooth.requestDevice(options);
             newPermissionPort = this.devices.find(port => port.port === userSelectedPort);
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
@@ -130,7 +130,7 @@ class BT extends EventTarget {
     }
 
     getAvailability() {
-        navigator.bluetooth.getAvailability().then((available) => {
+        this.bluetooth.getAvailability().then((available) => {
             console.log(`${this.logHead} Bluetooth available:`, available);
             this.available = available;
             return available;
@@ -184,7 +184,7 @@ class BT extends EventTarget {
                 new CustomEvent("connect", { detail: connectionInfo }),
             );
         } else if (connectionInfo && this.openCanceled) {
-            this.connectionId = connectionInfo.connectionId;
+            this.connectionId = this.device.port;
 
             console.log(
                 `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, but request was canceled, disconnecting`,
@@ -248,7 +248,6 @@ class BT extends EventTarget {
             if (characteristic.uuid == this.deviceDescription.readCharacteristic) {
                 this.readCharacteristic = characteristic;
             }
-            // console.log("Characteristic found: ", characteristic.uuid, this.deviceDescription.writeCharacteristic, this.deviceDescription.readCharacteristic);
             return this.writeCharacteristic && this.readCharacteristic;
         });
 
@@ -340,7 +339,7 @@ class BT extends EventTarget {
         }
     }
 
-    async send (data) {
+    async send(data) {
         if (!this.writeCharacteristic) {
             return;
         }

@@ -25,7 +25,6 @@ const PortHandler = new function () {
     this.bluetoothAvailable = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
-
     this.showAllSerialDevices = false;
     this.showVirtualMode = getConfig('showVirtualMode', false).showVirtualMode;
     this.showManualMode = getConfig('showManualMode', false).showManualMode;
@@ -217,7 +216,6 @@ PortHandler.selectActivePort = function(suggestedDevice) {
 
     // Return some bluetooth port that is recognized by the filter
     if (!selectedPort) {
-        console.log("BT ports recognized by the filter", this.currentBluetoothPorts);
         selectedPort = this.currentBluetoothPorts.find(device => deviceFilter.some(filter => device.displayName.includes(filter)));
         if (selectedPort) {
             selectedPort = selectedPort.path;

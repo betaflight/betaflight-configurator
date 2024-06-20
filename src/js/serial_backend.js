@@ -115,7 +115,7 @@ function connectDisconnect() {
                 return;
             }
 
-            console.log(`Connecting to: ${portName}`);
+            console.log(`[SERIAL-BACKEND] Connecting to: ${portName}`);
             GUI.connecting_to = portName;
 
             // lock port select & baud while we are connecting / connected
@@ -283,7 +283,7 @@ function onOpen(openInfo) {
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
         MSP.timeout = 250;
-        console.log(`Requesting configuration data`);
+        console.log(`[SERIAL-BACKEND] Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
