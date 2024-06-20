@@ -965,9 +965,9 @@
         "message": "No valid receiver signal is detected",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
         "message": "Your receiver has just recovered from receiver failsafe but the arm switch is on",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "The 'FAILSAFE' switch was activated",
