@@ -37,8 +37,8 @@ class BT extends EventTarget {
         this.logHead = "[BLUETOOTH]";
 
         this.portCounter = 0;
-        this.ports = [];
-        this.port = null;
+        this.devices = [];
+        this.device = null;
 
         this.connect = this.connect.bind(this);
 
@@ -51,15 +51,15 @@ class BT extends EventTarget {
     handleNewDevice(device) {
 
         const added = this.createPort(device);
-        this.ports.push(added);
+        this.devices.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
 
         return added;
     }
 
     handleRemovedDevice(device) {
-        const removed = this.ports.find(port => port.port === device);
-        this.ports = this.ports.filter(port => port.port !== device);
+        const removed = this.devices.find(port => port.port === device);
+        this.devices = this.devices.filter(port => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
 
@@ -73,7 +73,7 @@ class BT extends EventTarget {
     }
 
     getConnectedPort() {
-        return this.port;
+        return this.device;
     }
 
     createPort(device) {
@@ -87,10 +87,10 @@ class BT extends EventTarget {
     }
 
     async loadDevices() {
-        const ports = await navigator.bluetooth.getDevices();
+        const devices = await navigator.bluetooth.getDevices();
 
         this.portCounter = 1;
-        this.ports = ports.map(port => this.createPort(port));
+        this.devices = devices.map(device => this.createPort(device));
     }
 
     async requestPermissionDevice() {
@@ -105,7 +105,7 @@ class BT extends EventTarget {
 
         try {
             const userSelectedPort = await navigator.bluetooth.requestDevice(options);
-            newPermissionPort = this.ports.find(port => port.port === userSelectedPort);
+            newPermissionPort = this.devices.find(port => port.port === userSelectedPort);
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
             }
@@ -117,25 +117,25 @@ class BT extends EventTarget {
     }
 
     async getDevices() {
-        return this.ports;
+        return this.devices;
     }
 
     async connect(path, options) {
         this.openRequested = true;
         this.closeRequested = false;
 
-        this.port = this.ports.find(device => device.path === path).port;
+        this.device = this.devices.find(device => device.path === path).port;
 
-        console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`, this.port, options);
+        console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`, this.device, options);
 
-        this.port.addEventListener('gattserverdisconnected', this.handleDisconnect.bind(this));
+        this.device.addEventListener('gattserverdisconnected', this.handleDisconnect.bind(this));
 
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);
 
             await this.connectServer();
 
-            gui_log(i18n.getMessage('bluetoothConnected', [this.port.name]));
+            gui_log(i18n.getMessage('bluetoothConnected', [this.device.name]));
 
             await this.getServices();
             await this.getCharacteristics();
@@ -145,7 +145,7 @@ class BT extends EventTarget {
         }
 
         // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info
-        const connectionInfo = this.port.gatt.connected;
+        const connectionInfo = this.device.gatt.connected;
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
@@ -156,7 +156,7 @@ class BT extends EventTarget {
             this.failed = 0;
             this.openRequested = false;
 
-            this.port.addEventListener("disconnect", this.handleDisconnect.bind(this));
+            this.device.addEventListener("disconnect", this.handleDisconnect.bind(this));
             this.addEventListener("receive", this.handleReceiveBytes);
 
             console.log(
@@ -195,7 +195,7 @@ class BT extends EventTarget {
     }
 
     async connectServer() {
-        this.server = await this.port.gatt?.connect();
+        this.server = await this.device.gatt?.connect();
     }
 
     async getService (service) {
@@ -291,19 +291,19 @@ class BT extends EventTarget {
         const doCleanup = async () => {
             this.removeEventListener('receive', this.handleReceiveBytes);
 
-            if (this.port) {
-                this.port.removeEventListener("disconnect", this.handleDisconnect.bind(this));
-                this.port.removeEventListener('gattserverdisconnected', this.handleDisconnect);
+            if (this.device) {
+                this.device.removeEventListener("disconnect", this.handleDisconnect.bind(this));
+                this.device.removeEventListener('gattserverdisconnected', this.handleDisconnect);
                 this.readCharacteristic.removeEventListener('characteristicvaluechanged', this.onCharacteristicValueChanged.bind(this));
 
-                if (this.port.gatt.connected) {
-                    this.port.gatt.disconnect();
+                if (this.device.gatt.connected) {
+                    this.device.gatt.disconnect();
                 }
 
                 this.writeCharacteristic = false;
                 this.readCharacteristic = false;
                 this.deviceDescription = false;
-                this.port = null;
+                this.device = null;
             }
         };
 
