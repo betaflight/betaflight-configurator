@@ -17,7 +17,7 @@ import FileSystem from "../FileSystem";
 const serial =  serialShim();
 
 const cli = {
-    lineDelayMs: 15,
+    lineDelayMs: 5,
     profileSwitchDelayMs: 100,
     outputHistory: "",
     cliBuffer: "",
@@ -113,25 +113,33 @@ cli.initialize = function (callback) {
     async function executeCommands(outString) {
         self.history.add(outString.trim());
 
-        const outputArray = outString.split("\n");
+        function sendCommandIterative(commandArray) {
 
-        outputArray.forEach((command, index) => {
+            const command = commandArray.shift();
+
             let line = command.trim();
             let processingDelay = self.lineDelayMs;
             if (line.toLowerCase().startsWith('profile')) {
                 processingDelay = self.profileSwitchDelayMs;
             }
-            const isLastCommand = outputArray.length === index + 1;
+            const isLastCommand = outputArray.length === 0;
             if (isLastCommand && self.cliBuffer) {
                 line = getCliCommand(line, self.cliBuffer);
             }
 
-            GUI.timeout_add('CLI_send_slowly', function () {
-                self.sendLine(line, function () {
-                    console.log('line sent', line);
-                });
-            }, processingDelay);
-        });
+            self.sendLine(line);
+
+            if (!isLastCommand) {
+                GUI.timeout_add('CLI_send_slowly', function () {
+                    sendCommandIterative(commandArray);
+                }, processingDelay);
+            }
+
+        }
+
+        const outputArray = outString.split("\n");
+        sendCommandIterative(outputArray);
+
     }
 
     async function loadFile() {
