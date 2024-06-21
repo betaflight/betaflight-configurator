@@ -17,6 +17,7 @@ import STM32 from '../protocols/webstm32';
 import DFU from '../protocols/webusbdfu';
 import AutoBackup from '../utils/AutoBackup.js';
 import AutoDetect from '../utils/AutoDetect.js';
+import { EventBus } from "../../components/eventBus";
 
 const firmware_flasher = {
     targets: null,
@@ -560,6 +561,22 @@ firmware_flasher.initialize = function (callback) {
             return output.join('').split('\n');
         }
 
+        function detectedUsbDevice(device) {
+
+            const isFlashOnConnect = $('input.flash_on_connect').is(':checked');
+
+            console.log('Detected USB device:', device);
+            console.log('Reboot mode: %s, flash on connect', STM32.rebootMode, isFlashOnConnect);
+
+            if (STM32.rebootMode || isFlashOnConnect) {
+                STM32.rebootMode = 0;
+                GUI.connect_lock = false;
+                startFlashing();
+            }
+        }
+
+        EventBus.$on('port-handler:auto-select-usb-device', detectedUsbDevice);
+
         function flashFirmware(firmware) {
             const options = {};
 
@@ -578,10 +595,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, 'DFU Flashing', { filename: self.filename || null });
-                DFU.requestPermission()
-                .then((device) => {
-                    DFU.connect(device.path, firmware, options);
-                });
+                DFU.connect(port, firmware, options);
             } else if (isSerial) {
                 if ($('input.updating').is(':checked')) {
                     options.no_reboot = true;
@@ -598,8 +612,12 @@ firmware_flasher.initialize = function (callback) {
 
                 STM32.connect(port, baud, firmware, options);
             } else {
-                console.log('Please select valid serial port');
-                gui_log(i18n.getMessage('firmwareFlasherNoValidPort'));
+                // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
+                console.log('No valid port detected, asking for permissions');
+                DFU.requestPermission()
+                .then((device) => {
+                    DFU.connect(device.path, firmware, options);
+                });
             }
 
             self.isFlashing = false;
@@ -1104,39 +1122,6 @@ firmware_flasher.initialize = function (callback) {
                 console.error("Error saving file:", error);
             });
         });
-
-        $('input.flash_on_connect').change(function () {
-            const status = $(this).is(':checked');
-
-            if (status) {
-                const catch_new_port = function () {
-                    // TODO modify by listen to a new event
-                    PortHandler.port_detected('flash_detected_device', function (resultPort) {
-                        const port = resultPort[0];
-
-                        if (!GUI.connect_lock) {
-                            gui_log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
-                            console.log(`Detected: ${port} - triggering flash on connect`);
-
-                            // Trigger regular Flashing sequence
-                            GUI.timeout_add('initialization_timeout', function () {
-                                $('a.flash_firmware').click();
-                            }, 100); // timeout so bus have time to initialize after being detected by the system
-                        } else {
-                            gui_log(i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
-                        }
-
-                        // Since current port_detected request was consumed, create new one
-                        catch_new_port();
-                    }, false, true);
-                };
-
-                catch_new_port();
-            } else {
-                // Cancel the flash on connect
-                GUI.timeout_remove('initialization_timeout');
-            }
-        }).change();
 
         self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
