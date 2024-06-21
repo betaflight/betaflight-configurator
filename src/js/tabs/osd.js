@@ -779,8 +779,10 @@ OSD.loadDisplayFields = function() {
             draw_order: 160,
             positionable: true,
             variants: [
-                'osdTextElementAltitudeVariant1Decimal',
-                'osdTextElementAltitudeVariantNoDecimal',
+                'osdTextElementAltitudeVariant1DecimalAGL',
+                'osdTextElementAltitudeVariantNoDecimalAGL',
+                'osdTextElementAltitudeVariant1DecimalASL',
+                'osdTextElementAltitudeVariantNoDecimalASL',
             ],
             preview(osdData) {
                 return OSD.generateAltitudePreview(osdData);
