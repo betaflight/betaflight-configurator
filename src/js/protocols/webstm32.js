@@ -100,10 +100,31 @@ class STM32Protocol {
         serial.removeEventListener('disconnect', (event) => this.handleDisconnect(event.detail));
 
         if (disconnectionResult && this.rebootMode) {
-            DFU.requestPermission()
-            .then((device) => {
-                DFU.connect(device.path, this.hex, this.serialOptions);
-            });
+
+            // If the firmware_flasher does not start flashing, we need to ask for permission to flash
+            setTimeout(() => {
+                if (this.rebootMode) {
+                    console.log('STM32 Requesting permission for device');
+
+                    DFU.requestPermission()
+                    .then((device) => {
+
+                        if (device != null) {
+                            console.log('DFU request permission granted', device);
+                        } else {
+                            console.error('DFU request permission denied');
+                            this.rebootMode = 0;
+                            GUI.connect_lock = false;
+                        }
+                    })
+                    .catch (e => {
+                        console.error('DFU request permission failed', e);
+                        this.rebootMode = 0;
+                        GUI.connect_lock = false;
+                    });
+                }
+            }, 3000);
+
         } else {
             GUI.connect_lock = false;
         }
