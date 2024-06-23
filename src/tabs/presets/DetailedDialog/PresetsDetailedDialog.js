@@ -199,10 +199,9 @@ export default class PresetsDetailedDialog {
         const firstUnderscoreIndex = selectedOptionKey.indexOf('_');
         const lastUnderscoreIndex = selectedOptionKey.lastIndexOf('_');
         const groupIndex = selectedOptionKey.slice(firstUnderscoreIndex + 1, lastUnderscoreIndex);
-        const optionIndex = selectedOptionKey.slice(lastUnderscoreIndex + 1);
 
         const group = this._preset.options[groupIndex];
-        if(group.isExclusive) {
+        if (group.isExclusive) {
             // clear all options within group
             const valuesWithinGroup = this._domOptionsSelect.find(`optgroup[label="${group.name}"]`)
                 .children()

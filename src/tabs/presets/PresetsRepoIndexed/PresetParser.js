@@ -88,7 +88,7 @@ export default class PresetParser {
         const isExclusiveGroup = lowercaseLine.includes(exlusiveDirective);
 
         let directiveRemoved;
-        if(isExclusiveGroup) {
+        if (isExclusiveGroup) {
             const exclusiveDirectiveLength = exlusiveDirective.length;
             directiveRemoved = line.slice(lowercaseLine.lastIndexOf(exlusiveDirective) + exclusiveDirectiveLength - 1).trim();
         } else {
