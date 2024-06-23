@@ -13,6 +13,7 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import $ from 'jquery';
 import DEBUG from "../debug";
 import FileSystem from "../FileSystem";
+import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
 
 let sdcardTimer;
 
@@ -275,6 +276,8 @@ onboard_logging.initialize = function (callback) {
         }
     }
 
+    $('input[name="expertModeCheckbox"]').on('change', () => $('a.regular-button.require-msc-supported.save-flash').toggle(isExpertModeEnabled()));
+
     function update_html() {
         const dataflashPresent = FC.DATAFLASH.totalSize > 0;
 
@@ -284,7 +287,7 @@ onboard_logging.initialize = function (callback) {
         update_bar_width($(".tab-onboard_logging .sdcard-other"), FC.SDCARD.totalSizeKB - FC.SDCARD.freeSizeKB, FC.SDCARD.totalSizeKB, i18n.getMessage('dataflashUnavSpace'), true);
         update_bar_width($(".tab-onboard_logging .sdcard-free"), FC.SDCARD.freeSizeKB, FC.SDCARD.totalSizeKB, i18n.getMessage('dataflashLogsSpace'), true);
 
-        $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", FC.DATAFLASH.usedSize === 0);
+        $("a.regular-button erase-flash, a.regular-button.require-msc-supported.save-flash").toggleClass("disabled", FC.DATAFLASH.usedSize === 0);
 
         $(".tab-onboard_logging")
             .toggleClass("sdcard-error", FC.SDCARD.state === MSP.SDCARD_STATE_FATAL)
