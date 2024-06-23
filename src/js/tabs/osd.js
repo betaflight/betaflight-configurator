@@ -15,6 +15,7 @@ import inflection from "inflection";
 import debounce from "lodash.debounce";
 import $ from 'jquery';
 import FileSystem from "../FileSystem";
+import { have_sensor } from "../sensor_helpers";
 
 const FONT = {};
 const SYM = {};
@@ -781,8 +782,6 @@ OSD.loadDisplayFields = function() {
             variants: [
                 'osdTextElementAltitudeVariant1DecimalAGL',
                 'osdTextElementAltitudeVariantNoDecimalAGL',
-                'osdTextElementAltitudeVariant1DecimalASL',
-                'osdTextElementAltitudeVariantNoDecimalASL',
             ],
             preview(osdData) {
                 return OSD.generateAltitudePreview(osdData);
@@ -1515,6 +1514,11 @@ OSD.loadDisplayFields = function() {
             preview: '1:23.456',
         },
     };
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && have_sensor(FC.CONFIG.activeSensors, 'gps')) {
+        OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push('osdTextElementAltitudeVariant1DecimalASL');
+        OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push('osdTextElementAltitudeVariantNoDecimalASL');
+    }
 };
 
 OSD.constants = {
