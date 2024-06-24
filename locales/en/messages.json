@@ -34,6 +34,23 @@
     "dontShowAgain": {
         "message": "Don't show again"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "The application needs to be updated",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "You need to refresh the page to get the latest changes. Refreshing it now will reload the page and you will lose any unsaved changes and will abort any operation in progress.<br><br>Do you want to refresh it now? You can also dismiss this message and refresh the page manually later.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+
+    "pwaOnOffilenReadyTitle": {
+        "message": "The application is ready to be used offline",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "You can install it as an standalone application on your device if you want. Search for the option in your browser address bar or menu.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "This operation is not supported by your hardware."
     },
