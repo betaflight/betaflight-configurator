@@ -882,9 +882,9 @@
         "message": "No se ha detectado una señal válida del receptor",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
         "message": "Tu receptor se acaba de recuperar de un Modo de Seguridad pero el interruptor de armado está activado",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "El interruptor 'FAILSAFE' estaba activado",
@@ -3340,7 +3340,7 @@
         "message": "Selecciona el tipo de versión para ver las placas disponibles."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecciona o auto-detecta tu placa para ver las versiones de firmware disponibles - Elige el firmware adecuado para tu placa."
+        "message": "Selecciona o detecta tu placa para ver las versiones de firmware disponibles - Elige el firmware adecuado para tu placa."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight Configurator soporta la instalación de Placas Unificadas con sus respectivas configuraciones de placa en un sólo paso.<br><br>El concepto de Placas Unificadas significa que el mismo archivo .hex puede ser usado por todas las placas con la misma MCU.<br><br>Betaflight 4.4 introduce <strong>Compilación en la Nube<\/strong>.<br><br>Con <strong>Compilación en la Nube<\/strong> necesitamos indicar las opciones de hardware presentes en tu aeronave.<br><br>Para hacer que diferentes placas funcionen con el mismo hardware, un archivo de configuración específico se despliegue junto al firmware cuando una Placa Unificada se instala.<br><br>Con archivos de firmware en local puedes cargar un archivo de configuración de placa o elegir la placa antes de cargar de cargar el archivo .hex del firmware.<br><br>Si encuentras un problema instalando el firmware, por favor unete a nuestro <a href=\"https:\/\/discord.gg\/n4E6ak4u3c\" target=\"_blank\" rel=\"noopener noreferrer\">Discord<\/a> o abre una <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">incidencia<\/a>."
@@ -3355,7 +3355,7 @@
         "message": "Instalar al conectar"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Intenta instalar el firmware automáticamente (se activa al detectar un puerto serie nuevo).<br \/><br \/><span class=\"message-negative\">ADVERTENCIA<\/span>: esta función desactiva la función de auto-detección y copia de seguridad."
+        "message": "Intenta instalar el firmware automáticamente (se activa al detectar un puerto serie nuevo).<br \/><br \/><span class=\"message-negative\">ADVERTENCIA<\/span>: esta función desactiva la función de detección y copia de seguridad."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Borrado completo del chip"
@@ -3533,10 +3533,10 @@
         "message": "Continuar"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "Auto-detectar"
+        "message": "Detectar"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "La auto-detección sólo funciona cuando no está en modo DFU y cuando la comunicación MSP funciona. A veces tienes que reintentar unas cuantas veces o incluso reconectar el USB. Intenta conectar de modo habitual primero por si has olvidado aplicar los valores personalizados.. Por favor, reinicia después de instalar - reconecta tu USB."
+        "message": "La detección sólo funciona cuando no está en modo DFU y cuando la comunicación MSP funciona. A veces tienes que reintentar unas cuantas veces o incluso reconectar el USB. Intenta conectar de modo habitual primero por si has olvidado aplicar los valores personalizados.. Por favor, reinicia después de instalar - reconecta tu USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consultar información de la placa para preseleccionar el firmware correcto"

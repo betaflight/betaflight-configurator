@@ -811,10 +811,6 @@
         "message": "Aucun signal valide du récepteur détecté",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "Votre récepteur vient juste de récupérer du failsafe mais l'interrupteur d'armement est activé",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "L'interrupteur FAILSAFE était activé",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -2825,9 +2821,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Choisir le type de build pour voir les cartes disponibles."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Sélectionnez ou détectez automatiquement votre carte pour voir les versions de firmwares disponibles en ligne - Sélectionnez le firmware approprié à votre carte."
-    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Le configurateur Betaflight supporte le flash de cibles unifiées avec les configurations spécifiques de la carte en une seule étape.<br><br>Le concept de cibles unifiées signifie que le même firmware . ex file peut être utilisé pour toutes les cartes en utilisant le même MCU.<br><br>Betaflight 4.4 introduit <strong>Cloud Build<\/strong><br><br>Avec <strong>Cloud Build<\/strong> nous devons définir les options matérielles présentes sur votre build.<br><br>Pour que les différentes cartes fonctionnent avec le même firmware, un fichier de configuration spécifique est déployé à côté du microprogramme lorsqu'une cible unifiée est flashée.<br><br>Avec la compilation locale vous pouvez charger un fichier de configuration cible unifié ou choisir une carte avant de charger un fichier .hex firmware.<br><br>Si vous rencontrez des problèmes en utilisant le firmware, veuillez envisager de rejoindre Discord ou ouvrez une <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">anomalie<\/a>."
     },
@@ -3011,12 +3004,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Continuer"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "Détecter automatiquement"
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "La détection automatique ne fonctionne que si le mode DFU n’est pas activé et quand la communication MSP fonctionne. Parfois, vous devez réessayer quelques fois ou même reconnecter l'USB. Essayez d'abord de vous connecter normalement car vous pourriez avoir oublié d'appliquer des valeurs par défaut personnalisées. Veuillez redémarrer après avoir flashé - rebranchez votre USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Demander les informations de la carte pour présélectionner le bon firmware"

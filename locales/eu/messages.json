@@ -687,10 +687,6 @@
         "message": "Ez da hartzaile seinalerik hautematen",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "Zure hargailua failsafe batetik berreskuratu egin da baina arm switch-a gaituta dago",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "'SEGURTASUN MODUA' botoia aktibatuta zegoen",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"

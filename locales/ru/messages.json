@@ -882,10 +882,6 @@
         "message": "Не обнаружен корректный сигнал приёмника",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "Ваш приемник только что восстановил связь, но выключатель failsafe включен",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "Переключатель 'FAILSAFE' активирован",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -3235,9 +3231,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Выберите тип сборки, чтобы увидеть доступные платы полетных контроллеров."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Выберите вашу плату или используйте автоопределение, чтобы увидеть доступные онлайн версии прошивки. Выберите правильную прошивку, соответствующую вашей плате."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Выберите версию прошивки для Вашей платы."
     },
@@ -3418,12 +3411,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Продолжить"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "Автоопределение"
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "Автоопределение работает только в случае, если плата не находится в режиме DFU, и когда работает обмен данными по протоколу MSP. Иногда вам придется повторить попытку несколько раз или даже переподключить USB. Попробуйте сначала подключиться обычным способом, так как вы могли забыть применить пользовательские настройки по умолчанию. Пожалуйста, перезагрузите после прошивки - переподключите USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Запросите информацию о плате, чтобы предварительно выбрать правильную прошивку"

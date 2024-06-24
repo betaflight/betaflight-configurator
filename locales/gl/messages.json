@@ -877,10 +877,6 @@
         "message": "Non se detecta ningún sinal de receptor válido",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "O seu receptor acaba de recuperarse do dispositivo a proba de fallos, pero o interruptor de armar está activo",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "O switch 'FAILSAFE' foi activado",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -3325,9 +3321,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Seleccione o tipo de compilación para ver as dispoñibles."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecciona ou detecta automaticamente a súa placa para ver os lanzamentos de firmware en liña dispoñibles - Seleccione o firmware correcto axeitado para a súa placa."
-    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "O configurador de Betaflight admite o flasheo de Unified Targets coas configuracións específicas da placa respectiva nun só paso.<br><br>O concepto de Unified Targets significa que se pode usar o mesmo ficheiro .hex de firmware para todas as placas que utilicen o mesmo MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build<\/strong><br><br>Con <strong>Cloud Build<\/strong> necesitamos definir as opcións de hardware presentes na súa compilación.<br><br>Para facer as diferentes placas funcionan co mesmo firmware, un ficheiro de configuración específico desprégase xunto co firmware cando se mostra un Unified Target.<br><br>Con Local build podes cargar un ficheiro de configuración de destino unificado ou escoller unha placa antes de cargar un firmware .hex.<br><br>Se atopas problemas ao usar o firmware, considera unirte a Discord ou abre un <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problema<\/a>."
     },
@@ -3339,9 +3332,6 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Flashear ó conectar"
-    },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Intenta flashear o taboleiro automaticamente (actívase ó detectar un porto serie novo).<br \/><br \/><span class=\"message-negative\">ADVERTENCIA<\/span>: esta función desactiva a función de detección automática e de copia de seguridade."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Borrado completo do chip"
@@ -3514,12 +3504,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Continuar"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "Detección Automática"
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "Detectar automaticamente só funciona cando non está en modo DFU e cando a comunicación MSP está funcionando. Ás veces ten que reintentar algunhas veces ou incluso reconectar o USB. Probe a conectar normal por primeira vez como podería esquecer de aplicar estándares personalizados. Reinicie despois de instalar - retire o seu USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consulte a información da placa para preseleccionar firmware adecuado"

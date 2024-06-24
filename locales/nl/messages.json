@@ -722,10 +722,6 @@
         "message": "Geen geldig ontvanger signaal gevonden",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "Uw ontvanger is zojuist hersteld van een ontvanger-failsafe echter is de armschakelaar nog ingeschakeld",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "De 'FAILSAFE' schakelaar is geactiveerd",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -2588,9 +2584,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Doorgaan"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "Automatische detectie"
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Vraag bordinformatie op om de juiste firmware vooraf te selecteren"

@@ -882,9 +882,9 @@
         "message": "Nessun segnale dalla ricevente rilevato",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "La ricevente è appena uscita da un failsafe ma lo switch di armato è attivo",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
+        "message": "La ricevente si è riattivata da un failsafe ma lo switch di armato è attivo",
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "L'interruttore 'FAILSAFE' è stato attivato",
@@ -3340,7 +3340,7 @@
         "message": "Seleziona il tipo di build per vedere le schede disponibili."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Seleziona o rileva automaticamente la tua scheda per vedere i relativi firmware disponibili online - Seleziona il firmware appropriato per la tua scheda."
+        "message": "Seleziona o rileva automaticamente la scheda per vedere i relativi firmware disponibili online - Seleziona il firmware corretto per la tua scheda."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Il configuratore Betaflight supporta il flash di obiettivi unificati (Unified Targets) con le rispettive configurazioni specifiche della scheda in una fase.<br><br>Il concetto di Unified Targets significa che lo stesso firmware . hex file può essere utilizzato per tutte le schede che utilizzano la stessa MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build<\/strong><br><br>Con <strong>Cloud Build<\/strong> dobbiamo definire le opzioni hardware da includere nella build.<br><br>Per far funzionare schede diverse con lo stesso firmware, un file di configurazione specifico viene distribuito insieme al firmware quando viene flashato un obiettivo unificato.<br><br>Con le Local build puoi caricare un file di configurazione unificato o scegliere una scheda prima di caricare un file .hex del firmware.<br><br>Se riscontri problemi utilizzando il firmware, considera di partecipare su Discord o aprire una <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">segnalazione<\/a>."
@@ -3355,7 +3355,7 @@
         "message": "Flash alla connessione"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Tentativo di flashare la scheda automaticamente (attivato dalla nuova porta seriale rilevata).<br \/><br \/><span class=\"message-negative\">ATTENZIONE<\/span>: questa funzione disabilita la funzione di rilevamento automatico e backup."
+        "message": "Tentativo di flashare la scheda (attivata dalla nuova porta seriale rilevata).<br \/><br \/><span class=\"message-negative\">ATTENZIONE<\/span>: questa funzione disabilita la funzione di rilevamento automatico e backup."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Cancella completamente il chip"
@@ -3533,10 +3533,10 @@
         "message": "Continua"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "Automatico"
+        "message": "Rileva"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "Il rilevamento automatico funziona quando non si è in modalità DFU e quando la comunicazione MSP è attiva. A volte è necessario riprovare un paio di volte o anche ricollegare l'USB. Prova a connetterti normalmente prima poiché potresti aver dimenticato di applicare le impostazioni predefinite personalizzate. Riavvia dopo aver flashato - ricollega l'USB."
+        "message": "Il rilevamento funziona quando non si è in modalità DFU e quando la comunicazione MSP è attiva. A volte è necessario riprovare più volte o ricollegare l'USB. Prova a connetterti prima normalmente potresti aver dimenticato di applicare le impostazioni. Riavvia dopo aver flashato - ricollega l'USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Recupera le informazioni della scheda per scegliere il firmware giusto"
