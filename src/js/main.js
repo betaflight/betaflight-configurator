@@ -20,6 +20,7 @@ import { isExpertModeEnabled } from './utils/isExportModeEnabled.js';
 import { updateTabList } from './utils/updateTabList.js';
 import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates.js';
 import * as THREE from 'three';
+import.meta.hot;
 
 if (typeof String.prototype.replaceAll === "undefined") {
     String.prototype.replaceAll = function(match, replace) {
