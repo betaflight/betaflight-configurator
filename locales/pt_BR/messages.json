@@ -863,10 +863,6 @@
         "message": "Não foi detectado um sinal válido do receptor",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "Seu receptor se recuperou de um Failsafe, mas o switch para Armar está ativo",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "O switch do Failsafe foi ativado",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -3284,9 +3280,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Selecione o tipo de compilação para ver as placas disponíveis."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecione a sua placa ou use o Auto-detectar para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
-    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "O Configurador Betaflight tem suporte para instalar destinos unificados com as respectivas configurações da placa em um único passo.<br><br>O conceito de destinos unificados significa que o mesmo arquivo de firmware pode ser utilizados em todas as placas com o mesmo MCU.<br><br>O Betaflight 4.4 introduziou a <strong>compilação em nuvem<\/strong><br><br>Com a <strong>compilação em nuvem<\/strong> é necessário definir as opções de hardware presentes em sua aeronave.<br><br>Para fazer diferentes placas funcionarem com o mesmo firmware, um arquivo de configuração específico é enviado juntamente com o firmware quando ele é instalado.<br><br>Com a compilação local, é possivel definir um arquivo de configuração de destino unificado ou escolher uma placa antes de carregar o arquivo .hex do firmware.<br><br>Se encontrar problemas com o firmware, por favor considere entrar em nosso servidor do Discord ou abrir uma <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue no GitHub<\/a>."
     },
@@ -3470,12 +3463,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Continuar"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "Auto-detectar"
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "A ação Auto-detectar só funciona quando não está no modo DFU e quando a comunicação MSP está funcionando. Às vezes, você tem que tentar novamente algumas vezes ou reconectar o cabo USB. Primeiro tente conectar como normalmente faz, já que você poderia ter esquecido de aplicar os padrões personalizados. Após atualizar o firmware, reinicie o dispositivo e reconecte o cabo USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Procurar informações na placa conectada para selecionar o firmware correto"

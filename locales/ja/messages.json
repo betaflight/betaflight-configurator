@@ -882,9 +882,9 @@
         "message": "有効な受信機からの信号が検出されません",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "受信機はフェイルセーフから回復したばかりですが、アームスイッチはオンのままです",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
+        "message": "受信機はフェイルセーフから回復したものの、アームスイッチがオンのままになっています",
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "「フェイルセーフ」スイッチが有効です",
@@ -3340,7 +3340,7 @@
         "message": "使用可能なFCボードを表示するには、ビルドタイプを選択します。"
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "FCボードを任意選択もしくは自動検出すると、オンラインでファームウェアの確認ができます - 適切なファームウェアを選択して下さい。"
+        "message": "FCボードを任意選択または検出すると、オンラインで利用可能なファームウェア リリースが表示されます - お使いのFCボードに適したファームウェアを選択してください。"
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight Configuratorは、各FCボード固有の設定を持つ統一ターゲットのファームウェアフラッシュをワンステップでサポートします。<br><br>統一ターゲットのコンセプトは、同じMCUを使用するすべてのFCボードで同じファームウェアの.hexファイルを使用できることを意味しています。<br><br>Betaflight 4.4で導入された<strong>クラウドビルド<\/strong><br><br><strong>クラウドビルド<\/strong>では、ビルドに存在するハードウェアオプションを定義する必要があります。<br><br>異なるFCボードを同じファームウェアで動作させるために、統一ターゲットファームウェアをフラッシュする際、それと同時に特定の設定ファイルが展開されます。<br><br>ローカルビルドでは、統一ターゲット設定ファイルをロードしたり、ファームウェアの.hexファイルをロードする前にFCボードを選択することができます。<br><br>ファームウェアを使用していて問題が発生した場合は、Discordへの参加、または<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue<\/a>の新規投稿をご検討ください。"
@@ -3355,7 +3355,7 @@
         "message": "接続時に書き込み"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "FC基板の自動フラッシュを試みます。(新たに検出されたシリアルポートをトリガーにして実行されます。)<br \/><br \/><span class=\"message-negative\">警告<\/span>: この機能は自動検出とバックアップ機能を無効にします。"
+        "message": "FCボードのファームウェア自動書き込みを試みます。(新たに検出されたシリアルポートをトリガーにして実行されます) <br \/><br \/><span class=\"message-negative\">警告<\/span>: この機能は、検出とバックアップ機能を無効にします。"
     },
     "firmwareFlasherFullChipErase": {
         "message": "チップメモリの完全消去"
@@ -3533,10 +3533,10 @@
         "message": "続行"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "自動検出"
+        "message": "検出"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "自動検出は、DFUモードおよびMSP通信が動作している場合にのみ機能します。上手くいかない場合は、何度か再試行するかUSBを再接続する必要があります。デフォルト値からカスタムした値を適用し忘れているかもしれないので、一度通常通りに接続してください。書き込み後に再起動し、USBを再接続をお願いします。"
+        "message": "検出は、DFUモードではなく、MSP通信が動作している場合にのみ機能します。上手くいかない場合は、何度か再試行するかUSBを再接続する必要があります。デフォルト値からカスタムした値を適用し忘れているかもしれないので、まずは通常通りに接続してみてください。ファームウェア書き込み後に再起動し、USBを再接続してみてください。"
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "適切なファームウェアを選択するためにボード情報を照会する"
@@ -6148,6 +6148,10 @@
         "message": "リンク品質",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "アーム無効",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6273,6 +6277,14 @@
     },
     "osdWarningRSNR": {
         "message": "RSNR値がアラーム設定を下回ったときの警告"
+    },
+    "osdWarningTextLoad": {
+        "message": "ロード",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "フライトコントローラのCPU使用率が高すぎる場合の警告",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "不明 $1"

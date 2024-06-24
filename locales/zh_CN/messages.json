@@ -732,10 +732,6 @@
         "message": "未检测到有效的接收机信号",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "你的接收机刚刚从接收机失控保护中恢复，但解锁开关处于已解锁状态。",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "失控保护模式开关已激活",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -2676,9 +2672,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "选择 \"生成类型\" 以查看可用的飞控板。"
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "选择或自动检测您的飞控板以查看可用的在线固件发布版 - 选择适合您飞控板的正确固件。"
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "选择对应你飞控型号的固件版本"
     },
@@ -2853,12 +2846,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "继续"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "自动检测"
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "当处于 DFU 模式或者 MSP 通信正在运行时，自动检测将无法运行。某些情况下您需要重试几次，甚至重新连接 USB。 先尝试正常连接，因为您可能忘记应用自定义默认设置。请在烧录-重新插拔 USB 后重启。"
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "查询飞控板信息以辅助选择正确固件"

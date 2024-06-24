@@ -890,9 +890,9 @@
         "message": "No es detecta cap senyal de receptor vàlid",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "El receptor acaba de recuperar-se d'un Failsafe per falla del receptor, però l’interruptor d'armat està activat",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
+        "message": "El teu receptor acaba de recuperar-se d'un Failsafe per falla del receptor, però l’interruptor d'armat està activat",
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "El interruptor de \"FAILSAFE\" s'ha activat",
@@ -3348,7 +3348,7 @@
         "message": "Seleccioneu tipus de versió per veure les controladores disponibles."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecciona la teva placa per veure les versions de firmware online disponibles - Selecciona el firmware correcte que s'adeqüi a la teva placa."
+        "message": "Selecciona la teva placa per veure les versions de programari online disponibles - Selecciona el programari correcte per a la teva placa."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "El configurador de Betaflight admet la carga de programari nificat amb les configuracions específiques de la placa respectiva en un sol pas.<br><br>El concepte d'objectius unificats significa que es pot utilitzar el mateix fitxer .hex de microprogramari per a totes les plaques que utilitzen la mateixa MCU.<br> <br>Betaflight 4.4 presenta <strong>Cloud Build<\/strong><br><br>Amb <strong>Cloud Build<\/strong> hem de definir les opcions de maquinari presents a la vostra compilació.<br><br>Per fer les diferents plaques funcionen amb el mateix microprogramari, un fitxer de configuració específic es desplega al costat del microprogramari quan es mostra un Unified Target.<br><br>Amb Local build podeu carregar un fitxer de configuració de destinació unificat o triar un tauler abans de carregar un microprogramari. .hex.<br><br>Si trobeu problemes amb el microprogramari, considereu unir-vos a Discord o obrir un <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problema<\/a>."
@@ -3363,7 +3363,7 @@
         "message": "Flasheja al connectar"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Si intenteu flashejar el tauler automàticament (activat pel port sèrie recentment detectat).<br \/><br \/><span class=\"message-negative\">ADVERTIMENT<\/span>: aquesta funció desactiva la funció de detecció automàtica i còpia de seguretat."
+        "message": "Intent de flashejar la placa automàticament (activat pel nou port sèrie recentment detectat).<br \/><br \/><span class=\"message-negative\">ADVERTIMENT<\/span>: aquesta funció desactiva la funció de detecció automàtica i còpia de seguretat."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Esborrat total del xip"
@@ -3541,10 +3541,10 @@
         "message": "Continuar"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "Auto detectar"
+        "message": "Detectar"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "La detecció automàtica només funciona quan no es troba en mode DFU i quan la comunicació MSP funciona. De vegades cal tornar-ho a provar algunes vegades o fins i tot tornar a connectar l'USB. Proveu de connectar-vos amb la normalitat primer, ja que podríeu haver oblidat aplicar els valors predeterminats personalitzats. Reinicieu després de parpellejar: torneu a connectar l'USB."
+        "message": "La detecció només funciona quan no es troba en mode DFU i quan la comunicació MSP funciona. De vegades cal tornar-ho a provar algunes vegades o fins i tot tornar a connectar l'USB. Proveu de connectar-vos normalment primer, ja que podríeu haver oblidat aplicar els valors predeterminats personalitzats. Reinicieu després de flashejar: torneu a connectar l'USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Seleccioneu l'informació de la placa per preseleccionar el firmware adequat"

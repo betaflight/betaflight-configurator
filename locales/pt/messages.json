@@ -882,9 +882,9 @@
         "message": "Não é detetado um sinal válido do recetor",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "O seu receptor recuperou de um failsafe mas o switch para armar está ativo",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
+        "message": "O seu receptor recuperou de um failsafe mas o switch de armar está ativo",
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "O switch 'FAILSAFE' foi ativado",
@@ -3340,7 +3340,7 @@
         "message": "Selecione o tipo de compilação para ver as placas disponíveis."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecione ou detete automaticamente a sua placa para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
+        "message": "Selecione ou detete a sua controladora para ver os firmwares disponíveis online - Selecione o firmware apropriado para a sua controladora."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight configurator suporta o flash de Targets Unificados com as respetivas configurações específicas de placas num único passo.<br><br>O conceito de Targets Unificados significa que o mesmo ficheiro .hex de firmware pode ser usado para todas as placas que usem a mesma MCU.<br><br>Betaflight 4.4 introduz <strong>Compilação na Nuvem.<\/strong><br><br>Com <strong>Compilação na Nuvem<\/strong> precisamos de definir opções de hardware presentes na sua build.<br><br>Para fazer com que diferentes placas funcionem com o mesmo firmware, um ficheiro de configuração específica é executado em conjunto com o firmware quando o Target Unificado é flashado.<br><br>Com Compilação Local pode carregar um ficheiro de configuração de target unificado ou escolher uma placa antes de carregar o ficheiro .hex de firmware.<br><br>Se encontrar problemas a usar o firmware, por favor considere juntar-se ao Discord ou abrir um <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problema<\/a>."
@@ -3355,7 +3355,7 @@
         "message": "Flashar ao conectar"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Tentativa de flashar a controladora automaticamente (acionada pela nova porta serial detetada).<br \/><br \/><span class=\"message-negative\">AVISO<\/span>: esta função desativa a funcionalidade de deteção automática e backup."
+        "message": "Tentativa de flashar a controladora automaticamente (acionada pela nova porta serial detetada).<br \/><br \/><span class=\"message-negative\">AVISO<\/span>: esta função desativa as funcionalidades de deteção e backup."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Apagar completo do chip"
@@ -3533,10 +3533,10 @@
         "message": "Continuar"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "Auto-detetar"
+        "message": "Detetar"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "A deteção automática só funciona quando não está no modo DFU e quando a comunicação MSP está a funcionar. Às vezes, tem que tentar novamente algumas vezes ou até mesmo reconectar o USB. Tente ligar normalmente primeiro já que se pode ter esquecido de aplicar padrões personalizados. Por favor, reinicie após a instalação - reconecte o seu USB."
+        "message": "Detectar só funciona quando não estiver no modo DFU e quando a comunicação MSP estiver a funcionar. Às vezes, tem de tentar novamente algumas vezes ou até mesmo reconectar o USB. Tente conectar primeiro como normal, já que pode se ter esquecido de aplicar os padrões predefinidos. Por favor, reinicie após flashar - reconecte o seu USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Consultar informações da controladora para pré-selecionar o firmware certo"

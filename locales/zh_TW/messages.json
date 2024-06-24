@@ -669,10 +669,6 @@
         "message": "未檢測到有效的接收機訊號",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "你的接收機剛剛從接收機失控保護中恢復，但解鎖開關已處於解鎖狀態。",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "失控保護模式開關已激活",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"

@@ -801,10 +801,6 @@
         "message": "Kein gültiges Empfänger-Signal erkannt",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "Der Empfänger hat den Status 'Empfänger Failsafe' verlassen, aber der Arming-Schalter ist auf 'Ein'",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "Der 'FAILSAFE'-Schalter wurde betätigt",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -2869,9 +2865,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Wähle anzuzeigenden Entwicklungsstand der Firmware für die jeweiligen FC's."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Wähle deinen Flightcontroller oder lasse ihn automatisch erkennen, um die online verfügbaren Firmware-Versionen anzuzeigen. Wähle dann die passende Firmware für deinen FC."
-    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight-Konfigurator unterstützt das Flashen von \"Unified Targets\" mit den jeweiligen Board-spezifischen Konfigurationen in einem Schritt.<br><br>Das Konzept der \"Unified Targets\" bedeutet, dass die gleiche Firmware .hex-Datei für alle Boards mit der gleichen MCU verwendet werden kann.<br><br>Betaflight 4.4 führt <strong>Cloud Build<\/strong> ein.<br><br>Mit <strong>Cloud Build<\/strong> müssen wir diejenigen Hardware-Optionen definieren, die in deinem Build (Modell) vorhanden sind.<br><br>Damit verschiedene Boards mit derselben Firmware funktionieren, wird eine spezifische Konfigurationsdatei neben der Firmware bereitgestellt, wenn ein Unified Target geflasht wird.<br><br>Mit \"Local Build\" kann die Konfigurationsdatei eines Unified Targets geladen oder ein Board gewählt werden, bevor eine Firmware .hex-Datei geladen wird.<br><br>Falls Probleme mit der Firmware auftreten, trete bitte dem Discord-Kanal bei oder öffne ein <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Ticket<\/a>."
     },
@@ -3052,12 +3045,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Fortfahren"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "Auto-Erkennung"
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "Auto-Erkennung funktioniert nur, wenn nicht im DFU-Modus und wenn MSP-Kommunikation funktioniert. Manchmal muss man es ein mehrfach versuchen oder sogar erneut mit USB verbinden. Versuche zunächst als 'normal' zu verbinden, da du möglicherweise vergessen hast, benutzerdefinierte Standardwerte anzuwenden. Bitte starte nach dem Flashen neu - USB ein-aus stecken. Bitte Prüfe ob der automatisch erkannte Controller-Typ auch wirklich dem angeschlossenen FC entspricht. Ein falsche falsche Firmwareversion kann zu schwerwiegendem Fehlverhalten führen."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Geräteinformationen abfragen um korrekte Firmware automatisch auszuwählen"

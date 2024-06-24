@@ -49,12 +49,23 @@
     "disconnect": {
         "message": "Від'єднати"
     },
+    "portsSelectNoSelection": {
+        "message": "Виберіть свій пристрій",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Ручний вибір"
+    },
+    "portsSelectNone": {
+        "message": "Немає доступних з'єднань"
     },
     "portsSelectVirtual": {
         "message": "Віртуальний режим (експериментальний)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- Я не можу знайти мій пристрій ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "virtualMSPVersion": {
         "message": "Версія віртуальної прошивки"
@@ -867,10 +878,6 @@
         "message": "Не виявлено правильного сигналу приймача",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
-        "message": "Ваш приймач щойно відновив зв'язок після безаварійності, але перемикач взведення ввімкнено",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "Перемикач «FAILSAFE» був активований",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -1292,6 +1299,15 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Ця опція налаштовує мікшер очікувати, що мотор буде обертатись в протилежний бік і пропелери будуть орієнтовані відповідно. <strong>Попередження:<\/strong> Це не змінює напрямок руху мотора. Для цього скористайтеся інструментом конфігурації для вашого електронного контролера швидкості (анг. - ESC) або переключіть дроти між ESC та двигуном. Також переконайтеся, що з вимкненими пропелерами ваші мотори обертаються у напрямках, показаних на схемі вище, перш ніж намагатися взвести."
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "Охолостити мотори після затримки [секунди]"
+    },
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Охолостити мотори після заданої затримки [секунди] (Потребує функцію MOTOR_STOP)"
+    },
+    "configurationGyroCalOnFirstArm": {
+        "message": "Калібрувати гіроскоп при першому взведенні"
     },
     "configurationDigitalIdlePercent": {
         "message": "% тяги на холостому ходу (статичний)"
@@ -3315,9 +3331,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Виберіть тип збірки, щоб побачити доступні плати."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Виберіть або автоматично визначте вашу плату, щоб побачити доступні онлайн версії прошивок - Виберіть відповідне програмне забезпечення для вашої плати."
-    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Конфігуратор Betaflight підтримує прошивання уніфікованих цільових пристроїв разом з відповідними платоспецифічними налаштуваннями за один крок.<br><br>Концепція уніфікованих цільових пристроїв означає, що один і той же файл прошивки .hex можна використовувати для всіх плат, які використовують той самий мікроконтролер (MCU).<br><br>У версії Betaflight 4.4 додається <strong>Хмарна Збірка (Cloud Build)<\/strong>.<br><br>З Хмарною Збіркою (Cloud Build) нам потрібно описати опції обладнання, наявного у вашій збірці.<br><br>Щоб різні плати працювали з однією і тією ж прошивкою, при прошиванні уніфікованої цільової прошивки, специфічний файл конфігурації розміщується поряд з прошивкою.<br><br>При локальній збірці, ви можете завантажити файл конфігурації уніфікованого цільового пристрою або вибрати плату перед завантаженням файлу прошивки .hex.<br><br>Якщо у вас виникають проблеми з використанням прошивки, рекомендуємо приєднатися до Discord або <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">повідомити про проблему<\/a>."
     },
@@ -3329,9 +3342,6 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Прошити при підключенні"
-    },
-    "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Спробувати прошити плату автоматично (у випадку виявлення нового послідовного порту).<br \/><br \/><span class=\"message-negative\">УВАГА<\/span>: ця функція вимикає автовиявлення і резервне копіювання."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Повністю очистити мікроконтролер"
@@ -3474,6 +3484,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Не вибрано прошивку для завантаження<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "Цільові пристрої не завантажені"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Будь ласка, виберіть правильний послідовний порт<\/span>"
     },
@@ -3504,12 +3517,6 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Продовжити"
-    },
-    "firmwareFlasherDetectBoardButton": {
-        "message": "Автовизначення"
-    },
-    "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "Автоматичне виявлення працює тільки коли пристрій не перебуває в режимі DFU та коли зв'язок MSP працює. Іноді доводиться спробувати підключитися кілька разів або навіть перепідключити USB. Спробуйте спочатку підключитися як зазвичай, можливо ви забули застосувати налаштування за замовчуванням (custom defaults). Після прошивання перезавантажтеся - відключіть та знову підключіть USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Отримати інформацію з плати для попереднього вибору правильної прошивки"

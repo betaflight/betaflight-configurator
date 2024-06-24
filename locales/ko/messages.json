@@ -886,9 +886,9 @@
         "message": "유효한 수신기 신호가 감지되지 않습니다",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
         "message": "수신기가 페일세이프로부터 복구되었지만 아밍 스위치가 켜져있습니다",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "'페일세이프' 스위치가 작동중입니다",
@@ -3344,7 +3344,7 @@
         "message": "사용 가능한 보드를 보고 빌드 형식을 선택하세요."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "보드를 선택하거나 자동-감지로 사용 가능한 온라인 펌웨어 릴리즈를 확인하십시오 - 보드에 적합한 올바른 펌웨어를 선택하십시오."
+        "message": "보드를 선택하거나 감지로 사용 가능한 온라인 펌웨어 릴리즈를 확인하십시오 - 보드에 적합한 올바른 펌웨어를 선택하십시오."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "베타플라이트 컨피규레이터는 각 보드별 환경설정으로 통합 타겟의 플래시를 한 번에 지원합니다.<br><br>통합 타겟의 개념은 동일한 펌웨어 .hex 파일을 동일한 MCU를 사용하는 모든 보드에 사용할 수 있다는 것을 의미합니다.<br><br>Betaflight 4.4는 <strong>클라우드 빌드<\/strong>를 포함합니다<br><br><strong>클라우드 빌드<\/strong>를 사용하려면 빌드에 존재하는 하드웨어 옵션을 정의해야 합니다.<br><br>다른 보드가 동일한 펌웨어에서 작동하도록 하기 위해 통합 타겟이 플래시될 때 특정 환경설정 파일이 펌웨어와 함께 배포됩니다.<br><br>로컬 빌드를 사용하면 통합 대상 환경설정 파일을 로드하거나 펌웨어 .hex 파일을 로드하기 전에 보드를 선택할 수 있습니다.<br><br>펌웨어를 사용하는 데 문제가 발생하는 경우 Discord에 가입하거나 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈<\/a>를 여는 것을 고려하십시오."
@@ -3359,7 +3359,7 @@
         "message": "연결시 플래시함"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "보드를 자동으로 플래시하려고 시도합니다(새로 감지된 직렬 포트에 의해 트리거됨).<br \/><br \/><span class=\"message-negative\">경고<\/span>: 이 기능은 자동-감지 및 백업 기능을 비활성화합니다."
+        "message": "보드를 자동으로 플래시하려고 시도합니다(새로 감지된 직렬 포트에 의해 트리거됨).<br \/><br \/><span class=\"message-negative\">경고<\/span>: 이 기능은 감지 및 백업 기능을 비활성화합니다."
     },
     "firmwareFlasherFullChipErase": {
         "message": "칩 완전 삭제"
@@ -3537,10 +3537,10 @@
         "message": "계속"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "자동-감지"
+        "message": "감지"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "자동-감지는 DFU 모드가 아니고 MSP 통신이 작동 중일 때만 작동합니다. 경우에 따라 몇 번 다시 시도하거나 USB를 다시 연결해야 합니다. 사용자 지정 기본값을 적용하는 것을 잊어버렸을 수 있으므로 먼저 정상적으로 연결해 보십시오. 깜박인 후 다시 부팅하십시오 - USB를 다시 연결하십시오."
+        "message": "감지는 DFU 모드가 아니고 MSP 통신이 작동 중일 때만 작동합니다. 경우에 따라 몇 번 다시 시도하거나 USB를 다시 연결해야 합니다. 사용자 지정 기본값을 적용하는 것을 잊어버렸을 수 있으므로 먼저 정상적으로 연결해 보십시오. 깜박인 후 다시 부팅하십시오 - USB를 다시 연결하십시오."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "올바른 펌웨어를 미리 선택하기 위한 보드 정보 쿼리"
