@@ -84,7 +84,7 @@ export default defineConfig({
             hook: "writeBundle",
         }),
         VitePWA({
-            registerType: 'autoUpdate',
+            registerType: 'prompt',
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,json,mcm}'],
                 // 5MB
