@@ -102,10 +102,14 @@
                 align-items: center;
                 gap: 0.5rem;
             }
-            &.disabled span {
-                background-color: var(--surface-500);
-                color: var(--text);
+            &.disabled {
+                pointer-events: none;
                 cursor: default;
+                span {
+                    background-color: var(--surface-500);
+                    color: var(--text);
+                    cursor: default;
+                }
             }
         }
     }
