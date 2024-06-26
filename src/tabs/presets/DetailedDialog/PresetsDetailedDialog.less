@@ -37,7 +37,7 @@
 	padding-bottom: 6px;
 	margin-top: 12px;
 	overflow-y: scroll;
-	height: 270px;
+	height: 260px;
 	font-size: 110%;
 	white-space: pre-line;
 	user-select: text;
@@ -86,7 +86,7 @@ ol {
 	padding-left: 25px;
 }
 #presets_detailed_dialog_properties {
-	height: 360px;
+	height: 466px;
 }
 #presets_options_panel {
 	.ms-choice {
@@ -110,6 +110,14 @@ ol {
 	display: inline-block;
 }
 #presets_detailed_dialog {
+	.content_toolbar {
+		width: unset;
+		margin-left: auto;
+		margin-right: -12px;
+		.btn {
+			display: contents;
+		}
+	}
 	.ms-drop {
 		ul {
 			>li.hide-radio {
