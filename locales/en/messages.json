@@ -5498,14 +5498,23 @@
     "osdDescElementAltitude": {
         "message": "Current altitude (flashes when above alarm threshold)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "With 1 decimal",
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL with 1 decimal",
         "description": "One of the variants of the altitude element of the OSD"
     },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Without decimals",
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL without decimals",
         "description": "One of the variants of the altitude element of the OSD"
     },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL with 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL without decimals",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+
     "osdTextElementOnTime": {
         "message": "On time",
         "description": "One of the elements of the OSD"
