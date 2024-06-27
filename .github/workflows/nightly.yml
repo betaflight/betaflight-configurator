@@ -17,6 +17,7 @@ name: Nightly
 on:
   push:
     branches:
+      - master
       - '*-maintenance'
 
 jobs:
@@ -29,6 +30,7 @@ jobs:
   release:
     name: Nightly release
     needs: ci
+    if: ${{ endsWith(github.ref, 'maintenance') }}
     runs-on: ubuntu-22.04
     steps:
       - name: Fetch build artifacts

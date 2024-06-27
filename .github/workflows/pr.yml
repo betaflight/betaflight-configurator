@@ -3,6 +3,7 @@ name: PR
 on:
   pull_request:
     branches:
+      - master
       - '*-maintenance'
 
 concurrency:

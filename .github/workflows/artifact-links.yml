@@ -3,6 +3,7 @@ on:
   workflow_run:
     workflows: ["PR"]
     types: [completed]
+    branches: ['*-maintenance']
 
 jobs:
   artifacts-url-comments:

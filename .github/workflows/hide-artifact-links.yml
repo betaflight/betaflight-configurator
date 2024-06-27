@@ -3,6 +3,7 @@ name: Hide artifact links comments
 on:
   pull_request_target:
     types: [synchronize, reopened]
+    branches: ['*-maintenance']
 
 jobs:
   hide-artifacts-link-comments:
