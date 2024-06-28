@@ -15,9 +15,7 @@
     "lint": "eslint --ext .js,.vue src",
     "lint:fix": "eslint --fix src",
     "storybook": "start-storybook -p 6006",
-    "cap:sync": "npx cap sync",
-    "cap:android": "npx cap run android",
-    "android": "vite build && npx cap sync && npx cap run android"
+    "android:dev": "vite build && npx cap sync && npx cap build android"
   },
   "repository": {
     "type": "git",
