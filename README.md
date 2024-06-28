@@ -90,28 +90,61 @@ If you prefer to have the application in English or any other language, you can 
 
 ### Technical details
 
-The next versions of the Configurator will be a modern tool that uses principally Node, Yarn, Vite and Vue for development and building. To build and develop over it, follow the instructions below.
+The next versions of the Configurator will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, Yarn, Vite and Vue for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
 
 ### Prepare your environment
 
 1. Install [node.js](https://nodejs.org/) (refer to [.nvmrc](./.nvmrc) for minimum required version)
 2. Install yarn: `npm install yarn -g`
 
-### Run development version
+### PWA version
+
+#### Run development version
 
 1. Change to project folder and run `yarn install`.
 2. Run `yarn dev`.
 
 The web app will be available at http://localhost:8000 with full HMR.
 
-### Run production version
+#### Run production version
 
 1. Change to project folder and run `yarn install`.
 2. Run `yarn build`.
 3. Run `yarn preview` after build has finished.
-4. Alternatively run `yarn review` to build and preview in one step.
+
+Alternatively you can run `yarn review` to build and preview in one step.
 
 The web app should behave directly as in production, available at http://localhost:8080.
+
+### Android version
+
+NOTE: The Android version is not fully functional yet. It is in development.
+
+#### Prerequisites
+
+You need to install Android Studio as Capacitor apps are configured and managed through it.
+
+#### Run development version
+
+1. Change to project folder and run `yarn install`.
+2. Run `yarn android:dev`.
+
+The command will ask for the device to run the app. You need to have some Android virtual machine created or some Android phone [connected in ADB](https://developer.android.com/tools/adb).
+
+If you want to use live reload with the app, then you need to make some manual adjustments, and use this other instructions:
+
+1. Change to project folder and run `yarn install`.
+2. Run `yarn dev --host`. It will start the server and show the IP address. Ignore the localhost address and use the real IP address in the next step.
+3. Modify the file `capacitor.config.json` and add this properties:
+```
+  "server": {
+    "url": "[URL_SHOWN_IN_STEP_2]",
+    "cleartext": true
+  }
+```
+4. Run `yarn android:dev`.
+
+Any change make in the code will reload the app in the Android device.
 
 ### Running tests
 

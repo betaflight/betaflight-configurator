@@ -14,7 +14,8 @@
     "test": "vitest",
     "lint": "eslint --ext .js,.vue src",
     "lint:fix": "eslint --fix src",
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "android:dev": "vite build && npx cap sync && npx cap build android"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
     "node": "20.x"
   },
   "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@panter/vue-i18next": "^0.15.2",
     "@vitejs/plugin-vue2": "^2.3.1",
@@ -57,6 +60,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
+    "@capacitor/cli": "^6.0.0",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-links": "^6.5.16",
