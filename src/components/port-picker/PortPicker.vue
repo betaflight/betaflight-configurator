@@ -12,6 +12,7 @@
     />
     <PortsInput
       :value="value"
+      :connected-bluetooth-devices="connectedBluetoothDevices"
       :connected-serial-devices="connectedSerialDevices"
       :connected-usb-devices="connectedUsbDevices"
       :disabled="disabled"
@@ -44,11 +45,15 @@ export default {
           autoConnect: true,
         }),
       },
-      connectedUsbDevices: {
+      connectedBluetoothDevices: {
         type: Array,
         default: () => [],
       },
       connectedSerialDevices: {
+        type: Array,
+        default: () => [],
+      },
+      connectedUsbDevices: {
         type: Array,
         default: () => [],
       },

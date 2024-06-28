@@ -84,8 +84,21 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- I can't find my device ---",
+        "message": "--- I can't find my USB device ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- I can't find my Bluetooth device---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Connected to Bluetooth device: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Bluetooth connection type: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Bluetooth error: $1"
     },
     "virtualMSPVersion": {
         "message": "Virtual Firmware Version"

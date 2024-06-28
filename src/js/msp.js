@@ -1,11 +1,8 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
-import serialNWJS from "./serial.js";
-import serialWeb from "./webSerial.js";
-import { isWeb } from "./utils/isWeb.js";
 import { serialShim } from "./serial_shim.js";
 
-const serial = serialShim();
+let serial = serialShim();
 
 const MSP = {
     symbols: {
@@ -57,7 +54,7 @@ const MSP = {
     packet_error:               0,
     unsupported:                0,
 
-    MIN_TIMEOUT:                100,
+    MIN_TIMEOUT:                200,
     MAX_TIMEOUT:                2000,
     timeout:                    200,
 
@@ -309,7 +306,10 @@ const MSP = {
         return bufferOut;
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        const connected = isWeb() ? serial.connected : serial.connectionId;
+        // Hack to make BT work
+        serial = serialShim();
+
+        const connected = serial.connected;
 
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {

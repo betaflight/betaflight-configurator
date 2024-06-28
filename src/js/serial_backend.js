@@ -24,7 +24,6 @@ import CryptoES from "crypto-es";
 import $ from 'jquery';
 import BuildApi from "./BuildApi";
 
-import { isWeb } from "./utils/isWeb";
 import { serialShim } from "./serial_shim.js";
 import { EventBus } from "../components/eventBus";
 
@@ -64,6 +63,18 @@ export function initializeSerialBackend() {
         }
     });
 
+    EventBus.$on('port-handler:auto-select-bluetooth-device', function(device) {
+        if (!GUI.connected_to && !GUI.connecting_to && GUI.active_tab !== 'firmware_flasher'
+            && ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device))
+                || Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)) {
+            connectDisconnect();
+        }
+    });
+
+    // Using serialShim for serial and bluetooth we don't know which event we need before we connect
+    // Perhaps we should implement a Connection class that handles the connection and events for bluetooth, serial and sockets
+    // TODO: use event gattserverdisconnected for save and reboot and device removal.
+
     serial.addEventListener("removedDevice", (event) => {
         if (event.detail.path === GUI.connected_to) {
             connectDisconnect();
@@ -88,39 +99,39 @@ export function initializeSerialBackend() {
 
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
-    let portName;
-    if (selectedPort === 'manual') {
-        portName = PortHandler.portPicker.portOverride;
-    } else {
-        portName = selectedPort;
-    }
+    const portName = selectedPort === 'manual' ? PortHandler.portPicker.portOverride : selectedPort;
 
     if (!GUI.connect_lock && selectedPort !== 'noselection' && !selectedPort.path?.startsWith('usb_')) {
         // GUI control overrides the user control
 
         GUI.configuration_loaded = false;
 
-        const selected_baud = PortHandler.portPicker.selectedBauds;
+        const baudRate = PortHandler.portPicker.selectedBauds;
         const selectedPort = portName;
 
         if (!isConnected) {
-            console.log(`Connecting to: ${portName}`);
+            // prevent connection when we do not have permission
+            if (selectedPort.startsWith('requestpermission')) {
+                return;
+            }
+
+            console.log(`[SERIAL-BACKEND] Connecting to: ${portName}`);
             GUI.connecting_to = portName;
 
             // lock port select & baud while we are connecting / connected
             PortHandler.portPickerDisabled = true;
             $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-            const baudRate = selected_baud;
-            if (selectedPort === 'virtual') {
-                CONFIGURATOR.virtualMode = true;
+            CONFIGURATOR.virtualMode = selectedPort === 'virtual';
+            CONFIGURATOR.bluetoothMode = selectedPort.startsWith('bluetooth');
+
+            if (CONFIGURATOR.virtualMode) {
                 CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
 
                 // Hack to get virtual working on the web
                 serial = serialShim();
                 serial.connect('virtual', {}, onOpenVirtual);
             } else {
-                CONFIGURATOR.virtualMode = false;
                 serial = serialShim();
                 // Explicitly disconnect the event listeners before attaching the new ones.
                 serial.removeEventListener('connect', connectHandler);
@@ -163,6 +174,7 @@ function finishClose(finishedCallback) {
         $('#dialogResetToCustomDefaults')[0].close();
     }
 
+    // serialShim calls the disconnect method for selected connection type.
     serial.disconnect(onClosed);
 
     MSP.disconnect_cleanup();
@@ -262,18 +274,16 @@ function onOpen(openInfo) {
         result = getConfig('expertMode')?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop('checked', result).trigger('change');
 
-        if(isWeb()) {
-            serial.removeEventListener('receive', read_serial_adapter);
-            serial.addEventListener('receive', read_serial_adapter);
-        } else {
-            serial.onReceive.addListener(read_serial);
-        }
+        // serialShim adds event listener for selected connection type
+        serial.removeEventListener('receive', read_serial_adapter);
+        serial.addEventListener('receive', read_serial_adapter);
+
         setConnectionTimeout();
         FC.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
         MSP.timeout = 250;
-        console.log(`Requesting configuration data`);
+        console.log(`[SERIAL-BACKEND] Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage('apiVersionReceived', FC.CONFIG.apiVersion));
@@ -642,11 +652,7 @@ function onConnect() {
 }
 
 function onClosed(result) {
-    if (result) { // All went as expected
-        gui_log(i18n.getMessage('serialPortClosedOk'));
-    } else { // Something went wrong
-        gui_log(i18n.getMessage('serialPortClosedFail'));
-    }
+    gui_log(i18n.getMessage(result ? 'serialPortClosedOk' : 'serialPortClosedFail'));
 
     $('#tabs ul.mode-connected').hide();
     $('#tabs ul.mode-connected-cli').hide();
@@ -760,7 +766,7 @@ function startLiveDataRefreshTimer() {
 export function reinitializeConnection(callback) {
 
     // In virtual mode reconnect when autoconnect is enabled
-    if (PortHandler.portPicker.selectedPort === 'virtual' && PortHandler.portPicker.autoConnect) {
+    if (CONFIGURATOR.virtualMode && PortHandler.portPicker.autoConnect) {
         return setTimeout(function() {
             $('a.connect').trigger('click');
         }, 500);
@@ -768,6 +774,11 @@ export function reinitializeConnection(callback) {
 
     rebootTimestamp = Date.now();
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+
+    if (CONFIGURATOR.bluetoothMode) {
+        // Bluetooth devices are not disconnected when rebooting
+        connectDisconnect();
+    }
 
     gui_log(i18n.getMessage('deviceRebooting'));
 
