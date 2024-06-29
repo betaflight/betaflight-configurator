@@ -15,7 +15,9 @@
     "lint": "eslint --ext .js,.vue src",
     "lint:fix": "eslint --fix src",
     "storybook": "start-storybook -p 6006",
-    "android:dev": "vite build && npx cap sync && npx cap build android"
+    "android:dev": "node capacitor.config.generator.mjs --dev && npx cap run android",
+    "android:open": "vite build && node capacitor.config.generator.mjs && npx cap open android",
+    "android:run": "vite build && node capacitor.config.generator.mjs && npx cap run android"
   },
   "repository": {
     "type": "git",
@@ -69,6 +71,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^7.20.0",
     "husky": "^4.3.8",
+    "inquirer": "^9.3.1",
     "less": "^4.2.0",
     "rollup-plugin-copy": "^3.5.0",
     "run-script-os": "^1.1.6",
