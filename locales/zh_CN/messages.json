@@ -4322,14 +4322,6 @@
     "osdDescElementAltitude": {
         "message": "当前高度 (当超过设置的警告高度时会闪烁)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "保留1位小数",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "不保留小数",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
     "osdTextElementOnTime": {
         "message": "启动时间",
         "description": "One of the elements of the OSD"

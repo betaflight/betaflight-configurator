@@ -4698,14 +4698,6 @@
     "osdDescElementAltitude": {
         "message": "Aktuelle Höhe (blinkt, wenn über dem Alarm-Schwellwert)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Mit einer Dezimalstelle",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Ohne Nachkommastellen",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
     "osdTextElementOnTime": {
         "message": "eingeschaltet - Zeit",
         "description": "One of the elements of the OSD"

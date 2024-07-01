@@ -63,10 +63,6 @@
         "message": "Tryb wirtualny ",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
-    "portsSelectPermission": {
-        "message": "--- Nie mogę znaleźć mojego urządzenia ---",
-        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
-    },
     "virtualMSPVersion": {
         "message": "Wersja wirtualnego oprogramowania"
     },
@@ -5365,14 +5361,6 @@
     },
     "osdDescElementAltitude": {
         "message": "Aktualny pułap (miga gdy jest powyżej ustawionego limitu)"
-    },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "1 po przecinku",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Bez miejsc po przecinku",
-        "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Na czas",

@@ -5296,14 +5296,6 @@
     "osdDescElementAltitude": {
         "message": "Altitude atual (Piscar quando estiver acima do limite)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Com 1 casa decimal",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Sem casas decimais",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
     "osdTextElementOnTime": {
         "message": "Tempo total ligado",
         "description": "One of the elements of the OSD"

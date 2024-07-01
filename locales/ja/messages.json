@@ -31,6 +31,22 @@
     "dontShowAgain": {
         "message": "今後表示しない"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "アプリケーションの更新が必要です",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "最新の変更を取得するには、ページを更新する必要があります。今すぐ更新すると、ページが再読み込みされ、保存されていない変更が消失し、進行中の操作は中止されます。<br><br>今すぐ更新しますか？このメッセージを消去し、後で手動でページを更新することもできます。",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "アプリケーションはオフラインでも使用可能です",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "必要に応じてスタンドアロンのアプリケーションとしてインストールすることもできます。ブラウザのアドレスバー、またはメニューからオプションを検索してください。",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "この機能はお使いのハードウェアではサポートされていません。"
     },
@@ -64,8 +80,21 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- デバイスが見つかりません ---",
+        "message": "--- USBデバイスが見つかりません ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- Bluetoothデバイスが見つかりません ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Bluetoothデバイスに接続: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Bluetooth 接続タイプ: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Bluetooth エラー: $1"
     },
     "virtualMSPVersion": {
         "message": "バーチャルファームウェアバージョン"
@@ -5393,12 +5422,20 @@
     "osdDescElementAltitude": {
         "message": "現在の高度 (アラーム値を超えると点滅)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "小数点以下 1桁",
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL (小数点第一位)",
         "description": "One of the variants of the altitude element of the OSD"
     },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "小数点なし",
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL (小数点なし)",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL (小数点第一位)",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL (小数点なし)",
         "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {

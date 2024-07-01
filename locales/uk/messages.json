@@ -63,10 +63,6 @@
         "message": "Віртуальний режим (експериментальний)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
-    "portsSelectPermission": {
-        "message": "--- Я не можу знайти мій пристрій ---",
-        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
-    },
     "virtualMSPVersion": {
         "message": "Версія віртуальної прошивки"
     },
@@ -5365,14 +5361,6 @@
     },
     "osdDescElementAltitude": {
         "message": "Поточна висота (блимає, коли вище порогового значення)"
-    },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "З 1 розрядом після коми",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Без десятих",
-        "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Від підключення батареї",

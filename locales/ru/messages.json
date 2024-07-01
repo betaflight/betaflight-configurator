@@ -63,10 +63,6 @@
         "message": "Виртуальный режим (экспериментальный)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
-    "portsSelectPermission": {
-        "message": "--- Я не могу найти свое устройство ---",
-        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
-    },
     "virtualMSPVersion": {
         "message": "Версия виртуальной прошивки"
     },
@@ -1690,7 +1686,7 @@
         "description": "Anti Gravity Gain Parameter"
     },
     "pidTuningAntiGravityGainHelp": {
-        "message": "Увеличение \"И\" и \"П\" при быстром изменении газа.<br><br>8.0 означает примерно 8-кратное увеличение",
+        "message": "Увеличение \"И\" и \"П\" составляющих при быстром изменении газа.<br><br>8.0 означает примерно 8-кратное увеличение И.",
         "description": "Anti Gravity Gain Parameter Help Icon"
     },
     "pidTuningAntiGravityThres": {
@@ -2238,6 +2234,10 @@
     "auxiliaryHelpMode_GPSRESCUE": {
         "message": "Включите 'GPS Rescue', чтобы вернуть летательный аппарат вместо, где он был запущен в последний раз",
         "description": "Help text to GPS RESCUE mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Режим полета, где рысканье выравнивается по внешней системе координат (часто по направлению, куда смотрит пилот), а не по ориентации летательного аппарата. Разработан для начинающих, но используется редко, рекомендуется режим ANGLE",
+        "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
         "message": "Если стики крен и тангаж отцентрованы, этот гибридный режим работает точно как режим ANGLE (т.е. включено автовыравнивание), но по мере смещения стиков от центра, постепенно начинает вести себя как RATE (Акро) режим",
@@ -4188,6 +4188,9 @@
     "pidTuningItermRelax": {
         "message": "Ослабление коэффициента И"
     },
+    "pidTuningItermRelaxHelp": {
+        "message": "Подавляет накопление составляющей <b>И<\/b> при быстром маневре, уменьшая откат в конце переворотов, флипов и других быстрых маневров.<br><br> В режиме <b>Заданное значение<\/b> функция работает от уже сглажженых движениий стиков и наилучшим образом работает для отзывчивых квадрокоптеров.<br><br>Режим <b>Гиро<\/b> может быть полезен при наличии больших задержках в управлении.<br><br>Обычно iTerm Relax не должен применяться к yaw (рысканью)."
+    },
     "pidTuningItermRelaxAxes": {
         "message": "Oси",
         "description": "Iterm Relax Axes selection"
@@ -4212,7 +4215,7 @@
         "message": "Гиро"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
-        "message": "Уставка"
+        "message": "Заданное значение"
     },
     "pidTuningItermRelaxCutoff": {
         "message": "Срез",
@@ -5123,14 +5126,6 @@
     "osdDescElementAltitude": {
         "message": "Текущая высота (замигает, если значение будет ниже заданного порога тревоги)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "С 1 десятичным знаком",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Без десятичных знаков",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
     "osdTextElementOnTime": {
         "message": "Время работы",
         "description": "One of the elements of the OSD"
@@ -5878,6 +5873,10 @@
         "message": "Качество соединения",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI дБм",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Arming выключен",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6003,6 +6002,10 @@
     },
     "osdWarningRSNR": {
         "message": "Предупреждение, если значение RSNR ниже заданного уровня тревоги"
+    },
+    "osdWarningTextLoad": {
+        "message": "ЗАГРУЗКА",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "Неизвестно ($1)"

@@ -31,6 +31,22 @@
     "dontShowAgain": {
         "message": "No ho mostris més"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "Cal actualitzar l'aplicació",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "Heu d'actualitzar la pàgina per obtenir els darrers canvis. En actualitzar-lo ara, es tornarà a carregar la pàgina i perdràs els canvis no desats i avortarà qualsevol operació en curs.<br><br>Vols actualitzar-la ara? També podeu ignorar aquest missatge i actualitzar la pàgina manualment més tard.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "L'aplicació està preparada per utilitzar-se fora de línia",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "Podeu instal·lar-lo com a aplicació autònoma al vostre dispositiu si voleu. Cerqueu l'opció a la barra d'adreces o al menú del vostre navegador.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Aquesta operació no és compatible amb el teu maquinari."
     },
@@ -64,8 +80,21 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- No trobo el meu dispositiu ---",
+        "message": "--- No trobo el meu dispositiu USB ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- No trobo el meu dispositiu Bluetooth---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Connecta't al dispositiu Bluetooth: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Tipus connexió Bluetooth: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Error Bluetooth: $1"
     },
     "virtualMSPVersion": {
         "message": "Versió de microprogramari virtual"
@@ -5401,12 +5430,20 @@
     "osdDescElementAltitude": {
         "message": "Altitud actual (pampallugeja por sobre del nivell d'alarma)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Amb 1 decimal",
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL amb 1 decimal",
         "description": "One of the variants of the altitude element of the OSD"
     },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Sense decimals",
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL sense decimals",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL amb 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL sense decimals",
         "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {

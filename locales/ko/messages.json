@@ -31,6 +31,22 @@
     "dontShowAgain": {
         "message": "다시 보지 않기"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "응용 프로그램을 업데이트해야 합니다",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "페이지를 새로 고쳐야 최신 변경 사항을 얻을 수 있습니다. 지금 새로 고침을 하면 페이지가 다시 로드되고 저장되지 않은 변경 사항이 손실되며 진행 중인 작업이 중단됩니다. <br><br>지금 새로 고침을 원하십니까? 이 메시지를 무시하고 나중에 수동으로 페이지를 새로 고칠 수도 있습니다.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "응용 프로그램을 오프라인에서 사용할 준비가 되었습니다",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "원하는 경우 장치에 독립 실행형 응용 프로그램으로 설치할 수 있습니다. 브라우저 주소 표시줄이나 메뉴에서 해당 옵션을 검색합니다.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "이 조작은 당신의 하드웨어에서 지원되지 않습니다."
     },
@@ -64,8 +80,21 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- 내 디바이스를 찾을 수 없습니다 ---",
+        "message": "--- USB 장치를 찾을 수 없습니다 ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- 블루투스 장치를 찾을 수 없습니다---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "블루투스 장치에 연결됨: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "블루투스 연결 형식: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "블루투스 오류: $1"
     },
     "virtualMSPVersion": {
         "message": "가상 펌웨어 버전"
@@ -5397,12 +5426,20 @@
     "osdDescElementAltitude": {
         "message": "현재 고도 (임계값 이상일 때 깜빡임)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "소수 첫째자리로",
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL(소수 첫째자리)",
         "description": "One of the variants of the altitude element of the OSD"
     },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "소수점 없이",
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL(소수점 없이)",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL(소수 첫째자리)",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL(소수점 없이)",
         "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {
