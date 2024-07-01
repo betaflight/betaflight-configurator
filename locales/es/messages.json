@@ -31,6 +31,22 @@
     "dontShowAgain": {
         "message": "No volver a mostrar"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "La aplicación necesita ser actualizada",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "Necesitas refrescar la página para obtener los últimos cambios. Refrescarla ahora recargará la página y perderás cualquier cambio no guardado y abortará cualquier operación en progreso.<br><br>¿Quieres refrescar la página ahora? Tambien puedes cerrar este mensaje y refrescar la página manualmente después.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "La aplicación está lista para ser usada sin conexión",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "Puedes instalarla como una aplicación independiente en tu dispositivo si así lo deseas. Busca la opción en la barra de direcciones o en el menú de tu navegador.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Esta operación no es compatible con su hardware."
     },
@@ -64,8 +80,21 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- No encuentro mi dispositivo ---",
+        "message": "--- No encuentro mi dispositivo USB ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- No encuentro mi dispositivo Bluetooth --",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Conectado con dispositivo Bluetooth: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Tipo de conexión Bluetooth: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Error Bluetooth: $1"
     },
     "virtualMSPVersion": {
         "message": "Versión del firmware virtual"
@@ -5393,12 +5422,20 @@
     "osdDescElementAltitude": {
         "message": "Altitud actual (parpadea por encima del umbral de alarma)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Con 1 decimal",
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL (sobre el nivel del suelo, 1 decimal)",
         "description": "One of the variants of the altitude element of the OSD"
     },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Sin decimales",
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL (sobre el nivel del suelo, sin decimales)",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL (sobre el nivel del mar, 1 decimal)",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL (sobre el nivel del mar, sin decimales)",
         "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {

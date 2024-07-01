@@ -4649,14 +4649,6 @@
     "osdDescElementAltitude": {
         "message": "Altitude ( clignote quand le seuil d'alarme est atteint)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Avec 1 décimale",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Sans décimale",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
     "osdTextElementOnTime": {
         "message": "Temps de fonctionnement",
         "description": "One of the elements of the OSD"

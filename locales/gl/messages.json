@@ -62,10 +62,6 @@
         "message": "Modo Virtual (experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
-    "portsSelectPermission": {
-        "message": "--- Non atopo o meu dispositivo ---",
-        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
-    },
     "virtualMSPVersion": {
         "message": "Versión virtual do firmware"
     },
@@ -5356,14 +5352,6 @@
     },
     "osdDescElementAltitude": {
         "message": "Altitude actual (parpadea por riba do limiar de alarma)"
-    },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Con 1 decimal",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Sen decimal",
-        "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Unha vez",

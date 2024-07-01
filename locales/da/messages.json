@@ -31,6 +31,14 @@
     "dontShowAgain": {
         "message": "Skjul"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "Applikationen har fundet obligatorisk opdatering",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "Du skal opdatere siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og du vil miste alle ikke-gemte ændringer og vil afbryde iganværende operation.<br><br>Vil du opdatere  nu? Du kan også afvise  og opdatere manuelt senere.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
     "operationNotSupported": {
         "message": "Din hardware understøtter ikke denne handling."
     },
@@ -5370,14 +5378,6 @@
     },
     "osdDescElementAltitude": {
         "message": "Aktuel højde (blinker, når over alarmtærskelværdi)"
-    },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Med 1 decimal",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Uden decimaler",
-        "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Til tiden",

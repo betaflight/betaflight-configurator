@@ -3800,14 +3800,6 @@
     "osdDescElementAltitude": {
         "message": "Huidige hoogte (knippert wanneer deze boven drempel uit komt)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "Met 1 decimaal",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Zonder decimalen",
-        "description": "One of the variants of the altitude element of the OSD"
-    },
     "osdTextElementOnTime": {
         "message": "Tijd aan",
         "description": "One of the elements of the OSD"
