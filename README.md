@@ -122,28 +122,24 @@ NOTE: The Android version is not fully functional yet. It is in development.
 
 #### Prerequisites
 
-You need to install Android Studio as Capacitor apps are configured and managed through it.
+You need to install [Android Studio](https://developer.android.com/studio) as Capacitor apps are configured and managed through it.
 
 #### Run development version
 
 1. Change to project folder and run `yarn install`.
-2. Run `yarn android:dev`.
+2. Run `yarn android:run`.
 
-The command will ask for the device to run the app. You need to have some Android virtual machine created or some Android phone [connected in ADB](https://developer.android.com/tools/adb).
+The command will ask for the device to run the app. You need to have some Android virtual machine created or some Android phone [connected using ADB](https://developer.android.com/tools/adb).
 
-If you want to use live reload with the app, then you need to make some manual adjustments, and use this other instructions:
+As alternative to the step 2, you can execute a `yarn android:open` to open de project into Android Studio and run or debug the app from there.
+
+#### Run development version with live reload
 
 1. Change to project folder and run `yarn install`.
-2. Run `yarn dev --host`. It will start the server and show the IP address. Ignore the localhost address and use the real IP address in the next step.
-3. Modify the file `capacitor.config.json` and add this properties:
-```
-  "server": {
-    "url": "[URL_SHOWN_IN_STEP_2]",
-    "cleartext": true
-  }
-```
-4. Run `yarn android:dev`.
+2. Run `yarn dev --host`. It will start the vite server and will show you the IP address where the server is listening.
+3. Run `yarn android:dev` 
 
+This will ask for the IP where the server is running (if there are more than one network interfaces). You need to have some Android virtual machine created or some Android phone [connected using ADB](https://developer.android.com/tools/adb).
 Any change make in the code will reload the app in the Android device.
 
 ### Running tests
