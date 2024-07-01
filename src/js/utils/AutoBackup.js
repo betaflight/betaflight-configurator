@@ -76,7 +76,7 @@ class AutoBackup {
         console.log('Running backup');
 
         await this.activateCliMode();
-        await this.sendCommand("diff");
+        await this.sendCommand("diff all");
 
         setTimeout(async () => {
             this.sendCommand("exit", this.onClose);
