@@ -83,11 +83,22 @@ export default class PresetParser {
     }
 
     _getOptionGroup(line) {
-        const directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_GROUP_DIRECTIVE.length).trim();
+        const lowercaseLine = line.toLowerCase();
+        const exlusiveDirective = this._settings.OptionsDirectives.EXCLUSIVE_OPTION_GROUP;
+        const isExclusiveGroup = lowercaseLine.includes(exlusiveDirective);
+
+        let directiveRemoved;
+        if (isExclusiveGroup) {
+            const exclusiveDirectiveLength = exlusiveDirective.length;
+            directiveRemoved = line.slice(lowercaseLine.lastIndexOf(exlusiveDirective) + exclusiveDirectiveLength - 1).trim();
+        } else {
+            directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_GROUP_DIRECTIVE.length).trim();
+        }
 
         return {
             name: directiveRemoved.slice(1).trim(),
             childs: [],
+            isExclusive: isExclusiveGroup,
         };
     }
 
