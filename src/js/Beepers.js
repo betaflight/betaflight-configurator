@@ -29,6 +29,7 @@ class Beepers {
             { bit: 20, name: 'CAM_CONNECTION_OPEN', visible: true },
             { bit: 21, name: 'CAM_CONNECTION_CLOSE', visible: true },
             { bit: 22, name: 'RC_SMOOTHING_INIT_FAIL', visible: true },
+            { bit: 24, name: 'STICK_COMMAND_EXECUTED', visible: true },
         ];
 
         if (supportedConditions) {
