@@ -17,10 +17,7 @@ export default class PresetSource {
     static getBranchName(url) {
         const pattern = /https:\/\/github\.com\/[^\/]+\/[^\/]+\/tree\/([^\/]+)/;
         const match = url.match(pattern);
-        if (match) {
-            return match[1];
-        } else {
-            return null;
-        }
+
+        return match ? match[1] : null;
     }
 }
