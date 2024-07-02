@@ -9,4 +9,18 @@ export default class PresetSource {
     static isUrlGithubRepo(url) {
         return url.trim().toLowerCase().startsWith("https://github.com/");
     }
+
+    static containsBranchName(url) {
+        return url.includes("/tree/");
+    }
+
+    static getBranchName(url) {
+        const pattern = /https:\/\/github\.com\/[^\/]+\/[^\/]+\/tree\/([^\/]+)/;
+        const match = url.match(pattern);
+        if (match) {
+            return match[1];
+        } else {
+            return null;
+        }
+    }
 }
