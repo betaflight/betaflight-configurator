@@ -147,6 +147,10 @@ export default class SourcePanel {
 
     _onInputChange() {
         this._checkIfGithub();
+        if (PresetSource.containsBranchName(this._domEditUrl.val())) {
+            this._domEditGitHubBranch.val(PresetSource.getBranchName(this._domEditUrl.val()));
+            this._domEditUrl.val(this._domEditUrl.val().split("/tree/")[0]);
+        }
         this._setIsSaved(false);
     }
 
