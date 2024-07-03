@@ -375,7 +375,10 @@ configuration.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 FC.ARMING_CONFIG.gyro_cal_on_first_arm = $('input[id="configurationGyroCalOnFirstArm"]').is(':checked') ? 1 : 0;
-                FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
+                // only update auto_disarm_delay if MOTOR_STOP is enabled
+                if (FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP')) {
+                    FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
+                }
             }
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
 
