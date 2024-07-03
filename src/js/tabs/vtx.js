@@ -252,9 +252,6 @@ vtx.initialize = function (callback) {
         $(".vtx_table_save_pending").toggle(TABS.vtx.vtxTableSavePending);
         $(".factory_band").toggle(TABS.vtx.vtxTableFactoryBandsSupported);
 
-        // Buttons
-        $('.clipboard_available').toggle(Clipboard.available && Clipboard.readAvailable);
-
         // Insert actual values in the fields
         // Values of the selected mode
         $("#vtx_frequency").val(FC.VTX_CONFIG.vtx_frequency);

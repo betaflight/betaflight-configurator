@@ -8,11 +8,10 @@ import './msp/MSPHelper.js';
 import { i18n } from './localization.js';
 import GUI, { TABS } from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
-import { tracking, checkSetupAnalytics } from './Analytics.js';
+import { checkSetupAnalytics } from './Analytics.js';
 import { initializeSerialBackend } from './serial_backend.js';
 import FC from './fc.js';
 import CONFIGURATOR from './data_storage.js';
-import serial from './serial.js';
 import CliAutoComplete from './CliAutoComplete.js';
 import DarkTheme, { setDarkTheme } from './DarkTheme.js';
 import UI_PHONES from './phones_ui.js';
@@ -110,75 +109,6 @@ function appReady() {
     });
 }
 
-function closeSerial() {
-    // automatically close the port when application closes
-    const connectionId = serial.connectionId;
-
-    if (connectionId && CONFIGURATOR.connectionValid && !CONFIGURATOR.virtualMode) {
-        // code below is handmade MSP message (without pretty JS wrapper), it behaves exactly like MSP.send_message
-        // sending exit command just in case the cli tab was open.
-        // reset motors to default (mincommand)
-
-        let bufferOut = new ArrayBuffer(5),
-        bufView = new Uint8Array(bufferOut);
-
-        bufView[0] = 0x65; // e
-        bufView[1] = 0x78; // x
-        bufView[2] = 0x69; // i
-        bufView[3] = 0x74; // t
-        bufView[4] = 0x0D; // enter
-
-        const sendFn = (serial.connectionType === 'serial' ? chrome.serial.send : chrome.sockets.tcp.send);
-        sendFn(connectionId, bufferOut, function () {
-            console.log('Send exit');
-        });
-
-        setTimeout(function() {
-            bufferOut = new ArrayBuffer(22);
-            bufView = new Uint8Array(bufferOut);
-            let checksum = 0;
-
-            bufView[0] = 36; // $
-            bufView[1] = 77; // M
-            bufView[2] = 60; // <
-            bufView[3] = 16; // data length
-            bufView[4] = 214; // MSP_SET_MOTOR
-
-            checksum = bufView[3] ^ bufView[4];
-
-            for (let i = 0; i < 16; i += 2) {
-                bufView[i + 5] = FC.MOTOR_CONFIG.mincommand & 0x00FF;
-                bufView[i + 6] = FC.MOTOR_CONFIG.mincommand >> 8;
-
-                checksum ^= bufView[i + 5];
-                checksum ^= bufView[i + 6];
-            }
-
-            bufView[5 + 16] = checksum;
-
-            sendFn(connectionId, bufferOut, function () {
-                serial.disconnect();
-            });
-        }, 100);
-    } else if (connectionId) {
-        serial.disconnect();
-    }
-}
-
-function closeHandler() {
-    if (!GUI.isCordova()) {
-        this.hide();
-    }
-
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
-
-    closeSerial();
-
-    if (!GUI.isCordova()) {
-        this.close(true);
-    }
-}
-
 //Process to execute to real start the app
 function startProcess() {
     // translate to user-selected language
@@ -256,8 +186,6 @@ function startProcess() {
             if (GUI.allowedTabs.indexOf(tab) < 0 && tab === "firmware_flasher") {
                 if (GUI.connected_to || GUI.connecting_to) {
                     $('a.connect').click();
-                } else {
-                    serial.disconnect();
                 }
                 $('div.open_firmware_flasher a.flash').click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
