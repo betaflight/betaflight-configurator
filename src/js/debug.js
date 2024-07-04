@@ -235,7 +235,17 @@ const DEBUG = {
             'debug[0]':'Active calc step',
             'debug[1]':'Step duration',
         },
-        'FFT_FREQ' : {
+        'FFT_FREQ' : semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) ? {
+            'debug[all]':'Debug FFT FREQ',
+            'debug[0]':'Gyro Pre Dyn Notch [dbg-axis]',
+            'debug[1]':'Notch 1 Center Freq [dbg-axis]',
+            'debug[2]':'Notch 2 Center Freq [dbg-axis]',
+            'debug[3]':'Notch 3 Center Freq [dbg-axis]',
+            'debug[4]':'Notch 4 Center Freq [dbg-axis]',
+            'debug[5]':'Notch 5 Center Freq [dbg-axis]',
+            'debug[6]':'Notch 6 Center Freq [dbg-axis]',
+            'debug[7]':'Notch 7 Center Freq [dbg-axis]',
+        } : {
             'debug[all]':'Debug FFT FREQ',
             'debug[0]':'Notch 1 Center Freq [dbg-axis]',
             'debug[1]':'Notch 2 Center Freq [dbg-axis]',
