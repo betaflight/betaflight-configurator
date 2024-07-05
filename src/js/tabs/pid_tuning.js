@@ -10,7 +10,7 @@ import TuningSliders from "../TuningSliders";
 import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { degToRad, isInt } from "../utils/common";
 import semver from "semver";
@@ -970,6 +970,9 @@ pid_tuning.initialize = function (callback) {
 
         const dynamicNotchEnabled = $('.pid_filter input[id="dynamicNotchEnabled"]').is(':checked');
         FC.FILTER_CONFIG.dyn_notch_count = dynamicNotchEnabled ? parseInt($('.pid_filter input[name="dynamicNotchCount"]').val()) : 0;
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('.pid_filter input[name="dynamicNotchCount"]').attr('max', '7');
+        }
 
         FC.TUNING_SLIDERS.slider_pids_mode = TuningSliders.sliderPidsMode;
         //round slider values to nearest multiple of 5 and passes to the FW. Avoid dividing calc by (* x 100)/5 = 20
