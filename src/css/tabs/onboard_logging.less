@@ -15,7 +15,6 @@
 			font-weight: bold;
 		}
 		dt {
-			float: left;
 			width: 120px;
 			height: 20px;
 			line-height: 20px;
@@ -34,7 +33,6 @@
 	.dataflash-info {
 		overflow: hidden;
 		dt {
-			float: left;
 			width: 12em;
 			height: 20px;
 			line-height: 20px;
@@ -49,7 +47,7 @@
 	.speed {
 		margin-top: 5px;
 		width: 80px;
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 	}
 	.buttons {
 		width: calc(100% - 20px);
@@ -62,8 +60,8 @@
 	.dataflash-contents {
 		margin-top: 15px;
 		margin-bottom: 26px;
-		border: 1px solid var(--subtleAccent);
-		background-color: #eee;
+		border: 1px solid var(--surface-500);
+		background-color: var(--surface-300);
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
@@ -88,8 +86,8 @@
 	.sdcard-contents {
 		margin-top: 15px;
 		margin-bottom: 26px;
-		border: 1px solid var(--subtleAccent);
-		background-color: #eee;
+		border: 1px solid var(--surface-500);
+		background-color: var(--surface-300);
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
@@ -112,11 +110,11 @@
 		}
 	}
 	.dataflash-used {
-		background-color: var(--accent);
+		background-color: var(--primary-500);
 		border-radius: 4px;
 	}
 	.sdcard-other {
-		background-color: var(--accent);
+		background-color: var(--primary-500);
 		border-radius: 4px;
 	}
 	.dataflash-free {
@@ -128,7 +126,7 @@
 	progress {
 		&::-webkit-progress-bar {
 			height: 24px;
-			background-color: #eee;
+			background-color: var(--surface-300);
 		}
 		&::-webkit-progress-value {
 			background-color: #bcf;
@@ -152,7 +150,6 @@
 		.helpicon {
 			margin: 4px 0 0 7px;
 			display: inline-block;
-			float: unset;
 		}
 	}
 	.require-msc-supported {
@@ -164,73 +161,8 @@
 	.line {
 		clear: left;
 	}
-	.blackboxRate {
-		select {
-			float: left;
-			width: 180px;
-			height: 20px;
-			margin: 0 10px 5px 0;
-			border: 1px solid var(--subtleAccent);
-			border-radius: 3px;
-		}
-		span {
-			line-height: 20px;
-		}
-	}
-	.blackboxDebugFields {
-		margin-top: 5px;
-		select {
-			float: left;
-			width: 180px;
-			height: 20px;
-			margin: 0 10px 5px 0;
-			border: 1px solid var(--subtleAccent);
-			border-radius: 3px;
-		}
-		span {
-			&:last-child {
-				margin-left: 7px;
-			}
-			line-height: 20px;
-		}
-	}
-	.ms-choice {
-		background-color: var(--boxBackground) !important;
-		color: var(--defaultText) !important;
-		height: 20px;
-	}
-	.blackboxDebugMode {
-		select {
-			float: left;
-			width: 180px;
-			height: 20px;
-			margin: 0 10px 5px 0;
-			border: 1px solid var(--subtleAccent);
-			border-radius: 3px;
-		}
-		span {
-			line-height: 20px;
-		}
-	}
-	.blackboxDevice {
-		select {
-			float: left;
-			width: 180px;
-			height: 20px;
-			margin: 0 10px 5px 0;
-			border: 1px solid var(--subtleAccent);
-			border-radius: 3px;
-		}
-		span {
-			line-height: 20px;
-		}
-	}
 	.blackboxDebugModeText {
 		margin-left: 7px !important;
-	}
-	.sdcard {
-		padding: 10px;
-		float: left;
 	}
 	.sdcard-status {
 		padding-top: 4px;
@@ -353,7 +285,7 @@
 }
 .tab-onboard_logging.blackbox-supported {
 	.require-blackbox-supported {
-		display: block;
+		display: inherit;
 	}
 }
 .tab-onboard_logging.blackbox-maybe-supported {
@@ -400,56 +332,5 @@
 	.sdcard-icon {
 		background-color: #64a5f6;
 		border: 1px solid #68a7ff;
-	}
-}
-@media all and (max-width: 575px) {
-	.tab-onboard_logging {
-		dialog {
-			width: calc(100% - 2em);
-			border-radius: unset;
-		}
-		.blackboxRate {
-			select {
-				width: 120px;
-			}
-		}
-		.blackboxDebugMode {
-			select {
-				width: 120px;
-			}
-		}
-		.blackboxDevice {
-			select {
-				width: 120px;
-			}
-		}
-	}
-}
-@media only screen and (max-width: 1055px) {
-	.tab-onboard_logging {
-		table {
-			thead {
-				tr {
-					&:first-child {
-						font-size: 12px;
-						height: 22px;
-					}
-				}
-			}
-		}
-	}
-}
-@media only screen and (max-device-width: 1055px) {
-	.tab-onboard_logging {
-		table {
-			thead {
-				tr {
-					&:first-child {
-						font-size: 12px;
-						height: 22px;
-					}
-				}
-			}
-		}
 	}
 }

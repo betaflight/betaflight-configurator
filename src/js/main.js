@@ -20,7 +20,6 @@ import { isExpertModeEnabled } from './utils/isExportModeEnabled.js';
 import { updateTabList } from './utils/updateTabList.js';
 import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates.js';
 import * as THREE from 'three';
-import * as d3 from 'd3';
 
 if (typeof String.prototype.replaceAll === "undefined") {
     String.prototype.replaceAll = function(match, replace) {
@@ -104,7 +103,7 @@ function appReady() {
         startProcess();
 
         checkSetupAnalytics(function (analyticsService) {
-            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', { language: i18n.selectedLanguage });
         });
 
         initializeSerialBackend();
@@ -188,36 +187,6 @@ function startProcess() {
     gui_log(i18n.getMessage('infoVersionOs', { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage('infoVersionConfigurator', { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
-    if (GUI.isNWJS()) {
-        const nwWindow = GUI.nwGui.Window.get();
-        nwWindow.on('new-win-policy', function(frame, url, policy) {
-            // do not open the window
-            policy.ignore();
-            // and open it in external browser
-            GUI.nwGui.Shell.openExternal(url);
-        });
-        nwWindow.on('close', closeHandler);
-        const config = getConfig('showDevToolsOnStartup');
-        if (CONFIGURATOR.isDevVersion() && !!config.showDevToolsOnStartup) {
-            nwWindow.showDevTools();
-        }
-    } else if (GUI.isCordova()) {
-        window.addEventListener('beforeunload', closeHandler);
-        document.addEventListener('backbutton', function(e) {
-            e.preventDefault();
-            navigator.notification.confirm(
-                i18n.getMessage('cordovaExitAppMessage'),
-                function(stat) {
-                    if (stat === 1) {
-                        navigator.app.exitApp();
-                    }
-                },
-                i18n.getMessage('cordovaExitAppTitle'),
-                [i18n.getMessage('yes'),i18n.getMessage('no')],
-            );
-        });
-    }
-
     $('.connect_b a.connect').removeClass('disabled');
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
@@ -249,9 +218,19 @@ function startProcess() {
         }
     });
 
-    if (GUI.isCordova()) {
-        UI_PHONES.init();
-    }
+    // break into mobile UI at the same breakpoint as the CSS, not only for Cordova
+    // use window.matchMedia
+    const mediaQuery = window.matchMedia('(max-width: 576px)');
+    const handleMediaChange = function(e) {
+        if (e.matches) {
+            console.log('Using mobile UI');
+            UI_PHONES.init();
+        } else {
+            console.log('Using desktop UI');
+        }
+    };
+    mediaQuery.addEventListener('change', handleMediaChange);
+    handleMediaChange(mediaQuery);
 
     const ui_tabs = $('#tabs > ul');
     $('a', ui_tabs).click(function () {

@@ -174,17 +174,12 @@ export default class BuildApi {
 
     loadSponsorTile(mode, page, onSuccess, onFailure) {
         const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
-        this.load(url, onSuccess, onFailure);
-    }
-
-    sendAnalytics(type, parcel) {
-        const url = `${this._url}/analytics/${type}`;
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: JSON.stringify(parcel),
-            contentType: "application/json",
-            dataType: "json",
+        $.get(url, function (data) {
+            onSuccess(data);
+        }).fail(xhr => {
+            if (onFailure !== undefined) {
+                onFailure();
+            }
         });
     }
 }

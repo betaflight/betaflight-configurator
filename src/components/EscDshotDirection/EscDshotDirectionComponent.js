@@ -1,10 +1,8 @@
 import { i18n } from "../../js/localization.js";
 import GUI from "../../js/gui.js";
-import semver from "semver";
 import EscDshotDirectionMotorDriver from "./EscDshotDirectionMotorDriver.js";
 import DshotCommand from "../../js/utils/DshotCommand.js";
 import FC from "../../js/fc.js";
-import { API_VERSION_1_44 } from '../../js/data_storage.js';
 import { getMixerImageSrc } from "../../js/utils/common.js";
 import $ from "jquery";
 
@@ -337,12 +335,6 @@ class EscDshotDirectionComponent
         if (this._numberOfMotors <= 0) {
             anyError = true;
             this._domWrongMixerMessage.show();
-        }
-
-        if (!semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            // if BF4.2 or older - show the error message
-            anyError = true;
-            this._domWrongFirmwareMessage.show();
         }
 
         if (anyError) {

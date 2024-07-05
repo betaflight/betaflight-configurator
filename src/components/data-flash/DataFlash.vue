@@ -78,12 +78,10 @@ export default {
         rgba(0, 0, 0, 0.55)
     );
     padding-top: 5px;
-    text-shadow: 0 1px #000000;
 }
 .noflash_global {
     color: #868686;
     text-align: center;
-    text-shadow: 0 1px #000000;
     margin-top: 2px;
 }
 
@@ -105,7 +103,7 @@ export default {
     border-radius: 2px;
     width: 25%;
     display: block;
-    background-color: var(--accent);
+    background-color: var(--primary-500);
 }
 .dataflash-contents_global div span {
     position: absolute;

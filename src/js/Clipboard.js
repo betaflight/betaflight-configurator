@@ -1,4 +1,5 @@
 import GUI from './gui.js';
+import { isWeb } from "./utils/isWeb";
 
 /**
  * Encapsulates the Clipboard logic, depending on web or nw
@@ -75,6 +76,31 @@ Clipboard._configureClipboardAsCordova = function() {
 
 };
 
+Clipboard._configureClipboardAsWeb = function() {
+
+    console.log('Web Clipboard available');
+
+    this.available = true;
+    this.readAvailable = true;
+    this.writeAvailable = true;
+
+    this.writeText = function(text, onSuccess, onError) {
+
+        navigator.clipboard.writeText(text).then(
+            () => onSuccess?.(text),
+            onError,
+        );
+    };
+
+    this.readText = function(onSuccess, onError) {
+
+        navigator.clipboard.readText().then(
+            (text) => onSuccess?.(text),
+            onError,
+        );
+    };
+};
+
 Clipboard._configureClipboardAsOther = function() {
 
     console.warn('NO Clipboard available');
@@ -96,6 +122,8 @@ if (GUI.isNWJS()){
     Clipboard._configureClipboardAsNwJs(GUI.nwGui);
 } else if (GUI.isCordova()) {
     Clipboard._configureClipboardAsCordova();
+} else if (isWeb()) {
+    Clipboard._configureClipboardAsWeb();
 } else {
     Clipboard._configureClipboardAsOther();
 }

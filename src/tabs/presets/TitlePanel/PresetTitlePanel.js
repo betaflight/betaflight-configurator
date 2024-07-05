@@ -33,17 +33,17 @@ export default class PresetTitlePanel
         let starMouseHover = false;
 
         if (this._clickable && this._mouseOnPanel && !this._mouseOnStar) {
-            this._domWrapperDiv.css({"background-color": "var(--subtleAccent)"});
+            this._domWrapperDiv.css({"background-color": "var(--surface-500)"});
         } else {
-            this._domWrapperDiv.css({"background-color": "var(--boxBackground)"});
+            this._domWrapperDiv.css({"background-color": "var(--surface-200)"});
         }
 
         if (this._mouseOnStar || (this._mouseOnPanel && this._clickable)) {
-            this._domStar.css({"background-color": "var(--subtleAccent)"});
+            this._domStar.css({"background-color": "var(--surface-500)"});
             starMouseHover = true;
         } else {
-            this._domWrapperDiv.css({"background-color": "var(--boxBackground)"});
-            this._domStar.css({"background-color": "var(--boxBackground)"});
+            this._domWrapperDiv.css({"background-color": "var(--surface-200)"});
+            this._domStar.css({"background-color": "var(--surface-200)"});
         }
 
         if (this._preset.lastPickDate) {
@@ -93,7 +93,7 @@ export default class PresetTitlePanel
         if (isPicked) {
             this._domWrapperDiv.css({"border": "2px solid green"});
         } else {
-            this._domWrapperDiv.css({"border": "1px solid var(--subtleAccent)"});
+            this._domWrapperDiv.css({"border": "1px solid var(--surface-500)"});
         }
     }
 

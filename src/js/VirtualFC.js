@@ -19,6 +19,7 @@ const VirtualFC = {
         virtualFC.CONFIG.cpuTemp = 48;
 
         virtualFC.CONFIG.buildInfo = "now";
+        virtualFC.CONFIG.buildOptions = [];
 
         virtualFC.CONFIG.craftName = "BetaFlight" ;
         virtualFC.CONFIG.pilotName = "BF pilot" ;
@@ -260,6 +261,7 @@ const sampleGpsData = {
     "alt": 0,
     "speed": 0,
     "ground_course": 1337,
+    "positionalDop": 0,
     "distanceToHome": 0,
     "directionToHome": 0,
     "update": 0,

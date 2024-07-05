@@ -90,6 +90,8 @@ const DEBUG = {
         {text: "MAG_CALIB"},
         {text: "MAG_TASK_RATE"},
         {text: "EZLANDING"},
+        {text: "TPA"},
+        {text: "S_TERM"},
     ],
 
     fieldNames : {
@@ -754,6 +756,19 @@ const DEBUG = {
             'debug[1]': 'Adjusted Throttle',
             'debug[2]': 'Upper Limit',
             'debug[3]': 'EZ Land Limit',
+            'debug[4]': 'Stick Limit',
+            'debug[5]': 'Speed Limit',
+        },
+        'TPA' : {
+            'debug[all]': 'TPA',
+            'debug[0]': 'TPA Factor',
+            'debug[1]': 'TPA Factor (Wing)',
+        },
+        'S_TERM' : {
+            'debug[all]': 'S Term',
+            'debug[0]': 'S Term [roll]',
+            'debug[1]': 'S Term [pitch]',
+            'debug[2]': 'S Term [yaw]',
         },
     },
 
@@ -771,7 +786,7 @@ const DEBUG = {
         { text: "Motor" },
         { text: "GPS" },
         { text: "RPM" },
-        { text: "Unfiltered Gyro"},
+        { text: "Gyro (Unfiltered)"},
     ],
 };
 

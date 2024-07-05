@@ -34,6 +34,23 @@
     "dontShowAgain": {
         "message": "Don't show again"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "The application needs to be updated",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "You need to refresh the page to get the latest changes. Refreshing it now will reload the page and you will lose any unsaved changes and will abort any operation in progress.<br><br>Do you want to refresh it now? You can also dismiss this message and refresh the page manually later.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+
+    "pwaOnOffilenReadyTitle": {
+        "message": "The application is ready to be used offline",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "You can install it as an standalone application on your device if you want. Search for the option in your browser address bar or menu.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "This operation is not supported by your hardware."
     },
@@ -52,12 +69,36 @@
     "disconnect": {
         "message": "Disconnect"
     },
+    "portsSelectNoSelection": {
+        "message": "Select your device",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Manual Selection"
+    },
+    "portsSelectNone": {
+        "message": "No connection available"
     },
     "portsSelectVirtual": {
         "message": "Virtual Mode (Experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- I can't find my USB device ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- I can't find my Bluetooth device---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Connected to Bluetooth device: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Bluetooth connection type: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Bluetooth error: $1"
     },
     "virtualMSPVersion": {
         "message": "Virtual Firmware Version"
@@ -109,9 +150,9 @@
         "message": "Show all serial devices (for manufacturers or development)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
     },
-    "useMdnsBrowser": {
-        "message": "Use mDNS Browser Device discovery on network (experimental)",
-        "description": "Enable mDNS Browser Device discovery in PortHandler (experimental)"
+    "showManualMode": {
+        "message": "Enable manual connection mode",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Enable virtual connection mode",
@@ -371,6 +412,10 @@
     },
     "logActionShow": {
         "message": "Show Log"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} files",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Serial connection error: bad framing"
@@ -796,12 +841,6 @@
     "initialSetupRebootBootloaderText": {
         "message": "Reboot into <strong>boot loader / DFU</strong> mode."
     },
-    "initialSetupBackupSuccess": {
-        "message": "Backup saved <span class=\"message-positive\">successfully</span>"
-    },
-    "initialSetupRestoreSuccess": {
-        "message": "Configuration restored <span class=\"message-positive\">successfully</span>"
-    },
     "initialSetupButtonResetZaxis": {
         "message": "Reset Z axis, offset: 0 deg"
     },
@@ -954,9 +993,9 @@
         "message": "No valid receiver signal is detected",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
         "message": "Your receiver has just recovered from receiver failsafe but the arm switch is on",
-        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "The 'FAILSAFE' switch was activated",
@@ -1115,6 +1154,18 @@
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Local Build - no Cloud information"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "Build type"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Local Build"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Cloud Build"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "No build information available"
     },
     "initialSetupNotOnline": {
         "message": "Server unavailable"
@@ -1369,13 +1420,13 @@
         "message": "This option configures the mixer to expect the motor direction to be reversed and the propellers to be on accordingly. <strong>Warning:</strong> This does not reverse the motor direction. Use the configuration tool for your ESCs or switch the ESC - motor wiring order to achieve this. Also, make sure to check with propellers off that your motors are rotating in the directions shown in the diagram above before attempting to arm."
     },
     "configurationAutoDisarmDelay": {
+        "message": "Disarm motors after delay [seconds]"
+    },
+    "configurationAutoDisarmDelayHelp": {
         "message": "Disarm motors after set delay [seconds] (Requires MOTOR_STOP feature)"
     },
-    "configurationDisarmKillSwitch": {
-        "message": "Disarm motors regardless of throttle value (When ARM is configured in Modes tab via AUX channel)"
-    },
-    "configurationDisarmKillSwitchHelp": {
-        "message": "Arming is always disabled when the throttle is not low. Be careful as you could disarm accidentally with a switch while flying with this option active."
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibrate Gyro on first arm"
     },
     "configurationDigitalIdlePercent": {
         "message": "Motor Idle ( %, static)"
@@ -1772,9 +1823,6 @@
         "message": "<b>D</b>erivative",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinDisabledNote": {
-        "message": "<strong>Note:</strong> D Max feature is disabled and its parameters are hidden. To use D Max please enable it in $t(pidTuningPidSettings.message)."
-    },
     "pidTuningDMinFeatureTitle": {
         "message": "Dynamic Damping / D Max settings",
         "description": "Title for the options panel for the D Max feature"
@@ -1849,9 +1897,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filter"
     },
-    "receiverRcSmoothingTypeHelp": {
-        "message": "Type of RC smoothing used"
-    },
     "rcSmoothingSetpointCutoffHelp": {
         "message": "The cutoff frequency in Hz used by the setpoint filter. Using lower values will result in smoother inputs and are more appropriate for slower receiver protocols. Most users should leave this at 0 corresponding to \"Auto\"."
     },
@@ -1860,12 +1905,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "The channels smoothing applies to"
-    },
-    "rcSmoothingFeedforwardTypeHelp": {
-        "message": "The type of filtering method used for the feedforward. Starting with 4.2 the default value of \"Auto\" is recommended. For 4.1 and earlier most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
-    },
-    "rcSmoothingSetpointTypeHelp": {
-        "message": "The type of filtering method used for the setpoint. Most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
     },
     "receiverRcSmoothingSetpointManual": {
         "message": "Selects whether the setpoint filter cutoff frequency is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
@@ -1879,47 +1918,11 @@
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Cutoff Frequency"
     },
-    "receiverRcSetpointType": {
-        "message": "Setpoint Filter Type"
-    },
     "receiverRcFeedforwardType": {
         "message": "Feedforward Filter Type"
     },
-    "receiverRcSmoothingFeedforwardTypeOff": {
-        "message": "Off"
-    },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingChannel": {
-        "message": "Channels Smoothed"
-    },
-    "receiverRcInterpolation": {
-        "message": "RC Interpolation"
-    },
-    "receiverRcInterpolationHelp": {
-        "message": "RC TX/RX systems are not as fast as PID loops. That means that PID loop has gaps in the information stream from RC systems. This option enables interpolation of the RC input during the times when no RC frames are received. The option also offers cleaner P and D behaviour as there are no ramps in control input."
-    },
-    "receiverRcInterpolationIntervalHelp": {
-        "message": "Interpolation interval for manual RC interpolation mode in milliseconds"
-    },
-    "receiverRcInterpolationOff": {
-        "message": "Off"
-    },
-    "receiverRcSmoothingType": {
-        "message": "Smoothing Type"
-    },
-    "receiverRcInterpolationDefault": {
-        "message": "Preset"
-    },
-    "receiverRcInterpolationAuto": {
-        "message": "Auto"
-    },
-    "receiverRcInterpolationManual": {
-        "message": "Manual"
-    },
-    "receiverRcInterpolationInterval": {
-        "message": "RC Interpolation Interval [ms]"
     },
     "receiverRcSmoothingMode": {
         "message": "Smoothing Mode"
@@ -2062,10 +2065,10 @@
         "message": "TPA"
     },
     "pidTuningTPARate": {
-        "message": "TPA Rate"
+        "message": "TPA Rate (%)"
     },
     "pidTuningTPABreakPoint": {
-        "message": "TPA Breakpoint"
+        "message": "TPA Breakpoint (μs)"
     },
     "pidTuningTPAPD": {
         "message": "PD"
@@ -2187,7 +2190,7 @@
         "message": "<strong>Pid Tuning Slider Mode</strong><br><br>Pidtuning slider mode can be:<br><br>&bull; OFF - no sliders, enter values manually<br>&bull; RP - sliders control Roll and Pitch only, enter Yaw values manually<br>&bull; RPY - sliders control all PID values<br><br><span class=\"message-negative\"><b>Warning:</b></span>Going from RP to RPY mode will overwrite Yaw settings with firmware settings."
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/development/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
+        "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -2530,18 +2533,6 @@
     "adjustmentsHelp": {
         "message": "Configure adjustment switches. See the 'in-flight adjustments' section of the manual for details. The changes that adjustment functions make are not saved automatically."
     },
-    "adjustmentSlotsHelp": {
-        "message": "There are 4 slots. Each switch used to concurrently make adjustments requires exclusive use of a slot."
-    },
-    "adjustmentsExamples": {
-        "message": "Examples:"
-    },
-    "adjustmentsExample1": {
-        "message": "Use a three position switch on AUX1 to select between Pitch/Roll P, I and D and another three position switch on AUX2 to increase or decrease the value when held up or down."
-    },
-    "adjustmentsExample2": {
-        "message": "Use a three position switch on AUX4 to select enable Rate Profile Selection via the same three position switch on the same channel."
-    },
     "adjustmentsColumnEnable": {
         "message": "If enabled"
     },
@@ -2836,6 +2827,9 @@
     "gpsDistToHome": {
         "message": "Dist to Home:"
     },
+    "gpsPositionalDop": {
+        "message": "Positional DOP:"
+    },
     "gpsSignalStrHead": {
         "message": "GPS Signal Strength"
     },
@@ -2845,6 +2839,9 @@
     },
     "gpsSignalStr": {
         "message": "Signal Strength"
+    },
+    "gpsSignalLost": {
+        "message": "The GPS icon lights up only when the connection to the GPS module is confirmed.<br /><br />It will be red at first, changing to yellow when the 3D fix is attained.<br /><br />If the GPS icon does not light up, check your wiring and configuration, and confirm that the GPS module is receiving power.<br /><br />The CLI 'status' command provides more information about the state of the GPS connection."
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
@@ -3458,7 +3455,7 @@
         "message": "Select build type to see available boards."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Select or auto-detect your board to see available online firmware releases - Select the correct firmware appropriate for your board."
+        "message": "Select or detect your board to see available online firmware releases - Select the correct firmware appropriate for your board."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight configurator supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Betaflight 4.4 introduces <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, please consider joining Discord or open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>."
@@ -3473,7 +3470,7 @@
         "message": "Flash on connect"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "Attempt to flash the board automatically (triggered by newly detected serial port)."
+        "message": "Attempt to flash the board automatically (triggered by newly detected serial port).<br /><br /><span class=\"message-negative\">WARNING</span>: this function disables the detect and backup features."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Full chip erase"
@@ -3616,6 +3613,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>No firmware selected to load</b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "No targets loaded"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Please select valid serial port</span>"
     },
@@ -3648,10 +3648,10 @@
         "message": "Continue"
     },
     "firmwareFlasherDetectBoardButton": {
-        "message": "Auto-detect"
+        "message": "Detect"
     },
     "firmwareFlasherDetectBoardDescriptionHint": {
-        "message": "Auto-detect only works when not in DFU mode and when MSP communication is working. Sometimes you have to retry a few times or even reconnect USB. Try connecting as normal first as you could have forgotten to apply custom defaults. Please reboot after flashing - replug your USB."
+        "message": "Detect only works when not in DFU mode and when MSP communication is working. Sometimes you have to retry a few times or even reconnect USB. Try connecting as normal first as you could have forgotten to apply custom defaults. Please reboot after flashing - replug your USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Query board information to preselect right firmware"
@@ -3778,6 +3778,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "GPS Bar",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Battery Bar",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitude",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Ring",
         "description": "One of the modes of the Led Strip"
@@ -3871,6 +3883,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: locked",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Default",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Bar",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "LED Strip Wiring",
@@ -4216,31 +4236,6 @@
         "message": "Increases all PID parameters equally. Don't change this slider unless you run out of adjustment on the other sliders. Typically this is only needed for low authority or high moment of inertia (MoI) quads like X-Class or cinelifter builds. Too much master gain may cause trilling oscillations or hot motors.",
         "description": "Master Gain tuning slider helpicon message"
     },
-    "pidTuningPDRatioSlider": {
-        "message": "PD Balance:",
-        "description": "PD balance tuning slider label"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Changes D and D max. Relatively high D will dampen stick responsiveness and may make motors hot, but should help control P-term oscillations and will improve prop-wash oscillation.<br /><br />Relatively low D-term gives quicker stick responsiveness, but will weaken prop-wash performance and reacting to external forces (wind).",
-        "description": "D_term tuning slider helpicon message"
-    },
-    "pidTuningPDGainSlider": {
-        "message": "P and D Gain:",
-        "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningPDGainSliderHelp":{
-        "message": "Lower P and D Gain will result in cooler motors but also in more prop-wash oscillation. Too low value may cause the quad to be unstable.<br /><br />P and D terms work together to reduce prop-wash.<br /><br />Higher values will increase motor heat and could increase oscillations during smooth forward flight due to higher D term gains.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderLegacy": {
-        "message": "Stick Response Gain:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderLegacyHelp": {
-        "message": "Lower FF values will worsen the stick response and may result in slow bounceback at the end of a flip or roll due to the quad lagging the sticks too much and I-term winding up and cousing 'I-term Bounceback'.<br /><br />Higher FF values will give snappier stick responses in sharp moves. Excessively high FF values can cause overshoots and fast bounceback at the end of a flip or roll.<br /><br />Note:<br />The feature I-term Relax can stop the I-term from winding up on stick move for a low authority quads or if low Stick Response Gains are used.",
-        "description": "Stick response gain tuning slider helpicon message"
-    },
-
     "pidTuningDGainSlider": {
         "message": "Damping:<br /><i><small>D Gains</small></i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4322,17 +4317,11 @@
     "pidTuningLowpassFilterType": {
         "message": "Filter Type"
     },
-    "pidTuningGyroLowpassDyn": {
-        "message": "Gyro Lowpass Dynamic Filter"
-    },
     "pidTuningMinCutoffFrequency": {
         "message": "Min Cutoff Frequency [Hz]"
     },
     "pidTuningMaxCutoffFrequency": {
         "message": "Max Cutoff Frequency [Hz]"
-    },
-    "pidTuningGyroLowpassDynType": {
-        "message": "Gyro Lowpass 1 Dynamic Filter Type"
     },
     "pidTuningGyroLowpass2": {
         "message": "Gyro Lowpass 2"
@@ -4392,9 +4381,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Range"
     },
-    "pidTuningDynamicNotchWidthPercent": {
-        "message": "Dynamic Notch Width Percent"
-    },
     "pidTuningDynamicNotchQ": {
         "message": "Q factor"
     },
@@ -4409,9 +4395,6 @@
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving quads like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch quad, HIGH(230-800hz) for very high revving 2.5-3 inch quads. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
-    },
-    "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "This sets the width between two dynamic notch filters. Setting it at 0 will disable the second dynamic notch filter and will reduce filter delay, however it may make motor temperatures higher."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q factor adjust how narrow or wide the dynamic notch filters are. Higher value makes it narrower and more precise and lower value makes it wider and broader. Having a really low value will greatly increase filter delay."
@@ -4481,14 +4464,8 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Filter Type"
     },
-    "pidTuningDTermLowpassDyn": {
-        "message": "D Term Lowpass Dynamic Filter"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Dynamic Curve Expo"
-    },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Dynamic Filter Type"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filter"
@@ -4602,7 +4579,7 @@
         "message": "Acro Trainer Angle Limit"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Helps pilots learn to fly in acro mode by limiting the angle that the quad can attaion. Valid limits are 10-80 degrees.  The mode must be activated with a switch in the $t(tabAuxiliary.message) tab."
+        "message": "Helps pilots learn to fly in acro mode by limiting the angle that the quad can attain. Valid limits are 10-80 degrees.  The mode must be activated with a switch in the $t(tabAuxiliary.message) tab."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integrated Yaw"
@@ -5532,14 +5509,23 @@
     "osdDescElementAltitude": {
         "message": "Current altitude (flashes when above alarm threshold)"
     },
-    "osdTextElementAltitudeVariant1Decimal": {
-        "message": "With 1 decimal",
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL with 1 decimal",
         "description": "One of the variants of the altitude element of the OSD"
     },
-    "osdTextElementAltitudeVariantNoDecimal": {
-        "message": "Without decimals",
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL without decimals",
         "description": "One of the variants of the altitude element of the OSD"
     },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL with 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL without decimals",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+
     "osdTextElementOnTime": {
         "message": "On time",
         "description": "One of the elements of the OSD"
@@ -6287,6 +6273,11 @@
         "message": "Link Quality",
         "description": "Text of the link quality alarm"
       },
+      "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+      },
+  
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6413,6 +6404,15 @@
     "osdWarningRSNR": {
         "message": "Warns when RSNR value is below alarm setting"
     },
+    "osdWarningTextLoad": {
+        "message": "LOAD",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Warns if the CPU LOAD of the flight controller is too high",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
+    },
+
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
     },
@@ -6751,9 +6751,6 @@
         "message": "ESC/Motor protocol"
     },
     "configurationEscProtocolHelp": {
-        "message": "Select your motor protocol. <br>Make sure to verify the protocol is supported by your ESC, this information should be on the makers website. <br> <b>Be carefull using DSHOT900 and DSHOT1200 as not many ESC's support it!</b>"
-    },
-    "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "Select your motor protocol. <br>Make sure to verify the protocol is supported by your ESC, this information should be on the makers website."
     },
     "configurationunsyndePwm": {
@@ -6989,6 +6986,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Center Sensitivity"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Center-Max Sensitivity"
     },
     "dialogRatesTypeTitle": {
         "message": "Rates type change"
@@ -7339,19 +7339,19 @@
         "message": "Configuration Filename:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Select the radio protocol you would like included in this build. Note this is a drop down, but only one item maybe selected."
+        "message": "Select the radio protocol you would like included in this build. Note this is a drop down, but only one item may be selected."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Select the telemetry protocol you would like included in this build. Note this is a drop down, but only one item maybe selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
+        "message": "Select the telemetry protocol you would like included in this build. Note this is a drop down, but only one item may be selected. There are also some telemetry protocols that will be enabled, regardless of your selection here based on the radio protocol selected, e.g. CRSF."
     },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Automatically Included"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items maybe selected. Such items as fixes, e.g. AKK VTX, are included here."
+        "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items may be selected. Such items as fixes, e.g. AKK VTX, are included here."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Select the motor (ESC) protocol you would like included in this build. Note this is a drop down, but only one item maybe selected."
+        "message": "Select the motor (ESC) protocol you would like included in this build. Note this is a drop down, but only one item may be selected."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especially useful for developers, you can select a merged PR, specify a commit sha, or specify a 'yet to be merged' PR by typing in a # followed by the PR number e.g. #1234 (this is shorthand for the branch 'pull/1234/head')."

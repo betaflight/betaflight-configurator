@@ -1,5 +1,5 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_44, API_VERSION_1_45 } from './data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
 import $ from 'jquery';
@@ -32,21 +32,30 @@ const Features = function (config) {
         {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
     ];
 
-    if (semver.lt(config.apiVersion, API_VERSION_1_44)) { // DYNAMIC_FILTER got removed from FEATURES in BF 4.3 / API 1.44
-        features.push(
-            {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'},
-        );
-    }
-
     self._features = features;
 
-    // Filter features based on build options
-    if (semver.gte(config.apiVersion, API_VERSION_1_45) && config.buildOptions.length) {
-        self._features = [];
+    if (config.buildOptions?.length) {
+        // Filter features based on build options
+        if (semver.gte(config.apiVersion, API_VERSION_1_45)) {
+            self._features = [];
 
-        for (const feature of features) {
-            if (config.buildOptions.some(opt => opt.includes(feature.dependsOn)) || feature.dependsOn === undefined) {
-                self._features.push(feature);
+            for (const feature of features) {
+                if (config.buildOptions.some(opt => opt.includes(feature.dependsOn)) || feature.dependsOn === undefined) {
+                    self._features.push(feature);
+                }
+            }
+        }
+
+        // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT
+        if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
+            let enableTelemetry = false;
+            if (config.buildOptions.some(opt => opt.includes('CRSF') || opt.includes('GHST') || opt.includes('FPORT'))) {
+                enableTelemetry = true;
+            }
+
+            const telemetryFeature = self._features.filter(f => f.name === 'TELEMETRY')?.[0];
+            if (enableTelemetry && !telemetryFeature) {
+                self._features.push({bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'});
             }
         }
     }

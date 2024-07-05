@@ -1,5 +1,5 @@
 .tab-cli {
-	height: 100%;
+	height: calc(100% - 6rem);
 	.content_wrapper {
 		flex-direction: column;
 		display: flex;
@@ -8,10 +8,10 @@
 	}
 	p {
 		padding: 0;
-		border: 0 dotted var(--subtleAccent);
+		border: 0 dotted var(--surface-500);
 	}
 	.backdrop {
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		background-color: rgba(0, 0, 0, 0.75);
 		margin-top: 0;
 		flex-grow: 1;
@@ -53,8 +53,10 @@
 		height: 22px;
 		line-height: 20px;
 		padding-left: 5px;
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		resize: none;
+        background-color: var(--surface-200);
+        color: var(--surface-900);
 	}
 	textarea[name='supportWarningDialogInput'] {
 		-webkit-box-sizing: border-box;
@@ -63,7 +65,7 @@
 		height: 22px;
 		line-height: 20px;
 		padding-left: 5px;
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		resize: none;
 	}
 	#content-watermark {
@@ -87,8 +89,8 @@
 	}
 }
 .cli-textcomplete-dropdown {
-	border: 1px solid var(--subtleAccent);
-	background-color: white;
+	border: 1px solid var(--surface-500);
+	background-color: var(--surface-300);
 	border-radius: 5px;
 	max-height: 50%;
 	overflow: auto;
@@ -110,7 +112,7 @@
 		padding: 2px 5px;
 	}
 	.active {
-		background-color: rgb(255, 187, 0);
+		background-color: var(--surface-600);
 	}
 	a {
 		&:hover {

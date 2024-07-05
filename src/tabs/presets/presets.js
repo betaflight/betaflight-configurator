@@ -7,6 +7,7 @@ import FC from '../../js/fc';
 import CONFIGURATOR from '../../js/data_storage';
 import UI_PHONES from '../../js/phones_ui';
 import $ from 'jquery';
+import FileSystem from '../../js/FileSystem';
 
 import { favoritePresets } from './FavoritePresets';
 import CliEngine from './CliEngine';
@@ -228,7 +229,10 @@ presets.onSaveConfigClick = function() {
         const suffix = 'txt';
         const text = cliStrings.join("\n");
         const filename = generateFilename(prefix, suffix);
-        return GUI.saveToTextFileDialog(text, filename, suffix);
+        return FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+        .then((file) => {
+            return FileSystem.writeFile(file, text);
+        });
     })
     .then(() => {
         waitingDialog.close();
@@ -269,14 +273,22 @@ presets.readDumpAll = function() {
 };
 
 presets.onLoadConfigClick = function() {
-    GUI.readTextFileDialog("txt")
-    .then(text => {
+    const suffix = 'txt';
+    FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+    .then((file) => {
+        console.log("Reading VTX config from:", file.name);
+        return FileSystem.readFile(file);
+    })
+    .then((text) => {
         if (text) {
             const cliStrings = text.split("\n");
             const pickedPreset = new PickedPreset({title: "user configuration"}, cliStrings, undefined);
             this.pickedPresetList.push(pickedPreset);
             this.onSaveClick();
         }
+    })
+    .catch((error) => {
+        console.error('Failed loading presets config: ', error);
     });
 };
 
@@ -652,9 +664,14 @@ presets.isPresetFitSearch = function(preset, searchParams) {
 };
 
 presets.adaptPhones = function() {
-    if (GUI.isCordova()) {
-        UI_PHONES.initToolbar();
-    }
+    const mediaQuery = window.matchMedia('(max-width: 576px)');
+    const handleMediaChange = function(e) {
+        if (e.matches) {
+            UI_PHONES.initToolbar();
+        }
+    };
+    mediaQuery.addEventListener('change', handleMediaChange);
+    handleMediaChange(mediaQuery);
 };
 
 presets.read = function(readInfo) {

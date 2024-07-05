@@ -65,7 +65,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: cache/
-          key: nwjs-${{ inputs.debug_build && 'debug' || 'release' }}-${{ runner.os }}-${{ hashFiles('gulpfile.js') }}
+          key: nwjs-${{ inputs.debug_build && 'debug' || 'release' }}-${{ runner.os }}
 
       - name: Cache node_modules
         uses: actions/cache@v4

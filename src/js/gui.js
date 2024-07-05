@@ -2,7 +2,6 @@ import { get as getConfig } from './ConfigStorage';
 import MSP from './msp';
 import Switchery from 'switchery-latest';
 import jBox from 'jbox';
-import { checkChromeRuntimeError } from './utils/common';
 import $ from 'jquery';
 
 const TABS = {};
@@ -15,7 +14,6 @@ const GUI_MODES = {
 
 class GuiControl {
     constructor() {
-        this.auto_connect = false;
         this.connecting_to = false;
         this.connected_to = false;
         this.connect_lock = false;
@@ -70,17 +68,7 @@ class GuiControl {
         this.operating_system = GUI_checkOperatingSystem();
 
         // Check the method of execution
-        this.nwGui = null;
-        try {
-            this.nwGui = require('nw.gui');
-            this.Mode = GUI_MODES.NWJS;
-        } catch (ex) {
-            if (typeof cordovaApp !== 'undefined') {
-                this.Mode = GUI_MODES.Cordova;
-            } else {
-                this.Mode = GUI_MODES.Other;
-            }
-        }
+        this.nwGui = GUI_MODES.Other;
     }
     // Timer managing methods
     // name = string
@@ -268,7 +256,7 @@ class GuiControl {
     }
     switchery() {
 
-        const COLOR_ACCENT = 'var(--accent)';
+        const COLOR_ACCENT = 'var(--primary-500)';
         const COLOR_SWITCHERY_SECOND = 'var(--switcherysecond)';
 
         $('.togglesmall').each(function (index, elem) {
@@ -438,76 +426,6 @@ class GuiControl {
             });
 
             dialog[0].showModal();
-        });
-    }
-    saveToTextFileDialog(textToSave, suggestedFileName, extension) {
-        return new Promise((resolve, reject) => {
-            const accepts = [{ description: `${extension.toUpperCase()} files`, extensions: [extension] }];
-
-            chrome.fileSystem.chooseEntry(
-                {
-                    type: 'saveFile',
-                    suggestedName: suggestedFileName,
-                    accepts: accepts,
-                },
-                entry => this._saveToTextFileDialogFileSelected(entry, textToSave, resolve, reject),
-            );
-        });
-    }
-    _saveToTextFileDialogFileSelected(entry, textToSave, resolve, reject) {
-        checkChromeRuntimeError();
-
-        if (!entry) {
-            console.log('No file selected for saving');
-            resolve(false);
-            return;
-        }
-
-        entry.createWriter(writer => {
-            writer.onerror = () => {
-                reject();
-                console.error('Failed to write file');
-            };
-
-            writer.onwriteend = () => {
-                if (textToSave.length > 0 && writer.length === 0) {
-                    writer.write(new Blob([textToSave], { type: 'text/plain' }));
-                } else {
-                    resolve(true);
-                    console.log('File write complete');
-                }
-            };
-
-            writer.truncate(0);
-        },
-            () => {
-                reject();
-                console.error('Failed to get file writer');
-            });
-    }
-    readTextFileDialog(extension) {
-        const accepts = [{ description: `${extension.toUpperCase()} files`, extensions: [extension] }];
-
-        return new Promise((resolve, reject) => {
-            chrome.fileSystem.chooseEntry({ type: 'openFile', accepts: accepts }, function (entry) {
-                checkChromeRuntimeError();
-
-                if (!entry) {
-                    console.log('No file selected for loading');
-                    resolve(false);
-                    return;
-                }
-
-                entry.file((file) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = () => {
-                        console.error(reader.error);
-                        reject();
-                    };
-                    reader.readAsText(file);
-                });
-            });
         });
     }
     escapeHtml(unsafe) {

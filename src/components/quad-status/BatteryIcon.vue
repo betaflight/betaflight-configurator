@@ -10,8 +10,6 @@
   </div>
 </template>
 <script>
-const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
-
 export default {
   props: {
     voltage: {
@@ -30,14 +28,14 @@ export default {
       type: Number,
       default: 1,
     },
+    vbatcellcount: {
+      type: Number,
+      default: 1,
+    },
   },
   computed: {
     nbCells() {
-      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
-      if (this.voltage === 0) {
-        nbCells = 1;
-      }
-      return nbCells;
+      return this.voltage === 0 || this.vbatcellcount === 0 ? 1 : this.vbatcellcount;
     },
     min() {
       return this.vbatmincellvoltage * this.nbCells;
@@ -49,9 +47,7 @@ export default {
       return this.vbatwarningcellvoltage * this.nbCells;
     },
     isEmpty() {
-      return (
-        this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM
-      );
+      return this.voltage < this.min && !this.voltage.vbatcellcount;
     },
     classes() {
       if (this.batteryState) {
@@ -90,7 +86,7 @@ export default {
 
 .quad-status-contents progress::-webkit-progress-bar {
   height: 12px;
-  background-color: #eee;
+  background-color: var(--surface-300);
 }
 
 .quad-status-contents progress::-webkit-progress-value {
@@ -119,7 +115,7 @@ export default {
     background-color: transparent;
   }
   50% {
-    background-color: var(--error);
+    background-color: var(--error-500);
   }
 }
 
@@ -127,7 +123,7 @@ export default {
   background-color: #59aa29;
 }
 .battery-status.state-warning {
-  background-color: var(--error);
+  background-color: var(--error-500);
 }
 
 .battery-status.state-empty {

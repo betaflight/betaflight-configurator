@@ -1,6 +1,6 @@
 .presets_source_panel {
-    background-color: var(--boxBackground);
-    border: 1px solid var(--subtleAccent);
+    background-color: var(--surface-200);
+    border: 1px solid var(--surface-500);
     padding: 1.5ex;
     box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.25);
     border-radius: 4px;
@@ -16,7 +16,7 @@
 }
 
 .presets_source_panel_not_selected:hover {
-    background-color: var(--subtleAccent);
+    background-color: var(--surface-500);
     box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.5);
 }
 

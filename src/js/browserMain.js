@@ -38,7 +38,6 @@ import "../css/tabs/transponder.less";
 import "../css/tabs/privacy_policy.less";
 import "../css/tabs/options.less";
 import "../css/opensans_webfontkit/fonts.css";
-import "../css/dropdown-lists/css/style_lists.css";
 import "switchery-latest/dist/switchery.min.css";
 import "../css/switchery_custom.less";
 import "@fortawesome/fontawesome-free/css/all.css";
@@ -48,13 +47,29 @@ import "select2/dist/css/select2.min.css";
 import "multiple-select/dist/multiple-select.min.css";
 import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
-
 import "./main";
 
+import GUI from './gui';
 import { registerSW } from 'virtual:pwa-register';
 
-registerSW({
+const updateSW = registerSW({
+    onNeedRefresh() {
+        console.log("Detected onNeedRefresh");
+        GUI.showYesNoDialog({
+            title: i18n.getMessage("pwaOnNeedRefreshTitle"),
+            text: i18n.getMessage("pwaOnNeedRefreshText"),
+            buttonYesText: i18n.getMessage("yes"),
+            buttonNoText: i18n.getMessage("no"),
+            buttonYesCallback: () => updateSW(),
+            buttonNoCallback: null,
+        });
+    },
     onOfflineReady() {
-        alert('App is ready for offline use.');
+        console.log("Detected onOfflineReady");
+        GUI.showInformationDialog({
+            title : i18n.getMessage("pwaOnOffilenReadyTitle"),
+            text: i18n.getMessage("pwaOnOffilenReadyText"),
+            buttonConfirmText: i18n.getMessage("OK"),
+        });
     },
 });

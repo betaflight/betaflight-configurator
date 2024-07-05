@@ -1,29 +1,78 @@
 /**
- * Main theme colors
- * This file is left as css on purpose to make it easier to work without
- * the need to compile the less files and still can be use in storybook
- */
-:root {
-    --accent: #ffbb00;
-    --error: red;
-    --subtleAccent: silver;
-    --quietText: #ffffff;
-    --quietHeader: #828885;
-    --defaultText: #000000;
-    --subtleText: #c0c0c0;
-    --mutedText: #616161;
-    --linkText: #2e2ebb;
-    --boxBackground: #ffffff;
-    --alternativeBackground: #f9f9f9;
-    --sideBackground: #ffffff;
-    --ledAccent: #adadad;
-    --ledBackground: #e9e9e9;
-    --gimbalBackground: #eee;
-    --gimbalCrosshair: var(--subtleAccent);
-    --switcherysecond: #c4c4c4;
-    --pushedButton-background: #c4c4c4;
-    --pushedButton-fontColor: #000000;
-    --hoverButton-background: #ffcc3e;
-    --superSubtleAccent: #cccccc;
-    --accentBorder: #ffbb00;
+* Main theme colors
+* This file is left as css on purpose to make it easier to work without
+* the need to compile the less files and still can be use in storybook
+*/
+
+body {
+	--primary-50: #FFFAEB;
+	--primary-100: #FFF4D6;
+	--primary-200: #FFE9AD;
+	--primary-300: #FFDC7A;
+	--primary-400: #FFCD42;
+	--primary-500: #FFBB00;
+	--primary-600: #E6A800;
+	--primary-700: #CC9600;
+	--primary-800: #A87B00;
+	--primary-900: #7A5A00;
+	--primary-950: #5C4300;
+
+    --primary-transparent-1: rgba(255, 187, 0, 0.1);
+    --primary-transparent-2: rgba(255, 187, 0, 0.2);
+    --primary-transparent-3: rgba(255, 187, 0, 0.3);
+    --primary-transparent-4: rgba(255, 187, 0, 0.4);
+
+    --surface-50: hsl(0, 0%, 100%);
+    --surface-100: hsl(0, 0%, 98%);
+    --surface-200: hsl(0, 0%, 95%);
+    --surface-300: hsl(0, 0%, 92%);
+    --surface-400: hsl(0, 0%, 84%);
+    --surface-500: hsl(0, 0%, 75%);
+    --surface-600: hsl(0, 0%, 65%);
+    --surface-700: hsl(0, 0%, 55%);
+    --surface-800: hsl(0, 0%, 40%);
+    --surface-900: hsl(0, 0%, 30%);
+    --surface-950: hsl(0, 0%, 20%);
+
+    --text: hsl(0, 0%, 0%);
+
+    --error-400: #ee2b55;
+	--error-500: #e2123f;
+    --error-600: #c10f36;
+
+    --error-transparent-1: rgba(226, 18, 63, 0.1);
+    --error-transparent-2: rgba(226, 18, 63, 0.2);
+    --error-transparent-3: rgba(226, 18, 63, 0.3);
+    --error-transparent-4: rgba(226, 18, 63, 0.4);
+
+    --success-400: #90f042;
+	--success-500: #70e212;
+    --success-600: #5cb10f;
+
+    --success-transparent-1: rgba(112, 226, 18, 0.1);
+    --success-transparent-2: rgba(112, 226, 18, 0.2);
+    --success-transparent-3: rgba(112, 226, 18, 0.3);
+    --success-transparent-4: rgba(112, 226, 18, 0.4);
+
+    --warning-500: #ff6600;
+    --warning-600: #e65c00;
+
+    --switcherysecond: var(--surface-400);
+}
+
+
+body.dark-theme {
+    --surface-50: hsl(0, 0%, 4%);
+    --surface-100: #181818;
+    --surface-200: hsl(0, 0%, 13%);
+    --surface-300: hsl(0, 0%, 15%);
+    --surface-400: hsl(0, 0%, 20%);
+    --surface-500: hsl(0, 0%, 24%);
+    --surface-600: hsl(0, 0%, 35%);
+    --surface-700: hsl(0, 0%, 45%);
+    --surface-800: hsl(0, 0%, 60%);
+    --surface-900: hsl(0, 0%, 70%);
+    --surface-950: hsl(0, 0%, 80%);
+
+    --text: hsl(0, 0%, 95%);
 }

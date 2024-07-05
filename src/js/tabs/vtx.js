@@ -2,7 +2,6 @@ import { i18n } from "../localization";
 import djv from "djv";
 import { generateFilename } from "../utils/generate_filename";
 import Clipboard from "../Clipboard";
-import semver from "semver";
 import GUI, { TABS } from '../gui';
 import { tracking } from "../Analytics";
 import { mspHelper } from "../msp/MSPHelper";
@@ -10,14 +9,12 @@ import FC from '../fc';
 import { VtxDeviceTypes } from '../utils/VtxDeviceStatus/VtxDeviceStatus';
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_44 } from '../data_storage';
 import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
-import { checkChromeRuntimeError } from "../utils/common";
 import $ from 'jquery';
+import FileSystem from "../FileSystem";
 
 const vtx = {
-    supported: false,
     vtxTableSavePending: false,
     vtxTableFactoryBandsSupported: false,
     MAX_POWERLEVEL_VALUES: 8,
@@ -73,13 +70,7 @@ vtx.initialize = function (callback) {
 
     self.analyticsChanges = {};
 
-    this.supported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42);
-
-    if (!this.supported) {
-        load_html();
-    } else {
-        read_vtx_config(load_html);
-    }
+    read_vtx_config(load_html);
 
     function load_html() {
         $('#content').load("./tabs/vtx.html", process_html);
@@ -91,9 +82,14 @@ vtx.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        if (GUI.isCordova()) {
-            UI_PHONES.initToolbar();
-        }
+        const mediaQuery = window.matchMedia('(max-width: 576px)');
+        const handleMediaChange = function(e) {
+            if (e.matches) {
+                UI_PHONES.initToolbar();
+            }
+        };
+        mediaQuery.addEventListener('change', handleMediaChange);
+        handleMediaChange(mediaQuery);
 
         self.updating = false;
         GUI.content_ready(callback);
@@ -109,10 +105,7 @@ vtx.initialize = function (callback) {
         }
 
         function vtxConfigReceived() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                vtx.intervalId = setInterval(vtx.updateVtxDeviceStatus, 1000);
-            }
-
+            vtx.intervalId = setInterval(vtx.updateVtxDeviceStatus, 1000);
             vtxtable_bands();
         }
 
@@ -171,30 +164,23 @@ vtx.initialize = function (callback) {
             callback_error();
         }
 
-        // Load schema
-        const urlVtxSchema = chrome.runtime.getURL(`resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`);
+        function validateAgainstSchema(schemaJson, vtxConfig) {
+            let valid = false;
+            if (schemaJson !== undefined) {
+                // Validate
+                valid = (TABS.vtx.env.validate(schemaJson, vtxConfig) === undefined);
+            }
 
-        if (GUI.isCordova()) {
-            // FIXME On android : Fetch API cannot load : URL scheme "file" is not supported
-            callback_valid();
-        } else {
-            fetch(urlVtxSchema)
-                .then(response => response.json())
-                .catch(error => console.error('Error fetching VTX Schema:', error))
-                .then(schemaJson => {
-
-                    let valid = false;
-                    if (schemaJson !== undefined) {
-                        // Validate
-                        valid = (TABS.vtx.env.validate(schemaJson, vtxConfig) === undefined);
-                    }
-
-                    console.log("Validation against schema result:", valid);
-                    valid ? callback_valid() : callback_error();
-                },
-            );
+            console.log("Validation against schema result:", valid);
+            valid ? callback_valid() : callback_error();
         }
 
+        const vtxJsonSchemaUrl = `../../resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`;
+
+        fetch(vtxJsonSchemaUrl)
+        .then(response => response.json())
+        .catch(error => console.error('Error fetching VTX Schema:', error))
+        .then(schemaJson => validateAgainstSchema(schemaJson, vtxConfig));
     }
 
     // Emulates the MSP read from a vtxConfig object (JSON)
@@ -239,11 +225,6 @@ vtx.initialize = function (callback) {
 
     // Prepares all the UI elements, the MSP command has been executed before
     function initDisplay() {
-
-        if (!TABS.vtx.supported) {
-            $(".tab-vtx").removeClass("supported");
-            return;
-        }
 
         $(".tab-vtx").addClass("supported");
 
@@ -639,44 +620,21 @@ vtx.initialize = function (callback) {
 
         const filename = `${uid0}${uid1}${uid2}.${suffix}`;
 
-        const accepts = [{
-            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
-        }];
 
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts}, function(entry) {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
+        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+        .then((file) => {
+            dump_html_to_msp();
+            const vtxConfig = createVtxConfigInfo();
+            const text = createLuaTables(vtxConfig);
 
-            entry.createWriter(function (writer) {
+            console.log("Saving lua to:", file.name);
+            FileSystem.writeFile(file, text);
 
-                writer.onerror = function(){
-                    console.error('Failed to write VTX table lua file');
-                    gui_log(i18n.getMessage('vtxSavedLuaFileKo'));
-                };
-
-                writer.onwriteend = function() {
-                    dump_html_to_msp();
-                    const vtxConfig = createVtxConfigInfo();
-                    const text = createLuaTables(vtxConfig);
-                    const data = new Blob([text], { type: "application/text" });
-
-                    // we get here at the end of the truncate method, change to the new end
-                    writer.onwriteend = function() {
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', { length: text.length });
-                        console.log('Write VTX table lua file end');
-                        gui_log(i18n.getMessage('vtxSavedLuaFileOk'));
-                    };
-
-                    writer.write(data);
-                };
-
-                writer.truncate(0);
-
-            }, function (){
-                console.error('Failed to get VTX table lua file writer');
-                gui_log(i18n.getMessage('vtxSavedLuaFileKo'));
-            });
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', { length: text.length });
+        })
+        .catch((error) => {
+            console.error("Failed to write lua file:", error);
+            gui_log(i18n.getMessage('vtxSavedLuaFileKo'));
         });
     }
     function save_json() {
@@ -685,113 +643,61 @@ vtx.initialize = function (callback) {
 
         const filename = generateFilename(suggestedName, suffix);
 
-        const accepts = [{
-            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
-        }];
+        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+        .then((file) => {
+            dump_html_to_msp();
+            const vtxConfig = createVtxConfigInfo();
+            const text = JSON.stringify(vtxConfig, null, 4);
 
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts}, function(entry) {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
+            console.log("Saving VTX to:", file.name);
+            FileSystem.writeFile(file, text);
 
-            if (!entry) {
-                console.log('No file selected');
-                return;
-            }
-
-            entry.createWriter(function (writer) {
-
-                writer.onerror = function(){
-                    console.error('Failed to write VTX file');
-                    gui_log(i18n.getMessage('vtxSavedFileKo'));
-                };
-
-                writer.onwriteend = function() {
-                    dump_html_to_msp();
-                    const vtxConfig = createVtxConfigInfo();
-                    const text = JSON.stringify(vtxConfig, null, 4);
-                    const data = new Blob([text], { type: "application/json" });
-
-                    // we get here at the end of the truncate method, change to the new end
-                    writer.onwriteend = function() {
-                        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', { length: text.length });
-                        console.log(vtxConfig);
-                        console.log('Write VTX file end');
-                        gui_log(i18n.getMessage('vtxSavedFileOk'));
-                    };
-
-                    writer.write(data);
-                };
-
-                writer.truncate(0);
-
-            }, function (){
-                console.error('Failed to get VTX file writer');
-                gui_log(i18n.getMessage('vtxSavedFileKo'));
-            });
+            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', { length: text.length });
+        })
+        .catch((error) => {
+            console.error('Failed to write VTX file:', error);
+            gui_log(i18n.getMessage('vtxSavedFileKo'));
         });
     }
 
     function load_json() {
-
         const suffix = 'json';
 
-        const accepts = [{
-            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
-        }];
+        FileSystem.pickOpenFile(i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase()}), `.${suffix}`)
+        .then((file) => {
+            console.log("Reading VTX config from:", file.name);
+            FileSystem.readFile(file)
+            .then((text) => {
+                    const vtxConfig = JSON.parse(text);
 
-        chrome.fileSystem.chooseEntry({type: 'openFile', accepts}, function(entry) {
-            if (checkChromeRuntimeError()) {
-                return;
-            }
+                    validateVtxJson(
+                        vtxConfig,
+                        function() {
 
-            entry.file(function(file) {
+                            // JSON is valid
+                            read_vtx_config_json(vtxConfig, load_html);
 
-                const reader = new FileReader();
+                            TABS.vtx.vtxTableSavePending = true;
 
-                reader.onload = function(e) {
+                            self.analyticsChanges['VtxTableLoadFromClipboard'] = undefined;
+                            self.analyticsChanges['VtxTableLoadFromFile'] = file.name;
 
-                    const text = e.target.result;
-                    try {
+                            console.log('Load VTX file end');
+                            gui_log(i18n.getMessage('vtxLoadFileOk'));
+                        },
+                        function() {
 
-                        const vtxConfig = JSON.parse(text);
+                            // JSON is NOT valid
+                            console.error('VTX Config from file failed validation against schema');
+                            gui_log(i18n.getMessage('vtxLoadFileKo'));
 
-                        validateVtxJson(
-                            vtxConfig,
-                            function() {
-
-                                // JSON is valid
-                                read_vtx_config_json(vtxConfig, load_html);
-
-                                TABS.vtx.vtxTableSavePending = true;
-
-                                self.analyticsChanges['VtxTableLoadFromClipboard'] = undefined;
-                                self.analyticsChanges['VtxTableLoadFromFile'] = file.name;
-
-                                console.log('Load VTX file end');
-                                gui_log(i18n.getMessage('vtxLoadFileOk'));
-                            },
-                            function() {
-
-                                // JSON is NOT valid
-                                console.error('VTX Config from file failed validation against schema');
-                                gui_log(i18n.getMessage('vtxLoadFileKo'));
-
-                            },
-                        );
-
-                    } catch (err) {
-                        console.error('Failed loading VTX file config');
-                        gui_log(i18n.getMessage('vtxLoadFileKo'));
-                    }
-                };
-
-                reader.readAsText(file);
-
-            }, function() {
-                console.error('Failed to get VTX file reader');
-                gui_log(i18n.getMessage('vtxLoadFileKo'));
+                        },
+                    );
             });
+        })
+        .catch((error) => {
+            console.error('Failed loading VTX file config', error);
+            gui_log(i18n.getMessage('vtxLoadFileKo'));
         });
     }
 
@@ -934,11 +840,6 @@ vtx.initialize = function (callback) {
             FC.VTX_CONFIG.vtx_band = parseInt($("#vtx_band").val());
             FC.VTX_CONFIG.vtx_channel = parseInt($("#vtx_channel").val());
             FC.VTX_CONFIG.vtx_frequency = 0;
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                if (FC.VTX_CONFIG.vtx_band > 0 || FC.VTX_CONFIG.vtx_channel > 0) {
-                    FC.VTX_CONFIG.vtx_frequency = (FC.VTX_CONFIG.vtx_band- 1) * 8 + (FC.VTX_CONFIG.vtx_channel- 1);
-                }
-            }
         }
         FC.VTX_CONFIG.vtx_power = parseInt($("#vtx_power").val());
         FC.VTX_CONFIG.vtx_pit_mode = $("#vtx_pit_mode").prop('checked');

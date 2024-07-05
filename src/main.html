@@ -51,7 +51,7 @@
     <link type="text/css" rel="stylesheet" href="./node_modules/multiple-select/dist/multiple-select.min.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./components/EscDshotDirection/Styles.css" media="all"/>
 
-    <link type="text/css" rel="stylesheet" href="./css/dark-theme.css" media="all" disabled/>
+    <link type="text/css" rel="stylesheet" href="./css/dark-theme.css" media="all"/>
 
     <script type="module" src="./js/jquery.js"></script>
     <!-- TODO: probably won't need this here once everything is imported -->
@@ -132,11 +132,13 @@
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
                     :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
                     :batteryState="FC.BATTERY_STATE?.batteryState"
+                    :vbatcellcount="FC.BATTERY_STATE?.cellCount"
                 >
                 </battery-icon>
                 <battery-legend
                     :voltage="FC.ANALOG.voltage"
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
+                    :vbatcellcount="FC.BATTERY_STATE?.cellCount"
                 ></battery-legend>
                 <div class="bottomStatusIcons">
                     <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>

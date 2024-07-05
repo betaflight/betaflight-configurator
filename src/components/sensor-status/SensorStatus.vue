@@ -143,7 +143,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 #sensor-status ul {
     font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
     font-size: 12px;
@@ -168,7 +168,6 @@ li {
     );
     padding-left: 5px;
     padding-right: 5px;
-    text-shadow: 0 1px rgba(0, 0, 0, 1);
     &:last-child {
         border-right: 0 solid #c0c0c0;
         border-top-right-radius: 5px;
@@ -199,7 +198,7 @@ div {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--text);
     text-align: center;
     background-image: url(../../images/icons/sensor_gyro_off.png);
     background-size: 43px;
@@ -211,7 +210,7 @@ div {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--text);
     text-align: center;
     background-image: url(../../images/icons/sensor_acc_off.png);
     background-size: 40px;
@@ -223,7 +222,7 @@ div {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--text);
     text-align: center;
     background-image: url(../../images/icons/sensor_mag_off.png);
     background-size: 42px;
@@ -235,7 +234,7 @@ div {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--text);
     text-align: center;
     background-image: url(../../images/icons/sensor_sat_off.png);
     background-size: 42px;
@@ -247,7 +246,7 @@ div {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--text);
     text-align: center;
     background-image: url(../../images/icons/sensor_baro_off.png);
     background-size: 40px;
@@ -259,7 +258,7 @@ div {
     margin-top: 3px;
     width: 100%;
     padding-top: 40px;
-    color: #4f4f4f;
+    color: var(--text);
     text-align: center;
     background-image: url(../../images/icons/sensor_sonar_off.png);
     background-size: 41px;

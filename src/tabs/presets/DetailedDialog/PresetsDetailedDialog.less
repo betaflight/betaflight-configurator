@@ -5,12 +5,12 @@
 #presets_detailed_dialog_content_wrapper {
 	.preset_title_panel_title {
 		padding-bottom: .5ex;
-		border-bottom: 1px solid var(--accent);
+		border-bottom: 1px solid var(--primary-500);
 		margin-bottom: 2ex;
 	}
 	.ms-choice {
 		>span.placeholder {
-			color: var(--defaultText);
+			color: var(--text);
 		}
 	}
 	.left-panel {
@@ -37,7 +37,7 @@
 	padding-bottom: 6px;
 	margin-top: 12px;
 	overflow-y: scroll;
-	height: 270px;
+	height: 260px;
 	font-size: 110%;
 	white-space: pre-line;
 	user-select: text;
@@ -86,11 +86,11 @@ ol {
 	padding-left: 25px;
 }
 #presets_detailed_dialog_properties {
-	height: 360px;
+	height: 466px;
 }
 #presets_options_panel {
 	.ms-choice {
-		border-color: var(--accentBorder);
+		border-color: var(--primary-500);
 		border-width: 2px;
 	}
 	height: 26px;
@@ -110,6 +110,14 @@ ol {
 	display: inline-block;
 }
 #presets_detailed_dialog {
+	.content_toolbar {
+		width: unset;
+		margin-left: auto;
+		margin-right: -12px;
+		.btn {
+			display: contents;
+		}
+	}
 	.ms-drop {
 		ul {
 			>li.hide-radio {
