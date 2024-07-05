@@ -4,6 +4,8 @@ import Switchery from 'switchery-latest';
 import jBox from 'jbox';
 import $ from 'jquery';
 
+const appMode = import.meta.env.MODE;
+
 const TABS = {};
 
 const GUI_MODES = {
@@ -59,6 +61,10 @@ class GuiControl {
             'servos',
             'transponder',
         ];
+
+        if (appMode === 'development') {
+            this.defaultAllowedTabsWhenDisconnected.push('development');
+        }
 
         this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
 
