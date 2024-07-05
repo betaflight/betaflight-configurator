@@ -649,7 +649,6 @@ input[type="number"] {
     overflow-x: hidden;
     overflow-y: auto;
     background-color: var(--surface-100);
-    -webkit-transform: rotateX(0deg);
     width: 100%;
 }
 .tab_container.logopen {
@@ -1122,6 +1121,7 @@ dialog {
 }
 .content_wrapper {
     padding: 1.25rem;
+    padding-bottom: 4rem;
     height: 100%;
     position: relative;
     >.note {
@@ -1222,10 +1222,9 @@ dialog {
     &.content_toolbar {
         display: flex;
         flex-wrap: wrap;
-        position: sticky;
-        bottom: 0;
-        left: 100%;
-        z-index: 2000;
+        position: absolute;
+        bottom: 2.25rem;
+        right: 0;
     }
 }
 .content_toolbar.xs-compressed {
@@ -1570,92 +1569,28 @@ table {
     font-size: 11px;
     margin-left: 3px;
 }
-.tab-setup {
-    height: fit-content;
-    position: relative;
-}
-.tab-landing {
-    height: fit-content;
-    position: relative;
-}
-.tab-adjustments {
-    height: fit-content;
-    position: relative;
-}
-.tab-auxiliary {
-    height: fit-content;
-    position: relative;
-}
-.tab-cli {
-    height: fit-content;
-    position: relative;
-}
-.tab-configuration {
-    height: fit-content;
-    position: relative;
-}
-.tab-failsafe {
-    height: fit-content;
-    position: relative;
-}
-.tab-firmware_flasher {
-    height: fit-content;
-    position: relative;
-}
-.tab-gps {
-    height: fit-content;
-    position: relative;
-}
-.tab-help {
-    height: fit-content;
-    position: relative;
-}
-.tab-led-strip {
-    height: 100%;
-    position: relative;
-}
-.tab-logging {
-    height: fit-content;
-    position: relative;
-}
-.tab-modes {
-    height: fit-content;
-    position: relative;
-}
-.tab-motors {
-    height: fit-content;
-    position: relative;
-}
-.tab-pid_tuning {
-    height: fit-content;
-    position: relative;
-}
-.tab-ports {
-    height: fit-content;
-    position: relative;
-}
-.tab-receiver {
-    height: fit-content;
-    position: relative;
-}
-.tab-sensors {
-    height: fit-content;
-    position: relative;
-}
-.tab-servos {
-    height: fit-content;
-    position: relative;
-}
-.tab-osd {
-    height: fit-content;
-    position: relative;
-}
-.tab-power {
-    height: 100%;
-    position: relative;
-}
+.tab-setup,
+.tab-landing,
+.tab-adjustments,
+.tab-auxiliary,
+.tab-cli,
+.tab-configuration,
+.tab-failsafe,
+.tab-firmware_flasher,
+.tab-gps,
+.tab-help,
+.tab-led-strip,
+.tab-logging,
+.tab-modes,
+.tab-motors,
+.tab-pid_tuning,
+.tab-ports,
+.tab-receiver,
+.tab-sensors,
+.tab-servos,
+.tab-osd,
+.tab-power,
 .tab-vtx {
-    height: 100%;
     position: relative;
 }
 .properties {
@@ -2105,7 +2040,8 @@ button.active {
         width: calc(100% - 3.5rem);
     }
     .content_wrapper {
-        padding: 15px 15px 15px 14px;
+        padding: 1rem;
+        padding-bottom: 4rem;
     }
     .tab_title {
         font-size: 16px;
@@ -2159,6 +2095,9 @@ button.active {
             height: fit-content;
             overflow-y: auto;
             position: initial;
+        }
+        &.content_toolbar {
+            bottom: 0;
         }
     }
 }
