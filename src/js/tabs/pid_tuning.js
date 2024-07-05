@@ -141,9 +141,7 @@ pid_tuning.initialize = function (callback) {
         $('.pid_filter input[name="dTermNotchFrequency"]').val(FC.FILTER_CONFIG.dterm_notch_hz);
         $('.pid_filter input[name="dTermNotchCutoff"]').val(FC.FILTER_CONFIG.dterm_notch_cutoff);
 
-        const dtermSetpointTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
-        dtermSetpointTransitionNumberElement.attr('min', 0.00);
-        dtermSetpointTransitionNumberElement.val(FC.ADVANCED_TUNING.dtermSetpointTransition / 100);
+        $('input[name="dtermSetpointTransition-number"]').val(FC.ADVANCED_TUNING.dtermSetpointTransition / 100);
 
         $('input[name="dtermSetpoint-number"]').val(FC.ADVANCED_TUNING.dtermSetpointWeight / 100);
 
@@ -218,9 +216,6 @@ pid_tuning.initialize = function (callback) {
         $('.pid_filter input[name="dtermLowpass2Frequency"]').val(FC.FILTER_CONFIG.dterm_lowpass2_hz);
         $('.pid_filter select[name="dtermLowpass2Type"]').val(FC.FILTER_CONFIG.dterm_lowpass2_type);
 
-        // We load it again because the limits are now bigger than in 1.16.0
-        $('.pid_filter input[name="gyroLowpassFrequency"]').attr("max","16000");
-        $('.pid_filter input[name="gyroLowpassFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_hz);
         //removes 5th column which is Feedforward
         $('#pid_main .pid_titlebar2 th').attr('colspan', 4);
 
