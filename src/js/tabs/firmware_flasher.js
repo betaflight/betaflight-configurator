@@ -18,6 +18,7 @@ import DFU from '../protocols/webusbdfu';
 import AutoBackup from '../utils/AutoBackup.js';
 import AutoDetect from '../utils/AutoDetect.js';
 import { EventBus } from "../../components/eventBus";
+import { customDefinesList } from '../utils/custom_defines.js';
 
 const firmware_flasher = {
     targets: null,
@@ -188,6 +189,13 @@ firmware_flasher.initialize = function (callback) {
             });
         }
 
+        function buildCustomDefinesList(select_e, options) {
+            select_e.empty();
+            options.forEach((option) => {
+                select_e.append($(`<option value='${option}'>${option}</option>`));
+            });
+        }
+
         function toggleTelemetryProtocolInfo() {
             const radioProtocol = $('select[name="radioProtocols"] option:selected').val();
             const hasTelemetryEnabledByDefault = [
@@ -222,6 +230,8 @@ firmware_flasher.initialize = function (callback) {
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
+            buildCustomDefinesList($('select[name="customDefines"]'), customDefinesList);
+
 
             if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
@@ -441,6 +451,7 @@ firmware_flasher.initialize = function (callback) {
         $('select[name="radioProtocols"]').select2();
         $('select[name="telemetryProtocols"]').select2();
         $('select[name="motorProtocols"]').select2();
+        $('select[name="customDefines"]').select2({ tags: false, closeOnSelect: false});
         $('select[name="options"]').select2({ tags: false, closeOnSelect: false });
         $('select[name="commits"]').select2({ tags: true });
 
@@ -522,6 +533,7 @@ firmware_flasher.initialize = function (callback) {
             'select[name="telemetryProtocols"]',
             'select[name="motorProtocols"]',
             'select[name="options"]',
+            'select[name="customDefines"]',
             'select[name="commits"]',
         ];
 
@@ -843,8 +855,8 @@ firmware_flasher.initialize = function (callback) {
                             request.commit = $('select[name="commits"] option:selected').val();
                         }
 
-                        $('input[name="customDefines"]').val().split(' ').map(element => element.trim()).forEach(v => {
-                            request.options.push(v);
+                        $('select[name="customDefines"] option:selected').each(function () {
+                            request.options.push($(this).val());
                         });
                     }
                 }
