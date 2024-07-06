@@ -232,7 +232,6 @@ firmware_flasher.initialize = function (callback) {
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
             buildCustomDefinesList($('select[name="customDefines"]'), customDefinesList);
 
-
             if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
             }
