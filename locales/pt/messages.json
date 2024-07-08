@@ -7251,13 +7251,13 @@
         "message": "Selecione o protocolo de rádio que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Selecione o protocolo de telemetria que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado. Existem também alguns protocolos de telemetria que serão ativados independentemente da sua seleção aqui baseada no protocolo de rádio selecionado, por exemplo, CRSF."
+        "message": "Selecione o protocolo de telemetria que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado. Existem também alguns protocolos de telemetria que serão ativados, independentemente da sua seleção, baseados no protocolo de rádio selecionado, por exemplo, CRSF."
     },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Incluído Automaticamente"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "Selecione as opções genéricas que gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Tais itens como correções, por exemplo, VTX AKK, estão incluídos aqui."
+        "message": "Selecione as opções genéricas que você gostaria de incluir nesta compilação. Note que esta é uma lista de seleção, onde múltiplos itens podem ser selecionados. Tais itens como correções, por exemplo, AKK VTX, estão aqui incluídos."
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Selecione o protocolo (ESC) do motor que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado."

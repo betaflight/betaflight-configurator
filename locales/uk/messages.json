@@ -31,6 +31,22 @@
     "dontShowAgain": {
         "message": "Не показувати знову"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "Потрібно оновити застосунок",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "Вам потрібно оновити сторінку для отримання останніх змін. Оновлення зараз перезавантажить сторінку, і ви втратите будь-які незбережені зміни, та скасує будь-яку операцію, яка триває.<br><br>Бажаєте оновити її зараз? Також ви можете відхилити це повідомлення і власноруч оновити сторінку пізніше.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "Застосунок готовий до використання без мережі",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "Ви можете встановити це як автономний застосунок на вашому пристрої, якщо бажаєте. Шукайте таку функцію в адресному рядку браузера або в меню.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Операція не підтримується пристроєм."
     },
@@ -62,6 +78,23 @@
     "portsSelectVirtual": {
         "message": "Віртуальний режим (експериментальний)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- Я не можу знайти мій пристрій USB ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- Я не можу знайти мій пристрій Bluetooth ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Під'єднано до пристрою Bluetooth: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Тип підключення Bluetooth: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Помилка Bluetooth: $1"
     },
     "virtualMSPVersion": {
         "message": "Версія віртуальної прошивки"
@@ -297,6 +330,10 @@
     },
     "logActionShow": {
         "message": "Показати журнал подій"
+    },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} файли",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Помилка послідовного підключення: погане кадрування"
@@ -873,6 +910,10 @@
     "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
         "message": "Не виявлено правильного сигналу приймача",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
+        "message": "Ваш приймач щойно відновив зв'язок після безаварійності, але перемикач взведення ввімкнено",
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "Перемикач «FAILSAFE» був активований",
@@ -3327,6 +3368,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Виберіть тип збірки, щоб побачити доступні плати."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Виберіть або визначте вашу плату, щоб побачити доступні онлайн версії прошивок - Виберіть відповідну прошивку для вашої плати."
+    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Конфігуратор Betaflight підтримує прошивання уніфікованих цільових пристроїв разом з відповідними платоспецифічними налаштуваннями за один крок.<br><br>Концепція уніфікованих цільових пристроїв означає, що один і той же файл прошивки .hex можна використовувати для всіх плат, які використовують той самий мікроконтролер (MCU).<br><br>У версії Betaflight 4.4 додається <strong>Хмарна Збірка (Cloud Build)<\/strong>.<br><br>З Хмарною Збіркою (Cloud Build) нам потрібно описати опції обладнання, наявного у вашій збірці.<br><br>Щоб різні плати працювали з однією і тією ж прошивкою, при прошиванні уніфікованої цільової прошивки, специфічний файл конфігурації розміщується поряд з прошивкою.<br><br>При локальній збірці, ви можете завантажити файл конфігурації уніфікованого цільового пристрою або вибрати плату перед завантаженням файлу прошивки .hex.<br><br>Якщо у вас виникають проблеми з використанням прошивки, рекомендуємо приєднатися до Discord або <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">повідомити про проблему<\/a>."
     },
@@ -3338,6 +3382,9 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Прошити при підключенні"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Спробувати прошити плату автоматично (у випадку виявлення нового послідовного порту).<br \/><br \/><span class=\"message-negative\">УВАГА<\/span>: ця функція вимикає визначення і резервне копіювання."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Повністю очистити мікроконтролер"
@@ -3513,6 +3560,12 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Продовжити"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Визначити"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "Виявлення працює тільки коли пристрій не перебуває в режимі завантажувача та коли зв'язок MSP працює. Іноді доводиться спробувати підключитися кілька разів або навіть перепідключити USB. Спробуйте спочатку підключитися як зазвичай, можливо ви забули застосувати налаштування за замовчуванням (custom defaults). Після прошивання перезавантажтеся - відключіть та знову підключіть USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Отримати інформацію з плати для попереднього вибору правильної прошивки"
@@ -3747,6 +3800,10 @@
     },
     "ledStripModeGpsDefault": {
         "message": "За замовчуванням",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Індикатор GPS",
         "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
@@ -4434,6 +4491,9 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Обмеження кута для Acro Trainer"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Допомагає пілотам вивчити польоти в режимі акро шляхом обмеження кута, на який квадрокоптер може нахилитись. Дійсні обмеження становлять від 10 до 80 градусів. Цей режим повинен бути активований за допомогою перемикача на вкладці $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Інтегроване рискання"
@@ -5362,6 +5422,22 @@
     "osdDescElementAltitude": {
         "message": "Поточна висота (блимає, коли вище порогового значення)"
     },
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "Висота над землею з 1 десятковим знаком",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "Висота над землею без десяткових знаків",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "Висота над морем з 1 десятковим знаком",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "Висота над морем без десяткових знаків",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Від підключення батареї",
         "description": "One of the elements of the OSD"
@@ -6109,6 +6185,10 @@
         "message": "Якість зв'язку",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI дБм",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Взведення заборонене",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6234,6 +6314,14 @@
     },
     "osdWarningRSNR": {
         "message": "Попереджає коли співвідношення сигнал\/шум нижче порогового рівня"
+    },
+    "osdWarningTextLoad": {
+        "message": "ЗАВАНТАЖЕННЯ",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Застерігає, якщо навантаження на ЦП польотного контролера зависоке",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "Невідомо $1"
@@ -6571,6 +6659,9 @@
     "configurationEscProtocol": {
         "message": "Протокол ESC\/мотора"
     },
+    "configurationEscProtocolHelp": {
+        "message": "Виберіть свій протокол керування моторами. <br>Переконайтеся, що протокол підтримується вашим регулятором обертів, ця інформація має бути на вебсайті виробника."
+    },
     "configurationunsyndePwm": {
         "message": "Швидкість ШІМ мотора Відокремлена від швидкості PID"
     },
@@ -6804,6 +6895,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Чутливість центру"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Максимальна чутливість центру"
     },
     "dialogRatesTypeTitle": {
         "message": "Зміна типу коефіцієнтів реагування"
@@ -7154,19 +7248,19 @@
         "message": "Назва файлу конфігурації:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Виберіть радіопротокол, який ви хочете включити у цю збірку. Зверніть увагу, що це випадаючий список, але можна вибрати лише один елемент."
+        "message": "Виберіть радіопротокол, який ви хочете включити у цю збірку. Зверніть увагу, що це випадний список, але можна вибрати лише один елемент."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Виберіть протокол телеметрії, який ви хотіли б включити у цю збірку. Зауважте, що це випадаючий список, але можна вибрати лише один елемент. Також деякі протоколи телеметрії будуть увімкнені автоматично, незалежно від вашого вибору тут, якщо вони потрібні для радіообміну, наприклад, CRSF."
+        "message": "Виберіть протокол телеметрії, який ви хотіли б включити у цю збірку. Зауважте, що це випадний список, але можна вибрати лише один елемент. Також деякі протоколи телеметрії будуть увімкнені автоматично, незалежно від вашого вибору тут, якщо вони потрібні для радіообміну, наприклад, CRSF."
     },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Автоматично включено"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "Оберіть загальні опції, які б ви хотіли включили до цієї збірки. Зауважте, що це випадаючий список, і можна вибрати декілька елементів. Такі речі як виправлення, наприклад, відеопередавача AKK, знаходяться в цьому списку."
+        "message": "Оберіть загальні опції, які б ви хотіли включили до цієї збірки. Зауважте, що це випадний список, і можна вибрати декілька елементів. Такі речі як виправлення, наприклад, відеопередавача AKK, знаходяться в цьому списку."
     },
     "firmwareFlasherMotorProtocolDescription": {
-        "message": "Виберіть протокол керування моторами (електронними контролерами швидкості), який ви хотіли б додати до цієї збірки. Зверніть увагу, що в випадаючому меню можна вибрати лише один елемент."
+        "message": "Виберіть протокол керування моторами (електронними контролерами швидкості), який ви хотіли б додати до цієї збірки. Зверніть увагу, що в випадному меню можна вибрати лише один елемент."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Особливо корисно для розробників, ви можете вибрати запит на злиття (merged pull request), вказати коміт SHA або вказати \"ще не злитий\" запит на злиття, ввівши знак \"#\" за яким слідує номер запиту на злиття, наприклад #1234 (це стислий запис для гілки 'pull\/1234\/head')."

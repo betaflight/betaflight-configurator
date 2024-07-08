@@ -7087,20 +7087,8 @@
     "firmwareFlasherConfigurationFile": {
         "message": "Arquivo de Configuração:"
     },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": "Selecione o protocolo radio que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas apenas uma opção pode ser selecionada."
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Selecione o protocolo de telemetria que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas somente uma opção pode ser selecionada. Existem também alguns protocolos de telemetria que serão ativados independente da sua seleção, baseada no protocolo de rádio selecionado, por exemplo: CRSF."
-    },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Incluído Automaticamente"
-    },
-    "firmwareFlasherOptionsDescription": {
-        "message": "Selecione as opções genéricas que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Também estão inclusos aqui algumas opções de correção, como por exemplo: AKK VTX."
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": "Selecione o protocolo motor (ESC) que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas apenas uma opção pode ser selecionada."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialmente útil para desenvolvedores, você pode selecionar um PR que foi mesclado com o SHA do commit, ou um PR que ainda vai ser mesclado digitando um # seguido do número do PR, por exemplo, #1234 (isso é um atalho para 'pull\/1234\/head')."

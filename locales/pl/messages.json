@@ -7159,20 +7159,8 @@
     "firmwareFlasherConfigurationFile": {
         "message": "Nazwa pliku konfiguracyjnego:"
     },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": "Wybierz protokół radiowy, który chciałbyś dołączyć do tej kompilacji. Zauważ, że jest to lista rozwijana, ale tylko jeden element może zostać wybrany."
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Wybierz protokół telemetrii, który chcesz uwzględnić w tej kompilacji. Uwaga: jest to lista rozwijana, ale można wybrać tylko jeden element. Istnieją również protokoły telemetrii, które zostaną włączone, niezależnie od dokonanego tutaj wyboru w oparciu o wybrany protokół radiowy, np. CRSF."
-    },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Automatycznie uwzględnione"
-    },
-    "firmwareFlasherOptionsDescription": {
-        "message": "Wybierz ogólne opcje, które chcesz uwzględnić w tej kompilacji. Pamiętaj, że jest to lista rozwijana i można wybrać wiele elementów. Takie elementy jak poprawki, m.in. AKK VTX, są tutaj zawarte."
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": "Wybierz protokół silnika (ESC), który chcesz uwzględnić w tej kompilacji. Uwaga: jest to lista rozwijana, ale można wybrać tylko jeden element."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Szczególnie przydatne dla programistów, możesz wybrać scalone PR, określić sha zatwierdzenia lub określić PR „jeszcze do scalenia”, wpisując #, po którym następuje numer PR, np. #1234 (jest to skrót dla gałęzi „pull\/1234\/head”)."

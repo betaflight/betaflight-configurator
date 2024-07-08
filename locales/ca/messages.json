@@ -7265,7 +7265,7 @@
         "message": "Inclòs automàticament"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "Seleccioneu les opcions genèriques que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un menú desplegable i que es poden seleccionar diversos elements. Elements com ara correccions, p. AKK VTX, s'inclouen aquí."
+        "message": "Seleccioneu les opcions genèriques que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable i es poden seleccionar diversos elements. Elements com ara correccions, p. AKK VTX, s'inclouen aquí."
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Seleccioneu el protocol motor (ESC) que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, però només es pot seleccionar un element."

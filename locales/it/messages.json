@@ -7248,16 +7248,16 @@
         "message": "Nome file configurazione:"
     },
     "firmwareFlasherRadioProtocolDescription": {
-        "message": "Seleziona il protocollo radio che vuoi includere in questa build. Della lista, puoi selezionare una sola voce."
+        "message": "Seleziona il protocollo radio che vuoi includere nella build. Della lista, selezionare solo una voce."
     },
     "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Seleziona il protocollo telemetria che vuoi includere nella build. Della lista, puoi selezionare una sola voce. Ci sono anche alcuni protocolli per la telemetria che saranno abilitati, anche se la tua selezione è basata su un solo protocollo radio, es. CRSF."
+        "message": "Seleziona il protocollo telemetria che vuoi includere nella build. Della lista, selezionare solo una voce. Ci sono anche alcuni protocolli per la telemetria che saranno abilitati, anche se la tua selezione è basata su un solo protocollo radio, es. CRSF."
     },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Incluso automaticamente"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "Selezionare le opzioni generiche che si desidera includere in questa build. Da notare che è una lista in cui possono essere selezionati più elementi. Elementi come fix, es AKK VTX, sono inclusi qui."
+        "message": "Selezionare le opzioni generiche che si desidera includere nella build. Da notare che è una lista in cui possono essere selezionati più elementi. Elementi come fix, es AKK VTX, sono inclusi."
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Seleziona il protocollo motore (ESC) che vuoi includere nella build. Della lista, puoi selezionare una sola voce."
