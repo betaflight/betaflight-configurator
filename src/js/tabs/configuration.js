@@ -298,7 +298,6 @@ configuration.initialize = function (callback) {
         }
 
         $('input[name="fpvCamAngleDegrees"]').val(FC.RX_CONFIG.fpvCamAngleDegrees);
-        $('input[name="fpvCamAngleDegrees"]').attr("max", 90);
 
         // fill board alignment
         $('input[name="board_align_roll"]').val(FC.BOARD_ALIGNMENT_CONFIG.roll);

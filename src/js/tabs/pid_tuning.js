@@ -141,9 +141,7 @@ pid_tuning.initialize = function (callback) {
         $('.pid_filter input[name="dTermNotchFrequency"]').val(FC.FILTER_CONFIG.dterm_notch_hz);
         $('.pid_filter input[name="dTermNotchCutoff"]').val(FC.FILTER_CONFIG.dterm_notch_cutoff);
 
-        const dtermSetpointTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
-        dtermSetpointTransitionNumberElement.attr('min', 0.00);
-        dtermSetpointTransitionNumberElement.val(FC.ADVANCED_TUNING.dtermSetpointTransition / 100);
+        $('input[name="dtermSetpointTransition-number"]').val(FC.ADVANCED_TUNING.dtermSetpointTransition / 100);
 
         $('input[name="dtermSetpoint-number"]').val(FC.ADVANCED_TUNING.dtermSetpointWeight / 100);
 
@@ -218,12 +216,6 @@ pid_tuning.initialize = function (callback) {
         $('.pid_filter input[name="dtermLowpass2Frequency"]').val(FC.FILTER_CONFIG.dterm_lowpass2_hz);
         $('.pid_filter select[name="dtermLowpass2Type"]').val(FC.FILTER_CONFIG.dterm_lowpass2_type);
 
-        // We load it again because the limits are now bigger than in 1.16.0
-        $('.pid_filter input[name="gyroLowpassFrequency"]').attr("max","16000");
-        $('.pid_filter input[name="gyroLowpassFrequency"]').val(FC.FILTER_CONFIG.gyro_lowpass_hz);
-        //removes 5th column which is Feedforward
-        $('#pid_main .pid_titlebar2 th').attr('colspan', 4);
-
         // I Term Rotation
         $('input[id="itermrotation"]').prop('checked', FC.ADVANCED_TUNING.itermRotation !== 0);
 
@@ -269,7 +261,6 @@ pid_tuning.initialize = function (callback) {
         $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
         $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
         $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
-        $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
 
         const feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
         feedforwardTransitionNumberElement.val(Number.parseFloat(FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2));
@@ -306,8 +297,6 @@ pid_tuning.initialize = function (callback) {
         $('.dminGroup input[name="dMinAdvance"]').val(FC.ADVANCED_TUNING.dMinAdvance);
 
         $('input[id="useIntegratedYaw"]').prop('checked', FC.ADVANCED_TUNING.useIntegratedYaw !== 0);
-        //dmin column
-        $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
 
         $('.smartfeedforward').hide();
 
