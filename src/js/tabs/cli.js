@@ -192,7 +192,7 @@ cli.initialize = function (callback) {
 
         CONFIGURATOR.cliActive = true;
 
-        self.GUI.copyButton = $('.tab-cli .copy');
+        self.GUI.copyButton = $('a.copy');
         self.GUI.windowWrapper = $('.tab-cli .window .wrapper');
 
         const textarea = $('.tab-cli textarea[name="commands"]');
@@ -211,13 +211,13 @@ cli.initialize = function (callback) {
                 .focus();
         });
 
-        $('.tab-cli .save').on('click', function() {
+        $('a.save').on('click', function() {
             const filename = generateFilename('cli', 'txt');
 
             saveFile(filename, self.outputHistory);
         });
 
-        $('.tab-cli .clear').click(function() {
+        $('a.clear').click(function() {
             clearHistory();
         });
 
@@ -229,11 +229,11 @@ cli.initialize = function (callback) {
             self.GUI.copyButton.hide();
         }
 
-        $('.tab-cli .load').on('click', function() {
+        $('a.load').on('click', function() {
             loadFile();
         });
 
-        $('.tab-cli .support')
+        $('a.support')
         .toggle(navigator.onLine)
         .on('click', function() {
 
