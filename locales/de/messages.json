@@ -6412,18 +6412,6 @@
     "firmwareFlasherConfigurationFile": {
         "message": "Konfigurationsdatei:"
     },
-    "firmwareFlasherRadioProtocolDescription": {
-        "message": "Wähle das zu verwendende Funkprotokoll. Beachte, dass nur ein Element ausgewählt werden kann."
-    },
-    "firmwareFlasherTelemetryProtocolDescription": {
-        "message": "Wähle das zu verwendende Telemetrie-Protokoll. Beachte, dass nur ein Element ausgewählt werden kann. Weiterhin werden - basierend auf dem gewählten Funkprotokoll, z.B. CRSF - einige Telemetrie-Protokolle aktiviert, unabhängig von der hier getroffenen Auswahl."
-    },
-    "firmwareFlasherOptionsDescription": {
-        "message": "Wähle die zu verwendenden generischen Optionen. Beachte, dass mehrere Elemente ausgewählt werden können. Elemente wie Fehlerkorrekturen, z.B. AKK VTX, sind hier enthalten."
-    },
-    "firmwareFlasherMotorProtocolDescription": {
-        "message": "Wähle das zu verwendende Motor-(ESC)-Protokoll. Beachte, dass nur ein Element ausgewählt werden kann."
-    },
     "firmwareFlasherBranchDescription": {
         "message": "Besonders nützlich für Entwickler: wähle einen zusammengeführten PR aus, gib einen Commit SHA an, oder gib einen 'noch nicht zusammengeführten' PR durch Eingabe von # gefolgt von der PR-Nummer an, z.B. #1234 (Kurzform für den Branch 'pull\/1234\/head')."
     },
