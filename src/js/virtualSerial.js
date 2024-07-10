@@ -21,7 +21,7 @@ class VirtualSerial {
     connect(callback) {
         if (!this.openCanceled) {
             this.connected = true;
-            this.connectionId = "virtual";
+            this.connectionId = VIRTUAL;
             this.bitrate = 115200;
             callback();
         }
