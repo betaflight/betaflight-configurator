@@ -52,7 +52,13 @@ receiver.initialize = function (callback) {
         if (text) {
             const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
             const hash = CryptoES.MD5(bindingPhraseFull).toString();
-            uidBytes = Uint8Array.from(Buffer.from(hash, 'hex')).subarray(0, 6);
+            // Buffer.from is not available in the browser
+            const bytes = hash.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
+            const view = new DataView(new ArrayBuffer(6));
+            for (let i = 0; i < 6; i++) {
+                view.setUint8(i, bytes[i]);
+            }
+            uidBytes = Array.from(new Uint8Array(view.buffer));
         }
 
         return uidBytes;
