@@ -221,13 +221,9 @@ cli.initialize = function (callback) {
             clearHistory();
         });
 
-        if (Clipboard.available) {
-            self.GUI.copyButton.click(function() {
-                copyToClipboard(self.outputHistory);
-            });
-        } else {
-            self.GUI.copyButton.hide();
-        }
+        self.GUI.copyButton.click(function() {
+            copyToClipboard(self.outputHistory);
+        });
 
         $('a.load').on('click', function() {
             loadFile();
