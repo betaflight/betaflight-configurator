@@ -6,7 +6,7 @@
       @input="updateValue('portOverride', $event)"
     />
     <FirmwareVirtualOption
-      v-if="value.selectedPort === 'virtual'"
+      v-if="value.selectedPort === 'virtual' && !isConnected"
       :value="value.virtualMspVersion"
       @input="updateValue('virtualMspVersion', $event)"
     />
@@ -27,6 +27,7 @@
 import PortOverrideOption from "./PortOverrideOption.vue";
 import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
 import PortsInput from "./PortsInput.vue";
+import CONFIGURATOR from "../../js/data_storage";
 
 export default {
   components: {
@@ -69,6 +70,11 @@ export default {
         type: Boolean,
         default: false,
       },
+  },
+  computed: {
+    isConnected() {
+      return CONFIGURATOR.connectionValid;
+    },
   },
   methods: {
     updateValue(key, value) {

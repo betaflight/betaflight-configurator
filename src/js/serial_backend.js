@@ -645,7 +645,7 @@ function onConnect() {
     // header bar
     $('#sensor-status').show();
     $('#portsinput').hide();
-    $('#firmware-version-dropdown').hide();
+    // $('#firmware-version-dropdown').hide();
     $('#dataflash_wrapper_global').show();
 }
 
@@ -659,7 +659,7 @@ function onClosed(result) {
     // header bar
     $('#sensor-status').hide();
     $('#portsinput').show();
-    $('#firmware-version-dropdown').show();
+    // $('#firmware-version-dropdown').show();
     $('#dataflash_wrapper_global').hide();
     $('#quad-status_wrapper').hide();
 
