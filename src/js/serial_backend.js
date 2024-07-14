@@ -642,14 +642,10 @@ function onConnect() {
         }
     }
 
-    const sensorState = $('#sensor-status');
-    sensorState.show();
-
-    const portPicker = $('#portsinput');
-    portPicker.hide();
-
-    const dataflash = $('#dataflash_wrapper_global');
-    dataflash.show();
+    // header bar
+    $('#sensor-status').show();
+    $('#portsinput').hide();
+    $('#dataflash_wrapper_global').show();
 }
 
 function onClosed(result) {
@@ -659,17 +655,11 @@ function onClosed(result) {
     $('#tabs ul.mode-connected-cli').hide();
     $('#tabs ul.mode-disconnected').show();
 
-    const sensorState = $('#sensor-status');
-    sensorState.hide();
-
-    const portPicker = $('#portsinput');
-    portPicker.show();
-
-    const dataflash = $('#dataflash_wrapper_global');
-    dataflash.hide();
-
-    const battery = $('#quad-status_wrapper');
-    battery.hide();
+    // header bar
+    $('#sensor-status').hide();
+    $('#portsinput').show();
+    $('#dataflash_wrapper_global').hide();
+    $('#quad-status_wrapper').hide();
 
     clearLiveDataRefreshTimer();
 
