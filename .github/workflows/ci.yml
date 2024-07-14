@@ -52,7 +52,7 @@ jobs:
             releaseArgs: --linux64
 
           - name: macOS
-            os: macos-11
+            os: macos-12
             releaseArgs: --osx64
 
           - name: Windows
