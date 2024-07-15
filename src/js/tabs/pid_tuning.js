@@ -490,6 +490,7 @@ pid_tuning.initialize = function (callback) {
             $('.dtermLowpassDynLegacy').hide();
 
             $('.pid_filter input[name="dtermLowpassExpo"]').val(FC.FILTER_CONFIG.dyn_lpf_curve_expo);
+            $('input[name="feedforwardSmoothFactor"]').attr("max", "95");
         } else {
             // hide firmware filter switches
             $('.gyroLowpass').hide();
