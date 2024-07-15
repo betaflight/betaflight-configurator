@@ -90,6 +90,8 @@ function appReady() {
 
     cleanupLocalStorage();
 
+    updateTabList();
+
     i18n.init(function() {
 
         // pass the configurator version as a custom header for every AJAX request.
@@ -361,6 +363,11 @@ function startProcess() {
                     case 'presets':
                         import("../tabs/presets/presets").then(({ presets }) =>
                             presets.initialize(content_ready),
+                        );
+                        break;
+                    case 'development':
+                        import("./tabs/development").then(({ development }) =>
+                            development.initialize(content_ready),
                         );
                         break;
 

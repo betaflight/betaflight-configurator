@@ -340,6 +340,9 @@
     "tabOptions": {
         "message": "Options"
     },
+    "tabDevelopment": {
+        "message": "Development"
+    },
 
     "tabSetup": {
         "message": "Setup"
@@ -6279,7 +6282,7 @@
         "message": "RSSI dBm",
         "description": "Text of the RSSI dBm alarm"
       },
-  
+
     "osdWarningTextArmingDisabled": {
         "message": "Arming disabled",
         "description": "One of the warnings that can be selected to be shown in the OSD"
