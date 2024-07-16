@@ -4,7 +4,7 @@
   "displayName": "Betaflight - Configuration and management tool",
   "description": "Crossplatform configuration and management tool for the Betaflight flight control firmware.",
   "version": "11.0.0",
-  "main": "main.html",
+  "main": "index.html",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
