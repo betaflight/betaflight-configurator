@@ -308,7 +308,7 @@
         "message": "You are using an outdated version of the <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Using a newer version of the firmware with an outdated version of Configurator means that changing some settings will result in a <strong>corrupted firmware configuration and a non-working craft</strong>.<br />Furthermore, some features of the firmware will only be configurable in CLI.<br g/><br /><strong>Betaflight Configurator version <b>$1</b> is available for download online</strong>.<br />Download and install the latest version of configurator with fixes and improvements <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br>Configurator window needs to be closed before updating."
+        "message": "Using a newer version of the firmware with an outdated version of Configurator means that changing some settings will result in a <strong>corrupted firmware configuration and a non-working craft</strong>.<br />Furthermore, some features of the firmware will only be configurable in CLI.<br /><br /><strong>Betaflight Configurator version <b>$1</b> is available for download online</strong>.<br />Download and install the latest version of configurator with fixes and improvements <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br>Configurator window needs to be closed before updating."
     },
     "configuratorUpdateWebsite": {
         "message": "Go to Release Website"
