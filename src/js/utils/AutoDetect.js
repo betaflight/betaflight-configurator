@@ -132,7 +132,7 @@ class AutoDetect {
             const buildDate = new Date(FC.CONFIG.buildInfo);
 
             if (TABS.firmware_flasher.validateBuildKey() && (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)) {
-                return TABS.firmware_flasher.buildApi.requestBuildOptions(TABS.firmware_flasher.cloudBuildKey, this.getCloudBuildOptions, this.getBoardInfo);
+                return TABS.firmware_flasher.buildApi.requestBuildOptions(TABS.firmware_flasher.cloudBuildKey, this.getCloudBuildOptions.bind(this), this.getBoardInfo.bind(this));
             }
         }
 
