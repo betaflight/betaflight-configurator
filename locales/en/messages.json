@@ -2664,6 +2664,9 @@
     "adjustmentsFunction30": {
         "message": "LED Profile Selection"
     },
+	"adjustmentsFunction31": {
+        "message": "LED Brightness Adjust"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },
