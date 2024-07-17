@@ -2191,6 +2191,12 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Pid Tuning Slider Mode</strong><br><br>Pidtuning slider mode can be:<br><br>&bull; OFF - no sliders, enter values manually<br>&bull; RP - sliders control Roll and Pitch only, enter Yaw values manually<br>&bull; RPY - sliders control all PID values<br><br><span class=\"message-negative\"><b>Warning:</b></span>Going from RP to RPY mode will overwrite Yaw settings with firmware settings."
     },
+    "receiverHelpModelId": {
+        "message": "If you set the Model Match below to a number other than 255, you can specify the receiver number in OpenTX/EdgeTX model setup page and turn on the Model Match in the ELRS LUA script for that model. Model match is between 0 and 63 inclusive.<br />See ELRS Documentation for more information."
+    },
+    "receiverModelId": {
+        "message": "Model Match ID"
+    },
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https://betaflight.com/docs/wiki/guides/current/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://betaflight.com/docs/development/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://betaflight.com/docs/development/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
     },
