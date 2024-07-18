@@ -371,13 +371,16 @@ receiver.initialize = function (callback) {
                 }
                 updateSaveButton(true);
             });
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                $('input[name="elrsModelId-number"]').val(FC.RX_CONFIG.elrsModelId);
-            }
         } else {
             tab.elrsBindingPhraseEnabled = false;
         }
+
+        if (tab.elrsBindingPhraseEnabled && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="elrsModelId-number"]').val(FC.RX_CONFIG.elrsModelId);
+        } else {
+            $('input[name="elrsModelId-number"]').parent().hide();
+        }
+
 
         // UI Hooks
 
