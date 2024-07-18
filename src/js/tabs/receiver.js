@@ -483,6 +483,7 @@ receiver.initialize = function (callback) {
                 } else {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
                 }
+
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     FC.RX_CONFIG.elrsModelId = parseInt($('input[name="elrsModelId-number"]').val());
                 }
