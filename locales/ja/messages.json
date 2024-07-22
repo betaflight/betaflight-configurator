@@ -227,7 +227,7 @@
         "message": "<b>Betaflight Configurator<\/b>の旧バージョンを使用しています。<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "旧バージョンのBetaflight Configuratorで新しいバージョンのファームウェアを使用した場合、一部の設定を変更すると<strong>ファームウェア設定が破損し機体が動作しない状態となる場合があります。<\/strong><br \/>さらに、ファームウェアの一部の機能はCLIでしか設定できないものがあります。<br g\/><br \/><strong>Betaflight Configurator version <b>$1<\/b> はオンラインでダウンロード可能です。<\/strong><br \/>修正および改善された最新バージョンを <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードし、インストールしてください。<br>アップデートの前にBetaflight Configuratorウィンドウを閉じる必要がありますのでご注意ください。"
+        "message": "インターネットが利用可能な場合、アプリは自動的に利用可能なアップデートを要求します。"
     },
     "configuratorUpdateWebsite": {
         "message": "リリースサイトに移動"

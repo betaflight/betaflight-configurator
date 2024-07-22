@@ -198,7 +198,7 @@
         "message": "Używasz przestarzałej wersji <b>Konfiguratora Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Używanie nowszej wersji oprogramowania układowego z przestarzałą wersją Konfiguratora oznacza, że zmiana niektórych ustawień spowoduje uszkodzenie konfiguracji kontrolera lotu <strong>i uziemienie jednostki latającej<\/strong>.<br \/>Ponadto niektóre funkcje oprogramowania będą konfigurowalne tylko w CLI.<br g\/><br \/><strong>Konfiguracja Betaflight wersja <b>$1<\/b> jest dostępna do pobrania online<\/strong>.<br \/>Pobierz i zainstaluj najnowszą wersję konfiguratora z poprawkami i ulepszeniami <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><br>Przed aktualizacją należy zamknąć okno konfiguratora."
+        "message": "Gdy masz dostęp do internetu, aplikacja powinna automatycznie sprawdzić dostępne aktualizacje."
     },
     "configuratorUpdateWebsite": {
         "message": "Idź do strony z aktualizacjami"

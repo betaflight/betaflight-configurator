@@ -235,7 +235,7 @@
         "message": "Esteu utilitzant una versió obsoleta del <b>Configurador Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Si utilitzeu una versió més recent del firmware amb una versió obsoleta de configurador, significa que canviar alguns ajustos pot resultar una <strong>configuració del firmware corrompuda i un quad que no funciona<\/strong>.<br \/>A més, algunes funcions del firmware només es podran configurar en CLI.<br g\/><br \/><strong>La versió del configurador Betaflight <b>$1<\/b> està disponible per a la descàrrega en línia<\/strong>.<br \/>Visiteu <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br>per descarregar i instal·lar la versió més recent amb solucions i millores. Tanqueu la finestra del configurador abans de l’actualització."
+        "message": "Quan Internet está disponible la app pot preguntar sobre actualitzacions disponibles."
     },
     "configuratorUpdateWebsite": {
         "message": "Ves a la pàgina de publicació"

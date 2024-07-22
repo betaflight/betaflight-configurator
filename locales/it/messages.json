@@ -227,7 +227,7 @@
         "message": "Stai utilizzando una versione obsoleta del <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Utilizzando una versione più recente del firmware con una versione obsoleta del Configuratore significa che la modifica di alcune impostazioni porterà a una <strong>configurazione corrotta del firmware e a un modello non funzionante<\/strong><br\/> Inoltre, alcune caratteristiche del firmware saranno configurabili solo via CLI..<br g\/><br \/><strong>La versione <b>$1<\/b> del Betaflight Configurator è disponibile per il download<\/strong>, visita <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina<\/a> per scaricare e installare l'ultima versione con correzioni e miglioramenti.<br>Chiudere la finestra del configuratore prima dell'aggiornamento."
+        "message": "Quando internet è disponibile, l'app controlla automaticamente gli aggiornamenti disponibili."
     },
     "configuratorUpdateWebsite": {
         "message": "Pagina web degli aggiornamenti"
