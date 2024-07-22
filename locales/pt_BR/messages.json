@@ -182,9 +182,6 @@
     "configuratorUpdateNotice": {
         "message": "Você está utilizando uma versão antiga do <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Utilizando uma versão do firmware recente com uma versão antiga do configurador fará com que, ao alterar algumas configurações, a <strong>configuração do firmware ficará corrompida e sua aeronave não irá funcionar<\/strong>.<br \/>Além disso, só será possível configurar alguns recursos do firmware através da Linha de Comandos.<br><strong>O Betaflight Configurator versão <b>$1<\/b> está disponível para download online<\/strong>, visite <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para fazer o download e instalar a nova versão do configurador com correções e melhorias.<br>Por favor feche a janela do configurador antes de atualizar."
-    },
     "configuratorUpdateWebsite": {
         "message": "Ir para a Página Web do lançamento"
     },

@@ -230,9 +230,6 @@
     "configuratorUpdateNotice": {
         "message": "Du bruger en forældet version af <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Brug af en nyere version af firmware med en ældre version af Betaflight Configurator, kan betyde at ændring af indstillinger giver en <strong>beskadiget firmware konfiguration og en ikke-fungerende FC<\/strong>. Desuden vil nogle funktioner i firmwaren kun kunne konfigureres i CLI.<br><strong>Betaflight Configurator version <b>$1<\/b> er tilgængelig for at hente online<\/strong>, besøg <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">denne side<\/a> for at hente og installere den nyeste Configurator version med rettelser og forbedringer.<br>Det er bedst, at du lukker Configurator før du opdaterer."
-    },
     "configuratorUpdateWebsite": {
         "message": "Åbn udgivelseswebsted"
     },

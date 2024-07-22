@@ -192,9 +192,6 @@
     "configuratorUpdateNotice": {
         "message": "Está usando unha versión desactualizada do <b>Betaflight Configurator<\/b>. <br>$t(configuratorUpdateHelp.message)"
     },
-    "configuratorUpdateHelp": {
-        "message": "Empregar unha versión máis recente do firmware cunha versión obsoleta de Configurator significa que o cambio dalgunhas opcións dará como resultado unha <strong>configuración do firmware danada e un drone que non funciona<\/strong>.<br \/>Ademais, algunhas funcións do firmware, só se poderán configurar no CLI.<br g\/><br \/><strong>A versión do configurador de Betaflight <b>$1<\/b> está dispoñible para descargar en liña<\/strong>.<br \/>Descargue e instale a última versión do configurador con correccións e melloras <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br>A xanela do configurador debe pecharse antes de actualizar."
-    },
     "configuratorUpdateWebsite": {
         "message": "Ir a web de descargas"
     },
