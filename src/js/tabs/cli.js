@@ -7,7 +7,6 @@ import { tracking } from '../Analytics';
 import { reinitializeConnection } from "../serial_backend";
 import CONFIGURATOR from "../data_storage";
 import CliAutoComplete from "../CliAutoComplete";
-import UI_PHONES from "../phones_ui";
 import { gui_log } from "../gui_log";
 import jBox from "jbox";
 import $ from 'jquery';
@@ -334,15 +333,6 @@ cli.adaptPhones = function() {
         const backdropHeight = $('.note').height() + 22 + 38;
         $('.backdrop').css('height', `calc(100% - ${backdropHeight}px)`);
     }
-
-    const mediaQuery = window.matchMedia('(max-width: 576px)');
-    const handleMediaChange = function(e) {
-        if (e.matches) {
-            UI_PHONES.initToolbar();
-        }
-    };
-    mediaQuery.addEventListener('change', handleMediaChange);
-    handleMediaChange(mediaQuery);
 };
 
 cli.history = {

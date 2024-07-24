@@ -14,7 +14,6 @@ import FC from './fc.js';
 import CONFIGURATOR from './data_storage.js';
 import CliAutoComplete from './CliAutoComplete.js';
 import DarkTheme, { setDarkTheme } from './DarkTheme.js';
-import UI_PHONES from './phones_ui.js';
 import { isExpertModeEnabled } from './utils/isExportModeEnabled.js';
 import { updateTabList } from './utils/updateTabList.js';
 import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates.js';
@@ -28,39 +27,18 @@ if (typeof String.prototype.replaceAll === "undefined") {
 
 $(document).ready(function () {
 
-    useGlobalNodeFunctions();
-
     if (typeof cordovaApp === 'undefined') {
         appReady();
     }
 });
 
-function useGlobalNodeFunctions() {
-    // The global functions of Node continue working on background. This is good to continue flashing,
-    // for example, when the window is minimized
-    if (GUI.isNWJS()) {
-        console.log("Replacing timeout/interval functions with Node versions");
-        window.setTimeout = global.setTimeout;
-        window.clearTimeout = global.clearTimeout;
-        window.setInterval = global.setInterval;
-        window.clearInterval = global.clearInterval;
-    }
-}
-
 function readConfiguratorVersionMetadata() {
-    if (GUI.isNWJS() || GUI.isCordova()) {
-        const manifest = chrome.runtime.getManifest();
-        CONFIGURATOR.productName = manifest.productName;
-        CONFIGURATOR.version = manifest.version;
-        CONFIGURATOR.gitRevision = manifest.gitRevision;
-    } else {
-        // These are injected by vite. If not checking
-        // for undefined occasionally there is a race
-        // condition where this fails the nwjs and cordova builds
-        CONFIGURATOR.productName = typeof __APP_PRODUCTNAME__ !== 'undefined' ? __APP_PRODUCTNAME__ : 'Betaflight Configurator';
-        CONFIGURATOR.version = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
-        CONFIGURATOR.gitRevision = typeof __APP_REVISION__ !== 'undefined' ? __APP_REVISION__ : 'unknown';
-    }
+    // These are injected by vite. If not checking
+    // for undefined occasionally there is a race
+    // condition where this fails the nwjs and cordova builds
+    CONFIGURATOR.productName = typeof __APP_PRODUCTNAME__ !== 'undefined' ? __APP_PRODUCTNAME__ : 'Betaflight Configurator';
+    CONFIGURATOR.version = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
+    CONFIGURATOR.gitRevision = typeof __APP_REVISION__ !== 'undefined' ? __APP_REVISION__ : 'unknown';
 }
 
 function cleanupLocalStorage() {
@@ -147,20 +125,6 @@ function startProcess() {
             );
         }
     });
-
-    // break into mobile UI at the same breakpoint as the CSS, not only for Cordova
-    // use window.matchMedia
-    const mediaQuery = window.matchMedia('(max-width: 576px)');
-    const handleMediaChange = function(e) {
-        if (e.matches) {
-            console.log('Using mobile UI');
-            UI_PHONES.init();
-        } else {
-            console.log('Using desktop UI');
-        }
-    };
-    mediaQuery.addEventListener('change', handleMediaChange);
-    handleMediaChange(mediaQuery);
 
     const ui_tabs = $('#tabs > ul');
     $('a', ui_tabs).click(function () {
@@ -504,22 +468,9 @@ function startProcess() {
         setDarkTheme(result.darkTheme);
     }
 
-    if (GUI.isCordova()) {
-        let darkMode = false;
-        const checkDarkMode = function() {
-            cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
-                if (success.value !== darkMode) {
-                    darkMode = success.value;
-                    DarkTheme.autoSet();
-                }
-            });
-        };
-        setInterval(checkDarkMode, 500);
-    } else {
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
-            DarkTheme.autoSet();
-        });
-    }
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
+        DarkTheme.autoSet();
+    });
 }
 
 window.isExpertModeEnabled = isExpertModeEnabled;
