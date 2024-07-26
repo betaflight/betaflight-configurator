@@ -10,7 +10,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
@@ -370,6 +370,13 @@ receiver.initialize = function (callback) {
             tab.elrsBindingPhraseEnabled = false;
         }
 
+        if (tab.elrsBindingPhraseEnabled && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="elrsModelId-number"]').val(FC.RX_CONFIG.elrsModelId);
+        } else {
+            $('input[name="elrsModelId-number"]').parent().hide();
+        }
+
+
         // UI Hooks
 
         function updateSaveButton(reboot=false) {
@@ -470,6 +477,10 @@ receiver.initialize = function (callback) {
                     saveElrsBindingPhrase(elrsUid, elrsBindingPhrase);
                 } else {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
+                }
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.RX_CONFIG.elrsModelId = parseInt($('input[name="elrsModelId-number"]').val());
                 }
             }
 

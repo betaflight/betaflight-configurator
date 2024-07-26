@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1014,6 +1014,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                 }
 
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.RX_CONFIG.elrsModelId = data.readU8();
+                }
+
                 break;
 
             case MSPCodes.MSP_FAILSAFE_CONFIG:
@@ -1904,6 +1908,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             // Introduced in 1.45
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 FC.RX_CONFIG.elrsUid.forEach(b => buffer.push8(b));
+            }
+
+            // Introduced in 1.47
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(FC.RX_CONFIG.elrsModelId);
             }
 
             break;
