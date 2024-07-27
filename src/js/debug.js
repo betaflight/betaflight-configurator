@@ -1,3 +1,7 @@
+import FC from './fc.js';
+import { API_VERSION_1_47 } from './data_storage';
+import semver from "semver";
+
 const DEBUG = {
     modes : [
         {text: "NONE"},
@@ -759,10 +763,14 @@ const DEBUG = {
             'debug[4]': 'Stick Limit',
             'debug[5]': 'Speed Limit',
         },
-        'TPA' : {
+        'TPA' : semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) ? {
             'debug[all]': 'TPA',
             'debug[0]': 'TPA Factor',
-            'debug[1]': 'TPA Factor (Wing)',
+            'debug[1]': 'TPA Pitch Angle Factor (Wing)',
+            'debug[2]': 'TPA Argument (Wing)',
+        } : {
+            'debug[all]': 'TPA',
+            'debug[0]': 'TPA Factor',
         },
         'S_TERM' : {
             'debug[all]': 'S Term',
