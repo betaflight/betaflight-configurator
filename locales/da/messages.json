@@ -230,6 +230,9 @@
     "configuratorUpdateNotice": {
         "message": "Du bruger en forældet version af <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "configuratorUpdateHelp": {
+        "message": "Når internettet er tilgængeligt, vil Configurator automatisk undersøge for mulige opdateringer."
+    },
     "configuratorUpdateWebsite": {
         "message": "Åbn udgivelseswebsted"
     },

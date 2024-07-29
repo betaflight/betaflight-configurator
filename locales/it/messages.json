@@ -2103,6 +2103,12 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modalità slider per tuning PID<\/strong><br><br>La modalità slider per tuning PID può essere:<br><br>&bull; OFF - no slider, inserisci manualmente i valori<br>&bull; RP - i cursori controllano solo Roll e Pitch, inserisci manualmente i valori Yaw<br>&bull; RPY - i cursori controllano tutti i valori PID<br><br><span class=\"message-negative\"><b>Attenzione:<\/b><\/span>Passando dalla modalità RP a RPY sovrascriverà le impostazioni di Yaw con quelle del firmware."
     },
+    "receiverHelpModelId": {
+        "message": "Se si imposta l'abbinamento del modello con un numero minore di 255, puoi specificare il numero del ricevitore nella configurazione del modello in OpenTX\/EdgeTX e attivare l'abbinamento del modello nello script ELRS LUA. I numeri sono compresi tra 0 e 63 inclusi.<br \/>Vedi la documentazione ELRS per maggiori informazioni."
+    },
+    "receiverModelId": {
+        "message": "ID Abbina Modello"
+    },
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Controlla sempre che il tuo Failsafe funzioni correttamente!<\/a><\/strong><\/b> Le impostazioni sono nella scheda Failsafe, che richiede la modalità Esperto.<br> &#8226; <b>Usa l'ultimo firmware Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disabilita il filtro hardware ADC<\/a><\/strong> nel trasmettitore se si utilizza OpenTx o EdgeTx.<br>Configurazione base: Configura correttamente le impostazioni del 'Ricevitore'. Scegli la ‘Mappa dei canali’ corretta per la tua radio. Controlla che il Rollio, Imbardata e altri grafici delle barre si muovano correttamente. Regolare l'endpoint del canale o i valori dell'intervallo nel trasmettitore a ~1000 a ~2000 e impostare il punto medio a 1500. Per ulteriori informazioni, leggere la documentazione <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
     },
