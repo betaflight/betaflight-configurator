@@ -31,6 +31,22 @@
     "dontShowAgain": {
         "message": "Nie pokazuj ponownie"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "Aplikacja musi zostać zaktualizowana",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "Musisz odświeżyć stronę, aby zobaczyć najnowsze zmiany. Odświeżenie jej teraz odświeży stronę i stracisz wszelkie niezapisane zmiany, oraz zostanie przerwana każda operacja w toku.<br><br>Czy chcesz odświeżyć teraz? Możesz również odrzucić tę wiadomość i odświeżyć stronę ręcznie później.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "Aplikacja jest gotowa do użycia w trybie offline",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "Jeśli chcesz, możesz zainstalować ją jako samodzielną aplikację na swoim urządzeniu. Wyszukaj tę opcję w pasku adresu lub menu przeglądarki.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Operacja nie jest obsługiwana przez urządzenie."
     },
@@ -62,6 +78,23 @@
     "portsSelectVirtual": {
         "message": "Tryb wirtualny ",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- Nie można znaleźć urządzenia USB ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- Nie można znaleźć urządzenia Bluetooth---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Połączono z urządzeniem Bluetooth: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Typ połączenia Bluetooth: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Błąd Bluetooth: $1"
     },
     "virtualMSPVersion": {
         "message": "Wersja wirtualnego oprogramowania"
@@ -2415,11 +2448,26 @@
         "message": "Przełącz VTX w tryb pit mode (niska moc wyjściowa, jeśli jest obsługiwana)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "adjustmentsHelp": {
+        "message": "Skonfiguruj przełączniki regulacji. Szczegółowe informacje można znaleźć w sekcji „Korekty podczas lotu”. Zmiany wprowadzone przez funkcje regulacji nie są zapisywane automatycznie."
+    },
+    "adjustmentsColumnEnable": {
+        "message": "Jeśli włączone"
+    },
     "adjustmentsColumnUsingSlot": {
         "message": "użyte gniazda"
     },
+    "adjustmentsColumnWhenChannel": {
+        "message": "kiedy kanał"
+    },
+    "adjustmentsColumnIsInRange": {
+        "message": "Zakres"
+    },
     "adjustmentsColumnThenApplyFunction": {
         "message": "następnie zastosuj"
+    },
+    "adjustmentsColumnViaChannel": {
+        "message": "przez kanał"
     },
     "adjustmentsSlot0": {
         "message": "Slot 1"
@@ -3324,6 +3372,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Wybierz typ build'u żeby zobaczyć dostępne płytki."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Wybierz swój kontroler lotu, aby zobaczyć dostępne wersje oprogramowania online. Wybierz odpowiednie oprogramowanie dla twojego kontrolera lotu."
+    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Konfigurator Betaflight obsługuje flashowanie wielu kontrolerów lotu jednocześnie.<br><br>Koncepcja ta oznacza, że ​​ten sam plik .hex oprogramowania układowego może być używany dla wszystkich płyt korzystających z tego samego MCU.<br> <br>Betaflight 4.4 wprowadza <strong>Kompilację w chmurze<\/strong><br><br>W przypadku <strong>kompilacji w chmurze<\/strong> musimy zdefiniować opcje sprzętowe obecne w Twojej kompilacji.<br><br>Aby różne kontrolery współpracowały z tym samym oprogramowaniem układowym, a określony plik konfiguracyjny jest wdrażany wraz z oprogramowaniem układowym podczas flashowania.<br><br>Dzięki kompilacji lokalnej można załadować docelowy plik konfiguracyjny lub wybrać płytkę kontrolera lotu przed załadowaniem oprogramowania układowego .hex.<br><br>Jeśli napotkasz problemy z używaniem oprogramowania układowego, rozważ dołączenie do Discorda lub otwórz plik <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problem<\/a>."
     },
@@ -3335,6 +3386,9 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Wgraj w momęcie połączenia"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Próba automatycznego flashowania kontrolera lotu (uruchamiana przez nowo wykryty port szeregowy).<br \/><br \/><span class=\"message-negative\">UWAGA<\/span>: Ta funkcja wyłącza funkcję automatycznego wykrywania i tworzenia kopii zapasowych."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Wyczyść pamięć"
@@ -3510,6 +3564,12 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Kontynuuj"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Wykrywanie"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "Wykrywanie działa tylko wtedy, gdy nie jest w trybie DFU i gdy komunikacja MSP działa. Czasami musisz ponowić próbę kilka razy, a nawet ponownie połączyć się z USB. Spróbuj połączyć się normalnie, tak aby można było zapomnieć o stosowaniu niestandardowych ustawień domyślnych. Uruchom ponownie po wgraniu - podłącz ponownie swój USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Znajdź informacje na płytce kontrolera lotu, aby wstępnie wybrać odpowiednie oprogramowanie"
@@ -4029,6 +4089,10 @@
     "pidTuningDTermSliderEnabled": {
         "message": "Użyj suwaka dla D",
         "description": "Disable or enable D Term Filter Tuning Slider"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Suwaki do regulacji charakterystyki lotu jednostki latającej (wzmocnienia PID)<br \/><br \/>Tłumienie (wzmocnienie D): Odporność na szybki ruch, minimalizacja oscylacji P.<br \/><br \/>Śledzenie (wzmocnienie P i I): ​​Ulepszenia reakcja jednostki latającej, jeśli jest zbyt wysoka, może powodować drżenie lub oscylacje.<br \/><br \/>Stick Response (feedforward): Zwiększa reakcję jednostki latającej na szybsze ruchy drążków.<br \/><br \/>Drift - Wobble (wzmocnienie, ekspert): Precyzyjna regulacja I.<br \/><br \/>Dynamiczne D (D Max, ekspert): Ustawia maksymalną wartość, do której można zwiększyć D podczas szybkich ruchów.<br \/><br \/>Tłumienie tonu (współczynnik Pitch:Roll D, ekspert): Zwiększa tłumienie na boisku względem przechyłu.<br \/><br \/>Śledzenie tonu (stosunek Pitch:Roll P, I i F, ekspert): Zwiększa stabilizująca siłę na skoku w stosunku do przechyłu.<br \/><br \/>Master Multiplier (wszystkie wzmocnienia, ekspert): podnosi lub obniża wszystkie wzmocnienia PID, utrzymując ich proporcje na stałym poziomie.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">UWAGA<\/span>: Aktualne ustawienia suwaków mogą powodować zniszczenie silnika lub niebezpieczne zachowanie jednostki latającej. Proszę postępować ostrożnie.",
@@ -5362,6 +5426,22 @@
     "osdDescElementAltitude": {
         "message": "Aktualny pułap (miga gdy jest powyżej ustawionego limitu)"
     },
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL z 1 ułamkiem dziesiętnym",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL bez miejsc po przecinku",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL z 1 liczbą dziesiętną",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL bez miejsc po przecinku",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Na czas",
         "description": "One of the elements of the OSD"
@@ -6109,6 +6189,10 @@
         "message": "Jakość połączenia",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Uzbrajanie nieaktywne",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6234,6 +6318,14 @@
     },
     "osdWarningRSNR": {
         "message": "Ostrzeżenia, gdy wartość RSNR jest poniżej ustawienia alarmu"
+    },
+    "osdWarningTextLoad": {
+        "message": "Załaduj",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Ostrzeżenia jeśli CPU LOAD kontrolera lotu jest zbyt wysokie",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "Nieznane $1"
@@ -7159,8 +7251,20 @@
     "firmwareFlasherConfigurationFile": {
         "message": "Nazwa pliku konfiguracyjnego:"
     },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Wybierz protokół radiowy, który chciałbyś dołączyć do tej kompilacji. Zauważ, że jest to lista rozwijana, ale tylko jeden element może zostać wybrany."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Wybierz protokół telemetrii, który chcesz uwzględnić w tej kompilacji. Uwaga: jest to lista rozwijana, ale można wybrać tylko jeden element. Istnieją również protokoły telemetrii, które zostaną włączone, niezależnie od dokonanego tutaj wyboru w oparciu o wybrany protokół radiowy, np. CRSF."
+    },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Automatycznie uwzględnione"
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Wybierz ogólne opcje, które chcesz uwzględnić w tej kompilacji. Pamiętaj, że jest to lista rozwijana i można wybrać wiele elementów. Takie elementy jak: VTX,  GPS,  LED itd. są tutaj zawarte."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Wybierz protokół silnika (ESC), który chcesz uwzględnić w tej kompilacji. Uwaga: jest to lista rozwijana, ale można wybrać tylko jeden element."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Szczególnie przydatne dla programistów, możesz wybrać scalone PR, określić sha zatwierdzenia lub określić PR „jeszcze do scalenia”, wpisując #, po którym następuje numer PR, np. #1234 (jest to skrót dla gałęzi „pull\/1234\/head”)."

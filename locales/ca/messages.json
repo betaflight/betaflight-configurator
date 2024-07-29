@@ -2111,6 +2111,12 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Mode de control lliscant de sintonització de PID<\/strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><span class=\"message-negative\">Important: <b><\/b><\/span>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
     },
+    "receiverHelpModelId": {
+        "message": "Si configureu la Coincidència de model a continuació amb un número diferent del 255, podeu especificar el número de receptor a la pàgina de configuració del model OpenTX\/EdgeTX i activar la Coincidència de model a l'script ELRS LUA per a aquest model. La concordança del model està entre 0 i 63 inclosos.<br \/>Consulteu la documentació d'ELRS per obtenir més informació."
+    },
+    "receiverModelId": {
+        "message": "Identificador del model de coincidència"
+    },
     "receiverHelp": {
         "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Comproveu sempre que el vostre Failsafe funciona correctament!<\/a><\/strong><\/b> La configuració es troba a la pestanya Failsafe, que requereix el mode expert.<br> &#8226; <b>Utilitzeu el darrer microprogramari Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desactiva el filtre ADC de maquinari< \/a><\/strong> al transmissor si feu servir OpenTx o EdgeTx.<br>Configuració bàsica: configureu correctament la configuració del \"Receptor\". Trieu el \"Mapa de canals\" correcte per a la vostra ràdio. Comproveu que els gràfics de Roll, Pitch i altres barres es mouen correctament. Ajusteu el punt final del canal o els valors d'interval al transmissor entre ~1000 i ~2000 i configureu el punt mitjà en 1500. Per obtenir més informació, llegiu la <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener \nnoreferrer\">documentació<\/a><\/strong>."
     },

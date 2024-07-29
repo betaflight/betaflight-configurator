@@ -2107,6 +2107,12 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>PID 튜닝 슬라이더 모드<\/strong><br><br>PID 튜닝 슬라이더 모드는 다음과 같습니다:<br><br>&bull; 끄기 - 슬라이더 없음, 값을 수동으로 입력<br>&bull; RP - 슬라이더는 롤과 피치만 제어하며, 요 값은 수동으로 입력<br>&bull; RPY - 슬라이더가 모든 PID 값을 제어<br><br><span class=\"message-negative\"><b>경고:<\/b><\/span>RP에서 RPY 모드로 전환하면, Yaw 설정을 펌웨어 설정으로 덮어씁니다."
     },
+    "receiverHelpModelId": {
+        "message": "아래의 모델 매치(Match)를 255가 아닌 숫자로 설정하면 OpenTX\/EdgeTX 모델 설정 페이지에서 수신기 번호를 지정하고 해당 모델의 ELRS LUA 스크립트에서 모델 매치(Match)를 켤 수 있습니다. Model Match는 0에서 63 사이입니다.<br \/>자세한 내용은 ELRS 문서를 참조하십시오."
+    },
+    "receiverModelId": {
+        "message": "모델 매치(Match) ID"
+    },
     "receiverHelp": {
         "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">항상 페일세이프가 올바르게 작동하는지 확인하세요!<\/a><\/strong><\/b> 페일세이프 탭에서 설정할 수 있으며, 전문가 모드가 요구됩니다.<br> &#8226; <b>최신 Tx 펌웨어를 사용하세요!<\/b><br> &#8226; OpenTx나 EdgeTx를 사용하고 있다면, 조종기에서 <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">하드웨어 ADC 필터를 비활성화하세요<\/a><\/strong>.<br>기본 설정: '수신기' 설정을 제대로 하세요. 당신의 조종기에 맞는 '채널 맵'을 선택하세요. 롤, 피치와 다른 막대 그래프가 제대로 움직이는지 확인하세요. 조종기에서 채널 엔드포인트 또는 범위 값을 ~1000과 ~2000으로 조정하고, 중심값을 1500으로 설정하세요. 더 많은 정보는 <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">문서<\/a><\/strong>를 읽으세요."
     },
