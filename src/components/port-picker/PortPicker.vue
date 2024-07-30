@@ -11,6 +11,7 @@
       @input="updateValue('virtualMspVersion', $event)"
     />
     <PortsInput
+      v-if="isSerialSupported"
       :value="value"
       :connected-bluetooth-devices="connectedBluetoothDevices"
       :connected-serial-devices="connectedSerialDevices"
@@ -74,6 +75,12 @@ export default {
   computed: {
     isConnected() {
       return CONFIGURATOR.connectionValid;
+    },
+    isSerialSupported() {
+      return "serial" in navigator;
+    },
+    isBluetoothSupported() {
+      return "bluetooth" in navigator;
     },
   },
   methods: {
