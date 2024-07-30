@@ -51,7 +51,7 @@
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
     "pwaNonCompatibleBrowser": {
-        "message": "Betaflight app requires chrome, chromium, edge or vivaldi browser.",
+        "message": "Betaflight app requires Chrome, Chromium, Edge or Vivaldi browser.",
         "description": "Message shown when using incompatible browser for PWA"
     },
     "operationNotSupported": {

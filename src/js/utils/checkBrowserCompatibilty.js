@@ -6,7 +6,7 @@ export  function checkBrowserCompatibility() {
 
     if (!compatible) {
         // const errorMessage = i18n.getMessage("pwaNonCompatibleBrowser");
-        const errorMessage = "Betaflight app requires chrome, chromium, edge or vivaldi browser.";
+        const errorMessage = "Betaflight app requires Chrome, Chromium, Edge or Vivaldi browser.";
         const newDiv = document.createElement("div");
 
         $('body')
