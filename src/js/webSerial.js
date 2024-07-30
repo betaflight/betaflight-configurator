@@ -1,5 +1,9 @@
 import { webSerialDevices, vendorIdNames } from "./serial_devices";
 
+if (!("serial" in navigator)) {
+      alert("WebSerial is not supported by this Browser.\nChrome, Edge, or Opera required.");
+}
+
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
         while (keepReadingFlag()) {
