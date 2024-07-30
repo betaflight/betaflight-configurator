@@ -236,7 +236,7 @@ setup.initialize = function (callback) {
             ];
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf('RPMFILTER'), 0, 'DSHOT_TELEM');
+                disarmFlagElements.splice(disarmFlagElements.indexOf('RPMFILTER'), 1, 'DSHOT_TELEM');
             }
 
             // Arming allowed flag
