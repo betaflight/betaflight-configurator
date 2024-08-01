@@ -50,10 +50,6 @@
         "message": "You can install it as an standalone application on your device if you want. Search for the option in your browser address bar or menu.",
         "description": "Text of the window that appears when the app is ready to be installed and used offline"
     },
-    "pwaNonCompatibleBrowser": {
-        "message": "Betaflight app requires Chrome, Chromium, Edge or Vivaldi browser.",
-        "description": "Message shown when using incompatible browser for PWA"
-    },
     "operationNotSupported": {
         "message": "This operation is not supported by your hardware."
     },

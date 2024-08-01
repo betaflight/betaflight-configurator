@@ -1,11 +1,7 @@
-import { i18n } from "../localization";
-import $ from 'jquery';
-
 export  function checkBrowserCompatibility() {
     const compatible = "serial" in navigator;
 
     if (!compatible) {
-        // const errorMessage = i18n.getMessage("pwaNonCompatibleBrowser");
         const errorMessage = "Betaflight app requires Chrome, Chromium, Edge or Vivaldi browser.";
         const newDiv = document.createElement("div");
 
