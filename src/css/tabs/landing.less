@@ -1,12 +1,14 @@
 .tab-landing {
+    display: flex;
 	min-height: 100%;
 	background: var(--surface-100) url(../../images/pattern_light.png);
 	background-size: 300px;
 	overflow: hidden;
 	.content_wrapper {
+        display: flex;
+        flex-direction: column;
 		padding: 0;
-		min-height: 100%;
-		height: 100%;
+		height: unset;
 		overflow-y: auto;
 	}
 	.content_top {
@@ -18,6 +20,7 @@
 		background-color: var(--surface-300);
 		overflow: hidden;
 		padding: 0 15px;
+        margin-top: auto;
 		.column {
 			.wrap2 {
 				padding: 10px;
@@ -37,9 +40,8 @@
 			}
 			li {
 				padding: 2px 0;
-				list-style: initial;
-				list-style-type: circle;
-				margin-left: 30px;
+                list-style: circle;
+                margin-left: 30px;
 			}
 		}
 		.text3 {
@@ -58,7 +60,7 @@
 	}
 	.content_foot {
 		clear: both;
-		padding: 10px 0px 5px;
+		padding: 10px 0 5px;
 	}
 	.logowrapper {
 		margin-left: auto;
@@ -121,24 +123,13 @@
 		}
 	}
 }
-.text1 {
+.text1, .text2, .text3 {
 	margin-top: 15px;
 	margin-bottom: 15px;
 	font-weight: normal;
 	font-size: 12px;
 }
-.text2 {
-	margin-top: 15px;
-	margin-bottom: 15px;
-	font-weight: normal;
-	font-size: 12px;
-}
-.text3 {
-	margin-top: 15px;
-	margin-bottom: 15px;
-	font-weight: normal;
-	font-size: 12px;
-}
+
 @media all and (max-width: 575px) {
 	.tab-landing {
 		.logowrapper {
