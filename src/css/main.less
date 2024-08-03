@@ -1653,9 +1653,10 @@ each(range(12), {
     }
 }
 .graph-grid {
+    width: 100%;
     display: grid;
     gap: 1rem;
-    grid-template-columns: 100% fit-content;
+    grid-template-columns: auto max-content;
 }
 @media not all and (max-width: 575px) {
     .visible-on-phone-only {
