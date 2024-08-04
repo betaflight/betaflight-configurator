@@ -122,12 +122,6 @@ const DEBUG = {
             'debug[0]': 'Battery Volt ADC',
             'debug[1]': 'Battery Volt',
         },
-        'GYRO': {
-            'debug[all]': 'Debug Gyro',
-            'debug[0]': 'Gyro Raw [X]',
-            'debug[1]': 'Gyro Raw [Y]',
-            'debug[2]': 'Gyro Raw [Z]',
-        },
         'GYRO_FILTERED': {
             'debug[all]': 'Debug Gyro Filtered',
             'debug[0]': 'Gyro Filtered [X]',
@@ -140,25 +134,12 @@ const DEBUG = {
             'debug[1]': 'Accel. Raw [Y]',
             'debug[2]': 'Accel. Raw [Z]',
         },
-        'MIXER': {
-            'debug[all]': 'Debug Mixer',
-            'debug[0]': 'Roll-Pitch-Yaw Mix [0]',
-            'debug[1]': 'Roll-Pitch-Yaw Mix [1]',
-            'debug[2]': 'Roll-Pitch-Yaw Mix [2]',
-            'debug[3]': 'Roll-Pitch-Yaw Mix [3]',
-        },
         'PIDLOOP': {
             'debug[all]': 'Debug PID',
             'debug[0]': 'Wait Time',
             'debug[1]': 'Sub Update Time',
             'debug[2]': 'PID Update Time',
             'debug[3]': 'Motor Update Time',
-        },
-        'NOTCH': {
-            'debug[all]': 'Debug Notch',
-            'debug[0]': 'Gyro Pre-Notch [roll]',
-            'debug[1]': 'Gyro Pre-Notch [pitch]',
-            'debug[2]': 'Gyro Pre-Notch [yaw]',
         },
         'GYRO_SCALED': {
             'debug[all]': 'Debug Gyro Scaled',
@@ -173,16 +154,11 @@ const DEBUG = {
             'debug[2]': 'Interpolation Step Count',
             'debug[3]': 'RC Setpoint [roll]',
         },
-        'DTERM_FILTER': {
-            'debug[all]': 'Debug Filter',
-            'debug[0]': 'DTerm Filter [roll]',
-            'debug[1]': 'DTerm Filter [pitch]',
-        },
         'ANGLERATE': {
             'debug[all]': 'Debug Angle Rate',
-            'debug[0]': 'Angle Rate[roll]',
-            'debug[1]': 'Angle Rate[pitch]',
-            'debug[2]': 'Angle Rate[yaw]',
+            'debug[0]': 'Angle Rate [roll]',
+            'debug[1]': 'Angle Rate [pitch]',
+            'debug[2]': 'Angle Rate [yaw]',
         },
         'ESC_SENSOR': {
             'debug[all]': 'ESC Sensor',
@@ -261,13 +237,6 @@ const DEBUG = {
             'debug[0]': 'Gyro Raw [X]',
             'debug[1]': 'Gyro Raw [Y]',
             'debug[2]': 'Gyro Raw [Z]',
-        },
-        'DUAL_GYRO': {
-            'debug[all]': 'Debug Dual Gyro',
-            'debug[0]': 'Gyro 1 Filtered [roll]',
-            'debug[1]': 'Gyro 1 Filtered [pitch]',
-            'debug[2]': 'Gyro 2 Filtered [roll]',
-            'debug[3]': 'Gyro 2 Filtered [pitch]',
         },
         'DUAL_GYRO_RAW': {
             'debug[all]': 'Debug Dual Gyro Raw',
@@ -349,6 +318,9 @@ const DEBUG = {
             'debug[2]': 'Deactivating Delay',
             'debug[3]': 'Deactivating Time',
         },
+        'SDIO': {
+            'debug[all]': "Debug SDIO",
+        },
         'CURRENT_SENSOR': {
             'debug[all]': 'Current Sensor',
             'debug[0]': 'milliVolts',
@@ -423,6 +395,12 @@ const DEBUG = {
             'debug[1]': 'Notch Center [roll]',
             'debug[2]': 'Lowpass Cutoff',
             'debug[3]': 'Gyro Pre-Dyn [dbg-axis]',
+        },
+        'RX_SPEKTRUM_SPI': {
+            'debug[all]': 'Debug RX Spektrum SPI',
+            'debug[0]': 'Missed packets',
+            'debug[1]': 'Error',
+            'debug[2]': 'IRQ Status',
         },
         'DSHOT_RPM_TELEMETRY': {
             'debug[all]': 'DShot Telemetry RPM',
@@ -515,25 +493,18 @@ const DEBUG = {
             'debug[2]': 'Dyn Idle D [roll]',
             'debug[3]': 'Min RPM',
         },
-        'FEEDFORWARD': {
-            'debug[all]': 'Feedforward [roll]',
-            'debug[0]': 'Setpoint, un-smoothed [roll]',
-            'debug[1]': 'Delta, smoothed [roll]',
-            'debug[2]': 'Boost, smoothed [roll]',
-            'debug[3]': 'rcCommand Delta [roll]',
-        },
         'FEEDFORWARD_LIMIT': {
             'debug[all]': 'Feedforward Limit [roll]',
             'debug[0]': 'Feedforward input [roll]',
             'debug[1]': 'Feedforward input [pitch]',
             'debug[2]': 'Feedforward limited [roll]',
         },
-        'FF_INTERPOLATED': {
+        'FEEDFORWARD': {
             'debug[all]': 'Feedforward [roll]',
-            'debug[0]': 'Setpoint Delta [roll]',
-            'debug[1]': 'Acceleration [roll]',
-            'debug[2]': 'Acceleration, clipped [roll]',
-            'debug[3]': 'Duplicate Counter [roll]',
+            'debug[0]': 'Setpoint, un-smoothed [roll]',
+            'debug[1]': 'Delta, smoothed [roll]',
+            'debug[2]': 'Boost, smoothed [roll]',
+            'debug[3]': 'rcCommand Delta [roll]',
         },
         'BLACKBOX_OUTPUT': {
             'debug[all]': 'Blackbox Output',
