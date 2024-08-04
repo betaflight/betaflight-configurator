@@ -347,7 +347,7 @@ gps.initialize = async function (callback) {
                 const positionalDop = FC.GPS_DATA.positionalDop / 100;
                 $('.GPS_info td.positionalDop').text(`${positionalDop.toFixed(2)}`);
             }
-                
+
             updateSignalStrengths();
 
             let gpsFoundPosition = false;
