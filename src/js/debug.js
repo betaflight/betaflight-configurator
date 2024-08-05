@@ -744,6 +744,23 @@ const DEBUG = {
             'debug[1]': 'S Term [pitch]',
             'debug[2]': 'S Term [yaw]',
         },
+        'SPA': {
+            'debug[all': 'SPA',
+            'debug[0]': 'Setpoint PID Attenuation [roll]',
+            'debug[1]': 'Setpoint PID Attenuation [pitch]',
+            'debug[2]': 'Setpoint PID Attenuation [yaw]',
+        },
+        'TASK': {
+            'debug[all]': 'TASK',
+            'debug[0]': 'Value',
+            'debug[1]': 'Rate (Hz)',
+            'debug[2]': 'Max (us)',
+            'debug[3]': 'Average (us)',
+            'debug[4]': 'Estimated execution time (us)',
+            'debug[5]': 'Actual execution time (us)',
+            'debug[6]': 'Difference estimated vs actual',
+            'debug[7]': 'Late count',
+        },
     },
 
     enableFields: [
