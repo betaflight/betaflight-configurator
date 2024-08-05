@@ -2103,6 +2103,12 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>PIDチューニング スライダーモード<\/strong><br><br>PIDチューニング スライダーモードは以下のように使用します: <br><br>&bull; OFF - スライダーを使用せず手動で値を入力<br>&bull; RP - スライダーはロールとピッチのみをコントロールし、ヨーの値は手動で入力<br>&bull; RPY - スライダーにてすべてのPID値をコントロール<br><br><span class=\"message-negative\"><b>警告:<\/b><\/span>RPモードからRPYモードに切り替えると、ヨーの設定がファームウェアのデフォルト値に上書きされます。"
     },
+    "receiverHelpModelId": {
+        "message": "以下のモデルマッチを255以外の数値に設定する場合は、OpenTX\/EdgeTXのモデル設定ページで受信機番号を指定し、ELRS LUAスクリプトでモデルマッチをオンにします。モデルマッチの範囲は0～63の間となります。<br \/>詳細については、ELRS ドキュメントを参照してください。"
+    },
+    "receiverModelId": {
+        "message": "モデルマッチ ID"
+    },
     "receiverHelp": {
         "message": "&#8226; <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">フェイルセーフが正しく機能しているか、常に確認をしてください！<\/a><\/strong><\/b> 設定はフェイルセーフタブにあり、Expertモードへの切り替えが必要です。<br> &#8226; <b>最新の送信機ファームウェアを適用してください！<\/b><br> &#8226; OpenTX、またはEdgeTXを使用している場合は、送信機の<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">ハードウェアADCフィルターを無効にしてください。<\/a><\/strong><br>基本セットアップ:【受信機】の設定を正しく行ってください。送信機の正しい【チャンネルマップ】を選択します。ロール、ピッチ、その他のスライダーが正しく動くことを確認してください。送信機のチャンネルのエンドポイントまたは動作範囲の値を1000～2000に調整し、中央値を1500に設定します。詳しくは<strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">マニュアル<\/a><\/strong>をご確認ください。"
     },
