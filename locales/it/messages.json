@@ -2140,13 +2140,13 @@
         "message": "Deadband RC"
     },
     "receiverHelpDeadband": {
-        "message": "Questi sono i valori (in us) entro cui l'ingresso RC può variare prima che sia considerato valido. Per trasmittenti che hanno valori altalenanti in uscita, questo valore può essere aumentato se l'ingresso RC si muove troppo quando il comando è fermo."
+        "message": "Questi sono i valori (in us) per cui l'ingresso RC può variare prima che sia considerato valido. Per trasmittenti con valori instabili in uscita, aumentare il valore se l'ingresso RC si muove troppo quando il comando è inattivo."
     },
     "receiverYawDeadband": {
         "message": "Deadband Yaw"
     },
     "receiverHelpYawDeadband": {
-        "message": "Questi sono i valori (in us) entro cui l'ingresso RC può variare prima che sia considerato valido. Per trasmittenti che hanno valori altalenanti in uscita, questo valore può essere aumentato se l'ingresso RC è irregolare quando il comando è fermo. <strong>Questa impostazione è valida solo per l'imbardata (Yaw).<\/strong>"
+        "message": "Questi sono i valori (in us) per cui l'ingresso RC può variare prima che sia considerato valido. Per trasmittenti con valori instabili in uscita, aumentare il valore se l'ingresso RC si muove troppo quando il comando è inattivo. <strong>Questa impostazione è valida solo per l'imbardata (Yaw).<\/strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "Deadband Gas 3D"

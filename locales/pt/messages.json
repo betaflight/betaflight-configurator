@@ -2103,6 +2103,12 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modo Slider de Ajuste dos Pid<\/strong><br><br>O modo Slider de ajuste Pid pode ser:<br><br>&bull; DESLIGADO - sem sliders, insira os valores manualmente<br>&bull; RP - os sliders ajustam somente o Roll e o Pitch, digite os valores do Yaw manualmente<br>&bull; RPY - os sliders ajustam todos os valores do PID<br><br><span class=\"message-negative\"><b>Aviso:<\/b><\/span>Indo do modo RP para RPY irão sobrescrever as configurações do Yaw com definições do firmware."
     },
+    "receiverHelpModelId": {
+        "message": "Se definir abaixo a Correspondência de Modelo para um número diferente de 255, pode especificar o número de receptor na página de configuração do modelo OpenTX\/EdgeTX e ativar a Correspondência de Modelo no script LUA ELRS para esse modelo. A correspondência de modelo é entre 0 e 63 inclusivé.<br \/>Consulte a documentação do ELRS para mais informações."
+    },
+    "receiverModelId": {
+        "message": "ID de Correspondência de Modelo"
+    },
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Verifique sempre que o Failsafe está a trabalhar bem!<\/a><\/strong><\/b> As definições estão na aba Failsafe, que requere Modo Especialista.<br> &#8226; <b>Use o último firmware no Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desative o filtro ADC<\/a><\/strong> no rádio se usar o OpenTx ou o EdgeTx.<br>Configuração Básica: Configure as definições do ´Recetor´ corretamente. Escolha o ´Mapa de Canais’ correto para o seu rádio. Verifique que o Roll, Pitch e outras barras do gráfico se movem corretamente. Ajuste o endpoint do canal ou os valores do rádio entre ~1000 e ~2000, e coloque o ponto médio em 1500. Para mais informação, leia a <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentação<\/a><\/strong>."
     },
