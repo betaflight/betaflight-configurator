@@ -1658,6 +1658,52 @@ each(range(12), {
     gap: 1rem;
     grid-template-columns: auto max-content;
 }
+.plot_control {
+    .x {
+        background-color: #1fb1f0;
+    }
+    .y {
+        background-color: #97d800;
+    }
+    .z {
+        background-color: #e24761;
+    }
+    .x, .y, .z {
+        color: black;
+    }
+}
+.line {
+    &:nth-child(1) {
+        stroke: #1fb1f0;
+    }
+    &:nth-child(2) {
+        stroke: #97d800;
+    }
+    &:nth-child(3) {
+        stroke: #e24761;
+    }
+}
+.legend {
+    .item {
+        &:nth-child(1) {
+            fill: #1fb1f0;
+        }
+        &:nth-child(2) {
+            fill: #97d800;
+        }
+        &:nth-child(3) {
+            fill: #e24761;
+        }
+    }
+}
+.axis {
+    path, line {
+        fill: none;
+        stroke: var(--text);
+        stroke-width: 1px;
+        shape-rendering: crispEdges;
+    }
+}
 @media not all and (max-width: 575px) {
     .visible-on-phone-only {
         display: none !important;
