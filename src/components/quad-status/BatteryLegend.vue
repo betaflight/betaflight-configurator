@@ -39,7 +39,7 @@ export default {
   right: 0;
   width: 40px;
   text-align: left;
-  color: silver;
+  color: var(--surface-800);
   margin-left: -8px;
   padding-right: 4px;
 }
