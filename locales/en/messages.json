@@ -5606,6 +5606,13 @@
     "osdDescElementDebug": {
         "message": "Debug variables"
     },
+    "osdTextElementDebug2": {
+        "message": "Debug2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Debug variables for debug 4-7"
+    },
     "osdTextElementPIDRoll": {
         "message": "PID roll",
         "description": "One of the elements of the OSD"
