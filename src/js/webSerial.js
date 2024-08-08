@@ -1,4 +1,5 @@
 import { webSerialDevices, vendorIdNames } from "./serial_devices";
+import { checkBrowserCompatibility } from "./utils/checkBrowserCompatibilty";
 
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
@@ -17,6 +18,9 @@ async function* streamAsyncIterable(reader, keepReadingFlag) {
 class WebSerial extends EventTarget {
     constructor() {
         super();
+
+        checkBrowserCompatibility();
+
         this.connected = false;
         this.openRequested = false;
         this.openCanceled = false;
