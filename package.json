@@ -104,7 +104,7 @@
     "gulp-yarn": "^3.0.0",
     "gulp-zip": "^5.1.0",
     "husky": "^4.3.0",
-    "nw-builder": "3.8.3",
+    "nw-builder": "3.8.6",
     "os": "^0.1.2",
     "postcss": "^8.4.31",
     "rollup": "^3.29.4",
