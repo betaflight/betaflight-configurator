@@ -7371,7 +7371,7 @@
         "message": "Automatically Included"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items may be selected. Such items as fixes, e.g. AKK VTX, are included here."
+        "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items may be selected. Such items as fixes, e.g. AKK VTX, are included here. If you are unsure, leave this as the default.<br /><br /><b>Note</b>: Be aware that some options may not be compatible with others, and may cause issues if selected together. The options <b>OSD_SD</b> or <b>OSD_HD</b> are mutually exclusive, for example."
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Select the motor (ESC) protocol you would like included in this build. Note this is a drop down, but only one item may be selected."
