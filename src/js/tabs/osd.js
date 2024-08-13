@@ -1513,6 +1513,15 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: '1:23.456',
         },
+        DEBUG2: {
+            name: 'DEBUG2',
+            text: 'osdTextElementDebug2',
+            desc: 'osdDescElementDebug2',
+            defaultPosition: -1,
+            draw_order: 560,
+            positionable: true,
+            preview: 'DBG2     0     0     0     0',
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && have_sensor(FC.CONFIG.activeSensors, 'gps')) {
@@ -1960,6 +1969,11 @@ OSD.chooseFields = function() {
         ]);
     }
 
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.DEBUG2,
+        ]);
+    }
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
     F = OSD.constants.ALL_STATISTIC_FIELDS;
