@@ -4838,6 +4838,15 @@
     "powerBatteryWarning": {
         "message": "Warning Cell Voltage"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "The voltage that is considered critically low, and will trigger the corresponding warnings.  'LAND NOW' warning in OSD and audible beeping if a beeper is soldered. Also assists in cell-count calculation."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "The voltage of a fully charged Cell. Assists with cell-count calculation."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "The voltage that is considered low, and will trigger the corresponding warnings. 'LOW BATTERY' warning in OSD."
+    },
     "powerCalibrationManagerButton": {
         "message": "Calibration"
     },
