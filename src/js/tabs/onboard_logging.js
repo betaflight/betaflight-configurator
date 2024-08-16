@@ -14,6 +14,8 @@ import $ from 'jquery';
 import DEBUG from "../debug";
 import FileSystem from "../FileSystem";
 import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
+import NotificationManager from "../../js/utils/notifications";
+import { get as getConfig } from '../ConfigStorage';
 
 let sdcardTimer;
 
@@ -380,6 +382,8 @@ onboard_logging.initialize = function (callback) {
         }
 
         $(".dataflash-saving").addClass("done");
+
+        NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashDownloadDoneNotification'), icon: "/images/pwa/favicon.ico"});
     }
 
     function flash_update_summary(onDone) {
@@ -498,6 +502,9 @@ onboard_logging.initialize = function (callback) {
             if (CONFIGURATOR.connectionValid && !eraseCancelled) {
                 if (FC.DATAFLASH.ready) {
                     $(".dataflash-confirm-erase")[0].close();
+                    if (getConfig('showNotifications')) {
+                        NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashEraseDoneNotification'), icon: "/images/pwa/favicon.ico"});
+                    }
                 } else {
                     setTimeout(poll_for_erase_completion, 500);
                 }

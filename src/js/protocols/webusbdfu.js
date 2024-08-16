@@ -17,6 +17,8 @@ import GUI, { TABS } from "../gui";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import { usbDevices } from "../usb_devices";
+import NotificationManager from "../utils/notifications";
+import { get as getConfig } from '../ConfigStorage';
 
 class WEBUSBDFU_protocol extends EventTarget {
     constructor() {
@@ -1064,12 +1066,22 @@ class WEBUSBDFU_protocol extends EventTarget {
                                 // update progress bar
                                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingSuccessful'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID);
 
+                                // Show notification
+                                if (getConfig('showNotifications')) {
+                                    NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('programmingSuccessfulNotification'), icon: "/images/pwa/favicon.ico"});
+                                }
+
                                 // proceed to next step
                                 this.leave();
                             } else {
                                 console.log('Programming: FAILED');
                                 // update progress bar
                                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
+
+                                // Show notification
+                                if (getConfig('showNotifications')) {
+                                    NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('programmingFailedNotification'), icon: "/images/pwa/favicon.ico"});
+                                }
 
                                 // disconnect
                                 this.cleanup();

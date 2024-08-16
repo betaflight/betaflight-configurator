@@ -28,7 +28,7 @@ options.initialize = function (callback) {
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
         TABS.options.initShowDevToolsOnStartup();
-
+        TABS.options.initShowNotifications();
         TABS.options.initShowWarnings();
 
         GUI.content_ready(callback);
@@ -179,6 +179,16 @@ options.initShowDevToolsOnStartup = function () {
     $('div.showDevToolsOnStartup input')
         .prop('checked', !!result.showDevToolsOnStartup)
         .change(function () { setConfig({ showDevToolsOnStartup: $(this).is(':checked') }); })
+        .change();
+};
+
+options.initShowNotifications = function () {
+    const result = getConfig("showNotifications");
+    $("div.showNotifications input")
+        .prop("checked", !!result.showNotifications)
+        .change(function () {
+            setConfig({ showNotifications: $(this).is(":checked") });
+        })
         .change();
 };
 
