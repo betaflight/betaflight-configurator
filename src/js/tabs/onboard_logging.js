@@ -471,7 +471,7 @@ onboard_logging.initialize = function (callback) {
 
         const filename = generateFilename(prefix, suffix);
 
-        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: 'HEX'}), '.hex')
+        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', { typeof: suffix }), `.${suffix}`)
         .then((file) => {
             console.log("File picked:", file);
             onComplete(file);
