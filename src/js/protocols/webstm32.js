@@ -18,6 +18,8 @@ import $ from 'jquery';
 import serial from "../webSerial";
 import DFU from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
+import NotificationManager from "../utils/notifications";
+import { get as getConfig } from '../ConfigStorage';
 
 function readSerialAdapter(event) {
     read_serial(event.detail.buffer);
@@ -802,12 +804,22 @@ class STM32Protocol {
                             // update progress bar
                             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingSuccessful'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID);
 
+                            // Show notification
+                            if (getConfig('showNotifications')) {
+                                NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('programmingSuccessfulNotification'), icon: "/images/pwa/favicon.ico"});
+                            }
+
                             // proceed to next step
                             this.upload_procedure(7);
                         } else {
                             console.log('Programming: FAILED');
                             // update progress bar
                             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
+
+                            // Show notification
+                            if (getConfig('showNotifications')) {
+                                NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('programmingFailedNotification'), icon: "/images/pwa/favicon.ico"});
+                            }
 
                             // disconnect
                             this.upload_procedure(99);
