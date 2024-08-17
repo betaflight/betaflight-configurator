@@ -79,13 +79,12 @@
                 </ul>
             </div>
             <div id="dataflash_wrapper_global">
-                <div class="noflash_global" align="center" i18n="sensorDataFlashNotFound"></div>
+                <div class="noflash_global" i18n="sensorDataFlashNotFound"></div>
                 <ul class="dataflash-contents_global">
-                    <li class="dataflash-free_global">
-                        <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
-                    </li>
+                    <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
+                    <progress class="dataflash-progress_global" value="32" max="100"></progress>
                 </ul>
-                <div id="expertMode" align="center">
+                <div id="expertMode">
                     <label>
                         <input name="expertModeCheckbox" class="togglesmall" type="checkbox"/>
                         <span i18n="expertMode" class="expertModeText"></span>
