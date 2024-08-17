@@ -455,22 +455,25 @@ input[type="number"] {
     flex-direction: column;
     gap: 0.5rem;
     padding: 0.5rem;
-    background-color: var(--surface-300);
     border-radius: 0.5rem;
-    li {
-        background-color: var(--surface-600);
-        height: 0.35rem;
-        position: relative;
-        border-radius: 999px;
-        width: 100% !important;
-    }
+    background-color: var(--surface-300);
+
     .notsupported_global {
         display: none;
     }
+
     progress {
+        height: 0.35rem;
+        border-radius: 12px;
+        appearance: none;
+        -webkit-appearance: none;
+        overflow: hidden;
         &::-webkit-progress-bar {
-            height: 8px;
-            background-color: var(--surface-300);
+            background-color: var(--surface-500);
+        }
+        &::-webkit-progress-value {
+            background-color: var(--primary-500);
+            border-radius: 0 12px 12px 0;
         }
     }
 }
