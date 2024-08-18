@@ -1021,8 +1021,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_FAILSAFE_CONFIG:
-                FC.FAILSAFE_CONFIG.failsafe_delay = data.readU8();
-                FC.FAILSAFE_CONFIG.failsafe_off_delay = data.readU8();
+                FC.FAILSAFE_CONFIG.failsafe_delay = data.readU16();
+                FC.FAILSAFE_CONFIG.failsafe_off_delay = data.readU16();
                 FC.FAILSAFE_CONFIG.failsafe_throttle = data.readU16();
                 FC.FAILSAFE_CONFIG.failsafe_switch_mode = data.readU8();
                 FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay = data.readU16();
@@ -1918,8 +1918,8 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             break;
 
         case MSPCodes.MSP_SET_FAILSAFE_CONFIG:
-            buffer.push8(FC.FAILSAFE_CONFIG.failsafe_delay)
-                .push8(FC.FAILSAFE_CONFIG.failsafe_off_delay)
+            buffer.push16(FC.FAILSAFE_CONFIG.failsafe_delay)
+                .push16(FC.FAILSAFE_CONFIG.failsafe_off_delay)
                 .push16(FC.FAILSAFE_CONFIG.failsafe_throttle)
                 .push8(FC.FAILSAFE_CONFIG.failsafe_switch_mode)
                 .push16(FC.FAILSAFE_CONFIG.failsafe_throttle_low_delay)
