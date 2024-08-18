@@ -7371,7 +7371,7 @@
         "message": "Automatically Included"
     },
     "firmwareFlasherOptionsDescription": {
-        "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items may be selected. Such items as fixes, e.g. AKK VTX, are included here. If you are unsure, leave this as the default. <br /><br /><b>Note</b>: Do not add OSD_HD when using analog video as the configuration favors digital settings."
+        "message": "Select the generic options you would like included in this build. Note this is a drop down, and multiple items may be selected. Such items as fixes, e.g. AKK VTX, are included here. <br /><br /><b>Note</b>: Remove the OSD_HD option on analog FPV builds otherwise configuration would be setup as digital by default."
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Select the motor (ESC) protocol you would like included in this build. Note this is a drop down, but only one item may be selected."
