@@ -5520,6 +5520,13 @@
     "osdDescElementDebug": {
         "message": "디버그 변수"
     },
+    "osdTextElementDebug2": {
+        "message": "디버그2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "디버그 4-7을 위한 디버그 변수"
+    },
     "osdTextElementPIDRoll": {
         "message": "PID 롤",
         "description": "One of the elements of the OSD"
@@ -7294,5 +7301,24 @@
     "betaflightSupportButton": {
         "message": "위키",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "긴 작업에 대한 알림 표시"
+    },
+    "flashEraseDoneNotification": {
+        "message": "데이터 플래시 삭제가 완료되었습니다",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "데이터 플래시 로그가 다운로드되었습니다",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "FC가 성공적으로 프로그래밍되었습니다",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "FC 프로그래밍 실패",
+        "description": "Notification message when programming is unsuccessful"
     }
 }

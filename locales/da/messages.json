@@ -5514,6 +5514,13 @@
     "osdDescElementDebug": {
         "message": "Brugerstyret logning til debug"
     },
+    "osdTextElementDebug2": {
+        "message": "Debug2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Debug variable til debug 4-7"
+    },
     "osdTextElementPIDRoll": {
         "message": "PID krængror",
         "description": "One of the elements of the OSD"
@@ -7288,5 +7295,24 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Vis notifikationer ved langvarige operationer"
+    },
+    "flashEraseDoneNotification": {
+        "message": "Dataflash er slettet",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Dataflash logge er hentet",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "FC er brændt \/ programmeret",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "FC brænding \/ programmering mislykkedes",
+        "description": "Notification message when programming is unsuccessful"
     }
 }

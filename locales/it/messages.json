@@ -4751,6 +4751,15 @@
     "powerBatteryWarning": {
         "message": "Tensione cella avviso"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "La tensione considerata molto bassa, attiverà delle avvertenze corrispondenti. Avviso 'LAND NOW' in OSD e segnale acustico tramite beeper se connesso. È usato per il calcolo del conteggio celle."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "La tensione di una cella completamente carica. È usato per il calcolo del conteggio celle."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "La tensione considerata bassa, attiverà delle avvertenze corrispondenti. Avviso 'LOW BATTERY' in OSD."
+    },
     "powerCalibrationManagerButton": {
         "message": "Calibrazione"
     },
@@ -5515,6 +5524,13 @@
     },
     "osdDescElementDebug": {
         "message": "Variabili di debug"
+    },
+    "osdTextElementDebug2": {
+        "message": "Debug2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Variabili per il debug 4-7"
     },
     "osdTextElementPIDRoll": {
         "message": "PID roll",
@@ -7290,5 +7306,24 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Mostra notifiche per operazioni lunghe"
+    },
+    "flashEraseDoneNotification": {
+        "message": "Cancellazione completata",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Log flash scaricati",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "FC programmato con successo",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "Programmazione FC fallita",
+        "description": "Notification message when programming is unsuccessful"
     }
 }

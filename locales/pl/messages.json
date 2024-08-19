@@ -1216,7 +1216,7 @@
         "message": "Użyj telemetrii ESC KISS\/BLHeli_32 <b> na osobnym przewodzie<\/b>"
     },
     "featureANTI_GRAVITY": {
-        "message": "Wyłącz na stałe"
+        "message": "Włącz na stałe"
     },
     "featureANTI_GRAVITYTip": {
         "message": "Jeśli ta opcja jest wyłączona, tryb ANTI GRAVITY może być włączany za pomocą przełącznika."
@@ -4749,6 +4749,15 @@
     "powerBatteryWarning": {
         "message": "Ostrzeżenie o napięciu Celi"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "Napięcie uznawane za krytycznie niskie, powodujące wyświetlenie odpowiednich ostrzeżeń.  Ostrzeżenie „Wyląduj TERAZ” w menu OSD i sygnał dźwiękowy w przypadku zastosowania buzzera generującego dzwięk. Pomaga także w obliczaniu liczby cell bateri."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "Napięcie w pełni naładowanej celli bateri. Pomaga w obliczeniu liczby celli bateri."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "Napięcie uznawane za niskie, powodujące wyświetlenie odpowiednich ostrzeżeń. Ostrzeżenie „Niski poziom baterii” w menu OSD."
+    },
     "powerCalibrationManagerButton": {
         "message": "Kalibracja"
     },
@@ -5513,6 +5522,13 @@
     },
     "osdDescElementDebug": {
         "message": "Zmienne debugowania"
+    },
+    "osdTextElementDebug2": {
+        "message": "Debug 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Zmienne debugowania dla debugowania 4-7"
     },
     "osdTextElementPIDRoll": {
         "message": "PID roll",
@@ -7288,5 +7304,24 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Pokaż powiadomienia dla długich operacji"
+    },
+    "flashEraseDoneNotification": {
+        "message": "Usuwanie danych zostało zakończone",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Dzienniki danych zostały pobrane",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "Kontroler lotu został zaprogramowany pomyślnie",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "Programowanie kontrolera lotu nie powiodło się",
+        "description": "Notification message when programming is unsuccessful"
     }
 }
