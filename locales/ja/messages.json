@@ -5516,6 +5516,13 @@
     "osdDescElementDebug": {
         "message": "デバッグ変数"
     },
+    "osdTextElementDebug2": {
+        "message": "デバッグ2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "デバッグ用変数 debug 4～7"
+    },
     "osdTextElementPIDRoll": {
         "message": "PID ロール",
         "description": "One of the elements of the OSD"

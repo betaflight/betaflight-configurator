@@ -1188,7 +1188,7 @@
         "message": "Если эта настройка включена и не обнаружено подключение дисплея (или выключено питание дисплея), будет задержка  примерно 10 секунд при каждой перезагрузке полетного контроллера."
     },
     "featureOSD": {
-        "message": "On Screen Display (отображение данных поверх изображения камеры)"
+        "message": "Отображение данных поверх изображения камеры"
     },
     "featureOSDTip": {
         "message": "Включить OSD. Настройки доступны в разделе OSD"
@@ -4751,6 +4751,15 @@
     "powerBatteryWarning": {
         "message": "Предупреждать, если напряжение на банке"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "Напряжение, считающееся критически низким, вызовет соответствующие предупреждение. Предупреждение 'LAND NOW' в OSD и звуковой сигнал, если он включен. Также участвует в расчете количества ячеек."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "Напряжение полностью заряженной ячейки. Используется при расчете количества ячеек."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "Напряжение считается низким, и вызовет соответствующее предупреждение 'LOW BATTERY' в OSD."
+    },
     "powerCalibrationManagerButton": {
         "message": "Калибровка"
     },
@@ -5515,6 +5524,13 @@
     },
     "osdDescElementDebug": {
         "message": "Показывать Debug-переменные"
+    },
+    "osdTextElementDebug2": {
+        "message": "Debug2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Переменные отладки 4-7"
     },
     "osdTextElementPIDRoll": {
         "message": "PID крена",
@@ -7290,5 +7306,24 @@
     "betaflightSupportButton": {
         "message": "База знаний",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Показывать уведомления для длительных операций"
+    },
+    "flashEraseDoneNotification": {
+        "message": "Удаление данных завершено",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Логи загружены",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "ПК успешно запрограммирован",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "Не удалось запрограммировать ПК",
+        "description": "Notification message when programming is unsuccessful"
     }
 }
