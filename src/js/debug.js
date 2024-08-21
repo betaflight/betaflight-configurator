@@ -96,6 +96,8 @@ const DEBUG = {
         {text: "EZLANDING"},
         {text: "TPA"},
         {text: "S_TERM"},
+        {text: "SPA"},
+        {text: "TASK"},
     ],
 
     fieldNames: {
