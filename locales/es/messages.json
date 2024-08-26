@@ -4751,6 +4751,15 @@
     "powerBatteryWarning": {
         "message": "Aviso Voltaje por Celda"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "El voltaje que se considera críticamente bajo, y activará las advertencias correspondientes. Advertencia 'LAND NOW' en el OSD y pitidos si un zumbador está soldado. También se utiliza en el cálculo del número de celdas."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "El voltaje de una célula completamente cargada. Se utiliza en el cálculo del número de celdas."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "El voltaje que se considera bajo, y activará las advertencias correspondientes. Aviso de 'LOW BATTERY' en el OSD."
+    },
     "powerCalibrationManagerButton": {
         "message": "Calibración"
     },
@@ -5515,6 +5524,13 @@
     },
     "osdDescElementDebug": {
         "message": "Variables de depuración"
+    },
+    "osdTextElementDebug2": {
+        "message": "Depuración2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Variables de depuración 4 a 7"
     },
     "osdTextElementPIDRoll": {
         "message": "PID: roll",
@@ -7290,5 +7306,24 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Mostrar notificaciones para operaciones largas"
+    },
+    "flashEraseDoneNotification": {
+        "message": "El borrado de la memoria flash ha sido completado",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Los registros de la memoria flash han sido descargados",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "La placa ha sido programada correctamente",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "Error al programar la placa",
+        "description": "Notification message when programming is unsuccessful"
     }
 }

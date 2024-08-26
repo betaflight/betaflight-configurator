@@ -4751,6 +4751,15 @@
     "powerBatteryWarning": {
         "message": "Aviso de Voltagem de Célula"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "A voltagem que é considerada criticamente baixa e acionará os avisos correspondentes. Aviso de 'ATERRE AGORA' em OSD e som audível se um beeper estiver soldado. Também ajuda no cálculo de contagem de células."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "A voltagem de uma célula totalmente carregada. Ajuda no cálculo de contagem de células."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "A voltagem que é considerada baixa e acionará os avisos correspondentes. Aviso de 'BATTERIA FRACA' no OSD."
+    },
     "powerCalibrationManagerButton": {
         "message": "Calibração"
     },
@@ -5515,6 +5524,13 @@
     },
     "osdDescElementDebug": {
         "message": "Depuração de variáveis"
+    },
+    "osdTextElementDebug2": {
+        "message": "Depuração2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Variáveis de depuração para depuração 4-7"
     },
     "osdTextElementPIDRoll": {
         "message": "Valores PID do Roll",
@@ -7290,5 +7306,24 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Mostrar notificações para operações longas"
+    },
+    "flashEraseDoneNotification": {
+        "message": "O apagar da Dataflash foi concluído",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Efetuado o download dos logs da Dataflash",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "A Controladora foi programada com sucesso",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "A programação da Controladora falhou",
+        "description": "Notification message when programming is unsuccessful"
     }
 }
