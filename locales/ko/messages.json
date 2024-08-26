@@ -4755,6 +4755,15 @@
     "powerBatteryWarning": {
         "message": "셀 전압 경고"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "전압이 매우 낮으면 관련된 경고를 트리거합니다. OSD에 'LAND NOW' 경고와 비퍼가 장착된 경우 청각적인 비퍼음 경고를 합니다. 또한 셀-수 계산을 돕습니다."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "완전 충전된 셀 전압. 셀-수 계산을 돕습니다."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "전압이 매우 낮으면 관련된 경고를 트리거합니다. OSD에서 'LOW BATTERY' 경고를 표시합니다."
+    },
     "powerCalibrationManagerButton": {
         "message": "교정"
     },
