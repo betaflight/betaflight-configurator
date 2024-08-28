@@ -5,7 +5,7 @@ import MSP from "../msp";
 import FC from "../fc";
 import MSPCodes from "../msp/MSPCodes";
 import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
-import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import semver from 'semver';
 import $ from 'jquery';
 
@@ -336,6 +336,11 @@ failsafe.initialize = function (callback) {
             $('input[name="gps_rescue_min_start_dist"]').attr({"min": 10, "max": 30})
             .closest('.number').children('.helpicon').attr("i18n_title", "failsafeGpsRescueItemMinStartDistHelp");
             $('input[name="gps_rescue_descend_rate"]').attr({"min": 0.2, "max": 50.0});
+        }
+
+        // Update attributes for API version 4.6
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="failsafe_off_delay"]').attr({"max": 250}); // renamed to "failsafe_landing_time"
         }
 
         $('a.save').click(function () {
