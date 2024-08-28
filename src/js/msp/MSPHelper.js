@@ -493,10 +493,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
                 FC.MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
                 FC.MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
-                FC.MOTOR_CONFIG.motor_count = data.readU8();
-                FC.MOTOR_CONFIG.motor_poles = data.readU8();
-                FC.MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
-                FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                     FC.MOTOR_CONFIG.motor_count = data.readU8();
