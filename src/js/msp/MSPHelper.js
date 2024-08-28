@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_42, API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -505,7 +505,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
                 }
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     FC.MOTOR_CONFIG.use_dshot_edt = data.readU8() != 0;
                 }
                 break;
@@ -1832,7 +1832,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 buffer.push8(FC.MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.MOTOR_CONFIG.use_dshot_edt ? 1 : 0);
             }
             break;

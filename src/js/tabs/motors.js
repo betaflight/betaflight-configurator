@@ -12,12 +12,13 @@ import FC from "../fc";
 import MSP from "../msp";
 import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_42, API_VERSION_1_44, API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
 import * as d3 from 'd3';
 import $ from 'jquery';
+import semver from 'semver';
 
 const motors = {
     previousDshotBidir: null,
@@ -707,10 +708,11 @@ motors.initialize = async function (callback) {
             const newValue = (value !== FC.MOTOR_CONFIG.use_dshot_telemetry) ? 'On' : 'Off';
             self.analyticsChanges['BidirectionalDshot'] = newValue;
             FC.MOTOR_CONFIG.use_dshot_telemetry = value;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && !value) {
-                const dshotEdtElement = $('input[id="dshotEdt"]');
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && !value) {
                 FC.MOTOR_CONFIG.use_dshot_edt = value;
+
+                const dshotEdtElement = $('input[id="dshotEdt"]');
                 dshotEdtElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_edt).trigger("change");
             }
 
@@ -795,8 +797,8 @@ motors.initialize = async function (callback) {
 
             $('.escSensor').toggle(
                 protocolConfigured && digitalProtocol && (
-                semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) ||
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && !FC.MOTOR_CONFIG.use_dshot_edt));
+                    semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) ||
+                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && !FC.MOTOR_CONFIG.use_dshot_edt));
 
             $('div.checkboxDshotBidir').toggle(protocolConfigured && digitalProtocol);
             $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible);
@@ -805,8 +807,11 @@ motors.initialize = async function (callback) {
 
             $('#escProtocolDisabled').toggle(!protocolConfigured);
             $('.checkboxDshotEdt').toggle(
-                protocolConfigured && digitalProtocol && dshotBidirElement.is(':checked') &&
-                !$("input[name='ESC_SENSOR']").is(':checked') && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46));
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
+                protocolConfigured &&
+                digitalProtocol &&
+                dshotBidirElement.is(':checked') &&
+                !$("input[name='ESC_SENSOR']").is(':checked'));
 
             //trigger change unsyncedPWMSwitch to show/hide Motor PWM freq input
             unsyncedPWMSwitchElement.trigger("change");
@@ -828,9 +833,8 @@ motors.initialize = async function (callback) {
 
         //trigger change dshotBidir and ESC_SENSOR to show/hide Motor Poles tab
         dshotBidirElement.change(updateVisibility).trigger("change");
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const dshotEdtElement = $('input[id="dshotEdt"]');
-
             dshotEdtElement.change(updateVisibility).trigger("change");
         }
         $("input[name='ESC_SENSOR']").on("change", updateVisibility).trigger("change");
