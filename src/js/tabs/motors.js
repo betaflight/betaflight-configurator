@@ -12,14 +12,17 @@ import FC from "../fc";
 import MSP from "../msp";
 import { mixerList } from "../model";
 import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
 import * as d3 from 'd3';
 import $ from 'jquery';
+import semver from 'semver';
 
 const motors = {
     previousDshotBidir: null,
+    previousDshotEdt: null,
     previousFilterDynQ: null,
     previousFilterDynCount: null,
     analyticsChanges: {},
@@ -275,6 +278,7 @@ motors.initialize = async function (callback) {
             feature12:          FC.FEATURE_CONFIG.features.isEnabled('3D'),
             feature27:          FC.FEATURE_CONFIG.features.isEnabled('ESC_SENSOR'),
             dshotBidir:         FC.MOTOR_CONFIG.use_dshot_telemetry,
+            dshotEdt:           FC.MOTOR_CONFIG.use_dshot_edt,
             motorPoles:         FC.MOTOR_CONFIG.motor_poles,
             digitalIdlePercent: FC.PID_ADVANCED_CONFIG.digitalIdlePercent,
             idleMinRpm:         FC.ADVANCED_TUNING.idleMinRpm,
@@ -695,6 +699,7 @@ motors.initialize = async function (callback) {
         dshotBidirElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_telemetry).trigger("change");
 
         self.previousDshotBidir = FC.MOTOR_CONFIG.use_dshot_telemetry;
+        self.previousDshotEdt = FC.MOTOR_CONFIG.use_dshot_edt;
         self.previousFilterDynQ = FC.FILTER_CONFIG.dyn_notch_q;
         self.previousFilterDynCount = FC.FILTER_CONFIG.dyn_notch_count;
 
@@ -703,6 +708,13 @@ motors.initialize = async function (callback) {
             const newValue = (value !== FC.MOTOR_CONFIG.use_dshot_telemetry) ? 'On' : 'Off';
             self.analyticsChanges['BidirectionalDshot'] = newValue;
             FC.MOTOR_CONFIG.use_dshot_telemetry = value;
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && !value) {
+                FC.MOTOR_CONFIG.use_dshot_edt = value;
+
+                const dshotEdtElement = $('input[id="dshotEdt"]');
+                dshotEdtElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_edt).trigger("change");
+            }
 
             const rpmFilterIsDisabled = FC.FILTER_CONFIG.gyro_rpm_notch_harmonics === 0;
             FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
@@ -733,6 +745,21 @@ motors.initialize = async function (callback) {
                 FC.FILTER_CONFIG.dyn_notch_count = self.previousFilterDynCount;
                 FC.FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
             }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                const dshotEdtElement = $('input[id="dshotEdt"]');
+
+                dshotEdtElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_edt).trigger("change");
+                dshotEdtElement.on("change", function () {
+                    const value = dshotEdtElement.is(':checked');
+                    const newValue = (value !== FC.MOTOR_CONFIG.use_dshot_edt) ? 'On' : 'Off';
+
+                    self.analyticsChanges['DshotEdt'] = newValue;
+                    FC.MOTOR_CONFIG.use_dshot_edt = value;
+                });
+            }
+
+            $('input[name="motorPoles"]').val(FC.MOTOR_CONFIG.motor_poles);
         });
 
         $('input[name="motorPoles"]').val(FC.MOTOR_CONFIG.motor_poles);
@@ -768,7 +795,10 @@ motors.initialize = async function (callback) {
                 $('div.digitalIdlePercent').hide();
             }
 
-            $('.escSensor').toggle(protocolConfigured && digitalProtocol);
+            $('.escSensor').toggle(
+                protocolConfigured && digitalProtocol && (
+                    semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) ||
+                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && !FC.MOTOR_CONFIG.use_dshot_edt));
 
             $('div.checkboxDshotBidir').toggle(protocolConfigured && digitalProtocol);
             $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible);
@@ -776,6 +806,12 @@ motors.initialize = async function (callback) {
             $('.escMotorStop').toggle(protocolConfigured);
 
             $('#escProtocolDisabled').toggle(!protocolConfigured);
+            $('.checkboxDshotEdt').toggle(
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
+                protocolConfigured &&
+                digitalProtocol &&
+                dshotBidirElement.is(':checked') &&
+                !$("input[name='ESC_SENSOR']").is(':checked'));
 
             //trigger change unsyncedPWMSwitch to show/hide Motor PWM freq input
             unsyncedPWMSwitchElement.trigger("change");
@@ -797,6 +833,10 @@ motors.initialize = async function (callback) {
 
         //trigger change dshotBidir and ESC_SENSOR to show/hide Motor Poles tab
         dshotBidirElement.change(updateVisibility).trigger("change");
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            const dshotEdtElement = $('input[id="dshotEdt"]');
+            dshotEdtElement.change(updateVisibility).trigger("change");
+        }
         $("input[name='ESC_SENSOR']").on("change", updateVisibility).trigger("change");
 
         // fill throttle
