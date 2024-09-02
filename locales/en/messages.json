@@ -1636,6 +1636,9 @@
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
     },
+    "serialRXNotSupported": {
+        "message": "The selected Receiver Provider is not supported by the current Build Options. Select another Provider or Update Firmware with the correct Radio Protocol selected in Build Configuration."
+    },
     "configurationSpiRX": {
         "message": "SPI Bus Receiver Provider"
     },
