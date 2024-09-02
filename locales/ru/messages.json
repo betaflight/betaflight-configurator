@@ -657,7 +657,7 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">сервер Discord<\/a>.<br \/>Делись опытом полетов, обсуждай Betaflight, помогай другим людям и узнавай новое для себя."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Конфигуратор собирает анонимную статистику использования. Например, эти данные включают (но не ограничиваются) количество запусков, географический регион пользователей, типы полетов, версии прошивки, использование UI элементов и вкладок и т.д. Выжимка этих данных отправляется <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a>. Сбор статистики производится, чтобы лучше понять, как используется Betaflight Конфигуратор, понять тенденции сообщества и возможные улучшения интерфейса. Пользователи могут отказаться от сбора данных во вкладке Параметры."
+        "message": "Betaflight Конфигуратор собирает анонимную статистику использования. Например, эти данные включают (но не ограничиваются) количество запусков, географический регион пользователей, типы полетов, версии прошивки, использование UI элементов и вкладок и т.д. Статистика по этим данным приведена <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a>. Сбор статистики производится, чтобы лучше понять, как используется Betaflight Конфигуратор, понять тенденции сообщества и возможные улучшения интерфейса. Пользователи могут отказаться от сбора данных во вкладке Параметры."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Программатор"
@@ -5864,7 +5864,7 @@
         "message": "Приблизительно общее количество полетов"
     },
     "osdTextElementUpDownReference": {
-        "message": "Опрная точка Верх (питч 90 гр)\/Низ (питч -90 гр)",
+        "message": "Опорная точка Верх (тангаж 90 гр)\/Низ (тангаж -90 гр)",
         "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
     },
     "osdDescUpDownReference": {
