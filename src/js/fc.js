@@ -795,6 +795,52 @@ const FC = {
         return serialRxTypes;
     },
 
+    getSupportedSerialRxTypes: () => {
+        if (FC.CONFIG.buildOptions?.length) {
+            const options = FC.CONFIG.buildOptions;
+            let supportedRxTypes = ['NONE', 'TARGET_CUSTOM'];
+            if (options.includes('USE_SERIALRX_SPEKTRUM')) {
+                supportedRxTypes.push('SPEKTRUM1024');
+                supportedRxTypes.push('SPEKTRUM2048');
+                supportedRxTypes.push('SPEKTRUM2048/SRXL');
+            }
+            if (options.includes('USE_SERIALRX_SBUS')) {
+                supportedRxTypes.push('SBUS');
+            }
+            if (options.includes('USE_SERIALRX_SUMD')) {
+                supportedRxTypes.push('SUMD');
+            }
+            if (options.includes('USE_SERIALRX_SUMH')) {
+                supportedRxTypes.push('SUMH');
+            }
+            if (options.includes('USE_SERIALRX_XBUS')) {
+                supportedRxTypes.push('XBUS_MODE_B');
+                supportedRxTypes.push('XBUS_MODE_B_RJ01');
+            }
+            if (options.includes('USE_SERIALRX_IBUS')) {
+                supportedRxTypes.push('IBUS');
+            }
+            if (options.includes('USE_SERIALRX_JETIEXBUS')) {
+                supportedRxTypes.push('JETIEXBUS');
+            }
+            if (options.includes('USE_SERIALRX_CRSF')) {
+                supportedRxTypes.push('CRSF');
+            }
+            if (options.includes('USE_SERIALRX_FPORT')) {
+                supportedRxTypes.push('FPORT');
+            }
+            if (options.includes('USE_SERIALRX_SRXL2')) {
+                supportedRxTypes.push('SPEKTRUM SRXL2');
+            }
+            if (options.includes('USE_SERIALRX_GHST')) {
+                supportedRxTypes.push('IRC GHOST');
+            }
+            return supportedRxTypes;
+        } else {
+            return this.getSerialRxTypes();
+        }
+    },
+
     calculateHardwareName() {
         let name;
         if (this.CONFIG.targetName) {

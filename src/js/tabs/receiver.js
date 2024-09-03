@@ -251,60 +251,22 @@ receiver.initialize = function (callback) {
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);
 
+        const supportedRxTypes = FC.getSupportedSerialRxTypes();
         const serialRxSelectElement = $('select.serialRX');
+        let allRxTypesEnabled = true;
         FC.getSerialRxTypes().forEach((serialRxType, index) => {
-            serialRxSelectElement.append(`<option value="${index}">${serialRxType}</option>`);
+            const enabled = supportedRxTypes.includes(serialRxType);
+            if (!enabled) allRxTypesEnabled = false;
+            const disable = enabled ? "" : "disabled";
+            serialRxSelectElement.append(`<option value="${index}" ${disable} >${serialRxType}</option>`);
         });
 
         const warnRxProtocolNotInBuildOptions = function () {
-          let warning = false;
-          const config = FC.CONFIG;
-          if (config.buildOptions?.length) {
-            const serialRxValue = parseInt($('select.serialRX').val());
-            const serialRxProtocol = FC.getSerialRxTypes()[serialRxValue];
-            switch (serialRxProtocol) {
-              case 'SPEKTRUM1024':
-              case 'SPEKTRUM2048':
-              case 'SPEKTRUM2048/SRXL':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_SPEKTRUM');
-                break;
-              case 'SBUS':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_SBUS');
-                break;
-              case 'SUMD':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_SUMD');
-                break;
-              case 'SUMH':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_SUMH');
-                break;
-              case 'XBUS_MODE_B':
-              case 'XBUS_MODE_B_RJ01':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_XBUS');
-                break;
-              case 'IBUS':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_IBUS');
-                break;
-              case 'JETIEXBUS':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_JETIEXBUS');
-                break;
-              case 'CRSF':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_CRSF');
-                break;
-              case 'TARGET_CUSTOM':
-                warning = false;
-                break;
-              case 'FPORT':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_FPORT');
-                break;
-              case 'SPEKTRUM SRXL2':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_SRXL2');
-                break;
-              case 'IRC GHOST':
-                warning = ! config.buildOptions.includes('USE_SERIALRX_GHST');
-                break;
-            }
-          }
-          $('.serialRXNotSupported').toggle(warning);
+          const serialRxValue = parseInt($('select.serialRX').val());
+          const serialRxType = FC.getSerialRxTypes()[serialRxValue];
+          const supported = supportedRxTypes.includes(serialRxType);
+          $('.someRXTypesDisabled').toggle(supported && (! allRxTypesEnabled));
+          $('.serialRXNotSupported').toggle(! supported);
         };
 
         serialRxSelectElement.change(function () {
