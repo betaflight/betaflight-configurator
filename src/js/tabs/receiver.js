@@ -251,10 +251,23 @@ receiver.initialize = function (callback) {
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);
 
+        const supportedRxTypes = FC.getSupportedSerialRxTypes();
         const serialRxSelectElement = $('select.serialRX');
+        let allRxTypesEnabled = true;
         FC.getSerialRxTypes().forEach((serialRxType, index) => {
-            serialRxSelectElement.append(`<option value="${index}">${serialRxType}</option>`);
+            const enabled = supportedRxTypes.includes(serialRxType);
+            if (!enabled) allRxTypesEnabled = false;
+            const disable = enabled ? "" : "disabled";
+            serialRxSelectElement.append(`<option value="${index}" ${disable} >${serialRxType}</option>`);
         });
+
+        const warnRxProtocolNotInBuildOptions = function () {
+          const serialRxValue = parseInt($('select.serialRX').val());
+          const serialRxType = FC.getSerialRxTypes()[serialRxValue];
+          const supported = supportedRxTypes.includes(serialRxType);
+          $('.someRXTypesDisabled').toggle(supported && (! allRxTypesEnabled));
+          $('.serialRXNotSupported').toggle(! supported);
+        };
 
         serialRxSelectElement.change(function () {
             const serialRxValue = parseInt($(this).val());
@@ -267,10 +280,14 @@ receiver.initialize = function (callback) {
             tab.analyticsChanges['SerialRx'] = newValue;
 
             FC.RX_CONFIG.serialrx_provider = serialRxValue;
+
+            warnRxProtocolNotInBuildOptions();
         });
 
         // select current serial RX type
         serialRxSelectElement.val(FC.RX_CONFIG.serialrx_provider);
+
+        warnRxProtocolNotInBuildOptions();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             serialRxSelectElement.sortSelect("NONE").select2();
