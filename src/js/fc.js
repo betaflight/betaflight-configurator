@@ -798,10 +798,10 @@ const FC = {
     getSupportedSerialRxTypes: () => {
         if (FC.CONFIG.buildOptions?.length) {
             const options = FC.CONFIG.buildOptions;
-            let supportedRxTypes = ['NONE',];
+            let supportedRxTypes = ['NONE'];
             if (options.includes('USE_SERIALRX_TARGET_CUSTOM')) {
                 supportedRxTypes.push('TARGET_CUSTOM');
-            }  
+            }
             if (options.includes('USE_SERIALRX_SPEKTRUM')) {
                 supportedRxTypes.push('SPEKTRUM1024');
                 supportedRxTypes.push('SPEKTRUM2048');
