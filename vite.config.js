@@ -79,7 +79,7 @@ export default defineConfig({
         serveLocalesPlugin(),
         copy({
             targets: [
-                { src: ["locales", "resources", "src/tabs", "src/images"], dest: "src/dist" },
+                { src: ["locales", "resources", "src/tabs", "src/images", "src/components"], dest: "src/dist" },
             ],
             hook: "writeBundle",
         }),
