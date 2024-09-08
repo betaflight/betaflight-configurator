@@ -298,6 +298,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                     FC.GPS_DATA.positionalDop = data.readU16();
                 }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.GPS_DATA.status = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_COMP_GPS:
                 FC.GPS_DATA.distanceToHome = data.readU16();
@@ -510,6 +513,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 // Introduced in API version 1.43
                 FC.GPS_CONFIG.home_point_once = data.readU8();
                 FC.GPS_CONFIG.ublox_use_galileo = data.readU8();
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.GPS_CONFIG.ublox_version = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
                 FC.GPS_RESCUE.angle             = data.readU16();

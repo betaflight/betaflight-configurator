@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from 'semver';
-import { API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import GUI, { TABS } from '../gui';
 import FC from '../fc';
 import MSP from "../msp";
@@ -114,6 +114,28 @@ gps.initialize = async function (callback) {
             '9600',
         ];
 
+        const GPS_STATE = [
+            "UNKNOWN",
+            "DETECT_BAUD",
+            "INITIALIZED",
+            "CHANGE_BAUD",
+            "CONFIGURE",
+            "RECEIVING_DATA",
+            "PROCESS_DATA",
+            "LOST_COMMUNICATION",
+            "COUNT",
+        ];
+
+        const UBX_VERSION = [
+            "UNKNOWN",
+            "M5",
+            "M6",
+            "M7",
+            "M8",
+            "M9",
+            "M10",
+        ];
+
         const gpsSbas = [
             i18n.getMessage('gpsSbasAutoDetect'),
             i18n.getMessage('gpsSbasEuropeanEGNOS'),
@@ -168,6 +190,8 @@ gps.initialize = async function (callback) {
 
             gpsAutoBaudGroup.toggle((ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46));
             gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
+
+            $('#ublox_version').text(ubloxSelected ? UBX_VERSION[FC.GPS_CONFIG.ublox_version] : '');
 
         }).prop('checked', FC.GPS_CONFIG.auto_config === 1).trigger('change');
 
@@ -346,6 +370,10 @@ gps.initialize = async function (callback) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 const positionalDop = FC.GPS_DATA.positionalDop / 100;
                 $('.GPS_info td.positionalDop').text(`${positionalDop.toFixed(2)}`);
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                $('.GPS_info td.status').text(GPS_STATE[FC.GPS_DATA.status]);
             }
 
             updateSignalStrengths();

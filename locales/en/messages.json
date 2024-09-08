@@ -2843,6 +2843,9 @@
     "gpsPositionalDop": {
         "message": "Positional DOP:"
     },
+    "gpsStatus": {
+        "message": "Status:"
+    },
     "gpsSignalStrHead": {
         "message": "GPS Signal Strength"
     },
