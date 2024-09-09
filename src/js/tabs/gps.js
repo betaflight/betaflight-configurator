@@ -126,16 +126,6 @@ gps.initialize = async function (callback) {
             "COUNT",
         ];
 
-        const UBX_VERSION = [
-            "UNKNOWN",
-            "M5",
-            "M6",
-            "M7",
-            "M8",
-            "M9",
-            "M10",
-        ];
-
         const gpsSbas = [
             i18n.getMessage('gpsSbasAutoDetect'),
             i18n.getMessage('gpsSbasEuropeanEGNOS'),
@@ -190,9 +180,6 @@ gps.initialize = async function (callback) {
 
             gpsAutoBaudGroup.toggle((ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46));
             gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
-
-            $('#ublox_version').text(ubloxSelected ? UBX_VERSION[FC.GPS_CONFIG.ublox_version] : '');
-
         }).prop('checked', FC.GPS_CONFIG.auto_config === 1).trigger('change');
 
         gpsUbloxGalileoElement.change(function() {
