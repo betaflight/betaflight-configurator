@@ -1548,10 +1548,16 @@
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
-        "message": "Provider ricevente seriale"
+        "message": "Protocollo ricevente seriale"
+    },
+    "someRXTypesDisabled": {
+        "message": "Alcuni protocolli del ricevitore non sono supportati dalla configurazione della build."
+    },
+    "serialRXNotSupported": {
+        "message": "Il protocollo del ricevitore non è supportato nella configurazione attuale. Selezionare un altro protocollo o aggiornare il firmware con il protocollo radio corretto selezionandolo nella configurazione della build."
     },
     "configurationSpiRX": {
-        "message": "Provider ricevente bus SPI"
+        "message": "Protocollo ricevente bus SPI"
     },
     "configurationEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"

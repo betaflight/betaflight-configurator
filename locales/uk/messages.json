@@ -1550,6 +1550,12 @@
     "configurationSerialRX": {
         "message": "Постачальник послідовного приймача"
     },
+    "someRXTypesDisabled": {
+        "message": "Деякі постачальники приймачів не підтримуються поточною конфігурацією збірки."
+    },
+    "serialRXNotSupported": {
+        "message": "Обраний постачальник приймача не підтримується поточною конфігурацією збірки. Виберіть іншого постачальника або оновіть прошивку з правильним радіопротоколом, обраним у конфігурації збірки."
+    },
     "configurationSpiRX": {
         "message": "Постачальник приймача на шині SPI"
     },
@@ -4751,6 +4757,15 @@
     "powerBatteryWarning": {
         "message": "Попередження про напругу комірки"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "Напруга, яка вважається критично низькою та спричинить відповідні попередження. Попередження 'LAND NOW' в наекранному меню і звуковий сигнал, якщо приєднано пищалку. Також допомагає в розрахунку кількості комірок."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "Напруга повністю зарядженої комірки. Допомагає з розрахунком кількості комірок."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "Напруга, яка вважається низькою та спричинить відповідні попередження. Попередження 'LOW BATTERY' на в Наекранному меню."
+    },
     "powerCalibrationManagerButton": {
         "message": "Калібрування"
     },
@@ -5515,6 +5530,13 @@
     },
     "osdDescElementDebug": {
         "message": "Змінні налагодження"
+    },
+    "osdTextElementDebug2": {
+        "message": "Інформація для налагоджування 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Змінні налагодження для налагодження 4-7"
     },
     "osdTextElementPIDRoll": {
         "message": "PID крену",
@@ -7290,5 +7312,24 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Показувати сповіщення для довгих операцій"
+    },
+    "flashEraseDoneNotification": {
+        "message": "Флешпам'ять було очищено",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Журнали з флешпам'яті були завантажені",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "Польотний контролер успішно запрограмовано",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "Збій програмування польотного контролера",
+        "description": "Notification message when programming is unsuccessful"
     }
 }
