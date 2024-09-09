@@ -1550,6 +1550,12 @@
     "configurationSerialRX": {
         "message": "Proveedor del Receptor Serie"
     },
+    "someRXTypesDisabled": {
+        "message": "Algunos proveedores del receptor no están soportados por la configuración de compilación actual."
+    },
+    "serialRXNotSupported": {
+        "message": "El proveedor de receptor seleccionado no es compatible con la configuración de compilación actual. Seleccione otro proveedor o actualice el firmware con el protocolo de radio correcto seleccionado en la configuración de compilación."
+    },
     "configurationSpiRX": {
         "message": "Proveedor del Receptor Bus SPI"
     },

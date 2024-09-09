@@ -1550,6 +1550,12 @@
     "configurationSerialRX": {
         "message": "シリアル受信プロトコル"
     },
+    "someRXTypesDisabled": {
+        "message": "一部の受信プロトコルは、現在のビルド構成ではサポートされていません。"
+    },
+    "serialRXNotSupported": {
+        "message": "選択された受信プロトコルは、現在のビルド構成ではサポートされていません。別のプロトコルを選択するか、ビルド構成で選択した正しい送受信プロトコルでファームウェアを更新してください。"
+    },
     "configurationSpiRX": {
         "message": "SPIバス受信プロトコル"
     },
@@ -4751,6 +4757,15 @@
     "powerBatteryWarning": {
         "message": "1セルあたりの警告電圧"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "致命的な低電圧とみなされ、対応警告が発せられる電圧状態です。OSDに【LAND NOW】警告が表示され、ブザーがはんだ付けされている場合はビープ音が鳴ります。また、セル数の計算も補助します。"
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "完全充電されたセルの電圧を示します。セル数の計算を補助します。"
+    },
+    "powerBatteryWarningHelp": {
+        "message": "低電圧とみなされ、対応警告が発せられます。OSDに【LOW BATTERY】警告が表示されます。"
+    },
     "powerCalibrationManagerButton": {
         "message": "キャリブレーション"
     },
@@ -7297,5 +7312,24 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "長時間の操作に対する通知を表示"
+    },
+    "flashEraseDoneNotification": {
+        "message": "データフラッシュの消去が完了しました",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "データフラッシュのログがダウンロードされました",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "FC が正常にプログラムされました",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "FC のプログラムに失敗しました",
+        "description": "Notification message when programming is unsuccessful"
     }
 }
