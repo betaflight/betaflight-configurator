@@ -4749,6 +4749,15 @@
     "powerBatteryWarning": {
         "message": "Advarsel ved celle spænding"
     },
+    "powerBatteryMinimumHelp": {
+        "message": "Angiver den kritiske lave spænding, der udløser 'LAND NOW' advarsel i OSD og bipper, hvis monteret. Hjælper til beregning af antal celler."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "Spændingen for en fuldt opladet celle. Hjælper til beregning af antal celler."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "Angiver den laveste spænding, hvorunder der udløses 'LOW BATTERY' advarsel i OSD."
+    },
     "powerCalibrationManagerButton": {
         "message": "Kalibrering"
     },
