@@ -839,9 +839,9 @@ const FC = {
                 supportedRxTypes.push('IRC GHOST');
             }
             return supportedRxTypes;
-        } else {
-            return this.getSerialRxTypes();
         }
+
+        return FC.getSerialRxTypes();
     },
 
     calculateHardwareName() {
