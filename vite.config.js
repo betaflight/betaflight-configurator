@@ -1,15 +1,15 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import copy from "rollup-plugin-copy";
-import pkg from './package.json';
-import * as child from 'child_process';
+import pkg from "./package.json";
+import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
-import { resolve } from 'path';
+import { resolve } from "path";
 
-const commitHash = child.execSync('git rev-parse --short HEAD').toString();
+const commitHash = child.execSync("git rev-parse --short HEAD").toString();
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -53,15 +53,18 @@ function serveLocalesPlugin() {
 
 export default defineConfig({
     define: {
-        '__APP_VERSION__': JSON.stringify(pkg.version),
-        '__APP_PRODUCTNAME__': JSON.stringify(pkg.productName),
-        '__APP_REVISION__': JSON.stringify(commitHash),
+        __APP_VERSION__: JSON.stringify(pkg.version),
+        __APP_PRODUCTNAME__: JSON.stringify(pkg.productName),
+        __APP_REVISION__: JSON.stringify(commitHash),
     },
     build: {
         rollupOptions: {
             input: {
-                main: resolve(__dirname, 'src/index.html'),
-                receiver_msp: resolve(__dirname, 'src/receiver_msp/receiver_msp.html'),
+                main: resolve(__dirname, "src/index.html"),
+                receiver_msp: resolve(
+                    __dirname,
+                    "src/receiver_msp/receiver_msp.html"
+                ),
             },
         },
     },
@@ -75,37 +78,54 @@ export default defineConfig({
         root: ".",
     },
     plugins: [
-        vue(),
+        vue({
+            template: {
+                compilerOptions: {
+                    compatConfig: {
+                        MODE: 2,
+                    },
+                },
+            },
+        }),
         serveLocalesPlugin(),
         copy({
             targets: [
-                { src: ["locales", "resources", "src/tabs", "src/images", "src/components"], dest: "src/dist" },
+                {
+                    src: [
+                        "locales",
+                        "resources",
+                        "src/tabs",
+                        "src/images",
+                        "src/components",
+                    ],
+                    dest: "src/dist",
+                },
             ],
             hook: "writeBundle",
         }),
         VitePWA({
-            registerType: 'prompt',
+            registerType: "prompt",
             workbox: {
-                globPatterns: ['**/*.{js,css,html,ico,png,svg,json,mcm}'],
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm}"],
                 // 5MB
                 maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
             },
-            includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+            includeAssets: ["favicon.ico", "apple-touch-icon.png"],
             manifest: {
                 name: pkg.displayName,
                 short_name: pkg.productName,
                 description: pkg.description,
-                theme_color: '#ffffff',
+                theme_color: "#ffffff",
                 icons: [
                     {
-                        src: '/images/pwa/pwa-192-192.png',
-                        sizes: '192x192',
-                        type: 'image/png',
+                        src: "/images/pwa/pwa-192-192.png",
+                        sizes: "192x192",
+                        type: "image/png",
                     },
                     {
-                        src: '/images/pwa/pwa-512-512.png',
-                        sizes: '512x512',
-                        type: 'image/png',
+                        src: "/images/pwa/pwa-512-512.png",
+                        sizes: "512x512",
+                        type: "image/png",
                     },
                 ],
             },
@@ -115,7 +135,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
-            "vue": path.resolve(__dirname, "node_modules/vue/dist/vue.esm.js"),
+            vue: "@vue/compat",
         },
     },
     server: {

@@ -33,7 +33,8 @@
     "@capacitor/core": "^6.0.0",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@panter/vue-i18next": "^0.15.2",
-    "@vitejs/plugin-vue2": "^2.3.1",
+    "@vitejs/plugin-vue": "^5.1.3",
+    "@vue/compat": "^3.1.0",
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",
@@ -58,7 +59,7 @@
     "switchery-latest": "^0.8.2",
     "three": "~0.97.0",
     "vite-plugin-pwa": "^0.17.5",
-    "vue": "^2.7.16"
+    "vue": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
@@ -67,6 +68,7 @@
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-links": "^6.5.16",
     "@storybook/vue": "^6.5.16",
+    "@vue/compiler-sfc": "^3.1.0",
     "babel-loader": "^8.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^7.20.0",
@@ -78,7 +80,6 @@
     "vite": "^4.5.3",
     "vitest": "^0.27.3",
     "vue-loader": "^15.11.1",
-    "vue-template-compiler": "^2.7.16",
     "yarn": "^1.22.22"
   },
   "resolutions": {
@@ -89,5 +90,6 @@
     "hooks": {
       "pre-commit": "yarn lint"
     }
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
