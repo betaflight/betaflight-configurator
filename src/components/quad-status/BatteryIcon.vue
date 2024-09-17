@@ -10,8 +10,14 @@
   </div>
 </template>
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
+    batteryState: {
+      type: String,
+      default: '',
+    },
     voltage: {
       type: Number,
       default: 0,
@@ -33,6 +39,7 @@ export default {
       default: 1,
     },
   },
+
   computed: {
     nbCells() {
       return this.voltage === 0 || this.vbatcellcount === 0 ? 1 : this.vbatcellcount;
@@ -52,18 +59,18 @@ export default {
     classes() {
       if (this.batteryState) {
         return {
-          "state-ok": this.batteryState === 0,
-          "state-warning": this.batteryState === 1,
-          "state-empty": this.batteryState === 2,
+          'state-ok': this.batteryState === 0,
+          'state-warning': this.batteryState === 1,
+          'state-empty': this.batteryState === 2,
           // TODO: BATTERY_NOT_PRESENT
           // TODO: BATTERY_INIT
         };
       }
       const isWarning = this.voltage < this.warn;
       return {
-        "state-empty": this.isEmpty,
-        "state-warning": isWarning,
-        "state-ok": !this.isEmpty && !isWarning,
+        'state-empty': this.isEmpty,
+        'state-warning': isWarning,
+        'state-ok': !this.isEmpty && !isWarning,
       };
     },
     batteryWidth() {
@@ -72,7 +79,7 @@ export default {
         : ((this.voltage - this.min) / (this.max - this.min)) * 100;
     },
   },
-};
+});
 </script>
 
 <style>

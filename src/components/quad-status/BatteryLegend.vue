@@ -4,7 +4,9 @@
   </div>
 </template>
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     voltage: {
       type: Number,
@@ -19,14 +21,15 @@ export default {
       default: 1,
     },
   },
+
   computed: {
     reading() {
       const nbCells = this.voltage === 0 || this.vbatcellcount === 0 ? 1 : this.vbatcellcount;
-      const cellsText = this.voltage && this.vbatcellcount ? `${nbCells}S` : "USB";
+      const cellsText = this.voltage && this.vbatcellcount ? `${nbCells}S` : 'USB';
       return `${this.voltage.toFixed(2)}V (${cellsText})`;
     },
   },
-};
+});
 </script>
 
 <style>

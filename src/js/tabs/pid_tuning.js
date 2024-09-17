@@ -1723,7 +1723,7 @@ pid_tuning.initialize = function (callback) {
             self.analyticsChanges['PidTuningSliders'] = "On";
         });
 
-        allPidTuningSliders.each(function (i) {
+        allPidTuningSliders.each(function (_i) {
             self.sliderOnScroll($(this));
         });
 
@@ -2661,7 +2661,7 @@ pid_tuning.expertModeChanged = function(expertModeEnabled) {
     TuningSliders.setExpertMode(expertModeEnabled);
 };
 
-pid_tuning.sliderOnScroll = function(slider, e) {
+pid_tuning.sliderOnScroll = function(slider, _e) {
     slider.parent().on('input wheel', function(e) {
         if (slider.prop('disabled')) {
             return;

@@ -597,7 +597,7 @@ function onConnect() {
 
     // show only appropriate tabs
     $('#tabs ul.mode-connected li').hide();
-    $('#tabs ul.mode-connected li').filter(function (index) {
+    $('#tabs ul.mode-connected li').filter(function (_index) {
         const classes = $(this).attr("class").split(/\s+/);
         let found = false;
 

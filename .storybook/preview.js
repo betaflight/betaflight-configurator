@@ -1,7 +1,9 @@
-import Vue from "vue";
-import VueI18Next from "@panter/vue-i18next";
 import i18next from "i18next";
+import I18NextVue from "i18next-vue";
 import i18nextXHRBackend from "i18next-xhr-backend";
+import { createApp } from "vue/dist/vue.js";
+import { setup } from '@storybook/vue3'
+import { i18n } from "../src/js/localization";
 
 /**
  * Logic from ../src/js/localization.js
@@ -39,13 +41,14 @@ i18next.use(i18nextXHRBackend).init({
   },
 });
 
-Vue.use(VueI18Next);
+const app = createApp().use(I18NextVue, { i18next })
 
-const i18n = new VueI18Next(i18next);
+setup((app) => {
+  app.use(i18n)
+})
 
 export const decorators = [
   (story) => ({
-    i18n,
     components: { story },
     template: `
     <div style="margin: 1rem;">

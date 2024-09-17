@@ -45,8 +45,6 @@ const TuningSliders = {
     expertMode: false,
 };
 
-const D_MIN_RATIO = 0.85;
-
 TuningSliders.initialize = function() {
     this.PID_DEFAULT = FC.getPidDefaults();
     this.FILTER_DEFAULT = FC.getFilterDefaults();
@@ -388,7 +386,7 @@ TuningSliders.updateFormPids = function(updateSlidersOnly = false) {
     this.updateSlidersWarning();
 };
 
-TuningSliders.calculateNewPids = function(updateSlidersOnly = false) {
+TuningSliders.calculateNewPids = function(_updateSlidersOnly = false) {
     // this is the main calculation for PID sliders, inputs are in form of slider position values
     // values get set both into forms and their respective variables
     FC.TUNING_SLIDERS.slider_pids_mode = this.sliderPidsMode;

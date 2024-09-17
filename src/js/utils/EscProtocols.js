@@ -33,7 +33,7 @@ class EscProtocols
         return EscProtocols.DSHOT_PROTOCOLS_SET.includes(protocolName);
     }
 
-    static GetAvailableProtocols(apiVersion)
+    static GetAvailableProtocols(_apiVersion)
     {
         const escProtocols = [
             EscProtocols.PROTOCOL_PWM,

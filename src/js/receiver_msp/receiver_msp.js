@@ -8,10 +8,6 @@ import $ from 'jquery';
 // It seems than when node opens a new window, the module "context" is different, so the i18n var is not initialized
 const i18n = opener.i18n;
 
-const css_dark = [
-    '/css/dark-theme.css',
-];
-
 const CHANNEL_MIN_VALUE = 1000;
 const CHANNEL_MID_VALUE = 1500;
 const CHANNEL_MAX_VALUE = 2000;
@@ -194,7 +190,7 @@ $(".slider", sliderElems).each(function(sliderIndex) {
 /*
  * Mouseup handler needs to be bound to the window in order to receive mouseup if mouse leaves window.
  */
-$(window).on("mouseup", function(e) {
+$(window).on("mouseup", function(_e) {
     $(this).off('mousemove', handleGimbalMouseDrag);
 });
 

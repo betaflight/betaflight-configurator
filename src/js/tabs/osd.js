@@ -3060,15 +3060,10 @@ osd.initialize = function(callback) {
 
                     // display fields on/off and position
                     const $displayFields = $('#element-fields').empty();
-                    let enabledCount = 0;
                     for (const field of OSD.data.displayItems) {
                         // versioning related, if the field doesn't exist at the current flight controller version, just skip it
                         if (!field.name) {
                             continue;
-                        }
-
-                        if (field.isVisible[OSD.getCurrentPreviewProfile()]) {
-                            enabledCount++;
                         }
 
                         const $field = $(`<div class="switchable-field switchable-field-flex field-${field.index}"></div>`);

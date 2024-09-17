@@ -164,7 +164,7 @@ firmware_flasher.initialize = function (callback) {
 
             Object.keys(targets)
                 .sort((a,b) => a.target - b.target)
-                .forEach(function(target, i) {
+                .forEach(function(target, _i) {
                     const descriptor = targets[target];
                     const select_e = $(`<option value='${descriptor.target}'>${descriptor.target}</option>`);
                     boards_e.append(select_e);
@@ -580,11 +580,8 @@ firmware_flasher.initialize = function (callback) {
         function flashFirmware(firmware) {
             const options = {};
 
-            let eraseAll = false;
             if ($('input.erase_chip').is(':checked') || expertMode_e.is(':not(:checked)')) {
                 options.erase_chip = true;
-
-                eraseAll = true;
             }
 
             const port = PortHandler.portPicker.selectedPort;
@@ -757,12 +754,12 @@ firmware_flasher.initialize = function (callback) {
             },
         );
 
-        $('a.cloud_build_cancel').on('click', function (evt) {
+        $('a.cloud_build_cancel').on('click', function (_evt) {
             $('a.cloud_build_cancel').toggleClass('disabled', true);
             self.cancelBuild = true;
         });
 
-        $('a.load_remote_file').on('click', function (evt) {
+        $('a.load_remote_file').on('click', function (_evt) {
             if (!self.selectedBoard) {
                 return;
             }

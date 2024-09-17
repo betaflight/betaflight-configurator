@@ -3,7 +3,10 @@ module.exports = {
         ecmaVersion: 2020,
         sourceType: "module",
     },
-    extends: ["plugin:vue/recommended"],
+    extends: [
+        "eslint:recommended",
+        "plugin:vue/vue3-recommended",
+    ],
     env: {
         node: true,
         jquery: true,
@@ -22,6 +25,18 @@ module.exports = {
         "template-curly-spacing": "error",
         "no-undef": "error",
         'no-duplicate-imports': 'error',
+        "no-unused-vars": [
+            "error", // or "error"
+            {
+                "argsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_",
+            },
+        ],
+        "no-useless-escape": "warn",
+        "no-case-declarations": "warn",
+        "no-prototype-builtins": "warn",
+        "no-inner-declarations": "warn",
+        "no-fallthrough": "warn",
     },
     globals: {
         cordova: true,
@@ -37,11 +52,11 @@ module.exports = {
         cordovaChromeapi: true,
         appAvailability: true,
         // end cordova bindings
-        
+
         // globals for vite
         __APP_PRODUCTNAME__: "readonly",
         __APP_VERSION__: "readonly",
-        __APP_REVISION__: "readonly",     
+        __APP_REVISION__: "readonly",
     },
     // ignore src/dist folders
     ignorePatterns: ["src/dist/*"],

@@ -78,15 +78,7 @@ export default defineConfig({
         root: ".",
     },
     plugins: [
-        vue({
-            template: {
-                compilerOptions: {
-                    compatConfig: {
-                        MODE: 2,
-                    },
-                },
-            },
-        }),
+        vue(),
         serveLocalesPlugin(),
         copy({
             targets: [
@@ -135,7 +127,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
-            vue: "@vue/compat",
+            "vue": "vue/dist/vue.esm-bundler.js"
         },
     },
     server: {

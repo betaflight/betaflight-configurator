@@ -16,7 +16,6 @@ class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
 
     get smartAudioVersion()
     {
-        const sa = this._version * 100 + this._mode;
         let result = "";
 
         switch (this._version) {

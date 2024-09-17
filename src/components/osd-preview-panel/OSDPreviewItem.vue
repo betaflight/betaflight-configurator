@@ -5,11 +5,13 @@
 </template>
 
 <script>
-  // position
-  // title
-  // tooltip
-  // font image
-  export default {};
+import { defineComponent } from 'vue';
+
+// position
+// title
+// tooltip
+// font image
+export default defineComponent({});
 </script>
 
 <style>
