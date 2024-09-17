@@ -63,7 +63,7 @@ export default defineConfig({
                 main: resolve(__dirname, "src/index.html"),
                 receiver_msp: resolve(
                     __dirname,
-                    "src/receiver_msp/receiver_msp.html"
+                    "src/receiver_msp/receiver_msp.html",
                 ),
             },
         },
@@ -127,7 +127,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
-            "vue": "vue/dist/vue.esm-bundler.js"
+            "vue": "vue/dist/vue.esm-bundler.js",
         },
     },
     server: {

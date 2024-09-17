@@ -34,7 +34,6 @@
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@storybook/vue3": "^8.3.1",
     "@vitejs/plugin-vue": "^5.1.3",
-    "@vue/compat": "^3.1.0",
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",
