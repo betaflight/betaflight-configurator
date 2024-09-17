@@ -1,4 +1,5 @@
 import { get as getConfig } from "../ConfigStorage";
+import CONFIGURATOR from "../data_storage";
 
 export function ispConnected() {
 
@@ -13,6 +14,8 @@ export function ispConnected() {
     const downlink = navigator.connection.downlink;
     const rtt = navigator.connection.rtt;
     const logHead = '[ISP] ';
+
+    CONFIGURATOR.networkSpeed = downlink;
 
     if (isMetered) {
         console.log(`${logHead}Metered connection is enabled`);

@@ -667,6 +667,9 @@
     "versionLabelFirmware": {
         "message": "Firmware"
     },
+    "versionLabelConnection": {
+        "message": "ISP"
+    },
     "versionLabelConfigurator": {
         "message": "Configurator"
     },
