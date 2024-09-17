@@ -1,4 +1,4 @@
-import BottomStatusIcons from "./BottomStatusIcons";
+import BottomStatusIcons from "./BottomStatusIcons.vue";
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {

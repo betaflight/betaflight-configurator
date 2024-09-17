@@ -145,7 +145,7 @@ export default class BuildApi {
         const url = `${this._url}/api/builds/${key}/json`;
         $.get(url, function (data) {
             onSuccess(data);
-        }).fail(xhr => {
+        }).fail(_xhr => {
             if (onFailure !== undefined) {
                 onFailure();
             }
@@ -176,7 +176,7 @@ export default class BuildApi {
         const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
         $.get(url, function (data) {
             onSuccess(data);
-        }).fail(xhr => {
+        }).fail(_xhr => {
             if (onFailure !== undefined) {
                 onFailure();
             }

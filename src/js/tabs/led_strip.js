@@ -13,7 +13,7 @@ const led_strip = {
         directions: ['n', 'e', 's', 'w', 'u', 'd'],
     };
 
-led_strip.initialize = function (callback, scrollPosition) {
+led_strip.initialize = function (callback, _scrollPosition) {
     let selectedColorIndex = null;
     let selectedModeColor = null;
     const functionTag = '.function-';
@@ -212,7 +212,7 @@ led_strip.initialize = function (callback, scrollPosition) {
         const colorDefineSliders = $('.colorDefineSliders');
 
         // Color Buttons
-        $('.colors').on('click', 'button', function(e) {
+        $('.colors').on('click', 'button', function(_e) {
             const that = this;
             const colorButtons = $(this).parent().find('button');
 

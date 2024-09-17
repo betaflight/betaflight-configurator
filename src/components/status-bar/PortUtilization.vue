@@ -3,24 +3,27 @@
     <span class="message">{{ $t("statusbar_port_utilization") }}</span>
     <ReadingStat
       message="statusbar_usage_download"
-      :value="usageDown"
+      :model-value="usageDown"
       unit="%"
     />
     <ReadingStat
       message="statusbar_usage_upload"
-      :value="usageUp"
+      :model-value="usageUp"
       unit="%"
     />
   </div>
 </template>
 
 <script>
-import ReadingStat from "./ReadingStat.vue";
+import { defineComponent } from 'vue';
 
-export default {
+import ReadingStat from './ReadingStat.vue';
+
+export default defineComponent({
   components: {
     ReadingStat,
   },
+
   props: {
     usageDown: {
       type: Number,
@@ -31,5 +34,5 @@ export default {
       default: 0,
     },
   },
-};
+});
 </script>

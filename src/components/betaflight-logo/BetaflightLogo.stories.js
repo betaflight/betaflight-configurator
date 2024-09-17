@@ -17,4 +17,7 @@ export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
 Primary.args = {
   configuratorVersion: '1.0.0',
+  firmwareVersion: 'test',
+  firmwareId: '2.0.0',
+  hardwareId: '3.0.0',
 };

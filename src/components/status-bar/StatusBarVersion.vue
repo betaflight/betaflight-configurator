@@ -12,26 +12,28 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     configuratorVersion: {
       type: String,
-      default: "",
+      default: '',
     },
     firmwareVersion: {
       type: String,
-      default: "",
+      default: '',
     },
     firmwareId: {
       type: String,
-      default: "",
+      default: '',
     },
     hardwareId: {
       type: String,
-      default: "",
+      default: '',
     },
   },
-};
+});
 </script>
 
 <style>

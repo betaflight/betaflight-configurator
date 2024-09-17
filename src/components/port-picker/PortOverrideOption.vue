@@ -16,16 +16,16 @@
 </template>
 
 <script>
-import { set as setConfig } from '../../js/ConfigStorage';
+import { defineComponent } from 'vue';
 
-export default {
-    props: {
-        isManual: {
-            type: Boolean,
-            default: true,
-        },
-    },
-};
+export default defineComponent({
+  props: {
+      isManual: {
+          type: Boolean,
+          default: true,
+      },
+  },
+});
 </script>
 
 <style lang="less" scoped>

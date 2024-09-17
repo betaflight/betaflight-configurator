@@ -17,7 +17,7 @@ landing.initialize = function (callback) {
     $('#content').load("./tabs/landing.html", () => {
         function showLang(newLang) {
             bottomSection = $('.languageSwitcher');
-            bottomSection.find('a').each(function(index) {
+            bottomSection.find('a').each(function(_index) {
                 const element = $(this);
                 const languageSelected = element.attr('lang');
                 if (newLang == languageSelected) {
