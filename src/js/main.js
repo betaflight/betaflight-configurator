@@ -102,6 +102,7 @@ function startProcess() {
     gui_log(i18n.getMessage('infoVersionConfigurator', { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
     if (navigator.connection) {
+        console.log(`[ISP] Network connection type: ${navigator.connection.type}`);
         console.log(`[ISP] Effective network type: ${navigator.connection.effectiveType}`);
         console.log(`[ISP] Downlink Speed: ${navigator.connection.downlink}Mb/s`);
         console.log(`[ISP] Round Trip Time: ${navigator.connection.rtt}ms`);
