@@ -138,6 +138,10 @@
     "rememberLastTab": {
         "message": "Reopen last tab on connect"
     },
+    "meteredConnection": {
+        "message": "Metered connection (has data limits or can incur charges)",
+        "description": "Text for the option to enable or disable metered connection"
+    },
     "analyticsOptOut": {
         "message": "Opt out of the anonymised collection of statistics data"
     },

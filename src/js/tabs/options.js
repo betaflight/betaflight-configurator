@@ -30,6 +30,7 @@ options.initialize = function (callback) {
         TABS.options.initShowDevToolsOnStartup();
         TABS.options.initShowNotifications();
         TABS.options.initShowWarnings();
+        TABS.options.initMeteredConnection();
 
         GUI.content_ready(callback);
     });
@@ -224,6 +225,16 @@ options.initShowNotifications = function () {
             }
 
             setConfig({ showNotifications: element.is(":checked") });
+        })
+        .change();
+};
+
+options.initMeteredConnection = function () {
+    const result = getConfig("meteredConnection");
+    $("div.meteredConnection input")
+        .prop("checked", !!result.meteredConnection)
+        .change(function () {
+            setConfig({ meteredConnection: $(this).is(":checked") });
         })
         .change();
 };

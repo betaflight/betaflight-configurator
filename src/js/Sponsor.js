@@ -1,15 +1,16 @@
 import BuildApi from './BuildApi';
 import DarkTheme from './DarkTheme';
+import { ispConnected } from './utils/connection';
 
 export default class Sponsor {
 
     constructor () {
         this._api = new BuildApi();
-        this._timer = setInterval(() => { this.Refresh(); }, 30000);
+        this._timer = ispConnected() ? setInterval(() => { this.Refresh(); }, 30000) : null;
     }
 
     Refresh() {
-        if (!navigator.onLine) {
+        if (!ispConnected()) {
             return;
         }
 

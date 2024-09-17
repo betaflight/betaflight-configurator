@@ -12,6 +12,7 @@ import jBox from "jbox";
 import $ from 'jquery';
 import { serialShim } from "../serial_shim";
 import FileSystem from "../FileSystem";
+import { ispConnected } from "../utils/connection";
 
 const serial =  serialShim();
 
@@ -229,7 +230,7 @@ cli.initialize = function (callback) {
         });
 
         $('a.support')
-        .toggle(navigator.onLine)
+        .toggle(ispConnected())
         .on('click', function() {
 
             function submitSupportData(data) {
