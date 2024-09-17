@@ -11,7 +11,7 @@ const CONFIGURATOR = {
 
     connectionValid: false,
     connectionValidCliOnly: false,
-    networkSpeed: 0,
+    networkStatus: 'UNKNOWN',
     virtualMode: false,
     virtualApiVersion: '0.0.1',
     cliActive: false,

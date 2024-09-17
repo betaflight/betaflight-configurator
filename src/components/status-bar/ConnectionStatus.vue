@@ -1,15 +1,15 @@
 <template>
   <div class="connection">
-    {{ $t("versionLabelConnection") }}: {{ networkSpeed }} Mb/s
+    {{ $t("versionLabelConnection") }}: {{ networkStatus }}
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    networkSpeed: {
-      type: Number,
-      default: 0,
+    networkStatus: {
+      type: String,
+      default: "",
     },
   },
 };

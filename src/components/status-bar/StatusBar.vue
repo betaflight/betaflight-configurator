@@ -22,7 +22,7 @@
       unit="%"
     />
     <ConnectionStatus
-      :network-speed="networkSpeed"
+      :network-status="networkStatus"
     />
     <StatusBarVersion
       :configurator-version="configuratorVersion"
@@ -72,9 +72,9 @@ export default {
       default: 0,
     },
 
-    networkSpeed: {
-      type: Number,
-      default: 0,
+    networkStatus: {
+      type: String,
+      default: "",
     },
 
     configuratorVersion: {
