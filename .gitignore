@@ -37,3 +37,5 @@ test-results-junit/
 
 # Capacitor config file, we generate it at runtime
 capacitor.config.json
+
+*storybook.log
