@@ -8,6 +8,7 @@ import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdate
 import { checkSetupAnalytics } from '../Analytics';
 import $ from 'jquery';
 import NotificationManager from '../utils/notifications';
+import { ispConnected } from '../utils/connection';
 
 const options = {};
 options.initialize = function (callback) {
@@ -235,6 +236,8 @@ options.initMeteredConnection = function () {
         .prop("checked", !!result.meteredConnection)
         .change(function () {
             setConfig({ meteredConnection: $(this).is(":checked") });
+            // update network status
+            ispConnected();
         })
         .change();
 };

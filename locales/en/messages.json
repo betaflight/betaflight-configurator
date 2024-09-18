@@ -139,8 +139,8 @@
         "message": "Reopen last tab on connect"
     },
     "meteredConnection": {
-        "message": "Metered connection (has data limits or can incur charges)",
-        "description": "Text for the option to enable or disable metered connection"
+        "message": "Disable internet access (for metered or slow connections)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
     },
     "analyticsOptOut": {
         "message": "Opt out of the anonymised collection of statistics data"
