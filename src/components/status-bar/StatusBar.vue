@@ -21,9 +21,6 @@
       :value="cpuLoad"
       unit="%"
     />
-    <ConnectionStatus
-      :network-status="networkStatus"
-    />
     <StatusBarVersion
       :configurator-version="configuratorVersion"
       :firmware-version="firmwareVersion"
@@ -36,14 +33,12 @@
 <script>
 import StatusBarVersion from "./StatusBarVersion.vue";
 import ReadingStat from "./ReadingStat.vue";
-import ConnectionStatus from "./ConnectionStatus.vue";
 import PortUtilization from "./PortUtilization.vue";
 
 export default {
   components: {
     PortUtilization,
     ReadingStat,
-    ConnectionStatus,
     StatusBarVersion,
   },
   props: {
@@ -70,11 +65,6 @@ export default {
     cpuLoad: {
       type: Number,
       default: 0,
-    },
-
-    networkStatus: {
-      type: String,
-      default: "",
     },
 
     configuratorVersion: {
