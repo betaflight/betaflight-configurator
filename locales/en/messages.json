@@ -1205,6 +1205,34 @@
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
+    "initialSetupNetworkInfo": {
+        "message": "Network info"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Shows network connection status",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Status:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "Online"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "Offline"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Slow"
+    },
+    "initialSetupNetworkType": {
+        "message": "Type:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Downlink:"
+    },
     "featureNone": {
         "message": "&lt;Select One&gt;"
     },

@@ -465,9 +465,33 @@ setup.initialize = function (callback) {
             }
         }
 
+        function showNetworkStatus() {
+            const networkStatus = ispConnected();
+
+            let statusText = '';
+
+            const type = navigator.connection.effectiveType;
+            const downlink = navigator.connection.downlink;
+            const rtt = navigator.connection.rtt;
+
+            if (!networkStatus || !navigator.onLine || type === 'none') {
+                statusText = i18n.getMessage('initialSetupNetworkInfoStatusOffline');
+            } else if (type === 'slow-2g' || type === '2g' || downlink < 0.115 || rtt > 1000) {
+                statusText = i18n.getMessage('initialSetupNetworkInfoStatusSlow');
+            } else {
+                statusText = i18n.getMessage('initialSetupNetworkInfoStatusOnline');
+            }
+
+            $('.network-status').text(statusText);
+            $('.network-type').text(navigator.connection.effectiveType);
+            $('.network-downlink').text(`${navigator.connection.downlink} Mbps`);
+            $('.network-rtt').text(navigator.connection.rtt);
+        }
+
         prepareDisarmFlags();
         showSensorInfo();
         showFirmwareInfo();
+        showNetworkStatus();
 
         // Show Sonar info box if sensor exist
         if (!have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
