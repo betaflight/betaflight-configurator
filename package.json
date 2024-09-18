@@ -75,7 +75,7 @@
     "less": "^4.2.0",
     "rollup-plugin-copy": "^3.5.0",
     "run-script-os": "^1.1.6",
-    "vite": "^4.5.3",
+    "vite": "^5.2.14",
     "vitest": "^0.27.3",
     "vue-loader": "^15.11.1",
     "vue-template-compiler": "^2.7.16",
