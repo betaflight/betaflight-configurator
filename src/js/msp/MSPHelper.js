@@ -1138,11 +1138,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.ADVANCED_TUNING.feedforwardYaw   = data.readU16();
                 FC.ADVANCED_TUNING.antiGravityMode  = data.readU8();
 
-                FC.ADVANCED_TUNING.dMinRoll = data.readU8();
-                FC.ADVANCED_TUNING.dMinPitch = data.readU8();
-                FC.ADVANCED_TUNING.dMinYaw = data.readU8();
-                FC.ADVANCED_TUNING.dMinGain = data.readU8();
-                FC.ADVANCED_TUNING.dMinAdvance = data.readU8();
+                FC.ADVANCED_TUNING.dMaxRoll = data.readU8();
+                FC.ADVANCED_TUNING.dMaxPitch = data.readU8();
+                FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
+                FC.ADVANCED_TUNING.dMaxGain = data.readU8();
+                FC.ADVANCED_TUNING.dMaxAdvance = data.readU8();
                 FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
                 FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
 
@@ -1489,13 +1489,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.PIDS[0][0] = data.readU8();
                     FC.PIDS[0][1] = data.readU8();
                     FC.PIDS[0][2] = data.readU8();
-                    FC.ADVANCED_TUNING.dMinRoll = data.readU8();
+                    FC.ADVANCED_TUNING.dMaxRoll = data.readU8();
                     FC.ADVANCED_TUNING.feedforwardRoll = data.readU16();
 
                     FC.PIDS[1][0] = data.readU8();
                     FC.PIDS[1][1] = data.readU8();
                     FC.PIDS[1][2] = data.readU8();
-                    FC.ADVANCED_TUNING.dMinPitch = data.readU8();
+                    FC.ADVANCED_TUNING.dMaxPitch = data.readU8();
                     FC.ADVANCED_TUNING.feedforwardPitch = data.readU16();
                 }
 
@@ -1503,7 +1503,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.PIDS[2][0] = data.readU8();
                     FC.PIDS[2][1] = data.readU8();
                     FC.PIDS[2][2] = data.readU8();
-                    FC.ADVANCED_TUNING.dMinYaw = data.readU8();
+                    FC.ADVANCED_TUNING.dMaxYaw = data.readU8();
                     FC.ADVANCED_TUNING.feedforwardYaw = data.readU16();
                 }
 
@@ -2090,11 +2090,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push16(FC.ADVANCED_TUNING.feedforwardPitch)
                 .push16(FC.ADVANCED_TUNING.feedforwardYaw)
                 .push8(FC.ADVANCED_TUNING.antiGravityMode)
-                .push8(FC.ADVANCED_TUNING.dMinRoll)
-                .push8(FC.ADVANCED_TUNING.dMinPitch)
-                .push8(FC.ADVANCED_TUNING.dMinYaw)
-                .push8(FC.ADVANCED_TUNING.dMinGain)
-                .push8(FC.ADVANCED_TUNING.dMinAdvance)
+                .push8(FC.ADVANCED_TUNING.dMaxRoll)
+                .push8(FC.ADVANCED_TUNING.dMaxPitch)
+                .push8(FC.ADVANCED_TUNING.dMaxYaw)
+                .push8(FC.ADVANCED_TUNING.dMaxGain)
+                .push8(FC.ADVANCED_TUNING.dMaxAdvance)
                 .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
                 .push8(FC.ADVANCED_TUNING.integratedYawRelax);
 

@@ -290,11 +290,11 @@ pid_tuning.initialize = function (callback) {
         $('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val(FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
         $('.pid_filter select[name="dtermLowpassDynType"]').val(FC.FILTER_CONFIG.dterm_lowpass_type);
 
-        $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
-        $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
-        $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
-        $('.dminGroup input[name="dMinGain"]').val(FC.ADVANCED_TUNING.dMinGain);
-        $('.dminGroup input[name="dMinAdvance"]').val(FC.ADVANCED_TUNING.dMinAdvance);
+        $('.pid_tuning input[name="dMaxRoll"]').val(FC.ADVANCED_TUNING.dMaxRoll);
+        $('.pid_tuning input[name="dMaxPitch"]').val(FC.ADVANCED_TUNING.dMaxPitch);
+        $('.pid_tuning input[name="dMaxYaw"]').val(FC.ADVANCED_TUNING.dMaxYaw);
+        $('.dMaxGroup input[name="dMaxGain"]').val(FC.ADVANCED_TUNING.dMaxGain);
+        $('.dMaxGroup input[name="dMaxAdvance"]').val(FC.ADVANCED_TUNING.dMaxAdvance);
 
         $('input[id="useIntegratedYaw"]').prop('checked', FC.ADVANCED_TUNING.useIntegratedYaw !== 0);
 
@@ -465,70 +465,64 @@ pid_tuning.initialize = function (callback) {
             $('#pidTuningIntegratedYawCaution').toggle(checked);
         }).change();
 
-        // if user decreases Dmax, don't allow Dmin above Dmax
-        function adjustDMin(dElement, dMinElement) {
+        // if user decreases Dmax, don't allow D above Dmax
+        // if user increases D, don't allow Dmax below D
+        function adjustDValues(dElement, dMaxElement) {
             const dValue = parseInt(dElement.val());
-            const dMinValue = parseInt(dMinElement.val());
-            const dMinLimit = Math.min(Math.max(dValue, 0), 250);
-            if (dMinValue > dMinLimit) {
-                dMinElement.val(dMinLimit);
+            const dMaxValue = parseInt(dMaxElement.val());
+            const dMaxLimit = Math.min(Math.max(dValue, 0), 250);
+            const dLimit = Math.min(Math.max(dMaxValue, 0), 250);
+            if (dMaxValue > dMaxLimit) {
+                dMaxElement.val(dMaxLimit);
             }
-        }
-
-        $('.pid_tuning .ROLL input[name="d"]').change(function() {
-            const dMinElement= $('.pid_tuning input[name="dMinRoll"]');
-            adjustDMin($(this), dMinElement);
-        }).change();
-
-        $('.pid_tuning .PITCH input[name="d"]').change(function() {
-            const dMinElement= $('.pid_tuning input[name="dMinPitch"]');
-            adjustDMin($(this), dMinElement);
-        }).change();
-
-        $('.pid_tuning .YAW input[name="d"]').change(function() {
-            const dMinElement= $('.pid_tuning input[name="dMinYaw"]');
-            adjustDMin($(this), dMinElement);
-        }).change();
-
-        // if user increases Dmin, don't allow Dmax below Dmin
-        function adjustD(dMinElement, dElement) {
-            const dValue2 = parseInt(dElement.val());
-            const dMinValue2 = parseInt(dMinElement.val());
-            const dLimit = Math.min(Math.max(dMinValue2, 0), 250);
-
-            if (dValue2 < dLimit) {
+            if (dValue < dLimit) {
                 dElement.val(dLimit);
             }
         }
 
-        $('.pid_tuning input[name="dMinRoll"]').change(function() {
-        const dElement= $('.pid_tuning .ROLL input[name="d"]');
-        adjustD($(this), dElement);
+        $('.pid_tuning input[name="dMaxRoll"]').change(function() {
+            const dMaxElement= $('.pid_tuning input[name="dMaxRoll"]');
+            adjustDValues($(this), dMaxElement);
         }).change();
 
-        $('.pid_tuning input[name="dMinPitch"]').change(function() {
-        const dElement= $('.pid_tuning .PITCH input[name="d"]');
-        adjustD($(this), dElement);
+        $('.pid_tuning input[name="dMaxPitch"]').change(function() {
+            const dMaxElement= $('.pid_tuning input[name="dMaxPitch"]');
+            adjustDValues($(this), dMaxElement);
         }).change();
 
-        $('.pid_tuning input[name="dMinYaw"]').change(function() {
-        const dElement= $('.pid_tuning .YAW input[name="d"]');
-        adjustD($(this), dElement);
+        $('.pid_tuning input[name="dMaxYaw"]').change(function() {
+            const dMaxElement= $('.pid_tuning input[name="dMaxYaw"]');
+            adjustDValues($(this), dMaxElement);
         }).change();
 
         $('.pid_tuning .ROLL input[name="d"]').change(function() {
-            const dMinElement= $('.pid_tuning input[name="dMinRoll"]');
-            adjustDMin($(this), dMinElement);
+            const dElement= $('.pid_tuning .ROLL input[name="d"]');
+            adjustDValues($(this), dElement);
         }).change();
 
         $('.pid_tuning .PITCH input[name="d"]').change(function() {
-            const dMinElement= $('.pid_tuning input[name="dMinPitch"]');
-            adjustDMin($(this), dMinElement);
+            const dElement= $('.pid_tuning .PITCH input[name="d"]');
+            adjustDValues($(this), dElement);
         }).change();
 
         $('.pid_tuning .YAW input[name="d"]').change(function() {
-            const dMinElement= $('.pid_tuning input[name="dMinYaw"]');
-            adjustDMin($(this), dMinElement);
+            const dElement= $('.pid_tuning .YAW input[name="d"]');
+            adjustDValues($(this), dElement);
+        }).change();
+
+        $('.pid_tuning input[name="dMaxRoll"]').change(function() {
+            const dMaxElement= $('.pid_tuning input[name="dMaxRoll"]');
+            adjustDValues($(this), dMaxElement);
+        }).change();
+
+        $('.pid_tuning input[name="dMaxPitch"]').change(function() {
+            const dMaxElement= $('.pid_tuning input[name="dMaxPitch"]');
+            adjustDValues($(this), dMaxElement);
+        }).change();
+
+        $('.pid_tuning input[name="dMaxYaw"]').change(function() {
+            const dMaxElement= $('.pid_tuning input[name="dMaxYaw"]');
+            adjustDValues($(this), dMaxElement);
         }).change();
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
@@ -927,11 +921,11 @@ pid_tuning.initialize = function (callback) {
         FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = parseInt($('.pid_filter input[name="dtermLowpassDynMinFrequency"]').val());
         FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = parseInt($('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val());
 
-        FC.ADVANCED_TUNING.dMinRoll = parseInt($('.pid_tuning input[name="dMinRoll"]').val());
-        FC.ADVANCED_TUNING.dMinPitch = parseInt($('.pid_tuning input[name="dMinPitch"]').val());
-        FC.ADVANCED_TUNING.dMinYaw = parseInt($('.pid_tuning input[name="dMinYaw"]').val());
-        FC.ADVANCED_TUNING.dMinGain = parseInt($('.dminGroup input[name="dMinGain"]').val());
-        FC.ADVANCED_TUNING.dMinAdvance = parseInt($('.dminGroup input[name="dMinAdvance"]').val());
+        FC.ADVANCED_TUNING.dMaxRoll = parseInt($('.pid_tuning input[name="dMaxRoll"]').val());
+        FC.ADVANCED_TUNING.dMaxPitch = parseInt($('.pid_tuning input[name="dMaxPitch"]').val());
+        FC.ADVANCED_TUNING.dMaxYaw = parseInt($('.pid_tuning input[name="dMaxYaw"]').val());
+        FC.ADVANCED_TUNING.dMaxGain = parseInt($('.dMaxGroup input[name="dMaxGain"]').val());
+        FC.ADVANCED_TUNING.dMaxAdvance = parseInt($('.dMaxGroup input[name="dMaxAdvance"]').val());
 
         FC.ADVANCED_TUNING.useIntegratedYaw = $('input[id="useIntegratedYaw"]').is(':checked') ? 1 : 0;
 
@@ -2424,9 +2418,9 @@ pid_tuning.updatePIDColors = function(clear = false) {
         });
     });
 
-    setTuningElementColor($('.pid_tuning input[name="dMinRoll"]'), FC.ADVANCED_TUNING_ACTIVE.dMinRoll, FC.ADVANCED_TUNING.dMinRoll);
-    setTuningElementColor($('.pid_tuning input[name="dMinPitch"]'), FC.ADVANCED_TUNING_ACTIVE.dMinPitch, FC.ADVANCED_TUNING.dMinPitch);
-    setTuningElementColor($('.pid_tuning input[name="dMinYaw"]'), FC.ADVANCED_TUNING_ACTIVE.dMinYaw, FC.ADVANCED_TUNING.dMinYaw);
+    setTuningElementColor($('.pid_tuning input[name="dMaxRoll"]'), FC.ADVANCED_TUNING_ACTIVE.dMaxRoll, FC.ADVANCED_TUNING.dMaxRoll);
+    setTuningElementColor($('.pid_tuning input[name="dMaxPitch"]'), FC.ADVANCED_TUNING_ACTIVE.dMaxPitch, FC.ADVANCED_TUNING.dMaxPitch);
+    setTuningElementColor($('.pid_tuning input[name="dMaxYaw"]'), FC.ADVANCED_TUNING_ACTIVE.dMaxYaw, FC.ADVANCED_TUNING.dMaxYaw);
     setTuningElementColor($('.pid_tuning .ROLL input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardRoll, FC.ADVANCED_TUNING.feedforwardRoll);
     setTuningElementColor($('.pid_tuning .PITCH input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardPitch, FC.ADVANCED_TUNING.feedforwardPitch);
     setTuningElementColor($('.pid_tuning .YAW input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardYaw, FC.ADVANCED_TUNING.feedforwardYaw);

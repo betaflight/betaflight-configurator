@@ -89,14 +89,14 @@
                                 </th>
                                 <th class="derivative">
                                     <div class="name-helpicon-flex">
-                                        <div class="xs">D Max</div>
-                                        <div class="cf_tip sm-min" i18n="pidTuningDMax" i18n_title="pidTuningDMaxHelp"></div>
+                                        <div class="xs">Derivative</div>
+                                        <div class="cf_tip sm-min" i18n="pidTuningDerivative" i18n_title="pidTuningDerivativeHelp"></div>
                                     </div>
                                 </th>
-                                <th class="dmin">
+                                <th class="dmax">
                                     <div class="name-helpicon-flex">
-                                        <div class="xs">Derivative</div>
-                                        <div class="cf_tip sm-min" i18n="pidTuningDMin" i18n_title="pidTuningDMinHelp"></div>
+                                        <div class="xs">D Max</div>
+                                        <div class="cf_tip sm-min" i18n="pidTuningDMax" i18n_title="pidTuningDMaxHelp"></div>
                                     </div>
                                 </th>
                                 <th class="feedforward">
@@ -119,7 +119,7 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="250" /></td>
-                                <td class="pid_data"><input type="number" name="dMinRoll" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="dMaxRoll" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
 
                             </tr>
@@ -129,7 +129,7 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="250" /></td>
-                                <td class="pid_data"><input type="number" name="dMinPitch" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="dMaxPitch" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
                             </tr>
                             <tr class="YAW">
@@ -138,7 +138,7 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="250" /></td>
-                                <td class="pid_data"><input type="number" name="dMinYaw" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="dMaxYaw" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
                             </tr>
                             <tr class="YAW_JUMP_PREVENTION">
@@ -655,22 +655,22 @@
                                 </td>
                             </tr>
 
-                            <tr class="dminGroup">
+                            <tr class="dMaxGroup">
                                 <td>
                                     <span i18n="pidTuningDMaxSettingTitle"></span>
                                 </td>
                                 <td colspan="3">
                                     <span class="suboption">
-                                        <input type="number" name="dMinGain" step="1" min="0" max="100" />
-                                        <label for="dMinGain">
-                                            <span i18n="pidTuningDMinGain"></span>
+                                        <input type="number" name="dMaxGain" step="1" min="0" max="100" />
+                                        <label for="dMaxGain">
+                                            <span i18n="pidTuningDMaxGain"></span>
                                         </label>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningDMaxGainHelp"></div>
                                     </span>
                                     <span class="suboption">
-                                        <input type="number" name="dMinAdvance" step="1" min="0" max="200" />
-                                        <label for="dMinAdvance">
-                                            <span i18n="pidTuningDMinAdvance"></span>
+                                        <input type="number" name="dMaxAdvance" step="1" min="0" max="200" />
+                                        <label for="dMaxAdvance">
+                                            <span i18n="pidTuningDMaxAdvance"></span>
                                         </label>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningDMaxAdvanceHelp"></div>
                                     </span>

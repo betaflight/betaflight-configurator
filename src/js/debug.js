@@ -51,7 +51,7 @@ const DEBUG = {
         {text: "RX_SPEKTRUM_SPI"},
         {text: "DSHOT_RPM_TELEMETRY"},
         {text: "RPM_FILTER"},
-        {text: "D_MIN"},
+        {text: "D_MAX"},
         {text: "AC_CORRECTION"},
         {text: "AC_ERROR"},
         {text: "DUAL_GYRO_SCALED"},
@@ -423,8 +423,8 @@ const DEBUG = {
             'debug[2]': 'Motor 3 - rpmFilter',
             'debug[3]': 'Motor 4 - rpmFilter',
         },
-        'D_MIN': {
-            'debug[all]': 'D_MIN',
+        'D_MAX': {
+            'debug[all]': 'D_MAX',
             'debug[0]': 'Gyro Factor [roll]',
             'debug[1]': 'Setpoint Factor [roll]',
             'debug[2]': 'Actual D [roll]',
