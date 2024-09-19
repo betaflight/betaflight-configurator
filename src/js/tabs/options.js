@@ -30,6 +30,7 @@ options.initialize = function (callback) {
         TABS.options.initDarkTheme();
         TABS.options.initShowDevToolsOnStartup();
         TABS.options.initShowNotifications();
+        TABS.options.initUserLanguage();
         TABS.options.initShowWarnings();
         TABS.options.initMeteredConnection();
 
@@ -233,13 +234,34 @@ options.initShowNotifications = function () {
 options.initMeteredConnection = function () {
     const result = getConfig("meteredConnection");
     $("div.meteredConnection input")
-        .prop("checked", !!result.meteredConnection)
-        .on('change', function () {
-            setConfig({ meteredConnection: $(this).is(":checked") });
-            // update network status
-            ispConnected();
-        })
-        .trigger('change');
+    .prop("checked", !!result.meteredConnection)
+    .on('change', function () {
+        setConfig({ meteredConnection: $(this).is(":checked") });
+        // update network status
+        ispConnected();
+    })
+    .trigger('change');
+};
+
+options.initUserLanguage = function () {
+    const userLanguage = i18n.selectedLanguage;
+    const userLanguageElement = $('#userLanguage');
+    const languagesAvailables = i18n.getLanguagesAvailables();
+    userLanguageElement.append(`<option value="DEFAULT">${i18n.getMessage('language_default')}</option>`);
+    userLanguageElement.append('<option disabled>------</option>');
+    languagesAvailables.forEach(element => {
+        const languageName = i18n.getMessage(`language_${element}`);
+        userLanguageElement.append(`<option value="${element}">${languageName}</option>`);
+    });
+
+    userLanguageElement
+    .val(userLanguage)
+    .on('change', e => {
+        i18n.changeLanguage(e.target.value);
+        // translate to user-selected language
+        i18n.localizePage();
+    })
+    .trigger('change');
 };
 
 // TODO: remove when modules are in place
