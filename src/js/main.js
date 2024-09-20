@@ -86,7 +86,9 @@ function appReady() {
 
         initializeSerialBackend();
     });
-    if (getConfig('showNotifications') && NotificationManager.checkPermission() === 'default') {
+
+    const showNotifications = getConfig('showNotifications', false).showNotifications;
+    if (showNotifications && NotificationManager.checkPermission() === 'default') {
         NotificationManager.requestPermission();
     }
 }
