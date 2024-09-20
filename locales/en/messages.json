@@ -7408,6 +7408,14 @@
     "showNotifications": {
         "message": "Show notifications for long operations"
     },
+    "notificationsDeniedTitle": {
+        "message": "Notifications blocked",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "Notifications are blocked. Please enable them in your browser settings. Otherwise, you will not receive notifications about long operations. If you are using Chrome, you can enable notifications by clicking on the lock icon in the address bar and selecting 'Site settings'.",
+        "description": "Message when Notifications has no or denied permissions"
+    },
     "flashEraseDoneNotification": {
         "message": "Dataflash erase has been completed",
         "description": "Notification message when flash erase is done"
