@@ -574,6 +574,7 @@ const FC = {
             thrustLinearization:        0,
             tpaRate:                    0,
             tpaBreakpoint:              0,
+            dynIdleStartIncrease:       0,
         };
         this.ADVANCED_TUNING_ACTIVE = { ...this.ADVANCED_TUNING };
 

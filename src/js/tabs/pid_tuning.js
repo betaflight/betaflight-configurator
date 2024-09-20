@@ -10,7 +10,7 @@ import TuningSliders from "../TuningSliders";
 import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { degToRad, isInt } from "../utils/common";
 import semver from "semver";
@@ -122,6 +122,10 @@ pid_tuning.initialize = function (callback) {
         } else {
             $('.tpa-old input[name="tpa"]').val(FC.RC_TUNING.dynamic_THR_PID.toFixed(2));
             $('.tpa-old input[name="tpa-breakpoint"]').val(FC.RC_TUNING.dynamic_THR_breakpoint);
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="dynIdleStartIncrease-number"]').val(FC.ADVANCED_TUNING.dynIdleStartIncrease);
         }
 
         $('.vbatpidcompensation').toggle(vbatpidcompensationIsUsed);
@@ -850,6 +854,10 @@ pid_tuning.initialize = function (callback) {
         } else {
             FC.RC_TUNING.dynamic_THR_PID = parseFloat($('.tpa-old input[name="tpa"]').val());
             FC.RC_TUNING.dynamic_THR_breakpoint = parseInt($('.tpa-old input[name="tpa-breakpoint"]').val());
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            FC.ADVANCED_TUNING.dynIdleStartIncrease = parseInt($('input[name="dynIdleStartIncrease-number"]').val());
         }
 
         FC.FILTER_CONFIG.gyro_lowpass_hz = parseInt($('.pid_filter input[name="gyroLowpassFrequency"]').val());

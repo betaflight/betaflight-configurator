@@ -1168,6 +1168,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.ADVANCED_TUNING.tpaRate = parseFloat((data.readU8() / 100).toFixed(2));
                 FC.ADVANCED_TUNING.tpaBreakpoint = data.readU16();
 
+                // Introduced in 1.47
+                FC.ADVANCED_TUNING.dynIdleStartIncrease = data.readU8();
+
                 FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
                 break;
             case MSPCodes.MSP_SENSOR_CONFIG:
@@ -2119,7 +2122,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             buffer.push8(FC.ADVANCED_TUNING.tpaMode);
             buffer.push8(Math.round(FC.ADVANCED_TUNING.tpaRate * 100));
             buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
+
+            // Introduced in 1.47
+            buffer.push8(FC.ADVANCED_TUNING.dynIdleStartIncrease);
             break;
+
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
             buffer.push8(FC.SENSOR_CONFIG.acc_hardware)
                 .push8(FC.SENSOR_CONFIG.baro_hardware)

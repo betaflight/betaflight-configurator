@@ -4588,6 +4588,12 @@
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle is DISABLED because Dshot Telemetry is OFF"
     },
+    "pidTuningDynIdleStartIncrease": {
+        "message": "Dynamic Idle Start Increase"
+    },
+    "pidTuningDynIdleStartIncreaseHelp": {
+        "message": "TBD"
+    },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"
     },
