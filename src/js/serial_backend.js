@@ -464,7 +464,7 @@ function checkReportProblems() {
 
         if (needsProblemReportingDialog) {
 
-            problems.map((problem) => {
+            problems.forEach((problem) => {
                 problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
             });
 

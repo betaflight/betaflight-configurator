@@ -234,12 +234,12 @@ options.initMeteredConnection = function () {
     const result = getConfig("meteredConnection");
     $("div.meteredConnection input")
         .prop("checked", !!result.meteredConnection)
-        .change(function () {
+        .on('change', function () {
             setConfig({ meteredConnection: $(this).is(":checked") });
             // update network status
             ispConnected();
         })
-        .change();
+        .trigger('change');
 };
 
 // TODO: remove when modules are in place
