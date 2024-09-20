@@ -383,7 +383,9 @@ onboard_logging.initialize = function (callback) {
 
         $(".dataflash-saving").addClass("done");
 
-        NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashDownloadDoneNotification'), icon: "/images/pwa/favicon.ico"});
+        if (getConfig('showNotifications')) {
+            NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashDownloadDoneNotification'), icon: "/images/pwa/favicon.ico"});
+        }
     }
 
     function flash_update_summary(onDone) {
