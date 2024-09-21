@@ -18,6 +18,7 @@ import DFU from '../protocols/webusbdfu';
 import AutoBackup from '../utils/AutoBackup.js';
 import AutoDetect from '../utils/AutoDetect.js';
 import { EventBus } from "../../components/eventBus";
+import { ispConnected } from '../utils/connection.js';
 
 const firmware_flasher = {
     targets: null,
@@ -147,7 +148,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function loadTargetList(targets) {
-            if (!targets || !navigator.onLine) {
+            if (!targets || !ispConnected()) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
                 $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
 
@@ -214,7 +215,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function buildOptions(data) {
-            if (!navigator.onLine) {
+            if (!ispConnected()) {
                 return;
             }
 
@@ -1133,7 +1134,7 @@ firmware_flasher.initialize = function (callback) {
     }
 
     self.buildApi.loadTargets(() => {
-       $('#content').load("./tabs/firmware_flasher.html", onDocumentLoad);
+        $('#content').load("./tabs/firmware_flasher.html", onDocumentLoad);
     });
 };
 
@@ -1142,7 +1143,7 @@ firmware_flasher.initialize = function (callback) {
 
 
 firmware_flasher.validateBuildKey = function() {
-    return this.cloudBuildKey?.length === 32 && navigator.onLine;
+    return this.cloudBuildKey?.length === 32 && ispConnected();
 };
 
 firmware_flasher.cleanup = function (callback) {

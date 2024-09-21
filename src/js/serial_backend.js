@@ -25,6 +25,7 @@ import BuildApi from "./BuildApi";
 
 import { serialShim } from "./serial_shim.js";
 import { EventBus } from "../components/eventBus";
+import { ispConnected } from "./utils/connection";
 
 let serial = serialShim();
 
@@ -463,7 +464,7 @@ function checkReportProblems() {
 
         if (needsProblemReportingDialog) {
 
-            problems.map((problem) => {
+            problems.forEach((problem) => {
                 problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
             });
 
@@ -491,7 +492,7 @@ async function processBuildOptions() {
 
     // firmware 1_45 or higher is required to support cloud build options
     // firmware 1_46 or higher retrieves build options from the flight controller
-    if (supported && FC.CONFIG.buildKey.length === 32 && navigator.onLine) {
+    if (supported && FC.CONFIG.buildKey.length === 32 && ispConnected()) {
         const buildApi = new BuildApi();
 
         function onLoadCloudBuild(options) {

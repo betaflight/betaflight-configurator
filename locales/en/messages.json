@@ -138,6 +138,10 @@
     "rememberLastTab": {
         "message": "Reopen last tab on connect"
     },
+    "meteredConnection": {
+        "message": "Disable internet access (for metered or slow connections)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "Opt out of the anonymised collection of statistics data"
     },
@@ -1197,6 +1201,34 @@
     },
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
+    },
+    "initialSetupNetworkInfo": {
+        "message": "Network info"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Shows network connection status",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Status:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "Online"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "Offline"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Slow"
+    },
+    "initialSetupNetworkType": {
+        "message": "Type:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Downlink:"
     },
     "featureNone": {
         "message": "&lt;Select One&gt;"

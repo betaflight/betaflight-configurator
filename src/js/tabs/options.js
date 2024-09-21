@@ -8,6 +8,7 @@ import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdate
 import { checkSetupAnalytics } from '../Analytics';
 import $ from 'jquery';
 import NotificationManager from '../utils/notifications';
+import { ispConnected } from '../utils/connection';
 
 const options = {};
 options.initialize = function (callback) {
@@ -30,6 +31,7 @@ options.initialize = function (callback) {
         TABS.options.initShowDevToolsOnStartup();
         TABS.options.initShowNotifications();
         TABS.options.initShowWarnings();
+        TABS.options.initMeteredConnection();
 
         GUI.content_ready(callback);
     });
@@ -226,6 +228,18 @@ options.initShowNotifications = function () {
             setConfig({ showNotifications: element.is(":checked") });
         })
         .change();
+};
+
+options.initMeteredConnection = function () {
+    const result = getConfig("meteredConnection");
+    $("div.meteredConnection input")
+        .prop("checked", !!result.meteredConnection)
+        .on('change', function () {
+            setConfig({ meteredConnection: $(this).is(":checked") });
+            // update network status
+            ispConnected();
+        })
+        .trigger('change');
 };
 
 // TODO: remove when modules are in place

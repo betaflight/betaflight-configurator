@@ -11,6 +11,7 @@ import MSPCodes from '../msp/MSPCodes';
 import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import { gui_log } from '../gui_log';
 import $ from 'jquery';
+import { ispConnected } from '../utils/connection';
 
 const setup = {
     yaw_fix: 0.0,
@@ -411,7 +412,7 @@ setup.initialize = function (callback) {
         const showBuildInfo = function() {
             const supported = FC.CONFIG.buildKey.length === 32;
 
-            if (supported && navigator.onLine) {
+            if (supported && ispConnected()) {
                 const buildRoot   = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
                 const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage('initialSetupInfoBuildConfig')}: ${buildRoot}/json">
                                     <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage('initialSetupInfoBuildConfig')}</strong></a></span>`;
@@ -426,7 +427,7 @@ setup.initialize = function (callback) {
         };
 
         const showBuildOptions = function() {
-            const supported = (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && navigator.onLine || semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) && FC.CONFIG.buildOptions.length;
+            const supported = (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && ispConnected() || semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) && FC.CONFIG.buildOptions.length;
 
             if (supported) {
                 let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
@@ -464,9 +465,33 @@ setup.initialize = function (callback) {
             }
         }
 
+        function showNetworkStatus() {
+            const networkStatus = ispConnected();
+
+            let statusText = '';
+
+            const type = navigator.connection.effectiveType;
+            const downlink = navigator.connection.downlink;
+            const rtt = navigator.connection.rtt;
+
+            if (!networkStatus || !navigator.onLine || type === 'none') {
+                statusText = i18n.getMessage('initialSetupNetworkInfoStatusOffline');
+            } else if (type === 'slow-2g' || type === '2g' || downlink < 0.115 || rtt > 1000) {
+                statusText = i18n.getMessage('initialSetupNetworkInfoStatusSlow');
+            } else {
+                statusText = i18n.getMessage('initialSetupNetworkInfoStatusOnline');
+            }
+
+            $('.network-status').text(statusText);
+            $('.network-type').text(navigator.connection.effectiveType);
+            $('.network-downlink').text(`${navigator.connection.downlink} Mbps`);
+            $('.network-rtt').text(navigator.connection.rtt);
+        }
+
         prepareDisarmFlags();
         showSensorInfo();
         showFirmwareInfo();
+        showNetworkStatus();
 
         // Show Sonar info box if sensor exist
         if (!have_sensor(FC.CONFIG.activeSensors, 'sonar')) {

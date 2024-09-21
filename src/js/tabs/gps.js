@@ -11,6 +11,7 @@ import { mspHelper } from '../msp/MSPHelper';
 import { updateTabList } from '../utils/updateTabList';
 import { initMap } from './map';
 import { fromLonLat } from "ol/proj";
+import { ispConnected } from "../utils/connection";
 
 const gps = {};
 
@@ -352,7 +353,7 @@ gps.initialize = async function (callback) {
 
             let gpsFoundPosition = false;
 
-            if (navigator.onLine) {
+            if (ispConnected()) {
                 $('#connect').hide();
 
                 gpsFoundPosition = !!(lon && lat);
@@ -382,7 +383,7 @@ gps.initialize = async function (callback) {
         }, 75, true);
 
         //check for internet connection on load
-        if (navigator.onLine) {
+        if (ispConnected()) {
             console.log('Online');
             set_online();
         } else {
@@ -391,7 +392,7 @@ gps.initialize = async function (callback) {
         }
 
         $("#check").on('click',function(){
-            if (navigator.onLine) {
+            if (ispConnected()) {
                 console.log('Online');
                 set_online();
             } else {
