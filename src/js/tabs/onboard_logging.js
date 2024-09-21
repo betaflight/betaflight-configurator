@@ -383,7 +383,7 @@ onboard_logging.initialize = function (callback) {
 
         $(".dataflash-saving").addClass("done");
 
-        if (getConfig('showNotifications')) {
+        if (getConfig('showNotifications').showNotifications) {
             NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashDownloadDoneNotification'), icon: "/images/pwa/favicon.ico"});
         }
     }
@@ -504,7 +504,7 @@ onboard_logging.initialize = function (callback) {
             if (CONFIGURATOR.connectionValid && !eraseCancelled) {
                 if (FC.DATAFLASH.ready) {
                     $(".dataflash-confirm-erase")[0].close();
-                    if (getConfig('showNotifications')) {
+                    if (getConfig('showNotifications').showNotifications) {
                         NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashEraseDoneNotification'), icon: "/images/pwa/favicon.ico"});
                     }
                 } else {

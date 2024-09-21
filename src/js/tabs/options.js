@@ -7,7 +7,7 @@ import DarkTheme, { setDarkTheme } from '../DarkTheme';
 import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdates';
 import { checkSetupAnalytics } from '../Analytics';
 import $ from 'jquery';
-import CONFIGURATOR from '../data_storage';
+import NotificationManager from '../utils/notifications';
 
 const options = {};
 options.initialize = function (callback) {
@@ -186,8 +186,44 @@ options.initShowNotifications = function () {
     const result = getConfig("showNotifications");
     $("div.showNotifications input")
         .prop("checked", !!result.showNotifications)
-        .change(function () {
-            setConfig({ showNotifications: $(this).is(":checked") });
+        .on('change', function () {
+            const element = $(this);
+            const enabled = element.is(':checked');
+
+            if (enabled) {
+                const informationDialog = {
+                    title : i18n.getMessage("notificationsDeniedTitle"),
+                    text: i18n.getMessage("notificationsDenied"),
+                    buttonConfirmText: i18n.getMessage("OK"),
+                };
+
+                switch (NotificationManager.checkPermission()) {
+                    case 'granted':
+                        setConfig({ showNotifications: enabled });
+                        break;
+                    case 'denied':
+                        // disable notifications if permission is denied
+                        GUI.showInformationDialog(informationDialog);
+                        element.prop('checked', false);
+                        break;
+                    case 'default':
+                        // need to request permission first before enabling notifications
+                        element.prop('checked', false);
+                        NotificationManager.requestPermission().then((permission) => {
+                            if (permission === 'granted') {
+                                // enable notifications if permission is granted
+                                setConfig({ showNotifications: enabled });
+                                // trigger change event to update the switchery
+                                element.prop('checked', true).trigger('change');
+                            } else {
+                                GUI.showInformationDialog(informationDialog);
+                            }
+                        });
+                }
+
+            }
+
+            setConfig({ showNotifications: element.is(":checked") });
         })
         .change();
 };

@@ -805,7 +805,7 @@ class STM32Protocol {
                             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingSuccessful'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID);
 
                             // Show notification
-                            if (getConfig('showNotifications')) {
+                            if (getConfig('showNotifications').showNotifications) {
                                 NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('programmingSuccessfulNotification'), icon: "/images/pwa/favicon.ico"});
                             }
 
@@ -817,7 +817,7 @@ class STM32Protocol {
                             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
                             // Show notification
-                            if (getConfig('showNotifications')) {
+                            if (getConfig('showNotifications').showNotifications) {
                                 NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('programmingFailedNotification'), icon: "/images/pwa/favicon.ico"});
                             }
 
