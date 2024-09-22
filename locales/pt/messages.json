@@ -1739,11 +1739,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravity impulsiona o I (e, na 4.3, o P) durante e pouco depois de mudanças rápidas no acelerador, aumenta a estabilidade da atitude durante rasgos de acelerador.<br><br>Ganhos mais elevados podem melhorar a estabilidade em aparelhos com baixa autoridade ou com desvio no centro de gravidade."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivativo",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Amortecimento dinâmico \/ Definições D Max",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1751,7 +1751,7 @@
         "message": "Amortecimento<br>Dinâmico",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Ganho",
         "description": "Gain of the D Max feature"
     },
@@ -1759,7 +1759,7 @@
         "message": "O ganho D Max aumenta a sensibilidade do sistema que aumenta o D quando o quad vira rapidamente ou treme em propwash.<br><br>Valores de ganho maiores aumentam o D mais rapidamente do que valores inferiores, elevando o D até ao D Max mais rapidamente. Valores de 40 ou mesmo 50 podem funcionar bem para construções de Freestyle limpas.<br><br>Valores baixos não aumentarão o D para o DMax exceto em movimentos realmente rápidos, e podem ser mais adequados a configurações de corrida através da minimização do atraso do D.<br><br>AVISO: Ganho, ou Avanço, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá bloquear o D no valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Avanço",
         "description": "Advance of the D Max feature"
     },
@@ -1767,11 +1767,11 @@
         "message": "O Avanço D Max adiciona sensibilidade ao fator de Ganho quando os sticks são movidos rapidamente.<br><br>O avanço não responde ao gyro ou a propwash. Age mais cedo do que o fator de Ganho e às vezes é útil para quads com baixa autoridade que tendem a ter atraso no início de um movimento.<br><br>Geralmente é melhor deixar no zero.<br><br>AVISO: Ambos o Avanço, ou o Ganho, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir ambos para zero irá bloquear o D no valor de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max D aumenta o D durante movimentos mais rápidos do gyro e\/ou dos sticks.<br><br>O fator 'Ganho' aumenta o D quando o quad vira rapidamente ou está a tremer em propwash. Geralmente, apenas 'Ganho' é necessário. <br><br>O fator 'Avanço' aumenta o D na direção de D Max durante inputs de sticks. Normalmente não é necessário e deve ser definido como zero. Avanço pode ser útil para quads com baixa autoridade que tendem a ter muito overshoot.<br><br>Valores maiores de Ganho (por exemplo, 40) podem ser mais adequados para o estilo livre, levantando o D mais prontamente.<br><br>AVISO: Um dos valore de Ganho ou Avanço deve ser definido acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá bloquear o D no valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "O amortecimento de base de QUALQUER movimento do aparelho. <br \/><br \/>Opõe-se quer ao movimento causado por inputs de sticks como ao de  influências externas (ex: propwash ou rajadas de vento)<br \/><br \/>Valores mais altos do D Min fornecem mais estabilidade e reduzem o overshoot.<br \/><br \/>O D amplifica ruído (amplifica por 10x a 100x). Isto pode queimar os motores se os ganhos forem muito altos ou se o D não for bem filtrado.<br \/><br \/>O termo D é um bocado como o amortecedor no seu carro.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1932,9 +1932,6 @@
     "pidTuningIntegralHelp": {
         "message": "Controla os pequenos offsets persistentes.<br><br>Semelhante ao P, mas acumula progressiva e lentamente até que o erro seja zero. Importante para tendências de longo prazo, como um centro de de gravidade desviado, ou influências externas persistentes como o vento.<br \/><br \/>Altos ganhos permitem um rastreio mais apertado, especialmente em curvas, mas pode fazer com que o aparelho pareça mais rijo.<br><br>Pode causar lentas oscilações em builds com baixa autoridade ou se estiver alto em proporção ao P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivativo"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -4196,11 +4193,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Amortecimento Dinâmico:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Aumenta o máximo de D, a quantidade máxima que D pode aumentar durante movimentos mais rápidos.<br \/><br \/>Para quads de corrida, onde o principal controle deslizante de amortecedor foi reduzido para minimizar o calor do motor, mover esta barra deslizante para a direita irá melhorar o controle do overshoot para mudanças na direção rápida.<br \/><br \/>Para quads HD ou cinemáticos, a instabilidade em voo para frente é melhor resolvida movendo o slider de amortecimento (não o slider dinâmico) para a direita. Verifique se há aquecimento do motor e escute por ruídos estranhos durante inputs rápidos quando mover este controle para a direita.<br \/><br \/>Para quads de freestyle, especialmente builds mais pesadas, mover este slider para a direita pode ajudar a controlar o overshoot em flips e rolls.<br \/><br \/><strong>Nota:<\/strong><br \/>Geralmente, overshoot em flips e rolls são devidos a insuficiente 'i-Term Relax', desyncs de motor ou autoridade inadequada (Saturação do Motor). Se achar que ao mover o slider de amortecimento para a direita não melhora o overshoot no flip ou roll, volte a colocá-lo na posição normal e procure a razão para o overshoot ou oscilação.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Amortecimento Pitch:<br \/><i><small>Pitch:Roll D<\/small><\/i>",

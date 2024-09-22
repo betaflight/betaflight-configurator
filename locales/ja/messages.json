@@ -1739,11 +1739,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "アンチグラビティは、高速のスロットル切り替え時にI値 (BF4.3ではP値) をブーストし、スロットルポンプのような効果で姿勢安定性を高めます。<br><br>値を高くすると、制御の弱い機体や重心がずれた機体で安定性を向上させることが可能です。"
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivative",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "動的ダンピング \/ D Max 設定",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1751,7 +1751,7 @@
         "message": "動的<br>ダンピング",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "強度[ゲイン]",
         "description": "Gain of the D Max feature"
     },
@@ -1759,7 +1759,7 @@
         "message": "D Max強度[ゲイン] は、機体の急旋回やプロップウォッシュでふらついたりしたときにD値を自動増加させシステムの感度を高めます。<br><br>強度を高くすると低い値よりもD値が上昇しやすくなり、D値がより速くD Max値に向かいます。40～50の値は新造したフリースタイル機体に適しています。<br><br>低い値では、よほど速い動きでない限りD値がD Max値まで上昇することはなく、D値の差異を最小にすることでレース用機体のセットアップに適している場合があります。<br><br>警告: 強度、詳細のどちらかを20程度以上に設定しないと、D値が正常に増加しません。両方の値をゼロにすると、D値は基準値で固定されます。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "詳細設定",
         "description": "Advance of the D Max feature"
     },
@@ -1767,11 +1767,11 @@
         "message": "D Max詳細は、スティックを素早く動かしたときの強度係数に感度を付加します。<br><br>詳細はジャイロやプロップウォッシュには反応しません。強度係数よりも速く作用し、動き出しでひどく遅れがちな制御の弱い機体に時々有効です。<br><br>一般的にはゼロのままがベストです。<br><br>警告: 詳細、強度のどちらかを20程度以上に設定しないと、D値は正常に増加しません。両方の値をゼロにすると、D値は基準値で固定されます。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Maxは、ジャイロやスティックを素早く動かすときにD値を増加させます。<br><br>機体を急旋回させたり、プロップウォッシュでふらついたりすると『強度』係数はD値を増加させます。通常は『強度』だけ調整が必要となります。<br><br>『詳細』係数はスティック入力時にD値をD Max方向に増加させる係数です。通常は必要ありませんので、ゼロに設定してください。詳細は大きくオーバーシュートしがちな制御の弱い機体に有効です。<br><br>強度の値が高いほど (例えば40)、D値をより容易に上昇させることができ、フリースタイル機体に適している場合があります。<br><br>警告: 強度、詳細のどちらかを20程度以上に設定しないと、D値が正常に増加しません。両方の値をゼロにすると、D値は基準値で固定されます。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "機体のあらゆる動きを減衰させる基準値です。<br \/><br \/>スティック入力や外部からの影響 (プロップウォッシュや突風等) による動きを抑制します。<br \/><br \/>D Min値を高くすると、より安定し、オーバーシュートが減少します。<br \/><br \/>D値はノイズを増幅 (10～100倍に拡大) します。このため値を高くしすぎたり、D値がうまくフィルタリングされていないと、モーターが焼損する場合があります。<br \/><br \/>D値は車のショックアブソーバーのようなものです。",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1932,9 +1932,6 @@
     "pidTuningIntegralHelp": {
         "message": "小規模なズレを永続的に制御します。<br><br>P値と似ていますがエラーがゼロになるまで徐々に累積されます。重心がずれているような長期的な偏りや、風のような持続的な外的影響に重要な値となります。<br \/><br \/>値を高くすると、特に旋回時にタイトな挙動が得られますが、機体の動きが硬く感じられることがあります。<br><br>制御の弱い機体や、P値に比べ値が高い場合は、ゆっくりとした揺れを引き起こす場合があります。",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivative"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -4196,11 +4193,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "動的ダンピング:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "D Max値を増加させます。これは、より速い動きの時にD値が増加できる最大値です。<br \/><br \/>モーターの発熱を抑えるためにメインのダンピングスライダーが低く設定されているレース用機体の場合、このスライダーを右側に動かすことで、素早い旋回時のオーバーシュートコントロールが改善されます。<br \/><br \/>HD空撮機やCineWhoop機体では、直進飛行が不安定な場合、ダンピングスライダー (動的ダンピングスライダーではありません) を右側に動かすのが最適です。このスライダーを右側に動かすときは、モーターの発熱をチェックし、素早い入力時に異音がしないかを確認してください。<br \/><br \/>フリースタイル機体、特にヘビー級の機体では、このスライダーを右側に動かすことで、フリップやロールでのオーバーシュートを抑えることができます。<br \/><br \/><strong>注:<\/strong><br \/> 一般的にフリップやロールのオーバーシュートは『I値リラックス』が十分でないか、モーターの同期が取れていないか、制御が不十分なこと (別名: モーターサチレーション) が原因です。ダンピングブーストスライダーを右側に動かしてもフリップやロールのオーバーシュートが改善されない場合は、再度通常の位置に戻しオーバーシュートやふらつきの原因を探ってください。",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "ピッチダンピング:<br \/><i><small>Pitch:Roll D<\/small><\/i>",

@@ -1306,11 +1306,11 @@
         "message": "Muga",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Irabazia",
         "description": "Gain of the D Max feature"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Aurreratua",
         "description": "Advance of the D Max feature"
     },

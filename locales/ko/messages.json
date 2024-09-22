@@ -1743,11 +1743,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "안티 그라비티는 스로틀이 빠르게 변화하는 동안과 직후에 I (4.3은 P도) 를 증가시켜 스로틀 펌프 중 자세 안정성을 높입니다.<br><br>높은 게인 값은 낮은 권위의 기계 또는 무게 중심이 틀어진 기계에서 안정성을 향상시킬 수 있습니다."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>미분",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "다이나믹 댐핑 \/ D 최대 설정",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1755,7 +1755,7 @@
         "message": "다이나믹<br>댐핑",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "게인",
         "description": "Gain of the D Max feature"
     },
@@ -1763,7 +1763,7 @@
         "message": "D 최대 게인은 쿼드가 빠르게 회전하거나 프롭워시 흔들릴 때 D가 증가하는 시스템의 감도를 높입니다.<br><br>게인 값이 높을수록 낮은 값보다 D가 더 쉽게 상승하므로 D를 D 최대로 더 빠르게 들어올립니다.  40 또는 50의 값은 깨끗한 프리스타일 빌드에 적합합니다.<br><br>낮은 값은 매우 빠른 움직임을 제외하고 D를 D 최대쪽으로 올리지 않으며, D 지연을 최소화함으로써 레이스 설정에 더 적합할 수 있습니다.<br><br>경고: 게인 또는 진전을 약 20보다 높게 설정해야 합니다. 그렇지 않으면 D가 증가하지 않습니다. 둘 다 0으로 설정하면 D가 기준값으로 고정됩니다.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "가속",
         "description": "Advance of the D Max feature"
     },
@@ -1771,11 +1771,11 @@
         "message": "D 최대 진전은 스틱이 빠르게 이동할 때 게인 요인에 감도를 추가합니다.<br><br>진전은 자이로 또는 프롭워시에 반응하지 않습니다. 게인 계수보다 먼저 작용하며, 이동 시작 시 지연이 심한 낮은 권한 쿼드에 유용할 때도 있습니다.<br><br>일반적으로 0으로 두는 것이 가장 좋습니다.<br><br>경고: 진전 또는 게인을 약 20보다 높게 설정해야 합니다. 그렇지 않으면 D가 증가하지 않습니다. 둘 다 0으로 설정하면 D가 기준값으로 고정됩니다.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D 최대는 더 빠른 자이로 및\/또는 스틱 이동 중에 D를 증가시킵니다.<br><br>쿼드가 빠르게 회전하거나 프롭워시에서 흔들릴 때 '게인' 계수는 D를 증가시킵니다. 보통 '게인'만 있으면 됩니다. <br><br>스틱 입력 중에 '진전' 계수는 D를 D 최대쪽으로 증가시킵니다. 일반적으로 필요하지 않으며 0으로 설정해야 합니다.  진전은 오버슈팅이 심한 낮은 권위의 쿼드에 유용할 수 있습니다.<br><br>더 높은 게인 값 (예: 40) 은 D를 더 쉽게 들어올려 프리스타일에 더 적합할 수 있습니다.<br><br>경고: 게인 또는 진전 중 하나를 약 20보다 높게 설정해야 합니다. 그렇지 않으면 D가 증가하지 않습니다. 둘 다 0으로 설정하면 D가 기준값으로 고정됩니다.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "기체의 모든 모션에 대한 기본 댐핑. <br \/><br \/>스틱 입력이나 외부 영향(예: 프롭워시 또는 돌풍)에 의해 유발되는지 여부에 관계없이 움직임에 반대합니다.<br \/><br \/>D 최소 게인이 높을수록 안정성이 높아지고 오버슈트가 감소합니다.<br \/><br \/>D는 소음을 증폭시킵니다(10배에서 100배 확대).  게인이 너무 높거나 D가 잘 걸러지지 않으면 모터가 연소될 수 있습니다.<br \/><br \/>D-텀은 당신의 차에 있는 쇼크 업소버와 약간 비슷합니다.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1936,9 +1936,6 @@
     "pidTuningIntegralHelp": {
         "message": "작은 오프셋 지속을 제어합니다.<br><br>P와 비슷하지만 오차가 0이 될 때까지 점진적으로 천천히 누적됩니다.  무게중심 틀어짐 또는 바람과 같은 지속적인 외부 영향과 같은 장기적인 편향에 중요합니다.<br \/><br \/>더 높은 게인은 특히 차례대로 더 엄격한 추적을 제공하지만, 기체가 딱딱하게 느껴질 수 있습니다.<br><br>낮은 권위의 빌드 또는 P에 대한 비율이 높은 경우 느린 진동을 일으킬 수 있습니다.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "D(미분)"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> 최대"
@@ -4200,11 +4197,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "다이나믹 댐핑:<br \/><i><small>D 최대<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "더 빠른 움직임 동안 D가 증가할 수 있는 최대량인 D 최대를 증가시킵니다.<br \/><br \/>주 댐핑 슬라이더가 모터 열을 최소화하기 위해 낮게 설정되어 있는 레이스 쿼드의 경우, 이 슬라이더를 오른쪽으로 이동하면 빠른 방향 변경을 위한 오버슈트 제어를 개선할 수 있습니다.<br \/><br \/>HD 또는 시네마틱 쿼드의 경우, 전진 비행의 불안정성은 (다이나믹 댐핑 슬라이더가 아닌) 댐핑 슬라이더를 오른쪽으로 이동하여 가장 잘 해결됩니다. 이 슬라이더를 오른쪽으로 이동할 때 빠른 입력 동안 항상 모터 열을 확인하고 이상한 소음이 들리는지 확인하십시오.<br \/><br \/>프리스타일 쿼드, 특히 무거운 빌드의 경우 이 슬라이더를 오른쪽으로 이동하면 플립과 롤에서 오버슛을 제어하는 ​​데 도움이 될 수 있습니다.<br \/><br \/><strong>참고:<\/strong><br \/>일반적으로 플립과 롤의 오버슛은 'i-텀 릴렉스'가 충분하지 않거나, 모터 동기화가 부족하거나, 권한이 충분하지 않기 때문입니다(일명 모터 포화). 댐핑 부스트 슬라이더를 오른쪽으로 움직여도 플립이나 롤 오버슈트가 개선되지 않으면, 정상 위치로 되돌리고 오버슈트 또는 흔들림의 원인을 찾으십시오.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "피치 댐핑:<br \/><i><small>피치:롤 D<\/small><\/i>",

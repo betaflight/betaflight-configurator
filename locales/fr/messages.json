@@ -1492,11 +1492,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "L'anti Gravité renforce I (et, en 4.3, P) pendant et peu de temps après le changement rapide de l'accélérateur, augmentant la stabilité d'attitude pendant les pompes à papillon.<br><br>Des valeurs de gain plus élevées peuvent améliorer la stabilité sur les machines de basse autorité ou celles avec un centre de gravité décalé."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>érivée",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Atténuation dynamique \/ réglages D Max",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1504,7 +1504,7 @@
         "message": "Atténuation<br>Dynamique",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Gain",
         "description": "Gain of the D Max feature"
     },
@@ -1512,7 +1512,7 @@
         "message": "Le gain D Max augmente la sensibilité du système qui augmente D lorsque le quad tourne rapidement ou tremble lors de propwash.<br><br>Des valeurs de gain plus élevées augmentent D plus rapidement que les valeurs basses, amenant D vers D Max plus vite. Des valeurs de 40 ou même 50 peuvent bien fonctionner pour une machine freestyle bien faite. <br><br>Des valeurs basses n'augmenteront pas D vers D Max à moins que les mouvements ne soient vraiment très rapides et peut satisfaire une configuration pour la course en minimisant le délais de D.<br><br>ATTENTION: Gain ou Avance doit être au delà de 20, ou D n'augmentera pas comme il devrait. Mettre ces deux valeurs à zéro verrouille D à la valeur de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Avance",
         "description": "Advance of the D Max feature"
     },
@@ -1520,11 +1520,11 @@
         "message": "D Max Avance ajoute de la sensibilité au facteur Gain lorsque les sticks sont déplacés rapidement.<br><br>L'avance ne réagit pas au gyro ou au propwash. Il agit plus tôt que le facteur Gain et est parfois utile pour les quads de basse autorité qui ont tendance à prendre du retard au début d'un mouvement.<br><br>Généralement, il est préférable de le laisser à zéro.<br><br>AVERTISSEMENT : Soit l'avance, soit le Gain, doit être défini au-dessus de 20, sinon D n'augmentera pas comme il le devrait. Si vous définissez les deux à zéro, vous verrouillez D à la valeur de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max augmente D pendant les mouvements plus rapides du gyro et\/ou des sticks.<br><br>Le facteur 'Gain' augmente D lorsque le quad tourne rapidement ou se secoue en propwash. Habituellement, seul 'Gain' est nécessaire. <br><br>Le facteur 'Avance' augmente D vers D Max pendant les entrées des sticks. Habituellement, il n'est pas nécessaire et devrait être fixé à zéro. L'avance peut être utile pour les quads de basse autorité qui ont tendance à dépasser lourdement.<br><br>Des valeurs de gain plus élevées (par exemple 40) peuvent être plus adaptées au freestyle en augmentant D plus facilement.<br><br>AVERTISSEMENT : Au moins Gain ou Avance doit être défini au-dessus de 20 ou D n'augmentera pas comme il le devrait. Si vous définissez les deux à zéro, vous verrouillez D à la valeur de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDMaxHelp": {
         "message": "Atténue de facto de TOUT mouvement de la machine.<br \/><br \/>Oppose un mouvement que ce soit causé par des mouvements de sticks ou des influences extérieures (e. . prop-wash ou rafales de vent)<br \/><br \/>Des gains d min plus élevés procurent plus de stabilité et réduisent le dépassement.<br \/><br \/>D amplifie le bruit (de 10x à 100x). Cela peut brûler les moteurs si les gains sont trop élevés ou D n'est pas bien filtré.<br \/><br \/>D-term est un peu comme l'amortisseur sur votre voiture.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1685,9 +1685,6 @@
     "pidTuningIntegralHelp": {
         "message": "Contrôle la persistance de petits décalages.<br><br>Similaire à P, mais accumule progressivement et lentement jusqu'à ce que l'erreur soit nulle. Important pour les biais de long terme comme un centre de gravité décalé ou une influence extérieure persistante comme le vent.<br\/><br\/>Des gains plus élevés fournissent un suivi plus juste, surtout lors des virages, mais peut rendre le contrôle un peu rigide.<br><br>Peut causer des oscillations lentes sur les machines peu puissantes ou si la valeur est élevée en comparaison de P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Dérivée"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -3555,11 +3552,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Atténuation dynamique:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Augmente le D Max, valeur maximale que D peut atteindre lors de mouvements rapides.<br \/><br \/>Pour les quads de course où le curseur d'atténuation principal est bas pour minimiser l'échauffement des moteurs, déplacer ce curseur à droite améliorera le contrôle du dépassement pour les changements de direction rapides.<br \/><br \/>Pour les quads HD ou cinématiques, une instabilité de vol en avant est mieux corrigée en bougeant le curseur d'atténuation (pas celui d'atténuation dynamique) à droite.\nVérifiez la température des moteurs et soyez attentifs aux sons étranges lors de mouvement de sticks rapides quand vous bougez ce curiseur à droite.<br \/><br \/>Pour les quads freestyle, surtout les machines lourdes, déplacer ce curseur à droite peut aider à contrôler les dépassements lors de flips et rolls.<br \/><br \/><strong>Note:<\/strong><br \/>En général le dépassement lors de flips et rolls est lié à un manque de 'i-Term Relax', ou une désynchronization des moteurs, ou une authoritée inadequate (saturation des Moteurs).\nSi vous trouvez que déplacer le boost de l'atténuation à droite n'améliore pas les dépassements de flips ou rolls, replacez-le à la position normale et cherchez une autre raison pour les dépassements ou oscillations.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Atténuation du Pitch :<br \/><i><small>Pitch:Roll D<\/small><\/i>",

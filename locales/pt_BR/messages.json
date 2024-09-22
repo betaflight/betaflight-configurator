@@ -1657,11 +1657,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "A Anti Gravidade aumenta o termo I (e na versão 4.3, também o termo P) durante e um pouco depois de mudanças rápidas no acelerador, aumentando a estabilidade de atitude durante uma aceleração rápida.<br><br>Valores de ganho maiores podem melhorar a estabilidade em aeronaves com pouca autoridade ou naquelas que tem seu centro de gravidade deslocado."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivativo",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Amortecedor Dinâmico \/ Configurações de D Máximo",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1669,7 +1669,7 @@
         "message": "Amortecedor<br>Dinâmico",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Ganho",
         "description": "Gain of the D Max feature"
     },
@@ -1677,7 +1677,7 @@
         "message": "O ganho D Max aumenta a sensibilidade do sistema que aumenta o D quando a aeronave vira rapidamente ou treme devido a propwash.<br><br>Valores de ganho maiores aumentam o D mais rapidamente, elevando o D até ao D Max mais rapidamente. Valores de 40 ou mesmo 50 podem funcionar bem para construções de Freestyle.<br><br>Valores baixos não aumentarão o D para o DMax exceto em movimentos realmente rápidos, e podem ser mais adequados a configurações de corrida através da minimização do atraso do D.<br><br>AVISO: Ganho, ou Avanço, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá manter o D no valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Avanço",
         "description": "Advance of the D Max feature"
     },
@@ -1685,11 +1685,11 @@
         "message": "O Avanço D Max adiciona sensibilidade ao fator de Ganho quando os sticks são movidos rapidamente.<br><br>O avanço não responde ao giroscópio ou ao efeito de propwash. Age mais cedo do que o fator de Ganho e às vezes é útil para aeronaves com pouca autoridade que tendem a ter atraso no início de um movimento.<br><br>Geralmente é melhor deixar no zero.<br><br>AVISO: Ambos o Avanço, ou o Ganho, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir ambos para zero irá manter o D no valor de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max aumenta o D durante movimentos mais rápidos do gyro e\/ou dos sticks.<br><br>O fator 'Ganho' aumenta o D quando o quad vira rapidamente ou se está sofrendo os efeitos de propwash. Geralmente, apenas 'Ganho' é necessário. <br><br>O fator 'Avanço' aumenta o D na direção de D Max durante movimentos dos sticks. Normalmente não é necessário e deve ser definido como zero. Avanço pode ser útil para aeronaves com pouca autoridade que tendem a oscilar muito após movimentos rápidos.<br><br>Valores maiores de Ganho (por exemplo, 40) podem ser mais adequados para o estilo livre, aumentando o D mais rapidamente.<br><br>AVISO: Um dos valores de Ganho ou Avanço deve ser definido acima de 20 ou o D não aumentará como deveria. Definir para zero irá manter o D no valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "A base de amortecimento de QUALQUER movimento da aeronave. <br \/><br \/>Opõe-se qualquer ao movimento causado pelos sticks ou  de influências externas (ex: propwash ou rajadas de vento)<br \/><br \/>Valores mais altos do D Min fornecem mais estabilidade e reduzem oscilações.<br \/><br \/>O D amplifica ruído (amplifica em 10x a 100x). Isto pode queimar os motores se os ganhos forem muito altos ou se o D não for bem filtrado.<br \/><br \/>O termo D como o amortecedor no seu carro.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1850,9 +1850,6 @@
     "pidTuningIntegralHelp": {
         "message": "Controla os pequenos deslocamentos persistentes.<br><br>Semelhante ao P, mas acumula progressiva e lentamente até que o erro seja zero. Importante para tendências de longo prazo, como um centro de de gravidade desviado, ou influências externas persistentes como o vento.<br \/><br \/>Altos ganhos permitem um rastreio mais preciso, especialmente em curvas, mas pode fazer com que o aeronave pareça mais dura.<br><br>Pode causar lentas oscilações em aeronaves com pouca autoridade ou se estiver muito elevado em relação ao P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivativo"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -4058,11 +4055,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Amortecedor Dinâmico:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Aumenta o máximo de D, a quantidade máxima que D pode aumentar durante movimentos mais rápidos.<br \/><br \/>Para aeronaves de corrida, onde o slider do amortecedor principal de foi reduzido para diminuir a temperatura do motor, mover este slider para a direita irá melhorar o controle de overshoot para mudanças na direção rápida.<br \/><br \/>Para aeronaves HD ou cinemáticos, para melhorar a instabilidade em voo para frente, é recomendado mover o slider de amortecimento (não o dinâmico) para a direita. Verifique se há aquecimento do motor e escute por ruídos estranhos durante movimentos rápidos do stick quando mover este slider para a direita.<br \/><br \/>Para aeronaves de freestyle, especialmente as mais pesadas, mover este slider para a direita pode ajudar a controlar o overshoot em flips e rolls.<br \/><br \/><strong>Nota:<\/strong><br \/>Geralmente, overshoot em flips e rolls são devidos a valores muito baixos no 'Relaxar o Termo I', desincronização dos motores ou pouca autoridade (Saturação do Motor). Se achar que ao mover o slider de amortecimento para a direita não melhora o overshoot no flip ou roll, volte a colocá-lo na posição normal e procure a razão para o overshoot ou oscilação.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Amortecimento do Pitch:<br \/><i><small>Pitch:Roll D<\/small><\/i>",

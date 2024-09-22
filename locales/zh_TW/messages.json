@@ -1288,11 +1288,11 @@
         "message": "閾值",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "增益",
         "description": "Gain of the D Max feature"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "超前",
         "description": "Advance of the D Max feature"
     },

@@ -1737,11 +1737,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravity zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w jednostkach latających o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>pochodna",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Ustawienia dynamicznego tłumienia \/ D Max",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1749,7 +1749,7 @@
         "message": "Dynamiczny<br>Damping",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Wzmocnienie",
         "description": "Gain of the D Max feature"
     },
@@ -1757,7 +1757,7 @@
         "message": "D Max Gain zwiększa czułość systemu, gdy quad obraca się szybko lub podczas efektu propwash.<br><br>Wyższe wartości wzmocnienia powodują szybsze podnoszenie D. Wartości 40 lub nawet 50 mogą dobrze działać w przypadku czystych konfiguracji Freestyle.<br><br>Niższe wartości nie zwiększają D w kierunku D Max, z wyjątkiem naprawdę szybkich ruchów, i mogą lepiej pasować do konfiguracji quada wyścigowego, minimalizując opóźnienie D.<br><br >OSTRZEŻENIE: Wzmocnienie lub Natarcie muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Wyprzedzenie",
         "description": "Advance of the D Max feature"
     },
@@ -1765,11 +1765,11 @@
         "message": "D Max Advance dodaje czułość do współczynnika wzmocnienia, gdy drążki poruszają się szybko.<br><br>Advance nie reaguje na żyroskop ani na efekt propwash. Działa wcześniej niż współczynnik wzmocnienia i czasami jest przydatny w przypadku quadów o niskim autorytecie, które mają tendencję do dużego opóźnienia na początku ruchu.<br><br>Ogólnie najlepiej pozostawić go na zero.<br><br>OSTRZEŻENIE: Advance lub Zysk muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max zwiększa D podczas szybkich ruchów żyroskopu oraz podczas szybkich ruchów  drążka w nadajniku RC.<br><br>Współczynnik „Gain” zwiększa D, gdy quad obraca się szybko lub podczas efektu propwash. Zwykle potrzebne jest tylko „Gain”. <br><br>Współczynnik „Advance” zwiększa D w kierunku D Max podczas wychylania drążka. Zwykle nie jest potrzebny i powinien być ustawiony na zero. Advance może być przydatny w przypadku quadów o niskim autorytecie, które mają tendencję do silnego przeregulowania.<br><br>Wyższe wartości wzmocnienia Gain (np. 40) mogą być bardziej odpowiednie do freestyle'u, ponieważ łatwiej podnoszą D.<br><br>OSTRZEŻENIE: Jedno ze wzmocnień Gain lub Advance musi być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "Podstawowe tłumienie KAŻDEGO ruchu twojego quada. <br \/><br \/> Przeciwstawia się ruchowi spowodowanemu ruchem drążka lub czynnikami zewnętrznymi (np. efektem propwash lub podmuchom  wiatru)<br \/><br \/>Wyższe wzmocnienia D Min zapewniają większą stabilność i zmniejszają przeregulowanie.<br \/> <br \/>D wzmacnia szum (powiększa od 10x do 100x). Może to spalić silniki, jeśli wzmocnienia są zbyt wysokie lub D nie jest dobrze filtrowane.<br \/><br \/>D-term jest trochę jak amortyzator w twoim samochodzie.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1930,9 +1930,6 @@
     "pidTuningIntegralHelp": {
         "message": "Kontroluje utrzymujące się małe przesunięcia.<br><br>Podobne do P, ale kumuluje się stopniowo i powoli, aż błąd wyniesie zero. Ważne dla długoterminowych odchyleń, takich jak przesunięcie środka ciężkości lub utrzymujące się wpływy zewnętrzne, takie jak wiatr.<br \/><br \/>Wyższe wzmocnienia zapewniają dokładniejsze śledzenie, zwłaszcza na zakrętach, ale mogą sprawić, że jednostka latająca będzie sztywna.<br> <br>Może powodować powolne oscylacje w kompilacjach o niskim autorytecie lub jeśli jest wysoki proporcjonalnie do P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Pochodna"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -4188,11 +4185,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Tłumienie dynamiczne:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Zwiększa D max, maksymalną wartość, do której D może wzrosnąć podczas szybszych ruchów.<br \/><br \/>W przypadku quadów wyścigowych, w których główny suwak tłumienia został ustawiony nisko, aby zminimalizować ciepło silnika, przesunięcie tego suwaka w prawo poprawi kontrola przeregulowania dla szybkich zmian kierunku.<br \/><br \/>W przypadku quadów HD lub kinowych niestabilność w locie do przodu najlepiej rozwiązać, przesuwając suwak Tłumienie (nie suwak Tłumienie dynamiczne) w prawo. Sprawdź, czy silnik się nagrzewa i słuchaj dziwnych dźwięków podczas szybkiego wprowadzania danych podczas przesuwania tego suwaka w prawo.<br \/><br \/>W przypadku quadów freestyle, szczególnie cięższych, przesunięcie tego suwaka w prawo może pomóc w kontrolowaniu przerzutów i przewrotów.<br \/><br \/><strong>Uwaga:<\/strong><br \/>Ogólnie przewroty w przewrotach i przewrotach są spowodowane niewystarczającym „i-Term Relax”, desynchronizacją silnika lub nieodpowiednim autorytetem (tzw. Nasycenie). Jeśli okaże się, że przesunięcie suwaka Wzmocnienie tłumienia w prawo nie poprawia przewrotu lub przechylenia, ustaw go z powrotem w normalnej pozycji i poszukaj przyczyny przeregulowania lub chybotania.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Pitch Damping:<br \/><i><small>Pitch:Roll D<\/small><\/i>",

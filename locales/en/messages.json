@@ -1826,11 +1826,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravity boosts I (and, in 4.3, P) during and shortly after fast throttle changes, increasing attitude stability during throttle pumps.<br><br>Higher gain values may improve stability on low authority machines or those with an offset centre of gravity."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D</b>erivative",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Dynamic Damping / D Max settings",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1838,7 +1838,7 @@
         "message": "Dynamic<br>Damping",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Gain",
         "description": "Gain of the D Max feature"
     },
@@ -1846,7 +1846,7 @@
         "message": "D Max Gain increases the sensitivity of the system that increases D  when the quad turns quickly or is shaking in propwash.<br><br>Higher Gain values bring D up more readily than lower values, lifting D towards D Max more quickly.  Values of 40 or even 50 may work well for clean Freestyle builds.<br><br>Lower values will not raise D towards DMax except in really fast moves, and may suit race setups better by minimising D lag.<br><br>WARNING: Either Gain, or Advance, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Advance",
         "description": "Advance of the D Max feature"
     },
@@ -1854,12 +1854,12 @@
         "message": "D Max Advance adds sensitivity to the Gain factor when the sticks are moved quickly.<br><br>Advance does not respond to gyro or propwash. It acts earlier than the Gain factor and is occasionally useful for low authority quads that tend to lag badly at the start of a move.<br><br>Generally it is best left at zero.<br><br>WARNING: Either Advance, or Gain, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max increases D during quicker gyro and/or stick movements.<br><br>The 'Gain' factor increases D when the quad turns quickly or is shaking in propwash. Usually only 'Gain' is needed. <br><br>The 'Advance' factor increases D towards D Max during stick inputs. Usually it is not needed and should be set to zero.  Advance can be useful for low authority quads that tend to overshoot heavily.<br><br>Higher Gain values (eg 40) may be more suitable for freestyle by lifting D more readily.<br><br>WARNING: One of Gain or Advance must be set above about 20 or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
-        "message": "Baseline damping of ANY motion of the craft. <br /><br />Opposes movement whether caused by stick inputs or external influences (e.g. prop-wash or wind gusts)<br /><br />Higher D Min gains provide more stability and reduce overshoot.<br /><br />D amplifies noise (magnifies by 10x to 100x).  This can burn out motors if gains are too high or D isn't filtered well.<br /><br />D-term is a bit like the shock absorber on your car.",
+    "pidTuningDerivativeHelp": {
+        "message": "Baseline damping of ANY motion of the craft. <br /><br />Opposes movement whether caused by stick inputs or external influences (e.g. prop-wash or wind gusts)<br /><br />Higher D gains provide more stability and reduce overshoot.<br /><br />D amplifies noise (magnifies by 10x to 100x).  This can burn out motors if gains are too high or D isn't filtered well.<br /><br />D-term is a bit like the shock absorber on your car.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -2019,9 +2019,6 @@
     "pidTuningIntegralHelp": {
         "message": "Controls persisting small offsets.<br><br>Similar to P, but accumulates progressively and slowly until error is zero.  Important for longer-term biases such as an offset center of gravity, or persistent outside influences like wind.<br /><br />Higher gains provide tighter tracking, especially in turns, but can make the craft feel stiff.<br><br>Can cause slow oscillations in low authority builds or if high in proportion to P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivative"
     },
     "pidTuningDMax": {
         "message": "<b>D</b> Max"
@@ -4283,11 +4280,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Dynamic Damping:<br /><i><small>D Max</small></i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Increases D max, the maximum amount that D can increase to during faster movements.<br /><br />For race quads, where the main Damping slider has been set low to minimize motor heat, moving this slider to the right will improve overshoot control for quick direction changes.<br /><br />For HD or cinematic quads, instability in forward flight is best addressed by moving the Damping slider (not the Dynamic Damping slider) to the right. Check for motor heat and listen for weird noises during quick inputs when moving this slider to the right.<br /><br />For freestyle quads, especially heavier builds, moving this slider to the right may help control overshoot in flips and rolls.<br /><br /><strong>Note:</strong><br />Generally overshoot in flips and rolls is due to not enough 'i-Term Relax', or motor desyncs, or inadequate authority (a.k.a. Motor Saturation). If you find that moving the Damping Boost slider to the right doesn't improve flip or roll overshoot, put it back to the normal position, and seek out the reason for the overshoot or wobble.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Pitch Damping:<br /><i><small>Pitch:Roll D</small></i>",

@@ -1739,11 +1739,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravedad aumenta I (y también P en 4.3) durante un instante poco después de cambios de aceleración bruscos, aumentando la estabilidad de la actitud durante los acelerones.<br><br>Valores más altos pueden mejorar la estabilidad en máquinas de baja autoridad o en aquellas con un centro de gravedad desplazado."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "Derivativo (D)",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Amortiguación Dinámica \/ Ajustes D Max",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1751,7 +1751,7 @@
         "message": "Amortiguación<br>Dinámica",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Ganancia",
         "description": "Gain of the D Max feature"
     },
@@ -1759,7 +1759,7 @@
         "message": "El valor de Ganancia de D Max aumenta la sensibilidad del sistema que incrementa D cuando la aeronave gira rápidamente o se agita en turbulencias.<br><br>Valores más altos hacen que D suba más fácilmente, elevando D hacia D Max más rápidamente. Valores de 40 o incluso 50 pueden funcionar bien para construcciones limpias de Freestyle.<br><br>Valores inferiores no elevarán D hacia D Max excepto en movimientos realmente muy rápidos, y puede adaptarse mejor a construcciones tipo carreras minimizando el retraso de D.<br><br>ADVERTENCIA: El valor de Ganancia o el Avance, deben establecerse por encima de 20, o D no aumentará como debería. Establecer ambos a cero bloqueará D en el valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Avance",
         "description": "Advance of the D Max feature"
     },
@@ -1767,11 +1767,11 @@
         "message": "El Avance de D Max añade sensibilidad al factor de Ganancia cuando los mandos se mueven rápidamente.<br><br>El Avance no responde al giro o a las turbulencias. Actúa antes que el factor de Ganancia y en ocasiones es útil para aeronaves de baja autoridad que tienden a retrasarse malamente al inicio de un movimiento.<br><br>Generalmente es mejor dejarlo en cero.<br><br>ADVERTENCIA: El valor de Ganancia o el Avance, deben establecerse por encima de 20, o D no aumentará como debería. Establecer ambos a cero bloqueará D en el valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max incrementa D durante movimientos rápidos de giro y\/o mando.<br><br>El factor de Ganancia incrementa D cuando la aeronave gira rápidamente o se agita en turbulencias. Habitualmente sólo la Ganancia es necesaria.<br><br>El factor Avance incrementa D hacia D Max con los movimientos de los mandos. Normalmente no se necesita y deber ser cero. Puede ser útil para aeronaves con baja autoridad que tienden a sobregirar fuertemente.<br><br>Valores de Ganancia altos (por ejemplo 40) se adaptan mejor al estilo freestyle elevando D más rápidamente.<br><br>ADVERTENCIA: El valor de Ganancia o el Avance, deben establecerse por encima de 20, o D no aumentará como debería. Establecer ambos a cero bloqueará D en el valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "Amortiguación de CUALQUIER movimiento de la aeronave.<br \/><br \/>Se opone al movimiento causado por entradas de los mandos o influencias externas (por ejemplo turbulencias o rachas de viento)<br \/><br \/>Un valor más alto de D Min proporciona más estabilidad y reduce los sobregiros.<br \/><br \/>D amplifica el ruido (magnifica entre 10x y 100x). Esto puede quemar los motores si los valores son demasiado altos o si la D no tiene los filtros correctos.<br \/><br \/>El término D es un poco como el amortiguador de tu coche.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1932,9 +1932,6 @@
     "pidTuningIntegralHelp": {
         "message": "Controla pequeños desplazamientos persistentes.<br><br>Similar a P, pero acumula progresivamente y lentamente hasta que el error es cero. Importante para tendencias más largas en el tiempo, como un desplazamiento del centro de gravedad, o influencias externas persistentes como el viento.<br \/><br \/>Valores más altos proporciona un seguimiento más ajustado, especialmente en giros, pero pueden hacer que parezca que la aeronave se resiste a los cambios.<br><br>Puede causar oscilaciones lentas en construcciones de baja autoridad o si tiene un valor muy alto en proporción a P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivativo (D)"
     },
     "pidTuningDMax": {
         "message": "D Max (D)"
@@ -4196,11 +4193,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Amortiguación dinámica:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Aumenta D max, el máximo valor que D puede incrementarse durante movimientos rápidos.<br \/><br \/>Para aeronaves de carreras, donde el deslizador principal de amortiguación ha sido ajustado bajo para minimizar el calor de los motores, mover este deslizador hacia la derecha mejorará el control al sobregiro para cambios rápidos de dirección.<br \/><br \/>Para aeronaves HD o cinemáticas, la inestabilidad en vuelo recto se corrige mejor moviendo el deslizador de Amortiguación (no el de Amortiguación dinámica) hacia la derecha. Verifica siempre la temperatura del motor y escucha por si hay ruidos extraños al hacer movimientos rápidos si mueves este deslizador hacia la derecha.<br \/><br \/>Para aeronaves freestyle, especialmente construcciones pesadas, mover el deslizador hacia la derecha ayudará a controlar el sobregiro en flips y rolls.<br \/><br \/><strong>Nota:<\/strong><br \/> Generalmente el sobregiro en flips y rolls es producido por no tener suficiente 'Relajar I Term', desincronizaciones de motor, o autoridad inadecuada (saturación de motores). Si al mover la Amortiguación dinámica a la derecha no mejora el sobregiro en flips y rolls, vuelve a la posición \"normal\" y busca la razón del sobregiro o bamboleo.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Amortiguación de Pitch:<br \/><i><small>Pitch:Roll D<\/small><\/i>",

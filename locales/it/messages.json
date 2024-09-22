@@ -1739,11 +1739,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "L'Anti Gravity incrementa l'I term (e, in 4.3, la P) quando vengono rilevati cambiamenti veloci di gas, aumentando la stabilità durante i colpi di gas.<br><br>Valori più alti di guadagno possono aumentare la stabilità su quad a bassa potenza o in quelli con un baricentro spostato."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivativo",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Impostazioni Damping dinamico\/D Max",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1751,7 +1751,7 @@
         "message": "Damping<br>Dinamico",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Guadagno",
         "description": "Gain of the D Max feature"
     },
@@ -1759,7 +1759,7 @@
         "message": "Il guadagno del D Max aumenta la sensibilità del sistema che aumenta la D quando il quad vira velocemente o sta oscillando nel propwash.<br><br>Valori di guadagno più alti faranno aumentare la D più velocemente rispetto a valori bassi, aumentando la D verso la D Max più rapidamente. Valori di 40 o anche 50 possono funzionare bene per build Freestyle pulite.<br><br>Valori più bassi non aumenteranno la D tranne che in manovre molto veloci e potrebbe essere utile in setup da gara minimizzando il lag della D.<br><br>AVVISO: Sia per il guadagno o l'advance, devono essere settati oltre circa 20, altrimenti la D non aumenterà come deve. Impostando entrambi su 0 bloccherà la D al valore base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Avanzamento",
         "description": "Advance of the D Max feature"
     },
@@ -1767,11 +1767,11 @@
         "message": "Il D Max Advance aggiunge sensibilità al fattore di guadagno quando gli stick vengono spostati rapidamente.<br><br>L'Advance non risponde al giroscopio o al propwash. Agisce prima del guadagno ed è occasionalmente utile per i quads a bassa potenza che tendono a ritardare molto all'inizio di una manovra.<br><br>Generalmente è meglio lasciare a zero.<br><br>ATTENZIONE: Uno tra il guadagno o l'advance devono essere sopra circa 20, altrimenti la D non aumenterà come dovrebbe. Impostando entrambi su 0 bloccherà la D al valore base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max aumenta la D durante i movimenti veloci del gyro e\/o degli stick.<br><br>Il fattore 'Guadagno' aumenta la D quando il quad vira rapidamente o sta oscillando in propwash. Di solito è necessario solo 'Guadagno'. <br><br>Il fattore 'Advance' aumenta la D verso il D Max durante gli input degli stick. Di solito non è necessario e dovrebbe essere impostato a zero. L'advance può essere utile per i quad a bassa potenza che tendono a dare molto overshoot.<br><br>Valori di guadagno più alti (es 40) possono essere più adatti per il freestyle, aumentandola D più facilmente.<br><br>ATTENZIONE: Uno tra il guadagno o l'advance devono essere sopra circa 20, altrimenti la D non aumenterà come dovrebbe. Impostando entrambi su 0 bloccherà la D al valore base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "Smorzamento base di QUALSIASI movimento del modello. <br \/><br \/>Si oppone al movimento sia causato dal movimento degli stick sia da influenze esterne (es propwash o folate di vento)<br \/><br \/>Guadagni di D Min più alti danno una maggiore stabilità e riducono gli overshoot.<br \/><br \/>La D amplifica il rumore (aumenta da 10x a 100x). Questo può far bruciare i motori se i guadagni sono troppo alti o la D non è ben filtrata.<br \/><br \/>La D è un po' come l'ammortizzatore di una macchina.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1932,9 +1932,6 @@
     "pidTuningIntegralHelp": {
         "message": "Controlla piccole differenze persistenti.<br><br>Simile alla P ma si accumula progressivamente e lentamente finché l'errore non è zero. È importante per bias a lungo termine come un baricentro spostato o influenze esterne persistenti come il vento.<br \/><br \/>Guadagni più alti garantiscono un tracking più stretto, specialmente nelle virate, ma possono rendere il quad più rigido.<br><br>Può causare oscillazioni lente su quad a bassa potenza o se troppo alto in rapporto alla P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivato"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -4196,11 +4193,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Damping dinamico:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Aumenta D max, il valore massimo a cui la D può aumentare durante i movimenti più veloci.<br \/><br \/>Per quad da gara, dove lo slider principale del Damping è stato impostato basso per minimizzare il calore dei motori, muovendo lo slider a destra migliorerà il controllo dell'overshoot in cambi rapidi di direzione.<br \/><br \/>Per i quad HD e cinematici, l'instabilità nel volo in avanti può essere risolta meglio muovendo lo slider Damping (non lo slider del Damping Dinamico) verso destra. Controlla il calore dei motori e rumori strani durante input veloci quando sposti lo slider verso destra.<br \/><br \/>Per quad freestyle, specialmente build più pesanti, muovendo questo slider verso destra può aiutare a controllare overshoot in flip e roll.<br \/><br \/><strong>Nota:<\/strong><br \/>Generalmente l'overshoot in flip e roll è dovuto a 'I-Term Relax' insufficiente, desync dei motori o potenza inadeguata (alias Saturazione dei Motori). Se scopri che muovendo lo slider Boost del Damping a destra non migliora l'overshoot di flip e roll, riportalo in posizione normale e cerca il motivo per gli overshoot o il wobble.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Damping Pitch:<br \/><i><small>D Pitch e Roll<\/small><\/i>",
