@@ -1346,6 +1346,9 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Калибровка Gyro на первом арме"
     },
+    "configurationPrearmUntilFirstArm": {
+        "message": "Есди включено, то переключатель Преарм будет требоваться только при первом Арме"
+    },
     "configurationDigitalIdlePercent": {
         "message": "Режим холостого хода (% статический)"
     },
