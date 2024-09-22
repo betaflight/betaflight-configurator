@@ -1,9 +1,5 @@
 // naming BFClipboard to avoid conflict with Clipboard API
 class BFClipboard {
-    constructor() {
-        this.writeText = null;
-        this.readText = null;
-    }
     writeText(text, onSuccess, onError) {
         navigator.clipboard
             .writeText(text)
