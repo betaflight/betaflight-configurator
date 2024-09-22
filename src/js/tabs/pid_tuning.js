@@ -10,7 +10,7 @@ import TuningSliders from "../TuningSliders";
 import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { degToRad, isInt } from "../utils/common";
 import semver from "semver";
@@ -81,7 +81,7 @@ pid_tuning.initialize = function (callback) {
         self.setRateProfile();
 
         // Profile names
-        if (semver.gte(FC.CONFIG.apiVersion, "1.45.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('input[name="pidProfileName"]').val(FC.CONFIG.pidProfileNames[FC.CONFIG.profile]);
             $('input[name="rateProfileName"]').val(FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile]);
         } else {
@@ -479,52 +479,22 @@ pid_tuning.initialize = function (callback) {
                 dElement.val(dLimit);
             }
         }
-
-        $('.pid_tuning input[name="dMaxRoll"]').change(function() {
-            const dMaxElement= $('.pid_tuning input[name="dMaxRoll"]');
-            adjustDValues($(this), dMaxElement);
-        }).change();
-
-        $('.pid_tuning input[name="dMaxPitch"]').change(function() {
-            const dMaxElement= $('.pid_tuning input[name="dMaxPitch"]');
-            adjustDValues($(this), dMaxElement);
-        }).change();
-
-        $('.pid_tuning input[name="dMaxYaw"]').change(function() {
-            const dMaxElement= $('.pid_tuning input[name="dMaxYaw"]');
-            adjustDValues($(this), dMaxElement);
-        }).change();
-
-        $('.pid_tuning .ROLL input[name="d"]').change(function() {
-            const dElement= $('.pid_tuning .ROLL input[name="d"]');
-            adjustDValues($(this), dElement);
-        }).change();
-
-        $('.pid_tuning .PITCH input[name="d"]').change(function() {
-            const dElement= $('.pid_tuning .PITCH input[name="d"]');
-            adjustDValues($(this), dElement);
-        }).change();
-
-        $('.pid_tuning .YAW input[name="d"]').change(function() {
-            const dElement= $('.pid_tuning .YAW input[name="d"]');
-            adjustDValues($(this), dElement);
-        }).change();
-
-        $('.pid_tuning input[name="dMaxRoll"]').change(function() {
-            const dMaxElement= $('.pid_tuning input[name="dMaxRoll"]');
-            adjustDValues($(this), dMaxElement);
-        }).change();
-
-        $('.pid_tuning input[name="dMaxPitch"]').change(function() {
-            const dMaxElement= $('.pid_tuning input[name="dMaxPitch"]');
-            adjustDValues($(this), dMaxElement);
-        }).change();
-
-        $('.pid_tuning input[name="dMaxYaw"]').change(function() {
-            const dMaxElement= $('.pid_tuning input[name="dMaxYaw"]');
-            adjustDValues($(this), dMaxElement);
-        }).change();
-
+        
+        function setupDAdjustmentHandlers(axis) {
+            const dMaxElement = $(`.pid_tuning input[name="dMax${axis}"]`);
+            const dElement = $(`.pid_tuning .${axis} input[name="d"]`);
+        
+            dMaxElement.change(function() {
+                adjustDValues(dElement, dMaxElement);
+            }).change();
+        
+            dElement.change(function() {
+                adjustDValues(dElement, dMaxElement);
+            }).change();
+        }
+        
+        ['Roll', 'Pitch', 'Yaw'].forEach(axis => setupDAdjustmentHandlers(axis));
+        
         $('input[id="gyroNotch1Enabled"]').change(function() {
             const checked = $(this).is(':checked');
             const hz = FC.FILTER_CONFIG.gyro_notch_hz > 0 ? FC.FILTER_CONFIG.gyro_notch_hz : FILTER_DEFAULT.gyro_notch_hz;
@@ -1066,6 +1036,17 @@ pid_tuning.initialize = function (callback) {
         FC.FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
 
         $('.tab-pid_tuning .pidTuningSuperexpoRates').hide();
+            
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            const derivativeTip = document.querySelector('.derivative .cf_tip');
+            const dMaxTip = document.querySelector('.dmax .cf_tip');
+        
+            ['i18n', 'i18n_title'].forEach(attr => {
+                const tmp = derivativeTip.getAttribute(attr);
+                derivativeTip.setAttribute(attr, dMaxTip.getAttribute(attr));
+                dMaxTip.setAttribute(attr, tmp);
+            });
+        }
 
         // translate to user-selected language
         i18n.localizePage();
