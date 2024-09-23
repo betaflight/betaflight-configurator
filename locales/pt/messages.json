@@ -135,6 +135,10 @@
     "rememberLastTab": {
         "message": "Reabrir a última aba ao conectar"
     },
+    "meteredConnection": {
+        "message": "Desativar o acesso à internet (para ligações limitadas ou lentas)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "Excluir-se da coleta anónima de dados estatísticos"
     },
@@ -1114,6 +1118,34 @@
     },
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">gravada<\/span>"
+    },
+    "initialSetupNetworkInfo": {
+        "message": "Informações da rede"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Mostra o estado da ligação de rede",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Estado:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "Ligado"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "Desligado"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Lento"
+    },
+    "initialSetupNetworkType": {
+        "message": "Tipo:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Downlink:"
     },
     "featureNone": {
         "message": "&lt;Selecione Um&gt;"
@@ -7315,6 +7347,14 @@
     },
     "showNotifications": {
         "message": "Mostrar notificações para operações longas"
+    },
+    "notificationsDeniedTitle": {
+        "message": "Notificações bloqueadas",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "Notificações estão bloqueadas. Por favor, habilite-as nas configurações do seu navegador. Caso contrário, não receberá notificações sobre operações longas. Se estiver a usar o Chrome, pode ativar as notificações ao clicar no ícone do bloqueio na barra de endereços e ao selecionar 'Configurações do Site'.",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "O apagar da Dataflash foi concluído",

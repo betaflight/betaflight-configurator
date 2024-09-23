@@ -1554,6 +1554,12 @@
     "configurationSerialRX": {
         "message": "Rodzaj sygnału odbiornika"
     },
+    "someRXTypesDisabled": {
+        "message": "Bieżąca konfiguracja kompilacji nie wspiera niektórych dostawców odbiorników."
+    },
+    "serialRXNotSupported": {
+        "message": "Wybrany dostawca Odbiornika nie jest obsługiwany przez aktualną konfigurację. Wybierz innego dostawcę lub zaktualizuj firmware z poprawnym protokołem radiowym wybranym w konfiguracji kompilacji."
+    },
     "configurationSpiRX": {
         "message": "Rodzaj sygnału odbiornika SPI"
     },
@@ -2106,6 +2112,12 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Tryb suwaka Pid Tuning<\/strong><br><br>Tryb suwaka Pid Tuning może być:<br><br>&bull; WYŁĄCZONE - bez suwaków, wprowadź wartości ręcznie<br>&bull; RP – suwaki kontrolują tylko Roll i Pitch, wprowadź wartości Yaw ręcznie<br>&bull; RPY – suwaki kontrolują wszystkie wartości PID<br><br><span class=\"message-negative\"><b>Ostrzeżenie:<\/b><\/span>Przejście z trybu RP do trybu RPY spowoduje nadpisanie ustawień odchylenia z ustawieniami oprogramowania układowego."
+    },
+    "receiverHelpModelId": {
+        "message": "Jeśli ustawisz Model Match na wartość inną niż 255, możesz określić numer odbiornika na stronie ustawień modelu w OpenTX\/EdgeTX i włączyć Model Match w skrypcie ELRS LUA dla tego modelu. Model match mieści się w zakresie od 0 do 63 włącznie.<br \/>Zobacz dokumentację ELRS, aby uzyskać więcej informacji."
+    },
+    "receiverModelId": {
+        "message": "ID zgodności modelu"
     },
     "receiverHelp": {
         "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdź, czy Failsafe działa prawidłowo!<\/a><\/strong><\/b> Ustawienia znajdują się w zakładce Failsafe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego firmware dla twojego nadajnika Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz filtr ADC<\/a><\/strong> w Nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz poprawną „Mapę kanałów” dla swojego radia. Sprawdź, czy Roll, Pitch i inne wykresy słupkowe poruszają się poprawnie. Dostosuj wartości punktu końcowego lub zakresu kanału w nadajniku do ~1000 do ~2000 i ustaw punkt środkowy na 1500. Aby uzyskać więcej informacji przeczytaj dokumentację <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
@@ -7307,6 +7319,10 @@
     },
     "showNotifications": {
         "message": "Pokaż powiadomienia dla długich operacji"
+    },
+    "notificationsDenied": {
+        "message": "Powiadomienia są zablokowane. Proszę włączyć je w ustawieniach przeglądarki. W przeciwnym razie nie będziesz otrzymywać powiadomień o długich operacjach. Jeśli używasz Chrome, możesz włączyć powiadomienia, klikając ikonę kłódki na pasku adresu i wybierając \"Ustawienia witryny\".",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "Usuwanie danych zostało zakończone",

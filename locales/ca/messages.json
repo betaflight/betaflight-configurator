@@ -135,6 +135,10 @@
     "rememberLastTab": {
         "message": "Torna a obrir l'última pestanya al conectar"
     },
+    "meteredConnection": {
+        "message": "Desactiva l'accés a Internet (per a connexions mesurades o lentes)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "Desactiveu la col·lecció anònima de dades d’estadístiques"
     },
@@ -1122,6 +1126,34 @@
     },
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
+    },
+    "initialSetupNetworkInfo": {
+        "message": "Informació de la xarxa"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Mostra l'estat de la connexió de xarxa",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Estat:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "En línia"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "Desconnectat"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Lent"
+    },
+    "initialSetupNetworkType": {
+        "message": "Tipus:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Enllaç descendent:"
     },
     "featureNone": {
         "message": "&lt;Selecciona Un&gt;"
@@ -7323,6 +7355,14 @@
     },
     "showNotifications": {
         "message": "Mostra les notificacions per a operacions llargues"
+    },
+    "notificationsDeniedTitle": {
+        "message": "Notificacions bloquejades",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "Les notificacions estan bloquejades. Si us plau, activeu-los a la configuració del vostre navegador. En cas contrari, no rebràs notificacions sobre operacions llargues. Si utilitzeu Chrome, podeu activar les notificacions fent clic a la icona de bloqueig de la barra d'adreces i seleccionant \"Configuració del lloc\".",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "S'ha completat l'esborrat del flash de dades",

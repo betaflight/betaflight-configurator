@@ -135,6 +135,10 @@
     "rememberLastTab": {
         "message": "연결시 마지막 탭 다시 열기"
     },
+    "meteredConnection": {
+        "message": "인터넷 접근 비활성화 (데이터통신 또는 느린 연결의 경우)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "익명화된 통계 데이터 수집 선택 해제"
     },
@@ -1118,6 +1122,34 @@
     },
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
+    },
+    "initialSetupNetworkInfo": {
+        "message": "네트워크 정보"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "네트워크 연결 상태를 보여줍니다",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "상태:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "온라인"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "오프라인"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "느림"
+    },
+    "initialSetupNetworkType": {
+        "message": "형식:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "다운링크:"
     },
     "featureNone": {
         "message": "&lt;하나를 선택하세요&gt;"
@@ -7319,6 +7351,14 @@
     },
     "showNotifications": {
         "message": "긴 작업에 대한 알림 표시"
+    },
+    "notificationsDeniedTitle": {
+        "message": "알림 차단됨",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "알림이 차단되었습니다. 브라우저 설정에서 알림을 활성화하세요. 그렇지 않으면 장시간 작동에 대한 알림을 받지 못합니다. Chrome을 사용하는 경우 주소 표시줄의 잠금 아이콘을 클릭하고 '사이트 설정'을 선택하여 알림을 활성화할 수 있습니다.",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "데이터 플래시 삭제가 완료되었습니다",

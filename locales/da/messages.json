@@ -135,6 +135,10 @@
     "rememberLastTab": {
         "message": "Genåbn seneste fane ved tilslutning"
     },
+    "meteredConnection": {
+        "message": "Deaktiver internetadgang (ved måling af tid eller ved langsomme forbindelser)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "Fravælg anonymiseret statistikdataindsamling"
     },
@@ -1118,6 +1122,28 @@
     },
     "initialSetupEepromSaved": {
         "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
+    },
+    "initialSetupNetworkInfo": {
+        "message": "Oplysninger om netværk"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Viser status for netværksforbindelse",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Status:"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Langsom"
+    },
+    "initialSetupNetworkType": {
+        "message": "Type:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Adresse for hent:"
     },
     "featureNone": {
         "message": "&lt;Vælg en&gt;"
@@ -7307,6 +7333,14 @@
     },
     "showNotifications": {
         "message": "Vis notifikationer ved langvarige operationer"
+    },
+    "notificationsDeniedTitle": {
+        "message": "Notifikationer blokeret",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "Notifikationer er blokeret. Aktiver dem i dine browserindstillinger. Ellers vil du ikke modtage notifikationer om lange operationer. Hvis du bruger Chrome, kan du aktivere notifikationer ved at klikke på låseikonet i adresselinjen og vælge 'Webstedsindstillinger'.",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "Dataflash er slettet",
