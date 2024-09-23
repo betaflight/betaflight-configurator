@@ -1216,8 +1216,7 @@ motors.initialize = async function (callback) {
     function setup_motor_output_reordering_dialog(callbackFunction, zeroThrottleValue)
     {
         const domDialogMotorOutputReorder = $('#dialogMotorOutputReorder');
-        const idleThrottleValue = zeroThrottleValue + 60;
-
+        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 1000 / 100;
         const motorOutputReorderComponent = new MotorOutputReorderComponent($('#dialogMotorOutputReorderContent'),
             callbackFunction, mixerList[FC.MIXER_CONFIG.mixer - 1].name,
             zeroThrottleValue, idleThrottleValue);
@@ -1248,9 +1247,7 @@ motors.initialize = async function (callback) {
     function SetupdescDshotDirectionDialog(callbackFunction, zeroThrottleValue)
     {
         const domEscDshotDirectionDialog = $('#escDshotDirectionDialog');
-
-        const idleThrottleValue = zeroThrottleValue + 60;
-
+        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 1000 / 100;
         const motorConfig = {
             numberOfMotors: self.numberOfValidOutputs,
             motorStopValue: zeroThrottleValue,
