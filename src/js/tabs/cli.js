@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import Clipboard from "../Clipboard";
+import BFClipboard from "../Clipboard";
 import { generateFilename } from "../utils/generate_filename";
 import GUI, { TABS } from '../gui';
 import BuildApi from '../BuildApi';
@@ -89,7 +89,7 @@ function copyToClipboard(text) {
         console.warn(ex);
     }
 
-    Clipboard.writeText(text, onCopySuccessful, onCopyFailed);
+    BFClipboard.writeText(text, onCopySuccessful, onCopyFailed);
 }
 
 cli.initialize = function (callback) {
