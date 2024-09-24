@@ -1530,11 +1530,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravity verstärkt I-Term (in 4.3) während und kurz nach schnellen Gaswechseln und erhöht so die Lagestabilität während des Gasgebens.<br><br>Höhere Werte (Gains) können die Stabilität auf Coptern träge oder schwerfällig sind oder mit einem versetzten Schwerpunkt besitzen, verbessern."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivativ",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Dynamische Dämpfung \/ D Max Einstellungen",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1542,7 +1542,7 @@
         "message": "Dynamische<br>Dämpfung",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Verstärkung",
         "description": "Gain of the D Max feature"
     },
@@ -1550,7 +1550,7 @@
         "message": "D Max Gain erhöht die Empfindlichkeit des Systems, das erhöht D, wenn das Quad sich schnell dreht oder vibriert während Propwash.<br><br>Eine Verstärkung durch DMax Gain erhöht D schneller und wird somit zügiger Richtung DMax angehoben. Werte von 40 oder sogar 50 können gut für saubere Freestyle Builds funktionieren.<br><br>Kleinere Werte erhöhen D nicht in Richtung DMax außer bei wirklich schnellen Veränderungen. Bei schnellen Racers ist vermutlich eine kleinerer DMax besser indem man die D Verzögerung minimiert.<br><br>WARNUNG: Entweder Gain oder Advance, muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie er sollte. Wenn beide auf Null gesetzt werden, wird D auf den Basiswert festgelegt.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Vorhaltezeit",
         "description": "Advance of the D Max feature"
     },
@@ -1558,11 +1558,11 @@
         "message": "D Max Advance erhöht die Empfindlichkeit des Verstärkungsfaktors, wenn die Sticks schnell bewegt werden.<br><br>DMax Advance reagiert nicht auf Gyro oder Propwash. Dieser Wert reagiert vor dem Gain-Wert und kann für Quads mit geringer Sensitivität nützlich sein, die häufig bei schnellen Stickbewegungen schwerfällig sind.<br><br>Im Allgemeinen ist es am besten den Wert bei 0 zu belassen.<br><br>WARNUNG: Entweder Advance oder Gain, muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie er sollte. Wenn beide auf Null gesetzt werden, wird D am Basiswert gesperrt.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max erhöht D bei schnelleren Gyro- und\/oder Stick-Bewegungen.<br><br>Der Faktor 'Gain (Verstärkung)' erhöht D, wenn das Quad sich schnell dreht oder durch Propwash vibriert. Normalerweise wird nur 'Gain' benötigt. <br><br>Der 'Advance' Faktor erhöht D in Richtung D Max während der Stichbewegungen. Normalerweise wird das nicht benötigt und sollte auf Null gesetzt werden. Der Advance-Faktor kann für weniger gut abgestimmte Quads nützlich sein, die dazu neigen, stark zu überschießen(Overshoot).<br><br>Höhere Verstärkungswerte (zB 40) können für Freestyle besser geeignet sein, indem D leichter angehoben wird.<br><br><b>WARNUNG<\/b>: Ein Wert (Gain oder Advance) muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie man beabsichtigt. Wenn beide auf Null gesetzt werden, wird D am Basiswert gesperrt.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "Basis Dämpfung jeder des Copters.<br \/><br \/>Reguliert gegen Bewegungen, ob durch Stick-Eingänge oder äußere Einflüsse (z.B. prop-wash oder Windböen)<br \/><br \/>Eine höhere D Min Verstärkung sorgt für mehr Stabilität und reduziert das Überschiessen(Overshoot).<br \/><br \/>D verstärkt das Rauschen(Noice=Störung) (im Faktor 10-100x). Ein falscher Wert kann den ESC oder die Motoren zerstören oder D nicht gut gefiltert ist.<br \/><br \/>Der D-Term ist vergleichbar mit einem Stoßdämpfer im Auto.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1723,9 +1723,6 @@
     "pidTuningIntegralHelp": {
         "message": "Kontrolliert anhaltende kleine Abweichungen.<br \/><br \/>Ähnlich wie bei P, summiert aber progressiv und langsam, bis der Fehler Null ist.  Wichtig für längerfristige Abweichungen, wie z. B. ein versetzter Schwerpunkt oder anhaltende äußere Einflüsse wie Wind.<br \/><br \/>Höhere Verstärkungen sorgen für eine engere Nachführung, besonders in Kurven, können aber dazu führen, dass sich der Copter steif anfühlt.<br \/><br>Kann langsame Schwingungen bei trägen Coptern verursachen oder wenn sie im Verhältnis zu P hoch sind.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Differential"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b>-Max"
@@ -3604,11 +3601,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Dynamische Dämpfung:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Erhöht D Max, den maximale Wert, auf den D bei schnelleren Bewegungen steigen kann.<br \/><br \/>Für Rennquads, wo der Haupt-Dämpfungsregler niedrig eingestellt wurde, um die Motortemperatur zu minimieren, Wenn Du diesen Schieberegler nach rechts verschiebst, wird das Überschießen bei schnelle Richtungsänderungen verbessern.<br \/><br \/>Für HD oder Kino Quads, Instabilität im Forward-Flug wird am besten durch Verschieben des Dämpfungsreglers nach rechts reguliert (nicht des Dynamic Dämpfungs Reglers). Prüfe die Motortemperatur und achte auf seltsame Motorengeräusche beim Verschieben dieses Reglers nach rechts.<br \/><br \/>Für Freestyle-Quads, besonders schwerere Builds, kann das Verschieben dieses Schiebereglers nach rechts helfen, Überschießen (Overshoot) in Flips und Rolls zu steuern.<br \/><br \/><strong>Hinweis:<\/strong><br \/>Generelles Überschießen in Flips und Rollen ist auf zu wenig 'I-Term Relax' zurückzuführen oder Motordesyncs oder durch Motorsättigung). Wenn Du das feststellst, wenn Du den Dämpfungs Boost Regler nach rechts bewegst, kannst du das Flip- oder Rollüberschießen nicht verbessern, verschiebe wieder nach links auf die normale Position und suche den Grund für den Überschießen oder Wobbel.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Pitch-Dämpfung:<br \/><i><small>Pitch:Roll D<\/small><\/i>",

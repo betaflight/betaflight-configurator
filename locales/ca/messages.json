@@ -1779,11 +1779,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "L'antigravetat augmenta I (i, a 4.3, P) durant i poc després dels canvis ràpids de l'accelerador, augmentant l'estabilitat d'actitud durant les bombejos de l'accelerador.<br><br>Els valors de guany més alts poden millorar l'estabilitat en màquines de baixa autoritat o amb un centre de compensació de gravetat."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivada",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the D feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Configuració d'amortiment dinàmic \/ D Max",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1791,7 +1791,7 @@
         "message": "Amortiment<br>dinàmic",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Guany",
         "description": "Gain of the D Max feature"
     },
@@ -1799,7 +1799,7 @@
         "message": "D Max Gain augmenta la sensibilitat del sistema que augmenta D quan el quad gira ràpidament o tremola en el propwash.<br><br>Els valors de guany més alts augmenten D més fàcilment que els valors més baixos, augmentant D cap a D Max més ràpidament. Els valors de 40 o fins i tot 50 poden funcionar bé per a les configuracions noves d'estil lliure.<br><br>Els valors més baixos no augmentaran D cap a DMax excepte en moviments molt ràpids, i poden adaptar-se millor a les configuracions de cursa minimitzant el retard D.<br><br > ADVERTÈNCIA: El guany o l'avanç s'han de configurar per sobre d'uns 20, o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es fixarà D al valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Avanç",
         "description": "Advance of the D Max feature"
     },
@@ -1807,12 +1807,12 @@
         "message": "D Max Advance afegeix sensibilitat al factor Gain quan els sticks es mouen ràpidament.<br><br>Advance no respon al giroscopi ni al propwash. Actua abans que el factor Gain i de vegades és útil per a quads de baixa autoritat que tendeixen a retardar-se malament al començament d'un moviment.<br><br>En general, és millor deixar-lo a zero.<br><br>ADVERTIMENT: o bé L'avançament, o guany, s'ha de configurar per sobre d'uns 20, o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es fixarà D al valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max augmenta D durant moviments més ràpids del giroscopi i\/o del stick.<br><br>El factor \"Guany\" augmenta D quan el quad gira ràpidament o tremola en el propwash. Normalment només es necessita \"Guany\". <br><br>El factor \"Avançament\" augmenta D cap a D Max durant les entrades del stick. Normalment no és necessari i s'ha de posar a zero. L'avançament pot ser útil per a quads de baixa autoritat que tendeixen a sobrepassar-se molt.<br><br>Els valors de guany més alts (p. ex. 40) poden ser més adequats per a l'estil lliure aixecant D més fàcilment.<br><br>ADVERTIMENT: un dels guanys. o L'avançament s'ha de posar per sobre d'uns 20 o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es bloquejarà D al valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
-        "message": "Amortiment de la línia de base de QUALSEVOL moviment del quad. <br \/><br \/>S'oposa al moviment, ja sigui causat per les entrades dels sticks o per influències externes (p. ex.,propwash o ràfegues de vent)<br \/><br \/>Els guanys D Min més alts proporcionen més estabilitat i redueixen la superació.<br \/> <br \/>D amplifica el soroll (amplia de 10x a 100x). Això pot cremar motors si els guanys són massa elevats o si el D no es filtra bé.<br \/><br \/>D-term és una mica com l'amortidor del vostre cotxe.",
+    "pidTuningDerivativeHelp": {
+        "message": "Amortiment de la línia de base de QUALSEVOL moviment del quad. <br \/><br \/>S'oposa al moviment, ja sigui causat per les entrades dels sticks o per influències externes (p. ex.,propwash o ràfegues de vent)<br \/><br \/>Els guanys D més alts proporcionen més estabilitat i redueixen la superació.<br \/> <br \/>D amplifica el soroll (amplia de 10x a 100x). Això pot cremar motors si els guanys són massa elevats o si el D no es filtra bé.<br \/><br \/>D-term és una mica com l'amortidor del vostre cotxe.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1972,9 +1972,6 @@
     "pidTuningIntegralHelp": {
         "message": "Controla els petits desplaçaments persistents.<br><br>Semblant a P, però s'acumula progressivament i lentament fins que l'error és zero. Important per a biaixos a llarg termini, com ara un centre de gravetat desplaçat o influències externes persistents com el vent.<br \/><br \/>Els guanys més alts proporcionen un seguiment més ajustat, sobretot en els girs, però poden fer que el quad se senti rígid.<br> <br>Pot provocar oscil·lacions lentes en versions de poca autoritat o si són elevades en proporció a P.",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivativa"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -4236,11 +4233,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Amortiment Dinàmic:<br \/><i><small>Guany D<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Augmenta D max, la quantitat màxima a la qual D pot augmentar durant moviments més ràpids.<br \/><br \/>Per als quads de cursa, on el control lliscant principal d'amortiment s'ha ajustat a un nivell baix per minimitzar la calor del motor, moure aquest control lliscant cap a la dreta millorarà. Control de superació per a canvis ràpids de direcció.<br \/><br \/>Per als quads HD o cinematogràfics, la millor solució per a la inestabilitat en el vol cap endavant es mou movent el control lliscant Amortiment (no el control lliscant Amortiment dinàmic) cap a la dreta. Comproveu la calor del motor i escolteu si hi ha sorolls estranys durant les entrades ràpides en moure aquest control lliscant cap a la dreta.<br \/><br \/>Per als quads d'estil lliure, especialment les construccions més pesades, moure aquest control lliscant cap a la dreta pot ajudar a controlar la superació en girs i voltes..<br \/><br \/><strong>Nota:<\/strong><br \/>En general, la superació en els girs i els girs es deu a que no hi ha prou 'i-Term Relax', o dessincronitzacions del motor o una autoritat inadequada (també conegut com a Motor saturació). Si trobeu que moure el control lliscant del Daping Boost cap a la dreta no millora el capgirament ni el rodatge, torneu-lo a la posició normal i cerqueu el motiu de la superació o el balanceig.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Amortiment Pitch:<br \/><i><small>Pitch: Roll D<\/small><\/i>",

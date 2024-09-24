@@ -1763,11 +1763,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti tyndegraft øger I (og i 4.3, P) under og kort tid efter hurtig ændring af gas, øger positions stabilitet mens gas øges.<br><br>Højere forstærknings værdier kan forbedre stabiliteten på maskiner med lav autoritet eller dem med et offset tyngdepunkt."
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivativ (afledt)",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "Dynamisk dæmpning \/ D Maks. indstillinger",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1775,7 +1775,7 @@
         "message": "Dynamisk<br>dæmpning",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Forstærkning",
         "description": "Gain of the D Max feature"
     },
@@ -1783,7 +1783,7 @@
         "message": "D Max forstærkning øger følsomheden af det system, der øger D når fartøj skifter hurtigt eller ryster pga propel turbulens.<br><br>Højere forstærknings værdier bringer D hurtigere op end lavere værdier, løft D mod D Max hurtigere. Værdier af 40 eller endda 50 kan fungere godt for ren Freestyle fartøjer.<br><br>Lavere værdier vil ikke hæve D mod DMax undtagen i virkelig hurtige bevægelser, og kan passe ræs fartøjer bedre ved at minimere D lag.<br><br>ADVARSEL: Enten forstærkning, eller Advance, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Forskud",
         "description": "Advance of the D Max feature"
     },
@@ -1791,12 +1791,12 @@
         "message": "D Max Advance tilføjer følsomhed til forstærknings faktor, når pinde flyttes hurtigt.<br><br>Advance reagerer ikke på gyro eller propel turbulens.. Det virker tidligere end forstærknings faktor og er lejlighedsvis nyttigt for langsomme fartøjer, der har tendens til at reagere dårligt i starten af et træk i pinden.<br><br>Generelt er det bedst at stille værdien på nul.<br><br>ADVARSEL: Enten Advance, eller forstærkning, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max øger D under hurtigere gyro og \/ eller pind bevægelser.<br><br>'forstærkning' faktoren øger D, når fartøjet bliver hurtigt eller ryster pga propel turbulens. Normalt er kun 'forstærkning' nødvendig. <br><br>'Advance' faktoren øger D mod D Max under stigende pind værdi. Normalt er det ikke nødvendigt og bør sættes til nul. Advance kan være nyttigt for langsomme fartøjer, som har tendens til at overskride kraftigt.<br><br>Højere forstærknings værdier (fx 40) kan være mere egnede til freestyle fartøjer ved at løfte D mere let.<br><br>ADVARSEL: En af forstærkning eller Advance værdier skal sættes over ca. 20 ellers vil D ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
-        "message": "Baseline dæmpning af enhver bevægelse af fartøjet. <br \/><br \/>modsætter sig bevægelse, uanset om forårsaget af pind bevægelse eller eksterne påvirkninger (fx. propel turbulens eller vindstød)<br \/><br \/>Højere D Min forstærkning giver mere stabilitet og reducerer overskridelsen.<br \/><br \/>D forstærker støj (forstørrer med 10x til 100x). Dette kan brænde en motor af, hvis forstærkning er for høj eller D er ikke filtreret godt.<br \/><br \/>D-term er lidt ligesom støddæmperen på din bil.",
+    "pidTuningDerivativeHelp": {
+        "message": "Baseline dæmpning af enhver bevægelse af fartøjet. <br \/><br \/>modsætter sig bevægelse, uanset om forårsaget af pind bevægelse eller eksterne påvirkninger (fx. propel turbulens eller vindstød)<br \/><br \/>Højere D forstærkning giver mere stabilitet og reducerer overskridelsen.<br \/><br \/>D forstærker støj (forstørrer med 10x til 100x). Dette kan brænde en motor af, hvis forstærkning er for høj eller D er ikke filtreret godt.<br \/><br \/>D-term er lidt ligesom støddæmperen på din bil.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1957,14 +1957,11 @@
         "message": "Styrer vedvarende små forskydninger.<br><br>Svarende til P, men akkumuleres gradvist og langsomt, indtil fejl er nul. Vigtigt for mere langsigtede biaser såsom en offset centrum af tyngdekraft, eller vedvarende ydre påvirkninger som vind.<br \/><br \/>Højere forstærkning giver strammere sporing, især i omgange, men kan få fartøjet til at føle sig stive.<br><br>Kan forårsage langsomme svingninger i lav autoritet bygger eller hvis høj i forhold til P.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
-    "pidTuningDerivative": {
-        "message": "Afledt"
-    },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
     },
     "pidTuningDMaxHelp": {
-        "message": "Giver stærkere dæmpning for hurtige manøvrer, der ellers kan forårsage overskridelse. <br><br>Giver en lavere grundlæggende D min værdi end sædvanlig, holde motorerne kølige, og drej-in hurtigere, men løfter D til at kontrollere overshot i flips eller hurtige reversals. <br><br>Mest nyttigt for racere, frekvens støjende fartøjer eller langsomme fartøjer.",
+        "message": "Giver stærkere dæmpning for hurtige manøvrer, der ellers kan forårsage overskridelse. <br><br>Giver en lavere grundlæggende D værdi end sædvanlig, holde motorerne kølige, og drej-in hurtigere, men løfter D til at kontrollere overshot i flips eller hurtige reversals. <br><br>Mest nyttigt for racere, frekvens støjende fartøjer eller langsomme fartøjer.",
         "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivativeHelp": {
@@ -4214,11 +4211,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "Dynamisk dæmpning:<br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "Øger D max, den maksimale værdi, D kan stige til under hurtigere bevægelser.<br \/><br \/>For race fartøjer, hvor hoveddæmpningsskyderen er sat lav til at minimere motorvarme, at flytte denne skyder til højre vil forbedre overskydningskontrol for hurtige retningsændringer.<br \/><br \/>For HD eller kinetiske fartøjer håndteres ustabilitet i fremadgående flyvning bedst ved at flytte dæmpnings skyderen (ikke dynamisk dæmpning skyderen) til højre. Tjek for motorvarme og lyt efter underlige lyde under hurtige bevægelser, når du flytter denne skyder til højre.<br \/><br \/>For freestyle fartøjer, især tungere konstruktioner, kan det hjælpe at flytte denne skyder til højre for at styre overskydning i flips og krængning.<br \/><br \/><strong>Bemærk:<\/strong><br \/>Overskyd generelt i flips og krængning skyldes manglende 'i-Term Relax', eller at motor desyncs, eller utilstrækkelig styring (fx motor mætning). Hvis du opdager, at flytning af Damping Boost skyderen til højre ikke forbedre flip eller krængning overshoot, sæt skyder tilbage til den normale position, og undersøg årsag til overskridelse eller wobble.",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Højderor dæmpning:<br \/><i><small>højderor:krængror D<\/small><\/i>",

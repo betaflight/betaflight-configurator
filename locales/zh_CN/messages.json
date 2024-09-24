@@ -1391,11 +1391,11 @@
     "pidTuningAntiGravityHelp": {
         "message": "反重力会在油门变化后的短时间内增大 I (在4.3中还会增大 P)，从而提高油门抽动期间的姿态稳定度。<br><br>更高的增益值可能会提高弱动力飞机或质心偏离中心的飞机的稳定性。"
     },
-    "pidTuningDMin": {
+    "pidTuningDerivative": {
         "message": "<b>D<\/b>erivative",
-        "description": "Table header of the D Min feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
-    "pidTuningDMinFeatureTitle": {
+    "pidTuningDMaxFeatureTitle": {
         "message": "动态阻尼 \/ D Max 设置",
         "description": "Title for the options panel for the D Max feature"
     },
@@ -1403,7 +1403,7 @@
         "message": "动态<br>阻尼",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "增益（Gain）",
         "description": "Gain of the D Max feature"
     },
@@ -1411,7 +1411,7 @@
         "message": "D Max 可增加系统灵敏度，在飞机快速转弯或发生洗桨震荡时增加 D。<br><br>更高的增益值将会更快速地提升 D，将 D 更快地推向 D Max。 40 或 50 可能在干净的花飞机上取得良好效果。<br><br>较低的增益值将在除快速移动以外的大多数时间都不会使 D 升高到 D Max，并且最小化 D 延迟可能更适用于竞速飞机。<br><br>警告: 增益和超前都设置地超过20，否则 D 不会按预期增加。将其设置为 0 将会使 D 锁定在基础值。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "超前",
         "description": "Advance of the D Max feature"
     },
@@ -1419,11 +1419,11 @@
         "message": "D Max 超前 将提升摇杆快速移动时增益因子的灵敏度。<br><br>超前并不对应陀螺仪或洗桨。它的作用时间早于增益因子，并对某些在运动动作之初就有严重延迟的弱动力飞机偶尔有用。<br><br>通常来说，最好将其保持为零。<br><br>警告: 超前或增益必须至少有一项设置得大于20，否则 D 将不会按预设方式增加。将两者都设为 0 将使 D 锁定为基础值。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinFeatureHelp": {
+    "pidTuningDMaxFeatureHelp": {
         "message": "D Max 在陀螺快速移动\/快速打杆时增大 D。<br><br>“增益”因子可以在快速转弯或洗桨时增大 D。<br><br>“超前”因子将在摇杆命令输入时提前增大 D。通常来说并不需要使用它并应将其保持为0。超前对于某些易于过冲的弱动力飞机来说非常有用。<br><br>更高的增益值 (例如 40) 能够更迅速地提升 D，这或许更适用于花式飞行<br><br>警告: 超前或增益必须至少有一项设置得大于20，否则 D 将不会按预设方式增加。将两者都设为 0 将使 D 锁定为基础值。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMinHelp": {
+    "pidTuningDerivativeHelp": {
         "message": "飞机运动的基本阻尼。<br \/><br \/>它抗拒运动，不论是摇杆输入还是外部影响 (例如洗桨或强风)<br \/><br \/>更高的 D Min 增益将提供更强的稳定性并减少过冲。<br \/><br \/>D Term 会放大噪声 (模值放大 10-100 倍)。如果增益值过高而又没有进行良好滤波的话，它将会迅速烧毁电机。<br \/><br \/>D Term 更像是汽车上的减震器。",
         "description": "Derivative helpicon message on PID table titlebar"
     },
@@ -1584,9 +1584,6 @@
     "pidTuningIntegralHelp": {
         "message": "控制较小的持续偏移。<br><br>与 P 类似，但持续缓慢累积直至误差为 0。对于长期偏差很重要，例如重心偏移质心、风等长期外部影响。<br \/><br \/>更高的增益将使得飞机“更跟手”，尤其是在过弯时，但也可能使得飞机感觉“更僵硬”<br><br>在弱动力飞机上，若其与P的比例较高则可能导致缓慢晃动。",
         "description": "Integral Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivative"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -3345,11 +3342,11 @@
     },
     "pidTuningDMaxGainSlider": {
         "message": "动态阻尼: <br \/><i><small>D Max<\/small><\/i>",
-        "description": "D Min slider label"
+        "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
         "message": "增大 D max，则在快速运动中 D 值可增大的最大量也会增加。<br \/><br \/>对于竞速飞机，当为了降低电机热量而将 阻尼 滑块降低时，滑动此滑块将会提高快速转弯时的控制力。<br \/><br \/>对于使用高清图传系统或者要进行电影式航拍的飞机来说，解决前飞时抖动的最好方法是将 阻尼 滑块（注意不是 动态阻尼 滑块）推到最右边。在将该滑块调整至最右的过程中请仔细检查电机温度，并仔细聆听快速转向时是否出现了奇怪的噪声。<br \/><br \/>对于花式飞行，尤其是较重的飞机，将此滑块向右推可以帮助控制翻滚时出现的过冲。<br \/><br \/><strong>注意:<\/strong><br \/>通常来说翻滚出现的过冲是由于“I 值释放”得不够，或是电机失步，或是动力过弱（即出现电机饱和）。如果你发现向右移动 阻尼增压 滑块并不能改善翻滚的过冲，请将它重置回默认位置，并寻找过冲或晃动的真正原因。",
-        "description": "D_min slider helpicon message"
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Pitch 阻尼: <br \/><i><small>Pitch:Roll D<\/small><\/i>",

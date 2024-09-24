@@ -555,11 +555,11 @@ const FC = {
             feedforwardYaw:             0,
             feedforwardTransition:      0,
             antiGravityMode:            0,
-            dMinRoll:                   0,
-            dMinPitch:                  0,
-            dMinYaw:                    0,
-            dMinGain:                   0,
-            dMinAdvance:                0,
+            dMaxRoll:                   0,
+            dMaxPitch:                  0,
+            dMaxYaw:                    0,
+            dMaxGain:                   0,
+            dMaxAdvance:                0,
             useIntegratedYaw:           0,
             integratedYawRelax:         0,
             motorOutputLimit:           0,
@@ -984,8 +984,8 @@ const FC = {
         // if defaults change they should go here
         // Introduced in 1.44
         const versionPidDefaults = [
-            45, 80, 40, 30, 120,
-            47, 84, 46, 34, 125,
+            45, 80, 30, 40, 120,
+            47, 84, 34, 46, 125,
             45, 80,  0,  0, 120,
         ];
 

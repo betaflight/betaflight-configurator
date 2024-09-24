@@ -1341,11 +1341,11 @@
         "message": "Drempel",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMinGain": {
+    "pidTuningDMaxGain": {
         "message": "Toename",
         "description": "Gain of the D Max feature"
     },
-    "pidTuningDMinAdvance": {
+    "pidTuningDMaxAdvance": {
         "message": "Voortgang",
         "description": "Advance of the D Max feature"
     },

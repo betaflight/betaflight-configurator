@@ -1,6 +1,8 @@
 import MSP from "./msp";
 import FC from "./fc";
 import MSPCodes from "./msp/MSPCodes";
+import semver from 'semver';
+import { API_VERSION_1_47 } from "./data_storage";
 import { isExpertModeEnabled } from "./utils/isExportModeEnabled";
 import { mspHelper } from "./msp/MSPHelper";
 import $ from 'jquery';
@@ -25,7 +27,7 @@ const TuningSliders = {
     sliderDTermFilter: 1,
     sliderDTermFilterMultiplier: 1,
 
-    dMinFeatureEnabled: true,
+    dMaxFeatureEnabled: true,
     defaultPDRatio: 0,
     PID_DEFAULT: [],
     FILTER_DEFAULT: {},
@@ -45,7 +47,7 @@ const TuningSliders = {
     expertMode: false,
 };
 
-const D_MIN_RATIO = 0.85;
+const D_MAX_RATIO = 0.85;
 
 TuningSliders.initialize = function() {
     this.PID_DEFAULT = FC.getPidDefaults();
@@ -241,10 +243,12 @@ TuningSliders.dtermFilterSliderDisable = function() {
 
 TuningSliders.updateSlidersWarning = function(slidersUnavailable = false) {
     const WARNING_P_GAIN = 70;
-    const WARNING_DMAX_GAIN = 60;
+    const WARNING_D_MAX_GAIN = 60;
     const WARNING_I_GAIN = 2.5 * FC.PIDS[0][0];
-    const WARNING_DMIN_GAIN = 42;
-    const enableWarning = FC.PIDS[0][0] > WARNING_P_GAIN || FC.PIDS[0][1] > WARNING_I_GAIN || FC.PIDS[0][2] > WARNING_DMAX_GAIN || FC.ADVANCED_TUNING.dMinRoll > WARNING_DMIN_GAIN;
+    const WARNING_D_GAIN = 42;
+    const enableWarning = semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)
+        ? FC.PIDS[0][0] > WARNING_P_GAIN || FC.PIDS[0][1] > WARNING_I_GAIN || FC.PIDS[0][2] > WARNING_D_MAX_GAIN || FC.ADVANCED_TUNING.dMaxRoll > WARNING_D_GAIN
+        : FC.PIDS[0][0] > WARNING_P_GAIN || FC.PIDS[0][1] > WARNING_I_GAIN || FC.PIDS[0][2] > WARNING_D_GAIN || FC.ADVANCED_TUNING.dMaxRoll > WARNING_D_MAX_GAIN;
 
     $('.subtab-pid .slidersWarning').toggle(enableWarning && !slidersUnavailable);
 };
@@ -368,9 +372,9 @@ TuningSliders.updateFormPids = function(updateSlidersOnly = false) {
             });
         });
 
-        $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
-        $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
-        $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
+        $('.pid_tuning input[name="dMaxRoll"]').val(FC.ADVANCED_TUNING.dMaxRoll);
+        $('.pid_tuning input[name="dMaxPitch"]').val(FC.ADVANCED_TUNING.dMaxPitch);
+        $('.pid_tuning input[name="dMaxYaw"]').val(FC.ADVANCED_TUNING.dMaxYaw);
         $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
         $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
         $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
