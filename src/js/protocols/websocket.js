@@ -57,17 +57,6 @@ class WebsocketSerial extends EventTarget {
         return new Uint8Array(buffer);
     }
 
-    waitForConnection(socket) {
-        return new Promise((resolve) => {
-            const interval = setInterval(() => {
-                if (socket.connected) {
-                    clearInterval(interval);  // Stop checking
-                    resolve();                // Resolve the promise
-                }
-            }, 100); // Check every 100ms, adjust as needed
-        });
-    }
-
     async connect(path, options) {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
@@ -84,8 +73,6 @@ class WebsocketSerial extends EventTarget {
                 }}),
             );
         };
-
-        await this.waitForConnection(socket);
 
         this.ws.onclose = function(e) {
             console.log(`${socket.logHead} Connection closed: `, e);
