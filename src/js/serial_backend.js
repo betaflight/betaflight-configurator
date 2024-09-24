@@ -107,7 +107,6 @@ function connectDisconnect() {
         GUI.configuration_loaded = false;
 
         const baudRate = PortHandler.portPicker.selectedBauds;
-        const selectedPort = portName;
 
         if (!isConnected) {
             // prevent connection when we do not have permission
@@ -124,6 +123,7 @@ function connectDisconnect() {
 
             CONFIGURATOR.virtualMode = selectedPort === 'virtual';
             CONFIGURATOR.bluetoothMode = selectedPort.startsWith('bluetooth');
+            CONFIGURATOR.manualMode = selectedPort === 'manual';
 
             if (CONFIGURATOR.virtualMode) {
                 CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
@@ -131,6 +131,16 @@ function connectDisconnect() {
                 // Hack to get virtual working on the web
                 serial = serialShim();
                 serial.connect(onOpenVirtual);
+            } else if (selectedPort === 'manual') {
+                serial = serialShim();
+                // Explicitly disconnect the event listeners before attaching the new ones.
+                serial.removeEventListener('connect', connectHandler);
+                serial.addEventListener('connect', connectHandler);
+
+                serial.removeEventListener('disconnect', disconnectHandler);
+                serial.addEventListener('disconnect', disconnectHandler);
+
+                serial.connect(portName, { baudRate });
             } else {
                 CONFIGURATOR.virtualMode = false;
                 serial = serialShim();
