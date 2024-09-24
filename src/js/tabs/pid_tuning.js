@@ -479,22 +479,22 @@ pid_tuning.initialize = function (callback) {
                 dElement.val(dLimit);
             }
         }
-        
+
         function setupDAdjustmentHandlers(axis) {
             const dMaxElement = $(`.pid_tuning input[name="dMax${axis}"]`);
             const dElement = $(`.pid_tuning .${axis} input[name="d"]`);
-        
+
             dMaxElement.change(function() {
                 adjustDValues(dElement, dMaxElement);
             }).change();
-        
+
             dElement.change(function() {
                 adjustDValues(dElement, dMaxElement);
             }).change();
         }
-        
+
         ['Roll', 'Pitch', 'Yaw'].forEach(axis => setupDAdjustmentHandlers(axis));
-        
+
         $('input[id="gyroNotch1Enabled"]').change(function() {
             const checked = $(this).is(':checked');
             const hz = FC.FILTER_CONFIG.gyro_notch_hz > 0 ? FC.FILTER_CONFIG.gyro_notch_hz : FILTER_DEFAULT.gyro_notch_hz;
@@ -1036,11 +1036,11 @@ pid_tuning.initialize = function (callback) {
         FC.FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
 
         $('.tab-pid_tuning .pidTuningSuperexpoRates').hide();
-            
+
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const derivativeTip = document.querySelector('.derivative .cf_tip');
             const dMaxTip = document.querySelector('.dmax .cf_tip');
-        
+
             ['i18n', 'i18n_title'].forEach(attr => {
                 const tmp = derivativeTip.getAttribute(attr);
                 derivativeTip.setAttribute(attr, dMaxTip.getAttribute(attr));
