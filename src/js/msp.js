@@ -344,7 +344,7 @@ const MSP = {
     encode_message_cli(str) {
         const data = Array.from(str, c => c.charCodeAt(0));
         const dataLength = data ? data.length : 0;
-        const bufferSize = dataLength + 4;
+        const bufferSize = dataLength + 4;        // 4 bytes for protocol overhead
         const bufferOut = new ArrayBuffer(bufferSize);
         const bufView = new Uint8Array(bufferOut);
         bufView[0] = this.symbols.BEGIN;          // $
