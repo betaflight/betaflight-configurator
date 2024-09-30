@@ -171,6 +171,9 @@
         "message": "Change language:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Select default language"
+    },
     "language_default": {
         "message": "System Default"
     },
