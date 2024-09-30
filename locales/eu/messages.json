@@ -1306,14 +1306,6 @@
         "message": "Muga",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMaxGain": {
-        "message": "Irabazia",
-        "description": "Gain of the D Max feature"
-    },
-    "pidTuningDMaxAdvance": {
-        "message": "Aurreratua",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningPidSettings": {
         "message": "PID kontroladorearen ezarpenak"
     },
@@ -1343,9 +1335,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message): <\/strong>Ezda gomendagarria 0 Setpoint-en trantsizioa 0 eta 0.1 baino txikiagoa. Hori egitean, ezegonkortasuna eta makilen erantzuna murriztea eragin dezakete, makilek erdiko puntua zeharkatzen duten bitartean.<\/span>"
-    },
-    "pidTuningDerivative": {
-        "message": "Deribatiboa (D)"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Kontuz:<\/b><\/span>tasa oso altuak deselerazio azkarretan desinkronizazioak sor ditzakete."

@@ -1341,14 +1341,6 @@
         "message": "Drempel",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMaxGain": {
-        "message": "Toename",
-        "description": "Gain of the D Max feature"
-    },
-    "pidTuningDMaxAdvance": {
-        "message": "Voortgang",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningPidSettings": {
         "message": "PID Controller instellingen"
     },
@@ -1412,9 +1404,6 @@
     },
     "pidTuningFeedforwardTransition": {
         "message": "Overgang"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivaat"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Let op:<\/b><\/span> zeer hoge waardes kunnen leiden tot desyncs tijdens snelle vertragingen."

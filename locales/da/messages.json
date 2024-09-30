@@ -1377,10 +1377,10 @@
         "message": " Gyro kalibreres ved første aktivering"
     },
     "configurationDigitalIdlePercent": {
-        "message": "Motor tomgang ( %, statisk)"
+        "message": "Motor tomgang (%)"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "Værdien 'Motor tomgang (statisk)' er den procent af maksimal gas, der sendes til ESC'erne, når gas er på minimum position, og motor er aktiveret. <br><br>Forøg den for at få mere tomgangs hastighed og undgå desynkronisering. For højt og fartøjet føles flydende. For lavt og motorerne kan desynkronisere eller være langsomme til at starte op."
+        "message": "Motorens tomgangsværdi indstiller motorernes tomgangshastighed, når gassen er i minimal position.<br\/><br\/><strong>Dynamic Idle disabled<\/strong><br\/><br\/>Det er den laveste værdi for gas, mens aktiveret, som en procentdel af værdi for fuld gas. Forøg værdien for at forbedre motorens pålidelighed ved opstart, for at undgå desynkronisering, og for at forbedre PID reaktion ved lav gas.<br\/><br\/>For lav: motorerne kan ikke starte pålideligt, eller desynkroniseres slutningen af et flip, rul eller ved hård gas bevægelse.<br\/><br\/>For høj: fartøjet føles 'flydende'.<br\/><br\/><strong>Dynamisk tomgang aktiveret<\/strong><br\/><br\/>Den maksimale gas er tilladt, efter armering, men før start. Hvis RPM er mindre end dyn_idle_min_rpm, eller nul, vil denne gasværdi anvendes. Når motorerne starter med at rotere, justeres gassen for at opretholde det indstillede omdrejningstal, men denne værdi kan ikke overskrides, før dronen starter.<br\/><br\/>For lav: motorerne kan ikke starte pålideligt.<br\/><br\/>For høj: Fartøjet kan ryste på jorden før start."
     },
     "configurationMotorPoles": {
         "message": "Motor magneter",
@@ -1763,41 +1763,21 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti tyndegraft øger I (og i 4.3, P) under og kort tid efter hurtig ændring af gas, øger positions stabilitet mens gas øges.<br><br>Højere forstærknings værdier kan forbedre stabiliteten på maskiner med lav autoritet eller dem med et offset tyngdepunkt."
     },
-    "pidTuningDerivative": {
-        "message": "<b>D<\/b>erivativ (afledt)",
-        "description": "Table header of the Derivative feature in the PIDs tab"
-    },
-    "pidTuningDMaxFeatureTitle": {
-        "message": "Dynamisk dæmpning \/ D Maks. indstillinger",
-        "description": "Title for the options panel for the D Max feature"
-    },
     "pidTuningDMaxSettingTitle": {
         "message": "Dynamisk<br>dæmpning",
         "description": "Sidebar title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxGain": {
-        "message": "Forstærkning",
-        "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
         "message": "D Max forstærkning øger følsomheden af det system, der øger D når fartøj skifter hurtigt eller ryster pga propel turbulens.<br><br>Højere forstærknings værdier bringer D hurtigere op end lavere værdier, løft D mod D Max hurtigere. Værdier af 40 eller endda 50 kan fungere godt for ren Freestyle fartøjer.<br><br>Lavere værdier vil ikke hæve D mod DMax undtagen i virkelig hurtige bevægelser, og kan passe ræs fartøjer bedre ved at minimere D lag.<br><br>ADVARSEL: Enten forstærkning, eller Advance, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxAdvance": {
-        "message": "Forskud",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningDMaxAdvanceHelp": {
         "message": "D Max Advance tilføjer følsomhed til forstærknings faktor, når pinde flyttes hurtigt.<br><br>Advance reagerer ikke på gyro eller propel turbulens.. Det virker tidligere end forstærknings faktor og er lejlighedsvis nyttigt for langsomme fartøjer, der har tendens til at reagere dårligt i starten af et træk i pinden.<br><br>Generelt er det bedst at stille værdien på nul.<br><br>ADVARSEL: Enten Advance, eller forstærkning, skal sættes over omkring 20, ellers D vil ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxFeatureHelp": {
-        "message": "D Max øger D under hurtigere gyro og \/ eller pind bevægelser.<br><br>'forstærkning' faktoren øger D, når fartøjet bliver hurtigt eller ryster pga propel turbulens. Normalt er kun 'forstærkning' nødvendig. <br><br>'Advance' faktoren øger D mod D Max under stigende pind værdi. Normalt er det ikke nødvendigt og bør sættes til nul. Advance kan være nyttigt for langsomme fartøjer, som har tendens til at overskride kraftigt.<br><br>Højere forstærknings værdier (fx 40) kan være mere egnede til freestyle fartøjer ved at løfte D mere let.<br><br>ADVARSEL: En af forstærkning eller Advance værdier skal sættes over ca. 20 ellers vil D ikke stige som det skal. Indstilling af begge til nul vil låse D til basisværdi.",
-        "description": "D Max feature helpicon message"
-    },
     "pidTuningDerivativeHelp": {
-        "message": "Baseline dæmpning af enhver bevægelse af fartøjet. <br \/><br \/>modsætter sig bevægelse, uanset om forårsaget af pind bevægelse eller eksterne påvirkninger (fx. propel turbulens eller vindstød)<br \/><br \/>Højere D forstærkning giver mere stabilitet og reducerer overskridelsen.<br \/><br \/>D forstærker støj (forstørrer med 10x til 100x). Dette kan brænde en motor af, hvis forstærkning er for høj eller D er ikke filtreret godt.<br \/><br \/>D-term er lidt ligesom støddæmperen på din bil.",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "Styrer styrken af at dæmpe til en bevægelse på fartøjet. For pind bevæger sig, dæmper D-udtrykket kommandoen. For en udvendig indflydelse (probel turbulens ELLER vind stød) dæmper D-term indflydelse.<br><br>Højere værdier giver mere dæmpning og reducerer overskridelse af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab at det kan forstørrelse højfrekvent gyro støj.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PID controller indstillinger"
@@ -1961,12 +1941,8 @@
         "message": "<b>D<\/b> Max"
     },
     "pidTuningDMaxHelp": {
-        "message": "Giver stærkere dæmpning for hurtige manøvrer, der ellers kan forårsage overskridelse. <br><br>Giver en lavere grundlæggende D værdi end sædvanlig, holde motorerne kølige, og drej-in hurtigere, men løfter D til at kontrollere overshot i flips eller hurtige reversals. <br><br>Mest nyttigt for racere, frekvens støjende fartøjer eller langsomme fartøjer.",
+        "message": "Giver stærkere dæmpning for hurtige manøvrer, der ellers kan forårsage overskridelse. <br><br>Giver en lavere grundlæggende D min værdi end sædvanlig, holde motorerne kølige, og drej-in hurtigere, men løfter D til at kontrollere overshot i flips eller hurtige reversals. <br><br>Mest nyttigt for racere, frekvens støjende fartøjer eller langsomme fartøjer.",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Styrer styrken af at dæmpe til en bevægelse på fartøjet. For pind bevæger sig, dæmper D-udtrykket kommandoen. For en udvendig indflydelse (probel turbulens ELLER vind stød) dæmper D-term indflydelse.<br><br>Højere værdier giver mere dæmpning og reducerer overskridelse af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab at det kan forstørrelse højfrekvent gyro støj.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"

@@ -135,6 +135,10 @@
     "rememberLastTab": {
         "message": "Recordar última pestaña al conectar"
     },
+    "meteredConnection": {
+        "message": "Desactivar el acceso a Internet (para conexiones medidas o lentas)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "No participar en la recogida anónima de datos estadísticos"
     },
@@ -1115,6 +1119,34 @@
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
     },
+    "initialSetupNetworkInfo": {
+        "message": "Información de red"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Muestra el estado de la conexión de red",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Estado:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "En línea"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "Desconectado"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Lenta"
+    },
+    "initialSetupNetworkType": {
+        "message": "Tipo:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Enlace bajada:"
+    },
     "featureNone": {
         "message": "&lt;Elije Uno&gt;"
     },
@@ -1347,10 +1379,7 @@
         "message": "Calibrar Giro en el primer armado"
     },
     "configurationDigitalIdlePercent": {
-        "message": "Ralentí Motor (%, estático)"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "El valor de 'ralentí motor (estático)' es el porcentaje del valor máximo del acelerador que es enviado a los ESCs cuando el mando del acelerador está al mínimo y la aeronave está armada.<br><br> Incrementa este valor para obtener más velocidad al ralentí y evitar desincronizaciones. Un valor demasiado alto y la aeronave se notará muy flotante. Un valor muy bajo puede provocar desincronizaciones y que sea lento al iniciar."
+        "message": "Ralentí motor (%)"
     },
     "configurationMotorPoles": {
         "message": "Polos del motor",
@@ -1740,7 +1769,7 @@
         "message": "Anti Gravedad aumenta I (y también P en 4.3) durante un instante poco después de cambios de aceleración bruscos, aumentando la estabilidad de la actitud durante los acelerones.<br><br>Valores más altos pueden mejorar la estabilidad en máquinas de baja autoridad o en aquellas con un centro de gravedad desplazado."
     },
     "pidTuningDerivative": {
-        "message": "Derivativo (D)",
+        "message": "<b>D<\/b>erivativo",
         "description": "Table header of the Derivative feature in the PIDs tab"
     },
     "pidTuningDMaxFeatureTitle": {
@@ -1772,8 +1801,8 @@
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Amortiguación de CUALQUIER movimiento de la aeronave.<br \/><br \/>Se opone al movimiento causado por entradas de los mandos o influencias externas (por ejemplo turbulencias o rachas de viento)<br \/><br \/>Un valor más alto de D Min proporciona más estabilidad y reduce los sobregiros.<br \/><br \/>D amplifica el ruido (magnifica entre 10x y 100x). Esto puede quemar los motores si los valores son demasiado altos o si la D no tiene los filtros correctos.<br \/><br \/>El término D es un poco como el amortiguador de tu coche.",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "Controla la fuerza del amortiguado de CUALQUIER movimiento de la aeronave. Para movimientos de mandos, el Término D amortigua la orden. Para influencias externas (turbulencias o ráfagas de viento) el Término D amortigua la influencia.<br><br>Valores más altos proporcionan amortiguado y reducen sobre giros producidos el Término P y FF.<br>Lamentablemente, el Término D es MUY sensible a vibraciones de alta frecuencia (amplifica el ruido de 10x a 100x).<br><br>El ruido de alta frecuencia puede causar calentamiento de los motores e incluso quemados de los mismos si el valor de D es demasiado alto o el ruido del giro no está bien filtrado (ver pestaña Filtros).<br><br>Piensa en el Término D como el amortiguador de tu coche, pero con la propiedad negativa inherente de amplificar el ruido de alta frecuencia.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Ajustes del Controlador PID"
@@ -1939,10 +1968,6 @@
     "pidTuningDMaxHelp": {
         "message": "Proporciona una amortiguación más intensa para maniobras rápidas que de otro modo podrían causar un sobregiro excesivo. <br><br>Permite un valor de D min menor de lo usual, manteniendo los motores más frios, y giros más rápidos, pero eleva D para controlar el sobregiro en flips o cambios rápidos. <br><br>Más útil para carreras, construcciones ruidosas o máquinas de baja autoridad.",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla la fuerza del amortiguado de CUALQUIER movimiento de la aeronave. Para movimientos de mandos, el Término D amortigua la orden. Para influencias externas (turbulencias o ráfagas de viento) el Término D amortigua la influencia.<br><br>Valores más altos proporcionan amortiguado y reducen sobre giros producidos el Término P y FF.<br>Lamentablemente, el Término D es MUY sensible a vibraciones de alta frecuencia (amplifica el ruido de 10x a 100x).<br><br>El ruido de alta frecuencia puede causar calentamiento de los motores e incluso quemados de los mismos si el valor de D es demasiado alto o el ruido del giro no está bien filtrado (ver pestaña Filtros).<br><br>Piensa en el Término D como el amortiguador de tu coche, pero con la propiedad negativa inherente de amplificar el ruido de alta frecuencia.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "Prealimentación (F)"
@@ -7312,6 +7337,14 @@
     },
     "showNotifications": {
         "message": "Mostrar notificaciones para operaciones largas"
+    },
+    "notificationsDeniedTitle": {
+        "message": "Notificaciones bloqueadas",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "Las notificaciones están bloqueadas. Por favor, actívalas en la configuración de tu navegador. De lo contrario, no recibirás notificaciones sobre operaciones largas. Si estás usando Chrome, puedes activar las notificaciones haciendo clic en el icono de la barra de direcciones y seleccionando 'Configuración del sitio'.",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "El borrado de la memoria flash ha sido completado",
