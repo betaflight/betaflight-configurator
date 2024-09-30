@@ -83,38 +83,40 @@ const MSP = {
         for (const chunk of data) {
             switch (this.state) {
             case this.decoder_states.CLI_COMMAND:
-                    switch (chunk) {
-                        case this.symbols.END_OF_TEXT:
-                            this.cli_output.push(this.cli_buffer.join(''));
-                            this.cli_buffer.length = 0;
-                            if (this.cli_callback) {
-                                this.cli_callback(this.cli_output);
-                                this.cli_output.length = 0;
-                            }
-                            this.state = this.decoder_states.IDLE;
-                            break;
-                        case this.symbols.LINE_FEED:
-                            this.cli_output.push(this.cli_buffer.join(''));
-                            this.cli_buffer.length = 0;
-                            break;
-                        case this.symbols.CARRIAGE_RETURN:
-                            // ignore CRs
-                            break;
-                        default:
-                            this.cli_buffer.push(String.fromCharCode(chunk));
-                            break;
-                    }
+                switch (chunk) {
+                    case this.symbols.END_OF_TEXT:
+                        this.cli_output.push(this.cli_buffer.join(''));
+                        this.cli_buffer.length = 0;
+                        if (this.cli_callback) {
+                            this.cli_callback(this.cli_output);
+                            this.cli_output.length = 0;
+                        }
+                        this.state = this.decoder_states.IDLE;
+                        break;
+                    case this.symbols.LINE_FEED:
+                        this.cli_output.push(this.cli_buffer.join(''));
+                        this.cli_buffer.length = 0;
+                        break;
+                    case this.symbols.CARRIAGE_RETURN:
+                        // ignore CRs
+                        break;
+                    default:
+                        this.cli_buffer.push(String.fromCharCode(chunk));
+                        break;
+                }
                 break;
             case this.decoder_states.IDLE: // sync char 1
-                if (chunk === this.symbols.BEGIN) {
-                    this.state = this.decoder_states.PROTO_IDENTIFIER;
+                switch (chunk) {
+                    case this.symbols.BEGIN:
+                        this.state = this.decoder_states.PROTO_IDENTIFIER;
+                        break;
+                    case this.symbols.START_OF_TEXT:
+                        this.state = this.decoder_states.CLI_COMMAND;
+                        break;
                 }
                 break;
             case this.decoder_states.PROTO_IDENTIFIER: // sync char 2
                 switch (chunk) {
-                    case this.symbols.START_OF_TEXT:
-                        this.state = this.decoder_states.CLI_COMMAND;
-                        break;
                     case this.symbols.PROTO_V1:
                         this.state = this.decoder_states.DIRECTION_V1;
                         break;
@@ -344,13 +346,12 @@ const MSP = {
     encode_message_cli(str) {
         const data = Array.from(str, c => c.charCodeAt(0));
         const dataLength = data ? data.length : 0;
-        const bufferSize = dataLength + 4;        // 4 bytes for protocol overhead
+        const bufferSize = dataLength + 3;        // 3 bytes for protocol overhead
         const bufferOut = new ArrayBuffer(bufferSize);
         const bufView = new Uint8Array(bufferOut);
-        bufView[0] = this.symbols.BEGIN;          // $
-        bufView[1] = this.symbols.START_OF_TEXT;  // STX
+        bufView[0] = this.symbols.START_OF_TEXT;  // STX
         for (let ii = 0; ii < dataLength; ii++) {
-            bufView[2 + ii] = data[ii];
+            bufView[1 + ii] = data[ii];
         }
         bufView[bufferSize - 2] = this.symbols.LINE_FEED;   // LF
         bufView[bufferSize - 1] = this.symbols.END_OF_TEXT; // ETX
