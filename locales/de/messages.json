@@ -1154,9 +1154,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Diese Option weist den Mixer an, eine umgekehrte Motordrehrichtung zu erwarten. <strong>Warnung:<\/strong> Dies ändert nicht die reale Drehrichtung der Motoren. Das muss in der ESC-Konfiguration geändert oder die Motorverkabelung angepasst werden. Prüfe mit demontierten Propellern, ob die Motoren in die im Diagramm gezeigte Richtung drehen."
     },
-    "configurationDigitalIdlePercent": {
-        "message": "Motor Leerlauf (%, statisch)"
-    },
     "configurationMotorPoles": {
         "message": "Motor Pole",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -1530,41 +1527,21 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravity verstärkt I-Term (in 4.3) während und kurz nach schnellen Gaswechseln und erhöht so die Lagestabilität während des Gasgebens.<br><br>Höhere Werte (Gains) können die Stabilität auf Coptern träge oder schwerfällig sind oder mit einem versetzten Schwerpunkt besitzen, verbessern."
     },
-    "pidTuningDerivative": {
-        "message": "<b>D<\/b>erivativ",
-        "description": "Table header of the Derivative feature in the PIDs tab"
-    },
-    "pidTuningDMaxFeatureTitle": {
-        "message": "Dynamische Dämpfung \/ D Max Einstellungen",
-        "description": "Title for the options panel for the D Max feature"
-    },
     "pidTuningDMaxSettingTitle": {
         "message": "Dynamische<br>Dämpfung",
         "description": "Sidebar title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxGain": {
-        "message": "Verstärkung",
-        "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
         "message": "D Max Gain erhöht die Empfindlichkeit des Systems, das erhöht D, wenn das Quad sich schnell dreht oder vibriert während Propwash.<br><br>Eine Verstärkung durch DMax Gain erhöht D schneller und wird somit zügiger Richtung DMax angehoben. Werte von 40 oder sogar 50 können gut für saubere Freestyle Builds funktionieren.<br><br>Kleinere Werte erhöhen D nicht in Richtung DMax außer bei wirklich schnellen Veränderungen. Bei schnellen Racers ist vermutlich eine kleinerer DMax besser indem man die D Verzögerung minimiert.<br><br>WARNUNG: Entweder Gain oder Advance, muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie er sollte. Wenn beide auf Null gesetzt werden, wird D auf den Basiswert festgelegt.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxAdvance": {
-        "message": "Vorhaltezeit",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningDMaxAdvanceHelp": {
         "message": "D Max Advance erhöht die Empfindlichkeit des Verstärkungsfaktors, wenn die Sticks schnell bewegt werden.<br><br>DMax Advance reagiert nicht auf Gyro oder Propwash. Dieser Wert reagiert vor dem Gain-Wert und kann für Quads mit geringer Sensitivität nützlich sein, die häufig bei schnellen Stickbewegungen schwerfällig sind.<br><br>Im Allgemeinen ist es am besten den Wert bei 0 zu belassen.<br><br>WARNUNG: Entweder Advance oder Gain, muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie er sollte. Wenn beide auf Null gesetzt werden, wird D am Basiswert gesperrt.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxFeatureHelp": {
-        "message": "D Max erhöht D bei schnelleren Gyro- und\/oder Stick-Bewegungen.<br><br>Der Faktor 'Gain (Verstärkung)' erhöht D, wenn das Quad sich schnell dreht oder durch Propwash vibriert. Normalerweise wird nur 'Gain' benötigt. <br><br>Der 'Advance' Faktor erhöht D in Richtung D Max während der Stichbewegungen. Normalerweise wird das nicht benötigt und sollte auf Null gesetzt werden. Der Advance-Faktor kann für weniger gut abgestimmte Quads nützlich sein, die dazu neigen, stark zu überschießen(Overshoot).<br><br>Höhere Verstärkungswerte (zB 40) können für Freestyle besser geeignet sein, indem D leichter angehoben wird.<br><br><b>WARNUNG<\/b>: Ein Wert (Gain oder Advance) muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie man beabsichtigt. Wenn beide auf Null gesetzt werden, wird D am Basiswert gesperrt.",
-        "description": "D Max feature helpicon message"
-    },
     "pidTuningDerivativeHelp": {
-        "message": "Basis Dämpfung jeder des Copters.<br \/><br \/>Reguliert gegen Bewegungen, ob durch Stick-Eingänge oder äußere Einflüsse (z.B. prop-wash oder Windböen)<br \/><br \/>Eine höhere D Min Verstärkung sorgt für mehr Stabilität und reduziert das Überschiessen(Overshoot).<br \/><br \/>D verstärkt das Rauschen(Noice=Störung) (im Faktor 10-100x). Ein falscher Wert kann den ESC oder die Motoren zerstören oder D nicht gut gefiltert ist.<br \/><br \/>Der D-Term ist vergleichbar mit einem Stoßdämpfer im Auto.",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "Steuert die Stärke der Dämpfung des Copters auf JEDER Bewegung. Sobald  die Sticks bewegt werden, dämpft der D-Term den Befehl. Bei äußerem Einfluss (Propwash oder Windböen) dämpft der D-Term den Einfluss.<br><br>Eine höhere Verstärkung bietet mehr Dämpfung und reduziert die Überschreitung um P-Term und FF.<br>Der D-Term ist jedoch <b>SEHR<\/b> empfindlich für hochfrequentes Gyro-Rauschen (Noise | Vergrößert um Faktor 10 bis 100).<br><br>Hochfrequenzrauschen kann <b>heiße Motoren verursachen und Motoren zerstören<\/b>, wenn die D-Verstärkung zu hoch ist oder das Gyro-Rauschen nicht gut gefiltert wird (siehe Filter-Tab).<br><br>Der D-Term ist vergleichbar mit dem Stoßdämpfer im Auto, aber mit der negativen Eigenschaft hochfrequentes Gyro-Rauschen zu verstärken.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PID Kontroller EInstellungen"
@@ -1730,10 +1707,6 @@
     "pidTuningDMaxHelp": {
         "message": "Stellt ein stärkere Dämpfung bei schnellen Manövern zur Verfügung, die sonst zu einem Überschiessen (Overshoot) führt.<br>Erlaubt einen geringeren Basis-D-Min Wert, das führt in der Regel zu kühleren Motoren und reagiert schneller. Hebt den D-Term an, um in Flips oder schnellen Loops ein Überschiessen zu kontrollieren.<br><br>Bestens geeignet für Racer oder Quads mit starken Vibrationen.",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Steuert die Stärke der Dämpfung des Copters auf JEDER Bewegung. Sobald  die Sticks bewegt werden, dämpft der D-Term den Befehl. Bei äußerem Einfluss (Propwash oder Windböen) dämpft der D-Term den Einfluss.<br><br>Eine höhere Verstärkung bietet mehr Dämpfung und reduziert die Überschreitung um P-Term und FF.<br>Der D-Term ist jedoch <b>SEHR<\/b> empfindlich für hochfrequentes Gyro-Rauschen (Noise | Vergrößert um Faktor 10 bis 100).<br><br>Hochfrequenzrauschen kann <b>heiße Motoren verursachen und Motoren zerstören<\/b>, wenn die D-Verstärkung zu hoch ist oder das Gyro-Rauschen nicht gut gefiltert wird (siehe Filter-Tab).<br><br>Der D-Term ist vergleichbar mit dem Stoßdämpfer im Auto, aber mit der negativen Eigenschaft hochfrequentes Gyro-Rauschen zu verstärken.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"

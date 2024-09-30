@@ -1387,10 +1387,10 @@
         "message": "Calibra el Gyro al primer braç"
     },
     "configurationDigitalIdlePercent": {
-        "message": "Motor inactiu (%, estàtic)"
+        "message": "Motor inactiu (%)"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "El valor \"Motor Idle (estàtic)\" és el percentatge de l'acceleració màxima que s'envia als ESC quan l'accelerador a la posició mínima del pal i el quad està armat. <br><br>Augmenteu-lo per obtenir més velocitat de ralentí i evitar desincronitzacions. Massa alt i el quad se sent flotant. Massa baix i els motors es poden desincronitzar o engegar-se lentament."
+        "message": "El valor de ralentí del motor estableix la velocitat de ralentí dels motors quan l'accelerador està a la posició mínima.<br\/><br\/><strong>Ralentí dinàmic desactivat<\/strong><br\/><br\/>El valor de l'accelerador més baix enviat a qualsevol motor, mentre està armat, com a percentatge de l'acceleració total. Augmenteu-lo per millorar la fiabilitat de l'arrencada del motor, per evitar les desincronitzacions i per millorar la resposta del PID a l'accelerador baix.<br\/><br\/>Massa baix: és possible que els motors no s'engeguin de manera fiable o que es desincronitzin al final d'un flip o un roll o amb acceleracions brusques.<br\/><br\/>Massa alt: pot ser que el dron se senti \"flottant\".<br\/><br\/><strong>El ralentí dinàmic està activat<\/strong><br\/><br\/>L'acceleració màxima permesa, després de l'armament, abans de l'enlairament. Si RPM és inferior a dyn_idle_min_rpm, o zero, aquest valor de l'accelerador s'enviarà als motors. Quan els motors comencen a girar, l'accelerador s'ajusta per mantenir les RPM establertes, però no pot superar aquest valor fins que el quad s'enlaira.<br\/><br\/>Massa baix: és possible que els motors no s'engeguin de manera fiable.<br\/>< br\/>Massa alt: el dron pot sacsejar a terra abans de l'enlairament."
     },
     "configurationMotorPoles": {
         "message": "Pols de motor",
@@ -1781,10 +1781,10 @@
     },
     "pidTuningDerivative": {
         "message": "<b>D<\/b>erivada",
-        "description": "Table header of the D feature in the PIDs tab"
+        "description": "Table header of the Derivative feature in the PIDs tab"
     },
     "pidTuningDMaxFeatureTitle": {
-        "message": "Configuració d'amortiment dinàmic \/ D Max",
+        "message": "Ajustos Amortiment dinàmic \/ D Max",
         "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMaxSettingTitle": {
@@ -1812,8 +1812,8 @@
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Amortiment de la línia de base de QUALSEVOL moviment del quad. <br \/><br \/>S'oposa al moviment, ja sigui causat per les entrades dels sticks o per influències externes (p. ex.,propwash o ràfegues de vent)<br \/><br \/>Els guanys D més alts proporcionen més estabilitat i redueixen la superació.<br \/> <br \/>D amplifica el soroll (amplia de 10x a 100x). Això pot cremar motors si els guanys són massa elevats o si el D no es filtra bé.<br \/><br \/>D-term és una mica com l'amortidor del vostre cotxe.",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "Controla la força d’amortiment a qualsevol moviment del quad. Per a desplaçaments dels sticks, D Term amortitza el comandament. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br>El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll del gyro no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del gyro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Ajustament del Controlador de PIDs"
@@ -1979,10 +1979,6 @@
     "pidTuningDMaxHelp": {
         "message": "Proporciona un amortiment més fort per a maniobres ràpides que, d'una altra manera, podrien provocar un desbordament. <br><br>Permet un valor mínim bàsic de D més baix de l'habitual, mantenint els motors més freds i engegat més ràpid, però aixeca D per controlar la superació en voltes o inversions ràpides. <br><br>Més útil per a curses, construccions sorolloses o màquines de poca autoritat.",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla la força d’amortiment a qualsevol moviment del quad. Per a desplaçaments dels sticks, D Term amortitza el comandament. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br>El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll del gyro no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"

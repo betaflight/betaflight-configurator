@@ -1116,9 +1116,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Cette option informe le contrôleur que le sens de rotation des moteurs et des hélices est inversé. <strong>Attention: <\/strong> l'option n'inverse pas le sens de rotation des moteurs. Pour cela il faut utiliser l'utilitaire de configuration des ESCs ou interchanger 2 des fils moteurs. Enfin, retirez les hélices et vérifiez que le sens de rotation des moteurs est conforme au schéma ci-dessus."
     },
-    "configurationDigitalIdlePercent": {
-        "message": "Ralenti moteurs (%, statique)"
-    },
     "configurationMotorPoles": {
         "message": "Pôles moteur",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -1492,41 +1489,21 @@
     "pidTuningAntiGravityHelp": {
         "message": "L'anti Gravité renforce I (et, en 4.3, P) pendant et peu de temps après le changement rapide de l'accélérateur, augmentant la stabilité d'attitude pendant les pompes à papillon.<br><br>Des valeurs de gain plus élevées peuvent améliorer la stabilité sur les machines de basse autorité ou celles avec un centre de gravité décalé."
     },
-    "pidTuningDerivative": {
-        "message": "<b>D<\/b>érivée",
-        "description": "Table header of the Derivative feature in the PIDs tab"
-    },
-    "pidTuningDMaxFeatureTitle": {
-        "message": "Atténuation dynamique \/ réglages D Max",
-        "description": "Title for the options panel for the D Max feature"
-    },
     "pidTuningDMaxSettingTitle": {
         "message": "Atténuation<br>Dynamique",
         "description": "Sidebar title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxGain": {
-        "message": "Gain",
-        "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
         "message": "Le gain D Max augmente la sensibilité du système qui augmente D lorsque le quad tourne rapidement ou tremble lors de propwash.<br><br>Des valeurs de gain plus élevées augmentent D plus rapidement que les valeurs basses, amenant D vers D Max plus vite. Des valeurs de 40 ou même 50 peuvent bien fonctionner pour une machine freestyle bien faite. <br><br>Des valeurs basses n'augmenteront pas D vers D Max à moins que les mouvements ne soient vraiment très rapides et peut satisfaire une configuration pour la course en minimisant le délais de D.<br><br>ATTENTION: Gain ou Avance doit être au delà de 20, ou D n'augmentera pas comme il devrait. Mettre ces deux valeurs à zéro verrouille D à la valeur de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxAdvance": {
-        "message": "Avance",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningDMaxAdvanceHelp": {
         "message": "D Max Avance ajoute de la sensibilité au facteur Gain lorsque les sticks sont déplacés rapidement.<br><br>L'avance ne réagit pas au gyro ou au propwash. Il agit plus tôt que le facteur Gain et est parfois utile pour les quads de basse autorité qui ont tendance à prendre du retard au début d'un mouvement.<br><br>Généralement, il est préférable de le laisser à zéro.<br><br>AVERTISSEMENT : Soit l'avance, soit le Gain, doit être défini au-dessus de 20, sinon D n'augmentera pas comme il le devrait. Si vous définissez les deux à zéro, vous verrouillez D à la valeur de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxFeatureHelp": {
-        "message": "D Max augmente D pendant les mouvements plus rapides du gyro et\/ou des sticks.<br><br>Le facteur 'Gain' augmente D lorsque le quad tourne rapidement ou se secoue en propwash. Habituellement, seul 'Gain' est nécessaire. <br><br>Le facteur 'Avance' augmente D vers D Max pendant les entrées des sticks. Habituellement, il n'est pas nécessaire et devrait être fixé à zéro. L'avance peut être utile pour les quads de basse autorité qui ont tendance à dépasser lourdement.<br><br>Des valeurs de gain plus élevées (par exemple 40) peuvent être plus adaptées au freestyle en augmentant D plus facilement.<br><br>AVERTISSEMENT : Au moins Gain ou Avance doit être défini au-dessus de 20 ou D n'augmentera pas comme il le devrait. Si vous définissez les deux à zéro, vous verrouillez D à la valeur de base.",
-        "description": "D Max feature helpicon message"
-    },
-    "pidTuningDMaxHelp": {
-        "message": "Atténue de facto de TOUT mouvement de la machine.<br \/><br \/>Oppose un mouvement que ce soit causé par des mouvements de sticks ou des influences extérieures (e. . prop-wash ou rafales de vent)<br \/><br \/>Des gains d min plus élevés procurent plus de stabilité et réduisent le dépassement.<br \/><br \/>D amplifie le bruit (de 10x à 100x). Cela peut brûler les moteurs si les gains sont trop élevés ou D n'est pas bien filtré.<br \/><br \/>D-term est un peu comme l'amortisseur sur votre voiture.",
-        "description": "Derivative helpicon message on PID table titlebar"
+    "pidTuningDerivativeHelp": {
+        "message": "Contrôle la force de l'atténuation de TOUT mouvement de la machine. Pour les mouvements de stick, le D-term amorti la commande. Pour une influence externe (prop wash ou rafale de vent) le D-term amorti l'influence.<br><br>Des gains plus élevés fournissent plus d'amortissement et réduisent le dépassement lié au P-term et FF.<br>Cependant, le D-term est TRÈS sensible aux vibrations de haute fréquence du gyro (amplifié par 10x ou 100x).<br><br>Le bruit de haute fréquence peut faire chauffer les moteurs et les brûler si le gain de D est trop élevé ou si le bruit du gyro n'est pas bien filtré (voir l'onglet Filtres).<br><br> Imaginez que le D-term est l'amortisseur de votre voiture, mais avec un effet d'amplification du bruit de haute fréquence du gyro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Réglages du Contrôleur PID"
@@ -1692,10 +1669,6 @@
     "pidTuningDMaxHelp": {
         "message": "Fournit une atténuation plus forte pour des manœuvres rapides qui pourraient autrement provoquer un dépassement. <br><br>Permet une valeur D minimale de base inférieure à l'habitude, gardant les moteurs plus froids, et en améliorant le rétablissement, mais monte D pour contrôler le dépassement lors des retournements ou des réversions rapides. <br><br>Le plus utile pour la course, les constructions bruyantes ou les machines de faible autorité.",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Contrôle la force de l'atténuation de TOUT mouvement de la machine. Pour les mouvements de stick, le D-term amorti la commande. Pour une influence externe (prop wash ou rafale de vent) le D-term amorti l'influence.<br><br>Des gains plus élevés fournissent plus d'amortissement et réduisent le dépassement lié au P-term et FF.<br>Cependant, le D-term est TRÈS sensible aux vibrations de haute fréquence du gyro (amplifié par 10x ou 100x).<br><br>Le bruit de haute fréquence peut faire chauffer les moteurs et les brûler si le gain de D est trop élevé ou si le bruit du gyro n'est pas bien filtré (voir l'onglet Filtres).<br><br> Imaginez que le D-term est l'amortisseur de votre voiture, mais avec un effet d'amplification du bruit de haute fréquence du gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"

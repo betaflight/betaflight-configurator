@@ -135,6 +135,10 @@
     "rememberLastTab": {
         "message": "接続時に前回のタブを開く"
     },
+    "meteredConnection": {
+        "message": "インターネット接続を無効にする (従量制または低速接続の場合)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "匿名の統計データ収集を無効"
     },
@@ -1115,6 +1119,34 @@
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
     },
+    "initialSetupNetworkInfo": {
+        "message": "ネットワーク情報"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "ネットワーク接続の状態を表示",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "状態:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "オンライン"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "オフライン"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "低速"
+    },
+    "initialSetupNetworkType": {
+        "message": "タイプ:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "ダウンリンク:"
+    },
     "featureNone": {
         "message": "&lt;一つ選択&gt;"
     },
@@ -1347,10 +1379,10 @@
         "message": "初回アーム時にジャイロキャリブレーションを実施"
     },
     "configurationDigitalIdlePercent": {
-        "message": "モーターアイドル ( %, static)"
+        "message": "モーター アイドル (%)"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "『モーターアイドル (静的)』値は、スロットルがスティック最小位置にあり機体がアームしているときに、ESCに送信される最大スロットルの割合 [%] です。<br><br>アイドリングスピードを上げてモーターのばらつきを回避させます。値が高すぎると機体が浮いてしまいます。低すぎるとモーターがどこか回らなくなったり、起動が遅くなったりします。"
+        "message": "モーターアイドルの値は、スロットルが最小位置のときのモーターのアイドル速度を設定します。<br\/><br\/><strong>動的アイドル 無効<\/strong><br\/><br\/>フルスロットルに対するパーセンテージです。モータの起動の信頼性を向上させ、デシンクを回避し、低スロットルでのPIDの応答性を向上させるために増加させます。<br\/><br\/>低すぎる場合：モーターが確実に始動しなかったり、フリップやロールの終了時、または強烈なスロットル操作でモーター同期が乱れることがあります。<br\/><br\/>高すぎる場合：機体が『 [フワフワと] 浮いている』感覚になります。<br\/><br\/><strong>動的アイドル 有効<\/strong><br\/><br\/>アーミング時、離陸前に許容される最大スロットルです。モーター回転数がdyn_idle_min_rpm未満、またはゼロの場合、このスロットル値がモーターに適用されます。モーターが回転し始めると、スロットルは設定された回転数を維持するように調整されますが、機体が離陸するまでこの値を超えることはできません。<br\/><br\/>低すぎる場合：モーターが確実に始動しない場合があります。<br\/><br\/>高すぎる場合：離陸前に機体が揺れることがあります。"
     },
     "configurationMotorPoles": {
         "message": "モーター極数",
@@ -1569,7 +1601,7 @@
         "message": "動的ノッチ値の変更"
     },
     "dialogDynFiltersChangeNote": {
-        "message": "<span class=\"message-negative\"><b>警告: この変更によりRPMフィルタリングが有効 \/ 無効となり、フィルターの遅延と効果が増加ないし減少します。<\/b><\/span><br><br>ダイナミックノッチフィルターを推奨値にリセットしますか？"
+        "message": "<span class=\"message-negative\"><b>警告: この変更によりRPMフィルタリングが有効 \/ 無効となり、フィルターの遅延と効果が増加ないし減少します。<\/b><\/span><br><br>動的ノッチフィルターを推奨値にリセットしますか？"
     },
     "portsIdentifier": {
         "message": "識別子"
@@ -1768,12 +1800,12 @@
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxFeatureHelp": {
-        "message": "D Maxは、ジャイロやスティックを素早く動かすときにD値を増加させます。<br><br>機体を急旋回させたり、プロップウォッシュでふらついたりすると『強度』係数はD値を増加させます。通常は『強度』だけ調整が必要となります。<br><br>『詳細』係数はスティック入力時にD値をD Max方向に増加させる係数です。通常は必要ありませんので、ゼロに設定してください。詳細は大きくオーバーシュートしがちな制御の弱い機体に有効です。<br><br>強度の値が高いほど (例えば40)、D値をより容易に上昇させることができ、フリースタイル機体に適している場合があります。<br><br>警告: 強度、詳細のどちらかを20程度以上に設定しないと、D値が正常に増加しません。両方の値をゼロにすると、D値は基準値で固定されます。",
+        "message": "D Max値は、ジャイロやスティックを素早く動かすときにD値を増加させます。<br><br>機体を急旋回させたり、プロップウォッシュでふらついたりすると『強度』係数はD値を増加させます。通常は『強度』だけ調整が必要となります。<br><br>『詳細設定』係数はスティック入力時にD値をD Max方向に増加させる係数です。通常は必要ありませんので、ゼロに設定してください。詳細設定は大きくオーバーシュートしがちな制御の弱い機体に有効です。<br><br>強度の値が高いほど (例えば40)、D値をより容易に上昇させることができ、フリースタイル機体に適している場合があります。<br><br>警告: 強度、詳細のどちらかを20程度以上に設定しないと、D値が正常に増加しません。両方の値をゼロにすると、D値は基準値で固定されます。",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
-        "message": "機体のあらゆる動きを減衰させる基準値です。<br \/><br \/>スティック入力や外部からの影響 (プロップウォッシュや突風等) による動きを抑制します。<br \/><br \/>D Min値を高くすると、より安定し、オーバーシュートが減少します。<br \/><br \/>D値はノイズを増幅 (10～100倍に拡大) します。このため値を高くしすぎたり、D値がうまくフィルタリングされていないと、モーターが焼損する場合があります。<br \/><br \/>D値は車のショックアブソーバーのようなものです。",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "機体のあらゆる動きに対する減衰の強度を制御します。スティックの動きに対し、命令によりD値を減衰させます。外部からの影響 (プロップウォッシュまたは突風) の場合、D値にてその影響を減少させることができます。<br><br>強度を高くすると減衰が大きくなり、P値およびFF値によるオーバーシュートが減少します。<br>ただし、D値はジャイロにおける高周波振動に非常に敏感です。(ノイズ | \n10倍から100倍へ拡大)<br><br>D値強度が高すぎる場合、またはジャイロノイズが適切にフィルター処理されていない場合、高周波ノイズによりモーターが発熱し、モーターが焼損する可能性があります。(フィルタータブ参照) <br><br>D値は自動車のサスペンションのショックアブソーバーとお考えください。ただし高周波ジャイロノイズを増幅させてしまうという、固有のマイナス特性があります。",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PIDコントローラ設定"
@@ -1923,7 +1955,7 @@
         "message": "<b>P<\/b>roportional"
     },
     "pidTuningProportionalHelp": {
-        "message": "機体がスティックに対してどのくらい厳密に追従 (セットポイント) するかの値。<br \/><br \/>値 (強度) を大きくするとスティックに対する追従が厳密になりますが、D値が高過ぎるとオーバーシュートを引き起こしたり、高スロットルで震えだしたりすることがあります。P値に関しては自動車でいうサスペンションのスプリングとお考えください。",
+        "message": "機体がスティックに対してどのくらい厳密に追従 (セットポイント) するかの値。<br \/><br \/>値 (強度) を大きくするとスティックに対する追従が厳密になりますが、D値が高すぎるとオーバーシュートを引き起こしたり、高スロットルで震えだしたりすることがあります。P値に関しては自動車でいうサスペンションのスプリングとお考えください。",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
@@ -1939,10 +1971,6 @@
     "pidTuningDMaxHelp": {
         "message": "オーバーシュートしやすい素早い操作に対して、より強い減衰力を発揮します。<br><br>基本D Min値を通常より小さくすることで、モーターを低温に保ち、ターンインを速くしますが、フリップや高速反転時のオーバーシュートを抑制するためにD値を高くします。<br><br>レース用機体、ノイズの多い機体、制御の弱い機体に最適です。",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "機体のあらゆる動きに対する減衰の強度を制御します。スティックの動きに対し、命令によりD値を減衰させます。外部からの影響 (プロップウォッシュまたは突風) の場合、D値にてその影響を減少させることができます。<br><br>強度を高くすると減衰が大きくなり、P値およびFF値によるオーバーシュートが減少します。<br>ただし、D値はジャイロにおける高周波振動に非常に敏感です。(ノイズ | \n10倍から100倍へ拡大)<br><br>D値強度が高すぎる場合、またはジャイロノイズが適切にフィルター処理されていない場合、高周波ノイズによりモーターが発熱し、モーターが焼損する可能性があります。(フィルタータブ参照) <br><br>D値は自動車のサスペンションのショックアブソーバーとお考えください。ただし高周波ジャイロノイズを増幅させてしまうという、固有のマイナス特性があります。",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
@@ -4172,7 +4200,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "トラッキングスライダーを上げると、ご自身の操作や外部からの影響に対して機体の反応が機敏になり、どのような状況でも機体のノーズがコースから外れるのを避けることができるでしょう。<br \/><br \/>『トラッキング』の値が低いと、多くの揺れが発生しスティックの動きやプロップウォッシュでコースから外れてしまいます。『トラッキング』の値が高いと、振動と速いバウンスバックが発生します。(見えないかもしれませんが聞こえるでしょう)『トラッキング』の値が高過ぎると、振動が発生したり、モーターが熱くなったりします。",
+        "message": "トラッキングスライダーを上げると、ご自身の操作や外部からの影響に対して機体の反応が機敏になり、どのような状況でも機体のノーズがコースから外れるのを避けることができるでしょう。<br \/><br \/>『トラッキング』の値が低いと、多くの揺れが発生しスティックの動きやプロップウォッシュでコースから外れてしまいます。『トラッキング』の値が高いと、振動と速いバウンスバックが発生します。(見えないかもしれませんが聞こえるでしょう)『トラッキング』の値が高すぎると、振動が発生したり、モーターが熱くなったりします。",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4180,7 +4208,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "スティックレスポンスを低くすると、操作に対する機体挙動の遅延が大きくなり、フリップやロールの最後のバウンスバックが遅くなることがあります。<br><br>スティックレスポンスが高いほど、シャープなスティック操作に対する機体の反応がより素早くになります。スティックレスポンスが高過ぎると、フリップやロールの最後にオーバーシュートしてしまうことがあります。<br \/><br \/><strong>注:<\/strong><br \/>『I値リラックス』は、制御の弱い機体やスティックレスポンス強度が低い場合に、バウンスバックを軽減することができます。",
+        "message": "スティックレスポンスを低くすると、操作に対する機体挙動の遅延が大きくなり、フリップやロールの最後のバウンスバックが遅くなることがあります。<br><br>スティックレスポンスが高いほど、シャープなスティック操作に対する機体の反応がより素早くになります。スティックレスポンスが高すぎると、フリップやロールの最後にオーバーシュートしてしまうことがあります。<br \/><br \/><strong>注:<\/strong><br \/>『I値リラックス』は、制御の弱い機体やスティックレスポンス強度が低い場合に、バウンスバックを軽減することができます。",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -4188,7 +4216,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "I値を増加または減少させます。I値を高くすると、スパイラルターンやオービット、スロットルゼロでの操作追従性が向上します。I値が高過ぎると、特にP値が足りない場合フリップ\/ロールの後やスロットルを0%にしたときに、ふらつきやバウンスバックが発生することがあります。<br \/><br \/>一般的に『ドリフト - ふらつき』スライダーは、スパイラルターンやオービットなどで機体の追従性を維持するために、できるだけ値を高くしますが、スロットルを0%にしたときにふらつきが発生するほど高くはしません。<br \/><br \/><strong>注:<\/strong><br \/>目に見える形でバウンスバックが発生した場合は、『I値リラックス』が有効になっていることを確認し iterm_relax_cutoff の値を下げてみてください。",
+        "message": "I値を増加または減少させます。I値を高くすると、スパイラルターンやオービット、スロットルゼロでの操作追従性が向上します。I値が高すぎると、特にP値が足りない場合フリップ\/ロールの後やスロットルを0%にしたときに、ふらつきやバウンスバックが発生することがあります。<br \/><br \/>一般的に『ドリフト - ふらつき』スライダーは、スパイラルターンやオービットなどで機体の追従性を維持するために、できるだけ値を高くしますが、スロットルを0%にしたときにふらつきが発生するほど高くはしません。<br \/><br \/><strong>注:<\/strong><br \/>目に見える形でバウンスバックが発生した場合は、『I値リラックス』が有効になっていることを確認し iterm_relax_cutoff の値を下げてみてください。",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -7312,6 +7340,14 @@
     },
     "showNotifications": {
         "message": "長時間の操作に対する通知を表示"
+    },
+    "notificationsDeniedTitle": {
+        "message": "通知がブロックされています",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "通知がブロックされています。ブラウザの設定で有効にしてください。有効にしないと、長時間の操作に関する通知を受け取ることができません。Chromeをお使いの場合は、アドレスバーのロック [鍵] アイコンをクリックし『サイト設定』を選択することで通知を有効にすることができます。",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "データフラッシュの消去が完了しました",

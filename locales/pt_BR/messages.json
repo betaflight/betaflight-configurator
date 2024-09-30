@@ -1270,12 +1270,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "Esta opção indica à controladora de voo que a rotação dos motores é invertida e que as hélices serão montadas de acordo com isso. <strong>Atenção:<\/strong> Esta opção não inverte o sentido do motor; Para isto, use a ferramenta de configuração de seu ESC ou altere a ordem dos cabos ESC-motor. Além disso, com as hélices removidas, certifique-se que os motores estão girando nas direções mostradas no diagrama acima antes de tentar armar."
     },
-    "configurationDigitalIdlePercent": {
-        "message": "Motor Ocioso (em %, estático)"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "O valor 'Motor Ocioso' é uma porcentagem do valor máximo do acelerador que é enviado aos ESCs quando a aeronave está armada e o Stick do Acelerador está no mínimo. <br><br>Aumente o valor para ganhar mais velocidade quando ocioso e evitar a dessincronização dos motores. Se definir um valor muito alto, a aeronave terá um sensação de estar flutuando durante o voo. Um valor muito baixo pode causar desincronização nos motores ou demorar muito para iniciar."
-    },
     "configurationMotorPoles": {
         "message": "Polaridade dos motores",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -1657,41 +1651,21 @@
     "pidTuningAntiGravityHelp": {
         "message": "A Anti Gravidade aumenta o termo I (e na versão 4.3, também o termo P) durante e um pouco depois de mudanças rápidas no acelerador, aumentando a estabilidade de atitude durante uma aceleração rápida.<br><br>Valores de ganho maiores podem melhorar a estabilidade em aeronaves com pouca autoridade ou naquelas que tem seu centro de gravidade deslocado."
     },
-    "pidTuningDerivative": {
-        "message": "<b>D<\/b>erivativo",
-        "description": "Table header of the Derivative feature in the PIDs tab"
-    },
-    "pidTuningDMaxFeatureTitle": {
-        "message": "Amortecedor Dinâmico \/ Configurações de D Máximo",
-        "description": "Title for the options panel for the D Max feature"
-    },
     "pidTuningDMaxSettingTitle": {
         "message": "Amortecedor<br>Dinâmico",
         "description": "Sidebar title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxGain": {
-        "message": "Ganho",
-        "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
         "message": "O ganho D Max aumenta a sensibilidade do sistema que aumenta o D quando a aeronave vira rapidamente ou treme devido a propwash.<br><br>Valores de ganho maiores aumentam o D mais rapidamente, elevando o D até ao D Max mais rapidamente. Valores de 40 ou mesmo 50 podem funcionar bem para construções de Freestyle.<br><br>Valores baixos não aumentarão o D para o DMax exceto em movimentos realmente rápidos, e podem ser mais adequados a configurações de corrida através da minimização do atraso do D.<br><br>AVISO: Ganho, ou Avanço, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá manter o D no valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxAdvance": {
-        "message": "Avanço",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningDMaxAdvanceHelp": {
         "message": "O Avanço D Max adiciona sensibilidade ao fator de Ganho quando os sticks são movidos rapidamente.<br><br>O avanço não responde ao giroscópio ou ao efeito de propwash. Age mais cedo do que o fator de Ganho e às vezes é útil para aeronaves com pouca autoridade que tendem a ter atraso no início de um movimento.<br><br>Geralmente é melhor deixar no zero.<br><br>AVISO: Ambos o Avanço, ou o Ganho, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir ambos para zero irá manter o D no valor de base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxFeatureHelp": {
-        "message": "D Max aumenta o D durante movimentos mais rápidos do gyro e\/ou dos sticks.<br><br>O fator 'Ganho' aumenta o D quando o quad vira rapidamente ou se está sofrendo os efeitos de propwash. Geralmente, apenas 'Ganho' é necessário. <br><br>O fator 'Avanço' aumenta o D na direção de D Max durante movimentos dos sticks. Normalmente não é necessário e deve ser definido como zero. Avanço pode ser útil para aeronaves com pouca autoridade que tendem a oscilar muito após movimentos rápidos.<br><br>Valores maiores de Ganho (por exemplo, 40) podem ser mais adequados para o estilo livre, aumentando o D mais rapidamente.<br><br>AVISO: Um dos valores de Ganho ou Avanço deve ser definido acima de 20 ou o D não aumentará como deveria. Definir para zero irá manter o D no valor base.",
-        "description": "D Max feature helpicon message"
-    },
     "pidTuningDerivativeHelp": {
-        "message": "A base de amortecimento de QUALQUER movimento da aeronave. <br \/><br \/>Opõe-se qualquer ao movimento causado pelos sticks ou  de influências externas (ex: propwash ou rajadas de vento)<br \/><br \/>Valores mais altos do D Min fornecem mais estabilidade e reduzem oscilações.<br \/><br \/>O D amplifica ruído (amplifica em 10x a 100x). Isto pode queimar os motores se os ganhos forem muito altos ou se o D não for bem filtrado.<br \/><br \/>O termo D como o amortecedor no seu carro.",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "Controla a força de amortecimento de QUALQUER movimento do aparelho. Para movimentos dos sticks, o Termo D amortece o comando. Para uma influência externa (propwash ou rajada de vento) o Termo D amortece a sua influência.<br><br>Ganhos mais altos asseguram mais amortecimento e oscilações reduzidos do Termo P e FF.<br>No entanto, o Termo D é MUITO sensível a vibrações de alta frequência do gyro (ampliado o ruído em 10x a 100x).<br><br>Se os Ganhos D forem muito altos ou o ruído no gyro não for bem filtrado (ver aba Filtros) os ruído de alta frequência podem causar super aquecimento dos motores ou danos.<br><br>Pense no Termo D como um amortecedor do seu carro, mas com a propriedade inerente negativa de amplificar o ruído de alta frequência no gyro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Configurar controlador PID"
@@ -1857,10 +1831,6 @@
     "pidTuningDMaxHelp": {
         "message": "Fornece um amortecimento mais forte para manobras rápidas que, de outra forma, podem causar oscilações. <br><br>Permite um menor valor de D min do que o normal, mantendo os motores mais frios, e curvas mais rápidas, mas aumenta o D para controlar a oscilação em flips ou reversões rápidas. <br><br>Mais útil para corridas, aeronaves com ruído ou com pouca autoridade.",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla a força de amortecimento de QUALQUER movimento do aparelho. Para movimentos dos sticks, o Termo D amortece o comando. Para uma influência externa (propwash ou rajada de vento) o Termo D amortece a sua influência.<br><br>Ganhos mais altos asseguram mais amortecimento e oscilações reduzidos do Termo P e FF.<br>No entanto, o Termo D é MUITO sensível a vibrações de alta frequência do gyro (ampliado o ruído em 10x a 100x).<br><br>Se os Ganhos D forem muito altos ou o ruído no gyro não for bem filtrado (ver aba Filtros) os ruído de alta frequência podem causar super aquecimento dos motores ou danos.<br><br>Pense no Termo D como um amortecedor do seu carro, mas com a propriedade inerente negativa de amplificar o ruído de alta frequência no gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"

@@ -1379,10 +1379,10 @@
         "message": "Calibrar Gyro no primeiro armar"
     },
     "configurationDigitalIdlePercent": {
-        "message": "Idle do Motor ( %, estático)"
+        "message": "Ralenti do Motor (%)"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "O valor de 'Motor Idle (estático)' é a percentagem de acelerador máximo que é enviado para os ESCs quando o acelerador está em posição de stick mínima e a aeronave está armada. <br><br>Aumenta-o para ganhar mais velocidade em idle e evitar dessincronizações. Muito alto e a aeronave fica flutuante. Muito baixa e os motores podem dessincronizar ou ficar lentos no arranque."
+        "message": "O valor Ralenti do Motor define a velocidade de ralenti dos motores quando o acelerador está na sua posição mínima.<br\/><br\/><strong>Ralenti Dinâmico desativado<\/strong><br\/><br\/>O valor mais baixo enviado para cada motor, quando armado, como uma percentagem de acelerador no máximo. Aumente-o para melhorar a estabilidade do arranque do motor, para evitar dessincronismos, e para melhorar a resposta dos PIDS com acelerador baixo.<br\/><br\/>Baixo demais: os motores podem não arrancar com fiabilidade, ou ter um dessincronismo no final de um flip ou roll ou em mudanças de acelerador duras.<br\/><br\/>Alto de mais: pode sentir o aparelho 'flutuante'.<br\/><br\/><strong>Ralenti Dinâmico ativo<\/strong><br\/><br\/>O acelerador máximo permitido, depois de armar, antes de levantar voo. Se o RPM for menor que dyn_idle_min_rpm, ou zero, este valor de acelerador será enviado para os motores. Quando os motores começam a girar, o acelerador é ajustado para manter o RPM definido, não excedendo este valor até o quad levantar voo.<br\/><br\/>Baixo de mais: os motores podem não arrancar com fiabilidade.<br\/><br\/>Alto de mais: o aparelho pode abanar no chão antes de levantar voo."
     },
     "configurationMotorPoles": {
         "message": "Polaridade dos motores",
@@ -1397,14 +1397,14 @@
         "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
     },
     "configurationMotorIdleRpmHelp": {
-        "message": "Este é o valor dinâmico por defeito do perfil PID ativo. Quando o Idle Dinâmico está definido para zero, apenas o motor estático por defeito será aplicado. Altere as configurações do Idle dinamico por defeito na aba de ajuste PID.",
+        "message": "Este é o valor dinâmico por defeito do ralenti do perfil PID ativo. Quando o Ralenti Dinâmico está definido para zero, apenas o motor estático por defeito será aplicado. Altere as configurações do Ralenti dinâmico por defeito na aba de ajuste PID.",
         "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "Acelerador mínimo (Valor mínimo do ESC quando armado)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "Este é o valor 'idle' que é enviado para os ESCs quando o aparelho está armado e o stick do acelerador está no mínimo. Aumente o valor para ganhar mais velocidade 'idle'. Aumente também em caso de falhas na sincronia!"
+        "message": "Este é o valor 'ralenti' que é enviado para os ESCs quando o aparelho está armado e o stick do acelerador está no mínimo. Aumente o valor para ganhar mais velocidade 'idle'. Aumente também em caso de falhas na sincronia!"
     },
     "configurationThrottleMaximum": {
         "message": "Acelerador máximo (Valor máximo do ESC quando armado)"
@@ -1479,7 +1479,7 @@
         "message": "Sinais sonoros emitidos quando segurar o stick na posição de desarmar"
     },
     "beeperARMED": {
-        "message": "Sinal sonoro de alerta quando a controladora está armada com os motores parados em idle (repete até que seja desarmada ou o acelerador aumente)"
+        "message": "Sinal sonoro de alerta quando a controladora está armada com os motores parados em ralenti (repete até que seja desarmada ou o acelerador aumente)"
     },
     "beeperSYSTEM_INIT": {
         "message": "Sinais sonoros de inicialização quando a controladora é ligada"
@@ -1800,12 +1800,12 @@
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxFeatureHelp": {
-        "message": "D Max D aumenta o D durante movimentos mais rápidos do gyro e\/ou dos sticks.<br><br>O fator 'Ganho' aumenta o D quando o quad vira rapidamente ou está a tremer em propwash. Geralmente, apenas 'Ganho' é necessário. <br><br>O fator 'Avanço' aumenta o D na direção de D Max durante inputs de sticks. Normalmente não é necessário e deve ser definido como zero. Avanço pode ser útil para quads com baixa autoridade que tendem a ter muito overshoot.<br><br>Valores maiores de Ganho (por exemplo, 40) podem ser mais adequados para o estilo livre, levantando o D mais prontamente.<br><br>AVISO: Um dos valore de Ganho ou Avanço deve ser definido acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá bloquear o D no valor base.",
+        "message": "D Max D aumenta o D durante movimentos mais rápidos do gyro e\/ou dos sticks.<br><br>O fator 'Ganho' aumenta o D quando o quad vira rapidamente ou está a tremer em propwash. Geralmente, apenas 'Ganho' é necessário. <br><br>O fator 'Avanço' aumenta o D na direção de D Max durante inputs de sticks. Normalmente não é necessário e deve ser definido como zero. Avanço pode ser útil para quads com baixa autoridade que tendem a ter muito overshoot.<br><br>Valores maiores de Ganho (por exemplo, 40) podem ser mais adequados para o estilo livre, levantando o D mais prontamente.<br><br>AVISO: Um dos valores de Ganho ou Avanço deve ser definido acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá bloquear o D no valor base.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
-        "message": "O amortecimento de base de QUALQUER movimento do aparelho. <br \/><br \/>Opõe-se quer ao movimento causado por inputs de sticks como ao de  influências externas (ex: propwash ou rajadas de vento)<br \/><br \/>Valores mais altos do D Min fornecem mais estabilidade e reduzem o overshoot.<br \/><br \/>O D amplifica ruído (amplifica por 10x a 100x). Isto pode queimar os motores se os ganhos forem muito altos ou se o D não for bem filtrado.<br \/><br \/>O termo D é um bocado como o amortecedor no seu carro.",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "Controla a força de amortecimento de QUALQUER movimento do aparelho. Para movimentos dos sticks, o D-term amortece o comando. Para uma influência externa (propwash ou rajada de vento) o D-term amortece a sua influência.<br><br>Ganhos mais altos asseguram mais amortecimento e overshoot reduzido do P-term e FF.<br>No entanto, o D-term é MUITO sensível a vibrações de alta frequência do gyro (ruído | ampliado 10x a 100x).<br><br>Ruído de alta frequência pode causar aquecimento dos motores ou avarias, se os D-gains forem muito altos ou o ruído no gyro não for bem filtrado (ver aba Filtros).<br><br>Pense no D-term como um amortecedor do seu carro, mas com a propriedade inerente negativa de amplificar o ruído de alta frequência no gyro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Definições do controlador PID"
@@ -1971,10 +1971,6 @@
     "pidTuningDMaxHelp": {
         "message": "Fornece um amortecimento mais forte para manobras rápidas que, de outra forma, podem causar overshoot. <br><br>Permite um menor valor básico de D min do que o normal, mantendo os motores mais frios, e viragens mais rápidas, mas levanta o D para controlar o overshoot em flips ou reversões rápidas. <br><br>Mais útil para racers, builds com ruído ou máquinas com baixa autoridade.",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla a força de amortecimento de QUALQUER movimento do aparelho. Para movimentos dos sticks, o D-term amortece o comando. Para uma influência externa (propwash ou rajada de vento) o D-term amortece a sua influência.<br><br>Ganhos mais altos asseguram mais amortecimento e overshoot reduzido do P-term e FF.<br>No entanto, o D-term é MUITO sensível a vibrações de alta frequência do gyro (ruído | ampliado 10x a 100x).<br><br>Ruído de alta frequência pode causar aquecimento dos motores ou avarias, se os D-gains forem muito altos ou o ruído no gyro não for bem filtrado (ver aba Filtros).<br><br>Pense no D-term como um amortecedor do seu carro, mas com a propriedade inerente negativa de amplificar o ruído de alta frequência no gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
@@ -2181,7 +2177,7 @@
         "message": "Zona morta do Yaw"
     },
     "receiverHelpYawDeadband": {
-        "message": "Estes valores (em us) indicam quanto a entrada do RC pode variar antes de ser considerada válida. Para transmissores com saídas instáveis, este valor pode ser aumentado se as entradas RC variam enquanto parado. <strong> Esta configuração afeta somente o Yaw.<\/strong>"
+        "message": "Estes valores (em us) indicam quanto a entrada do RC pode variar antes de ser considerada válida. Para transmissores com saídas instáveis, este valor pode ser aumentado se as entradas RC variam enquanto em ralenti. <strong> Esta configuração afeta somente o Yaw.<\/strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "Zona morta do Acelerador 3D"
@@ -4522,10 +4518,10 @@
         "message": "Aumenta temporariamente a aceleração em inputs rápidos de acelerador, proporcionando uma resposta mais imediata no acelerador."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Valor Idle Dinâmico [* 100 RPM]"
+        "message": "Valor de Ralenti Dinâmico [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "O Idle Dinâmico melhora o controlo a baixas rotações e reduz o risco de dessincronização dos motores. <br \/><br \/> Melhora a autoridade dos PIDs, a estabilidade em acelerador zero, tempo quando invertido, e travagem do motor.<br \/><br \/>A miníma rotação do Idle Dinâmico deve ser definida em cerca de 3000 - 3500 rpm. <br \/><br \/>Visite <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada wiki<\/a> para mais informação."
+        "message": "O Ralenti Dinâmico melhora o controlo a baixas rotações e reduz o risco de dessincronização dos motores. <br \/><br \/> Melhora a autoridade dos PIDs, a estabilidade em acelerador zero, tempo quando invertido, e travagem do motor.<br \/><br \/>A miníma rotação do Ralenti Dinâmico deve ser definida em cerca de 3000 - 3500 rpm. <br \/><br \/>Visite <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada wiki<\/a> para mais informação."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "O Idle Dinâmico está DESLIGADO porque a Telemetria Dshot está DESLIGADA"
@@ -6730,7 +6726,7 @@
         "description": "Feature for the ESC\/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "Envia dados do ESC para a FC via telemetria DShot. Necessário pela filtragem de RPM e pelo idle dinâmico. <br> <br>Nota: Requer um ESC compatível com firmware apropriado, por exemplo, JESC, Jazzmac, BLHeli-32.",
+        "message": "Envia dados do ESC para a FC via telemetria DShot. Necessário pela filtragem de RPM e pelo ralenti dinâmico. <br> <br>Nota: Requer um ESC compatível com firmware apropriado, por exemplo, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
     "configurationGyroSyncDenom": {

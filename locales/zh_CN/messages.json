@@ -1037,9 +1037,6 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "此选项告知混控程序电机转向已经被反转，且螺旋桨也已对应安装。<strong>警告：<\/strong>此选项并不反转电机实际转向。要反转电机实际转向，请通过电调配置软件进行设置，或者交换电调 - 电机的线序。同时在尝试解锁前务必确认螺旋桨是按照上面示意图的转向安装的。"
     },
-    "configurationDigitalIdlePercent": {
-        "message": "电机怠速 ( %, 静态)"
-    },
     "configurationMotorPoles": {
         "message": "电机极数",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -1391,41 +1388,21 @@
     "pidTuningAntiGravityHelp": {
         "message": "反重力会在油门变化后的短时间内增大 I (在4.3中还会增大 P)，从而提高油门抽动期间的姿态稳定度。<br><br>更高的增益值可能会提高弱动力飞机或质心偏离中心的飞机的稳定性。"
     },
-    "pidTuningDerivative": {
-        "message": "<b>D<\/b>erivative",
-        "description": "Table header of the Derivative feature in the PIDs tab"
-    },
-    "pidTuningDMaxFeatureTitle": {
-        "message": "动态阻尼 \/ D Max 设置",
-        "description": "Title for the options panel for the D Max feature"
-    },
     "pidTuningDMaxSettingTitle": {
         "message": "动态<br>阻尼",
         "description": "Sidebar title for the options panel for the D Max feature"
-    },
-    "pidTuningDMaxGain": {
-        "message": "增益（Gain）",
-        "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
         "message": "D Max 可增加系统灵敏度，在飞机快速转弯或发生洗桨震荡时增加 D。<br><br>更高的增益值将会更快速地提升 D，将 D 更快地推向 D Max。 40 或 50 可能在干净的花飞机上取得良好效果。<br><br>较低的增益值将在除快速移动以外的大多数时间都不会使 D 升高到 D Max，并且最小化 D 延迟可能更适用于竞速飞机。<br><br>警告: 增益和超前都设置地超过20，否则 D 不会按预期增加。将其设置为 0 将会使 D 锁定在基础值。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxAdvance": {
-        "message": "超前",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningDMaxAdvanceHelp": {
         "message": "D Max 超前 将提升摇杆快速移动时增益因子的灵敏度。<br><br>超前并不对应陀螺仪或洗桨。它的作用时间早于增益因子，并对某些在运动动作之初就有严重延迟的弱动力飞机偶尔有用。<br><br>通常来说，最好将其保持为零。<br><br>警告: 超前或增益必须至少有一项设置得大于20，否则 D 将不会按预设方式增加。将两者都设为 0 将使 D 锁定为基础值。",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDMaxFeatureHelp": {
-        "message": "D Max 在陀螺快速移动\/快速打杆时增大 D。<br><br>“增益”因子可以在快速转弯或洗桨时增大 D。<br><br>“超前”因子将在摇杆命令输入时提前增大 D。通常来说并不需要使用它并应将其保持为0。超前对于某些易于过冲的弱动力飞机来说非常有用。<br><br>更高的增益值 (例如 40) 能够更迅速地提升 D，这或许更适用于花式飞行<br><br>警告: 超前或增益必须至少有一项设置得大于20，否则 D 将不会按预设方式增加。将两者都设为 0 将使 D 锁定为基础值。",
-        "description": "D Max feature helpicon message"
-    },
     "pidTuningDerivativeHelp": {
-        "message": "飞机运动的基本阻尼。<br \/><br \/>它抗拒运动，不论是摇杆输入还是外部影响 (例如洗桨或强风)<br \/><br \/>更高的 D Min 增益将提供更强的稳定性并减少过冲。<br \/><br \/>D Term 会放大噪声 (模值放大 10-100 倍)。如果增益值过高而又没有进行良好滤波的话，它将会迅速烧毁电机。<br \/><br \/>D Term 更像是汽车上的减震器。",
-        "description": "Derivative helpicon message on PID table titlebar"
+        "message": "控制缓冲任何移动的阻尼的强弱。对打杆动作，D-term 会缓冲命令。对外界扰动(洗桨或微风) D-term 会缓冲扰动。<br><br>更高的增益将提供更多的阻尼，以减少 P 和 FF 造成的过冲。<br>然而 D-term 对陀螺仪的高频振动非常敏感(噪音会被按频率放大)。<br><br>如果 D 增益太高或陀螺仪噪音没有被妥善滤波处理(见滤波页) ，高频噪音则会导致电机过热甚至烧毁。<br><br>把 D-term 想象成车辆上的避震器，但是具有放大陀螺仪高频噪音的负面效果。",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PID 控制器设置"
@@ -1591,10 +1568,6 @@
     "pidTuningDMaxHelp": {
         "message": "为可能导致过冲的快速机动动作提供更强的阻尼。<br><br>允许设置一个低于正常 D 值的基础 D Min 值，用以保持电机不至于高温，并在翻滚或快速转弯时更快地提升 D 值来控制过冲。<br><br>对竞速机、噪声比较大的飞机或弱动力飞机来说非常有用。",
         "description": "D Max Term helpicon message on PID table titlebar"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "控制缓冲任何移动的阻尼的强弱。对打杆动作，D-term 会缓冲命令。对外界扰动(洗桨或微风) D-term 会缓冲扰动。<br><br>更高的增益将提供更多的阻尼，以减少 P 和 FF 造成的过冲。<br>然而 D-term 对陀螺仪的高频振动非常敏感(噪音会被按频率放大)。<br><br>如果 D 增益太高或陀螺仪噪音没有被妥善滤波处理(见滤波页) ，高频噪音则会导致电机过热甚至烧毁。<br><br>把 D-term 想象成车辆上的避震器，但是具有放大陀螺仪高频噪音的负面效果。",
-        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"

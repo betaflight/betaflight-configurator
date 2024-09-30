@@ -1288,14 +1288,6 @@
         "message": "閾值",
         "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMaxGain": {
-        "message": "增益",
-        "description": "Gain of the D Max feature"
-    },
-    "pidTuningDMaxAdvance": {
-        "message": "超前",
-        "description": "Advance of the D Max feature"
-    },
     "pidTuningPidSettings": {
         "message": "PID 控制器設置"
     },
@@ -1325,9 +1317,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 強烈不建議將D設定點轉換閾值設置為0到0.1之間的值。這樣做可能會導致不穩定，以及降低搖桿在穿過中點時的響應速度。<\/span>"
-    },
-    "pidTuningDerivative": {
-        "message": "Derivative"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>警告:<\/b><\/span> 非常高的 rate 可能會導致突然減速時發生電機失步。"
