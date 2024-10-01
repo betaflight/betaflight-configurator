@@ -917,6 +917,7 @@ motors.initialize = async function (callback) {
                 // Send enable extended dshot telemetry command
                 const buffer = [];
 
+                // this should include check for using extended dshot telemetry
                 buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
                 buffer.push8(255);  // Send to all escs
                 buffer.push8(1);    // 1 command
@@ -994,6 +995,9 @@ motors.initialize = async function (callback) {
             }
         }
 
+        // After saving configuration [in another tab], arming will be disabled
+        motorsRunning = motorsRunning && !FC.CONFIG.armingDisabled;
+
         if (motorsRunning) {
             motorsEnableTestModeElement.prop('checked', true).trigger('change');
 
@@ -1020,6 +1024,9 @@ motors.initialize = async function (callback) {
                 $('div.sliders input.master').val(masterValue)
                 .trigger('input');
             }
+        } else {
+            // prevent jump on re-enable as FC.MOTOR_DATA has not been reset yet
+            FC.MOTOR_DATA.fill(zeroThrottleValue);
         }
 
         // data pulling functions used inside interval timer

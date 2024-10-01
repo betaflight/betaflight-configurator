@@ -2790,6 +2790,11 @@ MspHelper.prototype.sendSerialConfig = function(callback) {
 };
 
 MspHelper.prototype.writeConfiguration = function(reboot, callback) {
+    // We need some protection when testing motors on motors tab
+    if (!FC.CONFIG.armingDisabled) {
+        this.setArmingEnabled(false, false);
+    }
+
     setTimeout(function() {
         MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
             gui_log(i18n.getMessage('configurationEepromSaved'));
