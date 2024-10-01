@@ -129,9 +129,9 @@ input, select, .select2-selection--single {
         cursor: not-allowed;
         pointer-events: none;
     }
-    &[type="range"], &[type="checkbox"] {
+    &[type="range"], &[type="checkbox"], &[type="radio"] {
         min-width: 0;
-        height: unset !important;
+        accent-color: var(--primary-400);
     }
 }
 .ms-choice {
@@ -144,9 +144,7 @@ input, select, .select2-selection--single {
     min-width: 4rem !important;
     font-weight: normal !important;
 }
-input {
-    cursor: text;
-}
+
 select, input[type="checkbox"] {
     cursor: pointer;
 }
