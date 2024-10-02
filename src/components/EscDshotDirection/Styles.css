@@ -108,16 +108,16 @@
 
 @media (hover: hover) {
     #escDshotDirectionDialog-NormalDialog .regular-button.pushed:hover {
-        background-color: #993333;
+        background-color: var(--primary-transparent-4);
     }
 
     #escDshotDirectionDialog-NormalDialog .regular-button:hover {
-        background-color: #993333;
+        background-color: var(--primary-400);
     }
 }
 
 #escDshotDirectionDialog-MainContent .regular-button.highlighted {
-    background-color: #EE2222;
+    background-color: var(--primary-500);
 }
 
 #escDshotDirectionDialog-CommandsWrapper {
