@@ -755,13 +755,15 @@ motors.initialize = async function (callback) {
                 default:
             }
 
+            const analogProtocolConfigured = protocolConfigured && !digitalProtocol;
+            const digitalProtocolConfigured = protocolConfigured && digitalProtocol;
             const rpmFeaturesVisible = digitalProtocol && dshotBidirElement.is(':checked') || $("input[name='ESC_SENSOR']").is(':checked');
 
-            $('div.minthrottle').toggle(protocolConfigured && !digitalProtocol && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
-            $('div.maxthrottle').toggle(protocolConfigured && !digitalProtocol);
-            $('div.mincommand').toggle(protocolConfigured && !digitalProtocol);
-            $('div.checkboxPwm').toggle(protocolConfigured && !digitalProtocol);
-            divUnsyncedPWMFreq.toggle(protocolConfigured && !digitalProtocol);
+            $('div.minthrottle').toggle(analogProtocolConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
+            $('div.maxthrottle').toggle(analogProtocolConfigured);
+            $('div.mincommand').toggle(analogProtocolConfigured);
+            $('div.checkboxPwm').toggle(analogProtocolConfigured);
+            divUnsyncedPWMFreq.toggle(analogProtocolConfigured);
 
             $('div.digitalIdlePercent').toggle(protocolConfigured && (digitalProtocol || semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)));
             $('div.idleMinRpm').toggle(protocolConfigured && digitalProtocol && FC.MOTOR_CONFIG.use_dshot_telemetry);
@@ -770,9 +772,9 @@ motors.initialize = async function (callback) {
                 $('div.digitalIdlePercent').hide();
             }
 
-            $('.escSensor').toggle(protocolConfigured && digitalProtocol);
+            $('.escSensor').toggle(digitalProtocolConfigured);
 
-            $('div.checkboxDshotBidir').toggle(protocolConfigured && digitalProtocol);
+            $('div.checkboxDshotBidir').toggle(digitalProtocolConfigured);
             $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible);
 
             $('.escMotorStop').toggle(protocolConfigured);
