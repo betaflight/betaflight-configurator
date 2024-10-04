@@ -5,7 +5,7 @@ import MSP from "../msp";
 import FC from "../fc";
 import MSPCodes from "../msp/MSPCodes";
 import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
-import { API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import semver from 'semver';
 import $ from 'jquery';
 
@@ -301,24 +301,16 @@ failsafe.initialize = function (callback) {
         // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
         $('#failsafeGpsRescueItemAltitudeSelect').sortSelect();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            $('input[name="gps_rescue_ascend_rate"]').val((FC.GPS_RESCUE.ascendRate / 100).toFixed(1));
-            $('input[name="gps_rescue_descend_rate"]').val((FC.GPS_RESCUE.descendRate / 100).toFixed(1));
-            $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked', FC.GPS_RESCUE.allowArmingWithoutFix > 0);
-            $('select[name="gps_rescue_altitude_mode"]').val(FC.GPS_RESCUE.altitudeMode);
-        } else {
-            $('input[name="gps_rescue_ascend_rate"]').closest('.number').hide();
-            $('input[name="gps_rescue_descend_rate"]').closest('.number').hide();
-            $('input[name="gps_rescue_allow_arming_without_fix"]').closest('.number').hide();
-            $('select[name="gps_rescue_altitude_mode"]').closest('.number').hide();
-        }
+        // Introduced in 1.43
+        $('input[name="gps_rescue_ascend_rate"]').val((FC.GPS_RESCUE.ascendRate / 100).toFixed(1));
+        $('input[name="gps_rescue_descend_rate"]').val((FC.GPS_RESCUE.descendRate / 100).toFixed(1));
+        $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked', FC.GPS_RESCUE.allowArmingWithoutFix > 0);
+        $('select[name="gps_rescue_altitude_mode"]').val(FC.GPS_RESCUE.altitudeMode);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('input[name="gps_rescue_min_start_dist"]').val(FC.GPS_RESCUE.minStartDistM);
-        } else {
-            $('input[name="gps_rescue_min_start_dist"]').closest('.number').hide();
-        }
+        // Introduced in 1.44
+        $('input[name="gps_rescue_min_start_dist"]').val(FC.GPS_RESCUE.minStartDistM);
 
+        // Introduced in 1.45
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('input[name="gps_rescue_angle"]').attr("max", 80);
             $('input[name="gps_rescue_return_altitude"]').attr({"min": 2, "max": 255});
@@ -329,6 +321,7 @@ failsafe.initialize = function (callback) {
             $('input[name="gps_rescue_descend_rate"]').attr("min", 0.3);
         }
 
+        // Introduced in 1.46
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             $('input[name="gps_rescue_initial_climb"]').val(FC.GPS_RESCUE.initialClimbM);
         } else {
@@ -343,6 +336,11 @@ failsafe.initialize = function (callback) {
             $('input[name="gps_rescue_min_start_dist"]').attr({"min": 10, "max": 30})
             .closest('.number').children('.helpicon').attr("i18n_title", "failsafeGpsRescueItemMinStartDistHelp");
             $('input[name="gps_rescue_descend_rate"]').attr({"min": 0.2, "max": 50.0});
+        }
+
+        // Update attributes for API version 4.6
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="failsafe_off_delay"]').attr({"max": 250}); // renamed to "failsafe_landing_time"
         }
 
         $('a.save').click(function () {
@@ -379,17 +377,16 @@ failsafe.initialize = function (callback) {
             FC.GPS_RESCUE.minSats           = $('input[name="gps_rescue_min_sats"]').val();
             FC.GPS_RESCUE.sanityChecks      = $('select[name="gps_rescue_sanity_checks"]').val();
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                FC.GPS_RESCUE.ascendRate = $('input[name="gps_rescue_ascend_rate"]').val() * 100;
-                FC.GPS_RESCUE.descendRate = $('input[name="gps_rescue_descend_rate"]').val() * 100;
-                FC.GPS_RESCUE.allowArmingWithoutFix = $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked') ? 1 : 0;
-                FC.GPS_RESCUE.altitudeMode = parseInt($('select[name="gps_rescue_altitude_mode"]').val());
-            }
+            // Introduced in 1.43
+            FC.GPS_RESCUE.ascendRate = $('input[name="gps_rescue_ascend_rate"]').val() * 100;
+            FC.GPS_RESCUE.descendRate = $('input[name="gps_rescue_descend_rate"]').val() * 100;
+            FC.GPS_RESCUE.allowArmingWithoutFix = $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked') ? 1 : 0;
+            FC.GPS_RESCUE.altitudeMode = parseInt($('select[name="gps_rescue_altitude_mode"]').val());
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                FC.GPS_RESCUE.minStartDistM = $('input[name="gps_rescue_min_start_dist"]').val();
-            }
+            // Introduced in 1.44
+            FC.GPS_RESCUE.minStartDistM = $('input[name="gps_rescue_min_start_dist"]').val();
 
+            // Introduced in 1.46
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 FC.GPS_RESCUE.initialClimbM = $('input[name="gps_rescue_initial_climb"]').val();
             }

@@ -17,6 +17,7 @@ auxiliary.initialize = function (callback) {
     GUI.active_tab_ref = this;
     GUI.active_tab = 'auxiliary';
     let prevChannelsValues = null;
+    let hasDirtyUnusedModes = true;
 
     function get_mode_ranges() {
         MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, get_mode_ranges_extra);
@@ -486,11 +487,14 @@ auxiliary.initialize = function (callback) {
                 hasUsedMode = true;
             }
 
-            let hideUnused = hideUnusedModes && hasUsedMode;
-            for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-                let modeElement = $(`#mode-${i}`);
-                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
-                    modeElement.toggle(!hideUnused);
+            if (hasDirtyUnusedModes) {
+                hasDirtyUnusedModes = false;
+                let hideUnused = hideUnusedModes && hasUsedMode;
+                for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
+                    let modeElement = $(`#mode-${i}`);
+                    if (!modeElement.find(' .range').length && !modeElement.find(' .link').length) {
+                        modeElement.toggle(!hideUnused);
+                    }
                 }
             }
 
@@ -501,7 +505,6 @@ auxiliary.initialize = function (callback) {
             for (let i = 0; i < (auxChannelCount); i++) {
                 update_marker(i, limit_channel(FC.RC.channels[i + 4]));
             }
-
         }
 
         /**
@@ -549,6 +552,7 @@ auxiliary.initialize = function (callback) {
         $("input#switch-toggle-unused")
             .change(function() {
                 hideUnusedModes = $(this).prop("checked");
+                hasDirtyUnusedModes = true;
                 setConfig({ hideUnusedModes: hideUnusedModes });
                 update_ui();
             })

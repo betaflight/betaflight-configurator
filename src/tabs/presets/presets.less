@@ -7,7 +7,7 @@
 	}
 	p {
 		padding: 0;
-		border: 0 dotted var(--subtleAccent);
+		border: 0 dotted var(--surface-500);
 	}
 	.presets_warnings {
 		padding-left: 20px;
@@ -16,7 +16,7 @@
 	.top_panel_spacer {
 		width: 0px;
 		display: inline;
-		border: 1px var(--subtleAccent);
+		border: 1px var(--surface-500);
 		border-style: none none none solid;
 		height: 60%;
 		margin-right: 10px;
@@ -35,8 +35,8 @@
 		padding: 20px 20px 0px 20px;
 	}
 	.ms-choice {
-		background-color: var(--boxBackground) !important;
-		color: var(--defaultText) !important;
+		background-color: var(--surface-200) !important;
+		color: var(--text) !important;
 		>div.icon-close {
 			padding-top: 3px;
 			font-size: 16px;
@@ -77,7 +77,7 @@
 		padding-left: 8px;
 		padding-right: 8px;
 		color: white;
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-500);
 		background-color: rgba(64, 64, 64, 1);
 		resize: none;
 	}
@@ -95,6 +95,17 @@
 		width: 100%;
 		height: 20px;
 		margin-top: 12px;
+        border-radius: 4px;
+        appearance: none;
+        -webkit-appearance: none;
+        overflow: hidden;
+        &::-webkit-progress-bar {
+            background-color: var(--surface-500);
+        }
+        &::-webkit-progress-value {
+            background-color: var(--primary-500);
+            border-radius: 0 4px 4px 0;
+        }
 	}
 	.ms-drop {
 		z-index: 2001;
@@ -174,31 +185,31 @@
 }
 .presets_filter_select {
 	width: 100%;
-	background-color: var(--boxBackground);
-	color: var(--defaultText);
+	background-color: var(--surface-200);
+	color: var(--text);
 }
 .presets_filter_select_nonempty {
-	border-color: var(--accentBorder) !important;
+	border-color: var(--primary-500) !important;
 	border-width: 2px !important;
 }
 .presets_search_settings {
 	position: sticky;
 	top: 0px;
-	background-color: var(--boxBackground);
+	background-color: var(--surface-100);
 	z-index: 10;
 }
 .ms-drop {
-	background-color: var(--boxBackground) !important;
-	color: var(--defaultText) !important;
+	background-color: var(--surface-200) !important;
+	color: var(--text) !important;
 	input[type="checkbox"] {
 		margin-top: 0.1rem !important;
 	}
 }
 .presets_text_input {
-	border: 1px solid var(--subtleAccent);
+	border: 1px solid var(--surface-500);
 	border-radius: 3px;
-	background-color: var(--boxBackground);
-	color: var(--defaultText);
+	background-color: var(--surface-200);
+	color: var(--text);
 }
 #presets_filter_text {
 	height: 26px;
@@ -221,7 +232,7 @@
 	width: 100%;
 }
 #presets_cli_background {
-	border: 1px solid var(--subtleAccent);
+	border: 1px solid var(--surface-500);
 	background-color: rgba(64, 64, 64, 1);
 	margin-top: 0;
 	height: 300px;
@@ -229,15 +240,15 @@
 	box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.80);
 }
 .presets_fitler_table_header {
-	background: var(--quietHeader);
-	color: var(--quietText);
-	border-right: 1px solid var(--subtleAccent);
+	background: var(--surface-300);
+	color: var(--text);
+	border-radius: 4px;
 	font-weight: normal;
 	text-align: left;
 	padding: 4px 4px 4px 6px;
 }
 .presets_fitler_table_value {
-	background-color: var(--alternativeBackground);
+	background-color: var(--surface-300);
 	width: 100%;
 }
 #presets_cli_errors_dialog {
@@ -253,7 +264,7 @@
 #presets_detailed_dialog {
 	width: 600px;
 	height: 520px;
-	padding: 12px;
+	padding: 12px 12px 0px 12px;
 }
 #presets_sources_dialog {
 	width: 600px;

@@ -1,10 +1,9 @@
 import FC from "./fc";
-import { API_VERSION_1_43 } from "./data_storage";
-import semver from "semver";
 
 const minRc = 1000;
 const midRc = 1500;
 const maxRc = 2000;
+
 const RateCurve = function (useLegacyCurve) {
     this.useLegacyCurve = useLegacyCurve;
     this.maxAngularVel = null;
@@ -168,39 +167,37 @@ const RateCurve = function (useLegacyCurve) {
 
         currentRates.superexpo = true;
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            switch (FC.RC_TUNING.rates_type) {
-                case FC.RATES_TYPE.RACEFLIGHT:
-                    currentRates.roll_rate *= 100;
-                    currentRates.pitch_rate *= 100;
-                    currentRates.yaw_rate *= 100;
-                    currentRates.rc_rate *= 1000;
-                    currentRates.rc_rate_yaw *= 1000;
-                    currentRates.rc_rate_pitch *= 1000;
-                    currentRates.rc_expo *= 100;
-                    currentRates.rc_yaw_expo *= 100;
-                    currentRates.rc_pitch_expo *= 100;
+        switch (FC.RC_TUNING.rates_type) {
+            case FC.RATES_TYPE.RACEFLIGHT:
+                currentRates.roll_rate *= 100;
+                currentRates.pitch_rate *= 100;
+                currentRates.yaw_rate *= 100;
+                currentRates.rc_rate *= 1000;
+                currentRates.rc_rate_yaw *= 1000;
+                currentRates.rc_rate_pitch *= 1000;
+                currentRates.rc_expo *= 100;
+                currentRates.rc_yaw_expo *= 100;
+                currentRates.rc_pitch_expo *= 100;
 
-                    break;
-                case FC.RATES_TYPE.ACTUAL:
-                    currentRates.roll_rate *= 1000;
-                    currentRates.pitch_rate *= 1000;
-                    currentRates.yaw_rate *= 1000;
-                    currentRates.rc_rate *= 1000;
-                    currentRates.rc_rate_yaw *= 1000;
-                    currentRates.rc_rate_pitch *= 1000;
+                break;
+            case FC.RATES_TYPE.ACTUAL:
+                currentRates.roll_rate *= 1000;
+                currentRates.pitch_rate *= 1000;
+                currentRates.yaw_rate *= 1000;
+                currentRates.rc_rate *= 1000;
+                currentRates.rc_rate_yaw *= 1000;
+                currentRates.rc_rate_pitch *= 1000;
 
-                    break;
-                case FC.RATES_TYPE.QUICKRATES:
-                    currentRates.roll_rate *= 1000;
-                    currentRates.pitch_rate *= 1000;
-                    currentRates.yaw_rate *= 1000;
+                break;
+            case FC.RATES_TYPE.QUICKRATES:
+                currentRates.roll_rate *= 1000;
+                currentRates.pitch_rate *= 1000;
+                currentRates.yaw_rate *= 1000;
 
-                    break;
-                default:           // add future rates types here
+                break;
+            default:           // add future rates types here
 
-                    break;
-            }
+                break;
         }
 
         return currentRates;
@@ -212,11 +209,7 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 
     if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
         let rcCommandf = this.rcCommand(rcData, 1, deadband);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            rcCommandf = rcCommandf / (500 - deadband);
-        } else {
-            rcCommandf = rcCommandf / 500;
-        }
+        rcCommandf /= (500 - deadband);
 
         const rcCommandfAbs = Math.abs(rcCommandf);
 

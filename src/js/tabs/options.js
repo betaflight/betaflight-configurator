@@ -7,7 +7,8 @@ import DarkTheme, { setDarkTheme } from '../DarkTheme';
 import { checkForConfiguratorUpdates } from '../utils/checkForConfiguratorUpdates';
 import { checkSetupAnalytics } from '../Analytics';
 import $ from 'jquery';
-import CONFIGURATOR from '../data_storage';
+import NotificationManager from '../utils/notifications';
+import { ispConnected } from '../utils/connection';
 
 const options = {};
 options.initialize = function (callback) {
@@ -23,13 +24,15 @@ options.initialize = function (callback) {
         TABS.options.initAnalyticsOptOut();
         TABS.options.initCliAutoComplete();
         TABS.options.initShowAllSerialDevices();
-        TABS.options.initUseMdnsBrowser();
         TABS.options.initShowVirtualMode();
+        TABS.options.initUseManualConnection();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
         TABS.options.initShowDevToolsOnStartup();
-
+        TABS.options.initShowNotifications();
+        TABS.options.initUserLanguage();
         TABS.options.initShowWarnings();
+        TABS.options.initMeteredConnection();
 
         GUI.content_ready(callback);
     });
@@ -129,8 +132,9 @@ options.initShowAllSerialDevices = function() {
     showAllSerialDevicesElement
         .prop('checked', !!result.showAllSerialDevices)
         .on('change', () => {
-            setConfig({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') });
-            PortHandler.reinitialize();
+            const checked = showAllSerialDevicesElement.is(':checked');
+            setConfig({ showAllSerialDevices: checked });
+            PortHandler.setShowAllSerialDevices(checked);
         });
 };
 
@@ -140,41 +144,26 @@ options.initShowVirtualMode = function() {
     showVirtualModeElement
         .prop('checked', !!result.showVirtualMode)
         .on('change', () => {
-            setConfig({ showVirtualMode: showVirtualModeElement.is(':checked') });
-            PortHandler.reinitialize();
+            const checked = showVirtualModeElement.is(':checked');
+            setConfig({ showVirtualMode: checked });
+            PortHandler.setShowVirtualMode(checked);
         });
 };
 
-options.initUseMdnsBrowser = function() {
-    const useMdnsBrowserElement = $('div.useMdnsBrowser input');
-    const result = getConfig('useMdnsBrowser');
-    useMdnsBrowserElement
-        .prop('checked', !!result.useMdnsBrowser)
+options.initUseManualConnection = function() {
+    const showManualModeElement = $('div.showManualMode input');
+    const result = getConfig('showManualMode');
+    showManualModeElement
+        .prop('checked', !!result.showManualMode)
         .on('change', () => {
-            setConfig({ useMdnsBrowser: useMdnsBrowserElement.is(':checked') });
-            PortHandler.reinitialize();
+            const checked = showManualModeElement.is(':checked');
+            setConfig({ showManualMode: checked });
+            PortHandler.setShowManualMode(checked);
         });
 };
 
 options.initCordovaForceComputerUI = function () {
-    if (GUI.isCordova() && cordovaUI.canChangeUI) {
-        const result = getConfig('cordovaForceComputerUI');
-        if (result.cordovaForceComputerUI) {
-            $('div.cordovaForceComputerUI input').prop('checked', true);
-        }
-
-        $('div.cordovaForceComputerUI input').change(function () {
-            const checked = $(this).is(':checked');
-
-            setConfig({'cordovaForceComputerUI': checked});
-
-            if (typeof cordovaUI.set === 'function') {
-                cordovaUI.set();
-            }
-        });
-    } else {
-        $('div.cordovaForceComputerUI').hide();
-    }
+    $('div.cordovaForceComputerUI').hide();
 };
 
 options.initDarkTheme = function () {
@@ -189,15 +178,90 @@ options.initDarkTheme = function () {
 };
 
 options.initShowDevToolsOnStartup = function () {
-    if (!(CONFIGURATOR.isDevVersion() && GUI.isNWJS())) {
-        $('div.showDevToolsOnStartup').hide();
-        return;
-    }
     const result = getConfig('showDevToolsOnStartup');
     $('div.showDevToolsOnStartup input')
         .prop('checked', !!result.showDevToolsOnStartup)
         .change(function () { setConfig({ showDevToolsOnStartup: $(this).is(':checked') }); })
         .change();
+};
+
+options.initShowNotifications = function () {
+    const result = getConfig("showNotifications");
+    $("div.showNotifications input")
+        .prop("checked", !!result.showNotifications)
+        .on('change', function () {
+            const element = $(this);
+            const enabled = element.is(':checked');
+
+            if (enabled) {
+                const informationDialog = {
+                    title : i18n.getMessage("notificationsDeniedTitle"),
+                    text: i18n.getMessage("notificationsDenied"),
+                    buttonConfirmText: i18n.getMessage("OK"),
+                };
+
+                switch (NotificationManager.checkPermission()) {
+                    case 'granted':
+                        setConfig({ showNotifications: enabled });
+                        break;
+                    case 'denied':
+                        // disable notifications if permission is denied
+                        GUI.showInformationDialog(informationDialog);
+                        element.prop('checked', false);
+                        break;
+                    case 'default':
+                        // need to request permission first before enabling notifications
+                        element.prop('checked', false);
+                        NotificationManager.requestPermission().then((permission) => {
+                            if (permission === 'granted') {
+                                // enable notifications if permission is granted
+                                setConfig({ showNotifications: enabled });
+                                // trigger change event to update the switchery
+                                element.prop('checked', true).trigger('change');
+                            } else {
+                                GUI.showInformationDialog(informationDialog);
+                            }
+                        });
+                }
+
+            }
+
+            setConfig({ showNotifications: element.is(":checked") });
+        })
+        .change();
+};
+
+options.initMeteredConnection = function () {
+    const result = getConfig("meteredConnection");
+    $("div.meteredConnection input")
+    .prop("checked", !!result.meteredConnection)
+    .on('change', function () {
+        setConfig({ meteredConnection: $(this).is(":checked") });
+        // update network status
+        ispConnected();
+    })
+    .trigger('change');
+};
+
+options.initUserLanguage = function () {
+    const userLanguage = i18n.selectedLanguage;
+    const userLanguageElement = $('#userLanguage');
+    const languagesAvailables = i18n.getLanguagesAvailables();
+    userLanguageElement.append(`<option value="DEFAULT">${i18n.getMessage('language_default')}</option>`);
+    userLanguageElement.append('<option disabled>------</option>');
+    languagesAvailables.forEach(element => {
+        const languageName = i18n.getMessage(`language_${element}`);
+        userLanguageElement.append(`<option value="${element}">${languageName}</option>`);
+    });
+
+    userLanguageElement
+    .val(userLanguage)
+    .on('change', e => {
+        i18n.changeLanguage(e.target.value);
+        // translate to user-selected language
+        i18n.localizePage();
+    })
+    .trigger('change');
 };
 
 // TODO: remove when modules are in place

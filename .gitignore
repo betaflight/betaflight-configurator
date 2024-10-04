@@ -34,3 +34,6 @@ nbproject/
 .settings/
 test-results-junit/
 /src/package.json
+
+# Capacitor config file, we generate it at runtime
+capacitor.config.json

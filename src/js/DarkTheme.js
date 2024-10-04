@@ -16,17 +16,8 @@ DarkTheme.isDarkThemeEnabled = function (callback) {
     if (this.configSetting === 0) {
         callback(true);
     } else if (this.configSetting === 2) {
-        if (GUI.isCordova()) {
-            cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
-                callback(success.value);
-            }, function(error) {
-                console.log(`cordova-plugin-theme-detection: ${error}`);
-                callback(false);
-            });
-        } else {
-            const isEnabled = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            callback(isEnabled);
-        }
+        const isEnabled = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        callback(isEnabled);
     } else {
         callback(false);
     }
@@ -61,12 +52,12 @@ DarkTheme.setConfig = function (result) {
 };
 
 DarkTheme.applyDark = function () {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', false));
+    $('body').addClass('dark-theme');
     this.enabled = true;
 };
 
 DarkTheme.applyNormal = function () {
-    css_dark.forEach((el) => $(`link[href="${el}"]`).prop('disabled', true));
+    $('body').removeClass('dark-theme');
     this.enabled = false;
 };
 
@@ -74,7 +65,7 @@ export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
 
     checkSetupAnalytics(function (analyticsService) {
-        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', enabled);
+        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', { enabled: enabled });
     });
 }
 

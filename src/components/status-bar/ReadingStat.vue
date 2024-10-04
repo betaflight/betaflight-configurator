@@ -1,8 +1,13 @@
 <template>
   <span>
-    <span>{{ $t(message) }}</span>
-    <span>{{ value }}</span>
-    <span v-if="unit">{{ unit }}</span>
+    <span class="message">{{ $t(message) }}</span>
+    <span class="value">{{ value }}</span>
+    <span
+      v-if="unit"
+      class="unit"
+    >
+      {{ unit }}
+    </span>
   </span>
 </template>
 

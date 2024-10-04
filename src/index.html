@@ -7,7 +7,7 @@
     <script type="module" src="/src/js/browserMain.js"></script>
 
     <title>Betaflight</title>
-    <meta name="description" content="Configurator for betaflight firmware">
+    <meta name="description" content="Configuration and management tool for the Betaflight flight control firmware">
     <link rel="icon" href="/images/pwa/favicon.ico">
     <link rel="apple-touch-icon" href="/images/pwa/apple-touch-icon.png" sizes="128x128">
     <meta name="theme-color" content="#eea600">
@@ -26,54 +26,14 @@
             :firmware-id="FC.CONFIG.flightControllerIdentifier"
             :hardware-id="FC.CONFIG.hardwareName"
         ></betaflight-logo>
-        <div id="port-picker">
-            <div id="port-override-option">
-                <label for="port-override">
-                    <span i18n="portOverrideText">Port:</span>
-                    <input id="port-override" type="text" value="/dev/rfcomm0"/>
-                </label>
-            </div>
-            <div id="firmware-virtual-option">
-                <div class="dropdown dropdown-dark">
-                    <select id="firmware-version-dropdown" class="dropdown-select" i18n_title="virtualMSPVersion"></select>
-                </div>
-            </div>
-            <div id="portsinput" style="display: none">
-                <div class="dropdown dropdown-dark">
-                    <select class="dropdown-select" id="port" i18n_title="firmwareFlasherManualPort">
-                        <option value="loading" i18n="serialPortLoading">Loading</option>
-                        <!-- port list gets generated here -->
-                    </select>
-                </div>
-                <div id="auto-connect-and-baud">
-                    <div id="auto-connect-switch">
-                        <label>
-                            <input class="auto_connect togglesmall" type="checkbox"/>
-                            <span class="auto_connect" i18n="autoConnect"></span>
-                        </label>
-                    </div>
-                    <div id="baudselect">
-                        <div class="dropdown dropdown-dark">
-                            <select class="dropdown-select" id="baud" i18n_title="firmwareFlasherBaudRate">
-                                <option value="1000000">1000000</option>
-                                <option value="500000">500000</option>
-                                <option value="250000">250000</option>
-                                <option value="115200" selected="selected">115200</option>
-                                <option value="57600">57600</option>
-                                <option value="38400">38400</option>
-                                <option value="28800">28800</option>
-                                <option value="19200">19200</option>
-                                <option value="14400">14400</option>
-                                <option value="9600">9600</option>
-                                <option value="4800">4800</option>
-                                <option value="2400">2400</option>
-                                <option value="1200">1200</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <port-picker
+            v-model="PortHandler.portPicker"
+            :connected-serial-devices="PortHandler.currentSerialPorts"
+            :connected-usb-devices="PortHandler.currentUsbPorts"
+            :show-virtual-option="PortHandler.showVirtualMode"
+            :show-manual-option="PortHandler.showManualMode"
+            :disabled="PortHandler.portPickerDisabled"
+        ></port-picker>
         <div class="header-wrapper">
             <div id="quad-status_wrapper">
                 <battery-icon
@@ -82,11 +42,13 @@
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
                     :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
                     :batteryState="FC.BATTERY_STATE?.batteryState"
+                    :vbatcellcount="FC.BATTERY_STATE?.cellCount"
                 >
                 </battery-icon>
                 <battery-legend
                     :voltage="FC.ANALOG.voltage"
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
+                    :vbatcellcount="FC.BATTERY_STATE?.cellCount"
                 ></battery-legend>
                 <div class="bottomStatusIcons">
                     <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>
@@ -117,16 +79,15 @@
                 </ul>
             </div>
             <div id="dataflash_wrapper_global">
-                <div class="noflash_global" align="center" i18n="sensorDataFlashNotFound"></div>
+                <div class="noflash_global" i18n="sensorDataFlashNotFound"></div>
                 <ul class="dataflash-contents_global">
-                    <li class="dataflash-free_global">
-                        <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
-                    </li>
+                    <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
+                    <progress class="dataflash-progress_global" max="100"></progress>
                 </ul>
-                <div id="expertMode" align="center">
+                <div id="expertMode">
                     <label>
                         <input name="expertModeCheckbox" class="togglesmall" type="checkbox"/>
-                        <span i18n="expertMode"></span>
+                        <span i18n="expertMode" class="expertModeText"></span>
                     </label>
                 </div>
             </div>

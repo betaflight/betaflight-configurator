@@ -1,19 +1,22 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
-import serialNWJS from "./serial.js";
-import serialWeb from "./webSerial.js";
-import { isWeb } from "./utils/isWeb.js";
+import { serialShim } from "./serial_shim.js";
 
-const serial = isWeb() ? serialWeb : serialNWJS;
+let serial = serialShim();
 
 const MSP = {
     symbols: {
-        BEGIN: '$'.charCodeAt(0),
-        PROTO_V1: 'M'.charCodeAt(0),
-        PROTO_V2: 'X'.charCodeAt(0),
-        FROM_MWC: '>'.charCodeAt(0),
-        TO_MWC: '<'.charCodeAt(0),
-        UNSUPPORTED: '!'.charCodeAt(0),
+        BEGIN:               '$'.charCodeAt(0),
+        PROTO_V1:            'M'.charCodeAt(0),
+        PROTO_V2:            'X'.charCodeAt(0),
+        FROM_MWC:            '>'.charCodeAt(0),
+        TO_MWC:              '<'.charCodeAt(0),
+        UNSUPPORTED:         '!'.charCodeAt(0),
+        START_OF_TEXT:       0x02,
+        END_OF_TEXT:         0x03,
+        END_OF_TRANSMISSION: 0x04,
+        LINE_FEED:           0x0A,
+        CARRIAGE_RETURN:     0x0D,
     },
     constants: {
         PROTOCOL_V1:                1,
@@ -39,6 +42,7 @@ const MSP = {
         PAYLOAD_V2:                 15,
         CHECKSUM_V1:                16,
         CHECKSUM_V2:                17,
+        CLI_COMMAND:                18,
     },
     state:                      0,
     message_direction:          1,
@@ -56,7 +60,7 @@ const MSP = {
     packet_error:               0,
     unsupported:                0,
 
-    MIN_TIMEOUT:                100,
+    MIN_TIMEOUT:                200,
     MAX_TIMEOUT:                2000,
     timeout:                    200,
 
@@ -64,6 +68,10 @@ const MSP = {
     listeners:                  [],
 
     JUMBO_FRAME_SIZE_LIMIT:     255,
+
+    cli_buffer:                 [], // buffer for CLI charactor output
+    cli_output:                 [],
+    cli_callback:               null,
 
     read(readInfo) {
         if (CONFIGURATOR.virtualMode) {
@@ -74,9 +82,37 @@ const MSP = {
 
         for (const chunk of data) {
             switch (this.state) {
+            case this.decoder_states.CLI_COMMAND:
+                switch (chunk) {
+                    case this.symbols.END_OF_TEXT:
+                        this.cli_output.push(this.cli_buffer.join(''));
+                        this.cli_buffer.length = 0;
+                        if (this.cli_callback) {
+                            this.cli_callback(this.cli_output);
+                            this.cli_output.length = 0;
+                        }
+                        this.state = this.decoder_states.IDLE;
+                        break;
+                    case this.symbols.LINE_FEED:
+                        this.cli_output.push(this.cli_buffer.join(''));
+                        this.cli_buffer.length = 0;
+                        break;
+                    case this.symbols.CARRIAGE_RETURN:
+                        // ignore CRs
+                        break;
+                    default:
+                        this.cli_buffer.push(String.fromCharCode(chunk));
+                        break;
+                }
+                break;
             case this.decoder_states.IDLE: // sync char 1
-                if (chunk === this.symbols.BEGIN) {
-                    this.state = this.decoder_states.PROTO_IDENTIFIER;
+                switch (chunk) {
+                    case this.symbols.BEGIN:
+                        this.state = this.decoder_states.PROTO_IDENTIFIER;
+                        break;
+                    case this.symbols.START_OF_TEXT:
+                        this.state = this.decoder_states.CLI_COMMAND;
+                        break;
                 }
                 break;
             case this.decoder_states.PROTO_IDENTIFIER: // sync char 2
@@ -307,8 +343,33 @@ const MSP = {
         bufView[bufferSize - 1] = this.crc8_dvb_s2_data(bufView, 3, bufferSize - 1);
         return bufferOut;
     },
+    encode_message_cli(str) {
+        const data = Array.from(str, c => c.charCodeAt(0));
+        const dataLength = data ? data.length : 0;
+        const bufferSize = dataLength + 3;        // 3 bytes for protocol overhead
+        const bufferOut = new ArrayBuffer(bufferSize);
+        const bufView = new Uint8Array(bufferOut);
+        bufView[0] = this.symbols.START_OF_TEXT;  // STX
+        for (let ii = 0; ii < dataLength; ii++) {
+            bufView[1 + ii] = data[ii];
+        }
+        bufView[bufferSize - 2] = this.symbols.LINE_FEED;   // LF
+        bufView[bufferSize - 1] = this.symbols.END_OF_TEXT; // ETX
+        return bufferOut;
+    },
+    send_cli_command(str, callback) {
+        serial = serialShim();
+
+        const bufferOut = this.encode_message_cli(str);
+        this.cli_callback = callback;
+
+        serial.send(bufferOut);
+    },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        const connected = isWeb() ? serial.connected : serial.connectionId;
+        // Hack to make BT work
+        serial = serialShim();
+
+        const connected = serial.connected;
 
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {

@@ -1,6 +1,5 @@
 .tab-auxiliary {
-	float: left;
-	width: 100%;
+	min-height: 100%;
 	.help {
 		padding: 10px;
 		background-color: #ffcb18;
@@ -8,29 +7,29 @@
 	}
 	.toolbox {
 		font-weight: bold;
-		color: rgb(105, 99, 99);
-		padding: 10px 5px;
+        padding: 1rem 0;
+        form {
+            display: flex;
+            gap: 0.5rem;
+        }
 	}
 	.range {
 		.marker {
-			background: var(--accent);
+			background: var(--primary-500);
 			border-radius: 3px;
 			position: absolute;
 			left: 50%;
-			top: 27px;
-			height: 13px;
+			top: 2rem;
+			height: 1rem;
 			width: 6px;
 			margin-left: -3px;
 			z-index: 1000;
 		}
 		position: relative;
-		height: 70px;
-		padding-top: 15px;
+		padding-top: 1rem;
 		padding-left: 0;
-		border-top: 1px solid #fff;
-		border-bottom: 1px solid var(--subtleAccent);
-		background-color: #ececec;
-		padding-bottom: 5px;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid var(--surface-500);
 		&:first-child {
 			border-top: 0;
 		}
@@ -46,164 +45,164 @@
 			}
 		}
 		.channel {
-			border: 1px solid var(--subtleAccent);
+			border: 1px solid var(--surface-500);
 			border-radius: 3px;
 			margin-bottom: 3px;
 		}
 		.channel-slider {
-			float: left;
-			width: 77%;
-			margin-left: 20px;
-			margin-top: -4px;
+            width: 100%;
+            margin-right: 1.5rem;
 		}
 	}
 	.channel-slider {
 		.noUi-connect {
-			background: var(--accent);
-			border-radius: 3px;
+			background: var(--primary-500);
+			border-radius: 0.25rem;
 		}
 	}
 	.mode.on {
 		.info {
-			background: var(--accent);
+			background: var(--primary-500);
 			color: black;
 		}
 		&:nth-child(odd) {
 			.info {
-				background: var(--accent);
+				background: var(--primary-500);
 			}
 		}
+        .buttons {
+            a {
+                background-color: var(--primary-300);
+                color: black;
+                &:hover {
+                    background-color: var(--primary-200);
+                    color: black;
+                }
+            }
+        }
 	}
 	.mode.off {
 		.info {
-			background: #828885;
-			color: white;
+			background: var(--surface-300);
+			color: var(--surface-950);
 		}
 		&:nth-child(odd) {
 			.info {
-				background: #828885;
+				background: var(--surface-300);
 			}
 		}
+        .buttons {
+            a {
+                background-color: var(--surface-400);
+                color: var(--surface-950);
+                &:hover {
+                    background-color: var(--surface-500);
+                    color: var(--surface-950);
+                }
+            }
+        }
 	}
 	.mode.disabled {
 		.info {
-			background: var(--error);
-			color: var(--quietText);
-		}
-		&:nth-child(odd) {
-			.info {
-				background: var(--error);
-			}
+			background: var(--error-transparent-4);
+			color: var(--text);
+            .buttons {
+                a {
+                    background-color: var(--error-500);
+                    &:hover {
+                        background-color: var(--error-400);
+                    }
+                }
+            }
 		}
 	}
 	.modes {
 		width: 100%;
 	}
 	.mode {
-		background-color: #f9f9f9;
+		background-color: var(--surface-200);
 		vertical-align: top;
 		display: flex;
+        margin-bottom: 0.5rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        min-height: 6.5rem;
 		.name {
-			min-height: 80px;
-			padding: 5px 0;
+            padding: 0.5rem;
 		}
 		.info {
 			text-align: center;
-			width: 10%;
+			width: fit-content;
 			white-space: nowrap;
 			position: relative;
-			background-color: #e4e4e4;
-			border-bottom: 5px solid white;
-			color: grey;
+			background-color: var(--surface-300);
+            padding: 0.5rem;
 			.name {
 				font-weight: bold;
 				font-size: 1.0em;
 			}
 			.buttons {
-				position: absolute;
-				bottom: 0;
-				width: 100%;
 				a {
-					padding: 2px 5px;
-					border-radius: 4px;
+					padding: 0.25rem 0.5rem;
+					border-radius: 0.5rem;
 					cursor: pointer;
 					margin: 3px;
 					display: block;
-					&:hover {
-						background-color: darkgrey;
-					}
 				}
 			}
 		}
 		.range {
+            display: flex;
 			.channelInfo {
-				float: left;
-				min-width: 90px;
-				text-align: center;
-				margin-top: -4px;
-				margin-left: 5px;
-			}
-		}
-		.link {
-			.modeInfo {
-				float: left;
+                padding: 0 1.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
 			}
 		}
 	}
 	.ranges {
-		padding-right: 0;
-		border-bottom: 5px solid white;
-		width: 90%;
-		max-width: calc(100% - 140px);
+        width: 100%;
 	}
 	.link {
-		position: relative;
-		height: 70px;
-		padding-top: 15px;
-		padding-left: 15px;
-		border-top: 1px solid #fff;
-		border-bottom: 1px solid var(--subtleAccent);
-		background-color: #ececec;
-		padding-bottom: 5px;
+		padding-top: 1rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid var(--surface-500);
+		background-color: var(--surface-200);
+        display: flex;
+        gap: 0.5rem;
 		&:first-child {
 			border-top: 0;
 		}
 		&:last-child {
 			border-bottom: 0;
 		}
-		.linkedTo {
-			border: 1px solid var(--subtleAccent);
-			border-radius: 3px;
-			margin-bottom: 3px;
-		}
+        .delete {
+            a {
+                margin-top: 0.35rem;
+            }
+        }
+        .modeInfo {
+            padding: 0 1.5rem;
+        }
+        .linkLogic {
+            margin-top: 0.25rem;
+        }
 	}
 	.logic {
-		border: 1px solid var(--subtleAccent);
+		border: 1px solid var(--surface-700);
 		border-radius: 3px;
-	}
-	>.buttons {
-		margin-top: 10px;
-		a {
-			float: right;
-			height: 28px;
-			line-height: 28px;
-			padding: 0 15px 0 15px;
-			display: block;
-			color: #000;
-		}
 	}
 	.buttons {
 		a {
 			text-align: center;
 			font-weight: bold;
-			background-color: #fff;
-			color: black;
-			opacity: 0.8;
+			background-color: var(--surface-400);
+			color: var(--text);
 			transition: all ease 0.3s;
 			&:hover {
-				background-color: #fff;
+				background-color: var(--surface-500);
 				opacity: 1.0;
-				color: black;
 				transition: all ease 0.3s;
 			}
 		}
@@ -215,7 +214,6 @@
 			transition: all ease 0.3s;
 			opacity: 0.3;
 			position: relative;
-			float: right;
 			margin-right: 5px;
 			margin-top: -9px;
 			background-image: url('../../images/icons/close1.svg');
@@ -228,62 +226,43 @@
 			}
 		}
 	}
-	.fixed_band {
-		bottom: 0;
-	}
-	.save_btn {
-		a {
-			line-height: 28px;
-		}
-	}
 }
 #tab-auxiliary-templates {
 	display: none;
-}
-@media only screen and (max-width: 1055px) {
-	.tab-auxiliary {
-		.fixed_band {
-			width: calc(100% - -30px);
-			margin: 0 0 0 -15px;
-			.save_btn {
-				a {
-					margin-right: 15px;
-				}
-			}
-		}
-	}
-}
-@media only screen and (max-device-width: 1055px) {
-	.tab-auxiliary {
-		.fixed_band {
-			width: calc(100% - -30px);
-			margin: 0 0 0 -15px;
-			.save_btn {
-				a {
-					margin-right: 15px;
-				}
-			}
-		}
-	}
 }
 @media all and (max-width: 575px) {
 	.tab-auxiliary {
 		.mode {
 			flex-wrap: wrap;
+            height: fit-content;
 			.info {
 				width: 100%;
 				border-bottom: 0;
+                display: flex;
+                flex-direction: row-reverse;
+                justify-content: space-between;
+                align-items: center;
 				.name {
 					text-align: left;
-					padding-left: 10px;
 					min-height: auto;
+                    margin-right: auto;
 				}
 				.buttons {
 					right: 0;
 					width: auto;
 					display: flex;
 				}
+                .helpicon {
+                    margin-top: 0;
+                }
 			}
+            // offset "add" button for ARM mode since the "link" button is hidden
+            // keeps the layout consistent with other modes
+            &:first-of-type {
+                .buttons {
+                    margin-left: 2.5rem;
+                }
+            }
 			.ranges {
 				width: 100%;
 				max-width: 100%;
@@ -303,7 +282,7 @@
 			flex-wrap: wrap;
 			.channel-slider {
 				width: 100%;
-				margin: 10px 10px 45px 10px;
+				margin: 0.5rem 1rem 3.5rem 1rem;
 			}
 		}
 		.limits {
@@ -316,7 +295,6 @@
 				margin-top: 15px;
 				margin-right: 10px;
 				position: absolute;
-				float: none;
 				top: 0;
 				right: 0;
 			}

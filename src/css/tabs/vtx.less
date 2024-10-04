@@ -1,5 +1,4 @@
 .tab-vtx {
-	height: 100%;
 	.cf_table {
 		-webkit-border-horizontal-spacing: 1px;
 	}
@@ -9,95 +8,62 @@
 	.require-upgrade {
 		display: block;
 	}
-	.columnsWrapper {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: nowrap;
-		justify-content: space-between;
-		.leftColumn {
-			width: calc(100% - (250px + 25px));
-		}
-		.rightColumn {
-			flex-shrink: 0;
-			flex-grow: 0;
-			flex-basis: 250px;
-		}
-	}
-	.leftWrapper {
-		float: left;
-		width: calc(60% - 20px);
-	}
-	.rightWrapper {
-		float: left;
-		width: calc(30% - 0px);
-		max-width: 300px;
-		margin: 0 0 10px 20px;
-	}
-	input {
-		border: 1px solid var(--subtleAccent);
-		border-radius: 3px;
-		max-width: 100px;
-		background: var(--boxBackground);
-		color: var(--defaultText);
-	}
-	select {
-		border: 1px solid var(--subtleAccent);
-		border-radius: 3px;
-		max-width: 100px;
-		background: var(--boxBackground);
-		color: var(--defaultText);
-	}
-	.number {
-		input {
-			width: 55px;
-			padding-left: 3px;
-			height: 20px;
-			line-height: 20px;
-			text-align: left;
-			border-radius: 3px;
-			margin-right: 11px;
-			font-size: 12px;
-			font-weight: normal;
-		}
-	}
-	.gui_box {
-		span {
-			font-style: normal;
-			line-height: 19px;
-			color: var(--mutedtext);
-			font-size: 11px;
-		}
-	}
-	.spacer_box {
-		.field {
-			margin-bottom: 5px;
-			clear: left;
-			padding-bottom: 5px;
-			width: 100%;
-			float: left;
-			&:not(:last-child) {
-				border-bottom: 1px solid var(--subtleAccent);
-			}
-		}
-	}
 	.select_mode {
 		.field {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0 !important;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--surface-500);
+            .helpicon {
+                margin-top: 0;
+                margin-right: 0;
+            }
 			>span {
-				margin-right: 10px;
 				display: inline-block;
-				min-width: 100px;
+				min-width: 9rem;
+                &+span {
+                    margin-right: auto;
+                }
 			}
+            label {
+                width: 100%;
+                >span {
+                    margin-right: auto;
+                }
+            }
+            &:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+            .checkboxspacer {
+                height: 1.5rem;
+                display: flex;
+                align-items: center;
+            }
 		}
 	}
 	input.one_digit_input {
 		width: 28px;
 	}
 	input.frequency_input {
-		width: 48px;
+		width: 64px;
 	}
 	.vtx_table_box {
 		min-width: 750px;
 	}
+    .VTX_info {
+        table {
+            td {
+                padding: 0.25rem 0;
+                // first td 1rem right padding
+                &:first-child {
+                    padding-right: 1rem;
+                }
+            }
+        }
+    }
 	.table_vtx_bands {
 		tr {
 			&:first-child {
@@ -107,13 +73,13 @@
 			}
 		}
 		td {
-			padding: 0 1px;
+			padding: 0.25rem;
 			text-align: center;
 		}
-		input {
-			display: block;
-			margin: 0 auto;
-		}
+        input {
+            min-width: 0;
+            padding-right: 0.25rem;
+        }
 	}
 	.table_vtx_powerlevels {
 		tr {
@@ -124,48 +90,59 @@
 			}
 		}
 		td {
-			padding: 0 1px;
-			text-align: center;
+            padding: 0.25rem;
+            text-align: center;
 		}
 		input {
 			display: block;
-			margin: 0 auto;
-		}
+            min-width: 5rem;
+        }
 	}
-	.field_powerlevel_value {
-		input {
-			width: 53px;
-		}
-	}
-	.field_powerlevel_label {
-		input {
-			width: 53px;
-		}
-	}
-	.field_band_name {
-		input {
-			width: 71px;
-		}
-	}
-	.field_band_letter {
-		input {
-			width: 13px;
-		}
-	}
-	.vtx_table_bands_table {
-		span {
-			table {
-				float: left;
-			}
-		}
-	}
-	.vtx_table_powerlevels_table {
-		span {
-			table {
-				float: left;
-			}
-		}
-	}
+    @media all and (max-width: 575px) {
+        .tab-vtx {
+            .columnsWrapper {
+                flex-wrap: wrap;
+                .leftColumn {
+                    width: 100%;
+                }
+                .rightColumn {
+                    width: 100%;
+                    flex-basis: auto;
+                }
+            }
+            .x-scroll-wrapper {
+                overflow-x: auto;
+                .gui_box {
+                    min-width: fit-content;
+                }
+            }
+            .leftWrapper {
+                width: 100%;
+                overflow: auto;
+            }
+        }
+        .grid-box {
+            &.col4 {
+                grid-template-columns: 1fr;
+                .col-span-3 {
+                    grid-column: span 1;
+                }
+                .col-span-4 {
+                    grid-column: span 1;
+                }
+            }
+        }
+        .content_toolbar{
+            .save_lua_btn, .save_file_btn {
+                display: none;
+            }
+            &.expanded {
+                .save_lua_btn, .save_file_btn {
+                    display: block;
+                }
+            }
+        }
+    }
 }
 .tab-vtx.supported {
 	.require-support {
@@ -177,22 +154,4 @@
 }
 #tab-vtx-templates {
 	display: none;
-}
-@media all and (max-width: 575px) {
-	.tab-vtx {
-		.columnsWrapper {
-			flex-wrap: wrap;
-			.leftColumn {
-				width: 100%;
-			}
-			.rightColumn {
-				width: 100%;
-				flex-basis: auto;
-			}
-		}
-		.leftWrapper {
-			width: 100%;
-			overflow: auto;
-		}
-	}
 }

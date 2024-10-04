@@ -1,9 +1,11 @@
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import CONFIGURATOR from "../../js/data_storage";
-import serial from "../../js/serial";
 import { reinitializeConnection } from "../../js/serial_backend";
 import { gui_log } from "../../js/gui_log";
+import { serialShim } from "../../js/serial_shim";
+
+const serial = serialShim();
 
 export default class CliEngine
 {
@@ -186,7 +188,7 @@ export default class CliEngine
             Windows understands (both) CRLF
             Chrome OS currently unknown
         */
-        const data = new Uint8Array(readInfo.data);
+        const data = new Uint8Array(readInfo.data ?? readInfo);
         let validateText = "";
         let sequenceCharsToSkip = 0;
         for (const charCode of data) {

@@ -1,5 +1,5 @@
 <div class="tab-options">
-    <div class="content_wrapper">
+    <div class="content_wrapper grid-box col1">
         <div class="gui_box">
             <div class="gui_box_titlebar">
                 <div class="spacer_box_title" i18n="tabOptions"></div>
@@ -16,6 +16,12 @@
                         <input type="checkbox" class="toggle" />
                     </div>
                     <span class="freelabel" i18n="rememberLastTab"></span>
+                </div>
+                <div class="meteredConnection margin-bottom">
+                    <div>
+                        <input type="checkbox" class="toggle" />
+                    </div>
+                    <span class="freelabel" i18n="meteredConnection"></span>
                 </div>
                 <div class="analyticsOptOut margin-bottom">
                     <div>
@@ -35,11 +41,11 @@
                     </div>
                     <span class="freelabel" i18n="showAllSerialDevices"></span>
                 </div>
-                <div class="useMdnsBrowser margin-bottom">
+                <div class="showManualMode margin-bottom">
                     <div>
                         <input type="checkbox" class="toggle" />
                     </div>
-                    <span class="freelabel" i18n="useMdnsBrowser"></span>
+                    <span class="freelabel" i18n="showManualMode"></span>
                 </div>
                 <div class="showVirtualMode margin-bottom">
                     <div>
@@ -66,6 +72,20 @@
                         <input type="checkbox" class="toggle" />
                     </div>
                     <span class="freelabel" i18n="showDevToolsOnStartup"></span>
+                </div>
+                <div class="showNotifications margin-bottom">
+                    <div>
+                        <input type="checkbox" class="toggle" />
+                    </div>
+                    <span class="freelabel" i18n="showNotifications"></span>
+                </div>
+                <div class="userLanguage">
+                    <span class="dropdown">
+                        <select class="dropdown-select" id="userLanguage" i18n_title="userLanguageSelect">
+                            <!-- User languages generated here -->
+                        </select>
+                    </span>
+                    <span i18n="userLanguageSelect"></span>
                 </div>
             </div>
         </div>

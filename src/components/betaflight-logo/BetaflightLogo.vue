@@ -42,22 +42,23 @@ export default {
 .logo {
   height: 70px;
   width: 240px;
-  background-image: url(../../images/light-wide-2.svg);
+  background-image: url(../../images/dark-wide-2.svg);
   background-repeat: no-repeat;
   background-position: left center;
   background-size: contain;
   position: relative;
-  margin-top: -25px;
+}
+
+.dark-theme .logo {
+  background-image: url(../../images/light-wide-2.svg);
 }
 
 .logo_text {
   position: absolute;
   left: 80px;
   top: 49px;
-  color: #949494;
-  opacity: 0.5;
+  color: var(--text);
   font-size: 10px;
-  min-width: 210px;
   display: flex;
   flex-direction: column;
 }
@@ -70,17 +71,20 @@ export default {
   .logo {
     height: 24px;
     width: 150px;
-    background-image: url(../../images/light-wide-2-compact.svg);
+    background-image: url(../../images/dark-wide-2-compact.svg);
     background-position: left center;
     order: 2;
     margin-top: 0;
+  }
+  .dark-theme .logo {
+    background-image: url(../../images/light-wide-2-compact.svg);
   }
   .logo_text {
     display: none !important;
   }
   .tab_container .logo {
     display: block;
-    background-image: url(../../images/light-wide-2.svg);
+    background-image: url(../../images/dark-wide-2.svg);
     background-repeat: no-repeat;
     background-position: center 20px;
     background-position-x: 12px;
@@ -90,6 +94,9 @@ export default {
     margin-top: unset;
     position: relative;
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
+  .dark-theme .tab_container .logo {
+    background-image: url(../../images/light-wide-2.svg);
   }
   .tab_container .logo .logo_text {
     display: flex !important;

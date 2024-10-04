@@ -2,7 +2,7 @@
 
 ![Betaflight](http://static.rcgroups.net/forums/attachments/6/1/0/3/7/6/a9088900-228-bf_logo.jpg)
 
-[![Latest version](https://img.shields.io/github/v/release/betaflight/betaflight-configurator)](https://github.com/betaflight/betaflight-configurator/releases) [![Build](https://img.shields.io/github/actions/workflow/status/betaflight/betaflight-configurator/nightly.yml?branch=master)](https://github.com/betaflight/betaflight-configurator/actions/workflows/nightly.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/betaflight-configurator/localized.svg)](https://crowdin.com/project/betaflight-configurator) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=betaflight_betaflight-configurator&metric=alert_status)](https://sonarcloud.io/dashboard?id=betaflight_betaflight-configurator) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Latest version](https://img.shields.io/github/v/release/betaflight/betaflight-configurator)](https://github.com/betaflight/betaflight-configurator/releases) [![Build](https://img.shields.io/github/actions/workflow/status/betaflight/betaflight-configurator/nightly.yml?branch=master)](https://github.com/betaflight/betaflight-configurator/actions/workflows/nightly.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/betaflight-configurator/localized.svg)](https://crowdin.com/project/betaflight-configurator) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=betaflight_betaflight-configurator&metric=alert_status)](https://sonarcloud.io/dashboard?id=betaflight_betaflight-configurator) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Join us on Discord!](https://img.shields.io/discord/868013470023548938)](https://discord.gg/n4E6ak4u3c)
 
 
 Betaflight Configurator is a crossplatform configuration tool for the Betaflight flight control system.
@@ -57,15 +57,26 @@ The `libatomic` library must also be installed before installing Betaflight Conf
 sudo apt install libatomic1
 ```
 
+On Ubuntu 23.10 please follow these alternative steps for installation:
+
+```
+sudo echo "deb http://archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
+sudo apt update
+sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
+sudo apt-get -f install
+```
+
 #### Graphics Issues
 
 If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
 
 ### Unstable Testing Versions
 
-Unstable testing versions of the latest builds of the configurator for most platforms can be downloaded from [here](https://github.com/betaflight/betaflight-configurator-nightlies/releases/).
+The future of the Configurator is moving to a PWA (Progressive Web Application). In this way it will be easier to maintain specially to support different devices like phones, tablets. etc. Is a work in progress but you can have access to the latest snapshot in PWA way without installing anything (take into account that some things don't work and are in development).
 
-**Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
+- Latest PWA master snapshot of the Configurator: https://master.dev.app.betaflight.com/
+
+**Be aware that this version is intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using this version.**
 
 ## Languages
 
@@ -75,82 +86,77 @@ Betaflight Configurator has been translated into several languages. The applicat
 
 If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
 
-## App build via Vite (web)
+## Build and Development
 
-### Development
+### Technical details
 
-1. Install node.js (refer to [.nvmrc](./.nvmrc) for required version)
+The next versions of the Configurator will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, Yarn, Vite and Vue for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
+
+### Prepare your environment
+
+1. Install [node.js](https://nodejs.org/) (refer to [.nvmrc](./.nvmrc) for minimum required version)
 2. Install yarn: `npm install yarn -g`
-3. Change to project folder and run `yarn install`.
-4. Run `yarn dev`.
+
+### PWA version
+
+#### Run development version
+
+1. Change to project folder and run `yarn install`.
+2. Run `yarn dev`.
 
 The web app will be available at http://localhost:8000 with full HMR.
 
-### Build Preview
+#### Run production version
 
-1. Run `yarn build`.
-2. Run `yarn preview` after build has finished.
-3. Alternatively run `yarn review` to build and preview in one step.
+1. Change to project folder and run `yarn install`.
+2. Run `yarn build`.
+3. Run `yarn preview` after build has finished.
+
+Alternatively you can run `yarn review` to build and preview in one step.
 
 The web app should behave directly as in production, available at http://localhost:8080.
 
-## App build via NW.js (windows/linux/macos) or Cordova (android)
+### Android version
 
-### Development
+NOTE: The Android version is not fully functional yet. It is in development.
 
-1. Install node.js (refer to [.nvmrc](./.nvmrc) for required version)
-2. Install yarn: `npm install yarn -g`
-3. (For Android platform only) Install Java JDK 8, Gradle and Android Studio (Android SDK at least level 19). On Windows you have to extract Gradle binaries to C:\Gradle and set up some environmental variables.
+#### Prerequisites
 
-| Variable Name | Value |
-|---|---|
-| ANDROID_HOME | %LOCALAPPDATA%\Android\sdk |
-| ANDROID_SDK_ROOT | %LOCALAPPDATA%\Android\sdk |
-| Path | %ANDROID_HOME%\tools<br>%ANDROID_HOME%\platform-tools<br>C:\Gradle\bin |
-4. Change to project folder and run `yarn install`.
-5. Run `yarn start`.
+You need to install [Android Studio](https://developer.android.com/studio) as Capacitor apps are configured and managed through it.
+
+#### Run development version
+
+1. Change to project folder and run `yarn install`.
+2. Run `yarn android:run`.
+
+The command will ask for the device to run the app. You need to have some Android virtual machine created or some Android phone [connected using ADB](https://developer.android.com/tools/adb).
+
+As alternative to the step 2, you can execute a `yarn android:open` to open de project into Android Studio and run or debug the app from there.
+
+#### Run development version with live reload
+
+1. Change to project folder and run `yarn install`.
+2. Run `yarn dev --host`. It will start the vite server and will show you the IP address where the server is listening.
+3. Run `yarn android:dev` 
+
+This will ask for the IP where the server is running (if there are more than one network interfaces). You need to have some Android virtual machine created or some Android phone [connected using ADB](https://developer.android.com/tools/adb).
+Any change make in the code will reload the app in the Android device.
 
 ### Running tests
 
 `yarn test`
 
-### App build and release
+## Support and Developers Channel
 
-The tasks are defined in `gulpfile.js` and can be run with through yarn:
-```
-yarn gulp <taskname> [[platform] [platform] ...]
-```
+There's a dedicated Discord server here:
 
-List of possible values of `<task-name>`:
-* **dist** copies all the JS and CSS files in the `./dist` folder [2].
-* **apps** builds the apps in the `./apps` folder [1].
-* **debug** builds debug version of the apps in the `./debug` folder [1][3].
-* **release** zips up the apps into individual archives in the `./release` folder [1].
+https://discord.gg/n4E6ak4u3c
 
-[1] Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app (build for specific platform to avoid errors).
-[2] For Android platform, **dist** task will generate folders and files in the `./dist_cordova` folder.
-[3] For Android platform, you need to configure an emulator or to plug an Android device with USB debugging enabled
+We also have a Facebook Group. Join us to get a place to talk about Betaflight, ask configuration questions, or just hang out with fellow pilots.
 
-#### Build or release app for one specific platform
-To build or release only for one specific platform you can append the plaform after the `task-name`.
-If no platform is provided, the build for the host platform is run.
+https://www.facebook.com/groups/betaflightgroup/
 
-* **MacOS X** use `yarn gulp <task-name> --osx64`
-* **Linux** use `yarn gulp <task-name> --linux64`
-* **Windows** use `yarn gulp <task-name> --win64`
-* **Android** use `yarn gulp <task-name> --android`
-
-**Note:** Support for cross-platform building is very limited due to the requirement for platform specific build tools. If in doubt, build on the target platform.
-
-You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32`, `--linux32` and `--armv8` can be used too, but they are not officially supported, so use them at your own risk.
-
-#### Leverage GitHub-Actions to build binaries
-
-You can use the GitHub `Actions` tab in your fork to build binaries as well. Select `Actions`>`Manual Build`>`Run Workflow`. Choose your custom branch and click `Run workflow`. The workflow will dispatch in a few moments and upon completion, the build "Artifacts" will be available for download from within the workflow run.
-
-## Support
-
-If you need help please reach out on the [betaflightgroup](https://betaflightgroup.slack.com) slack channel before raising issues on github. Register and [request slack access here](https://slack.betaflight.com).
+Etiquette: Don't ask to ask and please wait around long enough for a reply - sometimes people are out flying, asleep or at work and can't answer immediately.
 
 ### Issue trackers
 
@@ -161,10 +167,6 @@ https://github.com/betaflight/betaflight-configurator/issues
 For Betaflight firmware issues raise them here
 
 https://github.com/betaflight/betaflight/issues
-
-## Technical details
-
-The configurator is based on chrome.serial API running on Google Chrome/Chromium core.
 
 ## Developers
 

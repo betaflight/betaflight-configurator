@@ -5,14 +5,17 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { generateFilename } from "../utils/generate_filename";
 import semver from 'semver';
 import { showErrorDialog } from "../utils/showErrorDialog";
-import { checkChromeRuntimeError } from "../utils/common";
 import $ from 'jquery';
 import DEBUG from "../debug";
+import FileSystem from "../FileSystem";
+import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
+import NotificationManager from "../../js/utils/notifications";
+import { get as getConfig } from '../ConfigStorage';
 
 let sdcardTimer;
 
@@ -115,19 +118,15 @@ onboard_logging.initialize = function (callback) {
 
                         FC.BLACKBOX.blackboxDisabledMask = fieldsMask;
                     }
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                        FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
-                    }
+                    FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
 
                     await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
 
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                        FC.PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
+                    FC.PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
 
-                        await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
-                    }
+                    await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
                     mspHelper.writeConfiguration(true);
                 });
@@ -190,73 +189,36 @@ onboard_logging.initialize = function (callback) {
     function populateLoggingRates(loggingRatesSelect) {
 
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
-        let loggingRates = [];
+        const pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
+        const sampleRateNum = 5;
 
-        let pidRate;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
-
-        } else {
-
-            let pidRateBase = 8000;
-
-            pidRate = pidRateBase / FC.PID_ADVANCED_CONFIG.gyro_sync_denom / FC.PID_ADVANCED_CONFIG.pid_process_denom;
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            const sampleRateNum=5;
-            for (let i = 0; i < sampleRateNum; i++) {
-                let loggingFrequency = Math.round(pidRate / (2**i));
-                let loggingFrequencyUnit = "Hz";
-                if (gcd(loggingFrequency, 1000) === 1000) {
-                    loggingFrequency /= 1000;
-                    loggingFrequencyUnit = "kHz";
-                }
-                loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
+        for (let i = 0; i < sampleRateNum; i++) {
+            let loggingFrequency = Math.round(pidRate / (2 ** i));
+            let loggingFrequencyUnit = "Hz";
+            if (gcd(loggingFrequency, 1000) === 1000) {
+                loggingFrequency /= 1000;
+                loggingFrequencyUnit = "kHz";
             }
-            loggingRatesSelect.val(FC.BLACKBOX.blackboxSampleRate);
-        } else {
-            loggingRates = [
-                {text: "Disabled", hz: 0,     p_denom: 0},
-                {text: "500 Hz",   hz: 500,   p_denom: 16},
-                {text: "1 kHz",    hz: 1000,  p_denom: 32},
-                {text: "1.5 kHz",  hz: 1500,  p_denom: 48},
-                {text: "2 kHz",    hz: 2000,  p_denom: 64},
-                {text: "4 kHz",    hz: 4000,  p_denom: 128},
-                {text: "8 kHz",    hz: 8000,  p_denom: 256},
-                {text: "16 kHz",   hz: 16000, p_denom: 512},
-                {text: "32 kHz",   hz: 32000, p_denom: 1024},
-            ];
-
-            $.each(loggingRates, function(index, item) {
-                if (pidRate >= item.hz || item.hz == 0) {
-                    loggingRatesSelect.append(new Option(item.text, item.p_denom));
-                }
-            });
-
-            loggingRatesSelect.val(FC.BLACKBOX.blackboxPDenom);
+            loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
         }
+        loggingRatesSelect.val(FC.BLACKBOX.blackboxSampleRate);
     }
 
     function populateDebugModes(debugModeSelect) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('.blackboxDebugMode').show();
+        $('.blackboxDebugMode').show();
 
-            for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
-                if (i < DEBUG.modes.length) {
-                    debugModeSelect.append(new Option(DEBUG.modes[i].text, i));
-                } else {
-                    debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
-                }
+        for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
+            if (i < DEBUG.modes.length) {
+                debugModeSelect.append(new Option(DEBUG.modes[i].text, i));
+            } else {
+                debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
             }
-
-            debugModeSelect
-            .val(FC.PID_ADVANCED_CONFIG.debugMode)
-            .select2()
-            .sortSelect("NONE");
-        } else {
-            $('.blackboxDebugMode').hide();
         }
+
+        debugModeSelect
+        .val(FC.PID_ADVANCED_CONFIG.debugMode)
+        .select2()
+        .sortSelect("NONE");
     }
 
     function populateDebugFields(debugFieldsSelect) {
@@ -316,6 +278,8 @@ onboard_logging.initialize = function (callback) {
         }
     }
 
+    $('input[name="expertModeCheckbox"]').on('change', () => $('a.regular-button.require-msc-supported.save-flash').toggle(isExpertModeEnabled()));
+
     function update_html() {
         const dataflashPresent = FC.DATAFLASH.totalSize > 0;
 
@@ -325,7 +289,7 @@ onboard_logging.initialize = function (callback) {
         update_bar_width($(".tab-onboard_logging .sdcard-other"), FC.SDCARD.totalSizeKB - FC.SDCARD.freeSizeKB, FC.SDCARD.totalSizeKB, i18n.getMessage('dataflashUnavSpace'), true);
         update_bar_width($(".tab-onboard_logging .sdcard-free"), FC.SDCARD.freeSizeKB, FC.SDCARD.totalSizeKB, i18n.getMessage('dataflashLogsSpace'), true);
 
-        $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", FC.DATAFLASH.usedSize === 0);
+        $("a.regular-button erase-flash, a.regular-button.require-msc-supported.save-flash").toggleClass("disabled", FC.DATAFLASH.usedSize === 0);
 
         $(".tab-onboard_logging")
             .toggleClass("sdcard-error", FC.SDCARD.state === MSP.SDCARD_STATE_FATAL)
@@ -418,6 +382,10 @@ onboard_logging.initialize = function (callback) {
         }
 
         $(".dataflash-saving").addClass("done");
+
+        if (getConfig('showNotifications').showNotifications) {
+            NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashDownloadDoneNotification'), icon: "/images/pwa/favicon.ico"});
+        }
     }
 
     function flash_update_summary(onDone) {
@@ -439,6 +407,7 @@ onboard_logging.initialize = function (callback) {
             flash_update_summary(function() {
                 const maxBytes = FC.DATAFLASH.usedSize;
 
+                let openedFile;
                 prepare_file(function(fileWriter) {
                     let nextAddress = 0;
                     let totalBytesCompressed = 0;
@@ -459,27 +428,29 @@ onboard_logging.initialize = function (callback) {
                                 $(".dataflash-saving progress").attr("value", nextAddress / maxBytes * 100);
 
                                 const blob = new Blob([chunkDataView]);
-
-                                fileWriter.onwriteend = function(e) {
+                                FileSystem.writeChunck(openedFile, blob)
+                                .then(() => {
                                     if (saveCancelled || nextAddress >= maxBytes) {
                                         if (saveCancelled) {
                                             dismiss_saving_dialog();
                                         } else {
                                             mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                         }
+                                        FileSystem.closeFile(openedFile);
                                     } else {
                                         if (!self.writeError) {
                                             mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                                         } else {
                                             dismiss_saving_dialog();
+                                            FileSystem.closeFile(openedFile);
                                         }
                                     }
-                                };
+                                });
 
-                                fileWriter.write(blob);
                             } else {
                                 // A zero-byte block indicates end-of-file, so we're done
                                 mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
+                                FileSystem.closeFile(openedFile);
                             }
                         } else {
                             // There was an error with the received block (address didn't match the one we asked for), retry
@@ -489,7 +460,11 @@ onboard_logging.initialize = function (callback) {
 
                     const startTime = new Date().getTime();
                     // Fetch the initial block
-                    mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                    FileSystem.openFile(fileWriter).
+                    then((file) => {
+                        openedFile = file;
+                        mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                    });
                 });
             });
         }
@@ -502,36 +477,18 @@ onboard_logging.initialize = function (callback) {
 
         const filename = generateFilename(prefix, suffix);
 
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename,
-                accepts: [{description: `${suffix.toUpperCase()} files`, extensions: [suffix]}]}, function(fileEntry) {
-            if (checkChromeRuntimeError()) {
-                if (chrome.runtime.lastError.message !== "User cancelled") {
-                    gui_log(i18n.getMessage('dataflashFileWriteFailed'));
-                }
-                return;
-            }
-
-            // echo/console log path specified
-            chrome.fileSystem.getDisplayPath(fileEntry, function(path) {
-                console.log(`Dataflash dump file path: ${path}`);
-            });
-
-            fileEntry.createWriter(function (fileWriter) {
-                fileWriter.onerror = function (e) {
-                    gui_log(`<strong><span class="message-negative">${i18n.getMessage('error', { errorMessage: e.target.error.message })}</span class="message-negative></strong>`);
-
-                    console.error(e);
-
-                    // stop logging if the procedure was/is still running
-                    self.writeError = true;
-                };
-
-                onComplete(fileWriter);
-            }, function (e) {
-                // File is not readable or does not exist!
-                console.error(e);
-                gui_log(i18n.getMessage('dataflashFileWriteFailed'));
-            });
+        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', { typeof: suffix }), `.${suffix}`)
+        .then((file) => {
+            console.log("File picked:", file);
+            onComplete(file);
+        })
+        .then(() => {
+            console.log("FINISHED");
+        })
+        .catch((error) => {
+            console.error("Error saving blackbox file:", error);
+            gui_log(i18n.getMessage('dataflashFileWriteFailed'));
+            gui_log(`<strong><span class="message-negative">${i18n.getMessage('error', { errorMessage: error })}</span class="message-negative></strong>`);
         });
     }
 
@@ -547,6 +504,9 @@ onboard_logging.initialize = function (callback) {
             if (CONFIGURATOR.connectionValid && !eraseCancelled) {
                 if (FC.DATAFLASH.ready) {
                     $(".dataflash-confirm-erase")[0].close();
+                    if (getConfig('showNotifications').showNotifications) {
+                        NotificationManager.showNotification("Betaflight Configurator", {body: i18n.getMessage('flashEraseDoneNotification'), icon: "/images/pwa/favicon.ico"});
+                    }
                 } else {
                     setTimeout(poll_for_erase_completion, 500);
                 }

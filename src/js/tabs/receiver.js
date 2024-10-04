@@ -10,7 +10,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_44, API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
@@ -52,7 +52,13 @@ receiver.initialize = function (callback) {
         if (text) {
             const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
             const hash = CryptoES.MD5(bindingPhraseFull).toString();
-            uidBytes = Uint8Array.from(Buffer.from(hash, 'hex')).subarray(0, 6);
+            // Buffer.from is not available in the browser
+            const bytes = hash.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
+            const view = new DataView(new ArrayBuffer(6));
+            for (let i = 0; i < 6; i++) {
+                view.setUint8(i, bytes[i]);
+            }
+            uidBytes = Array.from(new Uint8Array(view.buffer));
         }
 
         return uidBytes;
@@ -109,13 +115,6 @@ receiver.initialize = function (callback) {
         $('.sticks input[name="stick_min"]').val(FC.RX_CONFIG.stick_min);
         $('.sticks input[name="stick_center"]').val(FC.RX_CONFIG.stick_center);
         $('.sticks input[name="stick_max"]').val(FC.RX_CONFIG.stick_max);
-
-        $('select[name="rcInterpolation-select"]').val(FC.RX_CONFIG.rcInterpolation);
-        $('input[name="rcInterpolationInterval-number"]').val(FC.RX_CONFIG.rcInterpolationInterval);
-
-        $('select[name="rcInterpolation-select"]').change(function () {
-            tab.updateRcInterpolationParameters();
-        }).change();
 
         // generate bars
         const bar_names = [
@@ -252,10 +251,23 @@ receiver.initialize = function (callback) {
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);
 
+        const supportedRxTypes = FC.getSupportedSerialRxTypes();
         const serialRxSelectElement = $('select.serialRX');
+        let allRxTypesEnabled = true;
         FC.getSerialRxTypes().forEach((serialRxType, index) => {
-            serialRxSelectElement.append(`<option value="${index}">${serialRxType}</option>`);
+            const enabled = supportedRxTypes.includes(serialRxType);
+            if (!enabled) allRxTypesEnabled = false;
+            const disable = enabled ? "" : "disabled";
+            serialRxSelectElement.append(`<option value="${index}" ${disable} >${serialRxType}</option>`);
         });
+
+        const warnRxProtocolNotInBuildOptions = function () {
+          const serialRxValue = parseInt($('select.serialRX').val());
+          const serialRxType = FC.getSerialRxTypes()[serialRxValue];
+          const supported = supportedRxTypes.includes(serialRxType);
+          $('.someRXTypesDisabled').toggle(supported && (! allRxTypesEnabled));
+          $('.serialRXNotSupported').toggle(! supported);
+        };
 
         serialRxSelectElement.change(function () {
             const serialRxValue = parseInt($(this).val());
@@ -268,28 +280,29 @@ receiver.initialize = function (callback) {
             tab.analyticsChanges['SerialRx'] = newValue;
 
             FC.RX_CONFIG.serialrx_provider = serialRxValue;
+
+            warnRxProtocolNotInBuildOptions();
         });
 
         // select current serial RX type
         serialRxSelectElement.val(FC.RX_CONFIG.serialrx_provider);
 
-        // Convert to select2 and order alphabetic
-        if (!GUI.isCordova()) {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                serialRxSelectElement.sortSelect("NONE").select2();
-            } else {
-                serialRxSelectElement.sortSelect().select2();
-            }
+        warnRxProtocolNotInBuildOptions();
 
-            $(document).on('select2:open', 'select.serialRX', () => {
-                const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
-                $(this).one('mouseup keyup',()=>{
-                    setTimeout(()=>{
-                        allFound[allFound.length - 1].focus();
-                    },0);
-                });
-            });
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            serialRxSelectElement.sortSelect("NONE").select2();
+        } else {
+            serialRxSelectElement.sortSelect().select2();
         }
+
+        $(document).on('select2:open', 'select.serialRX', () => {
+            const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+            $(this).one('mouseup keyup',()=>{
+                setTimeout(()=>{
+                    allFound[allFound.length - 1].focus();
+                },0);
+            });
+        });
 
         const spiRxTypes = [
             'NRF24_V202_250K',
@@ -308,21 +321,11 @@ receiver.initialize = function (callback) {
             'SFHSS',
             'SPEKTRUM',
             'FRSKY_X_LBT',
+            'REDPINE',
+            'FRSKY_X_V2',
+            'FRSKY_X_LBT_V2',
+            'EXPRESSLRS',
         ];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            spiRxTypes.push(
-                'REDPINE',
-            );
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            spiRxTypes.push(
-                'FRSKY_X_V2',
-                'FRSKY_X_LBT_V2',
-                'EXPRESSLRS',
-            );
-        }
 
         const spiRxElement = $('select.spiRx');
         for (let i = 0; i < spiRxTypes.length; i++) {
@@ -345,19 +348,17 @@ receiver.initialize = function (callback) {
         // select current serial RX type
         spiRxElement.val(FC.RX_CONFIG.rxSpiProtocol);
 
-        if (!GUI.isCordova()) {
-            // Convert to select2 and order alphabetic
-            spiRxElement.sortSelect().select2();
+        // Convert to select2 and order alphabetic
+        spiRxElement.sortSelect().select2();
 
-            $(document).on('select2:open', 'select.spiRx', () => {
-                const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
-                $(this).one('mouseup keyup',()=>{
-                    setTimeout(()=>{
-                        allFound[allFound.length - 1].focus();
-                    },0);
-                });
+        $(document).on('select2:open', 'select.spiRx', () => {
+            const allFound = document.querySelectorAll('.select2-container--open .select2-search__field');
+            $(this).one('mouseup keyup',()=>{
+                setTimeout(()=>{
+                    allFound[allFound.length - 1].focus();
+                },0);
             });
-        }
+        });
 
         if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') && FC.RX_CONFIG.rxSpiProtocol == 19 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             tab.elrsBindingPhraseEnabled = true;
@@ -385,6 +386,13 @@ receiver.initialize = function (callback) {
         } else {
             tab.elrsBindingPhraseEnabled = false;
         }
+
+        if (tab.elrsBindingPhraseEnabled && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="elrsModelId-number"]').val(FC.RX_CONFIG.elrsModelId);
+        } else {
+            $('input[name="elrsModelId-number"]').parent().hide();
+        }
+
 
         // UI Hooks
 
@@ -471,18 +479,10 @@ receiver.initialize = function (callback) {
             // catch rssi aux
             FC.RSSI_CONFIG.channel = parseInt($('select[name="rssi_channel"]').val());
 
-            FC.RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
-            FC.RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
-
             FC.RX_CONFIG.rcSmoothingSetpointCutoff = parseInt($('input[name="rcSmoothingSetpointHz-number"]').val());
             FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt($('input[name="rcSmoothingFeedforwardCutoff-number"]').val());
-            FC.RX_CONFIG.rcSmoothingDerivativeType = parseInt($('select[name="rcSmoothingFeedforwardType-select"]').val());
-            FC.RX_CONFIG.rcInterpolationChannels = parseInt($('select[name="rcSmoothingChannels-select"]').val());
-            FC.RX_CONFIG.rcSmoothingInputType = parseInt($('select[name="rcSmoothingSetpointType-select"]').val());
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
-            }
+            FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
 
             if (tab.elrsBindingPhraseEnabled) {
                 const elrsUidChars = $('span.elrsUid')[0].innerText.split(',').map(uidChar => parseInt(uidChar, 10));
@@ -494,6 +494,10 @@ receiver.initialize = function (callback) {
                     saveElrsBindingPhrase(elrsUid, elrsBindingPhrase);
                 } else {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
+                }
+
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.RX_CONFIG.elrsModelId = parseInt($('input[name="elrsModelId-number"]').val());
                 }
             }
 
@@ -533,60 +537,46 @@ receiver.initialize = function (callback) {
             tab.needReboot = false;
         });
 
-        $("a.sticks").click(function() {
+        $("a.sticks").on("click", function() {
             const windowWidth = 370;
-            const windowHeight = 510;
+            const windowHeight = 550;
 
-            chrome.app.window.create("/tabs/receiver_msp.html", {
-                id: "receiver_msp",
-                innerBounds: {
-                    minWidth: windowWidth, minHeight: windowHeight,
-                    width: windowWidth, height: windowHeight,
-                    maxWidth: windowWidth, maxHeight: windowHeight,
-                },
-                alwaysOnTop: true,
-            }, function(createdWindow) {
-                // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
-                createdWindow.contentWindow.setRawRx = function(channels) {
-                    if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {
-                        mspHelper.setRawRx(channels);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                };
+            const rxFunction = function(channels) {
+                if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {
+                    mspHelper.setRawRx(channels);
+                    return true;
+                } else {
+                    return false;
+                }
+            };
 
-                DarkTheme.isDarkThemeEnabled(function(isEnabled) {
-                    windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
-                });
+            const createdWindow = open("/receiver_msp/receiver_msp.html", "receiver_msp", `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`);
+            createdWindow.setRawRx = rxFunction;
 
+            DarkTheme.isDarkThemeEnabled(function(isEnabled) {
+                windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
             });
         });
 
         let showBindButton = false;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            showBindButton = bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
+        showBindButton = bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
 
-            $("a.bind").click(function() {
-                MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
+        $("a.bind").click(function() {
+            MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
 
-                gui_log(i18n.getMessage('receiverButtonBindMessage'));
-            });
-        }
+            gui_log(i18n.getMessage('receiverButtonBindMessage'));
+        });
+
         $(".bind_btn").toggle(showBindButton);
 
         // RC Smoothing
-        const smoothingOnOff = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType;
+        const smoothingOnOff = FC.RX_CONFIG.rcSmoothingMode;
 
         $('.tab-receiver .rcSmoothing').show();
 
         const rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
         rc_smoothing_protocol_e.change(function () {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                FC.RX_CONFIG.rcSmoothingMode = parseFloat($(this).val());
-            } else {
-                FC.RX_CONFIG.rcSmoothingType = parseFloat($(this).val());
-            }
+            FC.RX_CONFIG.rcSmoothingMode = parseFloat($(this).val());
             updateInterpolationView();
         });
         rc_smoothing_protocol_e.val(smoothingOnOff);
@@ -629,36 +619,19 @@ receiver.initialize = function (callback) {
             }
         }).change();
 
-        const rcSmoothingFeedforwardType = $('select[name="rcSmoothingFeedforwardType-select"]');
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            rcSmoothingFeedforwardType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingFeedforwardTypeAuto")}</option>`));
-        }
+        $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
+            if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
+                $('.tab-receiver .rcSmoothing-auto-factor').show();
+            } else {
+                $('.tab-receiver .rcSmoothing-auto-factor').hide();
+            }
+        });
+        $('select[name="rcSmoothing-setpoint-manual-select"]').change();
 
-        rcSmoothingFeedforwardType.val(FC.RX_CONFIG.rcSmoothingDerivativeType);
-        const rcSmoothingChannels = $('select[name="rcSmoothingChannels-select"]');
-        rcSmoothingChannels.val(FC.RX_CONFIG.rcInterpolationChannels);
-        const rcSmoothingSetpointType = $('select[name="rcSmoothingSetpointType-select"]');
-        rcSmoothingSetpointType.val(FC.RX_CONFIG.rcSmoothingInputType);
+        const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
+        rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            $('select[name="rcSmoothing-setpoint-manual-select"], select[name="rcSmoothing-feedforward-select"]').change(function() {
-                if ($('select[name="rcSmoothing-setpoint-manual-select"]').val() === "0" || $('select[name="rcSmoothing-feedforward-select"]').val() === "0") {
-                    $('.tab-receiver .rcSmoothing-auto-factor').show();
-                } else {
-                    $('.tab-receiver .rcSmoothing-auto-factor').hide();
-                }
-            });
-            $('select[name="rcSmoothing-setpoint-manual-select"]').change();
-
-            const rcSmoothingAutoFactor = $('input[name="rcSmoothingAutoFactor-number"]');
-            rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
-        } else {
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
-        }
+        $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
 
         updateInterpolationView();
 
@@ -855,7 +828,10 @@ receiver.initModelPreview = function () {
 };
 
 receiver.renderModel = function () {
-    if (this.keepRendering) { requestAnimationFrame(this.renderModel.bind(this)); }
+    if (!this.keepRendering) {
+        return;
+    }
+    requestAnimationFrame(this.renderModel.bind(this));
 
     if (!this.clock) { this.clock = new THREE.Clock(); }
 
@@ -874,13 +850,13 @@ receiver.renderModel = function () {
 };
 
 receiver.cleanup = function (callback) {
+    this.keepRendering = false;
+
     $(window).off('resize', this.resize);
     if (this.model) {
         $(window).off('resize', $.proxy(this.model.resize, this.model));
         this.model.dispose();
     }
-
-    this.keepRendering = false;
 
     if (callback) callback();
 };
@@ -897,64 +873,33 @@ receiver.refresh = function (callback) {
     });
 };
 
-receiver.updateRcInterpolationParameters = function () {
-    if ($('select[name="rcInterpolation-select"]').val() === '3') {
-        $('.tab-receiver .rc-interpolation-manual').show();
-    } else {
-        $('.tab-receiver .rc-interpolation-manual').hide();
-    }
-};
-
 function updateInterpolationView() {
-    const smoothingOnOff = ((semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) ?
-        FC.RX_CONFIG.rcSmoothingMode : FC.RX_CONFIG.rcSmoothingType);
+    const smoothingOnOff = FC.RX_CONFIG.rcSmoothingMode;
 
-    $('.tab-receiver .rcInterpolation').hide();
     $('.tab-receiver .rcSmoothing-feedforward-cutoff').show();
     $('.tab-receiver .rcSmoothing-setpoint-cutoff').show();
-    $('.tab-receiver .rcSmoothing-feedforward-type').show();
-    $('.tab-receiver .rcSmoothing-setpoint-type').show();
     $('.tab-receiver .rcSmoothing-feedforward-manual').show();
     $('.tab-receiver .rcSmoothing-setpoint-manual').show();
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-        if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
-            $('.tab-receiver .rcSmoothing-auto-factor').show();
-        }
+
+    if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
+        $('.tab-receiver .rcSmoothing-auto-factor').show();
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-        $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-        $('.tab-receiver .rc-smoothing-channels').hide();
-        $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
-        $('.tab-receiver .rcSmoothingType').hide();
-        $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
-        $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
-    } else {
-        $('.tab-receiver .rcSmoothingMode').hide();
-    }
+    $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
+    $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
 
     if (smoothingOnOff === 0) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        } else {
-            $('.tab-receiver .rcInterpolation').show();
-            $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-type').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-type').hide();
-            $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
-            $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
-            $('.tab-receiver .rcSmoothing-auto-factor').hide();
-        }
+        $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-feedforward-manual').hide();
+        $('.tab-receiver .rcSmoothing-setpoint-manual').hide();
+        $('.tab-receiver .rcSmoothing-auto-factor').hide();
     }
+
     if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0) {
         $('.tab-receiver .rcSmoothing-feedforward-cutoff').hide();
     }
+
     if (FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
         $('.tab-receiver .rcSmoothing-setpoint-cutoff').hide();
     }

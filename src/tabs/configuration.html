@@ -1,4 +1,4 @@
-<div class="tab-configuration toolbar_fixed_bottom">
+<div class="tab-configuration">
     <div class="content_wrapper">
         <div class="tab_title" i18n="tabConfiguration"></div>
         <div class="cf_doc_version_bt">
@@ -8,10 +8,9 @@
             <p i18n="configurationFeaturesHelp"></p>
         </div>
 
-        <div class="grid-row">
+        <div class="grid-row grid-box col2">
 
-            <div class="grid-col col6">
-
+            <div class="col-span-1">
                 <!-- SYSTEM CONFIGURATION -->
                 <div class="systemconfig">
                     <div class="gui_box grey">
@@ -36,31 +35,28 @@
                                 <span i18n="configurationPidProcessDenom"></span>
                                 <div class="helpicon cf_tip" i18n_title="configurationPidProcessDenomHelp"></div>
                             </div>
-                            <div class="hardwareSelection">
-                                <div class="select">
-                                    <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
-                                        <input type="checkbox" id="accHardwareSwitch" class="toggle" />
-                                    </div>
-                                    <span class="freelabel" i18n="configurationAccHardware"></span>
+                            <div class="select">
+                                <div>
+                                    <input type="checkbox" id="accHardwareSwitch" class="toggle" />
                                 </div>
-                                <div class="select">
-                                    <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
-                                        <input type="checkbox" id="baroHardwareSwitch" class="toggle" />
-                                    </div>
-                                    <span class="freelabel" i18n="configurationBaroHardware"></span>
+                                <span class="freelabel" i18n="configurationAccHardware"></span>
+                            </div>
+                            <div class="select">
+                                <div>
+                                    <input type="checkbox" id="baroHardwareSwitch" class="toggle" />
                                 </div>
-                                <div class="select">
-                                    <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
-                                        <input type="checkbox" id="magHardwareSwitch" class="toggle" />
-                                    </div>
-                                    <span class="freelabel" i18n="configurationMagHardware"></span>
+                                <span class="freelabel" i18n="configurationBaroHardware"></span>
+                            </div>
+                            <div class="select">
+                                <div>
+                                    <input type="checkbox" id="magHardwareSwitch" class="toggle" />
                                 </div>
+                                <span class="freelabel" i18n="configurationMagHardware"></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- END SYSTEM CONFIGURATION-->
-
                 <!-- PERSONALIZATION-->
                 <div class="gui_box grey miscSettings">
                     <div class="gui_box_titlebar">
@@ -81,7 +77,6 @@
                         </div>
                     </div>
                 </div> <!-- END PERSONALIZATION-->
-
                 <!-- CAMERA -->
                 <div class="gui_box grey miscSettings accelNeeded">
                     <div class="gui_box_titlebar">
@@ -89,14 +84,13 @@
                     </div>
                     <div class="spacer_box">
                         <div class="number fpvCamAngleDegrees">
-                            <label> <input type="number" name="fpvCamAngleDegrees" step="1" min="0" max="50" /> <span
+                            <label> <input type="number" name="fpvCamAngleDegrees" step="1" min="0" max="90" /> <span
                                 i18n="configurationFpvCamAngleDegrees"></span>
                             </label>
                         </div>
                     </div>
                 </div>
                 <!-- END CAMERA -->
-
                 <!-- MAXIMUM ARMING ANGLE-->
                 <div class="gui_box grey accelNeeded">
                     <div class="gui_box_titlebar">
@@ -104,19 +98,29 @@
                         <div class="helpicon cf_tip" i18n_title="configurationArmingHelp"></div>
                     </div>
                     <div class="spacer_box">
-                        <div class="_smallAngle">
-                            <div class="number">
-                                <label>
-                                    <input type="number" id="configurationSmallAngle" step="1" min="1" max="180" />
-                                    <span i18n="configurationSmallAngle"></span>
-                                    <div class="helpicon cf_tip" i18n_title="configurationSmallAngleHelp"></div>
-                                </label>
+                        <div class="number">
+                            <label>
+                                <input type="number" id="configurationSmallAngle" step="1" min="1" max="180" />
+                                <span i18n="configurationSmallAngle"></span>
+                                <div class="helpicon cf_tip" i18n_title="configurationSmallAngleHelp"></div>
+                            </label>
+                        </div>
+                        <div class="number">
+                            <label>
+                                <input type="number" id="configurationAutoDisarmDelay" step="1" min="0" max="60" />
+                                <span i18n="configurationAutoDisarmDelay"></span>
+                                <div class="helpicon cf_tip" i18n_title="configurationAutoDisarmDelayHelp"></div>
+                            </label>
+                        </div>
+                        <div class="select">
+                            <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                                <input type="checkbox" id="configurationGyroCalOnFirstArm" class="toggle" />
                             </div>
+                            <span class="freelabel" i18n="configurationGyroCalOnFirstArm"></span>
                         </div>
                     </div>
                 </div>
                 <!-- END MAXIMUM ARMING ANGLE-->
-
                 <!-- OTHER FEATURES -->
                 <div class="featuresOther">
                     <div class="gui_box grey">
@@ -144,9 +148,7 @@
                 </div>
                 <!-- END OTHER FUTURES-->
             </div> <!-- END grid-col col6 -->
-
-            <div class="grid-col col6">
-
+            <div class="col-span-1">
                 <!-- BOARD ORIENTATION -->
                 <div class="board acc">
                     <div class="gui_box grey">
@@ -163,7 +165,6 @@
                                         <span i18n="configurationBoardAlignmentRoll"></span>
                                     </label>
                                 </div>
-
                                 <div class="board_align_inputs">
                                     <div class="alignicon pitch"></div>
                                     <label>
@@ -171,7 +172,6 @@
                                         <span i18n="configurationBoardAlignmentPitch"></span>
                                     </label>
                                 </div>
-
                                 <div class="board_align_inputs">
                                     <div class="alignicon yaw"></div>
                                     <label>
@@ -245,7 +245,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- ACCELEROMETER TRIM -->
                 <div class="gui_box grey accelNeeded">
                     <div class="gui_box_titlebar">
@@ -264,7 +263,6 @@
                         </div>
                     </div>
                 </div> <!-- END ACCELEROMETER TRIM -->
-
                 <!-- DSHOT BEEPER -->
                 <div class="dshotBeeper">
                     <div class="gui_box grey">
@@ -308,7 +306,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="beepers">
                     <!-- BEEPER -->
                     <div class="beepers">
@@ -341,11 +338,12 @@
             </div>
         </div>
 
-        <div class="content_toolbar">
-            <div class="btn save_btn">
-                <a class="save" href="#" i18n="configurationButtonSave"></a>
-            </div>
-        </div>
 
+    </div>
+</div>
+
+<div class="content_toolbar toolbar_fixed_bottom">
+    <div class="btn save_btn">
+        <a class="save" href="#" i18n="configurationButtonSave"></a>
     </div>
 </div>

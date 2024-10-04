@@ -28,11 +28,8 @@ export function update_dataflash_global() {
            display: 'block',
         });
 
-        $(".dataflash-free_global").css({
-           width: `${100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100}%`,
-           display: 'block',
-        });
-        $(".dataflash-free_global div").text(`Dataflash: free ${formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`);
+        $(".dataflash-progress_global").val(`${100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100}`);
+        $(".dataflash-contents_global div").text(`Dataflash: free ${formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`);
      } else {
         $(".noflash_global").css({
            display: 'block',

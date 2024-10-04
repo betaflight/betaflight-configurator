@@ -6,7 +6,7 @@ import { mspHelper } from '../msp/MSPHelper';
 import FC from '../fc';
 import MSP from '../msp';
 import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_42, API_VERSION_1_43, API_VERSION_1_45 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
 import { updateTabList } from '../utils/updateTabList';
 import $ from 'jquery';
 
@@ -107,11 +107,8 @@ configuration.initialize = function (callback) {
             'CW 90° flip',
             'CW 180° flip',
             'CW 270° flip',
+            'Custom',
         ];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            alignments.push('Custom');
-        }
 
         const gyro_align_content_e = $('.tab-configuration .gyro_align_content');
         const legacy_gyro_alignment_e = $('.tab-configuration .legacy_gyro_alignment');
@@ -251,25 +248,6 @@ configuration.initialize = function (callback) {
             element.append(`<option value="${denom}">${denomDescription}</option>`);
         }
 
-        const updateGyroDenom = function (gyroBaseFreq) {
-
-            gyroTextElement.hide();
-
-            const originalGyroDenom = gyroSelectElement.val();
-
-            gyroSelectElement.empty();
-
-            const MAX_DENOM = 8;
-
-            for (let denom = 1; denom <= MAX_DENOM; denom++) {
-                addDenomOption(gyroSelectElement, denom, gyroBaseFreq);
-            }
-
-            gyroSelectElement.val(originalGyroDenom);
-
-            gyroSelectElement.change();
-         };
-
          const updateGyroDenomReadOnly = function (gyroFrequency) {
              gyroSelectElement.hide();
 
@@ -284,11 +262,7 @@ configuration.initialize = function (callback) {
 
         $('div.gyroUse32kHz').hide();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            updateGyroDenomReadOnly(FC.CONFIG.sampleRateHz);
-        } else {
-            updateGyroDenom(8);
-        }
+        updateGyroDenomReadOnly(FC.CONFIG.sampleRateHz);
 
         gyroSelectElement.val(FC.PID_ADVANCED_CONFIG.gyro_sync_denom);
 
@@ -296,18 +270,10 @@ configuration.initialize = function (callback) {
 
         gyroSelectElement.change(function () {
             const originalPidDenom = parseInt(pidSelectElement.val());
-
-            let pidBaseFreq;
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
-            } else {
-                pidBaseFreq = 8;
-                pidBaseFreq /= parseInt($(this).val());
-            }
+            const pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
+            const MAX_DENOM = 8;
 
             pidSelectElement.empty();
-
-            const MAX_DENOM = 8;
 
             for (let denom = 1; denom <= MAX_DENOM; denom++) {
                 addDenomOption(pidSelectElement, denom, pidBaseFreq);
@@ -332,7 +298,6 @@ configuration.initialize = function (callback) {
         }
 
         $('input[name="fpvCamAngleDegrees"]').val(FC.RX_CONFIG.fpvCamAngleDegrees);
-        $('input[name="fpvCamAngleDegrees"]').attr("max", 90);
 
         // fill board alignment
         $('input[name="board_align_roll"]').val(FC.BOARD_ALIGNMENT_CONFIG.roll);
@@ -343,8 +308,20 @@ configuration.initialize = function (callback) {
         $('input[name="roll"]').val(FC.CONFIG.accelerometerTrims[1]);
         $('input[name="pitch"]').val(FC.CONFIG.accelerometerTrims[0]);
 
-        $('._smallAngle').show();
         $('input[id="configurationSmallAngle"]').val(FC.ARMING_CONFIG.small_angle);
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            $('input[id="configurationGyroCalOnFirstArm"]').prop('checked', FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1);
+
+            if (FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP')) {
+                $('input[id="configurationAutoDisarmDelay"]').val(FC.ARMING_CONFIG.auto_disarm_delay);
+            } else {
+                $('input[id="configurationAutoDisarmDelay"]').parent().hide();
+            }
+        } else {
+            $('input[id="configurationGyroCalOnFirstArm"]').parent().parent().hide();
+            $('input[id="configurationAutoDisarmDelay"]').parent().parent().hide();
+        }
 
         // UI hooks
 
@@ -395,7 +372,13 @@ configuration.initialize = function (callback) {
             FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
 
-            // small angle configuration
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                FC.ARMING_CONFIG.gyro_cal_on_first_arm = $('input[id="configurationGyroCalOnFirstArm"]').is(':checked') ? 1 : 0;
+                // only update auto_disarm_delay if MOTOR_STOP is enabled
+                if (FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP')) {
+                    FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
+                }
+            }
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
 
             FC.SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());

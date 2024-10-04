@@ -1,4 +1,4 @@
-<div class="tab-receiver toolbar_fixed_bottom">
+<div class="tab-receiver">
     <div class="content_wrapper">
         <div class="tab_title" i18n="tabReceiver"></div>
         <div class="cf_doc_version_bt">
@@ -7,28 +7,21 @@
         <div class="note">
             <p i18n="receiverHelp"></p>
         </div>
-        <div class="grid-row">
-            <div class="grid-col col6 bars">
+        <div class="grid-row grid-box col5">
+            <div class="col-span-2">
                 <div class="gui_box grey tunings topspacer">
-                    <table class="pid_titlebar">
-                        <thead>
-                        <tr>
-                            <th i18n="receiverModelPreview"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="model_preview_cell">
-                                <div class="model_preview background_paper">
-                                    <canvas id="canvas"></canvas>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="receiverModelPreview"></div>
+                    </div>
+                    <div class="model_preview_cell spacer_box">
+                        <div class="model_preview background_paper">
+                            <canvas id="canvas"></canvas>
+                        </div>
+                    </div>
                 </div>
+                <div class="bars"></div>
             </div>
-            <div class="grid-col col6">
+            <div class="col-span-3">
                 <!-- RECEIVER -->
                 <div class="receiver">
                     <div class="gui_box receiver grey">
@@ -49,6 +42,10 @@
                                 <!-- list generated here -->
                             </select>
                             <span i18n="configurationSerialRX"></span>
+                            <div class="note someRXTypesDisabled" i18n="someRXTypesDisabled">
+                            </div>
+                            <div class="note gui_warning serialRXNotSupported" i18n="serialRXNotSupported">
+                            </div>
                         </div>
                         <div class="spiRxBox spacer_box">
                             <div class="note">
@@ -67,12 +64,16 @@
                             <div>
                                 <span class="elrsUid"></span>
                             </div>
+                            <div class="number">
+                                <input type="number" name="elrsModelId-number" min="0" max="255"/>
+                                <span i18n="receiverModelId"></span>
+                                <div class="helpicon cf_tip" i18n_title="receiverHelpModelId"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="feature">
-                    <div class="gui_box grey">
+                <div class="grid-box col6">
+                    <div class="gui_box grey col-span-3">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title" i18n="configurationTelemetry"></div>
                             <div class="helpicon cf_tip" i18n_title="configurationTelemetryHelp"></div>
@@ -85,7 +86,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="gui_box grey">
+                    <div class="gui_box grey col-span-3">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title" i18n="configurationRSSI"></div>
                             <div class="helpicon cf_tip" i18n_title="configurationRSSIHelp"></div>
@@ -98,91 +99,89 @@
                             </table>
                         </div>
                     </div>
-                </div>
 
-                <div class="rssi_channel_wrapper grey">
-                    <div class="head" i18n="receiverRssiChannel"></div>
-                    <select name="rssi_channel">
-                        <!-- list generated here -->
-                    </select>
-                </div>
-                <div class="rcmap_wrapper grey">
-                    <div class="head">
-                        <span i18n="receiverChannelMap" i18n_title="receiverChannelMapTitle"></span>
-                    </div>
-                    <div class="hybrid_element">
-                        <input type="text" name="rcmap" spellcheck="false" />
-                        <select class="hybrid_helper"
-                                name="rcmap_helper">
-                            <option i18n="receiverChannelDefaultOption" value="AETR1234"></option>
-                            <option value="AETR1234">FrSky / Futaba / Hitec (AETR1234)</option>
-                            <option value="TAER1234">Spektrum / Graupner / JR (TAER1234)</option>
+                    <div class="gui_box grey col-span-3">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="receiverRssiChannel"></div>
+                        </div>
+                        <select name="rssi_channel">
+                            <!-- list generated here -->
                         </select>
                     </div>
-                </div>
-                <div class="gui_box tunings grey">
-                    <table class="sticks">
-                        <tr>
-                            <th i18n="receiverStickMin"></th>
-                            <th i18n="receiverStickCenter"></th>
-                            <th i18n="receiverStickMax"></th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="input-helpicon-flex">
-                                    <input type="number" name="stick_min" min="1000" max="1200"/>
-                                    <div class="helpicon cf_tip" i18n_title="receiverHelpStickMin"></div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-helpicon-flex">
-                                    <input type="number" name="stick_center" min="1401" max="1599"/>
-                                    <div class="helpicon cf_tip" i18n_title="receiverHelpStickCenter"></div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-helpicon-flex">
-                                    <input type="number" name="stick_max" min="1800" max="2000"/>
-                                    <div class="helpicon cf_tip" i18n_title="receiverHelpStickMax"></div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="gui_box tunings grey">
-                    <table class="deadband">
-                        <tr>
-                            <th i18n="receiverDeadband"></th>
-                            <th i18n="receiverYawDeadband"></th>
-                            <th i18n="recevier3dDeadbandThrottle"></th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="input-helpicon-flex">
-                                    <input type="number" name="deadband" step="1" min="0" max="32"/>
-                                    <div class="helpicon cf_tip" i18n_title="receiverHelpDeadband"></div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-helpicon-flex">
-                                    <input type="number" name="yaw_deadband" step="1" min="0" max="100"/>
-                                    <div class="helpicon cf_tip" i18n_title="receiverHelpYawDeadband"></div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-helpicon-flex">
-                                    <input type="number" name="3ddeadbandthrottle" step="1" min="0" max="100"/>
-                                    <div class="helpicon cf_tip" i18n_title="receiverHelp3dDeadbandThrottle"></div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="gui_box grey col-span-3">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="receiverChannelMap"></div>
+                        </div>
+                        <div class="hybrid_element">
+                            <input type="text" name="rcmap" spellcheck="false" />
+                            <select class="hybrid_helper"
+                                    name="rcmap_helper">
+                                <option i18n="receiverChannelDefaultOption" value="AETR1234"></option>
+                                <option value="AETR1234">FrSky / Futaba / Hitec (AETR1234)</option>
+                                <option value="TAER1234">Spektrum / Graupner / JR (TAER1234)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="gui_box grey col-span-2 sticks">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="receiverStickMin"></div>
+                        </div>
+                        <div class="input-helpicon-flex">
+                            <input type="number" name="stick_min" min="1000" max="1200"/>
+                            <div class="helpicon cf_tip" i18n_title="receiverHelpStickMin"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey col-span-2 sticks">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="receiverStickCenter"></div>
+                        </div>
+                        <div class="input-helpicon-flex">
+                            <input type="number" name="stick_center" min="1401" max="1599"/>
+                            <div class="helpicon cf_tip" i18n_title="receiverHelpStickCenter"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey col-span-2 sticks">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="receiverStickMax"></div>
+                        </div>
+                        <div class="input-helpicon-flex">
+                            <input type="number" name="stick_max" min="1800" max="2000"/>
+                            <div class="helpicon cf_tip" i18n_title="receiverHelpStickMax"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey col-span-2 deadband">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="receiverDeadband"></div>
+                        </div>
+                        <div class="input-helpicon-flex">
+                            <input type="number" name="deadband" min="0" max="32"/>
+                            <div class="helpicon cf_tip" i18n_title="receiverHelpDeadband"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey col-span-2 deadband">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="receiverYawDeadband"></div>
+                        </div>
+                        <div class="input-helpicon-flex">
+                            <input type="number" name="yaw_deadband" min="0" max="100"/>
+                            <div class="helpicon cf_tip" i18n_title="receiverHelpYawDeadband"></div>
+                        </div>
+                    </div>
+                    <div class="gui_box grey col-span-2 deadband">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="recevier3dDeadbandThrottle"></div>
+                        </div>
+                        <div class="input-helpicon-flex">
+                            <input type="number" name="3ddeadbandthrottle" min="0" max="100"/>
+                            <div class="helpicon cf_tip" i18n_title="receiverHelp3dDeadbandThrottle"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="gui_box grey tunings topspacer rcSmoothing">
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="receiverRcSmoothing"></div>
+                    </div>
                     <table class="rcSmoothing-table">
-                        <tr>
-                            <th colspan="3" i18n="receiverRcSmoothing"></th>
-                        </tr>
                         <tr class="rc-smoothing-type">
                             <td>
                                 <select name="rcSmoothing-select">
@@ -192,29 +191,8 @@
                             </td>
                             <td colspan="2">
                                 <div>
-                                    <label class="rcSmoothingType">
-                                        <span i18n="receiverRcSmoothingType"></span>
-                                    </label>
                                     <label class="rcSmoothingMode">
                                         <span i18n="receiverRcSmoothingMode"></span>
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="rc-smoothing-channels">
-                            <td>
-                                <select name="rcSmoothingChannels-select">
-                                    <option value="0">RP</option>
-                                    <option value="1">RPY</option>
-                                    <option value="2">RPYT</option>
-                                    <option value="3">T</option>
-                                    <option value="4">RPT</option>
-                                </select>
-                            </td>
-                            <td colspan="2">
-                                <div>
-                                    <label>
-                                        <span i18n="receiverRcSmoothingChannel"></span>
                                     </label>
                                 </div>
                             </td>
@@ -248,24 +226,6 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="rcSmoothing-setpoint-type">
-                            <td>
-                                <select name="rcSmoothingSetpointType-select">
-                                    <option value="0">PT1</option>
-                                    <option value="1">BIQUAD</option>
-                                </select>
-                            </td>
-                            <td>
-                                <div>
-                                    <label>
-                                        <span i18n="receiverRcSetpointType"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="helpicon cf_tip" i18n_title="rcSmoothingSetpointTypeHelp"></div>
-                            </td>
-                        </tr>
                         <tr class="rcSmoothing-feedforward-manual">
                             <td>
                                 <select name="rcSmoothing-feedforward-select">
@@ -295,28 +255,9 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="rcSmoothing-setpoint-type">
-                            <td>
-                                <select name="rcSmoothingFeedforwardType-select">
-                                    <option value="0" i18n="receiverRcSmoothingFeedforwardTypeOff"></option>
-                                    <option value="1">PT1</option>
-                                    <option value="2">BIQUAD</option>
-                                </select>
-                            </td>
-                            <td>
-                                <div>
-                                    <label>
-                                        <span i18n="receiverRcFeedforwardType"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="helpicon cf_tip" i18n_title="rcSmoothingFeedforwardTypeHelp"></div>
-                            </td>
-                        </tr>
                         <tr class="rcSmoothing-auto-factor">
                             <td>
-                                <input type="number" name="rcSmoothingAutoFactor-number" step="1" min="0" max="50">
+                                <input type="number" name="rcSmoothingAutoFactor-number" step="1" min="0" max="250">
                             </td>
                             <td>
                                 <div>
@@ -329,35 +270,6 @@
                                 <div class="helpicon cf_tip receiverRcSmoothingAutoFactorHelp" i18n_title="receiverRcSmoothingAutoFactorHelp"></div>
                             </td>
                         </tr>
-                        <tr class="rcInterpolation">
-                            <td>
-                                <select name="rcInterpolation-select">
-                                    <option value="0" i18n="receiverRcInterpolationOff"></option>
-                                    <option value="1" i18n="receiverRcInterpolationDefault"></option>
-                                    <option value="2" i18n="receiverRcInterpolationAuto"></option>
-                                    <option value="3" i18n="receiverRcInterpolationManual"></option>
-                                </select>
-                            </td>
-                            <td>
-                                <div class="rcInterpolation-label">
-                                    <label>
-                                        <span i18n="receiverRcInterpolation"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" i18n_title="receiverRcInterpolationHelp"></div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="rcInterpolation">
-                            <td class="rc-interpolation-manual" colspan="1"><input type="number" name="rcInterpolationInterval-number" step="1" min="1" max="50" /></td>
-                            <td class="rc-interpolation-manual" colspan="2">
-                                <div>
-                                    <label>
-                                        <span i18n="receiverRcInterpolationInterval"></span>
-                                    </label>
-                                    <div class="helpicon cf_tip" i18n_title="receiverRcInterpolationIntervalHelp"></div>
-                                </div>
-                            </td>
-                        </tr>
                     </table>
                 </div>
             </div>
@@ -365,14 +277,14 @@
         <div class="gui_box grey">
             <div class="spacer">
                 <div class="wrapper graphAndLabel">
-                     <svg id="RX_plot">
-                        <g class="grid x" transform="translate(40, 180)"></g>
-                        <g class="grid y" transform="translate(40, 10)"></g>
-                        <g class="data" transform="translate(41, 1)"></g>
-                        <g class="axis x" transform="translate(40, 180)"></g>
+                    <svg id="RX_plot" class="col-span-5">
+                        <g class="axis x" transform="translate(40, 188)"></g>
                         <g class="axis y" transform="translate(40, 10)"></g>
+                        <g class="grid x" transform="translate(40, 188)"></g>
+                        <g class="grid y" transform="translate(40, 10)"></g>
+                        <g class="data" transform="translate(40, 10)"></g>
                     </svg>
-     
+
                     <div class="plot_control">
                         <div class="table">
                             <div class="sensor row">
@@ -442,21 +354,21 @@
         </div>
         <div class="clear-both"></div>
     </div>
-    <div class="content_toolbar">
-        <div class="btn sticks_btn">
-            <a class="sticks" href="#" i18n="receiverButtonSticks"></a>
-        </div>
-        <div class="btn bind_btn">
-            <a class="bind" href="#" i18n="receiverButtonBind"></a>
-        </div>
-        <div class="btn refresh_btn">
-            <a class="refresh" href="#" i18n="receiverButtonRefresh"></a>
-        </div>
-        <div class="btn update_btn">
-            <a class="update" href="#" i18n="receiverButtonSave"></a>
-        </div>
-        <div class="btn save_btn">
-            <a class="save" href="#" i18n="configurationButtonSave"></a>
-        </div>
+</div>
+<div class="content_toolbar toolbar_fixed_bottom">
+    <div class="btn sticks_btn">
+        <a class="sticks" href="#" i18n="receiverButtonSticks"></a>
+    </div>
+    <div class="btn bind_btn">
+        <a class="bind" href="#" i18n="receiverButtonBind"></a>
+    </div>
+    <div class="btn refresh_btn">
+        <a class="refresh" href="#" i18n="receiverButtonRefresh"></a>
+    </div>
+    <div class="btn update_btn">
+        <a class="update" href="#" i18n="receiverButtonSave"></a>
+    </div>
+    <div class="btn save_btn">
+        <a class="save" href="#" i18n="configurationButtonSave"></a>
     </div>
 </div>

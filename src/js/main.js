@@ -8,19 +8,17 @@ import './msp/MSPHelper.js';
 import { i18n } from './localization.js';
 import GUI, { TABS } from './gui.js';
 import { get as getConfig, set as setConfig } from './ConfigStorage.js';
-import { tracking, checkSetupAnalytics } from './Analytics.js';
+import { checkSetupAnalytics } from './Analytics.js';
 import { initializeSerialBackend } from './serial_backend.js';
 import FC from './fc.js';
 import CONFIGURATOR from './data_storage.js';
-import serial from './serial.js';
 import CliAutoComplete from './CliAutoComplete.js';
 import DarkTheme, { setDarkTheme } from './DarkTheme.js';
-import UI_PHONES from './phones_ui.js';
 import { isExpertModeEnabled } from './utils/isExportModeEnabled.js';
 import { updateTabList } from './utils/updateTabList.js';
 import { checkForConfiguratorUpdates } from './utils/checkForConfiguratorUpdates.js';
 import * as THREE from 'three';
-import * as d3 from 'd3';
+import NotificationManager from './utils/notifications.js';
 
 if (typeof String.prototype.replaceAll === "undefined") {
     String.prototype.replaceAll = function(match, replace) {
@@ -30,39 +28,18 @@ if (typeof String.prototype.replaceAll === "undefined") {
 
 $(document).ready(function () {
 
-    useGlobalNodeFunctions();
-
     if (typeof cordovaApp === 'undefined') {
         appReady();
     }
 });
 
-function useGlobalNodeFunctions() {
-    // The global functions of Node continue working on background. This is good to continue flashing,
-    // for example, when the window is minimized
-    if (GUI.isNWJS()) {
-        console.log("Replacing timeout/interval functions with Node versions");
-        window.setTimeout = global.setTimeout;
-        window.clearTimeout = global.clearTimeout;
-        window.setInterval = global.setInterval;
-        window.clearInterval = global.clearInterval;
-    }
-}
-
 function readConfiguratorVersionMetadata() {
-    if (GUI.isNWJS() || GUI.isCordova()) {
-        const manifest = chrome.runtime.getManifest();
-        CONFIGURATOR.productName = manifest.productName;
-        CONFIGURATOR.version = manifest.version;
-        CONFIGURATOR.gitRevision = manifest.gitRevision;
-    } else {
-        // These are injected by vite. If not checking
-        // for undefined occasionally there is a race
-        // condition where this fails the nwjs and cordova builds
-        CONFIGURATOR.productName = typeof __APP_PRODUCTNAME__ !== 'undefined' ? __APP_PRODUCTNAME__ : 'Betaflight Configurator';
-        CONFIGURATOR.version = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
-        CONFIGURATOR.gitRevision = typeof __APP_REVISION__ !== 'undefined' ? __APP_REVISION__ : 'unknown';
-    }
+    // These are injected by vite. If not checking
+    // for undefined occasionally there is a race
+    // condition where this fails the nwjs and cordova builds
+    CONFIGURATOR.productName = typeof __APP_PRODUCTNAME__ !== 'undefined' ? __APP_PRODUCTNAME__ : 'Betaflight Configurator';
+    CONFIGURATOR.version = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
+    CONFIGURATOR.gitRevision = typeof __APP_REVISION__ !== 'undefined' ? __APP_REVISION__ : 'unknown';
 }
 
 function cleanupLocalStorage() {
@@ -104,79 +81,15 @@ function appReady() {
         startProcess();
 
         checkSetupAnalytics(function (analyticsService) {
-            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', { language: i18n.selectedLanguage });
         });
 
         initializeSerialBackend();
     });
-}
 
-function closeSerial() {
-    // automatically close the port when application closes
-    const connectionId = serial.connectionId;
-
-    if (connectionId && CONFIGURATOR.connectionValid && !CONFIGURATOR.virtualMode) {
-        // code below is handmade MSP message (without pretty JS wrapper), it behaves exactly like MSP.send_message
-        // sending exit command just in case the cli tab was open.
-        // reset motors to default (mincommand)
-
-        let bufferOut = new ArrayBuffer(5),
-        bufView = new Uint8Array(bufferOut);
-
-        bufView[0] = 0x65; // e
-        bufView[1] = 0x78; // x
-        bufView[2] = 0x69; // i
-        bufView[3] = 0x74; // t
-        bufView[4] = 0x0D; // enter
-
-        const sendFn = (serial.connectionType === 'serial' ? chrome.serial.send : chrome.sockets.tcp.send);
-        sendFn(connectionId, bufferOut, function () {
-            console.log('Send exit');
-        });
-
-        setTimeout(function() {
-            bufferOut = new ArrayBuffer(22);
-            bufView = new Uint8Array(bufferOut);
-            let checksum = 0;
-
-            bufView[0] = 36; // $
-            bufView[1] = 77; // M
-            bufView[2] = 60; // <
-            bufView[3] = 16; // data length
-            bufView[4] = 214; // MSP_SET_MOTOR
-
-            checksum = bufView[3] ^ bufView[4];
-
-            for (let i = 0; i < 16; i += 2) {
-                bufView[i + 5] = FC.MOTOR_CONFIG.mincommand & 0x00FF;
-                bufView[i + 6] = FC.MOTOR_CONFIG.mincommand >> 8;
-
-                checksum ^= bufView[i + 5];
-                checksum ^= bufView[i + 6];
-            }
-
-            bufView[5 + 16] = checksum;
-
-            sendFn(connectionId, bufferOut, function () {
-                serial.disconnect();
-            });
-        }, 100);
-    } else if (connectionId) {
-        serial.disconnect();
-    }
-}
-
-function closeHandler() {
-    if (!GUI.isCordova()) {
-        this.hide();
-    }
-
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
-
-    closeSerial();
-
-    if (!GUI.isCordova()) {
-        this.close(true);
+    const showNotifications = getConfig('showNotifications', false).showNotifications;
+    if (showNotifications && NotificationManager.checkPermission() === 'default') {
+        NotificationManager.requestPermission();
     }
 }
 
@@ -187,36 +100,6 @@ function startProcess() {
 
     gui_log(i18n.getMessage('infoVersionOs', { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage('infoVersionConfigurator', { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
-
-    if (GUI.isNWJS()) {
-        const nwWindow = GUI.nwGui.Window.get();
-        nwWindow.on('new-win-policy', function(frame, url, policy) {
-            // do not open the window
-            policy.ignore();
-            // and open it in external browser
-            GUI.nwGui.Shell.openExternal(url);
-        });
-        nwWindow.on('close', closeHandler);
-        const config = getConfig('showDevToolsOnStartup');
-        if (CONFIGURATOR.isDevVersion() && !!config.showDevToolsOnStartup) {
-            nwWindow.showDevTools();
-        }
-    } else if (GUI.isCordova()) {
-        window.addEventListener('beforeunload', closeHandler);
-        document.addEventListener('backbutton', function(e) {
-            e.preventDefault();
-            navigator.notification.confirm(
-                i18n.getMessage('cordovaExitAppMessage'),
-                function(stat) {
-                    if (stat === 1) {
-                        navigator.app.exitApp();
-                    }
-                },
-                i18n.getMessage('cordovaExitAppTitle'),
-                [i18n.getMessage('yes'),i18n.getMessage('no')],
-            );
-        });
-    }
 
     $('.connect_b a.connect').removeClass('disabled');
     // with Vue reactive system we don't need to call these,
@@ -249,10 +132,6 @@ function startProcess() {
         }
     });
 
-    if (GUI.isCordova()) {
-        UI_PHONES.init();
-    }
-
     const ui_tabs = $('#tabs > ul');
     $('a', ui_tabs).click(function () {
         if ($(this).parent().hasClass('active') === false && !GUI.tab_switch_in_progress) { // only initialize when the tab isn't already active
@@ -277,8 +156,6 @@ function startProcess() {
             if (GUI.allowedTabs.indexOf(tab) < 0 && tab === "firmware_flasher") {
                 if (GUI.connected_to || GUI.connecting_to) {
                     $('a.connect').click();
-                } else {
-                    serial.disconnect();
                 }
                 $('div.open_firmware_flasher a.flash').click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
@@ -597,22 +474,9 @@ function startProcess() {
         setDarkTheme(result.darkTheme);
     }
 
-    if (GUI.isCordova()) {
-        let darkMode = false;
-        const checkDarkMode = function() {
-            cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
-                if (success.value !== darkMode) {
-                    darkMode = success.value;
-                    DarkTheme.autoSet();
-                }
-            });
-        };
-        setInterval(checkDarkMode, 500);
-    } else {
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
-            DarkTheme.autoSet();
-        });
-    }
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
+        DarkTheme.autoSet();
+    });
 }
 
 window.isExpertModeEnabled = isExpertModeEnabled;

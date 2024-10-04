@@ -7,6 +7,7 @@ import copy from "rollup-plugin-copy";
 import pkg from './package.json';
 import * as child from 'child_process';
 import { VitePWA } from "vite-plugin-pwa";
+import { resolve } from 'path';
 
 const commitHash = child.execSync('git rev-parse --short HEAD').toString();
 
@@ -56,6 +57,14 @@ export default defineConfig({
         '__APP_PRODUCTNAME__': JSON.stringify(pkg.productName),
         '__APP_REVISION__': JSON.stringify(commitHash),
     },
+    build: {
+        rollupOptions: {
+            input: {
+                main: resolve(__dirname, 'src/index.html'),
+                receiver_msp: resolve(__dirname, 'src/receiver_msp/receiver_msp.html'),
+            },
+        },
+    },
     test: {
         // NOTE: this is a replacement location for karma tests.
         //       moving forward we should colocate tests with the
@@ -70,12 +79,12 @@ export default defineConfig({
         serveLocalesPlugin(),
         copy({
             targets: [
-                { src: ["locales", "resources", "src/tabs", "src/images"], dest: "src/dist" },
+                { src: ["locales", "resources", "src/tabs", "src/images", "src/components"], dest: "src/dist" },
             ],
             hook: "writeBundle",
         }),
         VitePWA({
-            registerType: 'autoUpdate',
+            registerType: 'prompt',
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,json,mcm}'],
                 // 5MB
@@ -83,7 +92,7 @@ export default defineConfig({
             },
             includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
             manifest: {
-                name: pkg.productName,
+                name: pkg.displayName,
                 short_name: pkg.productName,
                 description: pkg.description,
                 theme_color: '#ffffff',
@@ -111,8 +120,10 @@ export default defineConfig({
     },
     server: {
         port: 8000,
+        strictPort: true,
     },
     preview: {
         port: 8080,
+        strictPort: true,
     },
 });

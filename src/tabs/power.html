@@ -1,4 +1,4 @@
-<div class="tab-power toolbar_fixed_bottom">
+<div class="tab-power">
     <div class="content_wrapper">
         <!-- should be the first DIV on each tab -->
         <div class="cf_column">
@@ -8,8 +8,8 @@
             </div>
         </div>
 
-        <div class="grid-row">
-            <div class="grid-col col6">
+        <div class="grid-row grid-box col2">
+            <div class="col-span-1">
                 <div class="gui_box grey">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="powerBatteryHead"></div>
@@ -22,24 +22,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-            <div class="grid-col col6">
-                <div class="gui_box grey">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" i18n="powerStateHead"></div>
-                    </div>
-                    <div class="spacer_box battery">
-                        <table border="0" cellpadding="0" cellspacing="0" class="cf_table">
-                            <tbody class="battery-state">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid-row">
-            <div class="grid-col col6">
                 <div class="gui_box grey boxVoltageConfiguration">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="powerVoltageHead"></div>
@@ -56,10 +38,18 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="grid-row">
-            <div class="grid-col col6">
+            <div class="col-span-1">
+                <div class="gui_box grey">
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="powerStateHead"></div>
+                    </div>
+                    <div class="spacer_box battery">
+                        <table border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                            <tbody class="battery-state">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="gui_box grey boxAmperageConfiguration">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="powerAmperageHead"></div>
@@ -83,15 +73,15 @@
         </div>
     </div>
 
-    <div class="content_toolbar">
-        <div class="btn calibration">
-            <a class="calibrationmanager" id="calibrationmanager" href="#" i18n="powerCalibrationManagerButton"></a>
-        </div>
-        <div class="btn save_btn">
-            <a class="save" href="#" i18n="powerButtonSave"></a>
-        </div>
-
+</div>
+<div class="content_toolbar toolbar_fixed_bottom">
+    <div class="btn calibration">
+        <a class="calibrationmanager" id="calibrationmanager" href="#" i18n="powerCalibrationManagerButton"></a>
     </div>
+    <div class="btn save_btn">
+        <a class="save" href="#" i18n="powerButtonSave"></a>
+    </div>
+
 </div>
 
 <div id="tab-power-templates">
@@ -154,16 +144,19 @@
             <label> <input type="number" name="mincellvoltage" step="0.1" min="1" max="5" /> <span
                 i18n="powerBatteryMinimum"></span>
             </label>
+            <span class="helpicon cf_tip" i18n_title="powerBatteryMinimumHelp"></span>
         </div>
         <div class="number">
             <label> <input type="number" name="maxcellvoltage" step="0.1" min="1" max="5" /> <span
                 i18n="powerBatteryMaximum"></span>
             </label>
+            <span class="helpicon cf_tip" i18n_title="powerBatteryMaximumHelp"></span>
         </div>
         <div class="number">
             <label> <input type="number" name="warningcellvoltage" step="0.1" min="1" max="5" /> <span
                 i18n="powerBatteryWarning"></span>
             </label>
+            <span class="helpicon cf_tip" i18n_title="powerBatteryWarningHelp"></span>
         </div>
         <div class="number">
             <label> <input type="number" name="capacity" step="1" min="0" max="20000" /> <span
@@ -263,4 +256,4 @@
     <div class="default_btn">
         <a class="discardcalibration" id="discardcalibration" href="#" i18n="powerCalibrationDiscard"></a>
     </div>
-</div> 
+</div>
