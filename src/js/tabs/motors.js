@@ -765,12 +765,11 @@ motors.initialize = async function (callback) {
             $('div.checkboxPwm').toggle(analogProtocolConfigured);
             divUnsyncedPWMFreq.toggle(analogProtocolConfigured);
 
-            $('div.digitalIdlePercent').toggle(protocolConfigured && (digitalProtocol || semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)));
-            $('div.idleMinRpm').toggle(protocolConfigured && digitalProtocol && FC.MOTOR_CONFIG.use_dshot_telemetry);
+            $('div.digitalIdlePercent').toggle(protocolConfigured
+                && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
+                || (digitalProtocolConfigured && FC.MOTOR_CONFIG.use_dshot_telemetry && FC.ADVANCED_TUNING.idleMinRpm));
 
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47) && FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry) {
-                $('div.digitalIdlePercent').hide();
-            }
+            $('div.idleMinRpm').toggle(protocolConfigured && digitalProtocol && FC.MOTOR_CONFIG.use_dshot_telemetry);
 
             $('.escSensor').toggle(digitalProtocolConfigured);
 
