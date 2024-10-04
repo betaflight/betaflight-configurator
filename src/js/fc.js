@@ -479,7 +479,7 @@ const FC = {
             use_unsyncedPwm:            0,
             fast_pwm_protocol:          0,
             motor_pwm_rate:             0,
-            digitalIdlePercent:         0,
+            motorIdle:                  0,
             gyroUse32kHz:               0,
             motorPwmInversion:          0,
             gyroHighFsr:                0,

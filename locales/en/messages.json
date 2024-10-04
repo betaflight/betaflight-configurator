@@ -1464,10 +1464,10 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Calibrate Gyro on first arm"
     },
-    "configurationDigitalIdlePercent": {
+    "configurationmotorIdle": {
         "message": "Motor Idle (%)"
     },
-    "configurationDigitalIdlePercentHelp": {
+    "configurationmotorIdleHelp": {
         "message": "The Motor Idle value sets the idle speed of the motors when throttle is at minimum position.<br/><br/><strong>Dynamic Idle disabled</strong><br/><br/>The lowest throttle value sent to any motor, while armed, as a percentage of full throttle. Increase it to improve motor startup reliability, to avoid desyncs, and to improve PID responsiveness at low throttle.<br/><br/>Too low: the motors may not start up reliably, or desync at the end of a flip or roll or on hard throttle chops.<br/><br/>Too high: the craft may feel 'floaty'.<br/><br/><strong>Dynamic idle enabled</strong><br/><br/>The maximum throttle allowed, after arming, before takeoff. If RPM is less than dyn_idle_min_rpm, or zero, this throttle value will be sent to the motors. When the motors start spinning, throttle is adjusted to maintain the set RPM, but cannot exceed this value until the quad takes off.<br/><br/>Too low: the motors may not start up reliably.<br/><br/>Too high: the craft may shake on the ground before takeoff."
     },
     "configurationMotorPoles": {
