@@ -13,7 +13,7 @@ const Features = function (config) {
         {bit: 3, group: 'rxMode', mode: 'select', name: 'RX_SERIAL'},
         {bit: 4, group: 'escMotorStop', name: 'MOTOR_STOP'},
         {bit: 5, group: 'other', name: 'SERVO_TILT', haveTip: true, dependsOn: 'SERVOS'},
-        {bit: 6, group: 'other', name: 'SOFTSERIAL', haveTip: true},
+        {bit: 6, group: 'other', name: 'SOFTSERIAL', haveTip: true, dependsOn: 'SOFTSERIAL'},
         {bit: 7, group: 'other', name: 'GPS', haveTip: true, dependsOn: 'GPS'},
         {bit: 9, group: 'other', name: 'SONAR', haveTip: true, dependsOn: 'RANGEFINDER'},
         {bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'},
