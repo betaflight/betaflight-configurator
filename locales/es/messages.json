@@ -168,6 +168,9 @@
         "message": "Cambiar idioma:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Selecciona el idioma predeterminado"
+    },
     "language_default": {
         "message": "Predeterminado del Sistema"
     },
@@ -1380,6 +1383,9 @@
     },
     "configurationDigitalIdlePercent": {
         "message": "Ralentí motor (%)"
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "El valor de ralentí del motor establece la velocidad de ralentí de los motores cuando el acelerador está en la posición mínima.<br\/><br\/><strong>Ralentí dinámico deshabilitado<\/strong><br\/><br\/>El valor de aceleración más bajo enviado a cualquier motor, mientras está armado, como un porcentaje de aceleración máxima. Auméntalo para mejorar la fiabilidad en el arranque del motor, para evitar desincronizaciones y para mejorar la capacidad de respuesta del PID a baja aceleración.<br\/><br\/>Demasiado bajo: los motores pueden no arrancar de manera fiable o desincronizarse al final de un flip o roll o en pasos de fuerte aceleración.<br\/><br\/>Demasiado alto: la aeronave puede sentirse \"flotante\".<br\/><br\/><strong>Ralentí dinámico habilitado<\/strong><br\/><br\/>El máximo acelerador permitido, después del armado, antes del despegue. Si las RPM son menores que dyn_idle_min_rpm, o cero, este valor de aceleración se enviará a los motores. Cuando los motores empiezan a girar, el acelerador se ajusta para mantener las RPM establecidas, pero no puede superar este valor hasta que el dron despegue.<br\/><br\/>Demasiado bajo: los motores pueden no arrancar de forma fiable.<br\/><br\/>Demasiado alto: el dron puede temblar en el suelo antes del despegue."
     },
     "configurationMotorPoles": {
         "message": "Polos del motor",

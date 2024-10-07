@@ -168,6 +168,9 @@
         "message": "언어 변경:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "기본 언어 선택"
+    },
     "language_default": {
         "message": "시스템 기본"
     },

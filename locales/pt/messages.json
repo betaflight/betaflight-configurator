@@ -168,6 +168,9 @@
         "message": "Alterar idioma:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Selecione idioma predefinido"
+    },
     "language_default": {
         "message": "Padrão do sistema"
     },

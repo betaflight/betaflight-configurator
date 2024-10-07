@@ -168,6 +168,9 @@
         "message": "Canvia l'idioma:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Seleccioneu l'idioma predeterminat"
+    },
     "language_default": {
         "message": "Predeterminat de sistema"
     },
