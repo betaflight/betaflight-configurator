@@ -168,6 +168,9 @@
         "message": "Змінити мову:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Оберіть мову за замовчуванням"
+    },
     "language_default": {
         "message": "Системна за замовчуванням"
     },

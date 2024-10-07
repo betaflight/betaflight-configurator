@@ -168,6 +168,9 @@
         "message": "Skift sprog:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Vælg standardsprog"
+    },
     "language_default": {
         "message": "Sprog som system standard"
     },

@@ -168,11 +168,14 @@
         "message": "Zmień język:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Wybierz język domyślny"
+    },
     "language_default": {
         "message": "Domyślne ustawienie systemowe"
     },
     "language_default_pretty": {
-        "message": "Domyślne ustawienie systemowe ($t(detectedLanguage))"
+        "message": "Domyślny systemowy ($t(detectedLanguage))"
     },
     "language_pl": {
         "message": "Polski",
@@ -304,7 +307,7 @@
         "message": "Nadajnik wideo "
     },
     "tabPower": {
-        "message": "Zasilanie i Bateria"
+        "message": "Zasilanie i Akumulator"
     },
     "tabGPS": {
         "message": "GPS"
@@ -656,7 +659,7 @@
         "message": "Współtworzenie"
     },
     "defaultContributingText": {
-        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to robić na wiele sposobów:<br \/><ul><li> Możesz korzystać z Betaflight aby tworzyć lub aktualizować treści na naszej <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a>, lub odpowiadać na pytania innych użytkowników na forach internetowych.<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Wnosząc wkład na rzecz oprogramowania i konfiguratora<\/a> - nowe funkcje, poprawki, ulepszenia.<\/li><li>Poprzez testowanie <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowych funkcji i poprawek<\/a> oraz dostarczanie informacji zwrotnych.<\/li><li> Poprzez pomoc innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów<\/a> oraz w uczestniczenie w dyskusjach na temat wniosków o nowych funkcjonalnościach.<\/li><li><a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Poprzez tłumaczenie<\/a> Konfiguratora Betaflight na nowy język lub pomoc w aktualizacji istniejących tłumaczeń.<\/li><\/ul>"
+        "message": "Jeśli chcesz pomagać w rozwijaniu Betaflight, możesz to robić na wiele sposobów:<br \/><ul><li> Wykorzystując swoją wiedzę o Betaflight, twórz lub aktualizuj treści na <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki<\/a> lub odpowiadaj na pytania innych użytkowników na forach internetowych.<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Bierz udział w tworzeniu kodu<\/a> oprogramowania układowego oraz Konfiguratora. Kreuj nowe funkcje, poprawki i ulepszenia.<\/li><li>Testuj <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowe funkcje i poprawki<\/a>, nie zapominając o pozostawieniu nam feedbacku.<\/li><li> Pomagaj innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów<\/a> oraz bierz udział w dyskusjach dotyczących wniosków o nowe funkcjonalności.<\/li><li><a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Zostań tłumaczem<\/a> Konfiguratora Betaflight na nowy język lub pomóż w poprawianiu istniejących tłumaczeń.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku<\/a>.<br \/>Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
@@ -796,7 +799,7 @@
         "message": "MinCommand:"
     },
     "initialSetupBatteryHead": {
-        "message": "Bateria"
+        "message": "Akumulator"
     },
     "initialSetupMinCellV": {
         "message": "Minimalne napięcie celi:"
@@ -826,7 +829,7 @@
         "message": "Informacje o systemie"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "Pokazuje flagi kontrolera lotu, które uniemożliwiają uzbrojenie jednostki latającej, oraz rodzaj baterii i poziom RSSI.",
+        "message": "Pokazuje flagi kontrolera lotu przedstawiające rozbrojenie, informację o akumulatorze, poziom RSSI.",
         "description": "Message that pops up to describe the System info section"
     },
     "initialSensorInfoHead": {
@@ -837,7 +840,7 @@
         "description": "Message that pops up to describe the Sensor info section"
     },
     "initialSetupBattery": {
-        "message": "Napięcie baterii:"
+        "message": "Napięcie akumulatora:"
     },
     "initialSetupBatteryValue": {
         "message": "$1 V"
@@ -1423,7 +1426,7 @@
         "message": "Proszę wybrać protokół sterujący silnikiem odpowiedni dla ESC. $t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Uwaga:<\/strong> Wybranie protokołu sterowania silnika, który nie jest obsługiwany przez twoje ESC , może doprowadzić do niekontrolowanego uruchomienia silnika.<strong> Po podłaczeniu bateri silnik może wystartować samoczynnie<\/strong>  <strong>dlatego zawsze upewnij się, że nie ma zamontowanych śmigieł przy pierwszym podłączeniu baterii po zmianie protokołu sterującego silnikami<\/strong>."
+        "message": "<strong>Uwaga:<\/strong> Wybranie protokołu sterowania silnika nieobsługiwanego przez twoje ESC, może doprowadzić do <strong>niekontrolowanego uruchomienia silnika po podłączeniu akumulatora<\/strong>. Dlatego <strong>zawsze po zmianie protokołu sterującego silnikami upewnij się, że śmigła są zdjęte, gdy pierwszy raz podłączasz akumulator<\/strong>."
     },
     "configurationDshotBeeper": {
         "message": "Konfiguracja sygnału dzwiękowego Dshot"
@@ -1459,10 +1462,10 @@
         "message": "Emituje specjalny sygnał dźwiękowy gdy kontroler lotu jest uzbrajany i GPS ma fix'a"
     },
     "beeperBAT_CRIT_LOW": {
-        "message": "Dłuższe piknięcia gdy poziom baterii jest krytycznie niski (powtarzane)"
+        "message": "Dłuższe sygnały dźwiękowe ostrzegające o krytycznie niskim napięciu akumulatora (powtarzane kilkukrotnie)"
     },
     "beeperBAT_LOW": {
-        "message": "Ostrzegawcze piknięcia gdy poziom naładowania baterii spada (powtarzane)"
+        "message": "Sygnały dźwiękowe ostrzegające o spadającym napięciu akumulatora (powtarzane kilkukrotnie)"
     },
     "beeperGPS_STATUS": {
         "message": "Liczba sygnałów dźwiękowych określa ile satelitów GPS zostało znalezionych"
@@ -1580,7 +1583,7 @@
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Po włączeniu tej opcji pierwsze uzbrojenie jednostki latającej po podłączeniu bateri będzie używane na stałe jako punkt początkowy. Jeśli opcja ta nie zostanie aktywowana to za każdym razem, gdy dron zostanie uzbrojony, punkt początkowy zostanie zaktualizowany.",
+        "message": "Jeśli opcja jest włączona, wtedy tylko pierwsze uzbrojenie jednostki latającej po podłączeniu akumulatora ustali punkt początkowy. Jeśli opcja jest wyłączona, to za każdym razem, gdy quad zostanie uzbrojony, punkt początkowy zostanie zaktualizowany.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -1728,7 +1731,7 @@
         "message": "Nazwa profilu PID"
     },
     "pidProfileNameHelp": {
-        "message": "Nazwa profilu PID, która może opisywać, do jakich warunków dostosowano ten profil: lżejsza\/cięższa bateria, kamera akcji\/brak kamery akcji, większa wysokość itp."
+        "message": "Nazwa profilu PID, która określa, do jakich warunków ten profil dostosowano: lżejszy\/cięższy akumulator, kamera akcji\/brak kamery akcji, większe wznoszenie itp."
     },
     "rateProfileName": {
         "message": "Nazwa profilu"
@@ -3076,7 +3079,7 @@
         "message": "Zatrzymaj silniki"
     },
     "sensorsInfo": {
-        "message": "Pamiętaj, że używanie częstej aktualizacji i rysowanie wielu wykresów w tym samym czasie wymaga mocy obliczeniowej - co może zwiększyć użycie baterii laptopa.<br \/>Zalecamy włączenie rysowania wykresów tylko dla czujników, których potrzebujesz najwięcej i wybrania możliwie niskich częstotliwości aktualizacji danych."
+        "message": "Pamiętaj, że stosując częste odświeżanie i rysowanie wielu wykresów na raz wymaga wiekszej mocy obliczeniowej, co w przypadku używania laptopa, zwiększa zużycie akumulatora.<br \/>Zalecamy pozostawienie rysowania wykresów tylko dla czujników, których potrzebujesz najbardziej oraz wybranie niskich prędkości odświeżania danych."
     },
     "sensorsRefresh": {
         "message": "Odczyt:"
@@ -3562,7 +3565,7 @@
         "message": "Nie udało się załadować konfiguracji zdalnej dla {{remote_file}}"
     },
     "firmwareFlasherLegacyLabel": {
-        "message": "{{target}} (Legacy)",
+        "message": "{{target}} (Starszy)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
     },
     "firmwareFlasherNoFirmwareSelected": {
@@ -3722,7 +3725,7 @@
         "description": "One of the modes of the Led Strip"
     },
     "ledStripFunctionBatteryOption": {
-        "message": "Bateria",
+        "message": "Akumulator",
         "description": "One of the modes of the Led Strip"
     },
     "ledStripFunctionRSSIOption": {
@@ -3738,7 +3741,7 @@
         "description": "One of the modes of the Led Strip"
     },
     "ledStripFunctionBatteryBarOption": {
-        "message": "Pasek Baterii",
+        "message": "Pasek Poziomu Akumulatora",
         "description": "One of the modes of the Led Strip"
     },
     "ledStripFunctionAltitudeOption": {
@@ -6797,7 +6800,7 @@
         "message": "Przesunięcie (offset) w krokach co miliwolt"
     },
     "configurationBatteryMultiwiiCurrent": {
-        "message": "Włącz obsługę aktualnego wyjścia Multiwii MSP"
+        "message": "Włącz wsparcie dla wyjścia prądowego starszego MSP Multiwii"
     },
     "pidTuningProfile": {
         "message": "Profil"
