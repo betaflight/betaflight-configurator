@@ -1464,11 +1464,11 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Calibrate Gyro on first arm"
     },
-    "configurationDigitalIdlePercent": {
+    "configurationMotorIdle": {
         "message": "Motor Idle (%)"
     },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "The Motor Idle value sets the idle speed of the motors when throttle is at minimum position.<br/><br/><strong>Dynamic Idle disabled</strong><br/><br/>The lowest throttle value sent to any motor, while armed, as a percentage of full throttle. Increase it to improve motor startup reliability, to avoid desyncs, and to improve PID responsiveness at low throttle.<br/><br/>Too low: the motors may not start up reliably, or desync at the end of a flip or roll or on hard throttle chops.<br/><br/>Too high: the craft may feel 'floaty'.<br/><br/><strong>Dynamic idle enabled</strong><br/><br/>The maximum throttle allowed, after arming, before takeoff. If RPM is less than dyn_idle_min_rpm, or zero, this throttle value will be sent to the motors. When the motors start spinning, throttle is adjusted to maintain the set RPM, but cannot exceed this value until the quad takes off.<br/><br/>Too low: the motors may not start up reliably.<br/><br/>Too high: the craft may shake on the ground before takeoff."
+    "configurationMotorIdleHelp": {
+        "message": "Sets the idle speed of the motors while armed and throttle is 'low' (below `min_check`).<br/><br/><strong class=\"message-positive\">Dynamic Idle not enabled</strong><br/><br/>Each motor gets `min_command` plus Motor Idle percent.<br/><br/><b>Idle too low</b>: motors may not start reliably, spin up slowly, or desync in flips or rolls.<br/><br/><b>Idle too high</b>: the craft may feel 'floaty'.<br/><br/><b>Note</b>: analog ESC's must be calibrated so the motors start just above `min_command`.<br/><br/><strong class=\"message-positive\">Dynamic Idle enabled</strong><br/><br/>On arming, the 'normal' idle value is sent to each motor, until they spin up.<br/><br/>Once spinning, the motor signal is adjusted to achieve the target RPM.<br/><br/>Before takeoff, the motor signal is limited to the Motor Idle percentage, and the set RPM may not be achieved. This is OK.  When throttle is raised above the `airmode_motor_start_throttle` percentage, the limit is much higher, and the set RPM should be achieved at idle.<br/><br/><b>Idle too low</b>: motors may not start reliably<br/><br/><b>Idle too high</b>: shaking before takeoff (only if dynamic idle is also high)<br/><br/><b>Note</b>: Dynamic Idle requires DShot and DShot Telemetry."
     },
     "configurationMotorPoles": {
         "message": "Motor poles",
