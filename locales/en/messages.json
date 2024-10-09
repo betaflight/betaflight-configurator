@@ -1324,7 +1324,7 @@
         "message": "Permanently enable Airmode"
     },
     "featureAIRMODETip": {
-        "message": "Airmode allows for maintaining PID control at low throttle. Whereas in standard mode, when roll, pitch, and yaw calculations saturate a motor, all motors are equally reduced. If a motor goes below minimum, it gets clipped off. For example, with throttle just above minimum and a quick roll is attempted, two motors can't go any lower, resulting in half the power (half of the PID gain). If inputs demand more than a 100% difference between high and low motors, the low motors get clipped, causing an imbalance by unevenly reducing the gain."
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
@@ -2411,7 +2411,7 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "$t(featureAIRMODETip.message)",
+        "message": "AirMode allows for maintaining PID control at low throttle. Whereas in standard mode, when roll, pitch, and yaw calculations saturate a motor, all motors are equally reduced. If a motor goes below minimum, it gets clipped off. For example, with throttle just above minimum and a quick roll is attempted, two motors can't go any lower, resulting in half the power (half of the PID gain). If inputs demand more than a 100% difference between high and low motors, the low motors get clipped, causing an imbalance by unevenly reducing the gain.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
