@@ -26,7 +26,7 @@ const Features = function (config) {
         {bit: 18, group: 'other', name: 'OSD', haveTip: true, dependsOn: 'OSD'},
         {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING', dependsOn: 'SERVOS'},
         {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true, dependsOn: 'TRANSPONDER'},
-        {bit: 22, group: 'other', name: 'AIRMODE'},
+        {bit: 22, group: 'other', name: 'AIRMODE', haveTip: true},
         {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
         {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
         {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},

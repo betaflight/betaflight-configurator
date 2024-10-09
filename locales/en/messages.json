@@ -1323,6 +1323,9 @@
     "featureAIRMODE": {
         "message": "Permanently enable Airmode"
     },
+    "featureAIRMODETip": {
+        "message": "Keeps the PID loop active at zero-throttle, especially I-Term, to allow maintaining control of the craft."
+    },
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
     },
