@@ -1324,7 +1324,7 @@
         "message": "Permanently enable Airmode"
     },
     "featureAIRMODETip": {
-        "message": "Keeps the PID loop active at zero-throttle, especially I-Term, to allow maintaining control of the craft."
+        "message": "Airmode allows for maintaining PID control at low throttle. Whereas in standard mode, when roll, pitch, and yaw calculations saturate a motor, all motors are equally reduced. If a motor goes below minimum, it gets clipped off. For example, with throttle just above minimum and a quick roll is attempted, two motors can't go any lower, resulting in half the power (half of the PID gain). If inputs demand more than a 100% difference between high and low motors, the low motors get clipped, causing an imbalance by unevenly reducing the gain."
     },
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
@@ -2411,7 +2411,7 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "In the standard mixer / mode, when the roll, pitch and yaw gets calculated and saturates a motor, all motors will be reduced equally. When a motor goes below minimum it gets clipped off. Say you had your throttle just above minimum and tried to pull a quick roll - since two motors can't go any lower, you essentially get half the power (half of your PID gain). If your inputs would have asked for more than a 100% difference between the high and low motors, the low motors would get clipped, breaking the symmetry of the motor balance by unevenly reducing the gain",
+        "message": "$t(featureAIRMODETip.message)",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
