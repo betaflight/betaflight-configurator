@@ -882,6 +882,31 @@ dialog {
     width: fit-content;
     max-width: 400px;
 }
+.dialogInteractive {
+    .dialogInteractive-closeButton {
+        margin: 0px;
+    }
+    .cli-command {
+        input {
+            width: 100%;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+    }
+    .cli-response {
+        margin-top: 12px;
+        margin-bottom: 12px;
+        white-space: pre-line;
+        height: 100%;
+        width: 100%;
+        textarea {
+            font-size: 11px;
+            object-fit: contain;
+        }
+    }
+    width: fit-content;
+}
+
 .tab_title {
     border-bottom: 2px solid var(--primary-500);
     font-size: 2rem;

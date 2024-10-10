@@ -10,7 +10,7 @@ import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from './bit.js';
 import { sensor_status, have_sensor } from "./sensor_helpers";
 import { update_dataflash_global } from "./update_dataflash_global";
@@ -169,6 +169,15 @@ function connectDisconnect() {
 
             mspHelper?.setArmingEnabled(true, false, onFinishCallback);
         }
+
+        // show CLI panel on Control+I
+        document.onkeydown = function (e) {
+            if (e.code === 'KeyI' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
+                if (isConnected && GUI.active_tab !== 'cli' && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    GUI.showCliPanel();
+                }
+            }
+        };
     }
 }
 
@@ -208,6 +217,9 @@ function finishClose(finishedCallback) {
     if (wasConnected) {
         // detach listeners and remove element data
         $('#content').empty();
+
+        // close cliPanel if left open
+        $(".dialogInteractive")[0].close();
     }
 
     $('#tabs .tab_landing a').click();
