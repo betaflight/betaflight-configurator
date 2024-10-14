@@ -1379,12 +1379,6 @@
     "configurationGyroCalOnFirstArm": {
         "message": " Gyro kalibreres ved første aktivering"
     },
-    "configurationDigitalIdlePercent": {
-        "message": "Motor tomgang (%)"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Motorens tomgangsværdi indstiller motorernes tomgangshastighed, når gassen er i minimal position.<br\/><br\/><strong>Dynamic Idle disabled<\/strong><br\/><br\/>Det er den laveste værdi for gas, mens aktiveret, som en procentdel af værdi for fuld gas. Forøg værdien for at forbedre motorens pålidelighed ved opstart, for at undgå desynkronisering, og for at forbedre PID reaktion ved lav gas.<br\/><br\/>For lav: motorerne kan ikke starte pålideligt, eller desynkroniseres slutningen af et flip, rul eller ved hård gas bevægelse.<br\/><br\/>For høj: fartøjet føles 'flydende'.<br\/><br\/><strong>Dynamisk tomgang aktiveret<\/strong><br\/><br\/>Den maksimale gas er tilladt, efter armering, men før start. Hvis RPM er mindre end dyn_idle_min_rpm, eller nul, vil denne gasværdi anvendes. Når motorerne starter med at rotere, justeres gassen for at opretholde det indstillede omdrejningstal, men denne værdi kan ikke overskrides, før dronen starter.<br\/><br\/>For lav: motorerne kan ikke starte pålideligt.<br\/><br\/>For høj: Fartøjet kan ryste på jorden før start."
-    },
     "configurationMotorPoles": {
         "message": "Motor magneter",
         "description": "One of the fields of the ESC\/Motor configuration"

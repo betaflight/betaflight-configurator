@@ -256,7 +256,7 @@
         "message": "Urządzenie - <span class=\"message-positive\">Gotowe<\/span>"
     },
     "tabFirmwareFlasher": {
-        "message": "Wgraj oprogramowanie"
+        "message": "Wgraj Oprogramowanie"
     },
     "tabLanding": {
         "message": "Witaj"
@@ -304,7 +304,7 @@
         "message": "OSD"
     },
     "tabVtx": {
-        "message": "Nadajnik wideo "
+        "message": "Nadajnik Wideo"
     },
     "tabPower": {
         "message": "Zasilanie i Akumulator"
@@ -331,7 +331,7 @@
         "message": "Czarna Skrzynka"
     },
     "tabAdjustments": {
-        "message": "Korekty"
+        "message": "Modyfikacje"
     },
     "tabAuxiliary": {
         "message": "Tryby Lotu"
@@ -647,7 +647,7 @@
         "message": "<span class=\"message-positive\">Zapisano<\/span> zmiany w EEPROM"
     },
     "defaultWelcomeIntro": {
-        "message": "Witaj w <strong>Betaflight - Configurator<\/strong>, narzędziu stworzonym by uprościć aktualizację i konfigurację Twojego kontrolera lotu."
+        "message": "Witaj w <strong>Betaflight Configurator<\/strong>, narzędziu zaprojektowanym, aby uprościć aktualizację, konfigurację oraz tuning twojego kontrolera lotu."
     },
     "defaultWelcomeHead": {
         "message": "Sprzęt"
@@ -674,10 +674,10 @@
         "message": "Wgraj Oprogramowanie"
     },
     "defaultDonateHead": {
-        "message": "Open Source \/ Informacja o darowiznach"
+        "message": "Informacja o Open Source \/ Darowiznach"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> to oprogramowanie kontrolera lotu  jest na licencji <strong>open source<\/strong> i jest dostępne <strong>za darmo<\/strong> dla wszystkich użytkowników.<\/p><p>Jeśli używasz oprogramowania Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie<\/strong> jego rozwoju poprzez darowiznę.<\/p>"
+        "message": "<p><strong>Betaflight<\/strong> jest oprogramowaniem obsługującym kontroler lotu, udostępnianym za darmo na zasadach licencji <strong>open source<\/strong> wszystkim użytkownikom oraz <strong>bez udzielania gwarancji<\/strong>.<\/p><p>Jeżeli według ciebie oprogramowanie Betaflight oraz Betaflight Configurator są przydatnymi narzędziami, rozważ <strong>wsparcie<\/strong> ich rozwoju wpłacając darowiznę.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym subskrybentem $t(patreonLink.message).<\/p>"
@@ -699,7 +699,7 @@
         "message": "Dokumentacja Betaflight dostępna jest w formie do wydania oraz w formie elektronicznej.<br \/><br \/>"
     },
     "defaultDocumentation1": {
-        "message": "Wiki Betaflight jest świetnym źródłem informacji, można je znaleźć <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a>."
+        "message": "Świetnym źródłem informacji jest Wiki Betaflight, znajdziesz ją <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a>."
     },
     "defaultDocumentation2": {
         "message": "Z wykazem zmian w obecnym oprogramowaniu możesz się zapoznać na stronie GitHub, <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a>."
@@ -1164,7 +1164,7 @@
         "message": "Kalibracja akcelerometru w czasie lotu"
     },
     "featureRX_SERIAL": {
-        "message": "Numer seryjny (przez UART)"
+        "message": "Połączenie szeregowe (przez UART)"
     },
     "featureMOTOR_STOP": {
         "message": "Nie obracaj śmigłami po uzbrojeniu"
@@ -1371,7 +1371,7 @@
         "message": "Deklinacja magnetometru [stopnie]"
     },
     "configurationReverseMotorSwitch": {
-        "message": "Odwrócono kierunek obrotów silników"
+        "message": "Kierunek silników jest odwrócony"
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Opcja ta jest używana aby kamera FPV podczas lotów nie brudziła się oraz żeby kurz i inne zanieczyszczenia nie były wdmuchiwane na kontroler lotu. Należy zadbać aby kierunek obrotów silników został odpowiednio odwrócony a śmigła odpowiednio założone.<strong>Ostrzeżenie:<\/strong> Nie zmienia to kierunku obrotów silnika. Użyj narzędzia do konfiguracji swoich ESC lub zamień kolejność przewodów silnika aby to osiągnąć. Upewnij się również bez założonych śmigieł że silniki kręcą się w kierunku jak na grafice powyżej przed próbą uzbrajania."
@@ -1385,11 +1385,8 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Skalibruj żyroskop przy pierwszym uzbrojeniu"
     },
-    "configurationDigitalIdlePercent": {
+    "configurationMotorIdle": {
         "message": "Bieg Jałowy Silnika (%)"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Wartość Biegu Jałowego Silnika ustala prędkość obrotów silników, gdy przepustnica znajduje się w położeniu minimalnym.<br\/><br\/><strong>Dynamiczny Bieg Jałowy wyłączony<\/strong><br\/><br\/>Najniższa wartość przepustnicy wysyłanej do dowolnego silnika, gdy jest uzbrojony, jako procent całkowitej przepustnicy. Zwiększ go w celu poprawy niezawodności uruchamiania silników, uniknięcia desynchronizacji oraz poprawy reakcji pętli PID przy niskiej przepustnicy.<br\/><br\/>Zbyt niska: silniki mogą nie uruchamiać się niezawodnie, lub ulegać desynchronizacji w końcowej fazie flipa lub rolla lub przy ostrych szarpnięciach przepustnicy.<br\/><br\/>Zbyt wysoka: pojazd może sprawiać wrażenie \"pływającego\".<br\/><br\/><strong>Dynamiczny Bieg Jałowy włączony<\/strong><br\/><br\/>Maksymalna przepustnica dozwolona, po uzbrojeniu, przed startem. Jeśli RPM jest mniejszy niż dyn_idle_min_rpm, lub wynosi zero, ta wartość przepustnicy zostanie wysłana do silników. Gdy silniki zaczynają się obracać, przepustnica jest regulowana tak, aby utrzymać ustawioną RPM, ale nie może przekraczać tej wartości, dopóki quad nie wystartuje.<br\/><br\/>Zbyt niska: silniki mogą nie uruchamiać się niezawodnie.<br\/><br\/>Zbyt wysoka: dron może podskakiwać na ziemi przed startem."
     },
     "configurationMotorPoles": {
         "message": "Bieguny silnika",
@@ -1908,10 +1905,10 @@
         "message": "Feedforward dostosowuje reakcję drążka.<br \/><br \/> Te opcje pozwalają dostosować go, aby zapewnić wszystko, od wyraźnych, natychmiastowych reakcji drążka podczas wyścigów po miękkie, płynne reakcje w zastosowaniach kinowych\/HD."
     },
     "pidTuningFeedforwardJitter": {
-        "message": "Redukcja Jittera"
+        "message": "Redukcja Drgań"
     },
     "pidTuningFeedforwardJitterHelp": {
-        "message": "Redukcja jittera zmniejsza sprzężenie do przodu, gdy drążki poruszają się powoli, niezależnie od ich pozycji.<br><br>Umożliwia to płynny lot bez jittera podczas wykonywania płynnych, wolnych łuków, a jednocześnie zapewnia pełne sprzężenie do przodu bez żadnych opóźnień, gdy drążki poruszają się szybko. Przejście nie jest wymagane i powinno być ustawione na zero, gdy redukcja jittera jest aktywna.<br><br>Domyślnie 7. Wyższe wartości, np. 10-12, są dobre do zastosowań kinowych lub freestyle HD, 5 może być lepsze do ściganie się z szybkimi linkami RC."
+        "message": "Redukcja Drgań zmniejsza Feedforward, gdy drążki poruszane są powoli, niezależnie od ich pozycji.<br><br>Umożliwia to płynny lot bez drgań podczas wykonywania gładkich, wolnych łuków, a jednocześnie zapewnia pełny Feedforward bez żadnych opóźnień, gdy drążki poruszane są szybko. Parametr Przejście nie jest wymagany i powinien być ustawiony na zero, gdy Redukcja Drgań jest aktywna.<br><br>Domyślnie 7. Wyższe wartości, np. 10-12, są dobre do zastosowań cinematic lub freestyle HD, 5 może być lepsze do ścigania się z użyciem szybkich linków RC."
     },
     "pidTuningFeedforwardSmoothFactor": {
         "message": "Wygładzenie"
@@ -3425,7 +3422,7 @@
         "message": "Włącz, jeśli twój kontroler lotu jest w trybie DFU. np. jeśli włączyłeś swój kontroler za pomocą zwarcia dwóch pinów bootloadera lub przytrzymując przycisk BOOT."
     },
     "firmwareFlasherFlashOnConnect": {
-        "message": "Wgraj w momęcie połączenia"
+        "message": "Wgraj w momencie połączenia"
     },
     "firmwareFlasherFlashOnConnectDescription": {
         "message": "Próba automatycznego flashowania kontrolera lotu (uruchamiana przez nowo wykryty port szeregowy).<br \/><br \/><span class=\"message-negative\">UWAGA<\/span>: Ta funkcja wyłącza funkcję automatycznego wykrywania i tworzenia kopii zapasowych."
@@ -3446,7 +3443,7 @@
         "message": "Port"
     },
     "firmwareFlasherManualBaud": {
-        "message": "Ręczna prędkość transmisji"
+        "message": "Wybór prędkości transmisji"
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "Ręczny wybór szybkości przesyłania, dla kontrolerów lotu które nie obsługują domyślnej prędkości lub połączenia przez bluetooth.<br \/><span class=\"message-negative\"> Uwaga:<\/span> Nie używane podczas połączenia przez DFU USB"
@@ -3464,13 +3461,13 @@
         "message": "Wczytywanie ..."
     },
     "firmwareFlasherOptionLabelBuildTypeRelease": {
-        "message": "Wydania stabilne"
+        "message": "Wersje stabilne"
     },
     "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Wydania testowe"
+        "message": "Wersje stabilne z przedpremierowymi"
     },
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Wydania deweloperskie"
+        "message": "Wersje rozbudowane"
     },
     "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
         "message": "3.3 AKK & RDQ VTX Patch"
@@ -4187,7 +4184,7 @@
         "description": "Tuning Slider High header"
     },
     "pidTuningMasterSlider": {
-        "message": "Główny mnożnik:",
+        "message": "Główny Mnożnik:",
         "description": "Master tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
@@ -4195,7 +4192,7 @@
         "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningDGainSlider": {
-        "message": "Tłumienie:<br \/><i><small>Wzmocnienia D<\/small><\/i>",
+        "message": "Tłumienie:<br \/><i><small>Wzmacnia parametr D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
     },
     "pidTuningDGainSliderHelp": {
@@ -4203,7 +4200,7 @@
         "description": "D gain balance tuning slider helpicon message"
     },
     "pidTuningPIGainSlider": {
-        "message": "Śledzenie:<br \/><i><small>P & I Gains<\/small><\/i>",
+        "message": "Śledzenie:<br \/><i><small>Wzmacnia parametry P oraz I<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
@@ -4211,7 +4208,7 @@
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
-        "message": "Odpowiedź na drążek:<br \/><i><small>Wzmocnienia FF<\/small><\/i>",
+        "message": "Odpowiedź na Drążek:<br \/><i><small>Wzmacnia parametr FF<\/small><\/i>",
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
@@ -4219,7 +4216,7 @@
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
-        "message": "Dryf — chybotanie:<br \/><i><small>I Gains<\/small><\/i>",
+        "message": "Dryfowanie - Chybotanie:<br \/><i><small>Wzmacnia parametr I<\/small><\/i>",
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
@@ -4227,7 +4224,7 @@
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
-        "message": "Tłumienie dynamiczne:<br \/><i><small>D Max<\/small><\/i>",
+        "message": "Tłumienie Dynamiczne:<br \/><i><small>Wzmacnia parametr D Max<\/small><\/i>",
         "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
@@ -4243,7 +4240,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Śledzenie Pitch:<br><i><small>Pitch:Roll P & I & FF<\/small><\/i>",
+        "message": "Śledzenie osi Pitch:<br><i><small>Pitch: Wzmacnia parametry P, I oraz FF w osi Roll<\/small><\/i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
@@ -4847,7 +4844,7 @@
         "message": "Skalibrowana skala napięcia:"
     },
     "powerVoltageId10": {
-        "message": "Bateria"
+        "message": "Akumulator"
     },
     "powerVoltageId20": {
         "message": "5V"
@@ -4934,7 +4931,7 @@
         "message": "$1 A"
     },
     "powerAmperageId10": {
-        "message": "Bateria"
+        "message": "Akumulator"
     },
     "powerAmperageId50": {
         "message": "ESC łącznie"
@@ -4997,7 +4994,7 @@
         "message": "Skalibrowana skala natężenia prądu:"
     },
     "powerBatteryHead": {
-        "message": "Bateria"
+        "message": "Akumulator"
     },
     "powerStateHead": {
         "message": "Stan zasilania"
@@ -6049,7 +6046,7 @@
         "message": "Data i czas zegara czasu rzeczywistego"
     },
     "osdTextStatBattery": {
-        "message": "Napięcie baterii",
+        "message": "Napięcie akumulatora",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBattery": {
@@ -6540,7 +6537,7 @@
         "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
-        "message": "Urządzenie gotowe",
+        "message": "Gotowość urządzenia",
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPower": {
@@ -6767,7 +6764,7 @@
         "message": "Jednostka latająca nie uzbroi się jeśli jest pochylona o kąt większy niż ustalony. Działa tylko jeśli akcelerometr jest włączony. Ustawienie kąta 180 definitywnie wyłączy tą funkcje"
     },
     "configurationBatteryVoltage": {
-        "message": "Napięcie baterii"
+        "message": "Napięcie akumulatora"
     },
     "configurationBatteryCurrent": {
         "message": "Prąd baterii"

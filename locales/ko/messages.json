@@ -1385,12 +1385,6 @@
     "configurationGyroCalOnFirstArm": {
         "message": "첫번째 아밍시 자이로 교정"
     },
-    "configurationDigitalIdlePercent": {
-        "message": "모터 공회전 (%)"
-    },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "모터 공회전 값은 스로틀이 최소 위치에 있을 때 모터의 공회전 속도를 설정합니다.<br\/><br\/><strong>다이나믹 아이들 비활성화<\/strong><br\/><br\/>아밍한 상태에서 모터에 전송되는 최저 스로틀 값을 전체 스로틀의 백분율로 설정합니다. 모터 시동 신뢰성을 높이고, 동기화를 방지하고, 낮은 스로틀에서 PID 응답성을 개선하기 위해 이 값을 늘립니다.<br\/><br\/>너무 낮음: 모터가 안정적으로 시동되지 않거나, 플립 또는 롤이 끝날 때 또는 하드 스로틀 클립에서 동기화를 해제할 수 있습니다.<br\/><br\/>너무 높음: 기체가 '부동적'이라고 느껴질 수 있습니다.<br\/><br\/><strong>다이나믹 아이들 활성화<\/strong><br\/><br\/> 이륙 전 허용되는 최대 스로틀입니다. RPM이 dyn_idle_min_rpm 또는 0보다 작으면 이 스로틀 값이 모터로 전송됩니다. 모터가 회전하기 시작하면 스로틀이 설정된 RPM을 유지하도록 조정되지만 쿼드가 이륙할 때까지 이 값을 초과할 수 없습니다.<br\/><br\/>너무 낮음: 모터가 안정적으로 시동되지 않을 수 있습니다.<br\/><br\/>너무 높음: 이륙 전에 기체가 지면에서 흔들릴 수 있습니다."
-    },
     "configurationMotorPoles": {
         "message": "모터 폴수",
         "description": "One of the fields of the ESC\/Motor configuration"
