@@ -164,6 +164,9 @@
         "message": "Изменить язык:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Выберите язык по умолчанию"
+    },
     "language_default": {
         "message": "По умолчанию"
     },
@@ -1115,6 +1118,31 @@
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">сохранён<\/span>"
     },
+    "initialSetupNetworkInfo": {
+        "message": "Информация о соединении"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Показывает состояние сетевого подключения",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Статус:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "Онлайн"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "Не в сети"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Медленное соединение"
+    },
+    "initialSetupNetworkType": {
+        "message": "Тип:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
     "featureNone": {
         "message": "&lt;Выберите значение&gt;"
     },
@@ -1727,13 +1755,25 @@
     "pidTuningAntiGravityHelp": {
         "message": "Антигравити усиливает I (и P в 4.3) во время быстрого изменения газа и немного после, повышая устойчивость во время резкого добавления газа.<\/br><\/br> Высокие значения могут повысить стабильность на квадрокоптерах с низкой управляемостью или со смещенным центром тяжести."
     },
+    "pidTuningDerivative": {
+        "message": "<b>D<\/b>erivative",
+        "description": "Table header of the Derivative feature in the PIDs tab"
+    },
     "pidTuningDMaxSettingTitle": {
         "message": "Динамическое<br>Демпфирование",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
+    "pidTuningDMaxGain": {
+        "message": "Коэффициент усиления",
+        "description": "Gain of the D Max feature"
+    },
     "pidTuningDMaxGainHelp": {
         "message": "Коэффициент усиления D Max  увеличивает чувствительность системы, усиливая D при быстрой маневренности квадрокоптера или в случае вибраций при пропвоше.<br><br>\n\nБолее высокие значения коэффициент усиления  быстрее поднимают D к D Max, чем низкие, ускоряя процесс увеличения D. Значения 40 или даже 50 могут хорошо работать для чистых Freestyle-сборок.<br><br>\n\nБолее низкие значения не поднимут D к D Max, за исключением случаев очень быстрых движений, и могут лучше подойти для гоночных настроек, минимизируя задержку D.<br><br>\n\nПРЕДУПРЕЖДЕНИЕ: Коэффициенты усиления или опережения, должны быть установлены примерно на уровне 20 или более, в противном случае D не увеличится, как это должно быть. Установка обоих коэффицентов на ноль заблокирует D на базовом значении.",
         "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMaxAdvance": {
+        "message": "Коэффициент опережения",
+        "description": "Advance of the D Max feature"
     },
     "pidTuningDMaxAdvanceHelp": {
         "message": "Коэффициент опережения D Max повышает чувствительность к коэффициенту усиления D Max при быстром перемещении стиков.<br><br>Опережение не реагирует на гироскоп или пропвош. Оно действует раньше, чем коэффициент усиления и иногда полезен для квадрокоптеров с низкой управляемостью, которые как правило сильно отстают в начале хода.<br><br> Обычно его лучше оставить равным нулю.<br><br>ПРЕДУПРЕЖДЕНИЕ: Коэффициенты усиления или опережения, должны быть установлены примерно на уровне 20 или более, в противном случае D не увеличится, как это должно быть. Установка обоих коэффицентов на ноль заблокирует D на базовом значении.",
@@ -4064,7 +4104,7 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">ВНИМАНИЕ<\/span>: Текущие позиции слайдеров могут быть причиной улетаний коптера, повреждений моторов и небезопасного поведения. Пожалуйста, продолжайте с осторожностью!",
+        "message": "<span class=\"message-negative\">ВНИМАНИЕ<\/span>: Текущие позиции слайдеров могут быть причиной самопроизвольного взлета, повреждений моторов и небезопасного поведения. Пожалуйста, продолжайте с осторожностью!",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -7276,6 +7316,10 @@
     },
     "showNotifications": {
         "message": "Показывать уведомления для длительных операций"
+    },
+    "notificationsDeniedTitle": {
+        "message": "Уведомления заблокированы",
+        "description": "Title when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "Удаление данных завершено",
