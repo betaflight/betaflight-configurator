@@ -3255,6 +3255,12 @@
     "cliConfirmSnippetBtn": {
         "message": "Execute"
     },
+    "cliPanelTitle": {
+        "message": "Command Line Interface"
+    },
+    "cliCommand": {
+        "message": "Enter command here"
+    },
     "loggingNote": {
         "message": "Data will be logged in this tab <span class=\"message-negative\">only</span>, leaving the tab will <span class=\"message-negative\">cancel</span> logging and application will return to its normal <strong>\"configurator\"</strong> state.<br /> You are free to select the global update period, data will be written into the log file every <strong>1</strong> second for performance reasons."
     },
