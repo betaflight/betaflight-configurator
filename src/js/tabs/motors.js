@@ -407,6 +407,10 @@ motors.initialize = async function (callback) {
                         return;
                     }
                 }
+                //if every item in the motor array (current size limit: 8) is populated, we have that many motors
+                if(FC.MOTOR_DATA[FC.MOTOR_DATA.length-1]!=0){
+                    self.numberOfValidOutputs = FC.MOTOR_DATA.length;
+                }
             });
         }
 
