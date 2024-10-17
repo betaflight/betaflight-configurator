@@ -390,8 +390,8 @@ motors.initialize = async function (callback) {
             MSP.promise(MSPCodes.MSP_MOTOR).then(() => {
                 const mixer = FC.MIXER_CONFIG.mixer;
                 const motorCount = mixerList[mixer - 1].motors;
-                // initialize for models with zero motors
-                self.numberOfValidOutputs = motorCount;
+                // initialize with firmware supplied motor_count
+                self.numberOfValidOutputs = FC.MOTOR_CONFIG.motor_count;
 
                 for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
                     if (FC.MOTOR_DATA[i] === 0) {
