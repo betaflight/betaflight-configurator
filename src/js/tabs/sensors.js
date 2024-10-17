@@ -191,7 +191,7 @@ sensors.initialize = function (callback) {
     }
 
     function displayDebugColumnNames() {
-        const debugModeName = DEBUG.modes[FC.PID_ADVANCED_CONFIG.debugMode].text;
+        const debugModeName = DEBUG.modes[FC.PID_ADVANCED_CONFIG.debugMode];
         const debugFields = DEBUG.fieldNames[debugModeName];
 
         for (let i = 0; i < sensors.debugColumns; i++) {
