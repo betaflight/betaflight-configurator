@@ -811,8 +811,11 @@ function update() {
         DEBUG.fieldNames.TPA = {
             'debug[all]': 'TPA',
             'debug[0]': 'TPA Factor',
-            'debug[1]': 'TPA Pitch Angle Factor (Wing)',
-            'debug[2]': 'TPA Argument (Wing)',
+            'debug[1]': 'TPA Attitude Roll (Wing)',
+            'debug[2]': 'TPA Attitude Pitch (Wing)',
+            'debug[3]': 'TPA Throttle (Wing)',
+            'debug[4]': 'TPA Speed (Wing)',
+            'debug[5]': 'TPA Argument (Wing)',
         };
     }
 }
