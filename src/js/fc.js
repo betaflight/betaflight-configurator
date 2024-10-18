@@ -342,6 +342,7 @@ const FC = {
             speed:                      0,
             ground_course:              0,
             positionalDop:              0,
+            status:                     0,
             distanceToHome:             0,
             directionToHome:            0,
             update:                     0,
