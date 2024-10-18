@@ -1,3 +1,4 @@
+import GUI from "./gui";
 
 class FileSystem {
 
@@ -10,6 +11,7 @@ class FileSystem {
 
     async pickSaveFile(suggestedName, description, extension) {
         const fileHandle = await window.showSaveFilePicker({
+            id: GUI.active_tab,
             suggestedName: suggestedName,
             types: [{
                 description: description,
@@ -28,6 +30,7 @@ class FileSystem {
 
     async pickOpenFile(description, extension) {
         const fileHandle = await window.showOpenFilePicker({
+            id: GUI.active_tab,
             multiple: false,
             types: [{
                 description: description,
