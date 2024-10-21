@@ -40,6 +40,19 @@
 			}
 		}
 	}
+    .buildProgress {
+        border-radius: 4px;
+        appearance: none;
+        -webkit-appearance: none;
+        overflow: hidden;
+        &::-webkit-progress-bar {
+            background-color: var(--surface-500);
+        }
+        &::-webkit-progress-value {
+            background-color: var(--primary-500);
+            border-radius: 0 4px 4px 0;
+        }
+    }
 	ul {
 		li {
 			list-style: initial;
