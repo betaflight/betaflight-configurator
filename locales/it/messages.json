@@ -1163,7 +1163,7 @@
         "message": "Seriale (via UART)"
     },
     "featureMOTOR_STOP": {
-        "message": "Non far girare i motori se armato"
+        "message": "Non avviare i motori se armato"
     },
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
@@ -3163,6 +3163,12 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Esegui"
+    },
+    "cliPanelTitle": {
+        "message": "Interfaccia Linea di Comando"
+    },
+    "cliCommand": {
+        "message": "Inserisci il comando"
     },
     "loggingNote": {
         "message": "I dati saranno registrati <span class=\"message-negative\">soltanto<\/span> in questa schermata, spostandoti da questa la registrazione sarà <span class=\"message-negative\">annullata<\/span> ed il programma tornerà nel suo stato normale di <strong>\"configuratore\"<\/strong><br \/>. Sei libero di selezionare la frequenza di aggiornamento globale, i dati saranno scritti nel file di registro <strong>ogni secondo<\/strong> per questioni di prestazioni."
@@ -5758,7 +5764,7 @@
         "message": "Temperatura del core della MCU STM32"
     },
     "osdTextAntiGravity": {
-        "message": "Anti gravity",
+        "message": "Anti gravita'",
         "description": "One of the elements of the OSD"
     },
     "osdDescAntiGravity": {

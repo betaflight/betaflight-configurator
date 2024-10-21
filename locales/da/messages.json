@@ -1379,6 +1379,9 @@
     "configurationGyroCalOnFirstArm": {
         "message": " Gyro kalibreres ved første aktivering"
     },
+    "configurationMotorIdle": {
+        "message": "Motor tomgang (%)"
+    },
     "configurationMotorPoles": {
         "message": "Motor magneter",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -3123,6 +3126,12 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Udfør"
+    },
+    "cliPanelTitle": {
+        "message": "Kommando område"
+    },
+    "cliCommand": {
+        "message": "Indtast kommando her"
     },
     "loggingNote": {
         "message": "Data vil <span class=\"message-negative\">kun <\/span>blive logget i dette vindue, når du forlader vinduet vil logning <span class=\"message-negative\">standse<\/span> og Configurator vil vende tilbage til sin normale tilstand.<br \/> Du er velkommen til at ændre opdateringsperiode for målinger, data skrives uanset til logfilen hvert <strong>1<\/strong> sekund pga hastigheds hensyn."

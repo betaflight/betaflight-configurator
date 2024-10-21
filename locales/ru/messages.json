@@ -135,6 +135,10 @@
     "rememberLastTab": {
         "message": "Повторно открыть последнюю вкладку при подключении"
     },
+    "meteredConnection": {
+        "message": "Отключить доступ в Интернет (для ограниченных или медленных соединений)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "Отказ от анонимной коллекции статистических данных"
     },
@@ -827,10 +831,6 @@
     "initialSensorInfoHead": {
         "message": "Информация о сенсорах"
     },
-    "initialSensorInfoHeadHelp": {
-        "message": "Показывает оборудование датчиков",
-        "description": "Message that pops up to describe the Sensor info section"
-    },
     "initialSetupBattery": {
         "message": "Напряжение батареи:"
     },
@@ -1142,6 +1142,9 @@
     },
     "initialSetupNetworkRtt": {
         "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Скорость:"
     },
     "featureNone": {
         "message": "&lt;Выберите значение&gt;"
@@ -1571,6 +1574,9 @@
     },
     "configurationSerialRX": {
         "message": "Приемник с последовательным выходом"
+    },
+    "someRXTypesDisabled": {
+        "message": "Некоторые типы передатчиков не поддерживаются текущей конфигурацией сборки."
     },
     "configurationSpiRX": {
         "message": "Приемник с выходом шины SPI"
@@ -2795,10 +2801,10 @@
         "message": "непригодный"
     },
     "gnssQualityLocked": {
-        "message": "заблокирован"
+        "message": "отслеживается"
     },
     "gnssQualityFullyLocked": {
-        "message": "полностью заблокирован"
+        "message": "полностью отслеживается"
     },
     "gnssUsedUnused": {
         "message": "не используется"
@@ -3808,7 +3814,7 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeGPSLocked": {
-        "message": "GPS: закрыто",
+        "message": "GPS: отслеживается",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeGpsDefault": {
@@ -7320,6 +7326,10 @@
     "notificationsDeniedTitle": {
         "message": "Уведомления заблокированы",
         "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "Уведомления заблокированы. Пожалуйста, включите их в настройках браузера. В противном случае вы не будете получать уведомления о длительных операциях. При использовании Chrome, вы можете включить уведомления, нажав на значок блокировки в адресной строке и выбрав «Настройки сайта».",
+        "description": "Message when Notifications has no or denied permissions"
     },
     "flashEraseDoneNotification": {
         "message": "Удаление данных завершено",
