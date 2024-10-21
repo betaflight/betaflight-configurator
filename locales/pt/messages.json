@@ -3164,6 +3164,12 @@
     "cliConfirmSnippetBtn": {
         "message": "Executar"
     },
+    "cliPanelTitle": {
+        "message": "Interface da Linha de Comandos"
+    },
+    "cliCommand": {
+        "message": "Digite o comando aqui"
+    },
     "loggingNote": {
         "message": "Os dados serão gravados <span class=\"message-negative\">apenas<\/span> nesta aba, sair da aba irá <span class=\"message-negative\">cancelar<\/span> o log e a aplicação irá voltar ao seu estado <strong>\"configurador\"<\/strong> normal.<br \/> Pode selecionar o período de atualização global, os dados serão escritos no ficheiro de log a cada <strong>1<\/strong> segundo por questões de performance."
     },

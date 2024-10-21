@@ -3164,6 +3164,12 @@
     "cliConfirmSnippetBtn": {
         "message": "実行"
     },
+    "cliPanelTitle": {
+        "message": "コマンドラインインターフェイス"
+    },
+    "cliCommand": {
+        "message": "ここにコマンドを入力"
+    },
     "loggingNote": {
         "message": "ログデータは<span class=\"message-negative\">このタブを選択している間のみ<\/span>記録されます。このタブから他へ切り替えると<span class=\"message-negative\">ログは停止<\/span>し、通常の<strong>Configurator<\/strong>の状態に戻ります。<br \/>また項目全体のログ更新期間を自由に選択できます。パフォーマンス上の理由から、<strong>1秒<\/strong>ごとにログファイルにデータが書き込まれます。"
     },

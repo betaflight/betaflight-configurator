@@ -708,13 +708,13 @@
         "message": "Pomoc"
     },
     "defaultSupportSubline1": {
-        "message": "Pomoc"
+        "message": "Źródła Pomocy"
     },
     "defaultSupportSubline2": {
         "message": "Twórcy"
     },
     "defaultSupport": {
-        "message": "Aby uzyskać pomoc, przeszukaj fora lub odwiedź stronę internetową<br \/><br \/>"
+        "message": "Aby uzyskać pomoc, w pierwszej kolejności przeszukaj fora oraz wiki bądź skontaktuj się z dostawcą sprzętu<br \/><br \/>"
     },
     "defaultSupport1": {
         "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">Wątki na forum RC Groups<\/a>"
@@ -723,7 +723,7 @@
         "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki<\/a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Filmy o Betaflight autorstwa Joshuy Bardwell <\/a>"
+        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Filmy o Betaflight autorstwa Joshuy Bardwella <\/a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub<\/a>"
@@ -784,7 +784,7 @@
         "message": "Typ Modelu"
     },
     "initialSetupThrottleHead": {
-        "message": "Ustawienia gazu"
+        "message": "Ustawienia Przepustnicy"
     },
     "initialSetupMinimum": {
         "message": "Minimum:"
@@ -1067,7 +1067,7 @@
         "message": "Informacje o kompilacji:"
     },
     "initialSetupInfoBuildInfoKey": {
-        "message": "Budowa klucza"
+        "message": "Klucz kompilacji"
     },
     "initialSetupInfoBuildConfig": {
         "message": "Konfiguruj"
@@ -1388,6 +1388,9 @@
     "configurationMotorIdle": {
         "message": "Bieg Jałowy Silnika (%)"
     },
+    "configurationMotorIdleHelp": {
+        "message": "Definiuje prędkość biegu jałowego silników w momencie, gdy quad jest zarmowany, a przepustnica znajduje się w położeniu minimalnym (poniżej `min_check`).<br\/><br\/><strong class=\"message-positive\">Dynamiczny Bieg Jałowy wyłączony<\/strong><br\/><br\/>Każdy silnik otrzymuje `min_command` plus procent Biegu Jałowego Silnika.<br\/><br\/><b>Bieg Jałowy jest zbyt niski<\/b>: silniki mogą nie uruchamiać się niezawodnie, powoli się rozpędzać lub desynchronizować w końcowej fazie flipa lub rolla.<br\/><br\/><b>Bieg Jałowy jest zbyt wysoki<\/b>: pojazd \"pływa\" po polu startowym.<br\/><br\/><b>Uwaga<\/b>: należy skalibrować analogowe ESC, aby silniki startowały tuż po przekroczeniu `min_command`.<br\/><br\/><strong class=\"message-positive\">Dynamiczny Bieg Jałowy włączony<\/strong><br\/><br\/>Po zarmowaniu „normalna” wartość biegu jałowego jest wysyłana do każdego silnika, aż wszystkie się rozpędzą.<br\/><br\/>Po tym sygnał do silnika jest dostosowywany tak, aby osiągnąć docelowy RPM.<br\/><br\/>Przed wystartowaniem, sygnał do silnika jest ograniczony do wartości Biegu Jałowego Silnika a ustawiony RPM może nie zostać osiągnięty. To jest OK. Gdy przepustnica jest podnoszona powyżej procentu `airmode_motor_start_throttle`, limit jest o wiele wyższy, a ustawiona wartość RPM powinna być osiągnięta na biegu jałowym.<br\/><br\/><b>Bieg Jałowy jest zbyt niski<\/b>: silniki mogą nie uruchamiać się niezawodnie<br\/><br\/><b>Bieg Jałowy jest zbyt wysoki<\/b>: potrząsanie przed wystartowaniem (tylko gdy Dynamiczny Bieg Jałowy jest również wysoki)<br\/><br\/><b>Uwaga<\/b>: Dynamiczny Bieg Jałowy wymaga DShot oraz DShot Telemetry."
+    },
     "configurationMotorPoles": {
         "message": "Bieguny silnika",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -1483,7 +1486,7 @@
         "message": "Rozlega się sygnał dźwiękowy, gdy drążek jest w pozycji rozbrojenia"
     },
     "beeperARMED": {
-        "message": "Ostrzegawcze sygnały dźwiękowe gdy kontroler lotu jest uzbrojony a silniki są wyłączone podczas bezczynności (sygnały będą powtarzane dopóki kontroler lotu nie zostanie rozbrojony lub do momętu gdy przepustnica zostanie podniesiona)"
+        "message": "Ostrzegawcze sygnały dźwiękowe, gdy kontroler lotu jest uzbrojony a silniki są wyłączone podczas bezczynności (sygnały będą powtarzane, dopóki kontroler lotu nie zostanie rozbrojony lub do momentu, gdy przepustnica zostanie podniesiona)"
     },
     "beeperSYSTEM_INIT": {
         "message": "Sygnał dźwiękowy podczas Inicjalizacji, emitowany gdy kontroler lotu jest włączony"
@@ -1707,7 +1710,7 @@
         "message": "Profil $1"
     },
     "pidTuningRateProfileOption": {
-        "message": "Rateprofile $1"
+        "message": "Profil Rate $1"
     },
     "portsFunction_LIDAR_TF": {
         "message": "Benewake LIDAR"
@@ -1719,7 +1722,7 @@
         "message": "Ustawienia profilu PID"
     },
     "pidTuningSubTabRates": {
-        "message": "Ustawienia profilu Rate"
+        "message": "Ustawienia Profilu Rate"
     },
     "pidTuningSubTabFilter": {
         "message": "Ustawienia filtrów"
@@ -1731,7 +1734,7 @@
         "message": "Nazwa profilu PID, która określa, do jakich warunków ten profil dostosowano: lżejszy\/cięższy akumulator, kamera akcji\/brak kamery akcji, większe wznoszenie itp."
     },
     "rateProfileName": {
-        "message": "Nazwa profilu"
+        "message": "Nazwa Profilu Rate"
     },
     "rateProfileNameHelp": {
         "message": "Podaj nazwę profilu, która może opisywać, do jakiego rodzaju latania jest przeznaczony ten profil: film, wyścig, styl dowolny itp."
@@ -2077,13 +2080,13 @@
         "message": "Kopiuj profil"
     },
     "pidTuningCopyRateProfile": {
-        "message": "Kopiuj profil"
+        "message": "Kopiuj Profil Rate"
     },
     "dialogCopyProfileText": {
         "message": "Skopiuj wartości z obecnego profilu do"
     },
     "dialogCopyRateProfileText": {
-        "message": "Skopiuj wartości z obecnego profilu rate'ów do"
+        "message": "Skopiuj wartości z obecnego Profilu Rate do"
     },
     "dialogCopyProfileTitle": {
         "message": "Skopiuj wartości z profilu"
@@ -2486,7 +2489,7 @@
         "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
-        "message": "Skonfiguruj przełączniki regulacji. Szczegółowe informacje można znaleźć w sekcji „Korekty podczas lotu”. Zmiany wprowadzone przez funkcje regulacji nie są zapisywane automatycznie."
+        "message": "Konfiguruj modyfikacje przełączników. Szczegółowe informacje można znaleźć w sekcji „Korekty podczas lotu”. Zmiany, które wprowadzają funkcje modyfikacji, nie są zapisywane automatycznie."
     },
     "adjustmentsColumnEnable": {
         "message": "Jeśli włączone"
@@ -3164,6 +3167,12 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Wykonaj"
+    },
+    "cliPanelTitle": {
+        "message": "Interfejs Wiersza Poleceń"
+    },
+    "cliCommand": {
+        "message": "Tutaj wprowadź polecenie"
     },
     "loggingNote": {
         "message": "Dane będą zbierane <span class=\"message-negative\">wyłącznie w tym oknie<\/span>, opuszczenie tego okna <span class=\"message-negative\">zatrzyma<\/span> zbieranie danych, a program przejdzie w <strong>tryb standardowej pracy<\/strong>.<br \/>Możesz zmieniać globalne ustawienia aktualizacji, dane będą zapisywane do pliku co <strong>1<\/strong> sekundę."
@@ -4500,7 +4509,7 @@
         "message": "Gyro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
-        "message": "Ustawienie drążka"
+        "message": "Wartość zadana"
     },
     "pidTuningItermRelaxCutoff": {
         "message": "Odcięcie",
@@ -6803,13 +6812,13 @@
         "message": "Profil"
     },
     "pidTuningProfileTip": {
-        "message": "W kontrolerze lotu można zapisać do 3 (a w niektórych kontrolerach 2) różnych profili Pid. Profile zawierają ustawienia Pid, wartości zadane i ustawienia Kąt\/Horyzont. Będąc w terenie, można używać prostych poleceń drążka i przełączać się między profilami za pomocą aparatury Rc (patrz instrukcje online)."
+        "message": "W kontrolerze lotu można zapisać do 3 (a w niektórych kontrolerach 2) różnych profili PID. Profile w tej zakładce zawierają ustawienia PID, Wartości zadane oraz ustawienia trybów Angle i Horizon. Będąc w terenie można w prosty sposób, przełącznikami na aparaturze radiowej, zmieniać te profile (patrz instrukcje online)."
     },
     "pidTuningRateProfile": {
         "message": "Profil Rate"
     },
     "pidTuningRateProfileTip": {
-        "message": "W kontrolerze lotu można przechowywać do 3 różnych profili. Zawierają one ustawienia RC Rate, Rate, RC Expo, Throle oraz TPA. Przełączanie między profilami jest możliwe podczas lotu, poprzez ustawienie 3-pozycyjnego przełącznika w zakładce „Korekty”."
+        "message": "W kontrolerze lotu można przechowywać do 3 różnych Profili Rate. Zawierają one ustawienia: RC Rate, Rate, RC Expo, Przepustnica oraz TPA. Przełączanie między Profilami Rate jest możliwe podczas lotu, poprzez ustawienie 3-pozycyjnego przełącznika w zakładce „Modyfikacje”."
     },
     "pidTuningRateSetup": {
         "message": "Podstawowy\/Acro Rates"

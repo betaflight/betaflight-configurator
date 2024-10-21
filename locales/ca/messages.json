@@ -3172,6 +3172,12 @@
     "cliConfirmSnippetBtn": {
         "message": "Executa"
     },
+    "cliPanelTitle": {
+        "message": "Interfície de línia d'ordres"
+    },
+    "cliCommand": {
+        "message": "Escriu l'ordre aquí"
+    },
     "loggingNote": {
         "message": "Les dades es registraran en aquesta pestanya <span class=\"message-negative\">només<\/span>, deixant la pestanya <span class=\"message-negative\">cancel·lar<\/span> el registre i l'aplicació tornarà a la normalitat <strong>\"configurador\"<\/strong>. <br \/> Podeu seleccionar el període d'actualització global, les dades seran escrites al fitxer de registre cada <strong>1<\/strong> segon per motius de rendiment."
     },
