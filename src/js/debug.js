@@ -804,7 +804,10 @@ function update() {
         };
 
         DEBUG.modes.splice(DEBUG.modes.indexOf('GPS_RESCUE_THROTTLE_PID'), 1, 'AUTOPILOT_ALTITUDE');
+        DEBUG.modes.splice(DEBUG.modes.indexOf('GYRO_SCALED'), 1);
+
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
+        delete DEBUG.fieldNames.GYRO_SCALED;
 
         DEBUG.fieldNames.AUTOPILOT_ALTITUDE = {
             'debug[all]': 'Autopilot Altitude',
