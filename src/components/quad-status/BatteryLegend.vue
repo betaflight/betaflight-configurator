@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
 export default {
   props: {
     voltage: {
@@ -14,15 +15,14 @@ export default {
       type: Number,
       default: 1,
     },
-    vbatcellcount: {
-      type: Number,
-      default: 1,
-    },
   },
   computed: {
     reading() {
-      const nbCells = this.voltage === 0 || this.vbatcellcount === 0 ? 1 : this.vbatcellcount;
-      const cellsText = this.voltage && this.vbatcellcount ? `${nbCells}S` : "USB";
+      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
+      if (this.voltage === 0) {
+        nbCells = 1;
+      }
+      const cellsText = this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : "USB";
       return `${this.voltage.toFixed(2)}V (${cellsText})`;
     },
   },
