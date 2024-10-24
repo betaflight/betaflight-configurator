@@ -2411,6 +2411,10 @@
         "message": "In the standard mixer / mode, when the roll, pitch and yaw gets calculated and saturates a motor, all motors will be reduced equally. When a motor goes below minimum it gets clipped off. Say you had your throttle just above minimum and tried to pull a quick roll - since two motors can't go any lower, you essentially get half the power (half of your PID gain). If your inputs would have asked for more than a 100% difference between the high and low motors, the low motors would get clipped, breaking the symmetry of the motor balance by unevenly reducing the gain",
         "description": "Help text to AIRMODE mode"
     },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "Altitude mode is the safest non-GPS manual mode for new fliers. It is just like Stabilized mode but additionally locks the vehicle altitude when the sticks are released",
+        "description": "Help text for ALTITUDE HOLD mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Enable beeping - useful for locating a crashed aircraft",
         "description": "Help text to BEEPER mode"
