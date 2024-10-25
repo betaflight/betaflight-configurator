@@ -58,7 +58,7 @@
     "switchery-latest": "^0.8.2",
     "three": "~0.97.0",
     "vite-plugin-pwa": "^0.17.5",
-    "vue": "^2.7.16"
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
