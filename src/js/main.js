@@ -420,6 +420,15 @@ function startProcess() {
         $(this).data('state', state);
     });
 
+
+    $("#menu_btn").on('click', function () {
+        $("#tab-content-container .tab_container").addClass('reveal');
+    });
+
+    $("#tab-content-container .tab_container").on('click', function () {
+        $("#tab-content-container .tab_container").removeClass('reveal');
+    });
+
     let result = getConfig('logopen');
     if (result.logopen) {
         $("#showlog").trigger('click');

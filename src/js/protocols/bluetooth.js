@@ -22,6 +22,7 @@ const bluetoothDevices = [
 class BT extends EventTarget {
     constructor() {
         super();
+        this.lastWrite=null;
 
         if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
             this.bluetooth = navigator.bluetooth;
@@ -96,10 +97,14 @@ class BT extends EventTarget {
     }
 
     async loadDevices() {
-        const devices = await this.getDevices();
+        try{
+            const devices = await this.bluetooth.getDevices();
 
-        this.portCounter = 1;
-        this.devices = devices.map(device => this.createPort(device));
+            this.portCounter = 1;
+            this.devices = devices.map(device => this.createPort(device));
+        }catch(e){
+
+        }
     }
 
     async requestPermissionDevice() {
@@ -260,8 +265,12 @@ class BT extends EventTarget {
         }
 
         this.readCharacteristic.addEventListener('characteristicvaluechanged', this.handleNotification.bind(this));
-
-        return await this.readCharacteristic.readValue();
+        try{
+            return await this.readCharacteristic.readValue();
+        }catch(e){
+            console.error(e);
+            return;
+        }
     }
 
     handleNotification(event) {
@@ -270,8 +279,9 @@ class BT extends EventTarget {
         for (let i = 0; i < event.target.value.byteLength; i++) {
             buffer[i] = event.target.value.getUint8(i);
         }
-
-        this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
+        setTimeout(()=>{
+            this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
+        },0);
     }
 
     startNotifications() {
@@ -348,8 +358,14 @@ class BT extends EventTarget {
         this.bytesSent += data.byteLength;
 
         const dataBuffer = new Uint8Array(data);
-
-        await this.writeCharacteristic.writeValue(dataBuffer);
+        try {
+            if (this.lastWrite){
+                await this.lastWrite;
+            }
+        } catch(error) {
+            console.error(error);
+        }
+        this.lastWrite = this.writeCharacteristic.writeValueWithoutResponse(dataBuffer);
 
         return {
             bytesSent: data.byteLength,
