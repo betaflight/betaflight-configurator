@@ -2411,7 +2411,7 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode allows for maintaining PID control at low throttle. Whereas in standard mode, when roll, pitch, and yaw calculations saturate a motor, all motors are equally reduced. If a motor goes below minimum, it gets clipped off. For example, with throttle just above minimum and a quick roll is attempted, two motors can't go any lower, resulting in half the power (half of the PID gain). If inputs demand more than a 100% difference between high and low motors, the low motors get clipped, causing an imbalance by unevenly reducing the gain.",
+        "message": "AirMode allows for maintaining PID control at low throttle. For more information please see <a href=\"https://betaflight.com/docs/development/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
