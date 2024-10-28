@@ -2411,7 +2411,7 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode allows for maintaining PID control at low throttle. For more information please see <a href=\"https://betaflight.com/docs/development/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
+        "message": "AirMode allows for maintaining drone stability at low throttle. For more information please see <a href=\"https://betaflight.com/docs/development/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
