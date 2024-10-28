@@ -1323,6 +1323,9 @@
     "featureAIRMODE": {
         "message": "Permanently enable Airmode"
     },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+    },
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
     },
@@ -2408,7 +2411,7 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "In the standard mixer / mode, when the roll, pitch and yaw gets calculated and saturates a motor, all motors will be reduced equally. When a motor goes below minimum it gets clipped off. Say you had your throttle just above minimum and tried to pull a quick roll - since two motors can't go any lower, you essentially get half the power (half of your PID gain). If your inputs would have asked for more than a 100% difference between the high and low motors, the low motors would get clipped, breaking the symmetry of the motor balance by unevenly reducing the gain",
+        "message": "AirMode allows for maintaining drone stability at low throttle. For more information please see <a href=\"https://betaflight.com/docs/development/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
