@@ -22,7 +22,7 @@ const bluetoothDevices = [
 class BT extends EventTarget {
     constructor() {
         super();
-        this.lastWrite=null;
+        this.lastWrite = null;
 
         if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
             this.bluetooth = navigator.bluetooth;
@@ -97,12 +97,12 @@ class BT extends EventTarget {
     }
 
     async loadDevices() {
-        try{
+        try {
             const devices = await this.bluetooth.getDevices();
 
             this.portCounter = 1;
             this.devices = devices.map(device => this.createPort(device));
-        }catch(e){
+        } catch(e) {
 
         }
     }
@@ -265,9 +265,9 @@ class BT extends EventTarget {
         }
 
         this.readCharacteristic.addEventListener('characteristicvaluechanged', this.handleNotification.bind(this));
-        try{
+        try {
             return await this.readCharacteristic.readValue();
-        }catch(e){
+        } catch(e) {
             console.error(e);
             return;
         }
