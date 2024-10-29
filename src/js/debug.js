@@ -1,5 +1,5 @@
 import FC from './fc.js';
-import { API_VERSION_1_47 } from './data_storage';
+import { API_VERSION_1_46, API_VERSION_1_47 } from './data_storage';
 import semver from "semver";
 
 const DEBUG = {
@@ -784,6 +784,20 @@ const DEBUG = {
 };
 
 function update() {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        DEBUG.fieldNames.ATTITUDE = {
+            'debug[all]': 'Attitude',
+            'debug[0]': 'Roll Angle',
+            'debug[1]': 'Pitch Angle',
+            'debug[2]': 'Ground Speed Factor',
+            'debug[3]': 'Heading Error',
+            'debug[4]': 'Velocity to Home',
+            'debug[5]': 'Ground Speed Error Ratio',
+            'debug[6]': 'Pitch Forward Angle',
+            'debug[7]': 'dcmKp Gain',
+        };
+    }
+
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         DEBUG.fieldNames.FFT_FREQ = {
             'debug[all]': 'Debug FFT FREQ',
