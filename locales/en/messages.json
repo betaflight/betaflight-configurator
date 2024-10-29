@@ -4497,7 +4497,7 @@
         "message": "D Term Lowpass 1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "The first of two D-term lowpass filters.<br /><br />In dynamic mode, filtering will be stronger at low throttle, with less filtering and less delay as throttle increases. This helps control motor grinding or unexpected flyways on arming, while reducing delay and propwash after takeoff. The transition from low to high cutoff will happen earlier, as throttle is increased, with higher D-term lowpass expo values.<br /><br />In static mode, the cutoff frequency is fixed.  This is not recommended for D filtering.<br /><br />Filter type defaults to PT1, though some users have used only a single dynamic Bicraft filter here, with no second PT1.<br /><br />Changes that result in less D filtering may cause serious motor overheating or flyaways on arming.",
+        "message": "The first of two D-term lowpass filters.<br /><br />In dynamic mode, filtering will be stronger at low throttle, with less filtering and less delay as throttle increases. This helps control motor grinding or unexpected flyways on arming, while reducing delay and propwash after takeoff. The transition from low to high cutoff will happen earlier, as throttle is increased, with higher D-term lowpass expo values.<br /><br />In static mode, the cutoff frequency is fixed.  This is not recommended for D filtering.<br /><br />Filter type defaults to PT1, though some users have used only a single dynamic Biquad filter here, with no second PT1.<br /><br />Changes that result in less D filtering may cause serious motor overheating or flyaways on arming.",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpassMode": {
