@@ -16,16 +16,10 @@ export function isChromium() {
 
 export function checkBrowserCompatibility() {
     let compatible = "serial" in navigator;
-    if (!compatible) {
-        if('usb' in navigator &&
-            !('brave' in navigator)
-        ) {
-            navigator.serial = serialPolyfill;
-        }
 
-        if(navigator?.serial || navigator?.bluetooth){
-            compatible = true;
-        }
+    if (!compatible && 'usb' in navigator && !('brave' in navigator)) {
+        navigator.serial = serialPolyfill;
+        compatible = true;
     }
 
     if (isChromium() && compatible) {
