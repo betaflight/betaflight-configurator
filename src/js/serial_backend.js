@@ -275,7 +275,8 @@ function onOpen(openInfo) {
 
         // reset connecting_to
         GUI.connecting_to = false;
-        gui_log(i18n.getMessage('serialPortOpened', serial.connectionType === 'serial' ? [serial.connectionId] : [openInfo.socketId]));
+
+        gui_log(i18n.getMessage('serialPortOpened', [PortHandler.portPicker.selectedPort]));
 
         // save selected port with chrome.storage if the port differs
         let result = getConfig('last_used_port');
