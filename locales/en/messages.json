@@ -567,7 +567,7 @@
         "message": "The following <strong>problems with your configuration</strong> were detected:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<span class=\"message-negative\"><strong>You need to fix these problems before attempting to fly your craft</span></strong>."
+        "message": "<span class=\"message-negative\"><strong>You need to fix these problems before attempting to fly your aircraft</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>The configurator version used ($3) does not support firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
@@ -576,7 +576,7 @@
         "message": "<strong>there is no motor output protocol selected</strong>.<br>Please select a motor output protocol appropriate for your ESCs in '$t(configurationEscFeatures.message)' on the '$t(tabMotorTesting.message)' tab.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>.<br>If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the craft will be disabled until the accelerometer has been calibrated.<br>If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
+        "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>.<br>If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the aircraft will be disabled until the accelerometer has been calibrated.<br>If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
     },
     "infoVersionOs": {
         "message" : "OS: <strong>{{operatingSystem}}</strong>",
@@ -641,7 +641,7 @@
         "message": "Unique device ID: <strong>0x$1</strong>"
     },
     "craftNameReceived": {
-        "message": "Craft name: <strong>$1</strong>"
+        "message": "Aircraft name: <strong>$1</strong>"
     },
     "armingDisabled": {
         "message": "<strong>Arming Disabled</strong>"
@@ -1018,7 +1018,7 @@
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "The craft is currently calibrating",
+        "message": "The aircraft is currently calibrating",
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
@@ -1026,7 +1026,7 @@
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "Craft is not level (enough)",
+        "message": "Aircraft is not level (enough)",
         "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
@@ -1471,7 +1471,7 @@
         "message": "Motor Idle (%)"
     },
     "configurationMotorIdleHelp": {
-        "message": "Sets the idle speed of the motors while armed and throttle is 'low' (below `min_check`).<br/><br/><strong class=\"message-positive\">Dynamic Idle not enabled</strong><br/><br/>Each motor gets `min_command` plus Motor Idle percent.<br/><br/><b>Idle too low</b>: motors may not start reliably, spin up slowly, or desync in flips or rolls.<br/><br/><b>Idle too high</b>: the craft may feel 'floaty'.<br/><br/><b>Note</b>: analog ESC's must be calibrated so the motors start just above `min_command`.<br/><br/><strong class=\"message-positive\">Dynamic Idle enabled</strong><br/><br/>On arming, the 'normal' idle value is sent to each motor, until they spin up.<br/><br/>Once spinning, the motor signal is adjusted to achieve the target RPM.<br/><br/>Before takeoff, the motor signal is limited to the Motor Idle percentage, and the set RPM may not be achieved. This is OK.  When throttle is raised above the `airmode_motor_start_throttle` percentage, the limit is much higher, and the set RPM should be achieved at idle.<br/><br/><b>Idle too low</b>: motors may not start reliably<br/><br/><b>Idle too high</b>: shaking before takeoff (only if dynamic idle is also high)<br/><br/><b>Note</b>: Dynamic Idle requires DShot and DShot Telemetry."
+        "message": "Sets the idle speed of the motors while armed and throttle is 'low' (below `min_check`).<br/><br/><strong class=\"message-positive\">Dynamic Idle not enabled</strong><br/><br/>Each motor gets `min_command` plus Motor Idle percent.<br/><br/><b>Idle too low</b>: motors may not start reliably, spin up slowly, or desync in flips or rolls.<br/><br/><b>Idle too high</b>: the aircraft may feel 'floaty'.<br/><br/><b>Note</b>: analog ESC's must be calibrated so the motors start just above `min_command`.<br/><br/><strong class=\"message-positive\">Dynamic Idle enabled</strong><br/><br/>On arming, the 'normal' idle value is sent to each motor, until they spin up.<br/><br/>Once spinning, the motor signal is adjusted to achieve the target RPM.<br/><br/>Before takeoff, the motor signal is limited to the Motor Idle percentage, and the set RPM may not be achieved. This is OK.  When throttle is raised above the `airmode_motor_start_throttle` percentage, the limit is much higher, and the set RPM should be achieved at idle.<br/><br/><b>Idle too low</b>: motors may not start reliably<br/><br/><b>Idle too high</b>: shaking before takeoff (only if dynamic idle is also high)<br/><br/><b>Note</b>: Dynamic Idle requires DShot and DShot Telemetry."
     },
     "configurationMotorPoles": {
         "message": "Motor poles",
@@ -1493,7 +1493,7 @@
         "message": "Minimum Throttle (Lowest ESC value when armed)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "This is the 'idle' value that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the value to gain more idle speed. Also raise the value in case of desyncs!"
+        "message": "This is the 'idle' value that is sent to the ESCs when the aircraft is armed and the trottle stick is at minimum position. Increase the value to gain more idle speed. Also raise the value in case of desyncs!"
     },
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle (Highest ESC value when armed)"
@@ -1502,7 +1502,7 @@
         "message": "Minimum Command (ESC value when disarmed)"
     },
     "configurationThrottleMinimumCommandHelp": {
-        "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
+        "message": "This is the value that is sent to the ESCs when the aircraft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Please select a motor output protocol appropriate for your ESCs. $t(escProtocolDisabledMessage.message)"
@@ -1520,7 +1520,7 @@
         "message": "Beacon Tone"
     },
     "configurationDshotBeaconHelp": {
-        "message": "The Dshot beacon uses the ESCs and motors to produce sound. This means that the Dshot beacon cannot be used when the motors are spinning. In Betaflight 3.4 and newer, when arming is attempted while the Dshot beacon is active, there is a 2 second delay after the last Dshot beacon tone before the craft is armed. This is to prevent the Dshot beacon functionality from interfering with the Dshot commands sent when arming.<br/><strong>Warning:</strong> Since the Dshot beacon is running current through your motors when active, this can result in excessive heat production and damage to your motors and / or ESCs if the beacon strength is set too high. Use BLHeli Configurator or the BLHeli Suite to adjust and test the beacon strength."
+        "message": "The Dshot beacon uses the ESCs and motors to produce sound. This means that the Dshot beacon cannot be used when the motors are spinning. In Betaflight 3.4 and newer, when arming is attempted while the Dshot beacon is active, there is a 2 second delay after the last Dshot beacon tone before the aircraft is armed. This is to prevent the Dshot beacon functionality from interfering with the Dshot commands sent when arming.<br/><strong>Warning:</strong> Since the Dshot beacon is running current through your motors when active, this can result in excessive heat production and damage to your motors and / or ESCs if the beacon strength is set too high. Use BLHeli Configurator or the BLHeli Suite to adjust and test the beacon strength."
     },
     "configurationBeeper": {
         "message": "Beeper Configuration"
@@ -1668,7 +1668,7 @@
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "When enabled, only the first arm after the battery is connected will be used as home point. If not enabled, every time the craft is armed, the home point will be updated.",
+        "message": "When enabled, only the first arm after the battery is connected will be used as home point. If not enabled, every time the aircraft is armed, the home point will be updated.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -1881,7 +1881,7 @@
         "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
-        "message": "D Max Gain increases the sensitivity of the system that increases D  when the craft turns quickly or is shaking in propwash.<br><br>Higher Gain values bring D up more readily than lower values, lifting D towards D Max more quickly.  Values of 40 or even 50 may work well for clean Freestyle builds.<br><br>Lower values will not raise D towards DMax except in really fast moves, and may suit race setups better by minimising D lag.<br><br>WARNING: Either Gain, or Advance, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
+        "message": "D Max Gain increases the sensitivity of the system that increases D  when the aircraft turns quickly or is shaking in propwash.<br><br>Higher Gain values bring D up more readily than lower values, lifting D towards D Max more quickly.  Values of 40 or even 50 may work well for clean Freestyle builds.<br><br>Lower values will not raise D towards DMax except in really fast moves, and may suit race setups better by minimising D lag.<br><br>WARNING: Either Gain, or Advance, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxAdvance": {
@@ -1889,15 +1889,15 @@
         "description": "Advance of the D Max feature"
     },
     "pidTuningDMaxAdvanceHelp": {
-        "message": "D Max Advance adds sensitivity to the Gain factor when the sticks are moved quickly.<br><br>Advance does not respond to gyro or propwash. It acts earlier than the Gain factor and is occasionally useful for low authority crafts that tend to lag badly at the start of a move.<br><br>Generally it is best left at zero.<br><br>WARNING: Either Advance, or Gain, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
+        "message": "D Max Advance adds sensitivity to the Gain factor when the sticks are moved quickly.<br><br>Advance does not respond to gyro or propwash. It acts earlier than the Gain factor and is occasionally useful for low authority aircraft that tend to lag badly at the start of a move.<br><br>Generally it is best left at zero.<br><br>WARNING: Either Advance, or Gain, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxFeatureHelp": {
-        "message": "D Max increases D during quicker gyro and/or stick movements.<br><br>The 'Gain' factor increases D when the craft turns quickly or is shaking in propwash. Usually only 'Gain' is needed. <br><br>The 'Advance' factor increases D towards D Max during stick inputs. Usually it is not needed and should be set to zero.  Advance can be useful for low authority crafts that tend to overshoot heavily.<br><br>Higher Gain values (eg 40) may be more suitable for freestyle by lifting D more readily.<br><br>WARNING: One of Gain or Advance must be set above about 20 or D will not increase as it should. Setting both to zero will lock D at the base value.",
+        "message": "D Max increases D during quicker gyro and/or stick movements.<br><br>The 'Gain' factor increases D when the aircraft turns quickly or is shaking in propwash. Usually only 'Gain' is needed. <br><br>The 'Advance' factor increases D towards D Max during stick inputs. Usually it is not needed and should be set to zero.  Advance can be useful for low authority aircraft that tend to overshoot heavily.<br><br>Higher Gain values (eg 40) may be more suitable for freestyle by lifting D more readily.<br><br>WARNING: One of Gain or Advance must be set above about 20 or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Baseline damping of ANY motion of the craft. <br /><br />Opposes movement whether caused by stick inputs or external influences (e.g. prop-wash or wind gusts)<br /><br />Higher D gains provide more stability and reduce overshoot.<br /><br />D amplifies noise (magnifies by 10x to 100x).  This can burn out motors if gains are too high or D isn't filtered well.<br /><br />D-term is a bit like the shock absorber on your car.",
+        "message": "Baseline damping of ANY motion of the aircraft. <br /><br />Opposes movement whether caused by stick inputs or external influences (e.g. prop-wash or wind gusts)<br /><br />Higher D gains provide more stability and reduce overshoot.<br /><br />D amplifies noise (magnifies by 10x to 100x).  This can burn out motors if gains are too high or D isn't filtered well.<br /><br />D-term is a bit like the shock absorber on your car.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -2055,7 +2055,7 @@
         "message": "<b>I</b>ntegral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Controls persisting small offsets.<br><br>Similar to P, but accumulates progressively and slowly until error is zero.  Important for longer-term biases such as an offset center of gravity, or persistent outside influences like wind.<br /><br />Higher gains provide tighter tracking, especially in turns, but can make the craft feel stiff.<br><br>Can cause slow oscillations in low authority builds or if high in proportion to P.",
+        "message": "Controls persisting small offsets.<br><br>Similar to P, but accumulates progressively and slowly until error is zero.  Important for longer-term biases such as an offset center of gravity, or persistent outside influences like wind.<br /><br />Higher gains provide tighter tracking, especially in turns, but can make the aircraft feel stiff.<br><br>Can cause slow oscillations in low authority builds or if high in proportion to P.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDMax": {
@@ -2066,14 +2066,14 @@
         "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Controls the strength of dampening to ANY motion on the craft.  For stick moves, the D-term dampens the command. For an outside influence (prop wash OR wind gust) the D-term dampens the influence.<br><br>Higher gains provide more dampening and reduce overshoot by P-term and FF.<br>However, the D-term is VERY sensitive to gyro high frequency vibrations (noise | magnifies by 10x to 100x).<br><br>High frequency noise can cause motor heat and burn out motors if D-gains are too high or the gyro noise is not filtered well (see Filters tab).<br><br>Think of the D-term as the shock absorber on your car, but with the negative inherent property of magnifying high frequency gyro noise.",
+        "message": "Controls the strength of dampening to ANY motion on the aircraft.  For stick moves, the D-term dampens the command. For an outside influence (prop wash OR wind gust) the D-term dampens the influence.<br><br>Higher gains provide more dampening and reduce overshoot by P-term and FF.<br>However, the D-term is VERY sensitive to gyro high frequency vibrations (noise | magnifies by 10x to 100x).<br><br>High frequency noise can cause motor heat and burn out motors if D-gains are too high or the gyro noise is not filtered well (see Filters tab).<br><br>Think of the D-term as the shock absorber on your car, but with the negative inherent property of magnifying high frequency gyro noise.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F</b>eedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "An additional drive factor, derived purely from stick input, that helps push the craft quickly into fast stick moves.<br><br>FF cannot cause oscillation, allows a lower P for similar stick responses, and offsets the natural opposition of D to sick inputs.<br><br>Low or zero values will result in a smoother but more delayed response to stick inputs.",
+        "message": "An additional drive factor, derived purely from stick input, that helps push the aircraft quickly into fast stick moves.<br><br>FF cannot cause oscillation, allows a lower P for similar stick responses, and offsets the natural opposition of D to sick inputs.<br><br>Low or zero values will result in a smoother but more delayed response to stick inputs.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -2222,7 +2222,7 @@
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the craft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D-Term Dynamic Lowpass or D Term Lowpass 1</b>."
+        "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the aircraft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D-Term Dynamic Lowpass or D Term Lowpass 1</b>."
     },
     "pidTuningSliderPidsMode": {
         "message": "Mode:",
@@ -2351,7 +2351,7 @@
         "message": "Preview"
     },
     "receiverMspWarningText": {
-        "message": "These sticks allow Betaflight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br /><br />This feature does not guarantee reliable control of your craft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
+        "message": "These sticks allow Betaflight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br /><br />This feature does not guarantee reliable control of your aircraft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Enable controls"
@@ -2395,11 +2395,11 @@
         "description": "Help text to 3D mode"
     },
     "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "Flight mode which limits craft angle when flying in acro mode",
+        "message": "Flight mode which limits aircraft angle when flying in acro mode",
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Enables motor output and allows the craft to fly",
+        "message": "Enables motor output and allows the aircraft to fly",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2411,7 +2411,7 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode allows for maintaining craft stability at low throttle. For more information please see <a href=\"https://betaflight.com/docs/development/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
+        "message": "AirMode allows for maintaining aircraft stability at low throttle. For more information please see <a href=\"https://betaflight.com/docs/development/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode</a> on Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
@@ -2471,7 +2471,7 @@
         "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
-        "message": "Reverse the motors to flip over an upside down craft after a crash (DShot required)",
+        "message": "Reverse the motors to flip over an upside down aircraft after a crash (DShot required)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
     "auxiliaryHelpMode_FPVANGLEMIX": {
@@ -2483,7 +2483,7 @@
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Enable 'GPS Rescue' to return the craft to the location where it was last armed",
+        "message": "Enable 'GPS Rescue' to return the aircraft to the location where it was last armed",
         "description": "Help text to GPS RESCUE mode"
     },
     "auxiliaryHelpMode_HEADADJ": {
@@ -2491,7 +2491,7 @@
         "description": "Help text to HEAD ADJ mode"
     },
     "auxiliaryHelpMode_HEADFREE": {
-        "message": "Flight mode where yaw is aligned with an external frame of reference (often where the pilot is facing) instead of the craft's. Designed for beginners but rarely used, advise ANGLE mode",
+        "message": "Flight mode where yaw is aligned with an external frame of reference (often where the pilot is facing) instead of the aircraft's. Designed for beginners but rarely used, advise ANGLE mode",
         "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
@@ -2523,7 +2523,7 @@
         "description": "Help text to PASSTHRU mode"
     },
     "auxiliaryHelpMode_PARALYZE": {
-        "message": "Permanently disable a crashed craft until it is power cycled",
+        "message": "Permanently disable a crashed aircraft until it is power cycled",
         "description": "Help text to PARALYZE mode"
     },
     "auxiliaryHelpMode_PIDAUDIO": {
@@ -4099,7 +4099,7 @@
         "message": "Yaw Jump Prevention"
     },
     "pidTuningYawJumpPreventionHelp": {
-        "message": "Keeps the craft from jumping up at the end of yaws. Higher number gives more damping at the end of yaw moves (works like old yaw D, which was not a real D like on other axis)"
+        "message": "Keeps the aircraft from jumping up at the end of yaws. Higher number gives more damping at the end of yaw moves (works like old yaw D, which was not a real D like on other axis)"
     },
     "pidTuningRcExpoPower": {
         "message": "RC Expo Power"
@@ -4147,7 +4147,7 @@
         "message": "Scale Factor [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Percentage reduction in per-motor drive signal.<br><br>Reduces ESC current and motor heat when using higher cell count batteries on high KV motors.<br><br>When using a 6S battery on a craft that with 4S motors, props and tuning, try 66%; when using a 4S battery on a craft intended for 3S, try 75%.<br><br>Be sure that all of your components can support the voltage of the battery you are using."
+        "message": "Percentage reduction in per-motor drive signal.<br><br>Reduces ESC current and motor heat when using higher cell count batteries on high KV motors.<br><br>When using a 6S battery on a aircraft that with 4S motors, props and tuning, try 66%; when using a 4S battery on a aircraft intended for 3S, try 75%.<br><br>Be sure that all of your components can support the voltage of the battery you are using."
     },
     "pidTuningCellCount": {
         "message": "Cell Count - for auto Profile switching"
@@ -4191,7 +4191,7 @@
         "message": "Profile independent Filter Settings"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "These sliders adjust the Gyro and D-term filters.<br /><br />For more filtering:<br /> - Sliders to left<br> - Lower cutoff frequencies.<br /><br /> Stronger filtering keeps motors cooler by removing more noise, but delays the gyro signal more and may worsen prop-wash or cause resonant oscillations. Less responsive crafts eg X-Class do best with stronger filtering. <br><br>For less filtering:<br /> - Sliders to the right<br /> - Higher cutoff frequencies <br><br>Less filtering reduces gyro signal delay, and often improves propwash. Moving the gyro lowpass filter right is usually OK, but moving the D filter to the right is usually not required, and can easily result in very hot motors.",
+        "message": "These sliders adjust the Gyro and D-term filters.<br /><br />For more filtering:<br /> - Sliders to left<br> - Lower cutoff frequencies.<br /><br /> Stronger filtering keeps motors cooler by removing more noise, but delays the gyro signal more and may worsen prop-wash or cause resonant oscillations. Less responsive aircraft eg X-Class do best with stronger filtering. <br><br>For less filtering:<br /> - Sliders to the right<br /> - Higher cutoff frequencies <br><br>Less filtering reduces gyro signal delay, and often improves propwash. Moving the gyro lowpass filter right is usually OK, but moving the D filter to the right is usually not required, and can easily result in very hot motors.",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -4223,7 +4223,7 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Changes the D-term Lowpass Filter cutoffs.<br /><br />Moving the slider to the left gives stronger D filtering (lower cutoff frequency).<br /><br />Moving the slider to the right gives less filtering (higher cutoff frequency).<br /><br />D-term is the most sensitive PID element to noise and resonance. It can amplify high frequency noise by 10x to 100x. That's why D filter cutoffs are much lower than the gyro filters.<br /><br />D-term filtering is applied after, and in addition to, the gyro filtering. The default D filtering is optimal for most crafts and rarely needs changing.<br /><br />Moving this slider to the left reduces motor heat in noisy crafts and with high PID 'D' tunes, but we may see more propwash and lower frequency D resonances.<br /><br />Moving the slider to the right is not recommended, but may improve propwash on clean builds.  It may cause motor grinding on arming, sudden resonances in-flight, and serious motor overheating.",
+        "message": "Changes the D-term Lowpass Filter cutoffs.<br /><br />Moving the slider to the left gives stronger D filtering (lower cutoff frequency).<br /><br />Moving the slider to the right gives less filtering (higher cutoff frequency).<br /><br />D-term is the most sensitive PID element to noise and resonance. It can amplify high frequency noise by 10x to 100x. That's why D filter cutoffs are much lower than the gyro filters.<br /><br />D-term filtering is applied after, and in addition to, the gyro filtering. The default D filtering is optimal for most aircraft and rarely needs changing.<br /><br />Moving this slider to the left reduces motor heat in noisy aircraft and with high PID 'D' tunes, but we may see more propwash and lower frequency D resonances.<br /><br />Moving the slider to the right is not recommended, but may improve propwash on clean builds.  It may cause motor grinding on arming, sudden resonances in-flight, and serious motor overheating.",
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
@@ -4231,11 +4231,11 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Sliders to adjust the craft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enchances the responsiveness of the craft, if too high may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the craft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strenght on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or Lowers all the PID gains, keeping their proportions constant.",
+        "message": "Sliders to adjust the aircraft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enchances the responsiveness of the aircraft, if too high may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the aircraft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strenght on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or Lowers all the PID gains, keeping their proportions constant.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">CAUTION</span>: Current slider positions may cause flyaways, motor damage or unsafe craft behaviour. Please proceed with caution.",
+        "message": "<span class=\"message-negative\">CAUTION</span>: Current slider positions may cause flyaways, motor damage or unsafe aircraft behaviour. Please proceed with caution.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -4291,7 +4291,7 @@
         "description": "Master tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
-        "message": "Increases all PID parameters equally. Don't change this slider unless you run out of adjustment on the other sliders. Typically this is only needed for low authority or high moment of inertia (MoI) crafts like X-Class or cinelifter builds. Too much master gain may cause trilling oscillations or hot motors.",
+        "message": "Increases all PID parameters equally. Don't change this slider unless you run out of adjustment on the other sliders. Typically this is only needed for low authority or high moment of inertia (MoI) aircraft like X-Class or cinelifter builds. Too much master gain may cause trilling oscillations or hot motors.",
         "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningDGainSlider": {
@@ -4307,7 +4307,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Increase the Tracking slider to sharpen the craft's response to your commands and also outside influences; avoiding the nose of the craft going off course in any condition.<br /><br />Lower ‘Tracking’ values will have lots of bobbles and will go off course on stick moves and in prop wash. High ‘Tracking’ may result in oscillation and fast bounceback (hard to see, but you canhear). Excessive Tracking may result in oscillations and hot motors.",
+        "message": "Increase the Tracking slider to sharpen the aircraft's response to your commands and also outside influences; avoiding the nose of the aircraft going off course in any condition.<br /><br />Lower ‘Tracking’ values will have lots of bobbles and will go off course on stick moves and in prop wash. High ‘Tracking’ may result in oscillation and fast bounceback (hard to see, but you canhear). Excessive Tracking may result in oscillations and hot motors.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4315,7 +4315,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "Lower Stick Response will increase the latency of the craft movements to commands and may result in slow bounceback at the end of a flip or roll.<br><br>Higher Stick Response will give snappier craft response to sharp stick moves. Too much Stick Response can cause overshoots at the end of a flip or roll.<br /><br /><strong>Note:</strong><br />“I-term Relax” can reduce bounceback for low authority crafts or if low Stick Response Gains are used.",
+        "message": "Lower Stick Response will increase the latency of the aircraft movements to commands and may result in slow bounceback at the end of a flip or roll.<br><br>Higher Stick Response will give snappier aircraft response to sharp stick moves. Too much Stick Response can cause overshoots at the end of a flip or roll.<br /><br /><strong>Note:</strong><br />“I-term Relax” can reduce bounceback for low authority aircraft or if low Stick Response Gains are used.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -4323,7 +4323,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Increases or decreases I. Higher I may improve tracking in spiral turns, orbits, or 0% throttle commands. Too much I, particularly with not enough P, may cause wobbles or bounceback after flips/rolls or on chopping the throttle to 0%.<br /><br />Generally you want the ‘Drift – Wobble’ slider to be as high as it can be to keep the craft tracking in spiral turns, orbits, ect... but not so high that you start to see wobbles on chopping the throttle to 0%.<br /><br /><strong>Note:</strong><br />If you experience bounceback at any time that is easy to see, make sure that “I-term Relax” is enabled, and try lowering the iterm_relax_cutoff value.",
+        "message": "Increases or decreases I. Higher I may improve tracking in spiral turns, orbits, or 0% throttle commands. Too much I, particularly with not enough P, may cause wobbles or bounceback after flips/rolls or on chopping the throttle to 0%.<br /><br />Generally you want the ‘Drift – Wobble’ slider to be as high as it can be to keep the aircraft tracking in spiral turns, orbits, ect... but not so high that you start to see wobbles on chopping the throttle to 0%.<br /><br /><strong>Note:</strong><br />If you experience bounceback at any time that is easy to see, make sure that “I-term Relax” is enabled, and try lowering the iterm_relax_cutoff value.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -4331,7 +4331,7 @@
         "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "Increases D max, the maximum amount that D can increase to during faster movements.<br /><br />For race crafts, where the main Damping slider has been set low to minimize motor heat, moving this slider to the right will improve overshoot control for quick direction changes.<br /><br />For HD or cinematic crafts, instability in forward flight is best addressed by moving the Damping slider (not the Dynamic Damping slider) to the right. Check for motor heat and listen for weird noises during quick inputs when moving this slider to the right.<br /><br />For freestyle crafts, especially heavier builds, moving this slider to the right may help control overshoot in flips and rolls.<br /><br /><strong>Note:</strong><br />Generally overshoot in flips and rolls is due to not enough 'i-Term Relax', or motor desyncs, or inadequate authority (a.k.a. Motor Saturation). If you find that moving the Damping Boost slider to the right doesn't improve flip or roll overshoot, put it back to the normal position, and seek out the reason for the overshoot or wobble.",
+        "message": "Increases D max, the maximum amount that D can increase to during faster movements.<br /><br />For race aircraft, where the main Damping slider has been set low to minimize motor heat, moving this slider to the right will improve overshoot control for quick direction changes.<br /><br />For HD or cinematic aircraft, instability in forward flight is best addressed by moving the Damping slider (not the Dynamic Damping slider) to the right. Check for motor heat and listen for weird noises during quick inputs when moving this slider to the right.<br /><br />For freestyle aircraft, especially heavier builds, moving this slider to the right may help control overshoot in flips and rolls.<br /><br /><strong>Note:</strong><br />Generally overshoot in flips and rolls is due to not enough 'i-Term Relax', or motor desyncs, or inadequate authority (a.k.a. Motor Saturation). If you find that moving the Damping Boost slider to the right doesn't improve flip or roll overshoot, put it back to the normal position, and seek out the reason for the overshoot or wobble.",
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -4339,7 +4339,7 @@
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Increases Damping (D) on the Pitch axis ONLY, i.e, for Pitch relative to Roll. Helps control Pitch specific overshooting or bounce-back.<br /><br />Crafts with 'heavier' moment of inertia on the Pitch axis generally need more Damping authority (since Pitch has more inertia and accumulates more momentum).<br /><br />Tune the master 'Damping' and/or 'Tracking' sliders first, until you get good Roll axis behavior. Then use the Pitch sliders (increase or decrease) to fine tune the Pitch axis without affecting Roll.",
+        "message": "Increases Damping (D) on the Pitch axis ONLY, i.e, for Pitch relative to Roll. Helps control Pitch specific overshooting or bounce-back.<br /><br />Aircraft with 'heavier' moment of inertia on the Pitch axis generally need more Damping authority (since Pitch has more inertia and accumulates more momentum).<br /><br />Tune the master 'Damping' and/or 'Tracking' sliders first, until you get good Roll axis behavior. Then use the Pitch sliders (increase or decrease) to fine tune the Pitch axis without affecting Roll.",
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
@@ -4389,11 +4389,11 @@
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Gyro lowpass filters attenuate higher frequency noise to keep it out of the PID loop. There are two independently configurable gyro filters; by default both are active.<br /><br />With RPM filtering, the gyro filter slider can often be moved some way to the right, or alternatively a single static gyro lowpass filter at 500hz may be sufficient.<br /><br />A craft will have less propwash with the least gyro filter delay.<br /><br />Always check for motor heat when shifting sliders to the right. With minimal gyro filtering, it is essential to have enough D filtering! Take care!",
+        "message": "Gyro lowpass filters attenuate higher frequency noise to keep it out of the PID loop. There are two independently configurable gyro filters; by default both are active.<br /><br />With RPM filtering, the gyro filter slider can often be moved some way to the right, or alternatively a single static gyro lowpass filter at 500hz may be sufficient.<br /><br />A aircraft will have less propwash with the least gyro filter delay.<br /><br />Always check for motor heat when shifting sliders to the right. With minimal gyro filtering, it is essential to have enough D filtering! Take care!",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "D-term lowpass filters attenuate higher frequency noise and resonances that would otherwise be amplified by D gain.<br /><br />There are two D filters, and their effects are additive. Both are required in nearly all crafts, though a single PT2 may be used in place of dual PT1's.<br /><br />Generally, the craft will fly best and have the least propwash when configured to have the least filter delay (sliders to the right, higher cutoff values).  However, particularly with D filters, sliders to the right can greatly increase the chance of getting hot motors.<br /><br />It is very easy to burn motors if you don't have enough D filtering - take care!",
+        "message": "D-term lowpass filters attenuate higher frequency noise and resonances that would otherwise be amplified by D gain.<br /><br />There are two D filters, and their effects are additive. Both are required in nearly all aircraft, though a single PT2 may be used in place of dual PT1's.<br /><br />Generally, the aircraft will fly best and have the least propwash when configured to have the least filter delay (sliders to the right, higher cutoff values).  However, particularly with D filters, sliders to the right can greatly increase the chance of getting hot motors.<br /><br />It is very easy to burn motors if you don't have enough D filtering - take care!",
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
@@ -4452,7 +4452,7 @@
         "message": "Notch Count"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving crafts like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch craft, HIGH(230-800hz) for very high revving 2.5-3 inch crafts. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
+        "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving aircraft like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch aircraft, HIGH(230-800hz) for very high revving 2.5-3 inch aircraft. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q factor adjust how narrow or wide the dynamic notch filters are. Higher value makes it narrower and more precise and lower value makes it wider and broader. Having a really low value will greatly increase filter delay."
@@ -4479,7 +4479,7 @@
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
-        "message": "Number of harmonics per motor. A value of 3 (recommended for most crafts) will generate 3 notch filters, per motor for each axis, totaling 36 notches. One at the base motor frequency and two harmonics at multiples of that base frequency.",
+        "message": "Number of harmonics per motor. A value of 3 (recommended for most aircraft) will generate 3 notch filters, per motor for each axis, totaling 36 notches. One at the base motor frequency and two harmonics at multiples of that base frequency.",
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
@@ -4565,7 +4565,7 @@
         "message": "I Term Rotation"
     },
     "pidTuningItermRotationHelp": {
-        "message": "Rotates the current I Term vector properly to other axes as the craft rotates when yawing continuously during rolls and when performing funnels and other tricks. Very appreciated by LOS acro pilots."
+        "message": "Rotates the current I Term vector properly to other axes as the aircraft rotates when yawing continuously during rolls and when performing funnels and other tricks. Very appreciated by LOS acro pilots."
     },
     "pidTuningSmartFeedforward": {
         "message": "Smart Feedforward"
@@ -4577,7 +4577,7 @@
         "message": "I Term Relax"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Suppresses I Term accumulation when fast movements occur, reducing bounce-back at the end of rolls, flips and other quick inputs.<br><br> Setpoint mode responds to smoothed stick inputs and works best for responsive crafts.<br><br>Gyro mode can be useful for extremely laggy crafts.<br><br>Usually iTerm Relax should not be applied to yaw."
+        "message": "Suppresses I Term accumulation when fast movements occur, reducing bounce-back at the end of rolls, flips and other quick inputs.<br><br> Setpoint mode responds to smoothed stick inputs and works best for responsive aircraft.<br><br>Gyro mode can be useful for extremely laggy aircraft.<br><br>Usually iTerm Relax should not be applied to yaw."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Axes",
@@ -4610,13 +4610,13 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "Lower values mean stronger suppression of bounce-back after flips in low authority crafts.  Higher values increase high-rate turn precision for racing.<br><br>Set to 30-40 for racing, 15 for responsive freestyle builds, 10 for heavier freestyle crafts, 3-5 for X-class."
+        "message": "Lower values mean stronger suppression of bounce-back after flips in low authority aircraft.  Higher values increase high-rate turn precision for racing.<br><br>Set to 30-40 for racing, 15 for responsive freestyle builds, 10 for heavier freestyle aircraft, 3-5 for X-class."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Control"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "This feature solves some underlying problems of $t(pidTuningItermRotation.message) and may replace it at some point. It accumulates the absolute gyro error in craft coordinates and mixes a proportional correction into setpoint.<br><br>AirMode must be enabled and $t(pidTuningItermRelax.message) (for $t(pidTuningOptionRP.message)). When combined with $t(pidTuningIntegratedYaw.message), you can set $t(pidTuningItermRelax.message) enabled for $t(pidTuningOptionRPY.message)."
+        "message": "This feature solves some underlying problems of $t(pidTuningItermRotation.message) and may replace it at some point. It accumulates the absolute gyro error in aircraft coordinates and mixes a proportional correction into setpoint.<br><br>AirMode must be enabled and $t(pidTuningItermRelax.message) (for $t(pidTuningOptionRP.message)). When combined with $t(pidTuningIntegratedYaw.message), you can set $t(pidTuningItermRelax.message) enabled for $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
@@ -4637,7 +4637,7 @@
         "message": "Acro Trainer Angle Limit"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Helps pilots learn to fly in acro mode by limiting the angle that the craft can attain. Valid limits are 10-80 degrees.  The mode must be activated with a switch in the $t(tabAuxiliary.message) tab."
+        "message": "Helps pilots learn to fly in acro mode by limiting the angle that the aircraft can attain. Valid limits are 10-80 degrees.  The mode must be activated with a switch in the $t(tabAuxiliary.message) tab."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integrated Yaw"
@@ -4658,7 +4658,7 @@
         "message": "Receiver failsafe"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Failsafe has two stages. <strong>Stage 1</strong> is entered when a flightchannel has an invalid pulse length, the receiver reports failsafe mode or there is no signal from the receiver at all, the channel fallback settings are applied to <span class=\"message-negative\">all channels</span> and a short amount of time is provided to allow for recovery. <strong>Stage 2</strong> is entered when the error condition takes longer than the configured guard time while the craft is <span class=\"message-negative\">armed</span>, all channels will remain at the applied channel fallback setting unless overruled by the chosen procedure. <br /><strong>Note:</strong> Prior to entering stage 1, channel fallback settings are also applied to individual AUX channels that have invalid pulses."
+        "message": "Failsafe has two stages. <strong>Stage 1</strong> is entered when a flightchannel has an invalid pulse length, the receiver reports failsafe mode or there is no signal from the receiver at all, the channel fallback settings are applied to <span class=\"message-negative\">all channels</span> and a short amount of time is provided to allow for recovery. <strong>Stage 2</strong> is entered when the error condition takes longer than the configured guard time while the aircraft is <span class=\"message-negative\">armed</span>, all channels will remain at the applied channel fallback setting unless overruled by the chosen procedure. <br /><strong>Note:</strong> Prior to entering stage 1, channel fallback settings are also applied to individual AUX channels that have invalid pulses."
     },
     "failsafePulsrangeTitle": {
         "message": "Valid Pulse Range Settings"
@@ -4709,7 +4709,7 @@
         "message": "Failsafe Throttle Low Delay [seconds]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Just disarm the craft instead of executing the selected failsafe procedure when the throttle was low for this amount of time"
+        "message": "Just disarm the aircraft instead of executing the selected failsafe procedure when the throttle was low for this amount of time"
     },
     "failsafeThrottleItem": {
         "message": "Throttle value used while landing"
@@ -4718,7 +4718,7 @@
         "message": "Delay for turning off the Motors during Failsafe [seconds]"
     },
     "failsafeOffDelayHelp": {
-        "message": "Time to stay in landing mode until the motors are turned off and the craft is disarmed"
+        "message": "Time to stay in landing mode until the motors are turned off and the aircraft is disarmed"
     },
     "failsafeSubTitle1": {
         "message": "Stage 2 - Failsafe Procedure"
@@ -4748,7 +4748,7 @@
         "message": "Initial climb (meters)"
     },
     "failsafeGpsRescueInitialClimbHelp": {
-        "message": "The distance the craft will climb, above the current altitude, when a rescue is initiated and the altitude mode is set to CURRENT Altitude; also added when in MAX Altitude mode."
+        "message": "The distance the aircraft will climb, above the current altitude, when a rescue is initiated and the altitude mode is set to CURRENT Altitude; also added when in MAX Altitude mode."
     },
     "failsafeGpsRescueItemReturnAltitude": {
         "message": "Return altitude (meters) - <strong>only applies in Fixed Altitude mode</strong>"
@@ -4763,7 +4763,7 @@
         "message": "Maximum pitch angle"
     },
     "failsafeGpsRescueAngleHelp": {
-        "message": "Higher maximum angles lead to more aggressive returns and higher forward speeds.  May be useful for heavier, high-drag or low authority craft, or for use in stronger winds.  WARNING: Rescue throttle usually needs to be increased if the max angle is increased!  Otherwise the craft may lose altitude and crash!"
+        "message": "Higher maximum angles lead to more aggressive returns and higher forward speeds.  May be useful for heavier, high-drag or low authority aircraft, or for use in stronger winds.  WARNING: Rescue throttle usually needs to be increased if the max angle is increased!  Otherwise the aircraft may lose altitude and crash!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Descent distance (meters)"
@@ -4775,7 +4775,7 @@
         "message": "The initial descent rate is set to 3 times this value, decreasing to the set value at the landing altitude."
     },
     "failsafeGpsRescueItemMinStartDistHelp" : {
-        "message": "If the rescue starts too close to home (within this minimum distance), the craft will fly away, on its current heading, until at least this distance from home, and then start normal rescue behaviour",
+        "message": "If the rescue starts too close to home (within this minimum distance), the aircraft will fly away, on its current heading, until at least this distance from home, and then start normal rescue behaviour",
         "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
     },
     "failsafeGpsRescueItemThrottleMin": {
@@ -4785,13 +4785,13 @@
         "message": "Throttle maximum"
     },
     "failsafeGpsRescueThrottleMaxHelp": {
-        "message": "Should be increased for heavier, high-drag or low authority craft, if a return against strong winds is likely, or if the maximum pitch angle is increased."
+        "message": "Should be increased for heavier, high-drag or low authority aircraft, if a return against strong winds is likely, or if the maximum pitch angle is increased."
     },
     "failsafeGpsRescueItemThrottleHover": {
         "message": "Throttle hover - <span class=\"message-negative\">IMPORTANT: set this value accurately</span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "To find the right value, set the Failsafe switch action to Stage 2, set the Stage 2 Failsafe Procedure to Land, and adjust the Throttle value used while landing until the craft hovers or descends slowly.  Then set GPS Rescue Throttle Hover, and the Stage 1 Channel Fallback value for Throttle to this value."
+        "message": "To find the right value, set the Failsafe switch action to Stage 2, set the Stage 2 Failsafe Procedure to Land, and adjust the Throttle value used while landing until the aircraft hovers or descends slowly.  Then set GPS Rescue Throttle Hover, and the Stage 1 Channel Fallback value for Throttle to this value."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Minimum distance to home (meters)"
@@ -4806,7 +4806,7 @@
         "message": "Allow arming without fix - <span class=\"message-negative\">WARNING: No fix = disarm on failsafe!</span>"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
-        "message": "Not recommended. Permits arming without a Home point being set, but the craft will disarm and crash with a true Rx loss failsafe.  If tested with a switch, there is a short Do Nothing period before the disarm."
+        "message": "Not recommended. Permits arming without a Home point being set, but the aircraft will disarm and crash with a true Rx loss failsafe.  If tested with a switch, there is a short Do Nothing period before the disarm."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sanity checks"
@@ -4833,7 +4833,7 @@
         "message": "Failsafe Switch Action"
     },
     "failsafeSwitchModeHelp": {
-        "message": "This option determines what happens when Failsafe is activated through AUX switch:<br/><strong>Stage 1</strong> activates Stage 1 failsafe. This is useful if you want to simulate the exact signal loss failsafe behavior.<br/><strong>Stage 2</strong> skips Stage 1 and activates the Stage 2 procedure immediately<br/><strong>Kill</strong> disarms instantly (your craft will crash)"
+        "message": "This option determines what happens when Failsafe is activated through AUX switch:<br/><strong>Stage 1</strong> activates Stage 1 failsafe. This is useful if you want to simulate the exact signal loss failsafe behavior.<br/><strong>Stage 2</strong> skips Stage 1 and activates the Stage 2 procedure immediately<br/><strong>Kill</strong> disarms instantly (your aircraft will crash)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Stage 1"
@@ -4905,7 +4905,7 @@
         "message": "Calibration Manager"
     },
     "powerCalibrationManagerHelp": {
-        "message": "To calibrate, use a multimeter to measure the actual voltage / current draw on your craft (with a battery plugged in), and enter the values below. Then, with the same battery still plugged in, click [Calibrate]."
+        "message": "To calibrate, use a multimeter to measure the actual voltage / current draw on your aircraft (with a battery plugged in), and enter the values below. Then, with the same battery still plugged in, click [Calibrate]."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Note:</strong> Before calibrating the scale make sure that divider and multiplier for voltage and offset for amperage is set properly.<br>Leaving the values at 0 will not apply calibration.</br><strong>Remember to remove propellers before plugging in a battery!</strong>"
@@ -5264,7 +5264,7 @@
         "message": "VTX Settings"
     },
     "osdSetupCraftNameTitle": {
-        "message": "Craft Name"
+        "message": "Aircraft Name"
     },
     "osdSetupWarningsTitle": {
         "message": "Warnings"
@@ -5563,11 +5563,11 @@
         "message": "Best 3 GPS lap times"
     },
     "osdTextElementCraftName": {
-        "message": "Craft name",
+        "message": "Aircraft name",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Craft name as set in the Configuration tab.</br>Can also be set via the \"craft_name\" CLI variable."
+        "message": "Aircraft name as set in the Configuration tab.</br>Can also be set via the \"aircraft_name\" CLI variable."
     },
     "osdTextElementAltitude": {
         "message": "Altitude",
@@ -5598,14 +5598,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOnTime": {
-        "message": "Total time the craft has been powered on"
+        "message": "Total time the aircraft has been powered on"
     },
     "osdTextElementFlyTime": {
         "message": "Fly time",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlyTime": {
-        "message": "Total time the craft has been armed in the current power cycle (flashes when above alarm threshold)"
+        "message": "Total time the aircraft has been armed in the current power cycle (flashes when above alarm threshold)"
     },
     "osdTextElementFlyMode": {
         "message": "Fly mode",
@@ -5763,7 +5763,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementArmedTime": {
-        "message": "Time since the craft was last armed"
+        "message": "Time since the aircraft was last armed"
     },
     "osdTextElementHomeDirection": {
         "message": "Home direction",
@@ -5875,7 +5875,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
-        "message": "Shows how much G-Force the craft is experiencing"
+        "message": "Shows how much G-Force the aircraft is experiencing"
     },
     "osdTextElementMotorDiag": {
         "message": "Motor diagnostics",
@@ -6106,14 +6106,14 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatFlyTime": {
-        "message": "Total time craft has been armed on current power cycle"
+        "message": "Total time aircraft has been armed on current power cycle"
     },
     "osdTextStatArmedTime": {
         "message": "Fly time last armed",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatArmedTime": {
-        "message": "Time since craft was last armed"
+        "message": "Time since aircraft was last armed"
     },
     "osdTextStatMaxDistance": {
         "message": "Home distance maximum",
@@ -6162,7 +6162,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatGForce": {
-        "message": "Max G-Force experienced by the craft"
+        "message": "Max G-Force experienced by the aircraft"
     },
     "osdTextStatEscTemperature": {
         "message": "ESC temperature maximum",
@@ -6297,15 +6297,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
       "message": "Total armed time",
-      "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+      "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
       "message": "Last armed time",
-      "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+      "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
       "message": "On/Armed time",
-      "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+      "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
       "message": "Precision:"
@@ -6661,7 +6661,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "When enabled, the VTX enters in a very low power mode to let the craft be on at the bench without disturbing other pilots. Usually the range of this mode is less than 5m.<br /><br />NOTE: Some protocols, like SmartAudio, can't enable Pit Mode via software after power-up.",
+        "message": "When enabled, the VTX enters in a very low power mode to let the aircraft be on at the bench without disturbing other pilots. Usually the range of this mode is less than 5m.<br /><br />NOTE: Some protocols, like SmartAudio, can't enable Pit Mode via software after power-up.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -6869,7 +6869,7 @@
         "message": "Maximum ARM Angle [degrees]"
     },
     "configurationSmallAngleHelp": {
-        "message": "Craft will not ARM if tilted more than specified number of degrees. Only applies if accelerometer is enabled. Setting to 180 will effectivly disable check"
+        "message": "Aircraft will not ARM if tilted more than specified number of degrees. Only applies if accelerometer is enabled. Setting to 180 will effectivly disable check"
     },
     "configurationBatteryVoltage": {
         "message": "Battery Voltage"
@@ -6954,10 +6954,10 @@
         "message": "Personalization"
     },
     "craftName": {
-        "message": "Craft name"
+        "message": "Aircraft name"
     },
     "configurationCraftNameHelp": {
-        "message": "Can be show in logs, backup file names and the OSD.</br>Can be set via the <b>craft_name</b> CLI variable."
+        "message": "Can be show in logs, backup file names and the OSD.</br>Can be set via the <b>aircraft_name</b> CLI variable."
     },
     "configurationPilotName": {
         "message": "Pilot name"
@@ -7367,7 +7367,7 @@
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">WARNING!</span> Using third party preset sources could be dangerous.<br/>Make sure you add and use only trusted sources. Malicious or bad preset sources will break your craft configuration and can potentially harm your devices.",
+        "message": "<span class=\"message-negative\">WARNING!</span> Using third party preset sources could be dangerous.<br/>Make sure you add and use only trusted sources. Malicious or bad preset sources will break your aircraft configuration and can potentially harm your devices.",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
