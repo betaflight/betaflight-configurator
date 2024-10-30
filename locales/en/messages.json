@@ -4307,7 +4307,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Increase the Tracking slider to sharpen the crafts response to your commands and also outside influences; avoiding the nose of the craft going off course in any condition.<br /><br />Lower ‘Tracking’ values will have lots of bobbles and will go off course on stick moves and in prop wash. High ‘Tracking’ may result in oscillation and fast bounceback (hard to see, but you canhear). Excessive Tracking may result in oscillations and hot motors.",
+        "message": "Increase the Tracking slider to sharpen the craft's response to your commands and also outside influences; avoiding the nose of the craft going off course in any condition.<br /><br />Lower ‘Tracking’ values will have lots of bobbles and will go off course on stick moves and in prop wash. High ‘Tracking’ may result in oscillation and fast bounceback (hard to see, but you canhear). Excessive Tracking may result in oscillations and hot motors.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
