@@ -119,6 +119,9 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_RACE_PRO:               16419,
     USE_SERVOS:                 16420,
     USE_VTX:                    16421,
+    USE_ALTHOLD_MODE:           16422,
+    USE_SOFTSERIAL:             16423,
+    USE_WING:                   16424,
 };
 
 const FC = {
