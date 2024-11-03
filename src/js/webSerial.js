@@ -142,7 +142,7 @@ class WebSerial extends EventTarget {
             this.bytesSent = 0;
             this.failed = 0;
             this.openRequested = false;
-            if(this.port.addEventListener){
+            if (this.port.addEventListener) {
                 this.port.addEventListener("disconnect", this.handleDisconnect.bind(this));
             }
             this.addEventListener("receive", this.handleReceiveBytes);
