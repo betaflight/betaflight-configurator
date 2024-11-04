@@ -2189,10 +2189,6 @@
         "message": "Este modo de voo aumenta P e I durante os movementos rápidos do acelerador para mellorar o seguimento do stick e evitar a deriva do morro nos cambios rápidos do acelerador",
         "description": "Help text to ANTIGRAVITY mode"
     },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "No modo mesturador estándar, cando se calcula o balance, o cabeceo e o guiñada e satura un motor, tódolos motores reduciranse por igual. Cando un motor vai por debaixo do mínimo, córtase. Digamos que tivese o acelerador xusto por encima do mínimo e intentou un roll rápido; xa que dous motores non poden baixar, obtén esencialmente a metade da potencia (a metade da súa ganancia PID). Se as súas entradas solicitasen máis dun 100% de diferenza entre os motores altos e baixos, os motores baixos quedarían cortados, rompendo a simetría do equilibrio do motor reducindo a ganancia de forma desigual",
-        "description": "Help text to AIRMODE mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Activar pitidos - útil para localizar un avión accidentado",
         "description": "Help text to BEEPER mode"

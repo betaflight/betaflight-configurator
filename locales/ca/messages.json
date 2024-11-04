@@ -1248,6 +1248,9 @@
     "featureAIRMODE": {
         "message": "Activa Airmode permanentment"
     },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+    },
     "featureRX_SPI": {
         "message": "SPI Rx (p. ex., Rx integrat)"
     },
@@ -2325,8 +2328,12 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "En el mode de mesclador estàndard, quan es calculen el roll, el pitch i el yaw i saturen un motor, tots els motors es reduiran per igual. Quan un motor baixa per sota del mínim es talla. Diguem que teníeu l'accelerador just per sobre del mínim i vau intentar tirar un gir ràpid; com que dos motors no poden baixar, bàsicament obteniu la meitat de la potència (la meitat del vostre guany PID). Si les vostres entrades haurien demanat més d'una diferència del 100% entre els motors alts i baixos, els motors baixos es retallarien, trencant la simetria de l'equilibri del motor reduint de manera desigual el guany.",
+        "message": "AirMode permet mantindre l'estabilitat del quad a baixas revolucions. per més informació veure <ahref=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> a Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "El mode d'altitud és el mode manual no GPS més segur per als nous pilots. És com el mode estabilitzat, però a més bloqueja l'altitud del quad quan es deixen anar els sticks",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Habilita el bip: útil per localitzar un multicopter estavellat",

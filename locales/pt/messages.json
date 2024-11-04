@@ -1240,6 +1240,9 @@
     "featureAIRMODE": {
         "message": "Ativar permanentemente o Airmode"
     },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+    },
     "featureRX_SPI": {
         "message": "SPI Rx (ex: Rx embutido)"
     },
@@ -2317,8 +2320,12 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "No modo \/ mistura padrão, quando o roll, pitch e yaw são calculados e saturam um motor, todos os motores serão reduzidos igualmente. Quando um motor vai abaixo do mínimo, ele é cortado. Se tiver o acelerador logo acima do mínimo e tentou puxar uma rolagem rápidafazer um roll rápido - uma vez que 2 motores não podem ir mais abaixo, essencialmente terá metada da potência (metade do ganho do PID). Se os seus inputs pedirem mais do que a diferença de 100% entre motores altos e baixos, os motores baixos serão cortados, quebrando a simetria do equilíbrio motor através da redução desigual o ganho",
+        "message": "AirMode permite manter a estabilidade do drone com acelerador baixo. Para mais informação por favor veja <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> em Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "Modo Altitude é o modo não-GPS mais seguro para iniciantes. É como o Modo Estabilizado mas adicionalmente bloqueia a altitude do veículo quando os sticks são largados",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Ativar o beeper - útil para localizar uma aeronave caída",

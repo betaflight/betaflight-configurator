@@ -677,7 +677,7 @@
         "message": "Informacja o Open Source \/ Darowiznach"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> jest oprogramowaniem obsługującym kontroler lotu, udostępnianym za darmo na zasadach licencji <strong>open source<\/strong> wszystkim użytkownikom oraz <strong>bez udzielania gwarancji<\/strong>.<\/p><p>Jeżeli według ciebie oprogramowanie Betaflight oraz Betaflight Configurator są przydatnymi narzędziami, rozważ <strong>wsparcie<\/strong> ich rozwoju wpłacając darowiznę.<\/p>"
+        "message": "<p><strong>Betaflight<\/strong> to oprogramowanie kontrolera lotu , udostępniane za darmo na zasadach licencji <strong>open source<\/strong> i jest dostępne <strong>za darmo<\/strong> dla wszystkich użytkowników.<\/p><p>Jeśli używasz oprogramowania Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie<\/strong> jego rozwoju poprzez darowiznę.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym subskrybentem $t(patreonLink.message).<\/p>"
@@ -1243,6 +1243,9 @@
     },
     "featureAIRMODE": {
         "message": "Uruchom Airmode na stałe."
+    },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (np. wbudowany Rx)"
@@ -1950,7 +1953,7 @@
         "message": "Maksymalny limit \"Rate\""
     },
     "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "Tnie do przodu, gdy drążki poruszają się w kierunku maksymalnego wychylenia, aby zminimalizować przeregulowanie na początku fikołków lub beczek.<br><br>Nic nie robi na końcu fikołka lub beczki. Niższe wartości powodują, że tłumienie zaczyna się wcześniej.<br><br>Zwykle ta wartość nie wymaga modyfikacji. Najlepsza jest najwyższa wartość zgodna z dopuszczalnym przeregulowaniem na początku fikołka lub beczki."
+        "message": "Tnie do przodu, gdy drążki poruszają się w kierunku maksymalnego wychylenia, aby zminimalizować przeregulowanie na początku fikołków lub beczek.<br><br>Nic nie robi na końcu fikołka lub beczki. Niższe wartości powodują, że tłumienie zaczyna się wcześniej.<br><br>Zwykle ta wartość nie wymaga modyfikacji. Najlepsza jest najwyższa wartość zgodna z dopuszczalnym przeregulowaniem na początku fikołka lub be"
     },
     "pidTuningFeedforwardTransition": {
         "message": "Przejście"
@@ -2321,8 +2324,12 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "W standardowym trybie miksera \/, gdy przechylenie, nachylenie i odchylenie zostaną obliczone i nasycą silnik, wszystkie silniki zostaną jednakowo zredukowane. Kiedy silnik spada poniżej minimum, zostaje odcięty. Powiedzmy, że miałeś przepustnicę nieco powyżej minimum i próbowałeś szybko przechylić - ponieważ dwa silniki nie mogą zejść niżej, zasadniczo uzyskujesz połowę mocy (połowę wzmocnienia PID). Jeśli twoje dane wejściowe wymagałyby więcej niż 100% różnicy między wysokimi i niskimi silnikami, niskie silniki zostałyby obcięte, łamiąc symetrię równowagi silnika poprzez nierównomierne zmniejszenie wzmocnienia",
+        "message": "AirMode pozwala na utrzymanie stabilności drona przy niskiej przepustnicy. Więcej informacji znajdziesz w <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> na Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "Tryb utrzymywania wysokości jest jednym z bezpieczniejszych trybów lotu, dla nowych osób i różni się on od trybu GPS. Działa podobnie jak tryb stabilizowany Angle, ale dodatkowo blokuje wysokość jednostki latającej po zwolnieniu drążków",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionej jednostki latającej",
@@ -4522,7 +4529,7 @@
         "message": "Kontrola całkowita"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "Ta funkcja rozwiązuje niektóre podstawowe problemy związane z $t(pidTuningItermRotation.message) i może w pewnym momencie ją zastąpić. Kumuluje bezwzględny błąd żyroskopu we współrzędnych poczwórnych i miesza korekcję proporcjonalną z wartością zadaną. <br><br>AirMode musi być włączony i $t(pidTuningItermRelax.message) (dla $t(pidTuningOptionRP.message)). W połączeniu z $t(pidTuningIntegratedYaw.message), możesz ustawić $t(pidTuningItermRelax.message) włączone dla $t(pidTuningOptionRPY.message)."
+        "message": "Ta funkcja rozwiązuje niektóre podstawowe problemy z $t(pidTuningItermRotation.message) i powinna w pewnym momencie być zmieniona. Ta funkcja gromadzi bezwzględny błąd żyroskopowy we współrzędnych maszyny i dodaje poprawkę do wyniku. Aby to działało, musisz włączyć AirMode i $t(pidTuningItermRelax.message) (dla $t(pidTuningOptionRP.message)). Jeśli łączysz tę funkcję z $t(pidTuningIntegratedYaw.message), możesz ustawić $t(pidTuningItermRelax.message) włączone dla $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Wzmocnienie przepustnicy"
@@ -6888,7 +6895,7 @@
         "message": "Zewnętrzne urządzenie rejestrujące"
     },
     "onboardLoggingFlashLogger": {
-        "message": "Wbudowany układ flash na dane"
+        "message": "Wbudowany układ pamięci na dane"
     },
     "onboardLoggingEraseInProgress": {
         "message": "Usuwanie w toku, proszę czekać..."
