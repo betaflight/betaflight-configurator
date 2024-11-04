@@ -31,6 +31,22 @@
     "dontShowAgain": {
         "message": "Não exibir novamente"
     },
+    "pwaOnNeedRefreshTitle": {
+        "message": "O aplicativo precisa ser atualizado",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "Você precisa atualizar a página para ter acesso às atualizações recentes. Fazendo isso agora, a página será recarregada, com perda das informações não salvas e interrompendo operações em progresso. <br><br>Você quer atualizar a página agora? Você também pode rejeitar essa mensagem e atualizar manualmente em outra oportunidade.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "O aplicativo está pronto para ser usado offline",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
+    },
+    "pwaOnOffilenReadyText": {
+        "message": "Você pode instalá-lo como um aplicativo autônomo no seu dispositivo, se quiser. Pesquise a opção na barra de endereços do seu navegador.",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
         "message": "Seu hardware não suporta esta operação."
     },
@@ -49,12 +65,36 @@
     "disconnect": {
         "message": "Desconectar"
     },
+    "portsSelectNoSelection": {
+        "message": "Selecione seu dispositivo",
+        "description": "Text for the option to select a device in the port selection dropdown"
+    },
     "portsSelectManual": {
         "message": "Selecionar"
+    },
+    "portsSelectNone": {
+        "message": "Nenhuma conexão disponível"
     },
     "portsSelectVirtual": {
         "message": "Modo Virtual (Experimental)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- Não consigo encontrar meu dispositivo USB ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- Não consigo encontrar meu dispositivo USB---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "bluetoothConnected": {
+        "message": "Conectado ao dispositivo Bluetooth: $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "Tipo de conexão Bluetooth: $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "Erro de Bluetooth: $1"
     },
     "virtualMSPVersion": {
         "message": "Versão do Firmware Virtual"
@@ -95,6 +135,10 @@
     "rememberLastTab": {
         "message": "Continuar de onde parou ao conectar"
     },
+    "meteredConnection": {
+        "message": "Desativar o acesso à internet (para conexões limitadas ou lentas)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
+    },
     "analyticsOptOut": {
         "message": "Não participar da coleta anônima de dados estatísticos"
     },
@@ -105,6 +149,10 @@
     "showAllSerialDevices": {
         "message": "Mostrar todos os dispositivos de comunicação serial (para fabricantes ou desenvolvimento)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "showManualMode": {
+        "message": "Ativar modo de conexão virtual",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "Ativar modo de conexão virtual",
@@ -119,6 +167,9 @@
     "language_choice_message": {
         "message": "Alterar idioma:",
         "description": "Try and be brief"
+    },
+    "userLanguageSelect": {
+        "message": "Selecione a linguagem padrão"
     },
     "language_default": {
         "message": "Padrão do sistema"
@@ -181,6 +232,9 @@
     },
     "configuratorUpdateNotice": {
         "message": "Você está utilizando uma versão antiga do <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "configuratorUpdateHelp": {
+        "message": "Quando a internet estiver disponível, o app deverá solicitar atualizações automaticamente disponíveis."
     },
     "configuratorUpdateWebsite": {
         "message": "Ir para a Página Web do lançamento"
@@ -283,6 +337,10 @@
     },
     "logActionShow": {
         "message": "Exibir Histórico"
+    },
+    "fileSystemPickerFiles": {
+        "message": "Arquivos {{typeof}}",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
         "message": "Erro na conexão serial: erro no encapsulamento de dados"
@@ -860,6 +918,10 @@
         "message": "Não foi detectado um sinal válido do receptor",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
+        "message": "Seu receptor se recuperou de um Failsafe, mas o switch para Armar está ativo",
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "O switch do Failsafe foi ativado",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -1018,6 +1080,18 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Compilação Local - sem dados da nuvem"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Tipo de compilação"
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "Compilação local"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "Compilação em nuvem"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "Nenhuma informação de compilação disponível"
+    },
     "initialSetupNotOnline": {
         "message": "Servidor indisponível"
     },
@@ -1047,6 +1121,34 @@
     },
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
+    },
+    "initialSetupNetworkInfo": {
+        "message": "Informações da Rede"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "Mostra o status da conexão de rede",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "Status:"
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "Online"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "Desconectado"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "Lento"
+    },
+    "initialSetupNetworkType": {
+        "message": "Tipo:"
+    },
+    "initialSetupNetworkRtt": {
+        "message": "RTT:"
+    },
+    "initialSetupNetworkDownlink": {
+        "message": "Downlink:"
     },
     "featureNone": {
         "message": "&lt;Selecione&gt;"
@@ -1137,6 +1239,9 @@
     },
     "featureAIRMODE": {
         "message": "Ativar permanentemente o Airmode"
+    },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (Rx embutido)"
@@ -1269,6 +1374,21 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Esta opção indica à controladora de voo que a rotação dos motores é invertida e que as hélices serão montadas de acordo com isso. <strong>Atenção:<\/strong> Esta opção não inverte o sentido do motor; Para isto, use a ferramenta de configuração de seu ESC ou altere a ordem dos cabos ESC-motor. Além disso, com as hélices removidas, certifique-se que os motores estão girando nas direções mostradas no diagrama acima antes de tentar armar."
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "Desarmar motores após delay [segundos]"
+    },
+    "configurationAutoDisarmDelayHelp": {
+        "message": "Desarmar os motores após definir [segundos] de espera (Requer a funcionalidade MOTOR_STOP)"
+    },
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibrar giroscópio na primeira vez que armar"
+    },
+    "configurationMotorIdle": {
+        "message": "Motor ocioso (%)"
+    },
+    "configurationMotorIdleHelp": {
+        "message": "Fixa a velocidade ociosa dos motores enquanto armado e acelerador 'baixo' (menor que `min_check`).<br\/><br\/><strong class=\"message-positive\">Modo dinâmico ocioso desabilitado<\/strong><br\/><br\/>Cada motor recebe o `min_command` mais o percentual ocioso.<br\/><br\/><b>Ocioso muito baixo<\/b>: os motores podem não ligar confiavelmente, girar devagar ou dessincronizar em giros e rolos.<br\/><br\/><b>Ocioso muito alto<\/b>: a aeronave pode parecer flutuante demais'.<br\/><br\/><b>Nota<\/b>: ESC analógicos devem ser calibrados para que os motores liguem logo acima do limite de `min_command`.<br\/><br\/><strong class=\"message-positive\">Modo ocioso dinâmico habilitado<\/strong><br\/><br\/>Ao armar, o valor normal do modo ocioso é enviado a cada motor até que eles comecem a girar.<br\/><br\/>Uma vez que estejam girando, o sinal do motor é ajustado para obter a rotação-alvo.<br\/><br\/>Antes de decolar, o sinal do motor é limitado pelo percentual de Motor Ocioso e a rotação-alvo pode não ser atingida. Isso é normal. Quando o acelerador é elevadoa acima do limite percentual `airmode_motor_start_throttle` percentage, o limite é muito maior e a rotação alvo deve ser atingida em modo ocioso.<br\/><br\/><b>Ocioso muito baixo<\/b>: os motores podem não ligar confiavelmente<br\/><br\/><b>Ocioso muito alto<\/b>: decolagem com muito balanço (somente se o modo ocioso dinâmico estiver alto também)<br\/><br\/><b>Nota<\/b>: Modo ocioso dinâmico requer DShot e Telemetria DShot."
     },
     "configurationMotorPoles": {
         "message": "Polaridade dos motores",
@@ -1468,6 +1588,12 @@
     "configurationSerialRX": {
         "message": "Fornecedor do receptor Serial"
     },
+    "someRXTypesDisabled": {
+        "message": "Alguns provedores de receptores não são suportados pela atual configuração de compilação."
+    },
+    "serialRXNotSupported": {
+        "message": "O provedor de receptor selecionado não é suportado pela configuração de compilação atual. Selecione outro Provedor ou Atualize o Firmware com o Protocolo de Rádio correto selecionado na Configuração de Construção."
+    },
     "configurationSpiRX": {
         "message": "Fornecedor do receptor SPI BUS"
     },
@@ -1651,16 +1777,36 @@
     "pidTuningAntiGravityHelp": {
         "message": "A Anti Gravidade aumenta o termo I (e na versão 4.3, também o termo P) durante e um pouco depois de mudanças rápidas no acelerador, aumentando a estabilidade de atitude durante uma aceleração rápida.<br><br>Valores de ganho maiores podem melhorar a estabilidade em aeronaves com pouca autoridade ou naquelas que tem seu centro de gravidade deslocado."
     },
+    "pidTuningDerivative": {
+        "message": "<b>D<\/b>erivativo",
+        "description": "Table header of the Derivative feature in the PIDs tab"
+    },
+    "pidTuningDMaxFeatureTitle": {
+        "message": "Amortecedor Dinâmico \/ Configurações de D Máximo",
+        "description": "Title for the options panel for the D Max feature"
+    },
     "pidTuningDMaxSettingTitle": {
         "message": "Amortecedor<br>Dinâmico",
         "description": "Sidebar title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxGain": {
+        "message": "Ganho",
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
         "message": "O ganho D Max aumenta a sensibilidade do sistema que aumenta o D quando a aeronave vira rapidamente ou treme devido a propwash.<br><br>Valores de ganho maiores aumentam o D mais rapidamente, elevando o D até ao D Max mais rapidamente. Valores de 40 ou mesmo 50 podem funcionar bem para construções de Freestyle.<br><br>Valores baixos não aumentarão o D para o DMax exceto em movimentos realmente rápidos, e podem ser mais adequados a configurações de corrida através da minimização do atraso do D.<br><br>AVISO: Ganho, ou Avanço, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá manter o D no valor base.",
         "description": "D Max feature helpicon message"
     },
+    "pidTuningDMaxAdvance": {
+        "message": "Avanço",
+        "description": "Advance of the D Max feature"
+    },
     "pidTuningDMaxAdvanceHelp": {
         "message": "O Avanço D Max adiciona sensibilidade ao fator de Ganho quando os sticks são movidos rapidamente.<br><br>O avanço não responde ao giroscópio ou ao efeito de propwash. Age mais cedo do que o fator de Ganho e às vezes é útil para aeronaves com pouca autoridade que tendem a ter atraso no início de um movimento.<br><br>Geralmente é melhor deixar no zero.<br><br>AVISO: Ambos o Avanço, ou o Ganho, devem ser definidos acima de cerca de 20 ou o D não aumentará como deveria. Definir ambos para zero irá manter o D no valor de base.",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMaxFeatureHelp": {
+        "message": "D Max aumenta o D durante movimentos mais rápidos do gyro e\/ou dos sticks.<br><br>O fator 'Ganho' aumenta o D quando o quad vira rapidamente ou se está sofrendo os efeitos de propwash. Geralmente, apenas 'Ganho' é necessário. <br><br>O fator 'Avanço' aumenta o D na direção de D Max durante movimentos dos sticks. Normalmente não é necessário e deve ser definido como zero. Avanço pode ser útil para aeronaves com pouca autoridade que tendem a oscilar muito após movimentos rápidos.<br><br>Valores maiores de Ganho (por exemplo, 40) podem ser mais adequados para o estilo livre, aumentando o D mais rapidamente.<br><br>AVISO: Um dos valores de Ganho ou Avanço deve ser definido acima de 20 ou o D não aumentará como deveria. Definir para zero irá manter o D no valor base.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
@@ -1869,6 +2015,12 @@
     "pidTuningTPA": {
         "message": "TPA"
     },
+    "pidTuningTPARate": {
+        "message": "Taxa de TPA (%)"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "Ponto de Interrupção TPA (milissegundos)"
+    },
     "pidTuningTPAPD": {
         "message": "PD"
     },
@@ -1987,6 +2139,15 @@
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modo do Slider de Ajuste dos PID<\/strong><br><br>O modos podem ser:<br><br>&bull; DESLIGADO - sem sliders, insira os valores manualmente<br>&bull; RP - os sliders ajustam somente o Roll e o Pitch, digite os valores do Yaw manualmente<br>&bull; RPY - os sliders ajustam todos os valores do PID<br><br><span class=\"message-negative\"><b>Aviso:<\/b><\/span>Alterar do modo RP para RPY irá substituir as configurações do Yaw com os padrões do firmware."
+    },
+    "receiverHelpModelId": {
+        "message": "Se você definir o Model Match abaixo para um número diferente de 255, você pode especificar o número de receptor na página de configuração do modelo OpenTX\/EdgeTX e ativar o modelo de Correspondência no script LUA ELRS ELRS para esse modelo. A correspondência de modelos é entre 0 e 63 inclusivo.<br \/>Consulte a documentação de ELRS para obter mais informações."
+    },
+    "receiverModelId": {
+        "message": "ID de Correspondência Modelo"
+    },
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Sempre confira se seu Failsafe funciona adequadamente!<\/a><\/strong><\/b> As configurações estão na Aba Failsafe que requer o Modo Expert.<br> &#8226; <b>Use o firmware mais atualizado para o Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Desabilite o filtro ADC de hardware<\/a><\/strong> no Transmissor se estiver usando OpenTx ou EdgeTX.<br>Configuração Básica: Configure o 'Receptor' corretamente. Escolha o 'Mapa de Canal' certo para seu rádio. Confirme que rolar, picar e outros gráficos em barra movem corretamente. Ajuste o limite de canal e a faixa do transimissor para ~1000 a ~2000, e o ponto médio para 1500. Para mais informações, leia a <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">documentação<\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "MEIO do Acelerador"
@@ -2159,8 +2320,12 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "No padrão do mixer \/ modo, quando o roll, pitch e yaw são calculados e saturam um motor, todos os motores serão reduzidos igualmente. Quando um motor fica mais lentro do que o mínimo, ele é cortado. Digamos que você esteja com o acelerador um pouco acima do mínimo e então tenta fazer uma rolagem rápida - já que dois dos motores não podem ficar mais lentos, você essencialmente obtém metade da potência (metade do seu ganho de PID). Se os movimentos precisam de mais de 100% de diferença entre os motores mais rapidos e os mais lentos, os motores lentos serão cortados, quebrando a simetria e equilíbrio do motor, reduzindo desigualmente o ganho",
+        "message": "O AirMode permite manter a estabilidade do drone com o acelerador baixo. Para mais informações, consulte o <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> em Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "Modo de altitude é o modo manual não-GPS mais seguro para novos pilotos. É como o modo estabilizado, mas além disso fixa a altitude do veículo quando os controles são liberados",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Ativar o beeper - útil para localizar uma aeronave caída",
@@ -2623,6 +2788,9 @@
     "gpsDistToHome": {
         "message": "Distância até a base:"
     },
+    "gpsPositionalDop": {
+        "message": "DOP Posicional:"
+    },
     "gpsSignalStrHead": {
         "message": "Força do sinal GPS"
     },
@@ -2632,6 +2800,9 @@
     },
     "gpsSignalStr": {
         "message": "Força do Sinal"
+    },
+    "gpsSignalLost": {
+        "message": "O ícone do GPS acende somente quando a conexão com o módulo GPS é confirmada.<br \/><br \/> Inicia com luz vermelha, tornando-se amarela quando houver a fixação da posição em 3D. <br \/><br \/> Se o ícone do GPS não acender, confira a fiação, configuração e se o módulo GPS está recebendo energia. <br \/><br \/> O comando 'status' no CLI oferece mais informações sobre a conexão com GPS."
     },
     "gpsSignalGnssId": {
         "message": "ID GNSS"
@@ -3000,6 +3171,12 @@
     "cliConfirmSnippetBtn": {
         "message": "Executar"
     },
+    "cliPanelTitle": {
+        "message": "Interface da linha de comando"
+    },
+    "cliCommand": {
+        "message": "Digite o comando aqui"
+    },
     "loggingNote": {
         "message": "Os dados serão gravados <span class=\"message-negative\">somente<\/span> nesta aba, sair da aba irá <span class=\"message-negative\">cancelar<\/span> o log e a aplicação irá retornar para seu estado <strong>\"configurador\"<\/strong> normal.<br \/> Você pode selecionar o período de atualização global, por motivos de performance, os dados serão escritos no arquivo de log a cada <strong>1<\/strong> segundo."
     },
@@ -3244,6 +3421,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Selecione o tipo de compilação para ver as placas disponíveis."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Selecione a sua placa ou use o Auto-detectar para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
+    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "O Configurador Betaflight tem suporte para instalar destinos unificados com as respectivas configurações da placa em um único passo.<br><br>O conceito de destinos unificados significa que o mesmo arquivo de firmware pode ser utilizados em todas as placas com o mesmo MCU.<br><br>O Betaflight 4.4 introduziou a <strong>compilação em nuvem<\/strong><br><br>Com a <strong>compilação em nuvem<\/strong> é necessário definir as opções de hardware presentes em sua aeronave.<br><br>Para fazer diferentes placas funcionarem com o mesmo firmware, um arquivo de configuração específico é enviado juntamente com o firmware quando ele é instalado.<br><br>Com a compilação local, é possivel definir um arquivo de configuração de destino unificado ou escolher uma placa antes de carregar o arquivo .hex do firmware.<br><br>Se encontrar problemas com o firmware, por favor considere entrar em nosso servidor do Discord ou abrir uma <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue no GitHub<\/a>."
     },
@@ -3255,6 +3435,9 @@
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Atualizar ao conectar"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Tentativa de instalar a placa automaticamente (acionada pela porta serial recém-detectada).<br \/><br \/><span class=\"message-negative\">AVISO<\/span>: esta função desativa as funções de detecção e backup."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Formatar chip"
@@ -3397,6 +3580,9 @@
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Nenhum firmware para carregar<\/b>"
     },
+    "firmwareFlasherNoTargetsLoaded": {
+        "message": "Nenhum alvo carregado"
+    },
     "firmwareFlasherNoValidPort": {
         "message": "<span class=\"message-negative\">Selecione uma porta serial válida<\/span>"
     },
@@ -3427,6 +3613,12 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Continuar"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Detectar"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "A ação Auto-detectar só funciona quando não está no modo DFU e quando a comunicação MSP está funcionando. Às vezes, você tem que tentar novamente algumas vezes ou reconectar o cabo USB. Primeiro tente conectar como normalmente faz, já que você poderia ter esquecido de aplicar os padrões personalizados. Após atualizar o firmware, reinicie o dispositivo e reconecte o cabo USB."
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Procurar informações na placa conectada para selecionar o firmware correto"
@@ -3553,6 +3745,18 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionGPSBarOption": {
+        "message": "Barra do GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryBarOption": {
+        "message": "Barra da Bateria",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitude",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Ring",
         "description": "One of the modes of the Led Strip"
@@ -3646,6 +3850,14 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: Localizado",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Padrão",
+        "description": "One of the modes in GPS Mode in Led Strip"
+    },
+    "ledStripModeGpsBar": {
+        "message": "Barra",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Conexões da faixa de LED",
@@ -4333,6 +4545,9 @@
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angulo máximo do Treinador Acro"
     },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Ajuda os pilotos a aprenderem a voar no modo acro, limitando o ângulo que a aeronave pode atingir. Valores válidos são entre 10 e 80 graus. O modo deve ser configurado para ser ativado com um interruptor na aba $t(tabAuxiliary.message)."
+    },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrado"
     },
@@ -4582,6 +4797,15 @@
     },
     "powerBatteryWarning": {
         "message": "Alerta de voltagem da célula"
+    },
+    "powerBatteryMinimumHelp": {
+        "message": "A tensão considerada criticamente baixa e acionará os avisos correspondentes. Aviso de 'ATERRISAR AGORA' no OSD e som audível se um beeper estiver instalado. Também ajuda no cálculo de contagem de células."
+    },
+    "powerBatteryMaximumHelp": {
+        "message": "A tensão de uma célula totalmente carregada. Ajuda com cálculo de contagem de células."
+    },
+    "powerBatteryWarningHelp": {
+        "message": "A tensão que é considerada baixa e acionará os avisos correspondentes. Aviso 'BATERlA' no OSD."
     },
     "powerCalibrationManagerButton": {
         "message": "Calibração"
@@ -5260,6 +5484,22 @@
     "osdDescElementAltitude": {
         "message": "Altitude atual (Piscar quando estiver acima do limite)"
     },
+    "osdTextElementAltitudeVariant1DecimalAGL": {
+        "message": "AGL com 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalAGL": {
+        "message": "AGL sem casas decimais",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariant1DecimalASL": {
+        "message": "ASL com 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimalASL": {
+        "message": "ASL sem casas decimais",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Tempo total ligado",
         "description": "One of the elements of the OSD"
@@ -5331,6 +5571,13 @@
     },
     "osdDescElementDebug": {
         "message": "Depuração de variáveis"
+    },
+    "osdTextElementDebug2": {
+        "message": "Depurar2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug2": {
+        "message": "Variáveis de depuração para depuração 4-7"
     },
     "osdTextElementPIDRoll": {
         "message": "Valores PID do Roll",
@@ -6007,6 +6254,10 @@
         "message": "Qualidade da conexão",
         "description": "Text of the link quality alarm"
     },
+    "osdTimerAlarmOptionRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "Text of the RSSI dBm alarm"
+    },
     "osdWarningTextArmingDisabled": {
         "message": "Armar desativado",
         "description": "One of the warnings that can be selected to be shown in the OSD"
@@ -6132,6 +6383,14 @@
     },
     "osdWarningRSNR": {
         "message": "Alerta quando o valor RSNR está abaixo da configuração do alarme"
+    },
+    "osdWarningTextLoad": {
+        "message": "CARREGAR",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLoad": {
+        "message": "Avisa se o processamento da CPU do controlador de voo está muito alto",
+        "description": "Description of one of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningTextUnknown": {
         "message": "$1 desconhecido"
@@ -6469,6 +6728,9 @@
     "configurationEscProtocol": {
         "message": "Protocolo do ESC\/Motor"
     },
+    "configurationEscProtocolHelp": {
+        "message": "Selecione o protocolo do seu motor. <br>Tenha a certeza de que o protocolo é suportado pelo seu ESC, esta informação deve estar disponível no site do fabricante."
+    },
     "configurationunsyndePwm": {
         "message": "Velocidade do PWM do Motor independente da velocidade do PID"
     },
@@ -6702,6 +6964,9 @@
     },
     "pidTuningRcRateActual": {
         "message": "Sensibilidade"
+    },
+    "pidTuningAcroCenterSensitiviy": {
+        "message": "Sensibilidade centro-máxima"
     },
     "dialogRatesTypeTitle": {
         "message": "Alterar tipo de taxas"
@@ -7051,8 +7316,20 @@
     "firmwareFlasherConfigurationFile": {
         "message": "Arquivo de Configuração:"
     },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Selecione o protocolo rádio que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas apenas uma opção pode ser selecionada."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Selecione o protocolo de telemetria que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas somente uma opção pode ser selecionada. Existem também alguns protocolos de telemetria que serão ativados independente da sua seleção, baseada no protocolo de rádio selecionado, por exemplo: CRSF."
+    },
     "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
         "message": "Incluído Automaticamente"
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "Selecione as opções genéricas que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa e vários itens podem ser selecionados. Também estão inclusos aqui algumas opções de correção, como por exemplo: AKK VTX."
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "Selecione o protocolo motor (ESC) que você gostaria de incluir nesta compilação. Note que isto é uma lista suspensa, mas apenas uma opção pode ser selecionada."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialmente útil para desenvolvedores, você pode selecionar um PR que foi mesclado com o SHA do commit, ou um PR que ainda vai ser mesclado digitando um # seguido do número do PR, por exemplo, #1234 (isso é um atalho para 'pull\/1234\/head')."
@@ -7076,5 +7353,32 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "Mostrar notificações para operações longas"
+    },
+    "notificationsDeniedTitle": {
+        "message": "Notificações Bloqueadas",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "Notificações estão bloqueadas. Por favor, habilite-as nas configurações do seu navegador. Caso contrário, você não receberá notificações sobre operações longas. Se você estiver usando o Chrome, você pode ativar as notificações clicando no ícone do bloqueio na barra de endereços e selecionando 'Configurações do Site'.",
+        "description": "Message when Notifications has no or denied permissions"
+    },
+    "flashEraseDoneNotification": {
+        "message": "A limpeza do arquivo de dados foi concluída",
+        "description": "Notification message when flash erase is done"
+    },
+    "flashDownloadDoneNotification": {
+        "message": "Logs de dados da instalação foram baixados",
+        "description": "Notification message when flash logs are done downloading"
+    },
+    "programmingSuccessfulNotification": {
+        "message": "FC foi programado com sucesso",
+        "description": "Notification message when programming is successful"
+    },
+    "programmingFailedNotification": {
+        "message": "Programação do controlador falhou",
+        "description": "Notification message when programming is unsuccessful"
     }
 }

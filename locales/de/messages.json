@@ -827,6 +827,10 @@
     "initialSetupInfoHead": {
         "message": "Systeminfo"
     },
+    "initialSetupInfoHeadHelp": {
+        "message": "FC-Flags für Disarming, Akku-Information, RSSI-Level und Sensor-Hardware anzeigen.",
+        "description": "Message that pops up to describe the System info section"
+    },
     "initialSensorInfoHead": {
         "message": "Sensor Info"
     },
@@ -1741,6 +1745,10 @@
     "pidTuningAntiGravityHelp": {
         "message": "Anti Gravity verstärkt I-Term (in 4.3) während und kurz nach schnellen Gaswechseln und erhöht so die Lagestabilität während des Gasgebens.<br><br>Höhere Werte (Gains) können die Stabilität auf Coptern träge oder schwerfällig sind oder mit einem versetzten Schwerpunkt besitzen, verbessern."
     },
+    "pidTuningDerivative": {
+        "message": "<b>D<\/b>erivativ",
+        "description": "Table header of the Derivative feature in the PIDs tab"
+    },
     "pidTuningDMaxFeatureTitle": {
         "message": "Dynamische Dämpfung \/ D Max Einstellungen",
         "description": "Title for the options panel for the D Max feature"
@@ -2164,6 +2172,22 @@
     "receiverResetRefreshRateTitle": {
         "message": "Zurücksetzen der Refresh-Rate"
     },
+    "receiverRowContainerRoll": {
+        "message": "Roll [A]:",
+        "description": "Roll label in signal graph"
+    },
+    "receiverRowContainerPitch": {
+        "message": "Pitch [E]:",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "Yaw [R]:",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "Gas [T]:",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "Speichern"
     },
@@ -2236,13 +2260,37 @@
         "message": "Ermöglicht die Umkehrung der Motorrichtung, um negativen Schub zu erzeugen und Rückenflug zu ermöglichen. Gashebel wird -100 bis +100 statt 0 bis 100",
         "description": "Help text to 3D mode"
     },
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Flugmodus, der die maximalen Neigungswinkel beim Fliegen im Acro-Modus begrenzt",
+        "description": "Help text to ACRO TRAINER mode"
+    },
     "auxiliaryHelpMode_ARM": {
         "message": "Aktiviert die Motoransteuerung und ermöglicht das Fliegen des Fluggeräts",
         "description": "Help text to ARM mode"
     },
+    "auxiliaryHelpMode_ANTIGRAVITY": {
+        "message": "Der Flugmodus erhöht P und I bei schnellen Gasbewegungen, um die Knüppelnachführung zu verbessern und ein Abdriften der Nase bei schnellen Gaswechseln zu vermeiden.",
+        "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "Der AirMode ermöglicht die Aufrechterhaltung der Stabilität des Copters bei geringer Gaszufuhr. Weitere Informationen finden Sie unter <a href=„https:\/\/betaflight.com\/docs\/development\/modes#airmode“ target=„_blank“ rel=„noopener noreferrer“>AirMode<\/a> auf Betaflight.com.",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_BEEPER": {
+        "message": "Piepser aktivieren - nützlich zum Auffinden eines abgestürzten Fluggerätes",
+        "description": "Help text to BEEPER mode"
+    },
+    "auxiliaryHelpMode_BEEPERMUTE": {
+        "message": "Piepser deaktivieren\/aktivieren, einschließlich der Modi für Warnung, Status und BEEPER",
+        "description": "Help text to BEEPERMUTE mode"
+    },
     "auxiliaryHelpMode_BEEPERON": {
         "message": "BEEPER AN Modus aktivieren",
         "description": "Help text to BEEPER ON mode"
+    },
+    "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
+        "message": "BEEP GPS SATELLITE COUNT Modus aktivieren",
+        "description": "Help text to BEEP GPS SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
         "message": "BlackBox Logging aktivieren",
@@ -2292,9 +2340,17 @@
         "message": "Anzahl der Beeps entspricht der Anzahl der gefundenen GPS-Satelliten",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "'GPS-Rettung' aktivieren, um den Copter an den Ort des letzten Armings fliegen zu lassen",
+        "description": "Help text to GPS RESCUE mode"
+    },
     "auxiliaryHelpMode_HEADADJ": {
         "message": "Heading Adjust - Setzt neuen Ursprungswert für den HEADFREE Modus",
         "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_LAUNCHCONTROL": {
+        "message": "Startassistenzsystem für Rennen",
+        "description": "Help text to LAUNCH CONTROL mode"
     },
     "auxiliaryHelpMode_LEDLOW": {
         "message": "LED STRIP Ausgabe ausschalten",
@@ -2328,6 +2384,10 @@
         "message": "Beim Arming wird auf die Betätigung dieses Schalters gewartet, bevor tatsächlich gearmed wird.",
         "description": "Help text to PREARM mode"
     },
+    "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
+        "message": "Stick-Eingabe aktivieren\/deaktivieren",
+        "description": "Help text to STICK COMMANDS DISABLE mode"
+    },
     "auxiliaryHelpMode_SERVO1": {
         "message": "SERVO1 umschalten",
         "description": "Help text to SERVO1 mode"
@@ -2355,6 +2415,18 @@
     "auxiliaryHelpMode_USER3": {
         "message": "Benutzerdefinierten USER3 umschalten. Steuert beliebige Ausgabe über PINIO",
         "description": "Help text to customized USER3 mode"
+    },
+    "auxiliaryHelpMode_USER4": {
+        "message": "Dient zum Umschalten des benutzerdefinierten USER4. Steuert einen beliebigen Ausgang über PINIO.",
+        "description": "Help text to customized USER4 mode"
+    },
+    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+        "message": "Deaktivieren der Kontrolle von VTX-Einstellungen durch das OSD",
+        "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPITMODE": {
+        "message": "Den Videosender (VTX) in den Boxen-Modus (pit mode) versetzen (geringe Ausgangsleistung, falls unterstützt)",
+        "description": "Help text to VTX PIT MODE mode"
     },
     "adjustmentsHelp": {
         "message": "Konfiguriere Schalter für Anpassungen. Für Details siehe den Abschnitt 'in-flight adjustments' im Handbuch. Die Änderungen durch die Anpassungsfunktionen werden nicht automatisch gespeichert."
@@ -2811,6 +2883,9 @@
     "motorsMaster": {
         "message": "Master"
     },
+    "motorsNotice": {
+        "message": "<strong>Motor Test Modus \/ Arming Anzeige:<\/strong><br \/><br \/><strong class=\"message-negative\">WARNUNG: schweres Verletzungsrisiko! Entferne alle Propeller!<\/strong><br \/><br \/><br \/><ul><li>&#x2022; Die Motoren drehen sich, wenn gearmed wird oder wenn die Schieber angehoben werden<\/li><li>&#x2022; Motor Testmodus bleibt aktiv, wenn Sie zu einem anderen Tab wechseln<\/li><li><li>&#x2022; Betätigen einer Taste wird die Motoren stoppen, allerdings nur im Motoren Tab<\/li><li>&#x2022; Trennung des USB-Kabels kann unter Umständen die Motoren nicht stoppen!<\/li><\/ul>"
+    },
     "motorsEnableControl": {
         "message": "<strong>Ich weiß, was ich tue<\/strong>, Propeller sind entfernt - Motorkontrolle und Arming aktivieren, Abhebeschutz deaktivieren."
     },
@@ -3204,6 +3279,10 @@
     "firmwareFlasherReleaseTarget": {
         "message": "Ziel:"
     },
+    "firmwareFlasherTargetWikiUrlInfo": {
+        "message": "Weitere Informationen über das Ziel (target) finden Sie im Betaflight-Wiki",
+        "description": "Link to Betaflight support for target"
+    },
     "firmwareFlasherReleaseMCU": {
         "message": "MCU:"
     },
@@ -3478,6 +3557,10 @@
     "firmwareFlasherRemindBackupTitle": {
         "message": "Einstellungen löschen",
         "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Das Flashen neuer Firmware wird alle Einstellungen löschen. Wir empfehlen dringend ein Backup zu erstellen, bevor du weitermachst.",
+        "description": "Warning message before actual flashing takes place"
     },
     "firmwareFlasherBackup": {
         "message": "Backup erstellen",
@@ -3844,7 +3927,7 @@
         "message": "Yaw \"Sprung\" Schutz"
     },
     "pidTuningYawJumpPreventionHelp": {
-        "message": "Verhindert das Springen am Ende von Yaw Manövern. Je höher der Wert desto stärker ist die Dämpfung"
+        "message": "Verhindert, dass das Fahrzeug am Ende von Yaw Bewegungen hochspringt. Eine höhere Zahl sorgt, für eine stärkere Dämpfung am Ende der Yaw Bewegungen (funktioniert wie das alte Yaw D, welches kein echtes D wie bei anderen Achsen war)."
     },
     "pidTuningRcExpoPower": {
         "message": "RC Expo Stärke"
@@ -4384,6 +4467,9 @@
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
     },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">ACHTUNG<\/span>: Wenn Sie diese Funktion aktivieren, müssen Sie die YAW PID entsprechend anpassen. Weitere Informationen <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier<\/a>"
+    },
     "pidTuningIntegratedYawHelp": {
         "message": "Der 'Integrierter Yaw' Wert integriert die Werte P, I und D und erlaubt Yaw den P, I, D etwas zu verändernt ähnlich wie wenn Du Pitch und Roll tunest.<br><br>I-Werte sind sehr wenig erforderlich, weil das integrierte P wie I wirkt und integrierte D-Werte wirken wie P.<br><br>HINWEIS: Integrierter Yaw erfordert die Verwendung von Absoluter Kontrolle, da I mit dem integrierten Yaw nicht benötigt wird."
     },
@@ -4411,6 +4497,9 @@
     "failsafeRxMaxUsecItem": {
         "message": "Maximale Länge"
     },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "Stufe 1 - Kanalrückfall-Einstellungen"
+    },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Im Fall eines Stage 1 Failsafe werden diese Einstellungen den AUX Kanälen zugewiesen. <strong>Hinweis:<\/strong> Werte werden im Abstand von 25us gesetzt, kleinere Einstellungen werden vernachlässigt."
     },
@@ -4437,6 +4526,9 @@
     },
     "failsafeDelayItem": {
         "message": "Zeitspanne in Failsafe Phase 1 nach Signalverlust [sekunden]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Legen Sie die Zeitspanne fest, in der die Failsafe-Stufe 1 nach einem Signalverlust aktiv ist. Wenn die Verzögerungszeit abläuft, ohne dass das Signal zurückkehrt, beginnt die Failsafe-Stufe 2"
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe Gas niedrig Verzögerung [seconds]"
@@ -4480,6 +4572,12 @@
     "failsafeGpsRescueInitialClimb": {
         "message": "Initialer Aufstieg (Meter)"
     },
+    "failsafeGpsRescueInitialClimbHelp": {
+        "message": "Die Entfernung, um welche der Copter über seine aktuelle Höhe ansteigt, wenn eine Rettung eingeleitet und der Höhenmodus auf AKTUELLE Höhe gesetzt ist; wird auch im MAX Höhenmodus hinzugefügt."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Höhe bei Rückkehr (Meter) - <strong>gilt nur im Feste Höhe Modus<\/strong>"
+    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Steigrate (Meter\/Sekunde)"
     },
@@ -4489,11 +4587,21 @@
     "failsafeGpsRescueItemAngle": {
         "message": "Maximaler Neigungswinkel"
     },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Höhere Maximalwinkel führen zu aggressiveren Rückkehren und höheren Vorwärtsgeschwindigkeiten. Kann für schwerere Fluggeräte mit hohem Luftwiderstand oder schwer zu kontrollierende Fluggeräte oder für den Einsatz bei stärkerem Wind nützlich sein. WARNUNG: Das Rettungsgas muss normalerweise erhöht werden, wenn der maximale Winkel erhöht wird! Andernfalls kann das Fluggerät an Höhe verlieren und abstürzen!"
+    },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Sink-Entfernung (meter)"
     },
     "failsafeGpsRescueItemDescendRate": {
         "message": "Sinkrate (Meter\/Sekunde)"
+    },
+    "failsafeGpsRescueDescendRateHelp": {
+        "message": "Die initiale Sinkrate beträgt das 3-fache dieses Wertes und verringert sich auf den 1-fachen Wert bei Erreichen der Landehöhe."
+    },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Wenn die Rettung zu nah am Aufstiegspunkt (\"Home\") aktiviert wird (also innerhalb dieses Mindestabstands), wird das Fluggerät sich weiter entfernen, bis der Mindestabstand erreicht ist, und dann das normale Rettungsverhalten starten.",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
     },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Gas min"
@@ -5055,7 +5163,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattVoltage": {
-        "message": "Aktuelle Batteriespannung (blinkt wenn unter dem Alarm-Schwellwert)"
+        "message": "Aktuelle Batteriespannung (blinkt, wenn unter dem Alarm-Schwellwert)"
     },
     "osdTextElementRssiValue": {
         "message": "RSSI-Wert",
@@ -6236,7 +6344,7 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
-        "message": "<span class=\"message-negative\">Achtung:<\/span> Der gewählte VTX-Typ unterstützt nicht die 'standard' Einstellung für die Bänder, einige deiner Bänder haben aber diese Einstellung. Klicke$t(vtxButtonSave.message)' um dies zu beheben.",
+        "message": "<span class=\"message-negative\">Achtung:<\/span> Der gewählte VTX-Typ unterstützt nicht die 'Standard' Einstellung für die Bänder, einige deiner Bänder haben aber diese Einstellung. Klicke$t(vtxButtonSave.message)', um dies zu beheben.",
         "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {

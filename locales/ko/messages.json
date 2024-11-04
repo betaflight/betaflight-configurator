@@ -1244,6 +1244,9 @@
     "featureAIRMODE": {
         "message": "에어모드 영구 사용"
     },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+    },
     "featureRX_SPI": {
         "message": "SPI Rx (예. 빌드인 Rx)"
     },
@@ -1384,6 +1387,12 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "첫번째 아밍시 자이로 교정"
+    },
+    "configurationMotorIdle": {
+        "message": "모터 공회전 (%)"
+    },
+    "configurationMotorIdleHelp": {
+        "message": "아밍하고 스로틀이 '낮은' 상태에서 모터의 공회전 속도를 설정합니다('min_check' 아래일 때).<br\/><br\/><strong class=\"message-positive\">다이나믹 아이들이 활성화되지 않음<\/strong><br\/><br\/>각 모터는 'min_command'에 모터 아이들 비율을 더하여 값을 얻습니다.<br\/><br\/><b>아이들이 너무 낮음<\/b>: 모터가 안정적으로 시동되지 않거나 느리게 회전하거나 플립 또는 롤로 디싱크할 수 있습니다.<br\/><br\/><b>아이들 너무 높음<\/b>: 기체가 '둥둥뜬다'고 느껴질 수 있습니다.<br\/><br\/><b>참고<\/b>: 아날로그 ESC는 모터가 'min_command' 바로 위에서 시작하도록 교정해야 합니다.<br\/><br\/><strong class=\"message-positive\">다이나믹 아이들 활성화<\/strong><br\/><br\/>아밍 시 각 모터가 회전할 때까지 '정상' 아이들 값이 전송됩니다.<br\/><br\/>회전하면 모터 신호가 목표 RPM에 도달하도록 조정됩니다.<br\/><br\/>이륙 전 모터 신호는 모터 아이들 비율로 제한되며 설정 RPM이 달성되지 않을 수 있습니다. 이는 괜찮습니다. 스로틀이 'airmode_motor_start_throttle' 비율 이상으로 상승하면 한계가 훨씬 높으며 아이들 시 설정 RPM이 달성되어야 합니다.<br\/><br\/><b>아이들 너무 낮음<\/b>: 모터가 안정적으로 시동되지 않을 수 있습니다<br\/><br\/><b>아이들 너무 높음<\/b>: 이륙 전 흔들림이 발생할 수 있습니다 (다이나믹 아이들도 높은 경우에만)<br\/><br\/><b>참고<\/b>: 다이나믹 아이들은 DShot 및 DShot 텔레메트리가 필요합니다."
     },
     "configurationMotorPoles": {
         "message": "모터 폴수",
@@ -2315,8 +2324,12 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "표준 믹서\/모드에서 롤, 피치 및 요가 계산되고 모터가 포화되면 모든 모터가 동일하게 감소합니다. 모터가 최저치 이하로 떨어지면 모터 출력이 잘립니다. 스로틀이 최저치를 약간 상회하고 빠른 롤을 당기려고 했다고 가정해 보십시오. 두 개의 모터가 더 이상 내려갈 수 없기 때문에 기본적으로 전력의 절반(PID 이득의 절반)을 얻을 수 있습니다. 입력에 하이 모터와 로우 모터 간의 차이가 100% 이상 필요한 경우 로우 모터가 잘리고 이득이 불균일하게 감소하여 모터 밸런스의 대칭이 깨집니다",
+        "message": "에어모드를 사용하면 낮은 스로틀에서도 드론의 안정성을 유지할 수 있습니다. 자세한 내용은 Betaflight.com에서 <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">에어모드<\/a>를 확인하세요.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "고도 모드는 신규 플라이어에게 가장 안전한 비GPS 수동 모드입니다. 안정화 모드와 비슷하지만 스틱이 풀리면 기체 고도가 추가로 잠깁니다",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "비프음 활성화 - 추락한 기체를 찾는 데 유용합니다",
