@@ -285,7 +285,7 @@ gps.initialize = async function (callback) {
                         if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
                             used = `<span class="colorToggle ready">${used}</span>`;
                         } else {
-                            used = `<span class="colorToggle ${usedColor}">${used}</span>`;
+                            used = `<span class="colorToggle">${used}</span>`;
                         }
 
                         rowContent += `<td style="text-align: left;  width: 17%;">${used}</td>
