@@ -265,15 +265,14 @@ gps.initialize = async function (callback) {
                         rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
                         rowContent += `<td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>`;
 
-                        let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
-                        let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
-                        let usedColor;
+                        const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
+                        const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
 
                         // Add color to the text
-                        usedColor = quality.startsWith(i18n.getMessage('gnssQualityFullyLocked')) ? 'ready' : quality.startsWith(i18n.getMessage('gnssQualityLocked')) ? 'locked' : 'low';
-                        const qualityHtml = `<span class="colorToggle ${usedColor}">${quality}</span>`;
+                        const qualityColor = quality.startsWith(i18n.getMessage('gnssQualityFullyLocked')) ? 'ready' : quality.startsWith(i18n.getMessage('gnssQualityLocked')) ? 'locked' : 'low';
+                        const qualityHtml = `<span class="colorToggle ${qualityColor}">${quality}</span>`;
 
-                        usedColor = used.startsWith(i18n.getMessage('gnssUsedUsed')) ? 'ready' : 'low';
+                        const usedColor = used.startsWith(i18n.getMessage('gnssUsedUsed')) ? 'ready' : 'low';
                         const usedHtml = `<span class="colorToggle ${usedColor}">${used}</span>`;
 
                         rowContent += `<td style="text-align: left;  width: 17%;">${usedHtml}</td>
