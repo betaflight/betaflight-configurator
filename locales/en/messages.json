@@ -6957,7 +6957,7 @@
         "message": "Aircraft name"
     },
     "configurationCraftNameHelp": {
-        "message": "Can be show in logs, backup file names and the OSD.</br>Can be set via the <b>aircraft_name</b> CLI variable."
+        "message": "Can be show in logs, backup file names and the OSD.</br>Can be set via the <b>craft_name</b> CLI variable."
     },
     "configurationPilotName": {
         "message": "Pilot name"
