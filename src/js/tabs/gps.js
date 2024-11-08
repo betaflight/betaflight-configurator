@@ -265,31 +265,18 @@ gps.initialize = async function (callback) {
                         rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
                         rowContent += `<td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>`;
 
-                        let quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
-                        let used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
-                        let usedColor = '';
+                        const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
+                        const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
 
                         // Add color to the text
-                        // 2nd column: no signal = red, unusable = red, searching = red, locked = yellow and fully locked = green
-                        if (quality.startsWith(i18n.getMessage('gnssQualityFullyLocked'))) {
-                            usedColor = 'locked';
-                            quality = `<span class="colorToggle ready">${quality}</span>`;
-                        } else if (quality.startsWith(i18n.getMessage('gnssQualityLocked'))) {
-                            usedColor = 'notReady';
-                            quality = `<span class="colorToggle locked">${quality}</span>`;
-                        } else {
-                            quality = `<span class="colorToggle">${quality}</span>`;
-                        }
+                        const qualityColor = quality.startsWith(i18n.getMessage('gnssQualityFullyLocked')) ? 'ready' : quality.startsWith(i18n.getMessage('gnssQualityLocked')) ? 'locked' : 'low';
+                        const qualityHtml = `<span class="colorToggle ${qualityColor}">${quality}</span>`;
 
-                        // 1st column: unused = red, used = green
-                        if (used.startsWith(i18n.getMessage('gnssUsedUsed'))) {
-                            used = `<span class="colorToggle ready">${used}</span>`;
-                        } else {
-                            used = `<span class="colorToggle ${usedColor}">${used}</span>`;
-                        }
+                        const usedColor = used.startsWith(i18n.getMessage('gnssUsedUsed')) ? 'ready' : 'low';
+                        const usedHtml = `<span class="colorToggle ${usedColor}">${used}</span>`;
 
-                        rowContent += `<td style="text-align: left;  width: 17%;">${used}</td>
-                                       <td style="text-align: left;  width: 33%;">${quality}</td>`;
+                        rowContent += `<td style="text-align: left;  width: 17%;">${usedHtml}</td>
+                                       <td style="text-align: left;  width: 33%;">${qualityHtml}</td>`;
                     }
                     eSsTable.append(`<tr>${rowContent}</tr>`);
                 }
