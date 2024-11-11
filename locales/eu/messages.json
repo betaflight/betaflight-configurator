@@ -394,9 +394,6 @@
     "reportProblemsDialogHeader": {
         "message": "Zure konfigurazioarekin <strong>lotutako arazo hauek<\/strong> atzeman dira:"
     },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu<\/strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
-    },
     "buildServerUsingCached": {
         "message": "$1 -rako aurrememorian dauden konpilazioen informazioa erabiltzen."
     },
@@ -429,9 +426,6 @@
     },
     "uniqueDeviceIdReceived": {
         "message": "Gailuaren ID bakarra: <strong>=x$1<\/strong>"
-    },
-    "craftNameReceived": {
-        "message": "Gailuaren izena:<strong>$1<\/strong>"
     },
     "armingDisabled": {
         "message": "<strong>Armatua desgaitua<\/strong>"
@@ -698,10 +692,6 @@
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle kanala oso altua dago",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "Aireontzia ez da nahiko zuzena",
-        "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
         "message": "Laster armatuta piztu ondoren",
@@ -980,17 +970,11 @@
     "configurationThrottleMinimum": {
         "message": "Throttle minimoa (ESCren balio txikiena armatuta dagoenean)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "Aireontzia armatuta eta throttle gutxieneko egoeran dagoenean ESCra bidaltzen duten balio 'inaktiboa' da. Handitu balioa abiadura gehiago lortzeko. Handitu balioa desinkronizazio kasuan ere!"
-    },
     "configurationThrottleMaximum": {
         "message": "Throttle maximoa (ESC gehienezko balioa armatuta dagoenean)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Gutxieneko komandoa (ESC balioa desarmatzen denean)"
-    },
-    "configurationThrottleMinimumCommandHelp": {
-        "message": "ESCri bidaltzen zaion balioa Aireontzia desarmatuta dagoenean. Ezarri motorra geldirik egoteko baliora(1000 ESC gehienentzat)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Mesedez, zure ESCetarako egokia den irteera protokoloa aukeratu. $t(escProtocolDisabledMessage.message)"
@@ -1006,9 +990,6 @@
     },
     "configurationDshotBeaconTone": {
         "message": "Balizaren tonua"
-    },
-    "configurationDshotBeaconHelp": {
-        "message": "Dshot balizak ESCak eta motorrak erabiltzen ditu soinua sortzeko. Horrek esan nahi du Dshot baliza ezin dela erabili motorrak biratzen ari direnean. Betaflight 3.4 eta hurrengoetan, Dshot baliza aktibo dagoen bitartean armatzen saiatzean, Dshot balizaren azken tonuaren ondoren 2 segundoko eten bat dago armatu aurretik. Hau egin behar da Dshot balizaren funtzionaltasunak armagabetzean bidaltzen diren Dshot komandoak oztopatzeko. <br\/><strong>Arreta:<\/strong> Dshot baliza korrontea igaroko denez, balizaren intentsitatea altua bada ere, motorra \/ elektrikoa gehiegi berotu edo kalteak eragin ditzake. Erabil ezazu BLHeli konfiguratzailea edo BLHeli kit-a balizaren indarra doitzeko eta probatzeko."
     },
     "configurationBeeper": {
         "message": "Beeper-en konfigurazioa"
@@ -1140,10 +1121,6 @@
     "configurationGPSHomeOnce": {
         "message": "Hasierako puntua behin bakarrik ezarri",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "Gaituta dagoenean, bateria konektatu ondorengo lehenengo besoa bakarrik erabiliko da etxeko puntu gisarako. Gaituta ez bada, aireontxia armatuta dagoen bakoitzean, etxeko puntua eguneratuko da.",
-        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
         "message": "Serie hartzailea hornitzailea"
@@ -2705,9 +2682,6 @@
     "pidTuningYawJumpPrevention": {
         "message": "Yaw Saltoen Prebentzioa"
     },
-    "pidTuningYawJumpPreventionHelp": {
-        "message": "Gailua Yaw-en amaieran salto egitea eragozten du. Zenbaki altuagoak kalte handiagoa ematen du okertze mugimenduen amaieran (aurreko yaw D bezalakoa da, hau da, ez zen benetako D beste ardatzetan bezala)"
-    },
     "pidTuningRcExpoPower": {
         "message": "RC Expo potentzia"
     },
@@ -2776,10 +2750,6 @@
         "message": "D Term Iragazki Biderkatzailea:",
         "description": "D Term filter tuning slider label"
     },
-    "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">KONTUZ<\/span>: Uneko graduatzaileen posizioek, bolantea, motore kalteak edo portaera ziurra sor ditzakete. Kontuz jarraitu.",
-        "description": "Warning shown when tuning slider are above safe limits"
-    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Oharra:<\/strong> Graduatzaileak desgaituta daude balioak eskuz aldatu direlako. '$t(pidTuningSliderEnableButton.message)' botoia sakatzen, balioak berrezarriko dira eta gorde gabeko aldaketa guztiak galduko dira.",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -2823,9 +2793,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Notch Dinamikoa Iragazkiaren Barrutia"
     },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": "Notch dinamikoak hiru frekuentzian funtziona dezake: BAXUA (80-330hz) 6+ hazbeteko bezalako birakatze txikiagoetarako, ERDIA (140-550hz) 5 hazbeteko quad normal, ALTUA (230-800hz) oso altuerako 2,5-3 hazbeteko quad-ak berpiztea AUTO aukerak barrutia hautatzen du 1. Giro Behe-paseko Dinamiko Iragazkiaren ebakidura frekuentzia maximoaren balioaren arabera."
-    },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q faktorea Notch Iragazki Dinamikoak estu edo zabal egokitzeko erabiltzen da. Balio altuagoak estuagoak eta zehatzagoak dira eta balio baxuagoak zabalagoak eta zabalagoak egiten ditu. Benetan balio txikia izateak asko handituko du iragazkien atzerapena."
     },
@@ -2842,10 +2809,6 @@
     "pidTuningRpmHarmonics": {
         "message": "Giro RPM Iragazkiaren Armoniko Zenbakia",
         "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "Motor bakoitzeko harmoniko kopurua. 3-ko balioak (quad gehienentzat gomendatua) 3 notch iragazkiak sortuko dira, ardatz bakoitzeko motor bakoitzean, guztira 36 notch. Bata motorren frekuentzirako eta bi harmoniko frekuentzi horren multiploetan.",
-        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
         "message": "Giro RPM Iragazkiaren Min Frekuentzia [Hz]",
@@ -2881,9 +2844,6 @@
     },
     "pidTuningItermRotation": {
         "message": "I Term Biraketa"
-    },
-    "pidTuningItermRotationHelp": {
-        "message": "Momentuko I Term bektorea behar bezala biratzen du bezte ardatzerantz, quad biraka etengabe Yaw-arekin jaurtitzen direnean roll eta beste zenbait trikimailu egitean. LOS acro pilotuengatik oso estimatua."
     },
     "pidTuningSmartFeedforward": {
         "message": "Adimendun Feedforward"
@@ -2942,9 +2902,6 @@
     "failsafePaneTitleOld": {
         "message": "Hartzaileak huts egin du"
     },
-    "failsafeFeaturesHelpNew": {
-        "message": "Segurtasun moduak bi fase ditu. <strong>1. Etapa<\/strong> hegaldi-kanal baliogabe pultsu luzera daukanean sartzen da, hartzaileak Segurtasun Modua jakinarazten duenean edo hartzailearen seinalerik ez dagoenean, segurtasun-ezarpenak <span class=\"message-negative\">kanal guztiak<\/span> eta denbora pixka bat ematen da egoera berreskuratzeko <strong>2. Etapa<\/strong> exekutatzen da gailuak akats egoera konfiguratutako guardia denbora baino gehiago irauten duenean <span class=\"message-negative\">armatuta<\/span> dagoen bitartean, kanal guztiak mantentzen dira segurtasun ezarpena arauak aukeratutako prozeduran aldatu ezean.<br\/><strong>Oharra:<\/strong> 1. Etapan sartu aurretik, kanalaren atzerapen ezarpenak ere aplikatzen dira baliogabeak dituzten pultsuak dituzten AUX kanaletan."
-    },
     "failsafePulsrangeTitle": {
         "message": "Baliozko Pultsu Barrutiaren Ezarpenak"
     },
@@ -2969,14 +2926,8 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "2. Etapa - Ezarpenak"
     },
-    "failsafeThrottleLowHelp": {
-        "message": "Besterik gabe, desarmatu artisautza hautatutako segurtasun prozedura exekutatu beharrean, azeleragailua denbora horretan gutxienez dagoenean"
-    },
     "failsafeThrottleItem": {
         "message": "Lurreratzerakoan erabilitako azeleragailu balioa"
-    },
-    "failsafeOffDelayHelp": {
-        "message": "Denbora lurreratze moduan, motorrak itzali eta desarmatu egin arte"
     },
     "failsafeSubTitle1": {
         "message": "2. Etapa - Segurtasun Prozedura"
@@ -3044,9 +2995,6 @@
     "failsafeSwitchModeItem": {
         "message": "Segurtasun modua etengailuaren ekintza"
     },
-    "failsafeSwitchModeHelp": {
-        "message": "Aukera honek zehazten du zer gertatzen den Segurtasun modua AUX etengailu baten bidez aktibatzen da:<br\/><strong>1. Etapa<\/strong> segurtasun modua aktibatzen du. 1. Etapa erabilgarria da Seinale-galera portaera simulatu nahi baduzu.<br\/><strong>2. Etapa<\/strong> 1. Fasea saltatzen du eta 2. Etapa prozedura aktibatzen du berehala<br\/><strong>Hiltzea<\/strong> berehala desarmatzen du(gailua huts egingo du berehala)"
-    },
     "failsafeSwitchOptionStage1": {
         "message": "1. Etapa"
     },
@@ -3106,9 +3054,6 @@
     },
     "powerCalibrationManagerTitle": {
         "message": "Kalibratzeko Laguntzailea"
-    },
-    "powerCalibrationManagerHelp": {
-        "message": "Kalibratzeko, erabili multimetro bat zure gailuaren benetako tentsioa\/korrontea neurtzeko (bateria sartuta) eta sartu ondorengo balioak. Ondoren, bateria bera oraindik konektaturik dagoela, [Calibrate] klik egin."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Oharra:<\/strong> Eskala kalibratu aurretik, ziurtatu tentsiorako eta desplazamenduarentzako zatitzailea eta desplazamendua egokitzea ondo egokitzen dela.<br>0 -ko balioak uztean ez da kalibrazioa aplikatuko.<\/br><strong> Gogoratu bateriak sartu aurretik helizeak kendu behar dituzula!<\/strong>"
@@ -3414,9 +3359,6 @@
     "osdSetupVtxTitle": {
         "message": "VTX Ezarpenak"
     },
-    "osdSetupCraftNameTitle": {
-        "message": "Gailuaren Izena"
-    },
     "osdSetupWarningsTitle": {
         "message": "Abisuak"
     },
@@ -3585,10 +3527,6 @@
     "osdDescElementMahDrawn": {
         "message": "Erabilitako bateriaren ahalmena"
     },
-    "osdTextElementCraftName": {
-        "message": "Gailuaren izena",
-        "description": "One of the elements of the OSD"
-    },
     "osdTextElementAltitude": {
         "message": "Altitudea",
         "description": "One of the elements of the OSD"
@@ -3600,15 +3538,9 @@
         "message": "Denbora piztuta",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementOnTime": {
-        "message": "Aireontzia piztuta igaro den denbora"
-    },
     "osdTextElementFlyTime": {
         "message": "Hegaldiaren denbora",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlyTime": {
-        "message": "Aireontzia uneko energia zikloan armatu den denbora osoa (alarmaren atalasearen gainetik dago)"
     },
     "osdTextElementFlyMode": {
         "message": "Hegaldi modua",
@@ -3726,9 +3658,6 @@
         "message": "Tenporizadorea: Denbora armatua",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementArmedTime": {
-        "message": "Aireontzia azken aldiz armatu zenetik denbora"
-    },
     "osdTextElementHomeDirection": {
         "message": "Etxearen norabidea",
         "description": "One of the elements of the OSD"
@@ -3834,9 +3763,6 @@
     "osdTextGForce": {
         "message": "G indarra",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescGForce": {
-        "message": "Aireontzia G-Indarraren zenbatekoa den erakusten du"
     },
     "osdTextElementMotorDiag": {
         "message": "Motorren diagnostikoak",
@@ -4015,15 +3941,9 @@
         "message": "Hegaldiaren denbora guztira",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
-    "osdDescStatFlyTime": {
-        "message": "Aireontzia egungo energia zikloan armatu den denbora osoa"
-    },
     "osdTextStatArmedTime": {
         "message": "Azken hegaldiaren denbora armatu zenetik",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatArmedTime": {
-        "message": "Gailua azken aldiz armatu zenetik denbora"
     },
     "osdTextStatMaxDistance": {
         "message": "Etxea: gehieneko distantzia",
@@ -4070,9 +3990,6 @@
     "osdTextStatGForce": {
         "message": "Gehienezko G indarra",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatGForce": {
-        "message": "Aireontziak bizi duen gehienezko G indarra"
     },
     "osdTextStatEscTemperature": {
         "message": "ESC gehienezko tenperatura",
@@ -4165,15 +4082,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
         "message": "Denbora Armatua",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
         "message": "Azken armatuaren denbora",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
         "message": "On\/Armatuta denbora",
-        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Zehaztasuna:"
@@ -4655,9 +4572,6 @@
     "configurationSmallAngle": {
         "message": "Gehieneko ARM Angelua [degrees]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "Aireontziak ez du armatuko zehaztutako gradu kopurua baino gehiago okertzen bada. Azelerometroa aktibatuta badago bakarrik aplikatzen da. Ezarpena 180ra ezgaitzen du kontrol hau"
-    },
     "configurationBatteryVoltage": {
         "message": "Bateriaren Tentsioa"
     },
@@ -4736,9 +4650,6 @@
     },
     "configurationPersonalization": {
         "message": "Pertsonalizazioa"
-    },
-    "craftName": {
-        "message": "Gailuaren izena"
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV Kameraren Angelua [degrees]"

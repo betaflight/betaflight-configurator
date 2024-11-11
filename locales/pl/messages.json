@@ -488,7 +488,7 @@
         "message": "Wykryto następujące <strong>problemy z konfiguracją<\/strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać swoją jednostką latająca.<\/span><\/strong>"
+        "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać swoją jednostką latająca.<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Użyta wersja konfiguratora ($3) nie obsługuje oprogramowania $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
@@ -939,7 +939,7 @@
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Jednostka jest obecnie w trakcie kalibracji",
+        "message": "Jednostka latająca jest obecnie w trakcie kalibracji",
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
@@ -1441,7 +1441,7 @@
         "message": "Sygnał dzwiękowy"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Sygnał dzwiękowy Dshot wykorzstuje układy ESC i silniki do generowania dźwięku. Oznacza to, że protokół Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, gdy próbuje się uzbroić silniki występuje opóźnienie o 2 sekundy, zanim jednostka zostanie uzbrojona. Ma to zapobiegać przed zakłóceniami funkcji sygnału dzwiękowego Dshot, podczas gdy  wysyłany jest  sygnał<\/strong> dzwiękowy  podczas uzbrajania jednostki latającej. <br\/> <strong> Ostrzeżenie: <\/strong> Ponieważ sygnał Dshot przepływa przez silniki, gdy są aktywne, może powodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału ostrzegawczego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
+        "message": "Sygnał radiowy Dshot wykorzstuje układy ESC i silniki do generowania dźwięku. Oznacza to, że protokół Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, gdy próbuje się uzbroić silniki występuje opóźnienie o 2 sekundy, zanim jednostka zostanie uzbrojona. Ma to zapobiec przed zakłóceniem funkcji sygnału radiowego Dshot podczas wysyłania sygnału<\/strong> wysyłanego podczas uzbrajania. <br\/> <strong> Ostrzeżenie: <\/strong> Ponieważ sygnał Dshot przepływa przez silniki, gdy są aktywne, może to spowodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału ostrzegawczego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
     },
     "configurationBeeper": {
         "message": "Ustawienia buzzer'a"
@@ -1798,7 +1798,7 @@
         "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
-        "message": "D Max Gain zwiększa czułość systemu, gdy quad obraca się szybko lub podczas efektu propwash.<br><br>Wyższe wartości wzmocnienia powodują szybsze podnoszenie D. Wartości 40 lub nawet 50 mogą dobrze działać w przypadku czystych konfiguracji Freestyle.<br><br>Niższe wartości nie zwiększają D w kierunku D Max, z wyjątkiem naprawdę szybkich ruchów, i mogą lepiej pasować do konfiguracji quada wyścigowego, minimalizując opóźnienie D.<br><br >OSTRZEŻENIE: Wzmocnienie lub Natarcie muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
+        "message": "D Max Advance dodaje czułość do współczynnika wzmocnienia, gdy drążki poruszają się szybko.<br><br>Advance nie reaguje na żyroskop ani na efekt propwash. Działa wcześniej niż współczynnik wzmocnienia i czasami jest przydatny w przypadku quadów o niskim autorytecie, które mają tendencję do dużego opóźnienia na początku ruchu.<br><br>Ogólnie najlepiej pozostawić go na zero.<br><br>OSTRZEŻENIE: Advance lub Zysk muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxAdvance": {
@@ -1814,7 +1814,7 @@
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Kontroluje z jaką siłą odbywać ma się korekta ruch jednostki latającej przy KAŻDEJ zmia kierunku. Kiedy drążki są poruszane, D-term tłumi polece. W przypadku wpływu zewnętrznego ( dryfowa  lub porywy wiatru) D-term tłumi wpływ. <br> <br> Wyższe wzmoc zapewnia większe tłumie i zmjsza nadmiar P-term i FF. <br> D-term jest BARDZO wrażliwy na wibracje wysokiej częstotliwości które zakłócają  pracę żyroskopu  (zakłócenia zwiększają się od 10 do 100x). <br> <br> Wibracje o wysokiej częstotliwości mogą powodować grza się silników co może doprowadzić do ich zniszczenia, jeśli wzmoc D jest zbyt wysokie lub wibracje żyroskopowe   są dobrze filtrowane (patrz w zakładce Filtr). <br> <br> D-term jest podobny do amortyzatora, ale ma negatywną właściwość wzmacniania szumu żyroskopowego wysokiej częstotliwości.",
+        "message": "Kontroluje z jaką siłą odbywać ma się korekta ruch drona przy KAŻDEJ zmianie kierunku. Kiedy drążki są poruszane, D-term tłumi polecenie. W przypadku wpływu zewnętrznego ( dryfowanie  lub porywy wiatru) D-term tłumi wpływ. <br> <br> Wyższe wzmocnienie zapewnia większe tłumienie i zmniejsza nadmiar P-term i FF. <br> D-term jest BARDZO wrażliwy na wibracje wysokiej częstotliwości które zakłócają  pracę żyroskopu  (zakłócenia zwiększają się od 10 do 100x). <br> <br> Wibracje o wysokiej częstotliwości mogą powodować grzanie się silników co może doprowadzić do ich zniszczenia, jeśli wzmocnienie D jest zbyt wysokie lub wibracje żyroskopowe  nie są dobrze filtrowane (patrz w zakładce Filtr). <br> <br> D-term jest podobny do amortyzatora, ale ma negatywną właściwość wzmacniania szumu żyroskopowego wysokiej częstotliwości.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1986,7 +1986,7 @@
         "message": "<b>F<\/b>eedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "Dodatkowy czynnik napędowy, pochodzący wyłącznie z sygnału wejściowego drążka, który pomaga szybko poruszać  jednostką latającą za pomocą  szybkich ruchów drążkiem.<br><br>FF nie może powodować oscylacji, pozwala na niższe P dla podobnych reakcji drążka i kompensuje naturalną opozycję D względem danych wejściowych.<br><br>Niskie lub zerowe wartości spowodują płynniejszą, ale bardziej opóźnioną reakcję na sygnały wejściowe drążka.",
+        "message": "Dodatkowy czynnik napędowy, pochodzący wyłącznie z sygnału wejściowego drążka, który pomaga szybko poruszać jednostką latającą za pomocą szybkich ruchów drążkiem.<br><br>FF nie może powodować oscylacji, pozwala na niższe P dla podobnych reakcji drążka i kompensuje naturalną opozycję D względem danych wejściowych.<br><br>Niskie lub zerowe wartości spowodują płynniejszą, ale bardziej opóźnioną reakcję na sygnały wejściowe drążka.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -2135,7 +2135,7 @@
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Ostrzeżenie:<\/b><\/span> Ilość filtrów, których używasz, jest niebezpiecznie niska. Może to sprawić, że jednostka stanie się trudna do kontrolowania i może prowadzić do wycieków. Zaleca się, aby <b>włączyłeś co najmniej jeden z dynamicznych dolnej granicy żyroskopu lub dolnej granicy żyroskopu 1 oraz co najmniej jeden z dynamicznych dolnej granicy żyroskopu lub dolnej granicy D<\/b>."
+        "message": "<span class=\"message-negative\"><b>Uwaga:<\/b><\/span> Aktualne ustawienia filtrowania są niebezpiecznie niskie. Latenie maszyną będzie ciężkie, zachowanie maszyny może być nieprzewidywalnie niebezpieczne (flayaways). Jest wysoko zalecane aby <b>Włączyć przynajmniej jeden filter: Dynamiczny lub pierwszy (1) filter dolnoprzepustowy żyroskopu i przynajmniej jeden \"D-term\" Dynamiczny lub pierwszy (1) filtr dolnoprzepustowy<\/b>."
     },
     "pidTuningSliderPidsMode": {
         "message": "Tryb:",
@@ -2384,7 +2384,7 @@
         "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
-        "message": "Odwróć kierunek obrotu silników, aby przewrócić  jednostkę latającą do góry nogami po zderzeniu (wymagany DShot)",
+        "message": "Odwróć kierunek obrotu silników, aby przewrócić jednostkę latającą do góry nogami po zderzeniu (wymagany DShot)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
     "auxiliaryHelpMode_FPVANGLEMIX": {
@@ -4148,7 +4148,7 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">UWAGA<\/span>: Aktualne ustawienia suwaków mogą powodować zniszczenie silnika lub niebezpieczne zachowanie jednostki latającej. Proszę postępować ostrożnie.",
+        "message": "<span class=\"message-negative\">UWAGA<\/span>: Aktualne ustawienia suwaków może powodować zniszczenie silnika lub niebezpieczne zachowanie platformy. Proszę postępować ostrożnie.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -4571,7 +4571,7 @@
         "message": "Odbiornik Failsafe"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Failsafe ma dwa etapy. <br><strong> Etap 1 <\/strong> jest aktywowany w stuacjach  gdy kanał radiowy ma nieprawidłową długość impulsu oraz w  chwili gdy odbiornik zgłasza tryb awaryjny albo wogóle nie ma sygnału z odbiornika.  Ustawienia zastępcze kanałów odbiornika są stosowane do <span class = \"message-negative\"> WSZYSTKICH KANAŁÓW. <\/span> Pamiętaj że  zarezerwowany jest krótki czas ochrony na powrót trasmisji danych w kanale radiowym. <br><strong> Etap 2 <\/strong> jest aktywowany, gdy utrata sygnału  trwa dłużej niż skonfigurowany czas ochronny a jednostka latająca jest <span class = \"message-negative\"> UZBROJONA. <\/span> Wszystkie ustawienia kanału zastępczego  zostaną ustawione na podstawie wybranych przez ciebie wartości, chyba że wybrano inną procedurę. <br \/> <span class = \"message-negative\"><strong> UWAGA: <\/strong><\/span> Przed wejściem do etapu 1 ustawienia zastępcze kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
+        "message": "Failsafe ma dwa etapy. <strong> Etap 1 <\/strong> jest wprowadzany, gdy kanał lotniczy ma nieprawidłową długość impulsu, odbiornik zgłasza tryb awaryjny lub w ogóle nie ma sygnału z odbiornika, ustawienia cofania kanału są stosowane do <span class = \"message- negatywne \"> wszystkie kanały <\/span> oraz krótki czas na odzyskanie danych. <strong> Etap 2 <\/strong> jest wprowadzany, gdy warunek błędu trwa dłużej niż skonfigurowany czas ochronny, gdy jednostka jest <span class = \"message-negative\"> uzbrojona <\/span>, wszystkie kanały pozostaną na stosowanym kanale ustawienie rezerwowe, chyba że zostanie anulowane przez wybraną procedurę. <br \/> <strong> Uwaga: <\/strong> Przed wejściem do etapu 1 ustawienia zastępowania kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
     },
     "failsafePulsrangeTitle": {
         "message": "USTAWIENIA AKCEPTOWALNEGO ZAKRESU IMPULSÓW"
@@ -4622,7 +4622,7 @@
         "message": "Failsafe niskie położenie przepustnicy [sekund]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Doprowadza do rozbrojenia jednostki latającej zamiast wykonywać wybraną procedurę awaryjną, gdy przepustnica była na minimum przez dany okres czasu"
+        "message": "Wystarczy rozbroić model zamiast wykonać wybraną procedurę awaryjną, aby przepustnica była nieaktywna"
     },
     "failsafeThrottleItem": {
         "message": "Wartość przepustnicy użyta podczas lądowania"
@@ -4631,7 +4631,7 @@
         "message": "Opóźnienie wyłączenia silnika podczas Failsafe [sekund]"
     },
     "failsafeOffDelayHelp": {
-        "message": "Czas po wylądowaniu do momentu wyłączenia silników i rozbrojenia jednostki latającej"
+        "message": "Czas pozostawania w trybie lądowania do momentu wyłączenia silników i wyłączenia jednostki"
     },
     "failsafeSubTitle1": {
         "message": "Etap 2 – Procedura Failsafe"
@@ -4675,9 +4675,6 @@
     "failsafeGpsRescueItemAngle": {
         "message": "Maksymalny kąt pochylenia"
     },
-    "failsafeGpsRescueAngleHelp": {
-        "message": "Wyższe kąty maksymalne pochylenia prowadzą do bardziej agresywnych zwrotów i wyższych prędkości podczas lotu do przodu. Może to być przydatne w przypadku dużych jednostek, o większym oporze powietrza lub małej mocy, lub do stosowania przy silniejszym wietrze. OSTRZEŻENIE: W przypadku zwiększenia maksymalnego kąta pochylenia zwykle należy zwiększyć  moc przepustnicy ratunkowej! W przeciwnym razie jednostka latająca  może stracić wysokość i rozbić się!"
-    },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Długość zniżania (metry)"
     },
@@ -4687,24 +4684,14 @@
     "failsafeGpsRescueDescendRateHelp": {
         "message": "Początkowa prędkość opadania jest ustawiana na 3-krotność tej wartości i zmniejsza się do ustawionej wartości na wysokości lądowania."
     },
-    "failsafeGpsRescueItemMinStartDistHelp": {
-        "message": "Jeśli utrata sygnału nastąpi zbyt blisko miejsca startu (w tej minimalnej odległości), jednostka odleci zgodnie z bieżącym kursem, aż do tej odległości od miejsca startu, a następnie rozpocznie normalne zachowanie ratownicze failsafe.",
-        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
-    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Przepustnica minimum"
     },
     "failsafeGpsRescueItemThrottleMax": {
         "message": "Przepustnica w pozycji max"
     },
-    "failsafeGpsRescueThrottleMaxHelp": {
-        "message": "Należy zwiększyć w przypadku jednostek cięższych, o większym oporze lub o małej mocy, jeśli prawdopodobny jest powrót przy silnym wietrze lub jeśli zwiększony jest maksymalny kąt pochylenia."
-    },
     "failsafeGpsRescueItemThrottleHover": {
         "message": "Moc przepustnicy - <span class=\"message-negative\">WAŻNE: USTAW TĘ WARTOŚĆ DOKŁADNIE<\/span>"
-    },
-    "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "Aby znaleźć właściwą wartość, ustaw działanie przełącznika Failsafe na Etap 2, ustaw Procedurę Failsafe Etapu drugirgo na Lądowanie i dostosuj wartość przepustnicy używaną podczas lądowania, aż jednostka latająca zawiśnie w powietrzu lub zacznie powoli opadać"
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Minimalna odległość do domu (metry)"
@@ -4717,9 +4704,6 @@
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
         "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS - <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!<\/span"
-    },
-    "failsafeGpsRescueArmWithoutFixHelp": {
-        "message": "Nie rekomendowane. Umożliwia uzbrojenie bez poprawnego sygnału GPS, może spowodować, że jednostka latająca rozbroi się i ulegnie awarii z prawdziwym zabezpieczeniem przed utratą sygnału Rx. Jeśli testowano za pomocą przełącznika, przed rozbrojeniem następuje krótki okres bezczynności."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sprawdzenie kontrolne"
@@ -4744,9 +4728,6 @@
     },
     "failsafeSwitchModeItem": {
         "message": "Wybrany typ Failsafe"
-    },
-    "failsafeSwitchModeHelp": {
-        "message": "Ta opcja określa co się stanie gdy tryb Failsafe zostanie aktywowany przez przełącznik AUX:<br\/><strong>Etap 1<\/strong> aktywuje pierwszy etap Failsafe. Jest to przydatne w sytuacji gdy chcesz zasymulować  w bezpieczny sposób  utrate sygnału.<br\/><strong>Etap 2<\/strong> pomija Etap 1 i natychmiast aktywuje procedurę etapu drugiego.<br\/><strong>Upadek<\/strong> wyłącza silniki natychmiast a twoja jednostka latająca  spadnie na ziemię."
     },
     "failsafeSwitchOptionStage1": {
         "message": "Etap 1"
@@ -4816,9 +4797,6 @@
     },
     "powerCalibrationManagerTitle": {
         "message": "Menedżer Kalibracji"
-    },
-    "powerCalibrationManagerHelp": {
-        "message": "Aby skalibrować, użyj multimetru do pomiaru rzeczywistego napięcia \/ prądu pobieranego przez jednostkę latającą (z podłączoną baterią) i wprowadź poniższe wartości. Następnie, gdy ta sama bateria jest nadal podłączona, kliknij [Kalibracja]."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Uwaga:<\/strong> Przed kalibracją skali upewnij się, że dzielnik i mnożnik napięcia oraz przesunięcie dla amperażu są ustawione prawidłowo.<br>    Pozostawienie wartości na 0 nie spowoduje kalibracji.<\/br><strong> Pamiętaj, aby zdjąć śmigła przed podłączeniem  baterii!<\/strong>"
@@ -5176,9 +5154,6 @@
     "osdSetupVtxTitle": {
         "message": "Ustawienia VTX"
     },
-    "osdSetupCraftNameTitle": {
-        "message": "Nazwa modelu"
-    },
     "osdSetupWarningsTitle": {
         "message": "Ostrzeżenia"
     },
@@ -5474,13 +5449,6 @@
     "osdDescElementLapTimeBest3": {
         "message": "Najlepsze 3 czasy okrążania GPS"
     },
-    "osdTextElementCraftName": {
-        "message": "Nazwa modelu",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementCraftName": {
-        "message": "Nazwa modelu wpisana w zakładce Konfiguracja.<\/br>Można ją również ustawić z pomocą zmiennej \"craft_name\" w Wierszu Poleceń CLI."
-    },
     "osdTextElementAltitude": {
         "message": "Wysokość",
         "description": "One of the elements of the OSD"
@@ -5508,15 +5476,9 @@
         "message": "Na czas",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementOnTime": {
-        "message": "Całkowity czas pod zasilaniem"
-    },
     "osdTextElementFlyTime": {
         "message": "Czas lotu",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlyTime": {
-        "message": "Całkowity czas uzbrojenia maszyny w czasie pracy w tym cyklu zasilania(na tej baterii) - miga gdy przekroczy poziom alarmowy"
     },
     "osdTextElementFlyMode": {
         "message": "Tryb lotu",
@@ -5673,9 +5635,6 @@
         "message": "Licznik: czas uzbrojenia",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementArmedTime": {
-        "message": "Czas od ostatniego uzbrojenia"
-    },
     "osdTextElementHomeDirection": {
         "message": "Kierunek do domu",
         "description": "One of the elements of the OSD"
@@ -5784,9 +5743,6 @@
     "osdTextGForce": {
         "message": "Siła G",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescGForce": {
-        "message": "Pokazuje siłę przyciągania ziemskiego jakiej doświadczył model"
     },
     "osdTextElementMotorDiag": {
         "message": "Diagnostyka silnika",
@@ -6016,15 +5972,9 @@
         "message": "Całkowity czas lotu",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
-    "osdDescStatFlyTime": {
-        "message": "Całkowity czas uzbrojenia od podłączenia baterii"
-    },
     "osdTextStatArmedTime": {
         "message": "Czas lotu w ostatnim uzbrojeniu",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatArmedTime": {
-        "message": "Czas od ostatniego uzbrojenia"
     },
     "osdTextStatMaxDistance": {
         "message": "Maksymalna odległość do domu",
@@ -6071,9 +6021,6 @@
     "osdTextStatGForce": {
         "message": "Max przeciążenie grawitacyjne",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatGForce": {
-        "message": "Maksymalne przeciążenie grawitacyjne jakie doświadczył model"
     },
     "osdTextStatEscTemperature": {
         "message": "Maksymalna temperatura ESC",
@@ -6208,15 +6155,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
         "message": "Całkowity czas uzbrojenia",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
         "message": "Czas ostatniego uzbrojenia",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
         "message": "Czas włączonego uzbrojenia",
-        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Dokładność:"
@@ -6568,10 +6515,6 @@
         "message": "Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Gdy włączysz tą opcję VTX wchodzi w tryb bardzo niskiej mocy, aby można było włączyć model na czas naprawy bez zakłócania transmisji innych pilotów. Zwykle zasięg tego trybu jest mniejszy niż 5 m.<br \/><br \/>UWAGA: Niektóre protokoły, takie jak SmartAudio, nie mogą włączyć trybu Pit Mode za pomocą oprogramowania zaraz po uruchomieniu.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Częstotliwość Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
@@ -6776,9 +6719,6 @@
     "configurationSmallAngle": {
         "message": "Maksymalny kąt trybu ARM [Stopnie]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "Jednostka latająca nie uzbroi się jeśli jest pochylona o kąt większy niż ustalony. Działa tylko jeśli akcelerometr jest włączony. Ustawienie kąta 180 definitywnie wyłączy tą funkcje"
-    },
     "configurationBatteryVoltage": {
         "message": "Napięcie akumulatora"
     },
@@ -6860,9 +6800,6 @@
     },
     "configurationPersonalization": {
         "message": "Personalizacja"
-    },
-    "craftName": {
-        "message": "Nazwa modelu"
     },
     "configurationCraftNameHelp": {
         "message": "Będzie widoczna w dziennikach, nazwach plików kopii zapasowych oraz na OSD.<\/br> Może być edytowana z pomocą zmiennej <b>craft_name<\/b> w Wierszu Poleceń CLI."
@@ -7273,10 +7210,6 @@
     "presetsWarningBackup": {
         "message": "Upewnij się, że wykonałeś kopię zapasową bieżącej konfiguracji (przyciskiem '$t(presetsBackupSave.message)' lub za pośrednictwem Wiersza Poleceń CLI, jeśli przycisk jest wyłączony) <strong>przed<\/strong> wybraniem i zastosowaniem ustawień z szablonu. W przeciwnym razie, po zastosowaniu zmian, nie będzie możliwości powrotu do poprzedniej konfiguracji.",
         "description": "Warning message that shows up at the top of the presets tab"
-    },
-    "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">OSTRZEŻENIE!<\/span> Korzystanie ze wstępnych ustawień innych firm może być niebezpieczne.<br\/>  Upewnij się, że korzystasz tylko ze sprawdzonych ustawień. Złośliwe oprogramowanie lub błędna konfiguracja jednostki latającej może potencjalnie uszkodzić urządzenie.",
-        "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
         "message": "Wybrane ustawienie wstępne wymaga wersji oprogramowania układowego $1<br\/> Aktualna wersja oprogramowania układowego to $2",
