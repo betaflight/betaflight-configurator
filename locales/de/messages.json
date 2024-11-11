@@ -487,16 +487,13 @@
         "message": "Die folgenden <strong>Probleme mit Ihrer Konfiguration<\/strong> wurden entdeckt:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<span class=\"message-negative\"><strong>Sie müssen diese Probleme beheben, bevor Sie versuchen, Ihr Fluggerät zu fliegen<\/span><\/strong>."
+        "message": "<span class=\"message-negative\"><strong>Sie müssen diese Probleme beheben, bevor Sie versuchen, Ihren Copter zu fliegen<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Die verwendete Betaflight-Configurator-Version ($3) unterstützt nicht die Firmware$4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Es ist kein Motorausgabeprotokoll ausgewählt<\/strong>.<br>Bitte wähle ein für den ESCs geeignetes Motorausgabeprotokoll in '$t(configurationEscFeatures.message)' auf der Registerkarte '$t(tabMotorTesting.message)' aus.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>Der Beschleunigungsmesser ist aktiviert, aber nicht kalibriert<\/strong>.<br>Wenn Sie den Beschleunigungsmesser verwenden wollen, folgen Sie bitte den Anweisungen für '$t(initialSetupButtonCalibrateAccel.message)' auf der Registerkarte '$t(tabSetup.message)' Wenn eine Funktion, die den Beschleunigungsmesser benötigt (Auto-Level-Modi, GPS-Rettung, u. ä.) aktiviert ist, wird das Scharfstellen des Kopters deaktiviert. Solange, bis der Beschleunigungsmesser kalibriert ist.<br>Wenn Sie nicht planen, den Beschleunigungsmesser zu verwenden, wird empfohlen, dass Sie ihn in '$t(configurationSystem.message)' auf der Registerkarte '$t(tabConfiguration.message)' deaktivieren."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -561,7 +558,7 @@
         "message": "Eindeutige Geräte ID: <strong>0x$1<\/strong>"
     },
     "craftNameReceived": {
-        "message": "Fluggerät Name: <strong>$1<\/strong>"
+        "message": "Copter Name: <strong>$1<\/strong>"
     },
     "armingDisabled": {
         "message": "<strong>Arming deaktiviert<\/strong>"
@@ -934,7 +931,7 @@
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Das Fluggerät wird gerade kalibriert",
+        "message": "Der Copter wird gerade kalibriert",
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
@@ -942,7 +939,7 @@
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "Modell steht nicht (ausreichend) eben",
+        "message": "Copter steht nicht (ausreichend) eben",
         "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
@@ -1387,17 +1384,11 @@
     "configurationThrottleMinimum": {
         "message": "Minimum Gas (kleinster Wert für die Regler falls gearmt)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "Das ist der \"Leerlaufwert\" der an die Regler geschickt wird wenn der Quad gearmt ist und das Gas auf minimal Position ist. Wert erhöhen um einen schnelleren Leerlauf zu bekommen. Bei Regler Desync Problemen ebenfalls erhöhen"
-    },
     "configurationThrottleMaximum": {
         "message": "Maximum Gas (größter Wert für die Regler falls gearmt)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimal Kommando (Regler Wert falls nicht gearmt)"
-    },
-    "configurationThrottleMinimumCommandHelp": {
-        "message": "Das ist der Wert der an die Regler geschickt wird wenn disarmt ist. Setze diesen Wert so tief das die Motoren stoppen (in der Regel auf 1000)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Bitte wählen ein für Deinen ESC geeignetes Motorausgabeprotokoll. $t(escProtocolDisabledMessage.message)"
@@ -1413,9 +1404,6 @@
     },
     "configurationDshotBeaconTone": {
         "message": "Beacon Ton"
-    },
-    "configurationDshotBeaconHelp": {
-        "message": "Dshot Beacons sind Töne die mittels ESC und Motor erzeugt werden. Das bedeutet, dass dies nicht genutzt werden kann, während die Motoren drehen. In Betaflight 3.4 und neuer wird deshalb 2 Sekunden nach dem letzen Ton gewartet, bevor tatsächlich gearmt wird, wenn das Arming-Kommando gegeben wurde. Dies verhindert eine Beeinflussung andere Dshot-Kommandos beim Arming durch die Tonerzeugung. <br\/><strong>Warning:<\/strong> Da die Dshot-Kommandos Strom durch die Motoren schicken, kann das zu erheblicher Wärmeentwicklung führen, welche die Motoren und ESC's beschädigen kann, wenn die Beacon Lautstärke zu hoch eingestellt ist. Benutze den BLHeli Konfigurator oder die BLHeli Suite um die Lautstärke einzustellen und zu testen."
     },
     "configurationBeeper": {
         "message": "Piepser Konfiguration"
@@ -1554,10 +1542,6 @@
     "configurationGPSHomeOnce": {
         "message": "Startpunkt einmalig festlegen",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "Wenn aktiviert, wird nur beim ersten \"Armen\", nachdem der Akku angeschlossen wurde, der Startpunkt gesetzt. Wenn nicht aktiviert, wird jedes Mal, wenn der Quad \"gearmt\" wird, der Startpunkt aktualisiert.",
-        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
         "message": "Serieller Empfänger"
@@ -1761,18 +1745,6 @@
         "message": "Verstärkung",
         "description": "Gain of the D Max feature"
     },
-    "pidTuningDMaxGainHelp": {
-        "message": "D Max Gain erhöht die Empfindlichkeit des Systems, das erhöht D, wenn das Quad sich schnell dreht oder vibriert während Propwash.<br><br>Eine Verstärkung durch DMax Gain erhöht D schneller und wird somit zügiger Richtung DMax angehoben. Werte von 40 oder sogar 50 können gut für saubere Freestyle Builds funktionieren.<br><br>Kleinere Werte erhöhen D nicht in Richtung DMax außer bei wirklich schnellen Veränderungen. Bei schnellen Racers ist vermutlich eine kleinerer DMax besser indem man die D Verzögerung minimiert.<br><br>WARNUNG: Entweder Gain oder Advance, muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie er sollte. Wenn beide auf Null gesetzt werden, wird D auf den Basiswert festgelegt.",
-        "description": "D Max feature helpicon message"
-    },
-    "pidTuningDMaxAdvanceHelp": {
-        "message": "D Max Advance erhöht die Empfindlichkeit des Verstärkungsfaktors, wenn die Sticks schnell bewegt werden.<br><br>DMax Advance reagiert nicht auf Gyro oder Propwash. Dieser Wert reagiert vor dem Gain-Wert und kann für Quads mit geringer Sensitivität nützlich sein, die häufig bei schnellen Stickbewegungen schwerfällig sind.<br><br>Im Allgemeinen ist es am besten den Wert bei 0 zu belassen.<br><br>WARNUNG: Entweder Advance oder Gain, muss über 20 gesetzt werden oder D wird nicht so ansteigen, wie er sollte. Wenn beide auf Null gesetzt werden, wird D am Basiswert gesperrt.",
-        "description": "D Max feature helpicon message"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Steuert die Stärke der Dämpfung des Copters auf JEDER Bewegung. Sobald  die Sticks bewegt werden, dämpft der D-Term den Befehl. Bei äußerem Einfluss (Propwash oder Windböen) dämpft der D-Term den Einfluss.<br><br>Eine höhere Verstärkung bietet mehr Dämpfung und reduziert die Überschreitung um P-Term und FF.<br>Der D-Term ist jedoch <b>SEHR<\/b> empfindlich für hochfrequentes Gyro-Rauschen (Noise | Vergrößert um Faktor 10 bis 100).<br><br>Hochfrequenzrauschen kann <b>heiße Motoren verursachen und Motoren zerstören<\/b>, wenn die D-Verstärkung zu hoch ist oder das Gyro-Rauschen nicht gut gefiltert wird (siehe Filter-Tab).<br><br>Der D-Term ist vergleichbar mit dem Stoßdämpfer im Auto, aber mit der negativen Eigenschaft hochfrequentes Gyro-Rauschen zu verstärken.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "PID Kontroller EInstellungen"
     },
@@ -1927,10 +1899,6 @@
     "pidTuningIntegral": {
         "message": "<b>I<\/b>ntegral"
     },
-    "pidTuningIntegralHelp": {
-        "message": "Kontrolliert anhaltende kleine Abweichungen.<br \/><br \/>Ähnlich wie bei P, summiert aber progressiv und langsam, bis der Fehler Null ist.  Wichtig für längerfristige Abweichungen, wie z. B. ein versetzter Schwerpunkt oder anhaltende äußere Einflüsse wie Wind.<br \/><br \/>Höhere Verstärkungen sorgen für eine engere Nachführung, besonders in Kurven, können aber dazu führen, dass sich der Copter steif anfühlt.<br \/><br>Kann langsame Schwingungen bei trägen Coptern verursachen oder wenn sie im Verhältnis zu P hoch sind.",
-        "description": "Integral Term helpicon message on PID table titlebar"
-    },
     "pidTuningDMax": {
         "message": "<b>D<\/b>-Max"
     },
@@ -1940,10 +1908,6 @@
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "Ein zusätzlicher Antriebsfaktor, der rein von der Stickbewegungen abgeleitet wird und dazu beiträgt, dass der Copter schnell in schnelle Sticksignale übergeht.<br><br>Feedforward kann keine Oszillation verursachen, erlaubt einen niedrigeren P-Wert für ähnliche Stickbewegungen und gleicht das natürliche Gegensteuern von D zu ungünstigen Stickbewegungen aus.<br><br>Niedrige oder Nullwerte führen zu einer sanfteren, aber verzögerten Reaktion auf Stickeingaben.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Warnung:<\/b><\/span> sehr hohe Raten können bei heftigen Abbremsungen zu Desynchronisierungen führen."
@@ -2090,9 +2054,6 @@
         "message": "Benutze die Schieberegler für die Filter. Die Schieberegler müssen deaktiviert werden um manuelle Anpassungen vorzunehmen.<br>Bewege den Regler nach rechts reduziert die Filter, verringert die Latenzzeit, führt aber zu wärmeren Motoren.<br>Die meisten sauber gebauten Quads mit aktivierten RPM-Filter vertragen einen Gyro Tiefpass Regler ganz rechts oder nur mit Gyro Tiefpass 2 in der Mittelposition. <br><strong>Warnung:<\/strong>Sei vorsichtig, beim Verändern des -D-Term Schiebereglers nach rechts! Prüfe grundsätzlich die Motortemperatur nach jeder Veränderung.<br><strong>Hinweis:<\/strong>Beim Wechsel des Profils wird nur der D-Term Filter angepasst. Gyro-Filter Einstellungen gelten für alle Profile.",
         "description": "Filter tuning subtab note"
     },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Warnung:<\/b><\/span> Du verwendest eine gefährlich niedrige Anzahl an Filtern. Wahrscheinlich wird das Fluggerät dadurch schwer kontrollierbar und kann zu \"Fly-a-ways\" führen. Es wird dringend empfohlen, dass Du <b>mindestens einen dynamischen Gyro Tiefpass oder Gyro Tiefpass 1 und mindestens einen dynamischen D-Term Tiefpass oder D-Term Lowpass 1<\/b> einschaltest."
-    },
     "pidTuningSliderPidsMode": {
         "message": "Modus:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2216,9 +2177,6 @@
     "receiverModelPreview": {
         "message": "Vorschau"
     },
-    "receiverMspWarningText": {
-        "message": "Diese Einstellung ermöglicht es Betaflight zu armen und alles zu testen, ohne das eine Fernsteuerung verbunden ist. Achtung<strong> diese Funktion ist nicht für Flugtests gemacht und Props sollten entfernt sein.<\/strong><br \/><br \/>Die Funktion garantiert keine verlässliche Steuerung des Copters.<strong>Ernsthafte Verletzungen könnten die Folge sein falls Props montiert sind.<\/strong>"
-    },
     "receiverMspEnableButton": {
         "message": "Kontrolle aktivieren"
     },
@@ -2260,21 +2218,13 @@
         "message": "Ermöglicht die Umkehrung der Motorrichtung, um negativen Schub zu erzeugen und Rückenflug zu ermöglichen. Gashebel wird -100 bis +100 statt 0 bis 100",
         "description": "Help text to 3D mode"
     },
-    "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "Flugmodus, der die maximalen Neigungswinkel beim Fliegen im Acro-Modus begrenzt",
-        "description": "Help text to ACRO TRAINER mode"
-    },
     "auxiliaryHelpMode_ARM": {
-        "message": "Aktiviert die Motoransteuerung und ermöglicht das Fliegen des Fluggeräts",
+        "message": "Aktiviert die Motoransteuerung und ermöglicht das Fliegen des Copters",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Der Flugmodus erhöht P und I bei schnellen Gasbewegungen, um die Knüppelnachführung zu verbessern und ein Abdriften der Nase bei schnellen Gaswechseln zu vermeiden.",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "Der AirMode ermöglicht die Aufrechterhaltung der Stabilität des Copters bei geringer Gaszufuhr. Weitere Informationen finden Sie unter <a href=„https:\/\/betaflight.com\/docs\/development\/modes#airmode“ target=„_blank“ rel=„noopener noreferrer“>AirMode<\/a> auf Betaflight.com.",
-        "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Piepser aktivieren - nützlich zum Auffinden eines abgestürzten Fluggerätes",
@@ -2328,10 +2278,6 @@
         "message": "Failsafe Stufe 2 manuell aktivieren",
         "description": "Help text to FAILSAFE mode"
     },
-    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
-        "message": "Die Motorrichtung umkehren, um nach einem Absturz den Copter wieder umzudrehen (benötigt DShot)",
-        "description": "Help text to FLIP OVER AFTER CRASH mode"
-    },
     "auxiliaryHelpMode_FPVANGLEMIX": {
         "message": "Yaw Rotation relativ zu einer FPV-Kamera anwenden, die in einem voreingestellten Winkel montiert ist",
         "description": "Help text to FPV ANGLE MIX mode"
@@ -2339,10 +2285,6 @@
     "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
         "message": "Anzahl der Beeps entspricht der Anzahl der gefundenen GPS-Satelliten",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
-    },
-    "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "'GPS-Rettung' aktivieren, um den Copter an den Ort des letzten Armings fliegen zu lassen",
-        "description": "Help text to GPS RESCUE mode"
     },
     "auxiliaryHelpMode_HEADADJ": {
         "message": "Heading Adjust - Setzt neuen Ursprungswert für den HEADFREE Modus",
@@ -2373,7 +2315,7 @@
         "description": "Help text to PASSTHRU mode"
     },
     "auxiliaryHelpMode_PARALYZE": {
-        "message": "Ein abgestürztes Fluggerät dauerhaft deaktivieren (bis zum erneuten Herstellen der Stromversorgung)",
+        "message": "Deaktiviere einen abgestürzten Copter dauerhaft, (bis zum erneuten Herstellen der Stromversorgung)",
         "description": "Help text to PARALYZE mode"
     },
     "auxiliaryHelpMode_PIDAUDIO": {
@@ -3926,9 +3868,6 @@
     "pidTuningYawJumpPrevention": {
         "message": "Yaw \"Sprung\" Schutz"
     },
-    "pidTuningYawJumpPreventionHelp": {
-        "message": "Verhindert, dass das Fahrzeug am Ende von Yaw Bewegungen hochspringt. Eine höhere Zahl sorgt, für eine stärkere Dämpfung am Ende der Yaw Bewegungen (funktioniert wie das alte Yaw D, welches kein echtes D wie bei anderen Achsen war)."
-    },
     "pidTuningRcExpoPower": {
         "message": "RC Expo Stärke"
     },
@@ -3974,9 +3913,6 @@
     "pidTuningMotorLimit": {
         "message": "Skalierungsfaktor [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "Prozentaler Reduktion pro Motor Signal. <br><br>Reduziert den ESC Strom und Motorwärme, wenn höhere Zellenanzahl bei hohen KV Motoren.<br><br>Wenn eine 6S Lipo auf einem getuneten Quad mit 4S Motoren und Props verwendet wird, versuche 66%, bei einem 4S Lipo auf einem 3S Quad versuche 75%. <br><br>Prüfe das alle Komponenten auch die angelegte Lipo-Spannung vertragen."
-    },
     "pidTuningCellCount": {
         "message": "Anzahl Zellen für automatischen Profil-Wechsel"
     },
@@ -4018,10 +3954,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profilunabhängige Filtereinstellungen"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Diese Schieberegler passen die Filter Gyro und D-Term an.<br \/><br \/>Für mehr Filtern:<br \/> - Schieber nach links<br> - Niedrigere Grenzfrequenzen.<br \/><br \/> Stärkere Filterung hält Motoren kühler, indem mehr Rauschen entfernt wird, aber verzögert das Gyro Signal mehr (Latenz) und kann Prop-wash verschlimmern oder Resonanz-Oszillationen verursachen. Weniger reaktionsfähige Quads wie z. B. X-Klasse arbeiten am besten mit stärkerer Filterung. <br><br>Für weniger Filtern:<br \/> - Schieberegler nach rechts<br \/> - Höhere Grenzfrequenzen <br><br>Weniger Filter reduziert die Verzögerung des Gyro-Signals (weniger Latenz), und verbessert oft Propwash. Das Verschieben des Gyro Tiefpassfilters nach rechts ist normalerweise in Ordnung. Das Verschieben des D-Filters nach rechts ist in der Regel nicht erforderlich und kann leicht zu <b>sehr heißen Motoren<\/b> führen.",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Geringere Filterung",
         "description": "Filter tuning slider low header"
@@ -4050,21 +3982,9 @@
         "message": "D-Wert Filter Multiplikator:",
         "description": "D Term filter tuning slider label"
     },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Ändert die Grenzfrequenz des D-Term Tiefpassfilters.<br><br>Wird der Regler nach links bewegt, bewirkt dies eine erhöhte D Filterung (kleiner Grenzfrequenz, höhere Latenz).<br><br>Wird der Regler nach rechts bewegt, reduziert den D-Filter (höhere Grenzfrequenz, geringere Latenz).<br><br>Der D-Term ist das empfindlichste Element des PID-Controllers in Bezug auf Störungen und Resonanzen. Der D-Term kann Störungen 10-100x verstärken. Das ist der Grund das Grenzfrequenzen für den D-Term deutlich niedriger sind als bei anderen Gyro-Filtern.<br><br>Der D-Term Filter wird nach den Gyro-Filtern durchgeführt.<br>D-Term Filterung ist optimal für die meisten Copter und muss nur selten angepasst werden.<br><br>Wird der Regler nach links bewegt reduziert die Motortemperatur und Coptern mit vielen Störungen und mit einem hohen PID-D Tuningmaßnahmen, kann aber zu vermehrten Propwash und zu niedrigen D-Frequenz Resonanzen führen.<br><br>Wird der Regler nach rechts bewegt wird <b>nicht<\/b> empfohlen kann aber Propwash reduzieren in sauberen (störungsarmen) Coptern Aufbauten. Kann aber zu Motorüberhitzung oder während des Arming zu Motorgeräuschen führen.",
-        "description": "D Term filter tuning slider helpicon message"
-    },
     "pidTuningDTermSliderEnabled": {
         "message": "D Term Slider verwenden",
         "description": "Disable or enable D Term Filter Tuning Slider"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Schieberegler zum Anpassen der Quad-Flugeigenschaften (PID-Verstärkung)<br \/><br \/>Dämpfung (D-Verstärkung): Widersteht schnellen Bewegungen, minimiert P Oszillation.<br \/><br \/>Nachverfolgung (P\/I Verstärkung): Verbessert die Reaktionsfähigkeit des Quads, wenn zu hohe Werte Oszillation verursachen.<br \/><br \/>Stick-Reaktion (Feedforward): Erhöht die Reaktionsfähigkeit des Quads auf schnellere Stick-Bewegungen.<br \/><br \/>Drift - Wobble (I Verstärkung für Experten): Feinanpassung von I.<br \/><br \/>Dynamic D (D Max für Experten): Setzt den maximalen Wert, auf den D während schneller Bewegungen erhöht werden kann.<br \/><br \/>Pitch Dämpfung (Pitch:Roll D Verhältnis für Experten): Erhöht die Dämpfung auf Pitch relativ zur Roll.<br \/><br \/>Pitchverfolgung (Pitch:Roll P, I und F Verhältnis, Expert): Erhöht die Verstärkung der Stabilisierung auf Pitch relativ zur Roll.<br \/><br \/>Master Multiplikator (alle Verstärkungen für Experten): Erhöht oder senkt alle PID-Verstärkungen unter Beibehaltung der aller Verhältnisse.",
-        "description": "Overall helpicon message for PID tuning sliders"
-    },
-    "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">ACHTUNG<\/span>: Aktuelle Schieberegler-Positionen können \"flyaways\", Motorschäden oder unsicheres Multikopterverhalten verursachen. Bitte Vorsicht.",
-        "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Hinweis:<\/strong> Die Schieberegler sind deaktiviert, da die Werte manuell geändert wurden. Klicken Sie auf die Schaltfläche '$t(pidTuningSliderEnableButton.message)' um sie wieder zu aktivieren. Dies wird die Werte zurücksetzen und alle ungespeicherten Änderungen werden verloren gehen.",
@@ -4118,10 +4038,6 @@
         "message": "Hauptmultiplikator:",
         "description": "Master tuning slider label"
     },
-    "pidTuningMasterSliderHelp": {
-        "message": "Erhöht alle PID-Parameter gleichermaßen. Ändere diesen Schieberegler nicht, es sei denn, du hast keine Anpassung auf den anderen Schieberegler. In der Regel wird dies nur für schwere oder Copter mit hohen Trägheitsmomente (MoI)-Quads, wie X-Klasse oder Cinelifter benötigt. Zu viel Verstärkung kann zu höhrbaren Oszillationen oder heißen Motoren führen.",
-        "description": "Master Gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Dämpfung:<br \/><i><small>D Verstärkung(Gain)<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4134,41 +4050,21 @@
         "message": "Nachverfolgung:<br \/><i><small>P & I Verstärkung<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
-    "pidTuningPIGainSliderHelp": {
-        "message": "Erhöhe den Tracking-Schieberegler, um die Quad Reaktionen durch Deine Stick-Bewegungen zu schärfen und vermindert die Empfindlichkeit durch äußere Einflüsse; Vermeide das die Nase des Quad zu keiner Zeit ausserhalb des gewünschtens Kurses liegt.<br \/><br \/>Niedrigere „Tracking“-Werte werden viele Bobbles haben und werden bei Stick-Bewegungen und in Prop-wash vom Kurs abweichen. Hohes „Tracking“ kann zu Oszillation und schnellem Bounceback führen (schwer zu sehen, aber du kannst es hören). Übermäßiges Tracking kann zu Oszillation und heißen Motoren führen.",
-        "description": "P and I gain tuning slider helpicon message"
-    },
     "pidTuningResponseSlider": {
         "message": "Stick Empfindlichkeit:<br \/><i><small>FF (Feedforward) Verstärkung<\/small><\/i>",
         "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "Geringere Stick-Empfindlichkeit erhöht die Latenzzeit der Quad Bewegungen auf Signale und kann am Ende eines Flips oder einer Rolle zu langsamem Bounceback führen.<br><br>Höhere Stick Reaktionzeiten ergeben knackigere Quad-Reaktionen auf scharfe Stick Bewegungen. Zu viel Stick Response kann zu Überschießen am Ende eines Flips oder einer Rolle führen.<br \/><br \/><strong>Hinweis:<\/strong><br \/>„I-term Relax“ kann den Bounceback für trägere Quads reduzieren oder wenn niedrige Stick Response Verstärkung verwendet wird.",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br \/><i><small>I-Verstärkung<\/small><\/i>",
         "description": "I-term slider label"
     },
-    "pidTuningIGainSliderHelp": {
-        "message": "Erhöht oder verringert I. Höhere I-Werte können das Steuerverhalten in Spiraldrehungen, Orbits oder 0%-Gas-Befehlen verbessern. Zu hohe I-Werte, insbesondere in Kombination mit nicht ausreichend hohen P-Werten, können nach Flips\/Rolls oder bei plötzlichen 0%-Gas-Befehlen zu Schwingungen (Wobbles) oder Bounceback führen.<br \/><br \/>Normalerweise sollte der Schieberegler „Drift – Wobble“ so hoch wie möglich eingestellt sein, um ein besseres Steuerverhalten des Quads in Spiraldrehungen, Orbits, etc. zu erreichen...aber nicht so hoch, dass Schwingungen (Wobbles) bereits bei 0% Gas auftreten.<br \/><br \/><strong>Hinweis:<\/strong><br \/>Falls jemals offensichlicher Bounceback auftritt, stelle sicher, dass „I-Term Relax“ aktiviert ist und versuche den Wert <b>iterm_relax_cutoff<\/b> zu reduzieren.",
-        "description": "I-gain Gain tuning slider helpicon message"
-    },
     "pidTuningDMaxGainSlider": {
         "message": "Dynamische Dämpfung:<br \/><i><small>D Max<\/small><\/i>",
         "description": "D Max slider label"
     },
-    "pidTuningDMaxGainSliderHelp": {
-        "message": "Erhöht D Max, den maximale Wert, auf den D bei schnelleren Bewegungen steigen kann.<br \/><br \/>Für Rennquads, wo der Haupt-Dämpfungsregler niedrig eingestellt wurde, um die Motortemperatur zu minimieren, Wenn Du diesen Schieberegler nach rechts verschiebst, wird das Überschießen bei schnelle Richtungsänderungen verbessern.<br \/><br \/>Für HD oder Kino Quads, Instabilität im Forward-Flug wird am besten durch Verschieben des Dämpfungsreglers nach rechts reguliert (nicht des Dynamic Dämpfungs Reglers). Prüfe die Motortemperatur und achte auf seltsame Motorengeräusche beim Verschieben dieses Reglers nach rechts.<br \/><br \/>Für Freestyle-Quads, besonders schwerere Builds, kann das Verschieben dieses Schiebereglers nach rechts helfen, Überschießen (Overshoot) in Flips und Rolls zu steuern.<br \/><br \/><strong>Hinweis:<\/strong><br \/>Generelles Überschießen in Flips und Rollen ist auf zu wenig 'I-Term Relax' zurückzuführen oder Motordesyncs oder durch Motorsättigung). Wenn Du das feststellst, wenn Du den Dämpfungs Boost Regler nach rechts bewegst, kannst du das Flip- oder Rollüberschießen nicht verbessern, verschiebe wieder nach links auf die normale Position und suche den Grund für den Überschießen oder Wobbel.",
-        "description": "D Max slider helpicon message"
-    },
     "pidTuningRollPitchRatioSlider": {
         "message": "Pitch-Dämpfung:<br \/><i><small>Pitch:Roll D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Erhöht NUR die Dämpfung (D) auf der Pitch-achse, das heißt für Pitch relativ zur Roll. Hilft beim Überschiesen der Bewegung auf der Pitch-Achse oder auch bei Bounce-Back<br \/><br \/>Quads die träge auf Änderungen der Pitch-Achse reagieren, benötigen in der Regel mehr Dämpung (da Pitch träger ist und somit sich mehr Dynamik aufsummiert).<br \/><br \/>Verfeinere im ersten Schritt über Master \"Dämpfung\" und\/oder über den \"Nachverfolgung\" Schieberegler solange bis du ein gutes Roll-Achsenverhalten hast. Anschließend optimierst du über den Schiebregler (erhöhen\/verringern) die Pitch-Achse ohne das die Roll-achse beeinflusst wird.",
-        "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
         "message": "Pitch Nachverfolgung:<br><i><small>Pitch:Roll P, I & FF<\/small><\/i>",
@@ -4215,14 +4111,6 @@
     "pidTuningGyroLowpass2Help": {
         "message": "Der zweite von zwei Gyro Tiefpass Filtern.<br \/><br \/>Dieser Filter läuft in der Gyro-Schleife. Filtert das Signal, bevor es in die PID-Schleife eintritt. Es befindet sich immer im statischen (feste Grenzfrequenz) Modus.<br \/><br \/>Wenn die PID-Schleifenfrequenz kleiner ist als die Gyro-Schleifenfrequenz, zB eine 4k PID-Schleife mit einer 8k Gyro-Schleife. Dieser Filter sollte beibehalten werden, um Aliasing-Probleme aufgrund von 8k->4k Downsampling zu vermeiden.<br \/><br \/>Eine einzelne Gyro Tiefpass 2-Konfiguration, auf irgendwo zwischen 500 und 1000Hz gesetzt, funktioniert gut für Betaflight 4. x oder höher, für saubere Builds mit RPM Filterung aktiv und zumindest Standard D Filter.",
         "description": "Gyro lowpass filter helpicon message"
-    },
-    "pidTuningGyroLowpassFilterHelp": {
-        "message": "Gyro Tiefpassfilter dämpfen höhere Störfrequenzen, um diese von der PID-Schleife fernzuhalten. Es gibt zwei unabhängig konfigurierbare Gyrofilter; standardmäßig sind beide aktiv.<br \/><br \/>Mit RPM-Filterung kann der Gyro-Filter Schieberegler oft etwas nach rechts bewegt werden oder alternativ kann ein einzelner statischer Gyro Tiefpassfilter bei 500hz ausreichen.<br \/><br \/>Ein Quad wird mit der geringsten Verzögerung des Gyro Filters weniger Propwash haben.<br \/><br \/>Beim Verschieben von Schiebereglern immer auf Motortemperatur achten. Bei minimaler Gyrofilterung ist es unerlässlich, genügend D-Filter zu haben! Weniger Filterung bewirkt geringere Latenzzeiten!",
-        "description": "Gyro lowpass filter helpicon message"
-    },
-    "pidTuningDTermLowpassFilterHelp": {
-        "message": "D-Term Tiefpassfilter dämpfen höhere Störfrequenzen und Resonanzen, die sonst durch D-Gain verstärkt würden.<br \/><br \/>Es gibt zwei D-Filter und <b>ihre Effekte sind additiv<\/b>. Beide sind in fast allen Quad erforderlich, obwohl ein einziger PT2 anstelle von zwei PT1 verwendet werden kann.<br \/><br \/>Generell, das Quad fliegt am besten und hat die geringste Propwasch, wenn es die geringste Filterverzögerung (Latenz) hat (Schieber nach rechts, höhere Grenzfrequenzen = weniger Latenz). Vor allem bei D-Filtern können Schieberegler auf der rechten Seite Motortemperatur <b>erheblich erhöhen<\/b>.<br \/><br \/>Es ist sehr einfach, die Motoren zu zerstören, wenn Du nicht genügend D-Filter hast - <b>achten darauf!<\/b>!",
-        "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filter"
@@ -4279,9 +4167,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "Anzahl Kerbfilter(Notches)"
     },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": "Der dynamische Notchfilter hat drei Frequenzbereiche, in denen er funktionieren kann: LOW(80-330hz) für langsam drehende Quads wie 6+ Zoll, MEDIUM(140-550hz) für einen normalen 5 Zoll Quad, HIGH(230-800hz) für sehr hoch drehende 2,5-3 Zoll Quads."
-    },
     "pidTuningDynamicNotchQHelp": {
         "message": "Der Q-Faktor passt an, wie eng oder breit die dynamischen Notch-Filter sind. Höhere Werte machen ihn schmaler und präziser, niedrige Werte machen ihn weiter und breiter. Durch einen wirklich niedrigen Wert wird die Filterverzögerung erheblich erhöht."
     },
@@ -4305,10 +4190,6 @@
     "pidTuningRpmHarmonics": {
         "message": "Gyro RPM Filter Harmonie Anzahl",
         "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "Anzahl der Oberwellen pro Motor. Ein Wert von 3 (empfohlen für die meisten Quads) erzeugt 3 Notch-Filter pro Motor für jede Achse, insgesamt 36 Notches. Eine bei der Grundmotorfrequenz und zwei Oberwellen bei Vielfachen dieser Grundfrequenz.",
-        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
         "message": "Gyro RPM Filter Minimale Frequenz [Hz]",
@@ -4392,9 +4273,6 @@
     "pidTuningItermRotation": {
         "message": "I-Term Rotation"
     },
-    "pidTuningItermRotationHelp": {
-        "message": "Dreht den aktuellen I-Term Vektor korrekt zu den anderen Achsen, während der Rotation des Copters bei kontinuierlichen Gieren, z. B. bei Funnel (schelle Orbits) und anderen Tricks. Besonders für LOS-Acro Piloten nützlich."
-    },
     "pidTuningSmartFeedforward": {
         "message": "Smart Feedforward"
     },
@@ -4403,9 +4281,6 @@
     },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Unterdrückt I Term Summierung bei schnellen Bewegungen und reduziert Bounceback am Ende von Rolls\/Flips und anderen schnellen Stick-Bewegungen.<br><br> Setpoint-Modus reagiert auf geglättete Stick-Eingänge und funktioniert am besten für reaktionsschnelle Quads.<br><br>Der Gyro Modus kann für extrem träge Quads nützlich sein.<br><br>In der Regel sollte I-Term Relax nicht auf den Yaw angewendet werden."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Achsen",
@@ -4437,14 +4312,8 @@
         "message": "Cutoff",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Niedrigere Werte unterdrücken bei trägen Coptern den Bounceback-Effekte nach Flips, hohe Werte erhöhen die Präzision von schnellen Drehungen für beispielsweise Rennen.<br>Auf 30-40 setzen für Renn-Copter, auf 15 für reaktive Freestyle-Copter, auf 10 für schwerere Freestyle-Copter, auf 3-5 für Copter der X-Klasse."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Kontrolle"
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Diese Funktion löst einige grundlegende Probleme von $t(pidTuningItermRotation.message) und sollte sie irgendwann ersetzen. Diese Funktion sammelt den absoluten Gyro-Fehler in Quad Koordinaten und mischt eine proportionale Korrektur in den Sollwert. Dafür müssen AirMode und $t(pidTuningItermRelax.message) (für $t(pidTuningOptionRP.message)) aktiviert sein. Wenn Du diese Funktion mit $t(pidTuningIntegratedYaw.message) kombinierst aktiviere $t(pidTuningItermRelax.message) für $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Beschleunigungsschub"
@@ -4460,9 +4329,6 @@
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Winkelbegrenzung"
-    },
-    "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Hilft den Piloten, das Fliegen im Acro-Modus zu lernen, indem der Winkel, den der Quad erreichen kann, begrenzt wird. Gültige Grenzen sind 10-80 Grad.  Der Modus muss mit einem Schalter in der Registerkarte $t(tabAuxiliary.message) aktiviert werden."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integriertes Yaw"
@@ -4481,9 +4347,6 @@
     },
     "failsafePaneTitleOld": {
         "message": "Empfänger Failsafe"
-    },
-    "failsafeFeaturesHelpNew": {
-        "message": "Es gibt ein zweistufiges Failsafe-System. <strong>Stufe 1<\/strong> tritt dann ein, wenn die Impulslänge eines Kanals ungültig ist, der Empfänger einen Failsafe übermittelt oder kein Signal vom Empfänger anliegt. Die Kanal-Rückfalleinstellungen werden dann <span class=\"message-negative\">für alle<\/span> Kanäle gesetzt und ein kurzes Zeitfenster geöffnet, um eine erneute Verbindung zu ermöglichen. <strong>Stufe 2<\/strong> tritt ein, wenn die Fehlerbedingung länger besteht als die eingestellte 'Signalverlustdauer für die Aktivierung der Stufe 2', während der Copter <span class=\"message-negative\">gearmt<\/span> ist. Alle Kanäle behalten die in Stufe 1 definierten Werte, mit Ausnahme der in Stufe 2 gesetzten Werte.<br \/><strong>Hinweis:<\/strong> Bei der Aktivierung von Stufe 1 werden die Kanal-Rückfalleinstellungen auch auf AUX-Kanäle angewendet, die ungültige Impulse Werte haben."
     },
     "failsafePulsrangeTitle": {
         "message": "Einstellungen für gültige Pulslängen des Signals"
@@ -4533,9 +4396,6 @@
     "failsafeThrottleLowItem": {
         "message": "Failsafe Gas niedrig Verzögerung [seconds]"
     },
-    "failsafeThrottleLowHelp": {
-        "message": "Einfaches disarmen des Fluggerätes, falls das Gas über diese Zeit niedrig war. Dies wird anstatt der Failsafe Prozedur durchgeführt."
-    },
     "failsafeThrottleItem": {
         "message": "Verwendeter Gaswert bei Landung"
     },
@@ -4543,7 +4403,7 @@
         "message": "Verzögerung im Falle eines Failsafes bevor die Motoren abgeschaltet werden [seconds]"
     },
     "failsafeOffDelayHelp": {
-        "message": "Zeitspanne in der im Landemodus verblieben wird, bis die Motoren abgeschaltet werden und das Flugerät disarmt wird."
+        "message": "Zeitspanne, in der im Landemodus verblieben wird, bis die Motoren abgeschaltet werden und der Copter disarmt wird."
     },
     "failsafeSubTitle1": {
         "message": "Stufe 2 - Failsafe Einstellungen"
@@ -4572,9 +4432,6 @@
     "failsafeGpsRescueInitialClimb": {
         "message": "Initialer Aufstieg (Meter)"
     },
-    "failsafeGpsRescueInitialClimbHelp": {
-        "message": "Die Entfernung, um welche der Copter über seine aktuelle Höhe ansteigt, wenn eine Rettung eingeleitet und der Höhenmodus auf AKTUELLE Höhe gesetzt ist; wird auch im MAX Höhenmodus hinzugefügt."
-    },
     "failsafeGpsRescueItemReturnAltitude": {
         "message": "Höhe bei Rückkehr (Meter) - <strong>gilt nur im Feste Höhe Modus<\/strong>"
     },
@@ -4587,9 +4444,6 @@
     "failsafeGpsRescueItemAngle": {
         "message": "Maximaler Neigungswinkel"
     },
-    "failsafeGpsRescueAngleHelp": {
-        "message": "Höhere Maximalwinkel führen zu aggressiveren Rückkehren und höheren Vorwärtsgeschwindigkeiten. Kann für schwerere Fluggeräte mit hohem Luftwiderstand oder schwer zu kontrollierende Fluggeräte oder für den Einsatz bei stärkerem Wind nützlich sein. WARNUNG: Das Rettungsgas muss normalerweise erhöht werden, wenn der maximale Winkel erhöht wird! Andernfalls kann das Fluggerät an Höhe verlieren und abstürzen!"
-    },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Sink-Entfernung (meter)"
     },
@@ -4598,10 +4452,6 @@
     },
     "failsafeGpsRescueDescendRateHelp": {
         "message": "Die initiale Sinkrate beträgt das 3-fache dieses Wertes und verringert sich auf den 1-fachen Wert bei Erreichen der Landehöhe."
-    },
-    "failsafeGpsRescueItemMinStartDistHelp": {
-        "message": "Wenn die Rettung zu nah am Aufstiegspunkt (\"Home\") aktiviert wird (also innerhalb dieses Mindestabstands), wird das Fluggerät sich weiter entfernen, bis der Mindestabstand erreicht ist, und dann das normale Rettungsverhalten starten.",
-        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
     },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Gas min"
@@ -4623,9 +4473,6 @@
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
         "message": "\"Armen\" ohne GPS-Fix zulassen - <span class=\"message-negative\">WARNUNG: Kein GPS-Fix = bei Failsafe \"disarmt\" der Copter!<\/span>"
-    },
-    "failsafeGpsRescueArmWithoutFixHelp": {
-        "message": "Nicht empfohlen. Erlaubt \"Armen\" ohne erkannte Aufstiegsposition (\"Home\"), aber bei einem tatsächlichen Empfangsverlust wird der Copter deaktiviert (\"disarmed\") stürzt ab. Wenn das Verhalten per Schalter getestet wird, tritt die Deaktivierung erst mit einer kurzen Verzögerung ein."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Plausibilitätsprüfungen"
@@ -4650,9 +4497,6 @@
     },
     "failsafeSwitchModeItem": {
         "message": "Failsafe Schalter Aktion"
-    },
-    "failsafeSwitchModeHelp": {
-        "message": "Diese Option bestimmt, was geschieht, wenn Failsafe über einen AUX Schalter aktiviert wurde:<br\/><strong>Stufe 1<\/strong> aktiviert Failsafe Stufe 1. Dies ist nützlich, wenn du das Signalverlust Failsafe Verhalten testen möchtest.<br\/><strong>Stufe 2<\/strong> überspringt Stufe 1 und aktiviert das Stufe 2 Verfahren sofort<br\/><strong>Kill<\/strong> disarmed sofort (dein Fluggerät wird abstürzen)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Stufe 1"
@@ -4719,9 +4563,6 @@
     },
     "powerCalibrationManagerTitle": {
         "message": "Kalibrierungsmanager"
-    },
-    "powerCalibrationManagerHelp": {
-        "message": "Zum Kalibrieren verwende ein Multimeter, um die tatsächliche Spannung \/ Stromverbrauch auf deinem Multikopter (mit angeschlossenem Akku) zu messen und gib die Werte unten ein. Klicke dann, mit dem gleichen angeschlossenen Akku auf [Calibrate]."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Hinweis:<\/strong> Vor dem Kalibrieren stelle sicher, dass Divisor und Multiplikator für die Spannung und Abweichung für den Stromverbrauch korrekt eingestellt sind.<br>Wenn du die Werte auf 0 lässt, wird keine Kalibrierung angewendet.<\/br><strong>Denk dran die Propeller vor Anschliessen eines Akkus zu entfernen!<\/strong>"
@@ -5079,9 +4920,6 @@
     "osdSetupVtxTitle": {
         "message": "VTX Einstellungen"
     },
-    "osdSetupCraftNameTitle": {
-        "message": "Modellname"
-    },
     "osdSetupWarningsTitle": {
         "message": "Warnungen"
     },
@@ -5378,11 +5216,8 @@
         "message": "Die 3 besten GPS-Rundenzeiten"
     },
     "osdTextElementCraftName": {
-        "message": "Modellname",
+        "message": "Copter Name",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementCraftName": {
-        "message": "Fluggerät-Name wie im Konfigurations-Tab festgelegt.<\/br>Kann auch über die CLI-Variable \"craft_name\" gesetzt werden."
     },
     "osdTextElementAltitude": {
         "message": "Höhe",
@@ -5412,14 +5247,11 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOnTime": {
-        "message": "Totale Zeit seit dem das Fluggerät Strom hat"
+        "message": "Gesamtzeit, die der Copter eingeschaltet war"
     },
     "osdTextElementFlyTime": {
         "message": "Flugzeit",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlyTime": {
-        "message": "Gesamtzeit mit dieser Batterie seit das Fluggerät gearmt ist (blinkt wenn unter dem Alarm-Schwellwert)"
     },
     "osdTextElementFlyMode": {
         "message": "Flugmodus",
@@ -5689,7 +5521,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
-        "message": "Zeigt, welchen G-Kräften das Fluggerät ausgesetzt ist."
+        "message": "Zeigt, welchen G-Kräften der Copter ausgesetzt ist."
     },
     "osdTextElementMotorDiag": {
         "message": "Motor-Diagnose",
@@ -5919,15 +5751,12 @@
         "message": "Flugzeit gesamt",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
-    "osdDescStatFlyTime": {
-        "message": "Absolute Zeit seit dem das Fluggerät Strom hat"
-    },
     "osdTextStatArmedTime": {
         "message": "Flugzeit seit letztem Scharfschalten",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatArmedTime": {
-        "message": "Zeit seit dem letzten Armen"
+        "message": "Vergangene Zeit seit dem letzten Armen"
     },
     "osdTextStatMaxDistance": {
         "message": "Maximale Entfernung zur Startposition",
@@ -5976,7 +5805,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatGForce": {
-        "message": "Maximal einwirkende G-Kräfte auf das Fluggerät"
+        "message": "Maximale G-Kraft, die der Copter ausgesetzt war"
     },
     "osdTextStatEscTemperature": {
         "message": "ESC Temperatur Maximum",
@@ -6111,15 +5940,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
         "message": "Gesamte gearmte Zeit",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
         "message": "Letzte gearmte Zeit",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
         "message": "An\/gearmte Zeit",
-        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Genauigkeit:"
@@ -6467,10 +6296,6 @@
         "message": "Pit-Modus",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Wenn aktiviert, schaltet der VTX beim anschalten des Copters in einen sehr niedrigen Leistungsmodus, damit andere Piloten nicht gestört werden während der Copter eingeschaltet ist. Der Ausgangsleistung des vTX in diesem Modus beträgt gewöhnlich weniger als 5 mW.<br \/><br \/><b>HINWEIS:<\/b> Einige Protokolle wie SmartAudio können den Pit Mode nach dem Einschalten nicht über die Software aktivieren.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Pit-Modus Frequenz",
         "description": "Text of one of the fields of the VTX tab"
@@ -6675,9 +6500,6 @@
     "configurationSmallAngle": {
         "message": "Zum Armen maximal zulässiger Winkel"
     },
-    "configurationSmallAngleHelp": {
-        "message": "Das Fluggerät wird nicht armen wenn dieser Wert überschritten ist. Nur möglich bei aktiviertem Beschleunigungssensor. Ein Wert von 180 deaktiviert diese Funktion"
-    },
     "configurationBatteryVoltage": {
         "message": "Batterie Spannung"
     },
@@ -6761,7 +6583,7 @@
         "message": "Personalisierung"
     },
     "craftName": {
-        "message": "Modellname"
+        "message": "Copter Name"
     },
     "configurationCraftNameHelp": {
         "message": "Kann in Logs, Backup-Dateinamen und OSD angezeigt werden.<\/br>Kann über die <b>craft_name<\/b> CLI-Variable gesetzt werden."
@@ -7169,10 +6991,6 @@
     "presetsWarningBackup": {
         "message": "Bitte sichere Deine aktuelle Konfiguration ('$t(presetsBackupSave.message)'-Button oder über CLI, falls der Button deaktiviert ist) <strong>bevor<\/strong> du Voreinstellungen wählst und anwendest. Es gibt <b>keine Möglichkeit<\/b>, nach der Anwendung der Presets zur vorherigen Konfiguration zurückzukehren.",
         "description": "Warning message that shows up at the top of the presets tab"
-    },
-    "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">WARNUNG!<\/span> Die Verwendung von Preset Quellen von Dritten kann gefährlich sein.<br\/>Stelle sicher, dass du nur vertrauenswürdige Quellen hinzufügst und verwendest. Schädliche oder schlechte Preset Quellen werden Deine Copter-Konfiguration negative Auswirkungen auf das Flugverhalten Deines Copters haben.",
-        "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
         "message": "Ausgewählte Voreinstellung erfordert Firmware-Version $1<br\/> Aktuelle Firmware-Version ist $2",
