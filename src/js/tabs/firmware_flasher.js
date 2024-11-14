@@ -359,7 +359,7 @@ firmware_flasher.initialize = function (callback) {
                                 const select_e = $('select[name="commits"]');
                                 select_e.empty();
                                 commits.forEach((commit) => {
-                                    select_e.append($(`<option value='${commit.sha}'>${commit.message}</option>`));
+                                    select_e.append($(`<option value='${commit.sha}'>${commit.message.split('\n')[0]}</option>`));
                                 });
                             });
 
