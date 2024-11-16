@@ -81,18 +81,6 @@ export function initializeSerialBackend() {
         }
     });
 
-    $('div.open_firmware_flasher a.flash').click(function () {
-        if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
-            $('div#flashbutton a.flash_state').removeClass('active');
-            $('div#flashbutton a.flash').removeClass('active');
-            $('#tabs ul.mode-disconnected .tab_landing a').click();
-        } else {
-            $('#tabs ul.mode-disconnected .tab_firmware_flasher a').click();
-            $('div#flashbutton a.flash_state').addClass('active');
-            $('div#flashbutton a.flash').addClass('active');
-        }
-    });
-
     PortHandler.initialize();
     PortUsage.initialize();
 }
@@ -155,10 +143,6 @@ function connectDisconnect() {
             }
 
         } else {
-            if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
-                $('div#flashbutton a.flash_state').removeClass('active');
-                $('div#flashbutton a.flash').removeClass('active');
-            }
             GUI.timeout_kill_all();
             GUI.interval_kill_all();
             GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
