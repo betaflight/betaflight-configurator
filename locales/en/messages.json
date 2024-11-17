@@ -7409,6 +7409,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Motor Protocol"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "OSD Protocol"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Configuration Filename:"
     },
@@ -7426,6 +7429,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Select the motor (ESC) protocol you would like included in this build. Note this is a drop down, but only one item may be selected."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "Select the OSD protocol you would like included in this build. Note this is a drop down, but only one item may be selected."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especially useful for developers, you can select a merged PR, specify a commit sha, or specify a 'yet to be merged' PR by typing in a # followed by the PR number e.g. #1234 (this is shorthand for the branch 'pull/1234/head')."
