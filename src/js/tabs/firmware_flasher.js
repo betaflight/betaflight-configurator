@@ -221,7 +221,7 @@ firmware_flasher.initialize = function (callback) {
             }
 
             data.osdProtocols = [
-                { name: 'None', value: 'No OSD' },
+                { name: 'None', value: '' },
                 { name: 'Analog', value: 'USE_OSD_SD' },
                 { name: 'Digital', value: 'USE_OSD_HD' },
                 { name: 'FrSky', value: 'USE_FRSKYOSD' },
