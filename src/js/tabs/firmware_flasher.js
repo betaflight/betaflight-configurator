@@ -227,6 +227,13 @@ firmware_flasher.initialize = function (callback) {
                 { name: 'FrSky', value: 'USE_FRSKYOSD' },
             ];
 
+            // pre select osd option when found in general options after auto detect
+            if (self.cloudBuildOptions) {
+                data.osdProtocols.forEach((option) => {
+                    option.default = self.cloudBuildOptions.includes(option.value);
+                });
+            }
+
             // remove osdProtocols from generalOptions
             data.generalOptions = data.generalOptions.filter(option => option.value !== 'USE_FRSKYOSD' && option.value !== 'USE_OSD_SD' && option.value !== 'USE_OSD_HD');
 
