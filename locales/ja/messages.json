@@ -3806,7 +3806,7 @@
         "message": "警告灯"
     },
     "ledStripIndecatorOverlay": {
-        "message": "インジケーター (マトリクスの位置を利用)"
+        "message": "インジケータ (マトリクスの位置を利用)"
     },
     "colorBlack": {
         "message": "黒色"
@@ -5555,7 +5555,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescAntiGravity": {
-        "message": "アンチグラビティ機能がオンの時、インジケーターを有効にします。"
+        "message": "アンチグラビティ機能がオンの時、インジケータを有効にします。"
     },
     "osdTextGForce": {
         "message": "Gフォース値",
