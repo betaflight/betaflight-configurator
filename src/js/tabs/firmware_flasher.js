@@ -220,13 +220,10 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
-            data.osdProtocols = [
-                { name: 'None', value: '' },
-                { name: 'Analog', value: 'USE_OSD_SD' },
-                { name: 'Digital', value: 'USE_OSD_HD' },
-                { name: 'FrSky', value: 'USE_FRSKYOSD' },
-            ];
-
+            // extract osd protocols from general options and add to osdProtocols
+            data.osdProtocols = data.generalOptions.filter(option => option.group === 'OSD');
+            // add None option to osdProtocols as first option
+            data.osdProtocols.unshift({name: 'None', value: ''});
             // pre select osd option when found in general options after auto detect
             if (self.cloudBuildOptions) {
                 data.osdProtocols.forEach((option) => {
@@ -235,7 +232,7 @@ firmware_flasher.initialize = function (callback) {
             }
 
             // remove osdProtocols from generalOptions
-            data.generalOptions = data.generalOptions.filter(option => option.value !== 'USE_FRSKYOSD' && option.value !== 'USE_OSD_SD' && option.value !== 'USE_OSD_HD');
+            data.generalOptions = data.generalOptions.filter(option => !option.group);
 
             buildOptionsList($('select[name="radioProtocols"]'), data.radioProtocols);
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
