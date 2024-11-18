@@ -220,8 +220,24 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
+            // extract osd protocols from general options and add to osdProtocols
+            data.osdProtocols = data.generalOptions
+            .filter(option => option.group === 'OSD')
+            .map(option => {
+                option.name = option.groupedName;
+                option.default = self.cloudBuildOptions?.includes(option.value);
+                return option;
+            });
+
+            // add None option to osdProtocols as first option
+            data.osdProtocols.unshift({name: 'None', value: ''});
+
+            // remove osdProtocols from generalOptions
+            data.generalOptions = data.generalOptions.filter(option => !option.group);
+
             buildOptionsList($('select[name="radioProtocols"]'), data.radioProtocols);
             buildOptionsList($('select[name="telemetryProtocols"]'), data.telemetryProtocols);
+            buildOptionsList($('select[name="osdProtocols"]'), data.osdProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
 
@@ -440,6 +456,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         $('select[name="board"]').select2();
+        $('select[name="osdProtocols"]').select2();
         $('select[name="radioProtocols"]').select2();
         $('select[name="telemetryProtocols"]').select2();
         $('select[name="motorProtocols"]').select2();
@@ -522,6 +539,7 @@ firmware_flasher.initialize = function (callback) {
             'select[name="board"]',
             'select[name="radioProtocols"]',
             'select[name="telemetryProtocols"]',
+            'select[name="osdProtocols"]',
             'select[name="motorProtocols"]',
             'select[name="options"]',
             'select[name="commits"]',
@@ -834,6 +852,10 @@ firmware_flasher.initialize = function (callback) {
                     });
 
                     $('select[name="options"] option:selected').each(function () {
+                        request.options.push($(this).val());
+                    });
+
+                    $('select[name="osdProtocols"] option:selected').each(function () {
                         request.options.push($(this).val());
                     });
 
