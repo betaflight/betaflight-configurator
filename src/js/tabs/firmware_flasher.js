@@ -221,15 +221,16 @@ firmware_flasher.initialize = function (callback) {
             }
 
             // extract osd protocols from general options and add to osdProtocols
-            data.osdProtocols = data.generalOptions.filter(option => option.group === 'OSD');
+            data.osdProtocols = data.generalOptions
+            .filter(option => option.group === 'OSD')
+            .map(option => {
+                option.name = option.groupedName;
+                option.default = self.cloudBuildOptions.includes(option.value);
+                return option;
+            });
+
             // add None option to osdProtocols as first option
             data.osdProtocols.unshift({name: 'None', value: ''});
-            // pre select osd option when found in general options after auto detect
-            if (self.cloudBuildOptions) {
-                data.osdProtocols.forEach((option) => {
-                    option.default = self.cloudBuildOptions.includes(option.value);
-                });
-            }
 
             // remove osdProtocols from generalOptions
             data.generalOptions = data.generalOptions.filter(option => !option.group);
