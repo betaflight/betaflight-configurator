@@ -78,6 +78,10 @@ class GuiControl {
     interval_add(name, code, interval, first) {
         const data = { 'name': name, 'timer': null, 'code': code, 'interval': interval, 'fired': 0, 'paused': false };
 
+        if (this.interval_array.find((element) => element.name === name)) {
+            this.interval_remove(name);
+        }
+
         if (first === true) {
             code(); // execute code
 

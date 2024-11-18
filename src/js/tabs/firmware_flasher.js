@@ -623,6 +623,7 @@ firmware_flasher.initialize = function (callback) {
             }
 
             self.isFlashing = false;
+            GUI.interval_resume('sponsor');
         }
 
         let result = getConfig('erase_chip');
@@ -987,6 +988,7 @@ firmware_flasher.initialize = function (callback) {
 
         $('a.flash_firmware').on('click', function () {
             self.isFlashing = true;
+            GUI.interval_pause("sponsor");
             const isFlashOnConnect = $('input.flash_on_connect').is(':checked');
 
             self.enableFlashButton(false);
@@ -1135,6 +1137,7 @@ firmware_flasher.initialize = function (callback) {
     }
 
     self.buildApi.loadTargets(() => {
+        console.log('Targets loaded');
         $('#content').load("./tabs/firmware_flasher.html", onDocumentLoad);
     });
 };
