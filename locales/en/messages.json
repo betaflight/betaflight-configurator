@@ -3974,6 +3974,10 @@
         "message": "Larson scanner",
         "description": "Larson effect switch label on LED Strip tab"
     },
+    "ledStripAuroraOverlay": {
+        "message": "Aurora Effect",
+        "description": "Aurora effect switch label on LED Strip tab"
+    },
     "ledStripBlinkAlwaysOverlay": {
         "message": "Blink always"
     },
