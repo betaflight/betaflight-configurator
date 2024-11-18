@@ -225,7 +225,7 @@ firmware_flasher.initialize = function (callback) {
             .filter(option => option.group === 'OSD')
             .map(option => {
                 option.name = option.groupedName;
-                option.default = self.cloudBuildOptions.includes(option.value);
+                option.default = self.cloudBuildOptions?.includes(option.value);
                 return option;
             });
 
