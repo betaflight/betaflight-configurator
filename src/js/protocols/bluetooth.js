@@ -365,7 +365,7 @@ class BT extends EventTarget {
         } catch(error) {
             console.error(error);
         }
-        this.lastWrite = this.writeCharacteristic.writeValueWithoutResponse(dataBuffer);
+        this.lastWrite = this.writeCharacteristic.writeValueWithResponse(dataBuffer);
 
         return {
             bytesSent: data.byteLength,
