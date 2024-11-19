@@ -421,9 +421,6 @@
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>er is geen motoruitgangsprotocol geselecteerd<\/strong>.<br> Selecteer een motoruitgangsprotocol dat geschikt is voor uw ESC's in '$t(configurationEscFeatures.message)' op het tabblad '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>de versnellingsmeter is ingeschakeld maar is niet gekalibreerd<\/strong>.<br>Als u de versnellingsmeter wilt gebruiken, volg dan de instructies voor '$t(initialSetupButtonCalibrateAccel.message)' op het tabblad '$t(tabSetup.message). Als een functie zoals autolevel modus of GPS-reddingende die de versnellingsmeter vereist is ingeschakeld, zal arming van het vaartuig worden uitgeschakeld totdat de versnellingsmeter is gekalibreerd.<br>Als u niet van plan bent om de versnellingsmeter te gebruiken wordt aanbevolen om deze uit te schakelen in '$t(configuratiesysteem).message)' op het tabblad '$t(tabConfiguration.message)."
-    },
     "infoVersionOs": {
         "message": "Besturingsysteem:<strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
@@ -464,9 +461,6 @@
     },
     "uniqueDeviceIdReceived": {
         "message": "Unieke appaart-ID: <strong>0x$1<\/strong>"
-    },
-    "craftNameReceived": {
-        "message": "Naam model: <strong>$1<\/strong>"
     },
     "armingDisabled": {
         "message": "<strong>Arming Uitgezet<\/strong>"
@@ -733,10 +727,6 @@
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle kanaal is te hoog",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "Model niet vlak genoeg",
-        "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
         "message": "Te snel ingeschakeld na het aansluiten van de stroom",
@@ -1015,17 +1005,11 @@
     "configurationThrottleMinimum": {
         "message": "Minimale Throttle (Laagste ESC waarde wanneer gearmt)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "Dit is de 'idle'-waarde die naar de ESC's wordt gestuurd wanneer het vaartuig is ingeschakeld en de gashendel op de minimumpositie staat. Verhoog de waarde voor meer stationair toerental. Verhoog ook de waarde in het geval van desyncs!"
-    },
     "configurationThrottleMaximum": {
         "message": "Maximale Throttle (Hoogste ESC waarde wanneer gearmt)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimale Instructie (ESC waarde wanneer niet gearmt)"
-    },
-    "configurationThrottleMinimumCommandHelp": {
-        "message": "Dit is de waarde die wordt verzonden naar de ESC's wanneer de drone niet is gearmt. Stel deze in op een waarde die er voor zorgt dat de motoren zijn gestopt (voor bijna alle ESC's geldt een waarde van 1000)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Selecteer een motor uitvoer protocol geschikt voor jou ESC's. $t(escProtocolDisabledMessage.message)"
@@ -1041,9 +1025,6 @@
     },
     "configurationDshotBeaconTone": {
         "message": "Beacon Toon"
-    },
-    "configurationDshotBeaconHelp": {
-        "message": "De Dshot beacon gebruikt de ESC's en motoren om geluid te maken. Dit betekent dat de Dshot beacon niet gebruikt kan worden wanneer de motoren draaien. In betaflight 3.4 en later, wanneer er wordt geprobeerd te armen terwijl de Dshot beacon actief is, is er een 2 seconden vertraging na de laatste Dshot beacon toon voor de done is gearmt. Dit om te voorkomen dat de Dshot beacon functionaliteit de Dshot commands stoort bij armen.<br\/><strong>Waarschuwing:<\/strong> Dshot beacon laat stroom door je motoren lopen als het actief is. Dit kan overmatige hitte en mogelijk schade aan je motoren en of ESC's toedoen als de beacon sterkte te hoog is ingesteld. Gebruik de BLHeli Configurator of de BLHeli Suite om de beacon sterkte te testen en aan te passen."
     },
     "configurationBeeper": {
         "message": "Bieper Configuratie"
@@ -1175,10 +1156,6 @@
     "configurationGPSHomeOnce": {
         "message": "Thuispunt eenmaal instellen",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "Wanneer ingeschakeld wordt je startpunt (Home point) bepaald bij de eerste keer \"Armen\" na het inpluggen van je batterij. Als dit niet is ingeschakeld wordt je startpunt bij elke keer dat je \"Armt\" opnieuw bepaald.",
-        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
         "message": "Seriële Ontvanger Provider"
@@ -2885,9 +2862,6 @@
     "pidTuningYawJumpPrevention": {
         "message": "Yaw Sprong Voorkomen"
     },
-    "pidTuningYawJumpPreventionHelp": {
-        "message": "Voorkomt dat de quad aan het einde van een yaw omhoog te springt. Hoger waardes geeft meer demping aan het einde van een yaw bewegingen (werkt als de oude yaw D wat eigenlijk geen echte D waarde was zoals op alle andere assen)"
-    },
     "pidTuningRcExpoPower": {
         "message": "RC Expo Power"
     },
@@ -2956,10 +2930,6 @@
         "message": "D Term Filtervermenigvuldiger:",
         "description": "D Term filter tuning slider label"
     },
-    "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">VOORZICHTIG<\/span>: de huidige schuifposities kan leiden tot flyaways, motorschade of onveilig gedrag. Ga voorzichtig te werk.",
-        "description": "Warning shown when tuning slider are above safe limits"
-    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Opmerking:<\/strong> schuifregelaars zijn uitgeschakeld omdat de waarden handmatig gewijzigd zijn. Als u op de knop '$t(pidTuningSliderEnableButton.message)' klikt, worden ze opnieuw geactiveerd. Hierdoor worden de waarden gereset en gaan alle niet-opgeslagen wijzigingen verloren.",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -3003,9 +2973,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Bereik"
     },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": "De dynamische notch heeft drie frequentiebereiken waarin hij kan werken: LOW (80-330Hz) voor quads met een lager toerental zoals 6+ inch, MEDIUM (140-550Hz) voor een normale 5 inch quad, HIGH (230-800Hz) 2 tot 3 inch quads met hoge RPMs. De AUTO-optie selecteert het bereik afhankelijk van de waarde die is ingesteld bij de maximale afsnijfrequentie van de Gyro Dynamic Lowpass 1 Filter."
-    },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q-factor bepaalt hoe smal of breed de dynamische notch-filters zijn. Een hogere waarde maakt het smaller en nauwkeuriger en een lagere waarde maakt het breder en minder nauwkeurig. Een erg lage waarde zal de filtervertraging enorm vergroten."
     },
@@ -3029,10 +2996,6 @@
     "pidTuningRpmHarmonics": {
         "message": "Gyro RPM Filter Harmonics-nummer",
         "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "Aantal harmonischen per motor. Een waarde van 3 is aanbevolen voor de meeste quads. Deze waarde genereert 3 notch filters per motor voor elke as. Een waarde van 3 zal dus resulteren in 36 notches. (Xyz * notches * 4 motoren) In dit voorbeeld komt er dus een notch op de basismotorfrequentie en twee harmonischen op een veelvouden van die basisfrequentie.",
-        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
         "message": "Gyro RPM Filter Min Frequentie [Hz]",
@@ -3068,9 +3031,6 @@
     },
     "pidTuningItermRotation": {
         "message": "I Term Rotatie"
-    },
-    "pidTuningItermRotationHelp": {
-        "message": "Roteert de huidige I Term-vector op de juiste manier naar de andere assen wanneer de quad roteert bij continu gieren tijdens rollen en bij het uitvoeren van trechters en andere trucs. Wordt zeer gewaardeerd door LOS acro piloten."
     },
     "pidTuningSmartFeedforward": {
         "message": "Slimme Feedforward"
@@ -3129,9 +3089,6 @@
     "failsafePaneTitleOld": {
         "message": "Ontvanger failsafe"
     },
-    "failsafeFeaturesHelpNew": {
-        "message": "Failsafe heeft twee fasen. <strong>Fase 1<\/strong> wordt ingeschakeld wanneer een vluchtkanaal een ongeldige pulslengte heeft, de ontvanger een failsafe-modus meldt of er is helemaal geen signaal is ontvangen. De terugvalinstellingen van het kanaal worden toegepast op <span class=\"message-negative\">alle kanalen<\/span>. Er wordt dan een korte tijd gegeven om herstel mogelijk te maken. <strong>Fase 2<\/strong> wordt ingevoerd wanneer de foutconditie langer duurt dan de geconfigureerde tijd. Dit is van toepassing zolang de quad is <span class=\"message-negative\">ingeschakeld<\/span>. Alle kanalen blijven dan op de toegepaste kanaal fallback-instelling tenzij deze wordt onderdrukt door de gekozen procedure. <br \/><strong>Opmerking:<\/strong> voordat fase 1 wordt ingevoerd, worden de terugvalinstellingen voor kanalen ook toegepast op de individuele AUX-kanalen met ongeldige pulsen."
-    },
     "failsafePulsrangeTitle": {
         "message": "Geldige Pulse Bereik Instellingen"
     },
@@ -3156,14 +3113,8 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "Fase 2 - Instellingen"
     },
-    "failsafeThrottleLowHelp": {
-        "message": "Schakel het vaartuig gewoon uit in plaats van de geselecteerde failsafe-procedure uit te voeren wanneer de gashendel gedurende deze tijd laag stond"
-    },
     "failsafeThrottleItem": {
         "message": "Throttle waarde die gebruikt wordt tijdens het landen"
-    },
-    "failsafeOffDelayHelp": {
-        "message": "Tijd die er wordt doorgebracht in landingsmodus totdat de motoren worden uitgeschakeld en de quad wordt disarmed"
     },
     "failsafeSubTitle1": {
         "message": "Fase 2 - Faal Procedure"
@@ -3237,9 +3188,6 @@
     "failsafeSwitchModeItem": {
         "message": "Failsafe Schakelaar Actie"
     },
-    "failsafeSwitchModeHelp": {
-        "message": "Deze optie bepaalt wat er gebeurt als Failsafe via de AUX-schakelaar wordt geactiveerd:<br\/><strong>Fase 1<\/strong> activeert failsave fase 1. Dit is handig voor als u signaalverlies wilt simuleren.<br\/><strong>Fase 2<\/strong> slaat fase 1 over en activeert direct de fase 2 procedure<br\/><strong>Kill<\/strong> schakelt de quad direct uit (je drone zal gelijk crashen)"
-    },
     "failsafeSwitchOptionStage1": {
         "message": "Fase 1"
     },
@@ -3299,9 +3247,6 @@
     },
     "powerCalibrationManagerTitle": {
         "message": "Kalibratie Manager"
-    },
-    "powerCalibrationManagerHelp": {
-        "message": "Om te kalibreren dient u gebruik te maken van een multimeter om de daadwerkelijke voltage\/ amperage van uw drone te meten (de batterij dient ingeplugd te zijn). Voer de gemeten waardes hieronder in. Klik vervolgens op [Calibrate] terwijl u de batterij aangesloten houdt."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Opmerking:<\/strong> voordat u de schaal kalibreert, moet u ervoor zorgen dat de verdeler en vermenigvuldiger voor spanning en offset voor stroomsterkte correct zijn ingesteld.<br>Als u de waarden op 0 laat, wordt de kalibratie niet toegepast.<\/br><strong>Verwijder uw propellers alvorens je een accu aansluit!<\/strong>"
@@ -3607,9 +3552,6 @@
     "osdSetupVtxTitle": {
         "message": "VTX instellingen"
     },
-    "osdSetupCraftNameTitle": {
-        "message": "Naam drone"
-    },
     "osdSetupWarningsTitle": {
         "message": "Waarschuwingen"
     },
@@ -3778,10 +3720,6 @@
     "osdDescElementMahDrawn": {
         "message": "Totale verbruikte batterijcapaciteit"
     },
-    "osdTextElementCraftName": {
-        "message": "Naam drone",
-        "description": "One of the elements of the OSD"
-    },
     "osdTextElementAltitude": {
         "message": "Hoogte",
         "description": "One of the elements of the OSD"
@@ -3793,15 +3731,9 @@
         "message": "Tijd aan",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementOnTime": {
-        "message": "De totale tijd die de quad aan stond"
-    },
     "osdTextElementFlyTime": {
         "message": "Vlucht tijd",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlyTime": {
-        "message": "De totale tijd die de quad in de huidige stroomcyclus daadwerkelijk is ingeschakeld (knippert wanneer deze boven de alarmdrempel uit komt)"
     },
     "osdTextElementFlyMode": {
         "message": "Vluchtmodus",
@@ -3951,9 +3883,6 @@
         "message": "Timer: armed tijd",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementArmedTime": {
-        "message": "De tijd sinds het vaartuig voor het laatst was armed"
-    },
     "osdTextElementHomeDirection": {
         "message": "Thuis richting",
         "description": "One of the elements of the OSD"
@@ -4059,9 +3988,6 @@
     "osdTextGForce": {
         "message": "G-Kracht",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescGForce": {
-        "message": "Laat zien hoeveel G-Kracht de drone ervaart"
     },
     "osdTextElementMotorDiag": {
         "message": "Motor diagnostiek",
@@ -4257,15 +4183,9 @@
         "message": "Vluchttijd totaal",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
-    "osdDescStatFlyTime": {
-        "message": "De totale tijd dat het vaartuig is ingeschakeld op de huidige stroomcyclus"
-    },
     "osdTextStatArmedTime": {
         "message": "Vliegtijd laatst armed",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatArmedTime": {
-        "message": "Tijd sinds quad laatst was armed"
     },
     "osdTextStatMaxDistance": {
         "message": "Maximale afstand van thuis",
@@ -4312,9 +4232,6 @@
     "osdTextStatGForce": {
         "message": "Maximale G-kracht",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatGForce": {
-        "message": "Maximale G-Kracht ervaren door drone"
     },
     "osdTextStatEscTemperature": {
         "message": "Maximale ESC temperatuur",
@@ -4407,15 +4324,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
         "message": "Totale tijd armed",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
         "message": "Tijd laatste keer armed",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
         "message": "Aan\/Armed tijd",
-        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Nauwkeurigheid:"
@@ -4728,10 +4645,6 @@
         "message": "Pit modus",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Indien ingeschakeld gaat de VTX in een zeer energiezuinige modus zodat je aan je quad kan werken ​​zonder andere piloten te storen. Normaal is het bereik van deze modus minder dan 5 meter.<br \/><br \/>OPMERKING: Sommige protocollen, zoals SmartAudio, kunnen de Pit-modus na het opstarten niet via software inschakelen.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Pit Modus frequentie",
         "description": "Text of one of the fields of the VTX tab"
@@ -4909,9 +4822,6 @@
     "configurationSmallAngle": {
         "message": "Maximale ARM-hoek [degrees]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "Quad zal niet inschakelen worden als deze meer dan het opgegeven aantal graden gekanteld is. Alleen van toepassing als de versnellingsmeter is ingeschakeld. Deze controle wordt uitgeschakeld als de waarde wordt ingesteld op 180"
-    },
     "configurationBatteryVoltage": {
         "message": "Batterij voltage"
     },
@@ -4993,9 +4903,6 @@
     },
     "configurationPersonalization": {
         "message": "Personaliseren"
-    },
-    "craftName": {
-        "message": "Naam drone"
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV Camera Hoek [degrees]"

@@ -278,7 +278,7 @@ motors.initialize = async function (callback) {
             feature27:          FC.FEATURE_CONFIG.features.isEnabled('ESC_SENSOR'),
             dshotBidir:         FC.MOTOR_CONFIG.use_dshot_telemetry,
             motorPoles:         FC.MOTOR_CONFIG.motor_poles,
-            digitalIdlePercent: FC.PID_ADVANCED_CONFIG.digitalIdlePercent,
+            motorIdle:          FC.PID_ADVANCED_CONFIG.motorIdle,
             idleMinRpm:         FC.ADVANCED_TUNING.idleMinRpm,
             _3ddeadbandlow:     FC.MOTOR_3D_CONFIG.deadband3d_low,
             _3ddeadbandhigh:    FC.MOTOR_3D_CONFIG.deadband3d_high,
@@ -390,8 +390,8 @@ motors.initialize = async function (callback) {
             MSP.promise(MSPCodes.MSP_MOTOR).then(() => {
                 const mixer = FC.MIXER_CONFIG.mixer;
                 const motorCount = mixerList[mixer - 1].motors;
-                // initialize for models with zero motors
-                self.numberOfValidOutputs = motorCount;
+                // initialize with firmware supplied motor_count
+                self.numberOfValidOutputs = FC.MOTOR_CONFIG.motor_count;
 
                 for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
                     if (FC.MOTOR_DATA[i] === 0) {
@@ -691,7 +691,7 @@ motors.initialize = async function (callback) {
 
         unsyncedPWMSwitchElement.prop('checked', FC.PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0).trigger("change");
         $('input[name="unsyncedpwmfreq"]').val(FC.PID_ADVANCED_CONFIG.motor_pwm_rate);
-        $('input[name="digitalIdlePercent"]').val(FC.PID_ADVANCED_CONFIG.digitalIdlePercent);
+        $('input[name="motorIdle"]').val(FC.PID_ADVANCED_CONFIG.motorIdle);
         $('input[name="idleMinRpm"]').val(FC.ADVANCED_TUNING.idleMinRpm);
 
         dshotBidirElement.prop('checked', FC.MOTOR_CONFIG.use_dshot_telemetry).trigger("change");
@@ -755,24 +755,25 @@ motors.initialize = async function (callback) {
                 default:
             }
 
+            const analogProtocolConfigured = protocolConfigured && !digitalProtocol;
+            const digitalProtocolConfigured = protocolConfigured && digitalProtocol;
             const rpmFeaturesVisible = digitalProtocol && dshotBidirElement.is(':checked') || $("input[name='ESC_SENSOR']").is(':checked');
 
-            $('div.minthrottle').toggle(protocolConfigured && !digitalProtocol);
-            $('div.maxthrottle').toggle(protocolConfigured && !digitalProtocol);
-            $('div.mincommand').toggle(protocolConfigured && !digitalProtocol);
-            $('div.checkboxPwm').toggle(protocolConfigured && !digitalProtocol);
-            divUnsyncedPWMFreq.toggle(protocolConfigured && !digitalProtocol);
+            $('div.minthrottle').toggle(analogProtocolConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
+            $('div.maxthrottle').toggle(analogProtocolConfigured);
+            $('div.mincommand').toggle(analogProtocolConfigured);
+            $('div.checkboxPwm').toggle(analogProtocolConfigured);
+            divUnsyncedPWMFreq.toggle(analogProtocolConfigured);
 
-            $('div.digitalIdlePercent').toggle(protocolConfigured && digitalProtocol);
+            $('div.motorIdle').toggle(protocolConfigured
+                && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
+                || (digitalProtocolConfigured && FC.MOTOR_CONFIG.use_dshot_telemetry && FC.ADVANCED_TUNING.idleMinRpm));
+
             $('div.idleMinRpm').toggle(protocolConfigured && digitalProtocol && FC.MOTOR_CONFIG.use_dshot_telemetry);
 
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47) && FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry) {
-                $('div.digitalIdlePercent').hide();
-            }
+            $('.escSensor').toggle(digitalProtocolConfigured);
 
-            $('.escSensor').toggle(protocolConfigured && digitalProtocol);
-
-            $('div.checkboxDshotBidir').toggle(protocolConfigured && digitalProtocol);
+            $('div.checkboxDshotBidir').toggle(digitalProtocolConfigured);
             $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible);
 
             $('.escMotorStop').toggle(protocolConfigured);
@@ -1157,7 +1158,7 @@ motors.initialize = async function (callback) {
             FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = parseInt(escProtocolElement.val() - 1);
             FC.PID_ADVANCED_CONFIG.use_unsyncedPwm = unsyncedPWMSwitchElement.is(':checked') ? 1 : 0;
             FC.PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
-            FC.PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
+            FC.PID_ADVANCED_CONFIG.motorIdle = parseFloat($('input[name="motorIdle"]').val());
 
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
@@ -1225,7 +1226,7 @@ motors.initialize = async function (callback) {
     function setup_motor_output_reordering_dialog(callbackFunction, zeroThrottleValue)
     {
         const domDialogMotorOutputReorder = $('#dialogMotorOutputReorder');
-        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 1000 / 100;
+        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.motorIdle * 1000 / 100;
         const motorOutputReorderComponent = new MotorOutputReorderComponent($('#dialogMotorOutputReorderContent'),
             callbackFunction, mixerList[FC.MIXER_CONFIG.mixer - 1].name,
             zeroThrottleValue, idleThrottleValue);
@@ -1256,7 +1257,7 @@ motors.initialize = async function (callback) {
     function SetupdescDshotDirectionDialog(callbackFunction, zeroThrottleValue)
     {
         const domEscDshotDirectionDialog = $('#escDshotDirectionDialog');
-        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 1000 / 100;
+        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.motorIdle * 1000 / 100;
         const motorConfig = {
             numberOfMotors: self.numberOfValidOutputs,
             motorStopValue: zeroThrottleValue,

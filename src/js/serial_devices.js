@@ -9,6 +9,7 @@ export const vendorIdNames = {
 export const serialDevices = [
     { vendorId: 1027, productId: 24577 }, // FT232R USB UART
     { vendorId: 1155, productId: 12886 }, // STM32 in HID mode
+    { vendorId: 1155, productId: 14158 }, // 0483:374e STM Electronics STLink Virtual COM Port (NUCLEO boards)
     { vendorId: 1155, productId: 22336 }, // STM Electronics Virtual COM Port
     { vendorId: 4292, productId: 60000 }, // CP210x
     { vendorId: 4292, productId: 60001 }, // CP210x

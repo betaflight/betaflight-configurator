@@ -125,12 +125,15 @@
 	}
 	progress {
 		&::-webkit-progress-bar {
-			height: 24px;
-			background-color: var(--surface-300);
+			background-color: var(--surface-500);
 		}
 		&::-webkit-progress-value {
-			background-color: #bcf;
+			background-color: var(--primary-500);
+            border-radius: 0 4px 4px 0;
 		}
+        border-radius: 4px;
+        overflow: hidden;
+        height: 24px;
 		display: block;
 		width: 100%;
 		margin: 1em 0;

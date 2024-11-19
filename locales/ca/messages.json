@@ -168,6 +168,9 @@
         "message": "Canvia l'idioma:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Seleccioneu l'idioma predeterminat"
+    },
     "language_default": {
         "message": "Predeterminat de sistema"
     },
@@ -489,7 +492,7 @@
         "message": "S'han detectat els següents <strong>problemes amb la vostra configuració<\/strong>:"
     },
     "reportProblemsDialogFooter": {
-        "message": "<span class=\"message-negative\"><strong>Cal que solucioneu aquests problemes abans d’intentar volar el vostre aeronau<\/span><\/strong>."
+        "message": "<span class=\"message-negative\"><strong>Cal que solucioneu aquests problemes abans d’intentar volar el vostre quad<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>La versió de configurador feta servir ($3) no suporta aquest programari $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
@@ -498,7 +501,7 @@
         "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat<\/strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabMotorTesting.message)\".<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>l’acceleròmetre està activat, però no està calibrat<\/strong>.<br>Si voleu utilitzar l’acceleròmetre, seguiu les instruccions per a '$t(initialSetupButtonCalibrateAccel.message)' a la pestanya '$t(tabSetup.message)'. Si està habilitada qualsevol funció que requereixi l’acceleròmetre (modes de nivell automàtic, rescat GPS, ...), es desactivarà l’armament de la aeronau fins que s’hagi calibrat l’acceleròmetre.<br>Si no teniu previst utilitzar l'acceleròmetre, es recomana inhabilitar-lo a \"$t(configurationSystem.message)\" a la pestanya \"$t(tabConfiguration.message)\"."
+        "message": "<strong>l’acceleròmetre està activat, però no està calibrat<\/strong>.<br>Si voleu utilitzar l’acceleròmetre, seguiu les instruccions per a '$t(initialSetupButtonCalibrateAccel.message)' a la pestanya '$t(tabSetup.message)'. Si està habilitada qualsevol funció que requereixi l’acceleròmetre (modes de nivell automàtic, rescat GPS, ...), es desactivarà l’armat del quad fins que s’hagi calibrat l’acceleròmetre.<br>Si no teniu previst utilitzar l'acceleròmetre, es recomana inhabilitar-lo a \"$t(configurationSystem.message)\" a la pestanya \"$t(tabConfiguration.message)\"."
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
@@ -940,7 +943,7 @@
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "L'embarcació s'està calibrant",
+        "message": "El dron s'està calibrant",
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
@@ -948,7 +951,7 @@
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "La aeronau no està anivellada (suficientment)",
+        "message": "El dron no està anivellat (suficientment)",
         "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
@@ -1245,6 +1248,9 @@
     "featureAIRMODE": {
         "message": "Activa Airmode permanentment"
     },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+    },
     "featureRX_SPI": {
         "message": "SPI Rx (p. ex., Rx integrat)"
     },
@@ -1386,11 +1392,11 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Calibra el Gyro al primer braç"
     },
-    "configurationDigitalIdlePercent": {
+    "configurationMotorIdle": {
         "message": "Motor inactiu (%)"
     },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "El valor de ralentí del motor estableix la velocitat de ralentí dels motors quan l'accelerador està a la posició mínima.<br\/><br\/><strong>Ralentí dinàmic desactivat<\/strong><br\/><br\/>El valor de l'accelerador més baix enviat a qualsevol motor, mentre està armat, com a percentatge de l'acceleració total. Augmenteu-lo per millorar la fiabilitat de l'arrencada del motor, per evitar les desincronitzacions i per millorar la resposta del PID a l'accelerador baix.<br\/><br\/>Massa baix: és possible que els motors no s'engeguin de manera fiable o que es desincronitzin al final d'un flip o un roll o amb acceleracions brusques.<br\/><br\/>Massa alt: pot ser que el dron se senti \"flottant\".<br\/><br\/><strong>El ralentí dinàmic està activat<\/strong><br\/><br\/>L'acceleració màxima permesa, després de l'armament, abans de l'enlairament. Si RPM és inferior a dyn_idle_min_rpm, o zero, aquest valor de l'accelerador s'enviarà als motors. Quan els motors comencen a girar, l'accelerador s'ajusta per mantenir les RPM establertes, però no pot superar aquest valor fins que el quad s'enlaira.<br\/><br\/>Massa baix: és possible que els motors no s'engeguin de manera fiable.<br\/>< br\/>Massa alt: el dron pot sacsejar a terra abans de l'enlairament."
+    "configurationMotorIdleHelp": {
+        "message": "Estableix la velocitat de inactivitat dels motors mentre estan armats i l'accelerador és \"baix\" (a sota de \"min_check\").<br\/><br\/><strong class=\"message-positive\">Dynamic Idle no habilitat<\/strong><br \/><br\/>Cada motor obté el \"min_command\" més el percentatge d'inactivitat del motor.<br\/><br\/><b>Ralentí massa baix<\/b>: És possible que els motors no s'engeguin de manera fiable, que girin lentament o que es desincronitzin en girs o rolls.<br\/><br\/><b>Ralentí massa alt<\/b>: el dron pot sentir-se \"flota\".<br\/><br\/><b>Nota<\/b>: cal que l'ESC analògic cal calibrar-se perquè els motors arrenquin just per sobre de `min_command`.<br\/><br\/><strong class=\"message-positive\">Dynamic Idle activat<\/strong><br\/><br\/>En armar, el ' El valor de ralentí normal s'envia a cada motor fins que giri.<br\/><br\/>Un cop gira, el senyal del motor s'ajusta per assolir les RPM objectiu.<br\/><br\/>Abans de l'enlairament, el motor la senyal està llimitada al percentatge d'inactivitat del motor i és possible que no s'assoleixi les RPM establertes. Això està bé. Quan l'accelerador s'eleva per sobre del percentatge `airmode_motor_start_throttle`, el límit és molt més alt i les RPM establertes s'han d'aconseguir al ralentí.<br\/><br\/><b>Ralentí massa baix<\/b>: és possible que els motors no s'engeguin. fiable<br\/><br\/><b>Ralentí massa alt<\/b>: tremolor abans de l'enlairament (només si el ralentí dinàmic també és alt)<br\/><br\/><b>Nota<\/b>: dinàmic Idle requereix DShot i DShot Telemetry."
     },
     "configurationMotorPoles": {
         "message": "Pols de motor",
@@ -1412,7 +1418,7 @@
         "message": "Throttle mínim (Valor mínim dels ESC quan està armat)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "Aquest és el valor 'idle' que s'envia als ESCs quan l'aeronau est'a armada i el stick de throttle està a la posició mínima. Incrementar el valor per a guanyar més velocitat 'idle'. Incrementa'l també en cas de desyncs!"
+        "message": "Aquest és el valor 'idle' que s'envia als ESCs quan lel dron está armat i el stick de throttle està a la posició mínima. Incrementar el valor per a guanyar més velocitat 'idle'. Incrementa'l també en cas de desyncs!"
     },
     "configurationThrottleMaximum": {
         "message": "Throttle màxim (Valor màxim dels ESC quan està armat)"
@@ -1421,7 +1427,7 @@
         "message": "Minimum Command (valors ESC quan està desarmat)"
     },
     "configurationThrottleMinimumCommandHelp": {
-        "message": "Aquest és el valor que s'envia als ESCs quan l'aeronau està desarmada. Posa-ho a un valor que mantingui els motors parats (1000 a la majoria d'ESCs)."
+        "message": "Aquest és el valor que s'envia als ESCs quan el dron està desarmat. Posa-ho a un valor que mantingui els motors parats (1000 a la majoria d'ESCs)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Seleccioneu el protocol de sortida del motor adequat per als ESC's. $t(escProtocolDisabledMessage.message)"
@@ -1439,7 +1445,7 @@
         "message": "To de Beacon"
     },
     "configurationDshotBeaconHelp": {
-        "message": "La balisa Dshot utilitza els motors ESC i motors per produir so. Això significa que la balisa Dshot no es pot utilitzar quan els motors giren. A Betaflight 3.4 i més recent, quan s’intenta l’armament mentre la balisa Dshot està activa, es produeix un retard de 2 segons després de l’últim to de la balisa de Dshot abans que el quad s’armi. Això permet evitar que la funcionalitat de la balisa de Dshot interfereixi amb les ordres de Dshot enviades en l'armament.<br\/><strong>Advertència:<\/strong> Com que la balisa Dshot funciona actualment a través dels motors quan està activa, això pot produir una calor excessiva i produir danys als motors i\/o als ESC si la intensitat de la balisa és massa elevada. Utilitzeu BLHeli Configurator o BLHeli Suite per ajustar i provar la intensitat de la balisa."
+        "message": "La balisa Dshot utilitza els motors ESC i motors per produir so. Això significa que la balisa Dshot no es pot utilitzar quan els motors giren. A Betaflight 3.4 i més recent, quan s’intenta l’armament mentre la balisa Dshot està activa, es produeix un retard de 2 segons després de l’últim to de la balisa de Dshot abans que l’armament s’armi. Això permet evitar que la funcionalitat de la balisa de Dshot interfereixi amb les ordres de Dshot enviades en l'armament.<br\/><strong>Advertència:<\/strong> Com que la balisa Dshot funciona actualment a través dels motors quan està activa, això pot produir una calor excessiva i produir danys als motors i\/o als ESC si la intensitat de la balisa és massa elevada. Utilitzeu BLHeli Configurator o BLHeli Suite per ajustar i provar la intensitat de la balisa."
     },
     "configurationBeeper": {
         "message": "Configuració del Beeper"
@@ -1584,7 +1590,7 @@
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Quan estigui habilitat, només s’utilitzarà com a punt inicial el primer armat després de la bateria connectada. Si no està habilitat, cada vegada que el quad sigui armat s’actualitzarà el punt d’inici.",
+        "message": "Quan estigui habilitat, només s’utilitzarà com a punt inicial el primer armat després de la bateria connectada. Si no està habilitat, cada vegada que el dron sigui armat s’actualitzarà el punt d’inici.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -1796,7 +1802,7 @@
         "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
-        "message": "D Max Gain augmenta la sensibilitat del sistema que augmenta D quan el quad gira ràpidament o tremola en el propwash.<br><br>Els valors de guany més alts augmenten D més fàcilment que els valors més baixos, augmentant D cap a D Max més ràpidament. Els valors de 40 o fins i tot 50 poden funcionar bé per a les configuracions noves d'estil lliure.<br><br>Els valors més baixos no augmentaran D cap a DMax excepte en moviments molt ràpids, i poden adaptar-se millor a les configuracions de cursa minimitzant el retard D.<br><br > ADVERTÈNCIA: El guany o l'avanç s'han de configurar per sobre d'uns 20, o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es fixarà D al valor base.",
+        "message": "D Max Gain augmenta la sensibilitat del sistema que augmenta D quan el dron gira ràpidament o tremola en el propwash.<br><br>Els valors de guany més alts augmenten D més fàcilment que els valors més baixos, augmentant D cap a D Max més ràpidament. Els valors de 40 o fins i tot 50 poden funcionar bé per a les configuracions noves d'estil lliure.<br><br>Els valors més baixos no augmentaran D cap a DMax excepte en moviments molt ràpids, i poden adaptar-se millor a les configuracions de cursa minimitzant el retard D.<br><br > ADVERTÈNCIA: El guany o l'avanç s'han de configurar per sobre d'uns 20, o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es fixarà D al valor base.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxAdvance": {
@@ -1808,11 +1814,11 @@
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxFeatureHelp": {
-        "message": "D Max augmenta D durant moviments més ràpids del giroscopi i\/o del stick.<br><br>El factor \"Guany\" augmenta D quan el quad gira ràpidament o tremola en el propwash. Normalment només es necessita \"Guany\". <br><br>El factor \"Avançament\" augmenta D cap a D Max durant les entrades del stick. Normalment no és necessari i s'ha de posar a zero. L'avançament pot ser útil per a quads de baixa autoritat que tendeixen a sobrepassar-se molt.<br><br>Els valors de guany més alts (p. ex. 40) poden ser més adequats per a l'estil lliure aixecant D més fàcilment.<br><br>ADVERTIMENT: un dels guanys. o L'avançament s'ha de posar per sobre d'uns 20 o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es bloquejarà D al valor base.",
+        "message": "D Max augmenta D durant moviments més ràpids del giroscopi i\/o del stick.<br><br>El factor \"Guany\" augmenta D quan el dron gira ràpidament o tremola en el propwash. Normalment només es necessita \"Guany\". <br><br>El factor \"Avançament\" augmenta D cap a D Max durant les entrades del stick. Normalment no és necessari i s'ha de posar a zero. L'avançament pot ser útil per a drons de baixa autoritat que tendeixen a sobrepassar-se molt.<br><br>Els valors de guany més alts (p. ex. 40) poden ser més adequats per a l'estil lliure aixecant D més fàcilment.<br><br>ADVERTIMENT: un dels guanys. o L'avançament s'ha de posar per sobre d'uns 20 o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es bloquejarà D al valor base.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Controla la força d’amortiment a qualsevol moviment del quad. Per a desplaçaments dels sticks, D Term amortitza el comandament. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br>El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll del gyro no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del gyro.",
+        "message": "Controla la força d’amortiment a qualsevol moviment del dron. Per a desplaçaments dels sticks, D Term amortitza la comanda. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br> El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del giro.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -2133,7 +2139,7 @@
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "<span class =\"message-negative\"><b>Advertència:<\/b><\/span> La quantitat de filtratge que utilitzeu és perillosament baixa. És probable que això faci que l'aeronau sigui difícil de controlar i que es pugui traduir en fugides. És molt recomanable que <b>activeu almenys un pasaa baix dinàmic del Giro o passa baix 1 de Giro i almenys un passa baix dinàmic D Term o pas baix D Term 1<\/b>."
+        "message": "<span class =\"message-negative\"><b>Advertència:<\/b><\/span> La quantitat de filtratge que utilitzeu és perillosament baixa. És probable que això faci que el dron sigui difícil de controlar i que es pugui traduir en fugides. És molt recomanable que <b>activeu almenys un pasaa baix dinàmic del Giro o passa baix 1 de Giro i almenys un passa baix dinàmic D Term o pas baix D Term 1<\/b>."
     },
     "pidTuningSliderPidsMode": {
         "message": "Mode:",
@@ -2322,8 +2328,12 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "En el mode de mesclador estàndard, quan es calculen el roll, el pitch i el yaw i saturen un motor, tots els motors es reduiran per igual. Quan un motor baixa per sota del mínim es talla. Diguem que teníeu l'accelerador just per sobre del mínim i vau intentar tirar un gir ràpid; com que dos motors no poden baixar, bàsicament obteniu la meitat de la potència (la meitat del vostre guany PID). Si les vostres entrades haurien demanat més d'una diferència del 100% entre els motors alts i baixos, els motors baixos es retallarien, trencant la simetria de l'equilibri del motor reduint de manera desigual el guany.",
+        "message": "AirMode permet mantindre l'estabilitat del quad a baixas revolucions. per més informació veure <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> a Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "El mode d'altitud és el mode manual no GPS més segur per als nous pilots. És com el mode estabilitzat, però a més bloqueja l'altitud del quad quan es deixen anar els sticks",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Habilita el bip: útil per localitzar un multicopter estavellat",
@@ -2378,7 +2388,7 @@
         "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
-        "message": "Inverteix els motors per capgirar el multicopter cap per avall després d'un xoc (cal DShot)",
+        "message": "Inverteix els motors per capgirar el dron cap per avall després d'un xoc (cal DShot)",
         "description": "Help text to FLIP OVER AFTER CRASH mode"
     },
     "auxiliaryHelpMode_FPVANGLEMIX": {
@@ -2390,7 +2400,7 @@
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Habilita el \"Rescat GPS\" per tornar el multicopter a la ubicació on es va armar per última vegada",
+        "message": "Habilita el \"Rescat GPS\" per tornar el dron a la ubicació on es va armar per última vegada",
         "description": "Help text to GPS RESCUE mode"
     },
     "auxiliaryHelpMode_HEADADJ": {
@@ -3168,6 +3178,12 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Executa"
+    },
+    "cliPanelTitle": {
+        "message": "Interfície de línia d'ordres"
+    },
+    "cliCommand": {
+        "message": "Escriu l'ordre aquí"
     },
     "loggingNote": {
         "message": "Les dades es registraran en aquesta pestanya <span class=\"message-negative\">només<\/span>, deixant la pestanya <span class=\"message-negative\">cancel·lar<\/span> el registre i l'aplicació tornarà a la normalitat <strong>\"configurador\"<\/strong>. <br \/> Podeu seleccionar el període d'actualització global, les dades seran escrites al fitxer de registre cada <strong>1<\/strong> segon per motius de rendiment."
@@ -4136,7 +4152,7 @@
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">ATENCIÓ<\/span>: Les posicions dels controls lliscant actuals poden causar volades, danys del motor o comportaments no segurs per les aeronaus. Procediu amb precaució.",
+        "message": "<span class=\"message-negative\">ATENCIÓ<\/span>: Les posicions dels controls lliscant actuals poden causar volades, danys del motor o comportaments no segurs pels drons. Procediu amb precaució.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -4208,7 +4224,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Augmenteu el control lliscant de seguiment per afinar la resposta dels quads a les vostres ordres i també a influències externes; evitant que el nas del quad surti del rumb en qualsevol condició.<br \/><br \/>Els valors més baixos de \"seguiment\" tindran molts bolets i es retiraran del rumb si es mouen els pals i es renten els accessoris. Un \"seguiment\" elevat pot provocar una oscil·lació i un rebot ràpid (difícil de veure, però es pot escoltar). Un seguiment excessiu pot provocar oscil·lacions i motors calents.",
+        "message": "Augmenteu el control lliscant de seguiment per afinar la resposta dels quads a les vostres ordres i també a influències externes; evitant que el nas del quad surti del rumb en qualsevol condició.<br \/><br \/>Els valors més baixos de \"tracking\" tindran molts bolets i es retiraran del rumb si es mouen els sticks i es renten els accessoris. Un \"tracking\" elevat pot provocar una oscil·lació i un rebot ràpid (difícil de veure, però es pot escoltar). Un seguiment excessiu pot provocar oscil·lacions i motors calents.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4216,7 +4232,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "La resposta de stick inferior augmentarà la latència dels moviments del quad a les ordres i pot provocar un rebot lent al final d’un gir o tirada. <br><br>Una resposta de pal més alta donarà una resposta més ràpida als quadres als moviments forts de pal. Una resposta de pal excessivament alta pot provocar desbordaments i rebots ràpids al final d'un flip o roll. <br \/><br \/><strong>Nota: <\/strong><br \/>La funció \"Terme relaxat\" pot aturar-se rebot per a quads de baixa autoritat o si s’utilitzen guanys de resposta del stick baixos.",
+        "message": "La resposta de stick inferior augmentarà la latència dels moviments del dron a les ordres i pot provocar un rebot lent al final d’un gir o tirada. <br><br>Una resposta de pal més alta donarà una resposta més ràpida als quadres als moviments forts del stick. Una resposta de stick excessivament alta pot provocar desbordaments i rebots ràpids al final d'un flip o roll. <br \/><br \/><strong>Nota: <\/strong><br \/>La funció \"i-term relaxat\" pot aturar-se rebot per a drons amb baixa autoritat o si s’utilitzen guanys de resposta del stick baixos.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -4224,7 +4240,7 @@
         "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "Augmenta o disminueix I. Més alt pot millorar el seguiment en girs en espiral, en òrbites o en comandaments del 0% d’acceleració. Massa I, sobretot amb P insuficient, pot provocar oscil·lacions o rebots després de donar voltes o rodar o accelerar l’accelerador al 0%.<br \/><br \/>Generalment voleu que el control lliscant \"Drift - Wobble\" sigui tan alt com pot ser mantenir el seguiment del quad en girs en espiral, òrbites, etc., però no tan alt que comenceu a veure oscil·lacions al baixar el throttlet a 0%.<br \/><br \/><strong>Nota:<\/strong><br \/>Si experimenteu un rebot en qualsevol moment que sigui fàcil de veure, assegureu-vos que estigui activat \"I-term Relax\" i proveu de reduir el valor iterm_relax_cutoff.",
+        "message": "Augmenta o disminueix I. Més alt pot millorar el seguiment en girs en espiral, en òrbites o en comandaments del 0% d’acceleració. Massa I, sobretot amb P insuficient, pot provocar oscil·lacions o rebots després de donar voltes o rodar o accelerar l’accelerador al 0%.<br \/><br \/>Generalment voleu que el control lliscant \"Drift - Wobble\" sigui tan alt com pot ser mantenir el seguiment del dron en girs en espiral, òrbites, etc., però no tan alt que comenceu a veure oscil·lacions al baixar el gas a 0%.<br \/><br \/><strong>Nota:<\/strong><br \/>Si experimenteu un rebot en qualsevol moment que sigui fàcil de veure, assegureu-vos que estigui activat \"I-term Relax\" i proveu de reduir el valor iterm_relax_cutoff.",
         "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
@@ -4232,7 +4248,7 @@
         "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "Augmenta D max, la quantitat màxima a la qual D pot augmentar durant moviments més ràpids.<br \/><br \/>Per als quads de cursa, on el control lliscant principal d'amortiment s'ha ajustat a un nivell baix per minimitzar la calor del motor, moure aquest control lliscant cap a la dreta millorarà. Control de superació per a canvis ràpids de direcció.<br \/><br \/>Per als quads HD o cinematogràfics, la millor solució per a la inestabilitat en el vol cap endavant es mou movent el control lliscant Amortiment (no el control lliscant Amortiment dinàmic) cap a la dreta. Comproveu la calor del motor i escolteu si hi ha sorolls estranys durant les entrades ràpides en moure aquest control lliscant cap a la dreta.<br \/><br \/>Per als quads d'estil lliure, especialment les construccions més pesades, moure aquest control lliscant cap a la dreta pot ajudar a controlar la superació en girs i voltes..<br \/><br \/><strong>Nota:<\/strong><br \/>En general, la superació en els girs i els girs es deu a que no hi ha prou 'i-Term Relax', o dessincronitzacions del motor o una autoritat inadequada (també conegut com a Motor saturació). Si trobeu que moure el control lliscant del Daping Boost cap a la dreta no millora el capgirament ni el rodatge, torneu-lo a la posició normal i cerqueu el motiu de la superació o el balanceig.",
+        "message": "Augmenta D max, la quantitat màxima a la qual D pot augmentar durant moviments més ràpids.<br \/><br \/>Per als drons de cursa, on el control lliscant principal d'amortiment s'ha ajustat a un nivell baix per minimitzar la calor del motor, moure aquest control lliscant cap a la dreta millorarà. Control de superació per a canvis ràpids de direcció.<br \/><br \/>Per als quads HD o cinematogràfics, la millor solució per a la inestabilitat en el vol cap endavant es mou movent el control lliscant Amortiment (no el control lliscant Amortiment dinàmic) cap a la dreta. Comproveu la calor del motor i escolteu si hi ha sorolls estranys durant les entrades ràpides en moure aquest control lliscant cap a la dreta.<br \/><br \/>Per als quads d'estil lliure, especialment les construccions més pesades, moure aquest control lliscant cap a la dreta pot ajudar a controlar la superació en girs i voltes..<br \/><br \/><strong>Nota:<\/strong><br \/>En general, la superació en els girs i els girs es deu a que no hi ha prou 'i-Term Relax', o dessincronitzacions del motor o una autoritat inadequada (també conegut com a Motor saturació). Si trobeu que moure el control lliscant del Daping Boost cap a la dreta no millora el capgirament ni el rodatge, torneu-lo a la posició normal i cerqueu el motiu de la superació o el balanceig.",
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -4240,7 +4256,7 @@
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Augmenta l’amortiment (D) NOMÉS a l’eix del pas, és a dir, per al pas respecte al Roll. Ajuda a controlar la sobrecàrrega o el rebot específic del pitch específic.<br \/><br \/>Els quads amb un moment d’inèrcia \"més pesat\" a l'eix Pitch solen necessitar més autoritat d'amortiment (ja que Pitch té més inèrcia i acumula més impuls).<br \/ ><br \/>Sintonitzeu primer els lliscadors mòbils \"Amortiment\" i \/ o \"Seguiment\" fins que obtingueu un bon comportament de l'eix de rotació. A continuació, utilitzeu els lliscadors Pitch (augmentar o disminuir) per afinar l'eix del Pitch sense afectar al Roll.",
+        "message": "Augmenta l’amortiment (D) NOMÉS a l’eix del pas, és a dir, per al pas respecte al Roll. Ajuda a controlar la sobrecàrrega o el rebot específic del pitch específic.<br \/><br \/>Els drons amb un moment d’inèrcia \"més pesat\" a l'eix Pitch solen necessitar més autoritat d'amortiment (ja que Pitch té més inèrcia i acumula més impuls).<br \/><br \/>Sintonitzeu primer els lliscadors mòbils \"Amortiment\" i \/ o \"Seguiment\" fins que obtingueu un bon comportament de l'eix de rotació. A continuació, utilitzeu els lliscadors Pitch (augmentar o disminuir) per afinar l'eix del Pitch sense afectar al Roll.",
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
@@ -4290,7 +4306,7 @@
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Els filtres de pas baix del giroscopi atenuen el soroll de freqüència més alta per mantenir-lo fora del bucle PID. Hi ha dos filtres de giroscopi configurables de manera independent; de manera predeterminada, tots dos estan actius.<br \/><br \/>Amb el filtratge RPM, el control lliscant del filtre del giroscopi sovint es pot moure d'alguna manera cap a la dreta, o, alternativament, un sol filtre passa baix del giroscopi estàtic a 500 Hz pot ser suficient.<br \/> <br \/>Un quad tindrà menys propwash amb el menor retard del filtre del giroscopi.<br \/><br \/>Comproveu sempre la calor del motor quan moveu els controls lliscants cap a la dreta. Amb un filtrat de giroscopi mínim, és essencial tenir prou filtre D! Cuida't!",
+        "message": "Els filtres de pas baix del giroscopi atenuen el soroll de freqüència més alta per mantenir-lo fora del bucle PID. Hi ha dos filtres de giroscopi configurables de manera independent; de manera predeterminada, tots dos estan actius.<br \/><br \/>Amb el filtratge RPM, el control lliscant del filtre del giroscopi sovint es pot moure d'alguna manera cap a la dreta, o, alternativament, un sol filtre passa baix del giroscopi estàtic a 500hz pot ser suficient.<br \/> <br \/>Un quad tindrà menys propwash amb el menor retard del filtre del giroscopi.<br \/><br \/>Comproveu sempre la calor del motor quan moveu els controls lliscants cap a la dreta. Amb un filtrat de giroscopi mínim, és essencial tenir prou filtre D! Cuida't!",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
@@ -4478,7 +4494,7 @@
         "message": "Relaxació I term"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Suprimeix l'acumulació de I Term quan es produeixen moviments ràpids, reduint el rebot al final dels girs, els girs i altres entrades ràpides.<br><br> El mode de consigna respon a les entrades suavitzades del stick i funciona millor per a quads sensibles.<br><br >El mode giroscopi pot ser útil per a quads extremadament retardats.<br><br>Normalment, iTerm Relax no s'ha d'aplicar al yaw."
+        "message": "Suprimeix l'acumulació de I Term quan es produeixen moviments ràpids, reduint el rebot al final dels girs, els girs i altres entrades ràpides.<br><br> El mode de consigna respon a les entrades suavitzades del stick i funciona millor per a drons sensibles.<br><br >El mode giroscopi pot ser útil per a drons extremadament retardats.<br><br>Normalment, iTerm Relax no s'ha d'aplicar al yaw."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Eixos",
@@ -4511,7 +4527,7 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "Els valors més baixos signifiquen una supressió més forta de la recuperació després dels girs en quads de baixa autoritat. Els valors més alts augmenten la precisió de gir de velocitat alta per a les carreres.<br><br>Estableix entre 30 i 40 per a les carreres, 15 per a les construccions d'estil lliure sensibles, 10 per a quads d'estil lliure més pesats, 3-5 per a la classe X."
+        "message": "Els valors més baixos signifiquen una supressió més forta de la recuperació després dels girs en drons de baixa autoritat. Els valors més alts augmenten la precisió de gir de velocitat alta per a les carreres.<br><br>Estableix entre 30 i 40 per a les carreres, 15 per drons de d'estil lliure sensibles, 10 per a quads d'estil lliure més pesats, 3-5 per a la classe X."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Control absolut"
@@ -4538,7 +4554,7 @@
         "message": "Límit d’angle del Acro Trainer"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Ajuda els pilots a aprendre a volar en mode acro limitant l'angle que pot aconseguir el quad. Els límits vàlids són de 10 a 80 graus. El mode s'ha d'activar amb un interruptor a la pestanya $t(tabAuxiliary.message)."
+        "message": "Ajuda els pilots a aprendre a volar en mode acro limitant l'angle que pot aconseguir el dron. Els límits vàlids són de 10 a 80 graus. El mode s'ha d'activar amb un interruptor a la pestanya $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integrat"
@@ -4559,7 +4575,7 @@
         "message": "Failsafe de receptor"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "El failsafe te 2 etapes. <strong>Stage 1<\/strong> entra quan un canal de vol te un pols invàlid, el receptor reporta el mode failsafe o no hi ha cap senyal del receptor. S'aplica a <span class=\"message-negative\">tots els canals<\/span> i te un petit temps per a permetre recuperar. <strong>Stage 2<\/strong> s'aplica quen la condició d'error triga més que el temps de guarda especifical mentre l'aeronau està <span class=\"message-negative\">armada<\/span>, tots els canals romandran al fallback excepte que es sobrescriguin per el procediment escollit. <br \/><strong>Nota:<\/strong> Abans d'entrar a l'stage 1, el fallback de canals s'aplica individualment als canals AUX que tenen pulsos invàlids."
+        "message": "El failsafe te 2 etapes. <strong>Stage 1<\/strong> entra quan un canal de vol te un pols invàlid, el receptor reporta el mode failsafe o no hi ha cap senyal del receptor. S'aplica a <span class=\"message-negative\">tots els canals<\/span> i te un petit temps per a permetre recuperar. <strong>Stage 2<\/strong> s'aplica quen la condició d'error triga més que el temps de guarda especifical mentre el dron està <span class=\"message-negative\">armada<\/span>, tots els canals romandran al fallback excepte que es sobrescriguin per el procediment escollit. <br \/><strong>Nota:<\/strong> Abans d'entrar a l'stage 1, el fallback de canals s'aplica individualment als canals AUX que tenen pulsos invàlids."
     },
     "failsafePulsrangeTitle": {
         "message": "Ajustos de Rang vàlid de Pulses"
@@ -4610,7 +4626,7 @@
         "message": "Retard de Failsafe Throttle Low [seconds]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Només desarma l'aeronau en comptes d'executar el failsafe si el throttle està baix per un cert temps"
+        "message": "Només desarma el dron en comptes d'executar el failsafe si el throttle està baix per un cert temps"
     },
     "failsafeThrottleItem": {
         "message": "Valor de throttle per l'aterrament"
@@ -4619,7 +4635,7 @@
         "message": "Retard per aturar els motors en un failsafe [seconds]"
     },
     "failsafeOffDelayHelp": {
-        "message": "Temps de restar en landing mode fins que els motors són apagats i l'aeronau es desarma"
+        "message": "Temps de restar en landing mode fins que els motors són apagats i el dron es desarma"
     },
     "failsafeSubTitle1": {
         "message": "Stage 2 - Procediment de Failsafe"
@@ -4649,7 +4665,7 @@
         "message": "Desnivell inicial (metres)"
     },
     "failsafeGpsRescueInitialClimbHelp": {
-        "message": "La distància que pujarà el quad, per sobre de l'altitud actual, quan s'inicia un rescat i el mode d'altitud s'estableix en Altitud ACTUAL; també s'ha afegit quan està en mode d'altitud MAX."
+        "message": "La distància que pujarà el dron, per sobre de l'altitud actual, quan s'inicia un rescat i el mode d'altitud s'estableix en Altitud ACTUAL; també s'ha afegit quan està en mode d'altitud MAX."
     },
     "failsafeGpsRescueItemReturnAltitude": {
         "message": "​Altitud de retorn (metres) - <strong>només s'aplica al mode d'altitud fixa<\/strong>"
@@ -4664,7 +4680,7 @@
         "message": "Angle de pas màxim"
     },
     "failsafeGpsRescueAngleHelp": {
-        "message": "Angles màxims més alts condueixen a retorns més agressius i velocitats d'avançament més altes. Pot ser útil per a quads més pesades, de gran arrossegament o de baixa autoritat, o per utilitzar-les amb vents més forts. ADVERTÈNCIA: l'accelerador de rescat normalment s'ha d'augmentar si augmenta l'angle màxim. En cas contrari, el quad pot perdre alçada i estavellar-se!"
+        "message": "Angles màxims més alts condueixen a retorns més agressius i velocitats d'avançament més altes. Pot ser útil per a drons més pesats, de gran arrossegament o de baixa autoritat, o per utilitzar-les amb vents més forts. ADVERTÈNCIA: l'accelerador de rescat normalment s'ha d'augmentar si augmenta l'angle màxim. En cas contrari, el dron pot perdre alçada i estavellar-se!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distància de baixada (metres)"
@@ -4676,7 +4692,7 @@
         "message": "La velocitat de descens inicial s'estableix en 3 vegades aquest valor, disminuint fins al valor establert a l'altitud d'aterratge."
     },
     "failsafeGpsRescueItemMinStartDistHelp": {
-        "message": "Si el rescat comença massa a prop de casa (dins d'aquesta distància mínima), l'embarcació volarà lluny, en el seu rumb actual, fins almenys a aquesta distància de casa, i després començarà un comportament de rescat normal",
+        "message": "Si el rescat comença massa a prop de casa (dins d'aquesta distància mínima), el dron volarà lluny, en el seu rumb actual, fins almenys a aquesta distància de casa, i després començarà un comportament de rescat normal",
         "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
     },
     "failsafeGpsRescueItemThrottleMin": {
@@ -4686,13 +4702,13 @@
         "message": "Throttle màxim"
     },
     "failsafeGpsRescueThrottleMaxHelp": {
-        "message": "S'hauria d'augmentar per a quads més pesades, d'arrossegament elevat o de baixa autoritat, si és probable un retorn contra vents forts, o si s'augmenta l'angle d'inclinació màxim."
+        "message": "S'hauria d'augmentar per a drons més pesats, d'arrossegament elevat o de baixa autoritat, si és probable un retorn contra vents forts, o si s'augmenta l'angle d'inclinació màxim."
     },
     "failsafeGpsRescueItemThrottleHover": {
         "message": "Hover de l'accelerador - <span class=\"message-negative\">IMPORTANT: establiu aquest valor amb precisió<\/span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "Per trobar el valor correcte, configureu l'acció del commutador Failsafe a l'etapa 2, configureu el procediment Failsafe de l'etapa 2 a Aterratge i ajusteu el valor de l'accelerador que s'utilitza durant l'aterratge fins que el quad surti o baixi lentament. A continuació, configureu el gir de l'accelerador de rescat de GPS i el valor de reserva del canal de l'etapa 1 per a l'accelerador en aquest valor."
+        "message": "Per trobar el valor correcte, configureu l'acció del commutador Failsafe a l'etapa 2, configureu el procediment Failsafe de l'etapa 2 a Aterratge i ajusteu el valor de l'accelerador que s'utilitza durant l'aterratge fins que el dron surti o baixi lentament. A continuació, configureu el gir de l'accelerador de rescat de GPS i el valor de reserva del canal de l'etapa 1 per a l'accelerador en aquest valor."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Distància mínima fins a casa (metres)"
@@ -4707,7 +4723,7 @@
         "message": "Permetre l'armament sense correcció - <span class=\"message-negative\">ADVERTIMENT: No hi ha cap solució = desarmar a seguretat contra errors!<\/span>"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
-        "message": "No es recomana. Permet armar sense que s'estableixi un punt d'inici, però el quad es desarmarà i s'estavellarà amb una veritable seguretat de pèrdua de Rx. Si es prova amb un interruptor, hi ha un breu període de no fer res abans del desarmament."
+        "message": "No es recomana. Permet armar sense que s'estableixi un punt d'inici, però el dron es desarmarà i s'estavellarà amb una veritable seguretat de pèrdua de Rx. Si es prova amb un interruptor, hi ha un breu període de no fer res abans del desarmament."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Controls de sanejament"
@@ -4734,7 +4750,7 @@
         "message": "Acció de l'interruptor de Failsafe"
     },
     "failsafeSwitchModeHelp": {
-        "message": "Aquesta opció determina el que succeeix quan s'activa Failsafe mitjançant el commutador AUX:<br\/><strong>Etapa 1<\/strong> activa l'etiqueta failsafe 1. Això és útil si voleu simular el comportament fallit de la pèrdua de senyal.<br\/><strong>Etapa 2<\/strong> ometeix l’etapa 1 i activa immediatament el procediment de l’etapa 2<br\/><strong>Mata<\/strong> i desarma a l’instant (el teu equip s’estavella)"
+        "message": "Aquesta opció determina el que succeeix quan s'activa Failsafe mitjançant el commutador AUX:<br\/><strong>Etapa 1<\/strong> activa l'etiqueta failsafe 1. Això és útil si voleu simular el comportament fallit de la pèrdua de senyal.<br\/><strong>Etapa 2<\/strong> ometeix l’etapa 1 i activa immediatament el procediment de l’etapa 2<br\/><strong>Mata<\/strong> i desarma a l’instant (el teu dron s’estavella)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Stage 1"
@@ -4806,7 +4822,7 @@
         "message": "Gestor de calibratge"
     },
     "powerCalibrationManagerHelp": {
-        "message": "Per calibrar, utilitzeu un multímetre per mesurar la tensió \/ corrent real de la aeronau (amb una bateria connectada) i introduïu els valors següents. A continuació, amb la mateixa bateria encara connectada, feu clic a [Calibrate]."
+        "message": "Per calibrar, utilitzeu un multímetre per mesurar la tensió \/ corrent real del dron (amb una bateria connectada) i introduïu els valors següents. A continuació, amb la mateixa bateria encara connectada, feu clic a [Calibrate]."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Nota:<\/strong> Abans de calibrar la escala, assegureu-vos que el divisor i el multiplicador de la tensió i la compensació per a l'amperatge estan ajustats correctament.<br>Si deixeu els valors a 0 no aplicareu la ca-libració.<\/br><strong>Recorda treureels hèlix abans de connectar la bateria!<\/strong>"
@@ -5165,7 +5181,7 @@
         "message": "Configuració del VTX"
     },
     "osdSetupCraftNameTitle": {
-        "message": "Nom de l'aeronau"
+        "message": "Nom del dron"
     },
     "osdSetupWarningsTitle": {
         "message": "Alertes"
@@ -5463,11 +5479,11 @@
         "message": "Millor temps de 3 voltas per GPS"
     },
     "osdTextElementCraftName": {
-        "message": "Nom de l'aeronau",
+        "message": "Nom del dron",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Nom de l'aparell tal com s'estableix a la pestanya Configuració.<\/br>També es pot definir mitjançant la variable CLI \"craft_name\"."
+        "message": "Nom del dron tal com s'estableix a la pestanya Configuració.<\/br>També es pot definir mitjançant la variable CLI \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Altitud",
@@ -5497,14 +5513,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOnTime": {
-        "message": "Temps total d'encesa de l'aeromodels"
+        "message": "Temps total d'encesa del dron"
     },
     "osdTextElementFlyTime": {
         "message": "Temps de vol",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlyTime": {
-        "message": "Total temps que l'aeronau ha estat armada en aquesta bateria (parpelleja quan estàs per sobre el límit)"
+        "message": "Total temps que el dron ha estat armat en aquesta bateria (parpelleja quan estàs per sobre el límit)"
     },
     "osdTextElementFlyMode": {
         "message": "Mode de vol",
@@ -5662,7 +5678,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementArmedTime": {
-        "message": "Temps des que l'aeronau va ser armada"
+        "message": "Temps des que el dron va ser armat"
     },
     "osdTextElementHomeDirection": {
         "message": "Direcció de inici",
@@ -5774,7 +5790,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
-        "message": "Mostra la quantitat de força G de l'aeronau"
+        "message": "Mostra la quantitat de força G del dron"
     },
     "osdTextElementMotorDiag": {
         "message": "Diagnosi del motor",
@@ -6005,14 +6021,14 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatFlyTime": {
-        "message": "Temps total d'armat en aquesta bateria"
+        "message": "Temps total d'armat del dron amb aquesta bateria"
     },
     "osdTextStatArmedTime": {
         "message": "Temps de vol des de darrer armat",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatArmedTime": {
-        "message": "Temps des que l'aeronau va ser armada"
+        "message": "Temps des que el dron va ser armat"
     },
     "osdTextStatMaxDistance": {
         "message": "Màxima distancia a inici",
@@ -6061,7 +6077,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatGForce": {
-        "message": "Força G màxima soferta per l'aeronau"
+        "message": "Força G màxima soferta pel dron"
     },
     "osdTextStatEscTemperature": {
         "message": "Màxima temperatura ESC",
@@ -6196,15 +6212,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
         "message": "Temps total d'armat",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
         "message": "Darrer temps d'armat",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
         "message": "Temps activat\/armat",
-        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Precisió:"
@@ -6557,7 +6573,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "Quan està activat, el VTX entra en un mode de potència molt baixa per deixar que el quad es posi a la banqueta sense molestar altres pilots. Normalment l’abast d’aquest mode és inferior a 5 metres.<br \/><br \/>NOTA: Alguns protocols, com SmartAudio, no poden habilitar el Pit Mode mitjançant el programari després de l’alimentació.",
+        "message": "Quan està activat, el VTX entra en un mode de potència molt baixa per deixar que el dron es posi a la banqueta sense molestar altres pilots. Normalment l’abast d’aquest mode és inferior a 5 metres.<br \/><br \/>NOTA: Alguns protocols, com SmartAudio, no poden habilitar el Pit Mode mitjançant el programari després de l’alimentació.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -6765,7 +6781,7 @@
         "message": "Angle máxim d'armat [graus]"
     },
     "configurationSmallAngleHelp": {
-        "message": "L'aeronau no armarà si està inclinada certs graus. Només aplica si l'acceleròmetre està habilitat. Posar-ho a 180º deshabilitarà la comprovació."
+        "message": "El dron no armarà si està inclinada certs graus. Només aplica si l'acceleròmetre està habilitat. Posar-ho a 180º deshabilitarà la comprovació"
     },
     "configurationBatteryVoltage": {
         "message": "Voltatge de Bateria"
@@ -6850,7 +6866,7 @@
         "message": "Personalització"
     },
     "craftName": {
-        "message": "Nom de l'aeronau"
+        "message": "Nom del dron"
     },
     "configurationCraftNameHelp": {
         "message": "Es pot mostrar als registres, als noms dels fitxers de còpia de seguretat i a l'OSD.<\/br>Es pot configurar mitjançant la variable CLI <b>craft_name<\/b>."
@@ -7263,7 +7279,7 @@
         "description": "Warning message that shows up at the top of the presets tab"
     },
     "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">ADVERTIMENT!<\/span> L'ús de fonts predeterminades de tercers pot ser perillós.<br\/>Assegureu-vos que afegiu i feu servir només fonts de confiança. Les fonts predeterminades malicioses o dolentes trencaran la configuració del vostre drone i poden danyar els vostres dispositius.",
+        "message": "<span class=\"message-negative\">ADVERTIMENT!<\/span> L'ús de fonts predeterminades de tercers pot ser perillós.<br\/>Assegureu-vos que afegiu i feu servir només fonts de confiança. Les fonts predeterminades malicioses o dolentes trencaran la configuració del vostre dron i poden danyar els vostres dispositius.",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {

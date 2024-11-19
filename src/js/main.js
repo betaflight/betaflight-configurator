@@ -132,8 +132,20 @@ function startProcess() {
         }
     });
 
+    $('div.open_firmware_flasher a.flash').on('click', function () {
+        if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+            $('div#flashbutton a.flash_state').removeClass('active');
+            $('div#flashbutton a.flash').removeClass('active');
+            $('#tabs ul.mode-disconnected .tab_landing a').click();
+        } else {
+            $('#tabs ul.mode-disconnected .tab_firmware_flasher a').click();
+            $('div#flashbutton a.flash_state').addClass('active');
+            $('div#flashbutton a.flash').addClass('active');
+        }
+    });
+
     const ui_tabs = $('#tabs > ul');
-    $('a', ui_tabs).click(function () {
+    $('a', '#tabs > ul').click(function () {
         if ($(this).parent().hasClass('active') === false && !GUI.tab_switch_in_progress) { // only initialize when the tab isn't already active
             const self = this;
             const tabClass = $(self).parent().prop('class');
@@ -157,6 +169,7 @@ function startProcess() {
                 if (GUI.connected_to || GUI.connecting_to) {
                     $('a.connect').click();
                 }
+                // this line is required but it triggers opening the firmware flasher tab again
                 $('div.open_firmware_flasher a.flash').click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
                 gui_log(i18n.getMessage('tabSwitchUpgradeRequired', [tabName]));
@@ -350,21 +363,6 @@ function startProcess() {
 
         if (!isNaN(val)) {
             element.data('previousValue', parseFloat(val));
-        }
-    });
-
-    $("#content").on('keydown', 'input[type="number"]', function (e) {
-        // whitelist all that we need for numeric control
-        const whitelist = [
-            96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, // numpad and standard number keypad
-            109, 189, // minus on numpad and in standard keyboard
-            8, 46, 9, // backspace, delete, tab
-            190, 110, // decimal point
-            37, 38, 39, 40, 13, // arrows and enter
-        ];
-
-        if (whitelist.indexOf(e.keyCode) === -1) {
-            e.preventDefault();
         }
     });
 

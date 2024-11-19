@@ -435,17 +435,11 @@
     "reportProblemsDialogHeader": {
         "message": "Os seguintes <strong> problemas coa súa configuración <\/strong> foron detectados:"
     },
-    "reportProblemsDialogFooter": {
-        "message": "<span class=\"message-negative\"><strong>Debe solucionar estes problemas antes de intentar voar o seu drone<\/span><\/strong>."
-    },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>A versión do configurador utilizada ($3) non é compatible co firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Non hai ningún protocolo de saída do motor seleccionado<\/strong>.<br>Seleccione un protocolo de saída do motor adecuado para os seus ESC en '$t(configurationEscFeatures.message)' na pestana '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong> o acelerómetro está activado, pero non está calibrado <\/strong>.<br> Se pretende usar o acelerómetro, siga as instrucións de '$t(initialSetupButtonCalibrateAccel.message)' na '$t(tabSetup.message)'pestana. Se está habilitada algunha función que requira o acelerómetro (modos de nivel automático, rescate GPS, ...), o armado desactivarase ata que se calibre o acelerómetro.<br> Se non está usando o acelerómetro é recomendable deshabilitalo en '$t(configurationSystem.message)' na pestana '$t(tabConfiguration.message)'."
     },
     "infoVersionOs": {
         "message": "SO: <strong>{{operatingSystem}}<\/strong>",
@@ -508,9 +502,6 @@
     },
     "uniqueDeviceIdReceived": {
         "message": "ID único do dispositivo: <strong>0x$1<\/strong>"
-    },
-    "craftNameReceived": {
-        "message": "Nome aeronave: <strong>$1<\/strong>"
     },
     "armingDisabled": {
         "message": "<strong>Armado Desactivado<\/strong>"
@@ -882,17 +873,9 @@
         "message": "A detección de fallos está activa",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "O quad estase calibrando",
-        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "A canle do acelerador é demasiado alto",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "A aeronave non está nivelada (suficientemente)",
-        "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
         "message": "Armado demasiado pronto despois de acenderse",
@@ -1311,17 +1294,11 @@
     "configurationThrottleMinimum": {
         "message": "Minimun Throttle (Valor minimo do ESC ó armar)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "Este é o valor 'ralentí' que se envía aos ESCs cando a aeronave está armada e o acelerador está en posición mínima. Aumente o valor para gañar máis velocidade do ralentí. Tamén aumente o valor en caso de desincronización!"
-    },
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle ( Valor maximo do ESC ó armar)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Comando mínimo ( Valor do ESC ó desarmar)"
-    },
-    "configurationThrottleMinimumCommandHelp": {
-        "message": "Este é o valor que se envía aos ESCs cando a aeronave está desarmada. Selecciona un valor onde os motores estean parados (1000 para a maioria dos ESCs)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Seleccione un protocolo de saída do motor adecuado para os seus ESCs. $t(escProtocolDisabledMessage.message)"
@@ -1337,9 +1314,6 @@
     },
     "configurationDshotBeaconTone": {
         "message": "Ton da baliza"
-    },
-    "configurationDshotBeaconHelp": {
-        "message": "A baliza Dshot utiliza os ESCs e os motores para producir son. Isto significa que a baliza Dshot non se pode empregar cando os motores están xirando. En Betaflight 3.4 e máis recentes, cando se intenta armar mentres a baliza Dshot está activa, hai un atraso de 2 segundos despois do último ton da baliza Dshot antes de que a aeronave estea armada. Trátase de evitar que a funcionalidade de baliza Dshot interfira cós comandos Dshot enviados ao armar. <br\/><strong>Aviso:<\/strong> Xa que a baliza Dshot está funcionando a través dos seus motores cando está activo, isto pode provocar un exceso de calor producindo danos nos seus motores e \/ ou ESCs se a intensidade da baliza é demasiado alta. Use BLHeli Configurator ou BLHeli Suite para axustar e probar a intensidade da baliza."
     },
     "configurationBeeper": {
         "message": "Configuración do Beeper"
@@ -1482,10 +1456,6 @@
     "configurationGPSHomeOnce": {
         "message": "Estableza o punto de inicio unha vez",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "Se está activado, só se empregará o primeiro armado despois de conectar a batería como punto de inicio. Se non está activado, cada vez que o quad estea armado, o punto de inicio actualizarase.",
-        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
         "message": "Proveedor do Receptor Serie"
@@ -1677,18 +1647,6 @@
         "message": "Amortiguación<br>Dinámica",
         "description": "Sidebar title for the options panel for the D Max feature"
     },
-    "pidTuningDMaxGainHelp": {
-        "message": "D Max Gain aumenta a sensibilidade do sistema que aumenta D cando o quad xira rapidamente ou ten propwash. <br><br>Os valores de ganancia máis altos traen D máis facilmente que os valores máis baixos, levantando cara a D Max máis rápido. Os valores de 40 ou incluso 50 poden funcionar ben para as construcións limpas de freestyle. <br><br> Os valores máis baixos non aumentarán a DMAX, excepto en movementos moi rápidos, e poden atender mellor configuracións de carreira minimizando D Lag. <br><br> Aviso: ou ganancia ou avance, debe ser definido por riba de 20, ou D non vai aumentar como debería. Configurar ambos a cero bloqueará D no valor da base.",
-        "description": "D Max feature helpicon message"
-    },
-    "pidTuningDMaxAdvanceHelp": {
-        "message": "D Max Advance engade sensibilidade ao factor de ganancia cando os stiks móvense rapidamente.<br><br>Advance non responde o xiro ou o propwash. Actúa antes que o factor de ganancia e en ocasións é útil para os quads de baixa autoridade que tenden a retrasarse mal ao comezo dun movemento.<br><br>Xeralmente é mellor deixalo en cero.<br><br>Aviso: O valor de Advance, ou ganancia, debe ser definido por riba de 20, ou D non vai aumentar como debería. Configuración de ambos a cero bloqueará D no valor base.",
-        "description": "D Max feature helpicon message"
-    },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla a forza de amortiguamento a CALQUERA movemento do quad. Para os movementos de stick, o D-Term diminúe o comando. Para unha influencia externa (propwash ou ráfagas de vento) o d-term diminúe a influencia.<br><br>As ganancias máis altas proporcionan máis amortiguamento e redución do exceso de P-Term e FF.<br>Con todo, o D-term MOI sensible ás vibracións de alta frecuencia do Gyro (amplifica o ruido de 10x a 100x).<br><br>O ruído de alta frecuencia pode causar calor e queimar os motores se os valores de D son demasiado altos ou o ruído de Gyro non está ben filtrado (Vexa pestana Filtros).<br><br>Pense no D-Term como o amortecedor do seu coche, pero coa propiedade negativa inherente de amplificar ruido en altas frecuencias do gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "Configuración do controlador PID"
     },
@@ -1843,10 +1801,6 @@
     "pidTuningIntegral": {
         "message": "<b>I<\/b>ntegral"
     },
-    "pidTuningIntegralHelp": {
-        "message": "Controla os pequenos desplazamentos persistentes.<br><br>Semellante a P, pero acumúlase progresivamente e lentamente ata que o erro é cero. Importante para prexuízos a longo prazo, como un centro de gravidade descompensado ou influencias externas persistentes, como o vento.<br \/><br \/>Os aumentos máis altos proporcionan un seguimento máis axustado, especialmente nos xiros, pero poden facer que o quad se sinta ríxido.<br><br>Pode causar oscilacións lentas en compilacións de baixa autoridade ou se son altas en proporción a P.",
-        "description": "Integral Term helpicon message on PID table titlebar"
-    },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
     },
@@ -1856,10 +1810,6 @@
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "Un factor adicional, derivado puramente da entrada de sticks, que axuda a empurrar o quad rapidamente en movementos de stick rápidos.<br><br>FF non pode causar oscilacións, permite unha P máis baixo para unha respostra similar a dos sticks, e contrarrestar a oposición natural de D ós movementos.<br><br>Valores baixos ou cero producirán unha resposta máis suave pero máis atrasada aos movementos dos sticks.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Aviso:<\/b><\/span>Taxas moi altas poden producir desyncs dende desaceleracións rápidas."
@@ -2006,9 +1956,6 @@
         "message": "Use os controis deslizantes para axustar os seus filtros. Os controis deslizadores deben ser desconectados para facer cambios manuais.<br>Mover os controis deslizantes á dereita ofrecen valores superiores de corte e pode mellorar a propwash, pero permitirá máis ruído a través dos motores, facéndoos máis quentes.<br>A maioría das construccións limpas con filtrado RPM estarán ben co control deslizante de Gyro Lowpass a dereita ou con só o paso baixo 2 activo e os controis deslizantes no medio.<br><strong>Aviso:<\/strong> Sexa MOI cauteloso cando mova os controis de D á dereita! Comprobe a temperatura do motor despois de cada cambio!<br><strong>Nota:<\/strong> Cambiar os perfís só cambiarán a configuración do filtro D-term. A configuración do filtro de Gyro é a mesma para tódolos perfís.",
         "description": "Filter tuning subtab note"
     },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Aviso:<\/b><\/span> A cantidade de filtrado que está a usar é perigosamente baixa. É probable que isto faga que a aeronave sexa difícil de controlar e poida producir desarmados. É altamente recomendable <b>activar polo menos un dos Gyro Dynamic Lowpass ou Gyro Lowpass 1 e polo menos un dos D-Term Dynamic Lowpass ou D Term Lowpass 1<\/b>."
-    },
     "pidTuningSliderPidsMode": {
         "message": "Modo:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2129,9 +2076,6 @@
     "receiverModelPreview": {
         "message": "Vista Previa"
     },
-    "receiverMspWarningText": {
-        "message": "Estes stick permiten armar e probar Betaflight sen que estea presente un transmisor ou receptor. Non obstante, <strong> esta función non está pensada para o voo e non se deben colocar hélices.<\/strong><br \/><br \/>Esta función non garante un control fiable da súa aeronave. <strong>É probable que se produzan lesións graves se se deixan as hélices postas.<\/strong>"
-    },
     "receiverMspEnableButton": {
         "message": "Activar controis"
     },
@@ -2173,14 +2117,6 @@
         "message": "Permite a dirección reversible do motor para proporcionar un empuxe negativo e permitir o voo invertido. O acelerador pasa a ser de -100 a +100 en lugar de 0 a 100",
         "description": "Help text to 3D mode"
     },
-    "auxiliaryHelpMode_ACROTRAINER": {
-        "message": "Modo de voo que limita o ángulo da aeronave ao voar en modo acro",
-        "description": "Help text to ACRO TRAINER mode"
-    },
-    "auxiliaryHelpMode_ARM": {
-        "message": "Habilita a saída do motor e permite que a aeronave voe",
-        "description": "Help text to ARM mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "Neste modo de nivelación automática, as canles de roll e pitch controlan o ángulo entre o eixe relevante e o vertical, logrando un voo nivelado só deixando os sticks centrados",
         "description": "Help text to ANGLE mode"
@@ -2188,10 +2124,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Este modo de voo aumenta P e I durante os movementos rápidos do acelerador para mellorar o seguimento do stick e evitar a deriva do morro nos cambios rápidos do acelerador",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_AIRMODE": {
-        "message": "No modo mesturador estándar, cando se calcula o balance, o cabeceo e o guiñada e satura un motor, tódolos motores reduciranse por igual. Cando un motor vai por debaixo do mínimo, córtase. Digamos que tivese o acelerador xusto por encima do mínimo e intentou un roll rápido; xa que dous motores non poden baixar, obtén esencialmente a metade da potencia (a metade da súa ganancia PID). Se as súas entradas solicitasen máis dun 100% de diferenza entre os motores altos e baixos, os motores baixos quedarían cortados, rompendo a simetría do equilibrio do motor reducindo a ganancia de forma desigual",
-        "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Activar pitidos - útil para localizar un avión accidentado",
@@ -2245,10 +2177,6 @@
         "message": "Entra manualmente a fase 2 a proba de fallos",
         "description": "Help text to FAILSAFE mode"
     },
-    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
-        "message": "Inverte os motores para envorcar unha embarcación ao revés despois dun accidente (requírese DShot)",
-        "description": "Help text to FLIP OVER AFTER CRASH mode"
-    },
     "auxiliaryHelpMode_FPVANGLEMIX": {
         "message": "Aplique a rotación de guiñada en relación a unha cámara FPV montada nun ángulo preestablecido",
         "description": "Help text to FPV ANGLE MIX mode"
@@ -2257,17 +2185,9 @@
         "message": "Utilízao para indicar o número de satélites GPS atopados soando tantas veces como satélites atopara",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
-    "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Activa o 'GPS Rescue' para voltar a aeronave ao lugar onde foi armada por última vez",
-        "description": "Help text to GPS RESCUE mode"
-    },
     "auxiliaryHelpMode_HEADADJ": {
         "message": "Axuste de rumbo - Establece unha nova orixe de yaw para o modo HEADFREE",
         "description": "Help text to HEAD ADJ mode"
-    },
-    "auxiliaryHelpMode_HEADFREE": {
-        "message": "Modo de voo onde o yaw está aliñado cun marco de referencia externo (a miúdo cara onde o piloto está mirando) en lugar do da aeronave. Deseñado para principiantes pero de uso pouco frecuente, recomenda mellor o modo ANGLE",
-        "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
         "message": "Este modo híbrido funciona exactamente igual que o modo ANGLE cos sticks de roll e pitch centrados (permitindo así o voo autonivelado), despois compórtase gradualmente máis e máis como o modo RATE predeterminado a medida que os paus se afastan da posición central",
@@ -2296,10 +2216,6 @@
     "auxiliaryHelpMode_PASSTHRU": {
         "message": "Pasar roll, yaw e pitch directamente dende rx aos servos na mestura do avión",
         "description": "Help text to PASSTHRU mode"
-    },
-    "auxiliaryHelpMode_PARALYZE": {
-        "message": "Desactiva permanentemente unha aeronave accidentada ata que se apague",
-        "description": "Help text to PARALYZE mode"
     },
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Use para alternar PIDAUDIO",
@@ -3852,9 +3768,6 @@
     "pidTuningYawJumpPrevention": {
         "message": "Previr Salto de Yaw"
     },
-    "pidTuningYawJumpPreventionHelp": {
-        "message": "Evita que a aeronave salte ó final dos yaws. Un número máis alto da máis amortiguación ó final dos movementos de yaw (funciona como a anterior D de yaw, que no era realmente unha D real como noutros eixos)"
-    },
     "pidTuningRcExpoPower": {
         "message": "Potencia Expo RC"
     },
@@ -3900,9 +3813,6 @@
     "pidTuningMotorLimit": {
         "message": "Factor de Escala [%]"
     },
-    "pidTuningMotorLimitHelp": {
-        "message": "Redución da porcentaxe do sinal de saída por motor.<br><br>Reduce a corrente nos ESC e atemperatura no motor cando usa baterías con maior número de céldas en motores de KV elevados.<br><br>Cando se usa unha batería 6s nun quad con motores 4S, probe a poñer 66%; ao usar unha batería de 4S nun quad destinado a 3s, probe 75%.<br><br>Asegúrese de que todos os seus compoñentes poden soportar a tensión da batería que está a usar."
-    },
     "pidTuningCellCount": {
         "message": "Número de celdas - para cambio automático de perfil"
     },
@@ -3944,10 +3854,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Axustes do perfil de Filtros independentes"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Estes controis axustan os filtros de Gyro e D-Term.<br \/><br \/>Para máis filtrado:<br \/> - controis a esquerda<br> - Frecuencias de corte máis baixas.<br \/><br \/> Filtrado máis forte mantén motores máis frios eliminando máis ruído, pero atrasa o sinal de Gyro máis e pode empeorar o propwash ou causar oscilacións resonantes. Os quads menos sensibles, por exemplo, X-Class fano mellor con filtrado máis forte.<br><br>Para menos filtrado:<br \/> - Sliders á dereita<br \/> - Frecuencias máis altas de corte <br><br> Menos filtrado reduce o atraso de sinal de Gyro e moitas veces mellora a properwash. Mover o filtro de paso baixo do gyro a dereita sole ser correcto, pero mover o filtro de D a dereita non soe ser preciso e pode provocar motores quentes.",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Menos filtrado",
         "description": "Filter tuning slider low header"
@@ -3976,21 +3882,9 @@
         "message": "D Multiplicador de filtro de prazo:",
         "description": "D Term filter tuning slider label"
     },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Cambia os cortes de filtro de paso baixo D-term.<br \/><br \/>Mover o control deslizante á esquerda dá un filtrado D máis forte (menor frecuencia de corte).<br \/><br \/>Mover o control deslizante á dereita dá menos filtrado (maior frecuencia de corte).<br \/><br \/>O D-term é o elemento PID máis sensible ao ruído e a resonancia. Pode amplificar o ruído de alta frecuencia por 10x a 100x. É por iso que os cortes de filtro D son moito máis baixos que os filtros do gyro.<br \/><br \/>O filtrado D-term é aplicado despois e, ademais, do filtrado de Gyro. O filtrado D predeterminado é óptimo para a maioría dos quads e raramente necesita ser cambiado. <br \/><br \/>Mover este control deslizante á esquerda reduce a calor do motor en quads ruidosos e con melodías altas de PID, pero podemos ver máis propwash e resonancias de frecuencias inferiores.<br \/><br \/>Non se recomenda mover o control deslizante á dereita, pero pode mellorar a propwash en builds limpas. Pode causar motores ruidosos ó armar, resonancias repentinas en voo e sobrequentamento grave do motor.",
-        "description": "D Term filter tuning slider helpicon message"
-    },
     "pidTuningDTermSliderEnabled": {
         "message": "Empregar control deslizante D-Term",
         "description": "Disable or enable D Term Filter Tuning Slider"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Deslizadores para axustar as características do voo do quad (ganancias de PID)<br \/><br \/>Amortecemento (ganancia D): Resiste o movemento rápido, minimiza o oscilación de P.<br \/><br \/>Seguimento (ganancias P e I): Mellora a capacidade de resposta do quad, se é demasiado elevado pode causar vibracións ou oscilacións.<br \/><br \/>Resposta dos Stick's (Feedforward): Aumenta a capacidade de resposta do quad para movementos máis rápidos de stick.<br \/><br \/>Rumbo - Oscilación (ganancia I, experto): Axuste fino de I.<br \/><br \/>D Dinámica (D Max, experto): Establece a cantidade máxima a que D pode ser elevada durante os movementos rápidos.<br \/><br \/>Amortecemento Pitch (ratio Pitch: Roll de D, experto): Aumenta a cantidade de amortecemento en Pitch en relación ao roll.<br \/><br \/>Seguimento Pitch (ratio Pitch: Roll P, I e F, experto): Aumenta a forza de estabilización en Pitch con relación o Roll.<br \/><br \/>Multiplicador mestre (tódalas ganancias, experto): Levanta ou baixa tódalas ganancias PID, mantendo as súas proporcións constantes.",
-        "description": "Overall helpicon message for PID tuning sliders"
-    },
-    "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">ATENCIÓN<\/span>: As posicións deslizantes actuais poden causar volantes, danos no motor ou comportamentos seguros. Proceda con precaución.",
-        "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Nota:<\/strong>>Os deslizadores están desactivados porque os valores cambiaron manualmente. Premendo no botón '$t(pidTuningSliderEnableButton.message)' volveu activalos. Isto restablecerá os valores e perderanse os cambios non gardados.",
@@ -4044,10 +3938,6 @@
         "message": "Mestre multiplicador:",
         "description": "Master tuning slider label"
     },
-    "pidTuningMasterSliderHelp": {
-        "message": "Aumenta tódolos parámetros de PID por igual. Non cambie este control deslizante a menos que quede sen axuste nos outros controis deslizantes. Normalmente isto só é necesario para a baixa autoridade ou un gran momento de inercia (MOI) quads como X-Class ou as construcións cinelifter. Demasiada ganancia mestre pode causar trizando, oscilacións ou motores quentes.",
-        "description": "Master Gain tuning slider helpicon message"
-    },
     "pidTuningDGainSlider": {
         "message": "Amortiguamento:<br \/><i><small>Ganancia D<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4060,41 +3950,21 @@
         "message": "Seguimento:<br \/><i><small>P & I Gains<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
-    "pidTuningPIGainSliderHelp": {
-        "message": "Aumentar o control deslizante de seguimento para afinar a resposta dos quads aos comandos e mellora tamén a resposta a influencias externas; evitando que o morro do quad que saia da trazada en calquera condición <br \/><br \/>Os valores de \"seguimento\" máis baixos sufrirán bamboleos e irá fóra da trazada en movementos de stick e no propwash. Un \"seguimento\" alto pode producir oscilación e rebotes rápidos (difícil de ver, pero pódense oir). O seguimento excesivo pode producir oscilacións e motores quentes.",
-        "description": "P and I gain tuning slider helpicon message"
-    },
     "pidTuningResponseSlider": {
         "message": "Resposta de Stick:<br \/><i><small>FF Gains<\/small><\/i>",
         "description": "Response tuning slider label"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "Reducir a resposta do stick aumentará a latencia dos movementos do quad aos comandos e pode producir un rebote lento ao final dun flip ou roll.<br><br>A resposta do stick máis alta dará unha resposta do quad máis rápida aos movementos nítidos do stick. Demasiada resposta de stick pode provocar sobrexiros ao final dun flip ou roll.<br \/><br \/><strong>Nota:<\/strong><br \/>O \"I-term Relax\" pode reducir o rebote dos quads con baixa autoridade ou se se usan ganancias de resposta de stick baixas.",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
         "message": "Drift - Wobble:<br \/><i><small>I Gains<\/small><\/i>",
         "description": "I-term slider label"
     },
-    "pidTuningIGainSliderHelp": {
-        "message": "Aumente ou diminúa I. Un I Máis alto pode mellorar o seguimento en xiros en espiral, órbitas ou comandos de aceleración do 0%. Demasiada I, sobre todo se non hai suficiente P, pode causar tambaleos ou rebote despois de xirar ou rodar ou reducir o acelerador ao 0%. <br \/><br \/>como pode ser para manter o seguimento do cuádruple en xiros en espiral, órbitas, etc... pero non tan alto que comece a ver tambaleos ao cortar o acelerador ao 0%.<br \/><br \/><strong>Nota: <\/strong><br \/>Se experimenta un rebote nalgún momento que é fácil de ver, asegúrese de que \"I-term Relax\" estea activado e tente reducir o valor de iterm_relax_cutoff.",
-        "description": "I-gain Gain tuning slider helpicon message"
-    },
     "pidTuningDMaxGainSlider": {
         "message": "Amortiguamento dinámico:<br \/><i><small>D Max<\/small><\/i>",
         "description": "D Max slider label"
     },
-    "pidTuningDMaxGainSliderHelp": {
-        "message": "Aumenta o D Max, a cantidade máxima que D pode aumentar durante os movementos máis rápidos.<br \/><br \/>Para os quads de carreiras, onde o control deslizante do amortecemento principal foi axustado baixo para minimizar a calor do motor, movendo este control deslizante á dereita mellorará o control dos sobrexiros para cambios de dirección rápidos.<br \/><br \/>Para os quads cinemáticos ou cinematográficos, a inestabilidade no voo cara a adiante é mellor abordada movendo o control deslizante de amortecemento (non o control deslizante de amortecemento dinámico) á dereita. Consulte a temperatura do motor e escoite ruídos estraños durante as entradas rápidas ao mover este control deslizante á dereita.<br \/><br \/>Para os quads de freestyle, especialmente as construcións máis pesadas, movendo este control deslizante á dereita pode axudar a controlar o sobrexiro en flips e rolls.<br \/><br \/> <strong>Nota:<\/strong><br \/>Xeralmente o sobrexirot en flips e rolls débese a que non hai suficiente 'I-TERM RELAX', desincronizacións dos motores ou autoridade inadecuada (A.K.A. Saturación Motor). Se pensa que ó mover o control deslizante de amortecemento á dereita non mellora o sobrexiro nos flips ou rolls, colóqueo de volta á posición normal e busque o motivo do bamboleo ou sobrexiro.",
-        "description": "D Max slider helpicon message"
-    },
     "pidTuningRollPitchRatioSlider": {
         "message": "Amortiguamento Pitch:<br \/><i><small>Pitch: Roll D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Aumenta o amortecemento (D) SÓ no eixe do Pitch, é dicir, para un Pitch relativo ó Roll. Axuda a controlar os sobrexiros ou retrocesos específicos en Piych.<br \/><br \/>Quads con momento \"máis pesado\" de inercia no eixe do Pitch xeralmente necesita máis autoridade de amortecemento (xa que o Pitch ten máis inercia e acumula máis forza).<br \/><br \/>Axuste o mestre \"amortecemento\" e \/ ou os deslizadores de \"Seguimento\" primeiro, ata que obteña un bo comportamento do eixe do Roll. A continuación, use os controis deslizantes do Pitch (Aumentar ou diminuír) para axustar o eixe do Pitch sen afectar ó Roll.",
-        "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
         "message": "Seguimento de Pitch:<br><i><small>Pitch:Roll P, I y FF<\/small><\/i>",
@@ -4141,14 +4011,6 @@
     "pidTuningGyroLowpass2Help": {
         "message": "O segundo dos filtros de paso baixo do gyro.<br \/><br \/>Este filtro execútase no lazo de gyro, filtrando o sinal antes de entrar no Pid Loop. Sempre está en modo estático (frecuencia de corte fixa).<br \/><br \/>Se a frecuencia de loop de PID é inferior á frecuencia de loop de gyro, por exemplo, un ciclo de 4K PID cun ciclo de gyro de 8K, este filtro debe ser retido para previr problemas de aliasing debido a reducción de resolución de 8k-> 4k.<br \/><br \/>Unha única configuración de un solo paso baixo de gyro, establecida entre 500 e 1000Hz, funciona ben para BetaFlight 4.3 ou superior, para construcións limpas con RPM activo e polo menos filtro D por defecto.",
         "description": "Gyro lowpass filter helpicon message"
-    },
-    "pidTuningGyroLowpassFilterHelp": {
-        "message": "Os filtros de Gyro Lowpass atenúan o ruído de maior frecuencia para mantelo fóra do lazo PID. Hai dous filtros de Gyro configurables de forma independente; por defecto, ambos están activos.<br \/><br \/>Con filtrado de RPM, o control deslizante de filtro de Gyro moitas veces pode moverse cara á dereita ou, alternativamente, empregar un único filtro de paso baixo de gyro estático a 500Hz pode ser suficiente.<br \/><br \/>Un quad terá menos propwash co menor retraso do filtro de Gyro.<br \/><br \/>Comprobe sempre o calor do motor cando cambie os controis deslizantes cara á dereita. Cun filtrado de Gyro mínimo, é esencial ter o suficiente filtrado D! Cóidado!",
-        "description": "Gyro lowpass filter helpicon message"
-    },
-    "pidTuningDTermLowpassFilterHelp": {
-        "message": "Os filtros de paso baixo de D atenúan o ruído de alta frecuencia e as resonancias que serían amplificadas por unha ganancia D.<br \/><br \/> Hai dous filtros D e os seus efectos son aditivos. Ambos son necesarios en case todos os quads, aínda que un único PT2 pode usarse no lugar do dobre PT1.<br \/><br \/>En xeral, o quad vai voar mellor e ter o mínimo de propwash cando está configurado para ter o menor atraso de filtro (deslizantes á dereita, valores de corte máis altos). Non obstante, particularmente con filtros D, os controis deslizantes á dereita poden aumentar considerablemente a posibilidade de conseguir motores quentes.<br \/><br \/>É moi sinxelo queimar motores se non ten o suficiente filtrado D - ¡Coidado!",
-        "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch do Xiro"
@@ -4205,9 +4067,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "Número de Notch"
     },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": "O Notch dinámico ten tres intervalos de frecuencia nos que pode operar: BAIXO (80-330 Hz) para baixas revolucións en quads como 6+ polgadas, MEDIO (140-550Hz) para un quad normal de 5 polgadas, ALTO (230-800Hz) para moi altas revolucións en quads de 2,5-3 polgadas. A opción AUTO selecciona o rango en función do valor da frecuencia de corte máxima do filtro Gyro Dynamic Lowpass 1."
-    },
     "pidTuningDynamicNotchQHelp": {
         "message": "O factor Q axusta como de estreito ou amplo é o filtro notch dinámico. Un valor maior faino máis estreito e preciso e un valor máis baixo fai que sexa máis amplo. Ter un valor realmente baixo aumentará considerablemente o atraso do filtro."
     },
@@ -4231,10 +4090,6 @@
     "pidTuningRpmHarmonics": {
         "message": "Número de armónicos do filtro Gyro RPM",
         "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "Número de armónicos por motor. Un valor de 3 (recomendado para a maioría dos quads) xerará 3 filtros notch, por motor para cada eixe, un total de 36 notch. Un na frecuencia do motor base e dous harmónicos no múltiple desa frecuencia base.",
-        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
         "message": "Frecuencia mínima do filtro RPM de Gyro [Hz]",
@@ -4318,9 +4173,6 @@
     "pidTuningItermRotation": {
         "message": "Rotación Término I"
     },
-    "pidTuningItermRotationHelp": {
-        "message": "Xira correctamente o vector Termo I actual a outros eixes mentres o quad xira ao xirarse continuamente durante os rolls e ao realizar embudos e outros trucos. Moi apreciado polos pilotos LOS acro."
-    },
     "pidTuningSmartFeedforward": {
         "message": "Smart Feedforward"
     },
@@ -4329,9 +4181,6 @@
     },
     "pidTuningItermRelax": {
         "message": "Afloxar Termo I"
-    },
-    "pidTuningItermRelaxHelp": {
-        "message": "Suprime a acumulación de I Term cando se producen movementos rápidos, reducindo o rebote ao final dos rolls, flips e outras entradas rápidas.<br><br>Modo setpoint responde a entradas de sticks suaves e funciona mellor para quads nerviosos.<br><br>O modo Gyro pode ser útil para quads extremadamente lentas.<br><br>Normalmente, iterm Relax non debe ser aplicado a Yaw."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Eixos",
@@ -4363,14 +4212,8 @@
         "message": "Corte",
         "description": "Cutoff value of the I Term Relax"
     },
-    "pidTuningItermRelaxCutoffHelp": {
-        "message": "Os valores máis baixos significan a supresión máis forte do rebote tras flips en quads de baixa autoridade. Os valores máis altos aumentan a precisión de tasas máis altas para carreiras.<br><br> Seleccione 30-40 para carreiras, 15 para freestyle nerviosos, 10 para freestyle máis pesados, 3-5 para X-class."
-    },
     "pidTuningAbsoluteControlGain": {
         "message": "Control Absoluto"
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Esta característica resolve algúns problemas subxacentes de $t(pidTuningItermRotation.message) e pode substituílo nalgún momento. Acumula o erro de Gyro absoluto en coordenadas do quad e mestura unha corrección proporcional en setpoint.<br><br>AirMode debe estar habilitado e $t(pidTuningItermRelax.message) (for $t(pidTuningOptionRP.message)). Cando se combina con $t(pidTuningIntegratedYaw.message), pode ter $t(pidTuningItermRelax.message) activo para $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Potenciar do Acelerador"
@@ -4407,9 +4250,6 @@
     },
     "failsafePaneTitleOld": {
         "message": "Failsafe do receptor"
-    },
-    "failsafeFeaturesHelpNew": {
-        "message": "Failsafe ten dúas etapas. <strong>Etapa 1<\/strong> introdúcese cando un canle de voo ten unha lonxitude de pulso inválida, o receptor informa do modo a proba de fallos ou non hai ningún sinal do receptor, os axustes de caída do canal aplícanse a <span class=\"message-negative\"> todos os canais <\/span> e fornécese un curto período de tempo para permitir a recuperación. <strong> Etapa 2 <\/strong> introdúcese cando a condición de erro leva máis tempo que a garda configurada mentres que a nave é <span class=\"message-negative\"> armada <\/span>, tódolos canles permanecerán na canle aplicada opción de reposición a menos que se exceda o procedemento escollido. <br \/> <strong> Nota: <\/strong> Antes de entrar na fase 1, as opcións de caída do canal tamén se aplican a canles AUX individuais que teñen pulsos non válidos."
     },
     "failsafePulsrangeTitle": {
         "message": "Configuración de intervalo de pulsos válidos"
@@ -4459,17 +4299,11 @@
     "failsafeThrottleLowItem": {
         "message": "Demora para baixar o acelerador en Failsafe [seconds]"
     },
-    "failsafeThrottleLowHelp": {
-        "message": "Simplemente desarmar a aeronave en lugar de executar o procedimiento de Failsafe seleccionado cando non se acelera durante este período de tempo"
-    },
     "failsafeThrottleItem": {
         "message": "Valor do acelerador utilizado durante o aterrizaxe"
     },
     "failsafeOffDelayItem": {
         "message": "Espera para apagar os motores no caso de Failsafe [seconds]"
-    },
-    "failsafeOffDelayHelp": {
-        "message": "Tempo para permanecer no modo de aterrizaxe ata que os motores se apagan e a aeronave se desarma."
     },
     "failsafeSubTitle1": {
         "message": "Etapa 2 - Procedimiento de Failsafe"
@@ -4498,9 +4332,6 @@
     "failsafeGpsRescueInitialClimb": {
         "message": "Ascenso inicial (metros)"
     },
-    "failsafeGpsRescueInitialClimbHelp": {
-        "message": "A distancia que subirá o quad, por riba da altitude actual, cando se inicie un rescate e o modo de altitude estea configurado en Altitude ACTUAL; tamén se engade cando está no modo Altitude MAX."
-    },
     "failsafeGpsRescueItemReturnAltitude": {
         "message": "Altitude de retorno (metros) - <strong>só se aplica no modo Altitude Fixa<\/strong>"
     },
@@ -4513,9 +4344,6 @@
     "failsafeGpsRescueItemAngle": {
         "message": "Ángulo máximo de pitch"
     },
-    "failsafeGpsRescueAngleHelp": {
-        "message": "Os ángulos máximos máis altos dan lugar a retornos máis agresivos e velocidades de avance máis altas. Pode ser útil para aeronaves máis pesadas, de alta resistencia ou de baixa autoridade, ou para usar con ventos máis fortes. ADVERTENCIA: O acelerador de rescate xeralmente debe aumentarse se aumenta o ángulo máximo. Se non, o quad pode perder altitude e chocar!"
-    },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distancia de descenso (metros)"
     },
@@ -4525,24 +4353,14 @@
     "failsafeGpsRescueDescendRateHelp": {
         "message": "A taxa de descenso inicial establécese en 3 veces este valor, diminuíndo ata o valor establecido na altitude de aterraxe."
     },
-    "failsafeGpsRescueItemMinStartDistHelp": {
-        "message": "Se o rescate comeza demasiado preto da casa (dentro desta distancia mínima), a aeronave voará, no seu rumbo actual, ata polo menos esta distancia da casa, e despois comezará o comportamento normal de rescate",
-        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
-    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Aceleredor mínimo"
     },
     "failsafeGpsRescueItemThrottleMax": {
         "message": "Acelerador máximo"
     },
-    "failsafeGpsRescueThrottleMaxHelp": {
-        "message": "Debe aumentarse para as aeronaves máis pesadas, cargadas ou de baixa autoridade, se é probable un retorno contra ventos fortes ou se aumenta o ángulo de cabeceo máximo."
-    },
     "failsafeGpsRescueItemThrottleHover": {
         "message": "Acelerador para flotar - <span class=\"message-negative\">IMPORTANTE: estableza este valor con precisión<\/span>"
-    },
-    "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "Para atopar o valor correcto, configure a acción do interruptor Failsafe na Fase 2, configure o Procedemento Failsafe da Fase 2 en Aterrar e axuste o valor do acelerador que se usa ao aterrar ata que o quad se coloque ou descenda lentamente. A continuación, configure o Hover do acelerador de rescate do GPS e o valor de reserva da canle da etapa 1 para o acelerador a este valor."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Distancia mínima a casa (metros)"
@@ -4555,9 +4373,6 @@
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
         "message": "Permitir armar sen corrección - <span class=\"message-negative\">ADVERTENCIA: Non hai corrección = desarmar en caso de fallo!<\/span>"
-    },
-    "failsafeGpsRescueArmWithoutFixHelp": {
-        "message": "Non recomendado. Permite armar sen que se estableza un punto de inicio, pero o quad desarmarase e fallará cunha verdadeira perda de Rx. Se se proba cun interruptor, hai un breve período de non facer nada antes do desarmado."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Controis de corrección"
@@ -4582,9 +4397,6 @@
     },
     "failsafeSwitchModeItem": {
         "message": "Acción Interruptor Failsafe"
-    },
-    "failsafeSwitchModeHelp": {
-        "message": "Esta opción determina qué pasa cando o Failsafe se activa a través dun interruptor AUX:<br\/><strong>Etapa 1<\/strong> activa o modo de seguridade Etapa 1. É útil si queres simular o comportamiento exacto duna pérdida de sinal.<br\/><strong>Etapa 2<\/strong>salta a Etapa 1 e activa o procedemiento Etapa 2 inmediatamente<br\/><strong>Matar<\/strong> desarma instantáneamente (a aeronave estrellarase)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Etapa 1"
@@ -4645,9 +4457,6 @@
     },
     "powerCalibrationManagerTitle": {
         "message": "Xestor de calibración"
-    },
-    "powerCalibrationManagerHelp": {
-        "message": "Para calibrar, use un multímetro para medir a tensión \/ corrente real da súa aeronave (cunha batería conectada) e introduza os valores seguintes. Entón, coa mesma batería aínda conectada, faga clic en [Calibrate]."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong> Nota: <\/strong> antes de calibrar a escala, asegúrese de que o divisor e multiplicador de tensión e desprazamento para o amperaje estea axustado correctamente. <br> Deixar os valores en 0 non aplicará a calibración. <\/br> <strong> Recorde retirar as hélices antes de enchufar unha batería! <\/strong>"
@@ -5005,9 +4814,6 @@
     "osdSetupVtxTitle": {
         "message": "Axustes VTX"
     },
-    "osdSetupCraftNameTitle": {
-        "message": "Nome aeronave"
-    },
     "osdSetupWarningsTitle": {
         "message": "Avisos"
     },
@@ -5303,13 +5109,6 @@
     "osdDescElementLapTimeBest3": {
         "message": "Os 3 mellores tempos de volta por GPS"
     },
-    "osdTextElementCraftName": {
-        "message": "Nome da aeronave",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementCraftName": {
-        "message": "Nome da aeronave tal como se establece na pestana Configuración.<\/br>Tamén pódese definir mediante a variable do CLI \"craft_name\"."
-    },
     "osdTextElementAltitude": {
         "message": "Altitude",
         "description": "One of the elements of the OSD"
@@ -5321,15 +5120,9 @@
         "message": "Unha vez",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementOnTime": {
-        "message": "Tempo total que a aeronave estivo encendida"
-    },
     "osdTextElementFlyTime": {
         "message": "Tempo de voo",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlyTime": {
-        "message": "Tempo total que a aeronave estivo armada no ciclo actual de enerxía (parpadea por riba do limiar de alarma)"
     },
     "osdTextElementFlyMode": {
         "message": "Modo de Voo",
@@ -5479,9 +5272,6 @@
         "message": "Temporizador: Tempo armado",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementArmedTime": {
-        "message": "Tempo dende que a aeronave foi armada por última vez"
-    },
     "osdTextElementHomeDirection": {
         "message": "Dirección casa",
         "description": "One of the elements of the OSD"
@@ -5590,9 +5380,6 @@
     "osdTextGForce": {
         "message": "Forza G",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescGForce": {
-        "message": "Mostra canta Forza G está experimentando a aeronave"
     },
     "osdTextElementMotorDiag": {
         "message": "Diagnósticos do motor",
@@ -5822,15 +5609,9 @@
         "message": "Tempo total de voo",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
-    "osdDescStatFlyTime": {
-        "message": "Tempo total que a aeronave estivo armada no actual ciclo de enerxía"
-    },
     "osdTextStatArmedTime": {
         "message": "O tempo voou dende o último armado",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatArmedTime": {
-        "message": "Tempo dende que a aeronave foi armada por última vez"
     },
     "osdTextStatMaxDistance": {
         "message": "Máxima distancia a casa",
@@ -5877,9 +5658,6 @@
     "osdTextStatGForce": {
         "message": "Máxima forza G",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatGForce": {
-        "message": "Máxima forza G experimentada pola aeronave"
     },
     "osdTextStatEscTemperature": {
         "message": "Máxima temperatura ESC",
@@ -6014,15 +5792,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
         "message": "Tempo total de armado",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
         "message": "Último tempo de armado",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
         "message": "Tempo de armado",
-        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Precisión:"
@@ -6362,10 +6140,6 @@
         "message": "Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Cando está activado, o VTX entra nun modo de moi baixa potencia para deixar o quad no banco sen molestar a outros pilotos. Normalmente o alcance deste modo é inferior a 5 m.<br \/><br \/>NOTA: Algúns protocolos, como SmartAudio, non poden habilitar o modo Pit a través do software despois do arranque.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Frecuencia do Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
@@ -6567,9 +6341,6 @@
     "configurationSmallAngle": {
         "message": "Ángulo máximo de Armado [degrees]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "A aeronave non se armará si está ladeada máis que o número de graos especificados. Só aplica si o acelerómetro está activado. Axustalo a 180 desactiva esta comprobación"
-    },
     "configurationBatteryVoltage": {
         "message": "Voltaxe da LIPO"
     },
@@ -6651,9 +6422,6 @@
     },
     "configurationPersonalization": {
         "message": "Persoalización"
-    },
-    "craftName": {
-        "message": "Nome da aeronave"
     },
     "configurationCraftNameHelp": {
         "message": "Pódese mostrar nos rexistros, os nomes dos ficheiros de copia de seguridade e o OSD.<\/br> Pódese configurar mediante a variable do CLI <b>craft_name<\/b>."
@@ -7061,10 +6829,6 @@
     "presetsWarningBackup": {
         "message": "Por favor, asegúrese de facer unha copia de seguridade da súa configuración actual ('$t(presetsBackupSave.message)' botón ou vía CLI se o botón está desactivado) <strong>antes<\/strong> seleccionando e aplicando presets. En caso contrario, non hai ningunha forma de volver á configuración anterior despois de aplicar presets.",
         "description": "Warning message that shows up at the top of the presets tab"
-    },
-    "presets_sources_dialog_warning": {
-        "message": "<span class=\"message-negative\">AVISO!<\/span> Usar fontes predefinidas de terceiros pode ser perigoso.<br\/>Asegúrese de engadir e usar só fontes de confianza. As fontes predefinidas maliciosas ou malas romperán a configuración do drone e poden prexudicar os seus dispositivos.",
-        "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
         "message": "O Preset seleccionado require a versión de firmware $1<br\/> A versión actual do firmware é $2",

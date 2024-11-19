@@ -28,6 +28,7 @@
         ></betaflight-logo>
         <port-picker
             v-model="PortHandler.portPicker"
+            :connected-bluetooth-devices="PortHandler.currentBluetoothPorts"
             :connected-serial-devices="PortHandler.currentSerialPorts"
             :connected-usb-devices="PortHandler.currentUsbPorts"
             :show-virtual-option="PortHandler.showVirtualMode"
@@ -42,13 +43,11 @@
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
                     :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
                     :batteryState="FC.BATTERY_STATE?.batteryState"
-                    :vbatcellcount="FC.BATTERY_STATE?.cellCount"
                 >
                 </battery-icon>
                 <battery-legend
                     :voltage="FC.ANALOG.voltage"
                     :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
-                    :vbatcellcount="FC.BATTERY_STATE?.cellCount"
                 ></battery-legend>
                 <div class="bottomStatusIcons">
                     <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>
@@ -277,6 +276,26 @@
         <div class="dialogInformationContent"></div>
         <div class="buttons">
             <a href="#" class="dialogInformation-confirmButton regular-button"></a>
+        </div>
+    </dialog>
+
+    <dialog class="dialogInteractive">
+        <h3 class="dialogInteractiveTitle"></h3>
+        <div class="dialogInteractiveContent"></div>
+
+        <div class="cli-response">
+            <textarea id="cli-response" readonly rows="32" cols="96"></textarea>
+            <div class="default_btn">
+                <a class="confirm" href="#" i18n="cliConfirmSnippetBtn"></a>
+            </div>
+        </div>
+
+        <div class="cli-command">
+            <input type="text" id="cli-command" i18n_placeholder="cliCommand">
+        </div>
+
+        <div class="buttons">
+            <a href="#" class="dialogInteractive-closeButton regular-button"></a>
         </div>
     </dialog>
 </body>

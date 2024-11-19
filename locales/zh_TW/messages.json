@@ -388,9 +388,6 @@
     "reportProblemsDialogHeader": {
         "message": "檢測到<strong>您的配置存在下列問題<\/strong>:"
     },
-    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>加速度計已啟用，但未進行校準<\/strong>。<br>如果您計劃使用加速度計，請遵循 \"$t(tabSetup.message)\" 頁面中的 \"$t(initialSetupButtonCalibrateAccel.message)\" 操作指南。如果開啟了任何需要調用加速度計的功能 (例如自穩模式, GPS 救援, …)，在加速度計完成校準之间將無法解鎖。<br>如果您並不計劃使用加速度計，建議您在 \"$t(tabConfiguration.message)\" 頁面中通過 \"$t(configurationSystem.message)\" 禁用加速度計。"
-    },
     "buildServerUsingCached": {
         "message": "使用已緩存的 $1 生成訊息。"
     },
@@ -423,9 +420,6 @@
     },
     "uniqueDeviceIdReceived": {
         "message": "唯一設備 ID: <strong>0x$1<\/strong>"
-    },
-    "craftNameReceived": {
-        "message": "飛行器名稱：<strong>$1<\/strong>"
     },
     "armingDisabled": {
         "message": "<strong>禁止解鎖<\/strong>"
@@ -680,10 +674,6 @@
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "油門通道值過高",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "飛行器未（充分）放平",
-        "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
         "message": "上電後解鎖太早",
@@ -962,17 +952,11 @@
     "configurationThrottleMinimum": {
         "message": "最小油門（解鎖時飛控輸出給電調的最低油門數值）"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "這裡的“怠速”值指當飛控解鎖並且油門在最低位時，會被發送到電調的數值。增加這個數值可增加怠速時電機的轉速。如果電機發生失步也要增加這個數值！"
-    },
     "configurationThrottleMaximum": {
         "message": "最大油門（飛控發給電調的最大值）"
     },
     "configurationThrottleMinimumCommand": {
         "message": "電調命令最小值（鎖定時飛控發給電調的數值）"
-    },
-    "configurationThrottleMinimumCommandHelp": {
-        "message": "這個數值是飛控鎖定電機時發給電調的數值。將它設定為可以讓電機停轉的數值。（對大部分電調而言該值是1000）"
     },
     "configurationEscProtocolDisabled": {
         "message": "請選擇適合您的 ESC 的輸出協議。$t(escProtocolDisabledMessage.message)"
@@ -988,9 +972,6 @@
     },
     "configurationDshotBeaconTone": {
         "message": "信標音調"
-    },
-    "configurationDshotBeaconHelp": {
-        "message": "Dshot 信標使用電調和電機產生聲音。這意味著當電機旋轉時，Dshot 信標無法工作。在 Betaflight 3.4 和以後的版本中，若在 Dshot 信標激活時嘗試解鎖，飛控會在發出最後一聲信標音後延遲2秒再解鎖。這是為了防止 Dshot 信標功能干擾在解鎖時發送的 Dshot 命令。<br\/><strong>警告：<\/strong> 由於 Dshot 信標會有電流流過，如果信標鳴叫強度設置得太高，可能會噪聲電機\/電調過熱甚至孫奎。建議使用 BLHeli 配置程式或 BLHeliSuite 來調整和測試信標的鳴叫強度。"
     },
     "configurationBeeper": {
         "message": "蜂鳴器配置"
@@ -1122,10 +1103,6 @@
     "configurationGPSHomeOnce": {
         "message": "設置返航點",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
-    },
-    "configurationGPSHomeOnceHelp": {
-        "message": "啟用後，當接通電池後第一次解鎖時間的地點將被視為返航點。如果未開啟，返航點將隨每次解鎖而更新。",
-        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
         "message": "串行數字接收機協議"
@@ -2642,9 +2619,6 @@
     "pidTuningYawJumpPrevention": {
         "message": "抑制 Yaw Jump"
     },
-    "pidTuningYawJumpPreventionHelp": {
-        "message": "抑制飛機在裝箱結束時的高度跳動。數值越高，抑制效果越強。（類似於舊的 Yaw D，在其他軸上不是真正的D）"
-    },
     "pidTuningRcExpoPower": {
         "message": "RC Expo 權重"
     },
@@ -2713,10 +2687,6 @@
         "message": "D Term 濾波器乘數:",
         "description": "D Term filter tuning slider label"
     },
-    "pidTuningSliderWarning": {
-        "message": "<span class=\"message-negative\">小心<\/span>: 當前的滑塊位置可能導致起飛失控、電機損壞或飛行器出現其他不安全的行為。請謹慎行事。",
-        "description": "Warning shown when tuning slider are above safe limits"
-    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>注意:<\/strong>滑塊已禁用，因為已手動更改數值。點擊$t(pidTuningSliderEnableButton.message)按鈕將再次激活它們。這將重置數值，任何未保存的更改都將丟失。",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -2760,9 +2730,6 @@
     "pidTuningDynamicNotchRange": {
         "message": "動態陷波濾波器範圍"
     },
-    "pidTuningDynamicNotchRangeHelp": {
-        "message": "動態陷波濾波器有三個頻率範圍可供運行：LOW(80-330hz) 用於6英寸及以上的低速巡航機，MEDIU(140-550hz) 用於常見的5英寸飛行器，HIGH(230-800hz)用於電機轉速較高的2.5-3英寸的飛行器。 AUTO 選項將會使用陀螺儀低通濾波器1最高截止頻率範圍來決定頻率範圍。"
-    },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q調整了動態陷波濾波器的寬度。更高的值將使其變得更窄、更精準，較低的值將使其變得更寬、更寬泛。將Q調到很低將會帶來很大的濾波器延遲。"
     },
@@ -2779,10 +2746,6 @@
     "pidTuningRpmHarmonics": {
         "message": "陀螺儀 RPM 濾波器諧波數量",
         "description": "Text for one of the parameters of the RPM Filter"
-    },
-    "pidTuningRpmHarmonicsHelp": {
-        "message": "每個電機的諧波數量。 3(推薦適用於大多數飛行器) 將會對每個電機在每個軸上生成3個陷波器，共計36個陷波器。一個基於電機基波頻率，另兩個基於基波頻率整數倍的諧波頻率。",
-        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
         "message": "陀螺儀 RPM 濾波器最低頻率 [Hz]",
@@ -2812,9 +2775,6 @@
     },
     "pidTuningItermRotation": {
         "message": "I 值旋轉"
-    },
-    "pidTuningItermRotationHelp": {
-        "message": "在邊轉向邊翻滾以及做漏斗等特技時，將 I 向量正確旋轉到其他軸向上。比較受到目視飛行的飛手歡迎。"
     },
     "pidTuningSmartFeedforward": {
         "message": "智能前饋"
@@ -2873,9 +2833,6 @@
     "failsafePaneTitleOld": {
         "message": "接收器失控保護"
     },
-    "failsafeFeaturesHelpNew": {
-        "message": "失控保護有兩個階段。若飛控在任一接收通道收到無效的脈衝長度，或者接收機匯報已失控，或者徹底沒有收到接收機訊號，飛控將進入<strong>一階失控保護<\/strong>狀態。飛控將會在<span class=\"message-negative\">所有通道<\/span>使用預置通道設置，如果短時間內訊號恢復將可退出失控保護狀態。若飛機處於<span class=\"message-negative\">解鎖<\/span>狀態，並且一階失控保護模式持續時間超過了預設的時間，飛控將進入<strong>二價失控保護<\/strong>狀態，所有通道將會保持當前輸出。 <br \/><strong>注意：<\/strong> 在飛控進入一階失控保護之前，如果AUX 通道出現無效的脈衝，該通道一樣會使用預置通道設置。"
-    },
     "failsafePulsrangeTitle": {
         "message": "有效脈衝範圍設置"
     },
@@ -2900,14 +2857,8 @@
     "failsafeStageTwoSettingsTitle": {
         "message": "二階失控保護 - 設置"
     },
-    "failsafeThrottleLowHelp": {
-        "message": "在油門保持低位超過該時間，不再執行失控保護措施轉而直接鎖定電機。"
-    },
     "failsafeThrottleItem": {
         "message": "降落時油門大小"
-    },
-    "failsafeOffDelayHelp": {
-        "message": "暫時保持在降落模式而不鎖定電機的時間"
     },
     "failsafeSubTitle1": {
         "message": "二階失控保護措施"
@@ -2975,9 +2926,6 @@
     "failsafeSwitchModeItem": {
         "message": "失控保護開關行為"
     },
-    "failsafeSwitchModeHelp": {
-        "message": "此選項確定通過輔助開關激活失控保護時發生的情況:<br\/><strong>階段 1<\/strong> 激活階段1失控保護。如果要模擬訊號丟失時的失控保護行為，此功能非常有用。 <br\/><strong>階段 2<\/strong> 跳過階段1並立即激活階段2流程<br\/><strong>終止<\/strong> 立即鎖定 （你的飛行器將會墜毀）"
-    },
     "failsafeSwitchOptionStage1": {
         "message": "階段 1"
     },
@@ -3037,9 +2985,6 @@
     },
     "powerCalibrationManagerTitle": {
         "message": "校準管理器"
-    },
-    "powerCalibrationManagerHelp": {
-        "message": "要校準，請使用萬用表測量你的飛行器上(接上電池) 的實際電壓\/電流，然後在下方輸入值。然後，在同一塊電池仍然接入的情況下，點擊 [Calibrate] 按鈕。"
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>注意：<\/strong>在校準縮放之前，請確保電壓和電流漂移的除數和乘數設置正確。 <br>將值設置為0將不會應用校準。 <\/br><strong>切記在插入電池之前移除螺旋槳！ <\/strong>"
@@ -3341,9 +3286,6 @@
     "osdSetupVtxTitle": {
         "message": "圖傳設置"
     },
-    "osdSetupCraftNameTitle": {
-        "message": "飛行器名稱"
-    },
     "osdSetupWarningsTitle": {
         "message": "警告"
     },
@@ -3512,10 +3454,6 @@
     "osdDescElementMahDrawn": {
         "message": "累計已用電池容量"
     },
-    "osdTextElementCraftName": {
-        "message": "飛行器名稱",
-        "description": "One of the elements of the OSD"
-    },
     "osdTextElementAltitude": {
         "message": "海拔高度",
         "description": "One of the elements of the OSD"
@@ -3527,15 +3465,9 @@
         "message": "啟動時間",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementOnTime": {
-        "message": "累計上電時間"
-    },
     "osdTextElementFlyTime": {
         "message": "飛行時間",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescElementFlyTime": {
-        "message": "已解鎖時間 （超過設定值時會閃爍）"
     },
     "osdTextElementFlyMode": {
         "message": "飛行模式",
@@ -3653,9 +3585,6 @@
         "message": "計時器: 解鎖時間",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementArmedTime": {
-        "message": "距離上次解鎖時間"
-    },
     "osdTextElementHomeDirection": {
         "message": "到起飛點的方向",
         "description": "One of the elements of the OSD"
@@ -3761,9 +3690,6 @@
     "osdTextGForce": {
         "message": "G力",
         "description": "One of the elements of the OSD"
-    },
-    "osdDescGForce": {
-        "message": "顯示當前飛機所受G力"
     },
     "osdTextElementMotorDiag": {
         "message": "電機診斷",
@@ -3935,15 +3861,9 @@
         "message": "總飛行時間",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
-    "osdDescStatFlyTime": {
-        "message": "解鎖總時間"
-    },
     "osdTextStatArmedTime": {
         "message": "上次解鎖總飛行時間",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatArmedTime": {
-        "message": "距離上次解鎖時間"
     },
     "osdTextStatMaxDistance": {
         "message": "距起飛點最大距離",
@@ -3990,9 +3910,6 @@
     "osdTextStatGForce": {
         "message": "G力最大值",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescStatGForce": {
-        "message": "飛行器經歷的最大 G 力"
     },
     "osdTextStatEscTemperature": {
         "message": "電調溫度最高值",
@@ -4085,15 +4002,15 @@
     },
     "osdTimerSourceOptionTotalArmedTime": {
         "message": "總解鎖時間",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed since the battery was plugged"
     },
     "osdTimerSourceOptionLastArmedTime": {
         "message": "上次解鎖時間",
-        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+        "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
         "message": "啟動\/解鎖時間",
-        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+        "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "精度："
@@ -4575,9 +4492,6 @@
     "configurationSmallAngle": {
         "message": "最大允許解鎖角度 [degrees]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "如果飛機傾斜的角度大於指定的允許解鎖角度，飛控將會不允許解鎖。只有啟用了加速度計該功能才能工作。設置為180度相當於關閉了傾斜角度檢測。"
-    },
     "configurationBatteryVoltage": {
         "message": "電池電壓"
     },
@@ -4656,9 +4570,6 @@
     },
     "configurationPersonalization": {
         "message": "個性化"
-    },
-    "craftName": {
-        "message": "飛行器名稱"
     },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV攝像頭角度 [degrees]"

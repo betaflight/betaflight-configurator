@@ -119,6 +119,9 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_RACE_PRO:               16419,
     USE_SERVOS:                 16420,
     USE_VTX:                    16421,
+    USE_ALTHOLD_MODE:           16422,
+    USE_SOFTSERIAL:             16423,
+    USE_WING:                   16424,
 };
 
 const FC = {
@@ -479,7 +482,7 @@ const FC = {
             use_unsyncedPwm:            0,
             fast_pwm_protocol:          0,
             motor_pwm_rate:             0,
-            digitalIdlePercent:         0,
+            motorIdle:                  0,
             gyroUse32kHz:               0,
             motorPwmInversion:          0,
             gyroHighFsr:                0,

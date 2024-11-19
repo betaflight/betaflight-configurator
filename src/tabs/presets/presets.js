@@ -7,6 +7,7 @@ import FC from '../../js/fc';
 import CONFIGURATOR from '../../js/data_storage';
 import $ from 'jquery';
 import FileSystem from '../../js/FileSystem';
+import { update_sensor_status } from '../../js/serial_backend';
 
 import { favoritePresets } from './FavoritePresets';
 import CliEngine from './CliEngine';
@@ -37,6 +38,9 @@ presets.initialize = function (callback) {
     if (GUI.active_tab !== 'presets') {
         GUI.active_tab = 'presets';
     }
+
+    // after applying presets, update sensor status
+    update_sensor_status();
 };
 
 presets.readDom = function() {

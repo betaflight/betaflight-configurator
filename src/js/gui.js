@@ -78,6 +78,10 @@ class GuiControl {
     interval_add(name, code, interval, first) {
         const data = { 'name': name, 'timer': null, 'code': code, 'interval': interval, 'fired': 0, 'paused': false };
 
+        if (this.interval_array.find((element) => element.name === name)) {
+            this.interval_remove(name);
+        }
+
         if (first === true) {
             code(); // execute code
 
@@ -422,6 +426,29 @@ class GuiControl {
             dialog[0].showModal();
         });
     }
+    showInteractiveDialog(interactiveDialogSettings) {
+        // interactiveDialogSettings:
+        // title, text, buttonCloseText
+        return new Promise(resolve => {
+            const dialog = $(".dialogInteractive");
+            const title = dialog.find(".dialogInteractiveTitle");
+            const content = dialog.find(".dialogInteractiveContent");
+            const buttonClose = dialog.find(".dialogInteractive-closeButton");
+
+            title.html(interactiveDialogSettings.title);
+            content.html(interactiveDialogSettings.text);
+            buttonClose.html(interactiveDialogSettings.buttonCloseText);
+
+            buttonClose.off("click");
+
+            buttonClose.on("click", () => {
+                dialog[0].close();
+                resolve();
+            });
+
+            dialog[0].showModal();
+        });
+    }
     escapeHtml(unsafe) {
         return unsafe
             .replace(/&/g, "&amp;")
@@ -434,6 +461,41 @@ class GuiControl {
         element.find('a').each(function () {
             $(this).attr('target', '_blank');
         });
+    }
+    showCliPanel() {
+        function set_cli_response(response) {
+            const eol = '\n';
+            let output = `${eol}`;
+            for (const line of response) {
+                output += `${line}${eol}`;
+            }
+            // gui_log(output.split(eol).join('<br>'));
+            $("#cli-command").val('');
+            $('#cli-response').text(output);
+        }
+
+        // cli-command button hook
+        $('input#cli-command').change(function () {
+            const _self = $(this);
+            const command = _self.val();
+            if (!command) {
+                return;
+            }
+            MSP.send_cli_command(command, function (response) {
+                set_cli_response(response);
+            });
+        });
+
+        const cliPanelDialog = {
+            title : i18n.getMessage("cliPanelTitle"),
+            buttonCloseText: i18n.getMessage("Close"),
+        };
+
+        // clear any text leftovers from previous session
+        $('#cli-command').val('');
+        $('#cli-response').text('');
+
+        this.showInteractiveDialog(cliPanelDialog);
     }
 }
 

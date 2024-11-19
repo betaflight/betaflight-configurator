@@ -1048,7 +1048,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.PID_ADVANCED_CONFIG.use_unsyncedPwm = data.readU8();
                 FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = EscProtocols.ReorderPwmProtocols(FC.CONFIG.apiVersion, data.readU8());
                 FC.PID_ADVANCED_CONFIG.motor_pwm_rate = data.readU16();
-                FC.PID_ADVANCED_CONFIG.digitalIdlePercent = data.readU16() / 100;
+                FC.PID_ADVANCED_CONFIG.motorIdle = data.readU16() / 100;
                 data.readU8(); // gyroUse32Khz is not supported
                 // Introduced in 1.42
                 FC.PID_ADVANCED_CONFIG.motorPwmInversion = data.readU8();
@@ -2002,7 +2002,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                 .push8(FC.PID_ADVANCED_CONFIG.use_unsyncedPwm)
                 .push8(EscProtocols.ReorderPwmProtocols(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol))
                 .push16(FC.PID_ADVANCED_CONFIG.motor_pwm_rate)
-                .push16(FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 100)
+                .push16(FC.PID_ADVANCED_CONFIG.motorIdle * 100)
                 .push8(0); // gyroUse32kHz not used
 
             // Introduced in 1.42

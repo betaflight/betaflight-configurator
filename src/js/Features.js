@@ -1,5 +1,5 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_45, API_VERSION_1_46 } from './data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from './data_storage';
 import semver from "semver";
 import { tracking } from "./Analytics";
 import $ from 'jquery';
@@ -26,13 +26,25 @@ const Features = function (config) {
         {bit: 18, group: 'other', name: 'OSD', haveTip: true, dependsOn: 'OSD'},
         {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING', dependsOn: 'SERVOS'},
         {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true, dependsOn: 'TRANSPONDER'},
-        {bit: 22, group: 'other', name: 'AIRMODE'},
+        {bit: 22, group: 'other', name: 'AIRMODE', haveTip: true},
         {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
         {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
         {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
     ];
 
     self._features = features;
+
+    function addFeatureDependsOn(obj, featureName, dependsOn) {
+        obj.forEach(f => {
+            if (f.name === featureName) {
+                f.dependsOn = dependsOn;
+            }
+        });
+    }
+
+    if (semver.gte(config.apiVersion, API_VERSION_1_47)) {
+        addFeatureDependsOn(self._features, 'SOFTSERIAL', 'SOFTSERIAL');
+    }
 
     if (config.buildOptions?.length) {
         // Filter features based on build options
@@ -46,7 +58,7 @@ const Features = function (config) {
             }
         }
 
-        // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT
+        // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT, JETI
         if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
             let enableTelemetry = false;
             if (config.buildOptions.some(opt => opt.includes('CRSF') || opt.includes('GHST') || opt.includes('FPORT') || opt.includes('JETI'))) {

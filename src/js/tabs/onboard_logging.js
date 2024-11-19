@@ -209,7 +209,7 @@ onboard_logging.initialize = function (callback) {
 
         for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
             if (i < DEBUG.modes.length) {
-                debugModeSelect.append(new Option(DEBUG.modes[i].text, i));
+                debugModeSelect.append(new Option(DEBUG.modes[i], i));
             } else {
                 debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
             }
@@ -229,7 +229,7 @@ onboard_logging.initialize = function (callback) {
 
             for (let i = 0; i < DEBUG.enableFields.length; i++) {
                 const enabled = (fieldsMask & (1 << i)) === 0;
-                debugFieldsSelect.append(new Option(DEBUG.enableFields[i].text, i, false, enabled));
+                debugFieldsSelect.append(new Option(DEBUG.enableFields[i], i, false, enabled));
             }
 
             debugFieldsSelect.sortSelect().multipleSelect();

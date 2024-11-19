@@ -96,7 +96,7 @@ class BT extends EventTarget {
     }
 
     async loadDevices() {
-        const devices = await this.bluetooth.getDevices();
+        const devices = await this.getDevices();
 
         this.portCounter = 1;
         this.devices = devices.map(device => this.createPort(device));
