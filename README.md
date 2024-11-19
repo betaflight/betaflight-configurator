@@ -66,6 +66,18 @@ sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
 sudo apt-get -f install
 ```
 
+On Ubuntu 24.10 and above, please follow these steps, as some deprecated modules are no longer avaliable through apt on this distro:
+```
+sudo echo "deb http://archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
+sudo apt update
+wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/libgconf-2-4_3.2.6-4ubuntu1_amd64.deb
+wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/gconf2-common_3.2.6-4ubuntu1_all.deb
+sudo dpkg -i gconf2-common_3.2.6-4ubuntu1_all.deb
+sudo dpkg -i libgconf-2-4_3.2.6-4ubuntu1_amd64.deb
+sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
+sudo apt-get -f install
+```
+
 #### Graphics Issues
 
 If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
