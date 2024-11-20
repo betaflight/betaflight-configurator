@@ -68,7 +68,6 @@ sudo apt-get -f install
 
 On Ubuntu 24.10 and above, please follow these steps, as some deprecated modules are no longer available through apt on this distro:
 ```
-sudo echo "deb http://archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
 sudo apt update
 wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/libgconf-2-4_3.2.6-4ubuntu1_amd64.deb
 wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/gconf2-common_3.2.6-4ubuntu1_all.deb
