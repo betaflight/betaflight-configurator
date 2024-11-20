@@ -66,7 +66,7 @@ sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
 sudo apt-get -f install
 ```
 
-On Ubuntu 24.10 and above, please follow these steps, as some deprecated modules are no longer avaliable through apt on this distro:
+On Ubuntu 24.10 and above, please follow these steps, as some deprecated modules are no longer available through apt on this distro:
 ```
 sudo echo "deb http://archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
 sudo apt update
