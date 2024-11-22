@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import copy from "rollup-plugin-copy";
@@ -113,7 +113,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
-            vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm.js"),
+            "vue": path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
         },
     },
     server: {

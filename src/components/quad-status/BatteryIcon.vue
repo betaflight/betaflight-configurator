@@ -7,24 +7,17 @@
 </template>
 <script>
 const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
-export default {
-    props: {
-        voltage: {
-            type: Number,
-            default: 0,
-        },
-        vbatmincellvoltage: {
-            type: Number,
-            default: 1,
-        },
-        vbatmaxcellvoltage: {
-            type: Number,
-            default: 1,
-        },
-        vbatwarningcellvoltage: {
-            type: Number,
-            default: 1,
-        },
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    batteryState: {
+      type: String,
+      default: '',
+    },
+    voltage: {
+      type: Number,
+      default: 0,
     },
     computed: {
         nbCells() {
@@ -67,7 +60,60 @@ export default {
             return this.isEmpty ? 100 : ((this.voltage - this.min) / (this.max - this.min)) * 100;
         },
     },
-};
+    vbatmaxcellvoltage: {
+      type: Number,
+      default: 1,
+    },
+    vbatwarningcellvoltage: {
+      type: Number,
+      default: 1,
+    },
+  },
+
+  computed: {
+    nbCells() {
+      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
+      if (this.voltage === 0) {
+        nbCells = 1;
+      }
+      return nbCells;
+    },
+    min() {
+      return this.vbatmincellvoltage * this.nbCells;
+    },
+    max() {
+      return this.vbatmaxcellvoltage * this.nbCells;
+    },
+    warn() {
+      return this.vbatwarningcellvoltage * this.nbCells;
+    },
+    isEmpty() {
+      return this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
+    },
+    classes() {
+      if (this.batteryState) {
+        return {
+          "state-ok": this.batteryState === 0,
+          "state-warning": this.batteryState === 1,
+          "state-empty": this.batteryState === 2,
+          // TODO: BATTERY_NOT_PRESENT
+          // TODO: BATTERY_INIT
+        };
+      }
+      const isWarning = this.voltage < this.warn;
+      return {
+        "state-empty": this.isEmpty,
+        "state-warning": isWarning,
+        "state-ok": !this.isEmpty && !isWarning,
+      };
+    },
+    batteryWidth() {
+      return this.isEmpty
+        ? 100
+        : ((this.voltage - this.min) / (this.max - this.min)) * 100;
+    },
+  },
+});
 </script>
 
 <style>

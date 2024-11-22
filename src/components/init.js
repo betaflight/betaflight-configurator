@@ -2,11 +2,11 @@
 // `i18n` helper to window and setting up `i18next`
 // in the future it should be pure. This means it should
 // explicitly export things used by other parts of the app.
-import "../js/localization.js";
-import "../js/injected_methods";
-import i18next from "i18next";
-import Vue from "vue";
-import vueI18n from "./vueI18n.js";
+import '../js/localization.js';
+import '../js/injected_methods';
+import i18next from 'i18next';
+import { createApp } from "vue";
+import I18NextVue from "i18next-vue";
 import BatteryLegend from "./quad-status/BatteryLegend.vue";
 import BetaflightLogo from "./betaflight-logo/BetaflightLogo.vue";
 import StatusBar from "./status-bar/StatusBar.vue";
@@ -30,26 +30,27 @@ const betaflightModel = {
     PortHandler,
 };
 
-i18next.on("initialized", function () {
+i18next.on('initialized', function() {
     console.log("i18n initialized, starting Vue framework");
 
-    if (process.env.NODE_ENV === "development") {
-        console.log("Development mode enabled, installing Vue tools");
-        Vue.config.devtools = true;
-    }
-
-    const app = new Vue({
-        i18n: vueI18n,
-        el: "#main-wrapper",
-        components: {
-            BatteryLegend,
-            BetaflightLogo,
-            StatusBar,
-            BatteryIcon,
-            PortPicker,
-        },
-        data: betaflightModel,
+    const app = createApp({
+        data() { return betaflightModel; },
     });
+
+    app
+    .use(I18NextVue, { i18next })
+    .component('BetaflightLogo', BetaflightLogo)
+    .component('BatteryLegend', BatteryLegend)
+    .component('StatusBar', StatusBar)
+    .component('BatteryIcon', BatteryIcon)
+    .component('PortPicker', PortPicker)
+    .mount('#main-wrapper');
+
+    if (process.env.NODE_ENV === 'development') {
+        console.log("Development mode enabled, installing Vue tools");
+        // Vue.config.devtools = true;
+        app.config.performance = true;
+    }
 });
 
 // Not strictly necessary here, but if needed

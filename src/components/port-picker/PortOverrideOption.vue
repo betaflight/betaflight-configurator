@@ -1,24 +1,30 @@
 <template>
-    <div v-if="isManual" id="port-override-option">
-        <label for="port-override"
-            ><span>{{ $t("portOverrideText") }}</span>
-            <input id="port-override" type="text" :value="value" @change="inputValueChanged($event)"
-        /></label>
-    </div>
+  <div
+    v-if="isManual"
+    id="port-override-option"
+  >
+    <label
+      for="port-override"
+    ><span>{{ $t("portOverrideText") }}</span>
+      <input
+        id="port-override"
+        type="text"
+        :value="value"
+        @change="inputValueChanged($event)"
+      >
+    </label>
+  </div>
 </template>
 
 <script>
 import { set as setConfig } from "../../js/ConfigStorage";
-export default {
-    props: {
-        value: {
-            type: String,
-            default: "/dev/rfcomm0",
-        },
-        isManual: {
-            type: Boolean,
-            default: true,
-        },
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    value: {
+      type: String,
+      default: '/dev/rfcomm0',
     },
     methods: {
         inputValueChanged(event) {
@@ -26,7 +32,14 @@ export default {
             this.$emit("input", event.target.value);
         },
     },
-};
+  },
+  methods: {
+    inputValueChanged(event) {
+      setConfig({'portOverride': event.target.value});
+      this.$emit('input', event.target.value);
+    },
+  },
+});
 </script>
 
 <style lang="less" scoped>
