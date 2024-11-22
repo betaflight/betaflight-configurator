@@ -11,13 +11,16 @@
         type="text"
         :value="value"
         @change="inputValueChanged($event)"
-      ></label>
+      >
+    </label>
   </div>
 </template>
 
 <script>
 import { set as setConfig } from "../../js/ConfigStorage";
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     value: {
       type: String,
@@ -34,7 +37,7 @@ export default {
       this.$emit('input', event.target.value);
     },
   },
-};
+});
 </script>
 
 <style lang="less" scoped>
