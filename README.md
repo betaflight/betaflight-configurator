@@ -39,6 +39,11 @@ Changes to the security model used in the latest versions of MacOS X 10.14 (Moja
 
 #### Linux users
 
+First step is to download the installer and keep it in your working directory, which can be done with the following command:
+```
+wget https://github.com/betaflight/betaflight-configurator/releases/download/10.10.0/betaflight-configurator_10.10.0_amd64.deb
+```
+
 In most Linux distributions your user won't have access to serial interfaces by default. To add this access right type the following command in a terminal, log out your user and log in again:
 
 ```
