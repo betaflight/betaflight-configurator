@@ -12,7 +12,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     configuratorVersion: {
       type: String,
@@ -31,7 +33,7 @@ export default {
       default: "",
     },
   },
-};
+});
 </script>
 
 <style>

@@ -5,8 +5,8 @@
 import '../js/localization.js';
 import '../js/injected_methods';
 import i18next from 'i18next';
-import Vue from "vue";
-import vueI18n from "./vueI18n.js";
+import { createApp } from "vue";
+import I18NextVue from "i18next-vue";
 import BatteryLegend from "./quad-status/BatteryLegend.vue";
 import BetaflightLogo from "./betaflight-logo/BetaflightLogo.vue";
 import StatusBar from "./status-bar/StatusBar.vue";
@@ -31,28 +31,27 @@ const betaflightModel = {
 };
 
 i18next.on('initialized', function() {
-
     console.log("i18n initialized, starting Vue framework");
+
+    const app = createApp({
+        data() { return betaflightModel; },
+    });
+
+    app
+    .use(I18NextVue, { i18next })
+    .component('BetaflightLogo', BetaflightLogo)
+    .component('BatteryLegend', BatteryLegend)
+    .component('StatusBar', StatusBar)
+    .component('BatteryIcon', BatteryIcon)
+    .component('PortPicker', PortPicker)
+    .mount('#main-wrapper');
 
     if (process.env.NODE_ENV === 'development') {
         console.log("Development mode enabled, installing Vue tools");
-        Vue.config.devtools = true;
+        // Vue.config.devtools = true;
+        app.config.performance = true;
     }
-
-    const app = new Vue({
-        i18n: vueI18n,
-        el: '#main-wrapper',
-        components: {
-            BatteryLegend,
-            BetaflightLogo,
-            StatusBar,
-            BatteryIcon,
-            PortPicker,
-        },
-        data: betaflightModel,
-    });
 });
-
 
 // Not strictly necessary here, but if needed
 // it's always possible to modify this model in
