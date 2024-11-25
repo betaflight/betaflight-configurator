@@ -99,6 +99,7 @@ const DEBUG = {
         "SPA",
         "TASK",
         "GIMBAL",
+        "WING_SETPOINT",
     ],
 
     fieldNames: {
@@ -772,6 +773,15 @@ const DEBUG = {
             'debug[3]': 'Gimbal Roll',
             'debug[4]': 'Gimbal Pitch',
             'debug[5]': 'Gimbal Yaw',
+        },
+        'WING_SETPOINT': {
+            'debug[all]': 'Wing Setpoint',
+            'debug[0]': 'Current Setpoint [roll]',
+            'debug[1]': 'Current Setpoint [pitch]',
+            'debug[2]': 'Current Setpoint [yaw]',
+            'debug[3]': 'Adjusted Setpoint [roll]',
+            'debug[4]': 'Adjusted Setpoint [pitch]',
+            'debug[5]': 'Adjusted Setpoint [yaw]',
         },
     },
 
