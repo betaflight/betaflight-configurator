@@ -815,7 +815,7 @@ function update() {
             'debug[0]': 'TPA Factor',
             'debug[1]': 'TPA Attitude Roll (Wing)',
             'debug[2]': 'TPA Attitude Pitch (Wing)',
-            'debug[3]': 'TPA Throttle (Wing)',
+            'debug[3]': 'TPA Calculated Throttle (Wing)',
             'debug[4]': 'TPA Speed (Wing)',
             'debug[5]': 'TPA Argument (Wing)',
         };
