@@ -834,6 +834,7 @@ function update() {
             'debug[6]': 'Altitude D',
             'debug[7]': 'Altitude F',
         };
+        DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro"), 0, "Attitude");
     }
 }
 
