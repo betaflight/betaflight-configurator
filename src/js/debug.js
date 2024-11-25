@@ -799,6 +799,12 @@ function update() {
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        DEBUG.modes.splice(DEBUG.modes.indexOf('GPS_RESCUE_THROTTLE_PID'), 1, 'AUTOPILOT_ALTITUDE');
+        DEBUG.modes.splice(DEBUG.modes.indexOf('GYRO_SCALED'), 1);
+
+        delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
+        delete DEBUG.fieldNames.GYRO_SCALED;
+
         DEBUG.fieldNames.FFT_FREQ = {
             'debug[all]': 'Debug FFT FREQ',
             'debug[0]': 'Gyro Pre Dyn Notch [dbg-axis]',
@@ -810,18 +816,6 @@ function update() {
             'debug[6]': 'Notch 6 Center Freq [dbg-axis]',
             'debug[7]': 'Notch 7 Center Freq [dbg-axis]',
         };
-        DEBUG.fieldNames.TPA = {
-            'debug[all]': 'TPA',
-            'debug[0]': 'TPA Factor',
-            'debug[1]': 'TPA Pitch Angle Factor (Wing)',
-            'debug[2]': 'TPA Argument (Wing)',
-        };
-
-        DEBUG.modes.splice(DEBUG.modes.indexOf('GPS_RESCUE_THROTTLE_PID'), 1, 'AUTOPILOT_ALTITUDE');
-        DEBUG.modes.splice(DEBUG.modes.indexOf('GYRO_SCALED'), 1);
-
-        delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
-        delete DEBUG.fieldNames.GYRO_SCALED;
 
         DEBUG.fieldNames.AUTOPILOT_ALTITUDE = {
             'debug[all]': 'Autopilot Altitude',
@@ -834,6 +828,17 @@ function update() {
             'debug[6]': 'Altitude D',
             'debug[7]': 'Altitude F',
         };
+
+        DEBUG.fieldNames.TPA = {
+            'debug[all]': 'TPA',
+            'debug[0]': 'TPA Factor',
+            'debug[1]': 'TPA Attitude Roll (Wing)',
+            'debug[2]': 'TPA Attitude Pitch (Wing)',
+            'debug[3]': 'TPA Calculated Throttle (Wing)',
+            'debug[4]': 'TPA Speed (Wing)',
+            'debug[5]': 'TPA Argument (Wing)',
+        };
+
         DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro"), 0, "Attitude");
     }
 }
