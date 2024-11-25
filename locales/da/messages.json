@@ -487,6 +487,9 @@
     "reportProblemsDialogHeader": {
         "message": "Følgende <strong>problemer med din konfiguration<\/strong> blev opdaget:"
     },
+    "reportProblemsDialogFooter": {
+        "message": "<span class=\"message-negative\"><strong>Du skal løse problemer med disse indstillinger, før du forsøger at flyve med dit fartøj<\/span><\/strong>."
+    },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<span class=\"message-negative\"><strong>Din Betaflight configurator ($3) understøtter ikke den anvendte firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
@@ -554,6 +557,9 @@
     },
     "uniqueDeviceIdReceived": {
         "message": "Unik enheds-ID: <strong>0x$1<\/strong>"
+    },
+    "craftNameReceived": {
+        "message": "Fartøjsnavn: <strong>$1<\/strong>"
     },
     "armingDisabled": {
         "message": "<strong>Deaktiveret<\/strong>"
@@ -929,9 +935,17 @@
         "message": "Nedstyrtet drone er aktiv",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Fartøjet kalibrerer i øjeblikket",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Gas kanalværdi er for høj",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "Fartøjet er ikke i niveau (tilstrækkeligt)",
+        "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
         "message": "Aktiveret for hurtigt efter strøm er tændt",
@@ -1220,6 +1234,9 @@
     },
     "featureAIRMODE": {
         "message": "Aktiver Airmode permanent"
+    },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (f.eks. indbygget Rx)"

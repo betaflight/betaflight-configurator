@@ -7321,6 +7321,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocol motor"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "Protocol OSD"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Configuració del arxiu:"
     },
@@ -7338,6 +7341,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Seleccioneu el protocol motor (ESC) que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, però només es pot seleccionar un element."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "Seleccioneu el protocol OSD que voleu incloure en aquesta compilació. Tingueu en compte que aquest és un desplegable, només es pot seleccionar un element."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialment útil per als desenvolupadors, podeu seleccionar un PR combinat, especificar un commit sha o especificar un PR \"encara per combinar\" escrivint un # seguit del número de PR, p. #1234 (aquesta és l'abreviatura de la branca 'pull\/1234\/head')."
