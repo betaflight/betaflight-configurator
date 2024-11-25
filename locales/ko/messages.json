@@ -7317,6 +7317,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "모터 프로토콜"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "OSD 프로토콜"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "설정 파일이름:"
     },
@@ -7334,6 +7337,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "이 빌드에 포함할 모터(ESC) 프로토콜을 선택하십시오. 이것은 드롭다운으로 오직 하나의 항목을 선택할 수 있습니다."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "이 빌드에 포함할 OSD 프로토콜을 선택하십시오. 이것은 드롭다운으로 오직 하나의 항목을 선택할 수 있습니다."
     },
     "firmwareFlasherBranchDescription": {
         "message": "개발자에게 특히 유용한 것은 병합된 PR을 선택하거나 커밋 sha를 지정하거나 # 뒤에 PR 번호 예: #1234(이것은 'pull\/1234\/head'의 줄임말)를 입력하여 '아직 병합되지 않은' PR을 지정할 수 있습니다."
