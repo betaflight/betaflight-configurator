@@ -98,6 +98,7 @@ const DEBUG = {
         "S_TERM",
         "SPA",
         "TASK",
+        "GIMBAL",
     ],
 
     fieldNames: {
@@ -762,6 +763,15 @@ const DEBUG = {
             'debug[5]': 'Actual execution time (us)',
             'debug[6]': 'Difference estimated vs actual',
             'debug[7]': 'Late count',
+        },
+        'GIMBAL': {
+            'debug[all]': 'Gimbal',
+            'debug[0]': 'Headtracker Roll',
+            'debug[1]': 'Headtracker Pitch',
+            'debug[2]': 'Headtracker Yaw',
+            'debug[3]': 'Gimbal Roll',
+            'debug[4]': 'Gimbal Pitch',
+            'debug[5]': 'Gimbal Yaw',
         },
     },
 
