@@ -8,7 +8,7 @@ import FC from '../fc';
 import MSP from '../msp';
 import Model from '../model';
 import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_45, API_VERSION_1_46 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
 import { gui_log } from '../gui_log';
 import $ from 'jquery';
 import { ispConnected } from '../utils/connection';
@@ -238,6 +238,10 @@ setup.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('RPMFILTER'), 1, 'DSHOT_TELEM');
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                disarmFlagElements.splice(disarmFlagElements.indexOf('MOTOR_PROTOCOL'), 0, 'CRASHFLIP');
             }
 
             // Arming allowed flag
