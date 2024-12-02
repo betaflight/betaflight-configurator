@@ -5219,7 +5219,7 @@
         "message": "Зображення містить неприпустимий піксель: rgb({{valueR}}, {{valueG}}, {{valueB}}) у координатах {{posX}}×{{posY}}"
     },
     "osdSetupUploadFont": {
-        "message": "Вивантажити шрифт"
+        "message": "Завантажити шрифт"
     },
     "osdSetupUploadingFont": {
         "message": "Завантаження..."
