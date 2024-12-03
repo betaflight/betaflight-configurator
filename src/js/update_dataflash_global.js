@@ -13,13 +13,17 @@ export function update_dataflash_global() {
         }
 
         const megabytes = kilobytes / 1024;
-
-        return `${megabytes.toFixed(1)}MB`;
+        if (megabytes < 1024) {
+            return `${megabytes.toFixed(1)}MB`;
+        }
+        const gigabytes = megabytes / 1024;
+        return `${gigabytes.toFixed(1)}GB`;
     }
 
-    const supportsDataflash = FC.DATAFLASH.totalSize > 0;
+    const supportsDataflash = FC.DATAFLASH.supported && FC.DATAFLASH.totalSize > 0;
+    const supportsDatacard = FC.SDCARD.supported &&  FC.SDCARD.totalSizeKB > 0;
 
-    if (supportsDataflash){
+    if (supportsDataflash || supportsDatacard) {
         $(".noflash_global").css({
            display: 'none',
         });
@@ -28,9 +32,21 @@ export function update_dataflash_global() {
            display: 'block',
         });
 
-        $(".dataflash-progress_global").val(`${100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100}`);
-        $(".dataflash-contents_global div").text(`Dataflash: free ${formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`);
-     } else {
+        let dataflashProgress;
+        let dataflashProgressText;
+
+        if (supportsDataflash) {
+            dataflashProgress = 100 - (FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100;
+            dataflashProgressText = `Dataflash: free ${formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`;
+        }
+        if (supportsDatacard) {
+            dataflashProgress = 100 - FC.SDCARD.freeSizeKB / FC.SDCARD.totalSizeKB * 100;
+            dataflashProgressText = `SD Card: free ${formatFilesize(FC.SDCARD.freeSizeKB * 1024)}`;
+        }
+
+        $(".dataflash-progress_global").val(dataflashProgress);
+        $(".dataflash-contents_global div").text(dataflashProgressText);
+    } else {
         $(".noflash_global").css({
            display: 'block',
         });
@@ -38,5 +54,5 @@ export function update_dataflash_global() {
         $(".dataflash-contents_global").css({
            display: 'none',
         });
-     }
+    }
 }
