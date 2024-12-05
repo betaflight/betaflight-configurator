@@ -859,7 +859,7 @@ function update() {
             'debug[5]': 'TPA Argument (Wing)',
         };
 
-        DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro"), 0, "Attitude");
+        DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Accelerometer"), 0, "Attitude");
     }
 }
 
