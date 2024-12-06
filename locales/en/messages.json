@@ -1101,6 +1101,10 @@
         "message": "There is no motor output protocol selected",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Crash Flip Switch is active",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
