@@ -860,6 +860,7 @@ function update() {
         };
 
         DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro") + 1, 0, "Attitude");
+        DEBUG.enableFields.push("Servo");
     }
 }
 
