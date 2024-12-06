@@ -2530,6 +2530,10 @@
         "message": "Use to toggle PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
     },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Position hold mode",
+        "description": "Help text to POSHOLD mode"
+    },
     "auxiliaryHelpMode_PREARM": {
         "message": "When arming, wait for this switch to be activated before actually arming",
         "description": "Help text to PREARM mode"
